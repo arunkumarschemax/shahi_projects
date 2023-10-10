@@ -113,158 +113,159 @@ const ShipmentPlanningChart = () => {
         },
         {
             title: 'PO+Line',
-            dataIndex: "poLine",width:70,
+            dataIndex: "poLine", width: 70,
+            fixed: 'left'
         },
         {
             title: 'Item',
-            dataIndex: 'item',width:70,
+            dataIndex: 'item', width: 70,
             render: (text, record) => {
                 if (!text || text.trim() === '') {
-                  return '-';
+                    return '-';
                 } else {
-                  return text;
+                    return text;
                 }
-              },
+            },
         },
         {
             title: 'Factory',
-            dataIndex: 'factory',width:70,
+            dataIndex: 'factory', width: 70,
         },
         {
             title: 'Plan',
-            dataIndex: 'plan',width:70,
+            dataIndex: 'plan', width: 70,
 
         },
         {
             title: 'Purchase Order Number',
-            dataIndex: 'purchaseOrderNumber',width:70,
+            dataIndex: 'purchaseOrderNumber', width: 70,
 
         },
         {
             title: 'PO Line Item Number',
             dataIndex: 'poLineItemNumber',
-            align: 'center',width:70,
+            align: 'center', width: 70,
 
 
         },
         {
             title: 'Style Number',
-            dataIndex: 'styleNumber',width:70,
+            dataIndex: 'styleNumber', width: 70,
         },
         {
             title: 'Destination Country Name',
-            dataIndex: 'destinationCountryName',width:70,
+            dataIndex: 'destinationCountryName', width: 70,
         },
         {
             title: 'SHIP TO ADDRESS(lpo)',
-            dataIndex: 'shipToAddressToLegalPo',width:70,
+            dataIndex: 'shipToAddressToLegalPo', width: 70,
 
         }, {
             title: 'SHIP TO ADDRESS(DIA)',
-            dataIndex: 'shipToAddressDia',width:70,
+            dataIndex: 'shipToAddressDia', width: 70,
 
         }, {
             title: 'Hanger',
-            dataIndex: 'hanger',width:70,
+            dataIndex: 'hanger', width: 70,
 
         },
         {
             title: 'FOB',
             dataIndex: 'fob',
-            align:'right',width:70,
+            align: 'right', width: 70,
         },
         {
             title: 'CO',
-            dataIndex: 'co',width:70,
+            dataIndex: 'co', width: 70,
         },
         {
             title: 'Prooduct Code',
-            dataIndex: 'productCode',width:70,
+            dataIndex: 'productCode', width: 70,
         },
         {
             title: 'Color Description',
-            dataIndex: 'colorDescription',width:70,
+            dataIndex: 'colorDescription', width: 70,
         },
         {
             title: 'Planning Season Code',
             dataIndex: 'planningSeasonCode',
-            align: "center",width:70,
+            align: "center", width: 70,
         },
         {
             title: 'Plant Serason Year',
-            dataIndex: 'planningSeasonYear',width:70,
+            dataIndex: 'planningSeasonYear', width: 70,
         },
         {
             title: 'OGAC',
-            dataIndex: 'ogac',width:70,
-            render: (text) => moment(text).format('MM/DD/YYYY') 
+            dataIndex: 'ogac', width: 70,
+            render: (text) => moment(text).format('MM/DD/YYYY')
 
         },
         {
             title: 'GAC',
-            dataIndex: 'gac',width:70,
-            render: (text) => moment(text).format('MM/DD/YYYY') 
+            dataIndex: 'gac', width: 70,
+            render: (text) => moment(text).format('MM/DD/YYYY')
 
         },
         {
             title: 'EX FACTORY',
-            dataIndex: '',width:70,
+            dataIndex: '', width: 70,
         },
         {
             title: 'Total Item Quantity',
             dataIndex: 'totalItemQuantity',
-            align:'right',width:70,
-            render:(text, record) =>
-            <span>{Number(record.totalItemQuantity).toLocaleString()}</span>
+            align: 'right', width: 70,
+            render: (text, record) =>
+                <span>{Number(record.totalItemQuantity).toLocaleString()}</span>
         }, {
             title: 'Mode of Transportation',
-            dataIndex: 'modeofTransport',width:70,
+            dataIndex: 'modeofTransport', width: 70,
         },
         {
             title: 'PAYMENT TERMS LC/TT/TC',
-            dataIndex: 'paymentTerm',width:100,
+            dataIndex: 'paymentTerm', width: 100,
         },
         {
             title: 'DESCRIPTION WITH FABRIC CONTENT',
-            dataIndex: 'desFabricContent',width:100,
+            dataIndex: 'desFabricContent', width: 100,
         },
         {
             title: 'Gender Age Description',
             dataIndex: 'gender_age_desc', render: (text, record) => {
                 if (!text || text.trim() === '') {
-                  return '-';
+                    return '-';
                 } else {
-                  return text;
+                    return text;
                 }
-              },width:100,
+            }, width: 100,
         },
         {
             title: 'Fabric Content as per washcare label',
-            dataIndex: '',width:100,
+            dataIndex: '', width: 100,
         },
         {
             title: 'FABRIC IMPORTED/DOMESTIC',
-            dataIndex: 'fabricLocation',width:85,
+            dataIndex: 'fabricLocation', width: 85,
         },
         {
             title: 'COMMISSION(IF ANY)',
-            dataIndex: 'commission',width:70,
+            dataIndex: 'commission', width: 70,
         },
         {
             title: 'Shipping Type',
-            dataIndex: 'shippingType',width:70,
+            dataIndex: 'shippingType', width: 70,
         },
         {
             title: 'Doc Type Description',
-            dataIndex: 'docTypeDescription',width:70,
+            dataIndex: 'docTypeDescription', width: 70,
         },
         {
             title: 'Purchase Group Name',
-            dataIndex: 'purchaseGroupName',width:70,
+            dataIndex: 'purchaseGroupName', width: 70,
         },
         {
             title: 'CAB CODE',
-            dataIndex: 'cabCode',width:70,
+            dataIndex: 'cabCode', width: 70,
         },
 
     ]
@@ -376,7 +377,7 @@ const ShipmentPlanningChart = () => {
             },
             {
                 title: 'DESCRIPTION WITH FABRIC CONTENT',
-                dataIndex: 'desFabricContent',width:100
+                dataIndex: 'desFabricContent', width: 100
             },
             {
                 title: 'Gender Age Description',
@@ -435,13 +436,13 @@ const ShipmentPlanningChart = () => {
                         className="custom-table-wrapper"
                         dataSource={shipmentData}
                         pagination={{
-                            pageSize:50,
+                            pageSize: 50,
                             onChange(current, pageSize) {
                                 setPage(current);
                                 setPageSize(pageSize)
                             },
                         }}
-                        scroll={{ x: 'max-content',y:600 }}
+                        scroll={{ x: 'max-content', y: 600 }}
                         bordered
                     />
                 </Card>
