@@ -555,7 +555,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Text Area',
-                align: 'center',width:70,
+                align: 'center',width:165,
                 render: (text, rowData) => (
                     <div>
                         {expandedActualUnit[rowData.poAndLine] && (
@@ -808,61 +808,7 @@ const FactoryPPMReport = () => {
                     }
                 },
             },
-            // {
-            //     title: 'Ship to Address Legal PO',
-            //     dataIndex: 'shipToAddressLegalPO',
-            //     align: 'center',
-            //     render: (text, record) => {
-            //         if (!text || text.trim() === '') {
-            //             return '-';
-            //         } else {
-            //             return text;
-            //         }
-            //     },
-            // },
-            // {
-            //     title: 'Ship to Address DIA',
-            //     dataIndex: 'shipToAddressDIA',
-            //     align: 'center',
-            //     render: (text, record) => {
-            //         if (!text || text.trim() === '') {
-            //             return '-';
-            //         } else {
-            //             return text;
-            //         }
-            //     },
-            // },
 
-            // {
-            //     title: 'Diff of Ship to Address',
-            //     dataIndex: '',
-            //     align: 'center',
-            //     render: (text, record) => {
-            //         const lines1 = (record.shipToAddressLegalPO).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-            //         const text1 = lines1.join('');
-
-            //         const lines2 = (record.shipToAddressDIA).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-            //         const text2 = lines2.join('');
-
-            //         const dmp = new DiffMatchPatch();
-            //         const diff = dmp.diff_main(text1, text2);
-            //         dmp.diff_cleanupSemantic(diff);
-
-            //         let output = '';
-            //         for (const [op, text] of diff) {
-            //             if (op === DiffMatchPatch.DIFF_INSERT) {
-            //                 if (text.trim() !== '') {
-            //                     output += `${text} `;
-            //                 }
-            //             } else if (op === DiffMatchPatch.DIFF_DELETE) {
-            //                 if (text.trim() !== '') {
-            //                     output += `${text} `;
-            //                 }
-            //             }
-            //         }
-            //         return output.trim()
-            //     },
-            // },
             {
                 title: 'Planning Season Code',
                 dataIndex: 'planningSeasonCode',
@@ -989,7 +935,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title:'Text Area',
-                dataIndex: 'id',width:300,
+                dataIndex: 'id',width:165,
                 align: 'center',
                 render: (text, rowData) => (
                     <div>
