@@ -72,7 +72,11 @@ const VASChangesCompareGrid = () => {
     }
 
     const poLineItemStatusChange = () => {
-        service.poLineItemStatusChange().then((res) => {
+        const req = new nikeFilterRequest();
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
+        }
+        service.poLineItemStatusChange(req).then((res) => {
             setPOStatusData(res.data)
             setFilteredPOStatusData(res.data)
         })

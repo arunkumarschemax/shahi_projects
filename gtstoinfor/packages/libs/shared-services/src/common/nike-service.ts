@@ -79,8 +79,8 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/getTotalItemQtyChangeData", req)
     }
 
-    async poLineItemStatusChange(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/poLineItemStatusChange")
+    async poLineItemStatusChange(req:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/poLineItemStatusChange",req)
     }
 
     async getShipmentPlaningChart(): Promise<CommonResponseModel> {
@@ -118,8 +118,8 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/getUnitChangeData")
     }
 
-    async getFOBPriceChangeData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/getFOBPriceChangeData")
+    async getFOBPriceChangeData(req:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getFOBPriceChangeData",req)
     }
 
     async getNetInclDiscChangeData(): Promise<CommonResponseModel> {
@@ -344,6 +344,10 @@ export class NikeService extends CommonAxiosService {
     }
     async getColineOrderNo(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getColineOrderNo")
+    }
+
+    async getPpmAllPo(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmAllPo")
     }
 }
 

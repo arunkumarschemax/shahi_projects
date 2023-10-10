@@ -11,12 +11,14 @@ export class nikeFilterRequest {
     item?: string;
     factory?: string;
     DPOMLineItemStatus?:string;
+    poNumber?:string;
 
     constructor(
         documentStartDate?: string,
         documentEndtDate?: string,productCode?: string,poandLine?: string,
         colorDesc?: string,categoryDesc?: string,destinationCountry?: string,
-        plant?: string,item?: string,factory?: string,DPOMLineItemStatus?:string
+        plant?: string,item?: string,factory?: string,DPOMLineItemStatus?:string,poNumber?:string
+
     ) {
      
         this.documentStartDate = documentStartDate;
@@ -30,5 +32,6 @@ export class nikeFilterRequest {
         this.item = item;
         this.factory = factory;
         this.DPOMLineItemStatus = DPOMLineItemStatus;
+        this.poNumber = poNumber
     }
 }

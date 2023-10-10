@@ -276,7 +276,8 @@ export class DpomController {
     }
 
     @Post('/getTotalItemQtyChangeData')
-    async getTotalItemQtyChangeData(@Body() req: nikeFilterRequest): Promise<CommonResponseModel> {
+    @ApiBody({ type: nikeFilterRequest })
+    async getTotalItemQtyChangeData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.dpomService.getTotalItemQtyChangeData(req);
         } catch (err) {
@@ -285,9 +286,10 @@ export class DpomController {
     }
 
     @Post('/poLineItemStatusChange')
-    async poLineItemStatusChange(): Promise<CommonResponseModel> {
+    @ApiBody({ type: nikeFilterRequest })
+    async poLineItemStatusChange(@Body() req: any): Promise<CommonResponseModel> {
         try {
-            return this.dpomService.poLineItemStatusChange();
+            return this.dpomService.poLineItemStatusChange(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
@@ -312,9 +314,10 @@ export class DpomController {
     }
 
     @Post('/getFOBPriceChangeData')
-    async getFOBPriceChangeData(): Promise<CommonResponseModel> {
+    @ApiBody({ type: nikeFilterRequest })
+    async getFOBPriceChangeData(@Body() req: any): Promise<CommonResponseModel> {
         try {
-            return this.dpomService.getFOBPriceChangeData();
+            return this.dpomService.getFOBPriceChangeData(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
@@ -858,6 +861,15 @@ export class DpomController {
     async getPpmPoNumberForFactory(): Promise<CommonResponseModel> {
         try {
             return this.dpomService.getPpmPoNumberForFactory();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    
+    @Post('/getPpmAllPo')
+    async getPpmAllPo(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmAllPo();
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

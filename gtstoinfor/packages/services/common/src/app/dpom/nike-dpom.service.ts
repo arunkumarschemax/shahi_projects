@@ -304,7 +304,7 @@ export class DpomService {
             coLineEntity.createdUser = 'nike'
             const saveEntity: COLineEntity = await transactionManager.getRepository(COLineEntity).save(coLineEntity);
             const data = await this.coLineRepository.find()
-            console.log(data)
+            // console.log(data)
             if (!saveEntity) {
                 await transactionManager.releaseTransaction()
                 return new CommonResponseModel(false, 0, 'something went wrong')
@@ -949,8 +949,9 @@ export class DpomService {
         }
     }
 
-    async poLineItemStatusChange(): Promise<CommonResponseModel> {
-        const data = await this.dpomRepository.poLineItemStatusChange()
+    async poLineItemStatusChange(req?:nikeFilterRequest): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.poLineItemStatusChange(req)
+        console.log(req,"rewqq")
         if (data.length > 0)
             return new CommonResponseModel(true, 1, 'data retrived', data)
         else
@@ -981,8 +982,8 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async getFOBPriceChangeData(): Promise<CommonResponseModel> {
-        const data = await this.dpomRepository.getFOBPriceChangeData()
+    async getFOBPriceChangeData(req?:nikeFilterRequest): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getFOBPriceChangeData(req)
         if (data.length > 0)
             return new CommonResponseModel(true, 1, 'data retrived', data)
         else
@@ -1790,6 +1791,13 @@ export class DpomService {
 
     async getColineOrderNo(): Promise<CommonResponseModel> {
         const data = await this.coLineRepository.getOrderNumber()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPpmAllPo(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPpmPo()
         if (data.length > 0)
             return new CommonResponseModel(true, 1, 'data retrived', data)
         else

@@ -34,7 +34,7 @@ const OrdersCompareGrid = () => {
     const [remarkModal, setRemarkModal] = useState<boolean>(false)
     const [itemText, setRemarks] = useState<string>('')
     const [modeOTransportChaneData, setmodeOfTransportChangeData] = useState([])
-    const [poLine, setPoLine] = useState<any>([]);
+    const [poNumber, setPoNumber] = useState<any>([]);
 
 
     useEffect(() => {
@@ -50,19 +50,30 @@ const OrdersCompareGrid = () => {
     }, [])
 
     const getPoLine = () => {
-        service.getPpmPoLineForNikeOrder().then(res => {
-            setPoLine(res.data)
+        service.getPpmAllPo().then(res => {
+            setPoNumber(res.data)
         })
     }
+
     const getQtyChangeData = () => {
         const req = new nikeFilterRequest();
-        if (form.getFieldValue('poandLine') !== undefined) {
-            req.poandLine = form.getFieldValue('poandLine');
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
         }
         service.getTotalItemQtyChangeData(req).then((res) => {
             setQtyData(res.data)
             setFilteredQtyData(res.data)
             setFilterData(res.data)
+        })
+    }
+    const poLineItemStatusChange = () => {
+        const req = new nikeFilterRequest();
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
+        }
+        service.poLineItemStatusChange(req).then((res) => {
+            setPOStatusData(res.data)
+            setFilteredPOStatusData(res.data)
         })
     }
 
@@ -79,19 +90,14 @@ const OrdersCompareGrid = () => {
         })
     }
 
-    const poLineItemStatusChange = () => {
-        service.poLineItemStatusChange().then((res) => {
-            setPOStatusData(res.data)
-            setFilteredPOStatusData(res.data)
-        })
-    }
+  
 
     const PriceAndCurrencyChangeFob = () => {
         const req = new nikeFilterRequest();
-        // if (form.getFieldValue('poandLine') !== undefined) {
-        //     req.poandLine = form.getFieldValue('poandLine');
-        //   }
-        service.getFOBPriceChangeData().then((res) => {
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
+          }
+        service.getFOBPriceChangeData(req).then((res) => {
             setPriseChangeData(res.data)
             setFilteredPOStatusData(res.data)
         })
@@ -1475,32 +1481,36 @@ const OrdersCompareGrid = () => {
         }
     }
 
-    const getFilterdData = () => {
-        let orderStatus = form.getFieldValue('orderStatus');
-        let startDate = selectedEstimatedFromDate;
-        let endDate = selectedEstimatedToDate;
-        let filteredItemChangeData = itemChangeData;
-        let filteredQtyData = qtyData
-        let filteredPOStatusData = poStatusData
-        if (orderStatus) {
-            filteredItemChangeData = itemChangeData.filter(record => record.order_status === orderStatus);
-            filteredQtyData = filteredQtyData.filter(record => record.order_status === orderStatus)
-            filteredPOStatusData = poStatusData.filter(record => record.order_status === orderStatus)
-            setItemChangeData(filteredItemChangeData);
-            setFilteredQtyData(filteredQtyData)
-            setFilteredPOStatusData(filteredPOStatusData)
-        }
-        if (startDate && endDate) {
-            console.log(filteredQtyData)
-            filteredItemChangeData = itemChangeData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate);
-            filteredQtyData = filteredQtyData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
-            filteredPOStatusData = poStatusData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
-            setItemChangeData(filteredItemChangeData);
-            setFilteredQtyData(filteredQtyData)
-            setFilteredPOStatusData(filteredPOStatusData)
-        }
-    }
-
+    // const getFilterdData = () => {
+    //     let orderStatus = form.getFieldValue('orderStatus');
+    //     let startDate = selectedEstimatedFromDate;
+    //     let endDate = selectedEstimatedToDate;
+    //     let filteredItemChangeData = itemChangeData;
+    //     let filteredQtyData = qtyData
+    //     let filteredPOStatusData = poStatusData
+    //     if (orderStatus) {
+    //         filteredItemChangeData = itemChangeData.filter(record => record.order_status === orderStatus);
+    //         filteredQtyData = filteredQtyData.filter(record => record.order_status === orderStatus)
+    //         filteredPOStatusData = poStatusData.filter(record => record.order_status === orderStatus)
+    //         setItemChangeData(filteredItemChangeData);
+    //         setFilteredQtyData(filteredQtyData)
+    //         setFilteredPOStatusData(filteredPOStatusData)
+    //     }
+    //     if (startDate && endDate) {
+    //         console.log(filteredQtyData)
+    //         filteredItemChangeData = itemChangeData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate);
+    //         filteredQtyData = filteredQtyData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
+    //         filteredPOStatusData = poStatusData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
+    //         setItemChangeData(filteredItemChangeData);
+    //         setFilteredQtyData(filteredQtyData)
+    //         setFilteredPOStatusData(filteredPOStatusData)
+    //     }
+    // }
+ const getFilterdData = () =>{
+    getQtyChangeData();
+    poLineItemStatusChange();
+    PriceAndCurrencyChangeFob();
+ }
     const getSizeWiseHeaders = (data: TotalQuantityChangeModel[]) => {
         const sizeHeaders = new Set<string>();
         data?.forEach(rec => rec.sizeWiseData?.forEach(version => {
@@ -2019,18 +2029,18 @@ const OrdersCompareGrid = () => {
             style={{ color: 'green' }}
             onClick={exportExcel}
             icon={<FileExcelFilled />}>Download Excel</Button>)}>
-            {/* <Form form={form} layout={"vertical"} >
+            <Form form={form} layout={"vertical"} >
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 4 }} >
-                        <Form.Item name='poandLine' label='Po+Line' >
+                        <Form.Item name='poNumber' label='Po Number' >
                             <Select
                                 showSearch
-                                placeholder="Select Po+Line"
+                                placeholder="Select PoNumber"
                                 optionFilterProp="children"
                                 allowClear
                             >
-                                {poLine.map((inc: any) => {
-                                    return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                                {poNumber.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
                                 })
                                 }
                             </Select>
@@ -2056,7 +2066,7 @@ const OrdersCompareGrid = () => {
                     </Col>
 
                 </Row>
-            </Form> */}
+            </Form>
             {filteredQtyData || unitChangeData || itemChangeData || poStatusData ? <>
                 <Tabs type='card' items={items} />
             </> : <></>}
