@@ -2357,7 +2357,7 @@ const PPMReport = () => {
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3.5 }} >
-              <Form.Item name="DPOMLineItemStatus" label="DPOM Line Item Status">
+              <Form.Item name="DPOMLineItemStatus" label="Line Item Status">
                 <Select
                   showSearch
                   placeholder="Select Line Status"
