@@ -50,6 +50,7 @@ export class SampleRequestDto {
   facilityId: number;
   @ApiProperty()
   status: SampleDevelopmentStatusEnum;
+  @ApiProperty({type:[SampleSizeReq]})
   samplereqsizeinfo:SampleSizeReq[];
   @ApiProperty({type:[SamplefabricReq]})
   samplereqfabricinfo:SamplefabricReq[]

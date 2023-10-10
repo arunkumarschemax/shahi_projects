@@ -1,7 +1,8 @@
-import { BuyerIdReq } from "@project-management-system/shared-models";
-import { BuyersService, CurrencyService, DeliveryMethodService, DeliveryTermsService, EmployeeDetailsService, FactoryService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, WarehouseService } from "@project-management-system/shared-services"
-import { Card, Col, DatePicker, Form, Input, Row, Select } from "antd"
+import { BuyerIdReq, BuyersDestinationRequest, CustomerOrderStatusEnum, ItemCodeReq, SKUGenerationReq, StyleOrderItemsReq, StyleOrderReq } from "@project-management-system/shared-models";
+import { BuyerDestinationService, BuyersService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DestinationService, EmployeeDetailsService, FactoryService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, SKUGenerationService, WarehouseService } from "@project-management-system/shared-services"
+import { Button, Card, Col, DatePicker, Form, Input, Row, Segmented, Select, Space, Table } from "antd"
 import TextArea from "antd/es/input/TextArea";
+import { ColumnProps } from "antd/es/table";
 import { useEffect, useState } from "react"
 
 const {Option} = Select;
@@ -31,8 +32,15 @@ export const StyleOrderCreation = () => {
     const payMethService = new PaymentMethodService()
     const [currency,setCurrency] = useState<any[]>([])
     const currencyService = new CurrencyService()
-
-
+    const [destinations,setDestinations] = useState<any[]>([])
+    const skuService = new SKUGenerationService()
+    const [form] = Form.useForm()
+    const [data,setData] = useState<any[]>([])
+    const [page, setPage] = useState<number>(1);
+    const [orderQuantityData,setOrderQuantityData] = useState<any[]>([])
+    const [itemId,setItemId] = useState<number>(0)
+    const deliveryAddressService = new BuyerDestinationService()
+    const [delivAdd,setDelivAdd] =  useState<any[]>([])
 
 
     useEffect(() => {
@@ -146,12 +154,116 @@ export const StyleOrderCreation = () => {
         })
     }
 
+    const getDestinationsByItem = () =>{
+        const req = new ItemCodeReq(form.getFieldValue('itemCode'))
+        skuService.getDestinationsByItem(req).then(res =>{
+            if(res.status){
+                setDestinations(res.data)
+            }
+        })
+    }
+
+    const getBuyerDestinations = (buyerId) =>{
+        const request = new BuyersDestinationRequest(buyerId)
+        deliveryAddressService.getAll(request).then(res=>{
+            if(res.status){
+                setDelivAdd(res.data)
+            }
+        })
+    
+    }
+
     const onBuyerChange = (e,option) => {
         getBuyersAddressInfo(option?.key)
+        getBuyerDestinations(option?.key)
+    }
+
+    const onItemCodeChange = (e,option) => {
+        setItemId(option?.key)
+        getDestinationsByItem()
+
+    }
+
+    const generateSegmentedOptions = () => {
+        return destinations.map((rec, index) => (
+            {
+          label: <b>{rec.destination}</b>, // Change this to the appropriate property from your data
+          value: rec.destination_id,    // Change this to the appropriate property from your data
+          key: index.toString(),           // Use a unique key for each option
+        }
+        ));
+      };
+
+      const segmentedOptions = generateSegmentedOptions();
+
+    const onSegmentChange = (e) => {
+        console.log(e)
+        const req = new ItemCodeReq(form.getFieldValue('itemCode'),e)
+        skuService.getDataByDestinationAgainstItem(req).then(res => {
+            if(res.status){
+                setData(res.data)
+            }
+        })
+    }
+
+    const setQuantityValue = (e,index,rowData) => {
+        console.log(e,index,rowData)
+        console.log(e.target.value)
+        data[index].quantity = e.target.value
+        data[index].deliveryAddress = form.getFieldValue('deliveryAddress')
+        console.log(data)
+        const req = new StyleOrderItemsReq(form.getFieldValue('deliveryAddress'),e.target.value,rowData.color,rowData.size,rowData.destination,null,CustomerOrderStatusEnum.OPEN,null,null,null,rowData.colorInfo.colorId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId,null)
+        setOrderQuantityData([...orderQuantityData,req])
+    }
+
+    const columns: ColumnProps<any>[] = [
+        // {
+        //     title: 'S No',
+        //     key: 'sno',
+        //     width: '70px',
+        //     responsive: ['sm'],
+        //     render: (text, object, index) => (page-1) * 10 +(index+1)
+        // },
+        {
+            title:'SKU Code',
+            dataIndex:'skuCode'
+        },
+        {
+            title:'Color',
+            dataIndex:'color'
+        },
+        {
+            title:'Size',
+            dataIndex:'size'
+        },
+        {
+            title:'Quantity',
+            dataIndex:'quantity',
+            render:(text,row,index) => {
+                return(
+                    <Input key={index}placeholder="Enter value"
+                        onBlur={e=> setQuantityValue(e,index,row)}/>
+                )
+            }
+        },
+    ]
+
+    const splitData = (data) => {
+        const middleIndex = Math.ceil(data.length / 2);
+        const firstHalf = data.slice(0, middleIndex);
+        const secondHalf = data.slice(middleIndex);
+        return [firstHalf, secondHalf];
+    };
+
+    const [firstHalfData, secondHalfData] = splitData(data);
+
+    const onFinish = (val) => {
+        const req = new StyleOrderReq(val.itemCode,val.CODate,val.buyerPoNumber,val.shipmentType,val.buyerStyle,val.agent,val.buyerAddress,val.exfactoryDate,val.deliveryDate,val.inStoreDate,val.salePrice,val.priceQuantity,val.discount,null,CustomerOrderStatusEnum.OPEN,val.remarks,itemId,val.warehouse,val.facility,null,val.packageTerms,val.deliveryMethod,val.deliveryTerms,val.currency,val.paymentMethod,val.paymentTerms,orderQuantityData,val.buyer)
+        console.log(req,'---')
     }
     return(
         <Card title='Style Order Creation' size='small'>
-            <Form layout="vertical">
+            <Form layout="vertical" form={form} onFinish={onFinish}>
                <Row gutter={[8,4]}>
                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 12}}>
                <Card size='small' bordered={false}>
@@ -159,12 +271,12 @@ export const StyleOrderCreation = () => {
                <span style={{color:'blue'}}><b>Order Details</b></span>
                 <Row gutter={[8,8]}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                <Form.Item name='itemCode' label='Item'>
-                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select Item'>
+                <Form.Item name='itemCode' label='Item' rules={[{required:true,message:'Item is required'}]}>
+                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select Item' onChange={onItemCodeChange}>
                         {
                             itemCodes.map((e) => {
                                 return(
-                                    <Option key={e.itemCode} value={e.itemCode}>{e.itemCode}-{e.itemName}</Option>
+                                    <Option key={e.itemId} value={e.itemCode}>{e.itemCode}-{e.itemName}</Option>
                                 )
                             })
                         }
@@ -172,12 +284,12 @@ export const StyleOrderCreation = () => {
                 </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-                    <Form.Item name='buyer' label='Buyer' >
+                    <Form.Item name='buyer' label='Buyer' rules={[{required:true,message:'Buyer is required'}]} >
                         <Select showSearch allowClear optionFilterProp="children" onChange={onBuyerChange} placeholder='Select Buyer'>
                             {
                                 buyers.map((e) => {
                                     return(
-                                        <Option key={e.buyerId} value={e.buyerCode}>{e.buyerCode}-{e.buyerName}</Option>
+                                        <Option key={e.buyerId} value={e.buyerId}>{e.buyerCode}-{e.buyerName}</Option>
                                     )
                                 })
                             }
@@ -189,12 +301,12 @@ export const StyleOrderCreation = () => {
                 <span style={{color:'blue'}}><b>CO Information</b></span>
                     <Row gutter={[8,4]}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-                <Form.Item name='facility' label='Facility'>
+                <Form.Item name='facility' label='Facility' rules={[{required:true,message:'Facility is required'}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Facility'>
                             {
                                 factory.map((e) => {
                                     return(
-                                        <Option key={e.id} value={e.name}>{e.name}</Option>
+                                        <Option key={e.id} value={e.id}>{e.name}</Option>
                                     )
                                 })
                             }
@@ -202,12 +314,12 @@ export const StyleOrderCreation = () => {
                     </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-                <Form.Item name='warehouse' label='Warehouse'>
+                <Form.Item name='warehouse' label='Warehouse' rules={[{required:true,message:'Warehouse is required'}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Warehouse'>
                             {
                                 warehouse.map((e) => {
                                     return(
-                                        <Option key={e.id} value={e.name}>{e.name}</Option>
+                                        <Option key={e.warehouseId} value={e.warehouseId}>{e.warehouseName}</Option>
                                     )
                                 })
                             }
@@ -224,12 +336,12 @@ export const StyleOrderCreation = () => {
                 <span style={{color:'blue'}}><b>Customer PO Information</b></span>
                 <Row gutter={[8,4]}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-            <Form.Item name='buyerPO' label='Buyer PO'>
+            <Form.Item name='buyerPoNumber' label='Buyer PO' rules={[{required:true,message:'Buyer PO is required'}]}>
                     <Input placeholder="Enter Buyer PO"/>
                 </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-            <Form.Item name='CODate' label='CO Date'>
+            <Form.Item name='CODate' label='CO Date' rules={[{required:true,message:'CO Date is required'}]}>
                     <DatePicker style={{width:'100%'}}/>
                 </Form.Item>
             </Col>
@@ -239,7 +351,7 @@ export const StyleOrderCreation = () => {
                 </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-            <Form.Item name='buyerStyle' label='Buyer Style'>
+            <Form.Item name='buyerStyle' label='Buyer Style' rules={[{required:true,message:'Buyer Style is required'}]}>
                     <Input placeholder="Enter Buyer Style"/>
                 </Form.Item>
             </Col>
@@ -257,7 +369,7 @@ export const StyleOrderCreation = () => {
                 </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-            <Form.Item name='buyerAddress' label='Buyer Address' >
+            <Form.Item name='buyerAddress' label='Buyer Address' rules={[{required:true,message:'Buyer Address is required'}]}>
                     <Select showSearch allowClear optionFilterProp="children" placeholder='Select Address'>
                         {
                             buyerAddress.map((e) => {
@@ -278,17 +390,17 @@ export const StyleOrderCreation = () => {
                <span style={{color:'blue'}}><b>Shipment Information</b></span>
                 <Row gutter={8}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-                <Form.Item name='exfactoryDate' label='Ex-factory Date'>
+                <Form.Item name='exfactoryDate' label='Ex-factory Date' rules={[{required:true,message:'Ex-factory Date is required'}]}>
                         <DatePicker style={{width:'100%'}}/>
                     </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-                <Form.Item name='deliveryDate' label='Delivery Date'>
+                <Form.Item name='deliveryDate' label='Delivery Date' rules={[{required:true,message:'Delivery Date is required'}]}>
                         <DatePicker style={{width:'100%'}}/>
                     </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-                <Form.Item name='packingTerms' label='Packing Terms'>
+                <Form.Item name='packageTerms' label='Packing Terms'>
                     <Select showSearch allowClear optionFilterProp="children" placeholder='Select Packing Terms'>
                         {
                             packageTerms.map((e) => {
@@ -301,7 +413,7 @@ export const StyleOrderCreation = () => {
                 </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-                <Form.Item name='deliveryMethod' label='Delivery Method'>
+                <Form.Item name='deliveryMethod' label='Delivery Method' rules={[{required:true,message:'Delivery Method is required'}]}>
                     <Select showSearch allowClear optionFilterProp="children" placeholder='Select Delivery Method'>
                         {
                             deliveryMethod.map((e) => {
@@ -314,7 +426,7 @@ export const StyleOrderCreation = () => {
                 </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-                <Form.Item name='deliveryTerms' label='Delivery Terms'>
+                <Form.Item name='deliveryTerms' label='Delivery Terms' rules={[{required:true,message:'Delivery Terms is required'}]}>
                     <Select showSearch allowClear optionFilterProp="children" placeholder='Select Delivery Terms'>
                         {
                             deliveryTerms.map((e) => {
@@ -335,10 +447,39 @@ export const StyleOrderCreation = () => {
                 {/* <h4 style={{ color: 'grey', textAlign: 'left' }}>Payment Information</h4> */}
                <span style={{color:'blue'}}><b>Payment Information</b></span>
                 <Row gutter={8}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-                <Form.Item name='salesPrice' label='Sales Price'>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>
+                <Form.Item name='currency' label='Sales Price' rules={[{required:true,message:'Currency is required'}]}>
+                    <Select showSearch allowClear optionFilterProp="children" placeholder='Currency'>
+                        {
+                            currency.map((e) => {
+                                return(
+                                    <Option key={e.currencyId} value={e.currencyId}>{e.currencyName}</Option>
+                                )
+                            })
+                        }
+                    </Select>
+                        {/* <Input placeholder="Enter Price"/> */}
+                </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }} style={{marginTop:'23px'}}>
+                <Form.Item name='salePrice' rules={[{required:true,message:'Sale Price is required'}]}>
                         <Input placeholder="Enter Price"/>
-                    </Form.Item>
+                </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 1 }} style={{marginTop:'23px'}}>
+                <Form.Item>
+                        Per
+                </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 4 }} style={{marginTop:'23px'}}>
+                <Form.Item name='priceQuantity' rules={[{required:true,message:'Pieces is required'}]}>
+                        <Input placeholder="Quantity"/>
+                </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 4 }} style={{marginTop:'23px'}}>
+                <Form.Item>
+                        PCS
+                </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
                 <Form.Item name='discount' label='Discount(%)'>
@@ -346,7 +487,7 @@ export const StyleOrderCreation = () => {
                     </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-                <Form.Item name='paymentMethod' label='Payment Method'>
+                <Form.Item name='paymentMethod' label='Payment Method' rules={[{required:true,message:'Payment Method is required'}]}>
                     <Select showSearch allowClear optionFilterProp="children"  placeholder='Select Payment Method'>
                         {
                             paymentMethod.map((e) => {
@@ -359,7 +500,7 @@ export const StyleOrderCreation = () => {
                 </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-                <Form.Item name='paymentTerms' label='Payment Terms' >
+                <Form.Item name='paymentTerms' label='Payment Terms' rules={[{required:true,message:'Payment Terms is required'}]}>
                     <Select showSearch allowClear optionFilterProp="children" placeholder='Select Payment Terms'>
                         {
                             paymentTerms.map((e) => {
@@ -375,6 +516,64 @@ export const StyleOrderCreation = () => {
                 </Card>
                 </Col>
                </Row>
+               <Row>
+                <Card style={{width:'100%'}}>
+                <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}>
+                <Segmented 
+                style={{backgroundColor:'#dde5b6'}}
+                options={segmentedOptions} 
+                onChange={onSegmentChange}
+                />
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
+                    <Form.Item label='Delivery Address' name='deliveryAddress'>
+                        {/* <Input placeholder="Enter delivery address"/> */}
+                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Delivery Address'>
+                        {
+                            delivAdd[0].destination.map((e) => {
+                                return(
+                                    <Option key={e.destinationId} value={e.destinationId}>{e.destination}</Option>
+                                )
+                            })
+                        }
+                    </Select>
+                    </Form.Item>
+                </Col>
+                {/* <Table columns={columns} dataSource={data}/> */}
+                {
+                data.length <= 10 ? (<>
+                <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 18 }}>
+                {/* <Card size='small'> */}
+                <Table  size='small'  bordered columns={columns} dataSource={data} pagination={false}/>
+                {/* </Card> */}
+                </Col>
+                </>): (<></>)
+
+            }
+            {
+                data.length > 10 ? (<> <Row gutter={24}>
+                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                        {/* <Card size='small'> */}
+                            <Table  size='small'  bordered columns={columns} dataSource={firstHalfData} pagination={false}/>
+                        {/* </Card> */}
+                    </Col>
+                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                        {/* <Card size='small'> */}
+                            <Table  size='small'  bordered columns={columns} dataSource={secondHalfData} pagination={false}/>
+                        {/* </Card> */}
+                    </Col>
+                    </Row></>) : (<></>)
+            }
+                </Space>
+                <Row justify={'end'} style={{marginLeft:'85%',marginTop:'5px'}}>
+               <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                <Form.Item>
+                    <Button htmlType="submit" type='primary'>Submit</Button>
+                </Form.Item>
+               </Col>
+               </Row>
+                </Card>
+               </Row>
+             
             </Form>
 
         </Card>

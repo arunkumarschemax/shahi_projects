@@ -2,7 +2,7 @@ import { Controller,Post,Body } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { ItemSkuService } from "./sku-generation.service";
-import { ItemSKusReq, SKUGenerationResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, ItemCodeReq, ItemSKusReq, SKUGenerationResponseModel } from "@project-management-system/shared-models";
 
 @ApiTags('itemSkus')
 @Controller('itemSkus')
@@ -28,6 +28,24 @@ export class ItemSkuController{
             return await this.itemSkuService.cancelSKUById(req)
         }catch(err){
             return this.applicationExceptionHandler.returnException(SKUGenerationResponseModel,err)
+        }
+    }
+
+    @Post('/getDestinationsByItem')
+    async getDestinationsByItem(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return await this.itemSkuService.getDestinationsByItem(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+
+    @Post('/getDataByDestinationAgainstItem')
+    async getDataByDestinationAgainstItem(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return await this.itemSkuService.getDataByDestinationAgainstItem(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
         }
     }
 

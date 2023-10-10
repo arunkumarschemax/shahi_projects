@@ -4,13 +4,14 @@ import { ApplicationExceptionHandler } from '@project-management-system/backend-
 import { ItemSkus } from './sku-generation.entity';
 import { ItemSkuService } from './sku-generation.service';
 import { ItemSkuController } from './sku-generation.controller';
+import { ItemSkuRepository } from './sku-generation-repo';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ItemSkus]),
   ],
   controllers: [ItemSkuController],
-  providers: [ItemSkuService, ApplicationExceptionHandler],
+  providers: [ItemSkuService, ApplicationExceptionHandler,ItemSkuRepository],
   exports: [ItemSkuService],
 })
 export class SkuGenerationModule { }
