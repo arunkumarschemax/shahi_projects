@@ -101,7 +101,7 @@ const VASChangesCompareGrid = () => {
         const excel = new Excel();
         if (filteredQtyData.length > 0) {
             excel
-                .addSheet('Quantity changes')
+                .addSheet('VAS Text Revised PO')
                 .addColumns(data1)
                 .addDataSource(filteredQtyData, { str2num: true })
         }
@@ -127,38 +127,132 @@ const VASChangesCompareGrid = () => {
     }
 
     const data1 = [
+       
         {
-            title: 'Production Plan Id',
-            dataIndex: 'production_plan_id'
+            title: 'Report Generate Date',
+            dataIndex: 'document_date',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
-            title: 'Item code',
-            dataIndex: 'item_code'
+            title: 'Item',
+            dataIndex: 'item',
         },
         {
-            title: 'Item Name',
-            dataIndex: 'itemName'
-        },
-        {
-            title: 'Order Quantity Pieces',
-            dataIndex: 'new_val',
-        },
-        {
-            title: 'Contracted Date',
-            dataIndex: 'contracted_date',
-        },
-        {
-            title: 'Order Revised Date',
-            dataIndex: 'last_update_date',
-        },
-        {
-            title: 'Requested Warehouse Date',
-            dataIndex: 'requested_wh_date',
+            title: 'Factory',
+            dataIndex: 'factory',
         },
         // {
-        //     title: 'Order Status',
-        //     dataIndex: 'order_status'
-        // }
+        //     title: 'Document Date',
+        //     dataIndex: 'document_date'
+        // },
+        {
+            title: 'PO Number',
+            dataIndex: 'po_number',
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number',
+        },
+        {
+            title: 'Total Item Quantity',
+            dataIndex: 'totalItemQty',
+        },
+        {
+            title: 'Product Code',
+            dataIndex: 'productCode',
+        },
+        {
+            title: 'OGAC',
+            dataIndex: 'OGAC', render: (text) => moment(text).format('MM/DD/YYYY')
+
+        },
+        {
+            title: 'GAC',
+            dataIndex: 'GAC', render: (text) => moment(text).format('MM/DD/YYYY')
+
+        },
+        {
+            title: 'Change from Direct Ship Sales Order Number',
+            dataIndex: 'change_from_direct_ship_sales_order_number'
+        },
+        {
+            title: 'Change from Direct Ship Sales Order Item',
+            dataIndex: 'change_from_direct_ship_sales_order_item'
+        },
+        {
+            title: 'Change to Direct Ship Sales Order Number',
+            dataIndex: 'change_to_direct_ship_sales_order_number'
+        },
+        {
+            title: 'Change to Direct Ship Sales Order Item',
+            dataIndex: 'change_to_direct_ship_sales_order_item'
+        },
+        {
+            title: 'Change from Item Vas Text',
+            dataIndex: 'change_from_item_vas_text'
+        },
+        {
+            title: 'Change to Item Vas Text',
+            dataIndex: 'change_to_item_vas_text'
+        },
+        {
+            title: 'Item VAS PDF PO',
+            dataIndex: 'item_vas_pdf_po'
+        },
+        {
+            title: 'DIFFERENCE IN ITEM VAS TEXT ',
+            dataIndex: 'item_vas_pdf_po',
+
+        },
+       
+        {
+            title: 'Schedule Line Item No',
+            dataIndex: 'schedule_line_item_number',
+        },
+        {
+            title: 'Previous Order Quantity Pieces',width:80,
+            dataIndex: 'old_val',
+        },
+        {
+            title: 'Revised Order Quantity Pieces',
+            dataIndex: 'new_val',
+            render: (text, record) => (
+                <span  {...record.new_val}>
+                    <>
+                        {Number(record.old_val) === Number(record.new_val) ? <span style={{ color: '' }}>{Number(record.new_val).toLocaleString('en-IN', {
+                            maximumFractionDigits: 0
+                        })}</span> : ''}
+                        {Number(record.old_val) < Number(record.new_val) ? <span style={{ color: 'green' }}>{Number(record.new_val).toLocaleString('en-IN', {
+                            maximumFractionDigits: 0
+                        })}</span> : ''}
+                        {Number(record.old_val) > Number(record.new_val) ? <span style={{ color: 'red' }}>{Number(record.new_val).toLocaleString('en-IN', {
+                            maximumFractionDigits: 0
+                        })}</span> : ''}
+                    </>
+                </span>
+            )
+        },
+        {
+            title: 'Difference',
+            dataIndex: 'Diff',
+
+            render: (text, record) => (
+                < >
+                    {Number(record.Diff) === 0 ? '-' : ''}
+                    {Number(record.Diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.Diff).toLocaleString('en-IN', {
+                        maximumFractionDigits: 0
+                    })} </span> : ''}
+                    {Number(record.Diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.Diff).toLocaleString('en-IN', {
+                        maximumFractionDigits: 0
+                    })} </span> : ''}
+                </>
+            )
+        },
+       
+        {
+            title: 'Order Status',width:80,
+            dataIndex: 'dpom_item_line_status',
+        }
     ]
 
     const data2 = [
@@ -240,98 +334,39 @@ const VASChangesCompareGrid = () => {
         {
             title: 'Change from Inventory Segment Code',
             dataIndex: '',
-            // ...getColumnSearchProps('')
         },
         {
             title: 'Change To Inventory Segment Code',
             dataIndex: '',
-            // ...getColumnSearchProps('')
         },
         {
             title: 'Change from Destination Country Name',
             dataIndex: '',
-            // ...getColumnSearchProps('')
         },
         {
             title: 'Change To Destination Country Name',
             dataIndex: '',
-            // ...getColumnSearchProps('')
         },
         {
             title: 'Change from Ship To Customer Number',
             dataIndex: '',
-            // ...getColumnSearchProps('')
         },
         {
             title: 'Change to Ship To Customer Number',
             dataIndex: '',
-            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Ship To Customer Number in DIA',
             dataIndex: '',
-            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change from Plant Code',
             dataIndex: '',
-            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change to Plant Code',
             dataIndex: '',
-            // ...getColumnSearchProps('schedule_line_item_number')
         },
-        // {
-        //     title: ' Sum Of Qrd Qty last Week',
-        //     dataIndex: 'old_qty_value',
-        //     align: 'right',
-        //     render: (text, record) => (
-        //         <>
-        //             {Number(record.old_qty_value).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-        //         </>
-        //     )
-
-        // },
-        // {
-        //     title: 'Sum Of Qrd Qty this Week',
-        //     dataIndex: 'new_qty_value',
-        //     align: 'right',
-        //     render: (text, record) => (
-        //         <span  {...record.new_qty_value}>
-        //             <>
-        //                 {Number(record.old_qty_value) === Number(record.new_qty_value) ? <span style={{ color: '' }}>{Number(record.new_qty_value).toLocaleString('en-IN', {
-        //                     maximumFractionDigits: 0
-        //                 })}</span> : ''}
-        //                 {Number(record.old_qty_value) < Number(record.new_qty_value) ? <span style={{ color: 'green' }}>{Number(record.new_qty_value).toLocaleString('en-IN', {
-        //                     maximumFractionDigits: 0
-        //                 })}</span> : ''}
-        //                 {Number(record.old_qty_value) > Number(record.new_qty_value) ? <span style={{ color: 'red' }}>{Number(record.new_qty_value).toLocaleString('en-IN', {
-        //                     maximumFractionDigits: 0
-        //                 })}</span> : ''}
-        //             </>
-        //         </span>
-        //     )
-        // },
-        // {
-        //     title: 'Difference Ord Qty Revised',
-        //     dataIndex: 'diff',
-        //     align: 'right',
-        //     render: (text, record) => (
-        //         < >
-
-        //             {Number(record.diff) === 0 ? '-' : ''}
-        //             {Number(record.diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.diff).toLocaleString('en-IN', {
-        //                 maximumFractionDigits: 0
-        //             })} </span> : ''}
-        //             {Number(record.diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.diff).toLocaleString('en-IN', {
-        //                 maximumFractionDigits: 0
-        //             })} </span> : ''}
-
-        //         </>
-        //     )
-        // },
-
     ];
 
     const data4 = [
