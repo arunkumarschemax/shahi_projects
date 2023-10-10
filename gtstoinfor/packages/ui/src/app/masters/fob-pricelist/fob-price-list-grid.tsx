@@ -25,7 +25,7 @@ const FobPriceListGrid = () => {
 
   const getFobData = () => {
     service.getFobPrice().then((res) => {
-        console.log(res,"res")
+      console.log(res, "res")
       if (res.status) {
         setFob(res.data);
       } else {
@@ -37,6 +37,7 @@ const FobPriceListGrid = () => {
         console.log(error.response)
       })
   };
+
   const closeDrawer = () => {
     setDrawerVisible(false);
   }
@@ -44,18 +45,14 @@ const FobPriceListGrid = () => {
   const openFormwithData = (ViewData: FactoryDto) => {
     setDrawerVisible(true);
     setFactoryData(ViewData);
-    console.log(ViewData, "viewData")
   }
-  const updateFob = (Data: Fobdto) => {
 
-    console.log(Data, 'vidya')
+  const updateFob = (Data: Fobdto) => {
     service.updateFobplist(Data).then(res => {
-      console.log(res, "ressssssssssss");
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Succesfully');
         getFobData()
         setDrawerVisible(false);
-
       }
       else {
         AlertMessages.getErrorMessage(res.internalMessage)
@@ -146,11 +143,6 @@ const FobPriceListGrid = () => {
     setSearchText('');
   };
   const Columns: any = [
-    // {
-    //   title: "SL",
-    //   render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
-
-    // },
     {
       title: "S.No",
       key: "sno",
@@ -158,60 +150,53 @@ const FobPriceListGrid = () => {
       render: (text, object, index) => (page - 1) * pageSize + (index + 1),
     },
     {
-        title: 'Planning Season Code',
-        dataIndex: 'planningSeasonCode',
-        width:100,
-        // sorter: (a, b) => a.planningSeasonCode.length - b.planningSeasonCode.length,
-        // sortDirections: ['descend', 'ascend'],
-        // ...getColumnSearchProps('planningSeasonCode'),
-        align: 'center'
-  
-      },
-      {
-        title: 'Planning SeasonYear',
-        dataIndex: 'planningSeasonYear',
-        // sorter: (a, b) => a.planningSeasonYear.length - b.planningSeasonYear.length,
-        // sortDirections: ['descend', 'ascend'],
-        // ...getColumnSearchProps('planningSeasonYear'),
-        align: 'center'
-  
-      },
-      {
-        title: 'Style Number',
-        dataIndex: 'styleNumber',
-        align: 'center'
-  
-      },
-      {
-        title: 'Color Code',
-        dataIndex: 'colorCode',
-        align: 'center'
-  
-      },
-      {
-        title: 'Size Description',
-        dataIndex: 'sizeDescription',
-        align: 'center',
-        
-  
-      },
-
-    {
-      title: 'Shahi Confirmed Gross Price',
-      dataIndex: "shahiConfirmedGrossPrice",
+      title: 'Planning Season Code',
+      dataIndex: 'planningSeasonCode',
+      width: 100,
+      // sorter: (a, b) => a.planningSeasonCode.length - b.planningSeasonCode.length,
+      // sortDirections: ['descend', 'ascend'],
+      // ...getColumnSearchProps('planningSeasonCode'),
       align: 'center'
 
     },
     {
-        title: 'Currency Code',
-        dataIndex: "shahiConfirmedGrossPriceCurrencyCode",
-        align: 'center'
-  
-      },
+      title: 'Planning SeasonYear',
+      dataIndex: 'planningSeasonYear',
+      // sorter: (a, b) => a.planningSeasonYear.length - b.planningSeasonYear.length,
+      // sortDirections: ['descend', 'ascend'],
+      // ...getColumnSearchProps('planningSeasonYear'),
+      align: 'center'
+
+    },
+    {
+      title: 'Style Number',
+      dataIndex: 'styleNumber',
+      align: 'center'
+
+    },
+    {
+      title: 'Color Code',
+      dataIndex: 'colorCode',
+      align: 'center'
+    },
+    {
+      title: 'Size Description',
+      dataIndex: 'sizeDescription',
+      align: 'center',
+    },
+    {
+      title: 'Shahi Confirmed Gross Price',
+      dataIndex: "shahiConfirmedGrossPrice",
+      align: 'center'
+    },
+    {
+      title: 'Currency Code',
+      dataIndex: "shahiConfirmedGrossPriceCurrencyCode",
+      align: 'center'
+    },
     {
       title: "Status",
-      dataIndex: "isActive",width:80,
-
+      dataIndex: "isActive", width: 80,
       render: (isActive, rowData) => (
         <>
           {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -231,11 +216,9 @@ const FobPriceListGrid = () => {
       onFilter: (value, record) => {
         return record.isActive === value;
       }
-
-
     },
     {
-      title: "Actions",width:80,
+      title: "Actions", width: 80,
       render: (text, rowData, index: number) => {
         return <>
           <Tooltip title="Edit">
@@ -258,38 +241,31 @@ const FobPriceListGrid = () => {
             />
           </Popconfirm>
         </>
-
       }
     },
-
   ]
+
   return (
     <>
-  
       <div>
-
         <Card
-          extra={<span><Button onClick={() => navigate('/masters/fob-price-list-form/',{state:{name:'new'}})} type={'primary'}>New</Button></span>}
+          extra={<span><Button onClick={() => navigate('/masters/fob-price-list-form/', { state: { name: 'new' } })} type={'primary'}>New</Button></span>}
           headStyle={{ height: '50px' }}
-         // bodyStyle={{ height: '300px', paddingTop: '2px', paddingBottom: '5px' }}
-          // title={<h4 style={{ textAlign: 'left' }}>Fob Price List </h4>}
-          title={<><span>Fob Price List</span><span><Button onClick={() => navigate('/masters/fob-price-list-form',{state:{name:'excel'}})} style={{float:'right',marginRight:'2px'}} type='primary'>Excel Upload</Button></span></>}
+          title={<><span>Fob Price List</span><span><Button onClick={() => navigate('/masters/fob-price-list-form', { state: { name: 'excel' } })} style={{ float: 'right', marginRight: '2px' }} type='primary'>Excel Upload</Button></span></>}
         >
-
           <Table columns={Columns}
             dataSource={fob}
             className="custom-table-wrapper"
             bordered
             pagination={{
-              pageSize:50,
+              pageSize: 50,
               onChange(current, pageSize) {
-                  setPage(current);
-                  setPageSize(pageSize);
+                setPage(current);
+                setPageSize(pageSize);
               },
-          }}
-          // pagination={false}
-         scroll={{ x: 'max-content', y: 500}}
-
+            }}
+            // pagination={false}
+            scroll={{ x: 'max-content', y: 500 }}
           />
         </Card>
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='update' width={window.innerWidth > 768 ? '75%' : '85%'}
@@ -301,7 +277,6 @@ const FobPriceListGrid = () => {
         </Drawer>
       </div>
     </>
-
   )
 }
 
