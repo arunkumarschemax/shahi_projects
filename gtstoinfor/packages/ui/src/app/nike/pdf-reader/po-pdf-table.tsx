@@ -3,6 +3,7 @@ import { Button, Card, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import './pdf-reader.css'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { ArrowLeftOutlined } from '@ant-design/icons'
 
 export interface IPoPdfTableProps {
     data: LegalPoDetails
@@ -36,7 +37,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
 
     return (
         <Card>
-            <div><Button onClick={() => setMoreData()}><b>Back</b></Button></div>
+            <div><Button style={{backgroundColor:'#29397d',color:'white'}}   onClick={() => setMoreData()}><b><ArrowLeftOutlined />  Back</b></Button></div>
             <br />
             <table className='ta-b' style={{ width: '100%' }} >
                 <tr className='ta-b'>
