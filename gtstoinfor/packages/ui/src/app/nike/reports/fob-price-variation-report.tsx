@@ -116,7 +116,7 @@ export const FOBPriceVariationReport = () => {
         {
             title: 'Gross Price',
             dataIndex: 'grossPriceFob',
-            align: 'right',
+            align: 'center',
             render: (text, record) => {
                 return (
                     <>
@@ -128,7 +128,7 @@ export const FOBPriceVariationReport = () => {
         {
             title: 'Shahi Confirmed Gross Price',
             dataIndex: 'shahiConfirmedgrossPrice',
-            align: 'right',
+            align: 'center',
             render: (text, record) => {
                 return (
                     <>
@@ -246,8 +246,15 @@ export const FOBPriceVariationReport = () => {
                 {data.length > 0 ? (
                     <Table columns={columns} dataSource={data}
                     
-                        className="custom-table-wrapper" pagination={false}
-                        scroll={{ x: 'max-content', y: 600}}
+                        className="custom-table-wrapper" 
+                        
+                        scroll={{ x: 'max-content', y: 500}}
+                        pagination={{
+                            pageSize:50,
+                            onChange(current, pageSize) {
+                                setPage(current);
+                                setPageSize(pageSize);
+                            }}}
                         // summary={(pageData) => {
                         //     let totalDifference = 0;
 
