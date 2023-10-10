@@ -17,3 +17,8 @@ export enum StatusEnum {
 
 
  ]
+
+ export enum SubContractStatus {
+  YES = 'YES',
+  NO = 'NO',
+}
