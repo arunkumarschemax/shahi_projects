@@ -87,7 +87,9 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                 invoiceAmount: props.formData.invoiceAmount, igst: props.formData.igst, sgst: props.formData.sgst,
                 cgst: props.formData.cgst,
             })
-            props.form.setFieldValue('vendorCode', props?.formData.vendorCode);
+            getVendorCode(props.formData.venName)
+            // props.form.setFieldValue('vendorCode', props?.formData.vendorCode);
+
         }
     }, [props?.formData]);
 
@@ -103,6 +105,9 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                 charge: props.hsnData.charge, taxAmount: props.hsnData.taxAmount, quotation: props.hsnData.quotation,
                 variance: props.hsnData.variance,
             })
+
+            getVendorPrice(props.hsnData.venName)
+
         }
     }, [props?.hsnData]);
 
@@ -118,6 +123,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             if (res.status) {
                 setVendorCod(res.data?.vendorCode
                 );
+                console.log(res.data?.vendorCode)
+                props.form.setFieldsValue({venCod:res.data?.vendorCode})
             } else {
                 setVendorCod([]);
             }
@@ -153,6 +160,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
         venService.getPriceListByVendor(req).then((res) => {
             if (res.status) {
                 setPrice(res.data);
+                console.log(res.data?.unitPrice)
+                props.form.setFieldsValue({quotation:res.data?.unitPrice})
             } else {
                 setPrice([]);
             }
@@ -164,6 +173,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
 
     useEffect(() => {
         if (extractedData.length && price.length && extractionCompleted) {
+            console.log(extractedData)
             const extractedDataClone = [];
             extractedData.forEach(element => {
                 const obj = price.find(pr => pr.hsnCode == element.HSN && pr.serviceDescription == element.description)
