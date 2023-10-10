@@ -450,7 +450,7 @@ export function FabricTrackerReport() {
             }
           }}
           className="custom-table-wrapper"
-          scroll={{ x: 'max-content' ,y:600 }}
+          scroll={{ x: 'max-content' ,y:500 }}
           bordered
         ></Table>
       </Card>

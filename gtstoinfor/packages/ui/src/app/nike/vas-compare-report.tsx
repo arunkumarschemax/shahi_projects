@@ -480,7 +480,7 @@ const VASChangesCompareGrid = () => {
         {
             title: 'S No',
             key: 'sno',
-            width: '60px',
+            width: 60,
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),fixed:'left'
         },
         {
@@ -836,7 +836,7 @@ const VASChangesCompareGrid = () => {
         {
             title: 'S No',
             key: 'sno',
-            width: '60px',
+            width: 60,
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),fixed:'left'
         },{
             title: 'PO Number',
@@ -1022,7 +1022,7 @@ const VASChangesCompareGrid = () => {
         {
             key: '1',
             label: <b style={{ color: '#25CB2D' }}>VAS Text Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} pagination={false} scroll={{ x: 'max-content', y: 600}} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} pagination={false} scroll={{ x: 'max-content', y: 450}} />,
         },
         // {
         //     key: '2',
@@ -1047,7 +1047,7 @@ const VASChangesCompareGrid = () => {
         {
             key: '2',
             label: <b>Product Code Revised : {productCodeChaneData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={productCodeChaneData} columns={columns6} pagination={false} scroll={{ x: 'max-content', y: 600}} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={productCodeChaneData} columns={columns6} pagination={false} scroll={{ x: 1800, y: 450}} />,
         },
     ];
 
