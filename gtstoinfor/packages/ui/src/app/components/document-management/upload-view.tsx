@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { Alert, Button, Card, Col, Descriptions, Divider, Form, Input, message, Modal, Row, Select, Spin, Table, Tag, Typography, Upload, UploadProps,FormInstance, UploadFile, Radio, Tooltip } from 'antd';
 import { PDFDocument } from 'pdf-lib';
 import Papa from 'papaparse'
@@ -15,6 +15,7 @@ import { number } from 'prop-types';
 const { Title, Text } = Typography;
 import { saveAs } from 'file-saver';
 import axios, { AxiosRequestConfig } from 'axios';
+import { UploadChangeParam } from 'antd/es/upload';
 export interface UploadViewProps {
     form: FormInstance<any>
     docData: any;
@@ -292,17 +293,17 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
     // onDownload: handleFileDownload,
     beforeUpload: (file: any) => {
 
-      console.log(documentName);
-      if(documentName != undefined && documentName === "Mass Balance Sheet" && (!file.name.match(/\.(xlsx)$/) && !file.name.match(/\.(pdf)$/) && !file.name.match(/\.(PDF)$/)))
-        {
-            message.error("Only pdf & xlsx files are allowed!");
-            return true;
-        }
-      else if(documentName != "Mass Balance Sheet" && !file.name.match(/\.(pdf)$/) && !file.name.match(/\.(PDF)$/))
-        {
-            message.error("Only pdf files are allowed!");
-            return true;
-        }
+      // console.log(documentName);
+      // if(documentName != undefined && documentName === "Mass Balance Sheet" && (!file.name.match(/\.(xlsx)$/) && !file.name.match(/\.(pdf)$/) && !file.name.match(/\.(PDF)$/)))
+      //   {
+      //       message.error("Only pdf & xlsx files are allowed!");
+      //       return true;
+      //   }
+      // else if(documentName != "Mass Balance Sheet" && !file.name.match(/\.(pdf)$/) && !file.name.match(/\.(PDF)$/))
+      //   {
+      //       message.error("Only pdf files are allowed!");
+      //       return true;
+      //   }
         if (specialCharactersRegex.test(file.name)) {
           message.error("File name contains special characters. Please remove them.");
           return true;
@@ -354,9 +355,22 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
 
   const handleUpload = (documentsListId, info, docName) => {
     console.log(documentsListId);
-    console.log(info);
+    console.log(info)
+    console.log(info.file);
+    ;
     console.log(docName);
     setDocumentName(docName);
+    if(docName != undefined && docName === "Mass Balance Sheet" && (!info.file.name.match(/\.(xlsx)$/) && !info.file.name.match(/\.(pdf)$/) && !info.file.name.match(/\.(PDF)$/)))
+    {
+        message.error("Only pdf & xlsx files are allowed!");
+        // return true;
+    }
+  else if(docName != "Mass Balance Sheet" && !info.file.name.match(/\.(pdf)$/) && !info.file.name.match(/\.(PDF)$/))
+    {
+        message.error("Only pdf files are allowed!");
+        // return true;
+    }
+   
     // Handle the file upload for the specific documentListId
     // You can use the 'documentListId' to identify which row is being interacted with
   };
