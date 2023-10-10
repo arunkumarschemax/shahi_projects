@@ -11,6 +11,7 @@ import { Currencies } from "../currencies/currencies.entity";
 import { PaymentMethod } from "../payment-methods/payment-method-entity";
 import { PaymentTerms } from "../payment-terms/payment-terms.entity";
 import { CoLine } from "./co-line.entity";
+import { Buyers } from "../buyers/buyers.entity";
 
 @Entity('customer_order')
 export class StyleOrder{
@@ -170,6 +171,12 @@ export class StyleOrder{
     @JoinColumn({ name:"Payment_terms_id"})
     paymentTermsInfo: PaymentTerms;
 
+    @ManyToOne(type=>Buyers, buyer=>buyer.styleOrderInfo,{  nullable:false, })
+    @JoinColumn({ name:"buyer_id"})
+    buyerInfo: Buyers;
+
     @OneToMany(type=>CoLine, co=>co.styleOrderInfo,{cascade: true})
-    coLineInfo:CoLine;
+    coLineInfo:CoLine[];
+
+    
 }

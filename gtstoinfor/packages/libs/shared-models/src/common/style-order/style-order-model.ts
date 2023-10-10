@@ -30,8 +30,9 @@ export class StyleOrderModel{
     paymentMethodId: number;
     paymentTermId: number;
     styleOrderItems: StyleOrderItemsModel[];
+    buyerId: number;
 
-    constructor(styleOrderId: number,itemCode: string,orderDate : any,buyerPoNumber: string,shipmentType: string,buyerStyle : string,agent : string,buyerAddress : string,exFactoryDate: Date,deliveryDate: Date,instoreDate: Date,salePrice: number,priceQuantity: number,discountPercent: number,discountAmount: number,status: CustomerOrderStatusEnum,remarks: string,itemId: number,warehouseId: number,facilityId: number,styleId: number,packageTermsId: number,deliveryMethodId: number,deliverytermId: number,currencyId: number,paymentMethodId: number,paymentTermId: number,    styleOrderItems: StyleOrderItemsModel[]){
+    constructor(styleOrderId: number,itemCode: string,orderDate : any,buyerPoNumber: string,shipmentType: string,buyerStyle : string,agent : string,buyerAddress : string,exFactoryDate: Date,deliveryDate: Date,instoreDate: Date,salePrice: number,priceQuantity: number,discountPercent: number,discountAmount: number,status: CustomerOrderStatusEnum,remarks: string,itemId: number,warehouseId: number,facilityId: number,styleId: number,packageTermsId: number,deliveryMethodId: number,deliverytermId: number,currencyId: number,paymentMethodId: number,paymentTermId: number,styleOrderItems: StyleOrderItemsModel[],buyerId: number){
     this.styleOrderId = styleOrderId
     this.itemCode = itemCode
     this.orderDate = orderDate
@@ -60,5 +61,6 @@ export class StyleOrderModel{
     this.paymentMethodId = paymentMethodId
     this.paymentTermId = paymentTermId
     this.styleOrderItems = styleOrderItems
+    this.buyerId = buyerId;
     }
 }
