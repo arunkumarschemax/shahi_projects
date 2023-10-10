@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import bgImage from '../assets/images/boi-logo.jpg';
+import bgImage from '../assets/images/57573OCR.png';
 import { AxiosInstance } from '@xpparel/shared-services';
 import { useIAMClientState, LoginComponent } from './common';
 import { CustomSpinner } from './common/custom-spinner/custom-spinner';
@@ -41,7 +41,7 @@ function App() {
   </> :
     <div style={{
       backgroundColor: 'white',
-     // backgroundImage: `url(${bgImage})`,
+      backgroundImage: `url(${bgImage})`,
       backgroundSize: 'contain', // Image will be contained within the background
       backgroundRepeat: 'no-repeat', // Prevent image repetition
       backgroundPosition: 'center', // Center the image horizontally and vertically
