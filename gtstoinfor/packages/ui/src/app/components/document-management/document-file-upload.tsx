@@ -316,7 +316,8 @@ export default function DocumentListupload() {
   };
   const mergeAndDownloadPDFs = async (pathsData:any[]) => {
     try {
-      if(pathsData.length > 0){
+      console.log(pathsData.length)
+      if(Number(pathsData.length) > 0){
 
         console.log(pathsData);
         // Load the initial PDF file (you need to provide a valid URL)
@@ -371,11 +372,14 @@ export default function DocumentListupload() {
           saveAs(blob, 'PO-'+docData[0].customerPo+'.pdf');
       }
       else{
-        AlertMessages.getInfoMessage("Download access disabled. ");
-        console.log('test');
+        // AlertMessages.getInfoMessage("Download access disabled. ");
+        alert("Download access disabled. ")
+        // console.log('test');
       }
     } catch (error) {
-      console.error('Error merging and downloading PDFs:', error);
+      AlertMessages.getInfoMessage("No Document found. ");
+      alert("No Document found. ")
+      // console.error('Error merging and downloading PDFs:', error);
     }
   };
   const download = (data: any) => {
