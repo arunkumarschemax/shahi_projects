@@ -11,31 +11,26 @@ async createSampleDev(req: SampleDevelopmentRequest):Promise<any>{
     return this.axiosPostCall(this.URL +  '/createSampleDev',req)
 }
 
-        
 async getAllSampleDevData(req? : SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
-    return this.axiosPostCall(this.URL + "/getAllSampleDevData")
+    console.log(req,'shared service')
+    return this.axiosPostCall(this.URL + "/getAllSampleDevData",req)
 }
 
-async getReqNo():Promise<any>{
-    const reqData = [
-        {
-            reqNo:"REQ001"
-        },
-        {
-            reqNo:"REQ002"
-        },
-        {
-            reqNo:"REQ003"
-        },
-        {
-            reqNo:"REQ004"
-        }
-    ]
-    return reqData
-    // return this.axiosPostCall(this.URL + "/getAllSampleDevelopment")
+async getAllSampleReqNo():Promise<AllSampleDevReqResponseModel>{
+    return this.axiosPostCall(this.URL + "/getAllSampleReqNo")
+}
+
+async cancelSampleReqById(req : SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
+    return this.axiosPostCall(this.URL + "/cancelSampleReqById",req)
 }
         
+async getAllPCH():Promise<AllSampleDevReqResponseModel>{
+    return this.axiosPostCall(this.URL + "/getAllPCH")
+}
 
+async getAllStyleNo():Promise<AllSampleDevReqResponseModel>{
+    return this.axiosPostCall(this.URL + "/getAllStyleNo")
+}
         
 
 }

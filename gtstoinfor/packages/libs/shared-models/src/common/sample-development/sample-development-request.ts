@@ -25,6 +25,7 @@ export class SampleDevelopmentRequest{
     sampleRequestId? : number
     requestNo? : string
     facilityId? : number
+    
     status? : SampleDevelopmentStatusEnum
 
     constructor(

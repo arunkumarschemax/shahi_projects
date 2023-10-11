@@ -1,6 +1,7 @@
 import { CommonColumns } from "packages/services/common/common-columns.entity";
 import { Column, Entity, OneToMany } from "typeorm";
 import { Settings } from "../settings/settings.entity";
+import { StyleOrder } from "../style-order/style-order.entity";
 
 @Entity('factory')
 export class FactoriesEntity extends CommonColumns {
@@ -18,4 +19,7 @@ export class FactoriesEntity extends CommonColumns {
 
   @OneToMany(type => Settings, settings => settings.factoryInfo,{cascade: true})
   settingsInfo : Settings
+
+  @OneToMany(type=>StyleOrder, factory=>factory.factoryInfo,{cascade: true})
+  styleOrderInfo:StyleOrder;
 }

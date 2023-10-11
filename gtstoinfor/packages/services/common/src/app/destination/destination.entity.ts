@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { BuyersDestionations } from "../buyers-destination/buyers-destination.entity";
 import { ItemSkus } from "../sku-generation/sku-generation.entity";
+import { CoLine } from "../style-order/co-line.entity";
 @Entity('destination')
 export class Destination {
 
@@ -62,5 +63,8 @@ export class Destination {
 
     @OneToMany(type=>ItemSkus, item=>item.destinationInfo,{cascade: true})
     itemSkuInfo:ItemSkus;
+
+    @OneToMany(type=>CoLine, co=>co.destinationInfo,{cascade: true})
+    coLineInfo:CoLine;
 
 }

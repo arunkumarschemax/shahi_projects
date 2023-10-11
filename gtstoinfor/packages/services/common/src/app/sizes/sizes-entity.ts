@@ -2,6 +2,7 @@ import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne
 import { BuyersDestionations } from "../buyers-destination/buyers-destination.entity";
 import { BuyersSize } from "../buyers-destination/buyers-sizes.entity";
 import { ItemSkus } from "../sku-generation/sku-generation.entity";
+import { CoLine } from "../style-order/co-line.entity";
 
 @Entity('size')
 export class Size{
@@ -57,4 +58,7 @@ sizesInfo:BuyersSize;
 
 @OneToMany(type=>ItemSkus, item=>item.sizeInfo,{cascade: true})
 itemSkuInfo:ItemSkus;
+
+@OneToMany(type=>CoLine, co=>co.sizeInfo,{cascade: true})
+coLineInfo:CoLine;
 }

@@ -1,5 +1,6 @@
 import { UomCategoryEnum } from '@project-management-system/shared-models';
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, VersionColumn, OneToMany } from 'typeorm';
+import { CoLine } from '../style-order/co-line.entity';
 // import { CommonColumns } from '../../common/common-columns.entity';
 // import { UomCategoryEnum } from '@transport-management-system/shared-models';
 
@@ -82,4 +83,7 @@ export class UomEntity {
         name: 'updated_user_id'
     })
     updatedUserId: number | null;
+
+    @OneToMany(type=>CoLine, co=>co.uomInfo,{cascade: true})
+    coLineInfo:CoLine;
 }

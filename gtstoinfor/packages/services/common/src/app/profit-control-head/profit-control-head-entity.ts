@@ -1,6 +1,6 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 import { AccountControlObject } from "../account-control-objects/account-control-objects-entity";import { Settings } from "../settings/settings.entity";
-import { SampleRequest } from "../sample-dev-request/sample-dev-request.entity";
+import { SampleRequest } from "../sample-dev-request/entities/sample-dev-request.entity";
 
 
 @Entity('profit_control_head')

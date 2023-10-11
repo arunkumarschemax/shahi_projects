@@ -1,9 +1,9 @@
 export class ColorInfoReq{
-    colorId: number;
-    color:string;
+    colourId: number;
+    colour:string;
 
-    constructor(colorId: number,color:string){
-        this.colorId = colorId;
-        this.color = color;
+    constructor(colourId: number,colour:string){
+        this.colourId = colourId;
+        this.colour = colour;
     }
 }

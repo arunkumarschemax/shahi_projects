@@ -484,6 +484,18 @@ export const baseRouterList = [
                 path: "sku-list",
                 filepath: "sku-list",
             },
+            {
+                label: "Style Order Creation",
+                key: "style-order-creation",
+                path: "style-order-creation",
+                filepath: "style-order-creation",
+            },
+            {
+                label: "Style Order Grid",
+                key: "style-order-view",
+                path: "style-order-view",
+                filepath: "style-order-view",
+            },
            
         ]
     },

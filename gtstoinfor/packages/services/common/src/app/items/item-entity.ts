@@ -3,6 +3,7 @@ import { ItemCategory } from "../item-categories/item-categories.entity";
 import { ItemSubCategory } from "../item-sub-categories/item-sub-category.entity";
 import { OperationSequence } from "../operation-sequence/operation-sequence.entity";
 import { ItemSkus } from "../sku-generation/sku-generation.entity";
+import { StyleOrder } from "../style-order/style-order.entity";
 
 @Entity('items')
 export class Item {
@@ -106,6 +107,9 @@ export class Item {
 
   @OneToMany(type=>ItemSkus, item=>item.itemInfo,{cascade: true})
   itemSkuInfo:ItemSkus;
+
+  @OneToMany(type=>StyleOrder, item=>item.itemInfo,{cascade: true})
+  styleOrderInfo:StyleOrder;
 
 
 }
