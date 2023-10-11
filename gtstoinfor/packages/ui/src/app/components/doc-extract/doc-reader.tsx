@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Col, Form, Radio, Row, Upload, UploadProps, message, Spin, FormInstance } from 'antd';
+import { Button, Card, Col, Form, Radio, Row, Upload, UploadProps, message, Spin, FormInstance, Select } from 'antd';
 import { UploadOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import Tesseract from 'tesseract.js';
 import { pdfjs } from 'react-pdf';
-import { PriceListRequestModel } from '@xpparel/shared-models';
+import { PriceListRequestModel, VendorNameEnum } from '@xpparel/shared-models';
 import { PricesService, VendorNamereq, VendorService } from '@xpparel/shared-services';
 
 export interface DocReaderProps {
@@ -1198,7 +1198,12 @@ export const DocReader = (props: DocReaderProps) => {
                 }
 
                 const taxPercentageContent = extractedData[hsnId + 20].content;
-                const taxPercentage = parseFloat(taxPercentageContent.replace('%', ''));
+                let taxPercentage = parseFloat(taxPercentageContent.replace('%', ''));
+
+                // Check if taxPercentage is NaN or null and set it to 18 as a default
+                if (isNaN(taxPercentage) || taxPercentage === null) {
+                    taxPercentage = 18;
+                }
 
                 let igst = 0;
                 let cgst = 0;
@@ -1228,7 +1233,6 @@ export const DocReader = (props: DocReaderProps) => {
                     cgst: cgst,
                     sgst: sgst,
                 };
-
             }
             linesId += 1;
         }
@@ -1352,23 +1356,23 @@ export const DocReader = (props: DocReaderProps) => {
         let currentHSN = null;
         let hsnId = null;
         let linesId = 0;
-        
+
         for (const line of extractedData) {
             if (line.content.includes("996")) {
                 hsnId = linesId;
                 if (currentHSN) {
                     structuredHSNLines.push(currentHSN);
                 }
-        
+
                 const taxPercentageContent = extractedData[hsnId - 2].content;
                 const taxPercentageMatch = taxPercentageContent.match(/(\d+(\.\d+)?)/);
                 const taxPercentage = taxPercentageMatch ? parseFloat(taxPercentageMatch[0]) : 0;
-        
+
                 let igst = 0;
                 let cgst = 0;
                 let sgst = 0;
                 let taxType = "No Tax";
-        
+
                 if (taxPercentage === 18) {
                     igst = parseFloat(extractedData[hsnId + 6].content) || 0;
                     taxType = "IGST";
@@ -1377,24 +1381,24 @@ export const DocReader = (props: DocReaderProps) => {
                     sgst = parseFloat(extractedData[hsnId + 6].content) || 0;
                     taxType = "CGST & SGST";
                 }
-        
+
                 const taxAmountContent = extractedData[hsnId + 17].content.replace(/,/g, '');
                 const taxAmount = parseFloat(taxAmountContent).toFixed(2);
-        
+
                 const unitQuantityContent = extractedData[hsnId + 12].content;
                 const unitQuantity = parseFloat(unitQuantityContent) || 1;
-        
+
                 const charge = parseFloat(extractedData[hsnId + 14].content.replace(/,/g, ''));
                 const amount = parseFloat(extractedData[hsnId + 14].content.replace(/,/g, ''));
-        
+
                 // Calculate unitPrice
                 const unitPrice = (amount / unitQuantity).toFixed(2);
-        
+
                 currentHSN = {
                     description: extractedData[hsnId - 5].content,
                     HSN: line.content.includes("996") ? line.content.match(/\d+/) : line.content.trim(),
                     unitQuantity: unitQuantity,
-                    unitPrice: unitPrice, 
+                    unitPrice: unitPrice,
                     taxType: taxType,
                     charge: charge,
                     taxPercentage: taxPercentage,
@@ -1407,11 +1411,11 @@ export const DocReader = (props: DocReaderProps) => {
             }
             linesId += 1;
         }
-        
+
         if (currentHSN) {
             structuredHSNLines.push(currentHSN);
         }
-        
+
 
         const InvoiceLines = [];
         let currentInvoice = null;
@@ -1796,8 +1800,25 @@ export const DocReader = (props: DocReaderProps) => {
                                                     </Button>
                                                 )}
                                             </Row>
+
                                         </span>
                                     </Form.Item>
+                                </Col>
+                                <Col xs={{ span: 8 }}
+                                    sm={{ span: 8 }}
+                                    md={{ span: 8 }}
+                                    lg={{ span: 8 }}
+                                    xl={{ span: 8 }}>
+                                <Form.Item label="Vendors" name="vendors">
+                                    <Select
+                                    placeholder="Vendors"
+                                    >
+                                        {Object.keys(VendorNameEnum).map(vendors=>{
+                                            return <Select.Option value={VendorNameEnum[vendors]}>{VendorNameEnum[vendors]}</Select.Option>
+                                        })}
+
+                                    </Select>
+                                </Form.Item>
                                 </Col>
                             </Row>
                         </Form>
