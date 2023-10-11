@@ -238,7 +238,8 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'GAC',
-            dataIndex: 'gac'
+            dataIndex: 'gac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'CO Number',
@@ -384,11 +385,13 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'OGAC',
-            dataIndex: 'ogac'
+            dataIndex: 'ogac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'GAC',
-            dataIndex: 'gac'
+            dataIndex: 'gac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Total Item Quantity',
@@ -446,6 +449,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'GAC',
             dataIndex: 'gac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'CO Number',
@@ -659,12 +663,10 @@ const OrdersCompareGrid = () => {
             title: 'Factory',
             dataIndex: 'factory'
         },
-
         {
             title: 'Document Date',
             dataIndex: 'document_date',
             render: (text) => moment(text).format('MM/DD/YYYY')
-
         },
         {
             title: 'Style Number',
@@ -680,7 +682,8 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'GAC',
-            dataIndex: 'gac'
+            dataIndex: 'gac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Change from Total Item Quantity',
@@ -774,11 +777,14 @@ const OrdersCompareGrid = () => {
         {
             title: 'GAC',
             dataIndex: 'gac', width: 70,
+            render: (text) => moment(text).format('MM/DD/YYYY'),
             ...getColumnSearchProps('gac')
         },
         {
             title: 'CO Number',
             dataIndex: 'customer_order', width: 70,
+            render: (text) => moment(text).format('MM/DD/YYYY')
+
             //...getColumnSearchProps('po_number')
         },
         {
@@ -975,9 +981,9 @@ const OrdersCompareGrid = () => {
         {
             title: 'Document Date',
             dataIndex: 'documentDate',
+            render: (text) => moment(text).format('MM/DD/YYYY')
             //...getColumnSearchProps('factory')
         },
-
         {
             title: 'CO Number',
             dataIndex: '',
@@ -986,11 +992,13 @@ const OrdersCompareGrid = () => {
         {
             title: 'OGAC',
             dataIndex: 'ogac',
+            render: (text) => moment(text).format('MM/DD/YYYY'),
             ...getColumnSearchProps('ogac')
         },
         {
             title: 'GAC',
             dataIndex: 'gac',
+            render: (text) => moment(text).format('MM/DD/YYYY'),
             ...getColumnSearchProps('gac')
         },
         {
@@ -1003,8 +1011,8 @@ const OrdersCompareGrid = () => {
             dataIndex: '',
             ...getColumnSearchProps('')
         },
-
     ];
+
     const columns4: any = [
         {
             title: 'S No',
@@ -1031,12 +1039,10 @@ const OrdersCompareGrid = () => {
             title: 'Item No',
             dataIndex: 'item'
         },
-
         {
             title: 'Document Date',
             dataIndex: 'document_date',
             render: (text) => moment(text).format('MM/DD/YYYY')
-
         },
         {
             title: 'Style Number',
@@ -1052,11 +1058,13 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'OGAC',
-            dataIndex: 'ogac'
+            dataIndex: 'ogac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'GAC',
-            dataIndex: 'gac'
+            dataIndex: 'gac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Total Item Quantity',
@@ -1086,6 +1094,7 @@ const OrdersCompareGrid = () => {
         },
 
     ];
+
     const columns5: any = [
         {
             title: 'S No',
@@ -1125,6 +1134,7 @@ const OrdersCompareGrid = () => {
             title: 'Document Date',
             dataIndex: 'documentDate',
             width: 80,
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Total Iten Quantity',
@@ -1139,11 +1149,13 @@ const OrdersCompareGrid = () => {
         {
             title: 'OGAC',
             dataIndex: 'ogac', width: 80,
+            render: (text) => moment(text).format('MM/DD/YYYY'),
             ...getColumnSearchProps('ogac')
         },
         {
             title: 'GAC',
             dataIndex: 'gac', width: 80,
+            render: (text) => moment(text).format('MM/DD/YYYY'),
             ...getColumnSearchProps('gac')
         },
         {
@@ -1197,6 +1209,7 @@ const OrdersCompareGrid = () => {
             ...getColumnSearchProps('')
         },
     ];
+
     const columns6: any = [
         {
             title: 'S No',
@@ -1207,51 +1220,51 @@ const OrdersCompareGrid = () => {
         {
             title: 'PO Number',
             dataIndex: 'po_number',
-            ...getColumnSearchProps('po_number'), fixed: 'left',width: 80
+            ...getColumnSearchProps('po_number'), fixed: 'left', width: 80
         },
         {
             title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number', fixed: 'left',width: 80
+            dataIndex: 'po_line_item_number', fixed: 'left', width: 80
         },
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
-            render: (text) => moment(text).format('MM/DD/YYYY'),width: 80
+            render: (text) => moment(text).format('MM/DD/YYYY'), width: 80
         },
         {
             title: 'Item',
-            dataIndex: 'item',width: 80
+            dataIndex: 'item', width: 80
         },
         {
             title: 'Factory',
             dataIndex: 'factory',
-            ...getColumnSearchProps('factory'),width: 80
+            ...getColumnSearchProps('factory'), width: 80
         },
         {
             title: 'Document Date',
             dataIndex: 'document_date',
-            render: (text) => moment(text).format('MM/DD/YYYY'),width: 80
-
+            render: (text) => moment(text).format('MM/DD/YYYY'), width: 80
         },
-
         {
             title: 'Product Code',
-            dataIndex: 'product_code',width: 80
+            dataIndex: 'product_code', width: 80
         },
         {
             title: 'OGAC',
-            dataIndex: 'ogac',width: 80,
+            dataIndex: 'ogac', width: 80,
+            render: (text) => moment(text).format('MM/DD/YYYY'),
             ...getColumnSearchProps('ogac')
         },
         {
             title: 'GAC',
             dataIndex: 'gac',
+            render: (text) => moment(text).format('MM/DD/YYYY'),
             ...getColumnSearchProps('gac')
         },
         {
             title: 'Change from Inventory Segment Code',
             dataIndex: '', width: 100,
-            
+
         },
         {
             title: 'Change To Inventory Segment Code',
@@ -1293,9 +1306,8 @@ const OrdersCompareGrid = () => {
             dataIndex: '',
             // ...getColumnSearchProps('schedule_line_item_number')
         },
-        
-
     ];
+
     const columns7: any = [
         {
             title: 'S No',
@@ -1309,7 +1321,7 @@ const OrdersCompareGrid = () => {
             ...getColumnSearchProps('po_number'), fixed: 'left'
         },
         {
-            title: 'PO Line Item No', width:70,
+            title: 'PO Line Item No', width: 70,
             dataIndex: 'po_line_item_number', fixed: 'left'
         },
         {
@@ -1325,28 +1337,29 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'Factory',
-            dataIndex: 'factory', width:70,
+            dataIndex: 'factory', width: 70,
             ...getColumnSearchProps('factory')
         },
 
         {
             title: 'Product Code',
-            dataIndex: 'product_code', width:70,
+            dataIndex: 'product_code', width: 70,
             //...getColumnSearchProps('')
         },
         {
             title: 'GAC',
-            dataIndex: 'gac', width:70,
+            dataIndex: 'gac', width: 70,
+            render: (text) => moment(text).format('MM/DD/YYYY'),
             ...getColumnSearchProps('gac')
         },
         {
             title: 'CO Number',
-            dataIndex: 'customer_order', width:70,
+            dataIndex: 'customer_order', width: 70,
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Size Description',
-            dataIndex: 'size_description', width:70,
+            dataIndex: 'size_description', width: 70,
             // ...getColumnSearchProps('size_description')
         },
 
@@ -1358,67 +1371,67 @@ const OrdersCompareGrid = () => {
 
         {
             title: 'Change to Gross Price currency',
-            dataIndex: '', width:80,
+            dataIndex: '', width: 80,
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Shahi Offered Price from Master File  ',
-            dataIndex: '', width:80,
+            dataIndex: '', width: 80,
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Shahi Offered Price currency from Master File ',
-            dataIndex: '', width:80,
+            dataIndex: '', width: 80,
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change from Trading Co Net including discounts',
-            dataIndex: '', width:80,
+            dataIndex: '', width: 80,
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change from Trading Co Net including discounts currency',
-            dataIndex: '', width:80,
+            dataIndex: '', width: 80,
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change to Trading Co Net including discounts',
-            dataIndex: '', width:80,
+            dataIndex: '', width: 80,
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change to Trading Co Net including discounts currency',
-            dataIndex: '', width:80,
+            dataIndex: '', width: 80,
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change from Net including discounts',
-            dataIndex: '', width:80,
+            dataIndex: '', width: 80,
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change From Net including discounts currency',
-            dataIndex: '', width:80,
+            dataIndex: '', width: 80,
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change to Net including discounts',
-            dataIndex: '', width:80,
+            dataIndex: '', width: 80,
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'change to Net including discounts currency',
-            dataIndex: '', width:80,
+            dataIndex: '', width: 80,
             //...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Legal PDF PO Price',
-            dataIndex: '', width:70,
+            dataIndex: '', width: 70,
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Legal PDF PO Price Currency',
-            dataIndex: '', width:80,
+            dataIndex: '', width: 80,
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         // {
@@ -1433,27 +1446,27 @@ const OrdersCompareGrid = () => {
         // },
         {
             title: 'comparission of CRM CO Price to Legal PDF PO Price',
-            dataIndex: '', width:80,
+            dataIndex: '', width: 80,
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Schedule Line Item No',
-            dataIndex: 'schedule_line_item_number', width:80,
+            dataIndex: 'schedule_line_item_number', width: 80,
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Previous Line Item Status',
             dataIndex: 'old_val',
-            align: 'center', width:70,
+            align: 'center', width: 70,
         },
         {
             title: 'Revised Line Item Status',
-            dataIndex: 'new_val', align: 'center', width:70,
+            dataIndex: 'new_val', align: 'center', width: 70,
         },
         {
             title: 'Order Quantity Pieces',
             dataIndex: 'total_item_qty',
-            align: 'right', width:80,
+            align: 'right', width: 80,
             render: (text, record) => (
                 <>
                     {Number(record.total_item_qty).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
@@ -1461,10 +1474,7 @@ const OrdersCompareGrid = () => {
             )
 
         },
-
     ];
-
-
 
     const EstimatedETDDate = (value) => {
         if (value) {
@@ -1571,7 +1581,6 @@ const OrdersCompareGrid = () => {
                     }
                 },
             },
-
             {
                 title: 'Style Number',
                 dataIndex: 'styleNumber',
@@ -1587,10 +1596,12 @@ const OrdersCompareGrid = () => {
             {
                 title: 'OGAC',
                 dataIndex: 'OGAC',
+                render: (text) => moment(text).format('MM/DD/YYYY')
             },
             {
                 title: 'GAC',
                 dataIndex: 'GAC',
+                render: (text) => moment(text).format('MM/DD/YYYY')
             },
             {
                 title: 'Destination Country',
@@ -1636,6 +1647,7 @@ const OrdersCompareGrid = () => {
             //     ),
             // },
         ]
+
         const columns: any = [
             {
                 title: 'S No',
@@ -1703,10 +1715,12 @@ const OrdersCompareGrid = () => {
             {
                 title: 'OGAC',
                 dataIndex: 'OGAC', width: 70,
+                render: (text) => moment(text).format('MM/DD/YYYY')
             },
             {
                 title: 'GAC',
                 dataIndex: 'GAC', width: 70,
+                render: (text) => moment(text).format('MM/DD/YYYY')
             },
             {
                 title: 'Destination Country',
@@ -1763,7 +1777,6 @@ const OrdersCompareGrid = () => {
                 key: version,
                 width: 130,
                 align: 'center',
-
                 children: [
                     {
                         title: 'Old Quantity',
@@ -1789,7 +1802,6 @@ const OrdersCompareGrid = () => {
                             }
                         }
                     },
-
                     {
                         title: 'New Quantity',
                         dataIndex: 'newQuantity',
@@ -1814,7 +1826,6 @@ const OrdersCompareGrid = () => {
                             }
                         }
                     },
-
                     {
                         title: 'Difference',
                         dataIndex: 'difference',
@@ -1926,11 +1937,9 @@ const OrdersCompareGrid = () => {
                     return record.sizeWiseData.find(item => item.sizeDescription === version);
                 }
             });
-
         });
         return (
             <>
-
                 {filterData.length > 0 ? (
                     <Table
                         columns={columns}
@@ -1980,12 +1989,12 @@ const OrdersCompareGrid = () => {
             key: '5',
             label: <b style={{ color: '#B229DE' }}>Price & currency change in FOB : {priceChaneData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={priceChaneData} pagination={{
-                pageSize:50,
+                pageSize: 50,
                 onChange(current, pageSize) {
                     setPage(current);
                     setPageSize(pageSize);
                 }
-            }} columns={columns2}  scroll={{ x: 'max-content', y: 500 }} />,
+            }} columns={columns2} scroll={{ x: 'max-content', y: 500 }} />,
         },
         {
             key: '6',
@@ -2052,9 +2061,7 @@ const OrdersCompareGrid = () => {
                             icon={<UndoOutlined />}
                             htmlType="submit"
                             onClick={onReset}>Reset</Button>
-
                     </Col>
-
                 </Row>
             </Form> */}
             {filteredQtyData || unitChangeData || itemChangeData || poStatusData ? <>
@@ -2065,7 +2072,6 @@ const OrdersCompareGrid = () => {
                     <p>{itemText}</p>
                 </Card>
             </Modal>
-
         </Card>
     );
 };
