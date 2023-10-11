@@ -20,14 +20,15 @@ import { UomEntity } from "../uom/uom-entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { GenericTransactionManager } from "../../typeorm-transactions";
+import { StyleOrderRepository } from "./style-order-repo";
 
 @Injectable()
 
 export class StyleOrderService{
     constructor(
-        // private styleRepo:StyleRepository
-        @InjectRepository(StyleOrder)
-        private repo : Repository<StyleOrder>,
+        private repo:StyleOrderRepository,
+        // @InjectRepository(StyleOrder)
+        // private repo : Repository<StyleOrder>,
         private readonly dataSource: DataSource,
 
     ){}
@@ -36,6 +37,8 @@ export class StyleOrderService{
         const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
         try{
             await transactionalEntityManager.startTransaction();
+            const getCOLineCount = await this.repo.getAllCOCount()
+            const maxId = getCOLineCount.id
             const entity = new StyleOrder()
             entity.itemCode = req.itemCode;
             entity.orderDate = req.orderDate;
@@ -68,7 +71,7 @@ export class StyleOrderService{
             packageTerms.packageTermsId = req.packageTermsId
             entity.packageTermsInfo = packageTerms
             const deliveryTerms = new DeliveryTerms()
-            deliveryTerms.deliveryTermsId - req.deliverytermId
+            deliveryTerms.deliveryTermsId = req.deliverytermId
             entity.deliveryTermsInfo = deliveryTerms
             const deliveryMethod = new DeliveryMethod()
             deliveryMethod.deliveryMethodId = req.deliveryMethodId
@@ -85,9 +88,11 @@ export class StyleOrderService{
             const buyer = new Buyers()
             buyer.buyerId = req.buyerId
             entity.buyerInfo = buyer
-            const itemsEntity = new CoLine()
-            const coLineItem = []
+            let coLineItem  = []
+            let val = 0
             for(const rec of req.styleOrderItems){
+                val = val+1
+                const itemsEntity = new CoLine()
                 itemsEntity.deliveryAddress = rec.deliveryAddress
                 itemsEntity.orderQuantity = rec.orderQuantity
                 itemsEntity.color = rec.color
@@ -109,9 +114,27 @@ export class StyleOrderService{
                 const uom = new UomEntity()
                 uom.id = rec.uomId
                 itemsEntity.uomInfo = uom
+                if(rec.styleOrderItemId){
+                    itemsEntity.id = rec.styleOrderItemId
+                    const styleOrderEntity = new StyleOrder()
+                    styleOrderEntity.id = req.styleOrderId
+                    itemsEntity.styleOrderInfo = styleOrderEntity
+                    itemsEntity.updatedUser = req.createdUser
+
+                } else{
+                    itemsEntity.coLineNumber = `Line-${val}`
+                    itemsEntity.createdUser = req.createdUser
+                }
                 coLineItem.push(itemsEntity)
             }
             entity.coLineInfo = coLineItem
+            if(req.styleOrderId){
+                entity.id = req.styleOrderId
+                entity.updatedUser = req.createdUser
+            } else{
+                entity.coNumber = `CO-${Number(maxId)+1}`
+                entity.createdUser = req.createdUser
+            }
             const save = await transactionalEntityManager.getRepository(StyleOrder).save(entity)
             if(!save){
                 await transactionalEntityManager.releaseTransaction()

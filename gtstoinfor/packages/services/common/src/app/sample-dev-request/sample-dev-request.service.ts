@@ -41,6 +41,10 @@ export class SampleRequestService {
     async getAllSampleDevData(request? : SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
       try{
           const details = await this.sampleRepo.getAllSampleDevData(request)
+          // for(const data of details){
+          //   data.samplereqsizeinfo = await this.sizerepo.getAllSizeData(data.sampleId)
+          //   data.samplereqfabricinfo = await this.fabricRepo.getAllFabricData(data.sampleId)
+          // }
           if(details.length > 0){
               return new AllSampleDevReqResponseModel(true,0,'All Sample Requests retrieved successfully',details)
           } else {

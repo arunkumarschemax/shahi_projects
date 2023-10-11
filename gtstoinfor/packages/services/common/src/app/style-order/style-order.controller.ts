@@ -2,7 +2,7 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { StyleOrderService } from "./style-order.service";
-import { CommonResponseModel, StyleOrderResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, StyleOrderReq, StyleOrderResponseModel } from "@project-management-system/shared-models";
 
 @ApiTags('styleOrder')
 @Controller('styleOrder')
