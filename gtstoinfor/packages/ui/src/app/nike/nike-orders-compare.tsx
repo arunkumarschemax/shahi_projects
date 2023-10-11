@@ -1657,22 +1657,6 @@ const OrdersCompareGrid = () => {
                 fixed: 'left'
             },
             {
-                title: 'PO Number',
-                dataIndex: 'purchaseOrderNumber',
-                width: 70, fixed: 'left',
-                ...getColumnSearchProps('purchaseOrderNumber')
-            },
-            {
-                title: 'PO Line Item No', width: 70, fixed: 'left',
-                dataIndex: 'poLineItemNumber', align: 'center'
-            },
-            {
-                title: 'Schedule Line Item No',
-                dataIndex: 'scheduleLineItemNumber', width: 75,
-                align: 'center',
-                ...getColumnSearchProps('scheduleLineItemNumber')
-            },
-            {
                 title: 'Report Generate Date',
                 dataIndex: 'created_at', width: 70,
                 render: (text) => moment(text).format('MM/DD/YYYY'),
@@ -1699,7 +1683,22 @@ const OrdersCompareGrid = () => {
                     }
                 },
             },
-
+            {
+                title: 'PO Number',
+                dataIndex: 'purchaseOrderNumber',
+                width: 70,
+                ...getColumnSearchProps('purchaseOrderNumber')
+            },
+            {
+                title: 'PO Line Item No', width: 70,
+                dataIndex: 'poLineItemNumber', align: 'center'
+            },
+            {
+                title: 'Document Date',
+                dataIndex: 'documentDate', width: 75,
+                align: 'center',
+                render: (text) => moment(text).format('MM/DD/YYYY'),
+            },
             {
                 title: 'Style Number',
                 dataIndex: 'styleNumber', width: 70,
@@ -1726,48 +1725,7 @@ const OrdersCompareGrid = () => {
                 title: 'Destination Country',
                 dataIndex: 'destinationCountry', width: 70,
                 align: 'center',
-            },
-            {
-                title: 'Item Text',
-                dataIndex: 'itemText',
-                width: 220,
-                align: 'center',
-                render: (text, record) => {
-                    return (
-                        <>
-                            {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
-                                {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
-                            </span></p></Tooltip></>) : (<>{record.itemText}</>)}
-                        </>
-                    )
-                }
-            },
-
-            // {
-            //     title: 'Difference',
-            //     dataIndex: 'Diff',
-            //     align: 'right',
-            //     render: (text, record) => (
-            //         < >
-            //             {Number(record.Diff) === 0 ? '-' : ''}
-            //             {Number(record.Diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.Diff).toLocaleString('en-IN', {
-            //                 maximumFractionDigits: 0
-            //             })} </span> : ''}
-            //             {Number(record.Diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.Diff).toLocaleString('en-IN', {
-            //                 maximumFractionDigits: 0
-            //             })} </span> : ''}
-            //         </>
-            //     )
-            // },
-
-            // {
-            //     title: 'Total Quantity',
-            //     align: 'right',
-            //     dataIndex: 'totalQuantity',
-            //     render: (text) => (
-            //         <span>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
-            //     ),
-            // },
+            }
         ];
 
         sizeHeaders?.forEach(version => {
@@ -1851,10 +1809,6 @@ const OrdersCompareGrid = () => {
                             }
                         }
                     }
-
-
-
-
                 ],
                 render: (text, record) => {
                     return record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1938,6 +1892,24 @@ const OrdersCompareGrid = () => {
                 }
             });
         });
+
+        columns.push(
+            {
+                title: 'Item Text',
+                dataIndex: 'itemText',
+                width: 220,
+                align: 'center',
+                render: (text, record) => {
+                    return (
+                        <>
+                            {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
+                                {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
+                            </span></p></Tooltip></>) : (<>{record.itemText}</>)}
+                        </>
+                    )
+                }
+            }
+        )
         return (
             <>
                 {filterData.length > 0 ? (
