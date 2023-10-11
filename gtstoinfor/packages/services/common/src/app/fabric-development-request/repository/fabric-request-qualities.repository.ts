@@ -11,6 +11,14 @@ export class FabricRequestQualitiesRepository extends Repository<FabricRequestQu
     ) {
         super(FabricQualitiesRepo.target, FabricQualitiesRepo.manager, FabricQualitiesRepo.queryRunner);
     }
+
+    async getAllCount(): Promise<any> {
+        const query =  this.createQueryBuilder('fabric_req_qualities')
+            .select(`MAX(fabric_req_quality_id) as fabric_req_quality_id`)
+            .orderBy(` created_at`, 'DESC')
+        return await query.getRawOne()
+
+    }
  
 
 }

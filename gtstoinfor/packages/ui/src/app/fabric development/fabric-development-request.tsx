@@ -4,6 +4,7 @@ import {
   Card,
   Col,
   Form,
+  FormInstance,
   Input,
   Row,
   Select,
@@ -14,26 +15,33 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import FabricDevelopmentTabs from "./fabric-development-tabs";
-import { BuyersService, EmployeeDetailsService, FabricTypeService, LocationsService, ProfitControlHeadService } from "@project-management-system/shared-services";
+import { BuyersService, EmployeeDetailsService, FabricDevelopmentService, FabricTypeService, LocationsService, ProfitControlHeadService, StyleService } from "@project-management-system/shared-services";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link } from "react-router-dom";
 import FabricDevelopmentRequestQuality from "./fabric-development-quality-request";
+import { FabricDevelopmentRequestModel, StatusEnum } from "@project-management-system/shared-models";
+
+export interface FabricDevelopmentRequestProps {
+  
+}
 
 
 
 
-export const FabricDevelopmentRequest = () => {
+export const FabricDevelopmentRequest = (props:FabricDevelopmentRequestProps) => {
   const [form] = Form.useForm();
   const [pchData,setPchData] = useState<any>([])
   const [BuyerData,setBuyerData] = useState<any>([])
   const [fabricTypeData,setFabricTypeData] = useState<any>([])
   const [empData,setEmpData] = useState<any>([])
   const [locationData,setLocationData] = useState<any>([])
+  const [styleData,setstyleData] = useState<any>([])
+  const [qualitieData,setqualitieData] = useState<any>()
   const [pollutionFilelist,setPollutionFilelist] = useState<any[]>([]);
+  const [disable, setDisable] = useState<boolean>(false)
 
 
 
-   
 
 
     const Pchservice =new ProfitControlHeadService();
@@ -41,12 +49,55 @@ export const FabricDevelopmentRequest = () => {
     const fabrictypeservice = new FabricTypeService();
     const empDetailsservice = new EmployeeDetailsService();
     const locationservice = new LocationsService();
+    const styleservice =  new StyleService()
+    const service = new FabricDevelopmentService()
 
+   
+    
+
+
+
+
+    const onFinish = (values:any) => {
+      const data =[]
+      Object.values(qualitieData).forEach(val => { data.push(val)});
+
+      const req = new FabricDevelopmentRequestModel (values.locationId,values.styleId,values.pchId,values.buyerId,values.type,1,values.remarks,values.fabricResponsible,1,values.lightSourcePrimary,values.lightSourceSecondary,values.lightSourceTertiary,"","",data,StatusEnum.OPEN)
+  
+      service.createFabricDevelopmentRequest(req).then((res)=>{
+        setDisable(false)
+
+         if (res.status){
+          // window.location.reload();
+          onReset()
+          // props.dynamicForm.resetFields()
+          message.success(res.internalMessage);
+         
+      } else{
+  
+        AlertMessages.getErrorMessage(res.internalMessage);
+         }
+    }).catch(err => {
+  
+       AlertMessages.getErrorMessage(err.message);
+     })
+    
+    }
 
     const itemsInfo = (data) => {
     console.log(data,"items")
   }
 
+  const qualities = (data) => {
+    console.log(data,"request")
+    setqualitieData(data)
+  }
+  console.log(qualitieData,"request11")
+
+  
+
+  
+  
    
     useEffect (()=>{
       getAllActiveProfitControlHead();
@@ -54,6 +105,8 @@ export const FabricDevelopmentRequest = () => {
       getAllActiveFabricType();
       getAllActiveEmploee();
       getAllActiveLocations();
+      getAllstyle()
+
     },[])
   
   
@@ -131,6 +184,23 @@ const getAllActiveLocations=() =>{
  })
 
 }
+
+const getAllstyle=() =>{
+  styleservice.getAllActiveStyle().then(res =>{
+  if (res.status){
+    setstyleData(res.data);
+     
+  } else{
+    AlertMessages.getErrorMessage(res.internalMessage);
+     }
+}).catch(err => {
+  setstyleData([]);
+   AlertMessages.getErrorMessage(err.message);
+ })
+
+}
+
+
   
 console.log(locationData,"143")
   
@@ -179,10 +249,8 @@ console.log(locationData,"143")
   const onReset = () => {
     form.resetFields();
   };
+  
 
-  const onFinish = (values) => {
-    console.log(values, "values");
-  };
 
   
   return (
@@ -231,17 +299,6 @@ console.log(locationData,"143")
               </Form.Item>
             </Col>
 
-            {/* <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 4 }}
-            >
-              <Form.Item label="Request No" name="Requestno">
-                <Input placeholder="Request No" allowClear disabled={true} />
-              </Form.Item>
-            </Col> */}
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
@@ -249,8 +306,15 @@ console.log(locationData,"143")
               lg={{ span: 4 }}
               xl={{ span: 4 }}
             >
-              <Form.Item label="User" name="user">
-                <Input placeholder="User" allowClear />
+              <Form.Item label="Style" name="styleId">
+              <Select placeholder="Style" allowClear>
+              {styleData.map((rec) => (
+                  <option key={rec.styleId} value={rec.styleId}>
+                    {rec.style}
+                   </option>
+                       ))}      
+  
+              </Select>
               </Form.Item>
             </Col>
             <Col
@@ -476,14 +540,14 @@ console.log(locationData,"143")
               </Form.Item>
             </Col> */}
           </Row>
-          {/* <div>
-            <FabricDevelopmentTabs key="1" />
-          </div> */}
-          <Card>
+          <div>
+            <FabricDevelopmentTabs key="1"  qualities={qualities}/>
+          </div>
+          {/* <Card>
           <div>
             <FabricDevelopmentRequestQuality itemsInfo = {itemsInfo} />
           </div>
-          </Card>
+          </Card> */}
         </Card>
 
         <Row justify="end">

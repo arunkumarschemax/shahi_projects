@@ -3,28 +3,28 @@ import { FabricQuantitiesInfo, QualitiesEnum } from "@project-management-system/
 
 export class FabricRequestQualitiesRequest {
  
-    Quality: QualitiesEnum;
+    quality: QualitiesEnum;
     placement: string;
     width: number;
-    FabricDescription: string;
+    fabricDescription: string;
     description: string;
     qualitiesInfo:FabricQuantitiesInfo[];
     FabricCode?: string;
     fabricRequestQualityId?: number;
 
-    constructor(Quality: QualitiesEnum,
+    constructor(quality: QualitiesEnum,
         placement: string,
         width: number,
-        FabricDescription: string,
+        fabricDescription: string,
         description: string,
         qualitiesInfo:FabricQuantitiesInfo[],
         FabricCode?: string,
         fabricRequestQualityId?: number){
       
-        this.Quality = Quality
+        this.quality = quality
         this.placement = placement
         this.width = width
-        this.FabricDescription = FabricDescription
+        this.fabricDescription = fabricDescription
         this.description = description
         this.qualitiesInfo = qualitiesInfo
         this.FabricCode = FabricCode

@@ -12,7 +12,7 @@ export class FabricRequestQualitiesInfoEntity {
 
     @Column("int", {
         name: "style_id",
-        nullable: false,
+        nullable: true,
 
       })
     styleId: number;
