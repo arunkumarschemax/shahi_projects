@@ -349,5 +349,9 @@ export class NikeService extends CommonAxiosService {
     async getPpmAllPo(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmAllPo")
     }
+    
+    async getPpmAllPoForVas(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmAllPoForVas")
+    }
 }
 

@@ -28,29 +28,31 @@ const VASChangesCompareGrid = () => {
     const { Text } = Typography;
     const { RangePicker } = DatePicker
     const { Option } = Select
-    const [poLine, setPoLine] = useState<any>([]);
     const [productCodeChaneData, setProductCodeChangeData] = useState([])
+    const [poNumber, setPoNumber] = useState<any>([]);
+
 
 
 
     useEffect(() => {
-        poLineItemStatusChange()
+       // poLineItemStatusChange()
         getQtyChangeData()
-        getUnitChangeData()
-        getItemChangeData()
-        getPoLine()
         PlantCodeChange()
+        //getUnitChangeData()
+        //getItemChangeData()
+        getPoNum()
+        
     }, [])
 
-    const getPoLine = () => {
-        service.getPpmPoLineForNikeOrder().then(res => {
-            setPoLine(res.data)
+    const getPoNum = () => {
+        service.getPpmAllPoForVas().then(res => {
+            setPoNumber(res.data)
         })
     }
     const getQtyChangeData = () => {
         const req = new nikeFilterRequest();
-        if (form.getFieldValue('poandLine') !== undefined) {
-            req.poandLine = form.getFieldValue('poandLine');
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
         }
         service.getTotalItemQtyChangeData(req).then((res) => {
             setQtyData(res.data)
@@ -159,7 +161,7 @@ const VASChangesCompareGrid = () => {
         },
         {
             title: 'Total Item Quantity',
-            dataIndex: 'totalItemQty',
+            dataIndex: 'totalQuantity',
         },
         {
             title: 'Product Code',
@@ -516,7 +518,13 @@ const VASChangesCompareGrid = () => {
         
         {
             title: 'Total Item Quantity',
-            dataIndex: 'totalItemQty',width:70,
+            dataIndex: 'totalQuantity',width:70,align:'right',render: (text, record) => {
+                if (!text || text.trim() === '') {
+                  return '-';
+                } else {
+                  return <strong>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</strong>;
+                }
+              },
         },
         {
             title: 'Product Code',
@@ -574,61 +582,61 @@ const VASChangesCompareGrid = () => {
         // },
         {
             title: 'Schedule Line Item No',
-            dataIndex: 'schedule_line_item_number',width:80,
-            ...getColumnSearchProps('schedule_line_item_number')
+            dataIndex: 'scheduleLineItemNumber',width:80,
+            ...getColumnSearchProps('scheduleLineItemNumber')
         },
-        {
-            title: 'Previous Order Quantity Pieces',width:80,
-            dataIndex: 'old_val',
-            align: 'right',
-        },
-        {
-            title: 'Revised Order Quantity Pieces',
-            dataIndex: 'new_val',width:80,
-            align: 'right',
-            render: (text, record) => (
-                <span  {...record.new_val}>
-                    <>
-                        {Number(record.old_val) === Number(record.new_val) ? <span style={{ color: '' }}>{Number(record.new_val).toLocaleString('en-IN', {
-                            maximumFractionDigits: 0
-                        })}</span> : ''}
-                        {Number(record.old_val) < Number(record.new_val) ? <span style={{ color: 'green' }}>{Number(record.new_val).toLocaleString('en-IN', {
-                            maximumFractionDigits: 0
-                        })}</span> : ''}
-                        {Number(record.old_val) > Number(record.new_val) ? <span style={{ color: 'red' }}>{Number(record.new_val).toLocaleString('en-IN', {
-                            maximumFractionDigits: 0
-                        })}</span> : ''}
-                    </>
-                </span>
-            )
-        },
-        {
-            title: 'Difference',
-            dataIndex: 'Diff',
-            align: 'right',width:80,
-            render: (text, record) => (
-                < >
-                    {Number(record.Diff) === 0 ? '-' : ''}
-                    {Number(record.Diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.Diff).toLocaleString('en-IN', {
-                        maximumFractionDigits: 0
-                    })} </span> : ''}
-                    {Number(record.Diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.Diff).toLocaleString('en-IN', {
-                        maximumFractionDigits: 0
-                    })} </span> : ''}
-                </>
-            )
-        },
+        // {
+        //     title: 'Previous Order Quantity Pieces',width:80,
+        //     dataIndex: 'old_val',
+        //     align: 'right',
+        // },
+        // {
+        //     title: 'Revised Order Quantity Pieces',
+        //     dataIndex: 'new_val',width:80,
+        //     align: 'right',
+        //     // render: (text, record) => (
+        //     //     <span  {...record.new_val}>
+        //     //         <>
+        //     //             {Number(record.old_val) === Number(record.new_val) ? <span style={{ color: '' }}>{Number(record.new_val).toLocaleString('en-IN', {
+        //     //                 maximumFractionDigits: 0
+        //     //             })}</span> : ''}
+        //     //             {Number(record.old_val) < Number(record.new_val) ? <span style={{ color: 'green' }}>{Number(record.new_val).toLocaleString('en-IN', {
+        //     //                 maximumFractionDigits: 0
+        //     //             })}</span> : ''}
+        //     //             {Number(record.old_val) > Number(record.new_val) ? <span style={{ color: 'red' }}>{Number(record.new_val).toLocaleString('en-IN', {
+        //     //                 maximumFractionDigits: 0
+        //     //             })}</span> : ''}
+        //     //         </>
+        //     //     </span>
+        //     // )
+        // },
+        // {
+        //     title: 'Difference',
+        //     dataIndex: 'Diff',
+        //     align: 'right',width:80,
+        //     render: (text, record) => (
+        //         < >
+        //             {Number(record.Diff) === 0 ? '-' : ''}
+        //             {Number(record.Diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.Diff).toLocaleString('en-IN', {
+        //                 maximumFractionDigits: 0
+        //             })} </span> : ''}
+        //             {Number(record.Diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.Diff).toLocaleString('en-IN', {
+        //                 maximumFractionDigits: 0
+        //             })} </span> : ''}
+        //         </>
+        //     )
+        // },
         // {
         //     title: 'Version',
         //     dataIndex: 'version',
         //     sorter: (a, b) => a.version - b.version,
         //     sortDirections: ['descend', 'ascend'],
         // },
-        {
-            title: 'Order Status',width:80,
-            dataIndex: 'dpom_item_line_status',
-            // render: (value) => <Tag color={value == 'ACCEPTED' ? 'green' : 'green-inverse'} >{value}</Tag>
-        }
+        // {
+        //     title: 'Order Status',width:80,
+        //     dataIndex: 'dpom_item_line_status',
+        //     // render: (value) => <Tag color={value == 'ACCEPTED' ? 'green' : 'green-inverse'} >{value}</Tag>
+        // }
     ];
 
     const columns1: any = [
@@ -996,32 +1004,36 @@ const VASChangesCompareGrid = () => {
         }
     }
 
-    const getFilterdData = () => {
-        let orderStatus = form.getFieldValue('orderStatus');
-        let startDate = selectedEstimatedFromDate;
-        let endDate = selectedEstimatedToDate;
-        let filteredItemChangeData = itemChangeData;
-        let filteredQtyData = qtyData
-        let filteredPOStatusData = poStatusData
-        if (orderStatus) {
-            filteredItemChangeData = itemChangeData.filter(record => record.order_status === orderStatus);
-            filteredQtyData = filteredQtyData.filter(record => record.order_status === orderStatus)
-            filteredPOStatusData = poStatusData.filter(record => record.order_status === orderStatus)
-            setItemChangeData(filteredItemChangeData);
-            setFilteredQtyData(filteredQtyData)
-            setFilteredPOStatusData(filteredPOStatusData)
-        }
-        if (startDate && endDate) {
-            console.log(filteredQtyData)
-            filteredItemChangeData = itemChangeData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate);
-            filteredQtyData = filteredQtyData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
-            filteredPOStatusData = poStatusData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
-            setItemChangeData(filteredItemChangeData);
-            setFilteredQtyData(filteredQtyData)
-            setFilteredPOStatusData(filteredPOStatusData)
-        }
-    }
+    // const getFilterdData = () => {
+    //     let orderStatus = form.getFieldValue('orderStatus');
+    //     let startDate = selectedEstimatedFromDate;
+    //     let endDate = selectedEstimatedToDate;
+    //     let filteredItemChangeData = itemChangeData;
+    //     let filteredQtyData = qtyData
+    //     let filteredPOStatusData = poStatusData
+    //     if (orderStatus) {
+    //         filteredItemChangeData = itemChangeData.filter(record => record.order_status === orderStatus);
+    //         filteredQtyData = filteredQtyData.filter(record => record.order_status === orderStatus)
+    //         filteredPOStatusData = poStatusData.filter(record => record.order_status === orderStatus)
+    //         setItemChangeData(filteredItemChangeData);
+    //         setFilteredQtyData(filteredQtyData)
+    //         setFilteredPOStatusData(filteredPOStatusData)
+    //     }
+    //     if (startDate && endDate) {
+    //         console.log(filteredQtyData)
+    //         filteredItemChangeData = itemChangeData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate);
+    //         filteredQtyData = filteredQtyData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
+    //         filteredPOStatusData = poStatusData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
+    //         setItemChangeData(filteredItemChangeData);
+    //         setFilteredQtyData(filteredQtyData)
+    //         setFilteredPOStatusData(filteredPOStatusData)
+    //     }
+    // }
 
+    const getFilterdData = () =>{
+        getQtyChangeData()
+        PlantCodeChange()
+    }
     const items: TabsProps['items'] = [
         {
             key: '1',
@@ -1070,40 +1082,44 @@ const VASChangesCompareGrid = () => {
             style={{ color: 'green' }}
             onClick={exportExcel}
             icon={<FileExcelFilled />}>Download Excel</Button>)}>
-            {/* <Form form={form} layout={"vertical"} >
+            <Form form={form} layout={"vertical"} >
                 <Row gutter={24}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 3 }} lg={{ span: 3 }} xl={{ span: 4 }} >
-                  <Form.Item name='poandLine' label='Po+Line' >
-                <Select
-                  showSearch
-                  placeholder="Select Po+Line"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {poLine.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
-                  })
-                  }
-                   </Select>
-                 </Form.Item>
-                </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4  }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 4 }} >
+                        <Form.Item name='poNumber' label='Po Number' >
+                            <Select
+                                showSearch
+                                placeholder="Select PoNumber"
+                                optionFilterProp="children"
+                                allowClear
+                            >
+                                {poNumber.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
+                                })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 20 }}>
+
                         <Button
                             type="primary"
                             icon={<SearchOutlined />}
                             style={{ marginRight: 50, width: 100 }}
                             htmlType="button"
-                            onClick={getFilterdData}>Search</Button>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 3 }} lg={{ span: 3 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
+                            onClick={getFilterdData}>Search</Button>  </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 20 }}>
                         <Button
                             type="primary"
+
                             icon={<UndoOutlined />}
                             htmlType="submit"
                             onClick={onReset}>Reset</Button>
+
                     </Col>
+
                 </Row>
-            </Form> */}
+            </Form>
             {filteredQtyData || unitChangeData || itemChangeData || poStatusData ? <>
                 <Tabs type='card' items={items} />
             </> : <></>}

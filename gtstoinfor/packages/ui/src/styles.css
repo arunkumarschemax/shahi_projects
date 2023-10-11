@@ -47,7 +47,7 @@
 
 /* Optional: Darken the cell borders */
 .custom-table-wrapper .ant-table-tbody > tr > td {
-  border: 0.1px solid #929090;
+  border: 0.1px solid #b9b2b2;
 }
 
 

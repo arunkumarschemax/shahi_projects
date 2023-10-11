@@ -874,5 +874,14 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+    @Post('/getPpmAllPoForVas')
+    async getPpmAllPoForVas(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmAllPoForVas();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    
 }
 

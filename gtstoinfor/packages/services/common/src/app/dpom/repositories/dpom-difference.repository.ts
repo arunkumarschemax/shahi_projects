@@ -28,6 +28,12 @@ export class DpomDifferenceRepository extends Repository<DpomDifferenceEntity> {
 
         return await query.getRawMany();
     }
-   
+    async getPpmPo(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.po_number,dpom.dpom_diff_id`)
+            .groupBy(`dpom.po_number`)
+            .where(` dpom.po_number IS NOT NULL`)
+        return await query.getRawMany();
+    }
     
 }

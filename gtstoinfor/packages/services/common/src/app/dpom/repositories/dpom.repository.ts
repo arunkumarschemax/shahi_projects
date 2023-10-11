@@ -764,12 +764,21 @@ export class DpomRepository extends Repository<DpomEntity> {
             .groupBy(`dpom.plant`)
         return await query.getRawMany();
     }
-    async getPpmPo(): Promise<any[]> {
+    // async getPpmPo(): Promise<any[]> {
+    //     const query = this.createQueryBuilder('dpom')
+    //         .select(` dpom.po_number,dpom.id`)
+    //         .groupBy(`dpom.po_number`)
+    //         .where(` dpom.po_number IS NOT NULL`)
+    //     return await query.getRawMany();
+    // }
+    async getPpmPoVas(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
-            .select(` dpom.po_number,dpom.id`)
-            .groupBy(`dpom.po_number`)
-            .where(` dpom.po_number IS NOT NULL`)
+        .select(`dpom.po_number,dpom.id`)
+        .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number AND od.schedule_line_item_number = dpom.schedule_line_item_number')
+        .where(` od.column_name='total_item_qty' `)
+        .groupBy(`dpom.po_number `)
+        .andWhere(`dpom.po_number IS NOT NULL`)
         return await query.getRawMany();
     }
-
+  
 }

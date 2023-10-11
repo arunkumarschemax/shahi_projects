@@ -1797,7 +1797,14 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
     async getPpmAllPo(): Promise<CommonResponseModel> {
-        const data = await this.dpomRepository.getPpmPo()
+        const data = await this.dpomDiffRepo.getPpmPo()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPpmAllPoForVas(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPpmPoVas()
         if (data.length > 0)
             return new CommonResponseModel(true, 1, 'data retrived', data)
         else
