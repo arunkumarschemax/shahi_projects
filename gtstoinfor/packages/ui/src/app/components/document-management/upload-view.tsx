@@ -318,7 +318,7 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
                 console.log([...fileList, file])
 
 
-                setBtnDisable(false)
+                // setBtnDisable(false)
                 // uploadFileList([...filelist, file]);
                 return false;
         };
@@ -353,22 +353,27 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
   };
 
 
-  const handleUpload = (documentsListId, info, docName) => {
-    console.log(documentsListId);
+  const handleUpload = (info, data) => {
     console.log(info)
     console.log(info.file);
-    ;
-    console.log(docName);
-    setDocumentName(docName);
-    if(docName != undefined && docName === "Mass Balance Sheet" && (!info.file.name.match(/\.(xlsx)$/) && !info.file.name.match(/\.(pdf)$/) && !info.file.name.match(/\.(PDF)$/)))
+    if(data.docStatus === "Fully Uploaded"){
+      message.error("All Documents Uploaded. ");
+      setBtnDisable(true)
+    }
+    else if(data.documentName != undefined && data.documentName === "Mass Balance Sheet" && (!info.file.name.match(/\.(xlsx)$/) && !info.file.name.match(/\.(pdf)$/) && !info.file.name.match(/\.(PDF)$/)))
     {
         message.error("Only pdf & xlsx files are allowed!");
+        setBtnDisable(true)
         // return true;
     }
-  else if(docName != "Mass Balance Sheet" && !info.file.name.match(/\.(pdf)$/) && !info.file.name.match(/\.(PDF)$/))
+    else if(data.documentName != "Mass Balance Sheet" && !info.file.name.match(/\.(pdf)$/) && !info.file.name.match(/\.(PDF)$/))
     {
         message.error("Only pdf files are allowed!");
+        setBtnDisable(true)
         // return true;
+    }
+    else{
+      setBtnDisable(false)
     }
    
     // Handle the file upload for the specific documentListId
@@ -406,7 +411,7 @@ console.log(props.docData)
               key={props.docData.documentsListId}
               name={`uploadFile${props.docData.documentsListId}`}
               accept=".jpeg,.pdf,.png,.jpg,.xlsx"
-              onChange={(info) => handleUpload(props.docData.documentsListId, info, props.docData.documentName)}
+              onChange={(info) => handleUpload(info, props.docData)}
               {...gstUploadFieldProps}
 
             >
