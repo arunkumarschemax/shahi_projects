@@ -45,15 +45,19 @@ export class FabricDevelopmentService {
         Entity.fabricQuantityEntity = []
         
 
+
         
+        const data1 = await this.qualityrepo.getAllCount();
+        let MaxId1 = data1.fabric_req_quality_id
         for(const qualityData of req.qualities){
+             MaxId1 = MaxId1+1
             const entity = new FabricRequestQualitiesEntity()
             entity.quality= qualityData.quality
             entity.placement = qualityData.placement
             entity.width = qualityData.width
             entity.description = qualityData.description
             entity.fabricDescription = qualityData.fabricDescription
-            entity.fabricCode = "FABRIC"+"/"+ (maxId+1)
+            entity.fabricCode = "FABRIC"+"/"+ (MaxId1)
             entity.fabricEntity = []
              
             

@@ -327,6 +327,7 @@ import { useEffect, useState } from 'react';
 import FabricDevelopmentRequestQuality from './fabric-development-quality-request';
 import { FabricRequestQualitiesRequest } from 'packages/libs/shared-models/src/common/fabric-development/fabric-request-qualities.request';
 import { keys } from 'highcharts';
+import { QualitiesEnum } from '@project-management-system/shared-models';
 
 export interface FabricDevelopmentTabsProps {
   key: string;
@@ -340,7 +341,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
 
 
 
-  const onChange = (key: string) => {
+  const onChange = (key: QualitiesEnum) => {
     console.log('onChange', key)
     setActiveTab(key);
   };
@@ -371,11 +372,11 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
   console.log(qualitiesData,"India")
   
 
-  const items: TabsProps['items'] = [...Array(12)].map((_, index) => ({
+  const items: TabsProps['items'] = Object.keys(QualitiesEnum).map((quality, index) => ({
     key: `quality${index + 1}`,
     label: (
       <span style={{ color: index % 2 === 0 ? "green" : "brown" }}>
-        Quality {index + 1}
+        {quality}
       </span>
     ),
     children: (
@@ -390,7 +391,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
 
 
   return (
-    <Tabs items={items} onChange={onChange} defaultActiveKey={props.key} type="card"  className="custom-tab-styles"  />
+    <Tabs items={items} onChange={onChange} defaultActiveKey={QualitiesEnum.quality1} type="card"  className="custom-tab-styles"  />
   )
 }
 

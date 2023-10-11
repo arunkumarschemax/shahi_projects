@@ -19,7 +19,7 @@ export class FabricDevelopmentController {
      @ApiBody({type:FabricRequestDto})   
     @Post('/createFabricDevelopmentRequest')
     async createFabricDevelopmentRequest(@Body() req:any): Promise<FabricDevelopmentRequestResponse> {
-        console.log(req)
+        console.log(req,"controller")
         try {
             return await this.fabricDevelopmentService.createFabricDevelopmentRequest(req, false)
         } catch (error) {

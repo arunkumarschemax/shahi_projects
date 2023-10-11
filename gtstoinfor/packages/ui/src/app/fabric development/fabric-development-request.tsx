@@ -21,11 +21,14 @@ import { Link } from "react-router-dom";
 import FabricDevelopmentRequestQuality from "./fabric-development-quality-request";
 import { FabricDevelopmentRequestModel, StatusEnum } from "@project-management-system/shared-models";
 
+export interface FabricDevelopmentRequestProps {
+  
+}
 
 
 
 
-export const FabricDevelopmentRequest = () => {
+export const FabricDevelopmentRequest = (props:FabricDevelopmentRequestProps) => {
   const [form] = Form.useForm();
   const [pchData,setPchData] = useState<any>([])
   const [BuyerData,setBuyerData] = useState<any>([])
@@ -34,13 +37,11 @@ export const FabricDevelopmentRequest = () => {
   const [locationData,setLocationData] = useState<any>([])
   const [styleData,setstyleData] = useState<any>([])
   const [qualitieData,setqualitieData] = useState<any>()
-
-
   const [pollutionFilelist,setPollutionFilelist] = useState<any[]>([]);
+  const [disable, setDisable] = useState<boolean>(false)
 
 
 
-   
 
 
     const Pchservice =new ProfitControlHeadService();
@@ -51,6 +52,10 @@ export const FabricDevelopmentRequest = () => {
     const styleservice =  new StyleService()
     const service = new FabricDevelopmentService()
 
+   
+    
+
+
 
 
     const onFinish = (values:any) => {
@@ -60,8 +65,12 @@ export const FabricDevelopmentRequest = () => {
       const req = new FabricDevelopmentRequestModel (values.locationId,values.styleId,values.pchId,values.buyerId,values.type,1,values.remarks,values.fabricResponsible,1,values.lightSourcePrimary,values.lightSourceSecondary,values.lightSourceTertiary,"","",data,StatusEnum.OPEN)
   
       service.createFabricDevelopmentRequest(req).then((res)=>{
+        setDisable(false)
+
          if (res.status){
-          // onReset();
+          // window.location.reload();
+          onReset()
+          // props.dynamicForm.resetFields()
           message.success(res.internalMessage);
          
       } else{

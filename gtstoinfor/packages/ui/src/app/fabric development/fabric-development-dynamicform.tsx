@@ -530,10 +530,7 @@ export const FabricDevelopmentDynamicForm = (
           xl={{ span: 4 }}
           style={{ marginTop: 30 }}
         >
-          <Form.Item label="Remarks" name="remarks"
-            rules={[{ required: true, message: "Remarks" }]}
-          
-          >
+          <Form.Item label="Remarks" name="remarks">
             <Input placeholder="remarks" />
           </Form.Item>
         </Col>

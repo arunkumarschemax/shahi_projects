@@ -52,6 +52,7 @@ export class FabricRequestEntity {
 
     @Column('varchar', {
         name: 'remarks',
+        nullable: true,
     })
     remarks: string;
 
