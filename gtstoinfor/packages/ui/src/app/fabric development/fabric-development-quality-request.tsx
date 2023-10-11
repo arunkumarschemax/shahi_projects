@@ -9,33 +9,45 @@ import { FabricRequestQualitiesRequest } from 'packages/libs/shared-models/src/c
 export interface ReqProps {
   
   itemsInfo: (ItemsData: any[]) => void;
+  qualityInfo : (qualityInfoObj:any)=>void;
+  activeTab:any
+  
   
 }
 
-
-
+ 
 export const  FabricDevelopmentRequestQuality = (props:ReqProps) => {
+  
   const [formData,setFormData] = useState<any>([])
   const [itemData,setItemData] = useState<any>([])
   const [dynamicData,setDynamicData] = useState<any>([])
+  const [quantitiesData,setQuantitiesData] = useState<any>([])
   const [placementForm] = Form.useForm();
   const [dynamicForm] = Form.useForm();
+  const [finalData,setFinalData] = useState<any[]>([])
+  const [isQualityChanged,setIsQualityChanged] = useState<boolean>(false)
 
 
-  
-
-
-  const onChange = () =>{
-    placementForm.validateFields().then((values) => {
-      console.log(values, 'onchange');
-      setFormData(values)
-
-    })
-    
-   }
-  
-
+  useEffect(()=>{
+    if(props.activeTab){
+      placementForm.setFieldsValue({ quality: props.activeTab })
+    } else {
+      placementForm.setFieldsValue({ quality: "quality1" })
+    }
+  })
  
+  console.log(props.activeTab,"999888888777777788888888")
+  
+  // const onChange = () =>{
+  //   placementForm.validateFields().then((values) => {
+  //     console.log(values, 'onchange');
+  //     setFormData(values)
+
+  //   })
+    
+  //  }
+   
+
   const itemsData = (data) => {
     console.log(data,"m3data")
     setItemData(data)
@@ -47,43 +59,25 @@ export const  FabricDevelopmentRequestQuality = (props:ReqProps) => {
   const dynamicformData = (data) =>{
     console.log(data,'dynamicformData')
     setDynamicData(data)
+
+    const qualityInfoObj = new  FabricRequestQualitiesRequest(placementForm.getFieldValue('quality'),placementForm.getFieldValue('placement'),placementForm.getFieldValue('width'),placementForm.getFieldValue('fabricDescription'),placementForm.getFieldValue('description'),data)
+  
+      // const qualities = []
+      // qualities.push(qualityInfoObj)
+      // setQuantitiesData(qualities)gh
+  
+    console.log(dynamicData,"1234")
+    console.log(qualityInfoObj)
+    props.qualityInfo(qualityInfoObj)
   }
-  // console.log(dynamicData,"1234")
 
   
 
-const itemsinfo = [];
-const FabricQuantities = [];
 
-itemData.forEach((itemInfo) => {
-  const record = new FabricItemInfoRequest(
-    itemInfo.itemsCode, itemInfo.description
-  );
-  itemsinfo.push(record);
-
- console.log(itemsinfo,'[itemsinfo]')
-
-
-
-
- dynamicData.forEach((rec) => {
-  const records:any = new FabricQuantitiesInfo(
-    rec.styleId, rec.colorId, rec.garmentQuantity, rec.consumption, rec.wastage, rec.fabricQuantity, rec.uomId, "", "", rec.remarks,itemsinfo
-  );
-  FabricQuantities.push(records); 
-   
-
-});
-});
-console.log(FabricQuantities,"[FabricQuantities]");
-
-
-const finalDto = []
-const qualitiesarray = new FabricRequestQualitiesRequest(placementForm.getFieldValue('quality'),placementForm.getFieldValue('placement'),placementForm.getFieldValue('width'),placementForm.getFieldValue('fabricDescription'),placementForm.getFieldValue('description'),FabricQuantities)
-finalDto.push(qualitiesarray)
-
-console.log(finalDto,"pppp")
-
+ 
+  const setQualityInfo = (val) => {
+    setIsQualityChanged(true)
+  }
 
      
   
@@ -93,30 +87,19 @@ console.log(finalDto,"pppp")
       style={{ fontSize: "10px" }}
       layout="vertical"
       form={placementForm}
-      onChange={onChange}
+      // onChange={onChange}
+      // onSelect={onChange}
     >
       <Row gutter={12}>
-      <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 4 }}
-            >
+     
               <Form.Item
                 label="Quality"
                 name="quality"
-                rules={[{ required: true, message: "Location" }]}
+                hidden
               >
-                <Select placeholder="Select Qualities" allowClear>
-        
-                   {Object.values(QualitiesEnum).map((val) => {
-                       return <option key={val} value={val}>{val}</option>
-                     })}
-  
-                  </Select>
+              <Input />
               </Form.Item>
-            </Col>
+            
         <Col
           xs={{ span: 24 }}
           sm={{ span: 24 }}
@@ -162,7 +145,7 @@ console.log(finalDto,"pppp")
           </Form.Item>
         </Col>
 
-        <Col
+        {/* <Col
           xs={{ span: 24 }}
           sm={{ span: 24 }}
           md={{ span: 4 }}
@@ -175,7 +158,7 @@ console.log(finalDto,"pppp")
           >
             <Input placeholder="Fabric Code" allowClear disabled={true} />
           </Form.Item>
-        </Col>
+        </Col> */}
 
         <Col
           xs={{ span: 24 }}

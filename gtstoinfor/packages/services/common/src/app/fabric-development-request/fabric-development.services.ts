@@ -1,7 +1,7 @@
 import { FabricRequestEntity } from "./fabric-request.entity";
 import { Injectable } from "@nestjs/common";
 import { FabricRequestRepository } from "./repository/fabric-request.repository";
-import { CommonResponseModel, FabricDevelopmentRequest, FabricDevelopmentRequestResponse, StatusEnum } from "@project-management-system/shared-models";
+import { CommonResponseModel, FabricDevelopmentRequestResponse, StatusEnum } from "@project-management-system/shared-models";
 import { FabricRequestDto } from "./dto/fabric-request.dto";
 import { FabricRequestQualitiesInfoEntity } from "./fabric-request-quality-info.entity";
 import { FabricRequestItemsEntity } from "./fabric-request-items.entity";
@@ -20,10 +20,14 @@ export class FabricDevelopmentService {
       console.log(req,"service")
       try {
 
+        const data = await this.FabricRepo.getAllCount();
+        const maxId = data.fabric_request_id
+        console.log(data,"data")
+
     
         const Entity = new FabricRequestEntity();
         Entity.locationId = req.locationId
-        Entity.requestNo = req.requestNo
+        Entity.requestNo = "REQ"+(maxId+1)
         Entity.styleId = req.styleId
         Entity.buyerId = req.buyerId
         Entity.pchId = req.pchId
@@ -49,7 +53,7 @@ export class FabricDevelopmentService {
             entity.width = qualityData.width
             entity.description = qualityData.description
             entity.fabricDescription = qualityData.fabricDescription
-            entity.fabricCode = qualityData.fabricCode
+            entity.fabricCode = "FABRIC"+"/"+ (maxId+1)
             entity.fabricEntity = []
              
             
@@ -66,7 +70,7 @@ export class FabricDevelopmentService {
               quantityInfoEntity.uomId = qualityDataInfo.uomId
               quantityInfoEntity.fileName = qualityDataInfo.fileName
               quantityInfoEntity.filePath = qualityDataInfo.filePath
-              quantityInfoEntity.status =qualityDataInfo.status
+              quantityInfoEntity.status = StatusEnum.OPEN
               quantityInfoEntity.remarks = qualityDataInfo.remarks
               quantityInfoEntity.fabricItemsEntity = []
             
@@ -96,7 +100,7 @@ export class FabricDevelopmentService {
     
         if (save){
             
-       return new FabricDevelopmentRequestResponse(true, 0, "Fabric Development Request successfully", []);
+       return new FabricDevelopmentRequestResponse(true, 0, "Fabric Development Request successfully");
         }
     
         } catch (err) {

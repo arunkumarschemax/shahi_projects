@@ -1,8 +1,8 @@
+import { FabricDevelopmentRequestModel } from "@project-management-system/shared-models";
 import { GlobalResponseObject } from "../global-response-object";
-import { FabricDevelopmentRequest } from "./fabric-development-request";
 
 export class FabricDevelopmentRequestResponse extends GlobalResponseObject {
-    data:FabricDevelopmentRequest[]
+    data?:FabricDevelopmentRequestModel
     /**
     * 
     * @param status 
@@ -10,7 +10,7 @@ export class FabricDevelopmentRequestResponse extends GlobalResponseObject {
     * @param internalMessage 
     * @param data 
     */
-    constructor(status: boolean, errorCode: number, internalMessage: string, data:FabricDevelopmentRequest[]) {
+    constructor(status: boolean, errorCode: number, internalMessage: string, data?:FabricDevelopmentRequestModel) {
         super(status, errorCode, internalMessage);
         this.data = data;
     }

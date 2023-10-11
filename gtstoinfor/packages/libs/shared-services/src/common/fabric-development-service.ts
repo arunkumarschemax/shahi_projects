@@ -1,12 +1,14 @@
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { FabricFilterRequest } from '@project-management-system/shared-models';
+import {FabricDevelopmentRequestModel, FabricDevelopmentRequestResponse, FabricFilterRequest } from '@project-management-system/shared-models';
 
 
 export class FabricDevelopmentService extends CommonAxiosService{
-URL = '/fabric-development';
+URL = '/FabricDevelopment';
 
 
-
+async createFabricDevelopmentRequest(req: FabricDevelopmentRequestModel): Promise<FabricDevelopmentRequestResponse> {
+    return this.axiosPostCall(this.URL + "/createFabricDevelopmentRequest", req)
+}
         
 async getAllitemsCode(): Promise<any> {
     const dummyMapItemsData = [

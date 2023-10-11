@@ -14,11 +14,11 @@ export class FabricRequestEntity {
     })
     locationId: number;
 
-    @Column("int", {
+    @Column("varchar", {
         nullable: false,
         name: "request_no"
       })
-    requestNo: number;       //  Auto Generate
+    requestNo: string;       //  Auto Generate
 
     @Column("int", {
         nullable: true,

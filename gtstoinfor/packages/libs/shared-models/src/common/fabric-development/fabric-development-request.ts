@@ -1,7 +1,7 @@
 import { StatusEnum } from "../../enum";
 import { FabricRequestQualitiesRequest } from "./fabric-request-qualities.request";
 
-export class FabricDevelopmentRequest{
+export class FabricDevelopmentRequestModel{
     locationId: number;
     styleId: number;
     pchId: number;
