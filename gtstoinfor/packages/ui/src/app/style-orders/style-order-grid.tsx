@@ -1,10 +1,11 @@
 import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Divider, Form, Input, Popconfirm, Row, Select, Switch, Table, Tag } from "antd"
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useNavigate } from "react-router-dom";
+import { StyleOrderService } from "@project-management-system/shared-services";
 
 export const StyleOrderGrid = () => {
     const [searchText, setSearchText] = useState('');
@@ -13,7 +14,21 @@ export const StyleOrderGrid = () => {
     const [page, setPage] = React.useState(1);
     const navigate = useNavigate()
     const {Option} = Select;
-    
+    const service = new StyleOrderService()
+    const [data,setData] =  useState<any[]>([])
+
+
+    useEffect(() => {
+      getData()
+  },[])
+
+  const getData = () => {
+      // service.getAllStyleOrders().then(res => {
+      //     if(res.status){
+      //         setData(res.data)
+      //     }
+      // })
+  }
     const getColumnSearchProps = (dataIndex: string) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <div style={{ padding: 8 }}>
@@ -188,7 +203,7 @@ export const StyleOrderGrid = () => {
 //   ...getColumnSearchProps("remarks"),    
 },
       ];
-const data = []
+
       
     return(
         <Card title='Style Orders' extra={<span><Button onClick={() =>  navigate('/materialCreation/style-order-creation')}

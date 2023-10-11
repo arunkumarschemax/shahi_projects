@@ -7,4 +7,7 @@ export class StyleOrderService extends CommonAxiosService{
     async createCustomerOrder(req :StyleOrderReq): Promise<any>{
         return this.axiosPostCall(this.URL + '/createCustomerOrder',req)
     }
+    async getAllStyleOrders(): Promise<any>{
+        return this.axiosPostCall(this.URL + '/getAllStyleOrders')
+    }
 }

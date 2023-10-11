@@ -529,7 +529,7 @@ export const StyleOrderCreation = () => {
                         {/* <Input placeholder="Enter delivery address"/> */}
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Delivery Address'>
                         {
-                            delivAdd[0].destination.map((e) => {
+                            delivAdd[0]?.destination.map((e) => {
                                 return(
                                     <Option key={e.destinationId} value={e.destinationId}>{e.destination}</Option>
                                 )

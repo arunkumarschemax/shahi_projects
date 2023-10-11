@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { StyleOrderReq, StyleOrderResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, StyleOrderReq, StyleOrderResponseModel } from "@project-management-system/shared-models";
 import { StyleOrder } from "./style-order.entity";
 import { Item } from "../items/item-entity";
 import { Warehouse } from "../warehouse/warehouse.entity";
@@ -126,5 +126,16 @@ export class StyleOrderService{
             throw err
         }
     }
+   async getAllStyleOrders(itemId:number):Promise<CommonResponseModel>{
+    try{
+        const data = await this.getAllStyleOrders(itemId)
+        console.log(data,'ressssssssssss');
+        
+        return new CommonResponseModel(true,1,'',data)
+
+    } catch(err){
+        throw err
+    }
+   } 
 
 }
