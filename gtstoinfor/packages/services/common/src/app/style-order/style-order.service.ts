@@ -126,16 +126,16 @@ export class StyleOrderService{
             throw err
         }
     }
-   async getAllStyleOrders(itemId:number):Promise<CommonResponseModel>{
-    try{
-        const data = await this.getAllStyleOrders(itemId)
-        console.log(data,'ressssssssssss');
+//    async getAllStyleOrders(itemId:number):Promise<CommonResponseModel>{
+//     try{
+//         const data = await this.repo.getAllStyleOrders(itemId)
+//         console.log(data,'ressssssssssss');
         
-        return new CommonResponseModel(true,1,'',data)
+//         return new CommonResponseModel(true,1,'',data)
 
-    } catch(err){
-        throw err
-    }
-   } 
+//     } catch(err){
+//         throw err
+//     }
+//    } 
 
 }

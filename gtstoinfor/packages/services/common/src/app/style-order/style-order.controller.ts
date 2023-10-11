@@ -21,13 +21,13 @@ export class StyleOrderController{
             return this.applicationExceptionHandler.returnException(StyleOrderResponseModel,err)
         }
     }
-    @Post('/getAllStyleOrders')
-    @ApiBody({type:Number})
-    async getAllStyleOrders(@Body() id:any):Promise<CommonResponseModel>{
-        try{
-            return await this.styleOrderService.getAllStyleOrders(id)
-        }catch(err){
-            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
-        }
-    }
+    // @Post('/getAllStyleOrders')
+    // @ApiBody({type:Number})
+    // async getAllStyleOrders(@Body() id:any):Promise<CommonResponseModel>{
+    //     try{
+    //         return await this.styleOrderService.getAllStyleOrders(id)
+    //     }catch(err){
+    //         return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+    //     }
+    // }
 }
