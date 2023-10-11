@@ -4,7 +4,6 @@ import {FabricDevelopmentRequestModel, FabricDevelopmentRequestResponse, FabricF
 
 export class FabricDevelopmentService extends CommonAxiosService{
 URL = '/FabricDevelopment';
-URL = '/FabricDevelopment';
 
 
 async createFabricDevelopmentRequest(req: FabricDevelopmentRequestModel): Promise<FabricDevelopmentRequestResponse> {
