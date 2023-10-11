@@ -51,6 +51,12 @@
 }
 
 
+.table-header .ant-table-thead > tr > th {
+  background-color: lavender;
+}
+
+
+
 /* .even-version.ant-table-thead > tr > th {
   background-color: red;
 }
