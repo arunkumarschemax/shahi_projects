@@ -9,6 +9,7 @@ import { Size } from "../sizes/sizes-entity";
 import { Colour } from "../colours/colour.entity";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { ItemSkuRepository } from "./sku-generation-repo";
+import { Style } from "../style/dto/style-entity";
 
 @Injectable()
 export class ItemSkuService{
@@ -43,6 +44,9 @@ export class ItemSkuService{
             const itemEntity = new Item
             itemEntity.itemId = req.itemId 
             entity.itemInfo = itemEntity
+            const style = new Style()
+            style.styleId = req.styleId
+            entity.styleInfo = style
             entity.status = req.status
             entity.createdUser = req.createdUser
             const destinationEntity = new Destination()
@@ -56,16 +60,21 @@ export class ItemSkuService{
               entity.size = size.size
               for(const color of req.colorInfo){
                 len = len +1
-                entity.itemSkuId = null
                 const colorEntity = new Colour
                 colorEntity.colourId = color.colourId
                 entity.colorInfo = colorEntity
                 entity.color = color.colour
-                entity.skuCode = `${req.itemCode}-${len}`
-                console.log(entity,'------entity')
+                if(req.itemSkuId){
+                  entity.itemSkuId = req.itemSkuId
+                  entity.updatedUser = req.createdUser
+                  entity.skuCode = req.skuCode
+                } else{
+                  entity.itemSkuId = null
+                  entity.createdUser = req.createdUser
+                  entity.skuCode = `${req.itemCode}-${len}`
+                }
                 const save = await transactionalEntityManager.getRepository(ItemSkus).save(entity)
                 // const save = await this.itemSkuRepo.save(entity)
-                console.log(save,'----------save')
                 if(!save){
                   flag.push(false)
                   await transactionalEntityManager.releaseTransaction()
@@ -125,7 +134,7 @@ export class ItemSkuService{
 
     async getDataByDestinationAgainstItem(req:ItemCodeReq):Promise<CommonResponseModel>{
       try{
-        const getData = await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo'],where:{itemCode:req.itemCode,destinationInfo:{destinationId:req.destinationId}}})
+        const getData = await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo'],where:{itemCode:req.itemCode,destinationInfo:{destinationId:req.destinationId},status:SkuStatusEnum.OPEN}})
         if(getData.length > 0){
           return new CommonResponseModel(true,1,'Data retreived',getData)
         } else{
@@ -135,6 +144,19 @@ export class ItemSkuService{
         throw err
       }
     }
+
+  async getDataByItem(req:ItemCodeReq):Promise<CommonResponseModel>{
+    try{
+      const data = await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo'],where:{itemCode:req.itemCode}})
+      if(data.length > 0){
+        return new CommonResponseModel(true,1,'Data retreived',data)
+      } else{
+        return new CommonResponseModel(false,0,'No data found')
+      }
+    } catch(err){
+      throw err
+    }
+  }
 
 
 }

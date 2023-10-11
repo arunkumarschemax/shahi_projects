@@ -16,4 +16,8 @@ export class SKUGenerationService extends CommonAxiosService{
         return this.axiosPostCall(this.URL + "/getDataByDestinationAgainstItem", req)
     } 
 
+    async getDataByItem(req: ItemCodeReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getDataByItem", req)
+    } 
+
 }

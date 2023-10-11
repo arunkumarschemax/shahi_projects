@@ -45,7 +45,7 @@ import Highlighter from "react-highlight-words";
              };
 
              const cancelSKU = (id: number) => {
-              const req = new ItemSKusReq(id,'',null,null,null,null,'');
+              const req = new ItemSKusReq(id,'',null,null,null,null,'',0);
               service.cancelSKUById(req).then((res: any) => {
                   if (res.status) {
                       message.success(res.internalMessage)

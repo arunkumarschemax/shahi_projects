@@ -49,4 +49,13 @@ export class ItemSkuController{
         }
     }
 
+    @Post('/getDataByItem')
+    async getDataByItem(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return await this.itemSkuService.getDataByItem(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+
 }
