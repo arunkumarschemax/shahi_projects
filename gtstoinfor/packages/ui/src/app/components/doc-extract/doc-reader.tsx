@@ -1507,6 +1507,50 @@ export const DocReader = (props: DocReaderProps) => {
         if (pdfDataUrl) {
             const response = await fetch(pdfDataUrl);
             const pdfBuffer = await response.arrayBuffer();
+            async function extractAndSetData(pdfBuffer, source) {
+                let extractedData;
+                switch (source) {
+                    case VendorNameEnum.extractedDhl:
+                        extractedData = await extractDhl(pdfBuffer);
+                        console.log('PDF DATA DHL:', extractedData);
+                        break;
+                    case VendorNameEnum.extractedDart:
+                        extractedData = await extractDart(pdfBuffer);
+                        console.log('PDF DATA DART:', extractedData);
+                        break;
+                    case VendorNameEnum.extractedExpeditors:
+                        extractedData = await extractExpeditors(pdfBuffer);
+                        console.log('PDF DATA EXPEDITORS:', extractedData);
+                        break;
+                    case VendorNameEnum.extractedEfl:
+                        extractedData = await extractEfl(pdfBuffer);
+                        console.log('PDF DATA EFL:', extractedData);
+                        break;
+                    case VendorNameEnum.extractedOocl:
+                        extractedData = await extractOocl(pdfBuffer);
+                        console.log('PDF DATA OOCL:', extractedData);
+                        break;
+                    case VendorNameEnum.extractedNagel:
+                        extractedData = await extractNagel(pdfBuffer);
+                        console.log('PDF DATA Nagel:', extractedData);
+                        break;
+                    case VendorNameEnum.extractedApl:
+                        extractedData = await extractApl(pdfBuffer);
+                        console.log('PDF DATA Apl:', extractedData);
+                        break;
+                    default:
+                        console.log('Unknown source:', source);
+                        break;
+                }
+                
+                if (extractedData) {
+                    setJsonData(extractedData);
+                }
+            }
+            
+            // Usage
+            const source = VendorNameEnum;
+            await extractAndSetData(pdfBuffer, source);
 
             // const extractedDhl = await extractDhl(pdfBuffer);
             // setJsonData(extractedDhl);
@@ -1536,9 +1580,9 @@ export const DocReader = (props: DocReaderProps) => {
             // setJsonData(extractedApl);
             // console.log('PDF DATA Apl:', extractedApl);
 
-            const extractedMaersk = await extractMaersk(pdfBuffer);
-            setJsonData(extractedMaersk);
-            console.log('PDF DATA MAERSK:', extractedMaersk);
+            // const extractedMaersk = await extractMaersk(pdfBuffer);
+            // setJsonData(extractedMaersk);
+            // console.log('PDF DATA MAERSK:', extractedMaersk);
 
             const extractionTime = new Date().toLocaleString();
             setTimeout(() => {
@@ -1716,14 +1760,14 @@ export const DocReader = (props: DocReaderProps) => {
                     >
                         <Form layout="vertical" form={props.form}>
                             <Row gutter={12}>
-                                <Col span={6}>
+                                {/* <Col span={6}>
                                     <Form.Item name={"poType"}>
                                         <Radio.Group name="radiogroup" defaultValue={"po"}>
                                             <Radio value={"po"}>PO</Radio>
                                             <Radio value={"non_po"}>NON PO</Radio>
                                         </Radio.Group>
                                     </Form.Item>
-                                </Col>
+                                </Col> */}
                                 <Col xs={{ span: 8 }}
                                     sm={{ span: 8 }}
                                     md={{ span: 8 }}
