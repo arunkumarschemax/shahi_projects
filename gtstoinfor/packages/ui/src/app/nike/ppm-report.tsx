@@ -501,7 +501,7 @@ const PPMReport = () => {
       {
         title: 'Item',
         dataIndex: 'item',
-        width: 70,
+        width: 70,align:'center',
         render: (text, record) => {
           if (!text || text.trim() === '') {
             return '-';
@@ -564,7 +564,7 @@ const PPMReport = () => {
       },
       {
         title: 'PO Line Item Number',
-        dataIndex: 'poLineItemNumber',
+        dataIndex: 'poLineItemNumber',align:'center',
         width: 80,
       },
       {
@@ -615,7 +615,7 @@ const PPMReport = () => {
       },
       {
         title: 'Planning Season Year',
-        dataIndex: 'planningSeasonYear', width: 80,
+        dataIndex: 'planningSeasonYear', width: 80,align:'center',
         render: (text, record) => {
           if (!text || text.trim() === '') {
             return '-';
@@ -646,7 +646,7 @@ const PPMReport = () => {
       },
       {
         title: 'Plan No',
-        dataIndex: 'planNo', width: 80,
+        dataIndex: 'planNo', width: 80,align:'center',
         render: (text, record) => {
           if (!text || text.trim() === '') {
             return '-';
@@ -670,7 +670,7 @@ const PPMReport = () => {
       },
       {
         title: 'Category',
-        dataIndex: 'categoryCode', width: 80,
+        dataIndex: 'categoryCode', width: 80,align:'center'
       },
       {
         title: 'Category Description',
@@ -678,11 +678,11 @@ const PPMReport = () => {
       },
       {
         title: 'Vendor Code',
-        dataIndex: 'vendorCode', width: 80,
+        dataIndex: 'vendorCode', width: 80,align:'center'
       },
       {
         title: 'Global Category Core Focus',
-        dataIndex: 'gccFocusCode', width: 80,
+        dataIndex: 'gccFocusCode', width: 80,align:'center'
       },
       {
         title: 'Global Category Core Focus Description',
@@ -699,16 +699,16 @@ const PPMReport = () => {
       },
       {
         title: "Destination Country Code",
-        dataIndex: 'destinationCountryCode', width: 80,
+        dataIndex: 'destinationCountryCode', width: 80,align:'center'
       },
       {
         title: "Destination Country Name ",
         dataIndex: 'destinationCountry', width: 80,
       },
-      { title: 'Geo Code', dataIndex: 'geoCode', width: 80, },
+      { title: 'Geo Code', dataIndex: 'geoCode', width: 80,align:'center' },
       {
         title: "Plant Code",
-        dataIndex: 'plant', width: 80,
+        dataIndex: 'plant', width: 80,align:'center'
       },
       {
         title: "Plant Name",
@@ -852,7 +852,7 @@ const PPMReport = () => {
         },
       },
       {
-        title: 'GAC Reason Code', width: 80, dataIndex: 'GACReasonCode', render: (text, record) => {
+        title: 'GAC Reason Code', width: 80, dataIndex: 'GACReasonCode',align:'center', render: (text, record) => {
           if (!text || text.trim() === '') {
             return '-';
           } else {
@@ -936,13 +936,13 @@ const PPMReport = () => {
       },
       { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode', width: 90, },
       { title: 'In Co Terms', dataIndex: 'inCoTerms', width: 80, },
-      { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode', width: 80, },
-      { title: 'Purchase Group', dataIndex: 'purchaseGroupCode', className: 'centered-column', width: 80, },
+      { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode',align:'center', width: 80, },
+      { title: 'Purchase Group', dataIndex: 'purchaseGroupCode',align:'center', className: 'centered-column', width: 80, },
       { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName', width: 80, },
       {
         title: 'Total Item Qty',
         dataIndex: 'totalItemQty', width: 80,
-        align: 'center',
+        align: 'right',
         render: (text, record) => {
           if (!text || text.trim() === '') {
             return '-';
@@ -2478,7 +2478,7 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
               <Form.Item name='planningSeasonCode' label='Planning Season Code' >
                 <Select
                   showSearch

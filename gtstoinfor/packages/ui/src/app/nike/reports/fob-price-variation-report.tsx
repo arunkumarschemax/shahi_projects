@@ -1,4 +1,4 @@
-import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
+import { DownOutlined, SearchOutlined, UndoOutlined, UpOutlined } from "@ant-design/icons";
 import { FobPriceDiffRequest } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Row, Select, Table, Typography } from "antd"
@@ -142,6 +142,7 @@ export const FOBPriceVariationReport = () => {
             dataIndex: 'difference',
             align: 'right',
             render: (text, record) => {
+                
                 let diff;
                 let convertedPrice;
                 if (record.fobCurrencyCode === 'PHP') {
@@ -164,17 +165,24 @@ export const FOBPriceVariationReport = () => {
                     convertedPrice = record.grossPriceFob * 0.13;
                 }
                 diff = record.shahiConfirmedgrossPrice - convertedPrice
+                const color = diff < 0 ? 'red' : diff > 0 ? 'green' : 'black';
+                const arrowIcon = diff < 0 ? <DownOutlined /> : diff > 0 ? <UpOutlined /> : null;
                 return (
+                    
                     <>
-                        {record.grossPriceFob ? Number(diff).toLocaleString('en-IN') : '-'}
+                    <span style={{ color }}>
+                    {arrowIcon} {record.grossPriceFob ? Number(diff).toLocaleString('en-IN') : '-'}
+                        </span>
                         {/* return diff !== 0 ? Number(diff).toLocaleString('en-IN') : ''; */}
                     {/* return diff !== 0 ? Number(diff).toLocaleString('en-IN') : ''; */}
                     </>
                 )
             }
         },
+        
 
     ]
+
 
     return (
         <Card title='FOB Price Variation'  >
