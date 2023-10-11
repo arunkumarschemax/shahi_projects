@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Col, Form, Radio, Row, Upload, UploadProps, message, Spin, FormInstance } from 'antd';
+import { Button, Card, Col, Form, Radio, Row, Upload, UploadProps, message, Spin, FormInstance, Select } from 'antd';
 import { UploadOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import Tesseract from 'tesseract.js';
 import { pdfjs } from 'react-pdf';
-import { PriceListRequestModel } from '@xpparel/shared-models';
+import { PriceListRequestModel, VendorNameEnum } from '@xpparel/shared-models';
 import { PricesService, VendorNamereq, VendorService } from '@xpparel/shared-services';
 
 export interface DocReaderProps {
@@ -1196,7 +1196,12 @@ export const DocReader = (props: DocReaderProps) => {
                 }
 
                 const taxPercentageContent = extractedData[hsnId + 20].content;
-                const taxPercentage = parseFloat(taxPercentageContent.replace('%', ''));
+                let taxPercentage = parseFloat(taxPercentageContent.replace('%', ''));
+
+                // Check if taxPercentage is NaN or null and set it to 18 as a default
+                if (isNaN(taxPercentage) || taxPercentage === null) {
+                    taxPercentage = 18;
+                }
 
                 let igst = 0;
                 let cgst = 0;
@@ -1226,7 +1231,6 @@ export const DocReader = (props: DocReaderProps) => {
                     cgst: cgst,
                     sgst: sgst,
                 };
-
             }
             linesId += 1;
         }
@@ -1499,6 +1503,50 @@ export const DocReader = (props: DocReaderProps) => {
         if (pdfDataUrl) {
             const response = await fetch(pdfDataUrl);
             const pdfBuffer = await response.arrayBuffer();
+            async function extractAndSetData(pdfBuffer, source) {
+                let extractedData;
+                switch (source) {
+                    case VendorNameEnum.extractedDhl:
+                        extractedData = await extractDhl(pdfBuffer);
+                        console.log('PDF DATA DHL:', extractedData);
+                        break;
+                    case VendorNameEnum.extractedDart:
+                        extractedData = await extractDart(pdfBuffer);
+                        console.log('PDF DATA DART:', extractedData);
+                        break;
+                    case VendorNameEnum.extractedExpeditors:
+                        extractedData = await extractExpeditors(pdfBuffer);
+                        console.log('PDF DATA EXPEDITORS:', extractedData);
+                        break;
+                    case VendorNameEnum.extractedEfl:
+                        extractedData = await extractEfl(pdfBuffer);
+                        console.log('PDF DATA EFL:', extractedData);
+                        break;
+                    case VendorNameEnum.extractedOocl:
+                        extractedData = await extractOocl(pdfBuffer);
+                        console.log('PDF DATA OOCL:', extractedData);
+                        break;
+                    case VendorNameEnum.extractedNagel:
+                        extractedData = await extractNagel(pdfBuffer);
+                        console.log('PDF DATA Nagel:', extractedData);
+                        break;
+                    case VendorNameEnum.extractedApl:
+                        extractedData = await extractApl(pdfBuffer);
+                        console.log('PDF DATA Apl:', extractedData);
+                        break;
+                    default:
+                        console.log('Unknown source:', source);
+                        break;
+                }
+                
+                if (extractedData) {
+                    setJsonData(extractedData);
+                }
+            }
+            
+            // Usage
+            const source = VendorNameEnum;
+            await extractAndSetData(pdfBuffer, source);
 
             // const extractedDhl = await extractDhl(pdfBuffer);
             // setJsonData(extractedDhl);
@@ -1708,14 +1756,14 @@ export const DocReader = (props: DocReaderProps) => {
                     >
                         <Form layout="vertical" form={props.form}>
                             <Row gutter={12}>
-                                <Col span={6}>
+                                {/* <Col span={6}>
                                     <Form.Item name={"poType"}>
                                         <Radio.Group name="radiogroup" defaultValue={"po"}>
                                             <Radio value={"po"}>PO</Radio>
                                             <Radio value={"non_po"}>NON PO</Radio>
                                         </Radio.Group>
                                     </Form.Item>
-                                </Col>
+                                </Col> */}
                                 <Col xs={{ span: 8 }}
                                     sm={{ span: 8 }}
                                     md={{ span: 8 }}
@@ -1792,8 +1840,25 @@ export const DocReader = (props: DocReaderProps) => {
                                                     </Button>
                                                 )}
                                             </Row>
+
                                         </span>
                                     </Form.Item>
+                                </Col>
+                                <Col xs={{ span: 8 }}
+                                    sm={{ span: 8 }}
+                                    md={{ span: 8 }}
+                                    lg={{ span: 8 }}
+                                    xl={{ span: 8 }}>
+                                <Form.Item label="Vendors" name="vendors">
+                                    <Select
+                                    placeholder="Vendors"
+                                    >
+                                        {Object.keys(VendorNameEnum).map(vendors=>{
+                                            return <Select.Option value={VendorNameEnum[vendors]}>{VendorNameEnum[vendors]}</Select.Option>
+                                        })}
+
+                                    </Select>
+                                </Form.Item>
                                 </Col>
                             </Row>
                         </Form>
