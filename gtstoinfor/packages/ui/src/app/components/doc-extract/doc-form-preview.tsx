@@ -296,8 +296,16 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             dataIndex: "description",
             width: "30",
             key: "description",
-            render: (HSN) => (HSN !== undefined && HSN !== null ? HSN : "0"),
-        },
+            render: (description) => {
+              if (description !== undefined && description !== null) {
+                const descriptionString = description.toString().replace(/[^\w\s]/g, '');
+                const trimmedDescription = descriptionString.split(/[^a-zA-Z]/)[0];
+                return trimmedDescription;
+              } else {
+                return "_";
+              }
+            }
+          },
         {
             title: "HSN code",
             dataIndex: "HSN",
@@ -321,19 +329,6 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             title: "Unit Price",
             dataIndex: "unitPrice",
             key: "unitPrice",
-            render: (unitPrice, record) => {
-                const amount = parseFloat(record.amount) || 0;
-                const unitQuantity = parseFloat(record.unitQuantity) || 1;
-                const calculatedUnitPrice = (amount / unitQuantity).toFixed(2);
-
-                return (
-                    <div style={{ textAlign: "right" }}>
-                        {calculatedUnitPrice !== undefined && calculatedUnitPrice !== null
-                            ? `${calculatedUnitPrice}`
-                            : "0"}
-                    </div>
-                );
-            },
         },
         {
             title: "Tax Type",
