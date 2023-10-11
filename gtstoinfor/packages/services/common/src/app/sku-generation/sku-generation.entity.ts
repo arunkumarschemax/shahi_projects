@@ -4,6 +4,7 @@ import { Item } from "../items/item-entity";
 import { Colour } from "../colours/colour.entity";
 import { Size } from "../sizes/sizes-entity";
 import { Destination } from "../destination/destination.entity";
+import { Style } from "../style/dto/style-entity";
 
 @Entity('item_skus')
 export class ItemSkus{
@@ -122,5 +123,10 @@ export class ItemSkus{
     @ManyToOne(type=>Destination, destination=>destination.itemSkuInfo,{  nullable:false, })
     @JoinColumn({ name:"destination_id"})
     destinationInfo: Destination;
+
+    @ManyToOne(type=>Style, style=>style.itemSkuInfo,{  nullable:false, })
+    @JoinColumn({ name:"style_id"})
+    styleInfo: Style;
+    
 
 }

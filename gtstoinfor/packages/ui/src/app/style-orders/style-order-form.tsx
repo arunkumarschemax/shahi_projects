@@ -43,6 +43,7 @@ export const StyleOrderCreation = () => {
     const deliveryAddressService = new BuyerDestinationService()
     const [delivAdd,setDelivAdd] =  useState<any[]>([])
     const styleOrderService = new StyleOrderService()
+    const [tableVisible,setTableVisible] = useState<boolean>(false)
 
 
     useEffect(() => {
@@ -200,6 +201,7 @@ export const StyleOrderCreation = () => {
 
     const onSegmentChange = (e) => {
         console.log(e)
+        setTableVisible(true)
         const req = new ItemCodeReq(form.getFieldValue('itemCode'),e)
         skuService.getDataByDestinationAgainstItem(req).then(res => {
             if(res.status){
@@ -549,31 +551,30 @@ export const StyleOrderCreation = () => {
                     </Select>
                     </Form.Item>
                 </Col>
-                {/* <Table columns={columns} dataSource={data}/> */}
                 {
-                data.length <= 10 ? (<>
-                <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 18 }}>
-                {/* <Card size='small'> */}
-                <Table  size='small'  bordered columns={columns} dataSource={data} pagination={false}/>
-                {/* </Card> */}
-                </Col>
-                </>): (<></>)
-
-            }
-            {
-                data.length > 10 ? (<> <Row gutter={24}>
-                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                        {/* <Card size='small'> */}
-                            <Table  size='small'  bordered columns={columns} dataSource={firstHalfData} pagination={false}/>
-                        {/* </Card> */}
+                    tableVisible ? (<>
+                    
+                    {/* <Table columns={columns} dataSource={data}/> */}
+                    {
+                    data.length <= 10 ? (<>
+                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 18 }}>
+                    <Table  size='small'  bordered columns={columns} dataSource={data} pagination={false}/>
                     </Col>
-                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                        {/* <Card size='small'> */}
-                            <Table  size='small'  bordered columns={columns} dataSource={secondHalfData} pagination={false}/>
-                        {/* </Card> */}
-                    </Col>
-                    </Row></>) : (<></>)
-            }
+                    </>): (<></>)
+    
+                    }
+                    {
+                    data.length > 10 ? (<> <Row gutter={24}>
+                        <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                                <Table  size='small'  bordered columns={columns} dataSource={firstHalfData} pagination={false}/>
+                        </Col>
+                        <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                                <Table  size='small'  bordered columns={columns} dataSource={secondHalfData} pagination={false}/>
+                        </Col>
+                        </Row></>) : (<></>)
+                    }
+                    </>) : (<></>)
+                }
                 </Space>
                 <Row justify={'end'} style={{marginLeft:'85%',marginTop:'5px'}}>
                <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
