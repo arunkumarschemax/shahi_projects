@@ -43,6 +43,7 @@ const PPMReport = () => {
   const [planSesYear, setPlanSesYear] = useState<any>([]);
   const [geoCode, setGeoCode] = useState<any>([]);
   const [hideChildren, setHideChildren] = useState(false);
+  const [csvData, setcsvData] = useState([]);
   let navigate = useNavigate()
   let poFilterData
   const [tableLoading, setTableLoading] = useState<boolean>(false)
@@ -207,11 +208,116 @@ const PPMReport = () => {
       .then(res => {
         if (res.status) {
           setGridData(res.data);
-          // console.log(gridData)
           setFilterData(res.data);
           setFilteredData(res.data);
-          Finish(res.data);
-          // console.log(filterData[0],"filterData")
+          let csvdata = []
+          res.data.forEach(item => {
+            csvdata.push({
+              'Po+Line': item.poAndLine,
+              'Last Modified Date': moment(item.lastModifiedDate).format('MM/DD/YYYY'),
+              'Item': (item.item).substring(0, 4),
+              'Factory': item.factory,
+              'Document Date': moment(item.documentDate).format('MM/DD/YYYY'),
+              'Actual Unit': item.actualUnit,
+              'Purchase Order Number': item.purchaseOrderNumber,
+              'PO Line Item Number': item.poLineItemNumber,
+              'DPOM Line Item Status': item.DPOMLineItemStatus,
+              'Style Number': item.styleNumber,
+              'Product Code': item.productCode,
+              'Colour Description': item.colorDesc,
+              'CO': item.customerOrder,
+              'CO Final Approval Date': item.coFinalApprovalDate,
+              'Plan No': item.planNo,
+              'Lead Time': item.leadTime,
+              'Category': item.categoryCode,
+              'Category Description': item.categoryDesc,
+              'Vendor Code': item.vendorCode,
+              'Global Category Core Focus': item.gccFocusCode,
+              'Global Category Core Focus Description': item.gccFocusDesc,
+              'Gender Age': item.genderAgeCode,
+              'Gender Age Description': '',
+              'Destination Country Code ': item.destinationCountryCode,
+              'Destination Country Name': item.destinationCountry,
+              'Geo Code': item.geoCode,
+              'Plant Code': item.plant,
+              'Plant Name': item.plantName,
+              'Trading Co PO Number': item.tradingCoPoNumber,
+              'UPC': item.UPC,
+              'Sales Order Number': '',
+              'Sales Order Item Number': '',
+              'Customer PO': item.customerPO,
+              'Ship To Customer Number': item.shipToCustomerNumber,
+              'Ship To Customer Name': item.shipToCustomerName,
+              'Planning Season Code': item.planningSeasonCode,
+              'Planning Season Year': item.planningSeasonYear,
+              'Doc Type': item.docTypeCode,
+              'Doc Type Description ': item.docTypeDesc,
+              'MRGAC': moment(item.MRGAC).format('MM/DD/YYYY'),
+              'OGAC': moment(item.OGAC).format('MM/DD/YYYY'),
+              'GAC': moment(item.GAC).format('MM/DD/YYYY'),
+              'Truck Out Date': item.truckOutDate,
+              'Origin Receipt Date': item.originReceiptDate,
+              'Factory Delivery Actual Date': item.factoryDeliveryActDate,
+              'GAC Reason Code': item.GACReasonCode,
+              'GAC Reason Description': item.GACReasonDesc,
+              'Shipping Type': item.shippingType,
+              'Planning Priority Number': item.planningPriorityCode,
+              'Planning Priority Description': item.planningPriorityDesc,
+              'Launch Code': item.launchCode,
+              'Mode Of Transportation': item.modeOfTransportationCode,
+              'In Co Terms': item.inCoTerms,
+              'Inventory Segment Code': item.inventorySegmentCode,
+              'Purchase Group': item.purchaseGroupCode,
+              'Purchase Group Name': item.purchaseGroupName,
+              'Reallocated Quantity': item.allocatedQuantity,
+              'Total Item Quantity': item.totalItemQty,
+              '2XL': item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.sizeQty,
+              'XL': item.sizeWiseData.find(i => i.sizeDescription === 'XL')?.sizeQty,
+              'L': item.sizeWiseData.find(i => i.sizeDescription === 'L')?.sizeQty,
+              'M': item.sizeWiseData.find(i => i.sizeDescription === 'M')?.sizeQty,
+              'S': item.sizeWiseData.find(i => i.sizeDescription === 'S')?.sizeQty,
+              'XS': item.sizeWiseData.find(i => i.sizeDescription === 'XS')?.sizeQty,
+              '3XL': item.sizeWiseData.find(i => i.sizeDescription === '3XL')?.sizeQty,
+              '4XL': item.sizeWiseData.find(i => i.sizeDescription === '4XL')?.sizeQty,
+              '5XL': item.sizeWiseData.find(i => i.sizeDescription === '5XL')?.sizeQty,
+              'L-T': item.sizeWiseData.find(i => i.sizeDescription === 'L-T')?.sizeQty,
+              'L-S': item.sizeWiseData.find(i => i.sizeDescription === 'L-S')?.sizeQty,
+              'M-S': item.sizeWiseData.find(i => i.sizeDescription === 'M-S')?.sizeQty,
+              'M-T': item.sizeWiseData.find(i => i.sizeDescription === 'M-T')?.sizeQty,
+              'S-S': item.sizeWiseData.find(i => i.sizeDescription === 'S-S')?.sizeQty,
+              'S-T': item.sizeWiseData.find(i => i.sizeDescription === 'S-T')?.sizeQty,
+              'XL-T': item.sizeWiseData.find(i => i.sizeDescription === 'XL-T')?.sizeQty,
+              'XS-S': item.sizeWiseData.find(i => i.sizeDescription === 'XS-S')?.sizeQty,
+              'XS-T': item.sizeWiseData.find(i => i.sizeDescription === 'XS-T')?.sizeQty,
+              '2XL-T': item.sizeWiseData.find(i => i.sizeDescription === '2XL-T')?.sizeQty,
+              'XL-S': item.sizeWiseData.find(i => i.sizeDescription === 'XL-S')?.sizeQty,
+              '2XLTT': item.sizeWiseData.find(i => i.sizeDescription === '2XLTT')?.sizeQty,
+              '3XL-T': item.sizeWiseData.find(i => i.sizeDescription === '3XL-T')?.sizeQty,
+              'LTT': item.sizeWiseData.find(i => i.sizeDescription === 'LTT')?.sizeQty,
+              'XLTT': item.sizeWiseData.find(i => i.sizeDescription === 'XLTT')?.sizeQty,
+              '2XS': item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.sizeQty,
+              '4XL-T': item.sizeWiseData.find(i => i.sizeDescription === '4XL-T')?.sizeQty,
+              '2XL-S': item.sizeWiseData.find(i => i.sizeDescription === '2XL-S')?.sizeQty,
+              'MTT': item.sizeWiseData.find(i => i.sizeDescription === 'MTT')?.sizeQty,
+              '3XL-S': item.sizeWiseData.find(i => i.sizeDescription === '3XL-S')?.sizeQty,
+              '4XL-S': item.sizeWiseData.find(i => i.sizeDescription === '4XL-S')?.sizeQty,
+              '3XLTT': item.sizeWiseData.find(i => i.sizeDescription === '3XLTT')?.sizeQty,
+              'STT': item.sizeWiseData.find(i => i.sizeDescription === 'STT')?.sizeQty,
+              'L+': item.sizeWiseData.find(i => i.sizeDescription === 'L+')?.sizeQty,
+              'M+': item.sizeWiseData.find(i => i.sizeDescription === 'M+')?.sizeQty,
+              'S+': item.sizeWiseData.find(i => i.sizeDescription === 'S+')?.sizeQty,
+              'XL+': item.sizeWiseData.find(i => i.sizeDescription === 'XL+')?.sizeQty,
+              'Change Register': item.displayName,
+              'Allowed Excess Ship Qty': '',
+              'Actual Shipped Qty': item.actualShippedQty,
+              'Actual Ship %': '',
+              'VAS-Size': item.VASSize,
+              'Item Vas Text': item.itemVasText,
+              'Item Text': item.itemText,
+              'Hanger Po': item.allocatedQuantity
+            });
+          });
+          setcsvData(csvdata);
         } else {
           setGridData([]);
           setFilterData([]);
@@ -223,9 +329,7 @@ const PPMReport = () => {
         setTableLoading(false)
       });
   };
-  const Finish = (data: any) => {
-    //getData()
-  };
+
   let exportingColumns: IExcelColumn[] = []
 
   const handleExport = (e: any) => {
@@ -360,31 +464,12 @@ const PPMReport = () => {
     const sizeWiseMap = getMap(data);
 
     exportingColumns = [
-      { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
-      { title: 'Last Modified Date', dataIndex: 'lastModifiedDate', render: (text) => moment(text).format('MM/DD/YYYY') },
-      {
-        title: 'Item',
-        dataIndex: 'item',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            const firstFourDigits = text.substring(0, 3);
-            return firstFourDigits;
-          }
-        },
-      },
-      {
-        title: 'Factory', dataIndex: 'Factory', render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        }
-      },
+      { title: 'Po+Line ', dataIndex: 'poAndLine' },
+      { title: 'Last Modified Date', dataIndex: 'lastModifiedDate' },
+      { title: 'Item', dataIndex: 'item', },
+      { title: 'Factory', dataIndex: 'Factory' },
       { title: 'PCD', dataIndex: 'PCD' },
-      { title: 'Document Date', dataIndex: 'documentDate', render: (text) => moment(text).format('MM/DD/YYYY') },
+      { title: 'Document Date', dataIndex: 'documentDate' },
       { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
       { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
       { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
@@ -398,7 +483,7 @@ const PPMReport = () => {
       { title: 'Planning Season Code', dataIndex: 'planningSeasonCode' },
       { title: 'Planning Season Year', dataIndex: 'planningSeasonYear' },
       { title: 'Co', dataIndex: 'customerOrder' },
-      { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', render: (text, record) => { return record.coFinalApprovalDate ? moment(record.coFinalApprovalDate).format('MM/DD/YYYY') : '-' } },
+      { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate' },
       { title: 'Plan No', dataIndex: 'planNo' },
       { title: 'Lead Time', dataIndex: 'leadTime' },
       { title: 'Category', dataIndex: 'categoryCode' },
@@ -454,9 +539,9 @@ const PPMReport = () => {
       },
       { title: 'CAB Code', dataIndex: 'CABCode' },
       { title: 'Final Destination', dataIndex: '' },
-      { title: 'MRGAC', dataIndex: 'MRGAC', render: (text, record) => { return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-' } },
-      { title: 'OGAC', dataIndex: 'OGAC', render: (text, record) => { return record.OGAC ? moment(record.OGAC).format('MM/DD/YYYY') : '-' } },
-      { title: 'GAC', dataIndex: 'GAC', render: (text, record) => { return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-' } },
+      { title: 'MRGAC', dataIndex: 'MRGAC' },
+      { title: 'OGAC', dataIndex: 'OGAC' },
+      { title: 'GAC', dataIndex: 'GAC' },
       { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
       { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc' },
       { title: 'Truck Out Date', dataIndex: 'truckOutDate', width: 80, },
@@ -481,44 +566,28 @@ const PPMReport = () => {
       // },
       {
         title: "Po+Line",
-        dataIndex: 'Po+Line', fixed: 'left',
-        // render: (text, record) => `${record.purchaseOrderNumber} - ${record.poLineItemNumber}`,
-
+        dataIndex: 'poAndLine',
+        fixed: 'left',
         render: (text, record) => {
           return <>
-            <Button type='link' onClick={e => { DetailedView(record.poAndLine) }}>{record.purchaseOrderNumber} - {record.poLineItemNumber}</Button>
+            <Button type='link' onClick={e => { DetailedView(record.poAndLine) }}>{record.poAndLine}</Button>
           </>
         }
-
       },
       {
         title: 'Last Modified Date',
         dataIndex: 'lastModifiedDate',
-        render: (text) => moment(text).format('MM/DD/YYYY')
       },
       {
         title: 'Item',
         dataIndex: 'item',
         width: 70, align: 'center',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            const firstFourDigits = text.substring(0, 4);
-            return firstFourDigits;
-          }
-        },
       },
       {
         title: 'Factory',
         dataIndex: 'factory',
         width: 70,
         align: 'center',
-        render: (text, record) => (
-          <span style={getFactoryCellStyle(text)}>
-            {!text || text.trim() === '' ? '-' : text}
-          </span>
-        ),
       },
       {
         title: 'PCD',
@@ -553,7 +622,6 @@ const PPMReport = () => {
       {
         title: 'Document Date',
         dataIndex: 'documentDate',
-        render: (text) => moment(text).format('MM/DD/YYYY')
       },
       {
         title: 'Purchase Order Number',
@@ -568,7 +636,6 @@ const PPMReport = () => {
       {
         title: 'DPOM Line Item Status',
         dataIndex: 'DPOMLineItemStatus', width: 80,
-
       },
       {
         title: 'Doc Type',
@@ -626,32 +693,15 @@ const PPMReport = () => {
       {
         title: 'CO',
         dataIndex: 'customerOrder', width: 80,
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        }
       },
       {
         title: 'CO Final Approval Date',
         dataIndex: 'coFinalApprovalDate',
         className: "right-column", width: 80,
-        render: (text, record) => {
-          return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
-        }
       },
       {
         title: 'Plan No',
         dataIndex: 'planNo', width: 80, align: 'center',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        }
       },
       {
         title: 'Lead Time',
@@ -728,25 +778,11 @@ const PPMReport = () => {
         title: 'Customer PO',
         dataIndex: 'customerPO',
         width: 80,
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
       },
       {
         title: 'Ship To Customer Number',
         dataIndex: 'shipToCustomerNumber', width: 80,
         align: 'center',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
       },
       {
         title: 'Ship To Customer Name',
@@ -820,80 +856,35 @@ const PPMReport = () => {
       {
         title: "CAB Code",
         dataIndex: 'CABCode', width: 80,
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
       },
       {
         title: 'Final Destination',
         dataIndex: '', width: 80,
       },
-
       {
         title: "MRGAC", width: 80,
-        dataIndex: 'MRGAC', render: (text, record) => {
-          return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-';
-        },
+        dataIndex: 'MRGAC',
       },
       {
-        title: 'OGAC', dataIndex: 'OGAC', width: 80, className: "right-column", render: (text, record) => {
-          return record.OGAC ? moment(record.OGAC).format('MM/DD/YYYY') : '-';
-        },
+        title: 'OGAC', dataIndex: 'OGAC', width: 80,
       },
       {
-        title: 'GAC', dataIndex: 'GAC', width: 80, className: "right-column", render: (text, record) => {
-          return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-';
-        },
+        title: 'GAC', dataIndex: 'GAC', width: 80
       },
       {
-        title: 'GAC Reason Code', width: 80, dataIndex: 'GACReasonCode', align: 'center', render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-
-      {
-        title: 'GAC Reason Description', width: 80, dataIndex: 'GACReasonDesc', render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        title: 'GAC Reason Code', width: 80, dataIndex: 'GACReasonCode', align: 'center'
       },
       {
-        title: 'Truck Out Date', dataIndex: 'truckOutDate', width: 80, className: "right-column", render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        title: 'GAC Reason Description', width: 80, dataIndex: 'GACReasonDesc'
       },
       {
-        title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', width: 80, className: "right-column", render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        title: 'Truck Out Date', dataIndex: 'truckOutDate', width: 80
       },
       {
-        title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', width: 80, className: "right-column", render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', width: 80
+      },
+      {
+        title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', width: 80
       },
       {
         title: 'Shipping Type',
@@ -946,23 +937,6 @@ const PPMReport = () => {
             return '-';
           } else {
             return <strong>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</strong>;
-          }
-        },
-      },
-    ]
-
-    const csvHeaders = [
-      { header: 'Po+Line ', key: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
-      { header: 'Last Modified Date', key: 'lastModifiedDate', render: (text) => moment(text).format('MM/DD/YYYY') },
-      {
-        header: 'Item',
-        key: 'item',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            const firstFourDigits = text.substring(0, 3);
-            return firstFourDigits;
           }
         },
       },
@@ -2039,34 +2013,6 @@ const PPMReport = () => {
         ],
       });
 
-      // csvHeaders.push({
-      //   header: version,
-      //   key: version,
-      //   children: [
-      //     {
-      //       title: 'Quantity',
-      //       dataIndex: '',
-      //       align: 'right',
-      //       render: (text, record) => {
-      //         const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-      //         if (sizeData) {
-      //           if (sizeData.sizeQty !== null) {
-      //             const formattedQty = Number(sizeData.sizeQty).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-      //             return (
-      //               formattedQty
-      //             );
-      //           } else {
-      //             return (
-      //               '-'
-      //             );
-      //           }
-      //         } else {
-      //           return '-';
-      //         }
-      //       }
-      //     },
-      //   ]
-      // })
     });
 
     // if (hideChildren) {
@@ -2372,21 +2318,15 @@ const PPMReport = () => {
     navigate('/Reports/po-detailed-view', { state: { data: poFilterData } })
   }
 
-  const csvReport = {
-    data: filterData,
-    headers: exportingColumns,
-    filename: 'Clue_Mediator_Report.csv'
-  };
-
-
   return (
     <>
       <Card title="PPM Marketing Report" headStyle={{ color: 'black', fontWeight: 'bold' }}
         extra={filteredData.length > 0 ? (<Button
           type="default"
           style={{ color: 'green' }}
-          onClick={handleExport}
-          icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
+          icon={<FileExcelFilled />}><CSVLink className="downloadbtn" filename="marketing-ppm-report.csv" data={csvData}>
+            Export to CSV
+          </CSVLink></Button>) : null}>
         <Form
           onFinish={getData}
           form={form}
