@@ -43,6 +43,7 @@ const PPMReport = () => {
   const [planSesYear, setPlanSesYear] = useState<any>([]);
   const [geoCode, setGeoCode] = useState<any>([]);
   const [hideChildren, setHideChildren] = useState(false);
+  const [csvData, setcsvData] = useState([]);
   let navigate = useNavigate()
   let poFilterData
   const [tableLoading, setTableLoading] = useState<boolean>(false)
@@ -207,11 +208,118 @@ const PPMReport = () => {
       .then(res => {
         if (res.status) {
           setGridData(res.data);
-          // console.log(gridData)
           setFilterData(res.data);
           setFilteredData(res.data);
           Finish(res.data);
-          // console.log(filterData[0],"filterData")
+          let csvdata = []
+          filterData.forEach(item => {
+            console.log(item);
+            csvdata.push({
+              'Po+Line': item.poAndLine,
+              'Last Modified Date': moment(item.lastModifiedDate).format('MM/DD/YYYY'),
+              'Item': (item.item).substring(0, 4),
+              'Factory': item.factory,
+              'Document Date': moment(item.documentDate).format('MM/DD/YYYY'),
+              'Actual Unit': item.actualUnit,
+              'Purchase Order Number': item.purchaseOrderNumber,
+              'PO Line Item Number': item.poLineItemNumber,
+              'DPOM Line Item Status': item.DPOMLineItemStatus,
+              'Style Number': item.styleNumber,
+              'Product Code': item.productCode,
+              'Colour Description': item.colorDesc,
+              'CO': item.customerOrder,
+              'CO Final Approval Date': item.coFinalApprovalDate,
+              'Plan No': item.planNo,
+              'Lead Time': item.leadTime,
+              'Category': item.categoryCode,
+              'Category Description': item.categoryDesc,
+              'Vendor Code': item.vendorCode,
+              'Global Category Core Focus': item.gccFocusCode,
+              'Global Category Core Focus Description': item.gccFocusDesc,
+              'Gender Age': item.genderAgeCode,
+              'Gender Age Description': '',
+              'Destination Country Code ': item.destinationCountryCode,
+              'Destination Country Name': item.destinationCountry,
+              'Geo Code': item.geoCode,
+              'Plant Code': item.plant,
+              'Plant Name': item.plantName,
+              'Trading Co PO Number': item.tradingCoPoNumber,
+              'UPC': item.UPC,
+              'Sales Order Number': '',
+              'Sales Order Item Number': '',
+              'Customer PO': item.customerPO,
+              'Ship To Customer Number': item.shipToCustomerNumber,
+              'Ship To Customer Name': item.shipToCustomerName,
+              'Planning Season Code': item.planningSeasonCode,
+              'Planning Season Year': item.planningSeasonYear,
+              'Doc Type': item.docTypeCode,
+              'Doc Type Description ': item.docTypeDesc,
+              'MRGAC': moment(item.MRGAC).format('MM/DD/YYYY'),
+              'OGAC': moment(item.OGAC).format('MM/DD/YYYY'),
+              'GAC': moment(item.GAC).format('MM/DD/YYYY'),
+              'Truck Out Date': item.truckOutDate,
+              'Origin Receipt Date': item.originReceiptDate,
+              'Factory Delivery Actual Date': item.factoryDeliveryActDate,
+              'GAC Reason Code': item.GACReasonCode,
+              'GAC Reason Description': item.GACReasonDesc,
+              'Shipping Type': item.shippingType,
+              'Planning Priority Number': item.planningPriorityCode,
+              'Planning Priority Description': item.planningPriorityDesc,
+              'Launch Code': item.launchCode,
+              'Mode Of Transportation': item.modeOfTransportationCode,
+              'In Co Terms': item.inCoTerms,
+              'Inventory Segment Code': item.inventorySegmentCode,
+              'Purchase Group': item.purchaseGroupCode,
+              'Purchase Group Name': item.purchaseGroupName,
+              'Reallocated Quantity': item.allocatedQuantity,
+              'Total Item Quantity': item.totalItemQty,
+              '2XL': item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.sizeQty,
+              'XL': item.sizeWiseData.find(i => i.sizeDescription === 'XL')?.sizeQty,
+              'L': item.sizeWiseData.find(i => i.sizeDescription === 'L')?.sizeQty,
+              'M': item.sizeWiseData.find(i => i.sizeDescription === 'M')?.sizeQty,
+              'S': item.sizeWiseData.find(i => i.sizeDescription === 'S')?.sizeQty,
+              'XS': item.sizeWiseData.find(i => i.sizeDescription === 'XS')?.sizeQty,
+              '3XL': item.sizeWiseData.find(i => i.sizeDescription === '3XL')?.sizeQty,
+              '4XL': item.sizeWiseData.find(i => i.sizeDescription === '4XL')?.sizeQty,
+              '5XL': item.sizeWiseData.find(i => i.sizeDescription === '5XL')?.sizeQty,
+              'L-T': item.sizeWiseData.find(i => i.sizeDescription === 'L-T')?.sizeQty,
+              'L-S': item.sizeWiseData.find(i => i.sizeDescription === 'L-S')?.sizeQty,
+              'M-S': item.sizeWiseData.find(i => i.sizeDescription === 'M-S')?.sizeQty,
+              'M-T': item.sizeWiseData.find(i => i.sizeDescription === 'M-T')?.sizeQty,
+              'S-S': item.sizeWiseData.find(i => i.sizeDescription === 'S-S')?.sizeQty,
+              'S-T': item.sizeWiseData.find(i => i.sizeDescription === 'S-T')?.sizeQty,
+              'XL-T': item.sizeWiseData.find(i => i.sizeDescription === 'XL-T')?.sizeQty,
+              'XS-S': item.sizeWiseData.find(i => i.sizeDescription === 'XS-S')?.sizeQty,
+              'XS-T': item.sizeWiseData.find(i => i.sizeDescription === 'XS-T')?.sizeQty,
+              '2XL-T': item.sizeWiseData.find(i => i.sizeDescription === '2XL-T')?.sizeQty,
+              'XL-S': item.sizeWiseData.find(i => i.sizeDescription === 'XL-S')?.sizeQty,
+              '2XLTT': item.sizeWiseData.find(i => i.sizeDescription === '2XLTT')?.sizeQty,
+              '3XL-T': item.sizeWiseData.find(i => i.sizeDescription === '3XL-T')?.sizeQty,
+              'LTT': item.sizeWiseData.find(i => i.sizeDescription === 'LTT')?.sizeQty,
+              'XLTT': item.sizeWiseData.find(i => i.sizeDescription === 'XLTT')?.sizeQty,
+              '2XS': item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.sizeQty,
+              '4XL-T': item.sizeWiseData.find(i => i.sizeDescription === '4XL-T')?.sizeQty,
+              '2XL-S': item.sizeWiseData.find(i => i.sizeDescription === '2XL-S')?.sizeQty,
+              'MTT': item.sizeWiseData.find(i => i.sizeDescription === 'MTT')?.sizeQty,
+              '3XL-S': item.sizeWiseData.find(i => i.sizeDescription === '3XL-S')?.sizeQty,
+              '4XL-S': item.sizeWiseData.find(i => i.sizeDescription === '4XL-S')?.sizeQty,
+              '3XLTT': item.sizeWiseData.find(i => i.sizeDescription === '3XLTT')?.sizeQty,
+              'STT': item.sizeWiseData.find(i => i.sizeDescription === 'STT')?.sizeQty,
+              'L+': item.sizeWiseData.find(i => i.sizeDescription === 'L+')?.sizeQty,
+              'M+': item.sizeWiseData.find(i => i.sizeDescription === 'M+')?.sizeQty,
+              'S+': item.sizeWiseData.find(i => i.sizeDescription === 'S+')?.sizeQty,
+              'XL+': item.sizeWiseData.find(i => i.sizeDescription === 'XL+')?.sizeQty,
+              'Change Register': item.displayName,
+              'Allowed Excess Ship Qty': '',
+              'Actual Shipped Qty': item.actualShippedQty,
+              'Actual Ship %': '',
+              'VAS-Size': item.VASSize,
+              'Item Vas Text': item.itemVasText,
+              'Item Text': item.itemText,
+              'Hanger Po': item.allocatedQuantity
+            });
+          });
+          setcsvData(csvdata);
         } else {
           setGridData([]);
           setFilterData([]);
@@ -2385,8 +2493,9 @@ const PPMReport = () => {
         extra={filteredData.length > 0 ? (<Button
           type="default"
           style={{ color: 'green' }}
-          onClick={handleExport}
-          icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
+          icon={<FileExcelFilled />}><CSVLink className="downloadbtn" filename="marketing-ppm-report.csv" data={csvData}>
+            Export to CSV
+          </CSVLink></Button>) : null}>
         <Form
           onFinish={getData}
           form={form}
