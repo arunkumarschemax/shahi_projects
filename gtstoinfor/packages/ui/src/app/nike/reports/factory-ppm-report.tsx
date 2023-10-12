@@ -1425,7 +1425,7 @@ const FactoryPPMReport = () => {
                             <Form.Item>
                                 <Button htmlType="submit"
                                     icon={<SearchOutlined />}
-                                    type="primary">Get Report</Button>
+                                    type="primary">GET REPORT</Button>
                                 <Button
                                     htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
                                 >

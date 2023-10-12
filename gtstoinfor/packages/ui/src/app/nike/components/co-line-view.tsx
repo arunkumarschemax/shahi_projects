@@ -436,7 +436,7 @@ const ColineView = () => {
                         <Form.Item>
                             <Button htmlType="submit"
                                 icon={<SearchOutlined />}
-                                type="primary">Get Report</Button>
+                                type="primary">SEARCH</Button>
                             <Button
                                 htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
                             >

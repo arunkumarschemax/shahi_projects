@@ -47,8 +47,8 @@ const ChangeComparision = (props: Props) => {
     return (
       <div>
         <Space size={"large"}>
-          <span style={{ margin: 5 }}>Size Description</span><br /><span> Size Quantity</span><br /><span>Legal Po Qty</span><br />
-          <span>Difference in Quantity</span><br /><span>Gross/FOB Price</span><br /><br /><span>FOB Currency</span><br /><br />
+          <span style={{ margin: 5 }}>Size Description</span><br /><br /><span> Size Quantity</span><br /><br /><span>Legal Po Qty</span><br />
+          <br /><span>Difference in Quantity</span><br /><span>Gross/FOB Price</span><br /><br /><span>FOB Currency</span><br /><br />
           <span>Legal Po Price</span><br /><span>Legal Po Currency</span><br /><span>Difference in Price</span><br />
         </Space>
       </div>
@@ -73,7 +73,7 @@ const ChangeComparision = (props: Props) => {
     },
     {
       dataIndex: 'quantityDifference',
-      align: 'left',
+      align: 'center',
       render: (text, record) => {
         const formattedAmount = record.priceDifferance ? parseFloat(record.quantityDifference).toFixed(2) : "-";
 
@@ -106,7 +106,7 @@ const ChangeComparision = (props: Props) => {
     },
     {
       dataIndex: 'legalPoCurrency',
-      align: 'center',
+      align: 'right',
       render: (text, record) => {
         if (!text || text.trim() === '') {
           return '-';
@@ -117,7 +117,7 @@ const ChangeComparision = (props: Props) => {
     },
     {
       dataIndex: 'priceDifferance',
-      align: 'center',
+      align: 'right',
       render: (text, record) => {
         const formattedAmount = record.priceDifferance ? parseFloat(record.priceDifferance).toFixed(2) : "-";
 
