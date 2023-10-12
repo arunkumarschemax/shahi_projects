@@ -251,7 +251,7 @@ const FobPriceListGrid = () => {
         <Card
           extra={<span><Button onClick={() => navigate('/masters/fob-price-list-form/', { state: { name: 'new' } })} type={'primary'}>New</Button></span>}
           headStyle={{ height: '50px' }}
-          title={<><span>Fob Price List</span><span><Button onClick={() => navigate('/masters/fob-price-list-form', { state: { name: 'excel' } })} style={{ float: 'right', marginRight: '2px' }} type='primary'>Excel Upload</Button></span></>}
+          title={<><span>Fob Price List</span><span><Button onClick={() => navigate('/masters/fob-price-list-form', { state: { name: 'excel' } })} style={{ float: 'right', marginRight: '2px' }} type='primary'>CSV Upload</Button></span></>}
         >
           <Table columns={Columns}
             dataSource={fob}

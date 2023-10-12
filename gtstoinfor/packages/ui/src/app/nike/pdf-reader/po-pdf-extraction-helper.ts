@@ -3,7 +3,7 @@ import { CURR_INDEX, DIVISIONBUYGROUP_INDEX, EMP_STR_EXP, FACTORYLOCATION_INDEX,
 
 
 /**
- * @description this function takes @param pdf as parameter which will have all the raw text from the pdf that is extrcated by pdfjs lib
+ * @description this function takes @param pdf as parameter which will have all the raw text from the pdf that is extrcated by pdfjs lib.
  * pdf data should be structured into a nested format which will have Po details >> PO Item details >> Po Item variant details.
  * step 1 : Filter all the empty strings and unwanted texts from the raw data
  * step 2 : PO data will present in the first page.so extract text only from the first page and pick the Po details data
@@ -29,7 +29,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             const firstPageContent: any[] = textContent.items.filter((v) => {
                 return !EMP_STR_EXP.test(v.str)
             })
-            // find indexes of all the 
+            // find indexes of all the po data fields
             let poDocDateIndex
             let poNumberTextIndex
             let sellerStartIndex
@@ -132,11 +132,11 @@ export const extractDataFromPoPdf = async (pdf) => {
         filteredData.push(...pageContent)
     }
     //------------------------------------------------------------------------------
-    console.log(filteredData)
+    // console.log(filteredData)
 
     // console.log(filteredData)
     for (const [index, rec] of filteredData.entries()) {
-        // chech the item No pattern and using regex and push all matched items
+        // chech the item No pattern  using regex and push all matched items
         if (rec.str.match(ITEM_NO_EXP) && (rec.str.length === 5)) {
             itemsArr.push({ itemNo: rec.str, itemIndex: index })
         }
@@ -235,7 +235,7 @@ export const extractDataFromPoPdf = async (pdf) => {
         itemDetailsArr.push(itemDetailsObj)
     }
     poData.poItemDetails = itemDetailsArr
-    console.log(poData)
+    // console.log(poData)
     return poData
 }
 
