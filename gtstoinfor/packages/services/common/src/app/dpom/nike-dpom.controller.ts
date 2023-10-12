@@ -446,14 +446,14 @@ export class DpomController {
         }
     }
 
-    @Post('/getDifferentialData')
-    async getDifferentialData(): Promise<CommonResponseModel> {
-        try {
-            return this.dpomService.getDifferentialData();
-        } catch (err) {
-            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
-        }
-    }
+    // @Post('/getDifferentialData')
+    // async getDifferentialData(): Promise<CommonResponseModel> {
+    //     try {
+    //         return this.dpomService.getDifferentialData();
+    //     } catch (err) {
+    //         return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+    //     }
+    // }
     @Post('/getPoAndQtyDashboard')
     @ApiBody({ type: PoAndQtyReq })
     async getPoAndQtyDashboard(@Body() req: any): Promise<CommonResponseModel> {

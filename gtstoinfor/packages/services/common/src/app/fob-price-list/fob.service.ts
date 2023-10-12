@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { FactoryResponseModel } from 'packages/libs/shared-models/src/common/factory/factory-response-objects';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object'
 import { DataSource, Not, Raw } from 'typeorm';
-import { AllFactoriesResponseModel, AllFobResponseModel, CommonResponseModel, FactoryActivateDeactivateDto, FobResponseModel, Fobdto, FactoryDto as NewFactoriesDto } from '@project-management-system/shared-models';
+import { AllFactoriesResponseModel, AllFobResponseModel, CommonResponseModel, FactoryActivateDeactivateDto, FobFilterRequest, FobResponseModel, Fobdto, FactoryDto as NewFactoriesDto } from '@project-management-system/shared-models';
 import { FobAdapter } from './adapters/fob.adapter';
 import { FobRepository } from './repository/fob.repository';
 import { FobEntity } from './fob.entity';
@@ -99,14 +99,17 @@ export class FobService {
   
 
 
-  async getFobPrice(): Promise<FobResponseModel> {
-    const data = await this.repository.find()
-    const factoriesData: FobDto[] = []
-    for (const record of data) {
-      const adapterData = this.adaptor.convertEntityToDto(record)
-      factoriesData.push(adapterData)
+   async getFobPrice(req:FobFilterRequest): Promise<FobResponseModel> {
+     const data = await this.repository.getFobPricelist(req)
+    if(data.length > 0){
+      return new FobResponseModel(true, 1111, 'Data retreived', data)
+
     }
-    return new FobResponseModel(true, 1111, 'Data retreived', factoriesData)
+    else
+    {    return new FobResponseModel(false, 1111, 'Data Not Found', [])
+  }
+    
+    
   }
 
 
@@ -144,7 +147,6 @@ export class FobService {
       return err;
     }
   }
-
 
 
   async getFobById(id: number): Promise<FobEntity> {
@@ -232,6 +234,47 @@ export class FobService {
       return new CommonResponseModel(false, 0, err)
     }
   }
+
+  async getFobPlanningSeasonCode(): Promise<CommonResponseModel> {
+    const data = await this.repository.getFobPlanningSeasonCode()
+    if (data.length > 0)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
+
+async getFobPlanningSeasonYear(): Promise<CommonResponseModel> {
+  const data = await this.repository.getFobPlanningSeasonYear()
+  if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+  else
+      return new CommonResponseModel(false, 0, 'No data found');
+}
+
+async getFobStyleNumber(): Promise<CommonResponseModel> {
+  const data = await this.repository.getFobStyleNumber()
+  if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+  else
+      return new CommonResponseModel(false, 0, 'No data found');
+}
+
+async getFobColorCode(): Promise<CommonResponseModel> {
+  const data = await this.repository.getFobColorCode()
+  if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+  else
+      return new CommonResponseModel(false, 0, 'No data found');
+}
+
+async getFobSizeDescription(): Promise<CommonResponseModel> {
+  const data = await this.repository.getFobSizeDescription()
+  if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+  else
+      return new CommonResponseModel(false, 0, 'No data found');
+}
+
 }
 
 
