@@ -215,7 +215,11 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
                             <Col span={2}>
                                 <Button onClick={onReset} >Reset</Button>
                             </Col>
-                        </> : <></>
+                        </> : <>
+                            <Col span={2}>
+                                <Button onClick={onReset} >Reset</Button>
+                            </Col>
+                        </>
                         }
                     </>
                 }

@@ -143,19 +143,19 @@ const DivertReport = () => {
     let i = 1;
     const data = [
         { title: 'S No', dataIndex: 'sNo', render: (text, object, index) => { return i++; } },
-        { title: 'Old Request Date', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => { return record.oldPo.Plnt ? record.oldPo.Plant : '-'; } },
+        { title: 'O.Product Code', dataIndex: ['oldPo', 'productCode'], render: (text, record) => { return record.oldPo.productCode ? record.oldPo.productCode : '-'; } },
+        { title: 'Old Request Date', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => { return record.oldPo.DocumentDate ? record.oldPo.DocumentDate : '-'; } },
         { title: 'O.From Item', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => { return record.oldPo.Plnt ? record.oldPo.Plant : '-'; } },
         { title: 'O.Unit', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => { return record.oldPo.Plnt ? record.oldPo.Plant : '-'; } },
         { title: 'O.Plant', dataIndex: ['oldPo', 'Plant'], render: (text, record) => { return record.oldPo.Plant ? record.oldPo.Plant : '-'; } },
-        { title: 'O.Product Code', dataIndex: ['oldPo', 'productCode'], render: (text, record) => { return record.oldPo.productCode ? record.oldPo.productCode : '-'; } },
         { title: 'O.Line Status', dataIndex: ['oldPo', 'LineStatus'], render: (text, record) => { return record.oldPo.LineStatus ? record.oldPo.LineStatus : '-'; } },
-        {
-            title: 'O.Document Date',
-            dataIndex: ['oldPo', 'DocumentDate'],
-            render: (text, record) => {
-                return record.oldPo.DocumentDate ? moment(record.oldPo.DocumentDate).utc().format('MM/DD/YYYY') : '-';
-            }
-        },
+        // {
+        //     title: 'O.Document Date',
+        //     dataIndex: ['oldPo', 'DocumentDate'],
+        //     render: (text, record) => {
+        //         return record.oldPo.DocumentDate ? moment(record.oldPo.DocumentDate).utc().format('MM/DD/YYYY') : '-';
+        //     }
+        // },
         { title: 'Old Po', dataIndex: ['oldPo', 'poNumber'], render: (text, record) => { return record.oldPo.poNumber ? record.oldPo.poNumber : '-'; } },
         {
             title: 'Old Po Line',
@@ -166,20 +166,58 @@ const DivertReport = () => {
         { title: 'Balance Qty', dataIndex: ['oldPo', 'Quantity'], render: (text, record) => { return record.oldPo.Quantity ? record.oldPo.Quantity : '-'; } },
         { title: 'Destination', dataIndex: ['oldPo', 'destination'], render: (text, record) => { return record.oldPo.destination ? record.oldPo.destination : '-'; } },
         { title: 'Shipment Type', dataIndex: ['oldPo', 'shipmentType'], render: (text, record) => { return record.oldPo.shipmentType ? record.oldPo.shipmentType : '-'; } },
-        {
-            title: 'No of Days to GAC',
-            dataIndex: ['oldPo', 'DocumentDate'],
-            render: (text, record) => {
-                if (record.oldPo.dpomCreatedDates && record.newpo.nogac) {
-                    const dpomCreatedDate = moment(record.oldPo.dpomCreatedDates);
-                    const nogacDate = moment(record.newpo.nogac);
-                    const daysDifference = nogacDate.diff(dpomCreatedDate, 'days');
-                    return daysDifference + ' days';
-                } else {
-                    return "-";
-                }
+        // {
+        //     title: 'No of Days to GAC',
+        //     dataIndex: ['oldPo', 'DocumentDate'],
+        //     render: (text, record) => {
+        //         if (record.oldPo.dpomCreatedDates && record.newpo.nogac) {
+        //             const dpomCreatedDate = moment(record.oldPo.dpomCreatedDates);
+        //             const nogacDate = moment(record.newpo.nogac);
+        //             const daysDifference = nogacDate.diff(dpomCreatedDate, 'days');
+        //             return daysDifference + ' days';
+        //         } else {
+        //             return "-";
+        //         }
+        //     }
+        // },
+        {title: 'OLD OGAC',dataIndex: ['oldPo', 'ogac'],render: (text, record) => {
+            return record.oldPo.ogac ? moment(record.oldPo.ogac).format('MM/DD/YYYY') : "-";} },
+        { title: 'OLD GAC',dataIndex: ['oldPo', 'gac'], render: (text, record) => {
+            return record.oldPo.gac ? moment(record.oldPo.gac).format('MM/DD/YYYY') : "-";
+        } } ,
+        { title: 'Inventory Segment Code', dataIndex: ['oldPo', 'inventorySegmentCode'], render: (text, record) => { return record.oldPo.inventorySegmentCode ? record.oldPo.inventorySegmentCode : '-'; } },
+        {   title: 'GAC Difference',dataIndex: '',render: (text, record) => {
+            if (record.oldPo.ogac && record.newpo.nogac) {
+                const ogacDate = moment(record.oldPo.ogac, 'YYYY-MM-DD');
+                const nogacDate = moment(record.newpo.nogac, 'YYYY-MM-DD');
+                const daysDifference = nogacDate.diff(ogacDate, 'days');
+                return daysDifference + ' days';
+            } else {
+                return "-";
             }
+        },} ,
+        {
+            title: 'Item Vas',width:70,
+            dataIndex: ['oldPo', 'itemVasText'], render: (text, record) => { return record.oldPo.itemVasText ? record.oldPo.itemVasText : '-'; } 
         },
+        { title: 'N.OGAC Date', dataIndex: ['newpo', 'nogac'],  render: (text, record) => {
+            return record.newpo.nogac ? moment(record.newpo.nogac).format('MM/DD/YYYY') : "-";} },
+        { title: 'N.GAC Date',dataIndex: ['newpo', 'ngac'], render: (text, record) => {
+            return record.newpo.ngac ? moment(record.newpo.ngac).format('MM/DD/YYYY') : "-";} },
+
+        { title: 'No of Days to GAC', dataIndex: 'unit', render: (text, record) => {
+            if (record.oldPo.dpomCreatedDates && record.newpo.nogac) {
+                const dpomCreatedDate = moment(record.oldPo.dpomCreatedDates);
+                const nogacDate = moment(record.newpo.nogac);
+                const daysDifference = nogacDate.diff(dpomCreatedDate, 'days');
+                return daysDifference + ' days';
+            } else {
+                return "-";
+            }
+        }},
+        { title: "To item",
+        dataIndex: ['newpo', 'item'],  render: (text, record) => { return record.newpo.item ? record.newpo.item : '-'; } },
+
         { title: 'N.Unit', dataIndex: 'unit', render: (text, record) => { return record.oldPo.Plnt ? record.oldPo.Plnt : '-'; } },
         { title: 'N.Plant', dataIndex: ['newpo', 'nPlant'], render: (text, record) => { return record.newpo.nPlant ? record.newpo.nPlant : '-'; } },
         { title: 'N.Product Code', dataIndex: ['newpo', 'nproductCode'], render: (text, record) => { return record.newpo.nproductCode ? record.newpo.nproductCode : '-'; } },
@@ -283,27 +321,31 @@ const DivertReport = () => {
                     title: 'Old Qantity',
                     //from yesterdays ppm
                     dataIndex: ['oldPo', 'Quantity'],
-                    sorter: (a, b) => a.oldPo.Quantity.localeCompare(b.oldPo.Quantity),
-                    sortDirections: ["descend", "ascend"],width:70,
+                    // sorter: (a, b) => a.oldPo.Quantity.localeCompare(b.oldPo.Quantity),
+                    // sortDirections: ["descend", "ascend"],
+                    width:70,align:'right'
                 },
                 {
                     title: 'Balance Qty',
                     // from dpom
                     dataIndex: ['oldPo', 'Quantity'],
-                    sorter: (a, b) => a.oquantity.localeCompare(b.oquantity),
-                    sortDirections: ["descend", "ascend"],width:70,
+                    // sorter: (a, b) => a.oquantity.localeCompare(b.oquantity),
+                    // sortDirections: ["descend", "ascend"],
+                    width:70,align:'right'
                 },
                 {
                     title: 'Destination',
                     dataIndex: ['oldPo', 'destination'],
-                    sorter: (a, b) => a.oldPo.destination.localeCompare(b.oldPo.destination),
-                    sortDirections: ["descend", "ascend"],width:70,
+                    // sorter: (a, b) => a.oldPo.destination.localeCompare(b.oldPo.destination),
+                    // sortDirections: ["descend", "ascend"],
+                    width:75,
                 },
                 {
                     title: 'Shipment Type',
                     dataIndex: ['oldPo', 'shipmentType'],
-                    sorter: (a, b) => a.oldPo.shipmentType.localeCompare(b.oldPo.shipmentType),
-                    sortDirections: ["descend", "ascend"],width:70,
+                    // sorter: (a, b) => a.oldPo.shipmentType.localeCompare(b.oldPo.shipmentType),
+                    // sortDirections: ["descend", "ascend"],
+                    width:70,
                 },
                 {
                     title: 'OLD OGAC',
@@ -327,7 +369,7 @@ const DivertReport = () => {
                 },
                 {
                     title: 'GAC Difference',
-                    dataIndex: '',width:70,
+                    dataIndex: '',width:70,align:'right',
                     render: (text, record) => {
                         if (record.oldPo.ogac && record.newpo.nogac) {
                             const ogacDate = moment(record.oldPo.ogac, 'YYYY-MM-DD');
@@ -370,7 +412,7 @@ const DivertReport = () => {
                 },
                 {
                     title: "No of Days to GAC",
-                    align: 'center',width:70,
+                    align: 'right',width:70,
                     render: (text, record) => {
                         if (record.oldPo.dpomCreatedDates && record.newpo.nogac) {
                             const dpomCreatedDate = moment(record.oldPo.dpomCreatedDates);
@@ -384,8 +426,7 @@ const DivertReport = () => {
                 },
                 {
                     title: "To item",
-                    align: 'center',width:70,
-                    dataIndex: ['newpo', 'item'],
+                    dataIndex: ['newpo', 'item'], align: 'center',width:70,
                 },
                 {
                     title: "Unit",
@@ -394,7 +435,7 @@ const DivertReport = () => {
 
                 {
                     title: "Plant",
-                    dataIndex: ['newpo', 'nPlant'],width:70,
+                    dataIndex: ['newpo', 'nPlant'],width:70,align:'center'
                 },
                 {
                     title: "Product Code",
@@ -419,11 +460,11 @@ const DivertReport = () => {
                 },
                 {
                     title: 'New Po Line',width:70,
-                    dataIndex: ['newpo', 'npoLine'],
+                    dataIndex: ['newpo', 'npoLine'],align:'center'
                 },
                 {
                     title: 'Quantity',width:70,
-                    dataIndex: ['newpo', 'nQuantity'],
+                    dataIndex: ['newpo', 'nQuantity'],align:'right'
                 },
                 {
                     title: 'Destination',width:70,
@@ -431,7 +472,7 @@ const DivertReport = () => {
                 },
                 {
                     title: 'Inventory Segment Code',width:70,
-                    dataIndex: 'ninventorySegmentCode',
+                    dataIndex: ['newpo','ninventorySegmentCode'],
                 },
                 {
                     title: 'Item Vas',width:70,

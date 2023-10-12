@@ -347,7 +347,7 @@ export function FabricTrackerReport() {
          form={form}
          layout='vertical'>
           <Row gutter={24}>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }} style={{ padding: '20px' }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{ padding: '20px' }}>
               <Form.Item name='productCode' label='Product Code' >
                 <Select
                   showSearch
@@ -363,7 +363,7 @@ export function FabricTrackerReport() {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }} style={{ padding: '20px' }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{ padding: '20px' }}>
               <Form.Item name='styleNumber' label='Style Number' >
                 <Select
                   showSearch
@@ -378,10 +378,11 @@ export function FabricTrackerReport() {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }} style={{ padding: '20px' }}>
+            <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
               <Form.Item name='colorDesc' label='Color Description' >
                 <Select
                   showSearch
+                  dropdownMatchSelectWidth={false}
                   placeholder="Select Color Description"
                   optionFilterProp="children"
                   allowClear
@@ -393,7 +394,7 @@ export function FabricTrackerReport() {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }} >
+            <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{ padding: '20px' }} >
               <Form.Item name='item' label='Item' >
                 <Select
                   showSearch
@@ -408,7 +409,7 @@ export function FabricTrackerReport() {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+            <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{ padding: '15px' }} >
               <Form.Item name='factory' label='Factory' >
                 <Select
                   showSearch
@@ -423,7 +424,7 @@ export function FabricTrackerReport() {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }} >
+            <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }} style={{ padding: '25px' }} >
               <Form.Item>
                 <Button htmlType="submit"
                   icon={<SearchOutlined />}
@@ -449,7 +450,7 @@ export function FabricTrackerReport() {
             }
           }}
           className="custom-table-wrapper"
-          scroll={{ x: 'max-content' ,y:600 }}
+          scroll={{ x: 'max-content' ,y:500 }}
           bordered
         ></Table>
       </Card>

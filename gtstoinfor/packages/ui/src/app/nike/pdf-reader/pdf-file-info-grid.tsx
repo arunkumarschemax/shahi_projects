@@ -125,7 +125,6 @@ export function POPDFInfoGrid() {
     })
 
     const setMoreData = (record) => {
-        console.log(record.file_data)
         navigate('/nike/po-pdf-table', { state: { data: record.file_data } })
 
     }
@@ -222,11 +221,13 @@ export function POPDFInfoGrid() {
                     bordered
                     className="custom-table-wrapper"
                     pagination={{
+                        pageSize: 50,
                         onChange(current, pageSize) {
                             setPage(current);
                             setPageSize(pageSize);
                         },
                     }}
+                    scroll={{ x: 'max-content', y: 450 }}
                 >
                 </Table>
                 <Modal

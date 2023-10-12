@@ -137,7 +137,7 @@ const OrdersCompareGrid = () => {
         if (filteredQtyData && filteredQtyData.length > 0) {
             excel
                 .addSheet('Quantity changes')
-                .addColumns(data1)
+                .addColumns(exportingColumns)
                 .addDataSource(filterData, { str2num: true });
         }
 
@@ -161,6 +161,7 @@ const OrdersCompareGrid = () => {
                 .addColumns(data3)
                 .addDataSource(poStatusData, { str2num: true });
         }
+
         if (priceChaneData && priceChaneData.length > 0) {
             excel
                 .addSheet('Price & currency change in FOB')
@@ -171,115 +172,7 @@ const OrdersCompareGrid = () => {
         excel.saveAs('revisedPOs.xlsx');
     };
 
-
-
-    const data1 = [
-        {
-            title: 'PO Number',
-            dataIndex: 'purchaseOrderNumber',
-            fixed: 'left',
-        },
-        {
-            title: 'PO Line Item No',
-            dataIndex: 'poLineItemNumber',
-            fixed: 'left',
-        },
-        {
-            title: 'Schedule Line Item No',
-            dataIndex: 'scheduleLineItemNumber',
-        },
-        {
-            title: 'Report Generate Date',
-            dataIndex: 'created_at',
-            render: (text) => moment(text).format('MM/DD/YYYY'),
-        },
-        {
-            title: 'Item',
-            dataIndex: 'item',
-            render: (text, record) => {
-                if (!text || text.trim() === '') {
-                    return '-';
-                } else {
-                    return text;
-                }
-            },
-        },
-        {
-            title: 'Factory',
-            dataIndex: 'factory',
-            render: (text, record) => {
-                if (!text || text.trim() === '') {
-                    return '-';
-                } else {
-                    return text;
-                }
-            },
-        },
-
-        {
-            title: 'Style Number',
-            dataIndex: 'styleNumber',
-        },
-        {
-            title: 'Product Code',
-            dataIndex: 'productCode',
-        },
-        {
-            title: 'Color Description',
-            dataIndex: 'colorDesc',
-        },
-        {
-            title: 'OGAC',
-            dataIndex: 'OGAC',
-        },
-        {
-            title: 'GAC',
-            dataIndex: 'GAC',
-        },
-        {
-            title: 'Destination Country',
-            dataIndex: 'destinationCountry',
-        },
-        {
-            title: 'Item Text',
-            dataIndex: 'itemText',
-            // render:(text,record) => {
-            //     return(
-            //         <>
-            //         {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
-            //                     {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
-            //                 </span></p></Tooltip></>) : (<>{record.itemText}</>)}
-            //         </>
-            //     )
-            // }
-        },
-
-        // {
-        //     title: 'Difference',
-        //     dataIndex: 'Diff',
-        //     align: 'right',
-        //     render: (text, record) => (
-        //         < >
-        //             {Number(record.Diff) === 0 ? '-' : ''}
-        //             {Number(record.Diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.Diff).toLocaleString('en-IN', {
-        //                 maximumFractionDigits: 0
-        //             })} </span> : ''}
-        //             {Number(record.Diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.Diff).toLocaleString('en-IN', {
-        //                 maximumFractionDigits: 0
-        //             })} </span> : ''}
-        //         </>
-        //     )
-        // },
-
-        // {
-        //     title: 'Total Quantity',
-        //     align: 'right',
-        //     dataIndex: 'totalQuantity',
-        //     render: (text) => (
-        //         <span>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
-        //     ),
-        // },
-    ]
+    let exportingColumns: IExcelColumn[] = []
 
     const data2 = [
         {
@@ -288,7 +181,15 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'Item code',
-            dataIndex: 'item_code'
+            dataIndex: 'item_code',
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    const firstFourDigits = text.substring(0, 4);
+                    return firstFourDigits;
+                }
+            },
         },
         {
             title: 'Item Name',
@@ -317,7 +218,6 @@ const OrdersCompareGrid = () => {
     ];
 
     const data3 = [
-
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
@@ -326,6 +226,14 @@ const OrdersCompareGrid = () => {
         {
             title: 'Item',
             dataIndex: 'item',
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    const firstFourDigits = text.substring(0, 4);
+                    return firstFourDigits;
+                }
+            },
         },
         {
             title: 'Factory',
@@ -345,7 +253,8 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'GAC',
-            dataIndex: 'gac'
+            dataIndex: 'gac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'CO Number',
@@ -360,7 +269,6 @@ const OrdersCompareGrid = () => {
             title: 'Change from Gross Price currency',
             dataIndex: '',
         },
-
         {
             title: 'Change to Gross Price currency',
             dataIndex: '',
@@ -450,31 +358,92 @@ const OrdersCompareGrid = () => {
         },
     ];
 
-    const data4 = [
+    const data4: any = [
         {
-            title: 'Item code',
-            dataIndex: 'item_code'
+            title: 'S No',
+            key: 'sno',
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1)
         },
         {
-            title: 'Item Name',
-            dataIndex: 'itemName'
+            title: 'Report Generate Date',
+            dataIndex: 'created_at',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
-            title: ' sum Of Qrd Qty last Week',
-            dataIndex: 'old_qty_value',
+            title: 'Item No',
+            dataIndex: 'item',
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    const firstFourDigits = text.substring(0, 4);
+                    return firstFourDigits;
+                }
+            },
         },
         {
-            title: 'Sum Of Qrd Qty this Week',
-            dataIndex: 'new_qty_value',
+            title: 'PO Number',
+            dataIndex: 'po_number',
         },
         {
-            title: 'Difference Ord Qty Revised',
-            dataIndex: 'diff'
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number'
+        },
+        {
+            title: 'Document Date',
+            dataIndex: 'document_date',
+            render: (text) => moment(text).format('MM/DD/YYYY')
+        },
+        {
+            title: 'Style Number',
+            dataIndex: 'style_number'
+        },
+        {
+            title: 'Product Code',
+            dataIndex: 'product_code'
+        },
+        {
+            title: 'Color Description',
+            dataIndex: 'color_desc'
+        },
+        {
+            title: 'OGAC',
+            dataIndex: 'ogac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
+        },
+        {
+            title: 'GAC',
+            dataIndex: 'gac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
+        },
+        {
+            title: 'Total Item Quantity',
+            dataIndex: 'total_item_qty'
+        },
+        {
+            title: 'From Factory',
+            dataIndex: 'from_factory'
+        },
+        {
+            title: 'Change to Factory',
+            dataIndex: 'change_to_factory'
+        },
+        {
+            title: 'Schedule Line Item No',
+            dataIndex: 'schedule_line_item_number',
+        },
+        {
+            title: 'Previous Unit',
+            dataIndex: 'old_val',
+        },
+        {
+            title: 'Revised Unit',
+            dataIndex: 'new_val',
         },
 
     ];
-    const data5 = [
 
+    const data5 = [
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
@@ -483,6 +452,14 @@ const OrdersCompareGrid = () => {
         {
             title: 'Item',
             dataIndex: 'item',
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    const firstFourDigits = text.substring(0, 4);
+                    return firstFourDigits;
+                }
+            },
         },
         {
             title: 'Factory',
@@ -499,21 +476,19 @@ const OrdersCompareGrid = () => {
         {
             title: 'Product Code',
             dataIndex: 'product_code',
-            //...getColumnSearchProps('')
         },
         {
             title: 'GAC',
             dataIndex: 'gac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'CO Number',
             dataIndex: 'customer_order',
-            //...getColumnSearchProps('po_number')
         },
         {
             title: 'Size Description',
             dataIndex: 'size_description',
-            // ...getColumnSearchProps('size_description')
         },
         {
             title: 'Change From Gross Price',
@@ -595,8 +570,7 @@ const OrdersCompareGrid = () => {
             title: 'Legal PDF PO Price',
             dataIndex: 'legalPoPrice',
             render: (text, record) => (record.legalPoPrice ? record.legalPoPrice : '-'),
-        }
-        ,
+        },
         {
             title: 'Legal PDF PO Price Currency',
             dataIndex: 'legalPoCurrency',
@@ -606,35 +580,21 @@ const OrdersCompareGrid = () => {
             title: 'CRM CO Price',
             dataIndex: 'crmCoPrice',
             render: (text, record) => (record.crmCoPrice ? record.crmCoPrice : '-'),
-
-
         },
         {
             title: 'CRM CO Price Currency',
             dataIndex: 'coPriceCurrency',
             render: (text, record) => (record.coPriceCurrency ? record.coPriceCurrency : '-'),
         },
-
-
         {
             title: 'Comparison of CRM CO Price to Legal PDF PO Price',
             dataIndex: '',
-
             render: (text, record) => {
                 const diff = Number(record.crmCoPrice) - Number(record.legalPoPrice);
-                const color = diff < 0 ? 'red' : diff > 0 ? 'green' : 'black';
-                const arrowIcon = diff < 0 ? <DownOutlined /> : diff > 0 ? <UpOutlined /> : null;
-
-                return (
-                    <span style={{ color }}>
-                        {arrowIcon} {Number(diff).toFixed(2)}
-                    </span>
-                );
+                return (Number(diff).toFixed(2));
             }
         }
-
     ];
-    let exportingColumns: IExcelColumn[] = []
 
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
@@ -708,15 +668,21 @@ const OrdersCompareGrid = () => {
                 : null
     })
 
-
-
-
     const columns1: any = [
         {
             title: 'S No',
             key: 'sno',
-            width: '60px',
+            width: 60,
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+            fixed: 'left'
+        }, {
+            title: 'PO Number',
+            dataIndex: 'po_number',
+            ...getColumnSearchProps('po_number'), fixed: 'left'
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number', fixed: 'left'
         },
         {
             title: 'Report Generate Date',
@@ -728,19 +694,9 @@ const OrdersCompareGrid = () => {
             dataIndex: 'factory'
         },
         {
-            title: 'PO Number',
-            dataIndex: 'po_number',
-            ...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number'
-        },
-        {
             title: 'Document Date',
             dataIndex: 'document_date',
             render: (text) => moment(text).format('MM/DD/YYYY')
-
         },
         {
             title: 'Style Number',
@@ -756,7 +712,8 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'GAC',
-            dataIndex: 'gac'
+            dataIndex: 'gac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Change from Total Item Quantity',
@@ -815,8 +772,16 @@ const OrdersCompareGrid = () => {
         {
             title: 'S No',
             key: 'sno',
-            width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+            width: 60,
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1), fixed: 'left'
+        }, {
+            title: 'PO Number',
+            dataIndex: 'po_number', width: 70,
+            ...getColumnSearchProps('po_number'), fixed: 'left'
+        },
+        {
+            title: 'PO Line Item No', width: 70,
+            dataIndex: 'po_line_item_number', fixed: 'left'
         },
         {
             title: 'Report Generate Date',
@@ -826,21 +791,20 @@ const OrdersCompareGrid = () => {
         {
             title: 'Item',
             dataIndex: 'item', width: 70,
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    const firstFourDigits = text.substring(0, 4);
+                    return firstFourDigits;
+                }
+            },
             // ...getColumnSearchProps('item')
         },
         {
             title: 'Factory',
             dataIndex: 'factory', width: 70,
             ...getColumnSearchProps('factory')
-        },
-        {
-            title: 'PO Number',
-            dataIndex: 'po_number', width: 70,
-            ...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'PO Line Item No', width: 70,
-            dataIndex: 'po_line_item_number'
         },
         {
             title: 'Product Code',
@@ -850,33 +814,26 @@ const OrdersCompareGrid = () => {
         {
             title: 'GAC',
             dataIndex: 'gac', width: 70,
-            ...getColumnSearchProps('gac')
+            render: (text) => moment(text).format('MM/DD/YYYY'),
         },
         {
             title: 'CO Number',
             dataIndex: 'customer_order', width: 70,
-            //...getColumnSearchProps('po_number')
         },
         {
             title: 'Size Description',
             dataIndex: 'size_description', width: 70,
-            // ...getColumnSearchProps('size_description')
         },
         {
             title: 'Change From Gross Price',
             dataIndex: 'grossPriceFobOld', width: 70,
             align: 'right',
             render: (text, record) => (record.grossPriceFobOld ? record.grossPriceFobOld : '-'),
-
-
-            // ...getColumnSearchProps('po_number')
         },
         {
             title: 'Change from Gross Price currency',
             dataIndex: '',
             align: 'center', width: 70,
-
-            //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change to Gross Price',
@@ -886,30 +843,22 @@ const OrdersCompareGrid = () => {
                 const formattedAmount = record.grossPriceFobNew ? parseFloat(record.grossPriceFobNew).toFixed(2) : "-";
                 return <>{formattedAmount}</>;
             }
-
-            //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change to Gross Price currency',
             dataIndex: '',
             align: 'right', width: 70,
-
-            //...getColumnSearchProps('po_number')
         },
         {
             title: 'Shahi Offered Price from Master File  ',
             dataIndex: 'shahiOfferedPrice',
             align: 'center', width: 70,
             render: (text, record) => (record.shahiOfferedPrice ? record.shahiOfferedPrice : '-'),
-
-
-            //...getColumnSearchProps('po_number')
         },
         {
             title: 'Shahi Offered Price currency from Master File ',
             dataIndex: 'shahiOfferedPricecurrency', width: 90,
             render: (text, record) => (record.shahiOfferedPricecurrency ? record.shahiOfferedPricecurrency : '-'),
-            //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change from Trading Co Net including discounts',
@@ -917,55 +866,46 @@ const OrdersCompareGrid = () => {
             align: 'right',
             render: (text, record) =>
                 (record.trCoNetIncludingDiscFrom ? record.trCoNetIncludingDiscFrom : '-')
-            //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change from Trading Co Net including discounts currency',
-            dataIndex: 'trCoNetIncludingDiscCurrencyCodeFrom', width: 90,
+            dataIndex: 'trCoNetIncludingDiscCurrencyCodeFrom', width: 100,
             render: (text, record) =>
                 (record.trCoNetIncludingDiscCurrencyCodeFrom ? record.trCoNetIncludingDiscCurrencyCodeFrom : '-')
-            //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change to Trading Co Net including discounts',
-            dataIndex: 'trCoNetIncludingDiscNew', width: 70,
+            dataIndex: 'trCoNetIncludingDiscNew', width: 90,
             render: (text, record) =>
                 (record.trCoNetIncludingDiscNew ? record.trCoNetIncludingDiscNew : '-')
-            //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change to Trading Co Net including discounts currency',
             dataIndex: '', width: 90,
-
-            //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change from Net including discounts',
             dataIndex: 'trCoNetIncludingDiscFrom', width: 70,
             render: (text, record) =>
                 (record.trCoNetIncludingDiscFrom ? record.trCoNetIncludingDiscFrom : '-')
-            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change from Net including discounts currency',
             dataIndex: 'trCoNetIncludingDiscCurrencyCodeFrom', width: 70,
             render: (text, record) =>
                 (record.trCoNetIncludingDiscCurrencyCodeFrom ? record.trCoNetIncludingDiscCurrencyCodeFrom : '-')
-            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change to Net including discounts',
             dataIndex: 'trCoNetIncludingDiscNew', width: 70,
             render: (text, record) =>
                 (record.trCoNetIncludingDiscNew ? record.trCoNetIncludingDiscNew : '-')
-            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'change to Net including discounts currency',
             dataIndex: 'trCoNetIncludingDiscCurrencyCodeTo', width: 70,
             render: (text, record) =>
                 (record.trCoNetIncludingDiscCurrencyCodeTo ? record.trCoNetIncludingDiscCurrencyCodeTo : '-')
-            //...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Legal PDF PO Price',
@@ -978,26 +918,18 @@ const OrdersCompareGrid = () => {
             title: 'Legal PDF PO Price Currency',
             dataIndex: 'legalPoCurrency', width: 70,
             render: (text, record) => (record.legalPoCurrency ? record.legalPoCurrency : '-'),
-
-            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'CRM CO Price',
             dataIndex: 'crmCoPrice', width: 70,
             align: 'right',
             render: (text, record) => (record.crmCoPrice ? record.crmCoPrice : '-'),
-
-
         },
         {
             title: 'CRM CO Price Currency',
             dataIndex: 'coPriceCurrency', width: 70,
             render: (text, record) => (record.coPriceCurrency ? record.coPriceCurrency : '-'),
-
-            // ...getColumnSearchProps('schedule_line_item_number')
         },
-
-
         {
             title: 'Comparison of CRM CO Price to Legal PDF PO Price',
             dataIndex: '',
@@ -1006,7 +938,6 @@ const OrdersCompareGrid = () => {
                 const diff = Number(record.crmCoPrice) - Number(record.legalPoPrice);
                 const color = diff < 0 ? 'red' : diff > 0 ? 'green' : 'black';
                 const arrowIcon = diff < 0 ? <DownOutlined /> : diff > 0 ? <UpOutlined /> : null;
-
                 return (
                     <span style={{ color }}>
                         {arrowIcon} {Number(diff).toFixed(2)}
@@ -1014,16 +945,22 @@ const OrdersCompareGrid = () => {
                 );
             }
         }
-
-
     ];
 
     const columns3: any = [
         {
             title: 'S No',
             key: 'sno',
-            width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+            width: 60,
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1), fixed: 'left'
+        }, {
+            title: 'PO Number',
+            dataIndex: 'po_number',
+            ...getColumnSearchProps('po_number'), fixed: 'left'
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number', fixed: 'left'
         },
         {
             title: 'Report Generate Date',
@@ -1033,6 +970,14 @@ const OrdersCompareGrid = () => {
         {
             title: 'Item',
             dataIndex: 'item',
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    const firstFourDigits = text.substring(0, 4);
+                    return firstFourDigits;
+                }
+            },
             // ...getColumnSearchProps('item')
         },
         {
@@ -1043,16 +988,8 @@ const OrdersCompareGrid = () => {
         {
             title: 'Document Date',
             dataIndex: 'documentDate',
+            render: (text) => moment(text).format('MM/DD/YYYY')
             //...getColumnSearchProps('factory')
-        },
-        {
-            title: 'PO Number',
-            dataIndex: 'po_number',
-            ...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number'
         },
         {
             title: 'CO Number',
@@ -1062,11 +999,13 @@ const OrdersCompareGrid = () => {
         {
             title: 'OGAC',
             dataIndex: 'ogac',
+            render: (text) => moment(text).format('MM/DD/YYYY'),
             ...getColumnSearchProps('ogac')
         },
         {
             title: 'GAC',
             dataIndex: 'gac',
+            render: (text) => moment(text).format('MM/DD/YYYY'),
             ...getColumnSearchProps('gac')
         },
         {
@@ -1079,13 +1018,23 @@ const OrdersCompareGrid = () => {
             dataIndex: '',
             ...getColumnSearchProps('')
         },
-
     ];
+
     const columns4: any = [
         {
             title: 'S No',
             key: 'sno',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1)
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+            fixed: 'left'
+        },
+        {
+            title: 'PO Number',
+            dataIndex: 'po_number',
+            ...getColumnSearchProps('po_number'), fixed: 'left'
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number', fixed: 'left'
         },
         {
             title: 'Report Generate Date',
@@ -1094,22 +1043,20 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'Item No',
-            dataIndex: 'item'
-        },
-        {
-            title: 'PO Number',
-            dataIndex: 'po_number',
-            ...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number'
+            dataIndex: 'item',
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    const firstFourDigits = text.substring(0, 4);
+                    return firstFourDigits;
+                }
+            },
         },
         {
             title: 'Document Date',
             dataIndex: 'document_date',
             render: (text) => moment(text).format('MM/DD/YYYY')
-
         },
         {
             title: 'Style Number',
@@ -1125,11 +1072,13 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'OGAC',
-            dataIndex: 'ogac'
+            dataIndex: 'ogac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'GAC',
-            dataIndex: 'gac'
+            dataIndex: 'gac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Total Item Quantity',
@@ -1159,41 +1108,55 @@ const OrdersCompareGrid = () => {
         },
 
     ];
+
     const columns5: any = [
         {
             title: 'S No',
             key: 'sno',
-            width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+            width: 60,
+            fixed: 'left',
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1)
+        },
+        {
+            title: 'PO Number',
+            dataIndex: 'po_number',
+            fixed: 'left',
+            width: 80,
+            ...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number',
+            fixed: 'left',
+            width: 80,
         },
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
-            render: (text) => moment(text).format('MM/DD/YYYY'), width: 80,
+            render: (text) => moment(text).format('MM/DD/YYYY'),
+            width: 80,
         },
         {
             title: 'Item',
             dataIndex: 'item', width: 80,
-            // ...getColumnSearchProps('item')
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    const firstFourDigits = text.substring(0, 4);
+                    return firstFourDigits;
+                }
+            },
         },
         {
             title: 'Factory',
             dataIndex: 'factory', width: 80,
-            ...getColumnSearchProps('factory')
         },
         {
             title: 'Document Date',
-            dataIndex: 'documentDate', width: 80,
-            //...getColumnSearchProps('factory')
-        },
-        {
-            title: 'PO Number',
-            dataIndex: 'po_number', width: 80,
-            ...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'PO Line Item No', width: 80,
-            dataIndex: 'po_line_item_number'
+            dataIndex: 'documentDate',
+            width: 80,
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Total Iten Quantity',
@@ -1208,32 +1171,33 @@ const OrdersCompareGrid = () => {
         {
             title: 'OGAC',
             dataIndex: 'ogac', width: 80,
+            render: (text) => moment(text).format('MM/DD/YYYY'),
             ...getColumnSearchProps('ogac')
         },
         {
             title: 'GAC',
             dataIndex: 'gac', width: 80,
+            render: (text) => moment(text).format('MM/DD/YYYY'),
             ...getColumnSearchProps('gac')
         },
-
         {
             title: 'Change from Direct Ship Sales Order Number',
-            dataIndex: '', width: 80,
+            dataIndex: '', width: 120,
             ...getColumnSearchProps('')
         },
         {
             title: 'Change from Direct Ship Sales Order Item',
-            dataIndex: '', width: 80,
+            dataIndex: '', width: 100,
             ...getColumnSearchProps('')
         },
         {
             title: 'Change to Direct Ship Sales Order Number',
-            dataIndex: '', width: 80,
+            dataIndex: '', width: 100,
             ...getColumnSearchProps('')
         },
         {
             title: 'Change to Direct Ship Sales Order Item',
-            dataIndex: '', width: 80,
+            dataIndex: '', width: 100,
             ...getColumnSearchProps('')
         },
         {
@@ -1267,60 +1231,69 @@ const OrdersCompareGrid = () => {
             ...getColumnSearchProps('')
         },
     ];
+
     const columns6: any = [
         {
             title: 'S No',
             key: 'sno',
-            width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-        },
-        {
-            title: 'Report Generate Date',
-            dataIndex: 'created_at',
-            render: (text) => moment(text).format('MM/DD/YYYY')
-        },
-        {
-            title: 'Item',
-            dataIndex: 'item',
-        },
-        {
-            title: 'Factory',
-            dataIndex: 'factory',
-            ...getColumnSearchProps('factory')
-        },
-        {
-            title: 'Document Date',
-            dataIndex: 'document_date',
-            render: (text) => moment(text).format('MM/DD/YYYY')
-
+            width: 60,
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1), fixed: 'left'
         },
         {
             title: 'PO Number',
             dataIndex: 'po_number',
-            ...getColumnSearchProps('po_number')
+            ...getColumnSearchProps('po_number'), fixed: 'left', width: 80
         },
         {
             title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number'
+            dataIndex: 'po_line_item_number', fixed: 'left', width: 80
+        },
+        {
+            title: 'Report Generate Date',
+            dataIndex: 'created_at',
+            render: (text) => moment(text).format('MM/DD/YYYY'), width: 80
+        },
+        {
+            title: 'Item',
+            dataIndex: 'item', width: 80,
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    const firstFourDigits = text.substring(0, 4);
+                    return firstFourDigits;
+                }
+            },
+        },
+        {
+            title: 'Factory',
+            dataIndex: 'factory',
+            ...getColumnSearchProps('factory'), width: 80
+        },
+        {
+            title: 'Document Date',
+            dataIndex: 'document_date',
+            render: (text) => moment(text).format('MM/DD/YYYY'), width: 80
         },
         {
             title: 'Product Code',
-            dataIndex: 'product_code'
+            dataIndex: 'product_code', width: 80
         },
         {
             title: 'OGAC',
-            dataIndex: 'ogac',
+            dataIndex: 'ogac', width: 80,
+            render: (text) => moment(text).format('MM/DD/YYYY'),
             ...getColumnSearchProps('ogac')
         },
         {
             title: 'GAC',
             dataIndex: 'gac',
+            render: (text) => moment(text).format('MM/DD/YYYY'),
             ...getColumnSearchProps('gac')
         },
         {
             title: 'Change from Inventory Segment Code',
             dataIndex: '', width: 100,
-            // ...getColumnSearchProps('')
         },
         {
             title: 'Change To Inventory Segment Code',
@@ -1362,181 +1335,139 @@ const OrdersCompareGrid = () => {
             dataIndex: '',
             // ...getColumnSearchProps('schedule_line_item_number')
         },
-        // {
-        //     title: ' Sum Of Qrd Qty last Week',
-        //     dataIndex: 'old_qty_value',
-        //     align: 'right',
-        //     render: (text, record) => (
-        //         <>
-        //             {Number(record.old_qty_value).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-        //         </>
-        //     )
-
-        // },
-        // {
-        //     title: 'Sum Of Qrd Qty this Week',
-        //     dataIndex: 'new_qty_value',
-        //     align: 'right',
-        //     render: (text, record) => (
-        //         <span  {...record.new_qty_value}>
-        //             <>
-        //                 {Number(record.old_qty_value) === Number(record.new_qty_value) ? <span style={{ color: '' }}>{Number(record.new_qty_value).toLocaleString('en-IN', {
-        //                     maximumFractionDigits: 0
-        //                 })}</span> : ''}
-        //                 {Number(record.old_qty_value) < Number(record.new_qty_value) ? <span style={{ color: 'green' }}>{Number(record.new_qty_value).toLocaleString('en-IN', {
-        //                     maximumFractionDigits: 0
-        //                 })}</span> : ''}
-        //                 {Number(record.old_qty_value) > Number(record.new_qty_value) ? <span style={{ color: 'red' }}>{Number(record.new_qty_value).toLocaleString('en-IN', {
-        //                     maximumFractionDigits: 0
-        //                 })}</span> : ''}
-        //             </>
-        //         </span>
-        //     )
-        // },
-        // {
-        //     title: 'Difference Ord Qty Revised',
-        //     dataIndex: 'diff',
-        //     align: 'right',
-        //     render: (text, record) => (
-        //         < >
-
-        //             {Number(record.diff) === 0 ? '-' : ''}
-        //             {Number(record.diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.diff).toLocaleString('en-IN', {
-        //                 maximumFractionDigits: 0
-        //             })} </span> : ''}
-        //             {Number(record.diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.diff).toLocaleString('en-IN', {
-        //                 maximumFractionDigits: 0
-        //             })} </span> : ''}
-
-        //         </>
-        //     )
-        // },
-
     ];
+
     const columns7: any = [
         {
             title: 'S No',
             key: 'sno',
-            width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+            width: 60,
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1), fixed: 'left'
+        },
+        {
+            title: 'PO Number',
+            dataIndex: 'po_number', width: 70,
+            ...getColumnSearchProps('po_number'), fixed: 'left'
+        },
+        {
+            title: 'PO Line Item No', width: 70,
+            dataIndex: 'po_line_item_number', fixed: 'left'
         },
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
-
-
-            render: (text) => moment(text).format('MM/DD/YYYY')
+            render: (text) => moment(text).format('MM/DD/YYYY'), fixed: 'left'
         },
         {
             title: 'Item',
             dataIndex: 'item',
-
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    const firstFourDigits = text.substring(0, 4);
+                    return firstFourDigits;
+                }
+            },
             // ...getColumnSearchProps('item')
         },
         {
             title: 'Factory',
-            dataIndex: 'factory', width: '70px',
+            dataIndex: 'factory', width: 70,
             ...getColumnSearchProps('factory')
         },
-        {
-            title: 'PO Number',
-            dataIndex: 'po_number', width: '70px',
-            ...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'PO Line Item No', width: '70px',
-            dataIndex: 'po_line_item_number'
-        },
+
         {
             title: 'Product Code',
-            dataIndex: 'product_code', width: '70px',
+            dataIndex: 'product_code', width: 70,
             //...getColumnSearchProps('')
         },
         {
             title: 'GAC',
-            dataIndex: 'gac', width: '70px',
+            dataIndex: 'gac', width: 70,
+            render: (text) => moment(text).format('MM/DD/YYYY'),
             ...getColumnSearchProps('gac')
         },
         {
             title: 'CO Number',
-            dataIndex: 'customer_order', width: '70px',
+            dataIndex: 'customer_order', width: 70,
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Size Description',
-            dataIndex: 'size_description', width: '70px',
+            dataIndex: 'size_description', width: 70,
             // ...getColumnSearchProps('size_description')
         },
 
         {
             title: 'Change from Gross Price currency',
-            dataIndex: '', width: '80px',
+            dataIndex: '', width: 80,
             //...getColumnSearchProps('po_number')
         },
 
         {
             title: 'Change to Gross Price currency',
-            dataIndex: '', width: '80px',
+            dataIndex: '', width: 80,
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Shahi Offered Price from Master File  ',
-            dataIndex: '', width: '80px',
+            dataIndex: '', width: 80,
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Shahi Offered Price currency from Master File ',
-            dataIndex: '', width: '80px',
+            dataIndex: '', width: 80,
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change from Trading Co Net including discounts',
-            dataIndex: '', width: '80px',
+            dataIndex: '', width: 80,
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change from Trading Co Net including discounts currency',
-            dataIndex: '', width: '80px',
+            dataIndex: '', width: 80,
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change to Trading Co Net including discounts',
-            dataIndex: '', width: '80px',
+            dataIndex: '', width: 80,
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change to Trading Co Net including discounts currency',
-            dataIndex: '', width: '80px',
+            dataIndex: '', width: 80,
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change from Net including discounts',
-            dataIndex: '', width: '80px',
+            dataIndex: '', width: 80,
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change From Net including discounts currency',
-            dataIndex: '', width: '80px',
+            dataIndex: '', width: 80,
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change to Net including discounts',
-            dataIndex: '', width: '80px',
+            dataIndex: '', width: 80,
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'change to Net including discounts currency',
-            dataIndex: '', width: '80px',
+            dataIndex: '', width: 80,
             //...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Legal PDF PO Price',
-            dataIndex: '', width: '70px',
+            dataIndex: '', width: 70,
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Legal PDF PO Price Currency',
-            dataIndex: '', width: '80px',
+            dataIndex: '', width: 80,
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         // {
@@ -1551,38 +1482,34 @@ const OrdersCompareGrid = () => {
         // },
         {
             title: 'comparission of CRM CO Price to Legal PDF PO Price',
-            dataIndex: '', width: '80px',
+            dataIndex: '', width: 80,
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Schedule Line Item No',
-            dataIndex: 'schedule_line_item_number', width: '80px',
+            dataIndex: 'schedule_line_item_number', width: 80,
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Previous Line Item Status',
             dataIndex: 'old_val',
-            align: 'center', width: '70px',
+            align: 'center', width: 70,
         },
         {
             title: 'Revised Line Item Status',
-            dataIndex: 'new_val', align: 'center', width: '70px',
+            dataIndex: 'new_val', align: 'center', width: 70,
         },
         {
             title: 'Order Quantity Pieces',
             dataIndex: 'total_item_qty',
-            align: 'right', width: '80px',
+            align: 'right', width: 80,
             render: (text, record) => (
                 <>
                     {Number(record.total_item_qty).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                 </>
             )
-
         },
-
     ];
-
-
 
     const EstimatedETDDate = (value) => {
         if (value) {
@@ -1649,32 +1576,22 @@ const OrdersCompareGrid = () => {
     const renderReport = (data: TotalQuantityChangeModel[]) => {
         const sizeHeaders = getSizeWiseHeaders(data);
         const sizeWiseMap = getMap(data);
-        const columns: any = [
-            {
-                title: 'S No',
-                key: 'sno',
-                width: '60px',
-                render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-            },
+        exportingColumns = [
             {
                 title: 'PO Number',
                 dataIndex: 'purchaseOrderNumber',
-                width: 70,
-                ...getColumnSearchProps('purchaseOrderNumber')
             },
             {
-                title: 'PO Line Item No', width: 70,
-                dataIndex: 'poLineItemNumber', align: 'center'
+                title: 'PO Line Item No',
+                dataIndex: 'poLineItemNumber',
             },
             {
                 title: 'Schedule Line Item No',
-                dataIndex: 'scheduleLineItemNumber', width: 75,
-                align: 'center',
-                ...getColumnSearchProps('scheduleLineItemNumber')
+                dataIndex: 'scheduleLineItemNumber',
             },
             {
                 title: 'Report Generate Date',
-                dataIndex: 'created_at', width: 70,
+                dataIndex: 'created_at',
                 render: (text) => moment(text).format('MM/DD/YYYY'),
             },
             {
@@ -1690,7 +1607,7 @@ const OrdersCompareGrid = () => {
             },
             {
                 title: 'Factory',
-                dataIndex: 'factory', width: 70,
+                dataIndex: 'factory',
                 render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
@@ -1699,46 +1616,44 @@ const OrdersCompareGrid = () => {
                     }
                 },
             },
-
             {
                 title: 'Style Number',
-                dataIndex: 'styleNumber', width: 70,
+                dataIndex: 'styleNumber',
             },
             {
                 title: 'Product Code',
-                dataIndex: 'productCode', width: 70,
+                dataIndex: 'productCode',
             },
             {
                 title: 'Color Description',
-                dataIndex: 'colorDesc', width: 70,
+                dataIndex: 'colorDesc',
             },
             {
                 title: 'OGAC',
-                dataIndex: 'OGAC', width: 70,
+                dataIndex: 'OGAC',
+                render: (text) => moment(text).format('MM/DD/YYYY')
             },
             {
                 title: 'GAC',
-                dataIndex: 'GAC', width: 70,
+                dataIndex: 'GAC',
+                render: (text) => moment(text).format('MM/DD/YYYY')
             },
             {
                 title: 'Destination Country',
-                dataIndex: 'destinationCountry', width: 70,
-                align: 'center',
+                dataIndex: 'destinationCountry',
             },
             {
                 title: 'Item Text',
                 dataIndex: 'itemText',
-                width: 220,
-                align: 'center',
-                render: (text, record) => {
-                    return (
-                        <>
-                            {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
-                                {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
-                            </span></p></Tooltip></>) : (<>{record.itemText}</>)}
-                        </>
-                    )
-                }
+                // render:(text,record) => {
+                //     return(
+                //         <>
+                //         {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
+                //                     {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
+                //                 </span></p></Tooltip></>) : (<>{record.itemText}</>)}
+                //         </>
+                //     )
+                // }
             },
 
             // {
@@ -1766,6 +1681,87 @@ const OrdersCompareGrid = () => {
             //         <span>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
             //     ),
             // },
+        ]
+
+        const columns: any = [
+            {
+                title: 'S No',
+                key: 'sno',
+                width: '60px',
+                render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+                fixed: 'left'
+            },
+            {
+                title: 'Report Generate Date',
+                dataIndex: 'created_at', width: 70,
+                render: (text) => moment(text).format('MM/DD/YYYY'),
+            },
+            {
+                title: 'Item',
+                dataIndex: 'item',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        const firstFourDigits = text.substring(0, 4);
+                        return firstFourDigits;
+                    }
+                },
+            },
+            {
+                title: 'Factory',
+                dataIndex: 'factory', width: 70,
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
+            },
+            {
+                title: 'PO Number',
+                dataIndex: 'purchaseOrderNumber',
+                width: 70,
+                ...getColumnSearchProps('purchaseOrderNumber')
+            },
+            {
+                title: 'PO Line Item No', width: 70,
+                dataIndex: 'poLineItemNumber', align: 'center'
+            },
+            {
+                title: 'Document Date',
+                dataIndex: 'documentDate', width: 75,
+                align: 'center',
+                render: (text) => moment(text).format('MM/DD/YYYY'),
+            },
+            {
+                title: 'Style Number',
+                dataIndex: 'styleNumber', width: 70,
+            },
+            {
+                title: 'Product Code',
+                dataIndex: 'productCode', width: 70,
+            },
+            {
+                title: 'Color Description',
+                dataIndex: 'colorDesc', width: 70,
+            },
+            {
+                title: 'OGAC',
+                dataIndex: 'OGAC', width: 70,
+                render: (text) => moment(text).format('MM/DD/YYYY')
+            },
+            {
+                title: 'GAC',
+                dataIndex: 'GAC', width: 70,
+                render: (text) => moment(text).format('MM/DD/YYYY')
+            },
+            {
+                title: 'Destination Country',
+                dataIndex: 'destinationCountry', width: 70,
+                align: 'center',
+            }
         ];
 
         sizeHeaders?.forEach(version => {
@@ -1775,7 +1771,6 @@ const OrdersCompareGrid = () => {
                 key: version,
                 width: 130,
                 align: 'center',
-
                 children: [
                     {
                         title: 'Old Quantity',
@@ -1801,7 +1796,6 @@ const OrdersCompareGrid = () => {
                             }
                         }
                     },
-
                     {
                         title: 'New Quantity',
                         dataIndex: 'newQuantity',
@@ -1826,7 +1820,6 @@ const OrdersCompareGrid = () => {
                             }
                         }
                     },
-
                     {
                         title: 'Difference',
                         dataIndex: 'difference',
@@ -1852,34 +1845,123 @@ const OrdersCompareGrid = () => {
                             }
                         }
                     }
-
-
-
-
                 ],
                 render: (text, record) => {
                     return record.sizeWiseData.find(item => item.sizeDescription === version);
                 }
             });
+            exportingColumns.push({
+                title: version,
+                dataIndex: '',
+                children: [
+                    {
+                        title: 'Old Quantity',
+                        dataIndex: '',
+                        align: 'right',
+                        render: (text, record) => {
+                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                            if (sizeData) {
+                                if (sizeData.oldQuantity !== null) {
+                                    const formattedQty = Number(sizeData.oldQuantity).toLocaleString('en-IN', { maximumFractionDigits: 0 });
 
+                                    return (
+                                        formattedQty
+                                    );
+                                } else {
+                                    return (
+                                        '-'
+                                    );
+                                }
+                            } else {
+                                return '-';
+                            }
+                        }
+                    },
+                    {
+                        title: 'New Quantity',
+                        dataIndex: 'newQuantity',
+                        render: (text, record) => {
+                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                            if (sizeData) {
+                                if (sizeData.newQuantity !== null) {
+                                    const formattedQty = Number(sizeData.newQuantity).toLocaleString('en-IN', { maximumFractionDigits: 0 });
 
+                                    return (
+                                        formattedQty
+                                    );
+                                } else {
+                                    return (
+                                        '-'
+                                    );
+                                }
+                            } else {
+                                return '-';
+                            }
+                        }
+                    },
+                    {
+                        title: 'Difference',
+                        dataIndex: 'difference',
+                        render: (text, record) => {
+                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                            if (sizeData) {
+                                if (sizeData.difference !== null) {
+                                    const difference = Number(sizeData.difference);
+                                    const formattedQty = difference.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+
+                                    if (difference < 0) {
+                                        return <span style={{ color: 'red' }}>{formattedQty}</span>;
+                                    } else {
+                                        return <span style={{ color: 'green' }}>{formattedQty}</span>;
+                                    }
+                                } else {
+                                    return '-';
+                                }
+                            } else {
+                                return '-';
+                            }
+                        }
+                    }
+                ],
+                render: (text, record) => {
+                    return record.sizeWiseData.find(item => item.sizeDescription === version);
+                }
+            });
         });
+
+        columns.push(
+            {
+                title: 'Item Text',
+                dataIndex: 'itemText',
+                width: 220,
+                align: 'center',
+                render: (text, record) => {
+                    return (
+                        <>
+                            {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
+                                {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
+                            </span></p></Tooltip></>) : (<>{record.itemText}</>)}
+                        </>
+                    )
+                }
+            }
+        )
         return (
             <>
-
                 {filterData.length > 0 ? (
                     <Table
                         columns={columns}
                         dataSource={filterData}
                         size='large'
-                        pagination={false}
-                        // pagination={{
-                        //     onChange(current, pageSize) {
-                        //         setPage(current);
-                        //         setPageSize(pageSize);
-                        //     }
-                        // }}
-                        scroll={{ x: 'max-content', y: 600 }}
+                        // pagination={false}
+                        pagination={{
+                            pageSize: 50,
+                            onChange(current, pageSize) {
+                                setPage(current);
+                                setPageSize(pageSize);
+                            }
+                        }}
+                        scroll={{ x: 'max-content', y: 450 }}
                         className="custom-table-wrapper"
                         bordered
                     />
@@ -1899,37 +1981,43 @@ const OrdersCompareGrid = () => {
         {
             key: '2',
             label: <b>Unit changed PO's : {unitChangeData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} pagination={false} scroll={{ x: 'max-content', y: 600 }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} pagination={false} scroll={{ x: 'max-content', y: 450 }} />,
         },
         {
             key: '3',
             label: <b style={{ color: '#29D6DE' }}>Item Changed PO's : {itemChangeData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns1} pagination={false} scroll={{ x: 'max-content', y: 600 }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns1} pagination={false} scroll={{ x: 'max-content', y: 450 }} />,
         },
         {
             key: '4',
             label: <b>PO Line Item Status Revised PO's : {poStatusData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns7} pagination={false} scroll={{ x: 'max-content', y: 600 }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns7} pagination={false} scroll={{ x: 'max-content', y: 450 }} />,
         },
         {
             key: '5',
             label: <b style={{ color: '#B229DE' }}>Price & currency change in FOB : {priceChaneData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={priceChaneData} columns={columns2} pagination={false} scroll={{ x: 'max-content', y: 600 }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={priceChaneData} pagination={{
+                pageSize: 50,
+                onChange(current, pageSize) {
+                    setPage(current);
+                    setPageSize(pageSize);
+                }
+            }} columns={columns2} scroll={{ x: 'max-content', y: 500 }} />,
         },
         {
             key: '6',
             label: <b>Plant Code revised : {productCodeChaneData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={productCodeChaneData} columns={columns6} pagination={false} scroll={{ x: 'max-content', y: 600 }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={productCodeChaneData} columns={columns6} pagination={false} scroll={{ x: 2000, y: 450 }} />,
         },
         {
             key: '7',
             label: <b style={{ color: '#DEAD29' }}>Mode of transportation: {modeOTransportChaneData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={modeOTransportChaneData} columns={columns3} pagination={false} scroll={{ x: 'max-content', y: 600 }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={modeOTransportChaneData} columns={columns3} pagination={false} scroll={{ x: 'max-content', y: 500 }} />,
         },
         {
             key: '8',
             label: <b>Item Text changed PO's : {itemTextChaneData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={itemTextChaneData} columns={columns5} pagination={false} scroll={{ x: 'max-content', y: 600 }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={itemTextChaneData} columns={columns5} pagination={false} scroll={{ x: 'max-content', y: 500 }} />,
         }
     ];
 
@@ -1948,7 +2036,7 @@ const OrdersCompareGrid = () => {
             style={{ color: 'green' }}
             onClick={exportExcel}
             icon={<FileExcelFilled />}>Download Excel</Button>)}>
-            <Form form={form} layout={"vertical"} >
+            {/* <Form form={form} layout={"vertical"} >
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 4 }} >
                         <Form.Item name='poandLine' label='Po+Line' >
@@ -1981,11 +2069,9 @@ const OrdersCompareGrid = () => {
                             icon={<UndoOutlined />}
                             htmlType="submit"
                             onClick={onReset}>Reset</Button>
-
                     </Col>
-
                 </Row>
-            </Form>
+            </Form> */}
             {filteredQtyData || unitChangeData || itemChangeData || poStatusData ? <>
                 <Tabs type='card' items={items} />
             </> : <></>}
@@ -1994,7 +2080,6 @@ const OrdersCompareGrid = () => {
                     <p>{itemText}</p>
                 </Card>
             </Modal>
-
         </Card>
     );
 };

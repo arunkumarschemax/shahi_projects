@@ -480,8 +480,17 @@ const VASChangesCompareGrid = () => {
         {
             title: 'S No',
             key: 'sno',
-            width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+            width: 60,
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1),fixed:'left'
+        },
+        {
+            title: 'PO Number',
+            dataIndex: 'purchaseOrderNumber',width:70,
+            ...getColumnSearchProps('purchaseOrderNumber'),fixed:'left'
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'poLineItemNumber',width:70,fixed:'left'
         },
         {
             title: 'Report Generate Date',
@@ -500,15 +509,7 @@ const VASChangesCompareGrid = () => {
         //     title: 'Document Date',
         //     dataIndex: 'document_date'
         // },
-        {
-            title: 'PO Number',
-            dataIndex: 'po_number',width:70,
-            ...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number',width:70,
-        },
+        
         {
             title: 'Total Item Quantity',
             dataIndex: 'totalItemQty',width:70,
@@ -835,8 +836,16 @@ const VASChangesCompareGrid = () => {
         {
             title: 'S No',
             key: 'sno',
-            width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+            width: 60,
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1),fixed:'left'
+        },{
+            title: 'PO Number',
+            dataIndex: 'po_number',
+            ...getColumnSearchProps('po_number'),fixed:'left'
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number',fixed:'left'
         },
         {
             title: 'Report Generate Date',
@@ -858,15 +867,7 @@ const VASChangesCompareGrid = () => {
             render: (text) => moment(text).format('MM/DD/YYYY')
 
         },
-        {
-            title: 'PO Number',
-            dataIndex: 'po_number',
-            ...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number'
-        },
+        
         {
             title: 'Product Code',
             dataIndex: 'product_code'
@@ -1021,7 +1022,7 @@ const VASChangesCompareGrid = () => {
         {
             key: '1',
             label: <b style={{ color: '#25CB2D' }}>VAS Text Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} pagination={false} scroll={{ x: 'max-content', y: 600}} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} pagination={false} scroll={{ x: 'max-content', y: 450}} />,
         },
         // {
         //     key: '2',
@@ -1046,7 +1047,7 @@ const VASChangesCompareGrid = () => {
         {
             key: '2',
             label: <b>Product Code Revised : {productCodeChaneData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={productCodeChaneData} columns={columns6} pagination={false} scroll={{ x: 'max-content', y: 600}} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={productCodeChaneData} columns={columns6} pagination={false} scroll={{ x: 1800, y: 450}} />,
         },
     ];
 

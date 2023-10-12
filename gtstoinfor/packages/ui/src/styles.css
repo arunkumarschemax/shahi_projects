@@ -42,13 +42,19 @@
 
 /*Optional: Darken the header row's borders */
 .custom-table-wrapper .ant-table-thead > tr > th {
-  border: 0.5px solid #333;
+  border: 0.1px solid #464545;
 }
 
 /* Optional: Darken the cell borders */
-/* .custom-table-wrapper .ant-table-tbody > tr > td {
-  border: 0.25px solid #4d4d4d;
-} */
+.custom-table-wrapper .ant-table-tbody > tr > td {
+  border: 0.1px solid #d6cdcd;
+}
+
+
+.table-header .ant-table-thead > tr > th {
+  background-color: lavender;
+}
+
 
 
 /* .even-version.ant-table-thead > tr > th {

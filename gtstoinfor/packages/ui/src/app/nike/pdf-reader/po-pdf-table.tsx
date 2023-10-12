@@ -1,8 +1,9 @@
 import { LegalPoDetails } from '@project-management-system/shared-models'
-import { Card, Table } from 'antd'
+import { Button, Card, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import './pdf-reader.css'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { ArrowLeftOutlined } from '@ant-design/icons'
 
 export interface IPoPdfTableProps {
     data: LegalPoDetails
@@ -11,6 +12,7 @@ export interface IPoPdfTableProps {
 export default function PoPdfTable(props: IPoPdfTableProps) {
     const { state } = useLocation();
     const [pdfData, setPdfData] = useState<any>();
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -28,9 +30,15 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
         }
     }, [state?.data])
 
+    const setMoreData = () => {
+        navigate('/nike/pdf-file-info-grid')
+
+    }
+
     return (
         <Card>
-
+            <div><Button style={{backgroundColor:'#29397d',color:'white'}}   onClick={() => setMoreData()}><b><ArrowLeftOutlined />  Back</b></Button></div>
+            <br />
             <table className='ta-b' style={{ width: '100%' }} >
                 <tr className='ta-b'>
                     <th className='ta-b'>PO NUMBER</th>
@@ -96,7 +104,6 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                 })
                 }
             </table>
-
         </Card>
     )
 }
