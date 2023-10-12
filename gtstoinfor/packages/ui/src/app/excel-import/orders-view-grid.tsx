@@ -374,7 +374,7 @@ const Number=()=>{
             render: (text) => (text ? text : '-'),
             // width: '9%',
             // width: 100,
-
+             align:"right",
             ...getColumnSearchProps("fr_fabric"),
             sorter: (a, b) => {
                 const aKey = a.fr_fabric || "";
@@ -382,6 +382,18 @@ const Number=()=>{
                 return aKey.localeCompare(bKey);
               },
         },
+        {
+            title: 'Order Qty',
+            dataIndex: 'order_plan_qty',
+            align: 'right',
+            render: (text: any) => {
+              const orderQty = parseFloat(text);
+              return !isNaN(orderQty) ? orderQty.toLocaleString('en-IN', {
+                maximumFractionDigits: 0
+              }) : '0';
+            },
+          },
+          
 
         // {
         //     title: 'Branch Factory',
