@@ -50,9 +50,9 @@ export class OrdersService extends CommonAxiosService {
     //     return await this.axiosPostCall(this.ordersController + '/fileUpload', file);
     // }
 
-    async fileUpload(file: any, month: number,fileType:string): Promise<CommonResponseModel> {
+    async fileUpload(file: any, month: number,fileType:string,uploadType: string): Promise<CommonResponseModel> {
         const monthId = month;
-        const url = `/orders/fileUpload/${monthId}/${fileType}`;
+        const url = `/orders/fileUpload/${monthId}/${fileType}/${uploadType}`;
         return this.axiosPostCall(url, file);
     }
 

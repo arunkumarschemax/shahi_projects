@@ -1,11 +1,12 @@
-import { Button, Card, Popconfirm, Table, Tabs, TabsProps, Tooltip, message } from 'antd'
+import { Button, Card, Col, DatePicker, Form, Popconfirm, Row, Table, Tabs, TabsProps, Tooltip, message } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { UndoOutlined } from '@ant-design/icons';
+import { RestOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { OrdersService } from '@project-management-system/shared-services';
 import moment from 'moment';
 import { ColumnProps } from 'antd/es/table';
-import { FileIdReq, FileTypesEnum } from '@project-management-system/shared-models';
+import { FileIdReq, FileTypeDto, FileTypesEnum } from '@project-management-system/shared-models';
 
+const {RangePicker} = DatePicker
 export function FileRevert() {
     const [page, setPage] = React.useState(1);
     const [pageSize, setPageSize] = useState(100);
@@ -13,12 +14,18 @@ export function FileRevert() {
     const [data, setData] = useState<any[]>([])
     const [trimData, setTrimData] = useState<any[]>([])
     const [poData, setPoData] = useState<any[]>([])
+    const [form] = Form.useForm()
     useEffect(() => {
         getUploadFilesData()
     }, [])
 
     const getUploadFilesData = () => {
-        service.getUploadFilesData().then((res) => {
+        const req = new FileTypeDto(null)
+        if(form.getFieldValue('uploadDate') != undefined){
+            req.fromDate = (form.getFieldValue('uploadDate')[0]).format('YYYY-MM-DD')
+            req.toDate = (form.getFieldValue('uploadDate')[1]).format('YYYY-MM-DD')
+        }
+        service.getUploadFilesData(req).then((res) => {
             if (res.status) {
                 setData(res.data)
                 setTrimData(res.data.filter(e => e.fileType === 'Trim Order'));
@@ -61,23 +68,25 @@ export function FileRevert() {
             title: "S.No",
             key: "sno",
             responsive: ["sm"],
+            width:'60px',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
-            title: 'Uploaded Date ',
+            title: <div style={{textAlign:'center'}}>Uploaded Date</div>,
             dataIndex: 'uploadedDate',
-            render: (value, record) => {
-                return (
-                    moment(value).format('YYYY-MM-DD HH:mm:ss')
-                )
-            }
+            // render: (value, record) => {
+            //     return (
+            //         moment(value).format('YYYY-MM-DD HH:mm:ss')
+            //     )
+            // }
         },
         {
-            title: 'File Name',
-            dataIndex: 'fileName'
+            title: <div style={{textAlign:'center'}}>File Name</div>,
+            dataIndex: 'fileName',
+            width:'200px'
         },
         {
-            title: 'No of Records',
+            title: <div style={{textAlign:'center'}}>No of Records</div>,
             dataIndex: 'noofRecords',
             align:'right',
             render:(text,record) => {
@@ -89,9 +98,11 @@ export function FileRevert() {
             }
         },
         {
-            title: 'Total Order Quantity',
+            title: <div style={{textAlign:'center'}}>Total Order Quantity</div>,
             dataIndex: 'orderqty',
             align:'right',
+            sorter: (a,b) => a.fileType === FileTypesEnum.PROJECTION_ORDERS ? (a.proorderqty - b.proorderqty) : (a.trimorderqty - b.trimorderqty),
+            sortDirections:['ascend','descend'],
             render:(text,record) => {
                 return(
                     <>
@@ -100,16 +111,38 @@ export function FileRevert() {
                 )
             }
         },
+        // {
+        //     title: <div style={{textAlign:'center'}}>Upload Status</div>,
+        //     dataIndex: 'status'
+        // },
         {
-            title: 'Upload Status',
-            dataIndex: 'status'
-        },
-        {
-            title: 'Uploaded User',
+            title: <div style={{textAlign:'center'}}>Uploaded User</div>,
             dataIndex: 'createdUser'
         },
         {
-            title: 'Action',
+            title:<div style={{textAlign:'center'}}>Upload Type</div>,
+            dataIndex: 'uploadType',
+            filters: [
+                {
+                  text: 'Manual',
+                  value: "Manual",
+                },
+                {
+                  text: 'Email',
+                  value: "Email",
+                },
+              ],
+              onFilter: (value,record) =>{ return record.uploadType === value},
+            render:(text,record)=>{
+                return(
+                    <>
+                    {record.uploadType ? record.uploadType : '-'}
+                    </>
+                )
+            }
+        },
+        {
+            title: <div style={{textAlign:'center'}}>Action</div>,
             dataIndex: 'Action',
             render: (text, record, index) => {
                 const isFirstRecord = index === 0 && page === 1;
@@ -137,6 +170,7 @@ export function FileRevert() {
               key: '1',
               label: `Projection Order :${poData.length}`,
               children:   <Table
+              size='small'
               columns={columns}
               dataSource={poData}
               className="custom-table-wrapper"
@@ -153,6 +187,7 @@ export function FileRevert() {
                 key: '2',
                 label: `Trim Order :${trimData.length}`,
                 children:  <Table
+                size='small'
                 columns={columns}
                 dataSource={trimData}
                 className="custom-table-wrapper"
@@ -167,10 +202,39 @@ export function FileRevert() {
               },
            
           ];
+
+    const onReset = () => {
+        form.resetFields()
+        getUploadFilesData()
+    }
+
+    const onFinish = () =>{
+        getUploadFilesData()
+    }
     return (
         <>
             <Card
                 title="Uploaded Files List">
+                    <Form form={form} onFinish={onFinish}>
+                        <Row gutter={8}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 7 }} >
+                        <Form.Item name='uploadDate' label='Upload Date'>
+                            <RangePicker style={{width:'100%'}}/>
+                        </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 2 }} >
+                        <Form.Item>
+                            <Button icon={<SearchOutlined/>} type='primary' htmlType='submit'>Search</Button>
+                        </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 2 }} >
+                        <Form.Item>
+                            <Button icon={<UndoOutlined/>} danger onClick={onReset}>Reset</Button>
+                        </Form.Item>
+                        </Col>
+                        </Row>
+
+                    </Form>
                     <Tabs items={items}/>
               
             </Card>

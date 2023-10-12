@@ -417,4 +417,31 @@ SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '') E
     .orderBy(`o.item`)
     return await query.getRawMany()
   }
+
+  async getItemWiseQtyChangeData(req:CompareOrdersFilterReq): Promise<any[]> {
+    const query = this.createQueryBuilder('o')
+    .select(`o.production_plan_id,o.item_cd,o.item,o.prod_plan_type,o.fr_fabric,o.created_at,SUM(REPLACE(od.old_val,',','')) as old_qty_value,SUM(REPLACE(od.new_val,',','')) as new_qty_value,(SUM(REPLACE(od.new_val,',','')) - SUM(REPLACE(od.old_val,',',''))) AS diff,od.version,o.order_plan_number,o.wh,o.planned_exf,o.year`)
+        .leftJoin(OrdersDifferenceEntity, 'od', 'od.prod_plan_id = o.production_plan_id')
+        .where(`column_name = 'order_plan_qty' AND o.version = od.version`)
+    
+        if(req.orderNumber){
+            query.andWhere(`o.order_plan_number = '${req.orderNumber}'`)
+        }
+        if(req.itemCode){
+            query.andWhere(`o.item_cd = '${req.itemCode}'`)
+        }
+        if(req.itemName){
+            query.andWhere(`o.item = '${req.itemName}'`)
+        }
+        if(req.warehouseFromDate){
+            query.andWhere(`o.wh BETWEEN ${req.warehouseFromDate} AND ${req.warehouseToDate}`)
+        }
+        if(req.exFactoryFromDate){
+            query.andWhere(`o.planned_exf BETWEEN '${req.exFactoryFromDate}' AND '${req.exFactoryToDate}'`)
+        }
+        query.groupBy(`o.item`)
+        query.orderBy(`o.order_plan_number`)
+    return await query.getRawMany();
+}
+
 } 

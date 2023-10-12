@@ -417,21 +417,29 @@ if(data.Order_Plan_Number !== null){
     }
 
     async getQtyDifChangeData(req:CompareOrdersFilterReq): Promise<CommonResponseModel> {
-        const files = await this.fileUploadRepo.getFilesData()
-        
-        let data;
-        if (files.length == 0) {
-            return new CommonResponseModel(false, 0, 'No data found');
-        } else if (files.length == 1) {
-            data = await this.ordersChildRepo.getItemQtyChangeData1(files[0]?.fileId,req)
-        } else {
-            data = await this.ordersChildRepo.getItemQtyChangeData(files[1]?.fileId, files[0]?.fileId,req)
-        }
+        const data = await this.ordersRepository.getItemWiseQtyChangeData(req)
         if (data)
             return new CommonResponseModel(true, 1, 'data retrived', data)
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
+    // async getQtyDifChangeData(req:CompareOrdersFilterReq): Promise<CommonResponseModel> {
+    //     const files = await this.fileUploadRepo.getFilesData()
+        
+    //     let data;
+    //     if (files.length == 0) {
+    //         return new CommonResponseModel(false, 0, 'No data found');
+    //     } else if (files.length == 1) {
+    //         data = await this.ordersChildRepo.getItemQtyChangeData1(files[0]?.fileId,req)
+    //     } else {
+    //         data = await this.ordersChildRepo.getItemQtyChangeData(files[1]?.fileId, files[0]?.fileId,req)
+    //     }
+    //     if (data)
+    //         return new CommonResponseModel(true, 1, 'data retrived', data)
+    //     else
+    //         return new CommonResponseModel(false, 0, 'No data found');
+    // }
 
     async getContractDateChangeData(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getContractDateChangeData()
@@ -623,12 +631,13 @@ if(data.Order_Plan_Number !== null){
         }
     }
 
-    async updatePath(filePath: string, filename: string, month: number,fileType:string): Promise<CommonResponseModel> {
+    async updatePath(filePath: string, filename: string, month: number,fileType:string,uploadType:string): Promise<CommonResponseModel> {
         const entity = new FileUploadEntity()
         entity.fileName = filename;
         entity.filePath = filePath;
         entity.month = 9;
         entity.fileType = fileType;
+        entity.uploadType = uploadType
         entity.status = 'uploading';
         const file = await this.fileUploadRepo.findOne({ where: { fileName: filename, isActive: true } })
         if (file) {
@@ -1582,7 +1591,7 @@ async processEmails() {
             if(dataArray){
                 // console.log('dataArraymmmm',dataArray)
                 
-                const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS)
+                const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS,'Email')
                 console.log(filepath,'jjjjj')
                 console.log(filename,'jjjjj')
                 // console.log('saveFilePathhhhh')
