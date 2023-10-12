@@ -82,7 +82,7 @@ export function NikeFileRevert() {
                                 cancelText="No"
                                 onConfirm={() => revertFileData(record?.fileId)}
                             >
-                                <Button icon={<UndoOutlined style={{ color: 'red' }} />}>Revert File</Button>
+                                <Button size='small' icon={<UndoOutlined style={{ color: 'red' }} />}>Revert File</Button>
                             </Popconfirm>
                         )}
                         {!isFirstRecord && <></>}

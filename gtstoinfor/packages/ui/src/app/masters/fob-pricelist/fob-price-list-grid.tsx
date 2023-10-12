@@ -265,7 +265,7 @@ const FobPriceListGrid = () => {
               },
             }}
             // pagination={false}
-            scroll={{ x: 'max-content', y: 500 }}
+            scroll={{ x: 1000, y: 450 }}
           />
         </Card>
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='update' width={window.innerWidth > 768 ? '75%' : '85%'}

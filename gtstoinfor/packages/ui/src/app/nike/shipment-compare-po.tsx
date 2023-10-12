@@ -148,6 +148,10 @@ const ShipmentChangesCompareGrid = () => {
         {
             title: 'PO Line Item No',
             dataIndex: 'po_line_item_number'
+        }, {
+            title:'Document Date',
+            dataIndex:'document_date',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Change from OGAC',
@@ -171,7 +175,14 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'RC Code',
-            dataIndex: 'rc_code'
+            dataIndex: 'rc_code',
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                  return '-';
+                } else {
+                  return text;
+                }
+              },
         }
     ]
 
@@ -435,7 +446,12 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number'
+            dataIndex: 'po_line_item_number', width:70,align:'center'
+        },
+        {
+            title:'Document Date',
+            dataIndex:'document_date',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Change from OGAC',
@@ -459,7 +475,7 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'RC Code',
-            dataIndex: 'rc_code'
+            dataIndex: 'rc_code',width:70
         }
     ];
 
