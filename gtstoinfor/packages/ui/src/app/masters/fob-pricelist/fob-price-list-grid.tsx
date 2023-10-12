@@ -346,6 +346,117 @@ const FobPriceListGrid = () => {
           headStyle={{ height: '50px' }}
           title={<><span>Fob Price List</span><span><Button onClick={() => navigate('/masters/fob-price-list-form', { state: { name: 'excel' } })} style={{ float: 'right', marginRight: '2px' }} type='primary'>CSV Upload</Button></span></>}
         >
+             <Form
+
+form={form}
+layout='vertical'
+onFinish={getData}
+>
+<Row gutter={24}>
+
+  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
+    <Form.Item name='planningSeasonCode' label='Planning season code' >
+      <Select
+        showSearch
+        placeholder="Select Planning season code"
+        optionFilterProp="children"
+        allowClear
+
+      >
+        {planningSeasonCode?.map((inc: any) => {
+          return <Option key={inc.id} value={inc.planning_season_code}>{inc.planning_season_code}</Option>
+        })
+        }
+      </Select>
+    </Form.Item>
+  </Col>
+
+  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
+    <Form.Item name='planningSeasonYear' label='Planning season year' >
+      <Select
+        showSearch
+        placeholder="Select Planning season year"
+        optionFilterProp="children"
+        allowClear
+
+      >
+        {planningSeasonYear?.map((inc: any) => {
+          return <Option key={inc.id} value={inc.planning_season_year}>{inc.planning_season_year}</Option>
+        })
+        }
+      </Select>
+    </Form.Item>
+  </Col>
+
+  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
+    <Form.Item name='styleNumber' label='Style Number' >
+      <Select
+        showSearch
+        placeholder="Select Style Number"
+        optionFilterProp="children"
+        allowClear
+
+      >
+        {styleNumber?.map((inc: any) => {
+          return <Option key={inc.id} value={inc.style_number}>{inc.style_number}</Option>
+        })
+        }
+      </Select>
+    </Form.Item>
+  </Col>
+
+  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
+    <Form.Item name='colorCode' label='Color code' >
+      <Select
+        showSearch
+        placeholder="Select Color code"
+        optionFilterProp="children"
+        allowClear
+
+      >
+        {colorCode?.map((inc: any) => {
+          return <Option key={inc.id} value={inc.color_code}>{inc.color_code}</Option>
+        })
+        }
+      </Select>
+    </Form.Item>
+  </Col>
+
+  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
+    <Form.Item name='sizeDescription' label='Size Description' >
+      <Select
+        showSearch
+        placeholder="Select Style Description"
+        optionFilterProp="children"
+        allowClear
+
+      >
+        {sizeDescription?.map((inc: any) => {
+          return <Option key={inc.size_description} value={inc.size_description}>{inc.size_description}</Option>
+        })
+        }
+      </Select>
+    </Form.Item>
+  </Col>
+
+  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
+    <Form.Item>
+      <Button htmlType="submit"
+        icon={<SearchOutlined />}
+        type="primary">Get Report</Button>
+      <Button
+        htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }}
+      onClick={resetHandler}
+      >
+        RESET
+      </Button>
+    </Form.Item>
+  </Col>
+
+</Row>
+</Form>
+
+
 
           <Table columns={Columns}
             dataSource={fob}
