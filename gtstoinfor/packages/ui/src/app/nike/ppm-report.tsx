@@ -6,7 +6,7 @@ import { Excel } from 'antd-table-saveas-excel';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { ColumnsType } from 'antd/es/table';
 import moment from 'moment';
-import RangePicker from 'rc-picker/lib/RangePicker';
+import { CSVLink } from "react-csv";
 import React, { useEffect, useRef, useState } from 'react'
 import CountUp from 'react-countup';
 import Highlighter from 'react-highlight-words';
@@ -247,8 +247,6 @@ const PPMReport = () => {
   const totalItemQty = gridData?.map(i => i.totalItemQty)
   const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
 
-
-
   const onReset = () => {
     form.resetFields()
     getData()
@@ -308,7 +306,6 @@ const PPMReport = () => {
         ) : text
       )
         : null
-
   });
 
   function handleSearch(selectedKeys, confirm, dataIndex) {
@@ -338,6 +335,7 @@ const PPMReport = () => {
     }))
     return Array.from(sizeHeaders);
   };
+
   const getMap = (data: MarketingModel[]) => {
     const sizeWiseMap = new Map<string, Map<string, number>>();
     data?.forEach(rec => {
@@ -501,7 +499,7 @@ const PPMReport = () => {
       {
         title: 'Item',
         dataIndex: 'item',
-        width: 70,align:'center',
+        width: 70, align: 'center',
         render: (text, record) => {
           if (!text || text.trim() === '') {
             return '-';
@@ -559,12 +557,12 @@ const PPMReport = () => {
       },
       {
         title: 'Purchase Order Number',
-        dataIndex: 'purchaseOrderNumber',width:80,            
+        dataIndex: 'purchaseOrderNumber', width: 80,
         ...getColumnSearchProps('purchaseOrderNumber')
       },
       {
         title: 'PO Line Item Number',
-        dataIndex: 'poLineItemNumber',align:'center',
+        dataIndex: 'poLineItemNumber', align: 'center',
         width: 80,
       },
       {
@@ -615,7 +613,7 @@ const PPMReport = () => {
       },
       {
         title: 'Planning Season Year',
-        dataIndex: 'planningSeasonYear', width: 80,align:'center',
+        dataIndex: 'planningSeasonYear', width: 80, align: 'center',
         render: (text, record) => {
           if (!text || text.trim() === '') {
             return '-';
@@ -646,7 +644,7 @@ const PPMReport = () => {
       },
       {
         title: 'Plan No',
-        dataIndex: 'planNo', width: 80,align:'center',
+        dataIndex: 'planNo', width: 80, align: 'center',
         render: (text, record) => {
           if (!text || text.trim() === '') {
             return '-';
@@ -670,7 +668,7 @@ const PPMReport = () => {
       },
       {
         title: 'Category',
-        dataIndex: 'categoryCode', width: 80,align:'center'
+        dataIndex: 'categoryCode', width: 80, align: 'center'
       },
       {
         title: 'Category Description',
@@ -678,11 +676,11 @@ const PPMReport = () => {
       },
       {
         title: 'Vendor Code',
-        dataIndex: 'vendorCode', width: 80,align:'center'
+        dataIndex: 'vendorCode', width: 80, align: 'center'
       },
       {
         title: 'Global Category Core Focus',
-        dataIndex: 'gccFocusCode', width: 80,align:'center'
+        dataIndex: 'gccFocusCode', width: 80, align: 'center'
       },
       {
         title: 'Global Category Core Focus Description',
@@ -699,16 +697,16 @@ const PPMReport = () => {
       },
       {
         title: "Destination Country Code",
-        dataIndex: 'destinationCountryCode', width: 80,align:'center'
+        dataIndex: 'destinationCountryCode', width: 80, align: 'center'
       },
       {
         title: "Destination Country Name ",
         dataIndex: 'destinationCountry', width: 80,
       },
-      { title: 'Geo Code', dataIndex: 'geoCode', width: 80,align:'center' },
+      { title: 'Geo Code', dataIndex: 'geoCode', width: 80, align: 'center' },
       {
         title: "Plant Code",
-        dataIndex: 'plant', width: 80,align:'center'
+        dataIndex: 'plant', width: 80, align: 'center'
       },
       {
         title: "Plant Name",
@@ -852,7 +850,7 @@ const PPMReport = () => {
         },
       },
       {
-        title: 'GAC Reason Code', width: 80, dataIndex: 'GACReasonCode',align:'center', render: (text, record) => {
+        title: 'GAC Reason Code', width: 80, dataIndex: 'GACReasonCode', align: 'center', render: (text, record) => {
           if (!text || text.trim() === '') {
             return '-';
           } else {
@@ -936,8 +934,8 @@ const PPMReport = () => {
       },
       { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode', width: 90, },
       { title: 'In Co Terms', dataIndex: 'inCoTerms', width: 80, },
-      { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode',align:'center', width: 80, },
-      { title: 'Purchase Group', dataIndex: 'purchaseGroupCode',align:'center', className: 'centered-column', width: 80, },
+      { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode', align: 'center', width: 80, },
+      { title: 'Purchase Group', dataIndex: 'purchaseGroupCode', align: 'center', className: 'centered-column', width: 80, },
       { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName', width: 80, },
       {
         title: 'Total Item Qty',
@@ -948,6 +946,23 @@ const PPMReport = () => {
             return '-';
           } else {
             return <strong>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</strong>;
+          }
+        },
+      },
+    ]
+
+    const csvHeaders = [
+      { header: 'Po+Line ', key: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
+      { header: 'Last Modified Date', key: 'lastModifiedDate', render: (text) => moment(text).format('MM/DD/YYYY') },
+      {
+        header: 'Item',
+        key: 'item',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            const firstFourDigits = text.substring(0, 3);
+            return firstFourDigits;
           }
         },
       },
@@ -1604,9 +1619,6 @@ const PPMReport = () => {
             }
           },
         ],
-        render: (text, record) => {
-          return record.sizeWiseData.find(item => item.sizeDescription === version);
-        }
       });
 
       exportingColumns.push({
@@ -1903,12 +1915,10 @@ const PPMReport = () => {
           {
             title: 'Diff of Price',
             dataIndex: '',
-
           },
           {
             title: 'Diff of Price currency',
             dataIndex: '',
-
           },
           {
             title: 'CRM CO QTY',
@@ -1990,7 +2000,6 @@ const PPMReport = () => {
             dataIndex: 'actualShippedQty',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-
               if (sizeData) {
                 if (sizeData.sizeQty !== null) {
                   return (
@@ -2028,10 +2037,36 @@ const PPMReport = () => {
             }
           },
         ],
-        render: (text, record) => {
-          return record.sizeWiseData.find(item => item.sizeDescription === version);
-        }
       });
+
+      // csvHeaders.push({
+      //   header: version,
+      //   key: version,
+      //   children: [
+      //     {
+      //       title: 'Quantity',
+      //       dataIndex: '',
+      //       align: 'right',
+      //       render: (text, record) => {
+      //         const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+      //         if (sizeData) {
+      //           if (sizeData.sizeQty !== null) {
+      //             const formattedQty = Number(sizeData.sizeQty).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+      //             return (
+      //               formattedQty
+      //             );
+      //           } else {
+      //             return (
+      //               '-'
+      //             );
+      //           }
+      //         } else {
+      //           return '-';
+      //         }
+      //       }
+      //     },
+      //   ]
+      // })
     });
 
     // if (hideChildren) {
@@ -2337,6 +2372,12 @@ const PPMReport = () => {
     navigate('/Reports/po-detailed-view', { state: { data: poFilterData } })
   }
 
+  const csvReport = {
+    data: filterData,
+    headers: exportingColumns,
+    filename: 'Clue_Mediator_Report.csv'
+  };
+
 
   return (
     <>
@@ -2558,7 +2599,7 @@ const PPMReport = () => {
               <Form.Item>
                 <Button htmlType="submit"
                   icon={<SearchOutlined />}
-                  type="primary">Get Report</Button>
+                  type="primary">GET REPORT</Button>
                 <Button
                   htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={onReset}
                 >
@@ -2575,28 +2616,28 @@ const PPMReport = () => {
           </Row>
         </Form>
         <Row gutter={24} justify={'space-evenly'}>
-          <Col span={3}> <Card bordered style={{ backgroundColor: 'aqua', height:100,alignItems:'center' }}  >
+          <Col span={3}> <Card bordered style={{ backgroundColor: 'aqua', height: 100, alignItems: 'center' }}  >
             <b> <Statistic loading={tableLoading} title="Total Order Qty:" style={{ color: 'white' }} value={count} formatter={formatter} /></b></Card>
           </Col>
-          <Col span={3}> <Card bordered style={{ backgroundColor: '#CBADF7', height:100,alignItems:'center' }}>
+          <Col span={3}> <Card bordered style={{ backgroundColor: '#CBADF7', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
             </b></Card></Col>
-          <Col span={3}> <Card bordered style={{ backgroundColor: '#A1EBB5' , height:100,alignItems:'center'}} >
+          <Col span={3}> <Card bordered style={{ backgroundColor: '#A1EBB5', height: 100, alignItems: 'center' }} >
             <b><Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
             </b></Card></Col>
-          <Col span={3}> <Card bordered style={{ backgroundColor: '#E1F5A5', height:100,alignItems:'center' }}>
+          <Col span={3}> <Card bordered style={{ backgroundColor: '#E1F5A5', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
             </b> </Card> </Col>
-          <Col span={3}> <Card bordered style={{ backgroundColor: '#A5F5D7', height:100,alignItems:'center' }}>
+          <Col span={3}> <Card bordered style={{ backgroundColor: '#A5F5D7', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Accepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
             </b></Card></Col>
-          <Col span={3}> <Card bordered style={{ backgroundColor: '#F5BCB1', height:100,alignItems:'center' }}>
+          <Col span={3}> <Card bordered style={{ backgroundColor: '#F5BCB1', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Unaccepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
             </b></Card> </Col>
-          <Col span={3}><Card bordered style={{ backgroundColor: '#B1BDF5', height:100,alignItems:'center' }}>
+          <Col span={3}><Card bordered style={{ backgroundColor: '#B1BDF5', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
             </b> </Card> </Col>
-          <Col span={3}> <Card bordered style={{ backgroundColor: '#F1776A', height:100,alignItems:'center' }}>
+          <Col span={3}> <Card bordered style={{ backgroundColor: '#F1776A', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Cancelled PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} formatter={formatter} />
             </b></Card></Col>
         </Row><br></br>

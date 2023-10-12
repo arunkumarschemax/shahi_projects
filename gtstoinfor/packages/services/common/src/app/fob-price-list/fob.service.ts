@@ -132,8 +132,8 @@ export class FobService {
           }
         );
         const internalMessage: string = !roleExists.isActive
-          ? "Activated Successfully"
-          : "Daectivated Successfully";
+          ? "Price List Activated Successfully"
+          : "Price List Daectivated Successfully";
         return new AllFobResponseModel(true, 54654, internalMessage);
       } else {
         return new AllFobResponseModel(false, 654695, "Data Not Found");

@@ -482,7 +482,7 @@ export function OrderAcceptance() {
                                     icon={<SearchOutlined />}
                                     type="primary">SEARCH</Button>
 
-                                <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>Reset</Button>
+                                <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>RESET</Button>
                             </Form.Item>
                         </Col>
                     </Row>

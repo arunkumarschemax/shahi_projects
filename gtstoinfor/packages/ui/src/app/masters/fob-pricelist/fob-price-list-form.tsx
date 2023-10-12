@@ -6,6 +6,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 // import FactoriesView from './factories-view';
 import { AlertMessages, FactoryDto, Fobdto } from '@project-management-system/shared-models';
 import Papa from 'papaparse'
+import { FileExcelFilled } from '@ant-design/icons';
+import { IExcelColumn } from 'antd-table-saveas-excel/app';
+import { Excel } from 'antd-table-saveas-excel';
 
 const { Option } = Select
 export interface Formprops {
@@ -137,12 +140,41 @@ export function FobPriceListForm(props: Formprops) {
   const onTypeChange = (value) => {
     setType(value)
   }
+  const handleExport = (e: any) => {
+    e.preventDefault();
+
+
+    
+
+      let exportingColumns: IExcelColumn[] = []
+    exportingColumns = [
+      { title: 'Planning Season Code', dataIndex: '' },
+      { title: 'Planning Season Year', dataIndex: '' },
+      { title: 'Style Number', dataIndex: '' },
+      { title: 'Color Code', dataIndex: '' },
+      { title: 'Size Description', dataIndex: '' },
+      { title: 'Shahi Confirmed Gross Price', dataIndex: '' },
+      { title: 'Shahi Confirmed Gross Price currency code', dataIndex: '' },
+    ]
+
+
+    const excel = new Excel();
+    excel.addSheet("Sheet1");
+    // excel.addRow();
+    excel.addColumns(exportingColumns);
+    // excel.addDataSource(gridData);
+    excel.saveAs(`Sample Fob Format.xlsx`);
+  }
 
   return (
 
-    <Card title='Add Fob Price List' extra={<span><Button onClick={() => navigate('/masters/fob-price-list-view')} type={'primary'}>View</Button></span>}>
+    <Card title='Add Fob Price List' extra={<span> <Button
+      type="default"
+      style={{ color: 'green' , margin:10}}
+      onClick={handleExport}
+      icon={<FileExcelFilled />}>Download Sample File</Button> <Button onClick={() => navigate('/masters/fob-price-list-view')} type={'primary'}>View</Button></span>}>
       <Form form={form}
-        title='Factories'
+        title='Fob Price List'
         layout='vertical'
         onFinish={submitForm}
         initialValues={props.Data} >
@@ -153,8 +185,10 @@ export function FobPriceListForm(props: Formprops) {
           {
             state?.name === 'excel' ? (<>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item label="" name='excel'>
+                <Form.Item label="" name='excel' >
                   <input type="file" accept=".csv" onChange={handleFileChange} />
+                  <label style={{color:'blue'}} >Only  csv files allowed</label>
+
                 </Form.Item>
               </Col>
             </>) : (<>
@@ -168,11 +202,15 @@ export function FobPriceListForm(props: Formprops) {
 
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                   <Form.Item name='planningSeasonCode' label='Planning Season Code'
-                    rules={[{ required: true, message: 'Please enter the Planning Season Code', },
+                    rules={[
+                      { required: true, message: 'Please enter the Planning Season Code', },
+                    
+                   
                     {
-
-                      message: 'Please enter a valid code ',
-                    },
+                      pattern: /^[A-Z]+$/,
+                      message: 'Please enter up to capital letters Only',
+                    }
+                    
                     ]}>
                     <Input placeholder='Planning Season Code' />
                   </Form.Item>
@@ -196,18 +234,25 @@ export function FobPriceListForm(props: Formprops) {
                   </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                  <Form.Item name='colorCode' label='Color Code' rules={[{ required: true, message: 'Please enter the Color Code', },]}>
+                  <Form.Item name='colorCode' label='Color Code' rules={[{ required: true, message: 'Please enter the Color Code', },
+                                        { pattern: /^(?:\d{1}|\d{2}|\d{3}|\d{4}|\d{5}|\d{7})$/,
+                                        message: 'Please enter a valid Code',
+                                      }
+                                      ]}>
                     <Input placeholder='Color Code' />
                   </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                  <Form.Item name='sizeDescription' label='Size Description' rules={[{ required: true, message: 'Please enter the Color Code', },]}>
-                    <Input placeholder='Size Description' />
-                  </Form.Item>
+                <Form.Item name='sizeDescription'label='Size Description'
+                  rules={[{required: true, message: 'Please enter the Size Description',}, {
+                  pattern: /^(2XL|2XL-S|2XL-T|2XLTT|2XS|3XL|3XL-S|3XL-T|3XLTT|4XL|4XL-S|4XL-T|5XL|L|L-S|L-T|L\+|LTT|M|M-S|M-T|M\+|MTT|S|S-S|S-T|S\+|STT|XL|XL-S|XL-T|XL\+|XLTT|XS|XS-S|XS-T)$/i,
+                  message: 'Please enter a valid size description from the list (eg: 4XL-S or XL or L',},]}>
+                    <Input placeholder='Size Description' /></Form.Item>
+
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                   <Form.Item name='shahiConfirmedGrossPrice' label='Shahi Confirmed Gross Price'
-                    rules={[{ required: true, message: 'Please enter the Color Code', },
+                    rules={[{ required: true, message: 'Please enter the Valid Gross Price ', },
                     {
                       pattern: /^(?!0\d)(\d{1,5}(\.\d{2})?)?$/,
                       message: 'Please enter a valid price 00.00 type is required',
@@ -235,7 +280,7 @@ export function FobPriceListForm(props: Formprops) {
 
         </Row>
         <Row gutter={24} justify={'end'}>
-          <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button onClick={onReset} style={{ backgroundColor: ' red' }}>Reset</Button></Col>
+          <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button onClick={onReset} style={{ backgroundColor: ' red',color:'white' }}>Reset</Button></Col>
           <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button type='primary' htmlType='submit' style={{ backgroundColor: ' green' }} >Submit</Button></Col>
         </Row>
       </Form>
