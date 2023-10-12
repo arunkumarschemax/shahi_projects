@@ -4,22 +4,127 @@ import { IsNotEmpty, IsNumber, IsOptional } from "class-validator";
 export class ItemCreationDto {
     @ApiProperty()
     @IsNotEmpty()
-    fabricsId:number;
+    fgitemId?:number;
 
     @ApiProperty()
-    fabricsName: string;
+    itemName: string;
 
     @ApiProperty()
     fabricsCode: string;
 
     @ApiProperty()
+    itemCode: string;
+
+    @ApiProperty()
     description: string;
 
     @ApiProperty()
-    createdUser: string;
+    itemTypeId: number;
 
     @ApiProperty()
-    isActive: boolean;  
+    brandId: number;
+
+    @ApiProperty()
+    categoryId: number;
+
+    @ApiProperty()
+    subCategoryId: number;
+
+    @ApiProperty()
+    seasonId: number;
+
+    @ApiProperty()
+    responsiblePersonId: number;
+
+    @ApiProperty()
+    productDesignerId: number;
+
+    @ApiProperty()
+    approver: number;
+
+    @ApiProperty()
+    productionMerchant: number;
+
+    @ApiProperty()
+    pdMerchant: number;
+
+    @ApiProperty()
+    factoryMerchant: number;
+
+    @ApiProperty()
+    salePersonId: number;
+
+    @ApiProperty()
+    styleNo: string;
+
+    @ApiProperty()
+    internalStyleId: number;
+
+    @ApiProperty()
+    uom: string;
+
+    @ApiProperty()
+    altUom: string;
+
+    @ApiProperty()
+    currency: string;
+
+    @ApiProperty()
+    targetCurrency: string;
+
+    @ApiProperty()
+    conversionFactorId: number;
+
+    @ApiProperty()
+    projectionOrderId: number;
+
+    @ApiProperty()
+    buyingHouseCommision: number;
+
+    @ApiProperty()
+    salePriceQty: number;
+
+    @ApiProperty()
+    licenseId: number;
+
+    @ApiProperty()
+    customGroupId: number;
+
+    @ApiProperty()
+    nationalDbk: number;
+
+    @ApiProperty()
+    roslGroup: number;
+
+    @ApiProperty()
+    isSubContract: number;
+
+    @ApiProperty()
+    salePrice: number;
+
+    @ApiProperty()
+    orderConfirmedDate: Date;
+
+    @ApiProperty()
+    firstExFactoryDate: Date;
+
+    @ApiProperty()
+    orderCloseDate: Date;
+
+    @ApiProperty()
+    moq: number;
+
+    @ApiProperty()
+    orderQty: number;
+
+    @ApiProperty()
+    facilityId: number;
+
+    @ApiProperty()
+    isActive: boolean;
+    
+    @ApiProperty()
+    createdUser: string;
 
     @ApiProperty()
     @IsOptional()

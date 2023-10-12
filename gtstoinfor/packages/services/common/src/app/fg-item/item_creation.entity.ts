@@ -60,7 +60,7 @@ export class ItemCreation {
     nullable: false,
     name: "responsible_person_id" /// foregn key
   })
-  ResponsiblePersonId: number;
+  responsiblePersonId: number;
 
   @Column("int", {
     nullable: false,
