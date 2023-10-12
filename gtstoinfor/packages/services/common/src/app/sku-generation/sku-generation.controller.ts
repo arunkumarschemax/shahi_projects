@@ -50,11 +50,11 @@ export class ItemSkuController{
     }
 
     @Post('/getDataByItem')
-    async getDataByItem(@Body() req:any):Promise<CommonResponseModel>{
+    async getDataByItem(@Body() req:any):Promise<SKUGenerationResponseModel>{
         try{
             return await this.itemSkuService.getDataByItem(req)
         }catch(err){
-            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+            return this.applicationExceptionHandler.returnException(SKUGenerationResponseModel,err)
         }
     }
 
