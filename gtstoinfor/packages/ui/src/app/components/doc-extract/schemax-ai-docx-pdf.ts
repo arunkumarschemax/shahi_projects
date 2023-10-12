@@ -51,7 +51,9 @@ export const extractDhl = async (pdf) => {
                 taxType: taxType,
                 charge: extractedData[hsnId - 10].content,
                 taxPercentage: taxPercentage,
-                taxAmount: extractedData[hsnId - 6].content,
+                taxAmount: extractedData[hsnId - 6].content*extractedData[hsnId - 9].content,
+                tax: extractedData[hsnId - 6].content,
+                roe:extractedData[hsnId - 9].content,
                 amount: extractedData[hsnId - 4].content,
             };
         }
