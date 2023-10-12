@@ -10,9 +10,8 @@ import ScanDetailView from "./components/doc-extract/details-views"
 import PriceView from "./components/vendor-price/price-view"
 import PriceForm from "./components/vendor-price/price-form"
 import BuyersView from "./components/buyer-grid/buyer-grid-view"
-import { DocReader, DocumentUploadForm } from "./components"
+import { DocReader, DocumentUploadForm, SchemaxAIDocx } from "./components"
 import DocFormPreview from "./components/doc-extract/doc-form-preview"
-import DocParent from "./components/doc-extract/doc-parent"
 
 
 export const AppRoutes = () => {
@@ -33,7 +32,7 @@ export const AppRoutes = () => {
                     <Route path="doc-extract-view" key='/doc-extract-view' element={<View />} />
                 </Route>
                 <Route path="scan-document" element={<View />} />
-                <Route path="/doc-extract-form" element={<DocParent />} />
+                <Route path="/doc-extract-form" element={<SchemaxAIDocx />} />
                 {/* <Route path="/doc-parent" element={<DocParent />} /> */}
                 <Route path="/vendors" element={<VendorGrid />} />
                 <Route path="/invoices" />
