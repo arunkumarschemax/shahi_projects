@@ -1379,3 +1379,18 @@ export const extractMaersk = async (pdf) => {
         extractedHsnData: structuredHSNLines
     }
 }
+
+
+export const checkIsScannedPdf = async (pdf) => {
+    // Analyze each page for text or images
+    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+        const page = await pdf.getPage(pageNumber);
+        const content = await page.getTextContent();
+
+        // Check if there's any text content
+        if (content.items.length === 0) {
+            return true;
+        }
+    }
+    return false;
+};
