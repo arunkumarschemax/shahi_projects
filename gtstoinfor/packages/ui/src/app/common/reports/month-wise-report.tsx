@@ -43,7 +43,7 @@ export const MonthWiseReport = () =>{
     service.getExfactoryYearData().then((res) => {
       if (res.status) {
         setYear(res.data);
-        console.log(res.data[0].year);
+        // console.log(res.data[0].year);
         setTab(res.data[0].year)
         if (!selected && res.data.length > 0) {
           setTab(res.data[0].year);
@@ -1429,7 +1429,7 @@ if(selected == 'WareHouse'){
   };
   const handleTabChange = (selectedYear: any) => {
     setTab(Number(selectedYear));
-    console.log(selectedYear,'year');
+    // console.log(selectedYear,'year');
     
     getData(selected,selectedYear);
   };

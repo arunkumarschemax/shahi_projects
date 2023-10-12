@@ -73,7 +73,7 @@ const startIndex = (page - 1) * pageSize;
       service.getMonthlyComparisionDate(req).then((res)=>{
         if (res.status) {
             setDates(res.data);
-            console.log(res.data[0].Date);
+            // console.log(res.data[0].Date);
 
             
           } else {
@@ -115,7 +115,7 @@ const startIndex = (page - 1) * pageSize;
       };
 
       const onChange = (pagination, filters, sorter, extra) => {
-        console.log('params', pagination, filters, sorter, extra);
+        // console.log('params', pagination, filters, sorter, extra);
       }
       const CustomTitle = () => {
         return (
@@ -900,6 +900,7 @@ const startIndex = (page - 1) * pageSize;
       //     },
       //   },
       // ];
+      
       const childColumns1: any = [
         {
           // title: "Production Plan Type Name",
@@ -912,20 +913,44 @@ const startIndex = (page - 1) * pageSize;
           width:30,
           align: "right",
           render: (text: any, record: any) => {
-            return record.pcsData.map(
-              (item: any) => <span>{item.janPcs.toLocaleString()}</span> || "-"
-            );
+            return record.pcsData.map((item: any) => {
+              const janPcs = parseFloat(item.janPcs);           
+              if (!isNaN(janPcs)) {
+                return (
+                  <span>
+                    {janPcs.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
+        
         {
+
           // title: `In Coeff`,
           dataIndex: "janCoeff",
           width: 40,
           align: "right",
           render: (text: any, record: any) => {
-            return record.coeffData.map(
-              (item: any) => <span>{item.janCoeff.toLocaleString()}</span> || "-"
-            );
+            return record.coeffData.map((item: any) => {
+              const janCoeff = parseFloat(item.janCoeff);           
+              if (!isNaN(janCoeff)) {
+                return (
+                  <span>
+                    {janCoeff.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
     
@@ -934,21 +959,53 @@ const startIndex = (page - 1) * pageSize;
           dataIndex: "febPcs",
           width:50,
           align: "right",
+          // render: (text: any, record: any) => {
+          //   return record.pcsData.map(
+          //     (item: any) => <span>{item.febPcs.toLocaleString('en-IN', {
+          //       maximumFractionDigits: 0
+          //   })}</span> || "-"
+          //   );
+          // },
           render: (text: any, record: any) => {
-            return record.pcsData.map(
-              (item: any) => <span>{item.febPcs.toLocaleString()}</span> || "-"
-            );
+            return record.pcsData.map((item: any) => {
+              const febPcs = parseFloat(item.febPcs);           
+              if (!isNaN(febPcs)) {
+                return (
+                  <span>
+                    {febPcs.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
+          
+          
         },
+
         {
           // title: `In Coeff`,
           dataIndex: "febCoeff",
           width: 40,
           align: "right",
           render: (text: any, record: any) => {
-            return record.coeffData.map(
-              (item: any) => <span>{item.febCoeff.toLocaleString()}</span> || "-"
-            );
+            return record.coeffData.map((item: any) => {
+              const febCoeff = parseFloat(item.febCoeff);           
+              if (!isNaN(febCoeff)) {
+                return (
+                  <span>
+                    {febCoeff.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
     
@@ -958,9 +1015,20 @@ const startIndex = (page - 1) * pageSize;
           width: 40,
           align: "right",
           render: (text: any, record: any) => {
-            return record.pcsData.map(
-              (item: any) => <span>{item.marPcs.toLocaleString()}</span> || "-"
-            );
+            return record.pcsData.map((item: any) => {
+              const marPcs = parseFloat(item.marPcs);           
+              if (!isNaN(marPcs)) {
+                return (
+                  <span>
+                    {marPcs.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         {
@@ -969,9 +1037,20 @@ const startIndex = (page - 1) * pageSize;
           width: 40,
           align: "right",
           render: (text: any, record: any) => {
-            return record.coeffData.map(
-              (item: any) => <span>{item.marCoeff.toLocaleString()}</span> || "-"
-            );
+            return record.coeffData.map((item: any) => {
+              const marCoeff = parseFloat(item.marCoeff);           
+              if (!isNaN(marCoeff)) {
+                return (
+                  <span>
+                    {marCoeff.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
     
@@ -981,9 +1060,20 @@ const startIndex = (page - 1) * pageSize;
           width: 40,
           align: "right",
           render: (text: any, record: any) => {
-            return record.pcsData.map(
-              (item: any) => <span>{item.aprPcs.toLocaleString()}</span> || "-"
-            );
+            return record.pcsData.map((item: any) => {
+              const aprPcs = parseFloat(item.aprPcs);           
+              if (!isNaN(aprPcs)) {
+                return (
+                  <span>
+                    {aprPcs.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         {
@@ -992,9 +1082,20 @@ const startIndex = (page - 1) * pageSize;
           width: 40,
           align: "right",
           render: (text: any, record: any) => {
-            return record.pcsData.map(
-              (item: any) => <span>{item.aprPcs.toLocaleString()}</span> || "-"
-            );
+            return record.coeffData.map((item: any) => {
+              const aprCoeff = parseFloat(item.aprCoeff);           
+              if (!isNaN(aprCoeff)) {
+                return (
+                  <span>
+                    {aprCoeff.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         //   ],
@@ -1010,9 +1111,20 @@ const startIndex = (page - 1) * pageSize;
           width: 40,
           align: "right",
           render: (text: any, record: any) => {
-            return record.pcsData.map(
-              (item: any) => <span>{item.mayPcs.toLocaleString()}</span> || "-"
-            );
+            return record.pcsData.map((item: any) => {
+              const mayPcs = parseFloat(item.mayPcs);           
+              if (!isNaN(mayPcs)) {
+                return (
+                  <span>
+                    {mayPcs.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         {
@@ -1021,9 +1133,20 @@ const startIndex = (page - 1) * pageSize;
           width:40,
           align: "right",
           render: (text: any, record: any) => {
-            return record.coeffData.map(
-              (item: any) => <span>{item.mayCoeff.toLocaleString()}</span> || "-"
-            );
+            return record.coeffData.map((item: any) => {
+              const mayCoeff = parseFloat(item.mayCoeff);           
+              if (!isNaN(mayCoeff)) {
+                return (
+                  <span>
+                    {mayCoeff.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         //   ],
@@ -1039,9 +1162,20 @@ const startIndex = (page - 1) * pageSize;
           width: 40,
           align: "right",
           render: (text: any, record: any) => {
-            return record.pcsData.map(
-              (item: any) => <span>{item.junPcs.toLocaleString()}</span> || "-"
-            );
+            return record.pcsData.map((item: any) => {
+              const junPcs = parseFloat(item.junPcs);           
+              if (!isNaN(junPcs)) {
+                return (
+                  <span>
+                    {junPcs.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         {
@@ -1050,9 +1184,20 @@ const startIndex = (page - 1) * pageSize;
           width: 40,
           align: "right",
           render: (text: any, record: any) => {
-            return record.coeffData.map(
-              (item: any) => <span>{item.junCoeff.toLocaleString()}</span> || "-"
-            );
+            return record.coeffData.map((item: any) => {
+              const junCoeff = parseFloat(item.junCoeff);           
+              if (!isNaN(junCoeff)) {
+                return (
+                  <span>
+                    {junCoeff.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         //   ],
@@ -1068,9 +1213,20 @@ const startIndex = (page - 1) * pageSize;
           width: 50,
           align: "right",
           render: (text: any, record: any) => {
-            return record.pcsData.map(
-              (item: any) => <span>{item.julPcs.toLocaleString()}</span> || "-"
-            )
+            return record.pcsData.map((item: any) => {
+              const julPcs = parseFloat(item.julPcs);           
+              if (!isNaN(julPcs)) {
+                return (
+                  <span>
+                    {julPcs.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         {
@@ -1079,9 +1235,20 @@ const startIndex = (page - 1) * pageSize;
           width: 40,
           align: "right",
           render: (text: any, record: any) => {
-            return record.coeffData.map(
-              (item: any) => <span>{item.julCoeff.toLocaleString()}</span> || "-"
-            );
+            return record.coeffData.map((item: any) => {
+              const julCoeff = parseFloat(item.julCoeff);           
+              if (!isNaN(julCoeff)) {
+                return (
+                  <span>
+                    {julCoeff.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         //   ],
@@ -1097,9 +1264,20 @@ const startIndex = (page - 1) * pageSize;
           width: 40,
           align: "right",
           render: (text: any, record: any) => {
-            return record.pcsData.map(
-              (item: any) => <span>{item.augPcs.toLocaleString()}</span> || "-"
-            );
+            return record.pcsData.map((item: any) => {
+              const augPcs = parseFloat(item.augPcs);           
+              if (!isNaN(augPcs)) {
+                return (
+                  <span>
+                    {augPcs.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         {
@@ -1108,9 +1286,20 @@ const startIndex = (page - 1) * pageSize;
           width: 40,
           align: "right",
           render: (text: any, record: any) => {
-            return record.coeffData.map(
-              (item: any) => <span>{item.augCoeff.toLocaleString()}</span> || "-"
-            );
+            return record.coeffData.map((item: any) => {
+              const augCoeff = parseFloat(item.augCoeff);           
+              if (!isNaN(augCoeff)) {
+                return (
+                  <span>
+                    {augCoeff.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         //   ],
@@ -1126,9 +1315,20 @@ const startIndex = (page - 1) * pageSize;
           width: 50,
           align: "right",
           render: (text: any, record: any) => {
-            return record.pcsData.map(
-              (item: any) => <span>{item.sepPcs.toLocaleString()}</span> || "-"
-            );
+            return record.pcsData.map((item: any) => {
+              const sepPcs = parseFloat(item.sepPcs);           
+              if (!isNaN(sepPcs)) {
+                return (
+                  <span>
+                    {sepPcs.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         {
@@ -1137,9 +1337,20 @@ const startIndex = (page - 1) * pageSize;
           width: 40,
           align: "right",
           render: (text: any, record: any) => {
-            return record.coeffData.map(
-              (item: any) => <span>{item.sepCoeff.toLocaleString()}</span> || "-"
-            );
+            return record.coeffData.map((item: any) => {
+              const sepCoeff = parseFloat(item.sepCoeff);           
+              if (!isNaN(sepCoeff)) {
+                return (
+                  <span>
+                    {sepCoeff.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         //   ],
@@ -1155,9 +1366,20 @@ const startIndex = (page - 1) * pageSize;
           width: 40,
           align: "right",
           render: (text: any, record: any) => {
-            return record.pcsData.map(
-              (item: any) => <span>{item.octPcs.toLocaleString()}</span> || "-"
-            );
+            return record.pcsData.map((item: any) => {
+              const octPcs = parseFloat(item.octPcs);           
+              if (!isNaN(octPcs)) {
+                return (
+                  <span>
+                    {octPcs.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         {
@@ -1166,9 +1388,20 @@ const startIndex = (page - 1) * pageSize;
           width: 40,
           align: "right",
           render: (text: any, record: any) => {
-            return record.coeffData.map(
-              (item: any) => <span>{item.octCoeff.toLocaleString()}</span> || "-"
-            );
+            return record.coeffData.map((item: any) => {
+              const octCoeff = parseFloat(item.octCoeff);           
+              if (!isNaN(octCoeff)) {
+                return (
+                  <span>
+                    {octCoeff.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         //   ],
@@ -1184,9 +1417,20 @@ const startIndex = (page - 1) * pageSize;
           width: 50,
           align: "right",
           render: (text: any, record: any) => {
-            return record.pcsData.map(
-              (item: any) => <span>{item.novPcs.toLocaleString()}</span> || "-"
-            );
+            return record.pcsData.map((item: any) => {
+              const novPcs = parseFloat(item.novPcs);           
+              if (!isNaN(novPcs)) {
+                return (
+                  <span>
+                    {novPcs.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         {
@@ -1195,9 +1439,20 @@ const startIndex = (page - 1) * pageSize;
           width: 50,
           align: "right",
           render: (text: any, record: any) => {
-            return record.coeffData.map(
-              (item: any) => <span>{item.novCoeff.toLocaleString()}</span> || "-"
-            );
+            return record.coeffData.map((item: any) => {
+              const v = parseFloat(item.v);           
+              if (!isNaN(v)) {
+                return (
+                  <span>
+                    {v.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         //   ],
@@ -1213,9 +1468,20 @@ const startIndex = (page - 1) * pageSize;
           width: 50,
           align: "right",
           render: (text: any, record: any) => {
-            return record.pcsData.map(
-              (item: any) => <span>{item.decPcs.toLocaleString()}</span> || "-"
-            );
+            return record.pcsData.map((item: any) => {
+              const decPcs = parseFloat(item.decPcs);           
+              if (!isNaN(decPcs)) {
+                return (
+                  <span>
+                    {decPcs.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         {
@@ -1224,22 +1490,34 @@ const startIndex = (page - 1) * pageSize;
           width: 50,
           align: "right",
           render: (text: any, record: any) => {
-            return record.coeffData.map(
-              (item: any) => <span>{item.decCoeff.toLocaleString()}</span> || "-"
-            );
+            return record.coeffData.map((item: any) => {
+              const decCoeff = parseFloat(item.decCoeff);           
+              if (!isNaN(decCoeff)) {
+                return (
+                  <span>
+                    {decCoeff.toLocaleString('en-IN', {
+                      maximumFractionDigits: 0
+                    })}
+                  </span>
+                );
+              } else {
+                return "-";
+              }
+            });
           },
         },
         //   ],
         // },
         {
-          // title: "Total In PCs",
           dataIndex: "totalPcs",
           align: "right",
           width: 80,
           render: (text: any, record: any) => {
-            return record.totalPcs ? record.totalPcs.toLocaleString() : 0;
+            const totalPcs = parseFloat(record.totalPcs);
+            return !isNaN(totalPcs) ? totalPcs.toLocaleString() : '0';
           },
         },
+        
         {
           // title: "Total In Coeff",
           dataIndex: "totalCoeff",
@@ -1247,7 +1525,8 @@ const startIndex = (page - 1) * pageSize;
           width: 80,
     
           render: (text: any, record: any) => {
-            return record.totalCoeff ? record.totalCoeff.toLocaleString() : 0;
+            const totalCoeff = parseFloat(record.totalCoeff);
+            return !isNaN(totalCoeff) ? totalCoeff.toLocaleString() : '0';
           },
         },
       ];
@@ -1278,7 +1557,7 @@ const startIndex = (page - 1) * pageSize;
             
             <Table
             showHeader={false}
-            bordered={false}
+            bordered={true}
               dataSource={record.monthWiseData}
               columns={childColumns1}
               pagination={false} 
@@ -1671,7 +1950,7 @@ const startIndex = (page - 1) * pageSize;
         excel.addDataSource(excelsData);
         let secondTableColumns: IExcelColumn[] = [];
     if(selected =='ExFactory'){
-      console.log('exfactory');
+      // console.log('exfactory');
       
       secondTableColumns.push(
       { title: "Production Plan Type Name",dataIndex: "prod_plan_type",},
@@ -2224,7 +2503,7 @@ if(selected == 'WareHouse'){
                       </Row>
                   </Form>
           <Table
-          bordered={false}
+          bordered={true}
           // showHeader={false}
             dataSource={filteredData} 
             columns={columns5} 
