@@ -397,13 +397,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
 
-    async getPpmPlantForMarketing(): Promise<any[]> {
-        const query = this.createQueryBuilder('dpom')
-            .select(` dpom.plant,dpom.id`)
-            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
-            .groupBy(`dpom.plant`)
-        return await query.getRawMany();
-    }
+
 
     async getPpmProductCodeForMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
@@ -468,11 +462,10 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
 
-    ///-------------------------------------------------------------------->factory
     async getFactoryPpmData(req: PpmDateFilterRequest): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
-            .select(`dpom.po_and_line,dpom.last_modified_date,dpom.item,dpom.factory,dpom.document_date,dpom.po_number,dpom.po_line_item_number,dpom.dpom_item_line_status,dpom.style_number,dpom.product_code,dpom.color_desc,dpom.customer_order,dpom.po_final_approval_date,dpom.plan_no,dpom.lead_time,dpom.category_code,dpom.category_desc,dpom.vendor_code,dpom.gcc_focus_code,dpom.gcc_focus_desc,dpom.gender_age_code,dpom.gender_age_desc,dpom.destination_country_code,dpom.destination_country,dpom.plant,dpom.plant_name,dpom.trading_co_po_no,dpom.upc,dpom.direct_ship_so_no,dpom.direct_ship_so_item_no,dpom.customer_po,dpom.ship_to_customer_no,dpom.ship_to_customer_name,dpom.planning_season_code,dpom.planning_season_year , dpom.pcd,dpom.doc_type_code, dpom.doc_type_desc,dpom.mrgac,dpom.ogac,dpom.gac,dpom.truck_out_date,dpom.origin_receipt_date,dpom.factory_delivery_date,dpom.gac_reason_code,dpom.gac_reason_desc,dpom.shipping_type,dpom.planning_priority_code,dpom.planning_priority_desc,dpom.launch_code,dpom.mode_of_transport_code,dpom.inco_terms,dpom.inventory_segment_code,dpom.purchase_group_code,dpom.purchase_group_name,dpom.total_item_qty,dpom.actual_shipped_qty,dpom.vas_size,dpom.item_vas_text,dpom.item_text,dpom.legal_po_price,dpom.co_price,dpom.pcd,dpom.ship_to_address_legal_po,dpom.ship_to_address_dia,dpom.cab_code,dpom.gross_price_fob,dpom.ne_inc_disc,dpom.trading_net_inc_disc,dpom.actual_unit,dpom.allocated_quantity,dpom.size_description,dpom.size_qty,dpom.trading_co_po_no, od.display_name AS displayName,dpom.hanger,dpom.legal_po_qty `)
-            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number')
+            .select(`dpom.po_and_line,dpom.last_modified_date,dpom.item,dpom.factory,dpom.document_date,dpom.po_number,dpom.po_line_item_number,dpom.dpom_item_line_status,dpom.style_number,dpom.product_code,dpom.color_desc,dpom.customer_order,dpom.po_final_approval_date,dpom.plan_no,dpom.lead_time,dpom.category_code,dpom.category_desc,dpom.vendor_code,dpom.gcc_focus_code,dpom.gcc_focus_desc,dpom.gender_age_code,dpom.gender_age_desc,dpom.destination_country_code,dpom.destination_country,dpom.plant,dpom.plant_name,dpom.trading_co_po_no,dpom.upc,dpom.direct_ship_so_no,dpom.direct_ship_so_item_no,dpom.customer_po,dpom.ship_to_customer_no,dpom.ship_to_customer_name,dpom.planning_season_code,dpom.planning_season_year , dpom.pcd,dpom.doc_type_code, dpom.doc_type_desc,dpom.mrgac,dpom.ogac,dpom.gac,dpom.truck_out_date,dpom.origin_receipt_date,dpom.factory_delivery_date,dpom.gac_reason_code,dpom.gac_reason_desc,dpom.shipping_type,dpom.planning_priority_code,dpom.planning_priority_desc,dpom.launch_code,dpom.mode_of_transport_code,dpom.inco_terms,dpom.inventory_segment_code,dpom.purchase_group_code,dpom.purchase_group_name,dpom.total_item_qty,dpom.actual_shipped_qty,dpom.vas_size,dpom.item_vas_text,dpom.item_text,dpom.legal_po_price,dpom.co_price,dpom.pcd,dpom.ship_to_address_legal_po,dpom.ship_to_address_dia,dpom.cab_code,dpom.gross_price_fob,dpom.ne_inc_disc,dpom.trading_net_inc_disc,dpom.actual_unit,dpom.allocated_quantity,dpom.size_description,dpom.size_qty,dpom.trading_co_po_no,dpom.hanger,dpom.legal_po_qty,dpom.geo_code `)
+            // .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number')
             .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Cancelled'`)
         if (req.lastModifedStartDate !== undefined) {
             query.andWhere(`Date(dpom.last_modified_date) BETWEEN '${req.lastModifedStartDate}' AND '${req.lastModifedEndtDate}'`)
@@ -549,7 +542,7 @@ export class DpomRepository extends Repository<DpomEntity> {
            dpom.fob_currency_code,dpom.hanger,dpom.legal_po_qty, dpom.geo_code, fob.shahi_confirmed_gross_price, fob.shahi_confirmed_gross_price_currency_code`)
             // .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number')
             .leftJoin(FobEntity, 'fob', `fob.color_code = SUBSTRING_INDEX(dpom.product_code, '-', -1) AND fob.style_number = dpom.style_number AND fob.size_description = dpom.size_description`)
-           // .groupBy(`dpom.po_and_line`)
+        // .groupBy(`dpom.po_and_line`)
         // .groupBy(`dpom.po_number AND dpom.po_line_item_number AND dpom.size_description`)
         if (req.lastModifedStartDate !== undefined) {
             query.andWhere(`Date(dpom.last_modified_date) BETWEEN '${req.lastModifedStartDate}' AND '${req.lastModifedEndtDate}'`)
@@ -594,6 +587,8 @@ export class DpomRepository extends Repository<DpomEntity> {
         }
         if (req.planningSeasonYear !== undefined) {
             query.andWhere(`dpom.planning_season_year ='${req.planningSeasonYear}'`)
+        } if (req.geoCode !== undefined) {
+            query.andWhere(`dpom.geo_code ='${req.geoCode}'`)
         }
         if (req.DPOMLineItemStatus !== undefined && req.DPOMLineItemStatus.length > 0) {
             query.andWhere(`dpom.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
@@ -742,7 +737,9 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getPpmGeoCodeMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.geo_code, dpom.id`)
+            .where(`dpom.geo_code IS NOT Null`)
             .groupBy(`dpom.geo_code`)
+
         return await query.getRawMany();
     }
     async getChangeSData(poNumber: number): Promise<any[]> {
@@ -754,5 +751,113 @@ export class DpomRepository extends Repository<DpomEntity> {
         //  .andWhere(`o.dpom_item_line_status = 'Unaccepted'`)     
         return await query.getRawMany();
     }
+
+    async getPpmPlantForMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.plant,dpom.id`)
+            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
+            .groupBy(`dpom.plant`)
+        return await query.getRawMany();
+    }
+
+    // async getFactoryPpmData(req: PpmDateFilterRequest): Promise<any[]> {
+    //     const query = this.createQueryBuilder('dpom')
+    //       .select(`
+    //         dpom.po_number, dpom.size_description, dpom.customer_order, dpom.po_line_item_number,
+    //         (CASE WHEN dpom.size_description = '2XL' THEN dpom.size_qty ELSE NULL END) AS 2XL,
+    //         (CASE WHEN dpom.size_description = '2XL-S' THEN dpom.size_qty ELSE NULL END) AS 2XLS,
+    //         (CASE WHEN dpom.size_description = '2XL-T' THEN dpom.size_qty ELSE NULL END) AS 2XLT,
+    //         (CASE WHEN dpom.size_description = '2XLTT' THEN dpom.size_qty ELSE NULL END) AS 2XLTT,
+    //         (CASE WHEN dpom.size_description = '2XS' THEN dpom.size_qty ELSE NULL END) AS 2XS,
+    //         (CASE WHEN dpom.size_description = '3XL' THEN dpom.size_qty ELSE NULL END) AS 3XL,
+    //         (CASE WHEN dpom.size_description = '3XL-S' THEN dpom.size_qty ELSE NULL END) AS 3XLS,
+    //         (CASE WHEN dpom.size_description = '3XL-T' THEN dpom.size_qty ELSE NULL END) AS 3XLT,
+    //         (CASE WHEN dpom.size_description = '3XLTT' THEN dpom.size_qty ELSE NULL END) AS 3XLTT,
+    //         (CASE WHEN dpom.size_description = '4XL' THEN dpom.size_qty ELSE NULL END) AS 4XL,
+    //         (CASE WHEN dpom.size_description = '4XL-S' THEN dpom.size_qty ELSE NULL END) AS 4XLS,     
+    //         (CASE WHEN dpom.size_description = '4XL-T' THEN dpom.size_qty ELSE NULL END) AS 4XLT,
+    //         (CASE WHEN dpom.size_description = '5XL' THEN dpom.size_qty ELSE NULL END) AS 5XL,
+    //         (CASE WHEN dpom.size_description = 'L' THEN dpom.size_qty ELSE NULL END) AS L,
+    //         (CASE WHEN dpom.size_description = 'L-S ' THEN dpom.size_qty ELSE NULL END) AS LS ,
+    //         (CASE WHEN dpom.size_description = 'L-T' THEN dpom.size_qty ELSE NULL END) AS LT,
+    //         (CASE WHEN dpom.size_description = 'L+' THEN dpom.size_qty ELSE NULL END) AS Lplus ,
+    //         (CASE WHEN dpom.size_description = 'LTT' THEN dpom.size_qty ELSE NULL END) AS LTT,
+    //         (CASE WHEN dpom.size_description = 'M' THEN dpom.size_qty ELSE NULL END) AS M,
+    //         (CASE WHEN dpom.size_description = 'M-S' THEN dpom.size_qty ELSE NULL END) AS MS,
+    //         (CASE WHEN dpom.size_description = 'M-T' THEN dpom.size_qty ELSE NULL END) AS MT,
+    //         (CASE WHEN dpom.size_description = 'M+' THEN dpom.size_qty ELSE NULL END) AS Mplus,
+    //         (CASE WHEN dpom.size_description = 'MTT' THEN dpom.size_qty ELSE NULL END) AS MTT,
+    //         (CASE WHEN dpom.size_description = 'S' THEN dpom.size_qty ELSE NULL END) AS S,
+    //         (CASE WHEN dpom.size_description = 'S-S' THEN dpom.size_qty ELSE NULL END) AS SS,
+    //          (CASE WHEN dpom.size_description = 'S-T' THEN dpom.size_qty ELSE NULL END) AS ST,
+    //         (CASE WHEN dpom.size_description = 'S+' THEN dpom.size_qty ELSE NULL END) AS Splus,
+    //         (CASE WHEN dpom.size_description = 'STT' THEN dpom.size_qty ELSE NULL END) AS STT,
+    //         (CASE WHEN dpom.size_description = 'XL' THEN dpom.size_qty ELSE NULL END) AS XL,
+    //         (CASE WHEN dpom.size_description = 'XL-S' THEN dpom.size_qty ELSE NULL END) AS XLS,
+    //         (CASE WHEN dpom.size_description = 'XL-T' THEN dpom.size_qty ELSE NULL END) AS XLT,
+    //          (CASE WHEN dpom.size_description = 'XL+' THEN dpom.size_qty ELSE NULL END) AS XLpluse,
+    //          (CASE WHEN dpom.size_description = 'XLTT' THEN dpom.size_qty ELSE NULL END) AS XLTT ,
+    //          (CASE WHEN dpom.size_description = 'XS' THEN dpom.size_qty ELSE NULL END) AS XS ,
+    //          (CASE WHEN dpom.size_description = 'XS-S' THEN dpom.size_qty ELSE NULL END) AS XSS ,
+    //         (CASE WHEN dpom.size_description = 'XS-T' THEN dpom.size_qty ELSE NULL END) AS XST,
+    //         dpom.po_and_line, dpom.last_modified_date, dpom.item, dpom.factory, dpom.document_date,
+    //         dpom.dpom_item_line_status, dpom.style_number, dpom.product_code, dpom.color_desc, dpom.customer_order,
+    //         dpom.po_final_approval_date, dpom.plan_no, dpom.lead_time, dpom.category_code, dpom.category_desc,
+    //         dpom.vendor_code, dpom.gcc_focus_code, dpom.gcc_focus_desc, dpom.gender_age_code, dpom.gender_age_desc,
+    //         dpom.destination_country_code, dpom.destination_country, dpom.plant, dpom.plant_name,
+    //         dpom.trading_co_po_no, dpom.upc, dpom.direct_ship_so_no, dpom.direct_ship_so_item_no, dpom.customer_po,
+    //         dpom.ship_to_customer_no, dpom.ship_to_customer_name, dpom.planning_season_code, dpom.planning_season_year,
+    //         dpom.pcd, dpom.doc_type_code, dpom.doc_type_desc, dpom.mrgac, dpom.ogac, dpom.gac, dpom.truck_out_date,
+    //         dpom.origin_receipt_date, dpom.factory_delivery_date, dpom.gac_reason_code, dpom.gac_reason_desc, dpom.shipping_type,
+    //         dpom.planning_priority_code, dpom.planning_priority_desc, dpom.launch_code, dpom.mode_of_transport_code, dpom.inco_terms,
+    //         dpom.inventory_segment_code, dpom.purchase_group_code, dpom.purchase_group_name, dpom.total_item_qty,
+    //         dpom.actual_shipped_qty, dpom.vas_size, dpom.item_vas_text, dpom.item_text, dpom.legal_po_price, dpom.co_price,
+    //         dpom.pcd, dpom.ship_to_address_legal_po, dpom.ship_to_address_dia, dpom.cab_code, dpom.gross_price_fob,
+    //         dpom.ne_inc_disc, dpom.trading_net_inc_disc, dpom.actual_unit, dpom.allocated_quantity, dpom.legal_po_qty, dpom.geo_code,
+    //         od.display_name AS displayName, dpom.hanger
+    //       `)
+    //       .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number')
+    //       .groupBy(`dpom.size_description AND dpom.po_line_item_number `)
+    //       .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Cancelled'`)
+    //       .andWhere(`dpom.size_description IN ('2XL','2XL-S','2XL-T','2XLTT','2XS','3XL','3XL-S','3XL-T','3XLTT','4XL','4XL-S','4XL-T','5XL','L','L-S ','L-T','L+','LTT','M','M-S',
+    //       'M-T','M+','MTT','S','S-S','S-T','S+','STT','XL','XL-S','XL-T','XL+','XLTT','XS','XS-S','XS-T')`)
+    //     if (req.lastModifedStartDate !== undefined) {
+    //       query.andWhere(`Date(dpom.last_modified_date) BETWEEN '${req.lastModifedStartDate}' AND '${req.lastModifedEndtDate}'`);
+    //     }
+    //     if (req.documentStartDate !== undefined) {
+    //       query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndtDate}'`);
+    //     }
+    //     if (req.DPOMLineItemStatus !== undefined && req.DPOMLineItemStatus.length > 0) {
+    //       query.andWhere(`dpom.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
+    //     } else if (req.DPOMLineItemStatus !== undefined && req.DPOMLineItemStatus.length === 0) {
+    //       query.andWhere(`1=1`);
+    //     }
+    //     if (req.productCode !== undefined) {
+    //       query.andWhere(`dpom.product_code ='${req.productCode}'`);
+    //     }
+    //     if (req.poNumber !== undefined) {
+    //       query.andWhere(`dpom.po_number ='${req.poNumber}'`);
+    //     }
+    //     if (req.colorDesc !== undefined) {
+    //       query.andWhere(`dpom.color_desc ='${req.colorDesc}'`);
+    //     }
+    //     if (req.categoryDesc !== undefined) {
+    //       query.andWhere(`dpom.category_desc ='${req.categoryDesc}'`);
+    //     }
+    //     if (req.destinationCountry !== undefined) {
+    //       query.andWhere(`dpom.destination_country ='${req.destinationCountry}'`);
+    //     }
+    //     if (req.plant !== undefined) {
+    //       query.andWhere(`dpom.plant ='${req.plant}'`);
+    //     }
+    //     if (req.item !== undefined) {
+    //       query.andWhere(`dpom.item ='${req.item}'`);
+    //     }
+    //     if (req.factory !== undefined) {
+    //       query.andWhere(`dpom.factory ='${req.factory}'`);
+    //     }
+    //     return await query.getRawMany();
+    //   }
+      
 
 }

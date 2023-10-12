@@ -1,4 +1,4 @@
-import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
+import { DownOutlined, SearchOutlined, UndoOutlined, UpOutlined } from "@ant-design/icons";
 import { FobPriceDiffRequest } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Row, Select, Table, Typography } from "antd"
@@ -116,7 +116,7 @@ export const FOBPriceVariationReport = () => {
         {
             title: 'Gross Price',
             dataIndex: 'grossPriceFob',
-            align: 'right',
+            align: 'center',
             render: (text, record) => {
                 return (
                     <>
@@ -128,7 +128,7 @@ export const FOBPriceVariationReport = () => {
         {
             title: 'Shahi Confirmed Gross Price',
             dataIndex: 'shahiConfirmedgrossPrice',
-            align: 'right',
+            align: 'center',
             render: (text, record) => {
                 return (
                     <>
@@ -142,6 +142,7 @@ export const FOBPriceVariationReport = () => {
             dataIndex: 'difference',
             align: 'right',
             render: (text, record) => {
+                
                 let diff;
                 let convertedPrice;
                 if (record.fobCurrencyCode === 'PHP') {
@@ -164,17 +165,24 @@ export const FOBPriceVariationReport = () => {
                     convertedPrice = record.grossPriceFob * 0.13;
                 }
                 diff = record.shahiConfirmedgrossPrice - convertedPrice
+                const color = diff < 0 ? 'red' : diff > 0 ? 'green' : 'black';
+                const arrowIcon = diff < 0 ? <DownOutlined /> : diff > 0 ? <UpOutlined /> : null;
                 return (
+                    
                     <>
-                        {record.grossPriceFob ? Number(diff).toLocaleString('en-IN') : '-'}
+                    <span style={{ color }}>
+                    {arrowIcon} {record.grossPriceFob ? Number(diff).toLocaleString('en-IN') : '-'}
+                        </span>
                         {/* return diff !== 0 ? Number(diff).toLocaleString('en-IN') : ''; */}
                     {/* return diff !== 0 ? Number(diff).toLocaleString('en-IN') : ''; */}
                     </>
                 )
             }
         },
+        
 
     ]
+
 
     return (
         <Card title='FOB Price Variation'  >
@@ -232,7 +240,7 @@ export const FOBPriceVariationReport = () => {
                         <Form.Item>
                             <Button htmlType="submit"
                                 icon={<SearchOutlined />}
-                                type="primary">Get Report</Button>
+                                type="primary">GET REPORT</Button>
                             <Button
                                 htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
                             >
@@ -246,8 +254,15 @@ export const FOBPriceVariationReport = () => {
                 {data.length > 0 ? (
                     <Table columns={columns} dataSource={data}
                     
-                        className="custom-table-wrapper" pagination={false}
-                        scroll={{ x: 'max-content', y: 600}}
+                        className="custom-table-wrapper" 
+                        
+                        scroll={{ x: 'max-content', y: 500}}
+                        pagination={{
+                            pageSize:50,
+                            onChange(current, pageSize) {
+                                setPage(current);
+                                setPageSize(pageSize);
+                            }}}
                         // summary={(pageData) => {
                         //     let totalDifference = 0;
 

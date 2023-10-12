@@ -66,7 +66,7 @@ export class FobService {
   //       throw new FobResponseModel(false, 11106, 'Fob Price List saved but issue while transforming into DTO');
   //     }
   //   } catch (error) {
-     
+
   //     return error;
   //   }
 
@@ -77,11 +77,11 @@ export class FobService {
       if (!Dto || (Object.keys(Dto).length === 0 && Dto.constructor === Object)) {
         throw new FobResponseModel(false, 11107, 'Fob Price List data is empty. At least one value is required.');
       }
-  
+
       const convertedEntity: FobEntity = this.adaptor.convertDtoToEntity(Dto, isUpdate);
       const savedEntity: FobEntity = await this.repository.save(convertedEntity);
       const savedDto: FobDto = this.adaptor.convertEntityToDto(savedEntity);
-  
+
       if (savedDto) {
         const name = isUpdate ? 'updated' : 'created';
         const displayValue = isUpdate ? 'Fob Price List Updated Successfully' : 'Fob Price List Created Successfully';
@@ -95,8 +95,8 @@ export class FobService {
       return error;
     }
   }
-  
-  
+
+
 
 
   async getFobPrice(): Promise<FobResponseModel> {
@@ -120,22 +120,20 @@ export class FobService {
     return new FobResponseModel(true, 1111, 'Data retreived', activeData)
   }
 
-  async ActivateOrDeactivate(Req: FobDto): Promise<AllFobResponseModel> {
+  async ActivateOrDeactivate(req: FobDto): Promise<AllFobResponseModel> {
     try {
-      const roleExists = await this.getFobById(
-        Req.id
-      );
+      const roleExists = await this.getFobById(req.id);
       if (roleExists) {
         const roleStatus = await this.repository.update(
-          { id: Req.id },
+          { id: req.id },
           {
             isActive: !roleExists.isActive,
-            updatedUser: Req.planningSeasonCode,
+            updatedUser: req.planningSeasonCode,
           }
         );
         const internalMessage: string = !roleExists.isActive
-          ? "Activated Successfully"
-          : "Daectivated Successfully";
+          ? "Price List Activated Successfully"
+          : "Price List Daectivated Successfully";
         return new AllFobResponseModel(true, 54654, internalMessage);
       } else {
         return new AllFobResponseModel(false, 654695, "Data Not Found");
@@ -145,10 +143,8 @@ export class FobService {
     }
   }
 
-
-
   async getFobById(id: number): Promise<FobEntity> {
-    const Response = await this.repository.findOne({ where: { id: id },});
+    const Response = await this.repository.findOne({ where: { id: id }, });
     if (Response) {
       return Response;
     } else {
@@ -156,16 +152,16 @@ export class FobService {
     }
   }
 
-  async uploadFobPrice(formData:any) : Promise<CommonResponseModel>{
+  async uploadFobPrice(formData: any): Promise<CommonResponseModel> {
     const transactionManager = new GenericTransactionManager(this.dataSource)
-    try{
+    try {
       await transactionManager.startTransaction()
       const flag = new Set()
       const updatedArray = formData.map((obj) => {
         const updatedObj = {};
         for (const key in obj) {
-            const newKey = key.replace(/\s/g, '_').replace(/[\(\)]/g, '').replace(/-/g, '_');
-            updatedObj[newKey] = obj[key];
+          const newKey = key.replace(/\s/g, '_').replace(/[\(\)]/g, '').replace(/-/g, '_');
+          updatedObj[newKey] = obj[key];
         }
         return updatedObj;
       });
@@ -173,29 +169,29 @@ export class FobService {
       const convertedData = updatedArray.map((obj) => {
         const updatedObj = {};
         for (const key in obj) {
-            const value = obj[key];
-            if (value === "") {
-                updatedObj[key] = null;
-            } else {
-                // updatedObj[key] = value;
-                var regexPattern = /[^A-Za-z0-9 -;:/.,()[]&_']/g;
-                updatedObj[key] = value.replace(regexPattern, null);
-                updatedObj[key] = Buffer.from(value, 'utf-8').toString()
-            }
+          const value = obj[key];
+          if (value === "") {
+            updatedObj[key] = null;
+          } else {
+            // updatedObj[key] = value;
+            var regexPattern = /[^A-Za-z0-9 -;:/.,()[]&_']/g;
+            updatedObj[key] = value.replace(regexPattern, null);
+            updatedObj[key] = Buffer.from(value, 'utf-8').toString()
+          }
         }
         return updatedObj;
       });
-      const checkData = await this.repository.find({take:1})
-      if(checkData.length > 0){
-        const deleteExistingData  = await transactionManager.getRepository(FobEntity).delete({})
-        if(!deleteExistingData.affected){
+      const checkData = await this.repository.find({ take: 1 })
+      if (checkData.length > 0) {
+        const deleteExistingData = await transactionManager.getRepository(FobEntity).delete({})
+        if (!deleteExistingData.affected) {
           await transactionManager.releaseTransaction()
           return new CommonResponseModel(false, 0, 'Something went wrong in deleting existing data')
         }
       }
-      for(const data of convertedData){
+      for (const data of convertedData) {
         // let dtoData = new FobPriceExcelDto(data.Planning_Season_Code,data.Planning_Season_Year,data.Style_Number,data.Color_Code__Last_3_Degits_from_Product_Code,data.Size_Description,data.Shahi_Confirmed_Gross_Price,data.Shahi_Confirmed_Gross_Price_currency_code)
-        if(data.Planning_Season_Code !== null){
+        if (data.Planning_Season_Code !== null) {
 
           const dtoData = new FobDto()
           dtoData.planningSeasonCode = data.Planning_Season_Code
@@ -205,29 +201,27 @@ export class FobService {
           dtoData.sizeDescription = data.Size_Description
           dtoData.shahiConfirmedGrossPrice = data.Shahi_Confirmed_Gross_Price
           dtoData.shahiConfirmedGrossPriceCurrencyCode = data.Shahi_Confirmed_Gross_Price_currency_code
-  console.log(dtoData)
           const dtoConversion = this.adaptor.convertDtoToEntity(dtoData)
-          console.log(dtoConversion)
           const save = await transactionManager.getRepository(FobEntity).save(dtoConversion)
-          if(!save){
+          if (!save) {
             flag.add(false)
             await transactionManager.releaseTransaction();
             break;
-          } else{
+          } else {
             flag.add(true)
           }
-        } else{
+        } else {
           break
         }
       }
       if (!(flag.has(false))) {
         await transactionManager.completeTransaction()
         return new CommonResponseModel(true, 1, 'Data saved sucessfully')
-    } else {
+      } else {
         await transactionManager.releaseTransaction()
         return new CommonResponseModel(false, 0, 'Something went wrong')
-    }
-    } catch(err){
+      }
+    } catch (err) {
       await transactionManager.releaseTransaction()
       return new CommonResponseModel(false, 0, err)
     }
@@ -235,4 +229,4 @@ export class FobService {
 }
 
 
-    
+

@@ -480,6 +480,7 @@ export class DpomService {
     async saveDIAPDFData(req: DiaPDFDto): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
+            await transactionManager.startTransaction()
             const orderDetails = await this.dpomRepository.find({ where: { purchaseOrderNumber: req.poNumber, poLineItemNumber: req.lineNo } })
             if (orderDetails.length > 0) {
                 for (const detail of orderDetails) {
@@ -509,8 +510,6 @@ export class DpomService {
             }
         } catch (error) {
             await transactionManager.releaseTransaction()
-            // console.log(transactionManager.releaseTransaction,"ew request")
-
             return new CommonResponseModel(false, 0, error)
         }
     }
@@ -1116,8 +1115,8 @@ export class DpomService {
                 if (!sizeDateMap.has(rec.po_and_line)) {
                     sizeDateMap.set(
                         rec.po_and_line,
-                        new FactoryReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_text, rec.legal_po_price, rec.co_price, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.gross_price_fob, rec.ne_inc_disc, rec.trading_net_inc_disc, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.pcd, rec.fobCurrCode, rec.netIncDisCurrency, rec.tradingNetCurrencyCode, rec.hanger, rec.quantity, [])
-                    );
+                        new FactoryReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_text, rec.legal_po_price, rec.co_price, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.gross_price_fob, rec.ne_inc_disc, rec.trading_net_inc_disc, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.pcd, rec.fobCurrCode, rec.netIncDisCurrency, rec.tradingNetCurrencyCode, rec.hanger, rec.quantity,rec.geo_code, [])
+                    ); 
                 }
                 const sizeWiseData = sizeDateMap.get(rec.po_and_line).sizeWiseData;
                 if (rec.size_description !== null) {
@@ -1131,49 +1130,44 @@ export class DpomService {
         }
     }
 
+    // async getDifferentialData(): Promise<any> {
+    //     const oldText = `HANGING IS REQUIRED:
+    //     Each garment must be hung on a GS1 black style hanger HCLR12.
+    //     The carton contents should be placed in at least one GOH polybag and polybag(s) placed in a GOH shipping carton.
+    //     A per unit upcharge has been added to this PO for garment on hanger.
+    //     CROWN SIZER REQUIRED:
+    //     A Crown Sizer must be placed on all hangers for this Purchase Order.`;
 
-    async getDifferentialData(): Promise<any> {
+    //     const newText = `HANGING IS REQUIRED:
+    //     Each garment must be hung on a GS1 black style hanger HCLR12.
+    //     The carton contents should be placed in at least one GOH polybag and
+    //     polybag(s) placed in a GOH shipping carton.
+    //     A per unit upcharge has been added to this PO for garment on hanger.`;
 
-        const oldText = `HANGING IS REQUIRED:
-        Each garment must be hung on a GS1 black style hanger HCLR12.
-        
-        The carton contents should be placed in at least one GOH polybag and polybag(s) placed in a GOH shipping carton.
-        A per unit upcharge has been added to this PO for garment on hanger.
+    //     const lines1 = oldText.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+    //     const text1 = lines1.join('');
 
-        CROWN SIZER REQUIRED:
-        A Crown Sizer must be placed on all hangers for this Purchase Order.
-        `;
+    //     const lines2 = newText.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+    //     const text2 = lines2.join('');
 
-        const newText = `HANGING IS REQUIRED:
-        Each garment must be hung on a GS1 black style hanger HCLR12.
-        The carton contents should be placed in at least one GOH polybag and
-        polybag(s) placed in a GOH shipping carton.
-        A per unit upcharge has been added to this PO for garment on hanger.`;
+    //     const dmp = new DiffMatchPatch();
+    //     const diff = dmp.diff_main(text1, text2);
+    //     dmp.diff_cleanupSemantic(diff);
 
-        const lines1 = oldText.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-        const text1 = lines1.join('');
-
-        const lines2 = newText.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-        const text2 = lines2.join('');
-
-        const dmp = new DiffMatchPatch();
-        const diff = dmp.diff_main(text1, text2);
-        dmp.diff_cleanupSemantic(diff);
-
-        let output = '';
-        for (const [op, text] of diff) {
-            if (op === DiffMatchPatch.DIFF_INSERT) {
-                if (text.trim() !== '') {
-                    output += `${text} `;
-                }
-            } else if (op === DiffMatchPatch.DIFF_DELETE) {
-                if (text.trim() !== '') {
-                    output += `${text} `;
-                }
-            }
-        }
-        return output.trim();
-    }
+    //     let output = '';
+    //     for (const [op, text] of diff) {
+    //         if (op === DiffMatchPatch.DIFF_INSERT) {
+    //             if (text.trim() !== '') {
+    //                 output += `${text} `;
+    //             }
+    //         } else if (op === DiffMatchPatch.DIFF_DELETE) {
+    //             if (text.trim() !== '') {
+    //                 output += `${text} `;
+    //             }
+    //         }
+    //     }
+    //     return output.trim();
+    // }
 
     async getPPMData(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
 
@@ -1191,7 +1185,6 @@ export class DpomService {
             }
             sizeDateMap.get(rec.po_and_line).sizeWiseData.push(new MarketingReportSizeModel(rec.size_description, rec.size_qty, rec.gross_price_fob, rec.fob_currency_code, rec.shahi_confirmed_gross_price, rec.shahi_confirmed_gross_price_currency_code, rec.ne_inc_disc, rec.net_inc_disc_currency_code, rec.trading_net_inc_disc, rec.trading_net_currency_code, rec.legal_po_price, rec.legal_po_currency, rec.co_price, rec.co_price_currency, rec.crm_co_qty, rec.legal_po_qty, rec.actual_shipped_qty));
         }
-
         const dataModelArray: MarketingReportModel[] = [];
         sizeDateMap.forEach(sizeData => dataModelArray.push(sizeData));
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
@@ -1270,7 +1263,6 @@ export class DpomService {
             query = `SELECT po_number AS poNumber, sum(total_item_qty) AS totalItemQuantity,created_at AS createdAt,` + querySelect + `
          FROM dpom WHERE total_item_qty >0 AND `+ queryWhere + ``;
             query += ` group by ` + queryGroup + ``;
-
             const data = await this.dpomRepository.query(query)
             if (data.length < 1) {
                 return new CommonResponseModel(false, 0, 'No Records Found', [])
@@ -1317,13 +1309,6 @@ export class DpomService {
                 dashboardPoGrnData.poQty.push(totalQty);
             });
 
-            // const dashboardPoGrnData = new PoData();
-            // dashboardPoGrnData.poQty = [];           
-            // allNames.forEach(eachName => {
-            //     const PoGrnForQty = poMap.get(eachName); 
-            //     dashboardPoGrnData.poQty.push(PoGrnForQty? PoGrnForQty.poQty : 0); 
-            // })
-
             const dashboardData = new PoDataResDto(names, dashboardPoGrnData);
             return new CommonResponseModel(true, 10000, 'Data Retrieved Successfully.', dashboardData);
         } catch (error) {
@@ -1331,64 +1316,28 @@ export class DpomService {
         }
     }
 
-    // async getDivertReportData(): Promise<CommonResponseModel> {
-    //     const reports = await this.dpomRepository.getDivertReport();
-    //     // let model:OldDivertModel[];
-    //     let divertedPos = []
-    //     let divertModelData: DivertModel[] = [];
-    //     let po;
-    //     let line;
-    //     let divertModel = []
-    //     for (const report of reports) {
-    //         divertedPos = report.diverted_to_pos.split(',');
-
-    //         if (report.diverted_to_pos) {
-    //             for (const Po of divertedPos) {
-    //                 const [po, line] = Po.split('/');
-    //                 const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line])
-
-    //                 for (const newpoDivert of newPoData) {
-    //                     const model = new DivertModel(report, newpoDivert)
-    //                     divertModel.push(model)
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     if (reports.length > 0) {
-    //         return new CommonResponseModel(true, 1, 'Data Retrived Successfully', divertModel);
-    //     } else {
-    //         return new CommonResponseModel(false, 0, 'No Data Found', []);
-    //     }
-    // }  
-    // this is old code return data multiple times
     async getDivertReportData(): Promise<CommonResponseModel> {
         const reports = await this.dpomRepository.getDivertReport();
         const divertModelData: DivertModel[] = [];
         const processedPoLineSet = new Set<string>();
-
         for (const report of reports) {
             const divertedPos = report.diverted_to_pos.split(',');
-
             if (report.diverted_to_pos) {
                 for (const PoLine of divertedPos) {
                     const [po, line] = PoLine.split('/');
-
                     if (!processedPoLineSet.has(PoLine)) {
                         {/* Check if this Po/line combination has already been processed*/ }
                         const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line]);
-
                         for (const newpoDivert of newPoData) {
                             const model = new DivertModel(report, newpoDivert);
                             divertModelData.push(model);
                         }
-
                         // Mark this Po/line combination as processed
                         processedPoLineSet.add(PoLine);
                     }
                 }
             }
         }
-
         if (divertModelData.length > 0) {
             return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', divertModelData);
         } else {
@@ -1497,7 +1446,6 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-
     //-----------------------------------------------------------------------------marketing
     async getPpmPoLineForMarketing(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPpmPoLineItemNumberForMarketing()
@@ -1536,20 +1484,6 @@ export class DpomService {
             throw err
         }
     }
-
-    // async getPriceDifferenceReport( req: FobPriceDiffRequest): Promise<CommonResponseModel> {
-    //     const query = `SELECT d.po_number as poNumber,d.po_and_line as poAndLine,d.po_line_item_number as poLineItemNumber,d.style_number as styleNumber,d.size_description as sizeDescription,d.gross_price_fob as grossPriceFob,d.fob_currency_code as fobCurrencyCode,f.shahi_confirmed_gross_price as shahiConfirmedgrossPrice,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
-    //     LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
-    //     WHERE f.shahi_confirmed_gross_price IS NOT NULL
-    //     GROUP BY d.po_number,d.style_number,d.size_description`;
-
-    //     const data = await this.dpomRepository.query(query)
-    //     if (data.length) {
-    //         return new CommonResponseModel(true, 1, 'data retrived', data)
-    //     } else {
-    //         return new CommonResponseModel(false, 0, 'error')
-    //     }
-    // }
 
     async getPriceDifferenceReport(req: FobPriceDiffRequest): Promise<CommonResponseModel> {
         const conditions = [];
@@ -1808,13 +1742,10 @@ export class DpomService {
     async getChangeComparision(req: any): Promise<CommonResponseModel> {
         const poNumber = req.poNumber;
         const data = await this.dpomRepository.getChangeSData(poNumber);
-
         if (data.length === 0) {
             return new CommonResponseModel(false, 0, 'No data found');
         }
-
         const poAndLineMap = new Map<string, ChangePoandLineModel>();
-
         for (const rec of data) {
             const poAndLine = rec.po_and_line;
 
@@ -1825,29 +1756,14 @@ export class DpomService {
                     [],
                 ));
             }
-
             const sizeData = poAndLineMap.get(poAndLine).sizeWiseData;
-
-            sizeData.push(new OrderChangePoModel(
-                rec.po_number,
-                rec.id,
-                rec.size_description,
-                rec.size_qty,
-                rec.legalPoQty,
-                rec.gross_price_fob,
-                rec.fob_currency_code,
-                rec.legal_po_price,
-                rec.legal_po_currency,
-                poAndLine,
-                rec.qty_difference,
-                rec.price_change,
+            sizeData.push(new OrderChangePoModel(rec.po_number, rec.id, rec.size_description, rec.size_qty, rec.legalPoQty, rec.gross_price_fob, rec.fob_currency_code, rec.legal_po_price, rec.legal_po_currency, poAndLine, rec.qty_difference, rec.price_change,
             ));
         }
-
-
         const dataModelArray: ChangePoandLineModel[] = Array.from(poAndLineMap.values());
         return new CommonResponseModel(true, dataModelArray.length, 'Data retrieved', dataModelArray);
     }
+
     async getCoLine(req?: coLineRequest): Promise<CommonResponseModel> {
         const data = await this.coLineRepository.getCoLineData(req)
         if (data.length > 0)
@@ -1855,6 +1771,7 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
     async getBuyerPo(): Promise<CommonResponseModel> {
         const data = await this.coLineRepository.getBuyerPo()
         if (data.length > 0)
@@ -1862,6 +1779,7 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
     async getColineItem(): Promise<CommonResponseModel> {
         const data = await this.coLineRepository.getItem()
         if (data.length > 0)
@@ -1869,6 +1787,7 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
     async getColineOrderNo(): Promise<CommonResponseModel> {
         const data = await this.coLineRepository.getOrderNumber()
         if (data.length > 0)
