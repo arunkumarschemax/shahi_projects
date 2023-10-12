@@ -6,7 +6,9 @@ import { pdfjs } from 'react-pdf';
 import Tesseract from 'tesseract.js';
 import { extractDhl, extractDart, extractExpeditors, extractEfl, extractOocl, extractNagel, extractApl, extractMaersk } from './schemax-ai-docx-pdf';
 
+
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+
 export interface DocReaderProps {
     form: FormInstance<any>;
     extractedData: (data: any) => void;
