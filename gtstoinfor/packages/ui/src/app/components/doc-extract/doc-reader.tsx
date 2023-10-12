@@ -2401,10 +2401,8 @@ export const DocReader = (props: DocReaderProps) => {
                                         <Upload
                                             disabled={!selectedVendor}
                                             name="file"
-                                            {...imageFileUpload}
                                             accept=".pdf,.jpeg,.png,.jpg"
                                             multiple
-                                            // showUploadList={false}
                                             onChange={handleFileChange}
                                             customRequest={({ file }) => handleFileChange(file)}
                                         >
@@ -2412,6 +2410,7 @@ export const DocReader = (props: DocReaderProps) => {
                                                 style={{ color: "black", backgroundColor: selectedVendor ? "#7ec1ff" : '#0000000a' }}
                                                 icon={<UploadOutlined />}
                                                 onClick={handleUploadDocument}
+                                                disabled={!selectedVendor}
                                             >
                                                 Choose File
                                             </Button>
