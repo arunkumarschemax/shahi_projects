@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ItemSkus } from "./sku-generation.entity";
 import { DataSource, Repository } from "typeorm";
-import { ColorInfoReq, CommonResponseModel, DestinationInfoReq, ItemCodeReq, ItemSKusModel, ItemSKusReq, SKUGenerationResponseModel, SizeInfoReq, SkuStatusEnum } from "@project-management-system/shared-models";
+import { ColorInfoReq, CommonResponseModel, DestinationInfoReq, ItemCodeReq, ItemSKusModel, ItemSKusReq, SKUGenerationResponseModel, SizeInfoReq, SKUlistFilterRequest, SkuStatusEnum } from "@project-management-system/shared-models";
 import { Item } from "../items/item-entity";
 import { Destination } from "../destination/destination.entity";
 import { Size } from "../sizes/sizes-entity";
@@ -192,5 +192,21 @@ export class ItemSkuService{
     }
   }
 
+
+  async getSkuList(req:SKUlistFilterRequest):Promise<CommonResponseModel>{
+    try{
+      const getData= await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo'],
+      // const getData = await this.itemSkuRepo.getDestinationsByItem(req.itemCode)
+
+      where:{itemCode:req.itemsNo,destinationInfo:{destinationId:req.destinationsId}}})
+      if(getData.length> 0){
+        return new CommonResponseModel(true,1,'Data retreived',getData)
+      }else{
+        return new CommonResponseModel(false,0,'No data found')
+      }
+    }catch (err){
+      throw err
+    }
+  }
 
 }
