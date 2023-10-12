@@ -267,7 +267,7 @@ const Number=()=>{
               },
               render: (text,record) =>{
             return(
-               <Tooltip title="Click for Detail View">
+               <Tooltip title="Click for Order History">
                 <Button type='link' onClick={() => DetailView(record.order_plan_number)}>
                   {record.order_plan_number}
                 </Button>

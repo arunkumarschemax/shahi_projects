@@ -1509,14 +1509,15 @@ const startIndex = (page - 1) * pageSize;
         //   ],
         // },
         {
-          // title: "Total In PCs",
           dataIndex: "totalPcs",
           align: "right",
           width: 80,
           render: (text: any, record: any) => {
-            return record.totalPcs ? record.totalPcs.toLocaleString() : 0;
+            const totalPcs = parseFloat(record.totalPcs);
+            return !isNaN(totalPcs) ? totalPcs.toLocaleString() : '0';
           },
         },
+        
         {
           // title: "Total In Coeff",
           dataIndex: "totalCoeff",
@@ -1524,7 +1525,8 @@ const startIndex = (page - 1) * pageSize;
           width: 80,
     
           render: (text: any, record: any) => {
-            return record.totalCoeff ? record.totalCoeff.toLocaleString() : 0;
+            const totalCoeff = parseFloat(record.totalCoeff);
+            return !isNaN(totalCoeff) ? totalCoeff.toLocaleString() : '0';
           },
         },
       ];
