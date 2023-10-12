@@ -275,6 +275,7 @@ const DivertReport = () => {
                 {
                     title: "Request Date",
                     dataIndex: "DocumentDate",
+                    width:70,
                     render: (text, record) => {
                         return record.oldPo.DocumentDate ? moment(record.oldPo.DocumentDate).format('MM/DD/YYYY') : "-";
                     }
