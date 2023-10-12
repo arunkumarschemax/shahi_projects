@@ -6,6 +6,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 // import FactoriesView from './factories-view';
 import { AlertMessages, FactoryDto, Fobdto } from '@project-management-system/shared-models';
 import Papa from 'papaparse'
+import { FileExcelFilled } from '@ant-design/icons';
+import { IExcelColumn } from 'antd-table-saveas-excel/app';
+import { Excel } from 'antd-table-saveas-excel';
 
 const { Option } = Select
 export interface Formprops {
@@ -137,10 +140,39 @@ export function FobPriceListForm(props: Formprops) {
   const onTypeChange = (value) => {
     setType(value)
   }
+  const handleExport = (e: any) => {
+    e.preventDefault();
+
+
+    
+
+      let exportingColumns: IExcelColumn[] = []
+    exportingColumns = [
+      { title: 'Planning Season Code', dataIndex: '' },
+      { title: 'Planning Season Year', dataIndex: '' },
+      { title: 'Style Number', dataIndex: '' },
+      { title: 'Color Code', dataIndex: '' },
+      { title: 'Size Description', dataIndex: '' },
+      { title: 'Shahi Confirmed Gross Price', dataIndex: '' },
+      { title: 'Shahi Confirmed Gross Price currency code', dataIndex: '' },
+    ]
+
+
+    const excel = new Excel();
+    excel.addSheet("Sheet1");
+    // excel.addRow();
+    excel.addColumns(exportingColumns);
+    // excel.addDataSource(gridData);
+    excel.saveAs(`Sample Fob Format.xlsx`);
+  }
 
   return (
 
-    <Card title='Add Fob Price List' extra={<span><Button onClick={() => navigate('/masters/fob-price-list-view')} type={'primary'}>View</Button></span>}>
+    <Card title='Add Fob Price List' extra={<span> <Button
+      type="default"
+      style={{ color: 'green' , margin:10}}
+      onClick={handleExport}
+      icon={<FileExcelFilled />}>Download Sample File</Button> <Button onClick={() => navigate('/masters/fob-price-list-view')} type={'primary'}>View</Button></span>}>
       <Form form={form}
         title='Fob Price List'
         layout='vertical'
@@ -153,8 +185,10 @@ export function FobPriceListForm(props: Formprops) {
           {
             state?.name === 'excel' ? (<>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item label="" name='excel'>
+                <Form.Item label="" name='excel' >
                   <input type="file" accept=".csv" onChange={handleFileChange} />
+                  <label style={{color:'blue'}} >Only  csv files allowed</label>
+
                 </Form.Item>
               </Col>
             </>) : (<>
@@ -168,11 +202,9 @@ export function FobPriceListForm(props: Formprops) {
 
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                   <Form.Item name='planningSeasonCode' label='Planning Season Code'
-                    rules={[{ required: true, message: 'Please enter the Planning Season Code', },
-                    {
-
-                      message: 'Please enter a valid code ',
-                    },
+                    rules={[
+                      { required: true, message: 'Please enter the Planning Season Code', },
+                    
                    
                     {
                       pattern: /^[A-Z]+$/,
