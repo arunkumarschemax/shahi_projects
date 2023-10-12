@@ -1,4 +1,4 @@
-import { BuyersView, DocParent, DocView, PriceView, VendorBranchInfoGrid, VendorGrid } from "../../components";
+import { BuyersView, DocParent, DocView, LandingPageDashBoard, PriceView, VendorBranchInfoGrid, VendorGrid } from "../../components";
 
 export const components = {
     vendors: <VendorGrid />,
@@ -7,4 +7,5 @@ export const components = {
     DocumentScan: <DocParent />,
     DocView: <DocView />,
     VendorBranchInfoGrid: <VendorBranchInfoGrid />,
+    LandingPageDashBoard: <LandingPageDashBoard />,
 }
