@@ -317,15 +317,13 @@ const FactoryPPMReport = () => {
         }
         setTableLoading(true)
         service.getFactoryReportData(req)
-
             .then(res => {
                 if (res.status) {
                     setGridData(res.data);
                     setFilterData(res.data);
                     setFilteredData(res.data);
-                    Finish(res.data);
                     let csvdata = []
-                    filterData.forEach(item => {
+                    res.data.forEach(item => {
                         console.log(item);
                         csvdata.push({
                             'Po+Line': item.poAndLine,
@@ -444,10 +442,6 @@ const FactoryPPMReport = () => {
                 setTableLoading(false)
             });
     };
-
-    const Finish = (data: any) => {
-
-    }
 
     const handleTextClick = (remarks) => {
         setRemarks(remarks)

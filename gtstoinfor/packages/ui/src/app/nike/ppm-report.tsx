@@ -210,10 +210,8 @@ const PPMReport = () => {
           setGridData(res.data);
           setFilterData(res.data);
           setFilteredData(res.data);
-          Finish(res.data);
           let csvdata = []
-          filterData.forEach(item => {
-            console.log(item);
+          res.data.forEach(item => {
             csvdata.push({
               'Po+Line': item.poAndLine,
               'Last Modified Date': moment(item.lastModifiedDate).format('MM/DD/YYYY'),
@@ -331,9 +329,7 @@ const PPMReport = () => {
         setTableLoading(false)
       });
   };
-  const Finish = (data: any) => {
-    //getData()
-  };
+
   let exportingColumns: IExcelColumn[] = []
 
   const handleExport = (e: any) => {
@@ -468,31 +464,12 @@ const PPMReport = () => {
     const sizeWiseMap = getMap(data);
 
     exportingColumns = [
-      { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
-      { title: 'Last Modified Date', dataIndex: 'lastModifiedDate', render: (text) => moment(text).format('MM/DD/YYYY') },
-      {
-        title: 'Item',
-        dataIndex: 'item',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            const firstFourDigits = text.substring(0, 3);
-            return firstFourDigits;
-          }
-        },
-      },
-      {
-        title: 'Factory', dataIndex: 'Factory', render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        }
-      },
+      { title: 'Po+Line ', dataIndex: 'poAndLine' },
+      { title: 'Last Modified Date', dataIndex: 'lastModifiedDate' },
+      { title: 'Item', dataIndex: 'item', },
+      { title: 'Factory', dataIndex: 'Factory' },
       { title: 'PCD', dataIndex: 'PCD' },
-      { title: 'Document Date', dataIndex: 'documentDate', render: (text) => moment(text).format('MM/DD/YYYY') },
+      { title: 'Document Date', dataIndex: 'documentDate' },
       { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
       { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
       { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
@@ -506,7 +483,7 @@ const PPMReport = () => {
       { title: 'Planning Season Code', dataIndex: 'planningSeasonCode' },
       { title: 'Planning Season Year', dataIndex: 'planningSeasonYear' },
       { title: 'Co', dataIndex: 'customerOrder' },
-      { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', render: (text, record) => { return record.coFinalApprovalDate ? moment(record.coFinalApprovalDate).format('MM/DD/YYYY') : '-' } },
+      { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate' },
       { title: 'Plan No', dataIndex: 'planNo' },
       { title: 'Lead Time', dataIndex: 'leadTime' },
       { title: 'Category', dataIndex: 'categoryCode' },
@@ -562,9 +539,9 @@ const PPMReport = () => {
       },
       { title: 'CAB Code', dataIndex: 'CABCode' },
       { title: 'Final Destination', dataIndex: '' },
-      { title: 'MRGAC', dataIndex: 'MRGAC', render: (text, record) => { return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-' } },
-      { title: 'OGAC', dataIndex: 'OGAC', render: (text, record) => { return record.OGAC ? moment(record.OGAC).format('MM/DD/YYYY') : '-' } },
-      { title: 'GAC', dataIndex: 'GAC', render: (text, record) => { return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-' } },
+      { title: 'MRGAC', dataIndex: 'MRGAC' },
+      { title: 'OGAC', dataIndex: 'OGAC' },
+      { title: 'GAC', dataIndex: 'GAC' },
       { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
       { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc' },
       { title: 'Truck Out Date', dataIndex: 'truckOutDate', width: 80, },
@@ -589,44 +566,28 @@ const PPMReport = () => {
       // },
       {
         title: "Po+Line",
-        dataIndex: 'Po+Line', fixed: 'left',
-        // render: (text, record) => `${record.purchaseOrderNumber} - ${record.poLineItemNumber}`,
-
+        dataIndex: 'poAndLine',
+        fixed: 'left',
         render: (text, record) => {
           return <>
-            <Button type='link' onClick={e => { DetailedView(record.poAndLine) }}>{record.purchaseOrderNumber} - {record.poLineItemNumber}</Button>
+            <Button type='link' onClick={e => { DetailedView(record.poAndLine) }}>{record.poAndLine}</Button>
           </>
         }
-
       },
       {
         title: 'Last Modified Date',
         dataIndex: 'lastModifiedDate',
-        render: (text) => moment(text).format('MM/DD/YYYY')
       },
       {
         title: 'Item',
         dataIndex: 'item',
         width: 70, align: 'center',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            const firstFourDigits = text.substring(0, 4);
-            return firstFourDigits;
-          }
-        },
       },
       {
         title: 'Factory',
         dataIndex: 'factory',
         width: 70,
         align: 'center',
-        render: (text, record) => (
-          <span style={getFactoryCellStyle(text)}>
-            {!text || text.trim() === '' ? '-' : text}
-          </span>
-        ),
       },
       {
         title: 'PCD',
@@ -661,7 +622,6 @@ const PPMReport = () => {
       {
         title: 'Document Date',
         dataIndex: 'documentDate',
-        render: (text) => moment(text).format('MM/DD/YYYY')
       },
       {
         title: 'Purchase Order Number',
@@ -676,7 +636,6 @@ const PPMReport = () => {
       {
         title: 'DPOM Line Item Status',
         dataIndex: 'DPOMLineItemStatus', width: 80,
-
       },
       {
         title: 'Doc Type',
@@ -734,32 +693,15 @@ const PPMReport = () => {
       {
         title: 'CO',
         dataIndex: 'customerOrder', width: 80,
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        }
       },
       {
         title: 'CO Final Approval Date',
         dataIndex: 'coFinalApprovalDate',
         className: "right-column", width: 80,
-        render: (text, record) => {
-          return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
-        }
       },
       {
         title: 'Plan No',
         dataIndex: 'planNo', width: 80, align: 'center',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        }
       },
       {
         title: 'Lead Time',
@@ -836,25 +778,11 @@ const PPMReport = () => {
         title: 'Customer PO',
         dataIndex: 'customerPO',
         width: 80,
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
       },
       {
         title: 'Ship To Customer Number',
         dataIndex: 'shipToCustomerNumber', width: 80,
         align: 'center',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
       },
       {
         title: 'Ship To Customer Name',
@@ -928,80 +856,35 @@ const PPMReport = () => {
       {
         title: "CAB Code",
         dataIndex: 'CABCode', width: 80,
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
       },
       {
         title: 'Final Destination',
         dataIndex: '', width: 80,
       },
-
       {
         title: "MRGAC", width: 80,
-        dataIndex: 'MRGAC', render: (text, record) => {
-          return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-';
-        },
+        dataIndex: 'MRGAC',
       },
       {
-        title: 'OGAC', dataIndex: 'OGAC', width: 80, className: "right-column", render: (text, record) => {
-          return record.OGAC ? moment(record.OGAC).format('MM/DD/YYYY') : '-';
-        },
+        title: 'OGAC', dataIndex: 'OGAC', width: 80,
       },
       {
-        title: 'GAC', dataIndex: 'GAC', width: 80, className: "right-column", render: (text, record) => {
-          return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-';
-        },
+        title: 'GAC', dataIndex: 'GAC', width: 80
       },
       {
-        title: 'GAC Reason Code', width: 80, dataIndex: 'GACReasonCode', align: 'center', render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-
-      {
-        title: 'GAC Reason Description', width: 80, dataIndex: 'GACReasonDesc', render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        title: 'GAC Reason Code', width: 80, dataIndex: 'GACReasonCode', align: 'center'
       },
       {
-        title: 'Truck Out Date', dataIndex: 'truckOutDate', width: 80, className: "right-column", render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        title: 'GAC Reason Description', width: 80, dataIndex: 'GACReasonDesc'
       },
       {
-        title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', width: 80, className: "right-column", render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        title: 'Truck Out Date', dataIndex: 'truckOutDate', width: 80
       },
       {
-        title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', width: 80, className: "right-column", render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', width: 80
+      },
+      {
+        title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', width: 80
       },
       {
         title: 'Shipping Type',
@@ -1054,23 +937,6 @@ const PPMReport = () => {
             return '-';
           } else {
             return <strong>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</strong>;
-          }
-        },
-      },
-    ]
-
-    const csvHeaders = [
-      { header: 'Po+Line ', key: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
-      { header: 'Last Modified Date', key: 'lastModifiedDate', render: (text) => moment(text).format('MM/DD/YYYY') },
-      {
-        header: 'Item',
-        key: 'item',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            const firstFourDigits = text.substring(0, 3);
-            return firstFourDigits;
           }
         },
       },
@@ -2147,34 +2013,6 @@ const PPMReport = () => {
         ],
       });
 
-      // csvHeaders.push({
-      //   header: version,
-      //   key: version,
-      //   children: [
-      //     {
-      //       title: 'Quantity',
-      //       dataIndex: '',
-      //       align: 'right',
-      //       render: (text, record) => {
-      //         const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-      //         if (sizeData) {
-      //           if (sizeData.sizeQty !== null) {
-      //             const formattedQty = Number(sizeData.sizeQty).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-      //             return (
-      //               formattedQty
-      //             );
-      //           } else {
-      //             return (
-      //               '-'
-      //             );
-      //           }
-      //         } else {
-      //           return '-';
-      //         }
-      //       }
-      //     },
-      //   ]
-      // })
     });
 
     // if (hideChildren) {
@@ -2479,13 +2317,6 @@ const PPMReport = () => {
     console.log(poFilterData)
     navigate('/Reports/po-detailed-view', { state: { data: poFilterData } })
   }
-
-  const csvReport = {
-    data: filterData,
-    headers: exportingColumns,
-    filename: 'Clue_Mediator_Report.csv'
-  };
-
 
   return (
     <>
