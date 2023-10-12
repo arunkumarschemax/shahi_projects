@@ -37,7 +37,7 @@ export const FabricDevelopmentRequest = (props:FabricDevelopmentRequestProps) =>
   const [locationData,setLocationData] = useState<any>([])
   const [styleData,setstyleData] = useState<any>([])
   const [qualitieData,setqualitieData] = useState<any>()
-  const [pollutionFilelist,setPollutionFilelist] = useState<any[]>([]);
+  const [fabricFilelist,setFabricFilelist] = useState<any[]>([]);
   const [disable, setDisable] = useState<boolean>(false)
 
 
@@ -65,12 +65,25 @@ export const FabricDevelopmentRequest = (props:FabricDevelopmentRequestProps) =>
       const req = new FabricDevelopmentRequestModel (values.locationId,values.styleId,values.pchId,values.buyerId,values.type,1,values.remarks,values.fabricResponsible,1,values.lightSourcePrimary,values.lightSourceSecondary,values.lightSourceTertiary,"","",data,StatusEnum.OPEN)
   
       service.createFabricDevelopmentRequest(req).then((res)=>{
+        console.log(res,"res.........")
         setDisable(false)
 
          if (res.status){
-          // window.location.reload();
+           
+          if (fabricFilelist.length > 0) {
+            const formData = new FormData();
+            fabricFilelist.forEach((file: any) => {
+                formData.append('file', file);
+            });
+            formData.append('fabricRequestId', `${res.data.fabricRequestId}`)
+            formData.append('name', 'fabric')
+            console.log(formData,"*****")
+            service.fabricFileUpload(formData).then(fileres => {
+               res.data.filePath = fileres.data
+      
+            })
+        }
           onReset()
-          // props.dynamicForm.resetFields()
           message.success(res.internalMessage);
          
       } else{
@@ -94,7 +107,7 @@ export const FabricDevelopmentRequest = (props:FabricDevelopmentRequestProps) =>
   }
   console.log(qualitieData,"request11")
 
-  
+  console.log(fabricFilelist,"0000")
 
   
   
@@ -211,22 +224,22 @@ console.log(locationData,"143")
  const fileuploadFieldProps: UploadProps = {
   multiple: false,
   onRemove: (file:any) => {
-      setPollutionFilelist([]);
+      setFabricFilelist([]);
     // uploadFileList([]);
   },
   beforeUpload: (file: any) => {
     if (!file.name.match(/\.(jpg|jpeg|png)$/)) {
-      message.error("Only pdf and image files are allowed!");
+      message.error("image files are allowed!");
       return true;
     }
     var reader = new FileReader();
     reader.readAsArrayBuffer(file);
     reader.onload = data => {
-      if (pollutionFilelist.length === 1) {
+      if (fabricFilelist.length === 1) {
         message.error("You Cannot Upload More Than One File At A Time");
         return true;
       } else {
-          setPollutionFilelist([...pollutionFilelist, file]);
+          setFabricFilelist([...fabricFilelist, file]);
         // uploadFileList([...filelist, file]);
 
         return false;
@@ -244,8 +257,10 @@ console.log(locationData,"143")
     strokeWidth: 3,
     format: (percent:any) => `${parseFloat(percent.toFixed(2))}%`,
   },
-  fileList: pollutionFilelist
+  fileList: fabricFilelist
 };
+
+
   const onReset = () => {
     form.resetFields();
   };

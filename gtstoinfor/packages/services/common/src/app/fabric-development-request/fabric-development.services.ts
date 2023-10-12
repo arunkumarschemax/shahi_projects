@@ -1,7 +1,7 @@
 import { FabricRequestEntity } from "./fabric-request.entity";
 import { Injectable } from "@nestjs/common";
 import { FabricRequestRepository } from "./repository/fabric-request.repository";
-import { CommonResponseModel, FabricDevelopmentRequestResponse, StatusEnum } from "@project-management-system/shared-models";
+import { CommonResponseModel, FabricDevelopmentRequestResponse, StatusEnum, UploadResponse } from "@project-management-system/shared-models";
 import { FabricRequestDto } from "./dto/fabric-request.dto";
 import { FabricRequestQualitiesInfoEntity } from "./fabric-request-quality-info.entity";
 import { FabricRequestItemsEntity } from "./fabric-request-items.entity";
@@ -100,17 +100,44 @@ export class FabricDevelopmentService {
 
           }
         
-        const save = await this.FabricRepo.save(Entity);
+        let save = await this.FabricRepo.save(Entity);
     
         if (save){
             
-       return new FabricDevelopmentRequestResponse(true, 0, "Fabric Development Request successfully");
+       return new CommonResponseModel(true, 0, "Fabric Development Request successfully",save);
         }
     
         } catch (err) {
           throw err;
         }
       }
+
+      async updatePath(
+        filePath: string,
+        filename: string,
+        fabricRequestId: number,
+        name: string 
+      ): Promise<UploadResponse> {
+        console.log(fabricRequestId,"id------------")
+        try {
+          let filePathUpdate;
+          
+            filePathUpdate = await this.FabricRepo.update(
+              { fabricRequestId : fabricRequestId },
+              { filePath: filePath, fileName: filename }
+            );
+          
+          const result = await this.FabricRepo.findOne({ where: { fabricRequestId: fabricRequestId } });
+          if (filePathUpdate.affected > 0) {
+            return new UploadResponse(true, 11, "uploaded successfully", filePath);
+          } else {
+            return new UploadResponse(false, 11, "uploaded failed", filePath);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+     
 
    async getFabricDevReqData(): Promise<CommonResponseModel> {
       try {
