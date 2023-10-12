@@ -5,7 +5,8 @@ export enum VendorNameEnum {
     extractedEfl="EFL",
     extractedOocl="OOCL",
     extractedNagel="NAGEL",
-    extractedApl="APL"
+    extractedApl="APL",
+    extractedMaersk="MAERSK"
 
 
 
