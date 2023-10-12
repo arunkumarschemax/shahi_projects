@@ -537,7 +537,7 @@ const getAllItems = () => {
           className="custom-table-wrapper"
 
           pagination={{
-            pageSize: 100, // Set the page size to 100 records per page
+            pageSize: 100, 
             onChange(current, pageSize) {
                 setPage(current);
                 setPageSize(pageSize);

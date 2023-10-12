@@ -76,7 +76,7 @@ const ChangesGrid = () => {
                 setDiffquantitydata(res.data)
             }
         }).catch(err => {
-            console.log(err.message)
+            // console.log(err.message)
         })
     }
 
@@ -107,7 +107,7 @@ const ChangesGrid = () => {
                 setQuantitydata(res.data)
             }
         }).catch(err => {
-            console.log(err.message)
+            // console.log(err.message)
         })
     }
 
@@ -125,7 +125,7 @@ const ChangesGrid = () => {
                 Diff += Number(item.Diff)
                 
             })
-            console.log(old_val,new_val,Diff)
+            // console.log(old_val,new_val,Diff)
             const orderWiseTotals = {old_val,new_val,Diff,year:'Total'}
             return orderWiseTotals
         }
@@ -150,7 +150,7 @@ const ChangesGrid = () => {
                 .addColumns(data1)
                 .addDataSource(qtyData, { str2num: true })
                 const orderWiseTotals = preOrdQtyTotal(qtyData)
-                console.log(orderWiseTotals)
+                // console.log(orderWiseTotals)
                 excel.addDataSource([orderWiseTotals], { str2num: true })
         }
         if (differenceQtyData?.length > 0) {

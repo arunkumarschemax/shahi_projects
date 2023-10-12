@@ -157,7 +157,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
     //     return result
     // }
     async getMonthlyComparisionData(req: YearReq): Promise<any[]>{
-        console.log(req,'-----')
+        // console.log(req,'-----')
         let query = `WITH RankedVersions AS (
             SELECT
                 YEAR,
@@ -465,10 +465,10 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
                 WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
                 ELSE prod_plan_type
             END AS prod_plan_type,
-           SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank != 1 THEN order_plan_qty ELSE 0 END)  AS totalExfPcs,
-   SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank = 1 THEN order_plan_qty ELSE 0 END)AS totalExfCoeff,
-      SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 AND version_rank != 1 THEN order_plan_qty ELSE 0 END) AS totalWhPcs,
-     SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 AND version_rank = 1 THEN order_plan_qty ELSE 0 END) AS totalWhCoeff,
+            SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank != 1 THEN order_plan_qty ELSE 0 END)  AS totalExfPcs,
+            SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank = 1 THEN order_plan_qty ELSE 0 END)AS totalExfCoeff,
+            SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 AND version_rank != 1 THEN order_plan_qty ELSE 0 END) AS totalWhPcs,
+            SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 AND version_rank = 1 THEN order_plan_qty ELSE 0 END) AS totalWhCoeff,
          
             SUM(CASE WHEN MONTH(planned_exf) = 1 AND version_rank != 1 THEN CAST(   order_plan_qty  AS INT) ELSE 0 END) AS janExfPre,
             SUM(CASE WHEN MONTH(planned_exf) = 2 AND version_rank != 1 THEN CAST(   order_plan_qty  AS INT) ELSE 0 END) AS febExfPre,

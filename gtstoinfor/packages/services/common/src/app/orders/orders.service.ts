@@ -400,7 +400,7 @@ if(data.Order_Plan_Number !== null){
     }
 
     async getOrdersData(req: orders): Promise<CommonResponseModel> {
-        console.log(req,'req')
+        // console.log(req,'req')
         const details = await this.ordersRepository.getOrdersData(req)
         if (details)
             return new CommonResponseModel(true, 1, 'data retrived', details)
@@ -1411,7 +1411,7 @@ async processEmails() {
         });
       };
     };
-    console.log('filesssssnwwggg',filesArray)
+    // console.log('filesssssnwwggg',filesArray)
 
     imap.once('ready', () => {
       imap.openBox('INBOX', true, (err, box) => {
@@ -1521,7 +1521,7 @@ async processEmails() {
       return attachments;
     };
 
-    console.log(filesArray)
+    // console.log(filesArray)
             // this.readCell(savePath + filename,filename)
 
   }
@@ -1531,15 +1531,15 @@ async processEmails() {
     // console.log(req,'filesdataaaa')
     const fs = require('fs');
     const files = fs.readdirSync('./upload-files/');
-    console.log(files,'filesssss')
+    // console.log(files,'filesssss')
     // const req = [{filePath:'./upload-files/pro_orders_1.xlsx',fileName:'pro_orders_1.xlsx'},{filePath:'./upload-files/projection_orders_1.xlsx',fileName:'projection_orders_1.xlsx'}]
     for(const filerec of files){
         const filename = filerec
         const filepath = './upload-files/'+filerec
 
         // // filename = 'pro_order_sep3.xlsx';
-            console.log(filename.split('.').pop(),'extension')
-            console.log(filename,'filename')
+            // console.log(filename.split('.').pop(),'extension')
+            // console.log(filename,'filename')
             const promise = () => new Promise((resolve, reject) => {
                 if(filename.split('.').pop() == 'csv'){
                     const dataArray = []
@@ -1583,8 +1583,8 @@ async processEmails() {
                 // console.log('dataArraymmmm',dataArray)
                 
                 const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS)
-                console.log(filepath,'jjjjj')
-                console.log(filename,'jjjjj')
+                // console.log(filepath,'jjjjj')
+                // console.log(filename,'jjjjj')
                 // console.log('saveFilePathhhhh')
                 if(saveFilePath.status){
                     // console.log(dataArray,'------------------------------------')
@@ -2027,7 +2027,7 @@ async getPhaseMonthData(req): Promise<CommonResponseModel> {
     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);  
     } catch (error) {
     // Handle errors appropriately
-    console.error(error);
+    // console.error(error);
     return new CommonResponseModel(false, 0, 'error occurred', null);
     }
     }
@@ -2131,7 +2131,7 @@ async getPhaseMonthExcelData(req:YearReq):Promise<CommonResponseModel>{
               
 
             // Log the merged data for debugging
-            console.log('Merged Data:', mergedData);
+            // console.log('Merged Data:', mergedData);
 
             return new CommonResponseModel(true, 1, 'Data retrieved', mergedData);
         } else {
@@ -2152,7 +2152,7 @@ async getComparisionphaseExcelData(req: YearReq): Promise<CommonResponseModel> {
             return new CommonResponseModel(false, 1, 'No data found');
         }
     } catch (err) {
-        console.error('Error in getComparisionphaseExcelData:', err);
+        // console.error('Error in getComparisionphaseExcelData:', err);
         throw err;
     }
 }
@@ -2190,7 +2190,7 @@ async getComparisionphaseExcelData(req: YearReq): Promise<CommonResponseModel> {
 //     }
 // }
 async getversion(req:ordersPlanNo):Promise<CommonResponseModel>{
-console.log(req,'serviceeeeeeeeeeeeeee');
+// console.log(req,'serviceeeeeeeeeeeeeee');
 
     try{
         const data = await this.orderDiffRepo.getversions(req)

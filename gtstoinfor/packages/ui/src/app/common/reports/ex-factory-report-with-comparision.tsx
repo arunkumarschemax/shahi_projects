@@ -54,7 +54,7 @@ export const ExFactoryReportWithComparision = () => {
     service.getExfactoryYearData().then((res) => {
       if (res.status) {
         setYear(res.data);
-        console.log(res.data, "year");
+        // console.log(res.data, "year");
       }
     });
   };
@@ -64,7 +64,7 @@ export const ExFactoryReportWithComparision = () => {
     console.log(name);
     
     service.getMonthlyComparisionData(req).then((res) => {
-      console.log(res.data, "res==========");
+      // console.log(res.data, "res==========");
       if (res.status) {
         setData(res.data);
         setFilteredData(res.data);
@@ -73,7 +73,7 @@ export const ExFactoryReportWithComparision = () => {
       }
     });
     service.getExfactoryWithComparisionExcel(req).then((res) => {
-      console.log(res, "res==========");
+      // console.log(res, "res==========");
       if (res.status) {
         setExcelData(res.data);
       } else {
@@ -1214,13 +1214,13 @@ export const ExFactoryReportWithComparision = () => {
   const handleTabChange = (selectedYear: string) => {
     setTab(Number(selectedYear));
     getData();
-    console.log(Number(selectedYear), "///////////");
+    // console.log(Number(selectedYear), "///////////");
   };
   const getFilterdData = () => {
     let ItemName = form.getFieldValue("ItemName");
 
     let filteredData = data;
-    console.log(filteredData, "--------");
+    // console.log(filteredData, "--------");
 
     if (ItemName) {
       filteredData = filteredData.filter(
@@ -1238,7 +1238,7 @@ export const ExFactoryReportWithComparision = () => {
   };
 
   const getTableSummary = (pageData) => {
-    console.log(pageData,'pageeeeeeeeee');
+    // console.log(pageData,'pageeeeeeeeee');
     
     let janPre = 0;
     let janLat = 0;
@@ -1269,14 +1269,14 @@ export const ExFactoryReportWithComparision = () => {
 
     pageData.forEach((e) => {
       e.monthWiseData.forEach((rec) => {
-        console.log(Number(rec.coeffData[0].janCoeff),'----------');
+        // console.log(Number(rec.coeffData[0].janCoeff),'----------');
         
         if (rec.pcsData[0].janPcs) {
-          console.log(rec.pcsData[0].janPcs,'jannnnnnnnnnn');
+          // console.log(rec.pcsData[0].janPcs,'jannnnnnnnnnn');
           
           const jan = [rec.pcsData[0].janPcs];
           janPre += Number(jan);
-          console.log(janPre,'------');
+          // console.log(janPre,'------');
           
         }
         if (rec.pcsData[0].febPcs) {
