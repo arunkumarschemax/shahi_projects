@@ -387,7 +387,7 @@ async cancelSKUById(req :ItemSKusReq): Promise<any>{
 async getAllItemCode(req:SKUlistFilterRequest):Promise<SKUGenerationResponseModel>{
 return this.axiosPostCall(this.URL + "/getItems",req)
 }
-           
+    
 
 }
 

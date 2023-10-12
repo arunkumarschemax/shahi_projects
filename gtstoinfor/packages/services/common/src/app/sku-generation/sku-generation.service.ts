@@ -198,7 +198,8 @@ export class ItemSkuService{
       const getData= await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo'],
       // const getData = await this.itemSkuRepo.getDestinationsByItem(req.itemCode)
 
-      where:{itemCode:req.itemsNo,destinationInfo:{destinationId:req.destinationsId}}})
+      // where:{itemInfoitem_id = req.itemNoId}
+    })
       if(getData.length> 0){
         return new CommonResponseModel(true,1,'Data retreived',getData)
       }else{
@@ -208,5 +209,20 @@ export class ItemSkuService{
       throw err
     }
   }
+   
+
+// async getItemCode(req:ItemCodeReq):Promise<CommonResponseModel>{
+//   try{
+//     const getData = await this.itemSkuRepo.getDestinationsByItem(req.itemCode)
+//     if(getData.length > 0){
+//       return new CommonResponseModel(true,1,'Data retreived',getData)
+//     } else{
+//       return new CommonResponseModel(false,0,'No data found')
+//     }
+
+//   } catch(err){
+//     throw err
+//   }
+// }
 
 }
