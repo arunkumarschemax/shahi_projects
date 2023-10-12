@@ -238,7 +238,7 @@ const Number=()=>{
         {
             title: '#',
             key: 'sno',
-            width:50,
+            // width:50,
             align:'left',
             fixed:'left',
 
@@ -256,7 +256,7 @@ const Number=()=>{
         {
             title:'Order Plan Number',
             dataIndex:'order_plan_number',
-            width: 90,
+            // width: 90,
             align:'right',
             fixed:'left',
             ...getColumnSearchProps("order_plan_number"),
@@ -267,7 +267,7 @@ const Number=()=>{
               },
               render: (text,record) =>{
             return(
-               <Tooltip title="Click for Detail View">
+               <Tooltip title="Click for Order History">
                 <Button type='link' onClick={() => DetailView(record.order_plan_number)}>
                   {record.order_plan_number}
                 </Button>
@@ -283,7 +283,7 @@ const Number=()=>{
 
             render: (text) => (text ? text : '-'),
             // width: '9%',
-            width: 80,
+            // width: 80,
             sorter: (a, b) => {
                 const aKey = a.biz || "";
                 const bKey = b.biz || "";
@@ -293,23 +293,38 @@ const Number=()=>{
         {
             title: 'Department',
             dataIndex: 'department',
-            render: (text) => (text ? text : '-'),
+            // render: (text) => (text ? text : '-'),
             // width: '9%',
-            width: 90,
+            // width: 100,
 
-      ...getColumnSearchProps("department"),
-      sorter: (a, b) => {
-        const aKey = a.department || "";
-        const bKey = b.department || "";
-        return aKey.localeCompare(bKey);
-      },
+    //   ...getColumnSearchProps("department"),
+    //   sorter: (a, b) => {
+    //     const aKey = a.department || "";
+    //     const bKey = b.department || "";
+    //     return aKey.localeCompare(bKey);
+    //   },
+
+    filters:[
+        {text:"34. Men cut & sewn",
+        value:'34. Men cut & sewn'},
+        {
+            text:"24. Women cut & sewn",
+            value:"24. Women cut & sewn"
+        },
+        {
+            text:"82. Others Others",
+            value:"82. Others Others"
+        },
+    ],
+    onFilter:(value,record)=>{return record.department === value},
+    render:(text,record)=>{return record.department ? record.department:"-"}
         },
 
         {
         title:'Planning Sum Code',
         dataIndex:'planning_sum_code',
         render: (text) => (text ? text : '-'),
-        width: 100,
+        // width: 100,
 
         ...getColumnSearchProps("planning_sum_code"),
         sorter: (a, b) => {
@@ -324,7 +339,7 @@ const Number=()=>{
             dataIndex: 'planning_sum',
             render: (text) => (text ? text : '-'),
             // width: '9%',
-            width: 100,
+            // width: 100,
 
             ...getColumnSearchProps("planning_sum"),
             sorter: (a, b) => {
@@ -338,7 +353,7 @@ const Number=()=>{
             dataIndex: 'item',
             render: (text) => (text ? text : '-'),
             // width: '9%',
-            width: 100,
+            // width: 100,
 
             ...getColumnSearchProps("item"),
             sorter: (a, b) => {
@@ -358,8 +373,8 @@ const Number=()=>{
             dataIndex: 'fr_fabric',
             render: (text) => (text ? text : '-'),
             // width: '9%',
-            width: 100,
-
+            // width: 100,
+             align:"right",
             ...getColumnSearchProps("fr_fabric"),
             sorter: (a, b) => {
                 const aKey = a.fr_fabric || "";
@@ -367,6 +382,23 @@ const Number=()=>{
                 return aKey.localeCompare(bKey);
               },
         },
+        {
+            title: 'Order Qty',
+            dataIndex: 'order_plan_qty',
+            align: 'right',
+            render: (text: any) => {
+              const orderQty = parseFloat(text);
+              return !isNaN(orderQty) ? orderQty.toLocaleString('en-IN', {
+                maximumFractionDigits: 0
+              }) : '0';
+            },
+            sorter: (a, b) => {
+                const aKey = a.order_plan_qty || "";
+                const bKey = b.order_plan_qty || "";
+                return aKey.localeCompare(bKey);
+              },
+          },
+          
 
         // {
         //     title: 'Branch Factory',
@@ -380,7 +412,7 @@ const Number=()=>{
             dataIndex: 'coeff',
             render: (text) => (text ? text : '-'),
             // width: '9%',
-            width: 60,
+            // width: 60,
             align:'right',
             sorter: (a, b) => {
                 const aKey = a.coeff || "";
@@ -393,7 +425,7 @@ const Number=()=>{
             title: 'Publish Date',
             dataIndex: 'publish_date',
             // width: '9%',
-            width: 90,
+            // width: 90,
 
             render: (text, record) => {
                 return record.publish_date ? convertToYYYYMMDD(record.publish_date) : '-'
@@ -401,23 +433,23 @@ const Number=()=>{
         },
 
        
-        {
-            title: 'GWH',
-            dataIndex: 'gwh',
-            // width: '9%',
-            width: 80,
-            align:'right',
+        // {
+        //     title: 'GWH()',
+        //     dataIndex: 'gwh',
+        //     // width: '9%',
+        //     width: 80,
+        //     align:'right',
 
-            render: (text) => (text ? text : '-'),
-            ...getColumnSearchProps("gwh"),
+        //     render: (text) => (text ? text : '-'),
+        //     ...getColumnSearchProps("gwh"),
 
            
-        },
+        // },
         {
-            title: 'WH',
+            title: 'WH(yy-mm-dd)',
             dataIndex: 'wh',
             // width: '9%',
-            width: 90,
+            // width: 90,
 
             render: (text) => (text ? text : '-'),
             sorter: (a, b) => {
@@ -430,11 +462,19 @@ const Number=()=>{
             title: 'Transport Method',
             dataIndex: 'trnsp_mthd',
             // width: '9%',
-            width: 100,
-
-            render: (text) => (text ? text : '-'),
-
-            ...getColumnSearchProps("trnsp_mthd"),
+            // width: 100,
+            // ...getColumnSearchProps("trnsp_mthd"),
+            filters:[
+            {text:'Ship',
+            value:'Ship'
+               },
+        {
+            text:'Air',
+            value:'Air',
+        },
+            ],
+            onFilter:(value,record) =>{return record.trnsp_mthd === value},
+            render:(text,record)=>{ return record.trnsp_mthd ? record.trnsp_mthd:"-"}
 
         },
         {
@@ -443,7 +483,7 @@ const Number=()=>{
             render: (text) => (text ? text : '-'),
             ...getColumnSearchProps("raw_material_supplier"),
 
-            width: 100,
+            // width: 100,
 
             sorter: (a, b) => {
                 const aKey = a.raw_material_supplier || "";
@@ -454,7 +494,7 @@ const Number=()=>{
         {
             title: 'Yarn Order Status',
             dataIndex: 'yarn_order_status',
-            width: 100,
+            // width: 100,
             render: (text) => {
                 return text !== undefined && text !== "" ? text : "-";
               },           
@@ -472,7 +512,7 @@ const Number=()=>{
             dataIndex: 'fbrc_order_status',
             // width: '9%',
             render: (text) => (text ? text : '-'),
-            width: 100,
+            // width: 100,
             ...getColumnSearchProps("fbrc_order_status"),
 
         },
@@ -481,7 +521,7 @@ const Number=()=>{
             dataIndex: 'color_order_status',
             // width: '9%',
             render: (text) => (text ? text : '-'),
-            width: 100,
+            // width: 100,
             ...getColumnSearchProps("color_order_status"),
             // sorter: (a, b) => {
             //     const aKey = a.color_order_status || "";
@@ -494,7 +534,7 @@ const Number=()=>{
             dataIndex: 'trim_order_status',
             // width: '9%',
             render: (text) => (text ? text : '-'),
-            width: 100,
+            // width: 100,
             ...getColumnSearchProps("trim_order_status"),
             // sorter: (a, b) => {
             //     const aKey = a.trim_order_status || "";
@@ -507,7 +547,7 @@ const Number=()=>{
             dataIndex: 'po_order_status',
             // width: '9%',
             render: (text) => (text ? text : '-'),
-            width: 100,
+            // width: 100,
             ...getColumnSearchProps("po_order_status"),
             // sorter: (a, b) => {
             //     const aKey = a.color_order_status || "";
@@ -521,7 +561,7 @@ const Number=()=>{
             // width: '9%',
             render: (text) => (text ? text : '-'),
             ...getColumnSearchProps("prod_plan_type"),
-            width: 90,
+            // width: 90,
             sorter: (a, b) => {
                 const aKey = a.prod_plan_type || "";
                 const bKey = b.prod_plan_type || "";
@@ -529,11 +569,11 @@ const Number=()=>{
               },
         },
         {
-            title: 'Planned EXF',
+            title: 'Planned EXF(yy-mm-dd)',
             dataIndex: 'planned_exf',
             // width: '9%',
             render: (text) => (text ? text : '-'),
-            width: 90,
+            // width: 90,
             sorter: (a, b) => {
                 const aKey = a.planned_exf || "";
                 const bKey = b.planned_exf || "";
@@ -665,8 +705,11 @@ const Number=()=>{
                         </Col>
                     </Row>
                 </Form>
-                <Table columns={columns} dataSource={filteredData} scroll={{ x: 1000,y:500    }} className="custom-table-wrapper"
-
+                <Table columns={columns} 
+                dataSource={filteredData}
+                    className="custom-table-wrapper"
+                  size='small'
+scroll={{x:2000,y:500}}
                   pagination={{
                     pageSize: 100, 
                     onChange(current, pageSize) {

@@ -69,4 +69,11 @@ export class FileUploadEntity {
         name: "month"
     })
     month: number;
+
+    @Column('varchar', {
+        name: 'upload_type',
+        nullable: false,
+        length:20
+    })
+    uploadType: string;
 }

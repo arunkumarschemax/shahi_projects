@@ -76,7 +76,7 @@ const ChangesGrid = () => {
                 setDiffquantitydata(res.data)
             }
         }).catch(err => {
-            console.log(err.message)
+            // console.log(err.message)
         })
     }
 
@@ -107,7 +107,7 @@ const ChangesGrid = () => {
                 setQuantitydata(res.data)
             }
         }).catch(err => {
-            console.log(err.message)
+            // console.log(err.message)
         })
     }
 
@@ -125,7 +125,7 @@ const ChangesGrid = () => {
                 Diff += Number(item.Diff)
                 
             })
-            console.log(old_val,new_val,Diff)
+            // console.log(old_val,new_val,Diff)
             const orderWiseTotals = {old_val,new_val,Diff,year:'Total'}
             return orderWiseTotals
         }
@@ -150,7 +150,7 @@ const ChangesGrid = () => {
                 .addColumns(data1)
                 .addDataSource(qtyData, { str2num: true })
                 const orderWiseTotals = preOrdQtyTotal(qtyData)
-                console.log(orderWiseTotals)
+                // console.log(orderWiseTotals)
                 excel.addDataSource([orderWiseTotals], { str2num: true })
         }
         if (differenceQtyData?.length > 0) {
@@ -508,26 +508,26 @@ const ChangesGrid = () => {
             sorter: (a, b) => a.item?.localeCompare(b.item),
             sortDirections: [ "ascend","descend"],
         },
-        {
-            title: 'Year',
-            dataIndex: 'year',
-            sorter: (a, b) => a.year?.localeCompare(b.year),
-            sortDirections: [ "ascend","descend"],
-        },
-        {
-            title: 'Warehouse',
-            dataIndex: 'wh',
-            render: (text, record) => {
-                return record.wh ? moment(record.wh).format('MM-DD') : '-'
-            }
-        },
-        {
-            title: 'Ex Factory',
-            dataIndex: 'planned_exf',
-            render: (text, record) => {
-                return record.planned_exf ? moment(record.planned_exf).format('YYYY-MM-DD') : '-'
-            }
-        },
+        // {
+        //     title: 'Year',
+        //     dataIndex: 'year',
+        //     sorter: (a, b) => a.year?.localeCompare(b.year),
+        //     sortDirections: [ "ascend","descend"],
+        // },
+        // {
+        //     title: 'Warehouse',
+        //     dataIndex: 'wh',
+        //     render: (text, record) => {
+        //         return record.wh ? moment(record.wh).format('MM-DD') : '-'
+        //     }
+        // },
+        // {
+        //     title: 'Ex Factory',
+        //     dataIndex: 'planned_exf',
+        //     render: (text, record) => {
+        //         return record.planned_exf ? moment(record.planned_exf).format('YYYY-MM-DD') : '-'
+        //     }
+        // },
         {
             title: 'Previous Total Order Quantity',
             dataIndex: 'old_qty_value',
@@ -570,7 +570,7 @@ const ChangesGrid = () => {
             sortDirections: [ "ascend","descend"],
             render: (text, record) => (
                 < >
-                    {Number(record.diff) === 0 ? '-' : ''}
+                    {Number(record.diff) === 0 ? 0 : ''}
                     {Number(record.diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.diff).toLocaleString('en-IN', {
                         maximumFractionDigits: 0
                     })} </span> : ''}
@@ -590,7 +590,7 @@ const ChangesGrid = () => {
     const items: TabsProps['items'] = [
         {
             key: '1',
-            label: <b>Order Wise Quantity : {qtyData?.length} </b>,
+            label: <b>Order Wise Quantity Variance: {qtyData?.length} </b>,
             children: <Table className="custom-table-wrapper"
             bordered dataSource={qtyData} columns={orderWisecolumns}scroll={{x:1000,y:500}}
 
@@ -640,7 +640,7 @@ const ChangesGrid = () => {
         },
         {
             key: '2',
-            label: <b>Item Wise Quantity  : {differenceQtyData?.length}</b>,
+            label: <b>Item Wise Quantity Variance: {differenceQtyData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered
             dataSource={differenceQtyData} columns={ItemWisecolumns} pagination={false}
             scroll={{x:1000,y:500}}
@@ -662,9 +662,9 @@ const ChangesGrid = () => {
                     return (
                         <>
                             <Table.Summary.Row className='tableFooter'>
-                                <Table.Summary.Cell index={0} ><Text ></Text></Table.Summary.Cell>
-                                <Table.Summary.Cell index={1} ><Text ></Text></Table.Summary.Cell>
-                                <Table.Summary.Cell index={2} ><Text ></Text></Table.Summary.Cell>
+                                {/* <Table.Summary.Cell index={0} ><Text ></Text></Table.Summary.Cell> */}
+                                {/* <Table.Summary.Cell index={1} ><Text ></Text></Table.Summary.Cell> */}
+                                {/* <Table.Summary.Cell index={2} ><Text ></Text></Table.Summary.Cell> */}
                                 <Table.Summary.Cell index={3} ><Text ></Text></Table.Summary.Cell>
                                 <Table.Summary.Cell index={5} ><Text ></Text></Table.Summary.Cell>
                                 <Table.Summary.Cell index={6}  ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>Total</div></Table.Summary.Cell>

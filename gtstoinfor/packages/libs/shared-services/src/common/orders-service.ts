@@ -6,7 +6,7 @@ export class OrdersService extends CommonAxiosService {
     private ordersController = "/orders"
 
     async saveOrder(data: any, id: number, month: any): Promise<CommonResponseModel> {
-        console.log(month)
+        // console.log(month)
         const idn = id;
         const montId = month
         const url = `/orders/saveOrder/${idn}/${montId}`;
@@ -14,7 +14,7 @@ export class OrdersService extends CommonAxiosService {
     }
 
     async getOrdersData(req:orders): Promise<CommonResponseModel> {
-        console.log(req,"fe rreq")
+        // console.log(req,"fe rreq")
         return this.axiosPostCall(this.ordersController + "/getOrdersData",req)
     }
 
@@ -50,9 +50,9 @@ export class OrdersService extends CommonAxiosService {
     //     return await this.axiosPostCall(this.ordersController + '/fileUpload', file);
     // }
 
-    async fileUpload(file: any, month: number,fileType:string): Promise<CommonResponseModel> {
+    async fileUpload(file: any, month: number,fileType:string,uploadType: string): Promise<CommonResponseModel> {
         const monthId = month;
-        const url = `/orders/fileUpload/${monthId}/${fileType}`;
+        const url = `/orders/fileUpload/${monthId}/${fileType}/${uploadType}`;
         return this.axiosPostCall(url, file);
     }
 
@@ -113,7 +113,7 @@ export class OrdersService extends CommonAxiosService {
     }
 
     async saveTrimOrder(data: any, id: number, month: any): Promise<CommonResponseModel> {
-        console.log(month)
+        // console.log(month)
         const idn = id;
         const montId = month
         const url = `/orders/saveTrimOrder/${idn}/${montId}`;
@@ -171,11 +171,11 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.ordersController + "/getTrimOrdersNo")
     }
     async getOrdersStatus(req?:orders):Promise<CommonResponseModel>{
-        console.log(req,'okkkkkkk')
+        // console.log(req,'okkkkkkk')
         return this.axiosPostCall(this.ordersController + "/getOrdersStatus",req)
     }
     async getOrderPlanNo(req?:orders):Promise<CommonResponseModel>{
-        console.log(req,'okkkkkkk')
+        // console.log(req,'okkkkkkk')
         return this.axiosPostCall(this.ordersController + "/getOrderPlanNo",req)
     }
 
@@ -209,5 +209,12 @@ export class OrdersService extends CommonAxiosService {
     async getversion(req:ordersPlanNo):Promise<CommonResponseModel>{
         return this.axiosPostCall(this.ordersController + "/getversion",req)
       
+    }
+
+    async getItemsMonthly():Promise<CommonResponseModel>{
+   return this.axiosPostCall(this.ordersController + "/getItemsMonthly")
+    }
+    async getPhaseItems():Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.ordersController + "/getPhaseItems")
     }
 }

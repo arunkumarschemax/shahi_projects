@@ -400,7 +400,7 @@ if(data.Order_Plan_Number !== null){
     }
 
     async getOrdersData(req: orders): Promise<CommonResponseModel> {
-        console.log(req,'req')
+        // console.log(req,'req')
         const details = await this.ordersRepository.getOrdersData(req)
         if (details)
             return new CommonResponseModel(true, 1, 'data retrived', details)
@@ -417,21 +417,29 @@ if(data.Order_Plan_Number !== null){
     }
 
     async getQtyDifChangeData(req:CompareOrdersFilterReq): Promise<CommonResponseModel> {
-        const files = await this.fileUploadRepo.getFilesData()
-        
-        let data;
-        if (files.length == 0) {
-            return new CommonResponseModel(false, 0, 'No data found');
-        } else if (files.length == 1) {
-            data = await this.ordersChildRepo.getItemQtyChangeData1(files[0]?.fileId,req)
-        } else {
-            data = await this.ordersChildRepo.getItemQtyChangeData(files[1]?.fileId, files[0]?.fileId,req)
-        }
+        const data = await this.ordersRepository.getItemWiseQtyChangeData(req)
         if (data)
             return new CommonResponseModel(true, 1, 'data retrived', data)
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
+    // async getQtyDifChangeData(req:CompareOrdersFilterReq): Promise<CommonResponseModel> {
+    //     const files = await this.fileUploadRepo.getFilesData()
+        
+    //     let data;
+    //     if (files.length == 0) {
+    //         return new CommonResponseModel(false, 0, 'No data found');
+    //     } else if (files.length == 1) {
+    //         data = await this.ordersChildRepo.getItemQtyChangeData1(files[0]?.fileId,req)
+    //     } else {
+    //         data = await this.ordersChildRepo.getItemQtyChangeData(files[1]?.fileId, files[0]?.fileId,req)
+    //     }
+    //     if (data)
+    //         return new CommonResponseModel(true, 1, 'data retrived', data)
+    //     else
+    //         return new CommonResponseModel(false, 0, 'No data found');
+    // }
 
     async getContractDateChangeData(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getContractDateChangeData()
@@ -623,12 +631,13 @@ if(data.Order_Plan_Number !== null){
         }
     }
 
-    async updatePath(filePath: string, filename: string, month: number,fileType:string): Promise<CommonResponseModel> {
+    async updatePath(filePath: string, filename: string, month: number,fileType:string,uploadType:string): Promise<CommonResponseModel> {
         const entity = new FileUploadEntity()
         entity.fileName = filename;
         entity.filePath = filePath;
         entity.month = 9;
         entity.fileType = fileType;
+        entity.uploadType = uploadType
         entity.status = 'uploading';
         const file = await this.fileUploadRepo.findOne({ where: { fileName: filename, isActive: true } })
         if (file) {
@@ -1411,7 +1420,7 @@ async processEmails() {
         });
       };
     };
-    console.log('filesssssnwwggg',filesArray)
+    // console.log('filesssssnwwggg',filesArray)
 
     imap.once('ready', () => {
       imap.openBox('INBOX', true, (err, box) => {
@@ -1521,7 +1530,7 @@ async processEmails() {
       return attachments;
     };
 
-    console.log(filesArray)
+    // console.log(filesArray)
             // this.readCell(savePath + filename,filename)
 
   }
@@ -1531,15 +1540,15 @@ async processEmails() {
     // console.log(req,'filesdataaaa')
     const fs = require('fs');
     const files = fs.readdirSync('./upload-files/');
-    console.log(files,'filesssss')
+    // console.log(files,'filesssss')
     // const req = [{filePath:'./upload-files/pro_orders_1.xlsx',fileName:'pro_orders_1.xlsx'},{filePath:'./upload-files/projection_orders_1.xlsx',fileName:'projection_orders_1.xlsx'}]
     for(const filerec of files){
         const filename = filerec
         const filepath = './upload-files/'+filerec
 
         // // filename = 'pro_order_sep3.xlsx';
-            console.log(filename.split('.').pop(),'extension')
-            console.log(filename,'filename')
+            // console.log(filename.split('.').pop(),'extension')
+            // console.log(filename,'filename')
             const promise = () => new Promise((resolve, reject) => {
                 if(filename.split('.').pop() == 'csv'){
                     const dataArray = []
@@ -1582,9 +1591,9 @@ async processEmails() {
             if(dataArray){
                 // console.log('dataArraymmmm',dataArray)
                 
-                const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS)
-                console.log(filepath,'jjjjj')
-                console.log(filename,'jjjjj')
+                const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS,'Email')
+                // console.log(filepath,'jjjjj')
+                // console.log(filename,'jjjjj')
                 // console.log('saveFilePathhhhh')
                 if(saveFilePath.status){
                     // console.log(dataArray,'------------------------------------')
@@ -1614,6 +1623,7 @@ async processEmails() {
 
 
 async getMonthlyComparisionData(req:YearReq): Promise<CommonResponseModel> {
+    // console.log(req,'-------')
     const data = await this.ordersChildRepo.getMonthlyComparisionData(req);
     
     if (data.length === 0) {
@@ -2026,7 +2036,7 @@ async getPhaseMonthData(req): Promise<CommonResponseModel> {
     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);  
     } catch (error) {
     // Handle errors appropriately
-    console.error(error);
+    // console.error(error);
     return new CommonResponseModel(false, 0, 'error occurred', null);
     }
     }
@@ -2130,7 +2140,7 @@ async getPhaseMonthExcelData(req:YearReq):Promise<CommonResponseModel>{
               
 
             // Log the merged data for debugging
-            console.log('Merged Data:', mergedData);
+            // console.log('Merged Data:', mergedData);
 
             return new CommonResponseModel(true, 1, 'Data retrieved', mergedData);
         } else {
@@ -2142,190 +2152,19 @@ async getPhaseMonthExcelData(req:YearReq):Promise<CommonResponseModel>{
 }
 async getComparisionphaseExcelData(req: YearReq): Promise<CommonResponseModel> {
     try {
-        // const data = await this.ordersChildRepo.getComparisionphaseData(req);
-        const query = `SELECT
-        YEAR,
-        VERSION,
-        CASE
-            WHEN prod_plan_type LIKE '%Ph3%' THEN 'Ph3'
-            WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
-            WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
-            ELSE prod_plan_type
-        END AS prod_plan_type,
-        CASE
-            WHEN version_rank = 1 THEN 'latest'
-            ELSE 'previous'
-        END AS STATUS,
-       SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS totalExfPre,
-       SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS totalExfLat,
-                          
-   SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS totalWhPre,
-  SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS totalWhLat,
-               SUM(CASE WHEN MONTH(planned_exf) = 1 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS janExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 2 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS febExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 3 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS marExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 4 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS aprExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 5 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS mayExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 6 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS junExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 7 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS julExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 8 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS augExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 9 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS sepExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 10 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS octExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 11 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS novExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS decExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 1 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS janExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 2 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS febExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 3 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS marExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 4 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS aprExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 5 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS mayExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 6 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS junExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 7 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS julExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 8 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS augExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 9 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS sepExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 10 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS octExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 11 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS novExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 12 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS decExfLat,
-                SUM(CASE WHEN MONTH(wh) = 1  AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS janWhPre,
-                SUM(CASE WHEN MONTH(wh)  = 2 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS febWhPre,
-                SUM(CASE WHEN MONTH(wh)  = 3 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS marWhPre,
-                SUM(CASE WHEN MONTH(wh)  = 4 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS aprWhPre,
-                SUM(CASE WHEN MONTH(wh)  = 5 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS mayWhPre,
-                SUM(CASE WHEN MONTH(wh)  = 6 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS junWhPre,
-                SUM(CASE WHEN MONTH(wh)  = 7 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS julWhPre,
-                SUM(CASE WHEN MONTH(wh)  = 8 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS augWhPre,
-                SUM(CASE WHEN MONTH(wh)  = 9 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS sepWhPre,
-                SUM(CASE WHEN MONTH(wh)  =10 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS octWhPre,
-                SUM(CASE WHEN MONTH(wh)  =11 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS novWhPre,
-                SUM(CASE WHEN MONTH(wh)  = 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS decWhPre,
-                SUM(CASE WHEN MONTH(wh) = 1  AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS janWhLat,
-                SUM(CASE WHEN MONTH(wh)  = 2 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS febWhLat,
-                SUM(CASE WHEN MONTH(wh)  = 3 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS marWhLat,
-                SUM(CASE WHEN MONTH(wh)  = 4 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS aprWhLat,
-                SUM(CASE WHEN MONTH(wh)  = 5 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS mayWhLat,
-                SUM(CASE WHEN MONTH(wh)  = 6 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS junWhLat,
-                SUM(CASE WHEN MONTH(wh)  = 7 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS julWhLat,
-                SUM(CASE WHEN MONTH(wh)  = 8 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS augWhLat,
-                SUM(CASE WHEN MONTH(wh)  = 9 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS sepWhLat,
-                SUM(CASE WHEN MONTH(wh)  =10 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS octWhLat,
-                SUM(CASE WHEN MONTH(wh)  =11 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS novWhLat,
-                SUM(CASE WHEN MONTH(wh)  = 12 AND version_rank  = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS decWhLat
-        FROM (
-        SELECT
-            YEAR,
-            VERSION,
-            prod_plan_type,
-            planned_exf,
-            wh,
-            order_plan_qty,
-            ROW_NUMBER() OVER (PARTITION BY prod_plan_type ORDER BY VERSION DESC) AS version_rank
-        FROM orders_child
-        ) AS RankedVersions
-        WHERE version_rank <= 2
-        AND YEAR = '2023'
-        AND prod_plan_type != 'STOP'
-        GROUP BY
-        CASE
-            WHEN prod_plan_type LIKE '%Ph3%' THEN 'Ph3'
-            WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
-            WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
-            ELSE prod_plan_type
-        END,
-        YEAR`
-        const data = await this.dataSource.query(query);
-        console.log(data,'--------');
-        
-        // const data1 = await this.ordersChildRepo.getComparisionphaseData1(req);
-        const query2 = `SELECT year, version,
-        (CASE
-            WHEN prod_plan_type LIKE '%Ph3%' THEN 'Ph3'
-            WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
-            WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
-            ELSE prod_plan_type
-        END) AS prod_plan_type, 
-        (CASE WHEN version_rank = 1 THEN 'latest' ELSE 'previous' END) AS STATUS,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS totalExfPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS totalExfLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS totalWhPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS totalWhLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 1 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS janExfPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 2 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS febExfPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 3 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS marExfPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 4 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS aprExfPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 5 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) / NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%') AS mayExfPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 6 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS junExfPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 7 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS julExfPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 8 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) / NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%') AS augExfPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 9 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) / NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%') AS sepExfPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 10 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS octExfPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 11 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS novExfPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS decExfPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 1 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS janExfLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 2 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS febExfLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 3 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS marExfLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 4 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS aprExfLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 5 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS mayExfLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 6 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS junExfLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 7 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) / NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%') AS julExfLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 8 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS augExfLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 9 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS sepExfLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 10 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS octExfLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 11 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS novExfLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 12 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS decExfLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 1  AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS janWhPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 2 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS febWhPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 3 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS marWhPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 4 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS aprWhPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 5 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS mayWhPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 6 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) / NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%') AS junWhPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 7 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS julWhPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 8 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS augWhPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 9 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS sepWhPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 10 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS octWhPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 11 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) / NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%') AS novWhPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS decWhPre,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 1 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) / NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%') AS janWhLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 2 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) / NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%') AS febWhLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 3 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) / NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%') AS marWhLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 4 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS aprWhLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 5 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS mayWhLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 6 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS junWhLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 7 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS julWhLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 8 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS augWhLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 9 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS sepWhLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 10 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS octWhLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 11 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS novWhLat,
-        CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) = 12 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END)/ NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS decWhLat
-        FROM ( SELECT year, version, prod_plan_type, planned_exf, wh, order_plan_qty, ROW_NUMBER() OVER (PARTITION BY prod_plan_type ORDER BY VERSION DESC) AS version_rank
-        FROM orders_child) AS RankedVersions
-        WHERE version_rank <= 2
-        AND year = '2023'
-        AND prod_plan_type != 'STOP'
-        GROUP BY
-        CASE
-            WHEN prod_plan_type LIKE '%Ph3%' THEN 'Ph3'
-            WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
-            WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
-            ELSE prod_plan_type
-        END,
-        year`
-
-
-        const data1 = await this.dataSource.query(query2);
-        console.log(data1,'----data1')
-        if (data && data1) {
-           
-            // const mergedData = [...data1, ...data];
-
-            return new CommonResponseModel(true, 1, 'Data retrieved', data1);
+        const data = await this.ordersChildRepo.getComparisionphaseData(req);
+        const data1 = await this.ordersChildRepo.getComparisionphaseData1(req);
+    if (data && data1) {
+            const mergedData = [...data1, ...data];
+            return new CommonResponseModel(true, 1, 'Data retrieved', mergedData);
         } else {
             return new CommonResponseModel(false, 1, 'No data found');
         }
     } catch (err) {
-        console.error('Error in getComparisionphaseExcelData:', err);
+        // console.error('Error in getComparisionphaseExcelData:', err);
         throw err;
     }
 }
-
 // async getversion():Promise<CommonResponseModel>{
 //     let query=`SELECT 
 //     order_plan_number, 
@@ -2360,7 +2199,7 @@ async getComparisionphaseExcelData(req: YearReq): Promise<CommonResponseModel> {
 //     }
 // }
 async getversion(req:ordersPlanNo):Promise<CommonResponseModel>{
-console.log(req,'serviceeeeeeeeeeeeeee');
+// console.log(req,'serviceeeeeeeeeeeeeee');
 
     try{
         const data = await this.orderDiffRepo.getversions(req)
@@ -2373,6 +2212,20 @@ console.log(req,'serviceeeeeeeeeeeeeee');
     } catch(err){
         throw err
     }
+}
+async getItemsMonthly(): Promise<CommonResponseModel> {
+    const details = await this.ordersRepository.getItemsMonthly()
+    if (details)
+        return new CommonResponseModel(true, 1, 'data retrived', details)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
+async getPhaseItems(): Promise<CommonResponseModel> {
+    const details = await this.ordersChildRepo.getPhaseItems()
+    if (details)
+        return new CommonResponseModel(true, 1, 'data retrived', details)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
 }
 }
   

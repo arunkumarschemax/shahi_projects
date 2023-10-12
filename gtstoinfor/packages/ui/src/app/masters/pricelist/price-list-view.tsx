@@ -314,41 +314,42 @@ const getAllItems = () => {
 
        
       },
-      // {
-      //   title: "Price",
-      //   dataIndex: "fobLocalCurrency",
-      //   align:"right",
-      //   sorter: (a, b) => a.fobLocalCurrency.localeCompare(b.fobLocalCurrency),
-      //   sortDirections: [ "ascend","descend"],
-      //    ...getColumnSearchProps("currency"),
-      //   render:(text,record) => {
-      //     return(
-      //       <>
-      //       {record.fobLocalCurrency ? `${record.currency}- ${record.fobLocalCurrency} ` : '-'}
-      //       </>
-      //     )
-      //   }
-      //   // ...getColumnSearchProps("currency"),
-
-       
-       
-      // },
       {
-        title:"Price",
-        dataIndex:"fobLocalCurrency",
+        title: "Price",
+        dataIndex: "fobLocalCurrency",
         align:"right",
         sorter: (a, b) => a.fobLocalCurrency.localeCompare(b.fobLocalCurrency),
         sortDirections: [ "ascend","descend"],
-         ...getColumnSearchProps("fobLocalCurrency"),
-      },
-      {
-        title:"Currency",
-        dataIndex:"currency",
-        align:"right",
-        sorter: (a, b) => a.currency.localeCompare(b.currency),
-        sortDirections: [ "ascend","descend"],
          ...getColumnSearchProps("currency"),
+        render:(text,record) => {
+          return(
+            <>
+            {record.fobLocalCurrency ? `${record.currency} ${record.fobLocalCurrency.toLocaleString()} ` : '-'}
+            
+            </>
+          )
+        }
+        // ...getColumnSearchProps("currency"),
+
+       
+       
       },
+      // {
+      //   title:"Price",
+      //   dataIndex:"fobLocalCurrency",
+      //   align:"right",
+      //   sorter: (a, b) => a.fobLocalCurrency.localeCompare(b.fobLocalCurrency),
+      //   sortDirections: [ "ascend","descend"],
+      //    ...getColumnSearchProps("fobLocalCurrency"),
+      // },
+      // {
+      //   title:"Currency",
+      //   dataIndex:"currency",
+      //   align:"right",
+      //   sorter: (a, b) => a.currency.localeCompare(b.currency),
+      //   sortDirections: [ "ascend","descend"],
+      //    ...getColumnSearchProps("currency"),
+      // },
       {
         title: 'Status',
         dataIndex: 'isActive',
@@ -429,9 +430,9 @@ const getAllItems = () => {
   return (
       <>
       <Card title={<><span>Price List</span>
-      <span style={{marginLeft:'20%'}}>{'Created Styles: ' + styCount}</span>
-      <span style={{marginLeft:'20%'}}>{'Created Destination: ' + Number(des)}</span>
-      <span style={{marginLeft:'20%'}}>{'Created Item: ' + item}</span>
+      <span style={{marginLeft:'20%'}}>{'No of Styles: ' + styCount}</span>
+      <span style={{marginLeft:'20%'}}>{'No of Destination: ' + Number(des)}</span>
+      <span style={{marginLeft:'20%'}}>{'No of Item: ' + item}</span>
       </>}
     //  headStyle={{ border: 0 }} 
     extra={<Link to='/masters/pricelist/price-list-form' >
@@ -536,7 +537,7 @@ const getAllItems = () => {
           className="custom-table-wrapper"
 
           pagination={{
-            pageSize: 100, // Set the page size to 100 records per page
+            pageSize: 100, 
             onChange(current, pageSize) {
                 setPage(current);
                 setPageSize(pageSize);

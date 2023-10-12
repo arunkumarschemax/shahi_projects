@@ -137,25 +137,46 @@ export default function ExcelImport() {
       console.log(file.type)
     if (file && file.type === 'text/csv') {
         setSelectedFile(e.target.files[0]);
-      Papa.parse(e.target.files[0], {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const csv = event.target.result as string;
+          
+          // Split CSV data into lines
+          const lines = csv.split('\n');
+  
+          // Extract the second row as headers
+          const headers = Papa.parse(lines[1], {
+            header: true,
+          }).data[0];
+  
+          // Remove the first and second row from the lines array
+          lines.shift(); // Remove the first row
+          lines.shift(); // Remove the first row
+          lines.shift(); // Remove the first row          
+          // lines.splice(1, 1); // Remove the second row
+  
+          // Join the remaining lines back into CSV format
+          const modifiedCsv = lines.join('\n');
+  
+      Papa.parse(modifiedCsv, {
         header: true,
         complete: function (result) {
           {
             const columnArray = [];
             const valueArray = [];
-            console.log(result)
             result.data.map((d) => {
               columnArray.push(Object.keys(d))
               valueArray.push(Object.values(d))
             });
-            console.log(result.data)
             setData(result.data)
             setColumns(columnArray[0])
             setValues(valueArray)
           }
-        }
+        },
+        skipEmptyLines: true,
       });
-     
+    }
+    reader.readAsText(file);
     } else if(file && file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
       setSelectedFile(e.target.files[0]);
       let csvData
@@ -262,7 +283,7 @@ export default function ExcelImport() {
           if(form.getFieldsValue().fileType == FileTypesEnum.PROJECTION_ORDERS){
 
             if (month) {
-              ordersService.fileUpload(formData, integerPart,form.getFieldsValue().fileType).then((fileRes) => {
+              ordersService.fileUpload(formData, integerPart,form.getFieldsValue().fileType,'Manual').then((fileRes) => {
                 if (fileRes.status) {
                   ordersService.saveOrder(data, fileRes?.data?.id, integerPart).then((res) => {
                     setLoading(true)
@@ -294,7 +315,7 @@ export default function ExcelImport() {
               message.info('month not avilable')
             }
           }else{
-              ordersService.fileUpload(formData,month,form.getFieldsValue().fileType).then((fileRes) => {
+              ordersService.fileUpload(formData,month,form.getFieldsValue().fileType,'Manual').then((fileRes) => {
                 if (fileRes.status) {
                   ordersService.saveTrimOrder(data, fileRes?.data?.id, month).then((res) => {
                     setLoading(true)
@@ -582,26 +603,31 @@ export default function ExcelImport() {
   
 
   const exportExcel = () => {
-    const excel = new Excel();
     if(form.getFieldValue('fileType') === FileTypesEnum.PROJECTION_ORDERS){
-      excel
-        .addSheet('Projection Order')
-        .addColumns(projectiontemplate)
-        .addDataSource([])
-        .saveAs('Projection Order Template.xlsx');
+      const excel = new Excel();
+      excel.addSheet('Projection Order')
+        excel.addRow()
+        excel.addRow()
+        excel.addRow()
+        excel.addColumns(projectiontemplate)
+        excel.addDataSource([])
+        // .addDataSource([], { str2num: true });
+        excel.saveAs('Projection Order Template.xlsx');
     } else{
+      const excel = new Excel();
       excel
       .addSheet('Trim Order')
       .addColumns(trimTemplate)
       .addDataSource([])
       .saveAs('Trim Order Template.xlsx');
     }
+    
   }
 
 
   return (
     <>
-      <Card title="Add Order" extra={<span> <Button className='panel_button' icon={<FileExcelFilled />} style={{ color: 'green' }} onClick={() => exportExcel()}>Sample Excel</Button></span>}>
+      <Card title="Add Order" extra={<span> <Button className='panel_button' icon={<FileExcelFilled />} style={{ color: 'green' }} onClick={() => exportExcel()}>Sample Excel Format</Button></span>}>
       <b>Last Uploaded File Details</b>
       <br/>
       <br/>

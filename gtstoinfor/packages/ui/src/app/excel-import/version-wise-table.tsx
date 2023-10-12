@@ -289,11 +289,11 @@ render: (text, object, index) => (page - 1) * pageSize + (index + 1)
     dataIndex:"new_val"
 
 },
-{
-    title:"Column Name",
-    dataIndex:"column_name"
+// {
+//     title:"Column Name",
+//     dataIndex:"column_name"
 
-},
+// },
 {
     title:"Display Name",
     dataIndex:"display_name"

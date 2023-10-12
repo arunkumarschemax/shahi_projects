@@ -7,10 +7,9 @@ import form from "antd/es/form"
 import { useEffect, useState } from "react"
 import { OrdersService } from "@project-management-system/shared-services"
 import React from "react"
-import { YearReq } from "@project-management-system/shared-models"
+import {  YearReq, orders } from "@project-management-system/shared-models"
 import { Excel } from "antd-table-saveas-excel"
 import { IExcelColumn } from "antd-table-saveas-excel/app"
-
 export const MonthWiseReport = () =>{
     const [form] = Form.useForm();
   const { Option } = Select;
@@ -37,13 +36,14 @@ export const MonthWiseReport = () =>{
   }, [year]);
   const handleChange = (val) =>{
     setSelected(val)
+    // getItems()
     getData(val,tab)
   }
   const getTabs = () => {
     service.getExfactoryYearData().then((res) => {
       if (res.status) {
         setYear(res.data);
-        console.log(res.data[0].year);
+        // console.log(res.data[0].year);
         setTab(res.data[0].year)
         if (!selected && res.data.length > 0) {
           setTab(res.data[0].year);
@@ -52,8 +52,22 @@ export const MonthWiseReport = () =>{
           }
     });
   };
-  console.log(tab,'555555555555');
+  // console.log(tab,'555555555555');
 
+  // const getItems=()=>{
+  //   const req = new ()
+  //   if(form.getFieldValue('itemName') !== undefined){
+  //     req.itemName =form.getFieldValue('itemName')
+  //     service.getItemsMonthly().then(res=>{
+  //       if(res.status){
+  //         setFilteredData(res.data)
+  //         setData(res.data);
+  //       }
+  //     }).catch(err=>{
+
+  //     })
+  //   } 
+  // }
   const getData = (val,tabName) => {
     const req = new YearReq(tabName,val);
     service.getMonthWiseReportData(req).then((res) => {
@@ -612,7 +626,7 @@ const pagination = {
     
       
         {
-          dataIndex: "febPcsWh",
+          dataIndex: "febWhPcs",
           width:50,
           align:"right",
           render: (text: any, record: any) => {
@@ -907,62 +921,62 @@ const pagination = {
     {title: ``,dataIndex: "",},
     {title: ``,dataIndex: "",},
 
-    {title:<span style={{ background: 'lightgreen' }}>Jan In PCs</span>, dataIndex: "janPcsExf", align: "right"},
+    {title:<span style={{ background: 'lightgreen' }}>Jan In PCs</span>, dataIndex: "janExfPcs", align: "right"},
     {title: <span style={{ background: 'lightgreen' }}>Jan In Coeff</span>,dataIndex: "janExfCoeff",align:"right"},
       {title: ``,dataIndex: "",},
       {title: ``,dataIndex: "",},
 
-      {title: <span style={{ background: 'lightblue' }}>Feb In PCs</span>,dataIndex: "febPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightblue' }}>Feb In PCs</span>,dataIndex: "febExfPcs",align:"right"},
       {title: <span style={{ background: 'lightblue' }}>Feb In Coeff</span>,dataIndex: "febExfCoeff",align:"right"},
       {title: ``,dataIndex: "",},
       {title: ``,dataIndex: "",},
 
-      {title: <span style={{ background: 'lightgreen' }}>Mar In PCs</span>,dataIndex: "marPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightgreen' }}>Mar In PCs</span>,dataIndex: "marExfPcs",align:"right"},
       {title: <span style={{ background: 'lightgreen' }}>Mar In Coeff</span>,dataIndex: "marExfCoeff",align:"right"},
       {title: ``,dataIndex: "",},
       {title: ``,dataIndex: "",},
 
-      {title: <span style={{ background: 'lightblue' }}>Apr In PCs</span>,dataIndex: "aprPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightblue' }}>Apr In PCs</span>,dataIndex: "aprExfPcs",align:"right"},
       {title:<span style={{ background: 'lightblue' }}>Apr In Coeff</span>,dataIndex: "aprExfCoeff",align:"right"},
       {title: ``,dataIndex: "",},
       {title: ``,dataIndex: "",},
 
-      {title: <span style={{ background: 'lightgreen' }}> May In PCs</span>,dataIndex: "mayPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightgreen' }}> May In PCs</span>,dataIndex: "mayExfPcs",align:"right"},
       {title: <span style={{ background: 'lightgreen' }}> May In Coeff</span>,dataIndex: "mayExfCoeff",align:"right"},
       {title: ``,dataIndex: "",},
       {title: ``,dataIndex: "",},
 
-      {title:<span style={{ background: 'lightblue' }}>Jun In PCs</span>,dataIndex: "junPcsExf",align:"right"},
+      {title:<span style={{ background: 'lightblue' }}>Jun In PCs</span>,dataIndex: "junExfPcs",align:"right"},
       {title: <span style={{ background: 'lightblue' }}>Jun In Coeff</span>,dataIndex: "junExfCoeff",align:"right"},
       {title: ``,dataIndex: "",},
       {title: ``,dataIndex: "",},
 
-      {title: <span style={{ background: 'lightgreen' }}> Jul In PCs</span>,dataIndex: "julPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightgreen' }}> Jul In PCs</span>,dataIndex: "julExfPcs",align:"right"},
       {title: <span style={{ background: 'lightgreen' }}> Jul In Coeff</span>,dataIndex: "julExfCoeff",align:"right"},
       {title: ``,dataIndex: "",},
       {title: ``,dataIndex: "",},
 
-      {title: <span style={{ background: 'lightblue' }}>Aug In PCs</span>,dataIndex: "augPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightblue' }}>Aug In PCs</span>,dataIndex: "augExfPcs",align:"right"},
       {title: <span style={{ background: 'lightblue' }}>Aug In Coeff</span>,dataIndex: "augExfCoeff",align:"right"},
       {title: ``,dataIndex: "",},
       {title: ``,dataIndex: "",},
 
-      {title: <span style={{ background: 'lightgreen' }}> Sep In PCs</span>,dataIndex: "sepPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightgreen' }}> Sep In PCs</span>,dataIndex: "sepExfPcs",align:"right"},
       {title:<span style={{ background: 'lightgreen' }}> Sep In Coeff</span>,dataIndex: "sepExfCoeff",align:"right"},
       {title: ``,dataIndex: "",},
       {title: ``,dataIndex: "",},
 
-      {title: <span style={{ background: 'lightblue' }}>Oct In PCs</span>,dataIndex: "octPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightblue' }}>Oct In PCs</span>,dataIndex: "octExfPcs",align:"right"},
       {title: <span style={{ background: 'lightblue' }}>Oct In Coeff</span>,dataIndex: "octExfCoeff",align:"right"},
       {title: ``,dataIndex: "",},
       {title: ``,dataIndex: "",},
 
-      {title: <span style={{ background: 'lightgreen' }}> Nov In PCs</span>,dataIndex: "novPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightgreen' }}> Nov In PCs</span>,dataIndex: "novExfPcs",align:"right"},
       {title: <span style={{ background: 'lightgreen' }}> Nov In Coeff</span>,dataIndex: "novExfCoeff",align:"right"},
       {title: ``,dataIndex: "",},
       {title: ``,dataIndex: "",},
 
-      {title: <span style={{ background: 'lightblue' }}> Dec In PCs</span>,dataIndex: "decPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightblue' }}> Dec In PCs</span>,dataIndex: "decExfPcs",align:"right"},
       {title: <span style={{ background: 'lightblue' }}> Dec In Coeff</span>,dataIndex: "decExfCoeff",align:"right"},
       {title: ``,dataIndex: "",},
       {title:  <span style={{ background: 'lightblue' }}> Total In Pcs</span>,dataIndex: "totalExfPcs",align:"right"},
@@ -976,63 +990,63 @@ const pagination = {
 if(selected === 'WareHouse'){
   columns.push(
     { title: "Production Plan Type Name",dataIndex: "prod_plan_type",},
-    {title: <span style={{ background: 'lightblue' }}> Jan In PCs</span>,dataIndex: "janPcsWh",align:"right"},
-    {title: <span style={{ background: 'lightblue' }}> Jan In Coeff</span>,dataIndex: "janCoeffWh",align:"right"},
+    {title: <span style={{ background: 'lightblue' }}> Jan In PCs</span>,dataIndex: "janWhPcs",align:"right"},
+    {title: <span style={{ background: 'lightblue' }}> Jan In Coeff</span>,dataIndex: "janWhCoeff",align:"right"},
     {title: ``,dataIndex: "",},
     {title: ``,dataIndex: "",},
 
-    {title: <span style={{ background: 'lightgreen' }}> Feb In PCs</span>,dataIndex: "febPcsWh",align:"right"},
-    {title: <span style={{ background: 'lightgreen' }}> Feb In Coeff</span>,dataIndex: "febCoeffWh",align:"right"},
+    {title: <span style={{ background: 'lightgreen' }}> Feb In PCs</span>,dataIndex: "febWhPcs",align:"right"},
+    {title: <span style={{ background: 'lightgreen' }}> Feb In Coeff</span>,dataIndex: "febWhCoeff",align:"right"},
     {title: ``,dataIndex: "",},
     {title: ``,dataIndex: "",},
 
-    {title: <span style={{ background: 'lightblue' }}> Mar In PCs</span>,dataIndex: "marPcsWh",align:"right"},
-    {title: <span style={{ background: 'lightblue' }}> Mar In Coeff</span>,dataIndex: "marCoeffWh",align:"right"},
+    {title: <span style={{ background: 'lightblue' }}> Mar In PCs</span>,dataIndex: "marWhPcs",align:"right"},
+    {title: <span style={{ background: 'lightblue' }}> Mar In Coeff</span>,dataIndex: "marWhCoeff",align:"right"},
     {title: ``,dataIndex: "",},
     {title: ``,dataIndex: "",},
 
-    {title: <span style={{ background: 'lightgreen' }}> Apr In PCs</span>,dataIndex: "aprPcsWh",align:"right"},
-    {title: <span style={{ background: 'lightgreen' }}> Apr In Coeff</span>,dataIndex: "aprCoeffWh",align:"right"},
+    {title: <span style={{ background: 'lightgreen' }}> Apr In PCs</span>,dataIndex: "aprWhPcs",align:"right"},
+    {title: <span style={{ background: 'lightgreen' }}> Apr In Coeff</span>,dataIndex: "aprWhCoeff",align:"right"},
     {title: ``,dataIndex: "",},
     {title: ``,dataIndex: "",},
 
-    {title: <span style={{ background: 'lightblue' }}> May In PCs</span>,dataIndex: "mayPcsWh",align:"right"},
-    {title: <span style={{ background: 'lightblue' }}> May In Coeff</span>,dataIndex: "mayCoeffWh",align:"right"},
+    {title: <span style={{ background: 'lightblue' }}> May In PCs</span>,dataIndex: "mayWhPcs",align:"right"},
+    {title: <span style={{ background: 'lightblue' }}> May In Coeff</span>,dataIndex: "mayWhCoeff",align:"right"},
     {title: ``,dataIndex: "",},
     {title: ``,dataIndex: "",},
 
-    {title:  <span style={{ background: 'lightgreen' }}> Jun In PCs</span>,dataIndex: "junPcsWh",align:"right"},
-    {title:  <span style={{ background: 'lightgreen' }}> Jun In Coeff</span>,dataIndex: "junCoeffWh",align:"right"},
+    {title:  <span style={{ background: 'lightgreen' }}> Jun In PCs</span>,dataIndex: "junWhPcs",align:"right"},
+    {title:  <span style={{ background: 'lightgreen' }}> Jun In Coeff</span>,dataIndex: "junWhCoeff",align:"right"},
     {title: ``,dataIndex: "",},
     {title: ``,dataIndex: "",},
 
-    {title:  <span style={{ background: 'lightblue' }}> Jul In PCs</span>,dataIndex: "julPcsWh",align:"right"},
-    {title:  <span style={{ background: 'lightblue' }}> Jul In Coeff</span>,dataIndex: "julCoeffWh",align:"right"},
+    {title:  <span style={{ background: 'lightblue' }}> Jul In PCs</span>,dataIndex: "julWhPcs",align:"right"},
+    {title:  <span style={{ background: 'lightblue' }}> Jul In Coeff</span>,dataIndex: "julWhCoeff",align:"right"},
     {title: ``,dataIndex: "",},
     {title: ``,dataIndex: "",},
 
-    {title:  <span style={{ background: 'lightgreen' }}> Aug In PCs</span>,dataIndex: "augPcsWh",align:"right"},
-    {title:  <span style={{ background: 'lightgreen' }}> Aug In Coeff</span>,dataIndex: "augCoeffWh",align:"right"},
+    {title:  <span style={{ background: 'lightgreen' }}> Aug In PCs</span>,dataIndex: "augWhPcs",align:"right"},
+    {title:  <span style={{ background: 'lightgreen' }}> Aug In Coeff</span>,dataIndex: "augWhCoeff",align:"right"},
     {title: ``,dataIndex: "",},
     {title: ``,dataIndex: "",},
 
-    {title:  <span style={{ background: 'lightblue' }}> Sep In PCs</span>,dataIndex: "sepPcsWh",align:"right"},
-    {title:  <span style={{ background: 'lightblue' }}> Sep In Coeff</span>,dataIndex: "sepCoeffWh",align:"right"},
+    {title:  <span style={{ background: 'lightblue' }}> Sep In PCs</span>,dataIndex: "sepWhPcs",align:"right"},
+    {title:  <span style={{ background: 'lightblue' }}> Sep In Coeff</span>,dataIndex: "sepWhCoeff",align:"right"},
     {title: ``,dataIndex: "",},
     {title: ``,dataIndex: "",},
 
-    {title: <span style={{ background: 'lightgreen' }}> Oct In PCs</span>,dataIndex: "octPcsWh",align:"right"},
-    {title:  <span style={{ background: 'lightgreen' }}> Oct In Coeff</span>,dataIndex: "octCoeffWh",align:"right"},
+    {title: <span style={{ background: 'lightgreen' }}> Oct In PCs</span>,dataIndex: "octWhPcs",align:"right"},
+    {title:  <span style={{ background: 'lightgreen' }}> Oct In Coeff</span>,dataIndex: "octWhCoeff",align:"right"},
     {title: ``,dataIndex: "",},
     {title: ``,dataIndex: "",},
 
-    {title:  <span style={{ background: 'lightblue' }}> Nov In PCs</span>,dataIndex: "novPcsWh",align:"right"},
-    {title:  <span style={{ background: 'lightblue' }}> Nov In Coeff</span>,dataIndex: "novCoeffWh",align:"right"},
+    {title:  <span style={{ background: 'lightblue' }}> Nov In PCs</span>,dataIndex: "novWhPcs",align:"right"},
+    {title:  <span style={{ background: 'lightblue' }}> Nov In Coeff</span>,dataIndex: "novWhCoeff",align:"right"},
     {title: ``,dataIndex: "",},
     {title: ``,dataIndex: "",},
 
-    {title:  <span style={{ background: 'lightgreen' }}> Dec In PCs</span>,dataIndex: "decPcsWh",align:"right"},
-    {title:  <span style={{ background: 'lightgreen' }}> Dec In Coeff</span>,dataIndex: "decCoeffWh",align:"right"},
+    {title:  <span style={{ background: 'lightgreen' }}> Dec In PCs</span>,dataIndex: "decWhPcs",align:"right"},
+    {title:  <span style={{ background: 'lightgreen' }}> Dec In Coeff</span>,dataIndex: "decWhCoeff",align:"right"},
     {title: ``,dataIndex: "",},
     {title: ``,dataIndex: "",},
 
@@ -1131,7 +1145,7 @@ if(selected === 'WareHouse'){
     )
 }
 if(selected === 'WareHouse'){
-    exportingColumns.push(
+      exportingColumns.push(
       { title: "Item Name", dataIndex: "item" },
       { title: "Production Plan Type Name",dataIndex: "prod_plan_type",},
       {title: `Jan In PCs`,dataIndex: "janPcsWh",},
@@ -1343,63 +1357,63 @@ let totalJanExfPre = 0;
       
       secondTableColumns.push(
       { title: "Production Plan Type Name",dataIndex: "prod_plan_type",},
-      {title: `Jan In PCs`,dataIndex: "janPcsExf",},
+      {title: `Jan In PCs`,dataIndex: "janExfPcs",},
       {title: `Jan In Coeff`,dataIndex: "janExfCoeff",},
-      {title: `Feb In PCs`,dataIndex: "febPcsExf",},
+      {title: `Feb In PCs`,dataIndex: "febExfPcs",},
       {title: `Feb In Coeff`,dataIndex: "febExfCoeff",},
-      {title: `Mar In PCs`,dataIndex: "marPcsExf",},
+      {title: `Mar In PCs`,dataIndex: "marExfPcs",},
       {title: `Mar In Coeff`,dataIndex: "marExfCoeff",},
-      {title: `Apr In PCs`,dataIndex: "aprPcsExf",},
+      {title: `Apr In PCs`,dataIndex: "aprExfPcs",},
       {title: `Apr In Coeff`,dataIndex: "aprExfCoeff",},
-      {title: `May In PCs`,dataIndex: "mayPcsExf",},
+      {title: `May In PCs`,dataIndex: "mayExfPcs",},
       {title: `May In Coeff`,dataIndex: "mayExfCoeff",},
-      {title: `Jun In PCs`,dataIndex: "junPcsExf",},
+      {title: `Jun In PCs`,dataIndex: "junExfPcs",},
       {title: `Jun In Coeff`,dataIndex: "junExfCoeff",},
-      {title: `Jul In PCs`,dataIndex: "julPcsExf",},
+      {title: `Jul In PCs`,dataIndex: "julExfPcs",},
       {title: `Jul In Coeff`,dataIndex: "julExfCoeff",},
-      {title: `Aug In PCs`,dataIndex: "augPcsExf",},
+      {title: `Aug In PCs`,dataIndex: "augExfPcs",},
       {title: `Aug In Coeff`,dataIndex: "augExfCoeff",},
-      {title: `Sep In PCs`,dataIndex: "sepPcsExf",},
+      {title: `Sep In PCs`,dataIndex: "sepExfPcs",},
       {title: `Sep In Coeff`,dataIndex: "sepExfCoeff",},
-      {title: `Oct In PCs`,dataIndex: "octPcsExf",},
+      {title: `Oct In PCs`,dataIndex: "octExfPcs",},
       {title: `Oct In Coeff`,dataIndex: "octExfCoeff",},
-      {title: `Nov In PCs`,dataIndex: "novPcsExf",},
+      {title: `Nov In PCs`,dataIndex: "novExfPcs",},
       {title: `Nov In Coeff`,dataIndex: "novExfCoeff",},
-      {title: `Dec In PCs`,dataIndex: "decPcsExf",},
+      {title: `Dec In PCs`,dataIndex: "decExfPcs",},
       {title: `Dec In Coeff`,dataIndex: "decExfCoeff",},
       {title: `Total In Pcs`,dataIndex: "totalExfPcs"},
       {title:  `Total In Coeff`,dataIndex: "totalExfCoeff"},
   )
 }
-if(selected === 'WareHouse'){
+if(selected == 'WareHouse'){
   secondTableColumns.push(
     { title: "Production Plan Type Name",dataIndex: "prod_plan_type",},
-    {title: `Jan In PCs`,dataIndex: "janPcsWh",},
+    {title: `Jan In PCs`,dataIndex: "janWhPcs",},
     {title: `Jan In Coeff`,dataIndex: "janWhCoeff",},
-    {title: `Feb In PCs`,dataIndex: "febPcsWh",},
+    {title: `Feb In PCs`,dataIndex: "febWhPcs",},
     {title: `Feb In Coeff`,dataIndex: "febWhCoeff",},
-    {title: `Mar In PCs`,dataIndex: "marPcsWh",},
+    {title: `Mar In PCs`,dataIndex: "marWhPcs",},
     {title: `Mar In Coeff`,dataIndex: "marWhCoeff",},
-    {title: `Apr In PCs`,dataIndex: "aprPcsWh",},
+    {title: `Apr In PCs`,dataIndex: "aprWhPcs",},
     {title: `Apr In Coeff`,dataIndex: "aprWhCoeff",},
-    {title: `May In PCs`,dataIndex: "mayPcsWh",},
+    {title: `May In PCs`,dataIndex: "mayWhPcs",},
     {title: `May In Coeff`,dataIndex: "mayWhCoeff",},
-    {title: `Jun In PCs`,dataIndex: "junPcsWh",},
+    {title: `Jun In PCs`,dataIndex: "junWhPcs",},
     {title: `Jun In Coeff`,dataIndex: "junWhCoeff",},
-    {title: `Jul In PCs`,dataIndex: "julPcsWh",},
+    {title: `Jul In PCs`,dataIndex: "julWhPcs",},
     {title: `Jul In Coeff`,dataIndex: "julWhCoeff",},
-    {title: `Aug In PCs`,dataIndex: "augPcsWh",},
+    {title: `Aug In PCs`,dataIndex: "augWhPcs",},
     {title: `Aug In Coeff`,dataIndex: "augWhCoeff",},
-    {title: `Sep In PCs`,dataIndex: "sepPcsWh",},
+    {title: `Sep In PCs`,dataIndex: "sepWhPcs",},
     {title: `Sep In Coeff`,dataIndex: "sepWhCoeff",},
-    {title: `Oct In PCs`,dataIndex: "octPcsWh",},
+    {title: `Oct In PCs`,dataIndex: "octWhPcs",},
     {title: `Oct In Coeff`,dataIndex: "octWhCoeff",},
-    {title: `Nov In PCs`,dataIndex: "novPcsWh",},
+    {title: `Nov In PCs`,dataIndex: "novWhPcs",},
     {title: `Nov In Coeff`,dataIndex: "novWhCoeff",},
-    {title: `Dec In PCs`,dataIndex: "decPcsWh",},
+    {title: `Dec In PCs`,dataIndex: "decWhPcs",},
     {title: `Dec In Coeff`,dataIndex: "decWhCoeff",},
     {title: `Total In Pcs`,dataIndex: "totalWhPcs"},
-    {title:  `Total In Coeff`,dataIndex: "totalWhcoeff"},
+    {title:  `Total In Coeff`,dataIndex: "totalWhCoeff"},
   )
 }
 
@@ -1415,7 +1429,7 @@ if(selected === 'WareHouse'){
   };
   const handleTabChange = (selectedYear: any) => {
     setTab(Number(selectedYear));
-    console.log(selectedYear,'year');
+    // console.log(selectedYear,'year');
     
     getData(selected,selectedYear);
   };
@@ -1588,298 +1602,148 @@ if(selected === 'WareHouse'){
           <Table.Summary.Cell index={1}>Total</Table.Summary.Cell>
           <Table.Summary.Cell index={3}>
             <div>
-              <Space></Space>
-              <Space>
-                {/* <span /> 
-                <span />
-                <span /> */}
-                <span />
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-
-                {janPre.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span /> <span />
-                
-                <span /> {janLat.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                {febPre.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                {febLat.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                {marPre.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                {marLat.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                {aprPre.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-               
-                {aprLat.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                
-                <span />
-
-                {mayPre.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                 {mayLat.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                {junPre.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                {junLat.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                {julPre.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span /> {julLat.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                {augPre.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                {augLat.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                {sepPre.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                {sepLat.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                {octPre.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                {octLat.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                {novPre.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                {novLat.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                {decPre.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                {decLat.toLocaleString()}
-                <span />
-                <span /> <span />
-                <span />
-                <span /> 
-                <span />
-                <span /> 
-                <span />  <span /> 
-                <span />
-                
-                {totalPre.toLocaleString()}
-                <span />
-                
-                <span />
-              
-                <span />
-                <span />
-                <span /> <span />
-                <span /> <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                
-                {totalLat.toLocaleString()}
-                
-              </Space>
+       
+       <table>
+         <td>
+         <table  >
+             <th style={{width:80,textAlign:'center'}}></th>
+           </table>
+           </td>
+           <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',backgroundColor: 'lightgreen',borderLeft: '1px solid #ddd'}}>January</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{janPre.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{janLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>
+           <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',backgroundColor: 'lightblue',borderLeft: '1px solid #ddd'}}>February</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{febPre.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{febLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>   <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightgreen',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>March</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{marPre.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{marLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>   <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightblue',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>April</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{aprPre.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{aprLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>   <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightgreen',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>May</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{mayLat.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{mayPre.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>   <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightblue',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>June</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{junPre.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{junLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>  
+            <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightgreen',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>July</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{julPre.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{julLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>   <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightblue',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>August</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{augLat.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{augLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>   <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightgreen',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>September</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{sepPre.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse'}}>{sepLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>   <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightblue',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>October</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{octPre.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{octLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>   <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightgreen',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>November</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{novLat.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{novPre.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>   <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightblue',borderCollapse: 'collapse',borderLeft: '1px solid #ddd',borderRight: '1px solid #ddd'}}>December</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{decPre.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',borderRight: '1px solid #ddd',width:40,textAlign:'right'}}>{decLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>
+           <td>
+         <table  >
+             <th style={{width:50,textAlign:'center'}}>{totalPre.toLocaleString()}</th>
+           </table>
+           </td> <td>
+         <table  >
+             <th style={{width:50,textAlign:'center'}}>{totalLat.toLocaleString()}</th>
+           </table>
+           </td>
+       </table>
+         
+            
             </div>
           </Table.Summary.Cell>
         </Table.Summary.Row>
@@ -2022,7 +1886,7 @@ if(selected === 'WareHouse'){
               dataSource={filteredData}
               columns={columns5}
               size="small"
-              scroll={{ x: "max-content" }}
+              scroll={{ x: "max-content" }} 
               summary={getTableSummary}
               pagination={pagination}
 

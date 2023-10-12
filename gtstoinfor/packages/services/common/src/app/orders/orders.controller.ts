@@ -119,7 +119,7 @@ export class OrdersController {
         }
     }
 
-    @Post('/fileUpload/:month/:fileType')
+    @Post('/fileUpload/:month/:fileType/:uploadType')
     @ApiConsumes('multipart/form-data')
     @UseInterceptors(FileInterceptor('file', {
         limits: { files: 1 },
@@ -138,9 +138,10 @@ export class OrdersController {
         },
     }))
 
-    async fileUpload(@Param('month') month: number,@Param('fileType') fileType:string, @UploadedFile() file): Promise<CommonResponseModel> {
+    async fileUpload(@Param('month') month: number,@Param('fileType') fileType:string,@Param('uploadType') uploadType:string, @UploadedFile() file): Promise<CommonResponseModel> {
+        console.log(uploadType,'------------')
         try {
-            return await this.ordersService.updatePath(file.path, file.filename, month,fileType)
+            return await this.ordersService.updatePath(file.path, file.filename, month,fileType,uploadType)
         } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
         }
@@ -542,6 +543,22 @@ export class OrdersController {
     async getPhaseMonthExcelData(@Body() req:any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getPhaseMonthExcelData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getPhaseItems')
+    async getPhaseItems(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getPhaseItems();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getItemsMonthly')
+    async getItemsMonthly(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getItemsMonthly();
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
