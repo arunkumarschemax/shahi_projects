@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { pdfjs } from 'react-pdf';
 import Tesseract, { createWorker } from 'tesseract.js';
 import { extractDhl, extractDart, extractExpeditors, extractEfl, extractOocl, extractNagel, extractApl, extractMaersk, checkIsScannedPdf } from './schemax-ai-docx-pdf';
-import { extractSrivaruInvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
+import { extractDataFromScannedImages, extractEflInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
@@ -81,9 +81,19 @@ export const DocReader = (props: DocReaderProps) => {
                     console.log('PDF DATA EXPEDITORS:', processedData);
                     break;
                 case VendorNameEnum.extractedEfl:
-                    processedData = await extractEfl(pdfData);
-                    console.log('PDF DATA EFL:', processedData);
-                    break;
+                    {
+                        const isScannedPdf = await checkIsScannedPdf(pdfData)
+                        if (isScannedPdf) {
+                            const pageImages = await getImagesFromPdf(pdfData)
+                            const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                            processedData = await extractEflInvoiceDataFromScanned(allLines);
+                            console.log('PDF DATA Srivaru:', processedData);
+                        } else {
+                            processedData = await extractEfl(pdfData);
+                            console.log('PDF DATA EFL:', processedData);
+                        }
+                        break;
+                    }
                 case VendorNameEnum.extractedOocl:
                     processedData = await extractOocl(pdfData);
                     console.log('PDF DATA OOCL:', processedData);
@@ -101,15 +111,18 @@ export const DocReader = (props: DocReaderProps) => {
                     console.log('PDF DATA Maersk:', processedData);
                     break;
                 case VendorNameEnum.extractSrivaru:
-                    const isScannedPdf = await checkIsScannedPdf(pdfData)
-                    if (isScannedPdf) {
-                        const pageImages = await getImagesFromPdf(pdfData)
-                        processedData = await extractSrivaruInvoiceDataFromScanned(pageImages, [2, 3]);
-                        console.log('PDF DATA Srivaru:', processedData);
-                    } else {
+                    {
+                        const isScannedPdf = await checkIsScannedPdf(pdfData)
+                        if (isScannedPdf) {
+                            const pageImages = await getImagesFromPdf(pdfData)
+                            const allLines = await extractDataFromScannedImages(pageImages, [2, 3]);
+                            processedData = await extractSrivaruInvoiceDataFromScanned(allLines);
+                            console.log('PDF DATA Srivaru:', processedData);
+                        } else {
 
+                        }
+                        break;
                     }
-                    break;
                 default:
                     console.log('Unknown source:', selectedVendor);
                     break;
