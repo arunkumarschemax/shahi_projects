@@ -744,82 +744,82 @@ export const DocReader = (props: DocReaderProps) => {
         const InvoiceLines = [];
         let currentInvoice = null;
         let gstNumberExtracted = false;
-        const vendorName = '1-253';
         const invoiceDateId = '1-14';
         const invoiceNumberId = '1-2';
         const invoiceCurrency = 'INR';
         const currentYear = new Date().getFullYear();
         const nextYear = currentYear + 1;
         const financialYear = `${currentYear}-${nextYear}`;
-
+        
         if (extractedData && Array.isArray(extractedData)) {
             for (const line of extractedData) {
                 const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
-
+        
                 if (gstMatch && !gstNumberExtracted) {
                     const gstNumber = gstMatch[0];
-                    const vendorNameData = extractedData.find((item) => item.id === vendorName);
-                    const venName = vendorNameData ? vendorNameData.content : '';
-
-                    const invoiceDateData = extractedData.find((item) => item.id === invoiceDateId);
-                    const invoiceDate = invoiceDateData ? invoiceDateData.content : '';
-
-                    const invoiceNumberData = extractedData.find((item) => item.id === invoiceNumberId);
-                    const invoiceNumberNew = invoiceNumberData ? invoiceNumberData.content : '';
-
-                    const invoiceNumberMatch = invoiceNumberNew.match(/\|([^|]+)\|/);
-                    const invoiceNumber = invoiceNumberMatch ? invoiceNumberMatch[1] : '';
-
-                    const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
-                        const amount = parseFloat(hsnLine.amount) || 0;
-                        // const igst = parseFloat(hsnLine.igst) || 0;
-                        // const sgst = parseFloat(hsnLine.sgst) || 0;
-                        // const cgst = parseFloat(hsnLine.cgst) || 0;
-                        const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
-                        // const taxAmounts = parseFloat(hsnLine.taxAmount) || 0;
-                        return add + amount + taxAmount * 2;
-                    }, 0).toFixed(2);
-
-
-                    let igst = "0.00";
-                    let cgst = "0.00";
-                    let sgst = "0.00";
-
-                    for (const hsnLine of structuredHSNLines) {
-                        if (hsnLine.taxPercentage === 18) {
-                            igst = (parseFloat(igst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
-                        } else if (hsnLine.taxPercentage === 9) {
-                            cgst = (parseFloat(cgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
-                            sgst = (parseFloat(sgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+                    
+                    if (gstNumber === '29AAJCS1175L1ZU') {
+                        const venName = 'EXPO FREIGHT PVT LTD';
+                        
+                        const invoiceDateData = extractedData.find((item) => item.id === invoiceDateId);
+                        const invoiceDate = invoiceDateData ? invoiceDateData.content : '';
+        
+                        const invoiceNumberData = extractedData.find((item) => item.id === invoiceNumberId);
+                        const invoiceNumberNew = invoiceNumberData ? invoiceNumberData.content : '';
+        
+                        const invoiceNumberMatch = invoiceNumberNew.match(/\|([^|]+)\|/);
+                        const invoiceNumber = invoiceNumberMatch ? invoiceNumberMatch[1] : '';
+        
+                        const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
+                            const amount = parseFloat(hsnLine.amount) || 0;
+                            // const igst = parseFloat(hsnLine.igst) || 0;
+                            // const sgst = parseFloat(hsnLine.sgst) || 0;
+                            // const cgst = parseFloat(hsnLine.cgst) || 0;
+                            const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
+                            // const taxAmounts = parseFloat(hsnLine.taxAmount) || 0;
+                            return add + amount + taxAmount * 2;
+                        }, 0).toFixed(2);
+        
+                        let igst = "0.00";
+                        let cgst = "0.00";
+                        let sgst = "0.00";
+        
+                        for (const hsnLine of structuredHSNLines) {
+                            if (hsnLine.taxPercentage === 18) {
+                                igst = (parseFloat(igst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+                            } else if (hsnLine.taxPercentage === 9) {
+                                cgst = (parseFloat(cgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+                                sgst = (parseFloat(sgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+                            }
                         }
+        
+                        currentInvoice = {
+                            "venName": venName,
+                            "gstNumber": gstNumber,
+                            "invoiceDate": invoiceDate,
+                            "invoiceNumber": invoiceNumber,
+                            "invoiceCurrency": invoiceCurrency,
+                            "financialYear": financialYear,
+                            "invoiceAmount": invoiceAmount,
+                            "cgst": cgst,
+                            "sgst": sgst,
+                            "igst": igst,
+                        };
+        
+                        InvoiceLines.push(currentInvoice);
+                        gstNumberExtracted = true;
                     }
-
-                    currentInvoice = {
-                        "venName": venName,
-                        "gstNumber": gstNumber,
-                        "invoiceDate": invoiceDate,
-                        "invoiceNumber": invoiceNumber,
-                        "invoiceCurrency": invoiceCurrency,
-                        "financialYear": financialYear,
-                        "invoiceAmount": invoiceAmount,
-                        "cgst": cgst,
-                        "sgst": sgst,
-                        "igst": igst,
-                    };
-
-                    InvoiceLines.push(currentInvoice);
-                    gstNumberExtracted = true;
                 }
             }
         }
-
+        
         console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
         console.log("PDF INVOICE Data", JSON.stringify(InvoiceLines, null, 2));
         setExtractedData(structuredHSNLines);
         setExtractedData(InvoiceLines);
         props.extractedData(InvoiceLines[0]);
         props.extractedHsnData(structuredHSNLines);
-
+        
         return extractedData;
     }
 
@@ -1414,74 +1414,81 @@ export const DocReader = (props: DocReaderProps) => {
         const InvoiceLines = [];
         let currentInvoice = null;
         let gstNumberExtracted = false;
-
+        let venName = '';
         const vendorNameId = '1-2';
         const invoiceDateId = '1-9';
-        const invoiceNumberId = '1-41';
+        const invoiceNumberId = '1-254';
         const invoiceCurrency = 'INR';
-        // const invoiceAmountId='1-36'; 
         const currentYear = new Date().getFullYear();
         const nextYear = currentYear + 1;
         const financialYear = `${currentYear}-${nextYear}`;
 
         if (extractedData && Array.isArray(extractedData)) {
             for (const line of extractedData) {
-                const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
-                if (gstMatch && !gstNumberExtracted) {
-                    const gstNumber = gstMatch[0];
+                if (line.id >= '1-201' && line.id <= '2-300') {
+                    const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
+                    if (gstMatch && !gstNumberExtracted) {
+                        const gstNumber = gstMatch[0];
 
-                    const vendorNameData = extractedData.find((item) => item.id === vendorNameId);
-                    const venName = vendorNameData ? vendorNameData.content : '';
+                        if (gstNumber === '33AAHCA6078Q1Z3') {
+                            venName = 'Damco India Pvt. Ltd';
+                        } else {
+                            const vendorNameData = extractedData.find((item) => item.id === vendorNameId);
+                            venName = vendorNameData ? vendorNameData.content : '';
+                        }
 
-                    const invoiceDateData = extractedData.find((item) => item.id === invoiceDateId);
-                    const invoiceDate = invoiceDateData ? invoiceDateData.content.replace(/^INVOICE DATE:\s*/, '') : '';
+                        const invoiceDateData = extractedData.find((item) => item.id === invoiceDateId);
+                        const invoiceDate = invoiceDateData ? invoiceDateData.content.replace(/^INVOICE DATE:\s*/, '') : '';
 
-                    const invoiceNumberData = extractedData.find((item) => item.id === invoiceNumberId);
-                    const invoiceNumber = invoiceNumberData ? invoiceNumberData.content.replace(/^INVOICE NUMBER:\s*/, '') : '';
+                        const invoiceNumberData = extractedData.find((item) => item.id === invoiceNumberId);
+                        const invoiceNumber = invoiceNumberData ? invoiceNumberData.content.replace(/^INVOICE NUMBER:\s*/, '') : '';
 
-                    // const invoiceAmountData = extractedData.find((item) => item.id === invoiceAmountId); 
-                    // const invoiceAmount = invoiceAmountData ? invoiceAmountData.content : ''; 
 
-                    const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
-                        const amount = parseFloat(hsnLine.amount) || 0;
-                        const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
-                        // const igst = parseFloat(hsnLine.igst) || 0; 
-                        // const cgst = parseFloat(hsnLine.cgst) || 0; 
-                        // const sgst = parseFloat(hsnLine.sgst) || 0; 
-                        return add + amount + taxAmount;
-                    }, 0).toFixed(2);
+                        // const invoiceAmountData = extractedData.find((item) => item.id === invoiceAmountId); 
+                        // const invoiceAmount = invoiceAmountData ? invoiceAmountData.content : ''; 
 
-                    const igst = structuredHSNLines.reduce((acc, hsnLine) => {
-                        const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
-                        return acc + taxAmount
-                    }, 0).toFixed(2);
+                        const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
+                            const amount = parseFloat(hsnLine.amount) || 0;
+                            const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
+                            // const igst = parseFloat(hsnLine.igst) || 0; 
+                            // const cgst = parseFloat(hsnLine.cgst) || 0; 
+                            // const sgst = parseFloat(hsnLine.sgst) || 0; 
+                            return add + amount + taxAmount;
+                        }, 0).toFixed(2);
 
-                    const cgst = structuredHSNLines.reduce((add, hsnLine) => {
-                        return add + parseFloat(hsnLine.cgst) || 0;
-                    }, 0).toFixed(2);
+                        const igst = structuredHSNLines.reduce((acc, hsnLine) => {
+                            const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
+                            return acc + taxAmount
+                        }, 0).toFixed(2);
 
-                    const sgst = structuredHSNLines.reduce((acc, hsnLine) => {
-                        return acc + parseFloat(hsnLine.sgst) || 0;
-                    }, 0).toFixed(2);
+                        const cgst = structuredHSNLines.reduce((add, hsnLine) => {
+                            return add + parseFloat(hsnLine.cgst) || 0;
+                        }, 0).toFixed(2);
 
-                    currentInvoice = {
-                        "venName": venName,
-                        "gstNumber": gstNumber,
-                        "invoiceDate": invoiceDate,
-                        "invoiceNumber": invoiceNumber,
-                        "invoiceCurrency": invoiceCurrency,
-                        "financialYear": financialYear,
-                        "invoiceAmount": invoiceAmount,
-                        "igst": igst,
-                        "cgst": cgst,
-                        "sgst": sgst,
-                    };
-                    InvoiceLines.push(currentInvoice);
-                    gstNumberExtracted = true;
+                        const sgst = structuredHSNLines.reduce((acc, hsnLine) => {
+                            return acc + parseFloat(hsnLine.sgst) || 0;
+                        }, 0).toFixed(2);
+
+                        currentInvoice = {
+                            "venName": venName,
+                            "gstNumber": gstNumber,
+                            "invoiceDate": invoiceDate,
+                            "invoiceNumber": invoiceNumber,
+                            "invoiceCurrency": invoiceCurrency,
+                            "financialYear": financialYear,
+                            "invoiceAmount": invoiceAmount,
+                            "igst": igst,
+                            "cgst": cgst,
+                            "sgst": sgst,
+                        };
+                        InvoiceLines.push(currentInvoice);
+                        gstNumberExtracted = true;
+                    }
                 }
             }
         }
-        setExtractedData(structuredHSNLines);
+
+        setExtractedData(structuredHSNLines)
         setExtractedData(InvoiceLines);
         props.extractedData(InvoiceLines[0]);
         props.extractedHsnData(structuredHSNLines);
@@ -1726,6 +1733,10 @@ export const DocReader = (props: DocReaderProps) => {
                     extractedData = await extractApl(pdfBuffer);
                     console.log('PDF DATA Apl:', extractedData);
                     break;
+                case VendorNameEnum.extractedMaersk:
+                    extractedData = await extractMaersk(pdfBuffer);
+                    console.log('PDF DATA Maersk:', extractedData);
+                    break;
                 default:
                     console.log('Unknown source:', selectedVendor);
                     break;
@@ -1806,6 +1817,7 @@ export const DocReader = (props: DocReaderProps) => {
                             id: index + 1,
                             content: line.trim(),
                         }));
+
 
                         if (file.name.match(/\bexpo\b/i)) {
                             const Expo = () => {
