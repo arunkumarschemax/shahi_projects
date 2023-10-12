@@ -157,7 +157,8 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
     //     return result
     // }
     async getMonthlyComparisionData(req: YearReq): Promise<any[]>{
-        const query = `WITH RankedVersions AS (
+        console.log(req,'-----')
+        let query = `WITH RankedVersions AS (
             SELECT
                 YEAR,
                 VERSION,
@@ -239,13 +240,16 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  =11 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS novWhLat,
             SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  = 12 AND version_rank  = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS decWhLat,
             SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  BETWEEN 1 AND 12 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS totalWhLat
-
+      
         FROM RankedVersions
         WHERE version_rank <= 2
             AND YEAR = '${req.year}'
             AND prod_plan_type != 'STOP'
-            AND planned_exf IS NOT NULL AND wh IS NOT NULL
-             GROUP BY YEAR,  item, item_cd, prod_plan_type
+            AND planned_exf IS NOT NULL AND wh IS NOT NULL`
+            if(req.itemName){
+                query = query + ` AND item = '${req.itemName}'`
+            }
+           query = query +` GROUP BY YEAR,  item, item_cd, prod_plan_type
         ORDER BY  item ASC`;
         const result = await this.query(query);
         return result;

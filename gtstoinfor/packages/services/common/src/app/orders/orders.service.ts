@@ -1614,6 +1614,7 @@ async processEmails() {
 
 
 async getMonthlyComparisionData(req:YearReq): Promise<CommonResponseModel> {
+    // console.log(req,'-------')
     const data = await this.ordersChildRepo.getMonthlyComparisionData(req);
     
     if (data.length === 0) {
