@@ -392,6 +392,11 @@ const Number=()=>{
                 maximumFractionDigits: 0
               }) : '0';
             },
+            sorter: (a, b) => {
+                const aKey = a.order_plan_qty || "";
+                const bKey = b.order_plan_qty || "";
+                return aKey.localeCompare(bKey);
+              },
           },
           
 
