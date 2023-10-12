@@ -41,6 +41,21 @@ export const DocReader = (props: DocReaderProps) => {
 
     const [pdfData, setPdfData] = useState(null);
     const [jsonData, setJsonData] = useState(null);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [selectedOption, setSelectedOption] = useState(null);
+
+    const handleDropdownVisibility = (visible) => {
+        setIsDropdownOpen(visible);
+      };
+
+
+    const handleDropdownChange = (value) => {
+        setSelectedOption(value);
+        setIsDropdownOpen(false); // Close the dropdown
+      };
+
+
+
 
     pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -1735,12 +1750,12 @@ export const DocReader = (props: DocReaderProps) => {
                         console.log('Unknown source:', source);
                         break;
                 }
-                
+
                 if (extractedData) {
                     setJsonData(extractedData);
                 }
             }
-            
+
             // Usage
             const source = VendorNameEnum;
             await extractAndSetData(pdfBuffer, source);
@@ -1964,7 +1979,7 @@ export const DocReader = (props: DocReaderProps) => {
                             props.extractedData(InvoiceLines[0]);
                         }
                         Krsna();
-                        
+
                         const lineData = text.split("\n");
                         const allLinesData = lineData.map((line, index) => ({
                             id: index + 1,
@@ -2200,19 +2215,40 @@ export const DocReader = (props: DocReaderProps) => {
                     >
                         <Form layout="vertical" form={props.form}>
                             <Row gutter={12}>
-                                {/* <Col span={6}>
+                                <Col span={6}>
                                     <Form.Item name={"poType"}>
                                         <Radio.Group name="radiogroup" defaultValue={"po"}>
                                             <Radio value={"po"}>PO</Radio>
                                             <Radio value={"non_po"}>NON PO</Radio>
                                         </Radio.Group>
                                     </Form.Item>
-                                </Col> */}
-                                <Col xs={{ span: 8 }}
-                                    sm={{ span: 8 }}
-                                    md={{ span: 8 }}
-                                    lg={{ span: 8 }}
-                                    xl={{ span: 8 }}>
+                                </Col>
+
+                                <Col
+                            xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}
+                        >
+                                        <Form.Item label="Vendors" name="vendors"
+                                         rules={[
+                                            {
+                                                required: true,
+                                                message: "Select Option is required",
+                                            },
+                                        ]}>
+                                            <Select
+                                                placeholder="Vendors"
+                                                onDropdownVisibleChange={handleDropdownVisibility}
+                                                onChange={handleDropdownChange} 
+                                            >
+                                                {Object.keys(VendorNameEnum).map((vendors) => (
+                                                    <Select.Option value={VendorNameEnum[vendors]}>
+                                                        {VendorNameEnum[vendors]}
+                                                    </Select.Option>
+                                                ))}
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
+
+                                <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
                                     <Form.Item
                                         rules={[
                                             {
@@ -2225,17 +2261,17 @@ export const DocReader = (props: DocReaderProps) => {
                                     >
                                         <Upload
                                             name="file"
-                                            {...imageFileUpload}
                                             accept=".pdf,.jpeg,.png,.jpg"
                                             multiple
-                                            // showUploadList={false}
                                             onChange={handleFileChange}
                                             customRequest={({ file }) => handleFileChange(file)}
+                                            disabled={isDropdownOpen}
                                         >
                                             <Button
-                                                style={{ color: "black", backgroundColor: "#7ec1ff" }}
+                                                style={{ color: "black",  backgroundColor: isDropdownOpen || !selectedOption ? "#b7bdc7": "#7ec1ff" }}
                                                 icon={<UploadOutlined />}
                                                 onClick={handleUploadDocument}
+                                                disabled={isDropdownOpen || !selectedOption}
                                             >
                                                 Choose File
                                             </Button>
@@ -2288,22 +2324,7 @@ export const DocReader = (props: DocReaderProps) => {
                                         </span>
                                     </Form.Item>
                                 </Col>
-                                <Col xs={{ span: 8 }}
-                                    sm={{ span: 8 }}
-                                    md={{ span: 8 }}
-                                    lg={{ span: 8 }}
-                                    xl={{ span: 8 }}>
-                                <Form.Item label="Vendors" name="vendors">
-                                    <Select
-                                    placeholder="Vendors"
-                                    >
-                                        {Object.keys(VendorNameEnum).map(vendors=>{
-                                            return <Select.Option value={VendorNameEnum[vendors]}>{VendorNameEnum[vendors]}</Select.Option>
-                                        })}
 
-                                    </Select>
-                                </Form.Item>
-                                </Col>
                             </Row>
                         </Form>
                     </Card>
