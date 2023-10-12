@@ -14,8 +14,8 @@ export class FabricDevelopmentRequestModel{
     lightSourcePrimary: string;
     lightSourceSecondary: string;
     lightSourceTertiary: string;
-    FileName: string;
-    FilePath: string;
+    fileName: string;
+    filePath: string;
     qualities:FabricRequestQualitiesRequest[]
     status?: StatusEnum;
     requestNo?: number;    
@@ -35,8 +35,8 @@ export class FabricDevelopmentRequestModel{
         lightSourcePrimary: string,
         lightSourceSecondary: string,
         lightSourceTertiary: string,
-        FileName: string,
-        FilePath: string,
+        fileName: string,
+        filePath: string,
         qualities:FabricRequestQualitiesRequest[],
         status?: StatusEnum,
         requestNo?: number,    
@@ -54,8 +54,8 @@ export class FabricDevelopmentRequestModel{
         this.lightSourcePrimary = lightSourcePrimary
         this.lightSourceSecondary = lightSourceSecondary
         this.lightSourceTertiary = lightSourceTertiary
-        this.FileName = FileName
-        this.FilePath = FilePath
+        this.fileName = fileName
+        this.filePath = filePath
         this.qualities = qualities
         this.status = status
         this.requestNo = requestNo
