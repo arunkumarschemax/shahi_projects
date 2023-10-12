@@ -1,16 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsNumber, IsOptional } from "class-validator";
+import { SubContractStatus } from "packages/libs/shared-models/src/enum";
 
 export class ItemCreationDto {
     @ApiProperty()
-    @IsNotEmpty()
-    fgitemId?:number;
-
-    @ApiProperty()
     itemName: string;
-
-    @ApiProperty()
-    fabricsCode: string;
 
     @ApiProperty()
     itemCode: string;
@@ -97,7 +91,7 @@ export class ItemCreationDto {
     roslGroup: number;
 
     @ApiProperty()
-    isSubContract: number;
+    isSubContract: SubContractStatus;
 
     @ApiProperty()
     salePrice: number;
@@ -134,5 +128,9 @@ export class ItemCreationDto {
     @IsOptional()
      @IsNumber()
     versionFlag: number;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    fgitemId?:number;
 
 }
