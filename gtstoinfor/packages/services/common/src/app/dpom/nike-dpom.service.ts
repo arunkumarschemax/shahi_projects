@@ -1006,7 +1006,7 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async getModeOfTransportChangeData(): Promise<CommonResponseModel> {
+    async getModeOfTransportChangeData(req?:nikeFilterRequest): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getModeOfTransportChangeData()
         if (data.length > 0)
             return new CommonResponseModel(true, 1, 'data retrived', data)
@@ -1014,24 +1014,26 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async getGACChangeData(): Promise<CommonResponseModel> {
-        const data = await this.dpomRepository.getGACChangeData()
+    async getGACChangeData(req?:nikeFilterRequest): Promise<CommonResponseModel> {
+        // console.log(req,'service');
+        
+        const data = await this.dpomRepository.getGACChangeData(req)
         if (data.length > 0)
             return new CommonResponseModel(true, 1, 'data retrived', data)
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async getMRGACChangeData(): Promise<CommonResponseModel> {
-        const data = await this.dpomRepository.getMRGACChangeData()
+    async getMRGACChangeData(req?:nikeFilterRequest): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getMRGACChangeData(req)
         if (data.length > 0)
             return new CommonResponseModel(true, 1, 'data retrived', data)
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async getPlantCodeChangeData(): Promise<CommonResponseModel> {
-        const data = await this.dpomRepository.getPlantCodeChangeData()
+    async getPlantCodeChangeData(req?:nikeFilterRequest): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPlantCodeChangeData(req)
         if (data.length > 0)
             return new CommonResponseModel(true, 1, 'data retrived', data)
         else

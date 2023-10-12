@@ -6,6 +6,7 @@ import moment from 'moment';
 import { Excel } from 'antd-table-saveas-excel';
 import Highlighter from 'react-highlight-words';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
+import { nikeFilterRequest } from '@project-management-system/shared-models';
 
 const ShipmentChangesCompareGrid = () => {
 
@@ -29,24 +30,29 @@ const ShipmentChangesCompareGrid = () => {
     const { RangePicker } = DatePicker
     const { Option } = Select
     const [poLine, setPoLine] = useState<any>([]);
+    const [poNumber, setPoNumber] = useState<any>([]);
+
 
 
     useEffect(() => {
         getGACChangeData()
         getPlantCodeChangeData()
-
         getMRGACChangeData()
         getModeOfTransportChangeData()
-        getPoLine()
+        getPoNumber()
     }, [])
-    const getPoLine = () => {
-        service.getPpmPoLineForNikeOrder().then(res => {
-            setPoLine(res.data)
+    const getPoNumber = () => {
+        service.getPpmAllPo().then(res => {
+            setPoNumber(res.data)
         })
     }
 
     const getGACChangeData = () => {
-        service.getGACChangeData().then((res) => {
+        const req = new nikeFilterRequest();
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
+        }
+        service.getGACChangeData(req).then((res) => {
             setQtyData(res.data)
             setFilteredQtyData(res.data)
         })
@@ -54,12 +60,20 @@ const ShipmentChangesCompareGrid = () => {
     }
 
     const getMRGACChangeData = () => {
-        service.getMRGACChangeData().then((res) => {
+        const req = new nikeFilterRequest();
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
+        }
+        service.getMRGACChangeData(req).then((res) => {
             setUnitChangeData(res.data)
         })
     }
 
     const getModeOfTransportChangeData = () => {
+        const req = new nikeFilterRequest();
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
+        }
         service.getModeOfTransportChangeData().then((res) => {
             setItemChangeData(res.data)
             setFilteredItemChangeData(res.data)
@@ -67,7 +81,11 @@ const ShipmentChangesCompareGrid = () => {
     }
 
     const getPlantCodeChangeData = () => {
-        service.getPlantCodeChangeData().then((res) => {
+        const req = new nikeFilterRequest();
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
+        }
+        service.getPlantCodeChangeData(req).then((res) => {
             setPOStatusData(res.data)
             setFilteredPOStatusData(res.data)
         })
@@ -694,10 +712,10 @@ const ShipmentChangesCompareGrid = () => {
             key: 'sno',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),fixed:'left'
         },
-        // {
-        //     title: 'PO Number',
-        //     dataIndex: 'po_number',
-        // },
+        {
+            title: 'PO Number',
+            dataIndex: 'po_number',align:'center'
+        },
         {
             title: 'PO And Line ',
             dataIndex: 'po_and_line', align: 'center', fixed:'left'
@@ -855,52 +873,63 @@ const ShipmentChangesCompareGrid = () => {
     ];
 
     const onReset = () => {
+
         form.resetFields();
         setSelectedEstimatedFromDate(undefined);
         setSelectedEstimatedToDate(undefined);
+        getGACChangeData();
+        getMRGACChangeData();
     }
-
+    const getFilterdData = () =>{
+        getGACChangeData();
+        getMRGACChangeData();
+        getModeOfTransportChangeData();
+        getPlantCodeChangeData();
+        getModeOfTransportChangeData();
+        getPlantCodeChangeData();
+     }
     return (
         <Card title='Compare Orders' extra={(<Button
             type="default"
             style={{ color: 'green' }}
             onClick={exportExcel}
             icon={<FileExcelFilled />}>Download Excel</Button>)}>
-            {/* <Form form={form} layout={"vertical"} >
-                <Row gutter={[24, 24]}>
+                <Form form={form} layout={"vertical"} >
+                <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 4 }} >
-                        <Form.Item name='poandLine' label='Po+Line' >
+                        <Form.Item name='poNumber' label='Po Number' >
                             <Select
                                 showSearch
-                                placeholder="Select Po+Line"
+                                placeholder="Select PoNumber"
                                 optionFilterProp="children"
                                 allowClear
                             >
-                                {poLine.map((inc: any) => {
-                                    return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                                {poNumber.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
                                 })
                                 }
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 22 }}>
+
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 20 }}>
+
                         <Button
                             type="primary"
                             icon={<SearchOutlined />}
                             style={{ marginRight: 50, width: 100 }}
                             htmlType="button"
-                        // onClick={getFilterdData}
-                        >Search</Button>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 22 }}>
+                            onClick={getFilterdData}>Search</Button>  </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 20 }}>
                         <Button
                             type="primary"
+
                             icon={<UndoOutlined />}
                             htmlType="submit"
                             onClick={onReset}>Reset</Button>
                     </Col>
                 </Row>
-            </Form> */}
+            </Form>
             {filteredQtyData || unitChangeData || itemChangeData || poStatusData ? <>
                 <Tabs type='card' items={items} />
             </> : <><Table className="custom-table-wrapper" bordered scroll={{ x: 'max-content' }}

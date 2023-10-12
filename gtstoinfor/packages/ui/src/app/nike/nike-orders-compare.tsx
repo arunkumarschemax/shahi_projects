@@ -78,12 +78,20 @@ const OrdersCompareGrid = () => {
     }
 
     const getUnitChangeData = () => {
+        const req = new nikeFilterRequest();
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
+          }
         service.getUnitChangeData().then((res) => {
             setUnitChangeData(res.data)
         })
     }
 
     const getItemChangeData = () => {
+        const req = new nikeFilterRequest();
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
+          }
         service.getItemChangeData().then((res) => {
             setItemChangeData(res.data)
             setFilteredItemChangeData(res.data)
@@ -104,13 +112,21 @@ const OrdersCompareGrid = () => {
     }
 
     const PlantCodeChange = () => {
-        service.getPlantCodeChangeData().then((res) => {
+        const req = new nikeFilterRequest();
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
+          }
+        service.getPlantCodeChangeData(req).then((res) => {
             setProductCodeChangeData(res.data)
             setFilteredPOStatusData(res.data)
         })
     }
 
     const ModeOfTransportChange = () => {
+        const req = new nikeFilterRequest();
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
+          }
         service.getModeOfTransportChangeData().then((res) => {
             setmodeOfTransportChangeData(res.data)
             setFilteredPOStatusData(res.data)
@@ -1958,7 +1974,17 @@ const OrdersCompareGrid = () => {
         )
         return (
             <>
-                {filterData.length > 0 ? (
+                
+    {(
+      filterData?.length > 0 ||
+      unitChangeData?.length > 0 ||
+      itemChangeData?.length > 0 ||
+      poStatusData?.length > 0 ||
+      priceChaneData?.length > 0 ||
+      productCodeChaneData?.length > 0 ||
+      modeOTransportChaneData?.length > 0 ||
+      itemTextChaneData?.length > 0
+    )? (
                     <Table
                         columns={columns}
                         dataSource={filterData}
@@ -2037,6 +2063,8 @@ const OrdersCompareGrid = () => {
         setSelectedEstimatedToDate(undefined);
         // getContractDateChangeData()
         getQtyChangeData()
+        poLineItemStatusChange();
+        PriceAndCurrencyChangeFob();
         // getWharehouseDateChangeData()
     }
 
@@ -2071,20 +2099,20 @@ const OrdersCompareGrid = () => {
                             icon={<SearchOutlined />}
                             style={{ marginRight: 50, width: 100 }}
                             htmlType="button"
-                            onClick={getFilterdData}>Search</Button>  </Col>
+                            onClick={getFilterdData}>SEARCH</Button>  </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 20 }}>
                         <Button
                             type="primary"
 
                             icon={<UndoOutlined />}
                             htmlType="submit"
-                            onClick={onReset}>Reset</Button>
+                            onClick={onReset}>RESET</Button>
                     </Col>
                 </Row>
             </Form>
             {filteredQtyData || unitChangeData || itemChangeData || poStatusData ? <>
                 <Tabs type='card' items={items} />
-            </> : <></>}
+            </> : <><Table className="custom-table-wrapper" bordered scroll={{ x: 'max-content' }}/></>}
             <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
                 <Card>
                     <p>{itemText}</p>

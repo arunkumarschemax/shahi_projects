@@ -324,6 +324,7 @@ export class DpomController {
     }
 
     @Post('/getNetInclDiscChangeData')
+    @ApiBody({ type: nikeFilterRequest })
     async getNetInclDiscChangeData(): Promise<CommonResponseModel> {
         try {
             return this.dpomService.getNetInclDiscChangeData();
@@ -342,25 +343,28 @@ export class DpomController {
     }
 
     @Post('/getGACChangeData')
-    async getGACChangeData(): Promise<CommonResponseModel> {
+     @ApiBody({ type: nikeFilterRequest })
+    async getGACChangeData(@Body() req:any): Promise<CommonResponseModel> {
         try {
-            return this.dpomService.getGACChangeData();
+            return this.dpomService.getGACChangeData(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
 
     @Post('/getMRGACChangeData')
-    async getMRGACChangeData(): Promise<CommonResponseModel> {
+     @ApiBody({ type: nikeFilterRequest })
+    async getMRGACChangeData(@Body()req:any): Promise<CommonResponseModel> {
         try {
-            return this.dpomService.getMRGACChangeData();
+            return this.dpomService.getMRGACChangeData(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
 
     @Post('/getModeOfTransportChangeData')
-    async getModeOfTransportChangeData(): Promise<CommonResponseModel> {
+    // @ApiBody({ type: nikeFilterRequest })
+    async getModeOfTransportChangeData(req:any): Promise<CommonResponseModel> {
         try {
             return this.dpomService.getModeOfTransportChangeData();
         } catch (err) {
@@ -369,9 +373,12 @@ export class DpomController {
     }
 
     @Post('/getPlantCodeChangeData')
-    async getPlantCodeChangeData(): Promise<CommonResponseModel> {
+     @ApiBody({ type: nikeFilterRequest })
+    async getPlantCodeChangeData(@Body() req:any): Promise<CommonResponseModel> {
+        // console.log(req,'controller');
+        
         try {
-            return this.dpomService.getPlantCodeChangeData();
+            return this.dpomService.getPlantCodeChangeData(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

@@ -130,20 +130,20 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/getTradingNetInclDiscChangeData")
     }
 
-    async getGACChangeData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/getGACChangeData")
+    async getGACChangeData(req:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getGACChangeData",req)
     }
 
-    async getMRGACChangeData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/getMRGACChangeData")
+    async getMRGACChangeData(req:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getMRGACChangeData",req)
     }
 
     async getModeOfTransportChangeData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getModeOfTransportChangeData")
     }
 
-    async getPlantCodeChangeData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/getPlantCodeChangeData")
+    async getPlantCodeChangeData(req:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPlantCodeChangeData",req)
     }
 
     async getShippingTypeChangeData(): Promise<CommonResponseModel> {

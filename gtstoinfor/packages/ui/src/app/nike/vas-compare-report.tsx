@@ -84,7 +84,11 @@ const VASChangesCompareGrid = () => {
         })
     }
     const PlantCodeChange = () => {
-        service.getPlantCodeChangeData().then((res) => {
+        const req = new nikeFilterRequest();
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
+        }
+        service.getPlantCodeChangeData(req).then((res) => {
             setProductCodeChangeData(res.data)
             setFilteredPOStatusData(res.data)
         })
@@ -1071,9 +1075,8 @@ const VASChangesCompareGrid = () => {
         form.resetFields();
         setSelectedEstimatedFromDate(undefined);
         setSelectedEstimatedToDate(undefined);
-        // getContractDateChangeData()
         getQtyChangeData()
-        // getWharehouseDateChangeData()
+        PlantCodeChange()
     }
 
     return (
@@ -1107,14 +1110,14 @@ const VASChangesCompareGrid = () => {
                             icon={<SearchOutlined />}
                             style={{ marginRight: 50, width: 100 }}
                             htmlType="button"
-                            onClick={getFilterdData}>Search</Button>  </Col>
+                            onClick={getFilterdData}>SEARCH</Button>  </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 20 }}>
                         <Button
                             type="primary"
 
                             icon={<UndoOutlined />}
                             htmlType="submit"
-                            onClick={onReset}>Reset</Button>
+                            onClick={onReset}>RESET</Button>
 
                     </Col>
 
@@ -1122,7 +1125,7 @@ const VASChangesCompareGrid = () => {
             </Form>
             {filteredQtyData || unitChangeData || itemChangeData || poStatusData ? <>
                 <Tabs type='card' items={items} />
-            </> : <></>}
+            </> : <><Table className="custom-table-wrapper" bordered scroll={{ x: 'max-content' }}/></>}
 
         </Card>
     );

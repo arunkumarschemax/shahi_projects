@@ -172,21 +172,29 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
 
-    async getGACChangeData(): Promise<any[]> {
+    async getGACChangeData(req:nikeFilterRequest): Promise<any[]> {
         const query = this.createQueryBuilder('o')
             .select(`o.po_number, o.po_line_item_number,  o.item, o.factory,o.document_date,o.style_number,o.product_code,o.color_desc,o.destination_country,o.ogac,o.gac,o.item_text,
             o.size_description,o.customer_order,o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
             .where(` od.column_name='gac' `)
-        return await query.getRawMany();
+            if ( req.poNumber != undefined) {
+                query.andWhere(`o.po_number ='${req.poNumber}'`)
+                return await query.getRawMany();
+            } else
+                return await query.getRawMany();
     }
 
-    async getMRGACChangeData(): Promise<any[]> {
+    async getMRGACChangeData(req:any): Promise<any[]> {
         const query = this.createQueryBuilder('o')
             .select(`o.po_number, o.po_line_item_number,o.po_and_line, o.schedule_line_item_number,  o.item, o.factory,o.document_date,o.style_number,o.product_code,o.color_desc,o.destination_country,o.ogac,o.gac,o.item_text,
             o.size_description,o.customer_order,o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
             .where(` od.column_name='mrgac' `)
+            if ( req.poNumber !== undefined) {
+                query.andWhere(`o.po_number ='${req.poNumber}'`)
+                return await query.getRawMany();
+            } else
         return await query.getRawMany();
     }
 
@@ -196,15 +204,23 @@ export class DpomRepository extends Repository<DpomEntity> {
             o.size_description,o.customer_order, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
             .where(` od.column_name='unit' `)
+            // if ( req.poNumber !== undefined) {
+            //     query.andWhere(`o.po_number ='${req.poNumber}'`)
+            //     return await query.getRawMany();
+            // } else
         return await query.getRawMany();
     }
 
-    async getPlantCodeChangeData(): Promise<any[]> {
+    async getPlantCodeChangeData(req:any): Promise<any[]> {
         const query = this.createQueryBuilder('o')
             .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.item, o.factory,o.document_date,o.style_number,o.product_code,o.color_desc,o.destination_country,o.ogac,o.gac,o.item_text,
             o.size_description,o.customer_order, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
             .where(` od.column_name='plant' `)
+            if ( req.poNumber !== undefined) {
+                query.andWhere(`o.po_number ='${req.poNumber}'`)
+                return await query.getRawMany();
+            } else
         return await query.getRawMany();
     }
 
