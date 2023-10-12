@@ -785,7 +785,7 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'Report Generate Date',
-            dataIndex: 'created_at',
+            dataIndex: 'created_at',width: 70,
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
@@ -1355,12 +1355,12 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'Report Generate Date',
-            dataIndex: 'created_at',
+            dataIndex: 'created_at',width: 70,
             render: (text) => moment(text).format('MM/DD/YYYY'), fixed: 'left'
         },
         {
             title: 'Item',
-            dataIndex: 'item',
+            dataIndex: 'item',width: 70,
             render: (text, record) => {
                 if (!text || text.trim() === '') {
                     return '-';
