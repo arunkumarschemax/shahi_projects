@@ -849,6 +849,8 @@ export const MonthWiseComparisionReport = () => {
 
         title: "S No",
         key: "sno",
+        width: 50,
+
         render: (text, object, index) => (page - 1) * pageSize + (index + 1),
 
       },
