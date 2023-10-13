@@ -39,9 +39,7 @@ export const MonthWiseComparisionReport = () => {
     setPageSize(newPageSize);
   };
 
-  useEffect(()=> {
-    console.log(phaseExcel)
-  },[phaseExcel])
+ 
   useEffect(() => {
     getData(selected, tab);
     getTabs();
@@ -85,13 +83,13 @@ export const MonthWiseComparisionReport = () => {
         setDates([]);
       }
     })
-    service.getComparisionPhaseData(req).then((res) => {
-      if (res.status) {
-        setPhase(res.data)
-      } else {
-        setPhase([]);
-      }
-    })
+    // service.getComparisionPhaseData(req).then((res) => {
+    //   if (res.status) {
+    //     setPhase(res.data)
+    //   } else {
+    //     setPhase([]);
+    //   }
+    // })
     service.getComparisionPhaseExcelData(req).then((res) => {
       if (res.status) {
         setPhaseExcel(res.data)
@@ -926,7 +924,6 @@ export const MonthWiseComparisionReport = () => {
     )
   }
   if (selected === 'WareHouse') {
-    console.log(selected,'[[[[');
     
     columnsphase.push(
       {
