@@ -5,6 +5,7 @@ import TextArea from "antd/es/input/TextArea";
 import { ColumnProps } from "antd/es/table";
 import { useEffect, useState } from "react"
 import AlertMessages from "../common/common-functions/alert-messages";
+import { useNavigate } from "react-router-dom";
 
 const {Option} = Select;
 
@@ -43,6 +44,7 @@ export const StyleOrderCreation = () => {
     const deliveryAddressService = new BuyerDestinationService()
     const [delivAdd,setDelivAdd] =  useState<any[]>([])
     const styleOrderService = new StyleOrderService()
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -271,7 +273,16 @@ export const StyleOrderCreation = () => {
         })
     }
     return(
-        <Card title='Style Order Creation' size='small'>
+        <Card title='Style Order Creation' size='small'  extra={
+            <span>
+              <Button
+                onClick={() => navigate("/materialCreation/style-order-view")}
+                type={"primary"}
+              >
+                View
+              </Button>
+            </span>
+          }>
             <Form layout="vertical" form={form} onFinish={onFinish}>
                <Row gutter={[8,4]}>
                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 12}}>

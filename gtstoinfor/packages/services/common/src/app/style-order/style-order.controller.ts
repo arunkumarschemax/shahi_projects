@@ -2,7 +2,8 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { StyleOrderService } from "./style-order.service";
-import { CommonResponseModel, StyleOrderReq, StyleOrderResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
+
 
 @ApiTags('styleOrder')
 @Controller('styleOrder')
@@ -21,13 +22,26 @@ export class StyleOrderController{
             return this.applicationExceptionHandler.returnException(StyleOrderResponseModel,err)
         }
     }
-    // @Post('/getAllStyleOrders')
-    // @ApiBody({type:Number})
-    // async getAllStyleOrders(@Body() id:any):Promise<CommonResponseModel>{
-    //     try{
-    //         return await this.styleOrderService.getAllStyleOrders(id)
-    //     }catch(err){
-    //         return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
-    //     }
-    // }
+    @Post('/getAllStyleOrdersByItem')
+    // @ApiBody({type:styleOrderReq})
+    async getAllStyleOrders(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            console.log(req,'controller');
+            
+            return await this.styleOrderService.getAllStyleOrders(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+    @Post('/getAllCoLinesById')
+    @ApiBody({type:styleOrderReq})
+    async getAllCoLinesById(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            console.log(req,'controller');
+            
+            return await this.styleOrderService.getAllCoLinesById(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
 }
