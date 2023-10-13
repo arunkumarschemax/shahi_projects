@@ -2,24 +2,17 @@ import { UploadOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/ico
 import { VendorNameEnum } from '@xpparel/shared-models';
 import { Button, Card, Col, Form, FormInstance, Radio, Row, Select, Spin, Upload, UploadProps, message } from 'antd';
 import { useState } from 'react';
-import { pdfjs } from 'react-pdf';
-import Tesseract, { createWorker } from 'tesseract.js';
+import { pdfjs } from 'react-pdf';;
 import { extractDhl, extractDart, extractExpeditors, extractEfl, extractOocl, extractNagel, extractApl, extractMaersk, checkIsScannedPdf } from './schemax-ai-docx-pdf';
-import { extractDataFromScannedImages, extractEflInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
-
-
+import { convertScannedPdfToSelectablePdf, extractDataFromScannedImages, extractEflInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
-
+import { PDFDocument, rgb } from 'pdf-lib';
 export interface DocReaderProps {
     form: FormInstance<any>;
     extractedData: (data: any) => void;
     extractedHsnData: (data: any[]) => void;
 
 }
-const worker = createWorker({
-    logger: (m) => console.log(m), // Optional: Enable logging
-});
-
 export const DocReader = (props: DocReaderProps) => {
     const { extractedData, extractedHsnData } = props;
     const [file, setFile] = useState(null);
@@ -34,6 +27,8 @@ export const DocReader = (props: DocReaderProps) => {
     const [extractionCompleted, setExtractionCompleted] = useState(false);
     const [showCancelButton, setShowCancelButton] = useState(false);
     const [pdfData, setPdfData] = useState(null);
+    const [downloadLink, setDownloadLink] = useState(null);
+    const [imageDownloadLinks, setImageDownloadLinks] = useState([]);
 
     const handleFileChange = (info) => {
         if (info?.file?.type === 'application/pdf') {
@@ -84,13 +79,11 @@ export const DocReader = (props: DocReaderProps) => {
                     {
                         const isScannedPdf = await checkIsScannedPdf(pdfData)
                         if (isScannedPdf) {
-                            const pageImages = await getImagesFromPdf(pdfData)
+                            const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
                             const allLines = await extractDataFromScannedImages(pageImages, [0]);
                             processedData = await extractEflInvoiceDataFromScanned(allLines);
-                            console.log('PDF DATA Srivaru:', processedData);
                         } else {
                             processedData = await extractEfl(pdfData);
-                            console.log('PDF DATA EFL:', processedData);
                         }
                         break;
                     }
@@ -114,7 +107,7 @@ export const DocReader = (props: DocReaderProps) => {
                     {
                         const isScannedPdf = await checkIsScannedPdf(pdfData)
                         if (isScannedPdf) {
-                            const pageImages = await getImagesFromPdf(pdfData)
+                            const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks)
                             const allLines = await extractDataFromScannedImages(pageImages, [2, 3]);
                             processedData = await extractSrivaruInvoiceDataFromScanned(allLines);
                             console.log('PDF DATA Srivaru:', processedData);
@@ -368,6 +361,16 @@ export const DocReader = (props: DocReaderProps) => {
                             <Button type='primary' icon={<ZoomOutOutlined />} style={{ marginLeft: "10px" }} onClick={handleZoomOut}>Zoom Out</Button>
                         </span>
                     )}
+                    {downloadLink}
+                    <div>
+                        {imageDownloadLinks.map((link, index) => (
+                            <div key={index}>
+                                <a href={link.url} download={link.filename}>
+                                    Download {link.filename}
+                                </a>
+                            </div>
+                        ))}
+                    </div>
                 </Col>
             </Row>
         </div>

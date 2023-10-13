@@ -1,32 +1,70 @@
 import { createWorker } from "tesseract.js";
+import { rgb } from 'pdf-lib';
+import { SizeConverter } from "./helper/sizeConverter";
+
+const loadImage = (url) => new Promise((resolve, reject) => {
+    const img = new Image();
+    img.addEventListener('load', () => resolve(img));
+    img.addEventListener('error', (err) => reject(err));
+    img.src = url;
+});
 
 
-export const getImagesFromPdf = async (pdf) => {
+export const getImagesFromPdf = async (pdf, setImageDownloadLinks) => {
     const pagePromises = [];
+    const pageImages = [];
     for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
         const page = await pdf.getPage(pageNumber);
-        const viewport = page.getViewport({ scale: 1.0 });
+        const viewport = page.getViewport({ scale: 1.0, rotation: 0 });
+        // const pixelRatio = window.devicePixelRatio * 2;
+        // let pdfOriginalWidth = viewport.width;
+        // let viewpointHeight = viewport.height;
+        // const canvas = document.createElement('canvas');
+        // canvas.getContext('2d').scale(pixelRatio, pixelRatio);
+        // canvas.style.width = `${pdfOriginalWidth}px`;
+        // canvas.style.height = `${viewpointHeight}px`;
+        // const canvasContext = canvas.getContext('2d');
+        // canvas.height = viewport.height * pixelRatio;
+        // canvas.width = viewport.width * pixelRatio;
+        // const renderContext = {
+        //     canvasContext,
+        //     viewport,
+        // };
+
         const canvas = document.createElement('canvas');
-        const canvasContext = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        const renderContext = {
-            canvasContext,
-            viewport,
-        };
-        const renderTask = page.render(renderContext);
-        const promise = new Promise((resolve, reject) => {
-            renderTask.promise.then(
-                function () {
-                    resolve(canvas.toDataURL('image/jpeg'));
-                },
-                reject
-            );
-        });
-        pagePromises.push(promise);
+        const horizontalMm = SizeConverter.ConvertFromPxToMm(viewport.width, 72);
+        const verticalMm = SizeConverter.ConvertFromPxToMm(viewport.height, 72);
+
+        const actualWidth = SizeConverter.ConvertFromMmToPx(horizontalMm, 300);
+        const actualHeight = SizeConverter.ConvertFromMmToPx(verticalMm, 300);
+
+        canvas.width = actualWidth;
+        canvas.height = actualHeight;
+        canvas.style.width = `${viewport.width}px`;
+        canvas.style.height = `${viewport.height}px`;
+
+        const scale = Math.min(actualWidth / viewport.width, actualHeight / viewport.height);
+        const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+
+        await page.render({
+            canvasContext: ctx,
+            viewport: page.getViewport({ scale: scale, rotation: 0 }),
+        }).promise;
+
+        let b64str = canvas.toDataURL();
+        let loadedImg = await loadImage(b64str);
+        canvas.toBlob(function (blob) {
+            const downloadURL = URL.createObjectURL(blob);
+            setImageDownloadLinks((prevLinks) => [
+                ...prevLinks,
+                { url: downloadURL, filename: `page_${pageNumber}.jpg` },
+            ]);
+        })
+        //pagePromises.push(promise);
+        pageImages.push(loadedImg);
     }
 
-    const pageImages = await Promise.all(pagePromises);
+    //const pageImages = await Promise.all(pagePromises);
     return pageImages;
 }
 
@@ -65,6 +103,44 @@ export const extractDataFromScannedImages = async (pageImages: any[], invoicePag
     }
     await worker.terminate();
     return allPageLines;
+}
+
+export const convertScannedPdfToSelectablePdf = async (scannedPdfDoc, selectablePdf, images: any[]) => {
+    const worker = createWorker({
+        logger: (m) => console.log(m), // Optional: Enable logging
+    });
+    await worker.load();
+    await worker.loadLanguage('eng');
+    await worker.initialize('eng');
+
+    const pdfPages = scannedPdfDoc.getPages();
+    const newTextPages: any[] = [];
+    let imageIndex = 0;
+    for (const pdfPage of pdfPages) {
+        const { data: { text, words } } = await worker.recognize(images[imageIndex]);
+        const newTextPage = selectablePdf
+            .addPage([pdfPage.getWidth(), pdfPage.getHeight()])
+        try {
+            words.forEach((word) => {
+                const x = word.bbox.x0;
+                const y = pdfPage.getHeight() - word.bbox.y1;
+                newTextPage.drawText(word.text, {
+                    x,
+                    y,
+                    size: 12, 
+                    color: rgb(0, 0, 0),
+                });
+            });
+        } catch (error) {
+
+        }
+        newTextPages.push(newTextPage);
+        imageIndex += 1;
+    }
+    const modifiedPdfBytes = await selectablePdf.save();
+    const blob = new Blob([modifiedPdfBytes], { type: 'application/pdf' });
+    const objectURL = URL.createObjectURL(blob);
+    return objectURL;
 }
 
 
@@ -148,9 +224,12 @@ export const extractEflInvoiceDataFromScanned = async (allLines: any[]) => {
     if (allLines && Array.isArray(allLines)) {
         for (const line of allLines) {
             const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
+            const regex = /GST\s*No\.\s*([\dA-Z]{15})/;
+            const match = regex.exec(line.content);
+            if (match && !gstNumberExtracted) {
+                // const gstNumber = gstMatch[0];
 
-            if (gstMatch && !gstNumberExtracted) {
-                const gstNumber = gstMatch[0];
+                const gstNumber = match[1];
                 const vendorName = gstVendorMapping[gstNumber];
 
                 const invoiceDateData = allLines.find((item) => item.id === parseInt(invoiceDateId, 10));
@@ -205,7 +284,7 @@ export const extractEflInvoiceDataFromScanned = async (allLines: any[]) => {
     );
 
     console.log(
-        "IMAGE HSN DATA",
+        "IMAGE Invoice DATA",
         JSON.stringify(InvoiceLines, null, 2)
     );
     return {
