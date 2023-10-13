@@ -295,7 +295,7 @@ render: (text, object, index) => (page - 1) * pageSize + (index + 1)
 
 // },
 {
-    title:"Display Name",
+    title:"Updated Column",
     dataIndex:"display_name"
 
 },
