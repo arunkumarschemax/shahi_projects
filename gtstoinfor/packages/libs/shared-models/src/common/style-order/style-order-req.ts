@@ -32,8 +32,9 @@ export class StyleOrderReq{
     buyerId: number;
     createdUser: string;
     styleOrderId?: number;
+    coNumber?: string;
 
-    constructor(itemCode: string,orderDate : any,buyerPoNumber: string,shipmentType: string,buyerStyle : string,agent : string,buyerAddress : string,exFactoryDate: Date,deliveryDate: Date,instoreDate: Date,salePrice: number,priceQuantity: number,discountPercent: number,discountAmount: number,status: CustomerOrderStatusEnum,remarks: string,itemId: number,warehouseId: number,facilityId: number,styleId: number,packageTermsId: number,deliveryMethodId: number,deliverytermId: number,currencyId: number,paymentMethodId: number,paymentTermId: number,    styleOrderItems: StyleOrderItemsReq[],buyerId:number,createdUser: string,styleOrderId?: number){
+    constructor(itemCode: string,orderDate : any,buyerPoNumber: string,shipmentType: string,buyerStyle : string,agent : string,buyerAddress : string,exFactoryDate: Date,deliveryDate: Date,instoreDate: Date,salePrice: number,priceQuantity: number,discountPercent: number,discountAmount: number,status: CustomerOrderStatusEnum,remarks: string,itemId: number,warehouseId: number,facilityId: number,styleId: number,packageTermsId: number,deliveryMethodId: number,deliverytermId: number,currencyId: number,paymentMethodId: number,paymentTermId: number,    styleOrderItems: StyleOrderItemsReq[],buyerId:number,createdUser: string,styleOrderId?: number,coNumber?: string){
     this.itemCode = itemCode
     this.orderDate = orderDate
     this.buyerPoNumber = buyerPoNumber
@@ -64,5 +65,6 @@ export class StyleOrderReq{
     this.buyerId = buyerId
     this.createdUser = createdUser
     this.styleOrderId = styleOrderId
+    this.coNumber = coNumber
     }
 }

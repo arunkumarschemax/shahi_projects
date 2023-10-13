@@ -122,6 +122,7 @@ export class StyleOrderService{
                     styleOrderEntity.id = req.styleOrderId
                     itemsEntity.styleOrderInfo = styleOrderEntity
                     itemsEntity.updatedUser = req.createdUser
+                    itemsEntity.coLineNumber = rec.coLineNumber
 
                 } else{
                     itemsEntity.coLineNumber = `Line-${val}`
@@ -133,6 +134,7 @@ export class StyleOrderService{
             if(req.styleOrderId){
                 entity.id = req.styleOrderId
                 entity.updatedUser = req.createdUser
+                entity.coNumber = req.coNumber
             } else{
                 entity.coNumber = `CO-${Number(maxId)+1}`
                 entity.createdUser = req.createdUser

@@ -1,7 +1,7 @@
 import { Button, Card, Col, Descriptions, Form, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
-import { ColourService, DestinationService, ItemsService, SKUGenerationService, SizeService } from '@project-management-system/shared-services';
-import { ItemSKusReq, SKUGenerationReq, SkuStatusEnum } from '@project-management-system/shared-models';
+import { ColourService, DestinationService, ItemsService, SKUGenerationService, SizeService, StyleService } from '@project-management-system/shared-services';
+import { ItemCodeReq, ItemSKusReq, SKUGenerationReq, SkuStatusEnum } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
 
 const { Option } = Select;
@@ -24,6 +24,9 @@ export const SKUGeneration = () => {
     const selectedSizeObject =[]
     const selectedDestinationObject =[]
     const [itemId,setitemId] = useState<number>(0)
+    const [styles,setStyles] = useState<any[]>([])
+    const styleService = new StyleService()
+    const [itemData,setItemData] = useState<any[]>([])
 
 
     useEffect(() => {
@@ -31,11 +34,38 @@ export const SKUGeneration = () => {
         getAllSizes()
         getAllDestinations()
         getAllItemCodes()
+        getAllStyles()
     },[])
+
+    useEffect(() => {
+      if(itemData.length > 0){
+        console.log(itemData)
+        form.setFieldsValue({'style':itemData[0].style})
+        setSelectedColors(itemData[0]?.colorInfo)
+        setSelectedSizes(itemData[0].sizeInfo)
+        setSelectedDestinations(itemData[0].destinationInfo)
+        const colors = color.filter(e => {
+          return !itemData[0]?.colorInfo.some(rec => {
+          return e.colour === rec.colour
+        })} )
+        setColor(colors)
+        const sizes = size.filter(e => {
+          return !itemData[0]?.sizeInfo.some(rec => {
+          return e.size === rec.size
+        })} )
+        setSize(sizes)
+        const destinations = destination.filter(e => {
+          return !itemData[0]?.destinationInfo.some(rec => {
+          return e.destination === rec.destination
+        })} )
+        setDestination(destinations)
+      }
+    },[itemData])
 
     const generateSKU = () => {
       // const req = new SKUGenerationReq(form.getFieldValue('itemCode'),selectedColors,selectedSizes,selectedDestinations,'admin','')
-      const req = new ItemSKusReq(itemId,form.getFieldValue('itemCode'),SkuStatusEnum.OPEN,selectedColors,selectedSizes,selectedDestinations,'admin')
+      const req = new ItemSKusReq(itemId,form.getFieldValue('itemCode'),SkuStatusEnum.OPEN,selectedColors,selectedSizes,selectedDestinations,'admin',form.getFieldValue('style'))
+      console.log(req,'------')
       skuService.skuGeneration(req).then(res => {
         if(res.status){
           resetHandler()
@@ -77,7 +107,24 @@ export const SKUGeneration = () => {
               setItemcodes(res.data)
           }
       })
-  }
+    }
+
+    const getAllStyles = () => {
+      styleService.getAllActiveStyle().then(res => {
+          if(res.status){
+              setStyles(res.data)
+          }
+      })
+    }
+
+    const getDataByItem = (itemCode) => {
+      const req = new ItemCodeReq(itemCode)
+      skuService.getDataByItem(req).then(res => {
+        if(res.data){
+          setItemData(res.data)
+        }
+      })
+    }
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -152,8 +199,8 @@ export const SKUGeneration = () => {
   }
 
   const onItemCodeChange = (key,option) => {
-    console.log(option)
     setitemId(option?.itemId)
+    getDataByItem(key)
   }
 
   const resetHandler = () => {
@@ -184,6 +231,20 @@ export const SKUGeneration = () => {
                 </Select>
             </Form.Item>
         </Col>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>
+            <Form.Item label='Style' name='style' rules={[{required:true,message:'Style is required'}]}>
+                <Select showSearch allowClear placeholder='Select Style'>
+                    {/* <Option key='itemcode' value='itemcode' itemId='itemId'>Item Codes </Option> */}
+                    {
+                        styles.map((e)=>{
+                            return(
+                                <Option key={e.styleId} value={e.styleId}>{e.style}</Option>
+                            )
+                        })
+                    }
+                </Select>
+            </Form.Item>
+        </Col>
       </Row>
         <Row gutter={24}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
@@ -194,12 +255,12 @@ export const SKUGeneration = () => {
                     <Card
                         // key={comment.colourId}
                         size='small'
-                        style={{ background: '#f7c78d', marginBottom: '10px'}}
+                        style={{ background: '#f7c78d', marginBottom: '10px',height:'35px'}}
                         draggable
                         onDragStart={(event) => handleColorDragStart(event, comment)}
                     >
                         <span style={{ wordWrap: 'break-word' }}>
-                            <li style={{ color: 'black' }}>{comment.colour}</li>
+                            <li style={{ color: 'black',textAlign:'center'}}>{comment.colour}</li>
                         </span>
                     </Card>
                 ))}
@@ -213,12 +274,12 @@ export const SKUGeneration = () => {
                 <Card
                     // key={comment}
                     size='small'
-                    style={{ background: '#f7c78d', marginBottom: '10px' }}
+                    style={{ background: '#f7c78d', marginBottom: '10px',height:'35px' }}
                     draggable
                     onDragStart={(event) => handleAssignedColorDragStart(event, comment)}
                 >
                     <span style={{ wordWrap: 'break-word' }}>
-                        <li style={{ color: 'black' }}>{comment.colour}</li>
+                        <li style={{ color: 'black',textAlign:'center' }}>{comment.colour}</li>
                     </span>
                 </Card>
             ))}
@@ -232,12 +293,12 @@ export const SKUGeneration = () => {
                     <Card
                     size='small'
                         // key={comment.colourId}
-                        style={{ background: '#f7c78d', marginBottom: '10px' }}
+                        style={{ background: '#f7c78d', marginBottom: '10px',height:'35px' }}
                         draggable
                         onDragStart={(event) => handleSizeDragStart(event, comment)}
                     >
                         <span style={{ wordWrap: 'break-word' }}>
-                            <li style={{ color: 'black' }}>{comment.size}</li>
+                            <li style={{ color: 'black',textAlign:'center' }}>{comment.size}</li>
                         </span>
                     </Card>
                 ))}
@@ -251,12 +312,12 @@ export const SKUGeneration = () => {
                 <Card
                 size='small'
                     // key={comment}
-                    style={{ background: '#f7c78d', marginBottom: '10px' }}
+                    style={{ background: '#f7c78d', marginBottom: '10px',height:'35px' }}
                     draggable
                     onDragStart={(event) => handleAssignedSizesDragStart(event, comment)}
                 >
                     <span style={{ wordWrap: 'break-word' }}>
-                        <li style={{ color: 'black' }}>{comment.size}</li>
+                        <li style={{ color: 'black',textAlign:'center' }}>{comment.size}</li>
                     </span>
                 </Card>
             ))}
@@ -270,12 +331,12 @@ export const SKUGeneration = () => {
                     <Card
                     size='small'
                         // key={comment.colourId}
-                        style={{ background: '#f7c78d', marginBottom: '10px' }}
+                        style={{ background: '#f7c78d', marginBottom: '10px',height:'35px' }}
                         draggable
                         onDragStart={(event) => handleDestinationsDragStart(event, comment)}
                     >
                         <span style={{ wordWrap: 'break-word' }}>
-                            <li style={{ color: 'black' }}>{comment.destination}</li>
+                            <li style={{ color: 'black',textAlign:'center' }}>{comment.destination}</li>
                         </span>
                     </Card>
                 ))}
@@ -289,12 +350,12 @@ export const SKUGeneration = () => {
                 <Card
                 size='small'
                     // key={comment}
-                    style={{ background: '#f7c78d', marginBottom: '10px' }}
+                    style={{ background: '#f7c78d', marginBottom: '10px',height:'35px' }}
                     draggable
                     onDragStart={(event) => handleAssignedDestinationsDragStart(event, comment)}
                 >
                     <span style={{ wordWrap: 'break-word' }}>
-                        <li style={{ color: 'black' }}>{comment.destination}</li>
+                        <li style={{ color: 'black',marginBottom:'1px' }}>{comment.destination}</li>
                     </span>
                 </Card>
             ))}

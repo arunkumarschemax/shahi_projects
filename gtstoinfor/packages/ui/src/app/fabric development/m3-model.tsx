@@ -44,6 +44,7 @@ const M3Items = (props:M3ItemsProps) => {
 
   const handleOk = (value) =>{
     props.onClose(); // Close the modal
+    M3Item.resetFields();
     props.itemList(filterData)
 
     
