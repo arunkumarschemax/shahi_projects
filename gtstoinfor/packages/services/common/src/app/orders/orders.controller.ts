@@ -289,7 +289,6 @@ export class OrdersController {
     @ApiBody({type: SeasonWiseRequest})
     async seasonWiseReport(@Body() req?:any): Promise<CommonResponseModel> {
         try {
-            console.log(req,'lllllllllllllllll')
             return this.ordersService.seasonWiseReport(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);

@@ -271,9 +271,9 @@ const getAllItems = () => {
     },
     
       {
-          title: "Item",
+          title: <div style={{textAlign:"center"}}>Item</div>,
           dataIndex: "item",
-          align:"center",
+          align:"left",
           // sorter: (a, b) => a.item.localeCompare(b.item),
           // sortDirections: ["descend", "ascend"],
            ...getColumnSearchProps("item"),
@@ -296,7 +296,7 @@ const getAllItems = () => {
         // ...getColumnSearchProps("destination"),
         
       },{
-        title: "Year",
+        title: <div style={{textAlign:"center"}}>Year</div>,
         dataIndex: "year",
         align:"right",
         // sorter: (a, b) => a.year - b.year,
@@ -354,7 +354,6 @@ const getAllItems = () => {
         title: 'Status',
         dataIndex: 'isActive',
         align:"center",
-         // width:'80px',
         render: (isActive, rowData) => (
           <>
             {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -415,9 +414,6 @@ const getAllItems = () => {
           </span>
         )
       }
-     
-   
-   
   ];
 
   const onChange = (pagination, filters, sorter, extra) => {

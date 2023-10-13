@@ -1,0 +1,9 @@
+.price-table .ant-table-thead > tr > th {
+    height: 5px; /* Adjust the height to your preference */
+    line-height: 5px; /* Match the height to maintain vertical alignment */
+  }
+
+  .season-table .min-width-column {
+    min-width: 200px; /* Adjust the value as needed */
+    width:"100%"
+  }

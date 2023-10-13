@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, Tabs, TabsProps, Tag, Tooltip, Typography } from 'antd';
+import { Alert, Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, Tabs, TabsProps, Tag, Tooltip, Typography } from 'antd';
 import { OrdersService } from '@project-management-system/shared-services';
 import { ArrowDownOutlined, ArrowUpOutlined, FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import moment from 'moment';
@@ -591,7 +591,8 @@ const ChangesGrid = () => {
         {
             key: '1',
             label: <b>Order Wise Quantity Variance: {qtyData?.length} </b>,
-            children: <Table className="custom-table-wrapper"
+            children: (
+                qtyData.length > 0 ?(<Table className="custom-table-wrapper"
             bordered dataSource={qtyData} columns={orderWisecolumns}scroll={{x:1000,y:500}}
 
             summary={(qtyData) => {
@@ -636,12 +637,16 @@ const ChangesGrid = () => {
             }
             
             
-            />,
+            />) : (
+                <Alert message="No data available" type="warning" showIcon style={{ width: "140px", margin: "auto" }}/>
+              )
+            ),
         },
         {
             key: '2',
             label: <b>Item Wise Quantity Variance: {differenceQtyData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered
+            children: (
+                differenceQtyData.length > 0 ?(<Table className="custom-table-wrapper" bordered
             dataSource={differenceQtyData} columns={ItemWisecolumns} pagination={false}
             scroll={{x:1000,y:500}}
                 summary={(differenceQtyData) => {
@@ -682,7 +687,11 @@ const ChangesGrid = () => {
                     );
                 }
                 }
-            />,
+            />
+            ) : (
+                <Alert message="No data available" type="warning" showIcon style={{ width: "140px", margin: "auto" }}/>
+              )
+            ),
         },
     ];
 
