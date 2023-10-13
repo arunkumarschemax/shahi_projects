@@ -52,6 +52,9 @@ export class OrdersRepository extends Repository<OrdersEntity> {
             if(req.exFactoryFromDate){
                 query.andWhere(`o.planned_exf BETWEEN '${req.exFactoryFromDate}' AND '${req.exFactoryToDate}'`)
             }
+            if(req.year){
+                query.andWhere(`o.year = '${req.year}'`)
+            }
             query.orderBy(`o.order_plan_number`)
         return await query.getRawMany();
     }
@@ -439,9 +442,20 @@ SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '') E
         if(req.exFactoryFromDate){
             query.andWhere(`o.planned_exf BETWEEN '${req.exFactoryFromDate}' AND '${req.exFactoryToDate}'`)
         }
+        if(req.year){
+            query.andWhere(`o.year = '${req.year}'`)
+        }
         query.groupBy(`o.item`)
         query.orderBy(`o.order_plan_number`)
     return await query.getRawMany();
+}
+
+async getYearDropdown():Promise<any>{
+    const query = this.createQueryBuilder('o')
+    .select(`o.year as year`)
+    .groupBy(`o.year`)
+    .orderBy(`o.year`)
+    return await query.getRawMany()
 }
 
 } 

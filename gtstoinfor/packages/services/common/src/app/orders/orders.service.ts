@@ -2227,5 +2227,19 @@ async getPhaseItems(): Promise<CommonResponseModel> {
     else
         return new CommonResponseModel(false, 0, 'No data found');
 }
+
+async getYearDropdown():Promise<CommonResponseModel>{
+    try{
+        const info = await this.ordersRepository.getYearDropdown()
+        if(info.length >0){
+            return new CommonResponseModel(true,1,'Data retrieved',info)
+        } else{
+            return new CommonResponseModel(false,0,'No dat found')
+        }
+
+    }catch(err){
+        throw err
+    }
+}
 }
   
