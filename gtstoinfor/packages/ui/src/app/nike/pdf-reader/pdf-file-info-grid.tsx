@@ -133,41 +133,49 @@ export function POPDFInfoGrid() {
         {
             title: "S.No",
             key: "sno",
-            responsive: ["sm"],
+            width: 50,
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
             fixed: 'left'
         },
         {
             title: 'PO Number',
             dataIndex: 'po_number',
-            fixed: 'left',
+            width: 140,
             ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
             title: 'File Name',
             dataIndex: 'pdf_file_name',
-            fixed: 'left',
+            width: 150,
             // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
             title: 'File Type',
             dataIndex: 'file_type',
-            fixed: 'left',
+            width: 120,
             // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
             title: 'Uploaded Date',
             dataIndex: 'created_at',
             align: 'center',
+            width: 120,
             render: (text, record) => {
                 return record.created_at ? moment(record.created_at).format('MM/DD/YYYY') : '-'
             }
             // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
+            title: 'Changes Status',
+            dataIndex: 'status',
+            align: 'center',
+            width: 120,
+        },
+        {
             title: 'Action',
             dataIndex: 'action',
             align: 'center',
+            width: 120,
             render: (value, record) => (
                 <>
                     <Button onClick={() => setMoreData(record)}>More Info</Button>
@@ -206,11 +214,7 @@ export function POPDFInfoGrid() {
                         <Button htmlType="submit"
                             icon={<SearchOutlined />}
                             type="primary">SEARCH</Button>
-
                         <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>Reset</Button>
-
-
-
                     </Form.Item>
                 </Col>
             </Row>

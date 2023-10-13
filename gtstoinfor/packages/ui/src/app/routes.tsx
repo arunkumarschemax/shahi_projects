@@ -154,7 +154,7 @@ export const AppRoutes = () => {
                     <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
                     <Route path='shipment-report' element={<ShipmentTrackerReport />} />
                     <Route path='fob-price-variation-report' element={<FOBPriceVariationReport />} />
-                    <Route path='po-detailed-view' element={<PoDetailedview />} />
+                    <Route path='po-detailed-view' element={<PoDetailedview data={undefined}/>} />
                     
                 </Route>
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
