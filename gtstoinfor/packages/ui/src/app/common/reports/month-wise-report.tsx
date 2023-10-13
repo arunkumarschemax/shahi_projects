@@ -887,7 +887,7 @@ export const MonthWiseReport = () => {
       },
 
       {
-        title: "Production Plan Type Name",
+        title: "Production Plan Type",
         dataIndex: "prod_plan_type",
         render: (text, record, index) => (
           <th style={{ width: "100px" }}>
@@ -1069,7 +1069,16 @@ export const MonthWiseReport = () => {
   if (selected === "WareHouse") {
     columns.push(
       {
-        title: "Production Plan Type Name",
+
+        title: "S No",
+        key: "sno",
+        width: 50,
+
+        render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+
+      },
+      {
+        title: "Production Plan Type",
         dataIndex: "prod_plan_type",
         render: (text, record, index) => (
           <th style={{ width: "100px" }}>
@@ -1254,7 +1263,7 @@ export const MonthWiseReport = () => {
     if (selected == "ExFactory") {
       exportingColumns.push(
         { title: "Item Name", dataIndex: "item" },
-        { title: "Production Plan Type Name", dataIndex: "prod_plan_type" },
+        { title: "Production Plan Type ", dataIndex: "prod_plan_type" },
         { title: `Jan In PCs`, dataIndex: "janPcsExf" },
         { title: `Jan In Coeff`, dataIndex: "janCoeffExf" },
         { title: `Feb In PCs`, dataIndex: "febPcsExf" },
@@ -1284,7 +1293,7 @@ export const MonthWiseReport = () => {
     if (selected === "WareHouse") {
       exportingColumns.push(
         { title: "Item Name", dataIndex: "item" },
-        { title: "Production Plan Type Name", dataIndex: "prod_plan_type" },
+        { title: "Production Plan Type ", dataIndex: "prod_plan_type" },
         { title: `Jan In PCs`, dataIndex: "janPcsWh" },
         { title: `Jan In Coeff`, dataIndex: "janCoeffWh" },
         { title: `Feb In PCs`, dataIndex: "febPcsWh" },
@@ -1490,7 +1499,7 @@ export const MonthWiseReport = () => {
     let secondTableColumns: IExcelColumn[] = [];
     if (selected == "ExFactory") {
       secondTableColumns.push(
-        { title: "Production Plan Type Name", dataIndex: "prod_plan_type" },
+        { title: "Production Plan Type ", dataIndex: "prod_plan_type" },
         { title: `Jan In PCs`, dataIndex: "janExfPcs" },
         { title: `Jan In Coeff`, dataIndex: "janExfCoeff" },
         { title: `Feb In PCs`, dataIndex: "febExfPcs" },
@@ -1521,7 +1530,7 @@ export const MonthWiseReport = () => {
     }
     if (selected == "WareHouse") {
       secondTableColumns.push(
-        { title: "Production Plan Type Name", dataIndex: "prod_plan_type" },
+        { title: "Production Plan Type ", dataIndex: "prod_plan_type" },
         { title: `Jan In PCs`, dataIndex: "janWhPcs" },
         { title: `Jan In Coeff`, dataIndex: "janWhCoeff" },
         { title: `Feb In PCs`, dataIndex: "febWhPcs" },

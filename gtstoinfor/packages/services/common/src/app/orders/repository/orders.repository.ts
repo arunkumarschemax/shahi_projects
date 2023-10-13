@@ -35,7 +35,7 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         const query = this.createQueryBuilder('o')
         .select(`o.production_plan_id,o.item_cd,o.item,o.prod_plan_type,o.fr_fabric,o.created_at,REPLACE(od.old_val,',','') as old_val,REPLACE(od.new_val,',','') as new_val,(REPLACE(od.new_val,',','') - REPLACE(od.old_val,',','')) AS Diff,od.version,o.order_plan_number,o.wh,o.planned_exf,o.year`)
             .leftJoin(OrdersDifferenceEntity, 'od', 'od.prod_plan_id = o.production_plan_id')
-            .where(`column_name = 'order_plan_qty' AND o.version = od.version AND o.production_plan_type != 'STOP'`)
+            .where(`column_name = 'order_plan_qty' AND o.version = od.version AND o.prod_plan_type != 'STOP'`)
         
             if(req.orderNumber){
                 query.andWhere(`o.order_plan_number = '${req.orderNumber}'`)
@@ -51,6 +51,9 @@ export class OrdersRepository extends Repository<OrdersEntity> {
             }
             if(req.exFactoryFromDate){
                 query.andWhere(`o.planned_exf BETWEEN '${req.exFactoryFromDate}' AND '${req.exFactoryToDate}'`)
+            }
+            if(req.year){
+                query.andWhere(`o.year = '${req.year}'`)
             }
             query.orderBy(`o.order_plan_number`)
         return await query.getRawMany();
@@ -178,8 +181,8 @@ SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty, 
 SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 THEN 
 REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)AS totalExfCoeff,
                          
-SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '') ELSE 0 END) AS totalWhPcs,
- SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END) AS totalWhCoeff,
+SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '') ELSE 0 END) AS totalWhPcs,
+ SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END) AS totalWhCoeff,
 
      SUM(CASE WHEN MONTH(planned_exf) = 1 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS janExfPcs,
      SUM(CASE WHEN MONTH(planned_exf) = 2 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS febExfPcs,
@@ -345,8 +348,8 @@ SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '') E
  CONCAT(ROUND( (SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty, ',', '') ELSE 0 END)/  SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty, ',', '') ELSE 0 END)) *100,0),'%')  AS totalExfPcs,
    CONCAT(ROUND( (SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)/SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS totalExfCoeff,
                              
-   CONCAT(ROUND( (SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '') ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%')  AS totalWhPcs,
-     CONCAT(ROUND( (SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS totalWhCoeff,
+   CONCAT(ROUND( (SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '') ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d')) OR MONTH(STR_TO_DATE(wh, '%m-%d')) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%')  AS totalWhPcs,
+     CONCAT(ROUND( (SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d')) OR MONTH(STR_TO_DATE(wh, '%m-%d')) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS totalWhCoeff,
    
         CONCAT(ROUND( (SUM(CASE WHEN MONTH(planned_exf) = 1 THEN order_plan_qty ELSE 0 END)/  SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty, ',', '') ELSE 0 END) ) *100,0),'%') AS janExfPcs,
         CONCAT(ROUND( (SUM(CASE WHEN MONTH(planned_exf) = 2 THEN order_plan_qty ELSE 0 END)/  SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty, ',', '') ELSE 0 END) ) *100,0),'%') AS febExfPcs,
@@ -360,18 +363,19 @@ SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '') E
         CONCAT(ROUND( (SUM(CASE WHEN MONTH(planned_exf) = 10 THEN order_plan_qty ELSE 0 END)/  SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty, ',', '') ELSE 0 END) ) *100,0),'%') AS octExfPcs,
         CONCAT(ROUND( (SUM(CASE WHEN MONTH(planned_exf) = 11 THEN order_plan_qty ELSE 0 END)/  SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty, ',', '') ELSE 0 END) ) *100,0),'%') AS novExfPcs,
         CONCAT(ROUND( (SUM(CASE WHEN MONTH(planned_exf) = 12 THEN order_plan_qty ELSE 0 END)/  SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty, ',', '') ELSE 0 END) ) *100,0),'%') AS decExfPcs,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 1 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS janWhPcs,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 2 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS febWhPcs,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 3 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS marWhPcs,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 4  THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS aprWhPcs,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 5 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS mayWhPcs,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 6 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS junWhPcs,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 7 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS julWhPcs,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 8 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS augWhPcs,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 9 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS sepWhPcs,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 10 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS octWhPcs,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 11 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS novWhPcs,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 12 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS decWhPcs,
+
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 1 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 1 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 1 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS janWhPcs,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 2 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 2 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 2 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS febWhPcs,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 3 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 3 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 3 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS marWhPcs,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 4  OR MONTH(STR_TO_DATE(wh, '%m/%d')) =4 OR MONTH(STR_TO_DATE(wh, '%m-%d')) =4 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS aprWhPcs,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 5 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 5 OR MONTH(STR_TO_DATE(wh, '%m-%d')) =51 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d')) OR MONTH(STR_TO_DATE(wh, '%m-%d')) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS mayWhPcs,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 6 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 6 OR MONTH(STR_TO_DATE(wh, '%m-%d')) =61 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d')) OR MONTH(STR_TO_DATE(wh, '%m-%d')) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS junWhPcs,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 7 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 7 OR MONTH(STR_TO_DATE(wh, '%m-%d')) =71 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS julWhPcs,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 8 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 8 OR MONTH(STR_TO_DATE(wh, '%m-%d')) =81 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d')) OR MONTH(STR_TO_DATE(wh, '%m-%d')) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS augWhPcs,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 9 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 9 OR MONTH(STR_TO_DATE(wh, '%m-%d')) =91 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS sepWhPcs,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 10 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 10 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 01 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS octWhPcs,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 11 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 11 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 11 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS novWhPcs,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 12 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 12 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 12 THEN order_plan_qty ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '')ELSE 0 END)) *100,0),'%') AS decWhPcs,
          CONCAT(ROUND( (SUM(CASE WHEN MONTH(planned_exf) = 1 THEN  order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS janExfCoeff,
          CONCAT(ROUND( (SUM(CASE WHEN MONTH(planned_exf) = 2 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS febExfCoeff,
          CONCAT(ROUND( (SUM(CASE WHEN MONTH(planned_exf) = 3 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS marExfCoeff,
@@ -384,18 +388,19 @@ SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '') E
          CONCAT(ROUND( (SUM(CASE WHEN MONTH(planned_exf) = 10 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS octExfCoeff,
          CONCAT(ROUND( (SUM(CASE WHEN MONTH(planned_exf) = 11 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS novExfCoeff,
          CONCAT(ROUND( (SUM(CASE WHEN MONTH(planned_exf) = 12 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS decExfCoeff,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 1 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS janWhCoeff,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 2 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS febWhCoeff,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 3 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS marWhCoeff,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 4 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS aprWhCoeff,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 5 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS mayWhCoeff,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 6 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS junWhCoeff,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 7 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS julWhCoeff,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 8 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS augWhCoeff,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 9 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS sepWhCoeff,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 10 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS octWhCoeff,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 11 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS novWhCoeff,
-         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 12 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS decWhCoeff
+
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 1 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 1 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 1 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS janWhCoeff,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 2 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 2 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 2 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS febWhCoeff,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 3 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 3 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 3 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS marWhCoeff,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 4 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 4 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 4 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS aprWhCoeff,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 5 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 5 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 5 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS mayWhCoeff,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 6 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 6 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 6 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS junWhCoeff,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 7 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 7 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 7 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS julWhCoeff,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 8 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 8 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 8 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS augWhCoeff,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 9 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 9 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 9 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS sepWhCoeff,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 10 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 10 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 10 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS octWhCoeff,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 11 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 11 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 11 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS novWhCoeff,
+         CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 12 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 12 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 12 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS decWhCoeff
          FROM orders
          WHERE planned_exf IS NOT NULL AND YEAR = '${req.year}'
        AND prod_plan_type !='STOP'
@@ -422,7 +427,7 @@ SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '') E
     const query = this.createQueryBuilder('o')
     .select(`o.production_plan_id,o.item_cd,o.item,o.prod_plan_type,o.fr_fabric,o.created_at,SUM(REPLACE(od.old_val,',','')) as old_qty_value,SUM(REPLACE(od.new_val,',','')) as new_qty_value,(SUM(REPLACE(od.new_val,',','')) - SUM(REPLACE(od.old_val,',',''))) AS diff,od.version,o.order_plan_number,o.wh,o.planned_exf,o.year`)
         .leftJoin(OrdersDifferenceEntity, 'od', 'od.prod_plan_id = o.production_plan_id')
-        .where(`column_name = 'order_plan_qty' AND o.version = od.version AND o.production_plan_type != 'STOP'`)
+        .where(`column_name = 'order_plan_qty' AND o.version = od.version AND o.prod_plan_type != 'STOP'`)
     
         if(req.orderNumber){
             query.andWhere(`o.order_plan_number = '${req.orderNumber}'`)
@@ -439,9 +444,20 @@ SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 THEN REPLACE(order_plan_qty, ',', '') E
         if(req.exFactoryFromDate){
             query.andWhere(`o.planned_exf BETWEEN '${req.exFactoryFromDate}' AND '${req.exFactoryToDate}'`)
         }
+        if(req.year){
+            query.andWhere(`o.year = '${req.year}'`)
+        }
         query.groupBy(`o.item`)
         query.orderBy(`o.order_plan_number`)
     return await query.getRawMany();
+}
+
+async getYearDropdown():Promise<any>{
+    const query = this.createQueryBuilder('o')
+    .select(`o.year as year`)
+    .groupBy(`o.year`)
+    .orderBy(`o.year`)
+    return await query.getRawMany()
 }
 
 } 
