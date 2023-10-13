@@ -1732,12 +1732,15 @@ export const MonthWiseReport = () => {
               <table className="custom-tbl">
               <thead>
                     <tr>
-                    <th className="ant-table-cell" scope="col"  style={{ width: `${colWidth.proPlanType}px` }}></th>
-                    {totalValues.map((val,index)=>{
-                       return <th className="ant-table-cell" scope="col" style={{ width: `${(index % 2) ? colWidth.Pcs : colWidth.coeff}px`, textAlign:'right' }}>{val}</th>
-                    })}
-                    <th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalPcs}px`, textAlign:'right'}}>{totalPre}</th>
-                    <th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalcoeff}px`, textAlign:'right' }}>{totalLat}</th>
+                    <th className="ant-table-cell" scope="col" style={{ width: `${colWidth.proPlanType}px` }}></th>
+{totalValues.map((val, index) => (
+  <th className="ant-table-cell" scope="col" style={{ width: `${(index % 3) ? colWidth.Pcs : colWidth.coeff}px`, textAlign: 'right', paddingLeft: '20px' }}>
+    {val}
+  </th>
+))}
+<th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalPcs}px`, textAlign: 'right', paddingLeft: '20px' }}>{totalPre}</th>
+<th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalcoeff}px`, textAlign: 'right', paddingLeft: '20px' }}>{totalLat}</th>
+
                     </tr>
                     </thead>
                   </table>
