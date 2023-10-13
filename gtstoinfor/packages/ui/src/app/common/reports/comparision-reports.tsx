@@ -1500,6 +1500,8 @@ export const MonthWiseComparisionReport = () => {
       });
     });
     const totalValues = [janPre, janLat, febPre, febLat, marPre, marLat, aprPre, aprLat, mayPre, mayLat, junPre, junLat, julPre, julLat, augPre, augLat, sepPre, sepLat, octPre, octLat, novPre, novLat, decPre, decLat];
+    // const totalValuesWithCommas = totalValues.map((val) => val.toLocaleString());
+
     return (
       <>
         <Table.Summary.Row>
