@@ -3,7 +3,7 @@ import { HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link } from "react-router-dom";
-import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, StyleService } from "@project-management-system/shared-services";
+import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryService, ItemCreationService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, StyleService } from "@project-management-system/shared-services";
 
 
         export const ItemCreation =()=>{
@@ -16,6 +16,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
          const roslservice = new ROSLGroupsService();
          const customGroupservice = new CustomGroupsService();
          const buyingHouseservice = new BuyingHouseService();
+         const itemCreationService = new ItemCreationService();
          const [currencydata,setCurrencyData] = useState([]);
          const [customGroup,setCustomGroup]= useState([]);
          const [licence,setLicence]=useState([])
@@ -144,13 +145,29 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                 AlertMessages.getErrorMessage(err.message)
             })
          }
+
+         const saveItem=()=>{
+          form.validateFields().then((values) => {
+            console.log(values);
+              itemCreationService.createItem(values).then((res) => {
+                if(res.status){
+                  AlertMessages.getSuccessMessage(res.internalMessage)
+                }
+                else{
+                  AlertMessages.getWarningMessage(res.internalMessage)
+                }
+              }).catch(err => {
+                AlertMessages.getWarningMessage(err.message)
+              })
+          })
+         }
          return (
          <>
         <Card title="Item Creation">
             <Form form={form}
           style={{ fontSize: "10px" }}
           layout="vertical"
-          >
+          onFinish = {saveItem}>
 
           
         <Row gutter ={8} >

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { StyleOrderReq, StyleOrderResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
 import { StyleOrder } from "./style-order.entity";
 import { Item } from "../items/item-entity";
 import { Warehouse } from "../warehouse/warehouse.entity";
@@ -21,6 +21,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { StyleOrderRepository } from "./style-order-repo";
+import { CoLineRepository } from "./co-line.repo";
 
 @Injectable()
 
@@ -28,7 +29,8 @@ export class StyleOrderService{
     constructor(
         private repo:StyleOrderRepository,
         // @InjectRepository(StyleOrder)
-        // private repo : Repository<StyleOrder>,
+      
+         private CoLineRepo : CoLineRepository,
         private readonly dataSource: DataSource,
 
     ){}
@@ -151,5 +153,27 @@ export class StyleOrderService{
             throw err
         }
     }
+   async getAllStyleOrders(req:styleOrderReq):Promise<CommonResponseModel>{
+    try{
+        const data = await this.repo.getAllStyleOrders(req)
+        console.log(req.itemId,'ressssssssssss');
+        
+        return new CommonResponseModel(true,1,'',data)
+
+    } catch(err){
+        throw err
+    }
+   } 
+   async getAllCoLinesById(req:styleOrderReq):Promise<CommonResponseModel>{
+    try{
+        const data = await this.CoLineRepo.getAllCoLines(req)
+        console.log(req.itemId,'ressssssssssss');
+        
+        return new CommonResponseModel(true,1,'',data)
+
+    } catch(err){
+        throw err
+    }
+   } 
 
 }

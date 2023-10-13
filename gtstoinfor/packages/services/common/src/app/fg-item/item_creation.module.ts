@@ -14,4 +14,4 @@ import { ItemCreationAdapter } from './dto/item_creation.adapter';
   providers: [ItemCreationService,ItemCreationAdapter,ApplicationExceptionHandler],
   exports:[ItemCreationService]
 })
-export class AttributeModule {}
+export class ItemCreationModule {}

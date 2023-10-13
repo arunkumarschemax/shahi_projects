@@ -38,14 +38,34 @@ export const SKUGeneration = () => {
     },[])
 
     useEffect(() => {
-      if(itemData){
+      if(itemData.length > 0){
         console.log(itemData)
+        form.setFieldsValue({'style':itemData[0].style})
+        setSelectedColors(itemData[0]?.colorInfo)
+        setSelectedSizes(itemData[0].sizeInfo)
+        setSelectedDestinations(itemData[0].destinationInfo)
+        const colors = color.filter(e => {
+          return !itemData[0]?.colorInfo.some(rec => {
+          return e.colour === rec.colour
+        })} )
+        setColor(colors)
+        const sizes = size.filter(e => {
+          return !itemData[0]?.sizeInfo.some(rec => {
+          return e.size === rec.size
+        })} )
+        setSize(sizes)
+        const destinations = destination.filter(e => {
+          return !itemData[0]?.destinationInfo.some(rec => {
+          return e.destination === rec.destination
+        })} )
+        setDestination(destinations)
       }
     },[itemData])
 
     const generateSKU = () => {
       // const req = new SKUGenerationReq(form.getFieldValue('itemCode'),selectedColors,selectedSizes,selectedDestinations,'admin','')
       const req = new ItemSKusReq(itemId,form.getFieldValue('itemCode'),SkuStatusEnum.OPEN,selectedColors,selectedSizes,selectedDestinations,'admin',form.getFieldValue('style'))
+      console.log(req,'------')
       skuService.skuGeneration(req).then(res => {
         if(res.status){
           resetHandler()
@@ -179,7 +199,6 @@ export const SKUGeneration = () => {
   }
 
   const onItemCodeChange = (key,option) => {
-    console.log(option)
     setitemId(option?.itemId)
     getDataByItem(key)
   }
