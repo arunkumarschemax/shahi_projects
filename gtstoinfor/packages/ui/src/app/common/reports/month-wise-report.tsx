@@ -89,14 +89,14 @@ export const MonthWiseReport = () => {
         setData([]);
       }
     });
-    service.getPhaseMonthData(req).then((res) => {
-      // console.log(res,"*********")
-      if (res.status) {
-        setPhase(res.data);
-      } else {
-        setPhase([]);
-      }
-    });
+    // service.getPhaseMonthData(req).then((res) => {
+    //   // console.log(res,"*********")
+    //   if (res.status) {
+    //     setPhase(res.data);
+    //   } else {
+    //     setPhase([]);
+    //   }
+    // });
     service.getPhaseMonthExcelData(req).then((res) => {
       // console.log(res, "res==========");
       if (res.status) {
@@ -1287,7 +1287,10 @@ export const MonthWiseReport = () => {
         { title: `Nov In PCs`, dataIndex: "novPcsExf" },
         { title: `Nov In Coeff`, dataIndex: "novCoeffExf" },
         { title: `Dec In PCs`, dataIndex: "decPcsExf" },
-        { title: `Dec In Coeff`, dataIndex: "decCoeffExf" }
+        { title: `Dec In Coeff`, dataIndex: "decCoeffExf" },
+        { title:` Total In Pcs`,dataIndex: "ExfPcsTotal"},
+        { title:` Total In Coeff`,dataIndex: "ExfCoeffTotal"},
+
       );
     }
     if (selected === "WareHouse") {
@@ -1317,7 +1320,10 @@ export const MonthWiseReport = () => {
         { title: `Nov In PCs`, dataIndex: "novPcsWh" },
         { title: `Nov In Coeff`, dataIndex: "novCoeffWh" },
         { title: `Dec In PCs`, dataIndex: "decPcsWh" },
-        { title: `Dec In Coeff`, dataIndex: "decCoeffWh" }
+        { title: `Dec In Coeff`, dataIndex: "decCoeffWh" },
+        { title:` Total In Pcs`,dataIndex: "WhPcsTotal"},
+        { title:` Total In Coeff`,dataIndex: "WhCoeffTotal"},
+
       );
     }
     let totalJanExfPre = 0;
@@ -1397,8 +1403,8 @@ export const MonthWiseReport = () => {
       totalNovExfLat += Number(row.novCoeffExf) || 0;
       totalDecExfPre += Number(row.decPcsExf) || 0;
       totalDecExfLat += Number(row.decCoeffExf) || 0;
-      totalExfPre += Number(row.totalPcsExf) || 0;
-      totalExfLat += Number(row.totalCoeffExf) || 0;
+      totalExfPre += Number(row.ExfPcsTotal) || 0;
+      totalExfLat += Number(row.ExfCoeffTotal) || 0;
       totalJanWhPre += Number(row.janPcsWh) || 0;
       totalJanWhLat += Number(row.janCoeffWh) || 0;
       totalFebWhPre += Number(row.febPcsWh) || 0;
@@ -1423,8 +1429,8 @@ export const MonthWiseReport = () => {
       totalNovWhLat += Number(row.novCoeffWh) || 0;
       totalDecWhPre += Number(row.decPcsWh) || 0;
       totalDecWhLat += Number(row.decCoeffWh) || 0;
-      totalWhPre += Number(row.totalPcsWh) || 0;
-      totalWhLat += Number(row.totalCoeffWh) || 0;
+      totalWhPre += Number(row.WhPcsTotal) || 0;
+      totalWhLat += Number(row.WhCoeffTotal) || 0;
     });
 
     const totalsPcsRow = {
@@ -1438,8 +1444,8 @@ export const MonthWiseReport = () => {
       marCoeffExf: totalMarExfLat,
       aprPcsExf: totalAprExfPre,
       aprCoeffExf: totalAprExfLat,
-      mayFxfPre: totalMayExfPre,
-      mayFxfLat: totalMayExfLat,
+      mayExfPre: totalMayExfPre,
+      mayExfLat: totalMayExfLat,
       junPcsExf: totalJunExfPre,
       junCoeffExf: totalJunExfLat,
       julPcsExf: totalJulExfPre,
@@ -1454,48 +1460,52 @@ export const MonthWiseReport = () => {
       novCoeffExf: totalNovExfLat,
       decPcsExf: totalDecExfPre,
       decCoeffExf: totalDecExfLat,
-      totalPcsExf: totalExfPre,
-      totalCoeffExf: totalExfLat,
+      ExfPcsTotal: totalExfPre,
+      ExfCoeffTotal: totalExfLat,
     };
     const totalsCoeffRow = {
       item: "Total",
       prod_plan_type: "",
-      janWhPre: totalJanWhPre,
-      janWhLat: totalJanWhLat,
-      febWhPre: totalFebWhPre,
-      febWhLat: totalFebWhLat,
-      marWhPre: totalMarWhPre,
-      marWhLat: totalMarWhLat,
-      aprWhPre: totalAprWhPre,
-      aprWhLat: totalAprWhLat,
-      mayWhPre: totalMayWhPre,
-      mayWhLat: totalMayWhLat,
-      junWhPre: totalJunWhPre,
-      junWhLat: totalJunWhLat,
-      julWhPre: totalJulWhPre,
-      julWhLat: totalJulWhLat,
-      augWhPre: totalAugWhPre,
-      augWhLat: totalAugWhLat,
-      sepWhPre: totalSepWhPre,
-      sepWhLat: totalSepWhLat,
-      octWhPre: totalOctWhPre,
-      octWhLat: totalOctWhLat,
-      novWhPre: totalNovWhPre,
-      novWhLat: totalNovWhLat,
-      decWhPre: totalDecWhPre,
-      decWhLat: totalDecWhLat,
-      totalWhPre: totalWhPre,
-      totalWhLat: totalWhLat,
+      janPcsWh: totalJanWhPre,
+      janCoeffWh: totalJanWhLat,
+      febPcsWh: totalFebWhPre,
+      febCoeffWh: totalFebWhLat,
+      marPcsWh: totalMarWhPre,
+      marCoeffWh: totalMarWhLat,
+      aprPcsWh: totalAprWhPre,
+      aprCoeffWh: totalAprWhLat,
+      mayPcsWh: totalMayWhPre,
+      mayCoeffWh: totalMayWhLat,
+      junPcsWh: totalJunWhPre,
+      junCoeffWh: totalJunWhLat,
+      julPcsWh: totalJulWhPre,
+      julCoeffWh: totalJulWhLat,
+      augPcsWh: totalAugWhPre,
+      augCoeffWh: totalAugWhLat,
+      sepPcsWh: totalSepWhPre,
+      sepCoeffWh: totalSepWhLat,
+      octPcsWh: totalOctWhPre,
+      octCoeffWh: totalOctWhLat,
+      novPcsWh: totalNovWhPre,
+      novCoeffWh: totalNovWhLat,
+      decPcsWh: totalDecWhPre,
+      decCoeffWh: totalDecWhLat,
+      totalPcsWh: totalWhPre,
+      totalCoeffWh: totalWhLat,
     };
-    if (selected == "ExFactory") {
-      excelsData.push(totalsPcsRow);
-    }
-    if (selected == "WareHouse") {
-      excelsData.push(totalsCoeffRow);
-    }
+
+    
 
     excel.addColumns(exportingColumns);
+    if (selected === "ExFactory") {
+      excelsData.push(totalsPcsRow);
+    }
+    if (selected === "WareHouse") {
+
+      excelsData.push(totalsCoeffRow);
+    }
     excel.addDataSource(excelsData);
+
     let secondTableColumns: IExcelColumn[] = [];
     if (selected == "ExFactory") {
       secondTableColumns.push(

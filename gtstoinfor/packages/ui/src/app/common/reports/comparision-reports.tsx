@@ -39,9 +39,7 @@ export const MonthWiseComparisionReport = () => {
     setPageSize(newPageSize);
   };
 
-  useEffect(()=> {
-    console.log(phaseExcel)
-  },[phaseExcel])
+ 
   useEffect(() => {
     getData(selected, tab);
     getTabs();
@@ -85,13 +83,13 @@ export const MonthWiseComparisionReport = () => {
         setDates([]);
       }
     })
-    service.getComparisionPhaseData(req).then((res) => {
-      if (res.status) {
-        setPhase(res.data)
-      } else {
-        setPhase([]);
-      }
-    })
+    // service.getComparisionPhaseData(req).then((res) => {
+    //   if (res.status) {
+    //     setPhase(res.data)
+    //   } else {
+    //     setPhase([]);
+    //   }
+    // })
     service.getComparisionPhaseExcelData(req).then((res) => {
       if (res.status) {
         setPhaseExcel(res.data)
@@ -926,7 +924,6 @@ export const MonthWiseComparisionReport = () => {
     )
   }
   if (selected === 'WareHouse') {
-    console.log(selected,'[[[[');
     
     columnsphase.push(
       {
@@ -1441,10 +1438,12 @@ export const MonthWiseComparisionReport = () => {
           const dec = [rec.pcsData[0].decPcs];
           decPre += Number(dec);
         }
-        if (rec.pcsData[0].jancoeff) {
+        if (rec.coeffData[0].janCoeff) {
           const jan = [rec.coeffData[0].janCoeff];
           janLat += Number(jan);
         }
+        console.log(rec.coeffData[0].janCoeff,'jannnnnnn');
+        
         if (rec.coeffData[0].febCoeff) {
           const feb = [rec.coeffData[0].febCoeff];
           febLat += Number(feb);
@@ -1693,13 +1692,13 @@ export const MonthWiseComparisionReport = () => {
                 size="small"
                 scroll={{ x: "max-content", y: 500 }}
                 summary={getTableSummary}
-                pagination={{
-                  onChange(current) {
-                    setPage(current);
-                  },
-                  // pageSize: 1,
-                }}
-
+                // pagination={{
+                //   onChange(current) {
+                //     setPage(current);
+                //   },
+                //   // pageSize: 1,
+                // }}
+                pagination={false}
 
               />
               <Table
