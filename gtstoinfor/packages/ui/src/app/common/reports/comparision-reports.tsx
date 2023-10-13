@@ -38,6 +38,10 @@ export const MonthWiseComparisionReport = () => {
     setPage(newPage);
     setPageSize(newPageSize);
   };
+
+  useEffect(()=> {
+    console.log(phaseExcel)
+  },[phaseExcel])
   useEffect(() => {
     getData(selected, tab);
     getTabs();
@@ -54,6 +58,7 @@ export const MonthWiseComparisionReport = () => {
   const handleChange = (val) => {
     setSelected(val)
     getData(val, tab)
+    getPhase()
 
   }
   const getPhase = () => {
@@ -703,11 +708,11 @@ export const MonthWiseComparisionReport = () => {
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map((item: any) => {
-          const v = parseFloat(item.v);
-          if (!isNaN(v)) {
+          const novCoeff = parseFloat(item.novCoeff);
+          if (!isNaN(novCoeff)) {
             return (
               <span>
-                {v.toLocaleString('en-IN', {
+                {novCoeff.toLocaleString('en-IN', {
                   maximumFractionDigits: 0
                 })}
               </span>
@@ -855,7 +860,7 @@ export const MonthWiseComparisionReport = () => {
 
       },
       {
-        title: "Production Plan Type Name",
+        title: "Production Plan Type",
         dataIndex: "prod_plan_type",
         render: (text, record, index) => (
           <th style={{ width: "100px" }}>
@@ -921,10 +926,20 @@ export const MonthWiseComparisionReport = () => {
     )
   }
   if (selected === 'WareHouse') {
+    console.log(selected,'[[[[');
+    
     columnsphase.push(
-      { title: "Item Name", dataIndex: "item" },
       {
-        title: "Production Plan Type Name",
+
+        title: "S No",
+        key: "sno",
+        width: 50,
+
+        render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+
+      },
+      {
+        title: "Production Plan Type",
         dataIndex: "prod_plan_type",
         render: (text, record, index) => (
           <th style={{ width: "100px" }}>
@@ -1004,7 +1019,7 @@ export const MonthWiseComparisionReport = () => {
 
       exportingColumns.push(
         { title: "Item Name", dataIndex: "item" },
-        { title: "Production Plan Type Name", dataIndex: "prod_plan_type", },
+        { title: "Production Plan Type ", dataIndex: "prod_plan_type", },
         { title: `Jan Pre`, dataIndex: "janExfPre", },
         { title: `Jan Lat`, dataIndex: "janExfLat", },
         { title: `Feb Pre`, dataIndex: "febExfPre", },
@@ -1037,7 +1052,7 @@ export const MonthWiseComparisionReport = () => {
     if (selected === 'WareHouse') {
       exportingColumns.push(
         { title: "Item Name", dataIndex: "item" },
-        { title: "Production Plan Type Name", dataIndex: "prod_plan_type", },
+        { title: "Production Plan Type", dataIndex: "prod_plan_type", },
         { title: `Jan Pre`, dataIndex: "janWhPre", },
         { title: `Jan Lat`, dataIndex: "janWhLat", },
         { title: `Feb Pre`, dataIndex: "febWhPre", },
@@ -1248,7 +1263,7 @@ export const MonthWiseComparisionReport = () => {
       // console.log('exfactory');
 
       secondTableColumns.push(
-        { title: "Production Plan Type Name", dataIndex: "prod_plan_type", },
+        { title: "Production Plan Type ", dataIndex: "prod_plan_type", },
         { title: `Jan Pre`, dataIndex: "janExfPre", },
         { title: `Jan Lat`, dataIndex: "janExfLat", },
         { title: `Feb Pre`, dataIndex: "febExfPre", },
@@ -1280,7 +1295,7 @@ export const MonthWiseComparisionReport = () => {
     }
     if (selected === 'WareHouse') {
       secondTableColumns.push(
-        { title: "Production Plan Type Name", dataIndex: "prod_plan_type", },
+        { title: "Production Plan Type ", dataIndex: "prod_plan_type", },
         { title: `Jan Pre`, dataIndex: "janWhPre", },
         { title: `Jan Lat`, dataIndex: "janWhLat", },
         { title: `Feb Pre`, dataIndex: "febWhPre", },
