@@ -17,12 +17,15 @@ import React, { useEffect, useState } from "react";
 import FabricDevelopmentTabs from "./fabric-development-tabs";
 import { BuyersService, EmployeeDetailsService, FabricDevelopmentService, FabricTypeService, LocationsService, ProfitControlHeadService, StyleService } from "@project-management-system/shared-services";
 import AlertMessages from "../common/common-functions/alert-messages";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FabricDevelopmentRequestQuality from "./fabric-development-quality-request";
 import { FabricDevelopmentRequestModel, StatusEnum } from "@project-management-system/shared-models";
 
 export interface FabricDevelopmentRequestProps {
+  placementForm:FormInstance<any>;
+  dynamicForm:FormInstance<any>
   
+
 }
 
 
@@ -39,6 +42,7 @@ export const FabricDevelopmentRequest = (props:FabricDevelopmentRequestProps) =>
   const [qualitieData,setqualitieData] = useState<any>()
   const [fabricFilelist,setFabricFilelist] = useState<any[]>([]);
   const [disable, setDisable] = useState<boolean>(false)
+  let navigate = useNavigate();
 
 
 
@@ -52,9 +56,34 @@ export const FabricDevelopmentRequest = (props:FabricDevelopmentRequestProps) =>
     const styleservice =  new StyleService()
     const service = new FabricDevelopmentService()
 
-   
-    
 
+
+
+   const filesArray = [];
+
+// Loop through the qualities in the data object
+for (const quality in qualitieData) {
+    if (qualitieData.hasOwnProperty(quality)) {
+        const qualitiesInfo = qualitieData[quality].qualitiesInfo;
+        // Loop through the qualitiesInfo array for each quality
+        for (const info of qualitiesInfo) {
+            // Check if the "file" object exists in the info
+            if (info.file) {
+                // Push the "file" object into the filesArray
+                filesArray.push(info.file);
+            }
+        }
+    }
+}
+filesArray.push(fabricFilelist)
+console.log(fabricFilelist,"fab")
+// Now, filesArray contains all the "file" objects
+console.log(filesArray,"######");
+  
+//  console.log(props?.dynamicForm?.getFieldValue("garmentQuantity"),"props.dyna")
+//  console.log(props?.placementForm?.getFieldValue("placement"),"props.place")
+
+ 
 
 
 
@@ -62,7 +91,7 @@ export const FabricDevelopmentRequest = (props:FabricDevelopmentRequestProps) =>
       const data =[]
       Object.values(qualitieData).forEach(val => { data.push(val)});
 
-      const req = new FabricDevelopmentRequestModel (values.locationId,values.styleId,values.pchId,values.buyerId,values.type,1,values.remarks,values.fabricResponsible,1,values.lightSourcePrimary,values.lightSourceSecondary,values.lightSourceTertiary,"","",data,StatusEnum.OPEN)
+      const req = new FabricDevelopmentRequestModel (values.locationId,values.styleId,values.pchId,values.buyerId,values.type,1,values.remarks,values.fabricResponsible,1,values.lightSourcePrimary,values.lightSourceSecondary,values.lightSourceTertiary,fabricFilelist[0]?.uid,"","",data,StatusEnum.OPEN)
   
       service.createFabricDevelopmentRequest(req).then((res)=>{
         console.log(res,"res.........")
@@ -77,13 +106,15 @@ export const FabricDevelopmentRequest = (props:FabricDevelopmentRequestProps) =>
             });
             formData.append('fabricRequestId', `${res.data.fabricRequestId}`)
             formData.append('name', 'fabric')
-            console.log(formData,"*****")
             service.fabricFileUpload(formData).then(fileres => {
                res.data.filePath = fileres.data
       
             })
         }
           onReset()
+          navigate("/fabricdevelopment/fabric-development-request/fabric-development-request-view");
+
+          setFabricFilelist([])
           message.success(res.internalMessage);
          
       } else{
@@ -98,17 +129,11 @@ export const FabricDevelopmentRequest = (props:FabricDevelopmentRequestProps) =>
     }
 
     const itemsInfo = (data) => {
-    console.log(data,"items")
   }
 
   const qualities = (data) => {
-    console.log(data,"request")
     setqualitieData(data)
   }
-  console.log(qualitieData,"request11")
-
-  console.log(fabricFilelist,"0000")
-
   
   
    
@@ -214,12 +239,6 @@ const getAllstyle=() =>{
 }
 
 
-  
-console.log(locationData,"143")
-  
-    
- console.log(fabricTypeData,"55")
-
 
  const fileuploadFieldProps: UploadProps = {
   multiple: false,
@@ -263,6 +282,8 @@ console.log(locationData,"143")
 
   const onReset = () => {
     form.resetFields();
+    // props.dynamicForm.resetFields();
+    // props.placementForm.resetFields();
   };
   
 
@@ -556,7 +577,7 @@ console.log(locationData,"143")
             </Col> */}
           </Row>
           <div>
-            <FabricDevelopmentTabs key="1"  qualities={qualities}/>
+            <FabricDevelopmentTabs key="1"  qualities={qualities} />
           </div>
           {/* <Card>
           <div>

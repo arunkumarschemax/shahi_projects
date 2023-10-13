@@ -475,7 +475,7 @@ export const AppRoutes = () => {
                    
                         </Route>
                 <Route path='fabricdevelopment'>
-                <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentRequest/>}/>
+                <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentRequest placementForm={undefined} dynamicForm={undefined}/>}/>
                 <Route path='fabric-development-request/fabric-development-request-view' element={<FabricDevelopmentView/>}/>
                 <Route path='fabric-development-request-quality/fabric-development-request-quality-view' element={<QualityTabsView/>}/>
 

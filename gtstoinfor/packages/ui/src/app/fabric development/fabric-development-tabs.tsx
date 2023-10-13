@@ -342,12 +342,10 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
 
 
   const onChange = (key: QualitiesEnum) => {
-    console.log('onChange', key)
     setActiveTab(key);
   };
 
   const itemsInfo = (data) => {
-    console.log(data)
   }
 
   const qualityInfo = (data, qualityKey) => {
@@ -384,9 +382,33 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
         itemsInfo={itemsInfo}
         qualityInfo={(data) => qualityInfo(data, `quality${index + 1}`)}
         activeTab={activeTab}
+    
       />
     ),
   }));
+
+
+ 
+const filesWithKeyNames = {};
+
+for (const qualityKey in qualitiesData) {
+  const qualityArray = qualitiesData[qualityKey];
+  for (const qualityInfo of qualityArray) {
+    if (qualityInfo.qualitiesInfo) {
+      for (const qualityItem of qualityInfo.qualitiesInfo) {
+        if (qualityItem.file) {
+          for (const fileKey in qualityItem.file) {
+            const fileName = qualityItem.file[fileKey].uid;
+            filesWithKeyNames[fileName] = qualityItem.file[fileKey];
+          }
+        }
+      }
+    }
+  }
+}
+
+
+console.log(filesWithKeyNames,"()()()");
 
 
 

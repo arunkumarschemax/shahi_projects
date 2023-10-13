@@ -40,8 +40,9 @@ export class FabricDevelopmentService {
         Entity.lightSourceSecondary = req.lightSourceSecondary
         Entity.lightSourceTertiary = req.lightSourceTertiary
         Entity.status = StatusEnum.OPEN
+        Entity.uid = req.uid
         Entity.fileName = req.fileName
-        Entity.fileName= req.filePath
+        Entity.filePath= req.filePath
         Entity.fabricQuantityEntity = []
         
 
@@ -72,6 +73,7 @@ export class FabricDevelopmentService {
               quantityInfoEntity.wastage = qualityDataInfo.wastage
               quantityInfoEntity.fabricQuantity = qualityDataInfo.fabricQuantity
               quantityInfoEntity.uomId = qualityDataInfo.uomId
+              quantityInfoEntity.uid = qualityDataInfo.uid
               quantityInfoEntity.fileName = qualityDataInfo.fileName
               quantityInfoEntity.filePath = qualityDataInfo.filePath
               quantityInfoEntity.status = StatusEnum.OPEN

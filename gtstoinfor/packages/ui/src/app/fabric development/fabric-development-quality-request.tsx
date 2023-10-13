@@ -36,38 +36,18 @@ export const  FabricDevelopmentRequestQuality = (props:ReqProps) => {
     }
   })
  
-  console.log(props.activeTab,"999888888777777788888888")
-  
-  // const onChange = () =>{
-  //   placementForm.validateFields().then((values) => {
-  //     console.log(values, 'onchange');
-  //     setFormData(values)
-
-  //   })
-    
-  //  }
-   
 
   const itemsData = (data) => {
-    console.log(data,"m3data")
     setItemData(data)
     props.itemsInfo(data)
   }
    
-  // console.log(itemData,"8585")
 
   const dynamicformData = (data) =>{
     console.log(data,'dynamicformData')
     setDynamicData(data)
 
     const qualityInfoObj = new  FabricRequestQualitiesRequest(placementForm.getFieldValue('quality'),placementForm.getFieldValue('placement'),placementForm.getFieldValue('width'),placementForm.getFieldValue('fabricDescription'),placementForm.getFieldValue('description'),data)
-  
-      // const qualities = []
-      // qualities.push(qualityInfoObj)
-      // setQuantitiesData(qualities)gh
-  
-    console.log(dynamicData,"1234")
-    console.log(qualityInfoObj)
     props.qualityInfo(qualityInfoObj)
   }
 
@@ -78,6 +58,7 @@ export const  FabricDevelopmentRequestQuality = (props:ReqProps) => {
   const setQualityInfo = (val) => {
     setIsQualityChanged(true)
   }
+  
 
      
   
