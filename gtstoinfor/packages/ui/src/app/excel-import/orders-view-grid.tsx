@@ -232,21 +232,16 @@ const Number=()=>{
         }
         return formattedDate;
     }
+    const getStartIndex = () => (page - 1) * pageSize + 1;
 
     const columns: any = [
     
         {
-            title: '#',
-            key: 'sno',
-            // width:50,
-            align:'left',
-            fixed:'left',
-
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1)),
-        
-
-
-        },
+            title: "S.No",
+            key: "sno",
+            responsive: ["sm"],
+            render: (text, record, index) => getStartIndex() + index,
+          },
         // {
         //     title: ' Planning Ssn Cd',
         //     dataIndex: 'planning_ssn_cd',
@@ -709,16 +704,15 @@ const Number=()=>{
                 dataSource={filteredData}
                     className="custom-table-wrapper"
                   size='small'
-scroll={{x:2000,y:500}}
-                  pagination={{
+                scroll={{x:2000,y:500}}
+                pagination={{
                     pageSize: 100, 
                     onChange(current, pageSize) {
                         setPage(current);
                         setPageSize(pageSize);
                     }
-                
-
-                }} onChange={onChange} bordered />
+                }}
+                  onChange={onChange} bordered />
             </Card>
         </div>
     )

@@ -562,4 +562,13 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/getYearDropdown')
+    async getYearDropdown(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getYearDropdown();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }

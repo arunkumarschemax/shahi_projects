@@ -5,7 +5,8 @@ import './header.css';
 import { useNavigate } from 'react-router-dom';
 // import logo from '../basic-layout/logo.png';
 import shahinew from './shahinew.png'
-import xpperal from './xpparel-logo.jpeg'
+// import xpperal from './xpparel-logo.jpeg'
+import xpperal from './xapp.png'
 
 const { Header } = Layout;
 const { useToken } = theme
@@ -62,8 +63,9 @@ export const CommonHeader = (props: IProps) => {
         <Col span={4}>
           <div className="logo" >
             {/* <img src={xpperal} style={{ width: '20%', marginTop: '5px',marginLeft:'20px' }} /> */}
-            <img src={xpperal} width={100} height={50} style={{marginLeft:'20px'}}></img>
-          </div>
+            <img src={xpperal} width={78} height={'auto'} style={{marginLeft:'20px',float:'left'}}></img>     
+            <div style={{fontSize:'30px',float:'left',color:'#2b706d',paddingLeft:'11px',fontWeight:'600'}}> XPPAREL</div>
+                 </div>
         </Col>
         <Col span={1} >
           {/* <span className='ant-pro-global-header-trigger'>
@@ -73,9 +75,9 @@ export const CommonHeader = (props: IProps) => {
             })}
           </span> */}
         </Col>
-        <Col span={4}></Col>
+        <Col span={1}></Col>
         <Col span={6}>
-          <span style={{ alignSelf: 'center', fontSize: 24, color: 'darkblue' }}><b>{'ORDER MANAGEMENT'}</b></span>
+          <span style={{ alignSelf: 'center',fontFamily:'sans-serif', fontSize: 24, color: '#0d89b0' }}><b>{'ORDER MANAGEMENT'}</b></span>
           {/* <Select  onSelect={(e) => {navigate('/'+e)}} className='header-search' showSearch  allowClear style={{width:'100%',marginBottom:'60px'}}  placeholder='search for forms and views' options={options} suffixIcon={<SearchOutlined style={{color:colorPrimary}}/>} /> */}
         </Col>
         {/* <Col span={4} style={{ textAlign: 'right' }}>
@@ -92,3 +94,5 @@ export const CommonHeader = (props: IProps) => {
     </Header>
   )
 }
+
+

@@ -427,59 +427,59 @@ const {Text}=Typography
             sorter: (a, b) => a.answered_status.localeCompare(b.answered_status),
             sortDirections: ["descend", "ascend"],
         },
-        {
-            title: "Item No",
-            dataIndex: "itemNo",
-            width:150,
-            render: (text, record) => {
-                if(record.answered_status != 'Accepted'){
+        // {
+        //     title: "Item No",
+        //     dataIndex: "itemNo",
+        //     width:150,
+        //     render: (text, record) => {
+        //         if(record.answered_status != 'Accepted'){
 
-                return (
-                    <Form>
-                        <Form.Item>
-                            <Input
-                                placeholder="Enter Item No"
-                                onChange={(e) => handleItemNoChange(e.target.value, record)}
-                            />
-                        </Form.Item>
-                    </Form>
-                );
-                }else{
-                    return <>{record.buyer_item_number?record.buyer_item_number:'-'}</>
-                }
-            },
-        },
+        //         return (
+        //             <Form>
+        //                 <Form.Item>
+        //                     <Input
+        //                         placeholder="Enter Item No"
+        //                         onChange={(e) => handleItemNoChange(e.target.value, record)}
+        //                     />
+        //                 </Form.Item>
+        //             </Form>
+        //         );
+        //         }else{
+        //             return <>{record.buyer_item_number?record.buyer_item_number:'-'}</>
+        //         }
+        //     },
+        // },
         
-        {
-            title: "Action",
-            dataIndex: "action",
-            width:100,
-            fixed:'right',
-            render: (value, record) => {
-                // const isEnabled = isActionButtonEnabled(record);
-                // if(record.answered_status != 'Accepted'){
+        // {
+        //     title: "Action",
+        //     dataIndex: "action",
+        //     width:100,
+        //     fixed:'right',
+        //     render: (value, record) => {
+        //         // const isEnabled = isActionButtonEnabled(record);
+        //         // if(record.answered_status != 'Accepted'){
 
-                    return (
-                        <Popconfirm
-                            title="Are you sure to approve"
-                            onConfirm={() => approveOrderStatus(record)}
-                            // disabled={record.answered_status == 'Accepted'}
-                            disabled= {record.answered_status !== 'Accepted' ? false : true}
+        //             return (
+        //                 <Popconfirm
+        //                     title="Are you sure to approve"
+        //                     onConfirm={() => approveOrderStatus(record)}
+        //                     // disabled={record.answered_status == 'Accepted'}
+        //                     disabled= {record.answered_status !== 'Accepted' ? false : true}
 
-                        >
-                            <Button 
-                            // disabled={!isEnabled}
-                            disabled= {record.answered_status !== 'Accepted' ? false : true}
-                            >Accept</Button>
-                        </Popconfirm>
-                    );
-                // }else{
-                //     return <></>
-                // }
-            },
+        //                 >
+        //                     <Button 
+        //                     // disabled={!isEnabled}
+        //                     disabled= {record.answered_status !== 'Accepted' ? false : true}
+        //                     >Accept</Button>
+        //                 </Popconfirm>
+        //             );
+        //         // }else{
+        //         //     return <></>
+        //         // }
+        //     },
             
             
-        },
+        // },
         
        
     ];
