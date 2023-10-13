@@ -195,7 +195,6 @@ export class DpomService {
         const headers = { 'AUTH_API_KEY': '$2a$10$UzaZDcs2ih0MpW12ozjvi.KgUrJyhdxR.Z64oVIwGbz8WmBL.JhDy' }
         try {
             const response = await axios.post(`https://businesscard.shahi.co.in/ShahiApiGate/nikeCo/getNikeCoDetails?poNo=${buyerPO}`, { headers });
-
             // Extract the relevant data from the response and return it
             const responseData = response.data;
             if (responseData.length > 0) {
@@ -205,7 +204,7 @@ export class DpomService {
             }
         } catch (error) {
             // Handle any errors that may occur during the HTTP request
-            console.error('Error:', error);
+            // console.error('Error:', error);
             throw error; // You can choose to re-throw the error or handle it differently
         }
     }
@@ -225,7 +224,7 @@ export class DpomService {
             }
         } catch (error) {
             // Handle any errors that may occur during the HTTP request
-            console.error('Error:', error);
+            // console.error('Error:', error);
             throw error; // You can choose to re-throw the error or handle it differently
         }
     }
@@ -245,7 +244,7 @@ export class DpomService {
             }
         } catch (error) {
             // Handle any errors that may occur during the HTTP request
-            console.error('Error:', error);
+            // console.error('Error:', error);
             throw error; // You can choose to re-throw the error or handle it differently
         }
     }
@@ -304,7 +303,6 @@ export class DpomService {
             coLineEntity.createdUser = 'nike'
             const saveEntity: COLineEntity = await transactionManager.getRepository(COLineEntity).save(coLineEntity);
             const data = await this.coLineRepository.find()
-            console.log(data)
             if (!saveEntity) {
                 await transactionManager.releaseTransaction()
                 return new CommonResponseModel(false, 0, 'something went wrong')
@@ -339,39 +337,37 @@ export class DpomService {
             entity.createdUser = 'API sync'
             const save = await transactionManager.getRepository(NikeFileUploadEntity).save(entity);
             for (const orderDetail of orderDetails.data) {
-                const CRMData1 = await this.getCRMOrderDetails1(orderDetail.poHeader.poNumber);
-                const CRMData2 = await this.getCRMOrderDetails2(CRMData1?.data[0]?.ORDNO);
-                const CRMData3 = await this.getCRMOrderDetails3(orderDetail.product.styleNumber);
-
-                if (CRMData1.status && CRMData2.status) {
+                const CRMData1 = await this.getCRMOrderDetails1('DV3934');
+                const CRMData2 = await this.getCRMOrderDetails2('2000590900');
+                const CRMData3 = await this.getCRMOrderDetails3('476F');
+                if (CRMData1.status) {
                     const data1 = CRMData1?.data[0];
-                    const data2 = CRMData2?.data[0];
+                    // const data2 = CRMData2?.data[0] ? CRMData2?.data[0] : null;
                     const data3 = CRMData3?.data[0];
-
                     const crmData = {
-                        item: data1?.ITEMNO,
-                        factory: data2?.plan_UNIT,
-                        customerOrder: data1?.ORDNO,
-                        coFinalApprovalDate: data1?.CO_FINAL_APP_DATE,
-                        planNo: data2?.plan_NUMB,
+                        item: data1?.itemno,
+                        factory: '', // data2?.plan_UNIT ? data2.plan_UNIT : null,
+                        customerOrder: data1?.ordno,
+                        coFinalApprovalDate: data1?.co_FINAL_APP_DATE,
+                        planNo: '', //data2?.plan_NUMB ? data2?.plan_NUMB : null,
                         truckOutDate: '',
                         actualShippedQty: 0,
-                        coPrice: data1?.PRICE,
+                        coQty: data1?.ord_QTY,
+                        coPrice: data1?.price,
                         shipToAddress: '',
-                        paymentTerm: data2?.pay_TERM_DESC,
+                        paymentTerm: '', //data2?.pay_TERM_DESC ? data2?.pay_TERM_DESC : null,
                         styleDesc: '',
                         fabricContent: '',
                         fabricSource: '',
-                        commission: data1?.COMMISION,
-                        PCD: data1?.PCD
+                        commission: data1?.commision,
+                        PCD: data1?.pcd
                     }
-
                     // Parse dates using moment
-                    const date3 = moment(orderDetail.sizes.sizePo.goodsAtConsolidatorDate, 'MM/DD/YYYY');
-                    const date4 = moment(orderDetail.poHeader.documentDate, 'MM/DD/YYYY');
+                    const date3 = moment(orderDetail.sizes.sizePo.goodsAtConsolidatorDate, 'YYYY-MM-DD');
+                    const date4 = moment(orderDetail.poHeader.documentDate, 'YYYY-MM-DD');
 
                     // Calculate the difference in days
-                    const daysDifference = date4.diff(date3);
+                    const daysDifference = date4.diff(date3, 'days');
                     const text = orderDetail.poLine.itemVas.valueAddedServiceInstructions ? orderDetail.poLine.itemVas.valueAddedServiceInstructions : ' '
                     //orderDetail.poLine.itemVas.valueAddedServiceInstructions;
                     const searchText = "HANGING IS REQUIRED";
@@ -472,7 +468,6 @@ export class DpomService {
             }
         } catch (error) {
             await transactionManager.releaseTransaction()
-            console.log(error);
             return new CommonResponseModel(false, 0, error)
         }
     }
@@ -878,8 +873,7 @@ export class DpomService {
             }
         } catch (error) {
             // Handle errors, log them, and return an error response if needed
-            console.error('Error in getFabricTrackerReport:', error);
-            return new CommonResponseModel(false, 0, 'An error occurred');
+            return new CommonResponseModel(false, 0, 'An error occurred', error);
         }
     }
 
@@ -1177,10 +1171,15 @@ export class DpomService {
         }
         const sizeDateMap = new Map<string, MarketingReportModel>();
         for (const rec of details) {
-
+            let coFinalAppDate;
+            if (rec.po_final_approval_date != 0 && rec.po_final_approval_date != null) {
+                coFinalAppDate = moment(rec.po_final_approval_date).format('MM/DD/YYYY')
+            } else {
+                coFinalAppDate = '-'
+            }
             if (!sizeDateMap.has(rec.po_and_line)) {
                 sizeDateMap.set(
-                    rec.po_and_line, new MarketingReportModel(moment(rec.last_modified_date).format('MM/DD/YYYY'), (rec.item).substring(0, 4), rec.factory, moment(rec.document_date).format('MM/DD/YYYY'), rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date ? moment(rec.po_final_approval_date).format('MM/DD/YYYY') : '-', rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac ? moment(rec.mrgac).format('MM/DD/YYYY') : '-', rec.ogac ? moment(rec.ogac).format('MM/DD/YYYY') : '-', rec.gac ? moment(rec.gac).format('MM/DD/YYYY') : '-', rec.truck_out_date ? moment(rec.truck_out_date).format('MM/DD/YYYY') : '-', rec.origin_receipt_date ? moment(rec.origin_receipt_date).format('MM/DD/YYYY') : '-', rec.factory_delivery_date ? moment(rec.factory_delivery_date).format('MM/DD/YYYY') : '-', rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_vas_pdf, rec.item_text, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.hanger, [])
+                    rec.po_and_line, new MarketingReportModel(moment(rec.last_modified_date).format('MM/DD/YYYY'), (rec.item).substring(0, 4), rec.factory, moment(rec.document_date).format('MM/DD/YYYY'), rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, coFinalAppDate, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac ? moment(rec.mrgac).format('MM/DD/YYYY') : '-', rec.ogac ? moment(rec.ogac).format('MM/DD/YYYY') : '-', rec.gac ? moment(rec.gac).format('MM/DD/YYYY') : '-', rec.truck_out_date ? moment(rec.truck_out_date).format('MM/DD/YYYY') : '-', rec.origin_receipt_date ? moment(rec.origin_receipt_date).format('MM/DD/YYYY') : '-', rec.factory_delivery_date ? moment(rec.factory_delivery_date).format('MM/DD/YYYY') : '-', rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_vas_pdf, rec.item_text, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.hanger, [])
                 )
             }
             sizeDateMap.get(rec.po_and_line).sizeWiseData.push(new MarketingReportSizeModel(rec.size_description, rec.size_qty, rec.gross_price_fob, rec.fob_currency_code, rec.shahi_confirmed_gross_price, rec.shahi_confirmed_gross_price_currency_code, rec.ne_inc_disc, rec.net_inc_disc_currency_code, rec.trading_net_inc_disc, rec.trading_net_currency_code, rec.legal_po_price, rec.legal_po_currency, rec.co_price, rec.co_price_currency, rec.crm_co_qty, rec.legal_po_qty, rec.actual_shipped_qty));
