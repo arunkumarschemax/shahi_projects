@@ -8,8 +8,9 @@ export class CompareOrdersFilterReq {
      warehouseToYear?: any;
      exFactoryFromDate?: any;
      exFactoryToDate?: any;
+     year?:number
 
-     constructor(orderNumber?: string,itemCode?: string,itemName?: string,warehouseFromDate?: any,warehouseFromYear?: any,      warehouseToDate?: any,warehouseToYear?: any,exFactoryFromDate?: any,exFactoryToDate?: any){
+     constructor(orderNumber?: string,itemCode?: string,itemName?: string,warehouseFromDate?: any,warehouseFromYear?: any,warehouseToDate?: any,warehouseToYear?: any,exFactoryFromDate?: any,exFactoryToDate?: any,year?:number){
         this.orderNumber = orderNumber;
         this.itemCode = itemCode;
         this.itemName = itemName;
@@ -19,5 +20,6 @@ export class CompareOrdersFilterReq {
         this.warehouseToYear = warehouseToYear;
         this.exFactoryFromDate = exFactoryFromDate;
         this.exFactoryToDate = exFactoryToDate;
+        this.year = year
      }
 }

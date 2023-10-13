@@ -67,18 +67,21 @@ const SeasonWiseReport = () => {
 
     const columnsWH: ColumnsType<any> = [
         {
-            title: "S No",
+            title: "#",
             key: "sno",
+            // width:"50px",
             render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1)),
         },
         {
           title: <div style={{textAlign: "center"}}>Item Code</div>,
           dataIndex: 'itemCode',
+          width:"80px"
         },
         {
           title:<div style={{textAlign: "center"}}>Item Name</div>,
           dataIndex: 'itemName',
-            width:"200px"
+            width:"200px",
+            // ellipsis: true,
         },
         {
             title: 'Month',
@@ -87,12 +90,14 @@ const SeasonWiseReport = () => {
                     title: `Jan`,
                     dataIndex: "january",
                     align:"right",
+                    // className:"season-table",
                     render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
                     title: `Feb`,
                     dataIndex: "february",
                     align:"right",
+                    width:"60px",
                     render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
@@ -141,6 +146,7 @@ const SeasonWiseReport = () => {
                     title: `Oct`,
                     dataIndex: "october",
                     align:"right",
+                    width:"60px",
                     render: (value) => (<span>{value.toLocaleString()}</span>),               
                 },
                 {
@@ -153,6 +159,7 @@ const SeasonWiseReport = () => {
                     title: `Dec`,
                     dataIndex: "december",
                     align:"right",
+                    width:"60px",
                     render: (value) => (<span>{value.toLocaleString()}</span>),              
                 },
             ]
@@ -169,14 +176,17 @@ const SeasonWiseReport = () => {
 
     const columnsEXF: ColumnsType<any> = [
         {
-            title: "S No",
+            title: "#",
             key: "sno",
+            // width:"50px",
+            align:"right",
             render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1)),
         },
         {
             title: <div style={{textAlign: "center"}}>Item Code</div>,
             align:"right",
             dataIndex: 'itemCode',
+            width:"80px"
         },
         {
             title:<div style={{textAlign: "center"}}>Item Name</div>,
@@ -244,6 +254,7 @@ const SeasonWiseReport = () => {
                     title: `Oct`,
                     dataIndex: "exfOct",
                     align:"right",
+                    // className:"season-table",
                     render: (value) => (<span>{value.toLocaleString()}</span>),                
                 },
                 {
@@ -628,9 +639,8 @@ const SeasonWiseReport = () => {
                 dataSource={data?.[0]}
                 columns={columnsWH}
                 summary={generateSummaryWH}
-                className="custom-table-wrapper"
-                // scroll={{x:1500,y:500}}
-                scroll={{x:'max-content'}}
+                className="custom-table-wrapper price-table"
+                scroll={{x:'max-content',y:500}}
                 pagination={{
                   pageSize: 100, 
                   onChange(current, pageSize) {
@@ -653,15 +663,16 @@ const SeasonWiseReport = () => {
                 bordered
                 dataSource={data?.[0]}
                 // scroll={{x:1500,y:500}}
-                scroll={{x:'max-content'}}
+                scroll={{x:'max-content',y:500}}
                 columns={columnsEXF}
                 summary={generateSummaryEXF}
-                className="custom-table-wrapper"
+                className="custom-table-wrapper price-table"
                 pagination={{
+                  pageSize: 100, 
                   onChange(current, pageSize) {
                       setPage(current);
                       setPageSize(pageSize);
-                  },
+                  }
               }}
               />
             ) : (
@@ -679,14 +690,15 @@ const SeasonWiseReport = () => {
                 dataSource={data?.[1]}
                 columns={columnsWH}
                 // scroll={{x:1500,y:500}}
-                scroll={{x:'max-content'}}
+                scroll={{x:'max-content',y:500}}
                 summary={generateSummaryWH}
-                className="custom-table-wrapper"
+                className="custom-table-wrapper price-table"
                 pagination={{
+                  pageSize: 100, 
                   onChange(current, pageSize) {
                       setPage(current);
                       setPageSize(pageSize);
-                  },
+                  }
               }}
               />
             ) : (
@@ -704,14 +716,15 @@ const SeasonWiseReport = () => {
                 dataSource={data?.[1]}
                 columns={columnsEXF}
                 // scroll={{x:1500,y:500}}
-                scroll={{x:'max-content'}}
+                scroll={{x:'max-content',y:500}}
                 summary={generateSummaryEXF}
-                className="custom-table-wrapper"
+                className="custom-table-wrapper price-table"
                 pagination={{
+                  pageSize: 100, 
                   onChange(current, pageSize) {
                       setPage(current);
                       setPageSize(pageSize);
-                  },
+                  }
               }}
               />
             ) : (
@@ -728,15 +741,16 @@ const SeasonWiseReport = () => {
                 bordered
                 dataSource={data?.[2]}
                 columns={columnsWH}
-                // scroll={{x:1500,y:500}}
-                scroll={{x:'max-content'}}
+                scroll={{x:'max-content',y:500}}
+                // scroll={{x:'max-content'}}
                 summary={generateSummaryWH}
-                className="custom-table-wrapper"
+                className="custom-table-wrapper price-table"
                 pagination={{
+                  pageSize: 100, 
                   onChange(current, pageSize) {
                       setPage(current);
                       setPageSize(pageSize);
-                  },
+                  }
               }}
               />
             ) : (
@@ -753,18 +767,16 @@ const SeasonWiseReport = () => {
                 bordered
                 dataSource={data?.[2]}
                 columns={columnsEXF}
-                // scroll={{x:1500,y:500}}
-                scroll={{x:'max-content'}}
+                scroll={{x:'max-content',y:500}}
+                // scroll={{x:'max-content'}}
                 summary={generateSummaryEXF}
-                className="custom-table-wrapper"
+                className="custom-table-wrapper price-table"
                 pagination={{
                   pageSize: 100, 
                   onChange(current, pageSize) {
                       setPage(current);
                       setPageSize(pageSize);
                   }
-              
-
               }}
               />
             ) : (
@@ -787,7 +799,7 @@ const SeasonWiseReport = () => {
             Download Excel
           </Button>
         ) : null}>
-          <Form layout="vertical" form={form} onFinish={reportSS}>
+          <Form layout="horizontal" form={form} onFinish={reportSS}>
             <Row gutter={16}>
               <Col xs={24} sm={24} md={8} lg={6} xl={4}>
                 <Form.Item label='Item Code' name='itemCode'>
@@ -847,14 +859,14 @@ const SeasonWiseReport = () => {
               </Select>
                 </Form.Item>
               </Col>
-              <Col xs={24} sm={24} md={4} lg={4} xl={3} style={{ marginTop: "22px", marginRight: "-50px", marginLeft:"40px" }}>
+              <Col xs={24} sm={24} md={4} lg={4} xl={3} style={{ marginRight: "-50px", marginLeft:"40px" }}>
                 <Form.Item>
                   <Button icon={<SearchOutlined />} htmlType="submit" type='primary'>
                     Search
                   </Button>
                 </Form.Item>
               </Col>
-              <Col xs={24} sm={24} md={4} lg={4} xl={2} style={{ marginTop: "22px" }}>
+              <Col xs={24} sm={24} md={4} lg={4} xl={2} >
                 <Form.Item>
                   <Button danger icon={<UndoOutlined />} onClick={OnReset}>
                     Reset

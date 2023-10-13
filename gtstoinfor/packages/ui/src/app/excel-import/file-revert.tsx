@@ -29,9 +29,13 @@ export function FileRevert() {
             if (res.status) {
                 setData(res.data)
                 setTrimData(res.data.filter(e => e.fileType === 'Trim Order'));
-                setPoData(res.data.filter(e => e.fileType === 'Projection Order'));            } else {
+                setPoData(res.data.filter(e => e.fileType === 'Projection Order'));            
+            } else {
+                setData([])
+                setTrimData([])
+                setPoData([])
                 message.error(res.internalMessage)
-            }
+            } 
         })
     }
 

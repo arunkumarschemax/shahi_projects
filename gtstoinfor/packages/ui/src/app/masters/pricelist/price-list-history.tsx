@@ -8,7 +8,7 @@ import AlertMessages from '../../common/common-functions/alert-messages';
 import {  ColumnProps, ColumnsType } from 'antd/es/table';
 import PriceListForm from './price-list-form';
 import { HistoryRequest, NewFilterDto, PriceListActivateDeactivateDto, PriceListDto } from '@project-management-system/shared-models';
-
+import './pricelist.css'
 
 export interface PriceListView { }
 
@@ -438,8 +438,8 @@ const getUploadedTime = () => {
       rowKey={record => record}
       columns={columns}
       dataSource={priceList}
-      scroll={{x:'max-content'}}
-      className="custom-table-wrapper"
+      scroll={{x:'max-content',y:500}}
+      className="custom-table-wrapper price-table"
       pagination={{
         pageSize: 100, 
         onChange(current, pageSize) {

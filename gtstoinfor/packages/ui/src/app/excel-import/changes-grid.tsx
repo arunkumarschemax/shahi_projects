@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, Tabs, TabsProps, Tag, Tooltip, Typography } from 'antd';
+import { Alert, Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, Tabs, TabsProps, Tag, Tooltip, Typography } from 'antd';
 import { OrdersService } from '@project-management-system/shared-services';
 import { ArrowDownOutlined, ArrowUpOutlined, FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import moment from 'moment';
@@ -27,7 +27,7 @@ const ChangesGrid = () => {
     const [quantitydata, setQuantitydata] = useState([])
     const [diffquantitydata, setDiffquantitydata] = useState([])
     const [orderNumbers,setOrderNumbers] = useState<any[]>([])
-
+    const [yearData,setYearData] = useState<any[]>([])
 
 
     useEffect(() => {
@@ -35,7 +35,16 @@ const ChangesGrid = () => {
         getQtyDifChangeData()
         getItemCode()
         getOrderNumber()
+        getYearDropdown()
     }, [])
+
+    const getYearDropdown = () => {
+        service.getYearDropdown().then(res => {
+            if(res.status){
+                setYearData(res.data)
+            }
+        })
+    }
 
     const getOrderNumber = () => {
         service.getOrderNumberDropDownInCompare().then((res) => {
@@ -70,6 +79,9 @@ const ChangesGrid = () => {
             req.exFactoryFromDate = (form.getFieldValue('exFactory')[0]).format('YYYY-MM-DD')
             req.exFactoryToDate = (form.getFieldValue('exFactory')[1]).format('YYYY-MM-DD')
         } 
+        if(form.getFieldValue('year') !== undefined){
+            req.year = form.getFieldValue('year')
+        }  
         service.getQtyDifChangeData(req).then((res) => {
             if (res.status) {
                 setDifferenceQtyData(res.data)
@@ -100,7 +112,10 @@ const ChangesGrid = () => {
         if(form.getFieldValue('exFactory') !== undefined){
             req.exFactoryFromDate = (form.getFieldValue('exFactory')[0]).format('YYYY-MM-DD')
             req.exFactoryToDate = (form.getFieldValue('exFactory')[1]).format('YYYY-MM-DD')
-        } 
+        }
+        if(form.getFieldValue('year') !== undefined){
+            req.year = form.getFieldValue('year')
+        }  
         service.getQtyChangeData(req).then((res) => {
             if (res.status) {
                 setQtyData(res.data)
@@ -479,10 +494,10 @@ const ChangesGrid = () => {
                     {Number(record.Diff) === 0 ? '-' : ''}
                     {Number(record.Diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.Diff).toLocaleString('en-IN', {
                         maximumFractionDigits: 0
-                    })} </span> : ''}
+                    })}<ArrowDownOutlined style={{ color: "red" }} /> </span> : ''}
                     {Number(record.Diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.Diff).toLocaleString('en-IN', {
                         maximumFractionDigits: 0
-                    })} </span> : ''}
+                    })}<ArrowUpOutlined style={{ color: "green" }} /> </span> : ''}
                 </>
             )
             }
@@ -499,37 +514,37 @@ const ChangesGrid = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
-            title: 'Item code',
+            title: <div style={{textAlign:'center'}}>Item code</div>,
             dataIndex: 'item_cd'
         },
         {
-            title: 'Item Name',
+            title: <div style={{textAlign:'center'}}>Item Name</div>,
             dataIndex: 'item',
             sorter: (a, b) => a.item?.localeCompare(b.item),
             sortDirections: [ "ascend","descend"],
         },
         // {
-        //     title: 'Year',
+        //     title: <div style={{textAlign:'center'}}>Year</div>,
         //     dataIndex: 'year',
         //     sorter: (a, b) => a.year?.localeCompare(b.year),
         //     sortDirections: [ "ascend","descend"],
         // },
         // {
-        //     title: 'Warehouse',
+        //     title: <div style={{textAlign:'center'}}>Warehouse</div>,
         //     dataIndex: 'wh',
         //     render: (text, record) => {
         //         return record.wh ? moment(record.wh).format('MM-DD') : '-'
         //     }
         // },
         // {
-        //     title: 'Ex Factory',
+        //     title: <div style={{textAlign:'center'}}>Ex Factory</div>,
         //     dataIndex: 'planned_exf',
         //     render: (text, record) => {
         //         return record.planned_exf ? moment(record.planned_exf).format('YYYY-MM-DD') : '-'
         //     }
         // },
         {
-            title: 'Previous Total Order Quantity',
+            title: <div style={{textAlign:'center'}}>Previous Total Order Quantity</div>,
             dataIndex: 'old_qty_value',
             align: 'right',
             sorter: (a, b) => Number(a.old_qty_value) - Number(b.old_qty_value),
@@ -541,7 +556,7 @@ const ChangesGrid = () => {
             )
         },
         {
-            title: 'Revised Total Order Quantity',
+            title: <div style={{textAlign:'center'}}>Revised Total Order Quantity</div>,
             dataIndex: 'new_qty_value',
             align: 'right',
             sorter: (a, b) => Number(a.new_qty_value) - Number(b.new_qty_value),
@@ -563,7 +578,7 @@ const ChangesGrid = () => {
             )
         },
         {
-            title: 'Difference',
+            title: <div style={{textAlign:'center'}}>Difference</div>,
             dataIndex: 'diff',
             align: 'right',
             sorter: (a, b) => Number(a.diff) - Number(b.diff),
@@ -573,10 +588,10 @@ const ChangesGrid = () => {
                     {Number(record.diff) === 0 ? 0 : ''}
                     {Number(record.diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.diff).toLocaleString('en-IN', {
                         maximumFractionDigits: 0
-                    })} </span> : ''}
+                    })}<ArrowDownOutlined style={{ color: "red" }} /> </span> : ''}
                     {Number(record.diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.diff).toLocaleString('en-IN', {
                         maximumFractionDigits: 0
-                    })} </span> : ''}
+                    })} <ArrowUpOutlined style={{ color: "green" }} /></span> : ''}
                 </>
             )
         }
@@ -591,7 +606,8 @@ const ChangesGrid = () => {
         {
             key: '1',
             label: <b>Order Wise Quantity Variance: {qtyData?.length} </b>,
-            children: <Table className="custom-table-wrapper"
+            children: (
+                qtyData.length > 0 ?(<Table className="custom-table-wrapper"
             bordered dataSource={qtyData} columns={orderWisecolumns}
             // scroll={{x:1000,y:500}}
             scroll={{x:'max-content'}}
@@ -637,12 +653,16 @@ const ChangesGrid = () => {
             }
             
             
-            />,
+            />) : (
+                <Alert message="No data available" type="warning" showIcon style={{ width: "140px", margin: "auto" }}/>
+              )
+            ),
         },
         {
             key: '2',
             label: <b>Item Wise Quantity Variance: {differenceQtyData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered
+            children: (
+                differenceQtyData.length > 0 ?(<Table className="custom-table-wrapper" bordered
             dataSource={differenceQtyData} columns={ItemWisecolumns} pagination={false}
             // scroll={{x:1000,y:500}}
             scroll={{x:'max-content'}}
@@ -684,7 +704,11 @@ const ChangesGrid = () => {
                     );
                 }
                 }
-            />,
+            />
+            ) : (
+                <Alert message="No data available" type="warning" showIcon style={{ width: "140px", margin: "auto" }}/>
+              )
+            ),
         },
     ];
 
@@ -701,8 +725,8 @@ const ChangesGrid = () => {
             onClick={exportExcel}
             icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
             <Form form={form} layout={"vertical"}  onFinish={getFilterdData}>
-                <Row gutter={[24, 24]}>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 4 }}>
+                <Row gutter={8}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 3 }}>
                         <Form.Item name="orderNumber" label="Order Plan Number">
                     <Select placeholder="Select order Number" showSearch allowClear optionFilterProp="children">
                         {orderNumbers?.map((e) => {
@@ -714,7 +738,7 @@ const ChangesGrid = () => {
                     </Select>
                     </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 4 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 3 }}>
                     <Form.Item name="itemCode" label="Item Code">
               <Select placeholder="Select Item Code" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
                 {itemCode?.map((e) => {
@@ -746,6 +770,18 @@ const ChangesGrid = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
                         <Form.Item name='exFactory' label='Ex Factory'>
                             <RangePicker style={{width:'100'}}/>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 3 }}>
+                        <Form.Item name='year' label='Year'>
+                        <Select placeholder="Select Year" showSearch allowClear optionFilterProp="children">
+                        {yearData.map((e) => {
+                        return (
+                            <Option key={e.year} value={e.year}>{e.year}
+                            </Option>
+                        );
+                        })}
+                        </Select>
                         </Form.Item>
                     </Col>
                     </Row>
