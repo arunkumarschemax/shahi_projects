@@ -1,7 +1,7 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { MarketingModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 import { NikeService } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag, Statistic } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag, Statistic, Modal } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { ColumnsType } from 'antd/es/table';
@@ -12,6 +12,7 @@ import CountUp from 'react-countup';
 import Highlighter from 'react-highlight-words';
 import { Link, useNavigate } from 'react-router-dom';
 import { diffChars } from 'diff';
+import PoDetailedview from './reports/po-detailed-view';
 const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 
 const PPMReport = () => {
@@ -48,6 +49,9 @@ const PPMReport = () => {
   let poFilterData
   const [tableLoading, setTableLoading] = useState<boolean>(false)
   const formatter = (value: number) => <CountUp end={value} separator="," />;
+  const [isModalOpen1, setIsModalOpen1] = useState(false);
+  const [poLineProp,setPoLineProp] = useState<any>([])
+
 
 
 
@@ -69,6 +73,12 @@ const PPMReport = () => {
 
   }, [])
 
+
+
+const cancelHandle = () => {
+    setIsModalOpen1(false);
+
+};
 
   const getProductCode = () => {
     service.getPpmProductCodeForMarketing().then(res => {
@@ -1330,7 +1340,7 @@ const PPMReport = () => {
         fixed: 'left',
         render: (text, record) => {
           return <>
-            <Button type='link' onClick={e => { DetailedView(record.poAndLine) }}>{record.poAndLine}</Button>
+            <Button type='link' onClick={() => {showModal1(record) }}>{record.poAndLine}</Button>
           </>
         }
       },
@@ -3071,12 +3081,22 @@ const PPMReport = () => {
     );
 
   }
+  const showModal1 = (record) => {
+    setPoLineProp(record)
+
+    setIsModalOpen1(true);
+   // DetailedView(record);
+    // console.log(poLineProp,"record")
+};
+//  console.log(poLineProp,"record")
 
   const DetailedView = (record: any) => {
     poFilterData = filterData.filter(item => item.poAndLine == record)
-    console.log(poFilterData)
-    navigate('/Reports/po-detailed-view', { state: { data: poFilterData } })
+    // console.log(poFilterData)
+    // showModal1(record)
+    // navigate('/Reports/po-detailed-view', { state: { data: poFilterData } })
   }
+  
 
   return (
     <>
@@ -3343,6 +3363,21 @@ const PPMReport = () => {
         </Row><br></br>
 
         {renderReport(filterData)}
+        <Modal
+                    className='print-docket-modal'
+                    key={'modal1' + Date.now()}
+                    width={'700%'}
+                    style={{ top: 30, alignContent: 'center' }}
+                    visible={isModalOpen1}
+                    title={<React.Fragment>
+                    </React.Fragment>}
+                    onCancel={cancelHandle}
+                    footer={[ ]}
+                >
+                    {isModalOpen1 ? <PoDetailedview data={{ poLineProp }} />:<></>}
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Button size='large' onClick={cancelHandle} style={{ color: 'white', backgroundColor:'red', flexDirection: 'column-reverse' }}>Close</Button></div>
+                </Modal>
       </Card>
     </>
   )

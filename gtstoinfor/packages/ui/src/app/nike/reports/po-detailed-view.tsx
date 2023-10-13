@@ -1,3 +1,4 @@
+import { PpmDetails } from "@project-management-system/shared-models";
 import { Button, Card, Descriptions, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import moment from "moment";
@@ -5,14 +6,20 @@ import React, { useRef } from "react";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-export function PoDetailedview() {
+export interface Props {
+  data: any
+}
+
+export function PoDetailedview(props: Props) {
     const [page,setPage] = useState<number>(1);
     const [sizeData, setSizeData] = useState<any[]>([])
     let location = useLocation();
-    const stateData = location.state;
+    // const stateData = location.state;
 
 
-  //  console.log(sizeData)
+
+    
+
     const columns: ColumnsType<any> = [
     {
       title: "S.No",
@@ -31,26 +38,22 @@ export function PoDetailedview() {
     {
       title: 'Trading Co Net including discounts',
       dataIndex: 'trConetIncludingDiscCurrencyCode',
-      // sorter: (a, b) => a.description.localeCompare(b.description),
-      // sortDirections: ["ascend", "descend"],
+
     },
     {
       title: 'Trading CoNet Including Disc CurrencyCode',
       dataIndex: 'trConetIncludingDiscCurrencyCode',
-      // sorter: (a, b) => a.description.localeCompare(b.description),
-      // sortDirections: ["ascend", "descend"],
+
     },
     {
       title: 'Legal Po Price',
       dataIndex: 'legalPoPrice',
-      // sorter: (a, b) => a.sourceName.localeCompare(b.sourceName),
-      // sortDirections: ["ascend", "descend"],
+
     },
     {
       title: 'Legal Po Price Currency',
       dataIndex: 'legalPoCurrencyCode',
-      // sorter: (a, b) => a.sourceName.localeCompare(b.sourceName),
-      // sortDirections: ["ascend", "descend"],
+
     },
     {
       title: 'Co Price',
@@ -80,8 +83,7 @@ export function PoDetailedview() {
     {
       title: 'Legal Po Quantity',
        dataIndex: 'legalPoQty',
-        // sorter: (a, b) => a.sourceName.localeCompare(b.sourceName),
-        // sortDirections: ["ascend", "descend"],
+
     },
     {
       title: 'Diff Of Quantity',
@@ -96,8 +98,6 @@ export function PoDetailedview() {
     {
       title: 'Actual Shipped quantity',
       dataIndex: 'actualShippedQty',
-    //   sorter: (a, b) => a.actualShippedQty.localeCompare(b.actualShippedQty),
-    //   sortDirections: ["ascend", "descend"],
     },
     {
       title: 'Actual Ship %',
@@ -114,63 +114,64 @@ export function PoDetailedview() {
   
     ];
     return(
-        <Card title={<span style={{ color: 'black' }}> Detailed View - <span style={{color:'black'}}>{stateData?.data[0]?.purchaseOrderNumber?stateData?.data[0]?.purchaseOrderNumber:''
-        }</span></span>}  headStyle={{ fontWeight: 'bold' }} extra={<Link to='/Reports/ppm-report' ><span style={{color:'white'}} ><Button className='panel_button' >View </Button> </span></Link>}>
+        <Card title={<span style={{ color: 'black' }}> Detailed View - <span style={{color:'#0A93E1  '}}>{props?.data?.poLineProp?.purchaseOrderNumber?props?.data?.poLineProp?.purchaseOrderNumber:''
+        }</span></span>}  headStyle={{ fontWeight: 'bold' }} extra={<Link to='/Reports/ppm-report' ><span style={{color:'white'}} >
+          {/* <Button className='panel_button' >View </Button> */}
+           </span></Link>}>
             <span>
                 <Descriptions  style={{ alignItems: 'right' }} column={4}>
-                    <Descriptions.Item label={'Po + Line'}>{stateData.data[0].poAndLine}</Descriptions.Item>
-                    <Descriptions.Item label={'Document Date'}>{stateData?.data[0]?.documentDate?moment(stateData.data[0].documentDate).format('YYYY-MM-DD'):'-'} </Descriptions.Item>
-                    <Descriptions.Item label={'LineItem Status'}>{}</Descriptions.Item>
-                    <Descriptions.Item label={'Document Type Code'}>{stateData?.data[0]?.docTypeCode?stateData?.data[0]?.docTypeCode:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Style Number'}>{stateData?.data[0]?.styleNumber?stateData?.data[0]?.styleNumber:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Product Code'}>{stateData?.data[0]?.productCode?stateData?.data[0]?.productCode:'-'}             </Descriptions.Item>
-                    <Descriptions.Item label={'Color'}>{stateData?.data[0]?.colorDesc?stateData?.data[0]?.colorDesc:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Description'}>{}</Descriptions.Item>
-                    <Descriptions.Item label={'Planning Season'}>{stateData?.data[0]?.planningSeasonCode?stateData?.data[0]?.planningSeasonCode:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'CO'}>{}</Descriptions.Item>
-                    <Descriptions.Item label={'CO Final ApprovalDate'}>{stateData?.data[0]?.coFinalApprovalDate?moment(stateData.data[0].coFinalApprovalDate).format('YYYY-MM-DD'):'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Plan No'}>{stateData?.data[0]?.planNo?stateData?.data[0]?.planNo:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Category Code'}>{stateData?.data[0]?.categoryCode?stateData?.data[0]?.categoryCode:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Category Description'}>{stateData?.data[0]?.categoryDesc?stateData?.data[0]?.categoryDesc:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Destination'}>{stateData?.data[0]?.destinationCountry?stateData?.data[0]?.destinationCountry:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Country Code'}>{stateData?.data[0]?.destinationCountryCode?stateData?.data[0]?.destinationCountryCode:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'geo Code'}>{stateData?.data[0]?.geoCode?stateData?.data[0]?.geoCode:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Plant Code'}>{stateData?.data[0]?.plant?stateData?.data[0]?.plant:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Plant Name'}>{stateData?.data[0]?.plantName?stateData?.data[0]?.plantName:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'UPC'}>{stateData?.data[0]?.destinationCountryCode?stateData?.data[0]?.destinationCountryCode:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'MRGAC'}>{stateData?.data[0]?.MRGAC?stateData?.data[0]?.MRGAC:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'OGAC'}>{stateData?.data[0]?.OGAC?stateData?.data[0]?.OGAC:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'GAC'}>{stateData?.data[0]?.GAC?stateData?.data[0]?.GAC:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Shipping Type'}>{stateData?.data[0]?.shippingType?stateData?.data[0]?.shippingType:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Mode of transport'}>{stateData?.data[0]?.modeOfTransportationCode?stateData?.data[0]?.modeOfTransportationCode:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Transportation'}>{}</Descriptions.Item>
-                    <Descriptions.Item label={'Inco Terms'}>{stateData?.data[0]?.inCoTerms?stateData?.data[0]?.inCoTerms:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Inventory Segment Code'}>{stateData?.data[0]?.inventorySegmentCode?stateData?.data[0]?.inventorySegmentCode:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Purchase Group Name'}>{stateData?.data[0]?.purchaseGroupName?stateData?.data[0]?.purchaseGroupName:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Total Item Quantity'}>{stateData?.data[0]?.totalItemQty?stateData?.data[0]?.totalItemQty:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Ship TO Address Legal po'}>{stateData?.data[0]?.shipToAddressLegalPO?stateData?.data[0]?.shipToAddressLegalPO:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Ship TO Address DIA'}>{stateData?.data[0]?.shipToAddressDIA?stateData?.data[0]?.shipToAddressDIA:'-'}</Descriptions.Item>
-                    <Descriptions.Item label={'Diff Of Shipp TO Address'}>{}</Descriptions.Item>
-                    <Descriptions.Item label={'CAB'}>{stateData?.data[0]?.CABCode?stateData?.data[0]?.CABCode:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#26678C' }}>Po + Line</span>} >{props.data.poLineProp.poAndLine}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Document Date</span>} >{props.data.poLineProp.documentDate?moment(props.data.poLineProp.documentDate).format('YYYY-MM-DD'):'-'} </Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>LineItem Status</span>} >{props.data.poLineProp.DPOMLineItemStatus}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Document Type Code</span>} >{props.data.poLineProp.docTypeCode?props.data.poLineProp.docTypeCode:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Style Number</span>}>{props.data.poLineProp.styleNumber?props.data.poLineProp.styleNumber:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Product Code</span>}>{props.data.poLineProp.productCode?props.data.poLineProp.productCode:'-'}             </Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Color</span>}>{props.data.poLineProp.colorDesc?props.data.poLineProp.colorDesc:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Description</span>} >{}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Planning Season</span>}>{props.data.poLineProp.planningSeasonCode?props.data.poLineProp.planningSeasonCode:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>CO</span>}>{props.data.poLineProp.customerOrder}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>CO Final ApprovalDate</span>}>{props.data.poLineProp.coFinalApprovalDate?moment(props.data.poLineProp.coFinalApprovalDate).format('YYYY-MM-DD'):'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Plan No</span>}>{props.data.poLineProp.planNo?props.data.poLineProp.planNo:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Category Code</span>}>{props.data.poLineProp.categoryCode?props.data.poLineProp.categoryCode:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Category Description</span>}>{props.data.poLineProp.categoryDesc?props.data.poLineProp.categoryDesc:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Destination</span>}>{props.data.poLineProp.destinationCountry?props.data.poLineProp.destinationCountry:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Country Code</span>}>{props.data.poLineProp.destinationCountryCode?props.data.poLineProp.destinationCountryCode:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>geo Code</span>}>{props.data.poLineProp.geoCode?props.data.poLineProp.geoCode:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Plant Code</span>}>{props.data.poLineProp.plant?props.data.poLineProp.plant:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Plant Name</span>}>{props.data.poLineProp.plantName?props.data.poLineProp.plantName:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>UPC</span>}>{props.data.poLineProp.destinationCountryCode?props.data.poLineProp.destinationCountryCode:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>MRGAC</span>}>{props.data.poLineProp.MRGAC?props.data.poLineProp.MRGAC:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>OGAC</span>}>{props.data.poLineProp.OGAC?props.data.poLineProp.OGAC:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>GAC</span>}>{props.data.poLineProp.GAC?props.data.poLineProp.GAC:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Shipping Type</span>}>{props.data.poLineProp.shippingType?props.data.poLineProp.shippingType:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Mode of transport</span>}>{props.data.poLineProp.modeOfTransportationCode?props.data.poLineProp.modeOfTransportationCode:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Transportation</span>}>{props.data.poLineProp.modeOfTransportationCode}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Inco Terms</span>}>{props.data.poLineProp.inCoTerms?props.data.poLineProp.inCoTerms:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Inventory Segment Code</span>}>{props.data.poLineProp.inventorySegmentCode?props.data.poLineProp.inventorySegmentCode:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Purchase Group Name</span>}>{props.data.poLineProp.purchaseGroupName?props.data.poLineProp.purchaseGroupName:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Total Item Quantity</span>}>{props.data.poLineProp.totalItemQty?props.data.poLineProp.totalItemQty:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Ship TO Address Legal po</span>}>{props.data.poLineProp.shipToAddressLegalPO?props.data.poLineProp.shipToAddressLegalPO:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Ship TO Address DIA</span>}>{props.data.poLineProp.shipToAddressDIA?props.data.poLineProp.shipToAddressDIA:'-'}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>Diff Of Shipp TO Address</span>}>{}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#0C486A' }}>CAB</span>}>{props.data.poLineProp.CABCode?props.data.poLineProp.CABCode:'-'}</Descriptions.Item>
                 </Descriptions>
             </span>
-            <Card>
+            
      <Table columns={columns} 
       className="custom-table-wrapper"
-     dataSource={stateData.data[0].sizeWiseData} 
+       dataSource={props.data.poLineProp.sizeWiseData} 
      bordered
      rowKey={record => record.id}
         size='small'
-       pagination={{
-        onChange(current) {
-          setPage(current);
-        }
-      }}
+      //  pagination={{
+      //   onChange(current) {
+      //     setPage(current);
+      //   }
+      // }}
       scroll={{ x: 'max-content' }}
        />
-            </Card>
-
         </Card>
+  
     )
 }
 export default PoDetailedview;
