@@ -72,36 +72,37 @@ const SeasonWiseReport = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1)),
         },
         {
-            title: 'Item code',
-            dataIndex: 'itemCode',
+          title: <div style={{textAlign: "center"}}>Item Code</div>,
+          dataIndex: 'itemCode',
         },
         {
-            title: 'Item Name',
-            dataIndex: 'itemName',
+          title:<div style={{textAlign: "center"}}>Item Name</div>,
+          dataIndex: 'itemName',
+            width:"200px"
         },
         {
             title: 'Month',
             children :[
                 {
-                    title: `January`,
+                    title: `Jan`,
                     dataIndex: "january",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
-                    title: `February`,
+                    title: `Feb`,
                     dataIndex: "february",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
-                    title: `March`,
+                    title: `Mar`,
                     dataIndex: "march",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
-                    title: `April`,
+                    title: `Apr`,
                     dataIndex: "april",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),
@@ -113,43 +114,43 @@ const SeasonWiseReport = () => {
                     render: (value) => (<span>{value.toLocaleString()}</span>),              
                 },
                 {
-                    title: `June`,
+                    title: `Jun`,
                     dataIndex: "june",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),               
                 },
                 {
-                    title: `July`,
+                    title: `Jul`,
                     dataIndex: "july",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),                
                 },
                 {
-                    title: `August`,
+                    title: `Aug`,
                     dataIndex: "august",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),               
                 },
                 {
-                    title: `September`,
+                    title: `Sep`,
                     dataIndex: "september",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
-                    title: `October`,
+                    title: `Oct`,
                     dataIndex: "october",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),               
                 },
                 {
-                    title: `November`,
+                    title: `Nov`,
                     dataIndex: "november",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),               
                 },
                 {
-                    title: `December`,
+                    title: `Dec`,
                     dataIndex: "december",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),              
@@ -157,8 +158,8 @@ const SeasonWiseReport = () => {
             ]
         },
         {
-            title: 'Total',
-            dataIndex: 'whTotal',
+          title:<div style={{textAlign: "center"}}>Total</div>,
+          dataIndex: 'whTotal',
             align: 'right',
             width:"100px",
             render: (text, record) => (<strong>{text.toLocaleString()}</strong>),
@@ -173,11 +174,12 @@ const SeasonWiseReport = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1)),
         },
         {
-            title: 'Item code',
+            title: <div style={{textAlign: "center"}}>Item Code</div>,
+            align:"right",
             dataIndex: 'itemCode',
         },
         {
-            title: 'Item Name',
+            title:<div style={{textAlign: "center"}}>Item Name</div>,
             dataIndex: 'itemName',
         },
         {
@@ -185,25 +187,25 @@ const SeasonWiseReport = () => {
             // dataIndex: 'new_val',
             children :[
                 {
-                    title: `January`,
+                    title: `Jan`,
                     dataIndex: "exfJan",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
-                    title: `February`,
+                    title: `Feb`,
                     dataIndex: "exfFeb",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
-                    title: `March`,
+                    title: `Mar`,
                     dataIndex: "exfMarch",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
-                    title: `April`,
+                    title: `Apr`,
                     dataIndex: "exfApril",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),
@@ -215,43 +217,43 @@ const SeasonWiseReport = () => {
                     render: (value) => (<span>{value.toLocaleString()}</span>),                
                 },
                 {
-                    title: `June`,
+                    title: `Jun`,
                     dataIndex: "exfJune",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),                
                 },
                 {
-                    title: `July`,
+                    title: `Jul`,
                     dataIndex: "exfJuly",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),                
                 },
                 {
-                    title: `August`,
+                    title: `Aug`,
                     dataIndex: "exfAug",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),                
                 },
                 {
-                    title: `September`,
+                    title: `Sep`,
                     dataIndex: "exfSep",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
-                    title: `October`,
+                    title: `Oct`,
                     dataIndex: "exfOct",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),                
                 },
                 {
-                    title: `November`,
+                    title: `Nov`,
                     dataIndex: "exfNov",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),                
                 },
                 {
-                    title: `December`,
+                    title: `Dec`,
                     dataIndex: "exfDec",
                     align:"right",
                     render: (value) => (<span>{value.toLocaleString()}</span>),                
@@ -259,7 +261,7 @@ const SeasonWiseReport = () => {
             ]
         },
         {
-            title: 'Total',
+            title:<div style={{textAlign: "center"}}>Total</div>,
             dataIndex: 'exfTotal',
             align: 'right',
             width:"100px",
@@ -627,15 +629,14 @@ const SeasonWiseReport = () => {
                 columns={columnsWH}
                 summary={generateSummaryWH}
                 className="custom-table-wrapper"
-                scroll={{x:1000,y:500}}
+                // scroll={{x:1500,y:500}}
+                scroll={{x:'max-content'}}
                 pagination={{
                   pageSize: 100, 
                   onChange(current, pageSize) {
                       setPage(current);
                       setPageSize(pageSize);
                   }
-              
-
               }}
               />
             ) : (
@@ -651,6 +652,8 @@ const SeasonWiseReport = () => {
               <Table
                 bordered
                 dataSource={data?.[0]}
+                // scroll={{x:1500,y:500}}
+                scroll={{x:'max-content'}}
                 columns={columnsEXF}
                 summary={generateSummaryEXF}
                 className="custom-table-wrapper"
@@ -675,6 +678,8 @@ const SeasonWiseReport = () => {
                 bordered
                 dataSource={data?.[1]}
                 columns={columnsWH}
+                // scroll={{x:1500,y:500}}
+                scroll={{x:'max-content'}}
                 summary={generateSummaryWH}
                 className="custom-table-wrapper"
                 pagination={{
@@ -698,6 +703,8 @@ const SeasonWiseReport = () => {
                 bordered
                 dataSource={data?.[1]}
                 columns={columnsEXF}
+                // scroll={{x:1500,y:500}}
+                scroll={{x:'max-content'}}
                 summary={generateSummaryEXF}
                 className="custom-table-wrapper"
                 pagination={{
@@ -721,6 +728,8 @@ const SeasonWiseReport = () => {
                 bordered
                 dataSource={data?.[2]}
                 columns={columnsWH}
+                // scroll={{x:1500,y:500}}
+                scroll={{x:'max-content'}}
                 summary={generateSummaryWH}
                 className="custom-table-wrapper"
                 pagination={{
@@ -744,6 +753,8 @@ const SeasonWiseReport = () => {
                 bordered
                 dataSource={data?.[2]}
                 columns={columnsEXF}
+                // scroll={{x:1500,y:500}}
+                scroll={{x:'max-content'}}
                 summary={generateSummaryEXF}
                 className="custom-table-wrapper"
                 pagination={{

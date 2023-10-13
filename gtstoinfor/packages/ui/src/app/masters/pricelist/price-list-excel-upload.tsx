@@ -48,7 +48,6 @@ const PriceListUpload = () => {
         var wb = XLSX.read(data, { type: 'array', cellDates: true });
         let sheet: any[] = [];
         for (const Sheet in wb.Sheets) {
-          console.log(Sheet,'9000000000000000')
           if(Sheet){
             if (wb.Sheets.hasOwnProperty(Sheet)) {
                 sheet.push(XLSX.utils.sheet_to_json(wb.Sheets[Sheet], { raw: true, header: 1 }));
@@ -95,7 +94,6 @@ const PriceListUpload = () => {
         const filteredNestedData = csvData.filter(innerData => innerData.some(row => row.length > 0));
 
         const output = filteredNestedData.map(innerData => {
-          console.log(filteredNestedData,'fffffffffffff')
           const header = innerData[0];
           return innerData.slice(1).map(row => {
             if (row.every(value => value === '')) {
