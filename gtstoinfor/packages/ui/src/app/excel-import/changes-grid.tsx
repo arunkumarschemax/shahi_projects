@@ -705,7 +705,7 @@ const ChangesGrid = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 4 }}>
                         <Form.Item name="orderNumber" label="Order Plan Number">
                     <Select placeholder="Select order Number" showSearch allowClear optionFilterProp="children">
-                        {orderNumbers.map((e) => {
+                        {orderNumbers?.map((e) => {
                         return (
                             <Option key={e.order_plan_number} value={e.order_plan_number}>{e.order_plan_number}
                             </Option>
@@ -717,7 +717,7 @@ const ChangesGrid = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 4 }}>
                     <Form.Item name="itemCode" label="Item Code">
               <Select placeholder="Select Item Code" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
-                {itemCode.map((e) => {
+                {itemCode?.map((e) => {
                   return (
                     <Option key={e.id} value={e.item_cd}>{e.item_cd}
                     </Option>
@@ -729,7 +729,7 @@ const ChangesGrid = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
                     <Form.Item name="item" label="Item Name">
               <Select placeholder="Select Item" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
-                {itemCode.map((e) => {
+                {itemCode?.map((e) => {
                   return (
                     <Option key={e.id} value={e.item}>{e.item}
                     </Option>

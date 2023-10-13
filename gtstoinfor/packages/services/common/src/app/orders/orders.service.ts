@@ -119,8 +119,9 @@ export class OrdersService {
                 }
                 return updatedObj;
             });
-            const difference = columnArray.filter((element) => !ProductionOrderColumns.includes(element));
-            if(difference.length > 0){
+            // const difference = columnArray.filter((element) => !ProductionOrderColumns.includes(element));
+            const filteredArray = columnArray.filter((element) => !ProductionOrderColumns.some(col => col.toLowerCase() === element.toLowerCase()));
+            if(filteredArray.length > 0){
                 await transactionManager.releaseTransaction()
                 return new CommonResponseModel(false,1110,'Columns does not match!')
             }
@@ -1566,10 +1567,20 @@ async processEmails() {
                             resolve(dataArray)
                         })
                 }else if(filename.split('.').pop() == 'xlsx'){
-                    xlsxFile(filepath)
+                    xlsxFile(filepath,{sheet:'Production Plan Rawdata Export' || 'RawData'|| 'Rawdata'},{transformData(data){
+                        console.log(data)
+                        // data.slice(0,3)
+                        // console.log(data)
+                        return data}})
+                    
                       .then((rows) => {
                         const dataArray = []
+                        // console.log(rows,'---------------')
+                        rows.shift(); // Separate first row with column names
+                        rows.shift(); // Separate first row with column names
+                        rows.shift(); // Separate first row with column name
                         const columnNames = rows.shift(); // Separate first row with column names
+                        console.log(columnNames,'----------cccccccc')
                         rows.map((row) => { // Map the rest of the rows into objects
                           const obj = {}; // Create object literal for current row
                           row.forEach((cell, i) => {
