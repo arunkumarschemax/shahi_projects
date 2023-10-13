@@ -592,8 +592,9 @@ const ChangesGrid = () => {
             key: '1',
             label: <b>Order Wise Quantity Variance: {qtyData?.length} </b>,
             children: <Table className="custom-table-wrapper"
-            bordered dataSource={qtyData} columns={orderWisecolumns}scroll={{x:1000,y:500}}
-
+            bordered dataSource={qtyData} columns={orderWisecolumns}
+            // scroll={{x:1000,y:500}}
+            scroll={{x:'max-content'}}
             summary={(qtyData) => {
                 let totalLastQty = 0;
                 let totalRecQty = 0;
@@ -643,7 +644,8 @@ const ChangesGrid = () => {
             label: <b>Item Wise Quantity Variance: {differenceQtyData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered
             dataSource={differenceQtyData} columns={ItemWisecolumns} pagination={false}
-            scroll={{x:1000,y:500}}
+            // scroll={{x:1000,y:500}}
+            scroll={{x:'max-content'}}
                 summary={(differenceQtyData) => {
                     let totalLastQty = 0;
                     let totalRecQty = 0;

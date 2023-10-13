@@ -47,7 +47,6 @@ export default function ExcelImport() {
 
   const handleFileChange = (e) => {
     if(form.getFieldsValue().fileType == FileTypesEnum.TRIM_ORDERS){
-
     const file = e.target.files[0];
     console.log(file.type)
     if (file && file.type === 'text/csv') {
@@ -97,7 +96,7 @@ export default function ExcelImport() {
         });
       };
       reader.readAsText(file);
-    } else if(file && file.type === 'application/vnd.ms-excel'){
+    } else if(file && file.type === 'application/vnd.ms-excel' || file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
       console.log(file.type)
       setSelectedFile(e.target.files[0]);
       let csvData
@@ -221,9 +220,17 @@ export default function ExcelImport() {
     var wb = XLSX.read(data, { type: 'array', cellDates: true });
     let sheet: any[] = [];
     for (const Sheet in wb.Sheets) {
-      if(Sheet === 'Production Plan Rawdata Export' || Sheet === 'RawData' || Sheet === 'Rawdata'){
-        if (wb.Sheets.hasOwnProperty(Sheet)) {
-            sheet.push(XLSX.utils.sheet_to_json(wb.Sheets[Sheet], { raw: true, header: 1 }));
+      if(form.getFieldValue('fileType') === FileTypesEnum.PROJECTION_ORDERS){
+        if(Sheet === 'Production Plan Rawdata Export' || Sheet === 'RawData' || Sheet === 'Rawdata'){
+          if (wb.Sheets.hasOwnProperty(Sheet)) {
+              sheet.push(XLSX.utils.sheet_to_json(wb.Sheets[Sheet], { raw: true, header: 1 }));
+          }
+        }
+      } else{
+        if(Sheet){
+          if (wb.Sheets.hasOwnProperty(Sheet)) {
+              sheet.push(XLSX.utils.sheet_to_json(wb.Sheets[Sheet], { raw: true, header: 1 }));
+          }
         }
       }
     }
