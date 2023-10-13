@@ -65,7 +65,9 @@
 .odd-version.ant-table-thead > tr > th {
   background-color: green; 
 } */
-
+.bold-label {
+  font-weight: bold;
+}
 
 
 
