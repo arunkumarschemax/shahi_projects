@@ -239,6 +239,7 @@ const Number=()=>{
         {
             title: "S.No",
             key: "sno",
+            fixed:'left',
             responsive: ["sm"],
             render: (text, record, index) => getStartIndex() + index,
           },

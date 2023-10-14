@@ -435,9 +435,9 @@ const getAllItems = () => {
   return (
       <>
       <Card title={<><span>Price List</span>
-      <span style={{marginLeft:'20%'}}>{'No of Styles: ' + styCount}</span>
-      <span style={{marginLeft:'20%'}}>{'No of Destination: ' + Number(des)}</span>
-      <span style={{marginLeft:'20%'}}>{'No of Item: ' + item}</span>
+      <span style={{marginLeft:'20%'}}>{'No of Styles:' + `${styCount ? styCount : '-'}`}</span>
+      <span style={{marginLeft:'20%'}}>{'No of Destination: ' + `${Number(des) ? Number(des) : '-'}`}</span>
+      <span style={{marginLeft:'20%'}}>{'No of Item: ' + `${item ? item :'-'}`}</span>
       </>}
     //  headStyle={{ border: 0 }} 
     extra={<Link to='/masters/pricelist/price-list-form' >

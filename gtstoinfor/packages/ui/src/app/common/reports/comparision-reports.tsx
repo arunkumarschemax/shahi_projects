@@ -1438,10 +1438,12 @@ export const MonthWiseComparisionReport = () => {
           const dec = [rec.pcsData[0].decPcs];
           decPre += Number(dec);
         }
-        if (rec.pcsData[0].jancoeff) {
+        if (rec.coeffData[0].janCoeff) {
           const jan = [rec.coeffData[0].janCoeff];
           janLat += Number(jan);
         }
+        console.log(rec.coeffData[0].janCoeff,'jannnnnnn');
+        
         if (rec.coeffData[0].febCoeff) {
           const feb = [rec.coeffData[0].febCoeff];
           febLat += Number(feb);
@@ -1497,6 +1499,8 @@ export const MonthWiseComparisionReport = () => {
       });
     });
     const totalValues = [janPre, janLat, febPre, febLat, marPre, marLat, aprPre, aprLat, mayPre, mayLat, junPre, junLat, julPre, julLat, augPre, augLat, sepPre, sepLat, octPre, octLat, novPre, novLat, decPre, decLat];
+    // const totalValuesWithCommas = totalValues.map((val) => val.toLocaleString());
+
     return (
       <>
         <Table.Summary.Row>
@@ -1688,13 +1692,13 @@ export const MonthWiseComparisionReport = () => {
                 size="small"
                 scroll={{ x: "max-content", y: 500 }}
                 summary={getTableSummary}
-                pagination={{
-                  onChange(current) {
-                    setPage(current);
-                  },
-                  // pageSize: 1,
-                }}
-
+                // pagination={{
+                //   onChange(current) {
+                //     setPage(current);
+                //   },
+                //   // pageSize: 1,
+                // }}
+                pagination={false}
 
               />
               <Table

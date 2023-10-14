@@ -340,24 +340,24 @@ const getUploadedTime = () => {
       </Link>} >
         <Row gutter={10}>
         <Col>
-          <Tooltip title={fileData[1]?.fileName} arrow={false}>
+          <Tooltip title={fileData ? fileData[1]?.fileName : '-'} arrow={false}>
             <Card
-              title={'Previous File Name: ' + fileData[1]?.fileName}
+              title={'Previous File Name: ' +`${fileData ?  fileData[1]?.fileName : '-'}`}
               style={{ textAlign: 'left', maxWidth: 330, width: "100%", height: 41, backgroundColor: '#bfbfbf' }}
             />
           </Tooltip>
         </Col>
 
         <Col>
-          <Card title={'Previous File Date:' + fileData[1]?.createdAt} style={{ textAlign: 'left', width: 285, height: 41, backgroundColor: '#B1D5F8' }}></Card>
+          <Card title={'Previous File Date:' +`${fileData ?  fileData[1]?.createdAt : '-'}` } style={{ textAlign: 'left', width: 285, height: 41, backgroundColor: '#B1D5F8' }}></Card>
         </Col>
         <Col>
-        <Tooltip title={fileData[0]?.fileName} arrow={false}>
-          <Card title={'Latest File Name: ' + fileData[0]?.fileName} style={{ textAlign: 'left', maxWidth: 330,  width:"100%",height: 41, backgroundColor: '#B1F8E2' }}></Card>
+        <Tooltip title={fileData ? fileData[0]?.fileName :''} arrow={false}>
+          <Card title={'Latest File Name: ' +`${fileData ?  fileData[0]?.fileName : '-'}` } style={{ textAlign: 'left', maxWidth: 330,  width:"100%",height: 41, backgroundColor: '#B1F8E2' }}></Card>
         </Tooltip>
         </Col>
         <Col>
-          <Card title={'Latest File Date: ' + fileData[0]?.createdAt} style={{ textAlign: 'left', width: 270, height: 41, backgroundColor: '#CBB1F8  ' }}></Card>
+          <Card title={'Latest File Date: ' +`${fileData ?   fileData[0]?.createdAt : '-'}`} style={{ textAlign: 'left', width: 270, height: 41, backgroundColor: '#CBB1F8  ' }}></Card>
         </Col>
       </Row>
       <br></br>
