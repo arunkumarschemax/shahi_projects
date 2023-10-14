@@ -197,12 +197,17 @@ export default function BasicLayout() {
        
         if (route && route.subMenuData && route.subMenuData.length) {
             return (
-                <SubMenu key={route.menuId} title={<span> {renderIcon(route.iconType, route.iconName)} <span>{route.menuName}</span> </span>}  >
-                    <div style={{backgroundColor:'white',color:'black'}}>
+                <>
+                {route.menuName !== 'Dashboards' ? (<>
+                     <SubMenu key={route.menuId} title={<span> {renderIcon(route.iconType, route.iconName)} <span>{route.menuName}</span> </span>}  >
+                     <div style={{backgroundColor:'white',color:'black'}}>
 
-                    {route.subMenuData.map(item => getSubMenu(item))}
+                     {route.subMenuData.map(item => getSubMenu(item))}
                     </div>
-                </SubMenu>
+                 </SubMenu>
+                </>) : (<></>)}
+                </>
+               
             )
         } else {
                 return(
