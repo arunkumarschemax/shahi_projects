@@ -298,8 +298,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             key: "description",
             render: (description) => {
               if (description !== undefined && description !== null) {
-                const descriptionString = description.toString().replace(/[^\w]/g, '');
-                const trimmedDescription = descriptionString.split(/[^a-zA-Z]/)[0];
+                const descriptionString = description.toString().replace(/[^\w\s]/g, ''); 
+                const trimmedDescription = descriptionString.split(/[^a-zA-Z\s]+/)[0];
                 return trimmedDescription;
               } else {
                 return "_";

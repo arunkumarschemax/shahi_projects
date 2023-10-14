@@ -1,11 +1,17 @@
 export enum VendorNameEnum {
     extractedDhl = "DHL",
     extractedDart = "DART",
-    extractedExpeditors = "Expeditors",
+    extractedExpeditors = "EXPEDITORS",
     extractedEfl = "EFL",
     extractedOocl = "OOCL",
     extractedNagel = "NAGEL",
     extractedApl = "APL",
     extractedMaersk = "MAERSK",
-    extractSrivaru = "SRIVARU"
+    extractSrivaru = "SRIVARU",
+    extractedKrsna = "KRSNA",
+    extractedKsr = "KSR",
+    extractedDp = "DP",
+    extractedNippon = "NIPPON"
+
+
 }
