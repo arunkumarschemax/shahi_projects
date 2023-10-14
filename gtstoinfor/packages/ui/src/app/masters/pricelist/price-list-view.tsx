@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select, notification } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -133,28 +133,65 @@ const getAllItems = () => {
     })
   }
  
-  const deletePriceList = (values: PriceListDto) => {
-    values.isActive = values.isActive? false : true;
-    const req = new PriceListActivateDeactivateDto(values.id, values.isActive, values.versionFlag,)
-    priceService.ActivateOrDeactivatePriceList(req).then(res => {
-      getPriceList()
-      message.success(res.internalMessage)
+    // const deletePriceList = (values: PriceListDto) => {
+    //   values.isActive = values.isActive? false : true;
+    //   const req = new PriceListActivateDeactivateDto(values.id, values.isActive, values.versionFlag,)
+    //   priceService.ActivateOrDeactivatePriceList(req).then(res => {
+    //     getPriceList()
+    //     message.success(res.internalMessage)
 
-    if(res.status){
-   //   message.success(res.internalMessage)
-      getPriceList();
-      
-     // AlertMessages.getErrorMessage(res.internalMessage);
+    //   if(res.status){
+    // //   message.success(res.internalMessage)
+    //     getPriceList();
+        
+    //     AlertMessages.getErrorMessage(res.internalMessage);
 
-    }else {
-      // message.error("Status Not Changed")
-    }
-    }).catch(err => {
-      AlertMessages.getErrorMessage(err.message);
-    })
-  }
+    //   }else {
+    //     // message.error("Status Not Changed")
+    //   }
+    //   }).catch(err => {
+    //   // AlertMessages.getErrorMessage(err.message);
+    //   })
+    // }
+
+    const deletePriceList = (values: PriceListDto) => {
+      values.isActive = !values.isActive; // Toggle isActive
+    
+      const req = new PriceListActivateDeactivateDto(values.id, values.isActive, values.versionFlag);
+    
+      priceService
+        .ActivateOrDeactivatePriceList(req)
+        .then((res) => {
+          getPriceList();
+          const message = values.isActive
+            ? 'Price List is Activated Succesfully'
+            : 'Price List is Deactivated Succesfully';
+    
+          notification.success({
+            message,
+            description: res.internalMessage,
+            placement: 'top', 
+            duration: 0.75, 
+        style: {
+          width: 400, height:70
+        },
+          });
+        })
+        .catch((err) => {
+          notification.error({
+            message: 'Error',
+            description: err.message,
+            placement: 'top',
+            duration: 0.75, 
+        style: {
+          width: 350 , height:70
+        },
+          });
+        });
+    };
 
 
+    
  
   const updatePriceList = (req: PriceListDto) => {
     req.updatedUser = JSON.parse(localStorage.getItem('username'));
