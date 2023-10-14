@@ -147,7 +147,7 @@ export default function ExcelImport() {
           const headers = Papa.parse(lines[1], {
             header: true,
           }).data[0];
-  
+          
           // Remove the first and second row from the lines array
           lines.shift(); // Remove the first row
           lines.shift(); // Remove the first row
@@ -184,26 +184,31 @@ export default function ExcelImport() {
       reader.onload = async data => {
         let csvData1: any = reader.result;
         csvData = importExcel(csvData1);
-        // let headersRow = getHeaderArray(csvData[0][3]);
-        csvData[0].shift()
-        csvData[0].shift()
-        csvData[0].shift()
-        console.log(csvData)
-        const filteredNestedData = csvData.filter(innerData => innerData.some(row => row.length > 0));
-
-        const output = filteredNestedData.map(innerData => {
-          const header = innerData[0];
-          return innerData.slice(1).map(row => {
-            if (row.every(value => value === '')) {
-              return null; // Skip rows with all empty values
-            }
-            return row.reduce((acc, value, index) => {
-              acc[header[index]] = value;
-              return acc;
-            }, {});
-          }).filter(row => row !== null); // Remove rows with all empty values
-        });  
-           setData(output[0])   
+        if(csvData.length == 0){
+          setSelectedFile(null)
+          AlertMessages.getErrorMessage('Sheet Name does not match')
+        } else{
+          // let headersRow = getHeaderArray(csvData[0][3]);
+          csvData[0].shift()
+          csvData[0].shift()
+          csvData[0].shift()
+          console.log(csvData)
+          const filteredNestedData = csvData.filter(innerData => innerData.some(row => row.length > 0));
+  
+          const output = filteredNestedData.map(innerData => {
+            const header = innerData[0];
+            return innerData.slice(1).map(row => {
+              if (row.every(value => value === '')) {
+                return null; // Skip rows with all empty values
+              }
+              return row.reduce((acc, value, index) => {
+                acc[header[index]] = value;
+                return acc;
+              }, {});
+            }).filter(row => row !== null); // Remove rows with all empty values
+          });  
+             setData(output[0])   
+        }
       }
     }
     else {
@@ -225,8 +230,8 @@ export default function ExcelImport() {
           if (wb.Sheets.hasOwnProperty(Sheet)) {
               sheet.push(XLSX.utils.sheet_to_json(wb.Sheets[Sheet], { raw: true, header: 1 }));
           }
-        }
-      } else{
+        } 
+              } else{
         if(Sheet){
           if (wb.Sheets.hasOwnProperty(Sheet)) {
               sheet.push(XLSX.utils.sheet_to_json(wb.Sheets[Sheet], { raw: true, header: 1 }));
