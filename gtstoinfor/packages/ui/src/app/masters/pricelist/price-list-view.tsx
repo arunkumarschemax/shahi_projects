@@ -247,7 +247,7 @@ const getAllItems = () => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
-    window.location.reload();
+    // window.location.reload();
 
   };
 
@@ -273,7 +273,7 @@ const getAllItems = () => {
       {
           title: <div style={{textAlign:"center"}}>Item</div>,
           dataIndex: "item",
-          align:"left",
+          align:"right",
           // sorter: (a, b) => a.item.localeCompare(b.item),
           // sortDirections: ["descend", "ascend"],
            ...getColumnSearchProps("item"),
@@ -307,33 +307,42 @@ const getAllItems = () => {
       {
         title: "Season Code",
         dataIndex: "seasonCode",
-        align:"center",
-        // sorter: (a, b) => a.seasonCode.localeCompare(b.seasonCode),
-        // sortDirections: [ "ascend","descend"],
-        // ...getColumnSearchProps("seasonCode"),
-
+        align: "center",
+        width: 120,
+        filters: [
+          {
+            text: 'SS',
+            value: 'SS', 
+          },
+          {
+            text: 'FF',
+            value: 'FF',  
+          },
+        ],
+        filterMultiple: false,
+        onFilter: (value, record) => {
+          return record.seasonCode === value;
+        },
        
-      },
+      }
+      ,
       {
         title: "Price",
         dataIndex: "fobLocalCurrency",
-        align:"right",
+        align: "right",
         sorter: (a, b) => a.fobLocalCurrency.localeCompare(b.fobLocalCurrency),
-        sortDirections: [ "ascend","descend"],
-         ...getColumnSearchProps("currency"),
-        render:(text,record) => {
-          return(
+        sortDirections: ["ascend", "descend"],
+        ...getColumnSearchProps("currency"),
+        render: (text, record) => {
+          return (
             <>
-            {record.fobLocalCurrency ? `${record.currency} ${record.fobLocalCurrency.toLocaleString()} ` : '-'}
-            
+              {record.fobLocalCurrency ? `${record.currency}  ${parseFloat(record.fobLocalCurrency).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}` : '-'}
             </>
-          )
+          );
         }
-        // ...getColumnSearchProps("currency"),
-
-       
-       
       },
+      
+      
       // {
       //   title:"Price",
       //   dataIndex:"fobLocalCurrency",
@@ -540,7 +549,7 @@ const getAllItems = () => {
             }
         }}
         
-          scroll={{x:'max-content'}}
+          scroll={{x:'max-content',y:500}}
           onChange={onChange}
           bordered />
           
