@@ -4,7 +4,7 @@ import { Button, Card, Col, Form, FormInstance, Radio, Row, Select, Spin, Upload
 import { useState } from 'react';
 import { pdfjs } from 'react-pdf';;
 import { extractDhl, extractDart, extractExpeditors, extractEfl, extractOocl, extractNagel, extractApl, extractMaersk, checkIsScannedPdf } from './schemax-ai-docx-pdf';
-import { convertScannedPdfToSelectablePdf, extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
+import { convertScannedPdfToSelectablePdf, extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 import { PDFDocument, rgb } from 'pdf-lib';
 export interface DocReaderProps {
@@ -139,6 +139,59 @@ export const DocReader = (props: DocReaderProps) => {
                         break;
                     }
 
+                    case VendorNameEnum.extractedSriji:
+                        {
+                            const isScannedPdf = await checkIsScannedPdf(pdfData)
+                            if (isScannedPdf) {
+                                const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                                const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                                processedData = await extractSrijiInvoiceDataFromScanned(allLines);
+                            } else {
+                                processedData = await extractEfl(pdfData);
+                            }
+                            break;
+                        }
+
+                        case VendorNameEnum.extractSrivaru:
+                        {
+                            const isScannedPdf = await checkIsScannedPdf(pdfData)
+                            if (isScannedPdf) {
+                                const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                                const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                                processedData = await extractSrivaruInvoiceDataFromScanned(allLines);
+                            } else {
+                                processedData = await extractEfl(pdfData);
+                            }
+                            break;
+                        }
+
+                        case VendorNameEnum.extractedVinayaka:
+                            {
+                                const isScannedPdf = await checkIsScannedPdf(pdfData)
+                                if (isScannedPdf) {
+                                    const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                                    const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                                    processedData = await extractVinayakaInvoiceDataFromScanned(allLines);
+                                } else {
+                                    processedData = await extractEfl(pdfData);
+                                }
+                                break;
+                            }
+                            case VendorNameEnum.extractedWaymark:
+                                {
+                                    const isScannedPdf = await checkIsScannedPdf(pdfData)
+                                    if (isScannedPdf) {
+                                        const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                                        const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                                        processedData = await extractWaymarknvoiceDataFromScanned(allLines);
+                                    } else {
+                                        processedData = await extractEfl(pdfData);
+                                    }
+                                    break;
+                                }
+            
+        
+
                 case VendorNameEnum.extractedOocl:
                     processedData = await extractOocl(pdfData);
                     console.log('PDF DATA OOCL:', processedData);
@@ -155,19 +208,17 @@ export const DocReader = (props: DocReaderProps) => {
                     processedData = await extractMaersk(pdfData);
                     console.log('PDF DATA Maersk:', processedData);
                     break;
-                case VendorNameEnum.extractSrivaru:
-                    {
-                        const isScannedPdf = await checkIsScannedPdf(pdfData)
-                        if (isScannedPdf) {
-                            const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks)
-                            const allLines = await extractDataFromScannedImages(pageImages, [2, 3]);
-                            processedData = await extractSrivaruInvoiceDataFromScanned(allLines);
-                            console.log('PDF DATA Srivaru:', processedData);
-                        } else {
-
-                        }
-                        break;
-                    }
+                // case VendorNameEnum.extractSrivaru:
+                //     {
+                //         const isScannedPdf = await checkIsScannedPdf(pdfData)
+                //         if (isScannedPdf) {
+                //             const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks)
+                //             const allLines = await extractDataFromScannedImages(pageImages, [2, 3]);
+                //             processedData = await extractSrivaruInvoiceDataFromScanned(allLines);
+                //             console.log('PDF DATA Srivaru:', processedData);
+                //         } 
+                //         break;
+                //     }
                 default:
                     console.log('Unknown source:', selectedVendor);
                     break;

@@ -8,10 +8,13 @@ export enum VendorNameEnum {
     extractedApl = "APL",
     extractedMaersk = "MAERSK",
     extractSrivaru = "SRIVARU",
+    extractedSriji = "SRIJI",
     extractedKrsna = "KRSNA",
     extractedKsr = "KSR",
     extractedDp = "DP",
-    extractedNippon = "NIPPON"
+    extractedNippon = "NIPPON",
+    extractedVinayaka = "VINAYAKA",
+    extractedWaymark = "WAYMARK",
 
 
 }
