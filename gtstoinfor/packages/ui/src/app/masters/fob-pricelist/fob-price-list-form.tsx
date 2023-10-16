@@ -287,7 +287,7 @@ export function FobPriceListForm(props: Formprops) {
 
         <Row  gutter={24} justify={'end'}>
         <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span:2  }}><Button type='primary' disabled={disable} htmlType='submit'>Submit</Button></Col>
-              <Col xs={{ span: 6 }} sm={{ span: 6}} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button style={{ color:'red'}} onClick={onReset}><UndoOutlined />Reset</Button></Col>
+              <Col xs={{ span: 6 }} sm={{ span: 6}} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button type="primary" style={{ color:'red'}} onClick={onReset}><UndoOutlined />Reset</Button></Col>
             </Row>
       </Form>
     </Card>
