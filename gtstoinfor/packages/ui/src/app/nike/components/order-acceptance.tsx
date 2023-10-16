@@ -294,7 +294,7 @@ export function OrderAcceptance() {
         },
         {
             title: 'Total Order Quantity',
-            dataIndex: 'total_item_qty',width:80,
+            dataIndex: 'total_item_qty',width:80,align:'right',
             render: (text, record) => {
                 return (record.totalItemQty_OLD ?
                     (

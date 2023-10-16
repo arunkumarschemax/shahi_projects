@@ -230,8 +230,8 @@ const FobPriceListGrid = () => {
           <Popconfirm onConfirm={e => { activateOrDeactivate(rowData) }}
             title={
               rowData.isActive
-                ? 'Are you sure to deactivated ?'
-                : 'Are you sure to activated ?'
+                ? 'Deactivated Price-List?'
+                : 'Activated Price-List?'
             }
           >
             <Switch size="default"

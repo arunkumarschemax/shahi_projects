@@ -71,6 +71,7 @@ export function NikeFileRevert() {
         {
             title: 'Action',
             dataIndex: 'Action',
+            width:150,
             render: (text, record, index) => {
                 const isFirstRecord = index === 0 && page === 1;
                 return (
