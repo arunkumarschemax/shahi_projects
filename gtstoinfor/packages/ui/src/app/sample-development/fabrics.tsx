@@ -1,11 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Button, Input, Select, Tooltip } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
+import { ColourService, FabricsService } from '@project-management-system/shared-services';
 
 const FabricsForm = ({props}) => {
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
+  const [fabrics, setFabrics] = useState<any[]>([])
+  const service = new FabricsService()
+  const { Option } = Select;
+  const [color, setColor] = useState<any[]>([])
+  const colorService = new ColourService()
+
+  useEffect(()=>{
+    getFabrics()
+    getColors()
+  },[])
 
   const handleAddRow = () => {
     const newRow = {
@@ -13,6 +24,14 @@ const FabricsForm = ({props}) => {
     };
     setData([...data, newRow]);
     setCount(count + 1);
+  };
+
+  const getColors = () => {
+    colorService.getAllActiveColour().then((res) => {
+      if (res.status) {
+        setColor(res.data);
+      }
+    });
   };
 
   const handleInputChange = (e, key, field) => {
@@ -25,10 +44,19 @@ const FabricsForm = ({props}) => {
     setData(updatedData);
     props(updatedData);
   };
+  
 
   const handleDelete = (key) => {
     const updatedData = data.filter((record) => record.key !== key);
     setData(updatedData);
+  };
+
+  const getFabrics = () => {
+    service.getAllActiveFabrics().then((res) => {
+      if (res.status) {
+        setFabrics(res.data);
+      }
+    });
   };
 
   const columns = [
@@ -39,7 +67,7 @@ const FabricsForm = ({props}) => {
     },
     {
       title: 'Fabric Code',
-      dataIndex: 'fabricCode',
+      dataIndex: 'fabricsCode',
       width:"20%",
       render: (_, record) => (
         <Select
@@ -51,6 +79,13 @@ const FabricsForm = ({props}) => {
           optionFilterProp="children"
           placeholder="Select Fabric Code"
         >
+          {fabrics.map((e) => {
+                  return (
+                    <Option key={e.fabricsCode} value={e.fabricsCode}>
+                      {e.fabricsCode}
+                    </Option>
+                  );
+                })}
           </Select>
       ),
     },
@@ -67,12 +102,25 @@ const FabricsForm = ({props}) => {
     },
     {
       title: 'Color',
-      dataIndex: 'color',
+      width:"25%",
       render: (_, record) => (
-        <Input
-        value={record.color}
-        onChange={(e) => handleInputChange(e, record.key, 'color')}
-        />
+        <Select
+          value={record.colourId}
+          onChange={(value) => handleInputChange(value, record.key, 'colourId')}
+          style={{width:"100%"}}
+          allowClear
+          showSearch
+          optionFilterProp="children"
+          placeholder="Select Color"
+        >
+          {color.map((e) => {
+                  return (
+                    <Option key={e.colourId} value={e.colourId}>
+                      {e.colour}
+                    </Option>
+                  );
+                })}
+          </Select>
       ),
     },
     {
@@ -82,6 +130,7 @@ const FabricsForm = ({props}) => {
         <Input
         value={record.consumption}
         onChange={(e) => handleInputChange(e, record.key, 'consumption')}
+        placeholder='Enter Consumption'
         />
       ),
     },
@@ -93,6 +142,7 @@ const FabricsForm = ({props}) => {
         value={record.remarks}
         onChange={(e) => handleInputChange(e, record.key, 'remarks')}
         rows={1}
+        placeholder='Enter Remarks'
         />
       ),
     },

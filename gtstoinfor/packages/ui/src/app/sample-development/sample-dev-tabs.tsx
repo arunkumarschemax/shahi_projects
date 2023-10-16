@@ -8,15 +8,16 @@ import ProcessForm from "./process";
 
 export interface SampleDevTabsProps{
     handleSubmit: (value: any) => void;
-
+    buyerId : any
 }
 
 export const SampleDevTabs = (props:SampleDevTabsProps) => {
-    const [sizeData, setSizeData] = useState([]);
-    const [processData, setProcessData] = useState([]);
-    const [fabricsData, setFabricsData] = useState([]);
-    const [trimsData, setTrimsData] = useState([]);
-    const [data, setData] = useState({});
+    const [sizeData, setSizeData] = useState([])
+    const [processData, setProcessData] = useState([])
+    const [fabricsData, setFabricsData] = useState([])
+    const [trimsData, setTrimsData] = useState([])
+    const [data, setData] = useState([])
+    const { buyerId } = props
 
     const handleSizeDataUpdate = (updatedData) => {
         setData((prevData) => ({ ...prevData, sizeData: updatedData }));
@@ -40,14 +41,16 @@ export const SampleDevTabs = (props:SampleDevTabsProps) => {
 
     const onConfirm = () => {
         props.handleSubmit(data)
+        console.log(data,'submit')
     }
+    
 
 
     return(
         <Card size='small'>
             <Tabs type={'card'} tabPosition={'top'}>
                 <TabPane key="1" tab={<span><b>{`Size Detail`}</b></span>}>
-                <SizeDetail props = {handleSizeDataUpdate}/>
+                <SizeDetail props = {handleSizeDataUpdate} buyerId={buyerId}/>
                 </TabPane>
                 <TabPane key="2" tab={<span><b>{`Fabric`}</b></span>}>
                 <FabricsForm props = {handleFabricsDataUpdate}/>
@@ -58,9 +61,6 @@ export const SampleDevTabs = (props:SampleDevTabsProps) => {
                 <TabPane key="4" tab={<span><b>{`Process`}</b></span>}>
                 <ProcessForm props={handleProcessDataUpdate}/>
                 </TabPane>
-                {/* <TabPane key="5" tab={<span><b>{`Remarks`}</b></span>}>
-                    
-                </TabPane> */}
             </Tabs>
             <Button onClick={onConfirm}>Confirm</Button>
         </Card>

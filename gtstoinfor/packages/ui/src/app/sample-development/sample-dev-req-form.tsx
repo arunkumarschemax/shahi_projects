@@ -1,7 +1,7 @@
 import { PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
-import { DepartmentReq,SampleDevelopmentRequest } from "@project-management-system/shared-models";
-import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,LiscenceTypeService,LocationsService,MasterBrandsService,ProfitControlHeadService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
+import { BuyersDestinationRequest, DepartmentReq,SampleDevDto,SampleDevelopmentRequest } from "@project-management-system/shared-models";
+import {BuyerDestinationService, BuyersService,CountryService,CurrencyService,EmployeeDetailsService,LiscenceTypeService,LocationsService,MasterBrandsService,ProfitControlHeadService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Modal, Row, Select, message } from "antd";
 import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
@@ -29,6 +29,7 @@ export const SampleDevForm = () => {
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState([]);
   const [tabsData,setTabsData] = useState<any>()
+  const [selectedBuyerId, setSelectedBuyerId] = useState(null)
   const pchService = new ProfitControlHeadService();
   const styleService = new StyleService();
   const brandService = new MasterBrandsService();
@@ -47,6 +48,7 @@ export const SampleDevForm = () => {
     getLocations();
     getPCHData();
     getBuyers();
+    // getBuyersByDestination()
     getStyles();
     getBrands();
     getTechnicians();
@@ -56,6 +58,17 @@ export const SampleDevForm = () => {
     getSampleSubTypes();
     getDMM()
   }, []);
+
+  const handleBuyerChange = (value) => {
+    setSelectedBuyerId(value);
+  };
+
+  const hasMappedData = (buyerId, data) => {
+    const buyerData = data.find((item) => item.buyerId === buyerId);
+    return buyerData && buyerData.size.length > 0;
+  }
+
+  const hasData = hasMappedData && hasMappedData.length > 0;
 
   const getBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -103,6 +116,8 @@ export const SampleDevForm = () => {
       }
     });
   };
+
+  
 
   const getSampleTypes = () => {
     sampleTypeService.getAllActiveSampleTypes().then((res) => {
@@ -171,14 +186,14 @@ export const SampleDevForm = () => {
 
   const onReset = () => {
     form.resetFields();
+    setSelectedBuyerId('')
   };
 
 
   const onFinish = (val) =>{
-    console.log(tabsData)
-    const req = new SampleDevelopmentRequest(val.locationId,val.styleId,val.pchId,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.brandId,
-      val.costRef,val.m3Style,val.contact,val.extension,val.samValue,val.dmmId,val.technicianId,val.product,val.type,val.conversion,val.madeIn,tabsData.sizeData)
-      sampleService.createSampleDev(req).then((res)=>{
+    const req = new SampleDevDto(val.SampleRequestId,val.locationId,val.requestNo,val.styleId,val.pchId,val.buyerId,val.sampleTypeId,val.sampleSubTypeId,val.brandId,
+      val.costRef,val.m3Style,val.contact,val.extension,val.samValue,val.dmmId,val.technicianId,val.product,val.type,val.conversion,val.madeIn,val.facilityId,val.status,tabsData.sizeData,tabsData.fabricsData,tabsData.trimsData,tabsData.processData)
+      sampleService.createSmapleDevlopmentRequest(req).then((res)=>{
         if(res.status){
           message.success(res.internalMessage,2)
         }else{
@@ -191,6 +206,11 @@ export const SampleDevForm = () => {
   const handleSubmit = (data) => {
     setTabsData(data)
   }
+
+  // const handleBuyerChange = (value) => {
+  //   setBuyerId(value);
+  //   console.log(value,'----------------')
+  // };
 
   return (
     <Card title="Sample Request">
@@ -282,6 +302,7 @@ export const SampleDevForm = () => {
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select Buyer"
+                onChange={handleBuyerChange}
               >
                 {buyer.map((e) => {
                   return (
@@ -642,7 +663,15 @@ export const SampleDevForm = () => {
             </Form.Item>
           </Col>
         </Row>
-        <SampleDevTabs handleSubmit={handleSubmit}/>
+        <div>
+      {selectedBuyerId ? (
+        hasData ? (
+          <SampleDevTabs handleSubmit={handleSubmit} buyerId={selectedBuyerId} />
+        ) : (
+          <div>Error: No mapped data found for the selected buyer.</div>
+        )
+      ) : null}
+    </div>
         <Row>
           <Col span={24} style={{ textAlign: "right" }}>
             <div

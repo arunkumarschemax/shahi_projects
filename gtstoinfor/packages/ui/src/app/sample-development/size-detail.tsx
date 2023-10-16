@@ -1,24 +1,57 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip } from 'antd';
+import { Table, Button, Input, Select, Tooltip, Form } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
-import { ColourService } from '@project-management-system/shared-services';
+import { BuyerDestinationService, ColourService } from '@project-management-system/shared-services';
+import { BuyersDestinationRequest } from '@project-management-system/shared-models';
 
-const SizeDetail = ({props}) => {
+const SizeDetail = ({props, buyerId }) => {
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
   const [color, setColor] = useState<any[]>([])
   const colorService = new ColourService()
   const { Option } = Select;
+  const [form] = Form.useForm();
+  const [buyerDes, setBuyerDes] = useState<any[]>([]);
+  const buyersDestination = new BuyerDestinationService()
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [buttonDisable, setButtonDisable] = useState(false)
+
+
 
   useEffect(()=>{
     getColors()
+    // getBuyersByDestination()
   },[])
+
+  useEffect(() => {
+    if (buyerId !== undefined) {
+      getBuyersByDestination();
+    }
+  }, [buyerId]);
+  
 
   const getColors = () => {
     colorService.getAllActiveColour().then((res) => {
       if (res.status) {
-        console.log(res,'size data')
         setColor(res.data);
+      }
+      const colorLimit = res.data.length
+      if (selectedColors.length >= colorLimit) {
+        console.log(selectedColors.length,'not right')
+        setButtonDisable(true);
+      }
+    });
+  };
+
+  const getBuyersByDestination = () => {
+    const request = new BuyersDestinationRequest(buyerId)
+    if(form.getFieldValue('buyer') != undefined){
+      request.buyerId = form.getFieldValue('buyer')
+    }
+    buyersDestination.getAll(request).then((res) => {
+      if (res.status) {
+        setBuyerDes(res.data);
+        handleAddRow()
       }
     });
   };
@@ -31,13 +64,17 @@ const SizeDetail = ({props}) => {
     setCount(count + 1);
   };
 
-  const handleInputChange = (value, key, field) => {
+  const handleInputChange = (value, key, field,size?) => {
     const updatedData = data.map((record) => {
       if (record.key === key) {
         return { ...record, [field]: value };
       }
       return record;
-    });
+    })
+    if (field === 'colourId') {
+      const selectedColorId = parseInt(value);
+      setSelectedColors([...selectedColors, selectedColorId]);
+    }
     setData(updatedData);
     props(updatedData)
   };
@@ -50,6 +87,25 @@ const SizeDetail = ({props}) => {
   const calculateTotal = (size) => {
     return data.reduce((total, record) => total + parseInt(record[size] || 0), 0);
   };
+  
+
+  const sizeColumns = buyerDes[0]?.size.map((sizeData) => {
+    return {
+      title: sizeData.size,
+      dataIndex: sizeData.size, 
+      align:"center",
+      render: (_, record) => (
+        <Input
+          value={record[sizeData.size]}
+          onChange={(e) => handleInputChange(e, record.key, 'quantity', sizeData.size)}
+          type="number"
+          min={0}
+          placeholder="Quantity"
+        />
+      ),
+    };
+  });
+  
 
   const columns = [
     {
@@ -59,112 +115,32 @@ const SizeDetail = ({props}) => {
     },
     {
       title: 'Color',
-      // dataIndex: 'colourId',
       width:"25%",
       render: (_, record) => (
         <Select
           value={record.colourId}
-          onChange={(value) => handleInputChange(value, record.key, 'colourId')}
+          onChange={(value) => handleInputChange(value, record.colourId, 'colourId')}
           style={{width:"100%"}}
           allowClear
           showSearch
           optionFilterProp="children"
           placeholder="Select Color"
         >
-          {color.map((e) => {
-                  return (
-                    <Option key={e.colourId} value={e.colourId}>
-                      {e.colour}
-                    </Option>
-                  );
-                })}
-          </Select>
+          {color
+            .filter((e) => !selectedColors.includes(e.colourId))
+            .map((e) => {
+              return (
+                <Option key={e.colourId} value={e.colourId}>
+                  {e.colour}
+                </Option>
+              );
+            })}
+        </Select>
       ),
     },
     {
       title: 'Quantity by Size',
-      dataIndex: 'size',
-      width:"10%",
-      children :[
-        {
-          title: 'XS',
-          dataIndex: 'quantity',
-          render: (_, record) => (
-            <Input
-              value={record.xs}
-              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
-              type='number'
-              min={0}
-              placeholder='Quantity'
-            />
-          ),
-        },
-        {
-          title: 'S',
-          dataIndex: 'quantity',
-          render: (_, record) => (
-            <Input
-              value={record.s}
-              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
-              type='number'
-              min={0}
-              placeholder='Quantity'
-            />
-          ),
-        },
-        {
-          title: 'M',
-          dataIndex: 'quantity',
-          render: (_, record) => (
-            <Input
-              value={record.m}
-              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
-              type='number'
-              min={0}
-              placeholder='Quantity'
-            />
-          ),
-        },
-        {
-          title: 'L',
-          dataIndex: 'quantity',
-          render: (_, record) => (
-            <Input
-              value={record.l}
-              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
-              type='number'
-              min={0}
-              placeholder='Quantity'
-            />
-          ),
-        },
-        {
-          title: 'XL',
-          dataIndex: 'quantity',
-          render: (_, record) => (
-            <Input
-              value={record.xl}
-              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
-              type='number'
-              min={0}
-              placeholder='Quantity'
-            />
-          ),
-        },
-        {
-          title: 'XXL',
-          dataIndex: 'quantity',
-          render: (_, record) => (
-            <Input
-              value={record.xxl}
-              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
-              type='number'
-              min={0}
-              placeholder='Quantity'
-            />
-          ),
-        },
-      ],
+      children :sizeColumns
     },
     
     {
@@ -178,23 +154,23 @@ const SizeDetail = ({props}) => {
 
   const shouldShowSummary = data.length > 0;
 
-  const summary = () => shouldShowSummary ? (
+  const summary = () =>
+  shouldShowSummary ? (
     <Table.Summary.Row>
       <Table.Summary.Cell index={0}></Table.Summary.Cell>
       <Table.Summary.Cell index={1}>Total</Table.Summary.Cell>
-      <Table.Summary.Cell index={2}>{calculateTotal('xs')}</Table.Summary.Cell>
-      <Table.Summary.Cell index={3}>{calculateTotal('s')}</Table.Summary.Cell>
-      <Table.Summary.Cell index={4}>{calculateTotal('m')}</Table.Summary.Cell>
-      <Table.Summary.Cell index={5}>{calculateTotal('l')}</Table.Summary.Cell>
-      <Table.Summary.Cell index={6}>{calculateTotal('xl')}</Table.Summary.Cell>
-      <Table.Summary.Cell index={7}>{calculateTotal('xxl')}</Table.Summary.Cell>
-      <Table.Summary.Cell index={8}></Table.Summary.Cell>
+      {buyerDes[0]?.size.map((sizeData, index) => (
+        <Table.Summary.Cell index={index + 2} align='right'>
+          {calculateTotal(sizeData.size)}
+        </Table.Summary.Cell>
+      ))}
     </Table.Summary.Row>
   ) : null;
 
+
   return (
     <div>
-      <Button onClick={handleAddRow} style={{margin:"10px"}}>Add Row</Button>
+      <Button onClick={handleAddRow} style={{margin:"10px"}} disabled={buttonDisable}>Add Row</Button>
       <Table 
       dataSource={data} 
       columns={columns} 

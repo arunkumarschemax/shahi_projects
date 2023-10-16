@@ -21,7 +21,7 @@ export class buyerColorsMappingRepository extends Repository<BuyersColor> {
 
     async getAll(req?:BuyersDestinationRequest):Promise<any[]>{
         const query = this.createQueryBuilder('bc')
-        .select(`b.buyer_name,b.buyer_id,c.colour,c.colour_id`)
+        .select(`b.buyer_name,b.buyer_code,b.buyer_id,c.colour,c.colour_id`)
         .leftJoin(Buyers,'b','b.buyer_id = bc.buyer_id')
         .leftJoin(Colour,'c','c.colour_id = bc.colour_id')
         // .groupBy(`c.colour_id`)

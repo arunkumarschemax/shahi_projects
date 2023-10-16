@@ -13,6 +13,7 @@ export class EmployeeDetailsResponse{
     updateUser?:string
     createdUser?:string
     departments?:number
+    module?:string
     constructor(
         employeeCode:string,
         firstName:string,
@@ -27,7 +28,7 @@ export class EmployeeDetailsResponse{
       updateUser?:string,
       createdUser?:string,
       departments?:number,
-
+      module?:string
     ){
         this.employeeCode=employeeCode
         this.firstName=firstName;
@@ -42,6 +43,7 @@ export class EmployeeDetailsResponse{
         this.updateUser=updateUser
         this.createdUser=createdUser
          this.departments=departments
+         this.module= module
     }
   
 }
