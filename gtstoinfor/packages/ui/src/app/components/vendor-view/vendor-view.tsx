@@ -13,12 +13,12 @@ import {
   Tooltip,
 } from "antd";
 import { EyeOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
-import { VendorService } from "@xpparel/shared-services";
+import { VendorNamereq, VendorService } from "@xpparel/shared-services";
 import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
 import { useNavigate, useParams } from "react-router-dom";
 import Highlighter from "react-highlight-words";
 
-const VendorGrid = () => {
+export const VendorGrid = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [nameOptions, setNameOptions] = useState([]);
@@ -32,15 +32,20 @@ const VendorGrid = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const [searchText, setSearchText] = useState("");
 
+
   let navigate = useNavigate();
 
   useEffect(() => {
     fetchVendorData();
   }, []);
 
+  
+
+   
+
   const fetchVendorData = async () => {
     try {
-      const vendorService = new VendorService();
+      const vendorService = new VendorService()
       const response = await vendorService.getAllVendors();
 
       if (response.status) {
@@ -193,10 +198,24 @@ const VendorGrid = () => {
       render: (text, record, index) => (page - 1) * pageSize + (index + 1),
     },
     {
-      title: "Name",
+      title: "Vendor Name",
       dataIndex: "name",
       defaultSortOrder: "ascend" as SortOrder,
       sorter: (a, b) => a.name.localeCompare(b.name),
+    },
+    {
+      title: "Vendor code",
+      dataIndex:"vendorCode",
+      defaultSortOrder: "ascend" as SortOrder,
+      sorter: (a, b) => a.vendorCode.localeCompare(b.vendorCode),
+      ...getColumnSearchProps("vendorCode"),
+      render:(text,record,index)=>{
+        return(
+          <span>
+            {record.vendorCode? record.vendorCode:"--"}
+          </span>
+        )
+      }
     },
     {
       title: "Business Name",

@@ -3,7 +3,7 @@ import {
   SearchOutlined,
   UndoOutlined
 } from "@ant-design/icons";
-import { StatusEnumDisplay, VendorFilterModel } from "@xpparel/shared-models";
+import { VendorFilterModel } from "@xpparel/shared-models";
 import {
   SharedService,
   VendorService,
@@ -41,7 +41,7 @@ interface Item {
 
 // export interface DocViewProps { }
 
-export function DocView() {
+export const DocView = () => {
   const [formdata, setFormData] = useState<any>([]);
   const [searchedColumn, setSearchedColumn] = useState("");
   const [searchText, setSearchText] = useState("");
@@ -95,7 +95,7 @@ export function DocView() {
       console.log(err.message);
     });
   };
-  console.log(formdata,"formdata")
+  console.log(formdata, "formdata")
   const resetHandler = () => {
     form.resetFields();
     getdata();
@@ -113,11 +113,10 @@ export function DocView() {
 
   const viewchange = (rowData: any) => {
     navigate("/scandetailview", { state: { rowData } });
-    console.log(rowData, "Hhhhhhhhhhhhhhh");
   };
 
   const handleViewClick = (record: Item) => {
-    viewchange(record); // Call your viewchange function with the record data
+    viewchange(record);
   };
 
   const handleSearch = (
@@ -192,9 +191,9 @@ export function DocView() {
     onFilter: (value, record) =>
       record[dataIndex]
         ? record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes((value as string).toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes((value as string).toLowerCase())
         : false,
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
@@ -224,127 +223,84 @@ export function DocView() {
 
     {
       title: "Vendor Name",
-      dataIndex: "Vendor",
-      key: "Vendor",
+      dataIndex: "venName",
+      key: "venName",
       // ...getColumnSearchProps("Vendor"),
       align: "center",
-      sorter: (a, b) => a.Vendor.localeCompare(b.Vendor),
-      render: (text: any, record: { Vendor: any }) => {
-        return <> {record.Vendor ? record.Vendor : "-"} </>;
+      sorter: (a, b) => a.venName.localeCompare(b.venName),
+      render: (text: any, record: { venName: any }) => {
+        return <> {record.venName ? record.venName : "-"} </>;
       },
     },
-    // {
-    //   title: "Buyer Name",
-    //   dataIndex: "buyerName",
-    //   key: "buyerName",
-    //   ...getColumnSearchProps("buyerName"),
-    //   align: "center",
-    //   sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
-    //   render: (text: any, record: { buyerName: any }) => {
-    //     return <> {record.buyerName ? record.buyerName : "-"} </>;
-    //   },
-    // },
     {
-      title: "GST",
-      dataIndex: "GST",
-      key: "GST",
-      ...getColumnSearchProps("GST"),
+      title: "GST NUMBER",
+      dataIndex: "gstNumber",
+      key: "gstNumber",
+      ...getColumnSearchProps("gstNumber"),
       align: "center",
-      sorter: (a, b) => a.GST.localeCompare(b.GST),
-      render: (text: any, record: { GST: any }) => {
-        return <> {record.GST ? record.GST : "-"} </>;
+      sorter: (a, b) => a.gstNumber.localeCompare(b.gstNumber),
+      render: (text: any, record: { gstNumber: any }) => {
+        return <> {record.gstNumber ? record.gstNumber : "-"} </>;
       },
     },
 
     {
       title: "Invoice Number",
-      dataIndex: "InnvoiceNumber",
-      key: "InnvoiceNumber",
-      ...getColumnSearchProps("InnvoiceNumber"),
-      sorter: (a, b) => a.InnvoiceNumber.localeCompare(b.InnvoiceNumber),
+      dataIndex: "invoiceNumber",
+      key: "invoiceNumber",
+      ...getColumnSearchProps("invoiceNumber"),
+      sorter: (a, b) => a.invoiceNumber.localeCompare(b.invoiceNumber),
       align: "center",
-      render: (text: any, record: { InnvoiceNumber: any }) => {
-        return <> {record.InnvoiceNumber ? record.InnvoiceNumber : "-"} </>;
+      render: (text: any, record: { invoiceNumber: any }) => {
+        return <> {record.invoiceNumber ? record.invoiceNumber : "-"} </>;
       },
     },
     {
       title: "Invoice Amount",
-      dataIndex: "InnvoiceAmount",
-      key: "InnvoiceAmount",
-      ...getColumnSearchProps("InnvoiceAmount"),
-      sorter: (a, b) => a.InnvoiceAmount.localeCompare(b.InnvoiceAmount),
+      dataIndex: "invoiceAmount",
+      key: "invoiceAmount",
+      ...getColumnSearchProps("invoiceAmount"),
+      sorter: (a, b) => a.invoiceAmount.localeCompare(b.invoiceAmount),
       align: "center",
       render: (text, record) => {
-        const formattedAmount = record.InnvoiceAmount ? parseFloat(record.InnvoiceAmount).toFixed(2) : "-";
+        const formattedAmount = record.invoiceAmount ? parseFloat(record.invoiceAmount).toFixed(2) : "-";
         return <>{formattedAmount}</>;
       },
     },
     {
       title: "Invoice Currency",
-      dataIndex: "InnvoiceCurrency",
-      key: "InnvoiceCurrency",
-      ...getColumnSearchProps("InnvoiceCurrency"),
-      sorter: (a, b) => a.InnvoiceCurrency.localeCompare(b.InnvoiceCurrency),
+      dataIndex: "invoiceCurrency",
+      key: "invoiceCurrency",
+      ...getColumnSearchProps("invoiceCurrency"),
+      sorter: (a, b) => a.invoiceCurrency.localeCompare(b.invoiceCurrency),
       align: "center",
-      render: (text: any, record: { InnvoiceCurrency: any }) => {
-        return <> {record.InnvoiceCurrency ? record.InnvoiceCurrency : "-"} </>;
+      render: (text: any, record: { invoiceCurrency: any }) => {
+        return <> {record.invoiceCurrency ? record.invoiceCurrency : "-"} </>;
       },
     },
-    // {
-    //   title: "Status",
-    //   dataIndex: "VarianceStatus",
-    //   key: "VarianceStatus",
-    //   sorter: (a, b) => a.VarianceStatus.localeCompare(b.VarianceStatus),
-    //   ...getColumnSearchProps("VarianceStatus"),
-    //   align: "center",
-    //   // render: (text: any, record: { InnvoiceNumber: any; }) => {
-    //   //   return (<> {record.InnvoiceNumber ? record.InnvoiceNumber : '-'} </>)
-    //   // }
-    // },
     {
       title: "Status",
-      dataIndex: "VarianceStatus",
-      key: "VarianceStatus",
-      sorter: (a, b) => a.VarianceStatus.localeCompare(b.VarianceStatus),
+      dataIndex: "status",
+      key: "status",
+      ...getColumnSearchProps("status"),
+      sorter: (a, b) => a.status.localeCompare(b.status),
       align: "center",
-      render: (text: any, record: { VarianceStatus: any }) => {
-        // Define a mapping of status values to tag colors
-        const statusTagColors = {
-          Partial_Variance: "orange",
-          No_Variance: "green",
-          Full_Variance: "red",
-          // Add more status values and corresponding colors as needed
-        };
-    
-        const statusColor = statusTagColors[record.VarianceStatus] || "default";
-    
+      render: (text: any, record: { status: any }) => {
+        let statusColor = "black";
+
+        if (record.status === "No Variance") {
+          statusColor = "green";
+        } else if (record.status === "Fully Variance") {
+          statusColor = "red";
+        }
+        else if (record.status === "Partially Variance") {
+          statusColor = "blue"
+        }
         return (
-          <Tag color={statusColor}>
-            {record.VarianceStatus
-              ? StatusEnumDisplay.find(
-                  (item) => item.name === record.VarianceStatus
-                )?.displayVal
-              : "-"}
+          <Tag style={{ color: statusColor }}>
+            {record.status ? record.status : "-"}
           </Tag>
         );
-      },
-      filters: [
-        {
-          text: 'Partial Variance',
-          value: 'Partial_Variance', // Change value to the actual status value
-        },
-        {
-          text: 'No Variance',
-          value: 'No_Variance', // Change value to the actual status value
-        },
-        {
-          text: 'Full Variance',
-          value: 'Full_Variance', // Change value to the actual status value
-        },
-      ],
-      filterMultiple: false,
-      onFilter: (value, record) => {
-        return record.VarianceStatus === value; // Use record.VarianceStatus
       },
     },
     {
@@ -379,24 +335,24 @@ export function DocView() {
       }
 
     >
-       <Row>  <Col ><Card title={'Fully Variance : ' + formdata.filter(el => el.VarianceStatus === "Full_Variance").length} style={{textAlign: 'center',marginBottom:10,marginRight:60, width:180,height:35,backgroundColor:'red', borderRadius:3}}  size="small"></Card>
-                   </Col>
-                   
-                   <Col >
-                   <Card title={'Partial Variance : ' + formdata.filter(el => el.VarianceStatus === "Partial_Variance").length} style={{textAlign: 'center',marginBottom:10,marginRight:60, width:180,height:35,backgroundColor:'orange', borderRadius:3}} size="small"></Card>
-                   </Col>
-                   
-                   <Col >
-                   <Card title={'No Variance : ' + formdata.filter(el => el.VarianceStatus === "No_Variance").length } style={{textAlign: 'center',marginBottom:10,marginRight:60, width:180,height:35,backgroundColor:'lightgreen', borderRadius:3}} size="small"></Card>
-                   </Col>
-                   </Row>
-                   <br></br>
+      <Row>  <Col ><Card title={'Fully Variance : ' + formdata.filter(el => el.status === "Fully Variance").length} style={{ textAlign: 'center', marginBottom: 10, marginRight: 60, width: 180, height: 35, backgroundColor: 'red', borderRadius: 3 }} size="small" bodyStyle={{ display: 'none' }}></Card>
+      </Col>
+
+        <Col >
+          <Card title={'Partial Variance : ' + formdata.filter(el => el.status === "Partially Variance").length} style={{ textAlign: 'center', marginBottom: 10, marginRight: 60, width: 180, height: 35, backgroundColor: 'orange', borderRadius: 3 }} size="small" bodyStyle={{ display: 'none' }}></Card>
+        </Col>
+
+        <Col >
+          <Card title={'No Variance : ' + formdata.filter(el => el.status === "No Variance").length} style={{ textAlign: 'center', marginBottom: 10, marginRight: 60, width: 180, height: 35, backgroundColor: 'lightgreen', borderRadius: 3 }} size="small" bodyStyle={{ display: 'none' }}></Card>
+        </Col>
+      </Row>
+      <br></br>
       <Form form={form} onFinish={getdata}>
         <Row>
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
-            md={{ span: 10}}
+            md={{ span: 10 }}
             lg={{ span: 10 }}
             xl={{ span: 5 }}
           >
@@ -439,7 +395,7 @@ export function DocView() {
           </Row>
         </Row>
       </Form>
-      <Table size="small" dataSource={formdata} columns={columns} pagination={false}/>
+      <Table size="small" dataSource={formdata} columns={columns} pagination={false} />
     </Card>
   );
 }

@@ -22,15 +22,19 @@ export class ScanEntity extends BaseEntity {
     length: 50,
     name: 'gst',
   })
-  GST: string;
+  gstNumber: string;
 
   @Column('varchar', {
     length: 50,
-    name: 'vendor',
+    name: 'vendor_name',
   })
-  Vendor: string;
+  venName: string;
 
-
+  @Column('varchar', {
+    length: 50,
+    name: 'vendor_code',
+  })
+  venCod: string;
 
   @Column('varchar', {
     length: 50,
@@ -40,49 +44,53 @@ export class ScanEntity extends BaseEntity {
 
   @Column('varchar', {
     length: 50,
-    name: 'innvoice_number',
+    name: 'invoice_number',
   })
-  InnvoiceNumber: string;
+  invoiceNumber: string;
 
   @Column('varchar', {
     length: 50,
     name: 'cgst',
   })
-  Cgst: string;
+  cgst: string;
 
   @Column('varchar', {
     length: 50,
     name: 'igst',
   })
-  IGST: string;
+  igst: string;
 
   @Column('varchar', {
     length: 50,
     name: 'sgst',
   })
-  Sgst: string;
+  sgst: string;
 
   @Column('varchar', {
     length: 50,
-    name: 'innvoice_amount',
+    name: 'invoice_amount',
   })
-  InnvoiceAmount: string;
+  invoiceAmount: string;
 
   @Column('varchar', {
     length: 50,
-    name: 'innvoice_currency',
+    name: 'invoice_currency',
   })
-  InnvoiceCurrency: string;
+  invoiceCurrency: string;
 
 
   @Column('varchar', {
     length: 50,
     name: 'financial_year',
   })
-  Financialyear: string;
+  financialYear: string;
 
   
-
+  @Column('varchar', {
+    length: 50,
+    name: 'status',
+  })
+  status: string;
   
   @Column("enum", {
     name: "variance_status",

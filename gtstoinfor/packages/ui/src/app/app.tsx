@@ -1,61 +1,58 @@
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Form, Typography, message } from 'antd';
-import axios from "axios";
-import { useState } from "react";
+import { useState } from 'react';
+import bgImage from '../assets/images/57573OCR.png';
+import { AxiosInstance } from '@xpparel/shared-services';
+import { useIAMClientState, LoginComponent } from './common';
+import { CustomSpinner } from './common/custom-spinner/custom-spinner';
+import { BasicLayout } from './layout/basic-layout/layout';
 import './app.css';
-// import 'antd/dist/antd.css';
-import { LoginComponent, useIAMClientState } from "./common";
-import CustomSpinner from "./common/custom-spinner/custom-spinner";
-import { AppRoutes } from './routes';
-const { Text } = Typography;
 
-
-
-export function App() {
-
-  const { IAMClientAuthContext, dispatch } = useIAMClientState();
+function App() {
+  const { IAMClientAuthContext } = useIAMClientState();
+  let counter = 0;
   const [load, setLoad] = useState(false);
-  const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : undefined
 
 
-
-  const [form] = Form.useForm();
-  //setting load attribute for every request
-  axios.interceptors.request.use(request => {
-    setLoad(true);
+  AxiosInstance.interceptors.request.use(request => {
+    counter++;
+    if (!request['loadStatus']) {
+      setLoad(true);
+    }
     return request;
   });
-  //setting loading flag false after getting response for every request
-  axios.interceptors.response.use(response => {
-    setLoad(false);
+
+  AxiosInstance.interceptors.response.use(response => {
+    counter--;
+    if (counter == 0) {
+      setLoad(false);
+    }
     return response;
   }, error => {
-    setLoad(false);
-    throw error;
-  });
-
-  const handleSubmit = (values: any) => {
-    if (values.username && values.password) {
-      localStorage.setItem("user", JSON.stringify(values.username));
+    counter--;
+    if (counter == 0)
       setLoad(false);
-    } else {
-      message.error('Enter Username and password')
-    }
-  }
+    throw error;
+  })
 
-
-  return (
-    IAMClientAuthContext.isAuthenticated ? <>
+  return (IAMClientAuthContext.isAuthenticated ? <>
     <CustomSpinner loading={load} />
-    <AppRoutes />
+    <div className="App">
+      <BasicLayout key="1" />
+    </div>
   </> :
-    // <div style={{ backgroundImage: `url(${scanIcon})`, display: 'flex', backgroundSize: 'cover', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <div style={{
+      backgroundColor: 'white',
+      backgroundImage: `url(${bgImage})`,
+      backgroundSize: 'contain', // Image will be contained within the background
+      backgroundRepeat: 'no-repeat', // Prevent image repetition
+      backgroundPosition: 'center', // Center the image horizontally and vertically
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh'
+    }}>
       <LoginComponent />
-    // </div>
+    </div>
   );
-};
-
-
+}
 
 export default App;

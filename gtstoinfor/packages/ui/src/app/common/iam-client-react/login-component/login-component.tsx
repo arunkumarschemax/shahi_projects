@@ -1,13 +1,11 @@
-import React from 'react';
-import { Form, Input, Button, notification, Card, Typography } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import './login-component.css';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Card, Form, Input, Typography, notification } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useIAMClientState } from '../iam-client';
 import { loginUser } from '../actions';
+import { useIAMClientState } from '../iam-client';
 import { LoginUserDto } from '../user-models';
-import xpparellogo from './xpparel-logo.jpeg'
-const { Text } = Typography;
+import './login-component.css';
+import xpparellogo from './xpparel-logo.jpeg';
 
 
 export const LoginComponent = () => {
@@ -24,7 +22,7 @@ export const LoginComponent = () => {
             if (from) {
                 navigate(from, { replace: true });
             } else {
-                navigate("/", { replace: true });
+                navigate("/dashboard", { replace: true });
             }
             return true;
         } catch (error: any) {
@@ -41,19 +39,19 @@ export const LoginComponent = () => {
     };
 
     return (
-        <Card style={{marginLeft:'60%',marginTop:'5%',height: '55%',width: '300px'}}>
-        <div style={{marginLeft:'20%'}}>
+        <Card style={{ marginLeft: '60%', marginTop: '5%', height: '55%', width: '300px' }}>
+            <div style={{ marginLeft: '20%' }}>
                 <img src={xpparellogo} width={150} height={'50%'}></img>
             </div>
-        <div style={{marginLeft:'10%'}}><b>Document Scan Management</b></div>
-        <br />
+            <div style={{ marginLeft: '10%' }}><b>Document Scan Management</b></div>
+            <br />
             <Form
                 name="login-form"
                 initialValues={{ remember: true }}
                 onFinish={handleLogin}
                 style={{ minWidth: 300 }}
             >
-                <Form.Item style={{width:'250px'}}
+                <Form.Item style={{ width: '250px' }}
                     name="username"
                     rules={[
                         {
@@ -69,7 +67,7 @@ export const LoginComponent = () => {
                     <Input width={215} prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" autoComplete="off" />
                 </Form.Item>
 
-                <Form.Item style={{width:'250px'}}
+                <Form.Item style={{ width: '250px' }}
                     name="password"
                     rules={[{ required: true, message: 'Please input your password!' }]}
                 >
@@ -87,7 +85,7 @@ export const LoginComponent = () => {
 
                 <Form.Item>
                     <Button type="primary" htmlType="submit" style={{ width: '250px' }}>
-                        Log In 
+                        Log In
                     </Button>
                     {/* Or <a href="/">register now!</a> */}
                 </Form.Item>

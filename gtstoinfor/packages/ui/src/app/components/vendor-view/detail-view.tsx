@@ -20,7 +20,7 @@ const getBranchViewData = async (vendorId: number) => {
 
 
 
-const VendorBranchInfoGrid = () => {
+export const VendorBranchInfoGrid = () => {
   const [vendorDetails, setVendorDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -105,6 +105,11 @@ const VendorBranchInfoGrid = () => {
       title: "Email",
       dataIndex: "email",
       align: "left",
+      render: (text) => (
+        <a href={`mailto:${text}`}>
+          {text}
+        </a>
+      ),
     },
     {
       title: "State",
@@ -175,8 +180,11 @@ const VendorBranchInfoGrid = () => {
           label="Email"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {location.state.rowData.email}
+          <a href={`mailto:${location.state.rowData.email}`}>
+            {location.state.rowData.email}
+          </a>
         </Descriptions.Item>
+
         <Descriptions.Item
           label="Location"
           labelStyle={{ color: "black", fontWeight: "bold" }}
@@ -197,6 +205,7 @@ const VendorBranchInfoGrid = () => {
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {location.state.rowData.bankName}
+          
         </Descriptions.Item>
         <Descriptions.Item
           label="Account Holder Name"
@@ -224,7 +233,8 @@ const VendorBranchInfoGrid = () => {
         </Descriptions.Item>
       </Descriptions>
       <br />
-      <Card style={{ textAlign: "center" }} size="small" title={<span><ApartmentOutlined />Branches</span>} >
+      { vendorDetails.length > 0 ? (
+        <Card style={{ textAlign: "center" }} size="small" title={<span><ApartmentOutlined />Branches</span>} >
         <Table
           pagination={false}
           columns={columns}
@@ -232,6 +242,7 @@ const VendorBranchInfoGrid = () => {
           size="small"
         />
       </Card>
+     ):"" }
     </Card>
   );
 };

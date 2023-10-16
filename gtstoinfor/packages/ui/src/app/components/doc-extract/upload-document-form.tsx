@@ -5,6 +5,7 @@ import {
   BuyersService,
   PricesService,
   SharedService,
+  VendorNamereq,
   VendorService,
 } from "@xpparel/shared-services";
 import {
@@ -46,6 +47,7 @@ interface Item {
   variance: string;
   unitPrice: string;
   totalvalue: string;
+  // status: string;
   // unitPrice: string;
 }
 
@@ -61,6 +63,9 @@ export function DocumentUploadForm() {
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isQuotationDataSet, setIsQuotationDataSet] = useState(false);
+  const [isVendorCodeDataSet, setIsVendorCodeDataSet] = useState(false);
+
+
 
   const [hsnData, setHsnData] = useState([]);
   const [buttonText, setButtonText] = useState("Add");
@@ -75,6 +80,7 @@ export function DocumentUploadForm() {
   const [unitquantity, setUnitquantity] = useState("");
   const [amount, setAmount] = useState("");
   const [quotation, setQuotation] = useState("");
+  const [status, setStatus] = useState("");
   const [unitPrice, setunitPrice] = useState("");
   const [originalUnitPrice, setOriginalUnitPrice] = useState("");
   const [originalQuotation, setOriginalQuotation] = useState("");
@@ -98,38 +104,38 @@ export function DocumentUploadForm() {
   const [Sgst, setSgst] = useState("");
   const [Innvoiceamount, setInnvoiceamount] = useState("");
   const [vendor, setVendor] = useState("");
-  const [vendorCode, setvendorCode] = useState("");
+  const [venCode, setVenCode] = useState("");
   const [financialyear, setFinancialyear] = useState("");
   const [timecreated, setTimecreated] = useState("");
   const [Innvoicecurrency, setInnvoicecurrency] = useState("");
-
-
 
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [data1, setData1] = useState<any[]>([]);
   const [data2, setData2] = useState<any[]>([]);
   const [price, setPrice] = useState<any[]>([]);
+  const [vendorCod, setVendorCod] = useState<any[]>([]);
 
   const services = new VendorService();
   const buyers = new BuyersService();
   const service = new SharedService();
   const venService = new PricesService();
 
-  useEffect(() => {
-    let invoiceAmount = 0;
-    extractedData?.forEach(element => {
-      invoiceAmount += Number(element.amount);
-    });
-    setInnvoiceamount(invoiceAmount.toFixed(2));
-  }, [extractedData])
 
-  useEffect(() => {
-    let Igst = 0;
-    extractedData?.forEach(element => {
-      Igst += Number(element.Taxamount);
-    });
-    setIgst(Igst.toFixed(2));
-  }, [extractedData])
+  // useEffect(() => {
+  //   let invoiceAmount = 0;
+  //   extractedData?.forEach(element => {
+  //     invoiceAmount += Number(element.amount);
+  //   });
+  //   setInnvoiceamount(invoiceAmount.toFixed(2));
+  // }, [extractedData])
+
+  // useEffect(() => {
+  //   let Igst = 0;
+  //   extractedData?.forEach(element => {
+  //     Igst += Number(element.Taxamount);
+  //   });
+  //   setIgst(Igst.toFixed(2));
+  // }, [extractedData])
 
 
   useEffect(() => {
@@ -150,6 +156,43 @@ export function DocumentUploadForm() {
         console.log(err.message);
       });
   };
+
+  useEffect(() => {
+    if (vendor)
+      getVendorCode(vendor);
+  }, [vendor]);
+
+  const getVendorCode = (businessName: string) => {
+    const req = new VendorNamereq(businessName);
+    services.getVendorCodeByVendorName(req).then((res) => {
+      if (res.status) {
+        setVendorCod(res.data?.vendorCode
+        );
+      } else {
+        setVendorCod([]);
+      }
+    })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
+
+  useEffect(() => {
+    if (extractedData.length && vendorCod && extractionCompleted) {
+      const extractedDataCode = [];
+      extractedData.forEach(element => {
+        element.venCode = vendorCod;
+        extractedDataCode.push(element);
+      });
+      if (!isVendorCodeDataSet) {
+        setIsVendorCodeDataSet(true);
+        setExtractedData(extractedDataCode);
+      }
+    }
+  }, [vendorCod, extractedData, extractionCompleted])
+
+
 
   useEffect(() => {
     if (vendor)
@@ -186,9 +229,6 @@ export function DocumentUploadForm() {
   }, [price, extractedData, extractionCompleted])
 
 
-
-
-
   useEffect(() => {
     getData2();
   }, []);
@@ -208,6 +248,7 @@ export function DocumentUploadForm() {
       });
   };
 
+
   const handleMouseDown = (e) => {
     setIsDragging(true);
     setDragStartX(e.clientX);
@@ -218,17 +259,6 @@ export function DocumentUploadForm() {
     setIsDragging(false);
   };
 
-  // useEffect(() => {
-  //   if (extractedData.length && price.length && extractionCompleted) {
-  //     const extractedDataClone = [];
-
-  //     extractedData.forEach(element => {
-  //       const vendor = element.vendor; 
-  //       const Quotation = element.Quotation;  
-  //       extractedDataClone.push({ vendor, Quotation });
-  //     });
-  //   }
-  // }, [price, extractedData, extractionCompleted]);
 
   const handleMouseMove = (e) => {
     if (isDragging) {
@@ -256,10 +286,9 @@ export function DocumentUploadForm() {
       /[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g;
     const matches = text.match(gstNumberRegex);
 
-    // Return the first match if it exists, otherwise return an empty string
     const extractedGstNumber = matches ? matches[0] : "";
 
-    setGstNumbers(extractedGstNumber); // Set the extracted GST number
+    setGstNumbers(extractedGstNumber);
     return extractedGstNumber;
   };
 
@@ -276,6 +305,7 @@ export function DocumentUploadForm() {
     const extractedInvoiceamount = match ? match[0] : "";
     return extractedInvoiceamount;
   };
+
   const extractCgst = (text) => {
     const CgstRegex = /^\d+\.\d{2}$/;
     const match = text.match(CgstRegex);
@@ -361,6 +391,7 @@ export function DocumentUploadForm() {
       !variance &&
       !unitquantity &&
       !unitPrice &&
+      // !status &&
       !amount
     ) {
       return;
@@ -379,11 +410,6 @@ export function DocumentUploadForm() {
       unitPrice: isEditing ? originalUnitPrice : unitPrice,
       variance,
     };
-
-    // const ChargeFloat = parseFloat(Charge) || 0;
-    // const QuotationFloat = parseFloat(quotation) || 0;
-    // newItem.variance = (QuotationFloat - ChargeFloat).toFixed(2);
-
     if (isEditing) {
       const updatedTableData = extractedData.map((item) =>
         item === editingItem ? { ...newItem } : item
@@ -396,7 +422,6 @@ export function DocumentUploadForm() {
       setExtractedData([...extractedData, newItem]);
     }
 
-    // Reset all the input fields
     setHSN("");
     setDescription("");
     setTaxtype("");
@@ -407,6 +432,7 @@ export function DocumentUploadForm() {
     setVariance("");
     setUnitquantity("");
     setunitPrice("");
+    // setStatus("");
   };
 
   const handleEdit = (item) => {
@@ -430,6 +456,8 @@ export function DocumentUploadForm() {
     const quotation = parseFloat(item.quotation) || 0;
     setVariance((unitPrice - quotation).toFixed(2));
     setAmount(item.amount || "0");
+
+
     setUnitquantity(item.unitquantity || "0");
     setOriginalUnitPrice(item.unitPrice || "0");
     setOriginalQuotation(item.quotation || "0");
@@ -451,6 +479,7 @@ export function DocumentUploadForm() {
     setCharge("");
     setTaxPercentage("");
     setVariance("");
+    // setStatus("");
     setUnitquantity("");
     setAmount("");
     setunitPrice("");
@@ -544,21 +573,6 @@ export function DocumentUploadForm() {
       ),
     },
 
-
-
-
-
-    // {
-    //   title: "Amount",
-    //   dataIndex: "amount",
-    //   key: "amount",
-    //   render: (amount) => (
-    //     <div style={{ textAlign: "right" }}>
-    //       {amount !== undefined && amount !== null ? `${amount}` : "0"}
-    //     </div>
-    //   ),
-    // },
-
     // {
     //   title: "Quotation",
     //   dataIndex: "quotation",
@@ -577,34 +591,32 @@ export function DocumentUploadForm() {
     //     const quotation = record.quotation || 0;
     //     const variance = unitPrice - quotation;
 
+    //     const overallVariance = calculateOverallVariance(variance);
+    //     setStatus(overallVariance);
+
     //     return (
     //       <div style={{ textAlign: variance === 0 ? "center" : "right" }}>
     //         {variance !== undefined && variance !== null ? `${variance}` : "-"}
     //       </div>
     //     );
-    //   }
+    //   },
     // },
-    // render: (variance, record) => (
-    //   <div style={{ textAlign: "right" }}>
-    //     {
-    //       (() => {
-    //         const Charge = parseFloat(record.Charge) || 0;
-    //         const Quotation = parseFloat(record.quotation) || 0;
-    //         const varianceValue = Quotation - Charge;
-    //         let status;
-    //         if (varianceValue === 0) {
-    //           status = "No Variance";
-    //         } else if (varianceValue > 0) {
-    //           status = "Par Variance";
-    //         } else {
-    //           status = "Negative Variance";
-    //         }
-    //         return `${varianceValue.toFixed(2)}`;
-    //       })()
-    //     }
-    //   </div>
-    // ),
-
+    // {
+    //   title: "Amount",
+    //   dataIndex: "amount",
+    //   key: "amount",
+    //   render: (amount, record) => (
+    //     <div style={{ textAlign: "right" }}>
+    //       {record.Charge !== null && record.Taxamount !== null
+    //         ? `${(parseFloat(record.Charge) + parseFloat(record.Taxamount)).toFixed(2)}`
+    //         : record.Charge !== null
+    //         ? `${record.Charge}`
+    //         : record.Taxamount !== null
+    //         ? `${record.Taxamount}`
+    //         : "0"}
+    //     </div>
+    //   ),
+    // },
     {
       title: "Action",
       dataIndex: "action",
@@ -629,6 +641,20 @@ export function DocumentUploadForm() {
       ),
     },
   ];
+
+
+  const calculateOverallVariance = (variance) => {
+    if (variance === 0) {
+      return "No Variance";
+    } else if (variance > 0) {
+      return "Fully Variance";
+    } else if (variance <= 0 || variance >= 0) {
+      return "Partially Variance";
+    }
+    return "Unknown Variance";
+  };
+
+
 
   const calculateCharge = () => {
     const taxAmountFloat = parseFloat(Taxamount);
@@ -854,16 +880,7 @@ export function DocumentUploadForm() {
     }
   }
 
-  useEffect(() => {
-    extractGstFromJson();
-    extractInvoicenumberFromJson();
-    // extractigstFromJson();
-    extractcgstFromJson();
-    extractsgstFromJson();
-    extractCurrencyFromJson();
-    extractInvoiceDateFromJson();
-    extractVendornameFromJson();
-  }, [jsonData]);
+
 
   // const extractGstFromJson = () => {
   //   if (jsonData) {
@@ -919,11 +936,26 @@ export function DocumentUploadForm() {
   //   }
   // };
 
+  useEffect(() => {
+    extractGstFromJson();
+    extractInvoicenumberFromJson();
+    // extractigstFromJson();
+    extractcgstFromJson();
+    extractsgstFromJson();
+    extractCurrencyFromJson();
+    extractInvoiceamountFromJson();
+    extractInvoiceDateFromJson();
+    extractVendornameFromJson();
+  }, [jsonData]);
+
 
   const extractGstFromJson = () => {
     if (jsonData) {
       const gstKeywords = ['GSTIN No.'];
+      const gstnumId = '1-26';
+
       let gstValue = null;
+      let gstnum = null;
 
       for (const keyword of gstKeywords) {
         for (const item of jsonData) {
@@ -938,19 +970,44 @@ export function DocumentUploadForm() {
         }
       }
 
+      if (Array.isArray(jsonData)) {
+        const gstnumData = jsonData.find((item) => item.id === gstnumId);
+
+        if (gstnumData) {
+          gstnum = gstnumData.content;
+        }
+      }
+
       setGstNumbers(gstValue);
+      setGstNumbers(gstnum);
     }
   };
 
+
   const extractInvoiceDateFromJson = () => {
     if (extractedData) {
-      const invoiceAmountId = '1-64';
+      const invoiceDateId = '1-14';
+
+      if (Array.isArray(jsonData)) {
+        const invoicedatwData = jsonData.find((item) => item.id === invoiceDateId);
+
+        if (invoicedatwData) {
+          setInvoiceDate(invoicedatwData.content);
+        }
+      }
+    }
+  };
+
+
+  const extractInvoiceamountFromJson = () => {
+    if (extractedData) {
+      const invoiceAmountId = '2-413';
 
       if (Array.isArray(jsonData)) {
         const invoiceAmountData = jsonData.find((item) => item.id === invoiceAmountId);
 
         if (invoiceAmountData) {
-          setInvoiceDate(invoiceAmountData.content);
+          setInnvoiceamount(invoiceAmountData.content);
         }
       }
     }
@@ -958,7 +1015,7 @@ export function DocumentUploadForm() {
 
   const extractInvoicenumberFromJson = () => {
     if (extractedData) {
-      const invoiceNumberId = '1-86';
+      const invoiceNumberId = '1-2';
 
       if (Array.isArray(jsonData)) {
         const invoiceNumberData = jsonData.find((item) => item.id === invoiceNumberId);
@@ -972,7 +1029,7 @@ export function DocumentUploadForm() {
 
   const extractVendornameFromJson = () => {
     if (extractedData) {
-      const vendorId = '1-2';
+      const vendorId = '2-425';
 
       if (Array.isArray(jsonData)) {
         const vendorData = jsonData.find((item) => item.id === vendorId);
@@ -1006,6 +1063,7 @@ export function DocumentUploadForm() {
   const extractcgstFromJson = () => {
     if (jsonData) {
       const cgstKeywords = ['CGST:', 'CGST Amount:', 'Central Tax:'];
+      const cgstId = '2-405';
       let cgstValue = '0.00';
 
       for (const keyword of cgstKeywords) {
@@ -1024,13 +1082,26 @@ export function DocumentUploadForm() {
         }
       }
 
+      if (Array.isArray(jsonData)) {
+        const cgstData = jsonData.find((item) => item.id === cgstId);
+        if (cgstData) {
+          const value = cgstData.content.trim();
+          const numericValue = parseFloat(value.replace(/,/g, ''));
+          if (!isNaN(numericValue)) {
+            cgstValue = numericValue.toFixed(2);
+          }
+        }
+      }
+
       setCgst(cgstValue);
     }
   };
 
+
   const extractsgstFromJson = () => {
     if (jsonData) {
       const sgstKeywords = ['sgst:', 'sgst Amount:', 'Central Tax:'];
+      const sgstId = '2-405';
       let sgstValue = '0.00';
 
       for (const keyword of sgstKeywords) {
@@ -1049,9 +1120,21 @@ export function DocumentUploadForm() {
         }
       }
 
+      if (Array.isArray(jsonData)) {
+        const sgstData = jsonData.find((item) => item.id === sgstId);
+        if (sgstData) {
+          const value = sgstData.content.trim();
+          const numericValue = parseFloat(value.replace(/,/g, ''));
+          if (!isNaN(numericValue)) {
+            sgstValue = numericValue.toFixed(2);
+          }
+        }
+      }
+
       setSgst(sgstValue);
     }
   };
+
 
   const extractCurrencyFromJson = () => {
     if (jsonData) {
@@ -1114,6 +1197,7 @@ export function DocumentUploadForm() {
     const numPages = pdf.numPages;
     const extractedData = [];
     let idCounter = 1;
+    const allLines = [];
 
     for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
       const page = await pdf.getPage(pageNumber);
@@ -1130,6 +1214,7 @@ export function DocumentUploadForm() {
 
         if (item.transform[5]) {
           extractedData.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
+          allLines.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() }); // Add to allLines
           idCounter++;
           line = '';
         }
@@ -1138,6 +1223,7 @@ export function DocumentUploadForm() {
       });
 
       extractedData.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
+      allLines.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() }); // Add to allLines
     }
 
     const currentFinancialYear = getCurrentFinancialYearFrom();
@@ -1145,36 +1231,87 @@ export function DocumentUploadForm() {
 
     const structuredHSNLines = [];
     let currentHSN = null;
-    let hsnId = null;
-    let linesId = 0
-    for (const line of extractedData) {
-      if (line.content.match(/^\d{6}$/)) {
-        hsnId = linesId;
+
+    for (const line of allLines) {
+      if (line.content.includes("996") || line.content.match(/^\d{6}$/)) {
         if (currentHSN) {
           structuredHSNLines.push(currentHSN);
         }
         currentHSN = {
           HSN: line.content.includes("HSN")
             ? line.content.match(/\d+/)
-            : line.content.trim(),
-          Taxtype: line.content.match(/IGST|CGST|SGST|GST/),
-          Taxamount: extractedData[hsnId - 6].content,
-          description: extractedData[hsnId + 1].content,
-          Charge: extractedData[hsnId - 10].content,
-          unitPrice: extractedData[hsnId - 2].content,
-          amount: extractedData[hsnId - 10].content,
-          unitquantity: extractedData[hsnId - 1].content,
-          Taxpercentage: extractedData[hsnId - 5].content,
+            : line.content.replace(/\]/g, '').trim(),
+          Taxtype: null,
+          Taxamount: null,
+          chargeINR: null,
+          quotation: null,
+          unitPrice: null,
+          unitquantity: null,
+          description: [],
         };
+      } else if (currentHSN && !currentHSN.Taxtype) {
+        const taxtypeMatch = line.content.match(/IGST|CGST|SGST|GST/);
+        if (taxtypeMatch) {
+          if (taxtypeMatch[0] === "CGST" || taxtypeMatch[0] === "SGST") {
+            currentHSN.Taxtype = "CGST & SGST";
+          } else {
+            currentHSN.Taxtype = taxtypeMatch[0];
+          }
+        }
+      }
+      if (currentHSN && currentHSN.HSN && !currentHSN.Taxtype) {
+        if (!line.content.includes("996")) {
+          const wholeNumberMatch = line.content.match(/\b(\d+)\b/);
+          if (wholeNumberMatch) {
+            if (!currentHSN.unitquantity) {
+              currentHSN.unitquantity = parseInt(wholeNumberMatch[1]);
+            }
+          }
+          currentHSN.description.push(line.content.trim());
+        }
       }
 
-      linesId += 1;
+      if (line.content.includes("chargeINR")) {
+        const chargeValueMatch = line.content.match(/^\d{1,3}(,\d{3})*(\.\d{2})?$/);
+        if (chargeValueMatch) {
+          currentHSN.chargeINR = parseFloat(chargeValueMatch[0].replace(/,/g, ""));
+        }
+      }
+
+      if (line.content.includes("quotation")) {
+        const quotationValueMatch = line.content.match(/^\d{1,3}(,\d{3})*(\.\d{2})?$/);
+        if (quotationValueMatch) {
+          currentHSN.quotation = parseFloat(quotationValueMatch[0].replace(/,/g, ""));
+        }
+      }
+
+
+      const percentageMatch = line.content.match(/(\d+(\.\d+)?)%/);
+      if (percentageMatch && currentHSN) {
+        currentHSN.Taxpercentage = parseFloat(percentageMatch[1]);
+      }
+
+      if (line.content.includes("=") && currentHSN) {
+        const taxAmountMatch = line.content.match(/=(\d+(\.\d+)?)/);
+        if (taxAmountMatch) {
+          currentHSN.Taxamount = parseFloat(taxAmountMatch[1]);
+        }
+      }
     }
 
-    if (currentHSN) {
-      structuredHSNLines.push(currentHSN);
-    }
-    console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
+    console.log("Structured HSN Lines (JSON):", JSON.stringify(structuredHSNLines, null, 2));
+    setExtractedData(structuredHSNLines);
+    const result = {
+      "Entire Data": allLines,
+    };
+
+    setTimeout(() => {
+      setIsLoading(false);
+      setExtractionCompleted(true);
+      setShowCancelButton(true);
+    }, 2000);
+
+    console.log("Result (JSON):", JSON.stringify(result, null, 2));
     setExtractedData(structuredHSNLines);
     return extractedData;
   };
@@ -1277,7 +1414,6 @@ export function DocumentUploadForm() {
             for (const line of allLines) {
               if (line.content.includes("HSN") || line.content.match(/^\d{6}$/)) {
                 if (currentHSN) {
-                  // Calculate variance and add it to currentHSN
                   currentHSN.variance = currentHSN.chargeINR - currentHSN.quotation;
                   structuredHSNLines.push(currentHSN);
                 }
@@ -1352,7 +1488,6 @@ export function DocumentUploadForm() {
             const formattedDate = currentDate.toLocaleString();
             setTimecreated(formattedDate);
 
-            // setShowCancelButton(true);//
             setTimeout(() => {
               setIsLoading(false);
               setExtractionCompleted(true);
@@ -1394,25 +1529,25 @@ export function DocumentUploadForm() {
     },
   };
 
-  const onSumbit = () => {
-    const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount,
-      Innvoicecurrency, financialyear,
-      JSON.parse(localStorage.getItem("currentUser")).user.userName, extractedData, "");
-    console.log(req, "submit");
-    service
-      .postdata(req)
-      .then((res) => {
-        if (res.status) {
-          message.success("Success");
-          navigate("/scan-document");
-        } else {
-          message.error("Fill All Fields");
-        }
-      })
-      .catch((err: { message: any }) => {
-        console.log(err.message, "err message");
-      });
-  };
+  // const onSumbit = () => {
+  //   const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount,
+  //     Innvoicecurrency, financialyear, status,
+  //     JSON.parse(localStorage.getItem("currentUser")).user.userName, extractedData, "");
+  //   console.log(req, "submit");
+  //   service
+  //     .postdata(req)
+  //     .then((res) => {
+  //       if (res.status) {
+  //         message.success("Success");
+  //         navigate("/scan-document");
+  //       } else {
+  //         message.error("Fill All Fields");
+  //       }
+  //     })
+  //     .catch((err: { message: any }) => {
+  //       console.log(err.message, "err message");
+  //     });
+  // };
 
   const handleCancel = () => {
     setButtonClicked(true);
@@ -1437,6 +1572,7 @@ export function DocumentUploadForm() {
     const filteredValue = e.target.value.replace(/[^0-9,.]/g, "");
     setIgst(filteredValue);
   };
+
 
   return (
     <Row>
@@ -1516,7 +1652,8 @@ export function DocumentUploadForm() {
                           left: '220px',
                         }}
                         onClick={handleUploadDocument}
-                        disabled={isLoading || buttonClicked}
+                        disabled={true}
+
                       >
                         {isLoading ? (
                           <span
@@ -1557,53 +1694,52 @@ export function DocumentUploadForm() {
           headStyle={{ backgroundColor: "#00FFFF", border: 0 }}
           size="small"
         >
-          {selectedImage && <div>
-            <div
-              style={{
-                position: "relative",
-                overflow: "hidden",
-                width: "100%",
-                height: "300px",
-                cursor: isDragging ? "grabbing" : "grab",
-              }}
-              onMouseDown={handleMouseDown}
-              onMouseUp={handleMouseUp}
-              onMouseMove={handleMouseMove}
-            >
+          {selectedImage && (
+            <div>
               <div
                 style={{
-                  overflow: "auto",
-                  overflowX: "scroll",
-                  overflowY: "scroll",
-                  height: "100%",
+                  position: "relative",
+                  overflow: "hidden",
+                  width: "100%",
+                  height: "300px",
+                  cursor: "grab",
                 }}
               >
-                <img
-                  id="imageToDrag"
-                  src={selectedImage}
+                <div
                   style={{
-                    maxWidth: "100%",
-                    transform: `scale(${zoomFactor})`,
-                    transition: "transform 0.2s",
+                    overflow: "auto",
+                    width: "100%",
+                    height: "100%",
                   }}
-                />
+                >
+                  <img
+                    id="imageToDrag"
+                    src={selectedImage}
+                    style={{
+                      width: "100%",
+                      transform: `scale(${zoomFactor})`,
+                      transformOrigin: "top left",
+                      transition: "transform 0.2s",
+                    }}
+                  />
+                </div>
               </div>
+              <span style={{ textAlign: "center", marginTop: "10px" }}>
+                <Button onClick={handleZoomIn}>Zoom In</Button>
+                <Button onClick={handleZoomOut}>Zoom Out</Button>
+              </span>
             </div>
-            <span style={{ textAlign: "center", marginTop: "10px" }}>
-              <Button onClick={handleZoomIn}>Zoom In</Button>
-              <Button onClick={handleZoomOut}>Zoom Out</Button>
-            </span>
-          </div>}
-          {pdfData && (<div id="pdfContainer" style={{ marginTop: '20px' }}>
-
-            <iframe
-              src={pdfData}
-              title="PDF Viewer"
-              width="600px"
-              height="600px"
-              frameBorder="0"
-            />
-          </div>
+          )}
+          {pdfData && (
+            <div id="pdfContainer" style={{ marginTop: '20px' }}>
+              <iframe
+                src={pdfData}
+                title="PDF Viewer"
+                width="100%"
+                height="400px"
+                frameBorder="0"
+              />
+            </div>
           )}
         </Card>
       </Col>
@@ -1650,16 +1786,15 @@ export function DocumentUploadForm() {
                   <Input
                     title="Vendor"
                     name="Vendor"
-                    style={{ width: "190px", height: "30px", borderColor: vendor ? "green" : "red", }}
-                    className={vendor ? "green" : vendor === "" ? "red" : "black"}
+                    style={{ width: "190px", height: "30px", borderColor: vendor ? "blue" : "red", }}
+                    className={vendor ? "blue" : vendor === "" ? "red" : "black"}
                     value={vendor}
                     onChange={(e) => setVendor(e.target.value)}
                   />
                 </Col>
-
                 <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                   <label
-                    htmlFor="vendorCode"
+                    htmlFor="venCode"
                     style={{
                       color: "black",
                       fontWeight: "bold",
@@ -1670,14 +1805,19 @@ export function DocumentUploadForm() {
                     Vendor Code
                   </label>
                   <Input
-                    title="vendorCode"
-                    name="vendorCode"
-                    style={{ width: "190px", height: "30px", borderColor: vendorCode ? "green" : "red", }}
-                    className={vendorCode ? "green" : vendorCode === "" ? "red" : "black"}
-                    value={vendorCode}
-                    onChange={(e) => setvendorCode(e.target.value)}
+                    title="venCode"
+                    name="venCode"
+                    style={{
+                      width: "190px",
+                      height: "30px",
+                      borderColor: vendorCod ? "green" : "red",
+                    }}
+                    className={vendorCod ? "green" : venCode === "" ? "red" : "black"}
+                    value={vendorCod}
+                    onChange={(e) => setVenCode(e.target.value)}
                   />
                 </Col>
+
 
                 <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                   <label
@@ -1689,7 +1829,7 @@ export function DocumentUploadForm() {
                       left: "10px",
                     }}
                   >
-                    GST
+                    GST NUMBER
                   </label>
                   <Input
                     title="GST"
@@ -1759,53 +1899,57 @@ export function DocumentUploadForm() {
 
               <Row gutter={24} style={{ marginTop: "20px" }}>
                 <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                  <label
-                    htmlFor="IGST"
-                    style={{ color: "black", fontWeight: "bold" }}
-                  >
+                  <label htmlFor="IGST" style={{ color: "black", fontWeight: "bold" }}>
                     IGST
                   </label>
                   <Input
                     id="IGST"
                     name="IGST"
-                    style={{ width: "190px", height: "30px", borderColor: Igst ? "green" : "red", }}
+                    style={{
+                      width: "190px",
+                      height: "30px",
+                      borderColor: Igst ? "green" : "red",
+                    }}
                     className={Igst ? "green" : Igst === "" ? "red" : "black"}
                     value={Igst}
                     onChange={handleIgstChange}
-
+                    disabled={parseInt(Igst, 10) === 0}
                   />
                 </Col>
                 <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                  <label
-                    htmlFor="Cgst"
-                    style={{ color: "black", fontWeight: "bold" }}
-                  >
+                  <label htmlFor="Cgst" style={{ color: "black", fontWeight: "bold" }}>
                     CSGT
                   </label>
                   <Input
                     id="Cgst"
                     name="Cgst"
-                    style={{ width: "190px", height: "30px", borderColor: Cgst ? "green" : "red", }}
+                    style={{
+                      width: "190px",
+                      height: "30px",
+                      borderColor: Cgst ? "green" : "red",
+                    }}
                     className={Cgst ? "green" : Cgst === "" ? "red" : "black"}
                     value={Cgst}
                     onChange={handleCgstChange}
+                    disabled={parseInt(Cgst, 10) === 0}
                   />
                 </Col>
-
                 <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                  <label
-                    htmlFor="Sgst"
-                    style={{ color: "black", fontWeight: "bold" }}
-                  >
+                  <label htmlFor="Sgst" style={{ color: "black", fontWeight: "bold" }}>
                     SGST
                   </label>
                   <Input
                     id="Sgst"
                     name="Sgst"
-                    style={{ width: "180px", height: "30px", borderColor: Sgst ? "green" : "red", }}
+                    style={{
+                      width: "180px",
+                      height: "30px",
+                      borderColor: Sgst ? "green" : "red",
+                    }}
                     className={Sgst ? "green" : Sgst === "" ? "red" : "black"}
                     value={Sgst}
                     onChange={handleSgstChange}
+                    disabled={parseInt(Sgst, 10) === 0}
                   />
                 </Col>
               </Row>
@@ -1843,6 +1987,24 @@ export function DocumentUploadForm() {
                     onChange={(e) => setFinancialyear(e.target.value)}
                   />
                 </Col>
+
+                {/* <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                  <label htmlFor="status" style={{ color: "black", fontWeight: "bold" }}>
+                    Status
+                  </label>
+                  <Input
+                    id="status"
+                    name="status"
+                    style={{
+                      width: "190px",
+                      height: "30px",
+                      borderColor: status ? "blue" : "red",
+                    }}
+                    className={status === "No Variance" ? "blue" : status === "Fully Variance" ? "red" : "black"}
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                  />
+                </Col> */}
 
                 {/* <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                   <label
@@ -1991,7 +2153,6 @@ export function DocumentUploadForm() {
                     <Option value="CSGT & SGST">CSGT & SGST</Option>
                     <Option value="No Tax">No Tax</Option>
 
-                    {/* Add more options as needed */}
                   </Select>
                 </Col>
 
@@ -2046,22 +2207,6 @@ export function DocumentUploadForm() {
                     onChange={(e) => setUnitquantity(e.target.value)}
                   />
                 </Col>
-
-                {/* <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label
-                      htmlFor="Charge"
-                      style={{ color: "black", fontWeight: "bold" }}
-                    >
-                      Charge
-                    </label>
-                    <Input
-                      id="Charge"
-                      name="Charge"
-                      style={{ width: "150px", height: "30px" }}
-                      value={Charge}
-                      onChange={(e) => setCharge(e.target.value)}
-                    />
-                  </Col> */}
               </Row>
 
               <Row gutter={12} style={{ marginTop: "10px" }}>
@@ -2097,7 +2242,7 @@ export function DocumentUploadForm() {
                     onChange={(e) => setDescription(e.target.value)}
                   />
                 </Col>
-                {/* <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                   <label
                     htmlFor="variance"
                     style={{ color: "black", fontWeight: "bold" }}
@@ -2110,6 +2255,19 @@ export function DocumentUploadForm() {
                     style={{ width: "150px", height: "30px" }}
                     value={variance}
                     onChange={(e) => setVariance(e.target.value)}
+                  />
+                </Col>
+
+
+                {/* <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                  <label htmlFor="status" style={{ color: "black", fontWeight: "bold" }}>Status</label>
+                  <Input
+                    id="status"
+                    name="status"
+                    style={{ width: "150px", height: "30px" }}
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+
                   />
                 </Col> */}
               </Row>
@@ -2145,7 +2303,7 @@ export function DocumentUploadForm() {
               type="primary"
               htmlType="submit"
               style={{ position: "relative", top: "10px", left: "10PX" }}
-              onClick={onSumbit}
+              // onClick={onSumbit}
             >
               Submit
             </Button>

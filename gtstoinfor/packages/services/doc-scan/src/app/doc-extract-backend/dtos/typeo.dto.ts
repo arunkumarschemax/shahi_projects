@@ -5,35 +5,40 @@ export class ScanDto {
   
  
   @ApiProperty()
-  GST: string;
+  gstNumber: string;
 
   @ApiProperty()
-  Vendor: string;
+  venName: string;
+
+  @ApiProperty()
+  venCod: string;
 
   @ApiProperty()
   invoiceDate: string;
 
   @ApiProperty()
-  Cgst: string;
+  cgst: string;
 
   @ApiProperty()
-  IGST: string;
+  igst: string;
 
   @ApiProperty()
-  Sgst: string;
+  sgst: string;
 
   @ApiProperty()
-  InnvoiceNumber: string;
+  invoiceNumber: string;
 
   @ApiProperty()
-  InnvoiceAmount: string;
+  invoiceAmount: string;
 
   @ApiProperty()
-  InnvoiceCurrency: string;
-
+  invoiceCurrency: string;
 
   @ApiProperty()
-  Financialyear: string;
+  financialYear: string;
+
+  @ApiProperty()
+  status: string;
 
   @ApiProperty()
   createdUser: string;

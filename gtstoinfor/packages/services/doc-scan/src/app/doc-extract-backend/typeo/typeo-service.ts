@@ -25,7 +25,7 @@ export class ScanService {
     const adapterData = this.adapter.convertDtoToEntity(req);
     console.log(adapterData,'*******')
     await this.repository.save(adapterData)
-    const internalMessage: string = req.GST
+    const internalMessage: string = req.gstNumber
       ? "Created Successfully"
       : "Created Successfully";
     return new ScanResponseModel(true, 48896, internalMessage);
@@ -36,7 +36,7 @@ export class ScanService {
   async getdata(req:filterDto): Promise<CommonResponseModel> {
     console.log(req,"services")
     
-    const records = await this.repository.find({where:{Vendor:req.vendorName},
+    const records = await this.repository.find({where:{venName:req.vendorName},
       relations: ['scanentity']
     });
     if (records.length === 0) {
