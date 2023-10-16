@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 // import FactoriesView from './factories-view';
 import { AlertMessages, FactoryDto, Fobdto } from '@project-management-system/shared-models';
 import Papa from 'papaparse'
-import { FileExcelFilled } from '@ant-design/icons';
+import { FileExcelFilled, UndoOutlined } from '@ant-design/icons';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
 
@@ -178,6 +178,7 @@ export function FobPriceListForm(props: Formprops) {
         layout='vertical'
         onFinish={submitForm}
         initialValues={props.Data} >
+          
         <Row gutter={24}>
           <Form.Item name='id' hidden={true}>
             <Input />
@@ -203,7 +204,7 @@ export function FobPriceListForm(props: Formprops) {
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                   <Form.Item name='planningSeasonCode' label='Planning Season Code'
                     rules={[
-                      { required: true, message: 'Please enter the Planning Season Code', },
+                      { required: true, message: 'Planning Season Code is Required', },
                     
                    
                     {
@@ -218,7 +219,7 @@ export function FobPriceListForm(props: Formprops) {
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                   <Form.Item name='planningSeasonYear' label='Planning Season Year'
                     rules={[
-                      { required: true, message: 'Please enter the Planning Season Year', },
+                      { required: true, message: 'Planning Season Year is Required', },
                       {
                         pattern: /^[0-9]{4}$/,
                         message: 'Please enter a valid 4-digit year',
@@ -228,13 +229,13 @@ export function FobPriceListForm(props: Formprops) {
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                   <Form.Item name='styleNumber' label='Style Number'
-                    rules={[{ required: true, message: 'Please enter the Style Number', }]}>
+                    rules={[{ required: true, message: 'Style Number is Required', }]}>
                     <Input placeholder='Style Number'
                     />
                   </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                  <Form.Item name='colorCode' label='Color Code' rules={[{ required: true, message: 'Please enter the Color Code', },
+                  <Form.Item name='colorCode' label='Color Code' rules={[{ required: true, message: 'Color Code is Required', },
                                         { pattern: /^(?:\d{1}|\d{2}|\d{3}|\d{4}|\d{5}|\d{7})$/,
                                         message: 'Please enter a valid Code',
                                       }
@@ -244,7 +245,7 @@ export function FobPriceListForm(props: Formprops) {
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item name='sizeDescription'label='Size Description'
-                  rules={[{required: true, message: 'Please enter the Size Description',}, {
+                  rules={[{required: true, message: 'Size Description is Required',}, {
                   pattern: /^(2XL|2XL-S|2XL-T|2XLTT|2XS|3XL|3XL-S|3XL-T|3XLTT|4XL|4XL-S|4XL-T|5XL|L|L-S|L-T|L\+|LTT|M|M-S|M-T|M\+|MTT|S|S-S|S-T|S\+|STT|XL|XL-S|XL-T|XL\+|XLTT|XS|XS-S|XS-T)$/i,
                   message: 'Please enter a valid size description from the list (eg: 4XL-S or XL or L',},]}>
                     <Input placeholder='Size Description' /></Form.Item>
@@ -252,7 +253,7 @@ export function FobPriceListForm(props: Formprops) {
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                   <Form.Item name='shahiConfirmedGrossPrice' label='Shahi Confirmed Gross Price'
-                    rules={[{ required: true, message: 'Please enter the Valid Gross Price ', },
+                    rules={[{ required: true, message: 'Gross Price is Required', },
                     {
                       pattern: /^(?!0\d)(\d{1,5}(\.\d{2})?)?$/,
                       message: 'Please enter a valid price 00.00 type is required',
@@ -262,8 +263,8 @@ export function FobPriceListForm(props: Formprops) {
                   </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                  <Form.Item name='shahiConfirmedGrossPriceCurrencyCode' label='Shahi Confirmed Gross Price Currency Code'
-                    rules={[{ required: true, message: 'Please enter the Color Code' },
+                  <Form.Item name='shahiConfirmedGrossPriceCurrencyCode' label='Gross Price Currency Code is Required'
+                    rules={[{ required: true, message: 'Please enter the Currency Code' },
                     {
                       pattern: /^[A-Z]{0,5}$/,
                       message: 'Please enter up to 5 capital letters',
@@ -279,10 +280,15 @@ export function FobPriceListForm(props: Formprops) {
 
 
         </Row>
-        <Row gutter={24} justify={'end'}>
-          <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button onClick={onReset} style={{ backgroundColor: ' red',color:'white' }}>Reset</Button></Col>
-          <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button type='primary' htmlType='submit' style={{ backgroundColor: ' green' }} >Submit</Button></Col>
-        </Row>
+        {/* <Row gutter={24} justify={'end'}> */}
+          {/* <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button onClick={onReset} style={{ color:'red' }}><UndoOutlined /> Reset</Button></Col>
+          <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button type='primary' htmlType='submit' style={{ backgroundColor: ' green' }} >Submit</Button></Col> */}
+        {/* </Row> */}
+
+        <Row  gutter={24} justify={'end'}>
+              <Col xs={{ span: 6 }} sm={{ span: 6}} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button style={{ color:'red'}} onClick={onReset}><UndoOutlined />Reset</Button></Col>
+              <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span:2  }}><Button type='primary' disabled={disable} htmlType='submit'>Submit</Button></Col>
+            </Row>
       </Form>
     </Card>
 
