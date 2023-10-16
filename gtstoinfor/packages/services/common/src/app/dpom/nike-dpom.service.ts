@@ -194,7 +194,7 @@ export class DpomService {
     async getCRMOrderDetails1(buyerPO: string): Promise<any> {
         const headers = { 'AUTH_API_KEY': '$2a$10$UzaZDcs2ih0MpW12ozjvi.KgUrJyhdxR.Z64oVIwGbz8WmBL.JhDy' }
         try {
-            const response = await axios.post(`https://businesscard.shahi.co.in/ShahiApiGate/nikeCo/getNikeCoDetails?poNo=${buyerPO}`, { headers });
+            const response = await axios.post(`https://businesscard.shahi.co.in/ShahiApi/api/nikeCo/getNikeCoDetails?poNo=${buyerPO}`, { headers });
             // Extract the relevant data from the response and return it
             const responseData = response.data;
             if (responseData.length > 0) {
@@ -337,7 +337,7 @@ export class DpomService {
             entity.createdUser = 'API sync'
             const save = await transactionManager.getRepository(NikeFileUploadEntity).save(entity);
             for (const orderDetail of orderDetails.data) {
-                const CRMData1 = await this.getCRMOrderDetails1('DV3934');
+                const CRMData1 = await this.getCRMOrderDetails1(orderDetail.poHeader.poNumber);
                 const CRMData2 = await this.getCRMOrderDetails2('2000590900');
                 const CRMData3 = await this.getCRMOrderDetails3('476F');
                 if (CRMData1.status) {
