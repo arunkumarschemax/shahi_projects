@@ -480,8 +480,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
     const onSumbit = () => {
         const req1 = new HsnDto(HSN,taxType,taxAmount,taxPercentage,charge,unitQuantity,description,quotation,unitPrice,variance)
         const req = new AllScanDto(gstNumber,venName, venCod,invoiceDate,invoiceNumber,invoiceAmount,igst,cgst,sgst,invoiceCurrency,
-            financialYear, status,"",[req1])
-        //   JSON.parse(localStorage.getItem("currentUser")).user.userName, extractedData,"");
+            financialYear, status,"",[req1],
+          JSON.parse(localStorage.getItem("currentUser")).user.userName,);
         console.log(req, req1,"submit");
         service
           .postdata(req)

@@ -28,15 +28,17 @@ import Highlighter from "react-highlight-words";
 import { Link, useNavigate } from "react-router-dom";
 
 interface Item {
-  GST: string;
-  Vendor: string;
+  gstNumber: string;
+  venName: string;
+  venCod:string;
   invoiceDate: string;
-  Cgst: string;
-  IGST: string;
-  Sgst: string;
-  InnvoiceNumber: string;
-  InnvoiceAmount: string;
-  InnvoiceCurrency: string;
+  cgst: string;
+  igst: string;
+  sgst: string;
+  invoiceNumber: string;
+  invoiceAmount: string;
+  invoiceCurrency: string;
+  financialYear:string;
 }
 
 // export interface DocViewProps { }
