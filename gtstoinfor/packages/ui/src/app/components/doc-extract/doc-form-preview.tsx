@@ -476,33 +476,33 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
         calculateCharge();
     };
 
-  
+
     const onSumbit = () => {
-        const req1 = new HsnDto(HSN,taxType,taxAmount,taxPercentage,charge,unitQuantity,description,quotation,unitPrice,variance)
-        const req = new AllScanDto(gstNumber,venName, venCod,invoiceDate,invoiceNumber,invoiceAmount,igst,cgst,sgst,invoiceCurrency,
-            financialYear, status,"",[req1])
-        //   JSON.parse(localStorage.getItem("currentUser")).user.userName, extractedData,"");
-        console.log(req, req1,"submit");
+        const req1 = new HsnDto(HSN, taxType, taxAmount, taxPercentage, charge, unitQuantity, description, quotation, unitPrice, variance)
+        const req = new AllScanDto(gstNumber, venName, venCod, invoiceDate, invoiceNumber, invoiceAmount, igst, cgst, sgst, invoiceCurrency,
+            financialYear, status, "", [req1],
+            JSON.parse(localStorage.getItem("currentUser")).user.userName,);
+        console.log(req, req1, "submit");
         service
-          .postdata(req)
-          .then((res) => {
-            if (res.status) {
-              message.success("Success");
-              navigate("/scan-document");
-            } else {
-              message.error("Fill All Fields");
-            }
-          })
-          .catch((err: { message: any }) => {
-            console.log(err.message, "err message");
-          });
-      };
+            .postdata(req)
+            .then((res) => {
+                if (res.status) {
+                    message.success("Success");
+                    navigate("/scan-document");
+                } else {
+                    message.error("Fill All Fields");
+                }
+            })
+            .catch((err: { message: any }) => {
+                console.log(err.message, "err message");
+            });
+    };
 
 
     return (
         <>
-            <Card >
-                <Form layout='vertical' form={props.form} initialValues={props?.formData} name="control-hooks">
+            <Card>
+                <Form layout="vertical" form={props.form} initialValues={props?.formData} name="control-hooks">
                     <Row gutter={16}>
                         <Col xs={8} sm={8} md={8} lg={8} xl={8}>
                             <Form.Item
@@ -513,10 +513,10 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 <Input
                                     placeholder="Vendor Name"
                                     onChange={(e) => setVenName(e.target.value)}
+                                    style={{ borderColor: props.formData?.venName ? 'green' : 'red' }}
                                 />
                             </Form.Item>
                         </Col>
-
 
                         <Col
                             xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
@@ -526,7 +526,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="Vendor Code"
-                                    onChange={(e) => setVenCode(e.target.value)} />
+                                    onChange={(e) => setVenCode(e.target.value)}
+                                    style={{ borderColor: props.formData?.venCod ? 'green' : 'red' }} />
                             </Form.Item>
                         </Col>
 
@@ -535,7 +536,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 <Input
                                     placeholder="GST NUMBER"
                                     onChange={(e) => setGstNumber(e.target.value)}
-                                />
+                                    style={{ borderColor: props.formData?.gstNumber ? 'green' : 'red' }} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -548,7 +549,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="Invoice Date"
-                                    onChange={(e) => setInvoiceDate(e.target.value)} />
+                                    onChange={(e) => setInvoiceDate(e.target.value)}
+                                    style={{ borderColor: props.formData?.invoiceDate ? 'green' : 'red' }} />
                             </Form.Item>
                         </Col>
 
@@ -559,7 +561,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="Invoice Number"
-                                    onChange={(e) => setInvoiceNumber(e.target.value)} />
+                                    onChange={(e) => setInvoiceNumber(e.target.value)}
+                                    style={{ borderColor: props.formData?.invoiceNumber ? 'green' : 'red' }} />
                             </Form.Item>
                         </Col>
 
@@ -572,7 +575,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="Invoice Amount"
-                                    onChange={(e) => setInvoiceAmount(e.target.value)} />
+                                    onChange={(e) => setInvoiceAmount(e.target.value)}
+                                    style={{ borderColor: props.formData?.invoiceAmount ? 'green' : 'red' }} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -585,7 +589,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="IGST"
-                                    onChange={(e) => setIgst(e.target.value)} />
+                                    onChange={(e) => setIgst(e.target.value)}
+                                    style={{ borderColor: props.formData?.igst ? 'green' : 'red' }} />
                             </Form.Item>
                         </Col>
 
@@ -596,7 +601,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="CGST"
-                                    onChange={(e) => setCgst(e.target.value)} />
+                                    onChange={(e) => setCgst(e.target.value)}
+                                    style={{ borderColor: props.formData?.cgst ? 'green' : 'red' }} />
                             </Form.Item>
                         </Col>
 
@@ -613,7 +619,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="SGST"
-                                    onChange={(e) => setSgst(e.target.value)} />
+                                    onChange={(e) => setSgst(e.target.value)}
+                                    style={{ borderColor: props.formData?.sgst ? 'green' : 'red' }} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -626,7 +633,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="Invoice Currency"
-                                    onChange={(e) => setInvoiceCurrency(e.target.value)} />
+                                    onChange={(e) => setInvoiceCurrency(e.target.value)}
+                                    style={{ borderColor: props.formData?.invoiceCurrency ? 'green' : 'red' }} />
                             </Form.Item>
                         </Col>
 
@@ -636,7 +644,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                             rules={[{ required: true, message: "Field Is Required" }]}
                         >
                             <Input placeholder="Financial Year"
-                                onChange={(e) => setFinancialyear(e.target.value)} />
+                                onChange={(e) => setFinancialyear(e.target.value)}
+                                style={{ borderColor: props.formData?.financialYear ? 'green' : 'red' }} />
                         </Form.Item>
                         </Col>
 

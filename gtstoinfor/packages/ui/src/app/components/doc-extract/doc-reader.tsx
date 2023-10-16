@@ -4,7 +4,7 @@ import { Button, Card, Col, Form, FormInstance, Radio, Row, Select, Spin, Upload
 import { useState } from 'react';
 import { pdfjs } from 'react-pdf';;
 import { extractDhl, extractDart, extractExpeditors, extractEfl, extractOocl, extractNagel, extractApl, extractMaersk, checkIsScannedPdf } from './schemax-ai-docx-pdf';
-import { convertScannedPdfToSelectablePdf, extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
+import { convertScannedPdfToSelectablePdf, extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 import { PDFDocument, rgb } from 'pdf-lib';
 export interface DocReaderProps {
@@ -177,6 +177,20 @@ export const DocReader = (props: DocReaderProps) => {
                         }
                         break;
                     }
+
+                    case VendorNameEnum.extractedTriway:
+                        {
+                            const isScannedPdf = await checkIsScannedPdf(pdfData)
+                            if (isScannedPdf) {
+                                const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                                const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                                processedData = await extractTriwayInvoiceDataFromScanned(allLines);
+                            } else {
+                                processedData = await extractEfl(pdfData);
+                            }
+                            break;
+                        }
+    
 
                 case VendorNameEnum.extractedVinayaka:
                     {
