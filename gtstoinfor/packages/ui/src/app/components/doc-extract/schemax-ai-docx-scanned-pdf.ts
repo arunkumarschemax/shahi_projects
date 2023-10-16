@@ -1324,7 +1324,6 @@ export const extractSrivaruInvoiceDataFromScanned = async (allLines: any[]) => {
         extractedData: InvoiceLines?.[0],
         extractedHsnData: structuredHSNLines
     }
-<<<<<<< HEAD
     structuredHSNLines.forEach((line) => {
         if (line.taxAmount) {
             line.taxPercentage = line.taxAmount.taxPercentage;
@@ -2164,6 +2163,4 @@ export const extractRingoCargoInvoiceDataFromScanned = async (allLines: any[]) =
         extractedHsnData: structuredHSNLines
     };
 
-=======
->>>>>>> 5c402825f7d30bd6ecb68c30ca9f87b57f9d131d
 }
