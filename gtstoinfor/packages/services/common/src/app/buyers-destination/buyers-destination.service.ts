@@ -148,6 +148,7 @@ async createBuyersDestination(
        for (const res of color) {
            const buyerId = res.buyer_id;
            const buyerName = res.buyer_name;
+           const buyerCode = res.buyer_code
        
            if (!buyersInfo[buyerId]) {
                buyersInfo[buyerId] = {
@@ -156,6 +157,7 @@ async createBuyersDestination(
                    size: [],
                    destination: [],
                    color: [],
+                   buyerCode
                };
            }
        

@@ -10,13 +10,15 @@ export class MappingModel{
     size: SizeInfoModel[];
     destination: DestinationInfoModel[];
     color: ColourInfoModel[];
+    buyerCode?: string
 
-    constructor( buyerId:number,buyerName: string,size: SizeInfoModel[],destination: DestinationInfoModel[],color:ColourInfoModel[]){
+    constructor( buyerId:number,buyerName: string,size: SizeInfoModel[],destination: DestinationInfoModel[],color:ColourInfoModel[],buyerCode?: string){
        
         this.buyerId = buyerId
         this.buyerName = buyerName
         this.size = size
         this.destination = destination
         this.color = color
+        this.buyerCode = buyerCode
     }
 }
