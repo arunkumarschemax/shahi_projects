@@ -39,6 +39,9 @@ export class FabricRequestQualitiesInfoDto {
     uomId:number;
 
     @ApiProperty()
+    uid:string;
+
+    @ApiProperty()
     fileName: string;
 
     @ApiProperty()

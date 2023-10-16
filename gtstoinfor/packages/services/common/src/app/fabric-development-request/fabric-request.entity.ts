@@ -93,6 +93,12 @@ export class FabricRequestEntity {
     })
     status: StatusEnum;
 
+    @Column('varchar', {
+      name: 'uid',
+      nullable: true
+  })
+    uid: string;
+
 
     @Column('varchar', {
         name: 'file_name',

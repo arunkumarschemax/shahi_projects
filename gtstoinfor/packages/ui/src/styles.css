@@ -8,3 +8,12 @@
   .ant-segmented-thumb {
     background-color: lightgreen;
   }
+  .table-row-light {
+    background-color: #effafc;
+}
+.table-row-dark {
+    background-color: #f5fdcee7;
+}
+.custom-table-wrapper .ant-table-thead > tr > th {
+  background-color: lavender;
+}

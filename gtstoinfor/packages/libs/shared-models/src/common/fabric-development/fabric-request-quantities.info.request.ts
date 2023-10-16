@@ -9,6 +9,7 @@ export class FabricQuantitiesInfo {
     wastage:number;
     fabricQuantity:number;
     uomId:number;
+    uid:string
     FileName: string;
     FilePath: string;
     remarks: string;
@@ -23,6 +24,7 @@ export class FabricQuantitiesInfo {
         wastage:number,
         fabricQuantity:number,
         uomId:number,
+        uid:string,
         FileName: string,
         FilePath: string,
         remarks: string,
@@ -36,6 +38,7 @@ export class FabricQuantitiesInfo {
         this.comsumption = comsumption
         this.wastage = wastage
         this.fabricQuantity = fabricQuantity
+        this.uid = uid
         this.uomId = uomId
         this.FileName = FileName
          this.FilePath = FilePath

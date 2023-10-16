@@ -1,10 +1,13 @@
-import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Divider, Form, Input, Popconfirm, Row, Select, Switch, Table, Tag } from "antd"
-import React, { useRef } from "react";
+import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, EyeOutlined, RightSquareOutlined, SearchOutlined } from "@ant-design/icons";
+import { Alert, Button, Card, Col, Divider, Form, Input, Popconfirm, Row, Select, Switch, Table, Tag } from "antd"
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { BuyersService, CurrencyService, DeliveryMethodService, DeliveryTermsService, PackageTermsService, PaymentMethodService, PaymentTermsService, StyleOrderService, WarehouseService } from "@project-management-system/shared-services";
+import { PackageTermsDto, PaymentMethodDto, PaymentTermsDto, StyleOrderReq, styleOrderReq } from "@project-management-system/shared-models";
+import moment from "moment";
 
 export const StyleOrderGrid = () => {
     const [searchText, setSearchText] = useState('');
@@ -13,7 +16,100 @@ export const StyleOrderGrid = () => {
     const [page, setPage] = React.useState(1);
     const navigate = useNavigate()
     const {Option} = Select;
-    
+    const service = new StyleOrderService()
+    const [data,setData] =  useState<any[]>([])
+    const [items,setItems] =  useState<any[]>([])
+    const [selected,setSlected] =  useState()
+    const [form] = Form.useForm();
+    const [disable, setDisable] = useState<boolean>(false)
+    const buyerService = new BuyersService();
+    const[buyerId,setBuyerId] = useState([]);
+    const deliveryTermService = new DeliveryTermsService();
+    const[deliveryTerm,setDeliveryTerm] = useState([]);
+    const deliveryMethodService = new DeliveryMethodService();
+    const[deliveryMethod,setDeliveryMethod] = useState([]);
+    const [total,setTotalQty] =  useState<number>(0)
+    const[facilityId,setFacilityId] = useState([]);
+    // const facilityService = new 
+    const[paymentTermsId,setPaymentTermsId] = useState<PaymentTermsDto[]>([]);
+    const paymentTermsService = new PaymentTermsService()
+    const[packingTermsId,setPackingTermsId] = useState<PackageTermsDto[]>([]);
+    const packingTermsService = new PackageTermsService()
+    const[paymentMethodId,setPaymentMethodId] = useState<PaymentMethodDto[]>([]);
+    const paymentMethodService = new PaymentMethodService()
+    const[wareHouseId,setWareHouseId] = useState([]);
+    const warehouseService = new WarehouseService()
+    const[currencyId,setCurrencyId] = useState([]);
+    const currencyService = new CurrencyService()
+
+let location = useLocation()
+const stateData = location.state
+let val = 0
+    useEffect(() => {
+      getData()
+  },[])
+
+  const getData = () => {
+    const req = new styleOrderReq(4)
+      service.getAllStyleOrdersByItem(req).then(res => {
+          if(res.status){
+              setData(res.data)
+              res.data.map(e =>{ 
+                console.log(e,'--------')
+                // const totalQuantity = res.data.reduce((total, item) => total + item.qty, 0);
+                // setTotalQty(totalQuantity);
+                val = val+Number(e.qty)
+                setTotalQty(val)
+               })
+               
+              }
+     
+          buyerService.getAllActiveBuyers().then(res=>{
+            if(res.status){
+                  setBuyerId(res.data)
+            }
+          })
+          
+      })
+      deliveryTermService.getAllActiveDeliveryTerms().then(res=>{
+        if(res.status){
+              setDeliveryTerm(res.data)
+        }
+      })
+      deliveryMethodService.getAllDeliveryMethods().then(res=>{
+        if(res.status){
+              setDeliveryMethod(res.data)
+        }
+      })
+      paymentTermsService.getAllActivePaymentTerms().then(res=>{
+        if(res.status){
+              setPaymentTermsId([res.data]) 
+        }
+      })
+      packingTermsService.getAllActivePackageTerms().then(res=>{
+        if(res.status){
+              setPackingTermsId(res.data)
+             }
+      })
+      paymentMethodService.getAllActiveMethod().then(res=>{
+        if(res.status){
+              setPaymentMethodId(res.data)
+             }
+      })
+      warehouseService.getAllActiveWarehouse().then(res=>{
+        if(res.status){
+              setWareHouseId(res.data)
+             }
+      })
+      currencyService.getAllActiveCurrencys().then(res=>{
+        if(res.status){
+              setCurrencyId(res.data)
+             }
+      })
+  }
+  const onReset = () => {
+    form.resetFields();
+  };
     const getColumnSearchProps = (dataIndex: string) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <div style={{ padding: 8 }}>
@@ -86,115 +182,193 @@ export const StyleOrderGrid = () => {
         {
           title: 'S No',
           key: 'sno',
-          width: '70px',
+         
           responsive: ['sm'],
           render: (text, object, index) => (page - 1) * 10 + (index + 1)
         },
         {
             title: "CO Type",
             dataIndex: "coType",
-            width:'100px',
+           
             sorter: (a, b) => a.coType.localeCompare(b.style),
           ...getColumnSearchProps("coType"),
           },
-        
         {
           title: "Buyer",
-          dataIndex: "buyer",
-          width:'150px',
+          dataIndex: "buyer_id",
+          
+          render: (data) => {
+            const buyer = buyerId.find((res) => res.buyerId === data);
+            return buyer? buyer.buyerName : "-";
+          }
         },
         {
             title: "Buyer style",
-            dataIndex: "buyerStyle",
-          width:'100px',
-            // sorter: (a, b) => a.buyerStyle.localeCompare(b.buyerStyle),
-        //   ...getColumnSearchProps("buyerStyle"),
+            dataIndex: "buyer_style",
+         
+        
           },
           {
             title: "Buyer PO",
-            dataIndex: "buyerPo",
-          width:'100px',
-            // sorter: (a, b) => a.buyerPo.localeCompare(b.buyerPo),
-        //   ...getColumnSearchProps("buyerPo"),
+            dataIndex: "buyer_po_number",
+         
+           
+          },
+          {
+            title: "Agent",
+            dataIndex: "agent",
+         
+           
+          },
+          {
+            title: "Facility",
+            dataIndex: "facility_id",
+         
+           
+          },
+          {
+            title: "Warehouse",
+            dataIndex: "warehouse_id",
+         
+          render: (data) => {
+            const wareHouse = wareHouseId.find((res) => res.warehouseId === data);
+            return wareHouse? wareHouse.warehouseName : "-";
+          }
           },
         {
           title: 'CO Num',
-          dataIndex: 'coNum',
-          width:'100px',
-        //   sorter: (a, b) => a.coNum.localeCompare(b.coNum),
-        // ...getColumnSearchProps("coNum"),    
+          dataIndex: 'co_number',
+         
+           
      },
      {
         title: "CO Date",
-        dataIndex: "coDate",
-        width:'150px',
-        // sorter: (a, b) => a.coDate.localeCompare(b.coDate),
-    //   ...getColumnSearchProps("coDate"),
+        dataIndex: "order_date",
+        
+        render: (val,data) => {
+          return data.order_date ?moment( data.order_date).format('YYYY-MM-DD') : "-";
+        }
+        
+      },
+      {
+        title: "Shipment Type",
+        dataIndex: "shipment_type",
+     
+       
       },
        {
-          title: 'PI PO Qty',
-          dataIndex: 'PiPoQty',
-          width:'100px',
-        //   sorter: (a, b) => a.PiPoQty.localeCompare(b.PiPoQty),
-        // ...getColumnSearchProps("PiPoQty"),    
+          title: 'Order Quantity',
+          dataIndex: 'qty',
+         
+          
      },
      {
-        title: 'Shipped Qty',
-        dataIndex: 'shippedQty',
-        width:'100px',
-        // sorter: (a, b) => a.shippedQty.localeCompare(b.shippedQty),
-    //   ...getColumnSearchProps("shippedQty"),    
-   },
+      title: 'Packing Terms',
+      dataIndex: 'package_terms_id',
+     
+      render: (data) => {
+        const packingTerms = packingTermsId.find((res) => res.packageTermsId === data);
+        return packingTerms? packingTerms.packageTermsName : "-";
+      } 
+  },
     {
-    title: 'PI Ex-Factory',
-    dataIndex: 'PiEx_Factory',
-    width:'100px',
+    title: 'Ex-Factory',
+    dataIndex: 'exfactory_date',
+   
+    render: (val,data) => {
+      return data.exfactory_date?moment( data.exfactory_date).format('YYYY-MM-DD') : "-";
+    }
     // sorter: (a, b) => a.PiEx_Factory.localeCompare(b.PiEx_Factory),
 //   ...getColumnSearchProps("PiEx_Factory"),    
 },
 {
-    title: 'Ac Ex-Factory',
-    dataIndex: 'AcEx_Factory',
-    width:'100px',
-    // sorter: (a, b) => a.AcEx_Factory.localeCompare(b.AcEx_Factory),
-//   ...getColumnSearchProps("AcEx_Factory"),    
+  title: 'In Store Date',
+  dataIndex: 'instore_date',
+ 
+  render: (val,data) => {
+    return data.instore_date?moment( data.instore_date).format('YYYY-MM-DD') : "-";
+  }
 },
 {
-    title: 'PI Del Mode',
-    dataIndex: 'PiDelMode',
-    width:'100px',
-    // sorter: (a, b) => a.PiDelMode.localeCompare(b.PiDelMode),
-//   ...getColumnSearchProps("PiDelMode"),    
+  title: 'Sales Price',
+  dataIndex: 'sale_price',
+ 
+  render: (data,val) => {
+    const currency = currencyId.find((res) => res.currencyId === val.currency_id);
+
+    return( <span>{currency.currencyName}{val.sale_price}</span>)
+}
+
 },
 {
-    title: 'Ac Del Mode',
-    dataIndex: 'AcDelMode',
-    width:'100px',
-    // sorter: (a, b) => a.AcDelMode.localeCompare(b.AcDelMode),
-//   ...getColumnSearchProps("AcDelMode"),    
+  title: 'Discount(%)',
+  dataIndex: 'discount_amount',
+ 
+  render: (data,val) => {return( <span>{val.discount_amount}({val.discount_per}%)</span>)
+  } 
 },
 {
-    title: 'Del Terms',
-    dataIndex: 'delTerms',
-    width:'100px',
-    // sorter: (a, b) => a.delTerms.localeCompare(b.delTerms),
-//   ...getColumnSearchProps("delTerms"),    
+  title: 'Quantity(pcs)',
+  dataIndex: 'price_quantity',
+ 
+ 
 },
 {
-    title: 'Remarks',
-    dataIndex: 'remarks',
-    width:'100px',
-    // sorter: (a, b) => a.remarks.localeCompare(b.remarks),
-//   ...getColumnSearchProps("remarks"),    
+  title: 'Payment Method',
+  dataIndex: 'Payment_method_id',
+ 
+  render: (data) => {
+    const paymentMethod = paymentMethodId.find((res) => res.paymentMethodId === data);
+    return paymentMethod? paymentMethod.paymentMethod : "-";
+  } 
+},{
+  title: 'Payment Terms',
+  dataIndex: 'Payment_terms_id',
+ 
+  render: (data) => {
+    const paymentTerm = paymentTermsId.find((res) => res.paymentTermsId === data);
+    return paymentTerm? paymentTerm.paymentTermsName : "-";
+  } 
 },
+{
+    title: 'Delivery Method',
+    dataIndex: 'delivery_method_id',
+   
+    render: (data) => {
+      const delMethod = deliveryMethod.find((res) => res.deliveryMethodId === data);
+      return delMethod? delMethod.deliveryMethod : "-";
+    }
+},
+{
+    title: 'Delivery Terms',
+    dataIndex: 'delivery_terms_id',
+   
+    render: (data) => {
+      const delTerm = deliveryTerm.find((res) => res.deliveryTermsId === data);
+      return delTerm? delTerm.deliveryTermsName : "-";
+    }
+},
+{
+  
+  title: `Action`,
+  dataIndex: 'action',
+  render: (text, rowData) => (
+   <span>
+    <Button  onClick={ ()=> details(rowData)}>
+    <EyeOutlined/>
+    </Button>
+   </span>
+  )
+}
       ];
-const data = []
-      
-    return(
+
+      const details =(val:any) =>{
+        navigate('/materialCreation/style-order-detail-view',{state :val})
+      }
+    return (
         <Card title='Style Orders' extra={<span><Button onClick={() =>  navigate('/materialCreation/style-order-creation')}
-              type={'primary'}>View</Button></span>} >
-<Card size='small'>
-    <Form>
+              type={'primary'}>New</Button></span>} >
+    <Form  form={form} onFinish={getData}>
     <Row gutter={[8,8]}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                 <Form.Item name='itemNo' label='Item'>
@@ -205,11 +379,40 @@ const data = []
                     </Select>
                 </Form.Item>
                 </Col>
+                <Row>
+          <Col span={24} style={{ textAlign: 'right' }}>
+            <Button type="primary" disabled={disable} htmlType="submit">
+              Submit
+            </Button>
+            {/* {(props.isUpdate===false) && */}
+         <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset}>
+            Reset
+          </Button>
+          {/* } */}
+          </Col>
+        </Row>
                 </Row>
+
     </Form>
+    {/* {selected && data.length>0? ( */}
+    <Card>
+    <Row gutter={[8,8]}>
+    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+   
+   <Card title={'Total Qantity: ' + Number(total)} style={{marginBottom:5, textAlign: 'left', width: 200, height: 41, backgroundColor: '#fadada' }}></Card>
+ </Col>
+ <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+
+<Card title={'Total INV: ' +'' } style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#d8f0fc' }}></Card>
+</Col>  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+
+<Card title={'INV percent: ' + +'%'} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#d0fcb3' }}></Card>
+</Col>
+</Row>
         <Table
         size='small'
-          columns={columnsSkelton}
+        rowClassName={(record, index) => index % 2 === 0 ? 'table-row-light' :  'table-row-dark'} 
+           columns={columnsSkelton}
           dataSource={data}
           pagination={{
             onChange(current) {
@@ -218,7 +421,17 @@ const data = []
           }}
           scroll={{x:true}}
           bordered />
-      </Card>   
+          </Card>
+          {/* ):(<> 
+            <Row>
+               <Alert
+               message="No data"
+               type="info"
+               style={{ margin: "auto",width:500 }}
+               showIcon
+             />
+             </Row>
+             </>)} */}
       </Card> )
 }
 export default StyleOrderGrid

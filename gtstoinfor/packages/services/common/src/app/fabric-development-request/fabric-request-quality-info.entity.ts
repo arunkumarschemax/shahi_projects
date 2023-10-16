@@ -58,6 +58,13 @@ export class FabricRequestQualitiesInfoEntity {
     })
     uomId:number;
 
+    @Column('varchar', {
+      name: 'uid',
+      nullable: true,
+      
+  })
+    uid:string;
+
     
     @Column('varchar', {
         name: 'file_name',

@@ -56,51 +56,15 @@ export const FabricDevelopmentDynamicForm = (
   const [garmentQuantity, setGarmentQuantity] = useState<any>();
   const [consumptionData, setConsumptionData] = useState<any>();
   const [wastageData, setWastageData] = useState<any>();
-  const [pollutionFilelist, setPollutionFilelist] = useState<any[]>([]);
+  const [qualitiesFilelist, setQualitiesFilelist] = useState<any[]>([]);
+  const [itemsFilelist, setItemsFilelist] = useState<any[]>([]);
 
-  //  const itemsinfo = [];
-
-  //  itemsData.forEach((itemInfo: any) => {
-  //   const record = new FabricItemInfoRequest(
-  //     itemInfo.itemsCode,itemInfo.description
-  //   )
-  //   itemsinfo.push(record)
-
-  //  })
-
-  //  const FabricQuantitiesInfo = []
-  //  formData.forEach((rec:any) ) => {
-  //   const records = new FabricQuantitiesInfo (
-  //     rec.styleId,rec.colorId,rec.garmentQuantity,rec.consumption,rec.wastage,rec.fabricQuantity,rec.uomId,"","",remarks,itemsinfo
-  //   )
-  //  }
-
-  // const itemsinfo = [];
-  // const FabricQuantities = [];
-
-  // itemsData.forEach((itemInfo) => {
-  //   const record = new FabricItemInfoRequest(
-  //     itemInfo.itemsCode, itemInfo.description
-  //   );
-  //   itemsinfo.push(record);
-
-  //  console.log(itemsinfo,'llll')
-
-  // formData.forEach((rec) => {
-  //   const records:any = new FabricQuantitiesInfo(
-  //     rec.styleId, rec.colorId, rec.garmentQuantity, rec.consumption, rec.wastage, rec.fabricQuantity, rec.uomId, "", "", rec.remarks,itemsinfo
-  //   );
-  //   FabricQuantities.push(records);
-
-  // });
-  // });
-
-  // console.log(FabricQuantities,"request");
+   
 
   const fileuploadFieldProps: UploadProps = {
     multiple: false,
     onRemove: (file: any) => {
-      setPollutionFilelist([]);
+      setQualitiesFilelist([]);
       // uploadFileList([]);
     },
     beforeUpload: (file: any) => {
@@ -111,11 +75,11 @@ export const FabricDevelopmentDynamicForm = (
       var reader = new FileReader();
       reader.readAsArrayBuffer(file);
       reader.onload = (data) => {
-        if (pollutionFilelist.length === 1) {
+        if (qualitiesFilelist.length === 1) {
           message.error("You Cannot Upload More Than One File At A Time");
           return true;
         } else {
-          setPollutionFilelist([...pollutionFilelist, file]);
+          setQualitiesFilelist([...qualitiesFilelist, file]);
           // uploadFileList([...filelist, file]);
 
           return false;
@@ -133,16 +97,17 @@ export const FabricDevelopmentDynamicForm = (
       strokeWidth: 3,
       format: (percent: any) => `${parseFloat(percent.toFixed(2))}%`,
     },
-    fileList: pollutionFilelist,
+    fileList: qualitiesFilelist,
   };
-  console.log(pollutionFilelist, "FILEUPLOAD");
+  console.log(qualitiesFilelist, "FILEUPLOAD");
+
+  
+
 
   const colorservice = new ColourService();
   const uomservice = new UomService();
 
-  console.log(itemsData, "hygreev");
 
-  //  const req = new FabricInfo()
 
   const onChangeGarment = (e) => {
     // console.log( props.form.getFieldValue("garmentQuantity"),"khyg")
@@ -177,9 +142,7 @@ export const FabricDevelopmentDynamicForm = (
     }
   }, [garmentQuantity, consumptionData, wastageData]);
 
-  //  console.log(garmentQuantity,"0000")
-  //  console.log(consumptionData,"9898897")
-  //  console.log(wastageData,"121212")
+
 
   useEffect(() => {
     getAllActiveColour();
@@ -280,10 +243,14 @@ export const FabricDevelopmentDynamicForm = (
         const record = {
           ...values,
           itemsinfo: items,
+          uid: qualitiesFilelist[0]?.uid,
+          file:{...qualitiesFilelist}
         };
 
         // Push the new record into formData
         setFormData([...formData, record]);
+        setItemsFilelist([...itemsFilelist,qualitiesFilelist])
+        setQualitiesFilelist([])
         props.dynamicformData([...formData, record]);
       }
       props.form.resetFields();
@@ -294,6 +261,7 @@ export const FabricDevelopmentDynamicForm = (
   };
 
   console.log(formData, "dynamicformdata");
+  console.log(itemsFilelist,"itemFile")
 
   const setEditForm = (rowData: any, index: number) => {
     setEditingIndex(index); // Set the index of the row being edited

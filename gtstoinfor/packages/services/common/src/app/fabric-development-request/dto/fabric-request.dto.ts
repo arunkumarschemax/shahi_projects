@@ -61,6 +61,9 @@ export class FabricRequestDto{
     status: StatusEnum;
 
     @ApiProperty()
+    uid: string;
+
+    @ApiProperty()
     fileName: string;
 
     @ApiProperty() 
