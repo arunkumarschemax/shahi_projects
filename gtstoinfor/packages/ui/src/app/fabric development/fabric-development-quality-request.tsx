@@ -11,6 +11,9 @@ export interface ReqProps {
   itemsInfo: (ItemsData: any[]) => void;
   qualityInfo : (qualityInfoObj:any)=>void;
   activeTab:any
+  filesList:any;
+
+  
   
   
 }
@@ -59,6 +62,9 @@ export const  FabricDevelopmentRequestQuality = (props:ReqProps) => {
     setIsQualityChanged(true)
   }
   
+  const setFileList  = (val) => {
+    props.filesList(val);
+  }
 
      
   
@@ -160,7 +166,7 @@ export const  FabricDevelopmentRequestQuality = (props:ReqProps) => {
       </Row>
      </Form>
       <Card>
-        <FabricDevelopmentDynamicForm form={dynamicForm} itemsData={itemsData} dynamicformData={dynamicformData} />
+        <FabricDevelopmentDynamicForm form={dynamicForm} form1 = {placementForm} itemsData={itemsData} dynamicformData={dynamicformData} filesList={setFileList}  />
       </Card>
       </>
        

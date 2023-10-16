@@ -332,6 +332,9 @@ import { QualitiesEnum } from '@project-management-system/shared-models';
 export interface FabricDevelopmentTabsProps {
   key: string;
   qualities: (qualitiesData: any) => void;
+  fileList :any
+  
+  
 
 }
 const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
@@ -339,13 +342,17 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
   const [activeTab, setActiveTab] = useState<any>("");
   const [qualitiesData, setQualitiesData] = useState<any>([]);
 
-
-
   const onChange = (key: QualitiesEnum) => {
     setActiveTab(key);
   };
 
   const itemsInfo = (data) => {
+    
+  }
+
+  const filesList = (val) =>{
+    props.fileList(val)
+
   }
 
   const qualityInfo = (data, qualityKey) => {
@@ -382,6 +389,9 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
         itemsInfo={itemsInfo}
         qualityInfo={(data) => qualityInfo(data, `quality${index + 1}`)}
         activeTab={activeTab}
+        filesList={filesList}
+        
+        
     
       />
     ),
