@@ -9,6 +9,7 @@ import Papa from 'papaparse'
 import { FileExcelFilled, UndoOutlined } from '@ant-design/icons';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
+import { CSVLink } from 'react-csv';
 
 const { Option } = Select
 export interface Formprops {
@@ -31,7 +32,9 @@ export function FobPriceListForm(props: Formprops) {
   const [values, setValues] = useState([]);
   const [type, setType] = useState<string>('')
   const loc = useLocation()
-  const state = loc?.state
+  const state = loc?.state;
+  const [csvData, setcsvData] = useState([]);
+
 
 
   const create = (data: Fobdto) => {
@@ -140,39 +143,23 @@ export function FobPriceListForm(props: Formprops) {
   const onTypeChange = (value) => {
     setType(value)
   }
-  const handleExport = (e: any) => {
-    e.preventDefault();
-
-
-    
-
-      let exportingColumns: IExcelColumn[] = []
-    exportingColumns = [
-      { title: 'Planning Season Code', dataIndex: '' },
-      { title: 'Planning Season Year', dataIndex: '' },
-      { title: 'Style Number', dataIndex: '' },
-      { title: 'Color Code', dataIndex: '' },
-      { title: 'Size Description', dataIndex: '' },
-      { title: 'Shahi Confirmed Gross Price', dataIndex: '' },
-      { title: 'Shahi Confirmed Gross Price currency code', dataIndex: '' },
-    ]
-
-
-    const excel = new Excel();
-    excel.addSheet("Sheet1");
-    // excel.addRow();
-    excel.addColumns(exportingColumns);
-    // excel.addDataSource(gridData);
-    excel.saveAs(`Sample Fob Format.xlsx`);
-  }
+  let csvdata = [
+    { 'Planning Season Code': '' },
+        { 'Planning Season Year': '' },
+        { 'Style Number': '' },
+        { 'Color Code': '' },
+        { 'Size Description': '' },
+        { 'Shahi Confirmed Gross Price': '' },
+        { 'Shahi Confirmed Gross Price currency code': '' },
+  ]
+ 
 
   return (
 
-    <Card title='Add FOB Price List' extra={<span> <Button
-      type="default"
-      style={{ color: 'green' , margin:10}}
-      onClick={handleExport}
-      icon={<FileExcelFilled />}>Download Sample File</Button> <Button onClick={() => navigate('/masters/fob-price-list-view')} type={'primary'}>View</Button></span>}>
+    <Card title={props.isUpdate ? 'Update FOB Price List':'Add FOB Price List' } extra={(props.isUpdate === false) && <span> 
+      <Button type="default" style={{ color: 'green' , margin:10}} icon={<FileExcelFilled />}><CSVLink className="downloadbtn" filename="FOB-Sample-Format.csv" data={csvdata}>
+      Download Sample Format
+    </CSVLink></Button> <Button onClick={() => navigate('/masters/fob-price-list-view')} type={'primary'}>View</Button></span>}>
       <Form form={form}
         // title='Fob Price List'
         layout='vertical'
@@ -188,7 +175,7 @@ export function FobPriceListForm(props: Formprops) {
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item label="" name='excel' >
                   <input type="file" accept=".csv" onChange={handleFileChange} />
-                  <label style={{color:'blue'}} >Only  csv file allowed</label>
+                  <label style={{color:'blue'}} >Only  CSV file allowed</label>
 
                 </Form.Item>
               </Col>
