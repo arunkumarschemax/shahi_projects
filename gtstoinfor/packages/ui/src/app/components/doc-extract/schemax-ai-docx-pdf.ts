@@ -918,6 +918,8 @@ export const extractNagel = async (pdf) => {
         });
     }
 
+
+    
     const structuredHSNLines = [];
     let currentHSN = null;
     let hsnId = null;

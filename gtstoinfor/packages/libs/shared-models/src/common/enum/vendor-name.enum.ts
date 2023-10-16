@@ -8,7 +8,6 @@ export enum VendorNameEnum {
     extractedApl = "APL",
     extractedMaersk = "MAERSK",
     extractSrivaru = "SRIVARU",
-    extractedSriji = "SRIJI",
     extractedKrsna = "KRSNA",
     extractedKsr = "KSR",
     extractedDp = "DP",
@@ -18,6 +17,10 @@ export enum VendorNameEnum {
     extractedLigi="LIGI",
     extractedNikkou="NIKKOU",
     extractedRingoCarago="Ringo Carago",
+    extractedLigi="LIGI",
+    extractedNikkou="NIKKOU",
+    extractedRingoCarago="Ringo Carago",
+    
 
 
 }
