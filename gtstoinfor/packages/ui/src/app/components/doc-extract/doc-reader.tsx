@@ -4,7 +4,7 @@ import { Button, Card, Col, Form, FormInstance, Radio, Row, Select, Spin, Upload
 import { useState } from 'react';
 import { pdfjs } from 'react-pdf';;
 import { extractDhl, extractDart, extractExpeditors, extractEfl, extractOocl, extractNagel, extractApl, extractMaersk, checkIsScannedPdf } from './schemax-ai-docx-pdf';
-import { convertScannedPdfToSelectablePdf, extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
+import { convertScannedPdfToSelectablePdf, extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned,extractLigiInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 import { PDFDocument, rgb } from 'pdf-lib';
 export interface DocReaderProps {
@@ -125,6 +125,43 @@ export const DocReader = (props: DocReaderProps) => {
                                     }
                                     break;
                                 }
+
+                                case VendorNameEnum.extractedLigi:
+                                    {
+                                        const isScannedPdf = await checkIsScannedPdf(pdfData)
+                                        if (isScannedPdf) {
+                                            const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                                            const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                                            processedData = await extractLigiInvoiceDataFromScanned(allLines);
+                                        } else {
+                                            processedData = await extractEfl(pdfData);
+                                        }
+                                        break;
+                                    }
+                                    case VendorNameEnum.extractedNikkou:
+                                        {
+                                            const isScannedPdf = await checkIsScannedPdf(pdfData)
+                                            if (isScannedPdf) {
+                                                const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                                                const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                                                processedData = await extractNikkouInvoiceDataFromScanned(allLines);
+                                            } else {
+                                                processedData = await extractEfl(pdfData);
+                                            }
+                                            break;
+                                        }
+                                        case VendorNameEnum.extractedRingoCarago:
+                                        {
+                                            const isScannedPdf = await checkIsScannedPdf(pdfData)
+                                            if (isScannedPdf) {
+                                                const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                                                const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                                                processedData = await extractRingoCargoInvoiceDataFromScanned(allLines);
+                                            } else {
+                                                processedData = await extractEfl(pdfData);
+                                            }
+                                            break;
+                                        }
 
                 case VendorNameEnum.extractedOocl:
                     processedData = await extractOocl(pdfData);
