@@ -211,7 +211,7 @@ export function OrderAcceptance() {
         {
             title: 'PO Line Item No',
             dataIndex: 'po_line_item_number',width:80,
-            fixed: 'left',
+            fixed: 'left',align:'center'
         },
         {
             title: 'Schedule Line Item No',
@@ -225,7 +225,7 @@ export function OrderAcceptance() {
         },
         {
             title: 'Aging',
-            dataIndex: '',width:80,
+            dataIndex: '',width:80,align:'right',
             render: (text, record) => {
                 const documentDate = moment(record.document_date);
 
@@ -268,7 +268,7 @@ export function OrderAcceptance() {
         },
         {
             title: 'Size',
-            dataIndex: 'size_description',width:80,
+            dataIndex: 'size_description',width:80,align:'center',
             render: (text, record) => {
                 if (typeof text === 'string' && text.trim() === '') {
                     return '-';
@@ -281,7 +281,7 @@ export function OrderAcceptance() {
         },
         {
             title: 'Order Quantity',
-            dataIndex: 'size_qty',width:80,
+            dataIndex: 'size_qty',width:80,align:'right',
             render: (text, record) => {
                 if (typeof text === 'string' && text.trim() === '') {
                     return '-';
@@ -292,23 +292,60 @@ export function OrderAcceptance() {
                 }
             },
         },
+        // {
+        //     title: 'Total Order Quantity',
+        //     dataIndex: 'total_item_qty',width:80,align:'right',
+        //     render: (text, record) => {
+        //         return (record.totalItemQty_OLD ?
+        //             (
+        //                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${record.totalItemQty_OLD} Revised Date:  ${record.totalItemQty_NEW} Difference :  `}>
+        //                     {record.totalItemQty_OLD < record.totalItemQty_NEW ? <span style={{ color: 'green' }}>{Number(record.totalItemQty_NEW).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span> : ''}
+        //                     {record.totalItemQty_OLD > record.totalItemQty_NEW ? <span style={{ color: 'red' }}>{Number(record.totalItemQty_NEW).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span> : ''}
+        //                     &nbsp;&nbsp;
+        //                     <span>
+        //                         {Number(record.totalItemQty_OLD).toLocaleString('en-IN', { maximumFractionDigits: 0 }) < Number(record.totalItemQty_NEW).toLocaleString('en-IN', { maximumFractionDigits: 0 }) ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+        //                     </span>
+        //                 </Tooltip>
+        //             ) : record.total_item_qty)
+        //     }
+        // },
         {
             title: 'Total Order Quantity',
-            dataIndex: 'total_item_qty',width:80,
+            dataIndex: 'total_item_qty',
+            width: 80,
+            align: 'right',
             render: (text, record) => {
-                return (record.totalItemQty_OLD ?
-                    (
-                        <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${record.totalItemQty_OLD} Revised Date:  ${record.totalItemQty_NEW} Difference :  `}>
-                            {record.totalItemQty_OLD < record.totalItemQty_NEW ? <span style={{ color: 'green' }}>{record.totalItemQty_NEW}</span> : ''}
-                            {record.totalItemQty_OLD > record.totalItemQty_NEW ? <span style={{ color: 'red' }}>{record.totalItemQty_NEW}</span> : ''}
-                            &nbsp;&nbsp;
-                            <span>
-                                {record.totalItemQty_OLD < record.totalItemQty_NEW ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
-                            </span>
-                        </Tooltip>
-                    ) : record.total_item_qty)
+              return record.totalItemQty_OLD ? (
+                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${record.totalItemQty_OLD} Revised Date:  ${record.totalItemQty_NEW} Difference :  `}>
+                  {record.totalItemQty_OLD < record.totalItemQty_NEW ? (
+                    <span style={{ color: 'green' }}>
+                      {Number(record.totalItemQty_NEW).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                    </span>
+                  ) : (
+                    ''
+                  )}
+                  {record.totalItemQty_OLD > record.totalItemQty_NEW ? (
+                    <span style={{ color: 'red' }}>
+                      {Number(record.totalItemQty_NEW).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                    </span>
+                  ) : (
+                    ''
+                  )}
+                  &nbsp;&nbsp;
+                  <span>
+                    {record.totalItemQty_OLD < record.totalItemQty_NEW ? (
+                      <ArrowUpOutlined style={{ color: 'green' }} />
+                    ) : (
+                      <ArrowDownOutlined style={{ color: 'red' }} />
+                    )}
+                  </span>
+                </Tooltip>
+              ) : (
+                Number(record.total_item_qty).toLocaleString('en-IN', { maximumFractionDigits: 0 })
+              );
             }
-        },
+          }
+,          
         {
             title: 'MRGAC',
             dataIndex: 'mrgac',width:80,
@@ -344,7 +381,7 @@ export function OrderAcceptance() {
             }
         },
         {
-            title: 'Gross Price',
+            title: 'Gross Price',align:'right',
             dataIndex: 'gross_price_fob',width:80,
             render: (text, record) => {
                 return (record.grossPriceFOB_OLD ?
@@ -366,7 +403,10 @@ export function OrderAcceptance() {
         },
         {
             title: 'Shipping Type',
-            dataIndex: 'shipping_type',width:80,
+            dataIndex: 'shipping_type',width:80,render: (text) => {
+                const transformedText = text ? text.replace(/_/g, ' ') : '-';
+                return transformedText;
+            },
         },
         {
             title: 'DPOM Line Item Status',
@@ -476,13 +516,10 @@ export function OrderAcceptance() {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 40, }} >
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 40 }} >
                             <Form.Item>
-                                <Button htmlType="submit"
-                                    icon={<SearchOutlined />}
-                                    type="primary">SEARCH</Button>
-
-                                <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>RESET</Button>
+                                <Button  type="primary" htmlType="submit" icon={<SearchOutlined/>}>SEARCH</Button>
+                                <Button style={{ marginLeft: 8}} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>RESET</Button>
                             </Form.Item>
                         </Col>
                     </Row>

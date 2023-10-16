@@ -147,6 +147,7 @@ const FobPriceListGrid = () => {
       title: "S.No",
       key: "sno",
       responsive: ["sm"],
+      width:50,align:'center',
       render: (text, object, index) => (page - 1) * pageSize + (index + 1),
     },
     {
@@ -229,8 +230,8 @@ const FobPriceListGrid = () => {
           <Popconfirm onConfirm={e => { activateOrDeactivate(rowData) }}
             title={
               rowData.isActive
-                ? 'Are you sure to deactivated ?'
-                : 'Are you sure to activated ?'
+                ? 'Deactivated Price-List?'
+                : 'Activated Price-List?'
             }
           >
             <Switch size="default"
