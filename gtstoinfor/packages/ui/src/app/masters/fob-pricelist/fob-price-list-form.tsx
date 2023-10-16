@@ -188,7 +188,7 @@ export function FobPriceListForm(props: Formprops) {
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item label="" name='excel' >
                   <input type="file" accept=".csv" onChange={handleFileChange} />
-                  <label style={{color:'blue'}} >Only  csv file allowed</label>
+                  <label style={{color:'blue'}} >Only  CSV file allowed</label>
 
                 </Form.Item>
               </Col>
