@@ -67,12 +67,12 @@ export class ItemSkuController{
             return this.applicationExceptionHandler.returnException(SKUGenerationResponseModel,err)
         }
     }
-    // @Post('/getAllitemsCode')
-    // async getAllitemsCode(@Body() req:any):Promise<SKUGenerationResponseModel>{
-    //     try{
-    //         return await this.itemSkuService.(req)
-    //     }catch(err){
-    //         return this.applicationExceptionHandler.returnException(SKUGenerationResponseModel,err)
-    //     }
-    // }
+    @Post('/getAllitemsCode')
+    async getAllitemsCode():Promise<SKUGenerationResponseModel>{
+        try{
+            return await this.itemSkuService.getItemCode()
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(SKUGenerationResponseModel,err)
+        }
+    }
 }

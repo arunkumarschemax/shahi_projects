@@ -39,4 +39,11 @@ export class ItemSkuRepository extends Repository<ItemSkus> {
 
     }
 
+    async getItemCode():Promise<any>{
+        const query = await this.createQueryBuilder('i')
+        .select(`item_code,item_id `)
+        .groupBy(`item_code`)
+        return await query.getRawMany()
+    }
+
 }

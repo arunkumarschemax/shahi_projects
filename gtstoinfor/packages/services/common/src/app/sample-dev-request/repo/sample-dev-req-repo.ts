@@ -95,4 +95,11 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
         return query.getRawMany()
     }
     
+    async getSampleId(): Promise<any> {
+        const query = this.createQueryBuilder()
+            .select(` MAX(sample_request_id) as sampleId`)
+            // .orderBy(` created_at`, 'DESC')
+        return await query.getRawOne();
+    }
+    
 } 
