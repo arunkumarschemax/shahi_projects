@@ -124,7 +124,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                 setVendorCod(res.data?.vendorCode
                 );
                 console.log(res.data?.vendorCode)
-                props.form.setFieldsValue({venCod:res.data?.vendorCode})
+                props.form.setFieldsValue({ venCod: res.data?.vendorCode })
             } else {
                 setVendorCod([]);
             }
@@ -161,7 +161,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             if (res.status) {
                 setPrice(res.data);
                 console.log(res.data?.unitPrice)
-                props.form.setFieldsValue({quotation:res.data?.unitPrice})
+                props.form.setFieldsValue({ quotation: res.data?.unitPrice })
             } else {
                 setPrice([]);
             }
@@ -297,15 +297,15 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             width: "30",
             key: "description",
             render: (description) => {
-              if (description !== undefined && description !== null) {
-                const descriptionString = description.toString().replace(/[^\w\s]/g, ''); 
-                const trimmedDescription = descriptionString.split(/[^a-zA-Z\s]+/)[0];
-                return trimmedDescription;
-              } else {
-                return "_";
-              }
+                if (description !== undefined && description !== null) {
+                    const descriptionString = description.toString().replace(/[^\w\s]/g, '');
+                    const trimmedDescription = descriptionString.split(/[^a-zA-Z\s]+/)[0];
+                    return trimmedDescription;
+                } else {
+                    return "_";
+                }
             }
-          },
+        },
         {
             title: "HSN code",
             dataIndex: "HSN",
@@ -476,26 +476,27 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
         calculateCharge();
     };
 
-    // const onSumbit = () => {
-    //     const req1 = new HsnDto(HSN,taxType,taxAmount,taxPercentage,charge,unitQuantity,description,quotation,unitPrice,variance)
-    //     const req = new AllScanDto(gstNumber,venName, venCod,invoiceDate,invoiceNumber,invoiceAmount,igst,cgst,sgst,invoiceCurrency,
-    //         financialYear, status,"",req1)
-    //     //   JSON.parse(localStorage.getItem("currentUser")).user.userName, extractedData,"");
-    //     console.log(req, "submit");
-    //     service
-    //       .postdata(req)
-    //       .then((res) => {
-    //         if (res.status) {
-    //           message.success("Success");
-    //           navigate("/scan-document");
-    //         } else {
-    //           message.error("Fill All Fields");
-    //         }
-    //       })
-    //       .catch((err: { message: any }) => {
-    //         console.log(err.message, "err message");
-    //       });
-    //   };
+  
+    const onSumbit = () => {
+        const req1 = new HsnDto(HSN,taxType,taxAmount,taxPercentage,charge,unitQuantity,description,quotation,unitPrice,variance)
+        const req = new AllScanDto(gstNumber,venName, venCod,invoiceDate,invoiceNumber,invoiceAmount,igst,cgst,sgst,invoiceCurrency,
+            financialYear, status,"",[req1])
+        //   JSON.parse(localStorage.getItem("currentUser")).user.userName, extractedData,"");
+        console.log(req, req1,"submit");
+        service
+          .postdata(req)
+          .then((res) => {
+            if (res.status) {
+              message.success("Success");
+              navigate("/scan-document");
+            } else {
+              message.error("Fill All Fields");
+            }
+          })
+          .catch((err: { message: any }) => {
+            console.log(err.message, "err message");
+          });
+      };
 
 
     return (
@@ -795,7 +796,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                     type="primary"
                     htmlType="submit"
                     style={{ position: "relative", left: "10pX" }}
-                // onClick={onSumbit}
+                    onClick={onSumbit}
                 >
                     Submit
                 </Button>

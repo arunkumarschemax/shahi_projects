@@ -15,6 +15,9 @@ export enum VendorNameEnum {
     extractedNippon = "NIPPON",
     extractedVinayaka = "VINAYAKA",
     extractedWaymark = "WAYMARK",
+    extractedLigi="LIGI",
+    extractedNikkou="NIKKOU",
+    extractedRingoCarago="Ringo Carago",
 
 
 }
