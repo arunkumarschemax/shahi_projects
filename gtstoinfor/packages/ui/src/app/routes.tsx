@@ -12,6 +12,7 @@ import PriceForm from "./components/vendor-price/price-form"
 import BuyersView from "./components/buyer-grid/buyer-grid-view"
 import { DocReader, DocumentUploadForm, SchemaxAIDocx } from "./components"
 import DocFormPreview from "./components/doc-extract/doc-form-preview"
+import InvoiceReport from "./components/reports/innvoice-reports"
 
 
 export const AppRoutes = () => {
@@ -38,7 +39,7 @@ export const AppRoutes = () => {
                 <Route path="/invoices" />
                 <Route path="/pending-approvals" />
                 <Route path="/dashboard" />
-                <Route path="/invoice-report" />
+            <Route path="/invoice-report" element={<InvoiceReport/>} />
 
                 <Route path="/vendors" element={<VendorGrid />} />
 
