@@ -448,12 +448,12 @@ async getAllActivePriceList(): Promise<PriceListResponseModel> {
                         }
                         dtoData.version = version;
                         if (details) {
-                            const updatePriceList = await transactionManager.getRepository(PriceListEntity).update({sampleCode: dtoData.sampleCode,seasonCode: dtoData.seasonCode,year: dtoData.year}, 
+                            const updatePriceList = await transactionManager.getRepository(PriceListEntity).update({sampleCode: dtoData.sampleCode,seasonCode: dtoData.seasonCode,business: dtoData.business, item: dtoData.item}, 
                                 {
-                                year: dtoData.year,
-                                seasonCode: dtoData.seasonCode,
-                                item: dtoData.item,
-                                business: dtoData.business,
+                                // year: dtoData.year,
+                                // seasonCode: dtoData.seasonCode,
+                                // item: dtoData.item,
+                                // business: dtoData.business,
                                 fobLocalCurrency: dtoData.fobLocalCurrency,
                                 currency: dtoData.currency,
                                 createdUser: dtoData.createdUser,

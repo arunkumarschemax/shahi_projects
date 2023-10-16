@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select, Descriptions } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select, Descriptions, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -276,6 +276,7 @@ const getUploadedTime = () => {
             title: <div style={{ textAlign: "center" }}>Previous</div>,
             dataIndex: "previous_price",
             align: "right",
+            width:'120px',
             render: (text, record) => {
               return (
                 <>
@@ -302,25 +303,26 @@ const getUploadedTime = () => {
         title: <div style={{ textAlign: "center" }}>Variance</div>,
         dataIndex: "price_variance",
         align: "right",
-        render: (text) => {
-          if (text === undefined || text === null) {
-            return "-";
-          } else if (text > 0) {
-            return (
-              <span style={{ color: "green" }}>
-                {text.toLocaleString("en-US")} <ArrowUpOutlined style={{ color: "green" }} />
-              </span>
-            );
-          } else if (text < 0) {
-            return (
-              <span style={{ color: "red" }}>
-                {Math.abs(text).toLocaleString("en-US")} <ArrowDownOutlined style={{ color: "red" }} />
-              </span>
-            );
-          } else {
-            return text.toLocaleString("en-US");
-          }
-        },
+        width:"120px",
+        render: (text, currency) => {
+          if (text === undefined || text === null) return "-";
+          
+          const isINR = currency === 'INR';
+          const color = isINR ? 'green' : 'red';
+          const absText = Math.abs(text);
+        
+          return (
+            <span style={{ color: color }}>
+              {isINR ? text.toLocaleString('en-IN') : text.toLocaleString('en-US')}
+              {text > 0 && (
+                <>
+                  {' '}
+                  {isINR ? <ArrowUpOutlined style={{ color: color }} /> : <ArrowDownOutlined style={{ color: color }} />}
+                </>
+              )}
+            </span>
+          );
+        }
         
       }
   ];
@@ -434,7 +436,8 @@ const getUploadedTime = () => {
           </Descriptions>
         </Descriptions.Item>
       </Descriptions> */}
-      <Table
+      
+      {priceList?.length > 0 ? (<Table
       rowKey={record => record}
       columns={columns}
       dataSource={priceList}
@@ -449,8 +452,10 @@ const getUploadedTime = () => {
     }}
       // scroll={{x:true}}
       onChange={onChange}
-      bordered />
-    </Card> </>
+      bordered />):(
+        <Alert message="No data available" type="warning" showIcon style={{ width: "140px", margin: "auto" }}/>
+      )}
+    </Card></>
       
   );
 }

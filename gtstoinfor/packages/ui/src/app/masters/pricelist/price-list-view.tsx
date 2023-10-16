@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select, notification } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select, notification, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -310,7 +310,7 @@ const getAllItems = () => {
       {
           title: <div style={{textAlign:"center"}}>Item</div>,
           dataIndex: "item",
-          align:"right",
+          align:"left",
           // sorter: (a, b) => a.item.localeCompare(b.item),
           // sortDirections: ["descend", "ascend"],
            ...getColumnSearchProps("item"),
@@ -371,12 +371,15 @@ const getAllItems = () => {
         sortDirections: ["ascend", "descend"],
         ...getColumnSearchProps("currency"),
         render: (text, record) => {
-          return (
-            <>
-              {record.fobLocalCurrency ? `${record.currency}  ${parseFloat(record.fobLocalCurrency).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}` : '-'}
-            </>
-          );
+          const { fobLocalCurrency, currency } = record;
+          if (currency === 'INR') {
+            const formattedCurrency = parseFloat(record?.fobLocalCurrency).toLocaleString();
+            return (<>{currency} {formattedCurrency}</>);
+          } else {
+            return (<>{fobLocalCurrency ? `${currency} ${parseFloat(record.fobLocalCurrency).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}` : '-'}</>)          
+          }
         }
+        
       },
       
       
@@ -570,9 +573,7 @@ const getAllItems = () => {
                         </Col>
         </Row>
       </Form>
-     
-      
-        <Table
+        {priceList.length > 0 ? (<Table
         rowKey={record => record}
           columns={columns}
           dataSource={priceList}
@@ -588,7 +589,9 @@ const getAllItems = () => {
         
           scroll={{x:'max-content',y:500}}
           onChange={onChange}
-          bordered />
+          bordered />):(
+            <Alert message="No data available" type="warning" showIcon style={{ width: "140px", margin: "auto" }}/>
+          )}
           
     
       <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
