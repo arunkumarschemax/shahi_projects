@@ -5,19 +5,7 @@ import { FabricRequestItemsDto } from "./fabric-request-items.dto";
 
 export class FabricRequestQualitiesDto {
 
-    // createdAt : Date;
 
-    // @ApiProperty()
-    // createdUser : string;
-  
-    // updatedAt : Date;
-
-    // @ApiProperty()
-    // updatedUser : string;
-  
-    // @ApiProperty()
-    // versionFlag : number;
-    
     @ApiProperty()
     quality: QualitiesEnum;
 
@@ -42,12 +30,6 @@ export class FabricRequestQualitiesDto {
     @ApiProperty()
     fabricRequestId: number;
 
-
-
-  
-
-    // @ApiProperty()
-    // fabricRequestQualityId?: number;
 
 
 }

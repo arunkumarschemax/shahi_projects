@@ -14,11 +14,11 @@ export class FabricRequestEntity {
     })
     locationId: number;
 
-    @Column("int", {
+    @Column("varchar", {
         nullable: false,
         name: "request_no"
       })
-    requestNo: number;       //  Auto Generate
+    requestNo: string;       //  Auto Generate
 
     @Column("int", {
         nullable: true,
@@ -52,6 +52,7 @@ export class FabricRequestEntity {
 
     @Column('varchar', {
         name: 'remarks',
+        nullable: true,
     })
     remarks: string;
 
@@ -91,6 +92,12 @@ export class FabricRequestEntity {
         enum: StatusEnum
     })
     status: StatusEnum;
+
+    @Column('varchar', {
+      name: 'uid',
+      nullable: true
+  })
+    uid: string;
 
 
     @Column('varchar', {

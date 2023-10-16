@@ -12,7 +12,7 @@ export class FabricRequestQualitiesInfoEntity {
 
     @Column("int", {
         name: "style_id",
-        nullable: false,
+        nullable: true,
 
       })
     styleId: number;
@@ -57,6 +57,13 @@ export class FabricRequestQualitiesInfoEntity {
         
     })
     uomId:number;
+
+    @Column('varchar', {
+      name: 'uid',
+      nullable: true,
+      
+  })
+    uid:string;
 
     
     @Column('varchar', {

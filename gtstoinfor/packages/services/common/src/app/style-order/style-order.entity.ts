@@ -1,5 +1,5 @@
 import { CustomerOrderStatusEnum } from "@project-management-system/shared-models";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { Item } from "../items/item-entity";
 import { Warehouse } from "../warehouse/warehouse.entity";
 import { FactoriesEntity } from "../factories/factories.entity";
@@ -131,6 +131,47 @@ export class StyleOrder{
     })
     remarks: string;
 
+    @Column("boolean",{
+        nullable:false,
+        default:true,
+        name:"is_active"
+        })
+      isActive:boolean;
+    
+      @CreateDateColumn({
+        name: "created_at",
+        type:"datetime"
+      })
+      createdAt: Date;
+    
+      @Column("varchar", {
+          nullable: false,
+          name: "created_user",
+          default:"ADMIN",
+          length:50
+      })
+      createdUser: string | null;
+    
+    
+      @UpdateDateColumn({
+          name: "updated_at",
+          type:'datetime'
+      })
+      updatedAt: Date;
+    
+      @Column("varchar", {
+          nullable: true,
+          name: "updated_user",
+          length:50
+      })
+      updatedUser: string | null;
+    
+      @VersionColumn({
+          default:1,
+          name: "version_flag"
+      })
+      versionFlag: number;
+
     @ManyToOne(type=>Item, item=>item.styleOrderInfo,{  nullable:false, })
     @JoinColumn({ name:"item_id"})
     itemInfo: Item;
@@ -143,7 +184,7 @@ export class StyleOrder{
     @JoinColumn({ name:"facility_id"})
     factoryInfo: FactoriesEntity;
 
-    @ManyToOne(type=>Style, style=>style.styleOrderInfo,{  nullable:false, })
+    @ManyToOne(type=>Style, style=>style.styleOrderInfo,{  nullable:true, })
     @JoinColumn({ name:"style_id"})
     styleInfo: Style;
 

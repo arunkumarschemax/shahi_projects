@@ -126,6 +126,7 @@ import OperationReportingView from "./orders/operation-reporting-view"
 import IssueScreen from "./operation-tracking/issue"
 import StyleOrderCreation from "./style-orders/style-order-form"
 import StyleOrderGrid from "./style-orders/style-order-grid"
+import StyleOrderDetailView from "./style-orders/style-order-detail-view"
 
 
 export const AppRoutes = () => {
@@ -317,7 +318,7 @@ export const AppRoutes = () => {
                     isUpdate={false}
                     closeForm={() => { }}
                     updateItem={(undefined) => { }}/>} />
-                    <Route path='fabric-sub-type-view/fabric-sub-type-view' element={<FabricSubTypeGrid/>} />
+                    <Route path='fabricSubType/fabric-sub-type-view' element={<FabricSubTypeGrid/>} />
                     <Route path='fabric-sub-type-form/fabric-sub-type-form' key ='fabric-sub-type-form/fabric-sub-type-form' element={<FabricSubTypeForm  fabricsubtypeData={undefined}
 
                     isUpdate={false}
@@ -475,7 +476,7 @@ export const AppRoutes = () => {
                    
                         </Route>
                 <Route path='fabricdevelopment'>
-                <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentRequest/>}/>
+                <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentRequest placementForm={undefined} dynamicForm={undefined}/>}/>
                 <Route path='fabric-development-request/fabric-development-request-view' element={<FabricDevelopmentView/>}/>
                 <Route path='fabric-development-request-quality/fabric-development-request-quality-view' element={<QualityTabsView/>}/>
 
@@ -498,7 +499,7 @@ export const AppRoutes = () => {
                 <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation />} />
                 <Route path='style-order-creation' element={<StyleOrderCreation />} />
                 <Route path='style-order-view' element={<StyleOrderGrid />} />
-
+                <Route path='style-order-detail-view' element={<StyleOrderDetailView />} />
                 </Route>
                 <Route path='/operation-tracking'>
                 <Route path='operation-tracking/issuing' element={<IssueScreen/>}/>

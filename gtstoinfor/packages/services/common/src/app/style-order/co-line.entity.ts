@@ -1,5 +1,5 @@
 import { CustomerOrderStatusEnum } from "@project-management-system/shared-models";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { Colour } from "../colours/colour.entity";
 import { Size } from "../sizes/sizes-entity";
 import { Destination } from "../destination/destination.entity";
@@ -13,6 +13,13 @@ export class CoLine{
         name:'id'
     })
     id:number;
+
+    @Column('varchar',{
+        name:'coline_number',
+        nullable:false,
+        length:50
+    })
+    coLineNumber : string;
 
     @Column('varchar',{
         name:'delivery_address',
@@ -50,7 +57,7 @@ export class CoLine{
 
     @Column('varchar',{
         name:'uom',
-        nullable:false,
+        nullable:true,
         length:30
     })
     uom : string;
@@ -80,6 +87,47 @@ export class CoLine{
     })
     coPercentage: number
 
+    @Column("boolean",{
+        nullable:false,
+        default:true,
+        name:"is_active"
+        })
+      isActive:boolean;
+    
+      @CreateDateColumn({
+        name: "created_at",
+        type:"datetime"
+      })
+      createdAt: Date;
+    
+      @Column("varchar", {
+          nullable: false,
+          name: "created_user",
+          default:"ADMIN",
+          length:50
+      })
+      createdUser: string | null;
+    
+    
+      @UpdateDateColumn({
+          name: "updated_at",
+          type:'datetime'
+      })
+      updatedAt: Date;
+    
+      @Column("varchar", {
+          nullable: true,
+          name: "updated_user",
+          length:50
+      })
+      updatedUser: string | null;
+    
+      @VersionColumn({
+          default:1,
+          name: "version_flag"
+      })
+      versionFlag: number;
+
     @ManyToOne(type=>StyleOrder, co=>co.coLineInfo,{  nullable:false, })
     @JoinColumn({ name:"co_id"})
     styleOrderInfo: StyleOrder;
@@ -96,7 +144,7 @@ export class CoLine{
     @JoinColumn({ name:"destination_id"})
     destinationInfo: Destination;
 
-    @ManyToOne(type=>UomEntity, uom=>uom.coLineInfo,{  nullable:false, })
+    @ManyToOne(type=>UomEntity, uom=>uom.coLineInfo,{  nullable:true, })
     @JoinColumn({ name:"uom_id"})
     uomInfo: UomEntity;
 }

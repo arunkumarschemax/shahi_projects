@@ -1,9 +1,11 @@
 import { BuyerIdReq, BuyersDestinationRequest, CustomerOrderStatusEnum, ItemCodeReq, SKUGenerationReq, StyleOrderItemsReq, StyleOrderReq } from "@project-management-system/shared-models";
-import { BuyerDestinationService, BuyersService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DestinationService, EmployeeDetailsService, FactoryService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, SKUGenerationService, WarehouseService } from "@project-management-system/shared-services"
+import { BuyerDestinationService, BuyersService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DestinationService, EmployeeDetailsService, FactoryService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, SKUGenerationService, StyleOrderService, WarehouseService } from "@project-management-system/shared-services"
 import { Button, Card, Col, DatePicker, Form, Input, Row, Segmented, Select, Space, Table } from "antd"
 import TextArea from "antd/es/input/TextArea";
 import { ColumnProps } from "antd/es/table";
 import { useEffect, useState } from "react"
+import AlertMessages from "../common/common-functions/alert-messages";
+import { useNavigate } from "react-router-dom";
 
 const {Option} = Select;
 
@@ -41,6 +43,9 @@ export const StyleOrderCreation = () => {
     const [itemId,setItemId] = useState<number>(0)
     const deliveryAddressService = new BuyerDestinationService()
     const [delivAdd,setDelivAdd] =  useState<any[]>([])
+    const styleOrderService = new StyleOrderService()
+    const navigate = useNavigate();
+    const [tableVisible,setTableVisible] = useState<boolean>(false)
 
 
     useEffect(() => {
@@ -198,6 +203,7 @@ export const StyleOrderCreation = () => {
 
     const onSegmentChange = (e) => {
         console.log(e)
+        setTableVisible(true)
         const req = new ItemCodeReq(form.getFieldValue('itemCode'),e)
         skuService.getDataByDestinationAgainstItem(req).then(res => {
             if(res.status){
@@ -212,7 +218,7 @@ export const StyleOrderCreation = () => {
         data[index].quantity = e.target.value
         data[index].deliveryAddress = form.getFieldValue('deliveryAddress')
         console.log(data)
-        const req = new StyleOrderItemsReq(form.getFieldValue('deliveryAddress'),e.target.value,rowData.color,rowData.size,rowData.destination,null,CustomerOrderStatusEnum.OPEN,null,null,null,rowData.colorInfo.colorId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId,null)
+        const req = new StyleOrderItemsReq(form.getFieldValue('deliveryAddress'),e.target.value,rowData.color,rowData.size,rowData.destination,null,CustomerOrderStatusEnum.OPEN,null,null,null,rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId,null)
         setOrderQuantityData([...orderQuantityData,req])
     }
 
@@ -241,7 +247,7 @@ export const StyleOrderCreation = () => {
             dataIndex:'quantity',
             render:(text,row,index) => {
                 return(
-                    <Input key={index}placeholder="Enter value"
+                    <Input key={row.itemSkuId} placeholder="Enter value"
                         onBlur={e=> setQuantityValue(e,index,row)}/>
                 )
             }
@@ -258,11 +264,27 @@ export const StyleOrderCreation = () => {
     const [firstHalfData, secondHalfData] = splitData(data);
 
     const onFinish = (val) => {
-        const req = new StyleOrderReq(val.itemCode,val.CODate,val.buyerPoNumber,val.shipmentType,val.buyerStyle,val.agent,val.buyerAddress,val.exfactoryDate,val.deliveryDate,val.inStoreDate,val.salePrice,val.priceQuantity,val.discount,null,CustomerOrderStatusEnum.OPEN,val.remarks,itemId,val.warehouse,val.facility,null,val.packageTerms,val.deliveryMethod,val.deliveryTerms,val.currency,val.paymentMethod,val.paymentTerms,orderQuantityData,val.buyer)
+        const req = new StyleOrderReq(val.itemCode,val.CODate,val.buyerPoNumber,val.shipmentType,val.buyerStyle,val.agent,val.buyerAddress,val.exfactoryDate,val.deliveryDate,val.inStoreDate,val.salePrice,val.priceQuantity,val.discount,null,CustomerOrderStatusEnum.OPEN,val.remarks,itemId,val.warehouse,val.facility,null,val.packageTerms,val.deliveryMethod,val.deliveryTerms,val.currency,val.paymentMethod,val.paymentTerms,orderQuantityData,val.buyer,'admin')
         console.log(req,'---')
+        styleOrderService.createCustomerOrder(req).then(res => {
+            if(res.status){
+                AlertMessages.getSuccessMessage(res.internalMessage)
+            } else{
+                AlertMessages.getSuccessMessage(res.internalMessage)
+            }
+        })
     }
     return(
-        <Card title='Style Order Creation' size='small'>
+        <Card title='Style Order Creation' size='small'  extra={
+            <span>
+              <Button
+                onClick={() => navigate("/materialCreation/style-order-view")}
+                type={"primary"}
+              >
+                View
+              </Button>
+            </span>
+          }>
             <Form layout="vertical" form={form} onFinish={onFinish}>
                <Row gutter={[8,4]}>
                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 12}}>
@@ -517,7 +539,9 @@ export const StyleOrderCreation = () => {
                 </Col>
                </Row>
                <Row>
-                <Card style={{width:'100%'}}>
+                {
+                    form.getFieldValue('itemCode') !== undefined ? (<>
+                        <Card style={{width:'100%'}}>
                 <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}>
                 <Segmented 
                 style={{backgroundColor:'#dde5b6'}}
@@ -529,7 +553,7 @@ export const StyleOrderCreation = () => {
                         {/* <Input placeholder="Enter delivery address"/> */}
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Delivery Address'>
                         {
-                            delivAdd[0].destination.map((e) => {
+                            delivAdd[0]?.destination.map((e) => {
                                 return(
                                     <Option key={e.destinationId} value={e.destinationId}>{e.destination}</Option>
                                 )
@@ -538,31 +562,30 @@ export const StyleOrderCreation = () => {
                     </Select>
                     </Form.Item>
                 </Col>
-                {/* <Table columns={columns} dataSource={data}/> */}
                 {
-                data.length <= 10 ? (<>
-                <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 18 }}>
-                {/* <Card size='small'> */}
-                <Table  size='small'  bordered columns={columns} dataSource={data} pagination={false}/>
-                {/* </Card> */}
-                </Col>
-                </>): (<></>)
-
-            }
-            {
-                data.length > 10 ? (<> <Row gutter={24}>
-                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                        {/* <Card size='small'> */}
-                            <Table  size='small'  bordered columns={columns} dataSource={firstHalfData} pagination={false}/>
-                        {/* </Card> */}
+                    tableVisible ? (<>
+                    
+                    {/* <Table columns={columns} dataSource={data}/> */}
+                    {
+                    data.length <= 10 ? (<>
+                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 18 }}>
+                    <Table  size='small'  bordered columns={columns} dataSource={data} pagination={false}/>
                     </Col>
-                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                        {/* <Card size='small'> */}
-                            <Table  size='small'  bordered columns={columns} dataSource={secondHalfData} pagination={false}/>
-                        {/* </Card> */}
-                    </Col>
-                    </Row></>) : (<></>)
-            }
+                    </>): (<></>)
+    
+                    }
+                    {
+                    data.length > 10 ? (<> <Row gutter={24}>
+                        <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                                <Table  size='small'  bordered columns={columns} dataSource={firstHalfData} pagination={false}/>
+                        </Col>
+                        <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                                <Table  size='small'  bordered columns={columns} dataSource={secondHalfData} pagination={false}/>
+                        </Col>
+                        </Row></>) : (<></>)
+                    }
+                    </>) : (<></>)
+                }
                 </Space>
                 <Row justify={'end'} style={{marginLeft:'85%',marginTop:'5px'}}>
                <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
@@ -572,6 +595,9 @@ export const StyleOrderCreation = () => {
                </Col>
                </Row>
                 </Card>
+                    </>) : (<></>)
+                }
+            
                </Row>
              
             </Form>

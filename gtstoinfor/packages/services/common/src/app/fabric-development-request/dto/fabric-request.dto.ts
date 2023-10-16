@@ -22,7 +22,7 @@ export class FabricRequestDto{
     locationId: number;
 
     @ApiProperty()
-    requestNo: number;     //  Auto Generate
+    requestNo: string;     //  Auto Generate
 
     @ApiProperty()
     styleId: number;
@@ -59,6 +59,9 @@ export class FabricRequestDto{
 
     @ApiProperty()
     status: StatusEnum;
+
+    @ApiProperty()
+    uid: string;
 
     @ApiProperty()
     fileName: string;
