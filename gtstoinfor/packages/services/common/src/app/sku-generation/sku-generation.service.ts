@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ItemSkus } from "./sku-generation.entity";
 import { DataSource, Repository } from "typeorm";
-import { ColorInfoReq, CommonResponseModel, DestinationInfoReq, ItemCodeReq, ItemSKusModel, ItemSKusReq, SKUGenerationResponseModel, SizeInfoReq, SKUlistFilterRequest, SkuStatusEnum } from "@project-management-system/shared-models";
+import { ColorInfoReq, CommonResponseModel, DestinationInfoReq, ItemCodeReq, ItemSKusModel, ItemSKusReq, SKUGenerationResponseModel, SizeInfoReq, SKUlistFilterRequest, SkuStatusEnum, SKUDTO, SKUListDto } from "@project-management-system/shared-models";
 import { Item } from "../items/item-entity";
 import { Destination } from "../destination/destination.entity";
 import { Size } from "../sizes/sizes-entity";
@@ -198,7 +198,7 @@ export class ItemSkuService{
       const getData= await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo'],
       // const getData = await this.itemSkuRepo.getDestinationsByItem(req.itemCode)
 
-      // where:{itemInfoitem_id = req.itemNoId}
+      where:{itemInfo:{itemId:req.itemNoId}}
     })
       if(getData.length> 0){
         return new CommonResponseModel(true,1,'Data retreived',getData)
@@ -211,18 +211,44 @@ export class ItemSkuService{
   }
    
 
-// async getItemCode(req:ItemCodeReq):Promise<CommonResponseModel>{
-//   try{
-//     const getData = await this.itemSkuRepo.getDestinationsByItem(req.itemCode)
-//     if(getData.length > 0){
-//       return new CommonResponseModel(true,1,'Data retreived',getData)
-//     } else{
-//       return new CommonResponseModel(false,0,'No data found')
-//     }
+  // async getSkuList(req:SKUlistFilterRequest):Promise<CommonResponseModel>{
+  //   const data = await this.itemSkuRepo.getDestinationsByItem(req);
+  //   if(data.length ===0){
+  //     return new CommonResponseModel(false,0,'data not found');
+  //   }
+  //   const DataMap =new Map <string, SKUDTO>();
 
-//   } catch(err){
-//     throw err
-//   }
-// }
+  //   for(const res of data){
+  //     if(!DataMap.has(res.itemNo)){
+  //       DataMap.set(
+  //         res.itemNo,
+  //          new SKUListDto(res.itemskuID,[])
+  //       );
+  //     }
+  //     const Sku =DataMap.get(res.itemNo).sku;
+  //     const skus =Sku.find(e=>e.itemskuID === res.)
+      
+  //   }
+  
+  //   const ModelArray: SKUListDto[] = Array.from(DataMap.values());
+  //   return new CommonResponseModel(true,1,'data retrived', ModelArray);
+  // }
+
+
+async getItemCode():Promise<CommonResponseModel>{
+  try{
+    const getData = await this.itemSkuRepo.getItemCode()
+    console.log(getData,'dara');
+    
+    if(getData ){
+      return new CommonResponseModel(true,1,'Data retreived',getData)
+    } else{
+      return new CommonResponseModel(false,0,'No data found')
+    }
+
+  } catch(err){
+    throw err
+  }
+}
 
 }

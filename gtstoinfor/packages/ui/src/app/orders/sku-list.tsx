@@ -45,11 +45,11 @@ import Highlighter from "react-highlight-words";
 export const SkuList = () => {
   const [form] = Form.useForm();
   const [itemData, setItemData] = useState([]);
-  const [selectedItemNo, setSelectedItemNo] = useState(null);
+  const [selectedItemNo, setSelectedItemNo] = useState();
   const [selectedSIze, setSelectedSizeId] = useState(null);
   const [selectedcolour, setSelectedColourId] = useState(null);
   const [selecteddestination, setSelecteddestinationId] = useState(null);
-  const [selectedValue, setSelectedValue] = useState("cards");
+  const [Value, setValue] = useState("cards");
   const service = new SKUlistService();
   const services = new SKUGenerationService();
   const [data, setData] = useState([]);
@@ -62,23 +62,15 @@ export const SkuList = () => {
   const [options, setOptions] = useState(["Cards", "View"]);
   useEffect(() => {
     Dropdown();
+    getAllData();
+
   }, []);
 
-  const handleSearch = () => {
-    if (selectedItemNo) {
-      const req = new SKUlistFilterRequest(selectedItemNo);
-      services.getSkuList(req).then((res) => {
-        if (res) {
-          setItemData(res.data);
-        }
-      });
-    } else {
-    }
-  };
+
 
   const cancelSKU = (id: number) => {
     const req = new ItemSKusReq(id, "", null, null, null, null, "", 0);
-    service.cancelSKUById(req).then((res: any) => {
+    services.cancelSKUById(req).then((res: any) => {
       if (res.status) {
         message.success(res.internalMessage);
       } else {
@@ -87,7 +79,7 @@ export const SkuList = () => {
     });
   };
 
-  const Sku = (val, data) => {
+  const Sku = (val,data) => {
     setSelectedItemNo(val);
   };
 
@@ -112,7 +104,37 @@ export const SkuList = () => {
     });
   };
 
+  const getAllData=()=>{
+    const req = new SKUlistFilterRequest()
+    if(form.getFieldValue('item_code') !== undefined){
+      req.itemsNo=form.getFieldValue('item_code')
+    }
+    services.getSkuList(req).then(res=>{
+      if(res.data){
+        setValue(res.data)
+      }
+    })
+  }
+  const handleSearch = () => {
+    console.log('eeeeeeeeee',selectedItemNo);
+    
+    if (selectedItemNo) {
+      const req = new SKUlistFilterRequest(Number(selectedItemNo))
+      console.log(req,'777777');
+      
+      services.getSkuList(req).then((res) => {
+        if (res) {
+          setItemData(res.data);
+          console.log(res.data,'data');
+          
+        }
+      });
+    } else {
+    }
+  };
+
   function handledSearch(selectedKeys, confirm, dataIndex) {
+    // console.log("777777777777777777777777")
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -300,18 +322,18 @@ export const SkuList = () => {
               <Form.Item
                 style={{ flexDirection: "row" }}
                 label="Item No"
-                name="itemsNo"
+                name="item_code"
               >
                 <Select
                   allowClear
                   showSearch
                   optionFilterProp="children"
                   placeholder="Select Item No"
-                  onChange={(val, text) => Sku(val, text)}
+                  onChange={(val,data)=>Sku(val,data)}
                 >
                   {data.map((e) => (
-                    <Option key={e.itemNoId} val={e.itemNoId} code={e.itemsNo}>
-                      {e.itemsNo}
+                    <Option key={e.item_id} val={e.item_id} code={e.item_code}>
+                      {e.item_code}
                     </Option>
                   ))}
                 </Select>

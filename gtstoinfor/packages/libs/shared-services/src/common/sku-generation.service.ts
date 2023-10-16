@@ -26,4 +26,8 @@ export class SKUGenerationService extends CommonAxiosService{
     async getAllitemsCode ():Promise<CommonResponseModel>{
         return this.axiosPostCall(this.URL +"/getAllitemsCode")
     }
+
+    async cancelSKUById(req :ItemSKusReq): Promise<any>{
+        return this.axiosPostCall(this.URL + '/cancelSKUById')
+    }
 }

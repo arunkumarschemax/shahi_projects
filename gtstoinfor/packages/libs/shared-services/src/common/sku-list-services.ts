@@ -4,9 +4,9 @@ import { ItemSKusReq, SKUGenerationResponseModel, SKUlistFilterRequest } from "@
 export class SKUlistService extends CommonAxiosService{
 URL = '/sku-list';
 
-async cancelSKUById(req :ItemSKusReq): Promise<any>{
-    return this.axiosPostCall(this.URL + '/cancelSKUById')
-}
+// async cancelSKUById(req :ItemSKusReq): Promise<any>{
+//     return this.axiosPostCall(this.URL + '/cancelSKUById')
+// }
 
 // async getAllitemsCode():Promise<any>{
 //     const mockItemData=[
