@@ -366,7 +366,10 @@ export function OrderAcceptance() {
         },
         {
             title: 'Shipping Type',
-            dataIndex: 'shipping_type',width:80,
+            dataIndex: 'shipping_type',width:80,render: (text) => {
+                const transformedText = text ? text.replace(/_/g, ' ') : '-';
+                return transformedText;
+            },
         },
         {
             title: 'DPOM Line Item Status',

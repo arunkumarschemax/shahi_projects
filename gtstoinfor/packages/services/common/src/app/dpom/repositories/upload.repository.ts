@@ -13,7 +13,7 @@ export class NikeFileUploadRepository extends Repository<NikeFileUploadEntity> {
 
     async getFilesData(): Promise<any[]> {
         const query = this.createQueryBuilder('fup')
-            .select(`fup.id as fileId , fup.file_name as fileName , fup.file_path as filePath, fup.created_at as uploadedDate, fup.created_user as createdUser, fup.status as status`)
+            .select(`fup.id as fileId , fup.file_name as fileName , fup.file_path as filePath, DATE_FORMAT(fup.created_at, '%Y-%m-%d %h:%i %p') AS uploadedDate ,fup.created_user as createdUser, fup.status as status`)
             .where(`fup.is_active = 1`)
             .orderBy(`fup.created_at`, 'DESC')
         return await query.getRawMany();
