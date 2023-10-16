@@ -250,11 +250,10 @@ const FobPriceListGrid = () => {
     <>
       <div>
         <Card
-          extra={<span><Button onClick={() => navigate('/masters/fob-price-list-form/', { state: { name: 'new' } })} type={'primary'}>New</Button></span>}
-          headStyle={{ height: '50px' }}
+          extra={<span><Button onClick={() => navigate('/masters/fob-price-list-form/', { state: { name: 'new' } })} style={{height:32}} type={'primary'}>New</Button></span>}
+          headStyle={{ height: '53px' }}
           title={<><span>Fob Price List</span><span>
-            <Button onClick={() => navigate('/masters/fob-price-list-form', { state: { name: 'excel' } })} style={{ float: 'right', marginRight: '2px' }} type='primary'>CSV Upload</Button></span></>}
-        >
+            <Button onClick={() => navigate('/masters/fob-price-list-form', { state: { name: 'excel'} })} style={{ float: 'right',height:33, marginRight: '2px' }}  type='primary'>CSV Upload</Button></span></>}>
           <Table columns={Columns}
             dataSource={fob}
             className="custom-table-wrapper"
