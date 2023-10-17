@@ -1,5 +1,7 @@
 import { SubContractStatus } from "@project-management-system/shared-models";
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
+import { StyleOrder } from "../style-order/style-order.entity";
+import { ItemSkus } from "../sku-generation/sku-generation.entity";
 
 @Entity('fg_item')
 export class ItemCreation {
@@ -277,5 +279,13 @@ export class ItemCreation {
     name: "version_flag"
   })
   versionFlag: number;
+
+  
+  @OneToMany(type=>StyleOrder, item=>item.fgitemInfo,{cascade: true})
+  styleOrderInfo:StyleOrder;
+
+  
+  @OneToMany(type=>ItemSkus, item=>item.fgitemInfo,{cascade: true})
+  itemSkuInfo:ItemSkus;
 
 }

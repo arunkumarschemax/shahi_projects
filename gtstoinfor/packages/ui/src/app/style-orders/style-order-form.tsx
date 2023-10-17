@@ -264,8 +264,7 @@ export const StyleOrderCreation = () => {
     const [firstHalfData, secondHalfData] = splitData(data);
 
     const onFinish = (val) => {
-        const req = new StyleOrderReq(val.itemCode,val.CODate,val.buyerPoNumber,val.shipmentType,val.buyerStyle,val.agent,val.buyerAddress,val.exfactoryDate,val.deliveryDate,val.inStoreDate,val.salePrice,val.priceQuantity,val.discount,null,CustomerOrderStatusEnum.OPEN,val.remarks,itemId,val.warehouse,val.facility,null,val.packageTerms,val.deliveryMethod,val.deliveryTerms,val.currency,val.paymentMethod,val.paymentTerms,orderQuantityData,val.buyer,'admin')
-        console.log(req,'---')
+        const req = new StyleOrderReq(val.itemCode,val.CODate,val.buyerPoNumber,val.shipmentType,val.buyerStyle,val.agent,val.buyerAddress,val.exfactoryDate,val.deliveryDate,val.inStoreDate,val.salePrice,val.priceQuantity,val.discount,null,orderQuantityData.length > 0 ? CustomerOrderStatusEnum.CONFIRMED : CustomerOrderStatusEnum.OPEN,val.remarks,itemId,val.warehouse,val.facility,null,val.packageTerms,val.deliveryMethod,val.deliveryTerms,val.currency,val.paymentMethod,val.paymentTerms,orderQuantityData,val.buyer,'admin')
         styleOrderService.createCustomerOrder(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)

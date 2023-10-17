@@ -21,4 +21,13 @@ export class ItemCreationController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
+
+    @Post('/getFgItemsDropdown')
+    async getFgItemsDropdown(): Promise<CommonResponseModel> {
+        try {
+            return await this.itemCreationService.getFgItemsDropdown();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
 }

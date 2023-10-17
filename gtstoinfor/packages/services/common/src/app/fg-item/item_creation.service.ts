@@ -5,6 +5,7 @@ import { ItemCreationAdapter } from './dto/item_creation.adapter';
 import { ItemCreationDto } from './dto/item-creation.dto';
 import { ItemCreation } from './item_creation.entity';
 import { CommonResponseModel } from '@project-management-system/shared-models';
+import { error } from 'console';
 
 
 @Injectable()
@@ -30,6 +31,19 @@ export class ItemCreationService {
             }
         } catch (error) {
             return error;
+        }
+    }
+
+    async getFgItemsDropdown():Promise<CommonResponseModel>{
+        try{
+            const data = await this.itemCreationRepository.find({select:['fgitemId','itemName','itemCode']})
+            if(data.length >0){
+                return new CommonResponseModel(true,1,'Data retrieved',data)
+            } else{
+                return new CommonResponseModel(false,0,'No data found')
+            }
+        } catch(err){
+            return err
         }
     }
 }

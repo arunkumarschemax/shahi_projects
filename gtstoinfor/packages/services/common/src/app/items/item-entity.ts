@@ -105,11 +105,5 @@ export class Item {
   // @OneToMany(type=>OperationSequence, operation=>operation.itemInfo,{cascade: true})
   // itemsequenceInfo:OperationSequence;
 
-  @OneToMany(type=>ItemSkus, item=>item.itemInfo,{cascade: true})
-  itemSkuInfo:ItemSkus;
-
-  @OneToMany(type=>StyleOrder, item=>item.itemInfo,{cascade: true})
-  styleOrderInfo:StyleOrder;
-
 
 }

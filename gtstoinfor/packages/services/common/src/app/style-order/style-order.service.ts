@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, CustomerOrderStatusEnum, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
 import { StyleOrder } from "./style-order.entity";
 import { Item } from "../items/item-entity";
 import { Warehouse } from "../warehouse/warehouse.entity";
@@ -22,6 +22,7 @@ import { DataSource, Repository } from "typeorm";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { StyleOrderRepository } from "./style-order-repo";
 import { CoLineRepository } from "./co-line.repo";
+import { ItemCreation } from "../fg-item/item_creation.entity";
 
 @Injectable()
 
@@ -55,11 +56,11 @@ export class StyleOrderService{
             entity.salePrice = req.salePrice;
             entity.priceQuantity = req.priceQuantity;
             entity.discountAmount = req.discountAmount;
-            entity.status = req.status;
+            entity.status = req.styleOrderItems.length > 0 ? CustomerOrderStatusEnum.CONFIRMED : CustomerOrderStatusEnum.OPEN;
             entity.remarks = req.remarks;
-            const item = new Item()
-            item.itemId = req.itemId
-            entity.itemInfo = item;
+            const item = new ItemCreation()
+            item.fgitemId = req.itemId
+            entity.fgitemInfo = item;
             const warehouse = new Warehouse()
             warehouse.warehouseId = req.warehouseId
             entity.warehouseInfo = warehouse;
