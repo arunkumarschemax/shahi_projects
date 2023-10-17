@@ -291,21 +291,29 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
     };
 
     const columns = [
+        // {
+        //     title: "Service Description",
+        //     dataIndex: "description",
+        //     width: "30",
+        //     key: "description",
+        //     render: (description) => {
+        //         if (description !== undefined && description !== null) {
+        //             const descriptionString = description.toString().replace(/[^\w\s]/g, '');
+        //             const trimmedDescription = descriptionString.split(/[^a-zA-Z\s]+/)[0];
+        //             return trimmedDescription;
+        //         } else {
+        //             return "_";
+        //         }
+        //     }
+        // },
         {
             title: "Service Description",
             dataIndex: "description",
             width: "30",
             key: "description",
-            render: (description) => {
-                if (description !== undefined && description !== null) {
-                    const descriptionString = description.toString().replace(/[^\w\s]/g, '');
-                    const trimmedDescription = descriptionString.split(/[^a-zA-Z\s]+/)[0];
-                    return trimmedDescription;
-                } else {
-                    return "_";
-                }
-            }
+            render: (HSN) => (HSN !== undefined && HSN !== null ? HSN : "0"),
         },
+
         {
             title: "HSN code",
             dataIndex: "HSN",
@@ -527,7 +535,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                             >
                                 <Input placeholder="Vendor Code"
                                     onChange={(e) => setVenCode(e.target.value)}
-                                    style={{ borderColor: props.formData?.venCod ? 'green' : 'red' }} />
+                                    style={{ borderColor: props.formData?.venCod ? 'green' : 'blue' }} />
                             </Form.Item>
                         </Col>
 
