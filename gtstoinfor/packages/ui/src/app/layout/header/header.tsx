@@ -1,16 +1,12 @@
 import React from 'react'
 import { Layout, Row, Col, Menu, Dropdown, Button, Avatar, MenuProps, Select, SelectProps, theme, Divider } from 'antd';
+import xpperal from './xapp.png'
 
-import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  UserOutlined,
-  SearchOutlined,
-} from '@ant-design/icons';
+
+import {MenuUnfoldOutlined,MenuFoldOutlined,  SearchOutlined, UserOutlined} from '@ant-design/icons';
 import './header.css';
 import Search from 'antd/es/input/Search';
 import { useNavigate } from 'react-router-dom';
-import xpperal from './xpparel-logo.jpeg'
 
 const { Header } = Layout;
 const { useToken } = theme
@@ -75,11 +71,14 @@ export const CommonHeader = (props: IProps) => {
     <Header className='header-row' style={{ background: '#fff', padding: 0 }}>
       <Row justify='space-between' align='middle'>
         <Col span={4}>
-          <div className="logo" >
-            {/* <span style={{ color: colorPrimary, fontSize: 45, paddingLeft: '10px' }}><b>{'SHAHI'}</b></span> */}
-                        <img src={xpperal} width={120} height={55} style={{marginLeft:'20px'}}></img>
+        
+         <div className="logo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: '100%' }}>
+          <img src={xpperal} width={90} height={55} style={{marginBottom:'10px', marginLeft: '20px' }}></img>
+          <div style={{ fontSize: '30px', color: '#2b706d', paddingLeft: '8px', fontWeight: '620' }}>XPPAREL</div>
+        </div>
+  
+          {/* <div style={{fontSize:'30px',float:'left',color:'#2b706d',paddingLeft:'11px',fontWeight:'600'}}> XPPAREL</div> */}
 
-          </div>
         </Col>
         <Col span={1} >
           {/* <span className='ant-pro-global-header-trigger'>
@@ -91,7 +90,7 @@ export const CommonHeader = (props: IProps) => {
         </Col>
         <Col span={4}></Col>
         <Col span={8}>
-          <span style={{ alignSelf: 'center', fontSize: 30, color: 'darkblue' }}><b>{'ORDER MANAGEMENT & TRACKING'}</b></span>
+          <span style={{ alignSelf: 'center', fontSize: 28, color: 'darkblue' }}><b>{'ORDER MANAGEMENT & TRACKING'}</b></span>
           {/* <Select  onSelect={(e) => {navigate('/'+e)}} className='header-search' showSearch  allowClear style={{width:'100%',marginBottom:'60px'}}  placeholder='search for forms and views' options={options} suffixIcon={<SearchOutlined style={{color:colorPrimary}}/>} /> */}
         </Col>
         <Col span={7} style={{ textAlign: 'right' }}>

@@ -50,27 +50,28 @@ export function NikeFileRevert() {
         {
             title: 'Uploaded Date ',
             dataIndex: 'uploadedDate',
-            render: (value, record) => {
-                return (
-                    moment(record.uploadedDate).format('YYYY-MM-DD HH:mm:ss')
-                )
-            }
+            // render: (value, record) => {
+            //     return (
+            //         moment(record.uploadedDate).format('YYYY-MM-DD HH:mm:ss')
+            //     )
+            // }
         },
         {
             title: 'DPOM API (sync status)',
-            dataIndex: 'status'
+            dataIndex: 'status',align:'center'
         },
         {
             title: 'CRM API (sync status)',
-            dataIndex: 'status'
+            dataIndex: 'status',align:'center'
         },
         {
             title: 'Uploaded User',
-            dataIndex: 'createdUser'
+            dataIndex: 'createdUser',align:'center'
         },
         {
             title: 'Action',
             dataIndex: 'Action',
+            width:150,
             render: (text, record, index) => {
                 const isFirstRecord = index === 0 && page === 1;
                 return (

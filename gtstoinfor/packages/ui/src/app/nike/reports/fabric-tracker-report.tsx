@@ -314,7 +314,11 @@ export function FabricTrackerReport() {
     },
     {
       title: "Shipping Type",
-      dataIndex: 'shipmentType',width:70,
+      dataIndex: 'shipmentType',width:70,    render: (text) => {
+        const transformedText = text ? text.replace(/_/g, ' ') : '-';
+
+        return transformedText;
+    },
 
           },
           {

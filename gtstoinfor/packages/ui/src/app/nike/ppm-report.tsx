@@ -1,5 +1,5 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
-import { MarketingModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
+import { MarketingModel, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 import { NikeService } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag, Statistic, Modal, TreeSelect } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
@@ -1203,7 +1203,7 @@ const PPMReport = () => {
     return {};
   };
 
-  const getSizeWiseHeaders = (data: MarketingModel[]) => {
+  const getSizeWiseHeaders = (data: MarketingReportModel[]) => {
     const sizeHeaders = new Set<string>();
     data?.forEach(rec => rec.sizeWiseData?.forEach(version => {
       sizeHeaders.add('' + version.sizeDescription);
@@ -1211,14 +1211,15 @@ const PPMReport = () => {
     return Array.from(sizeHeaders);
   };
 
-  const getMap = (data: MarketingModel[]) => {
-    const sizeWiseMap = new Map<string, Map<string, number>>();
+  const getMap = (data: MarketingReportModel[]) => {
+    const sizeWiseMap = new Map<string, Map<string, MarketingReportSizeModel>>();
+    // po => size => obj
     data?.forEach(rec => {
-      if (!sizeWiseMap.has(rec.purchaseOrderNumber)) {
-        sizeWiseMap.set(rec.purchaseOrderNumber, new Map<string, number>());
+      if (!sizeWiseMap.has(rec.poAndLine)) {
+        sizeWiseMap.set(rec.poAndLine, new Map<string, MarketingReportSizeModel>());
       }
-      rec.sizeWiseData?.forEach(version => {
-        sizeWiseMap.get(rec.purchaseOrderNumber).set(' ' + version.sizeDescription, version.sizeQty);
+      rec.sizeWiseData?.forEach(size => {
+        sizeWiseMap.get(rec.poAndLine).set(size.sizeDescription, size);
       })
     });
     return sizeWiseMap;
@@ -1227,7 +1228,7 @@ const PPMReport = () => {
 
   // function generateClassName(index) {
   //   isOdd = !isOdd; 
-  //   return isOdd ? 'odd-version' : 'even-version';
+  //   return isOdd ? 'odd-version' version';
   // }
 
   const summaryColumns: CustomColumn<any>[] = [
@@ -1326,9 +1327,11 @@ const PPMReport = () => {
     { title: 'Total Item Quantity', dataIndex: 'totalItemQty', key: 'totalItemQty', isDefaultSelect: false },
   ]
 
-  const renderReport = (data: MarketingModel[]) => {
+  const renderReport = (data: MarketingReportModel[]) => {
     const sizeHeaders = getSizeWiseHeaders(data);
     const sizeWiseMap = getMap(data);
+
+
 
     const columns: any = [
       // {
@@ -1747,14 +1750,10 @@ const PPMReport = () => {
             width: 60,
             align: 'right',
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-              if (sizeData && sizeData.sizeQty !== null) {
-                const formattedQty = Number(sizeData.sizeQty).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-                return formattedQty;
-              } else {
-                return '-';
-              }
-            }
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.sizeQty
+                const formattedQty = Number(sizeData).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+                return formattedQty? formattedQty : '-';
+              } 
           },
           {
             title: (
@@ -1769,14 +1768,10 @@ const PPMReport = () => {
             width: 70,
             align: 'right',
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-              if (sizeData && sizeData.sizeQty !== null) {
-                return (sizeData.grossFobPrice);
-              } else {
-                return ('-');
-              }
-            }
-          },
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
+              return sizeData ? sizeData : '-'
+          }
+        },
           {
             title: (
               <div
@@ -1789,12 +1784,8 @@ const PPMReport = () => {
             dataIndex: 'grossFobCurrencyCode',
             width: 70,
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-              if (sizeData && sizeData.sizeQty !== null) {
-                return (sizeData.grossFobCurrencyCode);
-              } else {
-                return ('-');
-              }
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobCurrencyCode;
+              return sizeData ? sizeData : '-'
             }
           },
           {
@@ -1810,13 +1801,8 @@ const PPMReport = () => {
             align: 'right',
             width: 70,
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-
-              if (sizeData && sizeData.sizeQty !== null) {
-                return (sizeData.buyerGrossFobPrice);
-              } else {
-                return ('-');
-              }
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobPrice;
+              return sizeData ? sizeData : '-'
             }
           },
           {
@@ -1831,12 +1817,8 @@ const PPMReport = () => {
             dataIndex: 'buyerGrossFobCurrencyCode',
             align: 'right', width: 90,
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-              if (sizeData && sizeData.sizeQty !== null) {
-                return (sizeData.buyerGrossFobCurrencyCode);
-              } else {
-                return ('-');
-              }
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobCurrencyCode;
+              return sizeData ? sizeData : '-'
             }
           },
           {
@@ -1880,12 +1862,8 @@ const PPMReport = () => {
             align: 'center',
             width: 70,
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-              if (sizeData && sizeData.sizeQty !== null) {
-                return (sizeData.netIncludingDisc);
-              } else {
-                return ('-');
-              }
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.netIncludingDisc;
+              return sizeData ? sizeData : '-'
             }
           },
           {
@@ -1900,12 +1878,8 @@ const PPMReport = () => {
             dataIndex: 'netIncludingDiscCurrencyCode',
             width: 70,
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-              if (sizeData && sizeData.sizeQty !== null) {
-                return (sizeData.netIncludingDiscCurrencyCode);
-              } else {
-                return ('-');
-              }
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.netIncludingDiscCurrencyCode;
+              return sizeData ? sizeData : '-'
             }
           },
           {
@@ -1921,12 +1895,8 @@ const PPMReport = () => {
             align: 'right',
             width: 70,
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-              if (sizeData && sizeData.sizeQty !== null) {
-                return (sizeData.trConetIncludingDisc);
-              } else {
-                return ('-');
-              }
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.trConetIncludingDisc;
+              return sizeData ? sizeData : '-'
             }
           },
           {
@@ -1941,12 +1911,8 @@ const PPMReport = () => {
             className: sizeClass ? 'odd-version' : 'even-version',
             width: 70,
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-              if (sizeData && sizeData.sizeQty !== null) {
-                return (sizeData.trConetIncludingDiscCurrencyCode);
-              } else {
-                return ('-');
-              }
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.trConetIncludingDiscCurrencyCode;
+              return sizeData ? sizeData : '-'
             }
           },
           {
@@ -1963,12 +1929,8 @@ const PPMReport = () => {
             align: 'right',
             width: 60,
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-              if (sizeData && sizeData.sizeQty !== null) {
-                return (sizeData.legalPoPrice);
-              } else {
-                return ('-');
-              }
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoPrice;
+              return sizeData ? sizeData : '-'
             }
           },
           {
@@ -1983,12 +1945,8 @@ const PPMReport = () => {
             dataIndex: 'legalPoCurrencyCode',
             width: 60,
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-              if (sizeData && sizeData.sizeQty !== null) {
-                return (sizeData.legalPoCurrencyCode);
-              } else {
-                return ('-');
-              }
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoCurrencyCode;
+              return sizeData ? sizeData : '-'
             }
           },
           {
@@ -2004,12 +1962,8 @@ const PPMReport = () => {
             // align: 'right',
             width: 60,
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-              if (sizeData && sizeData.sizeQty !== null) {
-                return (sizeData.coPrice);
-              } else {
-                return ('-');
-              }
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPrice;
+              return sizeData ? sizeData : '-'
             }
           },
           {
@@ -2024,12 +1978,8 @@ const PPMReport = () => {
             dataIndex: 'coPriceCurrencyCode',
             width: 65,
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-              if (sizeData && sizeData.sizeQty !== null) {
-                return (sizeData.coPriceCurrencyCode);
-              } else {
-                return ('-');
-              }
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPriceCurrencyCode;
+              return sizeData ? sizeData : '-'
             }
           },
           // {
@@ -2073,12 +2023,8 @@ const PPMReport = () => {
             dataIndex: 'CRMCoQty',
             width: 60,
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-              if (sizeData && sizeData.sizeQty !== null) {
-                return (sizeData.CRMCoQty);
-              } else {
-                return ('-');
-              }
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.CRMCoQty;
+              return sizeData ? sizeData : '-'
             }
           },
           {
@@ -2094,12 +2040,8 @@ const PPMReport = () => {
             align: 'right',
             width: 60,
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-              if (sizeData && sizeData.sizeQty !== null) {
-                return (sizeData.legalPoQty);
-              } else {
-                return ('-');
-              }
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoQty;
+              return sizeData ? sizeData : '-'
             }
           },
           {
@@ -2129,7 +2071,8 @@ const PPMReport = () => {
             dataIndex: '',
             align: 'right',
             width: 70,
-            render: (text, record) => {
+         
+                render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
               if (sizeData && sizeData.sizeQty !== null) {
                 if (record.shippingType === 'DIRECT') {
@@ -2161,12 +2104,8 @@ const PPMReport = () => {
             align: 'right',
             width: 70,
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-              if (sizeData && sizeData.sizeQty !== null) {
-                return (sizeData.actualShippedQty);
-              } else {
-                return ('-');
-              }
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.actualShippedQty;
+              return sizeData ? sizeData : '-'
             }
           },
           {
@@ -2183,12 +2122,8 @@ const PPMReport = () => {
             width: 70,
             dataIndex: '',
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-              if (sizeData && sizeData.sizeQty !== null) {
-                return (sizeData.grossFobPrice);
-              } else {
-                return ('-');
-              }
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
+              return sizeData ? sizeData : '-'
             }
           },
         ],
@@ -3207,28 +3142,28 @@ const PPMReport = () => {
           </Row>
         </Form>
         <Row gutter={24} justify={'space-evenly'}>
-          <Col span={3}> <Card bordered style={{ backgroundColor: 'aqua', height: 100, alignItems: 'center' }}  >
+        <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: 'aqua', height: 100, alignItems: 'center' }}  >
             <b> <Statistic loading={tableLoading} title="Total Order Qty:" style={{ color: 'white' }} value={count} formatter={formatter} /></b></Card>
           </Col>
-          <Col span={3}> <Card bordered style={{ backgroundColor: '#CBADF7', height: 100, alignItems: 'center' }}>
+          <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#CBADF7', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
             </b></Card></Col>
-          <Col span={3}> <Card bordered style={{ backgroundColor: '#A1EBB5', height: 100, alignItems: 'center' }} >
+            <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: '#A1EBB5', height: 100, alignItems: 'center' }} >
             <b><Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
             </b></Card></Col>
-          <Col span={3}> <Card bordered style={{ backgroundColor: '#E1F5A5', height: 100, alignItems: 'center' }}>
+            <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: '#E1F5A5', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
             </b> </Card> </Col>
-          <Col span={3}> <Card bordered style={{ backgroundColor: '#A5F5D7', height: 100, alignItems: 'center' }}>
+            <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#A5F5D7', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Accepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
             </b></Card></Col>
-          <Col span={3}> <Card bordered style={{ backgroundColor: '#F5BCB1', height: 100, alignItems: 'center' }}>
+            <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#F5BCB1', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Unaccepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
             </b></Card> </Col>
-          <Col span={3}><Card bordered style={{ backgroundColor: '#B1BDF5', height: 100, alignItems: 'center' }}>
+            <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#B1BDF5', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
             </b> </Card> </Col>
-          <Col span={3}> <Card bordered style={{ backgroundColor: '#F1776A', height: 100, alignItems: 'center' }}>
+            <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#F1776A', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Cancelled PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} formatter={formatter} />
             </b></Card></Col>
         </Row><br></br>
