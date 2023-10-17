@@ -3,6 +3,7 @@ import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { StyleOrderService } from "./style-order.service";
 import { CommonResponseModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
+import { StyleOrderId } from "./style-order-id.request";
 
 
 @ApiTags('styleOrder')
@@ -44,4 +45,15 @@ export class StyleOrderController{
             return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
         }
     }
+
+    @Post('/cancelOrder')
+    async cancelOrder(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return await this.styleOrderService.cancelOrder(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+
+    
 }
