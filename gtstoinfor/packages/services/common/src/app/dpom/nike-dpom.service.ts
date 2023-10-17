@@ -1206,6 +1206,8 @@ export class DpomService {
                 )
             }
             sizeDateMap.get(rec.po_and_line).sizeWiseData.push(new MarketingReportSizeModel(rec.size_description, rec.size_qty, rec.gross_price_fob, rec.fob_currency_code, rec.shahi_confirmed_gross_price, rec.shahi_confirmed_gross_price_currency_code, rec.ne_inc_disc, rec.net_inc_disc_currency_code, rec.trading_net_inc_disc, rec.trading_net_currency_code, rec.legal_po_price, rec.legal_po_currency, rec.co_price, rec.co_price_currency, rec.crm_co_qty, rec.legal_po_qty, rec.actual_shipped_qty));
+            console.log(rec.trading_net_inc_disc,"rec")
+
         }
         const dataModelArray: MarketingReportModel[] = [];
         sizeDateMap.forEach(sizeData => dataModelArray.push(sizeData));

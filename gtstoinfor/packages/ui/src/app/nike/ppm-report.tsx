@@ -1833,8 +1833,12 @@ const PPMReport = () => {
             dataIndex: '',
             align: 'center',
             width: 50,
-
-
+            render: (text, record) => {
+              const shprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
+              const buyerprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobPrice;
+              let diff = Number(shprice)- Number(buyerprice)
+                return  diff  
+            }
           },
           {
             title: (
@@ -2003,11 +2007,22 @@ const PPMReport = () => {
                   backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
                   height: 130, justifyContent: 'center', color: 'Black',
                 }}
-              >Diff of currency</div>
+              >Diff of legal Po,Co Price</div>
             ),
             dataIndex: '',
             align: 'center',
             width: 70,
+            render: (text, record) => {
+              const Poprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoPrice;
+              const coprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPrice;
+              let diff = Number(Poprice) - Number(coprice)
+              if(Number(Poprice) && Number(coprice) !== null){ 
+                return  diff  
+              }
+              else{
+                return "-"
+              }
+            }
 
 
           },
@@ -2056,8 +2071,17 @@ const PPMReport = () => {
             dataIndex: '',
             align: 'right',
             width: 60,
-
-
+            render: (text, record) => {
+              const PoQty = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoQty;
+              const coQty = sizeWiseMap?.get(record.poAndLine)?.get(version)?.CRMCoQty;
+              let diff = Number(PoQty) - Number(coQty)
+              if(Number(PoQty) && Number(coQty) !== null){ 
+                return  diff  
+              }
+              else{
+                return "-"
+              }
+            }
           },
           {
             title: (
