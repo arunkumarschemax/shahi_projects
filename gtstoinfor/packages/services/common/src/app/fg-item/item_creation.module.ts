@@ -12,6 +12,6 @@ import { ItemCreationAdapter } from './dto/item_creation.adapter';
   ],
   controllers: [ItemCreationController],
   providers: [ItemCreationService,ItemCreationAdapter,ApplicationExceptionHandler],
-  exports:[ItemCreationService]
+  exports:[]
 })
 export class ItemCreationModule {}

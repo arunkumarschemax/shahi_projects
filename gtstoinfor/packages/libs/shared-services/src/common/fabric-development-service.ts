@@ -5,12 +5,18 @@ import {FabricDevelopmentRequestModel, FabricDevelopmentRequestResponse, FabricF
 export class FabricDevelopmentService extends CommonAxiosService{
 URL = '/FabricDevelopment';
 
-
 async createFabricDevelopmentRequest(req: FabricDevelopmentRequestModel): Promise<FabricDevelopmentRequestResponse> {
     return this.axiosPostCall(this.URL + "/createFabricDevelopmentRequest", req)
 }
 
+
+// async createFabricDevelopmentRequest(req: any , config:any): Promise<FabricDevelopmentRequestResponse> {
+//     return this.axiosPostCall(this.URL + "/createFabricDevelopmentRequest", req,config)
+// }
+
+
 async fabricFileUpload(file: any): Promise<UploadResponse> {
+    // console.log(file);
     return await this.axiosPostCall(this.URL + '/fileUpload', file);
 }
         

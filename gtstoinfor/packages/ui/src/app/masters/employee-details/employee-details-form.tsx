@@ -133,6 +133,18 @@ const getAllDepartments=()=>{
           <Input hidden />
         </Form.Item>
         <Row>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}> <Form.Item
+            name="module"
+            label="Module"
+            rules={[
+              {
+                required: true,
+                message:'Module Is Required'
+              }
+            ]}>
+          <Input />
+        </Form.Item>
+        </Col>
          <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}> <Form.Item
             name="firstName"
             label="First Name"
@@ -280,6 +292,7 @@ const getAllDepartments=()=>{
                       </Select>
                     </Form.Item>
                   </Col>
+                 
         </Row>
         <Row>
           <Col span={24} style={{ textAlign: 'right' }}>

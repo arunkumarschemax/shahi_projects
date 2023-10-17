@@ -1,4 +1,4 @@
-import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, EyeOutlined, RightSquareOutlined, SearchOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, CloseCircleOutlined, CloseOutlined, EditOutlined, EyeOutlined, RightSquareOutlined, SearchOutlined } from "@ant-design/icons";
 import { Alert, Button, Card, Col, Divider, Form, Input, Popconfirm, Row, Select, Switch, Table, Tag } from "antd"
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
@@ -6,7 +6,7 @@ import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BuyersService, CurrencyService, DeliveryMethodService, DeliveryTermsService, PackageTermsService, PaymentMethodService, PaymentTermsService, StyleOrderService, WarehouseService } from "@project-management-system/shared-services";
-import { PackageTermsDto, PaymentMethodDto, PaymentTermsDto, StyleOrderReq, styleOrderReq } from "@project-management-system/shared-models";
+import { CustomerOrderStatusEnum, PackageTermsDto, PaymentMethodDto, PaymentTermsDto, StyleOrderReq, styleOrderReq } from "@project-management-system/shared-models";
 import moment from "moment";
 
 export const StyleOrderGrid = () => {
@@ -349,19 +349,46 @@ let val = 0
     }
 },
 {
+  title: 'Status',
+  dataIndex: 'status',
+},
+{
   
   title: `Action`,
   dataIndex: 'action',
   render: (text, rowData) => (
-   <span>
-    <Button  onClick={ ()=> details(rowData)}>
-    <EyeOutlined/>
-    </Button>
-   </span>
+    <><span>
+     <Button title={"Detail View"} onClick={() => details(rowData)}>
+        <EyeOutlined />
+      </Button>
+    </span>
+    {
+      rowData.status != CustomerOrderStatusEnum.CLOSED ? 
+    <span>
+        <Button title={"Cancel Order"} onClick={() => cancelOrder(rowData)} >
+          <CloseOutlined />
+        </Button>
+      </span>
+      : ""
+    }
+    </>
   )
 }
       ];
 
+      const cancelOrder =(val:any) =>{
+        service.cancelOrder({styleOrderId:val.id}).then(res => {
+          if(res.status){
+            AlertMessages.getSuccessMessage("Order Cancelled successfully. ")
+            getData();
+          }
+          else{
+            AlertMessages.getWarningMessage("Something went wrong. ")
+          }
+        }).catch(err => {
+          AlertMessages.getErrorMessage("Something went wrong. ")
+        })
+      }
       const details =(val:any) =>{
         navigate('/materialCreation/style-order-detail-view',{state :val})
       }

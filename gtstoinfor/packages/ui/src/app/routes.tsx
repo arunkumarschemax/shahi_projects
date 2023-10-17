@@ -171,7 +171,11 @@ export const AppRoutes = () => {
                     <Route path='/user-management/users-view' element={<UsersView />} />
 
                     <Route path='/masters'>
-                        <Route path='factories/factories-view' element={<FactoriesView />} />
+                    <Route path='locations/locations-view' element={<LocationsGrid/>}/>                       
+                    <Route path='locations/locations-form' element={<LocationsForm locationsData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateDetails={(undefined) => { }}/>}/>                        <Route path='factories/factories-view' element={<FactoriesView />} />
                         <Route path='factories/factories-form' element={<FactoriesForm factoryData={undefined}
                         isUpdate={false}
                         closeForm={()=> {}}
@@ -449,14 +453,8 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={()=> {}}
                         updateDetails={(undefined) => { }}/>}/>
-                <Route path='locations/locations-view' element={<LocationsGrid/>}/>                       
                <Route path='buyers/buyers-general-attributes-form' key='buyers/buyers-general-attributes-form' element={<BuyersGeneralAttributeForm/>} />
                         <Route path='buyers/buyers-order-attributes-form' key='buyers/buyers-order-attributes-form' element={<BuyersOrderAttributeForm/>} />
-
-                        <Route path='locations/locations-form' element={<LocationsForm locationsData={undefined}
-                        isUpdate={false}
-                        closeForm={()=> {}}
-                        updateDetails={(undefined) => { }}/>}/>
                <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
                        
                         

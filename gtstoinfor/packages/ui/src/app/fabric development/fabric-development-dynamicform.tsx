@@ -37,11 +37,19 @@ export interface FabricDevelopmentDynamicFormProps {
   form: FormInstance<any>;
   itemsData: (itemsInfo: any[]) => void;
   dynamicformData: (dynamicInfo: any[]) => void;
+  form1:FormInstance<any>;
+  filesList:(file: any) => void;
+  
 }
+  
+
 
 export const FabricDevelopmentDynamicForm = (
   props: FabricDevelopmentDynamicFormProps
 ) => {
+
+ 
+
   // const [form] = Form.useForm();
   const [modalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState([]);
@@ -197,6 +205,10 @@ export const FabricDevelopmentDynamicForm = (
 
   const onReset = () => {
     props.form.resetFields();
+    props.form1.resetFields();
+    setFormData([])
+    setShowTable(false)
+    
   };
 
   //  const addData = () => {
@@ -252,6 +264,7 @@ export const FabricDevelopmentDynamicForm = (
         setItemsFilelist([...itemsFilelist,qualitiesFilelist])
         setQualitiesFilelist([])
         props.dynamicformData([...formData, record]);
+        props.filesList(qualitiesFilelist);
       }
       props.form.resetFields();
       setShowTable(true); // Set showTable to true when data is added

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, CustomerOrderStatusEnum, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
 import { StyleOrder } from "./style-order.entity";
 import { Item } from "../items/item-entity";
 import { Warehouse } from "../warehouse/warehouse.entity";
@@ -22,6 +22,7 @@ import { DataSource, Repository } from "typeorm";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { StyleOrderRepository } from "./style-order-repo";
 import { CoLineRepository } from "./co-line.repo";
+import { StyleOrderId } from "./style-order-id.request";
 
 @Injectable()
 
@@ -174,6 +175,21 @@ export class StyleOrderService{
     } catch(err){
         throw err
     }
-   } 
-
+   }
+   async cancelOrder(req:StyleOrderId):Promise<CommonResponseModel>{
+    const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
+    try{
+        await transactionalEntityManager.startTransaction();
+        console.log(req);
+        const data = await transactionalEntityManager.getCustomRepository(StyleOrderRepository).update({id:req.styleOrderId},{status:CustomerOrderStatusEnum.CLOSED});
+        if(data.affected > 0){
+            return new CommonResponseModel(true,1,'Order Cancelled Successfully. ',data)
+        }
+        else{
+            return new CommonResponseModel(false,0,'Cancel Order failed. ',data)
+        }
+    } catch(err){
+        throw err
+    }
+   }
 }

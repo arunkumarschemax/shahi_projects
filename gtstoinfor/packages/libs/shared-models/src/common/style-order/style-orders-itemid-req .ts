@@ -6,3 +6,13 @@ export class styleOrderReq {
         this.coId = coId
     }
 }
+
+
+
+export class StyleOrderIdReq {
+    styleOrderId:number
+    constructor(styleOrderId:number){
+        this.styleOrderId = styleOrderId
+    }
+}
+

@@ -96,7 +96,10 @@ export class SampleRequestService {
       const locationentity = new Location()
       locationentity.locationId=req.locationId
       samplereqEntity.location=locationentity
-      samplereqEntity.requestNo=req.requestNo
+      const data = await this.sampleRepo.getSampleId()
+      const maxId = data.sampleId
+      const nextId = Number(maxId) + 1
+      samplereqEntity.requestNo = "SAM/REQ-" + nextId.toString().padStart(3, '0')
       const styleEntity = new Style()
       styleEntity.styleId=req.styleId
       samplereqEntity.style=styleEntity

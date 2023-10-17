@@ -147,6 +147,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
          }
 
          const saveItem=()=>{
+          console.log("hiiii")
           form.validateFields().then((values) => {
             console.log(values);
               itemCreationService.createItem(values).then((res) => {
@@ -913,8 +914,8 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                 </Row>
                 <Row gutter={24} justify="end">
                 <Space size={16}>
-                  <Button type="primary" >
-                   Submit
+                <Button type="primary" htmlType="submit">
+                    Submit
                   </Button>
                   {/* <Link to="">
                     <Button type="primary" icon={<HomeOutlined />}>

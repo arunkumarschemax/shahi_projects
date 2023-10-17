@@ -34,6 +34,7 @@ export class EmployeeDetailsService {
             const depar = new Departments()
             depar.deptId = req.departments;
             employeeEntity.Department= depar
+            employeeEntity.module= req.module
             if (isUpdate) {
                 employeeEntity.employeeId = req.employeeId;
                 employeeEntity.employeeCode=req.employeeCode
