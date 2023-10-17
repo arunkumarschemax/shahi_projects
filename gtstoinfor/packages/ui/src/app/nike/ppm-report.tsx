@@ -1,7 +1,7 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { MarketingModel, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 import { NikeService } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag, Statistic, Modal, TreeSelect } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag, Statistic, Modal, TreeSelect, Tooltip } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { ColumnsType } from 'antd/es/table';
@@ -14,7 +14,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { diffChars } from 'diff';
 import PoDetailedview from './reports/po-detailed-view';
 import { TreeNode } from 'antd/es/tree-select';
-import { CustomColumn } from '../../components';
+// import { CustomColumn } from '../../components';
 // import { summaryColumns } from './reports/summary-columns';
 const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 
@@ -53,7 +53,9 @@ const PPMReport = () => {
   const [tableLoading, setTableLoading] = useState<boolean>(false)
   const formatter = (value: number) => <CountUp end={value} separator="," />;
   const [isModalOpen1, setIsModalOpen1] = useState(false);
-  const [poLineProp, setPoLineProp] = useState<any>([])
+  const [poLineProp, setPoLineProp] = useState<any>([]);
+  const [remarkModal, setRemarkModal] = useState<boolean>(false)
+  const [itemText, setRemarks] = useState<string>('')
 
 
   useEffect(() => {
@@ -1229,6 +1231,14 @@ const PPMReport = () => {
   }
   let isOdd = false;
 
+  const handleTextClick = (remarks) => {
+    setRemarks(remarks)
+    setRemarkModal(true)
+}
+const onRemarksModalOk = () => {
+    setRemarkModal(false)
+}
+
   // function generateClassName(index) {
   //   isOdd = !isOdd; 
   //   return isOdd ? 'odd-version' version';
@@ -1811,8 +1821,12 @@ const PPMReport = () => {
             dataIndex: '',
             align: 'center',
             width: 50,
-
-
+            render: (text, record) => {
+              const shprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
+              const buyerprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobPrice;
+              let diff = Number(shprice)- Number(buyerprice)
+                return  diff  
+            }
           },
           {
             title: (
@@ -1981,11 +1995,22 @@ const PPMReport = () => {
                   backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
                   height: 130, justifyContent: 'center', color: 'Black',
                 }}
-              >Diff of currency</div>
+              >Diff of legal Po,Co Price</div>
             ),
             dataIndex: '',
             align: 'center',
             width: 70,
+            render: (text, record) => {
+              const Poprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoPrice;
+              const coprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPrice;
+              let diff = Number(Poprice) - Number(coprice)
+              if(Number(Poprice) && Number(coprice) !== null){ 
+                return  diff  
+              }
+              else{
+                return "-"
+              }
+            }
 
 
           },
@@ -2034,8 +2059,17 @@ const PPMReport = () => {
             dataIndex: '',
             align: 'right',
             width: 60,
-
-
+            render: (text, record) => {
+              const PoQty = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoQty;
+              const coQty = sizeWiseMap?.get(record.poAndLine)?.get(version)?.CRMCoQty;
+              let diff = Number(PoQty) - Number(coQty)
+              if(Number(PoQty) && Number(coQty) !== null){ 
+                return  diff  
+              }
+              else{
+                return "-"
+              }
+            }
           },
           {
             title: (
@@ -2051,15 +2085,18 @@ const PPMReport = () => {
             width: 70,
             render: (text, record) => {
               const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.sizeQty;
-              if (record.shippingType === 'DIRECT') {
-                return 0;
+              if (record.sizeQty === null || isNaN(sizeData)) {
+                return '-';
               } else {
-                const result = 0.03 * sizeData;
-                return (
-                  result.toFixed(3)
-                );
+                if (record.shippingType === 'DIRECT') {
+                  return 0;
+                } else {
+                  const result = 0.03 * sizeData;
+                  return result.toFixed(3);
+                }
               }
             }
+            
           },
           {
             title: (
@@ -2634,12 +2671,14 @@ const PPMReport = () => {
         dataIndex: 'itemText', width: 80,
 
         render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+          return (
+              <>
+                  {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
+                      {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
+                  </span></p></Tooltip></>) : (<>{record.itemText}</>)}
+              </>
+          )
+      }
       },
       {
         title: 'Hanger PO',
@@ -2926,7 +2965,7 @@ const PPMReport = () => {
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
               <Form.Item name='item' label='Item' >
                 <Select showSearch placeholder="Select Item" optionFilterProp="children" allowClear>
-                  {item?.map((inc: any) => {
+                {item?.map((inc: any) => {
                     const firstFourDigits = inc.item.substring(0, 4);
                     return <Option key={inc.id} value={inc.item}>{firstFourDigits}</Option>
                   })}
@@ -3161,6 +3200,11 @@ const PPMReport = () => {
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Button size='large' onClick={cancelHandle} style={{ color: 'white', backgroundColor: 'red', flexDirection: 'column-reverse' }}>Close</Button></div>
         </Modal>
+        <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
+                <Card>
+                    <p>{itemText}</p>
+                </Card>
+            </Modal>
       </Card>
     </>
   )

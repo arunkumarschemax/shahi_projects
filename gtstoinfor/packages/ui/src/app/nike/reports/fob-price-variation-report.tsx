@@ -61,8 +61,8 @@ export const FOBPriceVariationReport = () => {
     const getData = () => {
         const req = new FobPriceDiffRequest();
 
-        if (form.getFieldValue('poandLine') !== undefined) {
-            req.poAndLine = form.getFieldValue('poandLine');
+        if (form.getFieldValue('poAndLine') !== undefined) {
+            req.poAndLine = form.getFieldValue('poAndLine');
         }
         if (form.getFieldValue('styleNumber') !== undefined) {
             req.styleNumber = form.getFieldValue('styleNumber');
@@ -186,7 +186,7 @@ export const FOBPriceVariationReport = () => {
             <Form onFinish={getData} form={form} layout='vertical'>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='poNumber' label='Po Number' >
+                        <Form.Item name='poAndLine' label='Po And Line' >
                             <Select
                                 showSearch
                                 placeholder="Select Po Number"
