@@ -20,7 +20,7 @@ export const PriceListForm = (props: PriceListFormProps) => {
   const priceService = new PriceListService();
   const { state } = useLocation();
   const [disable, setDisable] = useState<boolean>(false);
-  const [dataEntryType, setDataEntryType] = useState<'manual' | 'upload'>('manual'); // Track the data entry type
+  const [dataEntryType, setDataEntryType] = useState<'manual' | 'upload'>('manual')
 
   useEffect(() => {
     if (state?.id) {
@@ -44,7 +44,6 @@ export const PriceListForm = (props: PriceListFormProps) => {
           message.error('Style, Destination details already existed');
         }
       }
-      console.log(Dto,'lllllllllllllll')
     }).catch((err) => {
       setDisable(false);
       AlertMessages.getErrorMessage(err.message);

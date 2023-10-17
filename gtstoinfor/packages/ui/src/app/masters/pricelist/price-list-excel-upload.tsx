@@ -197,7 +197,7 @@ const PriceListUpload = () => {
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item label = "">
                 <input type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={handleFileChange} />
-                <label style={{color:'blue'}} >Only csv & excel files are allowed</label>
+                <label style={{color:'blue',whiteSpace: 'nowrap'}} >Only csv & excel files are allowed</label>
               </Form.Item>
             </Col>
           </Row>
@@ -211,7 +211,7 @@ const PriceListUpload = () => {
         </Form>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'right', marginTop:"-45px" }}>
-        <Button className='panel_button' icon={<FileExcelFilled />} style={{ color: 'green' }} onClick={() => exportExcel()}>Sample Excel</Button>
+        <Button className='panel_button' icon={<FileExcelFilled />} style={{ color: 'green' }} onClick={() => exportExcel()}>Sample Format</Button>
       </div>
   </div>
   );

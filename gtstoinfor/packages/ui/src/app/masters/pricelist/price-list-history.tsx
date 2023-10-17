@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select, Descriptions } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select, Descriptions, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -276,6 +276,7 @@ const getUploadedTime = () => {
             title: <div style={{ textAlign: "center" }}>Previous</div>,
             dataIndex: "previous_price",
             align: "right",
+            width:'120px',
             render: (text, record) => {
               return (
                 <>
@@ -302,6 +303,7 @@ const getUploadedTime = () => {
         title: <div style={{ textAlign: "center" }}>Variance</div>,
         dataIndex: "price_variance",
         align: "right",
+        width:"120px",
         render: (text) => {
           if (text === undefined || text === null) {
             return "-";
@@ -321,7 +323,6 @@ const getUploadedTime = () => {
             return text.toLocaleString("en-US");
           }
         },
-        
       }
   ];
 
@@ -434,7 +435,8 @@ const getUploadedTime = () => {
           </Descriptions>
         </Descriptions.Item>
       </Descriptions> */}
-      <Table
+      
+      {priceList?.length > 0 ? (<Table
       rowKey={record => record}
       columns={columns}
       dataSource={priceList}
@@ -449,8 +451,10 @@ const getUploadedTime = () => {
     }}
       // scroll={{x:true}}
       onChange={onChange}
-      bordered />
-    </Card> </>
+      bordered />):(
+        <Alert message="No data available" type="warning" showIcon style={{ width: "140px", margin: "auto" }}/>
+      )}
+    </Card></>
       
   );
 }
