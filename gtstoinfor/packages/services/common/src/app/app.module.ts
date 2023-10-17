@@ -14,6 +14,7 @@ import { AdobeAcrobatApiModule } from './adobe-acrobat-api/adobe-acrobat-api.mod
 import { DataSource } from 'typeorm';
 import { AppDataSource } from './app-datasource';
 import { FobModule } from './fob-price-list/fob.module';
+import { FabricContentModule } from './fabric-content/fabric-content.module';
 
 
 @Module({
@@ -37,7 +38,7 @@ import { FobModule } from './fob-price-list/fob.module';
     FactoriesModule,
     SupplierModule,
     UsersModule,
-    AuthModule, JwtModule, DpomModule, AdobeAcrobatApiModule, FobModule],
+    AuthModule, JwtModule, DpomModule, AdobeAcrobatApiModule, FobModule,FabricContentModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,

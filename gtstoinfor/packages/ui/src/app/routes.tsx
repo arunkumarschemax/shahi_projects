@@ -33,6 +33,9 @@ import FobPriceListForm from "./masters/fob-pricelist/fob-price-list-form"
 import ChangeComparision from "./nike/pdf-reader/change-detail-view"
 import PoDetailedview from "./nike/reports/po-detailed-view"
 import ColineView from "./nike/components/co-line-view"
+import FabricContenGrid from "./masters/fabric-content/fabric-conten-grid"
+import FabricContentGrid from "./masters/fabric-content/fabric-conten-grid"
+import FabricContentForm from "./masters/fabric-content/fabric-content-form"
 
 
 export const AppRoutes = () => {
@@ -113,6 +116,12 @@ export const AppRoutes = () => {
                     }} />} />
                     <Route path='fob-price-list-view' element={<FobPriceListGrid />} />
                     <Route path='fob-price-list-form' element={<FobPriceListForm Data={undefined} updateItem={function (Data: Fobdto): void {
+                        throw new Error("Function not implemented.")
+                    }} isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.")
+                    }} />} />
+                     <Route path='fabric-content-view' element={<FabricContentGrid />} />
+                    <Route path='fabric-content-form' element={<FabricContentForm Data={undefined} updateItem={function (Data: Fobdto): void {
                         throw new Error("Function not implemented.")
                     }} isUpdate={false} closeForm={function (): void {
                         throw new Error("Function not implemented.")
