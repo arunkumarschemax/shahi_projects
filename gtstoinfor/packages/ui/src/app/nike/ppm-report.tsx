@@ -2109,15 +2109,18 @@ const onRemarksModalOk = () => {
             width: 70,
             render: (text, record) => {
               const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.sizeQty;
-              if (record.shippingType === 'DIRECT') {
-                return 0;
+              if (record.sizeQty === null || isNaN(sizeData)) {
+                return '-';
               } else {
-                const result = 0.03 * sizeData;
-                return (
-                  result.toFixed(3)
-                );
+                if (record.shippingType === 'DIRECT') {
+                  return 0;
+                } else {
+                  const result = 0.03 * sizeData;
+                  return result.toFixed(3);
+                }
               }
             }
+            
           },
           {
             title: (
@@ -2986,7 +2989,7 @@ const onRemarksModalOk = () => {
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
               <Form.Item name='item' label='Item' >
                 <Select showSearch placeholder="Select Item" optionFilterProp="children" allowClear>
-                  {item?.map((inc: any) => {
+                {item?.map((inc: any) => {
                     const firstFourDigits = inc.item.substring(0, 4);
                     return <Option key={inc.id} value={inc.item}>{firstFourDigits}</Option>
                   })}
