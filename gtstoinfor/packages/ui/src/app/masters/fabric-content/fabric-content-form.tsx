@@ -214,12 +214,12 @@ const FabricContentForm = (props:Formprops) => {
                   </Form.Item>
                 </Col>
             
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 8}}>
                   <Form.Item name='fabricContent' label='Fabric Content'
                     rules={[{ required: true, message: 'Please enter the Fabric Content' },
                     ]}
                   >
-                    <Input placeholder='Fabric Content' />
+                    <textarea placeholder='Fabric Content' />
                   </Form.Item>
                 </Col>
               </Row>
