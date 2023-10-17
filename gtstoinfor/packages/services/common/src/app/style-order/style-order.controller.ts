@@ -55,5 +55,12 @@ export class StyleOrderController{
         }
     }
 
-    
+    @Post('/cancelVariantOrder')
+    async cancelVariantOrder(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return await this.styleOrderService.cancelVariantOrder(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
 }
