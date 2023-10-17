@@ -62,6 +62,7 @@ export class ItemSkuController{
     @ApiBody({type:SKUlistFilterRequest})
     async getSkuList(@Body() req:any):Promise<SKUGenerationResponseModel>{
         try{
+            console.log(req,'controller')
             return await this.itemSkuService.getSkuList(req)
         }catch(err){
             return this.applicationExceptionHandler.returnException(SKUGenerationResponseModel,err)

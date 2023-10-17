@@ -173,30 +173,26 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
           
         <Row gutter ={8} >
        <Card size="small" bordered={false} style={{width:"100%"}} >
-       <h1 style={{color:"grey",fontSize:"15px" }}>
-        Item Details
-       </h1>
+      
        <Col>
                 <Form.Item 
                 name="trim" style={{display:'none'}}>
-                {/* <Select
-                 placeholder="Select Item No" allowClear>
-                 <option value="item9001"> item9001</option>
-                 <option value="item9002"> item9002</option>
-                 <option value="item9003"> item9003</option>
-                 </Select> */}
+              
                  <Input disabled/>
                     </Form.Item>
                     </Col>
-                    
-       <Row gutter ={24}>
+
+                    <h1 style={{color:"grey",fontSize:"15px" }}>
+              Item Details
+             </h1>
+                   <Row gutter ={16}>
        
                     <Col
                     xs={{ span: 24 }}
-                    sm={{ span: 24 }}
+                    sm={{ span: 24}}
                     md={{ span: 4 }}
-                    lg={{ span: 7}}
-                    xl={{ span: 7 }}
+                    lg={{ span: 4}}
+                    xl={{ span: 5 }}
                     
                   >
                     <Form.Item
@@ -205,7 +201,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                       name="style"
                       rules={[{ required: true, message: "Enter Style" }]}
                     >
-                      <Select
+                      {/* <Select
                       placeholder="Select Style"
                       allowClear
                       >
@@ -216,16 +212,21 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                             </Option>
                         )
                     })}
-                      </Select>
+                      </Select> */
+                      }
+
+                      <Input placeholder="Style" allowClear/>
+                  
                     </Form.Item>
                   </Col>
 
                   <Col
                     xs={{ span: 24 }}
-                    sm={{ span: 24 }}
+                    sm={{ span: 24}}
                     md={{ span: 4 }}
-                    lg={{ span: 7}}
-                    xl={{ span: 7 }}
+                    lg={{ span: 4}}
+                    xl={{ span: 5 }}
+                    
                   >
                     <Form.Item
                     label="Type"
@@ -241,12 +242,13 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     </Col>
                     {/* </Row>
                     <Row gutter={24}> */}
-                    <Col
+                     <Col
                     xs={{ span: 24 }}
-                    sm={{ span: 24 }}
+                    sm={{ span: 24}}
                     md={{ span: 4 }}
-                    lg={{ span: 7}}
-                    xl={{ span: 7 }}
+                    lg={{ span: 4}}
+                    xl={{ span: 5 }}
+                    
                   >
                     <Form.Item
                       label="Brand"
@@ -270,10 +272,11 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                   
                   <Col
                     xs={{ span: 24 }}
-                    sm={{ span: 24 }}
+                    sm={{ span: 24}}
                     md={{ span: 4 }}
-                    lg={{ span: 7}}
-                    xl={{ span: 7 }}
+                    lg={{ span: 4}}
+                    xl={{ span: 5 }}
+                    
                   >
                     <Form.Item
                       label="Category"
@@ -299,12 +302,12 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                                      
                   <Col
                     xs={{ span: 24 }}
-                    sm={{ span: 24 }}
+                    sm={{ span: 24}}
                     md={{ span: 4 }}
-                    lg={{ span: 7}}
-                    xl={{ span: 7 }}
-                  >
+                    lg={{ span: 4}}
+                    xl={{ span: 5 }}
                     
+                  >
                     <Form.Item
                     label="Item Group"
                     name="itemgroup"
@@ -321,15 +324,16 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                  <Row gutter={24}> */}
                     <Col
                     xs={{ span: 24 }}
-                    sm={{ span: 24 }}
+                    sm={{ span: 24}}
                     md={{ span: 4 }}
-                    lg={{ span: 7}}
-                    xl={{ span: 7 }}
+                    lg={{ span: 4}}
+                    xl={{ span: 5 }}
+                    
                   >
                     <Form.Item
                       label="Season"
                       name="season"
-                      rules={[{ required: true, message: "Enter Season" }]}
+                      // rules={[{ required: true, message: "Enter Season" }]}
                     >
                       <Input placeholder="Season" 
                       allowClear
@@ -339,14 +343,18 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                   </Col>
                   <Col
                     xs={{ span: 24 }}
-                    sm={{ span: 24 }}
+                    sm={{ span: 24}}
                     md={{ span: 4 }}
-                    lg={{ span: 7}}
-                    xl={{ span: 7 }}
+                    lg={{ span: 4}}
+                    xl={{ span: 5 }}
+                    
                   >
                     <Form.Item
                     label="Shahi Style"
-                    name="Shahi Style">
+                    name="Shahi Style"
+                    rules={[{ required: true, message: "Fill Shahi Style" }]}
+                    >
+
                 <Select
                  showSearch
                  placeholder="Select Shahi Style"
@@ -354,9 +362,13 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                  suffixIcon={<SearchOutlined />}
 
                  >
-                 <option value="Shahi Style"> Shahi Style</option>
-                 <option value="Shahi Style"> Shahi Style</option>
-                 <option value="Shahi Style"> Shahi Style</option>
+                {styledata.map((e)=>{
+                        return(
+                            <Option key={e.styleId} value={e.styleId}>
+                             {e.style}
+                            </Option>
+                        )
+                    })}
                  </Select>
                     </Form.Item>
                     </Col>
@@ -366,14 +378,14 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                    <h1 style={{ color: "grey", fontSize: "15px", textAlign: "left" }}>
                     Performance Responsible Team
                     </h1> 
-                    <Row gutter={36}>
+                    <Row gutter={16}>
                     <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 7 }}
-                    xl={{ span: 7 }}
-                  >
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                      <Form.Item
                       name="responsible"
                       label="Responsible"
@@ -383,12 +395,12 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     </Form.Item>
                   </Col>
                   <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 7 }}
-                    xl={{ span: 7}}
-                  >
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                     <Form.Item
                       name="Approve"
                       label="Approve"
@@ -406,13 +418,13 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                       </Select>
                     </Form.Item>
                     </Col>
-                     <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 7 }}
-                    xl={{ span: 7 }}
-                  >
+                    <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                      <Form.Item
                       name="Product Designer"
                       label="Product Designer"
@@ -421,15 +433,13 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                       <Input placeholder="Product Designer" allowClear />
                     </Form.Item>
                   </Col>
-                  </Row>
-                  <Row gutter={24}>
                   <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 7 }}
-                    xl={{ span: 7}}
-                  >
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                     <Form.Item
                       name="production Merchant"
                       label="Production Merchant"
@@ -446,12 +456,12 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     </Form.Item>
                   </Col>
                   <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 7 }}
-                    xl={{ span: 7}}
-                  >
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                     <Form.Item
                       name="pd Merchant"
                       label="PD Merchant"
@@ -468,12 +478,12 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     </Form.Item>
                   </Col>
                   <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 7 }}
-                    xl={{ span: 7}}
-                  >
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                     <Form.Item
                       name="factory Merchant"
                       label="Factory Merchant"
@@ -490,14 +500,13 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     </Form.Item>
                   </Col>
                
-                </Row>
                 <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 7 }}
-                    xl={{ span: 7 }}
-                  >
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                      <Form.Item
                       name="salesPerson"
                       label="Sales Person"
@@ -506,18 +515,20 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                       <Input placeholder="Sales Person" allowClear />
                     </Form.Item>
                   </Col>
+                  </Row>
+
                   <h1 style={{ color: "grey", fontSize: "15px", textAlign: "left" }}>
                     Sales Price Information
                     </h1> 
 
-                    <Row gutter={24}>
+                    <Row gutter={16}>
                     <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 7 }}
-                    xl={{ span: 7 }}
-                  >
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                     <Form.Item
                       name="basicUOM"
                       label="Basic UOM"
@@ -535,12 +546,12 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     </Form.Item>
                   </Col>
                   <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 7 }}
-                    xl={{ span: 7 }}
-                  >
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                     <Form.Item
                       name="altUOM"
                       label="Alt UOM"
@@ -550,11 +561,12 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     </Form.Item>
                   </Col>
                   <Col
-                   xs={{ span: 24 }}
-                   sm={{ span: 24 }}
-                   md={{ span: 4 }}
-                   lg={{ span: 7 }}
-                   xl={{ span: 7 }}>
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                   <Form.Item
                       name="conversionFactor"
                       label="Conversion Factor"
@@ -563,15 +575,13 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                       <Input placeholder="Conversion Factor" allowClear />
                     </Form.Item>
                   </Col>
-                    </Row>
-                    <Row gutter={24}>
                     <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 7 }}
-                    xl={{ span: 7 }}
-                  >
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                     <Form.Item
                       name="currency"
                       label="Currency"
@@ -592,11 +602,12 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     </Form.Item>
                   </Col>
                   <Col
-                   xs={{ span: 24 }}
-                   sm={{ span: 24 }}
-                   md={{ span: 4 }}
-                   lg={{ span: 7 }}
-                   xl={{ span: 7 }}>
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                   <Form.Item
                       name="salesPrice"
                       label="Sales Price"
@@ -606,11 +617,12 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     </Form.Item>
                   </Col>
                   <Col
-                   xs={{ span: 24 }}
-                   sm={{ span: 24 }}
-                   md={{ span: 4 }}
-                   lg={{ span: 7 }}
-                   xl={{ span: 7 }}>
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                   <Form.Item
                       name="salesPriceQty"
                       label="Sales Price Qty"
@@ -620,12 +632,12 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     </Form.Item>
                   </Col>
                   <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 7 }}
-                    xl={{ span: 7 }}
-                  >
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                     <Form.Item
                       name="targetCurrency"
                       label="Target Currency"
@@ -641,12 +653,12 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     </Form.Item>
                   </Col>
                   <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 7 }}
-                    xl={{ span: 7 }}
-                  >
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                     <Form.Item
                       name="projection Order"
                       label="Projection Order"
@@ -665,18 +677,17 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     </Row>
 
                     <h1
-                  style={{ color: "grey", fontSize: "15px", textAlign: "left" }}
-                >
+                  style={{ color: "grey", fontSize: "15px", textAlign: "left" }}>
                Profit Controllers
                 </h1>
-                <Row gutter={24}>
-                  <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 7 }}
-                    xl={{ span: 7 }}
-                  >
+                <Row gutter={16}>
+                <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                     <Form.Item
                       name="buyingHouseCommission"
                       label="Buying House Commission"
@@ -696,11 +707,12 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     </Form.Item>
                   </Col>
                   <Col
-                   xs={{ span: 24 }}
-                   sm={{ span: 24 }}
-                   md={{ span: 4 }}
-                   lg={{ span: 7 }}
-                   xl={{ span: 7 }}>
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                   <Form.Item
                       name="licence"
                       label="Licence"
@@ -719,13 +731,13 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                       </Select>
                     </Form.Item>
                   </Col>
-                   <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 7 }}
-                    xl={{ span: 7 }}
-                  >
+                  <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                     <Form.Item
                       name="customGroup"
                       label="Custom Group"
@@ -744,15 +756,14 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                       </Select>
                     </Form.Item>
                   </Col>
-                  </Row>
 
-                  <Row gutter={24}>
                   <Col
-                   xs={{ span: 24 }}
-                   sm={{ span: 24 }}
-                   md={{ span: 4 }}
-                   lg={{ span: 7 }}
-                   xl={{ span: 7 }}>
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                   <Form.Item
                       name="nationalDBK"
                       label="National DBK%"
@@ -761,12 +772,12 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     </Form.Item>
                   </Col>
                   <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 7 }}
-                    xl={{ span: 7 }}
-                  >
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                     <Form.Item
                       name="roslGroup"
                       label="Rosl Group"
@@ -789,14 +800,14 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                 <h1  style={{ color: "grey", fontSize: "15px", textAlign: "left" }}>
                     Manufacturing Information
                 </h1>
-                <Row gutter={24}>
+                <Row gutter={16}>
                 <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 7 }}
-                    xl={{ span: 7 }}
-                  >
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                     <Form.Item
                       name="property"
                       label="Property"
@@ -805,18 +816,17 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                         placeholder="Select Property"
                         allowClear
                       >
-                      <option value="Manufactured1">Manufactured1</option>
-                      <option value="Manufactured2">=Manufactured2</option>
+                      
                       </Select>
                     </Form.Item>
                   </Col>
                   <Col
-              xs={{ span: 24 }}
-                sm={{ span: 24 }}
-                md={{ span: 4 }}
-                lg={{ span: 7 }}
-                xl={{ span: 7 }}
-               >
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 9 }}
+                >
                 
                 <Form.Item name="isSubcontracted">
                 <div style={{ padding: '25px' }}>
@@ -829,15 +839,14 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                  style={{ color: "grey", fontSize: "15px", textAlign: "left" }}>
                 TNA
                 </h1>
-           <Row gutter={24}>
-            <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 7 }}
-              xl={{ span: 7 }}
-            >
-              <Form.Item
+           <Row gutter={16}>
+           <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                ><Form.Item
                 label="Order Confirmation Date"
                 name="orderConfirmationDate"
               >
@@ -845,12 +854,12 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
               </Form.Item>
             </Col>
             <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 7 }}
-              xl={{ span: 7 }}
-            >
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
               <Form.Item
                 label="PCD"
                 name="pcd"
@@ -859,12 +868,12 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
               </Form.Item>
             </Col>
             <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 7 }}
-              xl={{ span: 7 }}
-            >
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
               <Form.Item
                 label="1stEx-Factory Date"
                 name="1stExFactoryDate"
@@ -872,14 +881,13 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                 <DatePicker style={{ width: "100%" }} />
               </Form.Item>
             </Col>
-           </Row>
-           <Row gutter={24}>
            <Col
-                   xs={{ span: 24 }}
-                   sm={{ span: 24 }}
-                   md={{ span: 4 }}
-                   lg={{ span: 7 }}
-                   xl={{ span: 7 }}>
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                   <Form.Item
                       name="FR TNA"
                       label="FR TNA"
@@ -888,11 +896,12 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     </Form.Item>
                   </Col>
                   <Col
-                   xs={{ span: 24 }}
-                   sm={{ span: 24 }}
-                   md={{ span: 4 }}
-                   lg={{ span: 7 }}
-                   xl={{ span: 7 }}>
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 5 }}
+                >
                   <Form.Item
                       name="total orderqty"
                       label="Total Order Qty"
