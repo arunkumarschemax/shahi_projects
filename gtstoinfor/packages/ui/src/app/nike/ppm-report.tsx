@@ -56,8 +56,6 @@ const PPMReport = () => {
   const [poLineProp, setPoLineProp] = useState<any>([])
 
 
-
-
   useEffect(() => {
     getProductCode();
     getPoLine();
@@ -1231,101 +1229,101 @@ const PPMReport = () => {
   //   return isOdd ? 'odd-version' version';
   // }
 
-  const summaryColumns: CustomColumn<any>[] = [
-    { title: 'Po+Line ', dataIndex: 'poAndLine', key: 'poAndLine', isDefaultSelect: true },
-    { title: 'Last Modified Date', dataIndex: 'lastModifiedDate', key: 'lastModifiedDate', isDefaultSelect: true },
-    { title: 'Item', dataIndex: 'item', key: 'item', isDefaultSelect: true },
-    { title: 'Factory', dataIndex: 'Factory', key: 'Factory', isDefaultSelect: true },
-    { title: 'PCD', dataIndex: 'PCD', key: 'PCD', isDefaultSelect: true },
-    { title: 'Document Date', dataIndex: 'documentDate', key: 'documentDate', isDefaultSelect: true },
-    { title: 'Purchase Order Number', dataIndex: 'purchase Order Number', key: 'Purchase Order Number', isDefaultSelect: true },
-    { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber', key: 'poLineItemNumber', isDefaultSelect: true },
-    { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus', key: 'DPOMLineItemStatus', isDefaultSelect: true },
-    { title: 'DocType', dataIndex: 'docTypeCode', key: 'deocTypeCode', isDefaultSelect: true },
-    { title: 'DocType Description', dataIndex: 'docTypeDesc', key: 'deocTypeDesc', isDefaultSelect: true },
-    { title: 'Style Number', dataIndex: 'styleNumber', key: 'styleNumber', isDefaultSelect: true },
-    { title: 'Product Code', dataIndex: 'productCode', key: 'productCode', isDefaultSelect: true },
-    { title: 'Colour Description', dataIndex: 'colorDesc', key: 'colorDesc', isDefaultSelect: true },
-    { title: 'Description With Fabric Content', dataIndex: '', key: 'descriptionWithFabContent', isDefaultSelect: true },
-    { title: 'Fabric Content as Per Washcare Label', dataIndex: '', key: 'fabricContentAsPer', isDefaultSelect: true },
-    { title: 'Planning Season Code', dataIndex: 'planningSeasonCode', key: 'planningSeasonCode', isDefaultSelect: true },
-    { title: 'Planning Season Year', dataIndex: 'planningSeasonYear', key: 'planningSeasonYear', isDefaultSelect: true },
-    { title: 'Co', dataIndex: 'customerOrder', key: 'customerOrder', isDefaultSelect: true },
-    { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', key: 'coFinalApprovalDate', isDefaultSelect: true },
-    { title: 'Plan No', dataIndex: 'planNo', key: 'planNo', isDefaultSelect: true },
-    { title: 'Lead Time', dataIndex: 'leadTime', key: 'leadTime', isDefaultSelect: true },
-    { title: 'Category', dataIndex: 'categoryCode', key: 'categoryCode', isDefaultSelect: true },
-    { title: 'Category Description', dataIndex: 'categoryDesc', key: 'categoryDesc', isDefaultSelect: true },
-    { title: 'Vendor Code', dataIndex: 'vendorCode', key: 'vendorCode', isDefaultSelect: true },
-    { title: 'Global Category Core Focus', dataIndex: 'gccFocusCode', key: 'gccFocusCode', isDefaultSelect: true },
-    { title: 'Global Category Core Focus Description', dataIndex: 'gccFocusDesc', key: 'gccFocusDesc', isDefaultSelect: true },
-    { title: 'Gender Age', dataIndex: 'genderAgeCode', key: 'genderAgeCode', isDefaultSelect: false },
-    { title: 'Gender Age Description', dataIndex: 'genderAgeDesc', key: 'genderAgeDesc', isDefaultSelect: false },
-    { title: 'Destination Country Code', dataIndex: 'destinationCountryCode', key: 'destinationCountryCode', isDefaultSelect: false },
-    { title: 'Destination Country Name', dataIndex: 'destinationCountry', key: 'destinationCountry', isDefaultSelect: false },
-    { title: 'Geo Code', dataIndex: 'geoCode', key: 'geoCode', isDefaultSelect: false },
-    { title: 'Plant Code', dataIndex: 'plant', key: 'plant', isDefaultSelect: false },
-    { title: 'plant Name', dataIndex: 'plantName', key: 'plantName', isDefaultSelect: false },
-    { title: 'UPC', dataIndex: 'UPC', key: 'UPC', isDefaultSelect: false },
-    { title: 'Sales Order Number', dataIndex: 'directShipSONumber', key: 'directShipSONumber', isDefaultSelect: false },
-    { title: 'Sales Order Item Number', dataIndex: 'directShipSOItemNumber', key: 'directShipSOItemNumber', isDefaultSelect: false },
-    { title: 'Customer PO', dataIndex: 'customerPO', key: 'customerPO', isDefaultSelect: false },
-    { title: 'Ship To Customer Number', dataIndex: 'shipToCustomerNumber', key: 'shipToCustomerNumber', isDefaultSelect: false },
-    { title: 'Ship To Customer Name', dataIndex: 'shipToCustomerName', key: 'shipToCustomerName', isDefaultSelect: false },
-    { title: 'Ship to Address Legal PO', dataIndex: 'shipToAddressLegalPO', key: 'shipToAddressLegalPO', isDefaultSelect: false },
-    { title: 'Ship to Address DIA', dataIndex: 'shipToAddressDIA', key: 'shipToAddressDIA', isDefaultSelect: false },
-    {
-      title: 'Diff of Ship to Address', dataIndex: '', key: 'diffOfShipToAddress', isDefaultSelect: false,
-      render: (text, record) => {
-        const lines1 = (record.shipToAddressLegalPO)?.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-        const text1 = lines1?.join('');
+  // const summaryColumns: CustomColumn<any>[] = [
+  //   { title: 'Po+Line ', dataIndex: 'poAndLine', key: 'poAndLine', isDefaultSelect: true },
+  //   { title: 'Last Modified Date', dataIndex: 'lastModifiedDate', key: 'lastModifiedDate', isDefaultSelect: true },
+  //   { title: 'Item', dataIndex: 'item', key: 'item', isDefaultSelect: true },
+  //   { title: 'Factory', dataIndex: 'Factory', key: 'Factory', isDefaultSelect: true },
+  //   { title: 'PCD', dataIndex: 'PCD', key: 'PCD', isDefaultSelect: true },
+  //   { title: 'Document Date', dataIndex: 'documentDate', key: 'documentDate', isDefaultSelect: true },
+  //   { title: 'Purchase Order Number', dataIndex: 'purchase Order Number', key: 'Purchase Order Number', isDefaultSelect: true },
+  //   { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber', key: 'poLineItemNumber', isDefaultSelect: true },
+  //   { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus', key: 'DPOMLineItemStatus', isDefaultSelect: true },
+  //   { title: 'DocType', dataIndex: 'docTypeCode', key: 'deocTypeCode', isDefaultSelect: true },
+  //   { title: 'DocType Description', dataIndex: 'docTypeDesc', key: 'deocTypeDesc', isDefaultSelect: true },
+  //   { title: 'Style Number', dataIndex: 'styleNumber', key: 'styleNumber', isDefaultSelect: true },
+  //   { title: 'Product Code', dataIndex: 'productCode', key: 'productCode', isDefaultSelect: true },
+  //   { title: 'Colour Description', dataIndex: 'colorDesc', key: 'colorDesc', isDefaultSelect: true },
+  //   { title: 'Description With Fabric Content', dataIndex: '', key: 'descriptionWithFabContent', isDefaultSelect: true },
+  //   { title: 'Fabric Content as Per Washcare Label', dataIndex: '', key: 'fabricContentAsPer', isDefaultSelect: true },
+  //   { title: 'Planning Season Code', dataIndex: 'planningSeasonCode', key: 'planningSeasonCode', isDefaultSelect: true },
+  //   { title: 'Planning Season Year', dataIndex: 'planningSeasonYear', key: 'planningSeasonYear', isDefaultSelect: true },
+  //   { title: 'Co', dataIndex: 'customerOrder', key: 'customerOrder', isDefaultSelect: true },
+  //   { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', key: 'coFinalApprovalDate', isDefaultSelect: true },
+  //   { title: 'Plan No', dataIndex: 'planNo', key: 'planNo', isDefaultSelect: true },
+  //   { title: 'Lead Time', dataIndex: 'leadTime', key: 'leadTime', isDefaultSelect: true },
+  //   { title: 'Category', dataIndex: 'categoryCode', key: 'categoryCode', isDefaultSelect: true },
+  //   { title: 'Category Description', dataIndex: 'categoryDesc', key: 'categoryDesc', isDefaultSelect: true },
+  //   { title: 'Vendor Code', dataIndex: 'vendorCode', key: 'vendorCode', isDefaultSelect: true },
+  //   { title: 'Global Category Core Focus', dataIndex: 'gccFocusCode', key: 'gccFocusCode', isDefaultSelect: true },
+  //   { title: 'Global Category Core Focus Description', dataIndex: 'gccFocusDesc', key: 'gccFocusDesc', isDefaultSelect: true },
+  //   { title: 'Gender Age', dataIndex: 'genderAgeCode', key: 'genderAgeCode', isDefaultSelect: false },
+  //   { title: 'Gender Age Description', dataIndex: 'genderAgeDesc', key: 'genderAgeDesc', isDefaultSelect: false },
+  //   { title: 'Destination Country Code', dataIndex: 'destinationCountryCode', key: 'destinationCountryCode', isDefaultSelect: false },
+  //   { title: 'Destination Country Name', dataIndex: 'destinationCountry', key: 'destinationCountry', isDefaultSelect: false },
+  //   { title: 'Geo Code', dataIndex: 'geoCode', key: 'geoCode', isDefaultSelect: false },
+  //   { title: 'Plant Code', dataIndex: 'plant', key: 'plant', isDefaultSelect: false },
+  //   { title: 'plant Name', dataIndex: 'plantName', key: 'plantName', isDefaultSelect: false },
+  //   { title: 'UPC', dataIndex: 'UPC', key: 'UPC', isDefaultSelect: false },
+  //   { title: 'Sales Order Number', dataIndex: 'directShipSONumber', key: 'directShipSONumber', isDefaultSelect: false },
+  //   { title: 'Sales Order Item Number', dataIndex: 'directShipSOItemNumber', key: 'directShipSOItemNumber', isDefaultSelect: false },
+  //   { title: 'Customer PO', dataIndex: 'customerPO', key: 'customerPO', isDefaultSelect: false },
+  //   { title: 'Ship To Customer Number', dataIndex: 'shipToCustomerNumber', key: 'shipToCustomerNumber', isDefaultSelect: false },
+  //   { title: 'Ship To Customer Name', dataIndex: 'shipToCustomerName', key: 'shipToCustomerName', isDefaultSelect: false },
+  //   { title: 'Ship to Address Legal PO', dataIndex: 'shipToAddressLegalPO', key: 'shipToAddressLegalPO', isDefaultSelect: false },
+  //   { title: 'Ship to Address DIA', dataIndex: 'shipToAddressDIA', key: 'shipToAddressDIA', isDefaultSelect: false },
+  //   {
+  //     title: 'Diff of Ship to Address', dataIndex: '', key: 'diffOfShipToAddress', isDefaultSelect: false,
+  //     render: (text, record) => {
+  //       const lines1 = (record.shipToAddressLegalPO)?.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+  //       const text1 = lines1?.join('');
 
-        const lines2 = (record.shipToAddressDIA)?.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-        const text2 = lines2?.join('');
-        if (text1 == null && text2 == null) {
-          return '-'
-        } else {
-          const dmp = new DiffMatchPatch();
-          const diff = dmp.diff_main(text1, text2);
-          dmp.diff_cleanupSemantic(diff);
+  //       const lines2 = (record.shipToAddressDIA)?.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+  //       const text2 = lines2?.join('');
+  //       if (text1 == null && text2 == null) {
+  //         return '-'
+  //       } else {
+  //         const dmp = new DiffMatchPatch();
+  //         const diff = dmp.diff_main(text1, text2);
+  //         dmp.diff_cleanupSemantic(diff);
 
-          let output = '';
-          for (const [op, text] of diff) {
-            if (op === DiffMatchPatch.DIFF_INSERT) {
-              if (text.trim() !== '') {
-                output += `${text} `;
-              }
-            } else if (op === DiffMatchPatch.DIFF_DELETE) {
-              if (text.trim() !== '') {
-                output += `${text} `;
-              }
-            }
-          }
-          return output.trim()
-        }
-      },
-    },
-    { title: 'CAB Code', dataIndex: 'CABCode', key: 'CABCode', isDefaultSelect: false },
-    { title: 'Final Destination', dataIndex: '', key: 'FinalDestination', isDefaultSelect: false },
-    { title: 'MRGAC', dataIndex: 'MRGAC', key: 'MRGAC', isDefaultSelect: false },
-    { title: 'OGAC', dataIndex: 'OGAC', key: 'OGAC', isDefaultSelect: false },
-    { title: 'GAC', dataIndex: 'GAC', key: 'GAC', isDefaultSelect: false },
-    { title: 'GAC Reason Code', dataIndex: 'GACReasonCode', key: 'GACReasonCode', isDefaultSelect: false },
-    { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc', key: 'GACReasonDescription', isDefaultSelect: false },
-    { title: 'Truck Out Date', dataIndex: 'truckOutDate', key: 'truckOutDate', isDefaultSelect: false },
-    { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', key: 'originReceiptDate', isDefaultSelect: false },
-    { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', key: 'factoryDeliveryActDate', isDefaultSelect: false },
-    { title: 'Shipping Type', dataIndex: 'shippingType', key: 'shippingType', isDefaultSelect: false },
-    { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', key: 'planningPriorityCode', isDefaultSelect: false },
-    { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc', key: 'planningPriorityDescription', isDefaultSelect: false },
-    { title: 'Launch Code', dataIndex: '"launchCode', key: 'launchCode', isDefaultSelect: false },
-    { title: 'Mode of Transportation', dataIndex: 'modeOfTransportationCode', key: 'modeOfTransportationCode', isDefaultSelect: false },
-    { title: 'In Co Terms', dataIndex: 'inCoTerms', key: 'inCoTerms', isDefaultSelect: false },
-    { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode', key: 'inventorySegmentCode', isDefaultSelect: false },
-    { title: 'Purchase Group', dataIndex: 'purchaseGroupCode', key: 'purchaseGroupCode', isDefaultSelect: false },
-    { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName', key: 'purchaseGroupName', isDefaultSelect: false },
-    { title: 'Total Item Quantity', dataIndex: 'totalItemQty', key: 'totalItemQty', isDefaultSelect: false },
-  ]
+  //         let output = '';
+  //         for (const [op, text] of diff) {
+  //           if (op === DiffMatchPatch.DIFF_INSERT) {
+  //             if (text.trim() !== '') {
+  //               output += `${text} `;
+  //             }
+  //           } else if (op === DiffMatchPatch.DIFF_DELETE) {
+  //             if (text.trim() !== '') {
+  //               output += `${text} `;
+  //             }
+  //           }
+  //         }
+  //         return output.trim()
+  //       }
+  //     },
+  //   },
+  //   { title: 'CAB Code', dataIndex: 'CABCode', key: 'CABCode', isDefaultSelect: false },
+  //   { title: 'Final Destination', dataIndex: '', key: 'FinalDestination', isDefaultSelect: false },
+  //   { title: 'MRGAC', dataIndex: 'MRGAC', key: 'MRGAC', isDefaultSelect: false },
+  //   { title: 'OGAC', dataIndex: 'OGAC', key: 'OGAC', isDefaultSelect: false },
+  //   { title: 'GAC', dataIndex: 'GAC', key: 'GAC', isDefaultSelect: false },
+  //   { title: 'GAC Reason Code', dataIndex: 'GACReasonCode', key: 'GACReasonCode', isDefaultSelect: false },
+  //   { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc', key: 'GACReasonDescription', isDefaultSelect: false },
+  //   { title: 'Truck Out Date', dataIndex: 'truckOutDate', key: 'truckOutDate', isDefaultSelect: false },
+  //   { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', key: 'originReceiptDate', isDefaultSelect: false },
+  //   { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', key: 'factoryDeliveryActDate', isDefaultSelect: false },
+  //   { title: 'Shipping Type', dataIndex: 'shippingType', key: 'shippingType', isDefaultSelect: false },
+  //   { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', key: 'planningPriorityCode', isDefaultSelect: false },
+  //   { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc', key: 'planningPriorityDescription', isDefaultSelect: false },
+  //   { title: 'Launch Code', dataIndex: '"launchCode', key: 'launchCode', isDefaultSelect: false },
+  //   { title: 'Mode of Transportation', dataIndex: 'modeOfTransportationCode', key: 'modeOfTransportationCode', isDefaultSelect: false },
+  //   { title: 'In Co Terms', dataIndex: 'inCoTerms', key: 'inCoTerms', isDefaultSelect: false },
+  //   { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode', key: 'inventorySegmentCode', isDefaultSelect: false },
+  //   { title: 'Purchase Group', dataIndex: 'purchaseGroupCode', key: 'purchaseGroupCode', isDefaultSelect: false },
+  //   { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName', key: 'purchaseGroupName', isDefaultSelect: false },
+  //   { title: 'Total Item Quantity', dataIndex: 'totalItemQty', key: 'totalItemQty', isDefaultSelect: false },
+  // ]
 
   const renderReport = (data: MarketingReportModel[]) => {
     const sizeHeaders = getSizeWiseHeaders(data);
@@ -1750,10 +1748,10 @@ const PPMReport = () => {
             width: 60,
             align: 'right',
             render: (text, record) => {
-                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.sizeQty
-                const formattedQty = Number(sizeData).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-                return formattedQty? formattedQty : '-';
-              } 
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.sizeQty
+              // const formattedQty = Number(sizeData).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+              return sizeData ? sizeData : '-';
+            }
           },
           {
             title: (
@@ -1770,8 +1768,8 @@ const PPMReport = () => {
             render: (text, record) => {
               const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
               return sizeData ? sizeData : '-'
-          }
-        },
+            }
+          },
           {
             title: (
               <div
@@ -2095,16 +2093,16 @@ const PPMReport = () => {
             dataIndex: '',
             align: 'right',
             width: 70,
-                render: (text, record) => {
-                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.sizeQty;
-                if (record.shippingType === 'DIRECT') {
-                  return 0 ;
-                } else {
-                  const result = 0.03 * sizeData;
-                  return (
-                    result.toFixed(3)
-                  );
-                }
+            render: (text, record) => {
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.sizeQty;
+              if (record.shippingType === 'DIRECT') {
+                return 0;
+              } else {
+                const result = 0.03 * sizeData;
+                return (
+                  result.toFixed(3)
+                );
+              }
             }
           },
           {
@@ -2850,58 +2848,58 @@ const PPMReport = () => {
 
   }
 
-  const [searchedText, setSearchedText] = useState("");
-  const [firstColumn, ...restColumns] = summaryColumns;
-  const modifiedFirstColumn = {
-    ...firstColumn,
-    filteredValue: [String(searchedText).toLowerCase()],
-    onFilter: (value, record) => {
-      const aaa = new Set(Object.keys(record).map((key) => {
-        return String(record[key]).toLowerCase().includes(value.toLocaleString())
-      }))
-      if (aaa.size && aaa.has(true))
-        return true;
-      else
-        return false;
-    },
-  };
-  const packListPreviewColumnsWithFilter = [modifiedFirstColumn, ...restColumns];
-  const [visibleColumns, setVisibleColumns] = useState(
-    packListPreviewColumnsWithFilter.filter((column) => column.isDefaultSelect == true).map(column => column.key)
-  );
-  const dynamicColumns = packListPreviewColumnsWithFilter.filter((column) => visibleColumns.includes(column.key));
-  const handleColumnToggle = (checkedValues) => {
-    setVisibleColumns(checkedValues);
-  };
+  // const [searchedText, setSearchedText] = useState("");
+  // const [firstColumn, ...restColumns] = summaryColumns;
+  // const modifiedFirstColumn = {
+  //   ...firstColumn,
+  //   filteredValue: [String(searchedText).toLowerCase()],
+  //   onFilter: (value, record) => {
+  //     const aaa = new Set(Object.keys(record).map((key) => {
+  //       return String(record[key]).toLowerCase().includes(value.toLocaleString())
+  //     }))
+  //     if (aaa.size && aaa.has(true))
+  //       return true;
+  //     else
+  //       return false;
+  //   },
+  // };
+  // const packListPreviewColumnsWithFilter = [modifiedFirstColumn, ...restColumns];
+  // const [visibleColumns, setVisibleColumns] = useState(
+  //   packListPreviewColumnsWithFilter.filter((column) => column.isDefaultSelect == true).map(column => column.key)
+  // );
+  // const dynamicColumns = packListPreviewColumnsWithFilter.filter((column) => visibleColumns.includes(column.key));
+  // const handleColumnToggle = (checkedValues) => {
+  //   setVisibleColumns(checkedValues);
+  // };
 
-  const columnChooserOptions = packListPreviewColumnsWithFilter.map((column) => ({
-    label: column.title,
-    value: column.key,
-    isDefaultSelect: column.isDefaultSelect
-  }));
+  // const columnChooserOptions = packListPreviewColumnsWithFilter.map((column) => ({
+  //   label: column.title,
+  //   value: column.key,
+  //   isDefaultSelect: column.isDefaultSelect
+  // }));
 
 
-  const columnChooser = (
-    <>
-      <span style={{ marginRight: '8px' }}>Select columns to show:</span>
+  // const columnChooser = (
+  //   <>
+  //     <span style={{ marginRight: '8px' }}>Select columns to show:</span>
 
-      <TreeSelect
-        showSearch
-        treeCheckable
-        treeDefaultExpandAll
-        style={{ width: '200px' }}
-        value={visibleColumns}
-        onChange={handleColumnToggle}
-        dropdownStyle={{ maxHeight: 200, overflow: 'auto' }}
-        placeholder="Select Columns"
-        tagRender={() => <></>}
-      >
-        {columnChooserOptions.map((option) => (
-          <TreeNode key={option.value} value={option.value} title={option.label} disableCheckbox={option.isDefaultSelect} disabled={option.isDefaultSelect} />
-        ))}
-      </TreeSelect>
-    </>
-  );
+  //     <TreeSelect
+  //       showSearch
+  //       treeCheckable
+  //       treeDefaultExpandAll
+  //       style={{ width: '200px' }}
+  //       value={visibleColumns}
+  //       onChange={handleColumnToggle}
+  //       dropdownStyle={{ maxHeight: 200, overflow: 'auto' }}
+  //       placeholder="Select Columns"
+  //       tagRender={() => <></>}
+  //     >
+  //       {columnChooserOptions.map((option) => (
+  //         <TreeNode key={option.value} value={option.value} title={option.label} disableCheckbox={option.isDefaultSelect} disabled={option.isDefaultSelect} />
+  //       ))}
+  //     </TreeSelect>
+  //   </>
+  // );
 
   const showModal1 = (record) => {
     setPoLineProp(record)
@@ -3158,40 +3156,39 @@ const PPMReport = () => {
           </Row>
         </Form>
         <Row gutter={24} justify={'space-evenly'}>
-        <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: 'aqua', height: 100, alignItems: 'center' }}  >
+          <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: 'aqua', height: 100, alignItems: 'center' }}  >
             <b> <Statistic loading={tableLoading} title="Total Order Qty:" style={{ color: 'white' }} value={count} formatter={formatter} /></b></Card>
           </Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#CBADF7', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
             </b></Card></Col>
-            <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: '#A1EBB5', height: 100, alignItems: 'center' }} >
+          <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: '#A1EBB5', height: 100, alignItems: 'center' }} >
             <b><Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
             </b></Card></Col>
-            <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: '#E1F5A5', height: 100, alignItems: 'center' }}>
+          <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: '#E1F5A5', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
             </b> </Card> </Col>
-            <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#A5F5D7', height: 100, alignItems: 'center' }}>
+          <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#A5F5D7', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Accepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
             </b></Card></Col>
-            <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#F5BCB1', height: 100, alignItems: 'center' }}>
+          <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#F5BCB1', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Unaccepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
             </b></Card> </Col>
-            <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#B1BDF5', height: 100, alignItems: 'center' }}>
+          <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#B1BDF5', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
             </b> </Card> </Col>
-            <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#F1776A', height: 100, alignItems: 'center' }}>
+          <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#F1776A', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Cancelled PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} formatter={formatter} />
             </b></Card></Col>
         </Row><br></br>
-        <Row>
+        {/* <Row>
           <Col>
             {columnChooser}
           </Col>
-          {/* <Col>
+          <Col>
             <Input.Search placeholder="Search" allowClear onChange={(e) => { setSearchedText(e.target.value) }} onSearch={(value) => { setSearchedText(value) }} style={{ width: 200, float: "right" }} />
-          </Col> */}
-        </Row>
-        <br />
+          </Col>
+        </Row> */}
         {renderReport(filterData)}
         <Modal
           className='print-docket-modal'

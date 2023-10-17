@@ -12,7 +12,7 @@ export const FOBPriceVariationReport = () => {
     const [pageSize, setPageSize] = useState<number>(1);
     const service = new NikeService()
     const [data, setData] = useState<any[]>([]);
-    const [poAndLine,setPoAndLine] = useState<any>([]); 
+    const [poAndLine, setPoAndLine] = useState<any>([]);
     const [poNumber, setPoNumber] = useState<any>([]);
     const [styleNumber, setStyleNumber] = useState<any>([]);
     const [size, setSize] = useState<any>([]);
@@ -26,23 +26,23 @@ export const FOBPriceVariationReport = () => {
         getData()
         PoandLine()
         getSize()
-        StyleNumber ()
+        StyleNumber()
         getSize()
     }, [])
 
-    
 
 
 
-    
-    const getSize = ()=>{
+
+
+    const getSize = () => {
         service.getPriceDiffSizeDescription().then(res => {
-            if(res.status){
+            if (res.status) {
                 setSize(res.data)
             }
         })
     }
-    
+
     const PoandLine = () => {
         service.getPriceDiffPoLinedd().then(res => {
             if (res.status) {
@@ -50,7 +50,7 @@ export const FOBPriceVariationReport = () => {
             }
         })
     }
-    
+
     const StyleNumber = () => {
         service.getPriceDiffStyleNumber().then(res => {
             if (res.status) {
@@ -63,25 +63,25 @@ export const FOBPriceVariationReport = () => {
 
         if (form.getFieldValue('poandLine') !== undefined) {
             req.poAndLine = form.getFieldValue('poandLine');
-          }
-          if (form.getFieldValue('styleNumber') !== undefined) {
+        }
+        if (form.getFieldValue('styleNumber') !== undefined) {
             req.styleNumber = form.getFieldValue('styleNumber');
-          }
-          if (form.getFieldValue('sizeDescription') !== undefined) {
+        }
+        if (form.getFieldValue('sizeDescription') !== undefined) {
             req.sizeDescription = form.getFieldValue('sizeDescription');
-          } 
+        }
         if (form.getFieldValue('poNumber') !== undefined) {
             req.poNumber = form.getFieldValue('poNumber');
         }
-         
+
         service.getPriceDifferenceReport(req).then(res => {
             if (res.status) {
                 setData(res.data)
             }
-            else{
+            else {
                 setData([])
             }
-            
+
         })
     }
     const resetHandler = () => {
@@ -99,18 +99,18 @@ export const FOBPriceVariationReport = () => {
         },
         {
             title: 'PO And Line',
-            dataIndex: 'poAndLine',            align:'center'
+            dataIndex: 'poAndLine', align: 'center'
 
         },
 
         {
             title: 'Style Number',
             dataIndex: 'styleNumber',
-            align:'center'
+            align: 'center'
         },
         {
             title: 'Size Description',
-            dataIndex: 'sizeDescription',            align:'center'
+            dataIndex: 'sizeDescription', align: 'center'
 
         },
         {
@@ -142,7 +142,7 @@ export const FOBPriceVariationReport = () => {
             dataIndex: 'difference',
             align: 'right',
             render: (text, record) => {
-                
+
                 let diff;
                 let convertedPrice;
                 if (record.fobCurrencyCode === 'PHP') {
@@ -168,19 +168,16 @@ export const FOBPriceVariationReport = () => {
                 const color = diff < 0 ? 'red' : diff > 0 ? 'green' : 'black';
                 const arrowIcon = diff < 0 ? <DownOutlined /> : diff > 0 ? <UpOutlined /> : null;
                 return (
-                    
                     <>
-                    <span style={{ color }}>
-                    {arrowIcon} {record.grossPriceFob ? Number(diff).toLocaleString('en-IN') : '-'}
+                        <span style={{ color }}>
+                            {arrowIcon} {record.grossPriceFob ? Number(diff).toLocaleString('en-IN') : '-'}
                         </span>
                         {/* return diff !== 0 ? Number(diff).toLocaleString('en-IN') : ''; */}
-                    {/* return diff !== 0 ? Number(diff).toLocaleString('en-IN') : ''; */}
+                        {/* return diff !== 0 ? Number(diff).toLocaleString('en-IN') : ''; */}
                     </>
                 )
             }
         },
-        
-
     ]
 
 
@@ -198,7 +195,7 @@ export const FOBPriceVariationReport = () => {
                             >
                                 {
                                     poNumber?.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.poNumber}>{inc.poNumber}</Option>
+                                        return <Option key={inc.id} value={inc.poAndLine}>{inc.poAndLine}</Option>
                                     })
                                 }
                             </Select>
@@ -253,35 +250,36 @@ export const FOBPriceVariationReport = () => {
             <>
                 {data.length > 0 ? (
                     <Table columns={columns} dataSource={data}
-                    
-                        className="custom-table-wrapper" 
-                        
-                        scroll={{ x: 'max-content', y: 500}}
+
+                        className="custom-table-wrapper"
+
+                        scroll={{ x: 'max-content', y: 500 }}
                         pagination={{
-                            pageSize:50,
+                            pageSize: 50,
                             onChange(current, pageSize) {
                                 setPage(current);
                                 setPageSize(pageSize);
-                            }}}
-                        // summary={(pageData) => {
-                        //     let totalDifference = 0;
+                            }
+                        }}
+                    // summary={(pageData) => {
+                    //     let totalDifference = 0;
 
-                        //     pageData.forEach(({ difference }) => {
-                        //         if (Number(difference)) {
-                        //             totalDifference += Number(difference)
-                        //         }
-                        //     })
+                    //     pageData.forEach(({ difference }) => {
+                    //         if (Number(difference)) {
+                    //             totalDifference += Number(difference)
+                    //         }
+                    //     })
 
-                        //     return (
-                        //         <>
-                        //             <Table.Summary.Row className="tableFooter">
-                        //                 <Table.Summary.Cell index={14} colSpan={6}><Text>Total</Text></Table.Summary.Cell>
-                        //                 <Table.Summary.Cell index={15} colSpan={1}></Table.Summary.Cell>
-                        //                 <Table.Summary.Cell index={15} colSpan={1}>{totalDifference}</Table.Summary.Cell>
-                        //             </Table.Summary.Row>
-                        //         </>
-                        //     )
-                        // }}
+                    //     return (
+                    //         <>
+                    //             <Table.Summary.Row className="tableFooter">
+                    //                 <Table.Summary.Cell index={14} colSpan={6}><Text>Total</Text></Table.Summary.Cell>
+                    //                 <Table.Summary.Cell index={15} colSpan={1}></Table.Summary.Cell>
+                    //                 <Table.Summary.Cell index={15} colSpan={1}>{totalDifference}</Table.Summary.Cell>
+                    //             </Table.Summary.Row>
+                    //         </>
+                    //     )
+                    // }}
                     />)
                     : (<Table size='large' />)}
             </>
