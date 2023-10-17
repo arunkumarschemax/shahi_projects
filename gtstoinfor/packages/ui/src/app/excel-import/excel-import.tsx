@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Card, Col, Descriptions, Divider, Form, message, Row, Select, UploadProps } from 'antd';
+import { Button, Card, Col, Descriptions, Divider, Form, message, Modal, Row, Select, UploadProps } from 'antd';
 import { OrdersService } from '@project-management-system/shared-services';
 import Papa from 'papaparse'
 import AlertMessages from '../common/common-functions/alert-messages';
@@ -23,6 +23,9 @@ export default function ExcelImport() {
   let navigate = useNavigate();
   const { Option } = Select;
   const [form] = Form.useForm();
+  const [modalOpen,setModalOpen] = useState<boolean>(false)
+  const [mismatchedColumns,setMismatchedColumns] = useState<any[]>([])
+  const [mismatchErrorCode,setMismatchErrorCode] = useState<number>(0)
 
 
   useEffect(() => {
@@ -44,6 +47,11 @@ export default function ExcelImport() {
       }
     })
   }
+
+  useEffect(() => {
+    console.log(mismatchedColumns,'------------')
+
+  },[mismatchedColumns])
 
   const handleFileChange = (e) => {
     if(form.getFieldsValue().fileType == FileTypesEnum.TRIM_ORDERS){
@@ -147,7 +155,6 @@ export default function ExcelImport() {
           const headers = Papa.parse(lines[1], {
             header: true,
           }).data[0];
-          
           // Remove the first and second row from the lines array
           lines.shift(); // Remove the first row
           lines.shift(); // Remove the first row
@@ -189,9 +196,30 @@ export default function ExcelImport() {
           AlertMessages.getErrorMessage('Sheet Name does not match')
         } else{
           // let headersRow = getHeaderArray(csvData[0][3]);
-          csvData[0].shift()
-          csvData[0].shift()
-          csvData[0].shift()
+          // for(const rec of csvData[0]){
+          //   console.log(rec[0],'----------rec')
+          //   if(rec[0] == 'No'){
+          //     console.log('empty')
+          //     break
+          //   }
+          //   else{
+          //     console.log('no')
+          //     csvData[0].shift()
+          //     continue
+          //   }
+          // }
+          let currentIndex = 0; // Initialize an index variable
+          while (currentIndex < csvData[0].length) {
+              const rec = csvData[0][currentIndex];              
+              if (rec[0] === 'No') {
+                  break;
+              } else {
+                  csvData[0].shift(); // Shift the row if rec[0] is not 'No'
+              }
+          }
+          // csvData[0].shift()
+          // csvData[0].shift()
+          // csvData[0].shift()
           console.log(csvData)
           const filteredNestedData = csvData.filter(innerData => innerData.some(row => row.length > 0));
   
@@ -314,7 +342,15 @@ export default function ExcelImport() {
                       req.userName = loginUser ? loginUser : null;
                       ordersService.updateFileStatus(req)
                       // message.error('File upload failed')
+                      if(res.errorCode === 23 || res.errorCode === 24){
+                        // message.error(res.internalMessage)
+                        // console.log('okk')
+                        setMismatchErrorCode(res.errorCode)
+                        setMismatchedColumns(res.data)
+                        setModalOpen(true)
+                      } else{
                       message.error(res.internalMessage)
+                      }
                     }
                   }).finally(() => {
                     setLoading(false);
@@ -703,6 +739,16 @@ export default function ExcelImport() {
           </Button>
           </Form>
         </>
+        <Modal open={modalOpen} onCancel={() => setModalOpen(false)} footer={[]}>
+          <span style={{color:'red',fontSize:'150%'}}>{mismatchErrorCode === 23 ? `Columns does not match!` : `Missed Columns`}</span>
+          <br/>
+          {
+            mismatchedColumns.map(e => 
+              <><b>{e.replace(/_/g,' ')}</b><br/></>
+            )
+          }
+          {/* <span>{mismatchedColumns}</span> */}
+        </Modal>
       </Card>
     </>
   );

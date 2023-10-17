@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders, CoLineStatusReq, TrimOrdersReq, ordersPlanNo } from '@project-management-system/shared-models';
+import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders, CoLineStatusReq, TrimOrdersReq, ordersPlanNo, RequiredColumns } from '@project-management-system/shared-models';
 import axios, { Axios } from 'axios';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
@@ -81,50 +81,58 @@ export class OrdersService {
             await transactionManager.startTransaction()
             const flag = new Set()
             const columnArray = [];
-            // console.log(formData,'formdaaaahh')
-            // console.log(id,'fileiddd')
             const updatedArray = formData.map((obj) => {
                 const updatedObj = {};
                 for (const key in obj) {
                     const newKey = key.replace(/\s/g, '_').replace(/[\(\)]/g, '').replace(/-/g, '_').replace(/:/g,'_').replace(/[*]/g,'_').replace(/=/g,'_').replace(/”/g,'').replace(/~/g,'').replace(/[/]/g,'').replace(/“/g,'').replace(/�/g,'').replace(/'/g,'')
                     const newKey1 = newKey.replace(/__/g,'_');
-                    // console.log(newKey1,'---------newkey1')
                     columnArray.push(newKey1)
                     updatedObj[newKey1] = obj[key];
                 }
                 return updatedObj;
 
             });
-            // console.log(updatedArray,'updatedarray')
+            //to get the required columns which are not present in the excel
+            const missedColumns =[]
+            const missedColumnsFlag = new Set<boolean>()
+            for(const requiredKey of RequiredColumns){
+                if(!(columnArray.includes(requiredKey))){
+                    missedColumns.push(requiredKey)
+                    missedColumnsFlag.add(false)
+                } else{
+                    missedColumnsFlag.add(true)
+                }
+            }
+            if((missedColumnsFlag.has(false))){
+                return new CommonResponseModel(false,24,'Required Columns missed',missedColumns)
+            }
 
+              // const difference = columnArray.filter((element) => !ProductionOrderColumns.includes(element));
+              const filteredArray = columnArray.filter((element) => !ProductionOrderColumns.some(col => col.toLowerCase() === element.toLowerCase()));
+              const mismatchColumns = filteredArray.filter((val,index) => filteredArray.indexOf(val) === index)
+              if(filteredArray.length > 0){
+                  await transactionManager.releaseTransaction()
+                  return new CommonResponseModel(false,23,'Columns does not match!',mismatchColumns)
+              } 
+           
             const convertedData = updatedArray.map((obj) => {
                 const updatedObj = {};
                 for (const key in obj) {
-                    // console.log(key,'keyvalues')
                     const value = obj[key];
-                    // console.log(value,'nevalue')
                     if (value === "") {
                         updatedObj[key] = null;
                     } else {
-                        // console.log(value,'nekkvalue')
                         updatedObj[key] = value;
                         // var regexPattern = /[^A-Za-z0-9 -;:/.,()[]&_']/g;
                         
                         // updatedObj[key] = value.replace(regexPattern, null);
-                        // console.log(value,'nekkvaluejjj')
-                        // console.log(updatedObj[key],'nekkvaluejjjiyuuu')
                         // updatedObj[key] = Buffer.from(value, 'utf-8').toString()
                         
                     }
                 }
+               
                 return updatedObj;
             });
-            // const difference = columnArray.filter((element) => !ProductionOrderColumns.includes(element));
-            const filteredArray = columnArray.filter((element) => !ProductionOrderColumns.some(col => col.toLowerCase() === element.toLowerCase()));
-            if(filteredArray.length > 0){
-                await transactionManager.releaseTransaction()
-                return new CommonResponseModel(false,1110,'Columns does not match!')
-            }
 
             for (const data of convertedData) {
 let dtoData;
@@ -1359,18 +1367,31 @@ async processEmails() {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     let filesArray = []
 
+    const dns = require('dns');
+    dns.lookup('zimbra.xmission.com', (err, addresses) => {
+        console.log(addresses,'---')
+      if (err) {
+        console.error(`DNS lookup error: ${err}`);
+      } else {
+        console.log(`Resolved addresses: ${addresses}`);
+      }
+    });
+
     // Define your email configuration
     const imap = new Imap({
-      user: 'naveenmaddula86@gmail.com',
-      password: 'bshk euvb tulv cghr',
-      host: 'imap.gmail.com',
+      user: 'uniqlo.projection@shahi.co.in',
+      password: 'SH@hi@98765435',
+      host: 'zimbra.xmission.com',
       port: 993,
       tls: true,
+      authTimeout: 30000,
     });
+
+
 
     const allowedExtensions = ['.xlsx', '.xls', '.csv'];
     const savePath = './upload-files/'
-    function toUpper(thing) {
+        function toUpper(thing) {
       return thing && thing.toUpperCase ? thing.toUpperCase() : thing;
     }
 

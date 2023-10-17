@@ -204,3 +204,8 @@ export const TrimOrderColumns =[
     "Trim_Item_No",
     "Trim_Supplier",
 ]
+
+export const RequiredColumns =[
+    "Year"
+
+]

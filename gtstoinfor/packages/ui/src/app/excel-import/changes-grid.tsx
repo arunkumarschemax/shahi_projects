@@ -643,9 +643,11 @@ const ChangesGrid = () => {
                             <Table.Summary.Cell index={8}><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalRecQty).toLocaleString('en-IN', {
                                 maximumFractionDigits: 0
                             })}</div></Table.Summary.Cell>
-                            <Table.Summary.Cell index={9} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(defData).toLocaleString('en-IN', {
+                            <Table.Summary.Cell index={9} >{Number(defData) > 0 ? (<div style={{ textAlign: 'right', fontWeight: 'bold', color: 'green' }}>{Number(defData).toLocaleString('en-IN', {
                                 maximumFractionDigits: 0
-                            })}</div></Table.Summary.Cell>
+                            })}<ArrowUpOutlined style={{ color: "green" }} /></div>) :(<div style={{ textAlign: 'right', fontWeight: 'bold', color: 'red' }}>{Number(defData).toLocaleString('en-IN', {
+                                maximumFractionDigits: 0
+                            })}<ArrowDownOutlined style={{ color: "red" }} /></div>)}</Table.Summary.Cell>
                         </Table.Summary.Row>
                     </>
                 );
@@ -696,9 +698,11 @@ const ChangesGrid = () => {
                                 <Table.Summary.Cell index={8}><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalRecQty).toLocaleString('en-IN', {
                                     maximumFractionDigits: 0
                                 })}</div></Table.Summary.Cell>
-                                <Table.Summary.Cell index={9} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(defData).toLocaleString('en-IN', {
-                                    maximumFractionDigits: 0
-                                })}</div></Table.Summary.Cell>
+                                <Table.Summary.Cell index={9} >{Number(defData) > 0 ? (<div style={{ textAlign: 'right', fontWeight: 'bold', color: 'green' }}>{Number(defData).toLocaleString('en-IN', {
+                                maximumFractionDigits: 0
+                            })}<ArrowUpOutlined style={{ color: "green" }} /></div>) :(<div style={{ textAlign: 'right', fontWeight: 'bold', color: 'red' }}>{Number(defData).toLocaleString('en-IN', {
+                                maximumFractionDigits: 0
+                            })}<ArrowDownOutlined style={{ color: "red" }} /></div>)}</Table.Summary.Cell>
                             </Table.Summary.Row>
                         </>
                     );
