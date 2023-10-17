@@ -4,7 +4,7 @@ import { OrdersEntity } from "../entities/orders.entity";
 
 export class OrdersChildAdapter {
 
-    public convertDtoToEntity(dto:any,id:number,productionPlanId:number,month:number): any {
+    public convertDtoToEntity(dto:any,id:number,productionPlanId:number,month:number,exf:any): any {
         const entity = new OrdersChildEntity()
         entity.year = dto.year;
         entity.planningSsnCd = dto.planningSsnCd
@@ -152,7 +152,7 @@ export class OrdersChildAdapter {
         entity.updateFunction = dto.updateFunction
         entity.countY = dto.countY
         entity.sample = dto.sample
-        entity.exf = dto.exf
+        entity.exf = exf
         entity.bddl = dto.bddl
         entity.bddlPast = dto.bddlPast
         entity.ltBdExf = dto.ltBdExf

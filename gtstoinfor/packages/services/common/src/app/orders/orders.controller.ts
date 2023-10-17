@@ -139,7 +139,6 @@ export class OrdersController {
     }))
 
     async fileUpload(@Param('month') month: number,@Param('fileType') fileType:string,@Param('uploadType') uploadType:string, @UploadedFile() file): Promise<CommonResponseModel> {
-        console.log(uploadType,'------------')
         try {
             return await this.ordersService.updatePath(file.path, file.filename, month,fileType,uploadType)
         } catch (error) {
@@ -178,7 +177,6 @@ export class OrdersController {
     @ApiBody({type:ordersPlanNo})
     async getversion(@Body() req:any):Promise<CommonResponseModel>{
         try{
-            console.log(req,"OOOOOOOOOOOO")
             return this.ordersService.getversion(req);
 
         }catch(err){

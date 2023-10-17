@@ -154,6 +154,8 @@ export const  ProductionOrderColumns = [
     "Qty_LTPO_EXF",
     "County2Y",
     "PHASE",
+    // "Sample_Code",
+    // "Prod_Plan_Type2"
 ];
 
 export const TrimOrderColumns =[
@@ -206,6 +208,19 @@ export const TrimOrderColumns =[
 ]
 
 export const RequiredColumns =[
-    "Year"
-
+    "Year",
+    "Planning_Ssn",
+    "Biz",
+    "Core_Category",
+    "Planning_Sum",
+    "Coeff",
+    "Publish_Flag_for_Factory",
+    "Order_Plan_Number",
+    "Order_Plan_Qty",
+    "Order_Plan_QtyCoeff",
+    "Prod_Plan_Type",
+    "WH",
+    "EXF_ETD",
+    "ETD_WH",
+    "Sample"
 ]
