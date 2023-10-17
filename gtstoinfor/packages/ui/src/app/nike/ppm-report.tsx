@@ -228,6 +228,7 @@ const PPMReport = () => {
               'Last Modified Date': item.lastModifiedDate,
               'Item': item.item,
               'Factory': item.factory,
+              'PCD': item.PCD,
               'Document Date': item.documentDate,
               'Purchase Order Number': item.purchaseOrderNumber,
               'PO Line Item Number': item.poLineItemNumber,
@@ -1367,33 +1368,8 @@ const PPMReport = () => {
       },
       {
         title: 'PCD',
-        dataIndex: 'pcd',
+        dataIndex: 'PCD',
         width: 70,
-
-        render: (text: string, record: any) => {
-          if (!text || text.trim() === '' || text.length !== 8) {
-            return '-';
-          } else {
-            const year = parseInt(text.slice(0, 4), 10);
-            const month = parseInt(text.slice(4, 6), 10);
-            const day = parseInt(text.slice(6, 8), 10);
-
-            if (isNaN(year) || isNaN(month) || isNaN(day)) {
-              return 'Invalid Date';
-            }
-
-            const date = new Date(year, month - 1, day);
-
-            if (isNaN(date.getTime())) {
-              return 'Invalid Date';
-            }
-
-            const mm = String(date.getMonth() + 1).padStart(2, '0');
-            const dd = String(date.getDate()).padStart(2, '0');
-            const yyyy = date.getFullYear();
-            return `${mm}/${dd}/${yyyy}`;
-          }
-        }
       },
       {
         title: 'Document Date',
