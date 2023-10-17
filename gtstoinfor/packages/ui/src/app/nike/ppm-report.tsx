@@ -1827,9 +1827,15 @@ const PPMReport = () => {
             render: (text, record) => {
               const shprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
               const buyerprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobPrice;
-              let diff = Number(shprice) - Number(buyerprice)
-              return diff
+            
+              if (isNaN(shprice) || isNaN(buyerprice)) {
+                return '-';
+              } else {
+                let diff = Number(shprice) - Number(buyerprice);
+                return diff;
+              }
             }
+            
           },
           {
             title: (
@@ -1954,7 +1960,7 @@ const PPMReport = () => {
               >CO Price</div>
             ),
             dataIndex: 'coPrice',
-            // align: 'right',
+             align: 'right',
             width: 60,
             render: (text, record) => {
               const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPrice;
@@ -2027,7 +2033,7 @@ const PPMReport = () => {
               >CRM CO QTY</div>
             ),
             dataIndex: 'CRMCoQty',
-            width: 60,
+            width: 60,align:'right',
             render: (text, record) => {
               const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.CRMCoQty;
               return sizeData ? sizeData : '-'
