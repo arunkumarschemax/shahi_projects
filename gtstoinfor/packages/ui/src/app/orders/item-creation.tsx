@@ -147,7 +147,6 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
          }
 
          const saveItem=()=>{
-          console.log("hiiii")
           form.validateFields().then((values) => {
             console.log(values);
               itemCreationService.createItem(values).then((res) => {
@@ -173,18 +172,22 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
           
         <Row gutter ={8} >
        <Card size="small" bordered={false} style={{width:"100%"}} >
-      
+       <h1 style={{color:"grey",fontSize:"15px" }}>
+        Item Details
+       </h1>
        <Col>
                 <Form.Item 
                 name="trim" style={{display:'none'}}>
-              
+                {/* <Select
+                 placeholder="Select Item No" allowClear>
+                 <option value="item9001"> item9001</option>
+                 <option value="item9002"> item9002</option>
+                 <option value="item9003"> item9003</option>
+                 </Select> */}
                  <Input disabled/>
                     </Form.Item>
                     </Col>
-
-                    <h1 style={{color:"grey",fontSize:"15px" }}>
-              Item Details
-             </h1>
+                    
                    <Row gutter ={16}>
        
                     <Col
@@ -235,8 +238,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     >
                 <Select
                  placeholder="Select Type" allowClear>
-                 <option value="Jacket"> Jacket</option>
-                 <option value="sweater"> sweater</option>
+                 
                  </Select>
                     </Form.Item>
                     </Col>
@@ -315,8 +317,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     >
                 <Select
                  placeholder="Select Item Group" allowClear>
-                 <option value="itemGroup"> itemGroup</option>
-                 <option value="itemGroup"> itemGroup</option>
+                 
                  </Select>
                     </Form.Item>
                     </Col>
@@ -351,7 +352,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                   >
                     <Form.Item
                     label="Shahi Style"
-                    name="Shahi Style"
+                    // name="Shahi Style"
                     rules={[{ required: true, message: "Fill Shahi Style" }]}
                     >
 
@@ -411,8 +412,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                         placeholder="Select Approve"
                         allowClear
                       >
-                      <option value="Team">Team1</option>
-                      <option value="Team1">Team2</option>
+                    
 
                          
                       </Select>
@@ -450,8 +450,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                         placeholder="Select Production Merchant"
                         allowClear
                       >
-                      <option value="production Merchant">production Merchant</option>
-                      <option value="production Merchant">production Merchant</option>                    
+                     
                       </Select>
                     </Form.Item>
                   </Col>
@@ -472,8 +471,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                         placeholder="Select PD Merchant"
                         allowClear
                       >
-                      <option value="PD Merchant">PD Merchant</option>
-                      <option value="PD Merchant">PD Merchant</option>                    
+                                     
                       </Select>
                     </Form.Item>
                   </Col>
@@ -494,8 +492,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                         placeholder="Select Factory Merchant"
                         allowClear
                       >
-                      <option value="Factory Merchant">Factory Merchant</option>
-                      <option value="Factory Merchant">Factory Merchant</option>                    
+                                       
                       </Select>
                     </Form.Item>
                   </Col>
@@ -538,8 +535,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                         placeholder="Select Basic UOM"
                         allowClear
                       >
-                      <option value="UOM">UOM</option>
-                      <option value="UOM">=UOM</option>
+                     
 
                          
                       </Select>
@@ -647,8 +643,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                         placeholder="Select Target Currency"
                         allowClear
                       >
-                      <option value="INR">INR1</option>
-                      <option value="INR">INR2</option>
+                     
                       </Select>
                     </Form.Item>
                   </Col>
@@ -669,8 +664,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                          allowClear
                          suffixIcon={<SearchOutlined />}
                       >
-                      <option value="Projection1">Projection1</option>
-                      <option value="Projection2">=Projection2</option>
+                    
                       </Select>
                     </Form.Item>
                   </Col>
@@ -825,7 +819,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                   sm={{ span: 24 }}
                   md={{ span: 4 }}
                   lg={{ span: 4 }}
-                  xl={{ span: 9 }}
+                  xl={{ span: 5 }}
                 >
                 
                 <Form.Item name="isSubcontracted">
@@ -845,7 +839,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                   sm={{ span: 24 }}
                   md={{ span: 4 }}
                   lg={{ span: 4 }}
-                  xl={{ span: 5 }}
+                  xl={{ span: 6 }}
                 ><Form.Item
                 label="Order Confirmation Date"
                 name="orderConfirmationDate"
@@ -858,7 +852,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                   sm={{ span: 24 }}
                   md={{ span: 4 }}
                   lg={{ span: 4 }}
-                  xl={{ span: 5 }}
+                  xl={{ span: 6 }}
                 >
               <Form.Item
                 label="PCD"
@@ -872,7 +866,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                   sm={{ span: 24 }}
                   md={{ span: 4 }}
                   lg={{ span: 4 }}
-                  xl={{ span: 5 }}
+                  xl={{ span: 6 }}
                 >
               <Form.Item
                 label="1stEx-Factory Date"
@@ -886,7 +880,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                   sm={{ span: 24 }}
                   md={{ span: 4 }}
                   lg={{ span: 4 }}
-                  xl={{ span: 5 }}
+                  xl={{ span: 6 }}
                 >
                   <Form.Item
                       name="FR TNA"
@@ -900,7 +894,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                   sm={{ span: 24 }}
                   md={{ span: 4 }}
                   lg={{ span: 4 }}
-                  xl={{ span: 5 }}
+                  xl={{ span: 6 }}
                 >
                   <Form.Item
                       name="total orderqty"
@@ -914,8 +908,8 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                 </Row>
                 <Row gutter={24} justify="end">
                 <Space size={16}>
-                <Button type="primary" htmlType="submit">
-                    Submit
+                  <Button type="primary" >
+                   Submit
                   </Button>
                   {/* <Link to="">
                     <Button type="primary" icon={<HomeOutlined />}>
