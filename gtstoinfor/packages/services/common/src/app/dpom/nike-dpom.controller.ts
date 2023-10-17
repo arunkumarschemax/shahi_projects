@@ -38,11 +38,12 @@ export class DpomController {
         }
     }
 
-    @Post('/getCRMOrderDetails2')
-    async getCRMOrderDetails2() {
+    @Post('/syncCRMData')
+    async syncCRMData() {
         try {
-            return await this.dpomService.getCRMOrderDetails2('2000593977')
+            return await this.dpomService.syncCRMData()
         } catch (error) {
+            console.log(error)
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
     }

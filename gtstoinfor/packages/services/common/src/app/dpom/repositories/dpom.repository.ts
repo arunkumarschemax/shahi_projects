@@ -7,7 +7,6 @@ import { FileIdReq } from "../../orders/models/file-id.req";
 import { DpomChildEntity } from "../entites/dpom-child.entity";
 import { PpmDateFilterRequest, nikeFilterRequest } from "@project-management-system/shared-models";
 import { FobEntity } from "../../fob-price-list/fob.entity";
-import { groupBy } from "rxjs";
 
 @Injectable()
 export class DpomRepository extends Repository<DpomEntity> {
@@ -15,6 +14,14 @@ export class DpomRepository extends Repository<DpomEntity> {
     constructor(@InjectRepository(DpomEntity) private dpomRepository: Repository<DpomEntity>
     ) {
         super(dpomRepository.target, dpomRepository.manager, dpomRepository.queryRunner);
+    }
+
+    async getBuyerPOs(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`po_number, po_line_item_number, schedule_line_item_number, po_and_line, style_number, size_qty, size_description `)
+            .where(` doc_type_code != 'ZP26'`)
+            .groupBy(` po_and_line`)
+        return await query.getRawMany()
     }
 
     async getCountForDivertReport(): Promise<any[]> {
@@ -858,6 +865,6 @@ export class DpomRepository extends Repository<DpomEntity> {
     //     }
     //     return await query.getRawMany();
     //   }
-      
+
 
 }
