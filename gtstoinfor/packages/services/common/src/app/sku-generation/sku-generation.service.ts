@@ -193,47 +193,81 @@ export class ItemSkuService{
   }
 
 
-  async getSkuList(req:SKUlistFilterRequest):Promise<CommonResponseModel>{
-    try{
-      const getData= await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo'],
-      // const getData = await this.itemSkuRepo.getDestinationsByItem(req.itemCode)
+  // async getSkuList(req:SKUlistFilterRequest):Promise<CommonResponseModel>{
+  //   try{
+  //     const getData= await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo'],
+  //     // const getData = await this.itemSkuRepo.getDestinationsByItem(req.itemCode)
 
-      where:{itemInfo:{itemId:req.itemNoId}}
-    })
-      if(getData.length> 0){
-        return new CommonResponseModel(true,1,'Data retreived',getData)
-      }else{
-        return new CommonResponseModel(false,0,'No data found')
-      }
-    }catch (err){
-      throw err
-    }
-  }
+  //     where:{itemInfo:{itemId:req.itemNoId}}
+  //   })
+  //     if(getData.length> 0){
+  //       return new CommonResponseModel(true,1,'Data retreived',getData)
+  //     }else{
+  //       return new CommonResponseModel(false,0,'No data found')
+  //     }
+  //   }catch (err){
+  //     throw err
+  //   }
+  // }
    
 
-  // async getSkuList(req:SKUlistFilterRequest):Promise<CommonResponseModel>{
-  //   const data = await this.itemSkuRepo.getDestinationsByItem(req);
-  //   if(data.length ===0){
-  //     return new CommonResponseModel(false,0,'data not found');
-  //   }
-  //   const DataMap =new Map <string, SKUDTO>();
+//   async getSkuList(req:SKUlistFilterRequest):Promise<CommonResponseModel>{
+//     const data = await this.itemSkuRepo.getSkuList(req);
+//     if(data.length ===0){
+//       return new CommonResponseModel(false,0,'data not found');
+//     }
+//     const DataMap =new Map<string, SKUDTO>();
+// console.log(data,'ppppppppp');
 
-  //   for(const res of data){
-  //     if(!DataMap.has(res.itemNo)){
-  //       DataMap.set(
-  //         res.itemNo,
-  //          new SKUListDto(res.itemskuID,[])
-  //       );
-  //     }
-  //     const Sku =DataMap.get(res.itemNo).sku;
-  //     const skus =Sku.find(e=>e.itemskuID === res.)
-      
-  //   }
+//     for(const res of data){
+//       if(!DataMap.has(res.item_code)){
+//         DataMap.set(res.item_id,new SKUDTO(res.item_code,res.item_id,[]));
+//       }
+//       const Sku =DataMap.get(res.itemNoId).sku;
+//       if(Sku){
+//       const data1 = new SKUListDto(res.item_sku_id,res.size_id,res.size,res.color_id,res.color,res.destination_id,res.destination)
+//       Sku.push(data1)
+//       }
+//     }
   
-  //   const ModelArray: SKUListDto[] = Array.from(DataMap.values());
-  //   return new CommonResponseModel(true,1,'data retrived', ModelArray);
-  // }
+//     const ListArray: SKUDTO[] = Array.from(DataMap.values());
+//     return new CommonResponseModel(true,1,'data retrived', ListArray);
+//   }
 
+
+async getSkuList(req: SKUlistFilterRequest): Promise<CommonResponseModel> {
+  const data = await this.itemSkuRepo.getSkuList(req);
+console.log(req,'service');
+  if (data.length === 0) {
+    return new CommonResponseModel(false, 0, 'data not found');
+  }
+
+  const DataMap = new Map<string, SKUDTO>();
+
+  for (const res of data) {
+    if (!DataMap.has(res.item_id)) {
+      DataMap.set(res.item_id, new SKUDTO(res.item_code, res.item_id, []));
+    }
+    const Sku = DataMap.get(res.item_id)?.sku;
+    // const phase = monthData.find(e => e.phasetype === rec.prod_plan_type
+    if (Sku) {
+      const data1 = new SKUListDto(
+        res.item_sku_id,
+        res.sku_code,
+        res.size_id,
+        res.size,
+        res.color_id,
+        res.color,
+        res.destination_id,
+        res.destination
+      );
+      Sku.push(data1);
+    }
+  }
+
+  const ListArray: SKUDTO[] = Array.from(DataMap.values());
+  return new CommonResponseModel(true, 1, 'data retrieved', ListArray);
+}
 
 async getItemCode():Promise<CommonResponseModel>{
   try{
