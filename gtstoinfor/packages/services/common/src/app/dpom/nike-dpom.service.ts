@@ -943,7 +943,6 @@ export class DpomService {
     async getOrderAcceptanceData(req: nikeFilterRequest): Promise<CommonResponseModel> {
         try {
             const data = await this.dpomRepository.getOrderAcceptanceDat(req);
-            //   console.log(req,'request')
             if (data.length > 0) {
                 return new CommonResponseModel(true, 1, 'Data retrieved', data);
             } else {
@@ -1206,7 +1205,6 @@ export class DpomService {
                 )
             }
             sizeDateMap.get(rec.po_and_line).sizeWiseData.push(new MarketingReportSizeModel(rec.size_description, rec.size_qty, rec.gross_price_fob, rec.fob_currency_code, rec.shahi_confirmed_gross_price, rec.shahi_confirmed_gross_price_currency_code, rec.ne_inc_disc, rec.net_inc_disc_currency_code, rec.trading_net_inc_disc, rec.trading_net_currency_code, rec.legal_po_price, rec.legal_po_currency, rec.co_price, rec.co_price_currency, rec.crm_co_qty, rec.legal_po_qty, rec.actual_shipped_qty));
-            console.log(rec.trading_net_inc_disc,"rec")
 
         }
         const dataModelArray: MarketingReportModel[] = [];
@@ -1509,37 +1507,13 @@ export class DpomService {
         }
     }
 
-    async getPriceDifferenceReport(req: FobPriceDiffRequest): Promise<CommonResponseModel> {
-        const conditions = [];
-        const queryParams: any[] = [];
-
-        let query = `SELECT DISTINCT d.po_number as poNumber,d.po_and_line as poAndLine,d.po_line_item_number as poLineItemNumber,d.style_number as styleNumber,d.size_description as sizeDescription,d.gross_price_fob as grossPriceFob,d.fob_currency_code as fobCurrencyCode,f.shahi_confirmed_gross_price as shahiConfirmedgrossPrice, f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
-        LEFT JOIN fob_price f ON f.style_number = d.style_number AND f.size_description = d.size_description AND f.color_code = SUBSTRING_INDEX(d.product_code, '-', -1) and f.planning_season_code = d.planning_season_code `;
-
-        if (req.poAndLine) {
-            conditions.push(`d.po_and_line = ?`);
-            queryParams.push(req.poAndLine);
-        }
-        if (req.styleNumber) {
-            conditions.push(`d.style_number = ?`);
-            queryParams.push(req.styleNumber);
-        }
-        if (req.sizeDescription) {
-            conditions.push(`d.size_description = ?`);
-            queryParams.push(req.sizeDescription);
-        }
-        if (conditions.length > 0) {
-            const conditionString = conditions.join(' AND ');
-            query += ` AND (${conditionString})`;
-        }
-
-        const data = await this.dpomRepository.query(query, queryParams);
-
-        if (data.length) {
+    async getPriceDifferenceReport(req?: FobPriceDiffRequest): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getfobPriceReportData(req)
+        if( data.length > 0){
             return new CommonResponseModel(true, 1, 'data retrieved', data);
-        } else {
-            return new CommonResponseModel(false, 0, 'error');
-        }
+        }else{
+            return new CommonResponseModel(false, 0, 'Data not retrived', []);
+        }  
     }
 
     async getPpmPlantForMarketing(): Promise<CommonResponseModel> {

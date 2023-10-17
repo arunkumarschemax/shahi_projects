@@ -14,7 +14,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { diffChars } from 'diff';
 import PoDetailedview from './reports/po-detailed-view';
 import { TreeNode } from 'antd/es/tree-select';
-import { CustomColumn } from '../../components';
+// import { CustomColumn } from '../../components';
 // import { summaryColumns } from './reports/summary-columns';
 const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 
