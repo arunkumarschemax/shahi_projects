@@ -248,7 +248,8 @@ export function POPDFInfoGrid() {
                     ]}
                 >
                     {isModalOpen1 && <ChangeComparision data={{ poNumber }} />}
-                    <Button onClick={cancelHandle} style={{ color: "red", flexDirection: 'column-reverse' }} > Close</Button>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Button onClick={cancelHandle} style={{ color: "red", flexDirection: 'column-reverse' }} > Close</Button></div>
                 </Modal>
             </Card>
         </>

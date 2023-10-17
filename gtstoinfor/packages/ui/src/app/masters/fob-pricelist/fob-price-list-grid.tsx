@@ -250,10 +250,10 @@ const FobPriceListGrid = () => {
     <>
       <div>
         <Card
-          extra={<span><Button onClick={() => navigate('/masters/fob-price-list-form/', { state: { name: 'new' } })} type={'primary'}>New</Button></span>}
-          headStyle={{ height: '50px' }}
-          title={<><span>Fob Price List</span><span><Button onClick={() => navigate('/masters/fob-price-list-form', { state: { name: 'excel' } })} style={{ float: 'right', marginRight: '2px' }} type='primary'>CSV Upload</Button></span></>}
-        >
+          extra={<span><Button onClick={() => navigate('/masters/fob-price-list-form/', { state: { name: 'new' } })} style={{height:32}} type={'primary'}>New</Button></span>}
+          headStyle={{ height: '53px' }}
+          title={<><span>Fob Price List</span><span>
+            <Button onClick={() => navigate('/masters/fob-price-list-form', { state: { name: 'excel'} })} style={{ float: 'right',height:33, marginRight: '2px' }}  type='primary'>CSV Upload</Button></span></>}>
           <Table columns={Columns}
             dataSource={fob}
             className="custom-table-wrapper"
@@ -269,11 +269,13 @@ const FobPriceListGrid = () => {
             scroll={{ x: 1000, y: 450 }}
           />
         </Card>
-        <Drawer bodyStyle={{ paddingBottom: 80 }} title='update' width={window.innerWidth > 768 ? '75%' : '85%'}
+        <Drawer bodyStyle={{ paddingBottom: 80 }}  width={window.innerWidth > 768 ? '75%' : '85%'}
           onClose={closeDrawer} visible={drawerVisible} closable={true}>
           <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small' >
             <FobPriceListForm
               updateItem={updateFob} Data={factoryData} isUpdate={true} closeForm={closeDrawer} />
+               <div style={{ display: 'flex', justifyContent: 'right' }}>
+              <Button onClick={closeDrawer} style={{color:'red',marginTop:10}}>Cancel</Button></div>
           </Card>
         </Drawer>
       </div>
