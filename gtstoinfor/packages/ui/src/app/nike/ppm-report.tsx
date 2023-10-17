@@ -180,9 +180,6 @@ const PPMReport = () => {
     if (form.getFieldValue('destinationCountry') !== undefined) {
       req.destinationCountry = form.getFieldValue('destinationCountry');
     }
-    if (form.getFieldValue('plant') !== undefined) {
-      req.plant = form.getFieldValue('plant');
-    }
     if (form.getFieldValue('item') !== undefined) {
       req.item = form.getFieldValue('item');
     }
@@ -215,6 +212,12 @@ const PPMReport = () => {
     }
     if (form.getFieldValue('plant') !== undefined) {
       req.plant = form.getFieldValue('plant');
+    }
+    if (form.getFieldValue('gac') !== undefined) {
+      req.gacStartDate = (form.getFieldValue('gac')[0]).format('YYYY-MM-DD');
+    }
+    if (form.getFieldValue('gac') !== undefined) {
+      req.gacEndDate = (form.getFieldValue('gac')[1]).format('YYYY-MM-DD');
     }
     setTableLoading(true)
     service.getPPMData(req)
@@ -1087,7 +1090,7 @@ const PPMReport = () => {
               'Item Vas Text in PDF PO': item.itemVasTextPDF,
               'Diff of Item Vas Text': '-',
               'Item Text': item.itemText,
-              'Hanger Po': item.allocatedQuantity,
+              'Hanger Po': item.hanger,
               'Change Register': item.displayName
             });
           });
@@ -1234,10 +1237,10 @@ const PPMReport = () => {
   const handleTextClick = (remarks) => {
     setRemarks(remarks)
     setRemarkModal(true)
-}
-const onRemarksModalOk = () => {
+  }
+  const onRemarksModalOk = () => {
     setRemarkModal(false)
-}
+  }
 
   // function generateClassName(index) {
   //   isOdd = !isOdd; 
@@ -1824,8 +1827,8 @@ const onRemarksModalOk = () => {
             render: (text, record) => {
               const shprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
               const buyerprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobPrice;
-              let diff = Number(shprice)- Number(buyerprice)
-                return  diff  
+              let diff = Number(shprice) - Number(buyerprice)
+              return diff
             }
           },
           {
@@ -2004,10 +2007,10 @@ const onRemarksModalOk = () => {
               const Poprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoPrice;
               const coprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPrice;
               let diff = Number(Poprice) - Number(coprice)
-              if(Number(Poprice) && Number(coprice) !== null){ 
-                return  diff  
+              if (Number(Poprice) && Number(coprice) !== null) {
+                return diff
               }
-              else{
+              else {
                 return "-"
               }
             }
@@ -2063,10 +2066,10 @@ const onRemarksModalOk = () => {
               const PoQty = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoQty;
               const coQty = sizeWiseMap?.get(record.poAndLine)?.get(version)?.CRMCoQty;
               let diff = Number(PoQty) - Number(coQty)
-              if(Number(PoQty) && Number(coQty) !== null){ 
-                return  diff  
+              if (Number(PoQty) && Number(coQty) !== null) {
+                return diff
               }
-              else{
+              else {
                 return "-"
               }
             }
@@ -2096,7 +2099,7 @@ const onRemarksModalOk = () => {
                 }
               }
             }
-            
+
           },
           {
             title: (
@@ -2672,13 +2675,13 @@ const onRemarksModalOk = () => {
 
         render: (text, record) => {
           return (
-              <>
-                  {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
-                      {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
-                  </span></p></Tooltip></>) : (<>{record.itemText}</>)}
-              </>
+            <>
+              {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
+                {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
+              </span></p></Tooltip></>) : (<>{record.itemText}</>)}
+            </>
           )
-      }
+        }
       },
       {
         title: 'Hanger PO',
@@ -2965,7 +2968,7 @@ const onRemarksModalOk = () => {
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
               <Form.Item name='item' label='Item' >
                 <Select showSearch placeholder="Select Item" optionFilterProp="children" allowClear>
-                {item?.map((inc: any) => {
+                  {item?.map((inc: any) => {
                     const firstFourDigits = inc.item.substring(0, 4);
                     return <Option key={inc.id} value={inc.item}>{firstFourDigits}</Option>
                   })}
@@ -3129,6 +3132,11 @@ const onRemarksModalOk = () => {
                 </Select>
               </Form.Item>
             </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
+              <Form.Item label="GAC" name="gac">
+                <RangePicker />
+              </Form.Item>
+            </Col>
 
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
               <Form.Item>
@@ -3201,10 +3209,10 @@ const onRemarksModalOk = () => {
             <Button size='large' onClick={cancelHandle} style={{ color: 'white', backgroundColor: 'red', flexDirection: 'column-reverse' }}>Close</Button></div>
         </Modal>
         <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
-                <Card>
-                    <p>{itemText}</p>
-                </Card>
-            </Modal>
+          <Card>
+            <p>{itemText}</p>
+          </Card>
+        </Modal>
       </Card>
     </>
   )

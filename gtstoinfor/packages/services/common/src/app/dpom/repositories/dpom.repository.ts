@@ -406,7 +406,7 @@ export class DpomRepository extends Repository<DpomEntity> {
     //       .groupBy(`itemPrefix`);
     //     return await query.getRawMany();
     //   } while searching whith this item dropdown not showing data
-      
+
 
     async getFactoryforMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
@@ -568,7 +568,8 @@ export class DpomRepository extends Repository<DpomEntity> {
         }
         if (req.documentStartDate !== undefined) {
             query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndtDate}'`)
-        } if (req.productCode !== undefined) {
+        }
+        if (req.productCode !== undefined) {
             query.andWhere(`dpom.product_code ='${req.productCode}'`)
         }
         if (req.poNumber !== undefined) {
@@ -606,8 +607,12 @@ export class DpomRepository extends Repository<DpomEntity> {
         }
         if (req.planningSeasonYear !== undefined) {
             query.andWhere(`dpom.planning_season_year ='${req.planningSeasonYear}'`)
-        } if (req.geoCode !== undefined) {
+        }
+        if (req.geoCode !== undefined) {
             query.andWhere(`dpom.geo_code ='${req.geoCode}'`)
+        }
+        if (req.gacStartDate !== undefined) {
+            query.andWhere(`Date(dpom.gac) BETWEEN '${req.gacStartDate}' AND '${req.gacEndDate}'`)
         }
         if (req.DPOMLineItemStatus !== undefined && req.DPOMLineItemStatus.length > 0) {
             query.andWhere(`dpom.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
@@ -797,5 +802,5 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
 
     }
-    
+
 }
