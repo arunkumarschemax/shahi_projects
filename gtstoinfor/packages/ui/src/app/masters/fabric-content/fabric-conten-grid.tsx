@@ -1,8 +1,8 @@
  
 
 import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined, SearchOutlined } from '@ant-design/icons';
-import { AlertMessages, FactoryActivateDeactivateDto, FactoryDto, FobActivateDeactivateDto, Fobdto } from '@project-management-system/shared-models';
-import { FactoryService, FobService } from '@project-management-system/shared-services';
+import { AlertMessages, FabricContentActivateDeactivateDto, FabricContentdto, FactoryActivateDeactivateDto, FactoryDto, FobActivateDeactivateDto, Fobdto } from '@project-management-system/shared-models';
+import { FabricContentService, FactoryService, FobService } from '@project-management-system/shared-services';
 import { Button, Card, Col, Divider, Drawer, Input, message, Popconfirm, Row, Switch, Table, Tag, Tooltip } from 'antd';
 import React, { useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words';
@@ -11,28 +11,28 @@ import FabricContentForm from './fabric-content-form';
 
 const FabricContentGrid = () => {
     const navigate = useNavigate();
-  const service = new FobService();
+  const service = new FabricContentService();
   const searchInput = useRef(null);
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
-  const [fob, setFob] = useState<any>([]);
+  const [fabric, setFabric] = useState<any>([]);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [factoryData, setFactoryData] = useState<any>(undefined);
   const [page, setPage] = React.useState(1);
   const [pageSize, setPageSize] = useState(1);
 
   useEffect(() => {
-    getFobData()
+    getFabricData()
   }, []);
 
-  const getFobData = () => {
-    service.getFobPrice().then((res) => {
-      console.log(res, "res")
+  const getFabricData = () => {
+    service.getFabricContent().then((res) => {
+      // console.log(res, "res")
       if (res.status) {
-        setFob(res.data);
+        setFabric(res.data);
       } else {
 
-        setFob([])
+        setFabric([])
       }
     })
       .catch((error) => {
@@ -49,11 +49,11 @@ const FabricContentGrid = () => {
     setFactoryData(ViewData);
   }
 
-  const updateFob = (Data: Fobdto) => {
-    service.updateFobplist(Data).then(res => {
+  const updateFob = (Data: FabricContentdto) => {
+    service.updateFabricContent(Data).then(res => {
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Succesfully');
-        getFobData()
+        getFabricData()
         setDrawerVisible(false);
       }
       else {
@@ -64,13 +64,13 @@ const FabricContentGrid = () => {
     })
   }
 
-  const activateOrDeactivate = (values: FobActivateDeactivateDto) => {
+  const activateOrDeactivate = (values: FabricContentActivateDeactivateDto) => {
     values.isActive = values.isActive ? false : true
-    const req = new FobActivateDeactivateDto(values.id, values.isActive, values.versionFlag,)
+    const req = new FabricContentActivateDeactivateDto(values.id, values.isActive, values.versionFlag,)
     service.activateOrDeactivate(req).then(res => {
       if (res.status) {
         message.success(res.internalMessage)
-        getFobData();
+        getFabricData();
       }
     })
   }
@@ -161,16 +161,13 @@ const FabricContentGrid = () => {
     },
     {
       title: 'Component ',
-      dataIndex: 'Component',
-      // sorter: (a, b) => a.planningSeasonYear.length - b.planningSeasonYear.length,
-      // sortDirections: ['descend', 'ascend'],
-      // ...getColumnSearchProps('planningSeasonYear'),
+      dataIndex: 'component',
       align: 'center'
 
     },
     {
       title: 'Fabric Content',
-      dataIndex: 'fabric_content',
+      dataIndex: 'fabricContent',
       align: 'center'
 
     },
@@ -232,9 +229,10 @@ const FabricContentGrid = () => {
           extra={<span><Button onClick={() => navigate('/masters/fabric-content-form/', { state: { name: 'new' } })} style={{height:32}} type={'primary'}>New</Button></span>}
           headStyle={{ height: '53px' }}
           title={<><span>Fabric Content</span><span>
-            <Button onClick={() => navigate('/masters/fabric-content-form', { state: { name: 'excel'} })} style={{ float: 'right',height:33, marginRight: '2px' }}  type='primary'>CSV Upload</Button></span></>}>
+            {/* <Button onClick={() => navigate('/masters/fabric-content-form', { state: { name: 'excel'} })} style={{ float: 'right',height:33, marginRight: '2px' }}  type='primary'>CSV Upload</Button> */}
+            </span></>}>
           <Table columns={Columns}
-            dataSource={fob}
+            dataSource={fabric}
             className="custom-table-wrapper"
             bordered
             pagination={{

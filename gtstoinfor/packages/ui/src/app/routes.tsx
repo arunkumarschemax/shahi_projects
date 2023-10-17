@@ -7,7 +7,7 @@ import UserCreationForm from "./user-management/users/users-form"
 import UsersView from "./user-management/users/users-view"
 import FactoriesView from "./masters/factories/factories-view"
 import FactoriesForm from "./masters/factories/factories-form"
-import { FactoryDto, Fobdto } from "@project-management-system/shared-models"
+import { FabricContentdto, FactoryDto, Fobdto } from "@project-management-system/shared-models"
 import PdfUpload from "./nike/pdf-reader/pdf-upload"
 import OrdersCompareGrid from "./nike/nike-orders-compare"
 import PoFileImport from "./nike/reports/po-file-import"
@@ -121,7 +121,7 @@ export const AppRoutes = () => {
                         throw new Error("Function not implemented.")
                     }} />} />
                      <Route path='fabric-content-view' element={<FabricContentGrid />} />
-                    <Route path='fabric-content-form' element={<FabricContentForm Data={undefined} updateItem={function (Data: Fobdto): void {
+                    <Route path='fabric-content-form' element={<FabricContentForm Data={undefined} updateItem={function (Data: FabricContentdto): void {
                         throw new Error("Function not implemented.")
                     }} isUpdate={false} closeForm={function (): void {
                         throw new Error("Function not implemented.")
