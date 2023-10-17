@@ -2071,25 +2071,8 @@ const PPMReport = () => {
             dataIndex: '',
             align: 'right',
             width: 70,
-            // render: (text, record) => {
-            //   const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoQty;
-            //   const shippingTyp = sizeWiseMap?.get(record.poAndLine)?.get(version)?.shippingType;
-            //   if (sizeData  !== null) {
-            //     if (record.shippingType === 'DIRECT') {
-            //       return (
-            //         '0'
-            //       );
-            //     } else {
-            //       // const sizeQty = sizeData.sizeQty;
-            //       const result = 0.03 * sizeData;
-            //       return (
-            //         result.toFixed(3)
-            //       );
-            //     }
-            //   return sizeData ? sizeData : '-'
-            // },
-
-            render: (text, record) => {
+         
+                render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
               if (sizeData && sizeData.sizeQty !== null) {
                 if (record.shippingType === 'DIRECT') {
