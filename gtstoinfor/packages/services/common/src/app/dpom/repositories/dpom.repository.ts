@@ -97,8 +97,12 @@ export class DpomRepository extends Repository<DpomEntity> {
     async poLineItemStatusChange(): Promise<any[]> {
         const query = this.createQueryBuilder('o')
             .select(`o.po_number, o.item,o.po_and_line, o.factory,o.document_date,o.style_number,o.product_code,o.color_desc,o.destination_country,o.ogac,o.gac,o.item_text,
-            o.size_description,o.customer_order, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, od.created_at, od.old_val, od.new_val, od.odVersion`)
+            o.size_description,o.customer_order, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, od.created_at, od.old_val, od.new_val, od.odVersion, fm.shahi_confirmed_gross_price AS shahiOfferedPrice, 
+            o.co_price AS crmCoPrice,o.co_price_currency AS coPriceCurrency,
+            fm.shahi_confirmed_gross_price_currency_code AS shahiOfferedPricecurrency,o.legal_po_price,o.legal_po_currency `)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
+            .leftJoin(FobEntity, 'fm', `fm.style_number = o.style_number AND fm.color_code = SUBSTRING_INDEX(o.product_code, '-', -1) AND fm.size_description = o.size_description`)
+
             .where(` od.column_name='dpom_line_item_status' `)
         return await query.getRawMany();
     }

@@ -347,7 +347,7 @@ const FactoryPPMReport = () => {
                             'Global Category Core Focus': item.gccFocusCode,
                             'Global Category Core Focus Description': item.gccFocusDesc,
                             'Gender Age': item.genderAgeCode,
-                            'Gender Age Description': '',
+                            'Gender Age Description': item.genderAgeDesc,
                             'Destination Country Code ': item.destinationCountryCode,
                             'Destination Country Name': item.destinationCountry,
                             'Geo Code': item.geoCode,
@@ -378,7 +378,7 @@ const FactoryPPMReport = () => {
                             'Launch Code': item.launchCode,
                             'Mode Of Transportation': item.modeOfTransportationCode,
                             'In Co Terms': item.inCoTerms,
-                            'Inventory Segment Code': item.inventorySegmentCode,
+                            'Inventory Segment Code': String(item.inventorySegmentCode),
                             'Purchase Group': item.purchaseGroupCode,
                             'Purchase Group Name': item.purchaseGroupName,
                             'Reallocated Quantity': item.allocatedQuantity,
@@ -426,7 +426,7 @@ const FactoryPPMReport = () => {
                             'VAS-Size': item.VASSize,
                             'Item Vas Text': item.itemVasText,
                             'Item Text': item.itemText,
-                            'Hanger Po': item.allocatedQuantity
+                            'Hanger Po': item.hanger,
                         });
                     });
                     console.log(csvdata)
@@ -1356,10 +1356,10 @@ const FactoryPPMReport = () => {
         <>
             <Card title="Factory PPM" headStyle={{ fontWeight: 'bold' }}
                 extra={filteredData.length > 0 ? (<Button
-                    type="default"
-                    style={{ color: 'green' }}
-                    icon={<FileExcelFilled />}><CSVLink className="downloadbtn" filename="factory-ppm-report.csv" data={csvData}>
-                        Export to CSV
+                    // type="default"
+                     style={{ color: 'green' }}
+                    ><CSVLink className="downloadbtn" filename="factory-ppm-report.csv" data={csvData}>
+                       <FileExcelFilled /> Export to CSV
                     </CSVLink></Button>) : null}>
                 <Form
                     onFinish={getData}

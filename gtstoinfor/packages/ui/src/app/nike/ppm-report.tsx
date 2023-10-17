@@ -1,7 +1,7 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { MarketingModel, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 import { NikeService } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag, Statistic, Modal, TreeSelect } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag, Statistic, Modal, TreeSelect, Tooltip } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { ColumnsType } from 'antd/es/table';
@@ -53,7 +53,9 @@ const PPMReport = () => {
   const [tableLoading, setTableLoading] = useState<boolean>(false)
   const formatter = (value: number) => <CountUp end={value} separator="," />;
   const [isModalOpen1, setIsModalOpen1] = useState(false);
-  const [poLineProp, setPoLineProp] = useState<any>([])
+  const [poLineProp, setPoLineProp] = useState<any>([]);
+  const [remarkModal, setRemarkModal] = useState<boolean>(false)
+  const [itemText, setRemarks] = useState<string>('')
 
 
   useEffect(() => {
@@ -1227,6 +1229,14 @@ const PPMReport = () => {
     return sizeWiseMap;
   }
   let isOdd = false;
+
+  const handleTextClick = (remarks) => {
+    setRemarks(remarks)
+    setRemarkModal(true)
+}
+const onRemarksModalOk = () => {
+    setRemarkModal(false)
+}
 
   // function generateClassName(index) {
   //   isOdd = !isOdd; 
@@ -2682,12 +2692,14 @@ const PPMReport = () => {
         dataIndex: 'itemText', width: 80,
 
         render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+          return (
+              <>
+                  {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
+                      {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
+                  </span></p></Tooltip></>) : (<>{record.itemText}</>)}
+              </>
+          )
+      }
       },
       {
         title: 'Hanger PO',
@@ -3209,6 +3221,11 @@ const PPMReport = () => {
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Button size='large' onClick={cancelHandle} style={{ color: 'white', backgroundColor: 'red', flexDirection: 'column-reverse' }}>Close</Button></div>
         </Modal>
+        <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
+                <Card>
+                    <p>{itemText}</p>
+                </Card>
+            </Modal>
       </Card>
     </>
   )

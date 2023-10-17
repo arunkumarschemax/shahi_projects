@@ -1395,7 +1395,7 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'Size Description',
-            dataIndex: 'size_description', width: 70,
+            dataIndex: 'size_description', width: 80,align:'center'
             // ...getColumnSearchProps('size_description')
         },
 
@@ -1412,12 +1412,12 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'Shahi Offered Price from Master File  ',
-            dataIndex: '', width: 80,
+            dataIndex: 'shahiOfferedPrice', width: 80,align:'left'
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Shahi Offered Price currency from Master File ',
-            dataIndex: '', width: 80,
+            dataIndex: 'shahiOfferedPricecurrency', width: 80,
             //...getColumnSearchProps('po_number')
         },
         {
@@ -1462,27 +1462,35 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'Legal PDF PO Price',
-            dataIndex: '', width: 70,
-            // ...getColumnSearchProps('schedule_line_item_number')
+            dataIndex: 'legal_po_price', width: 70,
+            render: (text, record) => (
+                <>
+                    {Number(record.legal_po_price).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                </>
+            )
         },
         {
             title: 'Legal PDF PO Price Currency',
-            dataIndex: '', width: 80,
-            // ...getColumnSearchProps('schedule_line_item_number')
+            dataIndex: 'legal_po_currency', width: 80,
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    return text;
+                }
+            },
         },
         // {
         //     title: 'CRM CO Price',
         //     dataIndex: '',
-        //     ...getColumnSearchProps('schedule_line_item_number')
         // },
         // {
         //     title: 'CRM CO Price Currency',
         //     dataIndex: '',
-        //     // ...getColumnSearchProps('schedule_line_item_number')
         // },
         {
             title: 'comparission of CRM CO Price to Legal PDF PO Price',
-            dataIndex: '', width: 80,
+            dataIndex: '', width: 90,
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
