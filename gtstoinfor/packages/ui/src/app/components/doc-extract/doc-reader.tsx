@@ -7,6 +7,7 @@ import { extractDhl, extractDart, extractExpeditors, extractEfl, extractOocl, ex
 import { convertScannedPdfToSelectablePdf, extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 import { PDFDocument, rgb } from 'pdf-lib';
+import loadingSymbol from '../../../assets/images/1_yE-S7HG0Rg-ACAcnjvKf5Q.gif';
 export interface DocReaderProps {
     form: FormInstance<any>;
     extractedData: (data: any) => void;
@@ -56,7 +57,6 @@ export const DocReader = (props: DocReaderProps) => {
     const handlePdfToJSON = async (pdfDataUrl) => {
         setButtonClicked(true);
         setIsLoading(true);
-        setIsLoading(false);
         if (pdfDataUrl) {
             const response = await fetch(pdfDataUrl);
             const pdfBuffer = await response.arrayBuffer();
@@ -435,6 +435,7 @@ export const DocReader = (props: DocReaderProps) => {
                                                                 <span style={{ marginTop: '10px', color: 'white' }}>
                                                                     Please wait...
                                                                 </span>
+                                                                <img src={loadingSymbol} alt="Please wait..."  height={100} width={100}/>
                                                             </span>
                                                         ) : (
                                                             'Upload'
