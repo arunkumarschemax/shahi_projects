@@ -16,3 +16,10 @@ export class StyleOrderIdReq {
     }
 }
 
+export class VariantIdReq {
+    variantId:number
+    constructor(variantId:number){
+        this.variantId = variantId
+    }
+}
+
