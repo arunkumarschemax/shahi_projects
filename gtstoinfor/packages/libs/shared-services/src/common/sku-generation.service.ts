@@ -21,6 +21,7 @@ export class SKUGenerationService extends CommonAxiosService{
     } 
 
     async getSkuList(req:SKUlistFilterRequest):Promise<CommonResponseModel>{
+        console.log(req,'tttttttttttt')
         return this.axiosPostCall(this.URL +"/getSkuList",req)
     }
     async getAllitemsCode ():Promise<CommonResponseModel>{

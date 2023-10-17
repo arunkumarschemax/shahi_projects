@@ -14,6 +14,6 @@ import { StyleOrder } from '../style-order/style-order.entity';
   ],
   controllers: [ItemCreationController],
   providers: [ItemCreationService,ItemCreationAdapter,ApplicationExceptionHandler,ItemSkus,StyleOrder],
-  exports:[ItemCreationService]
+  exports:[]
 })
 export class ItemCreationModule {}

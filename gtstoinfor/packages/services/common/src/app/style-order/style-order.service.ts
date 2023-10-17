@@ -23,6 +23,9 @@ import { GenericTransactionManager } from "../../typeorm-transactions";
 import { StyleOrderRepository } from "./style-order-repo";
 import { CoLineRepository } from "./co-line.repo";
 import { ItemCreation } from "../fg-item/item_creation.entity";
+import { StyleOrderId } from "./style-order-id.request";
+import { VariantIdReq } from "./variant-id.req";
+import { Raw } from 'typeorm';
 
 @Injectable()
 
@@ -175,6 +178,66 @@ export class StyleOrderService{
     } catch(err){
         throw err
     }
-   } 
+   }
+   async cancelOrder(req:StyleOrderId):Promise<CommonResponseModel>{
+    const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
+    try{
+        await transactionalEntityManager.startTransaction();
+        console.log(req);
+        const updateStatus = await transactionalEntityManager.getRepository(StyleOrder).update({id:req.styleOrderId},{status:CustomerOrderStatusEnum.CLOSED});
+        if(updateStatus.affected > 0){
+            const updateCoLineStatus = await transactionalEntityManager.getRepository(CoLine).update({styleOrderInfo:{id:req.styleOrderId}},{status:CustomerOrderStatusEnum.CLOSED});
+            if(updateCoLineStatus.affected > 0){
+                await transactionalEntityManager.completeTransaction();
+                return new CommonResponseModel(true,1,'Order Cancelled Successfully. ',)
+            }
+            else{
+                await transactionalEntityManager.releaseTransaction();
+                return new CommonResponseModel(false,0,'Cancel Order failed. ',)
+            }
+        }
+        else{
+            await transactionalEntityManager.releaseTransaction();
+            return new CommonResponseModel(false,0,'Cancel Order failed. ',)
+        }
+    } catch(err){
+        throw err
+    }
+   }
 
+   async cancelVariantOrder(req:VariantIdReq):Promise<CommonResponseModel>{
+    const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
+    try{
+        await transactionalEntityManager.startTransaction();
+        console.log(req);
+        const styleOrderDetails = await transactionalEntityManager.getRepository(CoLine).findOne({where:{id:req.variantId}});
+        const updateCoLineStatus = await transactionalEntityManager.getRepository(CoLine).update({id:req.variantId},{status:CustomerOrderStatusEnum.CLOSED});
+        if(updateCoLineStatus.affected > 0){
+            const getCoLines = await transactionalEntityManager.getRepository(CoLine).find({where:{status:Raw(alias => `status !=  '${CustomerOrderStatusEnum.CLOSED}'`), id:Raw(alias => `id !=  '${req.variantId}'`)}});
+            if(getCoLines.length > 0){
+                await transactionalEntityManager.completeTransaction();
+                return new CommonResponseModel(true,1,'Order Cancelled Successfully. ',)
+            }
+            else{
+                console.log("jo")
+                console.log(styleOrderDetails);
+                const cancelOrder = await transactionalEntityManager.getRepository(StyleOrder).update({id:styleOrderDetails.styleOrderInfo.id},{status:CustomerOrderStatusEnum.CLOSED});
+                if(cancelOrder.affected > 0){
+                    await transactionalEntityManager.completeTransaction();
+                    return new CommonResponseModel(true,1,'Order Cancelled Successfully. ',)
+                }
+                else{
+                    await transactionalEntityManager.releaseTransaction();
+                    return new CommonResponseModel(false,0,'Cancel Order failed. ',)
+                }
+            }
+        }
+        else{
+            await transactionalEntityManager.releaseTransaction();
+            return new CommonResponseModel(false,0,'Cancel Order failed. ',)
+        }
+    } catch(err){
+        throw err
+    }
+   }
 }
