@@ -225,10 +225,10 @@ const PPMReport = () => {
           res.data.forEach(item => {
             csvdata.push({
               'Po+Line': item.poAndLine,
-              'Last Modified Date': moment(item.lastModifiedDate).format('MM/DD/YYYY'),
-              'Item': (item.item).substring(0, 4),
+              'Last Modified Date': item.lastModifiedDate,
+              'Item': item.item,
               'Factory': item.factory,
-              'Document Date': moment(item.documentDate).format('MM/DD/YYYY'),
+              'Document Date': item.documentDate,
               'Purchase Order Number': item.purchaseOrderNumber,
               'PO Line Item Number': item.poLineItemNumber,
               'DPOM Line Item Status': item.DPOMLineItemStatus,
@@ -268,9 +268,9 @@ const PPMReport = () => {
               'Diff of Ship to Address': '-',
               'CAB Code': item.CABCode,
               'Final Destination': '-',
-              'MRGAC': moment(item.MRGAC).format('MM/DD/YYYY'),
-              'OGAC': moment(item.OGAC).format('MM/DD/YYYY'),
-              'GAC': moment(item.GAC).format('MM/DD/YYYY'),
+              'MRGAC': item.MRGAC,
+              'OGAC': item.OGAC,
+              'GAC': item.GAC,
               'GAC Reason Code': item.GACReasonCode,
               'GAC Reason Description': item.GACReasonDesc,
               'Truck Out Date': item.truckOutDate,
@@ -1116,6 +1116,10 @@ const PPMReport = () => {
   //   excel.addDataSource(gridData);
   //   excel.saveAs(`ppm-report-${currentDate}.xlsx`);
   // }
+
+  const handleExport = () => {
+
+  }
 
   const totalItemQty = gridData?.map(i => i.totalItemQty)
   const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
