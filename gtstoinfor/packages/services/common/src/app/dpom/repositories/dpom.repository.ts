@@ -399,6 +399,14 @@ export class DpomRepository extends Repository<DpomEntity> {
             .groupBy(`dpom.item`)
         return await query.getRawMany();
     }
+    // async getItemforMarketing(): Promise<any[]> {
+    //     const query = this.createQueryBuilder('dpom')
+    //       .select(`LEFT(dpom.item, 4) AS itemPrefix, dpom.id`)
+    //       .where(`dpom.doc_type_code != :docType AND dpom.item <> ' '`, { docType: 'ZP26' })
+    //       .groupBy(`itemPrefix`);
+    //     return await query.getRawMany();
+    //   } while searching whith this item dropdown not showing data
+      
 
     async getFactoryforMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
