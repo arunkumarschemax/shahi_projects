@@ -578,7 +578,7 @@ const getAllItems = () => {
           columns={columns}
           dataSource={priceList}
           className="custom-table-wrapper"
-
+          size='small'
           pagination={{
             pageSize: 100, 
             onChange(current, pageSize) {

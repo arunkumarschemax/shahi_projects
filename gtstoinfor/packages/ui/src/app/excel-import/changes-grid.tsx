@@ -402,6 +402,7 @@ const ChangesGrid = () => {
         {
             title: 'Production Plan Type',
             dataIndex: 'prod_plan_type',
+            width:'150px',
             sorter: (a, b) => a.prod_plan_type?.localeCompare(b.prod_plan_type),
             sortDirections: [ "ascend","descend"],
         },
@@ -520,6 +521,7 @@ const ChangesGrid = () => {
         {
             title: <div style={{textAlign:'center'}}>Item Name</div>,
             dataIndex: 'item',
+            width:'400px',
             sorter: (a, b) => a.item?.localeCompare(b.item),
             sortDirections: [ "ascend","descend"],
         },
@@ -608,10 +610,17 @@ const ChangesGrid = () => {
             label: <b>Order Wise Quantity Variance: {qtyData?.length} </b>,
             children: (
                 qtyData.length > 0 ?(<Table className="custom-table-wrapper"
-            bordered dataSource={qtyData} columns={orderWisecolumns}
+            bordered dataSource={qtyData} columns={orderWisecolumns} size='small'
+            pagination={{
+                pageSize: 100, 
+                onChange(current, pageSize) {
+                    setPage(current);
+                    setPageSize(pageSize);
+                }
+            }}
             // scroll={{x:1000,y:500}}
-            scroll={{x:'max-content'}}
-            summary={(qtyData) => {
+            scroll={{x:'max-content',y:500}}
+            summary={(e) => {
                 let totalLastQty = 0;
                 let totalRecQty = 0;
                 let defData = 0;
@@ -665,9 +674,16 @@ const ChangesGrid = () => {
             label: <b>Item Wise Quantity Variance: {differenceQtyData?.length}</b>,
             children: (
                 differenceQtyData.length > 0 ?(<Table className="custom-table-wrapper" bordered
-            dataSource={differenceQtyData} columns={ItemWisecolumns} pagination={false}
+            dataSource={differenceQtyData} columns={ItemWisecolumns} size='small'
+            pagination={{
+                pageSize: 100, 
+                onChange(current, pageSize) {
+                    setPage(current);
+                    setPageSize(pageSize);
+                }
+            }}
             // scroll={{x:1000,y:500}}
-            scroll={{x:'max-content'}}
+            scroll={{x:'max-content',y:500}}
                 summary={(differenceQtyData) => {
                     let totalLastQty = 0;
                     let totalRecQty = 0;

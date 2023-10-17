@@ -639,8 +639,9 @@ const SeasonWiseReport = () => {
                 dataSource={data?.[0]}
                 columns={columnsWH}
                 summary={generateSummaryWH}
-                className="custom-table-wrapper price-table"
+                className="custom-table-wrapper"
                 scroll={{x:'max-content',y:500}}
+                size='small'
                 pagination={{
                   pageSize: 100, 
                   onChange(current, pageSize) {
@@ -666,7 +667,8 @@ const SeasonWiseReport = () => {
                 scroll={{x:'max-content',y:500}}
                 columns={columnsEXF}
                 summary={generateSummaryEXF}
-                className="custom-table-wrapper price-table"
+                className="custom-table-wrapper"
+                size='small'
                 pagination={{
                   pageSize: 100, 
                   onChange(current, pageSize) {
@@ -692,7 +694,8 @@ const SeasonWiseReport = () => {
                 // scroll={{x:1500,y:500}}
                 scroll={{x:'max-content',y:500}}
                 summary={generateSummaryWH}
-                className="custom-table-wrapper price-table"
+                className="custom-table-wrapper"
+                size='small'
                 pagination={{
                   pageSize: 100, 
                   onChange(current, pageSize) {
@@ -718,7 +721,8 @@ const SeasonWiseReport = () => {
                 // scroll={{x:1500,y:500}}
                 scroll={{x:'max-content',y:500}}
                 summary={generateSummaryEXF}
-                className="custom-table-wrapper price-table"
+                className="custom-table-wrapper"
+                size='small'
                 pagination={{
                   pageSize: 100, 
                   onChange(current, pageSize) {
@@ -744,7 +748,8 @@ const SeasonWiseReport = () => {
                 scroll={{x:'max-content',y:500}}
                 // scroll={{x:'max-content'}}
                 summary={generateSummaryWH}
-                className="custom-table-wrapper price-table"
+                className="custom-table-wrapper"
+                size='small'
                 pagination={{
                   pageSize: 100, 
                   onChange(current, pageSize) {
@@ -770,7 +775,8 @@ const SeasonWiseReport = () => {
                 scroll={{x:'max-content',y:500}}
                 // scroll={{x:'max-content'}}
                 summary={generateSummaryEXF}
-                className="custom-table-wrapper price-table"
+                className="custom-table-wrapper"
+                size='small'
                 pagination={{
                   pageSize: 100, 
                   onChange(current, pageSize) {

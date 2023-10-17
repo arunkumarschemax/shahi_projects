@@ -441,7 +441,8 @@ const getUploadedTime = () => {
       columns={columns}
       dataSource={priceList}
       scroll={{x:'max-content',y:500}}
-      className="custom-table-wrapper price-table"
+      size='small'
+      className="custom-table-wrapper"
       pagination={{
         pageSize: 100, 
         onChange(current, pageSize) {
