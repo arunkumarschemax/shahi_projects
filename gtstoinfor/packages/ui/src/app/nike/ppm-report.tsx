@@ -243,7 +243,7 @@ const PPMReport = () => {
               'Style Number': item.styleNumber,
               'Product Code': item.productCode,
               'Colour Description': item.colorDesc,
-              'Description With Fabric Content': '-',
+              'Description With Fabric Content': item.fabricContent,
               'Fabric Content as Per Washcare Label': '-',
               'Planning Season Code': item.planningSeasonCode,
               'Planning Season Year': item.planningSeasonYear,
@@ -1262,7 +1262,7 @@ const PPMReport = () => {
   //   { title: 'Style Number', dataIndex: 'styleNumber', key: 'styleNumber', isDefaultSelect: true },
   //   { title: 'Product Code', dataIndex: 'productCode', key: 'productCode', isDefaultSelect: true },
   //   { title: 'Colour Description', dataIndex: 'colorDesc', key: 'colorDesc', isDefaultSelect: true },
-  //   { title: 'Description With Fabric Content', dataIndex: '', key: 'descriptionWithFabContent', isDefaultSelect: true },
+  //   { title: 'Description With Fabric Content', dataIndex: 'fabricContent', key: 'fabricContent', isDefaultSelect: true },
   //   { title: 'Fabric Content as Per Washcare Label', dataIndex: '', key: 'fabricContentAsPer', isDefaultSelect: true },
   //   { title: 'Planning Season Code', dataIndex: 'planningSeasonCode', key: 'planningSeasonCode', isDefaultSelect: true },
   //   { title: 'Planning Season Year', dataIndex: 'planningSeasonYear', key: 'planningSeasonYear', isDefaultSelect: true },
@@ -1426,7 +1426,7 @@ const PPMReport = () => {
       },
       {
         title: 'Description With Fabric Content',
-        dataIndex: '', width: 85,
+        dataIndex: 'fabricContent', width: 85,
       },
       {
         title: 'Fabric Content as Per Washcare Label',
