@@ -344,16 +344,15 @@ export class DpomService {
 
                 // Calculate the difference in days
                 const daysDifference = date4.diff(date3, 'days');
-                const text = orderDetail.poLine.itemVas.valueAddedServiceInstructions ? orderDetail.poLine.itemVas.valueAddedServiceInstructions : ' '
-                //orderDetail.poLine.itemVas.valueAddedServiceInstructions;
-                const searchText = "HANGING IS REQUIRED";
-                let hanger: string;
-                if (text.includes(searchText)) {
+                const text = orderDetail.poLine.itemVas.valueAddedServiceInstructions;
+                const searchText = 'HANGING IS REQUIRED';
+                const isPresent = text?.includes(searchText)
+                let hanger;
+                if (isPresent) {
                     hanger = 'YES'
                 } else {
                     hanger = 'NO';
                 }
-
                 // Diverted PO's
                 const itemText = orderDetail.poLine.itemTextDetail ? orderDetail.poLine.itemTextDetail[0]?.textDetails : null;
                 const matches = [];
@@ -672,8 +671,8 @@ export class DpomService {
                 const daysDifference = days;
                 let version = 1;
                 const text = orderDetail.poLine.itemVas.valueAddedServiceInstructions;
-                const searchText = "HANGING IS REQUIRED";
-                let hanger: string;
+                const searchText = 'HANGING IS REQUIRED';
+                let hanger;
                 if (text.includes(searchText)) {
                     hanger = 'YES'
                 } else {
@@ -1216,9 +1215,18 @@ export class DpomService {
                 const yyyy = date.getFullYear();
                 formattedPCD = `${mm}/${dd}/${yyyy}`;
             }
+            let itemVasText;
+            const instructions = rec.item_vas_text;
+            const searchString = 'SPECIAL VAS PACKING INSTRUCTIONS';
+            const isPresent = instructions?.includes(searchString);
+            if (isPresent) {
+                itemVasText = instructions?.replace(/"/g, '')
+            } else {
+                itemVasText = instructions
+            }
             if (!sizeDateMap.has(rec.po_and_line)) {
                 sizeDateMap.set(
-                    rec.po_and_line, new MarketingReportModel(moment(rec.last_modified_date).format('MM/DD/YYYY'), rec.item ? (rec.item).substring(0, 4) : null, rec.factory, moment(rec.document_date).format('MM/DD/YYYY'), rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, coFinalAppDate, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac ? moment(rec.mrgac).format('MM/DD/YYYY') : '-', rec.ogac ? moment(rec.ogac).format('MM/DD/YYYY') : '-', rec.gac ? moment(rec.gac).format('MM/DD/YYYY') : '-', rec.truck_out_date ? moment(rec.truck_out_date).format('MM/DD/YYYY') : '-', rec.origin_receipt_date ? moment(rec.origin_receipt_date).format('MM/DD/YYYY') : '-', rec.factory_delivery_date ? moment(rec.factory_delivery_date).format('MM/DD/YYYY') : '-', rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_vas_pdf, rec.item_text, formattedPCD, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.hanger, [])
+                    rec.po_and_line, new MarketingReportModel(moment(rec.last_modified_date).format('MM/DD/YYYY'), rec.item ? (rec.item).substring(0, 4) : null, rec.factory, moment(rec.document_date).format('MM/DD/YYYY'), rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, coFinalAppDate, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac ? moment(rec.mrgac).format('MM/DD/YYYY') : '-', rec.ogac ? moment(rec.ogac).format('MM/DD/YYYY') : '-', rec.gac ? moment(rec.gac).format('MM/DD/YYYY') : '-', rec.truck_out_date ? moment(rec.truck_out_date).format('MM/DD/YYYY') : '-', rec.origin_receipt_date ? moment(rec.origin_receipt_date).format('MM/DD/YYYY') : '-', rec.factory_delivery_date ? moment(rec.factory_delivery_date).format('MM/DD/YYYY') : '-', rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, itemVasText, rec.item_vas_pdf, rec.item_text, formattedPCD, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.hanger, [])
                 )
             }
             sizeDateMap.get(rec.po_and_line).sizeWiseData.push(new MarketingReportSizeModel(rec.size_description, rec.size_qty, rec.gross_price_fob, rec.fob_currency_code, rec.shahi_confirmed_gross_price, rec.shahi_confirmed_gross_price_currency_code, rec.ne_inc_disc, rec.net_inc_disc_currency_code, rec.trading_net_inc_disc, rec.trading_net_currency_code, rec.legal_po_price, rec.legal_po_currency, rec.co_price, rec.co_price_currency, rec.crm_co_qty, rec.legal_po_qty, rec.actual_shipped_qty));
@@ -1526,11 +1534,11 @@ export class DpomService {
 
     async getPriceDifferenceReport(req?: FobPriceDiffRequest): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getfobPriceReportData(req)
-        if( data.length > 0){
+        if (data.length > 0) {
             return new CommonResponseModel(true, 1, 'data retrieved', data);
-        }else{
+        } else {
             return new CommonResponseModel(false, 0, 'Data not retrived', []);
-        }  
+        }
     }
 
     async getPpmPlantForMarketing(): Promise<CommonResponseModel> {

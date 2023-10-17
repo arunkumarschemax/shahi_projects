@@ -11,27 +11,27 @@ export class PpmDateFilterRequest {
     plant?: string;
     item?: string;
     factory?: string;
-    DPOMLineItemStatus?:string;
-    poNumber?:string;
-    docTypeCode?:string;
-    poLineItemNumber?:string;
-    styleNumber ?:string;
-    planningSeasonCode?:string;
-    planningSeasonYear?:string;
-    geoCode?:string;
+    DPOMLineItemStatus?: string;
+    poNumber?: string;
+    docTypeCode?: string;
+    poLineItemNumber?: string;
+    styleNumber?: string;
+    planningSeasonCode?: string;
+    planningSeasonYear?: string;
+    geoCode?: string;
+    gacStartDate?: string;
+    gacEndDate?: string;
 
-
-    
 
     constructor(
-        lastModifedStartDate?: any ,lastModifedEndtDate?: any ,documentStartDate?: any,
-        documentEndtDate?: any,productCode?: string,poandLine?: string,
-        colorDesc?: string,categoryDesc?: string,destinationCountry?: string,
-        plant?: string,item?: string,factory?: string,DPOMLineItemStatus?:string, poNumber?:string, docTypeCode?:string,
-        poLineItemNumber?:string,
-        styleNumber?:string,    planningSeasonCode?:string,
-        planningSeasonYear?:string,
-        geoCode?:string,
+        lastModifedStartDate?: any, lastModifedEndtDate?: any, documentStartDate?: any,
+        documentEndtDate?: any, productCode?: string, poandLine?: string,
+        colorDesc?: string, categoryDesc?: string, destinationCountry?: string,
+        plant?: string, item?: string, factory?: string, DPOMLineItemStatus?: string, poNumber?: string, docTypeCode?: string,
+        poLineItemNumber?: string,
+        styleNumber?: string, planningSeasonCode?: string,
+        planningSeasonYear?: string,
+        geoCode?: string, gacStartDate?: string, gacEndDate?: string
 
     ) {
         this.lastModifedStartDate = lastModifedStartDate;
@@ -48,14 +48,15 @@ export class PpmDateFilterRequest {
         this.factory = factory;
         this.DPOMLineItemStatus = DPOMLineItemStatus;
         this.poNumber = poNumber;
-        this.styleNumber=styleNumber;
+        this.styleNumber = styleNumber;
         this.docTypeCode = docTypeCode;
         this.poLineItemNumber = poLineItemNumber
         this.styleNumber = styleNumber;
         this.planningSeasonCode = planningSeasonCode;
         this.planningSeasonYear = planningSeasonYear;
-        this.geoCode= geoCode;
-        
+        this.geoCode = geoCode;
+        this.gacStartDate = gacStartDate;
+        this.gacEndDate = gacEndDate;
 
     }
 }
