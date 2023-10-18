@@ -64,6 +64,16 @@ const InvoiceReport = () => {
             },
         },
         {
+            title: 'GST Number',
+            dataIndex: 'gstNumber',
+            key: 'gstNumber',
+            sorter: (a, b) => a.gstNumber.localeCompare(b.gstNumber),
+            align: 'center',
+            render: (text: any, record: { gstNumber: any }) => {
+                return <>{record.gstNumber ? record.gstNumber : '-'}</>;
+            },
+        },
+        {
             title: 'Invoice Number',
             dataIndex: 'invoiceNumber',
             key: 'invoiceNumber',
@@ -76,20 +86,32 @@ const InvoiceReport = () => {
     ];
 
 
-    const handleDateChange = (dates, dateStrings) => {
-        console.log('Selected Dates: ', dateStrings);
-        const startDate = dateStrings[0];
-        const endDate = dateStrings[1];
-
-        const filteredByDate = formData.filter(item => {
-            if (item.createdAt) {
-                return item.createdAt >= startDate && item.createdAt <= endDate;
+    const handleDateChange = (startDate, endDate) => {
+        if (startDate && endDate) {
+            const startDateObj = new Date(startDate);
+            const endDateObj = new Date(endDate);
+    
+            if (startDateObj > endDateObj) {
+                message.error('Start date cannot be after end date.');
+            } else {
+                const formattedData = formData.filter(item => {
+                    if (item.createdAt) {
+                        const itemDate = new Date(item.createdAt.split('T')[0]);
+                        return itemDate >= startDateObj && itemDate <= endDateObj;
+                    }
+                    return false;
+                });
+    
+                setFilteredData(formattedData);
             }
-            return false;
-        });
-
-        setFilteredData(filteredByDate);
+        } else {
+            message.error('Please select both start and end dates.');
+        }
     };
+    
+
+
+
     const handleVendorFilterChange = (value: string | string[]) => {
         if (Array.isArray(value)) {
             setSelectedVendors(value);
@@ -133,6 +155,7 @@ const InvoiceReport = () => {
             return {
                 'S.No': index + 1,
                 'Vendor Name': item.venName,
+                'GST Number':item.gstNumber,
                 'Invoice Number': item.invoiceNumber,
                 'Created at': item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '',
             };
@@ -192,12 +215,11 @@ const InvoiceReport = () => {
                         size="small"
                         bodyStyle={{ display: 'none' }}
                     ></Card>
+                    
                 </Row>
 
                 <Row gutter={24}>
-                    <Col>
-                        <RangePicker onChange={handleDateChange} />
-                    </Col>
+
 
                     <br />
 
@@ -215,6 +237,10 @@ const InvoiceReport = () => {
                                 </Option>
                             ))}
                         </Select>
+                    </Col>
+                    <br />
+                    <Col>
+                        <RangePicker onChange={handleDateChange} />
                     </Col>
                 </Row>
                 <Row>
@@ -251,3 +277,5 @@ const InvoiceReport = () => {
 };
 
 export default InvoiceReport;
+
+
