@@ -5,7 +5,7 @@ import { Link, Route, Routes } from 'react-router-dom';
 import { logout, useIAMClientState } from '../../common';
 import { ExceptionComponent } from '../../common/exception-handling';
 import { IconType } from '../../common/iam-client-react/constants/icon-type';
-import { SchemaxAIDocx, PriceForm, VendorBranchInfoGrid } from '../../components';
+import { SchemaxAIDocx, PriceForm, VendorBranchInfoGrid, BuyersView } from '../../components';
 import { OnlineStatus } from '../header';
 import { components } from './all-components';
 import { svgIcons } from './all-svg-icons';
@@ -166,6 +166,7 @@ export const BasicLayout: React.FC = () => {
                             {getAllRoutes().map(rec => rec)}
                             <Route path="/VendorBranchInfoGrid" element={<VendorBranchInfoGrid />} />
                             <Route path="/doc-extract-form" element={<SchemaxAIDocx />} />
+                            <Route path="/BuyersView" element={<BuyersView />} />
                             <Route path="/invoice-report" element={<InvoiceReport/>} />
                             <Route path="/priceform" element={<PriceForm />} />
                             <Route path='/*' element={<ExceptionComponent statusCode={404} statusMessage='Sorry, the page you visited does not exist.' />} />
