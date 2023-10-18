@@ -250,7 +250,7 @@ const PPMReport = () => {
               'CO': item.customerOrder,
               'CO Final Approval Date': item.coFinalApprovalDate,
               'Plan No': item.planNo,
-              'Lead Time': item.leadTime,
+              'Lead Time': (item.leadTime) * -1,
               'Category': item.categoryCode,
               'Category Description': item.categoryDesc,
               'Vendor Code': item.vendorCode,
@@ -311,7 +311,7 @@ const PPMReport = () => {
               '2XL (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.CRMCoQty,
               '2XL (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.legalPoQty,
               '2XL (Diff of Quantity)': '-',
-              '2XL (Allowed Excess Ship Qty)': '-',
+              '2XL (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.sizeQty * 0.03).toFixed(3)) : '-',
               '2XL (Actual Shipped Qty)': '-',
               '2XL (Actual Ship %)': '-',
               'XL (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XL')?.sizeQty,
@@ -333,7 +333,7 @@ const PPMReport = () => {
               'XL (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL')?.CRMCoQty,
               'XL (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL')?.legalPoQty,
               'XL (Diff of Quantity)': '-',
-              'XL (Allowed Excess Ship Qty)': '-',
+              'XL (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XL')?.sizeQty * 0.03).toFixed(3)) : '-',
               'XL (Actual Shipped Qty)': '-',
               'XL (Actual Ship %)': '-',
               'L (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'L')?.sizeQty,
@@ -355,7 +355,7 @@ const PPMReport = () => {
               'L (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L')?.CRMCoQty,
               'L (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L')?.legalPoQty,
               'L (Diff of Quantity)': '-',
-              'L (Allowed Excess Ship Qty)': '-',
+              'L (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'L')?.sizeQty * 0.03).toFixed(3)) : '-',
               'L (Actual Shipped Qty)': '-',
               'L (Actual Ship %)': '-',
               'M (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'M')?.sizeQty,
@@ -377,7 +377,7 @@ const PPMReport = () => {
               'M (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M')?.CRMCoQty,
               'M (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M')?.legalPoQty,
               'M (Diff of Quantity)': '-',
-              'M (Allowed Excess Ship Qty)': '-',
+              'M (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'M')?.sizeQty * 0.03).toFixed(3)) : '-',
               'M (Actual Shipped Qty)': '-',
               'M (Actual Ship %)': '-',
               'S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'S')?.sizeQty,
@@ -399,7 +399,7 @@ const PPMReport = () => {
               'S (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S')?.CRMCoQty,
               'S (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S')?.legalPoQty,
               'S (Diff of Quantity)': '-',
-              'S (Allowed Excess Ship Qty)': '-',
+              'S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'S')?.sizeQty * 0.03).toFixed(3)) : '-',
               'S (Actual Shipped Qty)': '-',
               'S (Actual Ship %)': '-',
               'XS (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XS')?.sizeQty,
@@ -421,7 +421,7 @@ const PPMReport = () => {
               'XS (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS')?.CRMCoQty,
               'XS (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS')?.legalPoQty,
               'XS (Diff of Quantity)': '-',
-              'XS (Allowed Excess Ship Qty)': '-',
+              'XS (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XS')?.sizeQty * 0.03).toFixed(3)) : '-',
               'XS (Actual Shipped Qty)': '-',
               'XS (Actual Ship %)': '-',
               '3XL (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '3XL')?.sizeQty,
@@ -443,7 +443,7 @@ const PPMReport = () => {
               '3XL (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL')?.CRMCoQty,
               '3XL (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL')?.legalPoQty,
               '3XL (Diff of Quantity)': '-',
-              '3XL (Allowed Excess Ship Qty)': '-',
+              '3XL (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '3XL')?.sizeQty * 0.03).toFixed(3)) : '-',
               '3XL (Actual Shipped Qty)': '-',
               '3XL (Actual Ship %)': '-',
               '4XL (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '4XL')?.sizeQty,
@@ -465,7 +465,7 @@ const PPMReport = () => {
               '4XL (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL')?.CRMCoQty,
               '4XL (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL')?.legalPoQty,
               '4XL (Diff of Quantity)': '-',
-              '4XL (Allowed Excess Ship Qty)': '-',
+              '4XL (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '4XL')?.sizeQty * 0.03).toFixed(3)) : '-',
               '4XL (Actual Shipped Qty)': '-',
               '4XL (Actual Ship %)': '-',
               '5XL (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '5XL')?.sizeQty,
@@ -487,7 +487,7 @@ const PPMReport = () => {
               '5XL (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '5XL')?.CRMCoQty,
               '5XL (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '5XL')?.legalPoQty,
               '5XL (Diff of Quantity)': '-',
-              '5XL (Allowed Excess Ship Qty)': '-',
+              '5XL (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '5XL')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '5XL')?.sizeQty * 0.03).toFixed(3)) : '-',
               '5XL (Actual Shipped Qty)': '-',
               '5XL (Actual Ship %)': '-',
               'L-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'L-T')?.sizeQty,
@@ -509,7 +509,7 @@ const PPMReport = () => {
               'L-T (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L-T')?.CRMCoQty,
               'L-T (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L-T')?.legalPoQty,
               'L-T (Diff of Quantity)': '-',
-              'L-T (Allowed Excess Ship Qty)': '-',
+              'L-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'L-T')?.sizeQty * 0.03).toFixed(3)) : '-',
               'L-T (Actual Shipped Qty)': '-',
               'L-T (Actual Ship %)': '-',
               'L-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'L-S')?.sizeQty,
@@ -531,7 +531,7 @@ const PPMReport = () => {
               'L-S (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L-S')?.CRMCoQty,
               'L-S (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L-S')?.legalPoQty,
               'L-S (Diff of Quantity)': '-',
-              'L-S (Allowed Excess Ship Qty)': '-',
+              'L-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'L-S')?.sizeQty * 0.03).toFixed(3)) : '-',
               'L-S (Actual Shipped Qty)': '-',
               'L-S (Actual Ship %)': '-',
               'M-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'M-S')?.sizeQty,
@@ -553,7 +553,7 @@ const PPMReport = () => {
               'M-S (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M-S')?.CRMCoQty,
               'M-S (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M-S')?.legalPoQty,
               'M-S (Diff of Quantity)': '-',
-              'M-S (Allowed Excess Ship Qty)': '-',
+              'M-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'M-S')?.sizeQty * 0.03).toFixed(3)) : '-',
               'M-S (Actual Shipped Qty)': '-',
               'M-S (Actual Ship %)': '-',
               'M-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'M-T')?.sizeQty,
@@ -575,7 +575,7 @@ const PPMReport = () => {
               'M-T (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M-T')?.CRMCoQty,
               'M-T (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M-T')?.legalPoQty,
               'M-T (Diff of Quantity)': '-',
-              'M-T (Allowed Excess Ship Qty)': '-',
+              'M-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'M-T')?.sizeQty * 0.03).toFixed(3)) : '-',
               'M-T (Actual Shipped Qty)': '-',
               'M-T (Actual Ship %)': '-',
               'S-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'S-S')?.sizeQty,
@@ -597,7 +597,7 @@ const PPMReport = () => {
               'S-S (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S-S')?.CRMCoQty,
               'S-S (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S-S')?.legalPoQty,
               'S-S (Diff of Quantity)': '-',
-              'S-S (Allowed Excess Ship Qty)': '-',
+              'S-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'S-S')?.sizeQty * 0.03).toFixed(3)) : '-',
               'S-S (Actual Shipped Qty)': '-',
               'S-S (Actual Ship %)': '-',
               'S-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'S-T')?.sizeQty,
@@ -619,7 +619,7 @@ const PPMReport = () => {
               'S-T (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S-T')?.CRMCoQty,
               'S-T (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S-T')?.legalPoQty,
               'S-T (Diff of Quantity)': '-',
-              'S-T (Allowed Excess Ship Qty)': '-',
+              'S-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'S-T')?.sizeQty * 0.03).toFixed(3)) : '-',
               'S-T (Actual Shipped Qty)': '-',
               'S-T (Actual Ship %)': '-',
               'XL-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-T')?.sizeQty,
@@ -641,7 +641,7 @@ const PPMReport = () => {
               'XL-T (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-T')?.CRMCoQty,
               'XL-T (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-T')?.legalPoQty,
               'XL-T (Diff of Quantity)': '-',
-              'XL-T (Allowed Excess Ship Qty)': '-',
+              'XL-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XL-T')?.sizeQty * 0.03).toFixed(3)) : '-',
               'XL-T (Actual Shipped Qty)': '-',
               'XL-T (Actual Ship %)': '-',
               'XS-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-S')?.sizeQty,
@@ -663,7 +663,7 @@ const PPMReport = () => {
               'XS-S (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-S')?.CRMCoQty,
               'XS-S (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-S')?.legalPoQty,
               'XS-S (Diff of Quantity)': '-',
-              'XS-S (Allowed Excess Ship Qty)': '-',
+              'XS-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XS-S')?.sizeQty * 0.03).toFixed(3)) : '-',
               'XS-S (Actual Shipped Qty)': '-',
               'XS-S (Actual Ship %)': '-',
               'XS-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-T')?.sizeQty,
@@ -685,7 +685,7 @@ const PPMReport = () => {
               'XS-T (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-T')?.CRMCoQty,
               'XS-T (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-T')?.legalPoQty,
               'XS-T (Diff of Quantity)': '-',
-              'XS-T (Allowed Excess Ship Qty)': '-',
+              'XS-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XS-T')?.sizeQty * 0.03).toFixed(3)) : '-',
               'XS-T (Actual Shipped Qty)': '-',
               'XS-T (Actual Ship %)': '-',
               '2XL-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-T')?.sizeQty,
@@ -707,7 +707,7 @@ const PPMReport = () => {
               '2XL-T (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-T')?.CRMCoQty,
               '2XL-T (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-T')?.legalPoQty,
               '2XL-T (Diff of Quantity)': '-',
-              '2XL-T (Allowed Excess Ship Qty)': '-',
+              '2XL-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '2XL-T')?.sizeQty * 0.03).toFixed(3)) : '-',
               '2XL-T (Actual Shipped Qty)': '-',
               '2XL-T (Actual Ship %)': '-',
               'XL-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-S')?.sizeQty,
@@ -729,7 +729,7 @@ const PPMReport = () => {
               'XL-S (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-S')?.CRMCoQty,
               'XL-S (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-S')?.legalPoQty,
               'XL-S (Diff of Quantity)': '-',
-              'XL-S (Allowed Excess Ship Qty)': '-',
+              'XL-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XL-S')?.sizeQty * 0.03).toFixed(3)) : '-',
               'XL-S (Actual Shipped Qty)': '-',
               'XL-S (Actual Ship %)': '-',
               '2XLTT (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '2XLTT')?.sizeQty,
@@ -751,7 +751,7 @@ const PPMReport = () => {
               '2XLTT (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XLTT')?.CRMCoQty,
               '2XLTT (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XLTT')?.legalPoQty,
               '2XLTT (Diff of Quantity)': '-',
-              '2XLTT (Allowed Excess Ship Qty)': '-',
+              '2XLTT (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XLTT')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '2XLTT')?.sizeQty * 0.03).toFixed(3)) : '-',
               '2XLTT (Actual Shipped Qty)': '-',
               '2XLTT (Actual Ship %)': '-',
               '3XL-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-T')?.sizeQty,
@@ -773,7 +773,7 @@ const PPMReport = () => {
               '3XL-T (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-T')?.CRMCoQty,
               '3XL-T (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-T')?.legalPoQty,
               '3XL-T (Diff of Quantity)': '-',
-              '3XL-T (Allowed Excess Ship Qty)': '-',
+              '3XL-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '3XL-T')?.sizeQty * 0.03).toFixed(3)) : '-',
               '3XL-T (Actual Shipped Qty)': '-',
               '3XL-T (Actual Ship %)': '-',
               'LTT (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'LTT')?.sizeQty,
@@ -795,7 +795,7 @@ const PPMReport = () => {
               'LTT (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'LTT')?.CRMCoQty,
               'LTT (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'LTT')?.legalPoQty,
               'LTT (Diff of Quantity)': '-',
-              'LTT (Allowed Excess Ship Qty)': '-',
+              'LTT (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'LTT')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'LTT')?.sizeQty * 0.03).toFixed(3)) : '-',
               'LTT (Actual Shipped Qty)': '-',
               'LTT (Actual Ship %)': '-',
               'XLTT (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XLTT')?.sizeQty,
@@ -817,7 +817,7 @@ const PPMReport = () => {
               'XLTT (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XLTT')?.CRMCoQty,
               'XLTT (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XLTT')?.legalPoQty,
               'XLTT (Diff of Quantity)': '-',
-              'XLTT (Allowed Excess Ship Qty)': '-',
+              'XLTT (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XLTT')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XLTT')?.sizeQty * 0.03).toFixed(3)) : '-',
               'XLTT (Actual Shipped Qty)': '-',
               'XLTT (Actual Ship %)': '-',
               '2XS (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.sizeQty,
@@ -839,7 +839,7 @@ const PPMReport = () => {
               '2XS (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.CRMCoQty,
               '2XS (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.legalPoQty,
               '2XS (Diff of Quantity)': '-',
-              '2XS (Allowed Excess Ship Qty)': '-',
+              '2XS (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.sizeQty * 0.03).toFixed(3)) : '-',
               '2XS (Actual Shipped Qty)': '-',
               '2XS (Actual Ship %)': '-',
               '4XL-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-T')?.sizeQty,
@@ -861,7 +861,7 @@ const PPMReport = () => {
               '4XL-T (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-T')?.CRMCoQty,
               '4XL-T (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-T')?.legalPoQty,
               '4XL-T (Diff of Quantity)': '-',
-              '4XL-T (Allowed Excess Ship Qty)': '-',
+              '4XL-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '4XL-T')?.sizeQty * 0.03).toFixed(3)) : '-',
               '4XL-T (Actual Shipped Qty)': '-',
               '4XL-T (Actual Ship %)': '-',
               '2XL-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-S')?.sizeQty,
@@ -883,7 +883,7 @@ const PPMReport = () => {
               '2XL-S (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-S')?.CRMCoQty,
               '2XL-S (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-S')?.legalPoQty,
               '2XL-S (Diff of Quantity)': '-',
-              '2XL-S (Allowed Excess Ship Qty)': '-',
+              '2XL-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '2XL-S')?.sizeQty * 0.03).toFixed(3)) : '-',
               '2XL-S (Actual Shipped Qty)': '-',
               '2XL-S (Actual Ship %)': '-',
               'MTT (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'MTT')?.sizeQty,
@@ -905,7 +905,7 @@ const PPMReport = () => {
               'MTT (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'MTT')?.CRMCoQty,
               'MTT (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'MTT')?.legalPoQty,
               'MTT (Diff of Quantity)': '-',
-              'MTT (Allowed Excess Ship Qty)': '-',
+              'MTT (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'MTT')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'MTT')?.sizeQty * 0.03).toFixed(3)) : '-',
               'MTT (Actual Shipped Qty)': '-',
               'MTT (Actual Ship %)': '-',
               '3XL-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-S')?.sizeQty,
@@ -927,7 +927,7 @@ const PPMReport = () => {
               '3XL-S (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-S')?.CRMCoQty,
               '3XL-S (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-S')?.legalPoQty,
               '3XL-S (Diff of Quantity)': '-',
-              '3XL-S (Allowed Excess Ship Qty)': '-',
+              '3XL-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '3XL-S')?.sizeQty * 0.03).toFixed(3)) : '-',
               '3XL-S (Actual Shipped Qty)': '-',
               '3XL-S (Actual Ship %)': '-',
               '4XL-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-S')?.sizeQty,
@@ -949,7 +949,7 @@ const PPMReport = () => {
               '4XL-S (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-S')?.CRMCoQty,
               '4XL-S (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-S')?.legalPoQty,
               '4XL-S (Diff of Quantity)': '-',
-              '4XL-S (Allowed Excess Ship Qty)': '-',
+              '4XL-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '4XL-S')?.sizeQty * 0.03).toFixed(3)) : '-',
               '4XL-S (Actual Shipped Qty)': '-',
               '4XL-S (Actual Ship %)': '-',
               '3XLTT (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '3XLTT')?.sizeQty,
@@ -971,7 +971,7 @@ const PPMReport = () => {
               '3XLTT (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XLTT')?.CRMCoQty,
               '3XLTT (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XLTT')?.legalPoQty,
               '3XLTT (Diff of Quantity)': '-',
-              '3XLTT (Allowed Excess Ship Qty)': '-',
+              '3XLTT (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XLTT')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '3XLTT')?.sizeQty * 0.03).toFixed(3)) : '-',
               '3XLTT (Actual Shipped Qty)': '-',
               '3XLTT (Actual Ship %)': '-',
               'STT (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'STT')?.sizeQty,
@@ -993,7 +993,7 @@ const PPMReport = () => {
               'STT (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'STT')?.CRMCoQty,
               'STT (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'STT')?.legalPoQty,
               'STT (Diff of Quantity)': '-',
-              'STT (Allowed Excess Ship Qty)': '-',
+              'STT (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'STT')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'STT')?.sizeQty * 0.03).toFixed(3)) : '-',
               'STT (Actual Shipped Qty)': '-',
               'STT (Actual Ship %)': '-',
               'L+ (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'L+')?.sizeQty,
@@ -1015,7 +1015,7 @@ const PPMReport = () => {
               'L+ (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L+')?.CRMCoQty,
               'L+ (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L+')?.legalPoQty,
               'L+ (Diff of Quantity)': '-',
-              'L+ (Allowed Excess Ship Qty)': '-',
+              'L+ (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L+')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'L+')?.sizeQty * 0.03).toFixed(3)) : '-',
               'L+ (Actual Shipped Qty)': '-',
               'L+ (Actual Ship %)': '-',
               'M+ (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'M+')?.sizeQty,
@@ -1037,7 +1037,7 @@ const PPMReport = () => {
               'M+ (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M+')?.CRMCoQty,
               'M+ (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M+')?.legalPoQty,
               'M+ (Diff of Quantity)': '-',
-              'M+ (Allowed Excess Ship Qty)': '-',
+              'M+ (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M+')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'M+')?.sizeQty * 0.03).toFixed(3)) : '-',
               'M+ (Actual Shipped Qty)': '-',
               'M+ (Actual Ship %)': '-',
               'S+ (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'S+')?.sizeQty,
@@ -1059,7 +1059,7 @@ const PPMReport = () => {
               'S+ (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S+')?.CRMCoQty,
               'S+ (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S+')?.legalPoQty,
               'S+ (Diff of Quantity)': '-',
-              'S+ (Allowed Excess Ship Qty)': '-',
+              'S+ (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S+')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'S+')?.sizeQty * 0.03).toFixed(3)) : '-',
               'S+ (Actual Shipped Qty)': '-',
               'S+ (Actual Ship %)': '-',
               'XL+ (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XL+')?.sizeQty,
@@ -1081,7 +1081,7 @@ const PPMReport = () => {
               'XL+ (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL+')?.CRMCoQty,
               'XL+ (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL+')?.legalPoQty,
               'XL+ (Diff of Quantity)': '-',
-              'XL+ (Allowed Excess Ship Qty)': '-',
+              'XL+ (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL+')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XL+')?.sizeQty * 0.03).toFixed(3)) : '-',
               'XL+ (Actual Shipped Qty)': '-',
               'XL+ (Actual Ship %)': '-',
               'Trading Co PO Number': item.tradingCoPoNumber,
@@ -1399,6 +1399,18 @@ const PPMReport = () => {
         width: 80,
       },
       {
+        title: 'Trading Co PO Number',
+        dataIndex: 'tradingCoPoNumber',
+        width: 80,
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
         title: 'DPOM Line Item Status',
         dataIndex: 'DPOMLineItemStatus', width: 80,
       },
@@ -1474,10 +1486,9 @@ const PPMReport = () => {
         render: (text) => {
           if (!isNaN(parseFloat(text))) {
             // If it's a valid number, render it
-            return parseFloat(text).toFixed(2); // You can format it as needed
+            return parseFloat(text) * -1; // You can format it as needed
           } else {
-            // If it's not a valid number, render a placeholder or an empty string
-            return 'N/A'; // Or any other desired text
+            return '-'; // Or any other desired text
           }
         }
       },
@@ -1827,15 +1838,15 @@ const PPMReport = () => {
             render: (text, record) => {
               const shprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
               const buyerprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobPrice;
-            
+
               if (isNaN(shprice) || isNaN(buyerprice)) {
                 return '-';
               } else {
                 let diff = Number(shprice) - Number(buyerprice);
-                return diff;
+                return (diff).toFixed(2);
               }
             }
-            
+
           },
           {
             title: (
@@ -1960,7 +1971,7 @@ const PPMReport = () => {
               >CO Price</div>
             ),
             dataIndex: 'coPrice',
-             align: 'right',
+            align: 'right',
             width: 60,
             render: (text, record) => {
               const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPrice;
@@ -1983,20 +1994,6 @@ const PPMReport = () => {
               return sizeData ? sizeData : '-'
             }
           },
-          // {
-          //   title:(
-          //     <div
-          //       style={{backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
-          //       height:130,justifyContent: 'center',color: 'Black', 
-          //       }}
-          //     >Diff of Price</div>
-          //   ),
-          //   dataIndex: '',
-          //   align: 'right',
-          //   width:40,
-
-
-          // },repeated multiple times 
           {
             title: (
               <div
@@ -2005,6 +2002,30 @@ const PPMReport = () => {
                   height: 130, justifyContent: 'center', color: 'Black',
                 }}
               >Diff of legal Po,Co Price</div>
+            ),
+            dataIndex: '',
+            align: 'center',
+            width: 70,
+            render: (text, record) => {
+              const poCurrency = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoCurrencyCode;
+              const coCurrency = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPriceCurrencyCode;
+              // let diff = Number(Poprice) - Number(coprice)
+              if (poCurrency && coCurrency !== null) {
+                return poCurrency + ' ' + coCurrency
+              }
+              else {
+                return "-"
+              }
+            }
+          },
+          {
+            title: (
+              <div
+                style={{
+                  backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                  height: 130, justifyContent: 'center', color: 'Black',
+                }}
+              >Diff of legal Po,Co Currency</div>
             ),
             dataIndex: '',
             align: 'center',
@@ -2020,8 +2041,6 @@ const PPMReport = () => {
                 return "-"
               }
             }
-
-
           },
           {
             title: (
@@ -2033,7 +2052,7 @@ const PPMReport = () => {
               >CRM CO QTY</div>
             ),
             dataIndex: 'CRMCoQty',
-            width: 60,align:'right',
+            width: 60, align: 'right',
             render: (text, record) => {
               const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.CRMCoQty;
               return sizeData ? sizeData : '-'
@@ -2105,7 +2124,6 @@ const PPMReport = () => {
                 }
               }
             }
-
           },
           {
             title: (
@@ -2592,19 +2610,6 @@ const PPMReport = () => {
     // };
 
     columns.push(
-
-      {
-        title: 'Trading Co PO Number',
-        dataIndex: 'tradingCoPoNumber',
-        width: 80,
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
       {
         title: 'VAS - Size',
         dataIndex: 'VASSize',
