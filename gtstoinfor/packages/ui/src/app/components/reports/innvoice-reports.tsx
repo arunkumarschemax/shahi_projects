@@ -1,4 +1,4 @@
-import { EditOutlined, DownloadOutlined } from '@ant-design/icons';
+import { EditOutlined, DownloadOutlined, UndoOutlined } from '@ant-design/icons';
 import { VendorFilterModel, VendorNameEnum } from '@xpparel/shared-models';
 import { SharedService } from '@xpparel/shared-services';
 import { Card, Table, DatePicker, message, Col, Row, Select, Button } from 'antd';
@@ -14,6 +14,7 @@ const InvoiceReport = () => {
     const [selectedVendors, setSelectedVendors] = useState<string[]>([]);
     const [filteredData, setFilteredData] = useState<any>([]);
     const [tableDisabled, setTableDisabled] = useState<boolean>(true);
+    const [buttonClicked, setButtonClicked] = useState(false)
 
     const services = new SharedService();
 
@@ -119,6 +120,10 @@ const InvoiceReport = () => {
         setTableDisabled(false);
     };
 
+    const handleCancel = () => {
+        setButtonClicked(true);
+        window.location.reload();
+    };
 
     const handleExportToExcel = () => {
         const fileType =
@@ -129,12 +134,13 @@ const InvoiceReport = () => {
                 'S.No': index + 1,
                 'Vendor Name': item.venName,
                 'Invoice Number': item.invoiceNumber,
+                'Created at': item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '',
             };
         });
         const ws = XLSX.utils.json_to_sheet(formattedData);
 
-        ws['!cols'] = [{ width: 20 }, { width: 20 }];
-
+        const columnWidths = Array(Object.keys(formattedData[0]).length).fill({ width: 20 });
+        ws['!cols'] = columnWidths;
         const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
         const data = new Blob([excelBuffer], { type: fileType });
@@ -166,26 +172,26 @@ const InvoiceReport = () => {
                 extra={
                     <Button
                         type="default"
-                        style={{ marginLeft: 10, marginTop: 10 }}
+                        style={{ marginLeft: 10, marginTop: 10, backgroundColor: "#3f6600", color: "white" }}
                         onClick={handleExportToExcel}
                         icon={<DownloadOutlined />}
                     >
-                        Export to Excel
+                        Get Excel
                     </Button>
                 }>
-                    <Row>
-                <Card
+                <Row>
+                    <Card
 
-                    title={"Total Vendors: " + formData.filter((el) => el.venName).length}
-                    style={{ textAlign: 'center', marginBottom: 10, marginRight: 60, width: 180, height: 35, backgroundColor: 'lightgreen', borderRadius: 3 }}
-                    size="small"
-                    bodyStyle={{ display: 'none' }}
-                ></Card><Card
-                    title={"DHL Count: " + formData.filter((el) => el.venName == "DHL Logistics Pvt. Ltd.").length}
-                    style={{ textAlign: 'center', marginBottom: 10, marginRight: 60, width: 180, height: 35, backgroundColor: 'powderblue', borderRadius: 3 }}
-                    size="small"
-                    bodyStyle={{ display: 'none' }}
-                ></Card>
+                        title={"Total Vendors: " + formData.filter((el) => el.venName).length}
+                        style={{ textAlign: 'center', marginBottom: 10, marginRight: 60, width: 180, height: 35, backgroundColor: 'lightgreen', borderRadius: 3 }}
+                        size="small"
+                        bodyStyle={{ display: 'none' }}
+                    ></Card><Card
+                        title={"DHL Count: " + formData.filter((el) => el.venName == "DHL Logistics Pvt. Ltd.").length}
+                        style={{ textAlign: 'center', marginBottom: 10, marginRight: 60, width: 180, height: 35, backgroundColor: 'powderblue', borderRadius: 3 }}
+                        size="small"
+                        bodyStyle={{ display: 'none' }}
+                    ></Card>
                 </Row>
 
                 <Row gutter={24}>
@@ -213,8 +219,17 @@ const InvoiceReport = () => {
                 </Row>
                 <Row>
                     <Col>
-                        <Button type="primary" style={{ marginTop: 10 }} onClick={handleGetReport}>
+                        <Button type="primary" onClick={handleGetReport}>
                             Get Report
+                        </Button>
+
+                    </Col>
+
+                    <Col>
+                        <Button type="primary" danger icon={<UndoOutlined />}
+                            style={{ marginLeft: "5px" }}
+                            onClick={handleCancel}>
+                            Reset
                         </Button>
 
                     </Col>
