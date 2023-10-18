@@ -1,6 +1,6 @@
 import { Body, Controller, Param, Post, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
 import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
-import {  AllFabricContentResponseModel, FabricContentResponseModel, FobResponseModel } from '@project-management-system/shared-models';
+import {  AllFabricContentResponseModel, CommonResponseModel, FabricContentResponseModel, FobResponseModel } from '@project-management-system/shared-models';
 import { ApiBody } from '@nestjs/swagger';
 import { FabricContentService } from './fabric-content.service';
 import { FabricContentDto } from './fabri-content-dto/fabric-dto';
@@ -57,6 +57,15 @@ export class FabricContentController {
     return await this.fobService.ActivateOrDeactivate(activateDeactivateReq)
     }
 
+    @Post('/uploadFabricContent')
+    async uploadFabricContent(@Body() data: any): Promise<CommonResponseModel> {
+        try {
+            return this.fobService.uploadFabricContent(data);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
 
    
     

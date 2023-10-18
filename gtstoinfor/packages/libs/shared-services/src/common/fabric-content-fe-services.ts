@@ -26,8 +26,8 @@ export class FabricContentService extends CommonAxiosService {
         return this.axiosPostCall(this.Controller + "/activateOrDeactivate", payload)
     }
 
-    // async uploadFobPrice(payload: any): Promise<CommonResponseModel> {
-    //     return this.axiosPostCall(this.Controller + "/uploadFobPrice", payload)
-    // }
+    async uploadFabricContent(payload: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.Controller + "/uploadFabricContent", payload)
+    }
 
 }

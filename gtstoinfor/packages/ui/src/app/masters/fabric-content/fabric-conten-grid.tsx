@@ -228,8 +228,8 @@ const FabricContentGrid = () => {
         <Card
           extra={<span><Button onClick={() => navigate('/masters/fabric-content-form/', { state: { name: 'new' } })} style={{height:32}} type={'primary'}>New</Button></span>}
           headStyle={{ height: '53px' }}
-          title={<><span>Fabric Content</span><span>
-            {/* <Button onClick={() => navigate('/masters/fabric-content-form', { state: { name: 'excel'} })} style={{ float: 'right',height:33, marginRight: '2px' }}  type='primary'>CSV Upload</Button> */}
+          title={<><span>Fabric Content Masters</span><span>
+            <Button onClick={() => navigate('/masters/fabric-content-form', { state: { name: 'excel'} })} style={{ float: 'right',height:33, marginRight: '2px' }}  type='primary'>CSV Upload</Button>
             </span></>}>
           <Table columns={Columns}
             dataSource={fabric}

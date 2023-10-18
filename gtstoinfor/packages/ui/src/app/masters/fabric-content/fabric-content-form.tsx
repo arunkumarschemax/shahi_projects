@@ -58,31 +58,31 @@ const FabricContentForm = (props:Formprops) => {
     })
   }
 
-  // const handleUpload = async () => {
-  //   try {
-  //     form.validateFields().then(values => {
-  //       const formData = new FormData();
-  //       formData.append('file', selectedFile);
-  //       if (data.length > 0) {
-  //         service.uploadFobPrice(data).then(res => {
-  //           if (res.status) {
-  //             AlertMessages.getSuccessMessage("Created Successfully")
-  //             setTimeout(() => {
-  //               navigate('/masters/fabric-content-view')
-  //             }, 500);
-  //           } else {
-  //             alert('Please upload right format file')
-  //           }
-  //         })
-  //       } else {
-  //         message.error('Please Upload File')
-  //       }
-  //     })
+  const handleUpload = async () => {
+    try {
+      form.validateFields().then(values => {
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        if (data.length > 0) {
+          service.uploadFabricContent(data).then(res => {
+            if (res.status) {
+              AlertMessages.getSuccessMessage("Created Successfully")
+              setTimeout(() => {
+                navigate('/masters/fabric-content-view')
+              }, 500);
+            } else {
+              alert('Please upload right format file')
+            }
+          })
+        } else {
+          message.error('Please Upload File')
+        }
+      })
 
-  //   } catch (error) {
-  //     message.error(error.message)
-  //   }
-  // }
+    } catch (error) {
+      message.error(error.message)
+    }
+  }
 
 
   const saveData = (values: FabricContentdto) => {
@@ -92,7 +92,7 @@ const FabricContentForm = (props:Formprops) => {
     } else {
       setDisable(false)
       if (state.name === 'excel') {
-      //  handleUpload()
+        handleUpload()
       } else {
         create(values);
       }
@@ -115,53 +115,49 @@ const FabricContentForm = (props:Formprops) => {
     setSelectedFile([])
   }
 
-  // const handleFileChange = (event) => {
-  //   const file = event.target.files[0];
-  //   if (file && file.type === 'text/csv') {
-  //     setSelectedFile(event.target.files[0]);
-  //     Papa.parse(event.target.files[0], {
-  //       header: true,
-  //       complete: function (result) {
-  //         {
-  //           const columnArray = [];
-  //           const valueArray = [];
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type === 'text/csv') {
+      setSelectedFile(event.target.files[0]);
+      Papa.parse(event.target.files[0], {
+        header: true,
+        complete: function (result) {
+          {
+            const columnArray = [];
+            const valueArray = [];
 
-  //           result.data.map((d) => {
-  //             columnArray.push(Object.keys(d))
-  //             valueArray.push(Object.values(d))
-  //           });
-  //           setData(result.data)
-  //           setColumns(columnArray[0])
-  //           setValues(valueArray)
-  //         }
-  //       }
-  //     });
-  //   } else {
-  //     // Display an error message or take appropriate action for invalid file type
-  //     alert('Please select a valid .csv file.');
-  //     setSelectedFile(null);
-  //   }
-  // };
+            result.data.map((d) => {
+              columnArray.push(Object.keys(d))
+              valueArray.push(Object.values(d))
+            });
+            setData(result.data)
+            setColumns(columnArray[0])
+            setValues(valueArray)
+          }
+        }
+      });
+    } else {
+      // Display an error message or take appropriate action for invalid file type
+      alert('Please select a valid .csv file.');
+      setSelectedFile(null);
+    }
+  };
 
-  // const onTypeChange = (value) => {
-  //   setType(value)
-  // }
-  // let csvdata = [
-  //   { 'Planning Season Code': '' },
-  //       { 'Planning Season Year': '' },
-  //       { 'Style Number': '' },
-  //       { 'Color Code': '' },
-  //       { 'Size Description': '' },
-  //       { 'Shahi Confirmed Gross Price': '' },
-  //       { 'Shahi Confirmed Gross Price currency code': '' },
-  // ]
+  const onTypeChange = (value) => {
+    setType(value)
+  }
+  let csvdata = [
+    { 'Style': '' },
+    { 'Component ': '' },
+    { 'Fabric Content': '' },
+  ]
  
 
   return (
 
     <Card title={props.isUpdate ? 'Update Fabric Content ':'Fabric Content' } extra={(props.isUpdate === false) && <span> 
-      {/* <Button type="default" style={{ color: 'green' , margin:10}} icon={<FileExcelFilled />}><CSVLink className="downloadbtn" filename="FOB-Sample-Format.csv" data={csvdata}>
-      Download Sample Format </CSVLink></Button> */}
+      <Button type="default" style={{ color: 'green' , margin:10}} icon={<FileExcelFilled />}><CSVLink className="downloadbtn" filename="Fabric-Content-Sample-Format.csv" data={csvdata}>
+      Download Sample Format </CSVLink></Button>
        <Button onClick={() => navigate('/masters/fabric-content-view')} type={'primary'}>View</Button></span>}>
       <Form form={form}
         // title='Fob Price List'
@@ -173,7 +169,7 @@ const FabricContentForm = (props:Formprops) => {
           <Form.Item name='id' hidden={true}>
             <Input />
           </Form.Item>
-          {/* {
+          {
             state?.name === 'excel' ? (<>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item label="" name='excel' >
@@ -185,7 +181,7 @@ const FabricContentForm = (props:Formprops) => {
             </>) : (<>
 
             </>)
-          } */}
+          }
 
           {
             state?.name === 'new' || state == null ? (<>
