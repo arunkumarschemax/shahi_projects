@@ -8,4 +8,8 @@ export class ItemCreationService extends CommonAxiosService{
     return this.axiosPostCall(this.URL + "/createItem", req)
 }
 
+  async getFgItemsDropdown(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getFgItemsDropdown")
+  }
+
 }

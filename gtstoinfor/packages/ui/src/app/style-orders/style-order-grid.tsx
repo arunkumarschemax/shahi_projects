@@ -1,5 +1,5 @@
 import { CheckCircleOutlined, CloseCircleOutlined, CloseOutlined, EditOutlined, EyeOutlined, RightSquareOutlined, SearchOutlined } from "@ant-design/icons";
-import { Alert, Button, Card, Col, Divider, Form, Input, Popconfirm, Row, Select, Switch, Table, Tag } from "antd"
+import { Alert, Button, Card, Col, Divider, Drawer, Form, Input, Popconfirm, Row, Select, Switch, Table, Tag } from "antd"
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import Highlighter from "react-highlight-words";
@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { BuyersService, CurrencyService, DeliveryMethodService, DeliveryTermsService, PackageTermsService, PaymentMethodService, PaymentTermsService, StyleOrderService, WarehouseService } from "@project-management-system/shared-services";
 import { CustomerOrderStatusEnum, PackageTermsDto, PaymentMethodDto, PaymentTermsDto, StyleOrderReq, styleOrderReq } from "@project-management-system/shared-models";
 import moment from "moment";
+import StyleOrderCreation from "./style-order-form";
 
 export const StyleOrderGrid = () => {
     const [searchText, setSearchText] = useState('');
@@ -41,6 +42,9 @@ export const StyleOrderGrid = () => {
     const warehouseService = new WarehouseService()
     const[currencyId,setCurrencyId] = useState([]);
     const currencyService = new CurrencyService()
+    const [drawerVisible, setDrawerVisible] = useState(false);
+    const [selectedBuyersData, setSelectedBuyersData] = useState<any>(undefined);
+  
 
 let location = useLocation()
 const stateData = location.state
@@ -110,6 +114,12 @@ let val = 0
   const onReset = () => {
     form.resetFields();
   };
+
+  const openFormWithData = (data) => {
+    
+    setDrawerVisible(true);
+    setSelectedBuyersData(data);
+  }
     const getColumnSearchProps = (dataIndex: string) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <div style={{ padding: 8 }}>
@@ -296,7 +306,7 @@ let val = 0
   render: (data,val) => {
     const currency = currencyId.find((res) => res.currencyId === val.currency_id);
 
-    return( <span>{currency.currencyName}{val.sale_price}</span>)
+    return( <span>{currency?.currencyName}{val.sale_price}</span>)
 }
 
 },
@@ -362,6 +372,7 @@ let val = 0
         <EyeOutlined />
       </Button>
     </span>
+    <Divider type="vertical"/>
     {
       rowData.status != CustomerOrderStatusEnum.CLOSED ? 
     <span>
@@ -371,6 +382,13 @@ let val = 0
       </span>
       : ""
     }
+    <Divider type="vertical"/>
+    <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
+      onClick={() => {
+          openFormWithData(rowData);
+      }}
+      style={{ color: '#1890ff', fontSize: '14px' }}
+    />
     </>
   )
 }
@@ -391,6 +409,14 @@ let val = 0
       }
       const details =(val:any) =>{
         navigate('/materialCreation/style-order-detail-view',{state :val})
+      }
+
+      const closeDrawer=()=>{
+        setDrawerVisible(false);
+      }
+
+      const updateCoLine = () =>{
+
       }
     return (
         <Card title='Style Orders' extra={<span><Button onClick={() =>  navigate('/materialCreation/style-order-creation')}
@@ -446,7 +472,7 @@ let val = 0
               setPage(current);
             }
           }}
-          scroll={{x:true}}
+          scroll={{x:'max-content'}}
           bordered />
           </Card>
           {/* ):(<> 
@@ -459,6 +485,17 @@ let val = 0
              />
              </Row>
              </>)} */}
+      <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
+        onClose={closeDrawer} visible={drawerVisible} closable={true}>
+        <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
+          <StyleOrderCreation key={Date.now()}
+            updateDetails={updateCoLine}
+            isUpdate={true}
+            // saveItem={saveVariant}
+            coData={selectedBuyersData}
+            closeForm={closeDrawer} />
+        </Card>
+      </Drawer>
       </Card> )
 }
 export default StyleOrderGrid

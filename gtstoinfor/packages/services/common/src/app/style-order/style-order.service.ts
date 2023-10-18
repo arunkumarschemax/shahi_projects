@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, CustomerOrderStatusEnum, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, CustomerOrderStatusEnum, StyleOrderIdReq, StyleOrderModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
 import { StyleOrder } from "./style-order.entity";
 import { Item } from "../items/item-entity";
 import { Warehouse } from "../warehouse/warehouse.entity";
@@ -236,6 +236,16 @@ export class StyleOrderService{
             await transactionalEntityManager.releaseTransaction();
             return new CommonResponseModel(false,0,'Cancel Order failed. ',)
         }
+    } catch(err){
+        throw err
+    }
+   }
+
+   async getCOInfoById(req:StyleOrderIdReq):Promise<StyleOrderResponseModel>{
+    try{
+        const data = await this.repo.find({where:{id:req.styleOrderId},relations:[]})
+        return new StyleOrderResponseModel(true,1,'Data retrieved',[])
+
     } catch(err){
         throw err
     }
