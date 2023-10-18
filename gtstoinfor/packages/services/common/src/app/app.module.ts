@@ -60,7 +60,6 @@ import { SampleSubTypesModule } from './sample-sub-types/sample-sub-type.module'
 import { OperationSequenceModule } from './operation-sequence/operation-sequence.module';
 import { FabricWeaveModule } from './fabric weave/fabric-weave.module';
 import { FabricDevelopmentModule } from './fabric-development-request/fabric-development.module';
-import { ItemSkus } from './sku-generation/sku-generation.entity';
 import { SkuGenerationModule } from './sku-generation/sku-generation.module';
 import { SampleDevReqModule } from './sample-dev-request/sample-dev-request.module';
 import { StyleOrderModule } from './style-order/style-order.module';
@@ -72,19 +71,14 @@ import { ItemCreationModule } from './fg-item/item_creation.module';
     TypeOrmModule.forRoot({
       type: "mysql",
       timezone: 'Z',
-      // host: appConfig.database.host,
-      // port: appConfig.database.port,
-      // username: appConfig.database.username,
-      // password: appConfig.database.password,
-      // database: appConfig.database.dbName,
-      host: 'localhost',
-      port:3308,
-      username: 'root',
-      password: '',
-      database: 'crm',
+      host: appConfig.database.host,
+      port: appConfig.database.port,
+      username: appConfig.database.username,
+      password: appConfig.database.password,
+      database: appConfig.database.dbName,
       autoLoadEntities: true,
       synchronize: false,
-      logging: true,
+      logging: false,
       extra: {
         connectionLimit: 20
       }

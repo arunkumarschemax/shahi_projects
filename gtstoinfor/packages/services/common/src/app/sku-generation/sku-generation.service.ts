@@ -10,6 +10,7 @@ import { Colour } from "../colours/colour.entity";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { ItemSkuRepository } from "./sku-generation-repo";
 import { Style } from "../style/dto/style-entity";
+import { ItemCreation } from "../fg-item/item_creation.entity";
 
 @Injectable()
 export class ItemSkuService{
@@ -42,9 +43,9 @@ export class ItemSkuService{
           for(const dest of req.destinationInfo){
             const entity = new ItemSkus()
             entity.itemCode = req.itemCode;
-            const itemEntity = new Item
-            itemEntity.itemId = req.itemId 
-            entity.itemInfo = itemEntity
+            const itemEntity = new ItemCreation
+            itemEntity.fgitemId = req.itemId 
+            entity.fgitemInfo = itemEntity
             const style = new Style()
             style.styleId = req.styleId
             entity.styleInfo = style
@@ -163,7 +164,7 @@ export class ItemSkuService{
 
   async getDataByItem(req:ItemCodeReq):Promise<SKUGenerationResponseModel>{
     try{
-      const data = await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo','itemInfo','styleInfo'],where:{itemCode:req.itemCode}})
+      const data = await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo','fgitemInfo','styleInfo'],where:{itemCode:req.itemCode}})
       // const data = await this.itemSkuRepo.getDataByItem(req.itemCode)
       if(data.length > 0){
         let colorInfo = []
@@ -181,7 +182,7 @@ export class ItemSkuService{
           destinationInfo.push(new DestinationInfoReq(rec.destinationInfo.destinationId,rec.destination))
           }
         }
-        info.push(new ItemSKusModel(data[0].itemSkuId,data[0].skuCode,data[0].itemInfo.itemId,data[0].itemCode,data[0].status,colorInfo,sizeInfo,destinationInfo,data[0].createdUser,data[0].styleInfo.styleId,data[0].styleInfo.style))
+        info.push(new ItemSKusModel(data[0].itemSkuId,data[0].skuCode,data[0].fgitemInfo.fgitemId,data[0].itemCode,data[0].status,colorInfo,sizeInfo,destinationInfo,data[0].createdUser,data[0].styleInfo.styleId,data[0].styleInfo.style))
         // console.log(info,'----------')
         return new SKUGenerationResponseModel(true,1,'Data retreived',info)
       } else{
@@ -192,6 +193,24 @@ export class ItemSkuService{
     }
   }
 
+
+  // async getSkuList(req:SKUlistFilterRequest):Promise<CommonResponseModel>{
+  //   try{
+  //     const getData= await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo'],
+  //     // const getData = await this.itemSkuRepo.getDestinationsByItem(req.itemCode)
+
+  //     where:{fgitemInfo:{fgitemId:req.itemNoId}}
+  //   })
+  //     if(getData.length> 0){
+  //       return new CommonResponseModel(true,1,'Data retreived',getData)
+  //     }else{
+  //       return new CommonResponseModel(false,0,'No data found')
+  //     }
+  //   }catch (err){
+  //     throw err
+  //   }
+  // }
+   
 
   // async getSkuList(req:SKUlistFilterRequest):Promise<CommonResponseModel>{
   //   try{

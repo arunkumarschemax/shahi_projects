@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, CustomerOrderStatusEnum, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, CustomerOrderStatusEnum, StyleOrderIdReq, StyleOrderModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
 import { StyleOrder } from "./style-order.entity";
 import { Item } from "../items/item-entity";
 import { Warehouse } from "../warehouse/warehouse.entity";
@@ -22,6 +22,7 @@ import { DataSource, Repository } from "typeorm";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { StyleOrderRepository } from "./style-order-repo";
 import { CoLineRepository } from "./co-line.repo";
+import { ItemCreation } from "../fg-item/item_creation.entity";
 import { StyleOrderId } from "./style-order-id.request";
 import { VariantIdReq } from "./variant-id.req";
 import { Raw } from 'typeorm';
@@ -58,11 +59,11 @@ export class StyleOrderService{
             entity.salePrice = req.salePrice;
             entity.priceQuantity = req.priceQuantity;
             entity.discountAmount = req.discountAmount;
-            entity.status = req.status;
+            entity.status = req.styleOrderItems.length > 0 ? CustomerOrderStatusEnum.CONFIRMED : CustomerOrderStatusEnum.OPEN;
             entity.remarks = req.remarks;
-            const item = new Item()
-            item.itemId = req.itemId
-            entity.itemInfo = item;
+            const item = new ItemCreation()
+            item.fgitemId = req.itemId
+            entity.fgitemInfo = item;
             const warehouse = new Warehouse()
             warehouse.warehouseId = req.warehouseId
             entity.warehouseInfo = warehouse;
@@ -209,7 +210,7 @@ export class StyleOrderService{
     try{
         await transactionalEntityManager.startTransaction();
         console.log(req);
-        const styleOrderDetails = await transactionalEntityManager.getRepository(CoLine).findOne({where:{id:req.variantId}});
+        const styleOrderDetails = await transactionalEntityManager.getRepository(CoLine).findOne({relations:["styleOrderInfo"],where:{id:req.variantId}});
         const updateCoLineStatus = await transactionalEntityManager.getRepository(CoLine).update({id:req.variantId},{status:CustomerOrderStatusEnum.CLOSED});
         if(updateCoLineStatus.affected > 0){
             const getCoLines = await transactionalEntityManager.getRepository(CoLine).find({where:{status:Raw(alias => `status !=  '${CustomerOrderStatusEnum.CLOSED}'`), id:Raw(alias => `id !=  '${req.variantId}'`)}});
@@ -235,6 +236,16 @@ export class StyleOrderService{
             await transactionalEntityManager.releaseTransaction();
             return new CommonResponseModel(false,0,'Cancel Order failed. ',)
         }
+    } catch(err){
+        throw err
+    }
+   }
+
+   async getCOInfoById(req:StyleOrderIdReq):Promise<StyleOrderResponseModel>{
+    try{
+        const data = await this.repo.find({where:{id:req.styleOrderId},relations:[]})
+        return new StyleOrderResponseModel(true,1,'Data retrieved',[])
+
     } catch(err){
         throw err
     }

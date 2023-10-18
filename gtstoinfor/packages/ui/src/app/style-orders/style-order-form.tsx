@@ -1,5 +1,5 @@
 import { BuyerIdReq, BuyersDestinationRequest, CustomerOrderStatusEnum, ItemCodeReq, SKUGenerationReq, StyleOrderItemsReq, StyleOrderReq } from "@project-management-system/shared-models";
-import { BuyerDestinationService, BuyersService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DestinationService, EmployeeDetailsService, FactoryService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, SKUGenerationService, StyleOrderService, WarehouseService } from "@project-management-system/shared-services"
+import { BuyerDestinationService, BuyersService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DestinationService, EmployeeDetailsService, FactoryService, ItemCreationService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, SKUGenerationService, StyleOrderService, WarehouseService } from "@project-management-system/shared-services"
 import { Button, Card, Col, DatePicker, Form, Input, Row, Segmented, Select, Space, Table } from "antd"
 import TextArea from "antd/es/input/TextArea";
 import { ColumnProps } from "antd/es/table";
@@ -9,7 +9,14 @@ import { useNavigate } from "react-router-dom";
 
 const {Option} = Select;
 
-export const StyleOrderCreation = () => {
+export interface StyleOrderCreationProps {
+    coData: any;
+    updateDetails: (data: StyleOrderReq) => void;
+    isUpdate: boolean;
+    closeForm: () => void;
+  }
+
+export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
 
     const [itemCodes,setItemCodes] = useState<any[]>([])
     const itemService = new ItemsService()
@@ -46,6 +53,18 @@ export const StyleOrderCreation = () => {
     const styleOrderService = new StyleOrderService()
     const navigate = useNavigate();
     const [tableVisible,setTableVisible] = useState<boolean>(false)
+    const fgItemService = new ItemCreationService()
+
+    useEffect(()=>{
+        if(props.coData){
+            form.setFieldsValue({
+                'itemCode':props.coData.item_code,
+                // 'buyer':
+
+            })
+        }
+    
+    },[props.coData])
 
 
     useEffect(() => {
@@ -63,7 +82,7 @@ export const StyleOrderCreation = () => {
     },[])
 
     const getItemCodes = () => {
-        itemService.getAllItems().then(res => {
+        fgItemService.getFgItemsDropdown().then(res => {
             if(res.status){
                 setItemCodes(res.data)
             }
@@ -184,7 +203,7 @@ export const StyleOrderCreation = () => {
     }
 
     const onItemCodeChange = (e,option) => {
-        setItemId(option?.key)
+                setItemId(option?.key)
         getDestinationsByItem()
 
     }
@@ -264,15 +283,14 @@ export const StyleOrderCreation = () => {
     const [firstHalfData, secondHalfData] = splitData(data);
 
     const onFinish = (val) => {
-        const req = new StyleOrderReq(val.itemCode,val.CODate,val.buyerPoNumber,val.shipmentType,val.buyerStyle,val.agent,val.buyerAddress,val.exfactoryDate,val.deliveryDate,val.inStoreDate,val.salePrice,val.priceQuantity,val.discount,null,CustomerOrderStatusEnum.OPEN,val.remarks,itemId,val.warehouse,val.facility,null,val.packageTerms,val.deliveryMethod,val.deliveryTerms,val.currency,val.paymentMethod,val.paymentTerms,orderQuantityData,val.buyer,'admin')
-        console.log(req,'---')
+        const req = new StyleOrderReq(val.itemCode,val.CODate,val.buyerPoNumber,val.shipmentType,val.buyerStyle,val.agent,val.buyerAddress,val.exfactoryDate,val.deliveryDate,val.inStoreDate,val.salePrice,val.priceQuantity,val.discount,null,orderQuantityData.length > 0 ? CustomerOrderStatusEnum.CONFIRMED : CustomerOrderStatusEnum.OPEN,val.remarks,itemId,val.warehouse,val.facility,null,val.packageTerms,val.deliveryMethod,val.deliveryTerms,val.currency,val.paymentMethod,val.paymentTerms,orderQuantityData,val.buyer,'admin')
         styleOrderService.createCustomerOrder(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
             } else{
                 AlertMessages.getSuccessMessage(res.internalMessage)
             }
-        })
+        }) 
     }
     return(
         <Card title='Style Order Creation' size='small'  extra={
@@ -285,7 +303,7 @@ export const StyleOrderCreation = () => {
               </Button>
             </span>
           }>
-            <Form layout="vertical" form={form} onFinish={onFinish}>
+            <Form layout="vertical" form={form} onFinish={onFinish} initialValues={props.coData}>
                <Row gutter={[8,4]}>
                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 12}}>
                <Card size='small' bordered={false}>
@@ -298,7 +316,7 @@ export const StyleOrderCreation = () => {
                         {
                             itemCodes.map((e) => {
                                 return(
-                                    <Option key={e.itemId} value={e.itemCode}>{e.itemCode}-{e.itemName}</Option>
+                                    <Option key={e.fgitemId} value={e.itemCode}>{e.itemCode}-{e.itemName}</Option>
                                 )
                             })
                         }

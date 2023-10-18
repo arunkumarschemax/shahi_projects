@@ -503,7 +503,7 @@ export const AppRoutes = () => {
                 <Route path='item-creation' element={<ItemCreation/>}/>
                 <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
                 <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation />} />
-                <Route path='style-order-creation' element={<StyleOrderCreation />} />
+                <Route path='style-order-creation' element={<StyleOrderCreation coData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
                 <Route path='style-order-view' element={<StyleOrderGrid />} />
                 <Route path='style-order-detail-view' element={<StyleOrderDetailView />} />
                 </Route>

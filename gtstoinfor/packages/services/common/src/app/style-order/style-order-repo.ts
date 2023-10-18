@@ -2,8 +2,20 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { StyleOrder } from "./style-order.entity";
-import { styleOrderReq } from "@project-management-system/shared-models";
+import { StyleOrderIdReq, styleOrderReq } from "@project-management-system/shared-models";
 import { CoLine } from "./co-line.entity";
+import { Buyers } from "../buyers/buyers.entity";
+import { FactoriesEntity } from "../factories/factories.entity";
+import { Warehouse } from "../warehouse/warehouse.entity";
+import { EmplyeeDetails } from "../employee-details/dto/employee-details-entity";
+import { Address } from "../buyers/address.entity";
+import { PackageTerms } from "../packages-terms/package-terms.entity";
+import { DeliveryTerms } from "../delivery-terms/delivery-terms.entity";
+import { DeliveryMethod } from "../delivery-method/delivery-method.entity";
+import { Currencies } from "../currencies/currencies.entity";
+import { PaymentMethod } from "../payment-methods/payment-method-entity";
+import { PaymentTerms } from "../payment-terms/payment-terms.entity";
+import { ItemCreation } from "../fg-item/item_creation.entity";
 
 @Injectable()
 export class StyleOrderRepository extends Repository<StyleOrder> {
@@ -28,6 +40,27 @@ export class StyleOrderRepository extends Repository<StyleOrder> {
         // .where(`co.item_id =${req.itemId}`)
         .groupBy(`co.buyer_id`)
         return query.getRawMany()
+    }
+
+    async getInfoById(req:StyleOrderIdReq):Promise<any>{
+        const query = await this.createQueryBuilder('co')
+        .select(`co.item_code,co.buyer_id,bu.buyer_name,co.facility_id,co.warehouseId,w.warehouse_name,co.remarks,co.buyer_po_number,co.order_date,co.shipment_type,co.buyer_style,co.agent,emp.first_name,emp.employee_code,co.buyer_address,add.landmark,add.district,add.state,co.exfactory_date,co.delivery_date,co.package_terms_id,pacter.package_terms_name,co.delivery_terms_id,delter.delivery_terms_name,co.delivery_method_id,delimet.delivery_method_name,co.instore_date,co.sale_price,co.currency_id,co.currency_name,co.price_quantity,co.discount_per,payter.payment_terms_name,payme.payment_method,co.Payment_method_id,co.Payment_terms_id,co.fg_item_id,fgi.item_name,col.id as coLineId,col.coline_number,delad.landmark,delad.district,delad.state,col.order_quantity,col.color,col.size,col.destination,col.uom,col.status`)
+        .leftJoin(Buyers,'bu',`bu.buyer_id = co.buyer_id`)
+        .leftJoin(FactoriesEntity,'fa',`fa.id = co.facility_id`)
+        .leftJoin(Warehouse,'w',`w.warehouse_id = co.warehouse_id`)
+        .leftJoin(EmplyeeDetails,'emp',`emp.employee_id = co.agent`)
+        .leftJoin(Address,'add',`add.address_id = co.buyer_address`)
+        .leftJoin(PackageTerms,'pacter',`pacter.package_terms_id = co.package_terms_id`)
+        .leftJoin(DeliveryTerms,'delter','delter.delivery_terms_id = co.delivery_terms_id')
+        .leftJoin(DeliveryMethod,'delimet','delimet.delivery_method_id = co.delivery_method_id')
+        .leftJoin(Currencies,'cu','cu.currency_id = co.currency_id')
+        .leftJoin(PaymentMethod,'payme','payme.payment_method_id = co.Payment_method_id')
+        .leftJoin(PaymentTerms,'payter','payter.payment_terms_id = co.Payment_terms_id')
+        .leftJoin(ItemCreation,'fgi','fgi.fg_item_id = co.fg_item_id')
+        .leftJoin(CoLine,'col','col.co_id = co.id')
+        .leftJoin(Address,'delad','delad.address_id = col.delivery_address')
+        return query.getRawMany()
+
     }
 
 }
