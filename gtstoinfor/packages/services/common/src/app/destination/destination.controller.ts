@@ -38,7 +38,7 @@ export class DestinationController {
   // @UseGuards(AuthGuard('jwt'))
   async getAllDestination(@Body() req?: UserRequestDto): Promise<AllDestinationResponseModel> {
     try {
-      return await this.Service.getAllDestination(req);
+      return await this.Service.getAllDestination();
     } catch (error) {
       return this.applicationExceptionHandler.returnException(AllDestinationResponseModel, error);
     }
