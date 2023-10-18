@@ -178,19 +178,19 @@ export const DocReader = (props: DocReaderProps) => {
                         break;
                     }
 
-                    case VendorNameEnum.extractedTriway:
-                        {
-                            const isScannedPdf = await checkIsScannedPdf(pdfData)
-                            if (isScannedPdf) {
-                                const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
-                                const allLines = await extractDataFromScannedImages(pageImages, [0]);
-                                processedData = await extractTriwayInvoiceDataFromScanned(allLines);
-                            } else {
-                                processedData = await extractEfl(pdfData);
-                            }
-                            break;
+                case VendorNameEnum.extractedTriway:
+                    {
+                        const isScannedPdf = await checkIsScannedPdf(pdfData)
+                        if (isScannedPdf) {
+                            const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                            const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                            processedData = await extractTriwayInvoiceDataFromScanned(allLines);
+                        } else {
+                            processedData = await extractEfl(pdfData);
                         }
-    
+                        break;
+                    }
+
 
                 case VendorNameEnum.extractedVinayaka:
                     {
@@ -231,19 +231,19 @@ export const DocReader = (props: DocReaderProps) => {
                         break;
                     }
 
-                    case VendorNameEnum.extractedSrivaru:
-                        {
-                            const isScannedPdf = await checkIsScannedPdf(pdfData)
-                            if (isScannedPdf) {
-                                const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
-                                const allLines = await extractDataFromScannedImages(pageImages, [0]);
-                                processedData = await extractSrivaruInvoiceDataFromScanned 
+                case VendorNameEnum.extractedSrivaru:
+                    {
+                        const isScannedPdf = await checkIsScannedPdf(pdfData)
+                        if (isScannedPdf) {
+                            const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                            const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                            processedData = await extractSrivaruInvoiceDataFromScanned
                                 (allLines);
-                            } else {
-                                processedData = await extractEfl(pdfData);
-                            }
-                            break;
+                        } else {
+                            processedData = await extractEfl(pdfData);
                         }
+                        break;
+                    }
 
 
 
@@ -350,6 +350,7 @@ export const DocReader = (props: DocReaderProps) => {
                                         </Radio.Group>
                                     </Form.Item>
                                 </Col>
+
                                 <Col xs={{ span: 8 }}
                                     sm={{ span: 8 }}
                                     md={{ span: 8 }}
@@ -357,16 +358,23 @@ export const DocReader = (props: DocReaderProps) => {
                                     xl={{ span: 8 }}>
                                     <Form.Item label="Vendors" name="vendors">
                                         <Select
+                                            showSearch
                                             placeholder="Vendors"
+                                            optionFilterProp="children"
                                             onChange={(value) => handleVendorOnChange(value)}
                                         >
-                                            {Object.keys(VendorNameEnum).map(vendors => {
-                                                return <Select.Option value={VendorNameEnum[vendors]}>{VendorNameEnum[vendors]}</Select.Option>
-                                            })}
-
+                                            {Object.keys(VendorNameEnum)
+                                                .sort()
+                                                .map(vendor => (
+                                                    <Select.Option key={VendorNameEnum[vendor]} value={VendorNameEnum[vendor]}>
+                                                        {VendorNameEnum[vendor]}
+                                                    </Select.Option>
+                                                ))}
                                         </Select>
                                     </Form.Item>
                                 </Col>
+
+
                                 <Col xs={{ span: 8 }}
                                     sm={{ span: 8 }}
                                     md={{ span: 8 }}
@@ -435,7 +443,7 @@ export const DocReader = (props: DocReaderProps) => {
                                                                 <span style={{ marginTop: '10px', color: 'white' }}>
                                                                     Please wait...
                                                                 </span>
-                                                                <img src={loadingSymbol} alt="Please wait..."  height={100} width={100}/>
+                                                                <img src={loadingSymbol} alt="Please wait..." height={100} width={100} />
                                                             </span>
                                                         ) : (
                                                             'Upload'
