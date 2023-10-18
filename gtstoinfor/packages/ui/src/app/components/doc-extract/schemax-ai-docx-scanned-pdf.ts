@@ -452,20 +452,83 @@ export const extractKrsnaInvoiceDataFromScanned = async (allLines: any[]) => {
 
 
 export const extractKsrInvoiceDataFromScanned = async (allLines: any[]) => {
+    // const structuredHSNLines = [];
+    // let currentHSN = null;
+    // console.log(allLines, 'allLines');
+
+    // for (const line of allLines) {
+    //     const hsnMatch = line.content.match(/\b996\d{3}\b/);
+
+    //     if (hsnMatch) {
+    //         if (currentHSN) {
+    //             structuredHSNLines.push(currentHSN);
+    //         }
+    //         currentHSN = {
+    //             HSN: hsnMatch[0],
+    //             description: line.content,
+    //             taxType: null,
+    //             taxAmount: null,
+    //             charge: null,
+    //             quotation: null,
+    //             unitPrice: null,
+    //         };
+    //     } else {
+    //         if (line.content.includes("IGST|CGST|SGST|GST")) {
+    //             currentHSN.taxType = "IGST";
+    //         }
+
+    //         if (line.content.includes("charge")) {
+    //             const chargeValueMatch = line.content.match(/^\d{1,3}(,\d{3})*(\.\d{2})?/);
+    //             if (chargeValueMatch) {
+    //                 currentHSN.charge = parseFloat(chargeValueMatch[0].replace(/,/g, ""));
+    //             }
+    //         }
+
+    //         if (line.content.includes("quotation")) {
+    //             const quotationValueMatch = line.content.match(/^\d{1,3}(,\d{3})*(\.\d{2})?/);
+    //             if (quotationValueMatch) {
+    //                 currentHSN.quotation = parseFloat(quotationValueMatch[0].replace(/,/g, ""));
+    //             }
+
+    //             if (!currentHSN.description) {
+    //                 currentHSN.description = line.content.trim();
+    //             }
+    //         }
+    //     }
+    // }
+
+    // if (currentHSN) {
+    //     structuredHSNLines.push(currentHSN);
+    // }
+
+    // structuredHSNLines.forEach((line) => {
+    //     if (line.taxAmount) {
+    //         line.taxPercentage = line.taxAmount.taxPercentage;
+    //         line.taxAmount = line.taxAmount.taxAmount;
+    //     }
+    // });
+
     const structuredHSNLines = [];
     let currentHSN = null;
     console.log(allLines, 'allLines');
-
+    
     for (const line of allLines) {
         const hsnMatch = line.content.match(/\b996\d{3}\b/);
-
+    
         if (hsnMatch) {
             if (currentHSN) {
                 structuredHSNLines.push(currentHSN);
             }
+    
+            let description = line.content.slice(0, hsnMatch.index).trim();
+            const pipeIndex = description.indexOf('|');
+            if (pipeIndex !== -1) {
+                description = description.slice(pipeIndex + 1).trim();
+            }
+    
             currentHSN = {
                 HSN: hsnMatch[0],
-                description: line.content,
+                description: description,
                 taxType: null,
                 taxAmount: null,
                 charge: null,
@@ -476,38 +539,33 @@ export const extractKsrInvoiceDataFromScanned = async (allLines: any[]) => {
             if (line.content.includes("IGST|CGST|SGST|GST")) {
                 currentHSN.taxType = "IGST";
             }
-
+    
             if (line.content.includes("charge")) {
                 const chargeValueMatch = line.content.match(/^\d{1,3}(,\d{3})*(\.\d{2})?/);
                 if (chargeValueMatch) {
                     currentHSN.charge = parseFloat(chargeValueMatch[0].replace(/,/g, ""));
                 }
             }
-
+    
             if (line.content.includes("quotation")) {
                 const quotationValueMatch = line.content.match(/^\d{1,3}(,\d{3})*(\.\d{2})?/);
                 if (quotationValueMatch) {
                     currentHSN.quotation = parseFloat(quotationValueMatch[0].replace(/,/g, ""));
                 }
-
-                if (!currentHSN.description) {
-                    currentHSN.description = line.content.trim();
-                }
             }
         }
     }
-
+    
     if (currentHSN) {
         structuredHSNLines.push(currentHSN);
     }
-
+    
     structuredHSNLines.forEach((line) => {
         if (line.taxAmount) {
             line.taxPercentage = line.taxAmount.taxPercentage;
             line.taxAmount = line.taxAmount.taxAmount;
         }
     });
-
 
     const InvoiceLines = [];
     let currentInvoice = null;
