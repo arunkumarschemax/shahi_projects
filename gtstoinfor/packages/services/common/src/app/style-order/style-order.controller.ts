@@ -63,4 +63,13 @@ export class StyleOrderController{
             return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
         }
     }
+
+    @Post('/getCOInfoById')
+    async getCOInfoById(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return await this.styleOrderService.getCOInfoById(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
 }

@@ -1,4 +1,4 @@
-import { BuyerIdReq, BuyersDestinationRequest, CustomerOrderStatusEnum, ItemCodeReq, SKUGenerationReq, StyleOrderItemsReq, StyleOrderReq } from "@project-management-system/shared-models";
+import { BuyerIdReq, BuyersDestinationRequest, CustomerOrderStatusEnum, ItemCodeReq, SKUGenerationReq, StyleOrderIdReq, StyleOrderItemsReq, StyleOrderReq } from "@project-management-system/shared-models";
 import { BuyerDestinationService, BuyersService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DestinationService, EmployeeDetailsService, FactoryService, ItemCreationService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, SKUGenerationService, StyleOrderService, WarehouseService } from "@project-management-system/shared-services"
 import { Button, Card, Col, DatePicker, Form, Input, Row, Segmented, Select, Space, Table } from "antd"
 import TextArea from "antd/es/input/TextArea";
@@ -54,17 +54,30 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
     const navigate = useNavigate();
     const [tableVisible,setTableVisible] = useState<boolean>(false)
     const fgItemService = new ItemCreationService()
+    const [initialData,setInitialData] = useState<any>([])
 
     useEffect(()=>{
         if(props.coData){
             form.setFieldsValue({
-                'itemCode':props.coData.item_code,
+                'itemCode':initialData.itemCode,
                 // 'buyer':
 
             })
         }
     
-    },[props.coData])
+    },[initialData])
+
+    useEffect(() => {
+        if(props?.coData){
+            const req = new StyleOrderIdReq(props?.coData)
+            styleOrderService.getCOInfoById(req).then(res => {
+                if(res.status){
+                    setInitialData(res.data)
+                }
+            })
+        }
+
+    },[props?.coData])
 
 
     useEffect(() => {
@@ -303,7 +316,7 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
               </Button>
             </span>
           }>
-            <Form layout="vertical" form={form} onFinish={onFinish} initialValues={props.coData}>
+            <Form layout="vertical" form={form} onFinish={onFinish} initialValues={initialData}>
                <Row gutter={[8,4]}>
                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 12}}>
                <Card size='small' bordered={false}>

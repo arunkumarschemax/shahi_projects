@@ -19,5 +19,8 @@ export class StyleOrderService extends CommonAxiosService{
     async cancelVariantOrder(req:VariantIdReq):Promise<CommonResponseModel>{
         return this.axiosPostCall(this.URL + '/cancelVariantOrder',req)
     }
+    async getCOInfoById(req:StyleOrderIdReq):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL + '/getCOInfoById',req)
+    }
 
 }
