@@ -1,7 +1,7 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
-import { MarketingModel, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
+import { FactoryUpdateRequest, MarketingModel, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 import { NikeService } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag, Statistic, Modal, TreeSelect, Tooltip } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag, Statistic, Modal, TreeSelect, Tooltip, Checkbox } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { ColumnsType } from 'antd/es/table';
@@ -56,6 +56,12 @@ const PPMReport = () => {
   const [poLineProp, setPoLineProp] = useState<any>([]);
   const [remarkModal, setRemarkModal] = useState<boolean>(false)
   const [itemText, setRemarks] = useState<string>('')
+  const [expandedActualUnit, setExpandedActualUnit] = useState({});
+  const [expandedQuantityAllocation, setExpandedQuantityAllocation] = useState({});
+  const [textareaValuesActualUnit, setTextareaValuesActualUnit] = useState({});
+  const [textareaValuesQuantityAllocation, setTextareaValuesQuantityAllocation] = useState({});
+
+
 
 
   useEffect(() => {
@@ -75,8 +81,6 @@ const PPMReport = () => {
     getGeoCode();
 
   }, [])
-
-
 
   const cancelHandle = () => {
     setIsModalOpen1(false);
@@ -1379,6 +1383,19 @@ const PPMReport = () => {
         width: 70,
         align: 'center',
       },
+      {
+        title: 'Actual Unit',
+        dataIndex: 'actualUnit',
+        width: 70,
+        align: 'center',
+        render: (text, record) => {
+            if (!text || text.trim() === '') {
+                return '-';
+            } else {
+                return text;
+            }
+        }
+    },
       {
         title: 'PCD',
         dataIndex: 'PCD',

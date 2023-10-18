@@ -1067,66 +1067,66 @@ const FactoryPPMReport = () => {
             },
             { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName', width: 70, },
 
-            {
-                title: 'Quantity Allocation',
-                align: 'center', width: 70,
-                render: (text, rowData) => (
-                    <span>
-                        <Form.Item>
-                            <Checkbox
-                                onChange={() => handleCheckboxChange('QuantityAllocation', rowData.poAndLine)}
-                                checked={expandedQuantityAllocation[rowData.poAndLine] || false}
-                            />
-                        </Form.Item>
-                    </span>
-                ),
-            },
-            {
-                title: 'Text Area',
-                dataIndex: 'id', width: 165,
-                align: 'center',
-                render: (text, rowData) => (
-                    <div>
-                        {expandedQuantityAllocation[rowData.poAndLine] && (
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <Input
-                                    name='allocatedQuantity'
-                                    allowClear
-                                    style={{ marginRight: '10px' }}
-                                    placeholder="Enter text"
-                                    value={textareaValuesQuantityAllocation[rowData.poAndLine] || ''}
-                                    onChange={(e) =>
-                                        handleTextareaChange('QuantityAllocation', rowData.poAndLine, e.target.value)
-                                    }
-                                />
-                                <Button
-                                    type="primary"
-                                    onClick={() => {
-                                        updateColumns(rowData.poAndLine, '', textareaValuesQuantityAllocation[rowData.poAndLine]);
-                                        handleCheckboxChange('QuantityAllocation', rowData.poAndLine);
-                                        handleTextareaChange('QuantityAllocation', rowData.poAndLine, '');
-                                    }}
-                                >
-                                    Submit
-                                </Button>
-                            </div>
-                        )}
-                    </div>
-                ),
+            // {
+            //     title: 'Quantity Allocation',
+            //     align: 'center', width: 70,
+            //     render: (text, rowData) => (
+            //         <span>
+            //             <Form.Item>
+            //                 <Checkbox
+            //                     onChange={() => handleCheckboxChange('QuantityAllocation', rowData.poAndLine)}
+            //                     checked={expandedQuantityAllocation[rowData.poAndLine] || false}
+            //                 />
+            //             </Form.Item>
+            //         </span>
+            //     ),
+            // },
+            // {
+            //     title: 'Text Area',
+            //     dataIndex: 'id', width: 165,
+            //     align: 'center',
+            //     render: (text, rowData) => (
+            //         <div>
+            //             {expandedQuantityAllocation[rowData.poAndLine] && (
+            //                 <div style={{ display: 'flex', alignItems: 'center' }}>
+            //                     <Input
+            //                         name='allocatedQuantity'
+            //                         allowClear
+            //                         style={{ marginRight: '10px' }}
+            //                         placeholder="Enter text"
+            //                         value={textareaValuesQuantityAllocation[rowData.poAndLine] || ''}
+            //                         onChange={(e) =>
+            //                             handleTextareaChange('QuantityAllocation', rowData.poAndLine, e.target.value)
+            //                         }
+            //                     />
+            //                     <Button
+            //                         type="primary"
+            //                         onClick={() => {
+            //                             updateColumns(rowData.poAndLine, '', textareaValuesQuantityAllocation[rowData.poAndLine]);
+            //                             handleCheckboxChange('QuantityAllocation', rowData.poAndLine);
+            //                             handleTextareaChange('QuantityAllocation', rowData.poAndLine, '');
+            //                         }}
+            //                     >
+            //                         Submit
+            //                     </Button>
+            //                 </div>
+            //             )}
+            //         </div>
+            //     ),
 
-            },
-            {
-                title: 'Reallocated Quantity',
-                dataIndex: 'allocatedQuantity', width: 75,
-                align: 'center',
-                render: (text, record) => {
-                    if (!text || text.trim() === '') {
-                        return '-';
-                    } else {
-                        return text;
-                    }
-                }
-            },
+            // },
+            // {
+            //     title: 'Reallocated Quantity',
+            //     dataIndex: 'allocatedQuantity', width: 75,
+            //     align: 'center',
+            //     render: (text, record) => {
+            //         if (!text || text.trim() === '') {
+            //             return '-';
+            //         } else {
+            //             return text;
+            //         }
+            //     }
+            // },
             {
                 title: 'Total Item Qty',
                 dataIndex: 'totalItemQty', width: 70,
