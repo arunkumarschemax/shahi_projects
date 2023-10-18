@@ -210,7 +210,7 @@ export class StyleOrderService{
     try{
         await transactionalEntityManager.startTransaction();
         console.log(req);
-        const styleOrderDetails = await transactionalEntityManager.getRepository(CoLine).findOne({where:{id:req.variantId}});
+        const styleOrderDetails = await transactionalEntityManager.getRepository(CoLine).findOne({relations:["styleOrderInfo"],where:{id:req.variantId}});
         const updateCoLineStatus = await transactionalEntityManager.getRepository(CoLine).update({id:req.variantId},{status:CustomerOrderStatusEnum.CLOSED});
         if(updateCoLineStatus.affected > 0){
             const getCoLines = await transactionalEntityManager.getRepository(CoLine).find({where:{status:Raw(alias => `status !=  '${CustomerOrderStatusEnum.CLOSED}'`), id:Raw(alias => `id !=  '${req.variantId}'`)}});
