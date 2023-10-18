@@ -532,7 +532,7 @@ const VASChangesCompareGrid = () => {
         },
         {
             title: 'Product Code',
-            dataIndex: 'productCode',width:70,
+            dataIndex: 'productCode',width:90,align:'center'
         },
         {
             title: 'OGAC',width:70,

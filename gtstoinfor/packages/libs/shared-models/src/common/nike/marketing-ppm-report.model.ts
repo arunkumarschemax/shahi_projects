@@ -71,10 +71,11 @@ export class MarketingReportModel {
     actualUnit: string;
     allocatedQuantity: string;
     hanger: string;
+    fabricContent: string;
     sizeWiseData: MarketingReportSizeModel[];
 
     constructor(lastModifiedDate: string, item: string, factory: string, documentDate: string, purchaseOrderNumber: string, poLineItemNumber: number, poAndLine: string, DPOMLineItemStatus: string, styleNumber: string, productCode: string, colorDesc: string, customerOrder: string, coFinalApprovalDate: string, planNo: string, leadTime: string, categoryCode: string, categoryDesc: string, vendorCode: string, gccFocusCode: string, gccFocusDesc: string, genderAgeCode: string, genderAgeDesc: string, destinationCountryCode: string, destinationCountry: string, plant: string, plantName: string, tradingCoPoNumber: string, UPC: string, directShipSONumber: string, directShipSOItemNumber: string, customerPO: string, shipToCustomerNumber: string, shipToCustomerName: string, planningSeasonCode: string, planningSeasonYear: string, docTypeCode: string, docTypeDesc: string, MRGAC: string, OGAC: string, GAC: string, truckOutDate: string, originReceiptDate: string, factoryDeliveryActDate: string, GACReasonCode: string, GACReasonDesc: string, shippingType: string, planningPriorityCode: string, planningPriorityDesc: string, launchCode: string, geoCode: string, modeOfTransportationCode: string, inCoTerms: string, inventorySegmentCode: string, purchaseGroupCode: string, purchaseGroupName: string, totalItemQty: string, actualShippedQty: string, VASSize: string, itemVasText: string, itemVasTextPDF: string, itemText: string,
-        PCD: string, shipToAddressLegalPO: string, shipToAddressDIA: string, CABCode: string, displayName: string, actualUnit: string, allocatedQuantity: string, hanger: string, sizeWiseData: MarketingReportSizeModel[]
+        PCD: string, shipToAddressLegalPO: string, shipToAddressDIA: string, CABCode: string, displayName: string, actualUnit: string, allocatedQuantity: string, hanger: string, fabricContent: string, sizeWiseData: MarketingReportSizeModel[]
     ) {
 
         this.lastModifiedDate = lastModifiedDate;
@@ -147,5 +148,6 @@ export class MarketingReportModel {
         this.allocatedQuantity = allocatedQuantity
         this.sizeWiseData = sizeWiseData
         this.hanger = hanger
+        this.fabricContent = fabricContent
     };
 }

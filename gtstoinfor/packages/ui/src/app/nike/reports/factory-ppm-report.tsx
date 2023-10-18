@@ -324,11 +324,10 @@ const FactoryPPMReport = () => {
                     setFilteredData(res.data);
                     let csvdata = []
                     res.data.forEach(item => {
-                        console.log(item);
                         csvdata.push({
                             'Po+Line': item.poAndLine,
                             'Last Modified Date': moment(item.lastModifiedDate).format('MM/DD/YYYY'),
-                            'Item': (item.item).substring(0, 4),
+                            'Item': item.item ? (item.item).substring(0, 4) : '-',
                             'Factory': item.factory,
                             'Document Date': moment(item.documentDate).format('MM/DD/YYYY'),
                             'Actual Unit': item.actualUnit,
@@ -341,14 +340,14 @@ const FactoryPPMReport = () => {
                             'CO': item.customerOrder,
                             'CO Final Approval Date': item.coFinalApprovalDate,
                             'Plan No': item.planNo,
-                            'Lead Time': item.leadTime,
+                            'Lead Time': item.leadTime ? (Number(item.leadTime) * -1) : '-',
                             'Category': item.categoryCode,
                             'Category Description': item.categoryDesc,
                             'Vendor Code': item.vendorCode,
                             'Global Category Core Focus': item.gccFocusCode,
                             'Global Category Core Focus Description': item.gccFocusDesc,
                             'Gender Age': item.genderAgeCode,
-                            'Gender Age Description': '',
+                            'Gender Age Description': item.genderAgeDesc,
                             'Destination Country Code ': item.destinationCountryCode,
                             'Destination Country Name': item.destinationCountry,
                             'Geo Code': item.geoCode,
@@ -379,57 +378,93 @@ const FactoryPPMReport = () => {
                             'Launch Code': item.launchCode,
                             'Mode Of Transportation': item.modeOfTransportationCode,
                             'In Co Terms': item.inCoTerms,
-                            'Inventory Segment Code': item.inventorySegmentCode,
+                            'Inventory Segment Code': String(item.inventorySegmentCode),
                             'Purchase Group': item.purchaseGroupCode,
                             'Purchase Group Name': item.purchaseGroupName,
                             'Reallocated Quantity': item.allocatedQuantity,
                             'Total Item Quantity': item.totalItemQty,
-                            '2XL': item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.sizeQty,
-                            'XL': item.sizeWiseData.find(i => i.sizeDescription === 'XL')?.sizeQty,
-                            'L': item.sizeWiseData.find(i => i.sizeDescription === 'L')?.sizeQty,
-                            'M': item.sizeWiseData.find(i => i.sizeDescription === 'M')?.sizeQty,
-                            'S': item.sizeWiseData.find(i => i.sizeDescription === 'S')?.sizeQty,
-                            'XS': item.sizeWiseData.find(i => i.sizeDescription === 'XS')?.sizeQty,
-                            '3XL': item.sizeWiseData.find(i => i.sizeDescription === '3XL')?.sizeQty,
-                            '4XL': item.sizeWiseData.find(i => i.sizeDescription === '4XL')?.sizeQty,
-                            '5XL': item.sizeWiseData.find(i => i.sizeDescription === '5XL')?.sizeQty,
-                            'L-T': item.sizeWiseData.find(i => i.sizeDescription === 'L-T')?.sizeQty,
-                            'L-S': item.sizeWiseData.find(i => i.sizeDescription === 'L-S')?.sizeQty,
-                            'M-S': item.sizeWiseData.find(i => i.sizeDescription === 'M-S')?.sizeQty,
-                            'M-T': item.sizeWiseData.find(i => i.sizeDescription === 'M-T')?.sizeQty,
-                            'S-S': item.sizeWiseData.find(i => i.sizeDescription === 'S-S')?.sizeQty,
-                            'S-T': item.sizeWiseData.find(i => i.sizeDescription === 'S-T')?.sizeQty,
-                            'XL-T': item.sizeWiseData.find(i => i.sizeDescription === 'XL-T')?.sizeQty,
-                            'XS-S': item.sizeWiseData.find(i => i.sizeDescription === 'XS-S')?.sizeQty,
-                            'XS-T': item.sizeWiseData.find(i => i.sizeDescription === 'XS-T')?.sizeQty,
-                            '2XL-T': item.sizeWiseData.find(i => i.sizeDescription === '2XL-T')?.sizeQty,
-                            'XL-S': item.sizeWiseData.find(i => i.sizeDescription === 'XL-S')?.sizeQty,
-                            '2XLTT': item.sizeWiseData.find(i => i.sizeDescription === '2XLTT')?.sizeQty,
-                            '3XL-T': item.sizeWiseData.find(i => i.sizeDescription === '3XL-T')?.sizeQty,
-                            'LTT': item.sizeWiseData.find(i => i.sizeDescription === 'LTT')?.sizeQty,
-                            'XLTT': item.sizeWiseData.find(i => i.sizeDescription === 'XLTT')?.sizeQty,
-                            '2XS': item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.sizeQty,
-                            '4XL-T': item.sizeWiseData.find(i => i.sizeDescription === '4XL-T')?.sizeQty,
-                            '2XL-S': item.sizeWiseData.find(i => i.sizeDescription === '2XL-S')?.sizeQty,
-                            'MTT': item.sizeWiseData.find(i => i.sizeDescription === 'MTT')?.sizeQty,
-                            '3XL-S': item.sizeWiseData.find(i => i.sizeDescription === '3XL-S')?.sizeQty,
-                            '4XL-S': item.sizeWiseData.find(i => i.sizeDescription === '4XL-S')?.sizeQty,
-                            '3XLTT': item.sizeWiseData.find(i => i.sizeDescription === '3XLTT')?.sizeQty,
-                            'STT': item.sizeWiseData.find(i => i.sizeDescription === 'STT')?.sizeQty,
-                            'L+': item.sizeWiseData.find(i => i.sizeDescription === 'L+')?.sizeQty,
-                            'M+': item.sizeWiseData.find(i => i.sizeDescription === 'M+')?.sizeQty,
-                            'S+': item.sizeWiseData.find(i => i.sizeDescription === 'S+')?.sizeQty,
-                            'XL+': item.sizeWiseData.find(i => i.sizeDescription === 'XL+')?.sizeQty,
+                            '2XL (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.sizeQty,
+                            '2XL (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'XL (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XL')?.sizeQty,
+                            'XL (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XL')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'L (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'L')?.sizeQty,
+                            'L (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'L')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'M (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'M')?.sizeQty,
+                            'M (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'M')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'S')?.sizeQty,
+                            'S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'S')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'XS (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XS')?.sizeQty,
+                            'XS (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XS')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            '3XL (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '3XL')?.sizeQty,
+                            '3XL (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '3XL')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            '4XL (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '4XL')?.sizeQty,
+                            '4XL (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '4XL')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            '5XL (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '5XL')?.sizeQty,
+                            '5XL (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '5XL')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '5XL')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'L-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'L-T')?.sizeQty,
+                            'L-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'L-T')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'L-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'L-S')?.sizeQty,
+                            'L-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'L-S')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'M-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'M-S')?.sizeQty,
+                            'M-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'M-S')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'M-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'M-T')?.sizeQty,
+                            'M-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'M-T')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'S-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'S-S')?.sizeQty,
+                            'S-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'S-S')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'S-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'S-T')?.sizeQty,
+                            'S-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'S-T')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'XL-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-T')?.sizeQty,
+                            'XL-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XL-T')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'XS-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-S')?.sizeQty,
+                            'XS-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XS-S')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'XS-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-T')?.sizeQty,
+                            'XS-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XS-T')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            '2XL-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-T')?.sizeQty,
+                            '2XL-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '2XL-T')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'XL-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-S')?.sizeQty,
+                            'XL-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XL-S')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            '2XLTT (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '2XLTT')?.sizeQty,
+                            '2XLTT (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XLTT')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '2XLTT')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            '3XL-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-T')?.sizeQty,
+                            '3XL-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '3XL-T')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'LTT (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'LTT')?.sizeQty,
+                            'LTT (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'LTT')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'LTT')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'XLTT (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XLTT')?.sizeQty,
+                            'XLTT (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XLTT')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XLTT')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            '2XS (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.sizeQty,
+                            '2XS (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            '4XL-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-T')?.sizeQty,
+                            '4XL-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '4XL-T')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            '2XL-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-S')?.sizeQty,
+                            '2XL-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '2XL-S')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'MTT (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'MTT')?.sizeQty,
+                            'MTT (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'MTT')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'MTT')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            '3XL-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-S')?.sizeQty,
+                            '3XL-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '3XL-S')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            '4XL-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-S')?.sizeQty,
+                            '4XL-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '4XL-S')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            '3XLTT (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '3XLTT')?.sizeQty,
+                            '3XLTT (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XLTT')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '3XLTT')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'STT (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'STT')?.sizeQty,
+                            'STT (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'STT')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'STT')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'L+ (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'L+')?.sizeQty,
+                            'L+ (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L+')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'L+')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'M+ (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'M+')?.sizeQty,
+                            'M+ (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M+')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'M+')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'S+ (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'S+')?.sizeQty,
+                            'S+ (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S+')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'S+')?.sizeQty * 0.03).toFixed(3)) : '-',
+                            'XL+ (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XL+')?.sizeQty,
+                            'XL+ (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL+')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XL+')?.sizeQty * 0.03).toFixed(3)) : '-',
                             'Change Register': item.displayName,
-                            'Allowed Excess Ship Qty': '',
                             'Actual Shipped Qty': item.actualShippedQty,
                             'Actual Ship %': '',
                             'VAS-Size': item.VASSize,
                             'Item Vas Text': item.itemVasText,
                             'Item Text': item.itemText,
-                            'Hanger Po': item.allocatedQuantity
+                            'Hanger Po': item.hanger,
                         });
                     });
+                    console.log(csvdata)
                     setcsvData(csvdata);
                 } else {
                     setGridData([]);
@@ -1032,66 +1067,66 @@ const FactoryPPMReport = () => {
             },
             { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName', width: 70, },
 
-            {
-                title: 'Quantity Allocation',
-                align: 'center', width: 70,
-                render: (text, rowData) => (
-                    <span>
-                        <Form.Item>
-                            <Checkbox
-                                onChange={() => handleCheckboxChange('QuantityAllocation', rowData.poAndLine)}
-                                checked={expandedQuantityAllocation[rowData.poAndLine] || false}
-                            />
-                        </Form.Item>
-                    </span>
-                ),
-            },
-            {
-                title: 'Text Area',
-                dataIndex: 'id', width: 165,
-                align: 'center',
-                render: (text, rowData) => (
-                    <div>
-                        {expandedQuantityAllocation[rowData.poAndLine] && (
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <Input
-                                    name='allocatedQuantity'
-                                    allowClear
-                                    style={{ marginRight: '10px' }}
-                                    placeholder="Enter text"
-                                    value={textareaValuesQuantityAllocation[rowData.poAndLine] || ''}
-                                    onChange={(e) =>
-                                        handleTextareaChange('QuantityAllocation', rowData.poAndLine, e.target.value)
-                                    }
-                                />
-                                <Button
-                                    type="primary"
-                                    onClick={() => {
-                                        updateColumns(rowData.poAndLine, '', textareaValuesQuantityAllocation[rowData.poAndLine]);
-                                        handleCheckboxChange('QuantityAllocation', rowData.poAndLine);
-                                        handleTextareaChange('QuantityAllocation', rowData.poAndLine, '');
-                                    }}
-                                >
-                                    Submit
-                                </Button>
-                            </div>
-                        )}
-                    </div>
-                ),
+            // {
+            //     title: 'Quantity Allocation',
+            //     align: 'center', width: 70,
+            //     render: (text, rowData) => (
+            //         <span>
+            //             <Form.Item>
+            //                 <Checkbox
+            //                     onChange={() => handleCheckboxChange('QuantityAllocation', rowData.poAndLine)}
+            //                     checked={expandedQuantityAllocation[rowData.poAndLine] || false}
+            //                 />
+            //             </Form.Item>
+            //         </span>
+            //     ),
+            // },
+            // {
+            //     title: 'Text Area',
+            //     dataIndex: 'id', width: 165,
+            //     align: 'center',
+            //     render: (text, rowData) => (
+            //         <div>
+            //             {expandedQuantityAllocation[rowData.poAndLine] && (
+            //                 <div style={{ display: 'flex', alignItems: 'center' }}>
+            //                     <Input
+            //                         name='allocatedQuantity'
+            //                         allowClear
+            //                         style={{ marginRight: '10px' }}
+            //                         placeholder="Enter text"
+            //                         value={textareaValuesQuantityAllocation[rowData.poAndLine] || ''}
+            //                         onChange={(e) =>
+            //                             handleTextareaChange('QuantityAllocation', rowData.poAndLine, e.target.value)
+            //                         }
+            //                     />
+            //                     <Button
+            //                         type="primary"
+            //                         onClick={() => {
+            //                             updateColumns(rowData.poAndLine, '', textareaValuesQuantityAllocation[rowData.poAndLine]);
+            //                             handleCheckboxChange('QuantityAllocation', rowData.poAndLine);
+            //                             handleTextareaChange('QuantityAllocation', rowData.poAndLine, '');
+            //                         }}
+            //                     >
+            //                         Submit
+            //                     </Button>
+            //                 </div>
+            //             )}
+            //         </div>
+            //     ),
 
-            },
-            {
-                title: 'Reallocated Quantity',
-                dataIndex: 'allocatedQuantity', width: 75,
-                align: 'center',
-                render: (text, record) => {
-                    if (!text || text.trim() === '') {
-                        return '-';
-                    } else {
-                        return text;
-                    }
-                }
-            },
+            // },
+            // {
+            //     title: 'Reallocated Quantity',
+            //     dataIndex: 'allocatedQuantity', width: 75,
+            //     align: 'center',
+            //     render: (text, record) => {
+            //         if (!text || text.trim() === '') {
+            //             return '-';
+            //         } else {
+            //             return text;
+            //         }
+            //     }
+            // },
             {
                 title: 'Total Item Qty',
                 dataIndex: 'totalItemQty', width: 70,
@@ -1132,7 +1167,31 @@ const FactoryPPMReport = () => {
                                 return '-';
                             }
                         }
-                    }
+                    },
+                    {
+                        title: 'Allowed Excess Ship Qty',
+                        dataIndex: '',
+                        key: '',
+                        width: 70,
+                        className: 'centered-column',
+                        render: (text, record) => {
+                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                            if (sizeData) {
+                                if (sizeData.sizeQty !== null) {
+                                    const formattedQty = Number(sizeData.sizeQty);
+                                    return (
+                                        Number(formattedQty * 0.03).toFixed(3)
+                                    );
+                                } else {
+                                    return (
+                                        '-'
+                                    );
+                                }
+                            } else {
+                                return '-';
+                            }
+                        }
+                    },
                 ]
             });
 
@@ -1179,12 +1238,6 @@ const FactoryPPMReport = () => {
                         return text;
                     }
                 },
-            },
-            {
-                title: 'Allowed Excess Ship Qty',
-                dataIndex: '',
-                align: 'center', width: 70,
-
             },
             {
                 title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty', width: 70, render: (text, record) => {
@@ -1356,10 +1409,10 @@ const FactoryPPMReport = () => {
         <>
             <Card title="Factory PPM" headStyle={{ fontWeight: 'bold' }}
                 extra={filteredData.length > 0 ? (<Button
-                    type="default"
+                    // type="default"
                     style={{ color: 'green' }}
-                    icon={<FileExcelFilled />}><CSVLink className="downloadbtn" filename="factory-ppm-report.csv" data={csvData}>
-                        Export to CSV
+                ><CSVLink className="downloadbtn" filename="factory-ppm-report.csv" data={csvData}>
+                        <FileExcelFilled /> Export to CSV
                     </CSVLink></Button>) : null}>
                 <Form
                     onFinish={getData}
@@ -1529,25 +1582,25 @@ const FactoryPPMReport = () => {
                     </Row>
                 </Form>
                 <Row gutter={24} justify={'space-evenly'}>
-                   <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card style={{ backgroundColor: 'aqua', height: 100, alignItems: 'center' }} >
+                    <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card style={{ backgroundColor: 'aqua', height: 100, alignItems: 'center' }} >
                         <b> <Statistic loading={tableLoading} title="Total Order Qty:" style={{ fontSize: 'small' }} value={count} formatter={formatter} />
                         </b></Card></Col>
-                   <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card style={{ backgroundColor: '#CBADF7', height: 100, alignItems: 'center' }}>
+                    <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card style={{ backgroundColor: '#CBADF7', height: 100, alignItems: 'center' }}>
                         <b><Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
                         </b></Card></Col>
-                   <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card style={{ backgroundColor: '#A1EBB5', height: 100, alignItems: 'center' }}>
+                    <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card style={{ backgroundColor: '#A1EBB5', height: 100, alignItems: 'center' }}>
                         <b><Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
                         </b></Card> </Col>
-                   <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card style={{ backgroundColor: '#E1F5A5', height: 100, alignItems: 'center' }}>
+                    <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card style={{ backgroundColor: '#E1F5A5', height: 100, alignItems: 'center' }}>
                         <b><Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
                         </b> </Card> </Col>
-                   <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card style={{ backgroundColor: '#A5F5D7', height: 100, alignItems: 'center' }}>
+                    <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card style={{ backgroundColor: '#A5F5D7', height: 100, alignItems: 'center' }}>
                         <b> <Statistic loading={tableLoading} title="Accepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
                         </b></Card> </Col>
-                   <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card style={{ backgroundColor: '#F5BCB1', height: 100, alignItems: 'center' }}>
+                    <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card style={{ backgroundColor: '#F5BCB1', height: 100, alignItems: 'center' }}>
                         <b><Statistic loading={tableLoading} title="Unaccepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
                         </b></Card></Col>
-                   <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card style={{ backgroundColor: '#B1BDF5', height: 100, alignItems: 'center' }}>
+                    <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card style={{ backgroundColor: '#B1BDF5', height: 100, alignItems: 'center' }}>
                         <b><Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
                         </b> </Card> </Col>
                     {/* <Col>

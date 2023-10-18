@@ -344,16 +344,15 @@ export class DpomService {
 
                 // Calculate the difference in days
                 const daysDifference = date4.diff(date3, 'days');
-                const text = orderDetail.poLine.itemVas.valueAddedServiceInstructions ? orderDetail.poLine.itemVas.valueAddedServiceInstructions : ' '
-                //orderDetail.poLine.itemVas.valueAddedServiceInstructions;
-                const searchText = "HANGING IS REQUIRED";
-                let hanger: string;
-                if (text.includes(searchText)) {
+                const text = orderDetail.poLine.itemVas.valueAddedServiceInstructions;
+                const searchText = 'HANGING IS REQUIRED';
+                const isPresent = text?.includes(searchText)
+                let hanger;
+                if (isPresent) {
                     hanger = 'YES'
                 } else {
                     hanger = 'NO';
                 }
-
                 // Diverted PO's
                 const itemText = orderDetail.poLine.itemTextDetail ? orderDetail.poLine.itemTextDetail[0]?.textDetails : null;
                 const matches = [];
@@ -462,7 +461,7 @@ export class DpomService {
                     const CRMData3 = await this.getCRMOrderDetails3(styleNo);
                     if (CRMData2.status) {
                         for (const data1 of CRMData1.data) {
-                            const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, factory: CRMData2?.data[0].plan_UNIT, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, planNo: CRMData2?.data[0].plan_NUMB, coPrice: data1.price, coPriceCurrency: data1.currency, paymentTerm: CRMData2?.data[0].pay_TERM_DESC, styleDesc: '', commission: data1.commission, PCD: data1.PCD })
+                            const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, factory: CRMData2?.data[0].plan_UNIT, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, planNo: CRMData2?.data[0].plan_NUMB, coPrice: data1.price, coPriceCurrency: data1.currency, paymentTerm: CRMData2?.data[0].pay_TERM_DESC, styleDesc: '', commission: data1.commission, PCD: data1.pcd, crmCoQty: data1.ord_QTY })
                             if (updateOrder.affected) {
                                 continue;
                             } else {
@@ -473,7 +472,7 @@ export class DpomService {
                         }
                     } else {
                         for (const data1 of CRMData1.data) {
-                            const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, coPrice: data1.price, coPriceCurrency: data1.currency, styleDesc: '', commission: data1.commission, PCD: data1.PCD })
+                            const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, coPrice: data1.price, coPriceCurrency: data1.currency, styleDesc: '', commission: data1.commission, PCD: data1.pcd, crmCoQty: data1.ord_QTY })
                             if (updateOrder.affected) {
                                 continue;
                             } else {
@@ -672,8 +671,8 @@ export class DpomService {
                 const daysDifference = days;
                 let version = 1;
                 const text = orderDetail.poLine.itemVas.valueAddedServiceInstructions;
-                const searchText = "HANGING IS REQUIRED";
-                let hanger: string;
+                const searchText = 'HANGING IS REQUIRED';
+                let hanger;
                 if (text.includes(searchText)) {
                     hanger = 'YES'
                 } else {
@@ -888,7 +887,7 @@ export class DpomService {
     async getFabricTrackerReport(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
         try {
             const data = await this.dpomRepository.getFabricTrackerReport(req);
-
+            // console.log(data,"data")
             if (data.length > 0) {
                 return new CommonResponseModel(true, 1, 'Data retrieved', data);
             } else {
@@ -943,7 +942,6 @@ export class DpomService {
     async getOrderAcceptanceData(req: nikeFilterRequest): Promise<CommonResponseModel> {
         try {
             const data = await this.dpomRepository.getOrderAcceptanceDat(req);
-            //   console.log(req,'request')
             if (data.length > 0) {
                 return new CommonResponseModel(true, 1, 'Data retrieved', data);
             } else {
@@ -1203,12 +1201,40 @@ export class DpomService {
             } else {
                 coFinalAppDate = '-'
             }
+            let formattedPCD;
+            if (rec.pcd != null && rec.pcd != 0) {
+                const year = parseInt(rec.pcd.slice(0, 4), 10);
+                const month = parseInt(rec.pcd.slice(4, 6), 10);
+                const day = parseInt(rec.pcd.slice(6, 8), 10);
+                if (isNaN(year) || isNaN(month) || isNaN(day)) {
+                    formattedPCD = null
+                }
+                const date = new Date(year, month - 1, day);
+                if (isNaN(date.getTime())) {
+                    formattedPCD = null
+                }
+                const mm = String(date.getMonth() + 1).padStart(2, '0');
+                const dd = String(date.getDate()).padStart(2, '0');
+                const yyyy = date.getFullYear();
+                formattedPCD = `${mm}/${dd}/${yyyy}`;
+            }
+            let itemVasText;
+            const instructions = rec.item_vas_text;
+            const searchString = 'SPECIAL VAS PACKING INSTRUCTIONS';
+            const isPresent = instructions?.includes(searchString);
+            if (isPresent) {
+                itemVasText = instructions?.replace(/"/g, '')
+            } else {
+                itemVasText = instructions
+            }
             if (!sizeDateMap.has(rec.po_and_line)) {
                 sizeDateMap.set(
-                    rec.po_and_line, new MarketingReportModel(moment(rec.last_modified_date).format('MM/DD/YYYY'), rec.item ? (rec.item).substring(0, 4) : null, rec.factory, moment(rec.document_date).format('MM/DD/YYYY'), rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, coFinalAppDate, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac ? moment(rec.mrgac).format('MM/DD/YYYY') : '-', rec.ogac ? moment(rec.ogac).format('MM/DD/YYYY') : '-', rec.gac ? moment(rec.gac).format('MM/DD/YYYY') : '-', rec.truck_out_date ? moment(rec.truck_out_date).format('MM/DD/YYYY') : '-', rec.origin_receipt_date ? moment(rec.origin_receipt_date).format('MM/DD/YYYY') : '-', rec.factory_delivery_date ? moment(rec.factory_delivery_date).format('MM/DD/YYYY') : '-', rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_vas_pdf, rec.item_text, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.hanger, [])
+                    rec.po_and_line, new MarketingReportModel(moment(rec.last_modified_date).format('MM/DD/YYYY'), rec.item ? (rec.item).substring(0, 4) : null, rec.factory, moment(rec.document_date).format('MM/DD/YYYY'), rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, coFinalAppDate, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac ? moment(rec.mrgac).format('MM/DD/YYYY') : '-', rec.ogac ? moment(rec.ogac).format('MM/DD/YYYY') : '-', rec.gac ? moment(rec.gac).format('MM/DD/YYYY') : '-', rec.truck_out_date ? moment(rec.truck_out_date).format('MM/DD/YYYY') : '-', rec.origin_receipt_date ? moment(rec.origin_receipt_date).format('MM/DD/YYYY') : '-', rec.factory_delivery_date ? moment(rec.factory_delivery_date).format('MM/DD/YYYY') : '-', rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, itemVasText, rec.item_vas_pdf, rec.item_text, formattedPCD, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.hanger, rec.fabric_content, [])
                 )
+                console.log(rec.cab_code,"cab_code")
             }
             sizeDateMap.get(rec.po_and_line).sizeWiseData.push(new MarketingReportSizeModel(rec.size_description, rec.size_qty, rec.gross_price_fob, rec.fob_currency_code, rec.shahi_confirmed_gross_price, rec.shahi_confirmed_gross_price_currency_code, rec.ne_inc_disc, rec.net_inc_disc_currency_code, rec.trading_net_inc_disc, rec.trading_net_currency_code, rec.legal_po_price, rec.legal_po_currency, rec.co_price, rec.co_price_currency, rec.crm_co_qty, rec.legal_po_qty, rec.actual_shipped_qty));
+
         }
         const dataModelArray: MarketingReportModel[] = [];
         sizeDateMap.forEach(sizeData => dataModelArray.push(sizeData));
@@ -1510,38 +1536,12 @@ export class DpomService {
         }
     }
 
-    async getPriceDifferenceReport(req: FobPriceDiffRequest): Promise<CommonResponseModel> {
-        const conditions = [];
-        const queryParams: any[] = [];
-
-        let query = `SELECT DISTINCT d.po_number as poNumber,d.po_and_line as poAndLine,d.po_line_item_number as poLineItemNumber,d.style_number as styleNumber,d.size_description as sizeDescription,d.gross_price_fob as grossPriceFob,d.fob_currency_code as fobCurrencyCode,f.shahi_confirmed_gross_price as shahiConfirmedgrossPrice,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
-        LEFT JOIN fob_price f ON f.style_number = d.style_number AND f.size_description = d.size_description
-        WHERE f.shahi_confirmed_gross_price IS NOT NULL `;
-
-        if (req.poAndLine) {
-            conditions.push(`d.po_and_line = ?`);
-            queryParams.push(req.poAndLine);
-        }
-        if (req.styleNumber) {
-            conditions.push(`d.style_number = ?`);
-            queryParams.push(req.styleNumber);
-        }
-        if (req.sizeDescription) {
-            conditions.push(`d.size_description = ?`);
-            queryParams.push(req.sizeDescription);
-        }
-
-        if (conditions.length > 0) {
-            const conditionString = conditions.join(' AND ');
-            query += ` AND (${conditionString})`;
-        }
-
-        const data = await this.dpomRepository.query(query, queryParams);
-
-        if (data.length) {
+    async getPriceDifferenceReport(req?: FobPriceDiffRequest): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getfobPriceReportData(req)
+        if (data.length > 0) {
             return new CommonResponseModel(true, 1, 'data retrieved', data);
         } else {
-            return new CommonResponseModel(false, 0, 'error');
+            return new CommonResponseModel(false, 0, 'Data not retrived', []);
         }
     }
 

@@ -1,7 +1,7 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
-import { MarketingModel, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
+import { FactoryUpdateRequest, MarketingModel, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 import { NikeService } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag, Statistic, Modal, TreeSelect } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag, Statistic, Modal, TreeSelect, Tooltip, Checkbox } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { ColumnsType } from 'antd/es/table';
@@ -14,7 +14,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { diffChars } from 'diff';
 import PoDetailedview from './reports/po-detailed-view';
 import { TreeNode } from 'antd/es/tree-select';
-import { CustomColumn } from '../../components';
+// import { CustomColumn } from '../../components';
 // import { summaryColumns } from './reports/summary-columns';
 const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 
@@ -53,7 +53,13 @@ const PPMReport = () => {
   const [tableLoading, setTableLoading] = useState<boolean>(false)
   const formatter = (value: number) => <CountUp end={value} separator="," />;
   const [isModalOpen1, setIsModalOpen1] = useState(false);
-  const [poLineProp, setPoLineProp] = useState<any>([])
+  const [poLineProp, setPoLineProp] = useState<any>([]);
+  const [remarkModal, setRemarkModal] = useState<boolean>(false)
+  const [itemText, setRemarks] = useState<string>('')
+  const [expandedActualUnit, setExpandedActualUnit] = useState({});
+  const [expandedQuantityAllocation, setExpandedQuantityAllocation] = useState({});
+  const [textareaValuesActualUnit, setTextareaValuesActualUnit] = useState({});
+  const [textareaValuesQuantityAllocation, setTextareaValuesQuantityAllocation] = useState({});
 
 
 
@@ -75,8 +81,6 @@ const PPMReport = () => {
     getGeoCode();
 
   }, [])
-
-
 
   const cancelHandle = () => {
     setIsModalOpen1(false);
@@ -180,9 +184,6 @@ const PPMReport = () => {
     if (form.getFieldValue('destinationCountry') !== undefined) {
       req.destinationCountry = form.getFieldValue('destinationCountry');
     }
-    if (form.getFieldValue('plant') !== undefined) {
-      req.plant = form.getFieldValue('plant');
-    }
     if (form.getFieldValue('item') !== undefined) {
       req.item = form.getFieldValue('item');
     }
@@ -216,6 +217,12 @@ const PPMReport = () => {
     if (form.getFieldValue('plant') !== undefined) {
       req.plant = form.getFieldValue('plant');
     }
+    if (form.getFieldValue('gac') !== undefined) {
+      req.gacStartDate = (form.getFieldValue('gac')[0]).format('YYYY-MM-DD');
+    }
+    if (form.getFieldValue('gac') !== undefined) {
+      req.gacEndDate = (form.getFieldValue('gac')[1]).format('YYYY-MM-DD');
+    }
     setTableLoading(true)
     service.getPPMData(req)
       .then(res => {
@@ -227,10 +234,11 @@ const PPMReport = () => {
           res.data.forEach(item => {
             csvdata.push({
               'Po+Line': item.poAndLine,
-              'Last Modified Date': moment(item.lastModifiedDate).format('MM/DD/YYYY'),
-              'Item': (item.item).substring(0, 4),
+              'Last Modified Date': item.lastModifiedDate,
+              'Item': item.item,
               'Factory': item.factory,
-              'Document Date': moment(item.documentDate).format('MM/DD/YYYY'),
+              'PCD': item.PCD,
+              'Document Date': item.documentDate,
               'Purchase Order Number': item.purchaseOrderNumber,
               'PO Line Item Number': item.poLineItemNumber,
               'DPOM Line Item Status': item.DPOMLineItemStatus,
@@ -239,14 +247,14 @@ const PPMReport = () => {
               'Style Number': item.styleNumber,
               'Product Code': item.productCode,
               'Colour Description': item.colorDesc,
-              'Description With Fabric Content': '-',
+              'Description With Fabric Content': item.fabricContent,
               'Fabric Content as Per Washcare Label': '-',
               'Planning Season Code': item.planningSeasonCode,
               'Planning Season Year': item.planningSeasonYear,
               'CO': item.customerOrder,
               'CO Final Approval Date': item.coFinalApprovalDate,
               'Plan No': item.planNo,
-              'Lead Time': item.leadTime,
+              'Lead Time': (item.leadTime) * -1,
               'Category': item.categoryCode,
               'Category Description': item.categoryDesc,
               'Vendor Code': item.vendorCode,
@@ -270,9 +278,9 @@ const PPMReport = () => {
               'Diff of Ship to Address': '-',
               'CAB Code': item.CABCode,
               'Final Destination': '-',
-              'MRGAC': moment(item.MRGAC).format('MM/DD/YYYY'),
-              'OGAC': moment(item.OGAC).format('MM/DD/YYYY'),
-              'GAC': moment(item.GAC).format('MM/DD/YYYY'),
+              'MRGAC': item.MRGAC,
+              'OGAC': item.OGAC,
+              'GAC': item.GAC,
               'GAC Reason Code': item.GACReasonCode,
               'GAC Reason Description': item.GACReasonDesc,
               'Truck Out Date': item.truckOutDate,
@@ -307,7 +315,7 @@ const PPMReport = () => {
               '2XL (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.CRMCoQty,
               '2XL (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.legalPoQty,
               '2XL (Diff of Quantity)': '-',
-              '2XL (Allowed Excess Ship Qty)': '-',
+              '2XL (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.sizeQty * 0.03).toFixed(3)) : '-',
               '2XL (Actual Shipped Qty)': '-',
               '2XL (Actual Ship %)': '-',
               'XL (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XL')?.sizeQty,
@@ -329,7 +337,7 @@ const PPMReport = () => {
               'XL (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL')?.CRMCoQty,
               'XL (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL')?.legalPoQty,
               'XL (Diff of Quantity)': '-',
-              'XL (Allowed Excess Ship Qty)': '-',
+              'XL (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XL')?.sizeQty * 0.03).toFixed(3)) : '-',
               'XL (Actual Shipped Qty)': '-',
               'XL (Actual Ship %)': '-',
               'L (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'L')?.sizeQty,
@@ -351,7 +359,7 @@ const PPMReport = () => {
               'L (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L')?.CRMCoQty,
               'L (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L')?.legalPoQty,
               'L (Diff of Quantity)': '-',
-              'L (Allowed Excess Ship Qty)': '-',
+              'L (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'L')?.sizeQty * 0.03).toFixed(3)) : '-',
               'L (Actual Shipped Qty)': '-',
               'L (Actual Ship %)': '-',
               'M (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'M')?.sizeQty,
@@ -373,7 +381,7 @@ const PPMReport = () => {
               'M (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M')?.CRMCoQty,
               'M (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M')?.legalPoQty,
               'M (Diff of Quantity)': '-',
-              'M (Allowed Excess Ship Qty)': '-',
+              'M (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'M')?.sizeQty * 0.03).toFixed(3)) : '-',
               'M (Actual Shipped Qty)': '-',
               'M (Actual Ship %)': '-',
               'S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'S')?.sizeQty,
@@ -395,7 +403,7 @@ const PPMReport = () => {
               'S (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S')?.CRMCoQty,
               'S (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S')?.legalPoQty,
               'S (Diff of Quantity)': '-',
-              'S (Allowed Excess Ship Qty)': '-',
+              'S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'S')?.sizeQty * 0.03).toFixed(3)) : '-',
               'S (Actual Shipped Qty)': '-',
               'S (Actual Ship %)': '-',
               'XS (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XS')?.sizeQty,
@@ -417,7 +425,7 @@ const PPMReport = () => {
               'XS (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS')?.CRMCoQty,
               'XS (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS')?.legalPoQty,
               'XS (Diff of Quantity)': '-',
-              'XS (Allowed Excess Ship Qty)': '-',
+              'XS (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XS')?.sizeQty * 0.03).toFixed(3)) : '-',
               'XS (Actual Shipped Qty)': '-',
               'XS (Actual Ship %)': '-',
               '3XL (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '3XL')?.sizeQty,
@@ -439,7 +447,7 @@ const PPMReport = () => {
               '3XL (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL')?.CRMCoQty,
               '3XL (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL')?.legalPoQty,
               '3XL (Diff of Quantity)': '-',
-              '3XL (Allowed Excess Ship Qty)': '-',
+              '3XL (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '3XL')?.sizeQty * 0.03).toFixed(3)) : '-',
               '3XL (Actual Shipped Qty)': '-',
               '3XL (Actual Ship %)': '-',
               '4XL (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '4XL')?.sizeQty,
@@ -461,7 +469,7 @@ const PPMReport = () => {
               '4XL (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL')?.CRMCoQty,
               '4XL (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL')?.legalPoQty,
               '4XL (Diff of Quantity)': '-',
-              '4XL (Allowed Excess Ship Qty)': '-',
+              '4XL (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '4XL')?.sizeQty * 0.03).toFixed(3)) : '-',
               '4XL (Actual Shipped Qty)': '-',
               '4XL (Actual Ship %)': '-',
               '5XL (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '5XL')?.sizeQty,
@@ -483,7 +491,7 @@ const PPMReport = () => {
               '5XL (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '5XL')?.CRMCoQty,
               '5XL (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '5XL')?.legalPoQty,
               '5XL (Diff of Quantity)': '-',
-              '5XL (Allowed Excess Ship Qty)': '-',
+              '5XL (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '5XL')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '5XL')?.sizeQty * 0.03).toFixed(3)) : '-',
               '5XL (Actual Shipped Qty)': '-',
               '5XL (Actual Ship %)': '-',
               'L-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'L-T')?.sizeQty,
@@ -505,7 +513,7 @@ const PPMReport = () => {
               'L-T (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L-T')?.CRMCoQty,
               'L-T (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L-T')?.legalPoQty,
               'L-T (Diff of Quantity)': '-',
-              'L-T (Allowed Excess Ship Qty)': '-',
+              'L-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'L-T')?.sizeQty * 0.03).toFixed(3)) : '-',
               'L-T (Actual Shipped Qty)': '-',
               'L-T (Actual Ship %)': '-',
               'L-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'L-S')?.sizeQty,
@@ -527,7 +535,7 @@ const PPMReport = () => {
               'L-S (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L-S')?.CRMCoQty,
               'L-S (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L-S')?.legalPoQty,
               'L-S (Diff of Quantity)': '-',
-              'L-S (Allowed Excess Ship Qty)': '-',
+              'L-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'L-S')?.sizeQty * 0.03).toFixed(3)) : '-',
               'L-S (Actual Shipped Qty)': '-',
               'L-S (Actual Ship %)': '-',
               'M-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'M-S')?.sizeQty,
@@ -549,7 +557,7 @@ const PPMReport = () => {
               'M-S (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M-S')?.CRMCoQty,
               'M-S (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M-S')?.legalPoQty,
               'M-S (Diff of Quantity)': '-',
-              'M-S (Allowed Excess Ship Qty)': '-',
+              'M-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'M-S')?.sizeQty * 0.03).toFixed(3)) : '-',
               'M-S (Actual Shipped Qty)': '-',
               'M-S (Actual Ship %)': '-',
               'M-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'M-T')?.sizeQty,
@@ -571,7 +579,7 @@ const PPMReport = () => {
               'M-T (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M-T')?.CRMCoQty,
               'M-T (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M-T')?.legalPoQty,
               'M-T (Diff of Quantity)': '-',
-              'M-T (Allowed Excess Ship Qty)': '-',
+              'M-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'M-T')?.sizeQty * 0.03).toFixed(3)) : '-',
               'M-T (Actual Shipped Qty)': '-',
               'M-T (Actual Ship %)': '-',
               'S-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'S-S')?.sizeQty,
@@ -593,7 +601,7 @@ const PPMReport = () => {
               'S-S (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S-S')?.CRMCoQty,
               'S-S (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S-S')?.legalPoQty,
               'S-S (Diff of Quantity)': '-',
-              'S-S (Allowed Excess Ship Qty)': '-',
+              'S-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'S-S')?.sizeQty * 0.03).toFixed(3)) : '-',
               'S-S (Actual Shipped Qty)': '-',
               'S-S (Actual Ship %)': '-',
               'S-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'S-T')?.sizeQty,
@@ -615,7 +623,7 @@ const PPMReport = () => {
               'S-T (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S-T')?.CRMCoQty,
               'S-T (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S-T')?.legalPoQty,
               'S-T (Diff of Quantity)': '-',
-              'S-T (Allowed Excess Ship Qty)': '-',
+              'S-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'S-T')?.sizeQty * 0.03).toFixed(3)) : '-',
               'S-T (Actual Shipped Qty)': '-',
               'S-T (Actual Ship %)': '-',
               'XL-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-T')?.sizeQty,
@@ -637,7 +645,7 @@ const PPMReport = () => {
               'XL-T (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-T')?.CRMCoQty,
               'XL-T (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-T')?.legalPoQty,
               'XL-T (Diff of Quantity)': '-',
-              'XL-T (Allowed Excess Ship Qty)': '-',
+              'XL-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XL-T')?.sizeQty * 0.03).toFixed(3)) : '-',
               'XL-T (Actual Shipped Qty)': '-',
               'XL-T (Actual Ship %)': '-',
               'XS-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-S')?.sizeQty,
@@ -659,7 +667,7 @@ const PPMReport = () => {
               'XS-S (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-S')?.CRMCoQty,
               'XS-S (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-S')?.legalPoQty,
               'XS-S (Diff of Quantity)': '-',
-              'XS-S (Allowed Excess Ship Qty)': '-',
+              'XS-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XS-S')?.sizeQty * 0.03).toFixed(3)) : '-',
               'XS-S (Actual Shipped Qty)': '-',
               'XS-S (Actual Ship %)': '-',
               'XS-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-T')?.sizeQty,
@@ -681,7 +689,7 @@ const PPMReport = () => {
               'XS-T (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-T')?.CRMCoQty,
               'XS-T (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-T')?.legalPoQty,
               'XS-T (Diff of Quantity)': '-',
-              'XS-T (Allowed Excess Ship Qty)': '-',
+              'XS-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XS-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XS-T')?.sizeQty * 0.03).toFixed(3)) : '-',
               'XS-T (Actual Shipped Qty)': '-',
               'XS-T (Actual Ship %)': '-',
               '2XL-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-T')?.sizeQty,
@@ -703,7 +711,7 @@ const PPMReport = () => {
               '2XL-T (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-T')?.CRMCoQty,
               '2XL-T (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-T')?.legalPoQty,
               '2XL-T (Diff of Quantity)': '-',
-              '2XL-T (Allowed Excess Ship Qty)': '-',
+              '2XL-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '2XL-T')?.sizeQty * 0.03).toFixed(3)) : '-',
               '2XL-T (Actual Shipped Qty)': '-',
               '2XL-T (Actual Ship %)': '-',
               'XL-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-S')?.sizeQty,
@@ -725,7 +733,7 @@ const PPMReport = () => {
               'XL-S (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-S')?.CRMCoQty,
               'XL-S (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-S')?.legalPoQty,
               'XL-S (Diff of Quantity)': '-',
-              'XL-S (Allowed Excess Ship Qty)': '-',
+              'XL-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XL-S')?.sizeQty * 0.03).toFixed(3)) : '-',
               'XL-S (Actual Shipped Qty)': '-',
               'XL-S (Actual Ship %)': '-',
               '2XLTT (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '2XLTT')?.sizeQty,
@@ -747,7 +755,7 @@ const PPMReport = () => {
               '2XLTT (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XLTT')?.CRMCoQty,
               '2XLTT (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XLTT')?.legalPoQty,
               '2XLTT (Diff of Quantity)': '-',
-              '2XLTT (Allowed Excess Ship Qty)': '-',
+              '2XLTT (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XLTT')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '2XLTT')?.sizeQty * 0.03).toFixed(3)) : '-',
               '2XLTT (Actual Shipped Qty)': '-',
               '2XLTT (Actual Ship %)': '-',
               '3XL-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-T')?.sizeQty,
@@ -769,7 +777,7 @@ const PPMReport = () => {
               '3XL-T (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-T')?.CRMCoQty,
               '3XL-T (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-T')?.legalPoQty,
               '3XL-T (Diff of Quantity)': '-',
-              '3XL-T (Allowed Excess Ship Qty)': '-',
+              '3XL-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '3XL-T')?.sizeQty * 0.03).toFixed(3)) : '-',
               '3XL-T (Actual Shipped Qty)': '-',
               '3XL-T (Actual Ship %)': '-',
               'LTT (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'LTT')?.sizeQty,
@@ -791,7 +799,7 @@ const PPMReport = () => {
               'LTT (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'LTT')?.CRMCoQty,
               'LTT (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'LTT')?.legalPoQty,
               'LTT (Diff of Quantity)': '-',
-              'LTT (Allowed Excess Ship Qty)': '-',
+              'LTT (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'LTT')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'LTT')?.sizeQty * 0.03).toFixed(3)) : '-',
               'LTT (Actual Shipped Qty)': '-',
               'LTT (Actual Ship %)': '-',
               'XLTT (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XLTT')?.sizeQty,
@@ -813,7 +821,7 @@ const PPMReport = () => {
               'XLTT (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XLTT')?.CRMCoQty,
               'XLTT (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XLTT')?.legalPoQty,
               'XLTT (Diff of Quantity)': '-',
-              'XLTT (Allowed Excess Ship Qty)': '-',
+              'XLTT (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XLTT')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XLTT')?.sizeQty * 0.03).toFixed(3)) : '-',
               'XLTT (Actual Shipped Qty)': '-',
               'XLTT (Actual Ship %)': '-',
               '2XS (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.sizeQty,
@@ -835,7 +843,7 @@ const PPMReport = () => {
               '2XS (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.CRMCoQty,
               '2XS (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.legalPoQty,
               '2XS (Diff of Quantity)': '-',
-              '2XS (Allowed Excess Ship Qty)': '-',
+              '2XS (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.sizeQty * 0.03).toFixed(3)) : '-',
               '2XS (Actual Shipped Qty)': '-',
               '2XS (Actual Ship %)': '-',
               '4XL-T (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-T')?.sizeQty,
@@ -857,7 +865,7 @@ const PPMReport = () => {
               '4XL-T (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-T')?.CRMCoQty,
               '4XL-T (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-T')?.legalPoQty,
               '4XL-T (Diff of Quantity)': '-',
-              '4XL-T (Allowed Excess Ship Qty)': '-',
+              '4XL-T (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-T')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '4XL-T')?.sizeQty * 0.03).toFixed(3)) : '-',
               '4XL-T (Actual Shipped Qty)': '-',
               '4XL-T (Actual Ship %)': '-',
               '2XL-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-S')?.sizeQty,
@@ -879,7 +887,7 @@ const PPMReport = () => {
               '2XL-S (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-S')?.CRMCoQty,
               '2XL-S (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-S')?.legalPoQty,
               '2XL-S (Diff of Quantity)': '-',
-              '2XL-S (Allowed Excess Ship Qty)': '-',
+              '2XL-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '2XL-S')?.sizeQty * 0.03).toFixed(3)) : '-',
               '2XL-S (Actual Shipped Qty)': '-',
               '2XL-S (Actual Ship %)': '-',
               'MTT (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'MTT')?.sizeQty,
@@ -901,7 +909,7 @@ const PPMReport = () => {
               'MTT (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'MTT')?.CRMCoQty,
               'MTT (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'MTT')?.legalPoQty,
               'MTT (Diff of Quantity)': '-',
-              'MTT (Allowed Excess Ship Qty)': '-',
+              'MTT (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'MTT')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'MTT')?.sizeQty * 0.03).toFixed(3)) : '-',
               'MTT (Actual Shipped Qty)': '-',
               'MTT (Actual Ship %)': '-',
               '3XL-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-S')?.sizeQty,
@@ -923,7 +931,7 @@ const PPMReport = () => {
               '3XL-S (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-S')?.CRMCoQty,
               '3XL-S (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-S')?.legalPoQty,
               '3XL-S (Diff of Quantity)': '-',
-              '3XL-S (Allowed Excess Ship Qty)': '-',
+              '3XL-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XL-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '3XL-S')?.sizeQty * 0.03).toFixed(3)) : '-',
               '3XL-S (Actual Shipped Qty)': '-',
               '3XL-S (Actual Ship %)': '-',
               '4XL-S (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-S')?.sizeQty,
@@ -945,7 +953,7 @@ const PPMReport = () => {
               '4XL-S (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-S')?.CRMCoQty,
               '4XL-S (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-S')?.legalPoQty,
               '4XL-S (Diff of Quantity)': '-',
-              '4XL-S (Allowed Excess Ship Qty)': '-',
+              '4XL-S (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '4XL-S')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '4XL-S')?.sizeQty * 0.03).toFixed(3)) : '-',
               '4XL-S (Actual Shipped Qty)': '-',
               '4XL-S (Actual Ship %)': '-',
               '3XLTT (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '3XLTT')?.sizeQty,
@@ -967,7 +975,7 @@ const PPMReport = () => {
               '3XLTT (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XLTT')?.CRMCoQty,
               '3XLTT (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XLTT')?.legalPoQty,
               '3XLTT (Diff of Quantity)': '-',
-              '3XLTT (Allowed Excess Ship Qty)': '-',
+              '3XLTT (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '3XLTT')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '3XLTT')?.sizeQty * 0.03).toFixed(3)) : '-',
               '3XLTT (Actual Shipped Qty)': '-',
               '3XLTT (Actual Ship %)': '-',
               'STT (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'STT')?.sizeQty,
@@ -989,7 +997,7 @@ const PPMReport = () => {
               'STT (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'STT')?.CRMCoQty,
               'STT (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'STT')?.legalPoQty,
               'STT (Diff of Quantity)': '-',
-              'STT (Allowed Excess Ship Qty)': '-',
+              'STT (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'STT')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'STT')?.sizeQty * 0.03).toFixed(3)) : '-',
               'STT (Actual Shipped Qty)': '-',
               'STT (Actual Ship %)': '-',
               'L+ (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'L+')?.sizeQty,
@@ -1011,7 +1019,7 @@ const PPMReport = () => {
               'L+ (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L+')?.CRMCoQty,
               'L+ (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L+')?.legalPoQty,
               'L+ (Diff of Quantity)': '-',
-              'L+ (Allowed Excess Ship Qty)': '-',
+              'L+ (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'L+')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'L+')?.sizeQty * 0.03).toFixed(3)) : '-',
               'L+ (Actual Shipped Qty)': '-',
               'L+ (Actual Ship %)': '-',
               'M+ (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'M+')?.sizeQty,
@@ -1033,7 +1041,7 @@ const PPMReport = () => {
               'M+ (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M+')?.CRMCoQty,
               'M+ (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M+')?.legalPoQty,
               'M+ (Diff of Quantity)': '-',
-              'M+ (Allowed Excess Ship Qty)': '-',
+              'M+ (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'M+')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'M+')?.sizeQty * 0.03).toFixed(3)) : '-',
               'M+ (Actual Shipped Qty)': '-',
               'M+ (Actual Ship %)': '-',
               'S+ (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'S+')?.sizeQty,
@@ -1055,7 +1063,7 @@ const PPMReport = () => {
               'S+ (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S+')?.CRMCoQty,
               'S+ (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S+')?.legalPoQty,
               'S+ (Diff of Quantity)': '-',
-              'S+ (Allowed Excess Ship Qty)': '-',
+              'S+ (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'S+')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'S+')?.sizeQty * 0.03).toFixed(3)) : '-',
               'S+ (Actual Shipped Qty)': '-',
               'S+ (Actual Ship %)': '-',
               'XL+ (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === 'XL+')?.sizeQty,
@@ -1077,7 +1085,7 @@ const PPMReport = () => {
               'XL+ (CO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL+')?.CRMCoQty,
               'XL+ (Legal PO Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL+')?.legalPoQty,
               'XL+ (Diff of Quantity)': '-',
-              'XL+ (Allowed Excess Ship Qty)': '-',
+              'XL+ (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === 'XL+')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === 'XL+')?.sizeQty * 0.03).toFixed(3)) : '-',
               'XL+ (Actual Shipped Qty)': '-',
               'XL+ (Actual Ship %)': '-',
               'Trading Co PO Number': item.tradingCoPoNumber,
@@ -1086,7 +1094,7 @@ const PPMReport = () => {
               'Item Vas Text in PDF PO': item.itemVasTextPDF,
               'Diff of Item Vas Text': '-',
               'Item Text': item.itemText,
-              'Hanger Po': item.allocatedQuantity,
+              'Hanger Po': item.hanger,
               'Change Register': item.displayName
             });
           });
@@ -1118,6 +1126,10 @@ const PPMReport = () => {
   //   excel.addDataSource(gridData);
   //   excel.saveAs(`ppm-report-${currentDate}.xlsx`);
   // }
+
+  const handleExport = () => {
+
+  }
 
   const totalItemQty = gridData?.map(i => i.totalItemQty)
   const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
@@ -1226,106 +1238,114 @@ const PPMReport = () => {
   }
   let isOdd = false;
 
+  const handleTextClick = (remarks) => {
+    setRemarks(remarks)
+    setRemarkModal(true)
+  }
+  const onRemarksModalOk = () => {
+    setRemarkModal(false)
+  }
+
   // function generateClassName(index) {
   //   isOdd = !isOdd; 
   //   return isOdd ? 'odd-version' version';
   // }
 
-  const summaryColumns: CustomColumn<any>[] = [
-    { title: 'Po+Line ', dataIndex: 'poAndLine', key: 'poAndLine', isDefaultSelect: true },
-    { title: 'Last Modified Date', dataIndex: 'lastModifiedDate', key: 'lastModifiedDate', isDefaultSelect: true },
-    { title: 'Item', dataIndex: 'item', key: 'item', isDefaultSelect: true },
-    { title: 'Factory', dataIndex: 'Factory', key: 'Factory', isDefaultSelect: true },
-    { title: 'PCD', dataIndex: 'PCD', key: 'PCD', isDefaultSelect: true },
-    { title: 'Document Date', dataIndex: 'documentDate', key: 'documentDate', isDefaultSelect: true },
-    { title: 'Purchase Order Number', dataIndex: 'purchase Order Number', key: 'Purchase Order Number', isDefaultSelect: true },
-    { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber', key: 'poLineItemNumber', isDefaultSelect: true },
-    { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus', key: 'DPOMLineItemStatus', isDefaultSelect: true },
-    { title: 'DocType', dataIndex: 'docTypeCode', key: 'deocTypeCode', isDefaultSelect: true },
-    { title: 'DocType Description', dataIndex: 'docTypeDesc', key: 'deocTypeDesc', isDefaultSelect: true },
-    { title: 'Style Number', dataIndex: 'styleNumber', key: 'styleNumber', isDefaultSelect: true },
-    { title: 'Product Code', dataIndex: 'productCode', key: 'productCode', isDefaultSelect: true },
-    { title: 'Colour Description', dataIndex: 'colorDesc', key: 'colorDesc', isDefaultSelect: true },
-    { title: 'Description With Fabric Content', dataIndex: '', key: 'descriptionWithFabContent', isDefaultSelect: true },
-    { title: 'Fabric Content as Per Washcare Label', dataIndex: '', key: 'fabricContentAsPer', isDefaultSelect: true },
-    { title: 'Planning Season Code', dataIndex: 'planningSeasonCode', key: 'planningSeasonCode', isDefaultSelect: true },
-    { title: 'Planning Season Year', dataIndex: 'planningSeasonYear', key: 'planningSeasonYear', isDefaultSelect: true },
-    { title: 'Co', dataIndex: 'customerOrder', key: 'customerOrder', isDefaultSelect: true },
-    { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', key: 'coFinalApprovalDate', isDefaultSelect: true },
-    { title: 'Plan No', dataIndex: 'planNo', key: 'planNo', isDefaultSelect: true },
-    { title: 'Lead Time', dataIndex: 'leadTime', key: 'leadTime', isDefaultSelect: true },
-    { title: 'Category', dataIndex: 'categoryCode', key: 'categoryCode', isDefaultSelect: true },
-    { title: 'Category Description', dataIndex: 'categoryDesc', key: 'categoryDesc', isDefaultSelect: true },
-    { title: 'Vendor Code', dataIndex: 'vendorCode', key: 'vendorCode', isDefaultSelect: true },
-    { title: 'Global Category Core Focus', dataIndex: 'gccFocusCode', key: 'gccFocusCode', isDefaultSelect: true },
-    { title: 'Global Category Core Focus Description', dataIndex: 'gccFocusDesc', key: 'gccFocusDesc', isDefaultSelect: true },
-    { title: 'Gender Age', dataIndex: 'genderAgeCode', key: 'genderAgeCode', isDefaultSelect: false },
-    { title: 'Gender Age Description', dataIndex: 'genderAgeDesc', key: 'genderAgeDesc', isDefaultSelect: false },
-    { title: 'Destination Country Code', dataIndex: 'destinationCountryCode', key: 'destinationCountryCode', isDefaultSelect: false },
-    { title: 'Destination Country Name', dataIndex: 'destinationCountry', key: 'destinationCountry', isDefaultSelect: false },
-    { title: 'Geo Code', dataIndex: 'geoCode', key: 'geoCode', isDefaultSelect: false },
-    { title: 'Plant Code', dataIndex: 'plant', key: 'plant', isDefaultSelect: false },
-    { title: 'plant Name', dataIndex: 'plantName', key: 'plantName', isDefaultSelect: false },
-    { title: 'UPC', dataIndex: 'UPC', key: 'UPC', isDefaultSelect: false },
-    { title: 'Sales Order Number', dataIndex: 'directShipSONumber', key: 'directShipSONumber', isDefaultSelect: false },
-    { title: 'Sales Order Item Number', dataIndex: 'directShipSOItemNumber', key: 'directShipSOItemNumber', isDefaultSelect: false },
-    { title: 'Customer PO', dataIndex: 'customerPO', key: 'customerPO', isDefaultSelect: false },
-    { title: 'Ship To Customer Number', dataIndex: 'shipToCustomerNumber', key: 'shipToCustomerNumber', isDefaultSelect: false },
-    { title: 'Ship To Customer Name', dataIndex: 'shipToCustomerName', key: 'shipToCustomerName', isDefaultSelect: false },
-    { title: 'Ship to Address Legal PO', dataIndex: 'shipToAddressLegalPO', key: 'shipToAddressLegalPO', isDefaultSelect: false },
-    { title: 'Ship to Address DIA', dataIndex: 'shipToAddressDIA', key: 'shipToAddressDIA', isDefaultSelect: false },
-    {
-      title: 'Diff of Ship to Address', dataIndex: '', key: 'diffOfShipToAddress', isDefaultSelect: false,
-      render: (text, record) => {
-        const lines1 = (record.shipToAddressLegalPO)?.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-        const text1 = lines1?.join('');
+  // const summaryColumns: CustomColumn<any>[] = [
+  //   { title: 'Po+Line ', dataIndex: 'poAndLine', key: 'poAndLine', isDefaultSelect: true },
+  //   { title: 'Last Modified Date', dataIndex: 'lastModifiedDate', key: 'lastModifiedDate', isDefaultSelect: true },
+  //   { title: 'Item', dataIndex: 'item', key: 'item', isDefaultSelect: true },
+  //   { title: 'Factory', dataIndex: 'Factory', key: 'Factory', isDefaultSelect: true },
+  //   { title: 'PCD', dataIndex: 'PCD', key: 'PCD', isDefaultSelect: true },
+  //   { title: 'Document Date', dataIndex: 'documentDate', key: 'documentDate', isDefaultSelect: true },
+  //   { title: 'Purchase Order Number', dataIndex: 'purchase Order Number', key: 'Purchase Order Number', isDefaultSelect: true },
+  //   { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber', key: 'poLineItemNumber', isDefaultSelect: true },
+  //   { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus', key: 'DPOMLineItemStatus', isDefaultSelect: true },
+  //   { title: 'DocType', dataIndex: 'docTypeCode', key: 'deocTypeCode', isDefaultSelect: true },
+  //   { title: 'DocType Description', dataIndex: 'docTypeDesc', key: 'deocTypeDesc', isDefaultSelect: true },
+  //   { title: 'Style Number', dataIndex: 'styleNumber', key: 'styleNumber', isDefaultSelect: true },
+  //   { title: 'Product Code', dataIndex: 'productCode', key: 'productCode', isDefaultSelect: true },
+  //   { title: 'Colour Description', dataIndex: 'colorDesc', key: 'colorDesc', isDefaultSelect: true },
+  //   { title: 'Description With Fabric Content', dataIndex: 'fabricContent', key: 'fabricContent', isDefaultSelect: true },
+  //   { title: 'Fabric Content as Per Washcare Label', dataIndex: '', key: 'fabricContentAsPer', isDefaultSelect: true },
+  //   { title: 'Planning Season Code', dataIndex: 'planningSeasonCode', key: 'planningSeasonCode', isDefaultSelect: true },
+  //   { title: 'Planning Season Year', dataIndex: 'planningSeasonYear', key: 'planningSeasonYear', isDefaultSelect: true },
+  //   { title: 'Co', dataIndex: 'customerOrder', key: 'customerOrder', isDefaultSelect: true },
+  //   { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', key: 'coFinalApprovalDate', isDefaultSelect: true },
+  //   { title: 'Plan No', dataIndex: 'planNo', key: 'planNo', isDefaultSelect: true },
+  //   { title: 'Lead Time', dataIndex: 'leadTime', key: 'leadTime', isDefaultSelect: true },
+  //   { title: 'Category', dataIndex: 'categoryCode', key: 'categoryCode', isDefaultSelect: true },
+  //   { title: 'Category Description', dataIndex: 'categoryDesc', key: 'categoryDesc', isDefaultSelect: true },
+  //   { title: 'Vendor Code', dataIndex: 'vendorCode', key: 'vendorCode', isDefaultSelect: true },
+  //   { title: 'Global Category Core Focus', dataIndex: 'gccFocusCode', key: 'gccFocusCode', isDefaultSelect: true },
+  //   { title: 'Global Category Core Focus Description', dataIndex: 'gccFocusDesc', key: 'gccFocusDesc', isDefaultSelect: true },
+  //   { title: 'Gender Age', dataIndex: 'genderAgeCode', key: 'genderAgeCode', isDefaultSelect: false },
+  //   { title: 'Gender Age Description', dataIndex: 'genderAgeDesc', key: 'genderAgeDesc', isDefaultSelect: false },
+  //   { title: 'Destination Country Code', dataIndex: 'destinationCountryCode', key: 'destinationCountryCode', isDefaultSelect: false },
+  //   { title: 'Destination Country Name', dataIndex: 'destinationCountry', key: 'destinationCountry', isDefaultSelect: false },
+  //   { title: 'Geo Code', dataIndex: 'geoCode', key: 'geoCode', isDefaultSelect: false },
+  //   { title: 'Plant Code', dataIndex: 'plant', key: 'plant', isDefaultSelect: false },
+  //   { title: 'plant Name', dataIndex: 'plantName', key: 'plantName', isDefaultSelect: false },
+  //   { title: 'UPC', dataIndex: 'UPC', key: 'UPC', isDefaultSelect: false },
+  //   { title: 'Sales Order Number', dataIndex: 'directShipSONumber', key: 'directShipSONumber', isDefaultSelect: false },
+  //   { title: 'Sales Order Item Number', dataIndex: 'directShipSOItemNumber', key: 'directShipSOItemNumber', isDefaultSelect: false },
+  //   { title: 'Customer PO', dataIndex: 'customerPO', key: 'customerPO', isDefaultSelect: false },
+  //   { title: 'Ship To Customer Number', dataIndex: 'shipToCustomerNumber', key: 'shipToCustomerNumber', isDefaultSelect: false },
+  //   { title: 'Ship To Customer Name', dataIndex: 'shipToCustomerName', key: 'shipToCustomerName', isDefaultSelect: false },
+  //   { title: 'Ship to Address Legal PO', dataIndex: 'shipToAddressLegalPO', key: 'shipToAddressLegalPO', isDefaultSelect: false },
+  //   { title: 'Ship to Address DIA', dataIndex: 'shipToAddressDIA', key: 'shipToAddressDIA', isDefaultSelect: false },
+  //   {
+  //     title: 'Diff of Ship to Address', dataIndex: '', key: 'diffOfShipToAddress', isDefaultSelect: false,
+  //     render: (text, record) => {
+  //       const lines1 = (record.shipToAddressLegalPO)?.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+  //       const text1 = lines1?.join('');
 
-        const lines2 = (record.shipToAddressDIA)?.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-        const text2 = lines2?.join('');
-        if (text1 == null && text2 == null) {
-          return '-'
-        } else {
-          const dmp = new DiffMatchPatch();
-          const diff = dmp.diff_main(text1, text2);
-          dmp.diff_cleanupSemantic(diff);
+  //       const lines2 = (record.shipToAddressDIA)?.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+  //       const text2 = lines2?.join('');
+  //       if (text1 == null && text2 == null) {
+  //         return '-'
+  //       } else {
+  //         const dmp = new DiffMatchPatch();
+  //         const diff = dmp.diff_main(text1, text2);
+  //         dmp.diff_cleanupSemantic(diff);
 
-          let output = '';
-          for (const [op, text] of diff) {
-            if (op === DiffMatchPatch.DIFF_INSERT) {
-              if (text.trim() !== '') {
-                output += `${text} `;
-              }
-            } else if (op === DiffMatchPatch.DIFF_DELETE) {
-              if (text.trim() !== '') {
-                output += `${text} `;
-              }
-            }
-          }
-          return output.trim()
-        }
-      },
-    },
-    { title: 'CAB Code', dataIndex: 'CABCode', key: 'CABCode', isDefaultSelect: false },
-    { title: 'Final Destination', dataIndex: '', key: 'FinalDestination', isDefaultSelect: false },
-    { title: 'MRGAC', dataIndex: 'MRGAC', key: 'MRGAC', isDefaultSelect: false },
-    { title: 'OGAC', dataIndex: 'OGAC', key: 'OGAC', isDefaultSelect: false },
-    { title: 'GAC', dataIndex: 'GAC', key: 'GAC', isDefaultSelect: false },
-    { title: 'GAC Reason Code', dataIndex: 'GACReasonCode', key: 'GACReasonCode', isDefaultSelect: false },
-    { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc', key: 'GACReasonDescription', isDefaultSelect: false },
-    { title: 'Truck Out Date', dataIndex: 'truckOutDate', key: 'truckOutDate', isDefaultSelect: false },
-    { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', key: 'originReceiptDate', isDefaultSelect: false },
-    { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', key: 'factoryDeliveryActDate', isDefaultSelect: false },
-    { title: 'Shipping Type', dataIndex: 'shippingType', key: 'shippingType', isDefaultSelect: false },
-    { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', key: 'planningPriorityCode', isDefaultSelect: false },
-    { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc', key: 'planningPriorityDescription', isDefaultSelect: false },
-    { title: 'Launch Code', dataIndex: '"launchCode', key: 'launchCode', isDefaultSelect: false },
-    { title: 'Mode of Transportation', dataIndex: 'modeOfTransportationCode', key: 'modeOfTransportationCode', isDefaultSelect: false },
-    { title: 'In Co Terms', dataIndex: 'inCoTerms', key: 'inCoTerms', isDefaultSelect: false },
-    { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode', key: 'inventorySegmentCode', isDefaultSelect: false },
-    { title: 'Purchase Group', dataIndex: 'purchaseGroupCode', key: 'purchaseGroupCode', isDefaultSelect: false },
-    { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName', key: 'purchaseGroupName', isDefaultSelect: false },
-    { title: 'Total Item Quantity', dataIndex: 'totalItemQty', key: 'totalItemQty', isDefaultSelect: false },
-  ]
+  //         let output = '';
+  //         for (const [op, text] of diff) {
+  //           if (op === DiffMatchPatch.DIFF_INSERT) {
+  //             if (text.trim() !== '') {
+  //               output += `${text} `;
+  //             }
+  //           } else if (op === DiffMatchPatch.DIFF_DELETE) {
+  //             if (text.trim() !== '') {
+  //               output += `${text} `;
+  //             }
+  //           }
+  //         }
+  //         return output.trim()
+  //       }
+  //     },
+  //   },
+  //   { title: 'CAB Code', dataIndex: 'CABCode', key: 'CABCode', isDefaultSelect: false },
+  //   { title: 'Final Destination', dataIndex: '', key: 'FinalDestination', isDefaultSelect: false },
+  //   { title: 'MRGAC', dataIndex: 'MRGAC', key: 'MRGAC', isDefaultSelect: false },
+  //   { title: 'OGAC', dataIndex: 'OGAC', key: 'OGAC', isDefaultSelect: false },
+  //   { title: 'GAC', dataIndex: 'GAC', key: 'GAC', isDefaultSelect: false },
+  //   { title: 'GAC Reason Code', dataIndex: 'GACReasonCode', key: 'GACReasonCode', isDefaultSelect: false },
+  //   { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc', key: 'GACReasonDescription', isDefaultSelect: false },
+  //   { title: 'Truck Out Date', dataIndex: 'truckOutDate', key: 'truckOutDate', isDefaultSelect: false },
+  //   { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', key: 'originReceiptDate', isDefaultSelect: false },
+  //   { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', key: 'factoryDeliveryActDate', isDefaultSelect: false },
+  //   { title: 'Shipping Type', dataIndex: 'shippingType', key: 'shippingType', isDefaultSelect: false },
+  //   { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', key: 'planningPriorityCode', isDefaultSelect: false },
+  //   { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc', key: 'planningPriorityDescription', isDefaultSelect: false },
+  //   { title: 'Launch Code', dataIndex: '"launchCode', key: 'launchCode', isDefaultSelect: false },
+  //   { title: 'Mode of Transportation', dataIndex: 'modeOfTransportationCode', key: 'modeOfTransportationCode', isDefaultSelect: false },
+  //   { title: 'In Co Terms', dataIndex: 'inCoTerms', key: 'inCoTerms', isDefaultSelect: false },
+  //   { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode', key: 'inventorySegmentCode', isDefaultSelect: false },
+  //   { title: 'Purchase Group', dataIndex: 'purchaseGroupCode', key: 'purchaseGroupCode', isDefaultSelect: false },
+  //   { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName', key: 'purchaseGroupName', isDefaultSelect: false },
+  //   { title: 'Total Item Quantity', dataIndex: 'totalItemQty', key: 'totalItemQty', isDefaultSelect: false },
+  // ]
 
   const renderReport = (data: MarketingReportModel[]) => {
     const sizeHeaders = getSizeWiseHeaders(data);
@@ -1364,34 +1384,22 @@ const PPMReport = () => {
         align: 'center',
       },
       {
-        title: 'PCD',
-        dataIndex: 'pcd',
+        title: 'Actual Unit',
+        dataIndex: 'actualUnit',
         width: 70,
-
-        render: (text: string, record: any) => {
-          if (!text || text.trim() === '' || text.length !== 8) {
-            return '-';
-          } else {
-            const year = parseInt(text.slice(0, 4), 10);
-            const month = parseInt(text.slice(4, 6), 10);
-            const day = parseInt(text.slice(6, 8), 10);
-
-            if (isNaN(year) || isNaN(month) || isNaN(day)) {
-              return 'Invalid Date';
+        align: 'center',
+        render: (text, record) => {
+            if (!text || text.trim() === '') {
+                return '-';
+            } else {
+                return text;
             }
-
-            const date = new Date(year, month - 1, day);
-
-            if (isNaN(date.getTime())) {
-              return 'Invalid Date';
-            }
-
-            const mm = String(date.getMonth() + 1).padStart(2, '0');
-            const dd = String(date.getDate()).padStart(2, '0');
-            const yyyy = date.getFullYear();
-            return `${mm}/${dd}/${yyyy}`;
-          }
         }
+    },
+      {
+        title: 'PCD',
+        dataIndex: 'PCD',
+        width: 70,
       },
       {
         title: 'Document Date',
@@ -1406,6 +1414,18 @@ const PPMReport = () => {
         title: 'PO Line Item Number',
         dataIndex: 'poLineItemNumber', align: 'center',
         width: 80,
+      },
+      {
+        title: 'Trading Co PO Number',
+        dataIndex: 'tradingCoPoNumber',
+        width: 80,
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
       },
       {
         title: 'DPOM Line Item Status',
@@ -1435,7 +1455,7 @@ const PPMReport = () => {
       },
       {
         title: 'Description With Fabric Content',
-        dataIndex: '', width: 85,
+        dataIndex: 'fabricContent', width: 85,
       },
       {
         title: 'Fabric Content as Per Washcare Label',
@@ -1479,14 +1499,13 @@ const PPMReport = () => {
       },
       {
         title: 'Lead Time',
-        dataIndex: 'leadTime', width: 80,
+        dataIndex: 'leadTime', width: 80,align:'left',
         render: (text) => {
           if (!isNaN(parseFloat(text))) {
             // If it's a valid number, render it
-            return parseFloat(text).toFixed(2); // You can format it as needed
+            return parseFloat(text) * -1; // You can format it as needed
           } else {
-            // If it's not a valid number, render a placeholder or an empty string
-            return 'N/A'; // Or any other desired text
+            return '-'; // Or any other desired text
           }
         }
       },
@@ -1750,10 +1769,10 @@ const PPMReport = () => {
             width: 60,
             align: 'right',
             render: (text, record) => {
-                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.sizeQty
-                const formattedQty = Number(sizeData).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-                return formattedQty? formattedQty : '-';
-              } 
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.sizeQty
+              // const formattedQty = Number(sizeData).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+              return sizeData ? sizeData : '-';
+            }
           },
           {
             title: (
@@ -1770,8 +1789,8 @@ const PPMReport = () => {
             render: (text, record) => {
               const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
               return sizeData ? sizeData : '-'
-          }
-        },
+            }
+          },
           {
             title: (
               <div
@@ -1833,7 +1852,17 @@ const PPMReport = () => {
             dataIndex: '',
             align: 'center',
             width: 50,
+            render: (text, record) => {
+              const shprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
+              const buyerprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobPrice;
 
+              if (isNaN(shprice) || isNaN(buyerprice)) {
+                return '-';
+              } else {
+                let diff = Number(shprice) - Number(buyerprice);
+                return (diff).toFixed(2);
+              }
+            }
 
           },
           {
@@ -1959,7 +1988,7 @@ const PPMReport = () => {
               >CO Price</div>
             ),
             dataIndex: 'coPrice',
-            // align: 'right',
+            align: 'right',
             width: 60,
             render: (text, record) => {
               const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPrice;
@@ -1982,20 +2011,6 @@ const PPMReport = () => {
               return sizeData ? sizeData : '-'
             }
           },
-          // {
-          //   title:(
-          //     <div
-          //       style={{backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
-          //       height:130,justifyContent: 'center',color: 'Black', 
-          //       }}
-          //     >Diff of Price</div>
-          //   ),
-          //   dataIndex: '',
-          //   align: 'right',
-          //   width:40,
-
-
-          // },repeated multiple times 
           {
             title: (
               <div
@@ -2003,13 +2018,46 @@ const PPMReport = () => {
                   backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
                   height: 130, justifyContent: 'center', color: 'Black',
                 }}
-              >Diff of currency</div>
+              >Diff of legal Po,Co Price</div>
             ),
             dataIndex: '',
             align: 'center',
             width: 70,
-
-
+            render: (text, record) => {
+              const poCurrency = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoCurrencyCode;
+              const coCurrency = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPriceCurrencyCode;
+              // let diff = Number(Poprice) - Number(coprice)
+              if (poCurrency && coCurrency !== null) {
+                return poCurrency + ' ' + coCurrency
+              }
+              else {
+                return "-"
+              }
+            }
+          },
+          {
+            title: (
+              <div
+                style={{
+                  backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                  height: 130, justifyContent: 'center', color: 'Black',
+                }}
+              >Diff of legal Po,Co Currency</div>
+            ),
+            dataIndex: '',
+            align: 'center',
+            width: 70,
+            render: (text, record) => {
+              const Poprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoPrice;
+              const coprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPrice;
+              let diff = Number(Poprice) - Number(coprice)
+              if (Number(Poprice) && Number(coprice) !== null) {
+                return diff
+              }
+              else {
+                return "-"
+              }
+            }
           },
           {
             title: (
@@ -2021,7 +2069,7 @@ const PPMReport = () => {
               >CRM CO QTY</div>
             ),
             dataIndex: 'CRMCoQty',
-            width: 60,
+            width: 60, align: 'right',
             render: (text, record) => {
               const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.CRMCoQty;
               return sizeData ? sizeData : '-'
@@ -2056,8 +2104,17 @@ const PPMReport = () => {
             dataIndex: '',
             align: 'right',
             width: 60,
-
-
+            render: (text, record) => {
+              const PoQty = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoQty;
+              const coQty = sizeWiseMap?.get(record.poAndLine)?.get(version)?.CRMCoQty;
+              let diff = Number(PoQty) - Number(coQty)
+              if (Number(PoQty) && Number(coQty) !== null) {
+                return diff
+              }
+              else {
+                return "-"
+              }
+            }
           },
           {
             title: (
@@ -2071,16 +2128,18 @@ const PPMReport = () => {
             dataIndex: '',
             align: 'right',
             width: 70,
-                render: (text, record) => {
-                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.sizeQty;
+            render: (text, record) => {
+              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.sizeQty;
+              if (record.sizeQty === null || isNaN(sizeData)) {
+                return '-';
+              } else {
                 if (record.shippingType === 'DIRECT') {
-                  return 0 ;
+                  return 0;
                 } else {
                   const result = 0.03 * sizeData;
-                  return (
-                    result.toFixed(3)
-                  );
+                  return result.toFixed(3);
                 }
+              }
             }
           },
           {
@@ -2568,19 +2627,6 @@ const PPMReport = () => {
     // };
 
     columns.push(
-
-      {
-        title: 'Trading Co PO Number',
-        dataIndex: 'tradingCoPoNumber',
-        width: 80,
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
       {
         title: 'VAS - Size',
         dataIndex: 'VASSize',
@@ -2656,12 +2702,14 @@ const PPMReport = () => {
         dataIndex: 'itemText', width: 80,
 
         render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+          return (
+            <>
+              {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
+                {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
+              </span></p></Tooltip></>) : (<>{record.itemText}</>)}
+            </>
+          )
+        }
       },
       {
         title: 'Hanger PO',
@@ -2826,58 +2874,58 @@ const PPMReport = () => {
 
   }
 
-  const [searchedText, setSearchedText] = useState("");
-  const [firstColumn, ...restColumns] = summaryColumns;
-  const modifiedFirstColumn = {
-    ...firstColumn,
-    filteredValue: [String(searchedText).toLowerCase()],
-    onFilter: (value, record) => {
-      const aaa = new Set(Object.keys(record).map((key) => {
-        return String(record[key]).toLowerCase().includes(value.toLocaleString())
-      }))
-      if (aaa.size && aaa.has(true))
-        return true;
-      else
-        return false;
-    },
-  };
-  const packListPreviewColumnsWithFilter = [modifiedFirstColumn, ...restColumns];
-  const [visibleColumns, setVisibleColumns] = useState(
-    packListPreviewColumnsWithFilter.filter((column) => column.isDefaultSelect == true).map(column => column.key)
-  );
-  const dynamicColumns = packListPreviewColumnsWithFilter.filter((column) => visibleColumns.includes(column.key));
-  const handleColumnToggle = (checkedValues) => {
-    setVisibleColumns(checkedValues);
-  };
+  // const [searchedText, setSearchedText] = useState("");
+  // const [firstColumn, ...restColumns] = summaryColumns;
+  // const modifiedFirstColumn = {
+  //   ...firstColumn,
+  //   filteredValue: [String(searchedText).toLowerCase()],
+  //   onFilter: (value, record) => {
+  //     const aaa = new Set(Object.keys(record).map((key) => {
+  //       return String(record[key]).toLowerCase().includes(value.toLocaleString())
+  //     }))
+  //     if (aaa.size && aaa.has(true))
+  //       return true;
+  //     else
+  //       return false;
+  //   },
+  // };
+  // const packListPreviewColumnsWithFilter = [modifiedFirstColumn, ...restColumns];
+  // const [visibleColumns, setVisibleColumns] = useState(
+  //   packListPreviewColumnsWithFilter.filter((column) => column.isDefaultSelect == true).map(column => column.key)
+  // );
+  // const dynamicColumns = packListPreviewColumnsWithFilter.filter((column) => visibleColumns.includes(column.key));
+  // const handleColumnToggle = (checkedValues) => {
+  //   setVisibleColumns(checkedValues);
+  // };
 
-  const columnChooserOptions = packListPreviewColumnsWithFilter.map((column) => ({
-    label: column.title,
-    value: column.key,
-    isDefaultSelect: column.isDefaultSelect
-  }));
+  // const columnChooserOptions = packListPreviewColumnsWithFilter.map((column) => ({
+  //   label: column.title,
+  //   value: column.key,
+  //   isDefaultSelect: column.isDefaultSelect
+  // }));
 
 
-  const columnChooser = (
-    <>
-      <span style={{ marginRight: '8px' }}>Select columns to show:</span>
+  // const columnChooser = (
+  //   <>
+  //     <span style={{ marginRight: '8px' }}>Select columns to show:</span>
 
-      <TreeSelect
-        showSearch
-        treeCheckable
-        treeDefaultExpandAll
-        style={{ width: '200px' }}
-        value={visibleColumns}
-        onChange={handleColumnToggle}
-        dropdownStyle={{ maxHeight: 200, overflow: 'auto' }}
-        placeholder="Select Columns"
-        tagRender={() => <></>}
-      >
-        {columnChooserOptions.map((option) => (
-          <TreeNode key={option.value} value={option.value} title={option.label} disableCheckbox={option.isDefaultSelect} disabled={option.isDefaultSelect} />
-        ))}
-      </TreeSelect>
-    </>
-  );
+  //     <TreeSelect
+  //       showSearch
+  //       treeCheckable
+  //       treeDefaultExpandAll
+  //       style={{ width: '200px' }}
+  //       value={visibleColumns}
+  //       onChange={handleColumnToggle}
+  //       dropdownStyle={{ maxHeight: 200, overflow: 'auto' }}
+  //       placeholder="Select Columns"
+  //       tagRender={() => <></>}
+  //     >
+  //       {columnChooserOptions.map((option) => (
+  //         <TreeNode key={option.value} value={option.value} title={option.label} disableCheckbox={option.isDefaultSelect} disabled={option.isDefaultSelect} />
+  //       ))}
+  //     </TreeSelect>
+  //   </>
+  // );
 
   const showModal1 = (record) => {
     setPoLineProp(record)
@@ -3112,6 +3160,11 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
+              <Form.Item label="GAC" name="gac">
+                <RangePicker />
+              </Form.Item>
+            </Col>
 
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
               <Form.Item>
@@ -3134,40 +3187,39 @@ const PPMReport = () => {
           </Row>
         </Form>
         <Row gutter={24} justify={'space-evenly'}>
-        <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: 'aqua', height: 100, alignItems: 'center' }}  >
+          <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: 'aqua', height: 100, alignItems: 'center' }}  >
             <b> <Statistic loading={tableLoading} title="Total Order Qty:" style={{ color: 'white' }} value={count} formatter={formatter} /></b></Card>
           </Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#CBADF7', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
             </b></Card></Col>
-            <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: '#A1EBB5', height: 100, alignItems: 'center' }} >
+          <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: '#A1EBB5', height: 100, alignItems: 'center' }} >
             <b><Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
             </b></Card></Col>
-            <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: '#E1F5A5', height: 100, alignItems: 'center' }}>
+          <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: '#E1F5A5', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
             </b> </Card> </Col>
-            <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#A5F5D7', height: 100, alignItems: 'center' }}>
+          <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#A5F5D7', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Accepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
             </b></Card></Col>
-            <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#F5BCB1', height: 100, alignItems: 'center' }}>
+          <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#F5BCB1', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Unaccepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
             </b></Card> </Col>
-            <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#B1BDF5', height: 100, alignItems: 'center' }}>
+          <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#B1BDF5', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
             </b> </Card> </Col>
-            <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#F1776A', height: 100, alignItems: 'center' }}>
+          <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#F1776A', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Cancelled PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} formatter={formatter} />
             </b></Card></Col>
         </Row><br></br>
-        <Row>
+        {/* <Row>
           <Col>
             {columnChooser}
           </Col>
-          {/* <Col>
+          <Col>
             <Input.Search placeholder="Search" allowClear onChange={(e) => { setSearchedText(e.target.value) }} onSearch={(value) => { setSearchedText(value) }} style={{ width: 200, float: "right" }} />
-          </Col> */}
-        </Row>
-        <br />
+          </Col>
+        </Row> */}
         {renderReport(filterData)}
         <Modal
           className='print-docket-modal'
@@ -3183,6 +3235,11 @@ const PPMReport = () => {
           {isModalOpen1 ? <PoDetailedview data={{ poLineProp }} /> : <></>}
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Button size='large' onClick={cancelHandle} style={{ color: 'white', backgroundColor: 'red', flexDirection: 'column-reverse' }}>Close</Button></div>
+        </Modal>
+        <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
+          <Card>
+            <p>{itemText}</p>
+          </Card>
         </Modal>
       </Card>
     </>

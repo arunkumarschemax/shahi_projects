@@ -5,7 +5,7 @@ export class MarketingReportSizeModel {
     grossFobCurrencyCode: string;
     buyerGrossFobPrice: number;
     buyerGrossFobCurrencyCode: string;
-    netIncludingDisc: number;
+    netIncludingDisc: string;
     netIncludingDiscCurrencyCode: string;
     trConetIncludingDisc: number;
     trConetIncludingDiscCurrencyCode: string;
@@ -17,7 +17,7 @@ export class MarketingReportSizeModel {
     legalPoQty: number;
     actualShippedQty: number;
 
-    constructor(sizeDescription: string, sizeQty: number, grossFobPrice: number, grossFobCurrencyCode: string, buyerGrossFobPrice: number, buyerGrossFobCurrencyCode: string, netIncludingDisc: number, netIncludingDiscCurrencyCode: string, trConetIncludingDisc: number, trConetIncludingDiscCurrencyCode: string, legalPoPrice: number, legalPoCurrencyCode: string, coPrice: number, coPriceCurrencyCode: string, CRMCoQty: number, legalPoQty: number, actualShippedQty: number,
+    constructor(sizeDescription: string, sizeQty: number, grossFobPrice: number, grossFobCurrencyCode: string, buyerGrossFobPrice: number, buyerGrossFobCurrencyCode: string, netIncludingDisc: string, netIncludingDiscCurrencyCode: string, trConetIncludingDisc: number, trConetIncludingDiscCurrencyCode: string, legalPoPrice: number, legalPoCurrencyCode: string, coPrice: number, coPriceCurrencyCode: string, CRMCoQty: number, legalPoQty: number, actualShippedQty: number,
     ) {
         this.sizeQty = sizeQty
         this.sizeDescription = sizeDescription
