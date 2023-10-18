@@ -244,6 +244,12 @@ export function FabricTrackerReport() {
       
           },
           {
+            title: 'PCD',
+            dataIndex: 'pcd',   
+            width:70
+      
+          },
+          {
             title: 'Document Date',
             dataIndex: 'documentDate',            width:70,
             render: (text) => moment(text).format('MM/DD/YYYY') 
@@ -285,6 +291,25 @@ export function FabricTrackerReport() {
           },
           {
             title: 'Colour Description',
+            dataIndex: 'colorDesc',width:70,
+          },
+          {
+            title: 'Nike Fabric IM Code',
+            dataIndex: '',width:70,
+          },{
+            title: 'CRM Fabric Code',
+            dataIndex: '',width:70,
+          },{
+            title: 'Fabric Component Type',
+            dataIndex: '',width:85,
+          },{
+            title: 'FABRIC QUALITY DESCRIPTION',
+            dataIndex: '',width:95,
+          },{
+            title: 'Fabric Width',
+            dataIndex: 'colorDesc',width:60,
+          },{
+            title: 'MILL',
             dataIndex: 'colorDesc',width:60,
           },
           {
@@ -310,8 +335,14 @@ export function FabricTrackerReport() {
             title:"GAC",
             dataIndex:'GAC',width:70,
             render: (text) => moment(text).format('MM/DD/YYYY') 
-
-    },
+         },
+        {
+        title:"Consumption",
+        dataIndex:'',width:70,
+      },{
+        title:"Wastage %",
+        dataIndex:'',width:70,
+      },
     {
       title: "Shipping Type",
       dataIndex: 'shipmentType',width:70,    render: (text) => {
@@ -329,13 +360,45 @@ export function FabricTrackerReport() {
               <span>{Number(record.totalItemQty).toLocaleString()}</span>
             
           },
-
-
+          {
+            title:'Total Required Fabric Quantity',
+            dataIndex:'',width:90,
+          },
+          {
+            title:'Total Inhoused Qty',
+            dataIndex:'',width:80,
+          },
+          {
+            title:'Total Inhoused % ',
+            dataIndex:'',width:80,
+          },
+          {
+            title:'balance to Inhouse',
+            dataIndex:'',width:80,
+          },
+          {
+            title:'balance to Inhouse %',
+            dataIndex:'',width:90,
+          },
+          {
+            title:'MRP plan Required Inhouse date',
+            dataIndex:'',width:90,
+          },
           {
             title: 'MRP plan Required Inhouse QTY',
             dataIndex: 'mrpPlanRequiredInhouseQty', 
-            width:120,
+            width:90,
           }, 
+          {
+            title: 'Actual Inhouse against MRP',
+            dataIndex: '', 
+            width:90,
+          },
+          {
+            title: 'balance to Inhouse Against MRP Plan',
+            dataIndex: '', 
+            width:90,
+          },
     ]
 
   return (

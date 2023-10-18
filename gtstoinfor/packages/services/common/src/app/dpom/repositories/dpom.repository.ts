@@ -305,7 +305,7 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getDivertWithNewDataReport(req: [po: string, line: string]): Promise<any[]> {
         const [po, line] = req;
         const query = this.createQueryBuilder('dpm')
-            .select(` id AS nId,item, plant AS nPlant, dpom_item_line_status AS nLineStatus,
+            .select(` id AS nId,LEFT(REGEXP_REPLACE(item, '[^0-9]+', ''), 4) AS item, plant AS nPlant, dpom_item_line_status AS nLineStatus,
             plant_name AS nPlantName, document_date AS nDocumentDate,
             po_number AS npoNumber, po_line_item_number AS npoLine, destination_country AS ndestination,
             shipping_type AS nshipmentType, inventory_segment_code AS ninventorySegmentCode,
@@ -530,7 +530,7 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getFabricTrackerReport(req: PpmDateFilterRequest) {
         let query = this.createQueryBuilder('dpom')
             .select(`item,
-            po_line_item_number AS poLine,style_number AS styleNumber,
+            po_line_item_number AS poLine,style_number AS styleNumber,pcd,
             product_code AS productCode, total_item_qty AS totalItemQty, factory,document_date AS DocumentDate,
             planning_season_code AS planningSeasonCode,
             planning_season_year AS planningSeasonYear,color_desc AS colorDesc,ogac,gac, mrgac,shipping_type AS shipmentType, po_number AS poNumber, po_line_item_number AS poLineItemNumber`)

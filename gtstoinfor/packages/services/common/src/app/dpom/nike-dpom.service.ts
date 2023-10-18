@@ -887,7 +887,7 @@ export class DpomService {
     async getFabricTrackerReport(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
         try {
             const data = await this.dpomRepository.getFabricTrackerReport(req);
-
+            // console.log(data,"data")
             if (data.length > 0) {
                 return new CommonResponseModel(true, 1, 'Data retrieved', data);
             } else {

@@ -456,7 +456,7 @@ const DivertReport = () => {
                 },
                 {
                     title: "Unit",
-                    dataIndex: ['newpo', 'factory'],width:70,  render: (text) => (text !== null ? text : '-')
+                    dataIndex: ['newpo', 'factory'],width:70,align:'center',  render: (text) => (text !== null ? text : '-')
                     
                 },
 
