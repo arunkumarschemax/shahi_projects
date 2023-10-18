@@ -1,4 +1,4 @@
-import { EditOutlined, DownloadOutlined, UndoOutlined } from '@ant-design/icons';
+import { EditOutlined, DownloadOutlined, UndoOutlined, FileExcelFilled } from '@ant-design/icons';
 import { VendorFilterModel, VendorNameEnum } from '@xpparel/shared-models';
 import { SharedService } from '@xpparel/shared-services';
 import { Card, Table, DatePicker, message, Col, Row, Select, Button } from 'antd';
@@ -172,11 +172,11 @@ const InvoiceReport = () => {
                 extra={
                     <Button
                         type="default"
-                        style={{ marginLeft: 10, marginTop: 10, backgroundColor: "#3f6600", color: "white" }}
+                        style={{ marginLeft: 10, marginTop: 10, color: "green" }}
                         onClick={handleExportToExcel}
-                        icon={<DownloadOutlined />}
+                        icon={<FileExcelFilled />}
                     >
-                        Get Excel
+                        Download Excel
                     </Button>
                 }>
                 <Row>
