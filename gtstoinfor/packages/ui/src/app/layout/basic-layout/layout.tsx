@@ -360,6 +360,12 @@ export const baseRouterList = [
                 path: "size/size-view",
                 filepath: "size/size-view",
             },
+            {
+                label: "Division",
+                key: "division",
+                path: "division/division-view",
+                filepath: "division/division-view",
+            },
         ],
     }, 
     {

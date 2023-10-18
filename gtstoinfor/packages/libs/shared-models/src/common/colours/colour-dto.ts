@@ -1,6 +1,8 @@
 export class ColourDto {
     colourId?: number;
     colour: string;
+    divisionId:number;
+    divisionName:string;
     isActive: boolean;
     createdAt : Date | any;
     createdUser : string;
@@ -12,6 +14,8 @@ export class ColourDto {
 export const colourDtoDefault : ColourDto = {
     colourId:0,
     colour:"",
+    divisionId:0,
+    divisionName:"",
     isActive: true,
     createdAt : new Date() ,
     createdUser : '0',

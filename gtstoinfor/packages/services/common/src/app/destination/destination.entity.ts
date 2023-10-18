@@ -2,6 +2,7 @@ import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, M
 import { BuyersDestionations } from "../buyers-destination/buyers-destination.entity";
 import { ItemSkus } from "../sku-generation/sku-generation.entity";
 import { CoLine } from "../style-order/co-line.entity";
+import { Division } from "../division/division.entity";
 @Entity('destination')
 export class Destination {
 
@@ -67,4 +68,8 @@ export class Destination {
     @OneToMany(type=>CoLine, co=>co.destinationInfo,{cascade: true})
     coLineInfo:CoLine;
 
+    
+@ManyToOne(()=> Division, division=>division.Destination)
+@JoinColumn({name:'division_id'})
+division:Division;
 }

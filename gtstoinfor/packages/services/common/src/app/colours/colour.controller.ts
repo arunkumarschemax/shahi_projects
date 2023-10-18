@@ -1,4 +1,4 @@
-import { ColourResponseModel } from '@project-management-system/shared-models';
+import { ColourDropDownDto, ColourDropDownResponse, ColourResponseModel } from '@project-management-system/shared-models';
 import { AllColourResponseModel } from '@project-management-system/shared-models';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { Body, Controller, Post } from '@nestjs/common';
@@ -80,5 +80,13 @@ export class ColourController{
     }
     
 }
+@Post('/getColourforDivisionDropDown')
+async getColourforDivisionDropDown(@Body() req:any): Promise<ColourDropDownResponse> {
+    try {
+     return await this.colourService.getColourForDivisionDropDown(req);
+   } catch (error) {
+        return this.applicationExceptionHandler.returnException(ColourDropDownResponse, error);
+   }
+ }
 }
 

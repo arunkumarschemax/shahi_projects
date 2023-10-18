@@ -3,7 +3,7 @@ import { Repository, Raw, getConnection } from 'typeorm';
 import { DestinationDTO } from '../destination/dto/destination.dto';
 import { Destination } from '../destination/destination.entity';
 import { DestinationAdapter } from '../destination/dto/destination.adapter';
-import { AllDestinationResponseModel, DestinationResponseModel } from '@project-management-system/shared-models';
+import { AllDestinationResponseModel, DestinationDropDownDto, DestinationDropDownResponse, DestinationResponseModel, DivisionRequest } from '@project-management-system/shared-models';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DestinationRequest } from './dto/destination.request';
 import { UserRequestDto } from './dto/user-log-dto';
@@ -74,14 +74,14 @@ export class DestinationService {
     }
   }
 
-  async getAllDestination(req?: UserRequestDto): Promise<AllDestinationResponseModel> {
+  async getAllDestination(): Promise<AllDestinationResponseModel> {
     // const page: number = 1;
     try {
       const Dtos: DestinationDTO[] = [];
       //retrieves all companies
-      const Entities: Destination[] = await this.Repository.find({ order: { 'destination': 'ASC' } });
+      const Entities: Destination[] = await this.Repository.find({ order: { 'destination': 'ASC' },relations:['division'] });
       //console.log(statesEntities);
-      if (Entities) {
+      if (Entities.length>0) {
         // converts the data fetched from the database which of type companies array to type StateDto array.
         Entities.forEach(DestinationEntity => {
           const convertedDto: DestinationDTO = this.Adapter.convertEntityToDto(
@@ -90,6 +90,7 @@ export class DestinationService {
           Dtos.push(convertedDto);
         });
         const response = new AllDestinationResponseModel(true, 1, 'Destination retrieved successfully', Dtos);
+        console.log(response,'--------------')
 
         return response;
       } else {
@@ -196,4 +197,23 @@ export class DestinationService {
     }
   }
 
+  async getDestinationForDivisionDropDown(req:DivisionRequest ): Promise<DestinationDropDownResponse> {
+    try {
+        const colourEntities: DestinationDropDownDto[] = await this.Repository
+            .createQueryBuilder('destination')
+            .select('destination_id   as destinationId,  destination as  destination, ')
+            .where(`is_active=1 and division_id='${req.divisionId}'`)
+            .orderBy('destination')
+            .getRawMany();
+
+        if (colourEntities && colourEntities.length > 0) {
+            const response = new DestinationDropDownResponse(true, 11108, "Destination  retrieved successfully", colourEntities);
+            return response;
+        } else {
+            throw new DestinationDropDownResponse(false,99998, 'Data not found');
+        }
+    } catch (err) {
+        return err;
+    }
+}
 }

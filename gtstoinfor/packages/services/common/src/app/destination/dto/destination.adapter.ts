@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DestinationDTO } from './destination.dto';
 import { Destination } from '../destination.entity';
+import { Division } from '../../division/division.entity';
 
 @Injectable()
 export class DestinationAdapter {
@@ -14,7 +15,9 @@ export class DestinationAdapter {
     const destination = new Destination();
     destination.destinationId = destinationDto.destinationId;
     destination.destination = destinationDto.destination;
-    // company.isActive = statesDto.isActive == undefined ? true : statesDto.isActive;
+    destination.division= new Division();
+        destination.division.divisionId=destinationDto.divisionId;
+        destination.division.divisionName=destinationDto.divisionName;
     destination.isActive = destinationDto.isActive == undefined ? true : destinationDto.isActive;
     if (isUpdate) {
       destination.updatedUser = destinationDto.updatedUser;
@@ -28,6 +31,8 @@ export class DestinationAdapter {
     const destinationDto = new DestinationDTO;
     destinationDto.destinationId = destinationObject.destinationId;
     destinationDto.destination = destinationObject.destination;
+    destinationDto.divisionId=(destinationObject.division)?.divisionId;
+    destinationDto.divisionName=(destinationObject.division)?.divisionName;
     destinationDto.isActive = destinationObject.isActive;
     destinationDto.createdAt = destinationObject.createdAt;
     destinationDto.updatedAt = destinationObject.updatedAt;

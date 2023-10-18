@@ -116,6 +116,13 @@ export const DestinationGrid = (props: DestinationGridProps) => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
+      title: 'Division',
+      dataIndex: 'divisionName',
+      sorter: (a, b) => a.divisionName.localeCompare(b.divisionName),
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('divisionName')
+    },
+    {
       title: "Destination Name",
       dataIndex: "destination",
       sorter: (a, b) => a.source.localeCompare(b.source),

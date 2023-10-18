@@ -5,6 +5,10 @@ export class SizeDto {
     sizeId: number;
     
     size: string;
+    
+    divisionId:number;
+
+    divisionName:string;
 
     isActive: boolean;
 
@@ -22,6 +26,8 @@ export class SizeDto {
 export const sizeDtoDefault : SizeDto = {
     sizeId:0,
     size:"",
+    divisionId:0,
+    divisionName:"",
     isActive: true,
     createdAt : new Date() ,
     createdUser : '0',

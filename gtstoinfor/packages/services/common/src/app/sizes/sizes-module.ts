@@ -11,8 +11,8 @@ import { ApplicationExceptionHandler } from '@project-management-system/backend-
         TypeOrmModule.forFeature([Size]),
         ],
         controllers: [SizeController],
-        providers: [SizeService,SizeAdapter,ApplicationExceptionHandler]
+        providers: [SizeService,SizeAdapter,ApplicationExceptionHandler],
+        exports:[SizeService]
       })
 export class SizeModule{
-    
 }

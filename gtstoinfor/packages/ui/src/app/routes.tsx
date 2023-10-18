@@ -127,6 +127,7 @@ import IssueScreen from "./operation-tracking/issue"
 import StyleOrderCreation from "./style-orders/style-order-form"
 import StyleOrderGrid from "./style-orders/style-order-grid"
 import StyleOrderDetailView from "./style-orders/style-order-detail-view"
+import DivisionForm from "./masters/company/division-form"
 
 
 export const AppRoutes = () => {
@@ -199,6 +200,12 @@ export const AppRoutes = () => {
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
                         <Route path='warehouse/warehouse-grid' element={<WarehouseGrid />} />
+                    <Route path='division/division-view' element={<DivisionGrid/>} />
+                    <Route path='division/division-form' key ='division/division-form' element={<DivisionForm  Data={undefined}
+
+                    isUpdate={false}
+                    closeForm={() => { }}
+                    updateItem={(undefined) => { }}/>} />
 
                         <Route path='destination/destination-form' element={<DestinationForm Data={undefined}
                 isUpdate={false}
@@ -415,7 +422,7 @@ export const AppRoutes = () => {
                 updateItem={(undefined) => { }}/>} />
                         <Route path='warehouse/warehouse-grid' element={<WarehouseGrid />} />
 
-                        <Route path='destination/destination-form' element={<DestinationForm Data={undefined}
+                                             <Route path='destination/destination-form' element={<DestinationForm Data={undefined}
                 isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
@@ -467,6 +474,7 @@ export const AppRoutes = () => {
                 isUpdate={false}
                 closeForm={() => { }}
                 updateDetails={(undefined) => { }}/>} />
+
                         <Route path='style/style-grid' element={<StyleGrid />} />
                         <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
                         <Route path='component-mapping/component-mapping-view' element={<ComponentMappingView/>}/>
