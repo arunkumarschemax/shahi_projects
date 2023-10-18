@@ -1482,7 +1482,7 @@ const PPMReport = () => {
       },
       {
         title: 'Lead Time',
-        dataIndex: 'leadTime', width: 80,
+        dataIndex: 'leadTime', width: 80,align:'left',
         render: (text) => {
           if (!isNaN(parseFloat(text))) {
             // If it's a valid number, render it

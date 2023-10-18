@@ -65,7 +65,7 @@ export function NikeFileRevert() {
             dataIndex: 'status',align:'center'
         },
         {
-            title: 'Uploaded User',
+            title: 'Type Of Sync',
             dataIndex: 'createdUser',align:'center'
         },
         {

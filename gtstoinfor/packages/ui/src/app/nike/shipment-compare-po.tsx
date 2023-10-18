@@ -433,11 +433,11 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'Item',
-            dataIndex: 'item'
+            dataIndex: 'item',width: 60,
         },
         {
             title: 'Unit',
-            dataIndex: 'factory'
+            dataIndex: 'factory',width: 60,
         },
         {
             title: 'PO Number',
@@ -788,12 +788,12 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'Change To Destination Country Name',
-            dataIndex: '', width: 80,
+            dataIndex: '', width: 90,
             // ...getColumnSearchProps('')
         },
         {
             title: 'Change from Ship To Customer Number',
-            dataIndex: '', width: 80,
+            dataIndex: '', width: 90,
             // ...getColumnSearchProps('')
         },
         {
