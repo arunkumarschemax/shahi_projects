@@ -433,11 +433,11 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'Item',
-            dataIndex: 'item'
+            dataIndex: 'item',width: 60,
         },
         {
             title: 'Unit',
-            dataIndex: 'factory'
+            dataIndex: 'factory',width: 60,
         },
         {
             title: 'PO Number',
