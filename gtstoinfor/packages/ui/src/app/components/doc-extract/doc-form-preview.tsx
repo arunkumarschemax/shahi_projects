@@ -485,12 +485,15 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
     };
 
 
-    const onSumbit = () => {
-        const req1 = new HsnDto(HSN, taxType, taxAmount, taxPercentage, charge, unitQuantity, description, quotation, unitPrice, variance)
-        const req = new AllScanDto(gstNumber, venName, venCod, invoiceDate, invoiceNumber, invoiceAmount, igst, cgst, sgst, invoiceCurrency,
-            financialYear, status, "", [req1],
-            JSON.parse(localStorage.getItem("currentUser")).user.userName,);
-        console.log(req, req1, "submit");
+    const onSubmit = () => {
+        const dto1 = []
+        for (const data of props.hsnData){
+             const dto = new HsnDto(data.HSN,data.taxType,data.taxAmount,data.taxPercentage,data.charge,data.unitQuantity,data.quotation,data.unitPrice,data.description)
+             dto1.push(dto)
+        }
+        
+        const req = new AllScanDto(props.formData.gstNumber, props.formData.venName, props.form.getFieldValue("venCod"), props.formData.invoiceDate, props.formData.invoiceNumber, props.formData.invoiceAmount, props.formData.igst, props.formData.cgst, props.formData.sgst, props.formData.invoiceCurrency,props.formData.financialYear,status, "", dto1,JSON.parse(localStorage.getItem("currentUser")).user.userName,);
+        console.log(req, dto1, "submit");
         service
             .postdata(req)
             .then((res) => {
@@ -504,7 +507,9 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             .catch((err: { message: any }) => {
                 console.log(err.message, "err message");
             });
-    };
+    
+
+}
 
 
     return (
@@ -813,7 +818,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                     type="primary"
                     htmlType="submit"
                     style={{ position: "relative", left: "10pX" }}
-                    onClick={onSumbit}
+                    onClick={onSubmit}
                 >
                     Submit
                 </Button>

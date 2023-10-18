@@ -4,7 +4,7 @@ export enum VendorNameEnum {
     extractedExpeditors = "EXPEDITORS",
     extractedEfl = "EFL",
     extractedOocl = "OOCL",
-    extractedNagel = "NAGEL",
+    extractedNagel = "KUEHNE NAGEL",
     extractedApl = "APL",
     extractedMaersk = "MAERSK",
     extractedSrivaru = "SRIVARU",

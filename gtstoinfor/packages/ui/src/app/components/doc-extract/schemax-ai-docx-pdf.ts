@@ -174,7 +174,7 @@ export const extractDart = async (pdf) => {
             }
 
             currentHSN = {
-                description: [],
+                description:'',
                 HSN: line.content.includes("SAC")
                     ? line.content.match(/\d+/)
                     : line.content.replace(/\]/g, '').trim(),
@@ -185,7 +185,7 @@ export const extractDart = async (pdf) => {
                 taxAmount: null,
                 amount: null,
                 quotation: null,
-            };
+            };            
 
         } else if (currentHSN && !currentHSN.taxType) {
             const taxtypeMatch = line.content.match(/IGST|CGST|SGST|GST/);
@@ -212,7 +212,7 @@ export const extractDart = async (pdf) => {
                         currentHSN.unitQuantity = parseInt(wholeNumberMatch[1]);
                     }
                 }
-                currentHSN.description.push(line.content.trim());
+                currentHSN.description += ' ' + line.content.trim();
             }
         }
 
@@ -571,7 +571,7 @@ export const extractEfl = async (pdf) => {
                 unitPrice: null,
                 unitQuantity: null,
                 amount: null,
-                description: [],
+                description: '',
             };
         } else if (currentHSN && !currentHSN.taxType) {
             const taxtypeMatch = line.content.match(/IGST|CGST|SGST|GST/);
@@ -592,7 +592,7 @@ export const extractEfl = async (pdf) => {
                         currentHSN.unitQuantity = parseInt(wholeNumberMatch[1]);
                     }
                 }
-                currentHSN.description.push(line.content.trim());
+                currentHSN.description += ' ' + line.content.trim();
             }
         }
 
@@ -1092,7 +1092,6 @@ export const extractApl = async (pdf) => {
             const taxPercentageContent = extractedData[hsnId + 20].content;
             let taxPercentage = parseFloat(taxPercentageContent.replace('%', ''));
 
-            // Check if taxPercentage is NaN or null and set it to 18 as a default
             if (isNaN(taxPercentage) || taxPercentage === null) {
                 taxPercentage = 18;
             }
@@ -1204,6 +1203,7 @@ export const extractApl = async (pdf) => {
             }
         }
     }
+    console.log("APL PDF DATA",JSON.stringify(allLines,null,2))
     return {
         extractedData: InvoiceLines[0],
         extractedHsnData: structuredHSNLines
