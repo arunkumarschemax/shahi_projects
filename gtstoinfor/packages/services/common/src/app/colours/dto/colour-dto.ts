@@ -13,6 +13,11 @@ export class ColourDTO{
 colour:string;
 
 @ApiProperty()
+  @IsNotEmpty()
+ divisionId:number;
+ divisionName:string;
+ 
+@ApiProperty()
 isActive: boolean;
 
 createdAt: Date;

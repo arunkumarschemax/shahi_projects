@@ -1,6 +1,6 @@
 import { Button, Card, Col, Descriptions, Form, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
-import { ColourService, DestinationService, ItemsService, SKUGenerationService, SizeService, StyleService } from '@project-management-system/shared-services';
+import { ColourService, DestinationService, ItemCreationService, ItemsService, SKUGenerationService, SizeService, StyleService } from '@project-management-system/shared-services';
 import { ItemCodeReq, ItemSKusReq, SKUGenerationReq, SkuStatusEnum } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
 
@@ -27,6 +27,7 @@ export const SKUGeneration = () => {
     const [styles,setStyles] = useState<any[]>([])
     const styleService = new StyleService()
     const [itemData,setItemData] = useState<any[]>([])
+    const fgItemService = new ItemCreationService()
 
 
     useEffect(() => {
@@ -102,7 +103,7 @@ export const SKUGeneration = () => {
     }
 
     const getAllItemCodes = () => {
-      itemService.getAllItems().then(res => {
+      fgItemService.getFgItemsDropdown().then(res => {
           if(res.status){
               setItemcodes(res.data)
           }
@@ -224,7 +225,7 @@ export const SKUGeneration = () => {
                     {
                         itemcodes.map((e)=>{
                             return(
-                                <Option key={e.itemCode} value={e.itemCode} itemId ={e.itemId}>{e.itemCode}-{e.itemName}</Option>
+                                <Option key={e.itemCode} value={e.itemCode} itemId ={e.fgitemId}>{e.itemCode}-{e.itemName}</Option>
                             )
                         })
                     }

@@ -1,5 +1,7 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 import { Settings } from "../settings/settings.entity";
+import { Size } from "../sizes/sizes-entity";
+import { Colour } from "../colours/colour.entity";
 
 @Entity('division')
 export class Division {
@@ -83,4 +85,10 @@ updatedUser: string | null;
   @OneToMany(type => Settings, settings => settings.divisionInfo,{cascade: true})
   settingsInfo : Settings
 
+  @OneToOne(()=> Size,size=>size.division)
+  sizes:Size[]
+  @OneToOne(()=> Colour,color=>color.division)
+  Colour:Size[]
+  @OneToOne(()=> Colour,destination=>destination.division)
+  Destination:Size[]
 }

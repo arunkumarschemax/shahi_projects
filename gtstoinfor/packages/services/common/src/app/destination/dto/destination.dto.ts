@@ -14,6 +14,11 @@ export class DestinationDTO {
   destination: string;
 
   @ApiProperty()
+  @IsNotEmpty()
+ divisionId:number;
+ divisionName:string;
+ 
+  @ApiProperty()
   isActive: boolean;
 
   createdAt: Date;

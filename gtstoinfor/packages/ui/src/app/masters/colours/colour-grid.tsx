@@ -175,6 +175,13 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
             render: (text, object, index) => (page - 1) * 10 + (index + 1) 
         },
         {
+          title: 'Division',
+          dataIndex: 'divisionName',
+          sorter: (a, b) => a.divisionName.localeCompare(b.divisionName),
+          sortDirections: ['descend', 'ascend'],
+          ...getColumnSearchProps('divisionName')
+        },
+        {
             title: 'Colour',
             dataIndex: 'colour',
             sorter: (a, b) => a.colour.localeCompare(b.colour),

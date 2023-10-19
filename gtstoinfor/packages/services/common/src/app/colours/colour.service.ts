@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Raw, Repository } from 'typeorm';
-import { AllColourResponseModel, AllProfitControlHeadResponseModel } from '@project-management-system/shared-models';
+import { AllColourResponseModel, AllProfitControlHeadResponseModel, ColourDropDownDto, ColourDropDownResponse, DivisionRequest } from '@project-management-system/shared-models';
 import { ProfitControlHeadResponseModel } from '@project-management-system/shared-models';
 import {ColourResponseModel} from '@project-management-system/shared-models'
 import { UserRequestDto } from '../currencies/dto/user-logs-dto';
@@ -44,17 +44,17 @@ export class ColourService{
 
             const colourEntity = await this.getColourWithoutRelations(colourDto.colour);
             if (colourEntity){
-                console.log(colourEntity,'------')
+                // console.log(colourEntity,'------')
               throw new ColourResponseModel(false,11104, 'Colour already exists'); 
             }
           }
           else{
-            console.log('ertyudfghjk============')
+            // console.log('ertyudfghjk============')
 
             const certificatePrevious = await this.ColourRepository.findOne({where:{colourId:colourDto.colourId}})
             previousValue =(certificatePrevious.colour)
             const ColourEntity = await this.getColourWithoutRelations(colourDto.colour);
-            console.log('ertyudfghjk============',certificatePrevious)
+            // console.log('ertyudfghjk============',certificatePrevious)
             if (ColourEntity){
               if(ColourEntity.colour != colourDto.colour ){
                 throw new ColourResponseModel(false,11104, 'Colour already exists'); 
@@ -66,7 +66,7 @@ export class ColourService{
           console.log(convertedColourEntity);
         const savedColourEntity: Colour = await this.ColourRepository.save(convertedColourEntity);
         const savedHeadDto: ColourDTO = this.ColourAdapter.convertEntityToDto(savedColourEntity);
-        ColourDtos.push(savedColourEntity)
+        // ColourDtos.push(savedColourEntity)
           console.log(savedColourEntity,'saved');
         if (savedColourEntity) {
           const presentValue = colourDto.colour;
@@ -77,7 +77,7 @@ export class ColourService{
           const userName = isUpdate? savedHeadDto.updatedUser :savedHeadDto.createdUser;
             // const newLogDto = new LogsDto(1,name, 'Profit Control Head', savedProfitCenterDto.profitCenter, true, displayValue,userName,previousValue,presentValue)
             // let res = await this.logService.createLog(newLogDto);
-            console.log(response,'9999999999999999');
+            // console.log(response,'9999999999999999');
             // const response = new AllProfitCenterResponseModel(true,1000,isUpdate? 'Profit Control Head Updated Successfully': Profit Control Head Created Successfully');
           return response;
         } else {
@@ -98,9 +98,9 @@ export class ColourService{
         try {
           const ColorDto: ColourDTO[] = [];
           //retrieves all companies
-          const Entity: Colour[] = await this.ColourRepository.find({ order :{'colour':'ASC'}});
+          const Entity: Colour[] = await this.ColourRepository.find({ order :{'colour':'ASC'},relations:['division']});
           //console.log(statesEntities);
-          if (Entity) {
+          if (Entity.length>0) {
             // converts the data fetched from the database which of type companies array to type StateDto array.
             Entity.forEach(Entity => {
               const convertedColourDto: ColourDTO = this.ColourAdapter.convertEntityToDto(
@@ -139,7 +139,7 @@ export class ColourService{
           if (colourEntity) {
             // converts the data fetched from the database which of type companies array to type StateDto array.
             colourEntity.forEach(colourEntity => {
-              const convertedColourDto: Colour = this.ColourAdapter.convertEntityToDto(
+              const convertedColourDto: ColourDTO = this.ColourAdapter.convertEntityToDto(
                 colourEntity
               );
               colorDTO.push(convertedColourDto);
@@ -202,7 +202,7 @@ export class ColourService{
               where:{colourId:profitReq.colourId}
               });
               
-              const profitControlHead: Colour = this.ColourAdapter.convertEntityToDto(profitControlEntities);
+              const profitControlHead: ColourDTO = this.ColourAdapter.convertEntityToDto(profitControlEntities);
               if (profitControlHead) {
                   const response = new ColourResponseModel(true, 11101 , 'Colour  retrived Successfully',[profitControlHead]);
                   return response;
@@ -228,4 +228,23 @@ export class ColourService{
             return null;
             }
         } 
+        async getColourForDivisionDropDown(req:DivisionRequest ): Promise<ColourDropDownResponse> {
+          try {
+              const colourEntities: ColourDropDownDto[] = await this.ColourRepository
+                  .createQueryBuilder('colour')
+                  .select('colour_id   as colourId,  colour as  colour, ')
+                  .where(`is_active=1 and division_id='${req.divisionId}'`)
+                  .orderBy('colour')
+                  .getRawMany();
+  
+              if (colourEntities && colourEntities.length > 0) {
+                  const response = new ColourDropDownResponse(true, 11108, "Colour  retrieved successfully", colourEntities);
+                  return response;
+              } else {
+                  throw new ColourDropDownResponse(false,99998, 'Data not found');
+              }
+          } catch (err) {
+              return err;
+          }
+      }
 }

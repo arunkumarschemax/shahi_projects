@@ -1,9 +1,11 @@
-import { PackageTermsDto, PaymentMethodDto, PaymentTermsDto, styleOrderReq } from "@project-management-system/shared-models";
+import { CloseOutlined } from "@ant-design/icons";
+import { CustomerOrderStatusEnum, PackageTermsDto, PaymentMethodDto, PaymentTermsDto, styleOrderReq } from "@project-management-system/shared-models";
 import { DeliveryMethodService, DeliveryTermsService, PackageTermsService, PaymentMethodService, PaymentTermsService, StyleOrderService, WarehouseService } from "@project-management-system/shared-services";
 import { Button, Card, Descriptions, Table } from "antd";
 import React from "react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import AlertMessages from "../common/common-functions/alert-messages";
 
 export const StyleOrderDetailView = () => {
   const service = new StyleOrderService();
@@ -71,6 +73,20 @@ export const StyleOrderDetailView = () => {
       })
   };
 
+  const cancelOrder =(val:any) =>{
+    service.cancelVariantOrder({variantId:val.id}).then(res => {
+      if(res.status){
+        AlertMessages.getSuccessMessage("Order Cancelled successfully. ")
+        getData();
+      }
+      else{
+        AlertMessages.getWarningMessage("Something went wrong. ")
+      }
+    }).catch(err => {
+      AlertMessages.getErrorMessage("Something went wrong. ")
+    })
+  }
+
   const columnsSkelton: any = [
     {
       title: "S No",
@@ -107,6 +123,32 @@ export const StyleOrderDetailView = () => {
       //   sorter: (a, b) => a.coNum.localeCompare(b.coNum),
       // ...getColumnSearchProps("coNum"),
     },
+
+    {
+      title: "Status",
+      dataIndex: "status",
+      
+      //   sorter: (a, b) => a.coNum.localeCompare(b.coNum),
+      // ...getColumnSearchProps("coNum"),
+    },
+    {
+  
+      title: `Action`,
+      dataIndex: 'action',
+      render: (text, rowData) => (
+        <>
+        {
+          rowData.status != CustomerOrderStatusEnum.CLOSED ? 
+        <span>
+            <Button title={"Cancel Order"} onClick={() => cancelOrder(rowData)} >
+              <CloseOutlined />
+            </Button>
+          </span>
+          : ""
+        }
+        </>
+      )
+    }
 
   ];
   return (

@@ -128,6 +128,7 @@ import StyleOrderCreation from "./style-orders/style-order-form"
 import StyleOrderGrid from "./style-orders/style-order-grid"
 import StyleOrderDetailView from "./style-orders/style-order-detail-view"
 import FabricReqApproval from "./fabric development/fabric-req-approval"
+import DivisionForm from "./masters/company/division-form"
 
 
 export const AppRoutes = () => {
@@ -172,7 +173,11 @@ export const AppRoutes = () => {
                     <Route path='/user-management/users-view' element={<UsersView />} />
 
                     <Route path='/masters'>
-                        <Route path='factories/factories-view' element={<FactoriesView />} />
+                    <Route path='locations/locations-view' element={<LocationsGrid/>}/>                       
+                    <Route path='locations/locations-form' element={<LocationsForm locationsData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateDetails={(undefined) => { }}/>}/>                        <Route path='factories/factories-view' element={<FactoriesView />} />
                         <Route path='factories/factories-form' element={<FactoriesForm factoryData={undefined}
                         isUpdate={false}
                         closeForm={()=> {}}
@@ -196,6 +201,12 @@ export const AppRoutes = () => {
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
                         <Route path='warehouse/warehouse-grid' element={<WarehouseGrid />} />
+                    <Route path='division/division-view' element={<DivisionGrid/>} />
+                    <Route path='division/division-form' key ='division/division-form' element={<DivisionForm  Data={undefined}
+
+                    isUpdate={false}
+                    closeForm={() => { }}
+                    updateItem={(undefined) => { }}/>} />
 
                         <Route path='destination/destination-form' element={<DestinationForm Data={undefined}
                 isUpdate={false}
@@ -412,7 +423,7 @@ export const AppRoutes = () => {
                 updateItem={(undefined) => { }}/>} />
                         <Route path='warehouse/warehouse-grid' element={<WarehouseGrid />} />
 
-                        <Route path='destination/destination-form' element={<DestinationForm Data={undefined}
+                                             <Route path='destination/destination-form' element={<DestinationForm Data={undefined}
                 isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
@@ -450,14 +461,8 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={()=> {}}
                         updateDetails={(undefined) => { }}/>}/>
-                <Route path='locations/locations-view' element={<LocationsGrid/>}/>                       
                <Route path='buyers/buyers-general-attributes-form' key='buyers/buyers-general-attributes-form' element={<BuyersGeneralAttributeForm/>} />
                         <Route path='buyers/buyers-order-attributes-form' key='buyers/buyers-order-attributes-form' element={<BuyersOrderAttributeForm/>} />
-
-                        <Route path='locations/locations-form' element={<LocationsForm locationsData={undefined}
-                        isUpdate={false}
-                        closeForm={()=> {}}
-                        updateDetails={(undefined) => { }}/>}/>
                <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
                        
                         
@@ -470,6 +475,7 @@ export const AppRoutes = () => {
                 isUpdate={false}
                 closeForm={() => { }}
                 updateDetails={(undefined) => { }}/>} />
+
                         <Route path='style/style-grid' element={<StyleGrid />} />
                         <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
                         <Route path='component-mapping/component-mapping-view' element={<ComponentMappingView/>}/>
@@ -498,7 +504,7 @@ export const AppRoutes = () => {
                 <Route path='item-creation' element={<ItemCreation/>}/>
                 <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
                 <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation />} />
-                <Route path='style-order-creation' element={<StyleOrderCreation />} />
+                <Route path='style-order-creation' element={<StyleOrderCreation coData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
                 <Route path='style-order-view' element={<StyleOrderGrid />} />
                 <Route path='style-order-detail-view' element={<StyleOrderDetailView />} />
                 </Route>

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, CustomerOrderStatusEnum, StyleOrderIdReq, StyleOrderItemsModel, StyleOrderModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
 import { StyleOrder } from "./style-order.entity";
 import { Item } from "../items/item-entity";
 import { Warehouse } from "../warehouse/warehouse.entity";
@@ -22,6 +22,10 @@ import { DataSource, Repository } from "typeorm";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { StyleOrderRepository } from "./style-order-repo";
 import { CoLineRepository } from "./co-line.repo";
+import { ItemCreation } from "../fg-item/item_creation.entity";
+import { StyleOrderId } from "./style-order-id.request";
+import { VariantIdReq } from "./variant-id.req";
+import { Raw } from 'typeorm';
 
 @Injectable()
 
@@ -55,11 +59,11 @@ export class StyleOrderService{
             entity.salePrice = req.salePrice;
             entity.priceQuantity = req.priceQuantity;
             entity.discountAmount = req.discountAmount;
-            entity.status = req.status;
+            entity.status = req.styleOrderItems.length > 0 ? CustomerOrderStatusEnum.CONFIRMED : CustomerOrderStatusEnum.OPEN;
             entity.remarks = req.remarks;
-            const item = new Item()
-            item.itemId = req.itemId
-            entity.itemInfo = item;
+            const item = new ItemCreation()
+            item.fgitemId = req.itemId
+            entity.fgitemInfo = item;
             const warehouse = new Warehouse()
             warehouse.warehouseId = req.warehouseId
             entity.warehouseInfo = warehouse;
@@ -174,6 +178,89 @@ export class StyleOrderService{
     } catch(err){
         throw err
     }
-   } 
+   }
+   async cancelOrder(req:StyleOrderId):Promise<CommonResponseModel>{
+    const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
+    try{
+        await transactionalEntityManager.startTransaction();
+        console.log(req);
+        const updateStatus = await transactionalEntityManager.getRepository(StyleOrder).update({id:req.styleOrderId},{status:CustomerOrderStatusEnum.CLOSED});
+        if(updateStatus.affected > 0){
+            const updateCoLineStatus = await transactionalEntityManager.getRepository(CoLine).update({styleOrderInfo:{id:req.styleOrderId}},{status:CustomerOrderStatusEnum.CLOSED});
+            if(updateCoLineStatus.affected > 0){
+                await transactionalEntityManager.completeTransaction();
+                return new CommonResponseModel(true,1,'Order Cancelled Successfully. ',)
+            }
+            else{
+                await transactionalEntityManager.releaseTransaction();
+                return new CommonResponseModel(false,0,'Cancel Order failed. ',)
+            }
+        }
+        else{
+            await transactionalEntityManager.releaseTransaction();
+            return new CommonResponseModel(false,0,'Cancel Order failed. ',)
+        }
+    } catch(err){
+        throw err
+    }
+   }
 
+   async cancelVariantOrder(req:VariantIdReq):Promise<CommonResponseModel>{
+    const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
+    try{
+        await transactionalEntityManager.startTransaction();
+        console.log(req);
+        const styleOrderDetails = await transactionalEntityManager.getRepository(CoLine).findOne({relations:["styleOrderInfo"],where:{id:req.variantId}});
+        const updateCoLineStatus = await transactionalEntityManager.getRepository(CoLine).update({id:req.variantId},{status:CustomerOrderStatusEnum.CLOSED});
+        if(updateCoLineStatus.affected > 0){
+            const getCoLines = await transactionalEntityManager.getRepository(CoLine).find({where:{status:Raw(alias => `status !=  '${CustomerOrderStatusEnum.CLOSED}'`), id:Raw(alias => `id !=  '${req.variantId}'`)}});
+            if(getCoLines.length > 0){
+                await transactionalEntityManager.completeTransaction();
+                return new CommonResponseModel(true,1,'Order Cancelled Successfully. ',)
+            }
+            else{
+                console.log("jo")
+                console.log(styleOrderDetails);
+                const cancelOrder = await transactionalEntityManager.getRepository(StyleOrder).update({id:styleOrderDetails.styleOrderInfo.id},{status:CustomerOrderStatusEnum.CLOSED});
+                if(cancelOrder.affected > 0){
+                    await transactionalEntityManager.completeTransaction();
+                    return new CommonResponseModel(true,1,'Order Cancelled Successfully. ',)
+                }
+                else{
+                    await transactionalEntityManager.releaseTransaction();
+                    return new CommonResponseModel(false,0,'Cancel Order failed. ',)
+                }
+            }
+        }
+        else{
+            await transactionalEntityManager.releaseTransaction();
+            return new CommonResponseModel(false,0,'Cancel Order failed. ',)
+        }
+    } catch(err){
+        throw err
+    }
+   }
+
+   async getCOInfoById(req:StyleOrderIdReq):Promise<StyleOrderResponseModel>{
+    try{
+        const data = await this.repo.getInfoById(req)
+        const COMap = new Map<number,StyleOrderModel>()
+        if(data.length == 0){
+            return new StyleOrderResponseModel(false,0,'No data found',[])
+        } else{
+            for(const rec of data){
+                if(!COMap.has(rec.id)){
+                    COMap.set(rec.id,new StyleOrderModel(rec.id,rec.item_code,rec.order_date,rec.buyer_po_number,rec.shipment_type,rec.buyer_style,rec.agent,rec.buyer_address,rec.exfactory_date,rec.delivery_date,rec.instore_date,rec.sale_price,rec.price_quantity,rec.discount_per,rec.discount_amount,rec.status,rec.remarks,rec.item_id,rec.warehouse_id,rec.facility_id,rec.style_id,rec.package_terms_id,rec.delivery_method_id,rec.delivery_terms_id,rec.currency_id,rec.payment_method_id,rec.payment_terms_id,[],rec.buyer_id,rec.item_name,rec.buyer_code,rec.buyer_name,rec.factoryName,rec.warehouse_name,rec.agentName,rec.agentCode,rec.buyerLandmark,rec.buyerCity,rec.buyerState,rec.package_terms_name,rec.delivery_method,rec.delivery_terms_name,rec.currency_name,rec.payment_method,rec.payment_terms_name))
+                }
+                COMap.get(rec.id).styleOrderItems.push(new StyleOrderItemsModel(rec.coLineId,rec.delivery_address,rec.order_quantity,rec.color,rec.size,rec.destination,rec.uom,rec.status,rec.discount,rec.salePrice,rec.coPercentage,rec.color_id,rec.size_id,rec.uom_id,rec.delLandmark,rec.delCity,rec.delState))
+            }
+            const styleOrderModel: StyleOrderModel[] = [];
+            COMap.forEach((e) => styleOrderModel.push(e))
+            return new StyleOrderResponseModel(true,1,'Data retrieved',styleOrderModel)
+        }
+
+    } catch(err){
+        throw err
+    }
+   }
 }

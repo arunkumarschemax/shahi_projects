@@ -5,6 +5,7 @@ import { Colour } from "../colours/colour.entity";
 import { Size } from "../sizes/sizes-entity";
 import { Destination } from "../destination/destination.entity";
 import { Style } from "../style/dto/style-entity";
+import { ItemCreation } from "../fg-item/item_creation.entity";
 
 @Entity('item_skus')
 export class ItemSkus{
@@ -108,9 +109,9 @@ export class ItemSkus{
     })
     versionFlag: number;
 
-    @ManyToOne(type=>Item, item=>item.itemSkuInfo,{  nullable:false, })
-    @JoinColumn({ name:"item_id"})
-    itemInfo: Item;
+    @ManyToOne(type=>ItemCreation, item=>item.itemSkuInfo,{  nullable:false, })
+    @JoinColumn({ name:"fg_item_id"})
+    fgitemInfo: ItemCreation;
 
     @ManyToOne(type=>Colour, color=>color.itemSkuInfo,{  nullable:false, })
     @JoinColumn({ name:"color_id"})

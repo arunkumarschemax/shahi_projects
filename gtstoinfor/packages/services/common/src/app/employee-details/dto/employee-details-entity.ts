@@ -105,6 +105,13 @@ createdUser: string | null;
 })
 updatedUser: string | null;
 
+@Column("varchar", {
+  nullable: true,
+  name: "module",
+  length:50
+})
+module: string | null;
+
 
   @VersionColumn({
       default:1,
