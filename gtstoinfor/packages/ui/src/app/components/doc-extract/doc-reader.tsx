@@ -4,7 +4,7 @@ import { Button, Card, Col, Form, FormInstance, Radio, Row, Select, Spin, Upload
 import { useState } from 'react';
 import { pdfjs } from 'react-pdf';;
 import { extractDhl, extractDart, extractExpeditors, extractEfl, extractOocl, extractNagel, extractApl, extractMaersk, checkIsScannedPdf } from './schemax-ai-docx-pdf';
-import { convertScannedPdfToSelectablePdf, extractAplInvoiceDataFromScanned, extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
+import { convertScannedPdfToSelectablePdf, extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 import { PDFDocument, rgb } from 'pdf-lib';
 import loadingSymbol from '../../../assets/images/1_yE-S7HG0Rg-ACAcnjvKf5Q.gif';
@@ -231,18 +231,18 @@ export const DocReader = (props: DocReaderProps) => {
                         break;
                     }
 
-                    case VendorNameEnum.extractedApl:
-                        {
-                            const isScannedPdf = await checkIsScannedPdf(pdfData)
-                            if (isScannedPdf) {
-                                const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
-                                const allLines = await extractDataFromScannedImages(pageImages, [0]);
-                                processedData = await extractAplInvoiceDataFromScanned(allLines);
-                            } else {
-                                processedData = await extractEfl(pdfData);
-                            }
-                            break;
-                        }
+                    // case VendorNameEnum.extractedApl:
+                    //     {
+                    //         const isScannedPdf = await checkIsScannedPdf(pdfData)
+                    //         if (isScannedPdf) {
+                    //             const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                    //             const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                    //             processedData = await extractAplInvoiceDataFromScanned(allLines);
+                    //         } else {
+                    //             processedData = await extractEfl(pdfData);
+                    //         }
+                    //         break;
+                    //     }
 
                 case VendorNameEnum.extractedSrivaru:
                     {
@@ -266,10 +266,10 @@ export const DocReader = (props: DocReaderProps) => {
                     processedData = await extractNagel(pdfData);
                     console.log('PDF DATA Nagel:', processedData);
                     break;
-                // case VendorNameEnum.extractedApl:
-                //     processedData = await extractApl(pdfData);
-                //     console.log('PDF DATA Apl:', processedData);
-                //     break;
+                case VendorNameEnum.extractedApl:
+                    processedData = await extractApl(pdfData);
+                    console.log('PDF DATA Apl:', processedData);
+                    break;
                 case VendorNameEnum.extractedMaersk:
                     processedData = await extractMaersk(pdfData);
                     console.log('PDF DATA Maersk:', processedData);
