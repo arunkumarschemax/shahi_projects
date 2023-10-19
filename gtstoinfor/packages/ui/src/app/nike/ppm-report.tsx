@@ -254,7 +254,7 @@ const PPMReport = () => {
               'CO': item.customerOrder,
               'CO Final Approval Date': item.coFinalApprovalDate,
               'Plan No': item.planNo,
-              'Lead Time': (item.leadTime) * -1,
+              'Lead Time': item.leadTime ? Math.abs(item.leadTime) : '-',
               'Category': item.categoryCode,
               'Category Description': item.categoryDesc,
               'Vendor Code': item.vendorCode,
@@ -1389,13 +1389,13 @@ const PPMReport = () => {
         width: 70,
         align: 'center',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
         }
-    },
+      },
       {
         title: 'PCD',
         dataIndex: 'PCD',
@@ -1499,11 +1499,11 @@ const PPMReport = () => {
       },
       {
         title: 'Lead Time',
-        dataIndex: 'leadTime', width: 80,align:'left',
+        dataIndex: 'leadTime', width: 80, align: 'left',
         render: (text) => {
           if (!isNaN(parseFloat(text))) {
             // If it's a valid number, render it
-            return parseFloat(text) * -1; // You can format it as needed
+            return Math.abs(text); // You can format it as needed
           } else {
             return '-'; // Or any other desired text
           }

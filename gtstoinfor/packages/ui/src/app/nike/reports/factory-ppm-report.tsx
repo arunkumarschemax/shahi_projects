@@ -340,7 +340,7 @@ const FactoryPPMReport = () => {
                             'CO': item.customerOrder,
                             'CO Final Approval Date': item.coFinalApprovalDate,
                             'Plan No': item.planNo,
-                            'Lead Time': item.leadTime ? (Number(item.leadTime) * -1) : '-',
+                            'Lead Time': item.leadTime ? Math.abs(item.leadTime) : '-',
                             'Category': item.categoryCode,
                             'Category Description': item.categoryDesc,
                             'Vendor Code': item.vendorCode,
@@ -841,7 +841,7 @@ const FactoryPPMReport = () => {
                 render: (text) => {
                     if (!isNaN(parseFloat(text))) {
                         // If it's a valid number, render it
-                        return parseFloat(text).toFixed(2); // You can format it as needed
+                        return Math.abs(text); // You can format it as needed
                     } else {
                         // If it's not a valid number, render a placeholder or an empty string
                         return 'N/A'; // Or any other desired text
