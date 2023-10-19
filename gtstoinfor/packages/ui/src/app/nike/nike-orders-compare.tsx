@@ -1892,14 +1892,14 @@ const OrdersCompareGrid = () => {
             label: <b>Country & Coustomer & Plant Revised : {productCodeChaneData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={productCodeChaneData} columns={columns6} pagination={false} scroll={{ x: 2000, y: 450 }} />,
         },
+        // {
+        //     key: '7',
+        //     label: <b style={{ color: '#DEAD29' }}>Mode of transportation: {modeOTransportChaneData?.length}</b>,
+        //     children: <Table className="custom-table-wrapper" bordered dataSource={modeOTransportChaneData} columns={columns3} pagination={false} scroll={{ x: 'max-content', y: 500 }} />,
+        // },
         {
             key: '7',
-            label: <b style={{ color: '#DEAD29' }}>Mode of transportation: {modeOTransportChaneData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={modeOTransportChaneData} columns={columns3} pagination={false} scroll={{ x: 'max-content', y: 500 }} />,
-        },
-        {
-            key: '8',
-            label: <b>Item Text changed PO's : {itemTextChaneData?.length}</b>,
+            label: <b style={{ color: '#DEAD29' }}>Item Text changed PO's : {itemTextChaneData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={itemTextChaneData} columns={columns5} pagination={false} scroll={{ x: 'max-content', y: 500 }} />,
         }
     ];
