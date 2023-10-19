@@ -263,12 +263,14 @@ export const DocView = () => {
       key: "invoiceAmount",
       ...getColumnSearchProps("invoiceAmount"),
       sorter: (a, b) => a.invoiceAmount.localeCompare(b.invoiceAmount),
-      align: "center",
+      align: "right",
       render: (text, record) => {
-        const formattedAmount = record.invoiceAmount ? parseFloat(record.invoiceAmount).toFixed(2) : "-";
+        const invoiceAmountWithoutCommas = record.invoiceAmount ? record.invoiceAmount.replace(/,/g, '') : "-";
+        const formattedAmount = parseFloat(invoiceAmountWithoutCommas).toFixed(2);
         return <>{formattedAmount}</>;
       },
     },
+    
     {
       title: "Invoice Currency",
       dataIndex: "invoiceCurrency",

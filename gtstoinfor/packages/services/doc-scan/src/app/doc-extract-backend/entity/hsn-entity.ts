@@ -62,7 +62,7 @@ export class HSNEntity {
   unitPrice:string;
 
   @Column("varchar", {
-    nullable:true,
+    nullable:false,
     length: 50,
     name: "unit_quantity",
   })
@@ -96,12 +96,12 @@ export class HSNEntity {
   // })
   // status: string;
 
-  @Column("enum", {
-    default:StatusEnum.No_Variance,
-    name: "variance_status",
-    enum: StatusEnum,
-  })
-  VarianceStatus: StatusEnum;
+  // @Column("enum", {
+  //   default:StatusEnum.No_Variance,
+  //   name: "variance_status",
+  //   enum: StatusEnum,
+  // })
+  // VarianceStatus: StatusEnum;
 
   @CreateDateColumn({
     name: "created_at",

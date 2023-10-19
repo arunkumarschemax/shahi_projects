@@ -44,6 +44,7 @@ export const extractDhl = async (pdf) => {
             }
 
             currentHSN = {
+                // quotation:extractedData[hsnId-1].content,
                 description: extractedData[hsnId + 1].content,
                 HSN: line.content.includes("HSN") ? line.content.match(/\d+/) : line.content.trim(),
                 unitQuantity: extractedData[hsnId - 1].content,
@@ -51,11 +52,13 @@ export const extractDhl = async (pdf) => {
                 taxType: taxType,
                 charge: extractedData[hsnId - 10].content,
                 taxPercentage: taxPercentage,
-                taxAmount: extractedData[hsnId - 6].content*extractedData[hsnId - 9].content,
+                taxAmount: extractedData[hsnId - 6].content * extractedData[hsnId - 9].content,
                 tax: extractedData[hsnId - 6].content,
-                roe:extractedData[hsnId - 9].content,
+                roe: extractedData[hsnId - 9].content,
                 amount: extractedData[hsnId - 4].content,
+                // variance: extractedData[hsnId - 2].content - extractedData[hsnId-1].content
             };
+            
         }
         linesId += 1;
     }

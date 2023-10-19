@@ -476,13 +476,21 @@ function ScanDetailView() {
           {rowData.state.rowData.sgst ? rowData.state.rowData.sgst : "--"}
         </Descriptions.Item>
 
-        <Descriptions.Item
+        {/* <Descriptions.Item
           label="Invoice Amount"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.invoiceAmount
             ? parseFloat(rowData.state.rowData.invoiceAmount).toFixed(2)
             : "--"}
+        </Descriptions.Item> */}
+
+
+        <Descriptions.Item
+          label="Invoice Amount"
+          labelStyle={{ color: "black", fontWeight: "bold" }}
+        >
+          {rowData.state.rowData.invoiceAmount ? rowData.state.rowData.invoiceAmount : "--"}
         </Descriptions.Item>
 
         <Descriptions.Item
@@ -507,14 +515,14 @@ function ScanDetailView() {
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           <Tag
-           color={rowData.state.rowData.status === "No Variance" ? "green"
-                  : rowData.state.rowData.status === "Fully Variance"  ? "red"
-                  : rowData.state.rowData.status === "Partially Variance"  ? "blue"
-                  : "default" }>
+            color={rowData.state.rowData.status === "No Variance" ? "green"
+              : rowData.state.rowData.status === "Fully Variance" ? "red"
+                : rowData.state.rowData.status === "Partially Variance" ? "blue"
+                  : "default"}>
             {rowData.state.rowData.status ? rowData.state.rowData.status : "--"}
           </Tag>
         </Descriptions.Item>
-        
+
       </Descriptions>
 
       <Card>

@@ -8,7 +8,6 @@ export class HsnDto {
   taxPercentage: string;
   charge: string;
   unitQuantity: string;
-
   quotation: string;
   // status:string;
   unitPrice:string;
@@ -47,7 +46,6 @@ export class HsnDto {
     // this.status=status
     this.variance = variance
     this.description=description
-
     // this.VarianceStatus = VarianceStatus
     this.HsnId = HsnId
 

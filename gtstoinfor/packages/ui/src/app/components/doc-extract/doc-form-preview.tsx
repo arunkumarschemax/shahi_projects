@@ -488,7 +488,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
     const onSubmit = () => {
         const dto1 = []
         for (const data of props.hsnData){
-             const dto = new HsnDto(data.HSN,data.taxType,data.taxAmount,data.taxPercentage,data.charge,data.unitQuantity,data.quotation,data.unitPrice,data.description)
+             const dto = new HsnDto(data.HSN,data.taxType,data.taxAmount,data.description,data.taxPercentage,data.charge,data.unitQuantity,data.quotation,data.unitPrice,data.variance)
              dto1.push(dto)
         }
         
