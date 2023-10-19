@@ -1,5 +1,5 @@
 import { CommonAxiosService } from "../common-axios-service-prs";
-import {FabricDevelopmentRequestModel, FabricDevelopmentRequestResponse, FabricFilterRequest, UploadResponse } from '@project-management-system/shared-models';
+import {CommonResponseModel, FabricApprovalReq, FabricDevelopmentRequestModel, FabricDevelopmentRequestResponse, FabricFilterRequest, UploadResponse } from '@project-management-system/shared-models';
 
 
 export class FabricDevelopmentService extends CommonAxiosService{
@@ -44,6 +44,14 @@ async getAllMapItems(req?: FabricFilterRequest): Promise<any> {
   return dummyMapItemsData;
 
 
+}
+
+async fabricApproval(req: FabricApprovalReq): Promise<CommonResponseModel>{
+    return await this.axiosPostCall(this.URL + '/fabricApproval',req)
+}
+
+async getAllFabricRequestNo(): Promise<CommonResponseModel>{
+    return await this.axiosPostCall(this.URL + '/getAllFabricRequestNo')
 }
 // async getAllMapItems(req?: FabricFilterRequest): Promise<any> {
 //   console.log(req, "989898");

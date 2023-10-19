@@ -9,6 +9,7 @@ import { FabricRequestDto } from "./dto/fabric-request.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { FabricApprovalReq } from "./dto/fabric-approval-req";
 
 
  
@@ -71,6 +72,26 @@ export class FabricDevelopmentController {
       } catch (error) {
         return this.applicationExceptionHandler.returnException(UploadResponse, error);
       }
+    }
+
+
+    @Post('/fabricApproval')
+    @ApiBody({type: FabricApprovalReq})
+    async fabricApproval(@Body() req? : any): Promise<CommonResponseModel> {
+        try {
+            return this.fabricDevelopmentService.fabricApproval(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getAllFabricRequestNo')
+    async getAllFabricRequestNo(): Promise<CommonResponseModel> {
+        try {
+            return this.fabricDevelopmentService.getAllFabricRequestNo();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
     }
 
     }

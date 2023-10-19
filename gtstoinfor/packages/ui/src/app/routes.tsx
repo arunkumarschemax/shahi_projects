@@ -127,6 +127,7 @@ import IssueScreen from "./operation-tracking/issue"
 import StyleOrderCreation from "./style-orders/style-order-form"
 import StyleOrderGrid from "./style-orders/style-order-grid"
 import StyleOrderDetailView from "./style-orders/style-order-detail-view"
+import FabricReqApproval from "./fabric development/fabric-req-approval"
 
 
 export const AppRoutes = () => {
@@ -479,7 +480,7 @@ export const AppRoutes = () => {
                 <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentRequest placementForm={undefined} dynamicForm={undefined}/>}/>
                 <Route path='fabric-development-request/fabric-development-request-view' element={<FabricDevelopmentView/>}/>
                 <Route path='fabric-development-request-quality/fabric-development-request-quality-view' element={<QualityTabsView/>}/>
-
+                <Route path='fabric-approval-request' element={<FabricReqApproval/>}/>
                 </Route>
                 {/* <Route path='settings'> */}
                 <Route path='settings/settings-form' element={<SettingsForm/>}/>
