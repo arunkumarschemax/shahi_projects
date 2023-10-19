@@ -291,7 +291,7 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getDivertReport(): Promise<any[]> {
         const query = this.createQueryBuilder('dpm')
-            .select(`DISTINCT po_and_line,id,LEFT(REGEXP_REPLACE(item, '[^0-9]+', ''), 4) AS item,plant AS Plant,dpom_item_line_status AS LineStatus,
+            .select(`DISTINCT po_and_line,id, LEFT(item, 4) AS item,plant AS Plant,dpom_item_line_status AS LineStatus,
             plant_name AS PlantName,document_date AS DocumentDate,
             po_number AS poNumber, po_line_item_number AS poLine ,destination_country AS destination,
             shipping_type AS shipmentType,inventory_segment_code AS inventorySegmentCode,
@@ -305,7 +305,7 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getDivertWithNewDataReport(req: [po: string, line: string]): Promise<any[]> {
         const [po, line] = req;
         const query = this.createQueryBuilder('dpm')
-            .select(` id AS nId,LEFT(REGEXP_REPLACE(item, '[^0-9]+', ''), 4) AS item, plant AS nPlant, dpom_item_line_status AS nLineStatus,
+            .select(` id AS nId, LEFT(item, 4) AS item, plant AS nPlant, dpom_item_line_status AS nLineStatus,
             plant_name AS nPlantName, document_date AS nDocumentDate,
             po_number AS npoNumber, po_line_item_number AS npoLine, destination_country AS ndestination,
             shipping_type AS nshipmentType, inventory_segment_code AS ninventorySegmentCode,

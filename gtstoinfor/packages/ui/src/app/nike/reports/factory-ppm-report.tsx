@@ -956,7 +956,6 @@ const FactoryPPMReport = () => {
                     }
                 },
             },
-
             {
                 title: 'Planning Season Code',
                 dataIndex: 'planningSeasonCode',
@@ -989,7 +988,6 @@ const FactoryPPMReport = () => {
                     return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-';
                 },
             },
-
             {
                 title: 'Truck Out Date', dataIndex: 'truckOutDate', width: 70, className: "right-column", render: (text, record) => {
                     if (!text || text.trim() === '') {
@@ -1041,11 +1039,9 @@ const FactoryPPMReport = () => {
                 render: (text) => {
                     // Replace underscores (_) with spaces
                     const transformedText = text ? text.replace(/_/g, ' ') : '-';
-
                     return transformedText;
                 },
             },
-
             { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', width: 70, className: 'centered-column', },
             { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc', width: 75 },
             {
@@ -1226,7 +1222,6 @@ const FactoryPPMReport = () => {
             // });
         });
         columns.push(
-
             {
                 title: 'Change Register',
                 dataIndex: 'displayName', width: 70,
@@ -1295,7 +1290,6 @@ const FactoryPPMReport = () => {
                     }
                 },
             }
-
         )
         // exportingColumns.push(
 
@@ -1603,9 +1597,6 @@ const FactoryPPMReport = () => {
                     <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card style={{ backgroundColor: '#B1BDF5', height: 100, alignItems: 'center' }}>
                         <b><Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
                         </b> </Card> </Col>
-                    {/* <Col>
-                        <Card title={'Cancelled PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
-                    </Col> */}
                 </Row><br></br>
                 <Card >
                     {/* <Table
@@ -1615,7 +1606,6 @@ const FactoryPPMReport = () => {
                         scroll={{ x: 1000 }}
                         bordered /> */}
                     {renderReport(filterData)}
-
                 </Card>
                 <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
                     <Card>
