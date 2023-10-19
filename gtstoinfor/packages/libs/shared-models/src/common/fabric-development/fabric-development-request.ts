@@ -14,6 +14,7 @@ export class FabricDevelopmentRequestModel{
     lightSourcePrimary: string;
     lightSourceSecondary: string;
     lightSourceTertiary: string;
+    file:any;
     fileName: string;
     filePath: string;
     qualities:FabricRequestQualitiesRequest[]
@@ -36,6 +37,7 @@ export class FabricDevelopmentRequestModel{
         lightSourcePrimary: string,
         lightSourceSecondary: string,
         lightSourceTertiary: string,
+        file:any,
         fileName: string,
         filePath: string,
         qualities:FabricRequestQualitiesRequest[],
@@ -56,6 +58,7 @@ export class FabricDevelopmentRequestModel{
         this.lightSourcePrimary = lightSourcePrimary
         this.lightSourceSecondary = lightSourceSecondary
         this.lightSourceTertiary = lightSourceTertiary
+        this.file = file
         this.fileName = fileName
         this.filePath = filePath
         this.qualities = qualities
