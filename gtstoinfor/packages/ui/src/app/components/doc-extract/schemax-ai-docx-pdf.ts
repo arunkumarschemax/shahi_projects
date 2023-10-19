@@ -58,7 +58,7 @@ export const extractDhl = async (pdf) => {
                 amount: extractedData[hsnId - 4].content,
                 // variance: extractedData[hsnId - 2].content - extractedData[hsnId-1].content
             };
-            
+
         }
         linesId += 1;
     }
@@ -177,7 +177,7 @@ export const extractDart = async (pdf) => {
             }
 
             currentHSN = {
-                description:'',
+                description: '',
                 HSN: line.content.includes("SAC")
                     ? line.content.match(/\d+/)
                     : line.content.replace(/\]/g, '').trim(),
@@ -188,7 +188,7 @@ export const extractDart = async (pdf) => {
                 taxAmount: null,
                 amount: null,
                 quotation: null,
-            };            
+            };
 
         } else if (currentHSN && !currentHSN.taxType) {
             const taxtypeMatch = line.content.match(/IGST|CGST|SGST|GST/);
@@ -922,7 +922,7 @@ export const extractNagel = async (pdf) => {
     }
 
 
-    
+
     const structuredHSNLines = [];
     let currentHSN = null;
     let hsnId = null;
@@ -1206,7 +1206,7 @@ export const extractApl = async (pdf) => {
             }
         }
     }
-    console.log("APL PDF DATA",JSON.stringify(allLines,null,2))
+    console.log("APL PDF DATA", JSON.stringify(allLines, null, 2))
     return {
         extractedData: InvoiceLines[0],
         extractedHsnData: structuredHSNLines
@@ -1303,21 +1303,24 @@ export const extractMaersk = async (pdf) => {
     if (currentHSN) {
         structuredHSNLines.push(currentHSN);
     }
-
-
     const InvoiceLines = [];
     let currentInvoice = null;
     let gstNumberExtracted = false;
     let venName = '';
     const vendorNameId = '1-2';
     const invoiceDateId = '1-9';
+    const invoiceDateId2 = '1-10';
     const invoiceNumberId = '1-254';
+    const invoiceNumberId2 = '1-224';
     const invoiceCurrency = 'INR';
     const currentYear = new Date().getFullYear();
     const nextYear = currentYear + 1;
     const financialYear = `${currentYear}-${nextYear}`;
 
     if (extractedData && Array.isArray(extractedData)) {
+        let invoiceDate = '';
+        let invoiceNumber = '';
+
         for (const line of extractedData) {
             if (line.id >= '1-201' && line.id <= '2-300') {
                 const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
@@ -1332,27 +1335,34 @@ export const extractMaersk = async (pdf) => {
                     }
 
                     const invoiceDateData = extractedData.find((item) => item.id === invoiceDateId);
-                    const invoiceDate = invoiceDateData ? invoiceDateData.content.replace(/^INVOICE DATE:\s*/, '') : '';
+                    if (invoiceDateData && invoiceDateData.content.trim() !== '') {
+                        invoiceDate = invoiceDateData.content.replace(/^INVOICE DATE:\s*/, '');
+                    } else {
+                        const invoiceDateData2 = extractedData.find((item) => item.id === invoiceDateId2);
+                        if (invoiceDateData2 && invoiceDateData2.content.trim() !== '') {
+                            invoiceDate = invoiceDateData2.content.replace(/^INVOICE DATE:\s*/, '');
+                        }
+                    }
 
                     const invoiceNumberData = extractedData.find((item) => item.id === invoiceNumberId);
-                    const invoiceNumber = invoiceNumberData ? invoiceNumberData.content.replace(/^INVOICE NUMBER:\s*/, '') : '';
-
-
-                    // const invoiceAmountData = extractedData.find((item) => item.id === invoiceAmountId); 
-                    // const invoiceAmount = invoiceAmountData ? invoiceAmountData.content : ''; 
+                    if (invoiceNumberData && invoiceNumberData.content.trim() !== '') {
+                        invoiceNumber = invoiceNumberData.content.replace(/^INVOICE NUMBER:\s*/, '');
+                    } else {
+                        const invoiceNumberData2 = extractedData.find((item) => item.id === invoiceNumberId2);
+                        if (invoiceNumberData2 && invoiceNumberData2.content.trim() !== '') {
+                            invoiceNumber = invoiceNumberData2.content.replace(/^INVOICE NUMBER:\s*/, '');
+                        }
+                    }
 
                     const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
                         const amount = parseFloat(hsnLine.amount) || 0;
                         const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
-                        // const igst = parseFloat(hsnLine.igst) || 0; 
-                        // const cgst = parseFloat(hsnLine.cgst) || 0; 
-                        // const sgst = parseFloat(hsnLine.sgst) || 0; 
                         return add + amount + taxAmount;
                     }, 0).toFixed(2);
 
                     const igst = structuredHSNLines.reduce((acc, hsnLine) => {
                         const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
-                        return acc + taxAmount
+                        return acc + taxAmount;
                     }, 0).toFixed(2);
 
                     const cgst = structuredHSNLines.reduce((add, hsnLine) => {
@@ -1381,12 +1391,14 @@ export const extractMaersk = async (pdf) => {
             }
         }
     }
+    console.log("ALL LINES", JSON.stringify(allLines, null, 2));
     return {
         extractedData: InvoiceLines[0],
         extractedHsnData: structuredHSNLines
-    }
-}
+    };
 
+
+}
 
 export const checkIsScannedPdf = async (pdf) => {
     // Analyze each page for text or images
