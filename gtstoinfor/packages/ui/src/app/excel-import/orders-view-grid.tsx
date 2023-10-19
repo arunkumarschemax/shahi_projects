@@ -442,7 +442,7 @@ const Number=()=>{
            
         // },
         {
-            title: 'WH(yy-mm-dd)',
+            title: 'WH(mm-dd)',
             dataIndex: 'wh',
             // width: '9%',
             // width: 90,
