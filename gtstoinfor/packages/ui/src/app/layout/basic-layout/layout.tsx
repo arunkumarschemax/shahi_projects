@@ -214,7 +214,7 @@ export default function BasicLayout() {
                     <div style={key === route.subMenuId ? {backgroundColor:'#a3e1f5'} : {}}
                     // style={{backgroundColor:'white',color:'black'}}
                     >
-                         {route.subMenuName !== 'Order History Report' ? (<Menu.Item key={route.subMenuId} ><Link  onClick={() => handleClick(route.subMenuId)} to={route.path}><span><span> {route.icon} <span>{route.subMenuName}</span> </span></span></Link> </Menu.Item> ) : (<></>)}
+                         {route.subMenuName !== 'Trim Order'? (<Menu.Item key={route.subMenuId} ><Link  onClick={() => handleClick(route.subMenuId)} to={route.path}><span><span> {route.icon} <span>{route.subMenuName}</span> </span></span></Link> </Menu.Item> ) : (<></>)}
                     </div>
     
                 ) 

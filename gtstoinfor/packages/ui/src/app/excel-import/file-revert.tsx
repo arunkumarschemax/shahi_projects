@@ -187,23 +187,23 @@ export function FileRevert() {
               }}
               bordered />,
             },
-            {
-                key: '2',
-                label: `Trim Order :${trimData.length}`,
-                children:  <Table
-                size='small'
-                columns={columns}
-                dataSource={trimData}
-                className="custom-table-wrapper"
-                scroll={{ x: 1000,y:500 }}
-                pagination={{
-                    onChange(current, pageSize) {
-                        setPage(current);
-                        setPageSize(pageSize);
-                    },
-                }}
-                bordered />,
-              },
+            // {
+            //     key: '2',
+            //     label: `Trim Order :${trimData.length}`,
+            //     children:  <Table
+            //     size='small'
+            //     columns={columns}
+            //     dataSource={trimData}
+            //     className="custom-table-wrapper"
+            //     scroll={{ x: 1000,y:500 }}
+            //     pagination={{
+            //         onChange(current, pageSize) {
+            //             setPage(current);
+            //             setPageSize(pageSize);
+            //         },
+            //     }}
+            //     bordered />,
+            //   },
            
           ];
 
