@@ -9,6 +9,7 @@ import { FabricRequestDto } from "./dto/fabric-request.dto";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { FabricApprovalReq } from "./dto/fabric-approval-req";
 const util = require('util');
 import * as express from 'express';
 import * as multer from 'multer';
@@ -113,18 +114,23 @@ export class FabricDevelopmentController {
     // }
 
 
+    @Post('/fabricApproval')
+    @ApiBody({type: FabricApprovalReq})
+    async fabricApproval(@Body() req? : any): Promise<CommonResponseModel> {
+        try {
+            return this.fabricDevelopmentService.fabricApproval(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 
-//     @Post('/createFabricDevelopmentRequest')
-//    @UseInterceptors(FilesInterceptor('files', 50 ))
-//     @ApiConsumes('multipart/form-data')
-// // @ApiImplicitFile({ name: 'file', required: true })
-// async uploadModel(@UploadedFiles() file, @Body() req: any) {
-//   console.log(util.inspect(file, false, null, true));
-//   console.log(util.inspect(req, false, null, true));
-//   console.log(JSON.parse(req.formContent));
-//   const decodedData = JSON.parse(req.formContent);
-//   await this.fabricDevelopmentService.createFabricDevelopmentRequest(decodedData, file);
-// }
-
+    @Post('/getAllFabricRequestNo')
+    async getAllFabricRequestNo(): Promise<CommonResponseModel> {
+        try {
+            return this.fabricDevelopmentService.getAllFabricRequestNo();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 
     }

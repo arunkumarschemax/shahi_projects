@@ -12,6 +12,7 @@ import { PaymentMethod } from "../payment-methods/payment-method-entity";
 import { PaymentTerms } from "../payment-terms/payment-terms.entity";
 import { CoLine } from "./co-line.entity";
 import { Buyers } from "../buyers/buyers.entity";
+import { ItemCreation } from "../fg-item/item_creation.entity";
 
 @Entity('customer_order')
 export class StyleOrder{
@@ -172,9 +173,9 @@ export class StyleOrder{
       })
       versionFlag: number;
 
-    @ManyToOne(type=>Item, item=>item.styleOrderInfo,{  nullable:false, })
-    @JoinColumn({ name:"item_id"})
-    itemInfo: Item;
+    @ManyToOne(type=>ItemCreation, item=>item.styleOrderInfo,{  nullable:false, })
+    @JoinColumn({ name:"fg_item_id"})
+    fgitemInfo: ItemCreation;
 
     @ManyToOne(type=>Warehouse, wh=>wh.styleOrderInfo,{  nullable:false, })
     @JoinColumn({ name:"warehouse_id"})

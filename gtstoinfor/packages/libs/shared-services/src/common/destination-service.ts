@@ -1,4 +1,4 @@
-import { AllDestinationResponseModel, DestinationDto, DestinationRequest, DestinationResponseModel } from '@project-management-system/shared-models';
+import { AllDestinationResponseModel, DestinationDropDownResponse, DestinationDto, DestinationRequest, DestinationResponseModel, DivisionRequest } from '@project-management-system/shared-models';
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class DestinationService extends CommonAxiosService{
@@ -31,4 +31,8 @@ export class DestinationService extends CommonAxiosService{
   async getActiveDestinationCount(): Promise<AllDestinationResponseModel> {
     return this.axiosPostCall(this.URL + '/getActiveDestinationCount')
   }
+  async getDestinationforDivisionDropDown(req:DivisionRequest): Promise<DestinationDropDownResponse> {
+    return this.axiosPostCall(this.URL + '/getDestinationforDivisionDropDown',req)
+
+}
 }

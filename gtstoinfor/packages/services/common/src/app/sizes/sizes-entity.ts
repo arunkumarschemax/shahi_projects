@@ -3,6 +3,7 @@ import { BuyersDestionations } from "../buyers-destination/buyers-destination.en
 import { BuyersSize } from "../buyers-destination/buyers-sizes.entity";
 import { ItemSkus } from "../sku-generation/sku-generation.entity";
 import { CoLine } from "../style-order/co-line.entity";
+import { Division } from "../division/division.entity";
 
 @Entity('size')
 export class Size{
@@ -61,4 +62,8 @@ itemSkuInfo:ItemSkus;
 
 @OneToMany(type=>CoLine, co=>co.sizeInfo,{cascade: true})
 coLineInfo:CoLine;
+
+@ManyToOne(()=> Division, division=>division.sizes)
+@JoinColumn({name:'division_id'})
+division:Division;
 }

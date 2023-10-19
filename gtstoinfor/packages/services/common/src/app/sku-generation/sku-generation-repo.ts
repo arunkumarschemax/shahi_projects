@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ItemSkus } from "./sku-generation.entity";
-import { SkuStatusEnum } from "@project-management-system/shared-models";
+import { SKUlistFilterRequest, SkuStatusEnum } from "@project-management-system/shared-models";
 import { Colour } from "../colours/colour.entity";
 import { Size } from "../sizes/sizes-entity";
 import { Destination } from "../destination/destination.entity";
@@ -44,6 +44,18 @@ export class ItemSkuRepository extends Repository<ItemSkus> {
         .select(`item_code,item_id `)
         .groupBy(`item_code`)
         return await query.getRawMany()
+    }
+
+    async getSkuList(req:SKUlistFilterRequest):Promise<any>{
+        const query = await this.createQueryBuilder('is')
+        .select(`*`)
+        // .leftJoin(Colour,`c`,`c.colourId = is.color_id`)
+        // .leftJoin(Size,`s`,`s.size_id = is.size_id`)
+        // .leftJoin(Destination,`d`,`d.destination_id = is.destination_id`)
+        .where(`is.item_id = '${req.itemNoId}'`)
+        .groupBy(`is.color,is.size,is.destination`)
+        return query.getRawMany()
+
     }
 
 }

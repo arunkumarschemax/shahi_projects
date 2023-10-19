@@ -41,7 +41,6 @@ import {
   SKUlistFilterRequest,
 } from "@project-management-system/shared-models";
 import Highlighter from "react-highlight-words";
-
 export const SkuList = () => {
   const [form] = Form.useForm();
   const [itemData, setItemData] = useState([]);
@@ -68,9 +67,9 @@ export const SkuList = () => {
 
 
 
-  const cancelSKU = (id: number) => {
+  const closeSKU = (id: number) => {
     const req = new ItemSKusReq(id, "", null, null, null, null, "", 0);
-    services.cancelSKUById(req).then((res: any) => {
+    services.closeSKUById(req).then((res: any) => {
       if (res.status) {
         message.success(res.internalMessage);
       } else {
@@ -106,6 +105,7 @@ export const SkuList = () => {
 
   const getAllData=()=>{
     const req = new SKUlistFilterRequest()
+    console.log(req,'jjjjjjjjjjjjjjjjj')
     if(form.getFieldValue('item_code') !== undefined){
       req.itemsNo=form.getFieldValue('item_code')
     }
@@ -116,7 +116,7 @@ export const SkuList = () => {
     })
   }
   const handleSearch = () => {
-    console.log('eeeeeeeeee',selectedItemNo);
+    // console.log('eeeeeeeeee',selectedItemNo);
     
     if (selectedItemNo) {
       const req = new SKUlistFilterRequest(Number(selectedItemNo))
@@ -228,20 +228,20 @@ export const SkuList = () => {
   const columnsSkelton: any = [
     {
       title: "SKU Code",
-      dataIndex: "skuId",
-      key: "skuId",
+      dataIndex: "skucode",
+      key: "skucode",
       width: "300px",
 
       // render: (skus) => skus.map((sku) => sku.skuId),
     },
     {
       title: "Sizes",
-      dataIndex: "sizes",
-      key: "sizes",
+      dataIndex: "size",
+      key: "size",
       width: "300px",
-      sorter: (a, b) => a.sizes.localeCompare(b.sizes),
+      sorter: (a, b) => a.size.localeCompare(b.size),
       sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("sizes"),
+      ...getColumnSearchProps("size"),
       // render: (skus) => skus.map((sku) => sku.sizes),
     },
     {
@@ -264,26 +264,17 @@ export const SkuList = () => {
       sorter: (a, b) => a.colours.localeCompare(b.colours),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("colours"),
-      // render: (colours,rowData) => {
-      //   console.log(rowData)
-      //   let co;
-      //   if(rowData.colour == 'White'){
-      //     co = 'black'
-      //   } else{
-      //     co = 'white'
-      //   }
-      //   return(
-      //     <Tag color={colours} style={{color:co}}>{colours}</Tag>
-      //   )
-      // }
       render: (colours, rowData) => (
         <Tag
           color={colours}
-          style={{ color: rowData.colour == "White" ? "black" : "white" }}
+          style={{
+            color: rowData.colour === "White" ? "black" : rowData.colour === "Black" ? "white" : "inherit"
+          }}
         >
           {colours}
         </Tag>
       ),
+    
     },
     {
       title: "Action",
@@ -292,14 +283,14 @@ export const SkuList = () => {
       render: (text, rowData, index) => (
         <span>
           {rowData.status !== "CANCELLED" ? (
-            <Tooltip placement="top" title="Cancel SKU">
+            <Tooltip placement="top" title="Close SKU">
               <Popconfirm
-                onConfirm={(vale) => {
-                  cancelSKU(rowData.id);
+                onConfirm={(value) => {
+                  closeSKU(rowData.id);
                 }}
-                title={"Are you sure to Cancel ?"}
+                title={"Are you sure to Close ?"}
               >
-                <CloseOutlined style={{ color: "red", fontSize: "20" }} />
+                <Button type="primary" shape="circle">Close</Button>
               </Popconfirm>
             </Tooltip>
           ) : null}
@@ -498,12 +489,12 @@ export const SkuList = () => {
                 <div>
                   {itemData.map((item) => (
                     <Card
-                      key={item.itemsNo}
-                      title={`Item No: ${item.itemsNo}`}
+                      key={item.itemNoId}
+                      title={`Item No: ${item.itemNo}`}
                       style={{ cursor: "pointer" }}
                     >
                       <Row gutter={[20, 16]}>
-                        {item.skus.map((e) => {
+                        {item.sku?.map((e) => {
                           let co;
                           if (e.color == "white") {
                             co = "balck";
@@ -517,7 +508,7 @@ export const SkuList = () => {
                               md={{ span: 3 }}
                               lg={{ span: 6 }}
                               xl={{ span: 5 }}
-                              key={e.skuId}
+                              key={e.skucode}
                             >
                               <div>
                                 <Card
@@ -531,13 +522,13 @@ export const SkuList = () => {
                                   <Descriptions
                                     column={1}
                                     style={{ fontSize: "2px" }}
-                                    title={`SKU Code: ${e.skuId}`}
+                                    title={`SKU Code: ${e.skucode}`}
                                   >
                                     <Descriptions.Item label="Size">
-                                      {e.sizes}
+                                      {e.size}
                                     </Descriptions.Item>
                                     <Descriptions.Item label="Colour">
-                                      <Tag
+                                      {/* <Tag
                                         color={e.colour}
                                         // style={{
                                         //   color: item.colour === 'white' ? 'black' : 'inherit',
@@ -551,7 +542,17 @@ export const SkuList = () => {
                                         }}
                                       >
                                         {e.colour}
-                                      </Tag>
+                                      </Tag> */}
+                                      <Tag
+                                     color={e.colour}
+                                            style={{
+                                            color: e.colour === "White" ? "black" : e.colour === "Black" ? "white" : "inherit"
+                                             }}
+                                                   >
+                                                     {e.colour}
+                                            </Tag>
+
+
                                     </Descriptions.Item>
                                     <Descriptions.Item label="Destination">
                                       {e.destinations}
@@ -571,11 +572,11 @@ export const SkuList = () => {
                   {itemData.map((e) => (
                     <Card
                       style={{ width: "1240px" }}
-                      key={e.itemsNo}
-                      title={`Item No: ${e.itemsNo}`}
+                      key={e.itemNoId}
+                      title={`Item No: ${e.itemNo}`}
                     >
                       <Table
-                        dataSource={e.skus}
+                        dataSource={e.sku}
                         columns={columnsSkelton}
                         size="small"
                       />

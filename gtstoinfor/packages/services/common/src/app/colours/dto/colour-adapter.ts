@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Colour } from "../colour.entity";
 import { ColourDTO } from "./colour-dto";
+import { Division } from "../../division/division.entity";
 
 
 @Injectable()
@@ -17,6 +18,9 @@ export class ColourAdapter{
         const colour = new Colour();
         colour.colourId=colourDto.colourId;
         colour.colour=colourDto.colour;
+        colour.division= new Division();
+        colour.division.divisionId=colourDto.divisionId;
+        colour.division.divisionName=colourDto.divisionName;
         colour.isActive=colourDto.isActive==undefined?true:colourDto.isActive;
         if(isUpdate){
             colour.updatedUser=colourDto.updatedUser;
@@ -34,6 +38,8 @@ export class ColourAdapter{
         const colors= new ColourDTO();
         colors.colourId=colour.colourId;
         colors.colour=colour.colour;
+        colors.divisionId=(colour.division)?.divisionId;
+        colors.divisionName=(colour.division)?.divisionName;
         colors.isActive=colour.isActive;
         colors.createdAt=colour.createdAt;
         colors.updatedAt=colour.updatedAt;

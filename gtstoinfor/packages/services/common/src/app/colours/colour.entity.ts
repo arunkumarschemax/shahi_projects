@@ -2,6 +2,7 @@ import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne
 import { BuyersColor } from "../buyers-destination/byers-colors.entity";
 import { ItemSkus } from "../sku-generation/sku-generation.entity";
 import { CoLine } from "../style-order/co-line.entity";
+import { Division } from "../division/division.entity";
 
 @Entity('colour')
 export class Colour{
@@ -62,4 +63,8 @@ itemSkuInfo?:ItemSkus;
 
 @OneToMany(type=>CoLine, co=>co.colorInfo,{cascade: true})
 coLineInfo?:CoLine;
+
+@ManyToOne(()=> Division, division=>division.Colour)
+@JoinColumn({name:'division_id'})
+division:Division;
 }

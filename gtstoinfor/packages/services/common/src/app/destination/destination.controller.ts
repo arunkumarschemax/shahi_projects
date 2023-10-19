@@ -5,7 +5,7 @@ import { DestinationDTO } from './dto/destination.dto';
 import { DestinationService } from './destination.service';
 import { DestinationRequest } from './dto/destination.request';
 
-import { AllDestinationResponseModel, DestinationResponseModel } from '@project-management-system/shared-models';
+import { AllDestinationResponseModel, DestinationDropDownResponse, DestinationResponseModel } from '@project-management-system/shared-models';
 import { UserRequestDto } from './dto/user-log-dto';
 
 @ApiTags('destination')
@@ -38,7 +38,7 @@ export class DestinationController {
   // @UseGuards(AuthGuard('jwt'))
   async getAllDestination(@Body() req?: UserRequestDto): Promise<AllDestinationResponseModel> {
     try {
-      return await this.Service.getAllDestination(req);
+      return await this.Service.getAllDestination();
     } catch (error) {
       return this.applicationExceptionHandler.returnException(AllDestinationResponseModel, error);
     }
@@ -67,4 +67,12 @@ export class DestinationController {
       return this.applicationExceptionHandler.returnException(DestinationResponseModel, err);
     }
   }
+  @Post('/getColourforDivisionDropDown')
+async getDestinationforDivisionDropDown(@Body() req:any): Promise<DestinationDropDownResponse> {
+    try {
+     return await this.Service.getDestinationForDivisionDropDown(req);
+   } catch (error) {
+        return this.applicationExceptionHandler.returnException(DestinationDropDownResponse, error);
+   }
+ }
 }

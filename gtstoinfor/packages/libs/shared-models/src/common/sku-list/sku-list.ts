@@ -1,6 +1,7 @@
 export class SKUlistFilterRequest{
     itemNoId?:number;
     itemsNo?:string;
+    
     sizeId?:number;
     size?:string;
     colourId?:number;

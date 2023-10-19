@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Raw, Repository } from 'typeorm';
-import { AllSizeResponseModel } from '@project-management-system/shared-models';
+import { AllSizeResponseModel, SizesDropDownDto, SizesDropDownResponse } from '@project-management-system/shared-models';
 import { SizeResponseModel } from '@project-management-system/shared-models';
 import { UserRequestDto } from '../currencies/dto/user-logs-dto';
 import { SizeAdapter } from './dto/sizes-adapter';
@@ -10,7 +10,7 @@ import { SizeRequest } from './dto/sizes-request';
 import { SizeRequestDto } from '@project-management-system/shared-models';
 import { Console } from 'console';
 import { SizeDto } from './dto/sizes-dto';
-
+import { DivisionRequest } from '../division/dto/division.request';
 @Injectable()
 export class SizeService{
     constructor(
@@ -43,17 +43,17 @@ export class SizeService{
 
             const SizeEntity = await this.getsizeWithoutRelations(sizedto.size);
             if (SizeEntity){
-                console.log(SizeEntity,'------')
+                // console.log(SizeEntity,'------')
               throw new SizeResponseModel(false,11104, 'Size already exists'); 
             }
           }
           else{
-            console.log('ertyudfghjk============')
+            // console.log('ertyudfghjk============')
 
             const certificatePrevious = await this.SizeRepository.findOne({where:{sizeId:sizedto.sizeId}})
             previousValue =(certificatePrevious.size)
             const sizeEntity = await this.getsizeWithoutRelations(sizedto.size);
-            console.log('ertyudfghjk============',certificatePrevious)
+            // console.log('ertyudfghjk============',certificatePrevious)
             if (sizeEntity){
               if(sizeEntity.sizeId != sizedto.sizeId ){
                 throw new SizeResponseModel(false,11104, 'Size already exists'); 
@@ -62,11 +62,11 @@ export class SizeService{
           }
           const convertedSizeEntity: Size = this.SizeAdapter.convertDtoToEntity(sizedto,isUpdate);
 
-          console.log(convertedSizeEntity);
+          // console.log(convertedSizeEntity);
         const savedSizeEntity: Size = await this.SizeRepository.save(convertedSizeEntity);
         const savedSizeDto: SizeDto = this.SizeAdapter.convertEntityToDto(savedSizeEntity);
-        sizedDto2.push(savedSizeDto)
-          console.log(savedSizeDto,'saved');
+        // sizedDto2.push(savedSizeDto)
+          // console.log(savedSizeDto,'saved');
         if (savedSizeDto) {
           const presentValue = sizedto.size;
           //generating resposnse
@@ -76,7 +76,7 @@ export class SizeService{
           const userName = isUpdate? savedSizeDto.updatedUser :savedSizeDto.createdUser;
             // const newLogDto = new LogsDto(1,name, 'Size', savedProfitCenterDto.profitCenter, true, displayValue,userName,previousValue,presentValue)
             // let res = await this.logService.createLog(newLogDto);
-            console.log(response,'9999999999999999');
+            // console.log(response,'9999999999999999');
             // const response = new AllProfitCenterResponseModel(true,1000,isUpdate? 'SizeUpdated Successfully': Size Created Successfully');
           return response;
         } else {
@@ -92,15 +92,14 @@ export class SizeService{
     }
 
     async getAllSizes(): Promise<AllSizeResponseModel> {
-        // const page: number = 1;
-        // const response = new AllSizeResponseModel();
+       
         try {
           const sizedto: SizeDto[] = [];
-          //retrieves all companies
-          const sizeEntity: Size[] = await this.SizeRepository.find({ order :{'size':'ASC'}});
-          //console.log(statesEntities);
-          if (sizeEntity) {
-            // converts the data fetched from the database which of type companies array to type StateDto array.
+          const sizeEntity: Size[] = await this.SizeRepository.find({ 
+            order :{size:'ASC'},
+            relations: ['division']
+          });
+          if (sizeEntity.length > 0) {
             sizeEntity.forEach(sizeEntity => {
               const convertedsizeDto: SizeDto = this.SizeAdapter.convertEntityToDto(
                 sizeEntity
@@ -110,12 +109,8 @@ export class SizeService{
     
             //generated response
   
-            const response = new AllSizeResponseModel(true,1,'size retrieved successfully',sizedto);
-          //  if(req?.createdUser){
-          // //   const newLogDto = new LogsDto(1,'view', 'size', 0, true, 'size retrieved successfully',req.createdUser,'','',)
-          // //   let res = await this.logService.createLog(newLogDto);
-          // //   console.log(res);
-          //  }
+            const response = new AllSizeResponseModel(true,11208,'size retrieved successfully',sizedto);
+        
             return response;
           } else {
             throw new SizeResponseModel(false,99998, 'Data not found');
@@ -251,4 +246,24 @@ export class SizeService{
             return null;
             }
         } 
+
+        async getSizesForDivisionDropDown(req:DivisionRequest ): Promise<SizesDropDownResponse> {
+          try {
+              const sizeEntities: SizesDropDownDto[] = await this.SizeRepository
+                  .createQueryBuilder('sizes')
+                  .select('size_id   as sizeId, sizes as size, ')
+                  .where(`is_active=1 and division_id='${req.divisionId}'`)
+                  .orderBy('sizes')
+                  .getRawMany();
+  
+              if (sizeEntities && sizeEntities.length > 0) {
+                  const response = new SizesDropDownResponse(true, 11108, "sizes  retrieved successfully", sizeEntities);
+                  return response;
+              } else {
+                  throw new SizesDropDownResponse(false,99998, 'Data not found');
+              }
+          } catch (err) {
+              return err;
+          }
+      }
 }

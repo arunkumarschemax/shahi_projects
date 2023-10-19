@@ -13,29 +13,6 @@ import AlertMessages from '../../common/common-functions/alert-messages';
 import DivisionForm from './division-form';
 
 
-
-
-// const data:ItemVariant[] = [
-//   {
-//     variantId: '1',
-//     variantName: 'Shrimp',
-//     isActive:true,    
-//   },
-//   {
-//     variantId: '2',
-//     variantName: 'General',
-//     isActive:true,
-
-//   },
-//   {
-//     variantId: '3',
-//     variantName: 'Fish',
-//     isActive:false,
-//   }
-// ];
-
-
-/* eslint-disable-next-line */
 export interface DivisionGridProps { }
 
 export const DivisionGrid = (props: DivisionGridProps) => {
@@ -52,69 +29,10 @@ export const DivisionGrid = (props: DivisionGridProps) => {
   const navigate = useNavigate()
   const [form] = Form.useForm();
 
-  // const { formatMessage: fm } = useIntl();
   const service = new DivisionService();
 
-  /**
-   * used for column filter
-   * @param dataIndex column data index
-   */
-  // const getColumnSearchProps = (dataIndex: string) => ({
-  //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-  //     <div style={{ padding: 8 }}>
-  //       <Input
-  //         ref={searchInput}
-  //         placeholder={`Search ${dataIndex}`}
-  //         value={selectedKeys[0]}
-  //         onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-  //         onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-  //         style={{ width: 188, marginBottom: 8, display: 'block' }}
-  //       />
-  //       <Button
-  //         type="primary"
-  //         onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-  //         icon={<SearchOutlined />}
-  //         size="small"
-  //         style={{ width: 90, marginRight: 8 }}
-  //       >
-  //         Search
-  //       </Button>
-  //       <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-  //         Reset
-  //       </Button>
-  //     </div>
-  //   ),
-  //   filterIcon: filtered => (
-  //     <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
-  //   ),
-  //   onFilter: (value, record) =>
-  //     record[dataIndex]
-  //       ? record[dataIndex]
-  //         .toString()
-  //         .toLowerCase()
-  //         .includes(value.toLowerCase())
-  //       : false,
-  //   onFilterDropdownVisibleChange: visible => {
-  //     if (visible) { setTimeout(() => searchInput.current.select()); }
-  //   },
-  //   render: text =>
-  //     text ? (
-  //       searchedColumn === dataIndex ? (
-  //         <Highlighter
-  //           highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-  //           searchWords={[searchText]}
-  //           autoEscape
-  //           textToHighlight={text.toString()}
-  //         />
-  //       ) : text
-  //     )
-  //       : null
-
-  // });
-  const showModal = (id: number) => {
-    setIsModalVisible(true);
-
-  };
+ 
+ 
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
@@ -172,12 +90,7 @@ export const DivisionGrid = (props: DivisionGridProps) => {
         : null
   })
 
-  /**
-   * 
-   * @param selectedKeys 
-   * @param confirm 
-   * @param dataIndex 
-   */
+  
   function handleSearch(selectedKeys, confirm, dataIndex) {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -188,6 +101,8 @@ export const DivisionGrid = (props: DivisionGridProps) => {
     clearFilters();
     setSearchText('');
   };
+
+  
   const columnsSkelton: any = [
     {
       title: 'S No',
@@ -274,26 +189,12 @@ export const DivisionGrid = (props: DivisionGridProps) => {
     }
   ];
 
-  /**
-   * 
-   * @param pagination 
-   * @param filters 
-   * @param sorter 
-   * @param extra 
-   */
+ 
   const onChange = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
   }
   useEffect(() => { getAllDivision(); }, [])
 
-  // const getAllCurrencys = async (params = {}, sort, filter) => {
-  //   const res = await service.getAllCurrencies()
-  //   if (res.status) {
-  //     return { data: res.data, sucess: true, total: res.data.length }
-  //   } else {
-  //     return { data: [], sucess: false, total: 0 }
-  //   }
-  // }
 
   const getAllDivision = () => {
     service.getAllDivision().then(res => {
@@ -359,9 +260,7 @@ export const DivisionGrid = (props: DivisionGridProps) => {
         //  getAllDivision();
         setDrawerVisible(false);
       } else {
-        // if (res.intlCode) {
-        //   AlertMessages.getErrorMessage(res.internalMessage);
-        // } else {
+        
         AlertMessages.getErrorMessage(res.internalMessage);
         // }
       }
@@ -381,9 +280,7 @@ export const DivisionGrid = (props: DivisionGridProps) => {
         //  getAllDivision();
         AlertMessages.getSuccessMessage('Success');
       } else {
-        // if (res.intlCode) {
-        //   AlertMessages.getErrorMessage(res.internalMessage);
-        // } else {
+        
         AlertMessages.getErrorMessage(res.internalMessage);
         // }
       }
@@ -392,54 +289,9 @@ export const DivisionGrid = (props: DivisionGridProps) => {
     })
   }
 
-  //   const cumulativeSkelton:CumulativeModel[]=[
-  //     {
-  //       dataIndex:'currencyId',
-  //       lableName:'Currency',
-  //       lablecolor:'#eb2f96',
-  //   cumulativeType:CumulativeTypes.OCCURENCE
-  //   },
-  //   // {
-  //     //   dataIndex:'variantName',
-  //   //   lableName:'Variant Name',
-  //   //   lablecolor:'#eb2f96',
-  //   //   cumulativeType:CumulativeTypes.VALUE
-  //   //   }
-
-  // ]
-  // interface DivisionFormProps {
-    // updateItem: (Data: DivisionDto) => void;
-    // isUpdate: boolean;
-    // currencyData: any;
-    // closeForm: () => void;
-  // }
-  // const DivisionForm = (props:DivisionFormProps) => {
-  //   return (
-  //     <Card title="Division">
-  //       <Form form={form} layout="vertical" onFinish={save}>
-  //         <Row gutter={24}>
-  //           <Col>
-  //             <Form.Item style={{display:'none'}} label="Company Id" name="companyId" initialValue={selectedData.companyId}>
-  //               <Input disabled />
-  //             </Form.Item>
-  //           </Col>
-  //           <Col span={4}>
-  //             <Form.Item label="Division Name" name="divisionName">
-  //               <Input  />
-  //             </Form.Item>
-  //           </Col>
-  //           <Col span={4}>
-  //             <Form.Item label="Division Code" name="divisionCode">
-  //               <Input  />
-  //             </Form.Item>
-  //           </Col>
-  //         </Row>
-  //       </Form>
-  //     </Card>
-  //   );
-  // };
   return (
-
+<Card title={<span>Division</span>} style={{textAlign:'center'}} headStyle={{border:0}}  extra={<Link to="/masters/division/division-form"><span><Button type={'primary'}>New</Button></span></Link>}>
+  <br></br>
     <>
       <Row gutter={40}>
         <Col>
@@ -451,28 +303,10 @@ export const DivisionGrid = (props: DivisionGridProps) => {
         <Col>
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
-        {/* <Col>
-          <span><Button onClick={() => navigate('/masters/company/company-form')}
-            type={'primary'}>New</Button></span>
-        </Col> */}
-      </Row><br></br>
+        
+      </Row>
       <Card >
-        {/* <GetCumulatives cumulativeColumns={cumulativeSkelton} data={variantData}/> */}
-        {/* <ProTable
-          request={getAllCurrencys}
-          bordered size='small'
-          cardBordered
-          editable={{
-            type: 'multiple',
-          }}
-          // cardProps={{
-          //   extra: <span><Button onClick={() => navigate('/masters/currencies/currency-form')}
-          //     type={'primary'}>New</Button></span>
-          // }}
-          search={false} headerTitle={'Currencies'}
-          columns={columnsSkelton}
-
-        /> */}
+       
 
         <Table
           size='small'
@@ -494,12 +328,12 @@ export const DivisionGrid = (props: DivisionGridProps) => {
         <DivisionForm 
           updateItem={updateDivision}
           isUpdate={true}
-          // saveItem={saveVariant}
           Data={selectedVariant}
           closeForm={closeDrawer} />
       </Card>
     </Drawer>
      </>
+     </Card>
   );
 }
 

@@ -2,10 +2,14 @@ import { AllWarehouseResponseModel, CommonResponseModel, ItemCreationDTO, Wareho
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class ItemCreationService extends CommonAxiosService{
-  URL = "/item-creation";
+  URL = "/fg-item";
 
   async createItem(req: ItemCreationDTO): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/createItem", req)
 }
+
+  async getFgItemsDropdown(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getFgItemsDropdown")
+  }
 
 }
