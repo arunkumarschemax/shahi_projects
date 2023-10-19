@@ -145,9 +145,12 @@ const DivertReport = () => {
     let i = 1;
     const data = [
         { title: 'S No', dataIndex: 'sNo', render: (text, object, index) => { return i++; } },
-        { title: 'Old Request Date', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => { return record.oldPo.DocumentDate ? record.oldPo.DocumentDate : '-'; } },
-        { title: 'O.From Item', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => { return record.oldPo.Plnt ? record.oldPo.Plant : '-'; } },
-        { title: 'O.Unit', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => { return record.oldPo.Plnt ? record.oldPo.Plant : '-'; } },
+        { title: 'Old Request Date', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => {
+            const date = record.oldPo.DocumentDate;
+            return date ? moment(date).format('MM/DD/YYYY') : '-';
+          } },
+        { title: 'O.From Item', dataIndex: ['oldPo', 'item'], render: (text, record) => { return record.oldPo.item ? record.oldPo.item : '-'; } },
+        { title: 'O.Unit', dataIndex: ['oldPo', 'factory'], render: (text, record) => { return record.oldPo.factory ? record.oldPo.factory : '-'; } },
         { title: 'O.Plant', dataIndex: ['oldPo', 'Plant'], render: (text, record) => { return record.oldPo.Plant ? record.oldPo.Plant : '-'; } },
         { title: 'O.Product Code', dataIndex: ['oldPo', 'productCode'], render: (text, record) => { return record.oldPo.productCode ? record.oldPo.productCode : '-'; } },
         { title: 'O.Line Status', dataIndex: ['oldPo', 'LineStatus'], render: (text, record) => { return record.oldPo.LineStatus ? record.oldPo.LineStatus : '-'; } },
@@ -220,7 +223,7 @@ const DivertReport = () => {
         { title: "To item",
         dataIndex: ['newpo', 'item'],  render: (text, record) => { return record.newpo.item ? record.newpo.item : '-'; } },
 
-        { title: 'N.Unit', dataIndex: 'unit', render: (text, record) => { return record.oldPo.Plnt ? record.oldPo.Plnt : '-'; } },
+        { title: 'N.Unit', dataIndex: 'unit', render: (text, record) => { return record.oldPo.factory ? record.oldPo.factory : '-'; } },
         { title: 'N.Plant', dataIndex: ['newpo', 'nPlant'], render: (text, record) => { return record.newpo.nPlant ? record.newpo.nPlant : '-'; } },
         { title: 'N.Product Code', dataIndex: ['newpo', 'nproductCode'], render: (text, record) => { return record.newpo.nproductCode ? record.newpo.nproductCode : '-'; } },
         { title: 'N.Line Status', dataIndex: ['newpo', 'nLineStatus'], render: (text, record) => { return record.newpo.nLineStatus ? record.newpo.nLineStatus : '-'; } },
@@ -332,14 +335,12 @@ const DivertReport = () => {
                     title: 'Old Qantity',
                     //from yesterdays ppm
                     dataIndex: ['oldPo', 'Quantity'],
-                    // sorter: (a, b) => a.oldPo.Quantity.localeCompare(b.oldPo.Quantity),
-                    // sortDirections: ["descend", "ascend"],
                     width:70,align:'right',  render: (text,record) => {
-                        if(record.oldPo.Quantity !== null){
+                        // if(record.oldPo.Quantity !== null){
                             const oldQty = Number(record.oldPo.Quantity) + Number(record.newpo.nQuantity)
                             return oldQty ? oldQty :'-'
-                        }else
-                        return "-"   
+                        // }else
+                        // return "-"   
                     }
 
                 },
