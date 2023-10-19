@@ -283,14 +283,14 @@ export const SkuList = () => {
       render: (text, rowData, index) => (
         <span>
           {rowData.status !== "CANCELLED" ? (
-            <Tooltip placement="top" title="Cancel SKU">
+            <Tooltip placement="top" title="Close SKU">
               <Popconfirm
                 onConfirm={(value) => {
                   closeSKU(rowData.id);
                 }}
                 title={"Are you sure to Close ?"}
               >
-                <Button style={{ color: "red", fontSize: "20" }} />
+                <Button type="primary" shape="circle">Close</Button>
               </Popconfirm>
             </Tooltip>
           ) : null}
