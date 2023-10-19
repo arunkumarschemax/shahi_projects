@@ -393,7 +393,9 @@ const getAllstyle=() =>{
               lg={{ span: 4 }}
               xl={{ span: 4 }}
             >
-              <Form.Item label="Style" name="styleId">
+              <Form.Item label="Style" name="styleId"
+              rules={[{ required: true, message: "Style" }]}
+              >
               <Select placeholder="Style" allowClear>
               {styleData.map((rec) => (
                   <option key={rec.styleId} value={rec.styleId}>
