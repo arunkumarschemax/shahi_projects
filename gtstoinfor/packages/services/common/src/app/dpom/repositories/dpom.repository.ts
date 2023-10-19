@@ -291,14 +291,14 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getDivertReport(): Promise<any[]> {
         const query = this.createQueryBuilder('dpm')
-            .select(`DISTINCT po_and_line,id, LEFT(item, 4) AS item,plant AS Plant,dpom_item_line_status AS LineStatus,
+            .select(`po_and_line,id, LEFT(item, 4) AS item,plant AS Plant,dpom_item_line_status AS LineStatus,
             plant_name AS PlantName,document_date AS DocumentDate,
             po_number AS poNumber, po_line_item_number AS poLine ,destination_country AS destination,
             shipping_type AS shipmentType,inventory_segment_code AS inventorySegmentCode,
             ogac AS ogac ,gac AS gac ,product_code AS productCode,
-            item_vas_text AS itemVasText,total_item_qty AS Quantity,created_at AS dpomCreatedDates,diverted_to_pos, factory`)
+            item_vas_text AS itemVasText,total_item_qty AS Quantity,created_at AS dpomCreatedDates,diverted_to_pos, factory,gross_price_fob,trading_net_inc_disc`)
             .where(`diverted_to_pos IS NOT null`)
-        // .groupBy(`po_number AND diverted_to_pos `)LEFT(REGEXP_REPLACE(item, '[^0-9]+', ''), 4) as 4digitonly
+         .groupBy(`po_and_line  `)
         return await query.getRawMany()
     }
 
@@ -310,8 +310,8 @@ export class DpomRepository extends Repository<DpomEntity> {
             po_number AS npoNumber, po_line_item_number AS npoLine, destination_country AS ndestination,
             shipping_type AS nshipmentType, inventory_segment_code AS ninventorySegmentCode,
             ogac AS nogac, gac AS ngac, product_code AS nproductCode, dpom_item_line_status AS nDPOMLineItemStatus,
-            item_vas_text AS nitemVasText, total_item_qty AS nQuantity, created_at AS ndpomCreatedDates, diverted_to_pos,factory`)
-            .where(`diverted_to_pos IS NOT null`)
+            item_vas_text AS nitemVasText, total_item_qty AS nQuantity, created_at AS ndpomCreatedDates, diverted_to_pos,factory,gross_price_fob,trading_net_inc_disc`)
+            // .where(`diverted_to_pos IS NOT null`)
             .groupBy(`dpm.po_number AND item`)
             .andWhere(`po_number = :po AND po_line_item_number = :line`, { po, line });
 

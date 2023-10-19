@@ -18,7 +18,7 @@ interface ExpandedRows {
 interface FactoryUpdateRequest {
     poAndLine: string;
     actualUnit?: string;
-    allocatedQuantity?: string;
+    // allocatedQuantity?: string;
 }
 
 const FactoryPPMReport = () => {
@@ -79,13 +79,13 @@ const FactoryPPMReport = () => {
             req.actualUnit = actualUnit;
         }
 
-        if (
-            allocatedQuantity !== null &&
-            allocatedQuantity !== undefined &&
-            allocatedQuantity !== ''
-        ) {
-            req.allocatedQuantity = allocatedQuantity;
-        }
+        // if (
+        //     allocatedQuantity !== null &&
+        //     allocatedQuantity !== undefined &&
+        //     allocatedQuantity !== ''
+        // ) {
+        //     req.allocatedQuantity = allocatedQuantity;
+        // }
 
         service.updateFactoryStatusColumns(req).then((res) => {
             if (res.status) {
@@ -381,7 +381,7 @@ const FactoryPPMReport = () => {
                             'Inventory Segment Code': String(item.inventorySegmentCode),
                             'Purchase Group': item.purchaseGroupCode,
                             'Purchase Group Name': item.purchaseGroupName,
-                            'Reallocated Quantity': item.allocatedQuantity,
+                            // 'Reallocated Quantity': item.allocatedQuantity,
                             'Total Item Quantity': item.totalItemQty,
                             '2XL (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.sizeQty,
                             '2XL (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.sizeQty * 0.03).toFixed(3)) : '-',
@@ -688,54 +688,54 @@ const FactoryPPMReport = () => {
                 }
                 // ...getColumnSearch('factory'),
             },
-            {
-                title: 'Edit Unit Allocation',
-                dataIndex: '', width: 70,
-                align: "center",
-                render: (text, rowData) => (
-                    <span>
-                        <Form.Item>
-                            <Checkbox
-                                onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
-                                checked={expandedActualUnit[rowData.poAndLine] || false}
-                            />
-                        </Form.Item>
-                    </span>
-                ),
-            },
-            {
-                title: 'Text Area',
-                align: 'center', width: 165,
-                render: (text, rowData) => (
-                    <div>
-                        {expandedActualUnit[rowData.poAndLine] && (
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <Input
-                                    name='actualUnit'
-                                    allowClear
-                                    style={{ marginRight: '10px' }}
-                                    placeholder="Enter text"
-                                    value={textareaValuesActualUnit[rowData.poAndLine] || ''}
-                                    onChange={(e) =>
-                                        handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
-                                    }
-                                />
-                                <Button
-                                    type="primary"
-                                    onClick={() => {
-                                        updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
-                                        handleCheckboxChange('ActualUnit', rowData.poAndLine);
-                                        handleTextareaChange('ActualUnit', rowData.poAndLine, '');
-                                    }}
-                                >
-                                    Submit
-                                </Button>
-                            </div>
-                        )}
-                    </div>
-                ),
+            // {
+            //     title: 'Edit Unit Allocation',
+            //     dataIndex: '', width: 70,
+            //     align: "center",
+            //     render: (text, rowData) => (
+            //         <span>
+            //             <Form.Item>
+            //                 <Checkbox
+            //                     onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
+            //                     checked={expandedActualUnit[rowData.poAndLine] || false}
+            //                 />
+            //             </Form.Item>
+            //         </span>
+            //     ),
+            // },
+            // {
+            //     title: 'Text Area',
+            //     align: 'center', width: 165,
+            //     render: (text, rowData) => (
+            //         <div>
+            //             {expandedActualUnit[rowData.poAndLine] && (
+            //                 <div style={{ display: 'flex', alignItems: 'center' }}>
+            //                     <Input
+            //                         name='actualUnit'
+            //                         allowClear
+            //                         style={{ marginRight: '10px' }}
+            //                         placeholder="Enter text"
+            //                         value={textareaValuesActualUnit[rowData.poAndLine] || ''}
+            //                         onChange={(e) =>
+            //                             handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
+            //                         }
+            //                     />
+            //                     <Button
+            //                         type="primary"
+            //                         onClick={() => {
+            //                             updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
+            //                             handleCheckboxChange('ActualUnit', rowData.poAndLine);
+            //                             handleTextareaChange('ActualUnit', rowData.poAndLine, '');
+            //                         }}
+            //                     >
+            //                         Submit
+            //                     </Button>
+            //                 </div>
+            //             )}
+            //         </div>
+            //     ),
 
-            },
+            // },
             {
                 title: 'Actual Unit',
                 dataIndex: 'actualUnit',

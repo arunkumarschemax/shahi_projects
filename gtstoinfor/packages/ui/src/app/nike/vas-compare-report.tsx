@@ -137,7 +137,7 @@ const VASChangesCompareGrid = () => {
        
         {
             title: 'Report Generate Date',
-            dataIndex: 'document_date',
+            dataIndex: 'created_at',
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {

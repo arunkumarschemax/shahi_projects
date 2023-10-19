@@ -86,6 +86,64 @@ const PPMReport = () => {
     setIsModalOpen1(false);
 
   };
+  const handleCheckboxChange = (column, poAndLine) => {
+    if (column === 'ActualUnit') {
+        setExpandedActualUnit((prevRows) => ({
+            ...prevRows,
+            [poAndLine]: !prevRows[poAndLine],
+        }));
+    } else if (column === 'QuantityAllocation') {
+        setExpandedQuantityAllocation((prevRows) => ({
+            ...prevRows,
+            [poAndLine]: !prevRows[poAndLine],
+        }));
+    }
+};
+
+const handleTextareaChange = (column, poAndLine, value) => {
+    if (column === 'ActualUnit') {
+        setTextareaValuesActualUnit((prevValues) => ({
+            ...prevValues,
+            [poAndLine]: value,
+        }));
+    }
+    //  else if (column === 'QuantityAllocation') {
+    //     setTextareaValuesQuantityAllocation((prevValues) => ({
+    //         ...prevValues,
+    //         [poAndLine]: value,
+    //     }));
+    // }
+};
+const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
+  const req: FactoryUpdateRequest = {
+      poAndLine: poAndLine,
+  };
+
+  if (actualUnit !== null && actualUnit !== undefined && actualUnit !== '') {
+      req.actualUnit = actualUnit;
+  }
+
+  // if (
+  //     allocatedQuantity !== null &&
+  //     allocatedQuantity !== undefined &&
+  //     allocatedQuantity !== ''
+  // ) {
+  //     req.allocatedQuantity = allocatedQuantity;
+  // }
+
+  service.updateFactoryStatusColumns(req).then((res) => {
+      if (res.status) {
+          getData();
+          message.success(res.internalMessage);
+
+          // window.location.reload();
+
+      } else {
+          message.error(res.internalMessage);
+      }
+  });
+};
+
 
   const getProductCode = () => {
     service.getPpmProductCodeForMarketing().then(res => {
@@ -1384,18 +1442,66 @@ const PPMReport = () => {
         align: 'center',
       },
       {
+        title: 'Edit Unit Allocation',
+        dataIndex: '', width: 70,
+        align: "center",
+        render: (text, rowData) => (
+            <span>
+                <Form.Item>
+                    <Checkbox
+                        onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
+                        checked={expandedActualUnit[rowData.poAndLine] || false}
+                    />
+                </Form.Item>
+            </span>
+        ),
+    },
+    {
+        title: 'Text Area',
+        align: 'center', width: 165,
+        render: (text, rowData) => (
+            <div>
+                {expandedActualUnit[rowData.poAndLine] && (
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Input
+                            name='actualUnit'
+                            allowClear
+                            style={{ marginRight: '10px' }}
+                            placeholder="Enter text"
+                            value={textareaValuesActualUnit[rowData.poAndLine] || ''}
+                            onChange={(e) =>
+                                handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
+                            }
+                        />
+                        <Button
+                            type="primary"
+                            onClick={() => {
+                                updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
+                                handleCheckboxChange('ActualUnit', rowData.poAndLine);
+                                handleTextareaChange('ActualUnit', rowData.poAndLine, '');
+                            }}
+                        >
+                            Submit
+                        </Button>
+                    </div>
+                )}
+            </div>
+        ),
+
+    },
+    {
         title: 'Actual Unit',
         dataIndex: 'actualUnit',
         width: 70,
         align: 'center',
         render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
+            if (!text || text.trim() === '') {
+                return '-';
+            } else {
+                return text;
+            }
         }
-      },
+    },
       {
         title: 'PCD',
         dataIndex: 'PCD',

@@ -130,7 +130,7 @@ const ShipmentChangesCompareGrid = () => {
 
         {
             title: 'Report Generate Date',
-            dataIndex: 'document_date',
+            dataIndex: 'created_at',
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
@@ -428,7 +428,7 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'Report Generate Date',
-            dataIndex: 'document_date',
+            dataIndex: 'created_at',
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
@@ -520,7 +520,7 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'Report Generate Date',
-            dataIndex: 'report_generate_date',
+            dataIndex: 'created_at',
         },
         {
             title: 'Item',
