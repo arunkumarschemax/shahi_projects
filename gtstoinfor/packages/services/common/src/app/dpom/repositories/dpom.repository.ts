@@ -298,7 +298,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             ogac AS ogac ,gac AS gac ,product_code AS productCode,
             item_vas_text AS itemVasText,total_item_qty AS Quantity,created_at AS dpomCreatedDates,diverted_to_pos, factory,gross_price_fob,trading_net_inc_disc`)
             .where(`diverted_to_pos IS NOT null`)
-         .groupBy(`po_and_line  `)
+            .groupBy(`po_and_line  `)
         return await query.getRawMany()
     }
 
@@ -395,9 +395,9 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getItemforMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
-            .select(` dpom.item,dpom.id`)
+            .select(` DISTINCT LEFT(dpom.item, 4) as item`)
             .where(`dpom.doc_type_code != :docType AND dpom.item <> ' '`, { docType: 'ZP26' },)
-            .groupBy(`dpom.item`)
+        // .groupBy(`dpom.item`)
         return await query.getRawMany();
     }
     // async getItemforMarketing(): Promise<any[]> {
@@ -590,7 +590,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             query.andWhere(`dpom.plant ='${req.plant}'`)
         }
         if (req.item !== undefined) {
-            query.andWhere(`dpom.item ='${req.item}'`)
+            query.andWhere(` LEFT(dpom.item, 4) ='${req.item}'`)
         }
         if (req.factory !== undefined) {
             query.andWhere(`dpom.factory ='${req.factory}'`)

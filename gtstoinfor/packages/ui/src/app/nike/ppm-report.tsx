@@ -1457,17 +1457,18 @@ const PPMReport = () => {
         ),
       },
       {
-        title: 'Enter Unit',
+        title: 'Actual Unit',
+        dataIndex: 'actualUnit',
         align: 'center', width: 160,
         render: (text, rowData) => (
           <div>
-            {expandedActualUnit[rowData.poAndLine] && (
+            {expandedActualUnit[rowData.poAndLine] ? (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Input
                   name='actualUnit'
                   allowClear
                   style={{ marginRight: '10px' }}
-                  placeholder="Enter text"
+                  placeholder={rowData.actualUnit ? rowData.actualUnit : "Enter text"}
                   value={textareaValuesActualUnit[rowData.poAndLine] || ''}
                   onChange={(e) =>
                     handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
@@ -1484,24 +1485,24 @@ const PPMReport = () => {
                   Submit
                 </Button>
               </div>
-            )}
+            ) : rowData.actualUnit}
           </div>
         ),
 
       },
-      {
-        title: 'Actual Unit',
-        dataIndex: 'actualUnit',
-        width: 70,
-        align: 'center',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        }
-      },
+      // {
+      //   title: 'Actual Unit',
+      //   dataIndex: 'actualUnit',
+      //   width: 70,
+      //   align: 'center',
+      //   render: (text, record) => {
+      //     if (!text || text.trim() === '') {
+      //       return '-';
+      //     } else {
+      //       return text;
+      //     }
+      //   }
+      // },
       {
         title: 'PCD',
         dataIndex: 'PCD',
@@ -3101,8 +3102,7 @@ const PPMReport = () => {
               <Form.Item name='item' label='Item' >
                 <Select showSearch placeholder="Select Item" optionFilterProp="children" allowClear>
                   {item?.map((inc: any) => {
-                    const firstFourDigits = inc.item.substring(0, 4);
-                    return <Option key={inc.id} value={inc.item}>{firstFourDigits}</Option>
+                    return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
                   })}
                 </Select>
               </Form.Item>

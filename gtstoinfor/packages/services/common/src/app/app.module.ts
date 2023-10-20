@@ -30,7 +30,7 @@ import { FabricContentModule } from './fabric-content/fabric-content.module';
       database: appConfig.database.dbName,
       autoLoadEntities: true,
       synchronize: false,
-      logging: false,
+      logging: true,
       extra: {
         connectionLimit: 20
       }

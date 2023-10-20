@@ -251,7 +251,7 @@ export class DpomService {
     //     try {
     //         req.purchaseOrderNumber = 3504865987
     //         req.poLineItemNumber = 10000
-    //         req.scheduleLineItemNumber = 100
+    //         req.scheduleLineItemNumber = 100     
     //         const styleNumber = 'FN389'
     //         const m3Config = appConfig.m3Cred.headerRequest()
     //         const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddBatchLine?CONO=111&ORNO=4857896325&ITNO=${req.itemNo}&ORQT=1000&PWNR=00010`;
