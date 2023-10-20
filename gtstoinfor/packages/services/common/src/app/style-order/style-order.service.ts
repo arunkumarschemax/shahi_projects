@@ -40,7 +40,7 @@ export class StyleOrderService{
     ){}
 
     async createCustomerOrder(req:StyleOrderReq):Promise<StyleOrderResponseModel>{
-        const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
+                const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
         try{
             await transactionalEntityManager.startTransaction();
             const getCOLineCount = await this.repo.getAllCOCount()
@@ -120,6 +120,7 @@ export class StyleOrderService{
                 const uom = new UomEntity()
                 uom.id = rec.uomId
                 itemsEntity.uomInfo = uom
+                itemsEntity.skuCode = rec.skuCode
                 if(rec.styleOrderItemId){
                     itemsEntity.id = rec.styleOrderItemId
                     const styleOrderEntity = new StyleOrder()
@@ -132,6 +133,7 @@ export class StyleOrderService{
                     itemsEntity.coLineNumber = `Line-${val}`
                     itemsEntity.createdUser = req.createdUser
                 }
+                console.log(itemsEntity,'-----------items')
                 coLineItem.push(itemsEntity)
             }
             entity.coLineInfo = coLineItem
@@ -160,7 +162,6 @@ export class StyleOrderService{
    async getAllStyleOrders(req:styleOrderReq):Promise<CommonResponseModel>{
     try{
         const data = await this.repo.getAllStyleOrders(req)
-        console.log(req.itemId,'ressssssssssss');
         
         return new CommonResponseModel(true,1,'',data)
 
@@ -250,7 +251,7 @@ export class StyleOrderService{
         } else{
             for(const rec of data){
                 if(!COMap.has(rec.id)){
-                    COMap.set(rec.id,new StyleOrderModel(rec.id,rec.item_code,rec.order_date,rec.buyer_po_number,rec.shipment_type,rec.buyer_style,rec.agent,rec.buyer_address,rec.exfactory_date,rec.delivery_date,rec.instore_date,rec.sale_price,rec.price_quantity,rec.discount_per,rec.discount_amount,rec.status,rec.remarks,rec.item_id,rec.warehouse_id,rec.facility_id,rec.style_id,rec.package_terms_id,rec.delivery_method_id,rec.delivery_terms_id,rec.currency_id,rec.payment_method_id,rec.payment_terms_id,[],rec.buyer_id,rec.item_name,rec.buyer_code,rec.buyer_name,rec.factoryName,rec.warehouse_name,rec.agentName,rec.agentCode,rec.buyerLandmark,rec.buyerCity,rec.buyerState,rec.package_terms_name,rec.delivery_method,rec.delivery_terms_name,rec.currency_name,rec.payment_method,rec.payment_terms_name))
+                    COMap.set(rec.id,new StyleOrderModel(rec.id,rec.item_code,rec.order_date,rec.buyer_po_number,rec.shipment_type,rec.buyer_style,rec.agent,rec.buyer_address,rec.exfactory_date,rec.delivery_date,rec.instore_date,rec.sale_price,rec.price_quantity,rec.discount_per,rec.discount_amount,rec.status,rec.remarks,rec.fg_item_id,rec.warehouse_id,rec.facility_id,rec.style_id,rec.package_terms_id,rec.delivery_method_id,rec.delivery_terms_id,rec.currency_id,rec.Payment_method_id,rec.Payment_terms_id,[],rec.buyer_id,rec.item_name,rec.buyer_code,rec.buyer_name,rec.factoryName,rec.warehouse_name,rec.agentName,rec.agentCode,rec.buyerLandmark,rec.buyerCity,rec.buyerState,rec.package_terms_name,rec.delivery_method,rec.delivery_terms_name,rec.currency_name,rec.payment_method,rec.payment_terms_name))
                 }
                 COMap.get(rec.id).styleOrderItems.push(new StyleOrderItemsModel(rec.coLineId,rec.delivery_address,rec.order_quantity,rec.color,rec.size,rec.destination,rec.uom,rec.status,rec.discount,rec.salePrice,rec.coPercentage,rec.color_id,rec.size_id,rec.uom_id,rec.delLandmark,rec.delCity,rec.delState))
             }
@@ -259,6 +260,24 @@ export class StyleOrderService{
             return new StyleOrderResponseModel(true,1,'Data retrieved',styleOrderModel)
         }
 
+    } catch(err){
+        throw err
+    }
+   }
+
+   async getCoLineItemsByDestination(req:StyleOrderIdReq):Promise<CommonResponseModel>{
+    try{
+        const info = await this.CoLineRepo.find({where:{styleOrderInfo:{id:req.styleOrderId},destinationInfo:{destinationId:req.destinationId}},relations:['colorInfo','sizeInfo','destinationInfo','uomInfo']})
+        let data = []
+        if(info.length > 0){
+            for(const rec of info){
+                data.push(new StyleOrderItemsModel(rec.id,rec.deliveryAddress,rec.orderQuantity,rec.color,rec.size,rec.destination,rec.uom,rec.status,rec.discount,rec.salePrice,rec.coPercentage,Number(rec.colorInfo.colourId),Number(rec.sizeInfo.sizeId),Number(rec.destinationInfo.destinationId),Number(rec.uomInfo?.id),null,null,null,rec.skuCode))
+            }
+            return new CommonResponseModel(true,1,'Data retrieved',info)
+        } else{
+            return new CommonResponseModel(false,0,'No data found')
+        }
+ 
     } catch(err){
         throw err
     }

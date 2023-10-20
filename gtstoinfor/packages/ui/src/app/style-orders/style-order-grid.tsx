@@ -119,6 +119,7 @@ let val = 0
     
     setDrawerVisible(true);
     setSelectedId(data.id);
+    navigate('/materialCreation/style-order-creation',{state:{id:data.id}})
   }
     const getColumnSearchProps = (dataIndex: string) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -485,17 +486,16 @@ let val = 0
              />
              </Row>
              </>)} */}
-      <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
+      {/* <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
         <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
           <StyleOrderCreation key={Date.now()}
             updateDetails={updateCoLine}
             isUpdate={true}
-            // saveItem={saveVariant}
             coData={selectedId}
             closeForm={closeDrawer} />
         </Card>
-      </Drawer>
+      </Drawer> */}
       </Card> )
 }
 export default StyleOrderGrid
