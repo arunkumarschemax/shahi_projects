@@ -67,6 +67,8 @@ import { ItemCreationModule } from './fg-item/item_creation.module';
 import { BusinessAreaModule } from './business-area/business-area.module';
 import { CoTypeModule } from './co-type/co-type.module';
 import { CompositionModule } from './composition/composition.module';
+import { RangeModule } from './range/range.module';
+import { SearchGrpModule } from './search-group/search-group.module';
 
 
 @Module({
@@ -122,7 +124,7 @@ import { CompositionModule } from './composition/composition.module';
     ColourModule,
     BuyersDestinationModule,
     BomModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule,BusinessAreaModule,CoTypeModule,CompositionModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule,BusinessAreaModule,CoTypeModule,CompositionModule,RangeModule,SearchGrpModule],
   controllers: [AppController],
   providers: [AppService],
 })
