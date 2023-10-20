@@ -15,6 +15,14 @@ const InvoiceReport = () => {
     const [filteredData, setFilteredData] = useState<any>([]);
     const [tableDisabled, setTableDisabled] = useState<boolean>(true);
     const [buttonClicked, setButtonClicked] = useState(false)
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const handleVendorFilterChange = (value) => {
+        // Placeholder function, customize as per your requirement
+        console.log("Selected vendors:", value);
+        setSelectedVendors(value);
+    };
+
 
     const services = new SharedService();
 
@@ -85,40 +93,12 @@ const InvoiceReport = () => {
         },
     ];
 
-
-    const handleDateChange = (startDate, endDate) => {
-        if (startDate && endDate) {
-            const startDateObj = new Date(startDate);
-            const endDateObj = new Date(endDate);
-    
-            if (startDateObj > endDateObj) {
-                message.error('Start date cannot be after end date.');
-            } else {
-                const formattedData = formData.filter(item => {
-                    if (item.createdAt) {
-                        const itemDate = new Date(item.createdAt.split('T')[0]);
-                        return itemDate >= startDateObj && itemDate <= endDateObj;
-                    }
-                    return false;
-                });
-    
-                setFilteredData(formattedData);
-            }
+    const handleDateChange = (dates, dateStrings) => {
+        if (dates && dates.length === 2) {
+            setStartDate(dates[0]);
+            setEndDate(dates[1]);
         } else {
             message.error('Please select both start and end dates.');
-        }
-    };
-    
-
-
-
-    const handleVendorFilterChange = (value: string | string[]) => {
-        if (Array.isArray(value)) {
-            setSelectedVendors(value);
-        } else if (value) {
-            setSelectedVendors([value]);
-        } else {
-            setSelectedVendors([]);
         }
     };
 
@@ -138,9 +118,20 @@ const InvoiceReport = () => {
             }
         }
 
+        if (startDate && endDate) {
+            const startDateObj = new Date(startDate);
+            const endDateObj = new Date(endDate);
+
+            dataToSet = dataToSet.filter(item => {
+                const itemDate = new Date(item.createdAt).toISOString().split('T')[0];
+                return itemDate >= startDateObj.toISOString().split('T')[0] && itemDate <= endDateObj.toISOString().split('T')[0];
+            });
+        }
+
         setFilteredData(dataToSet);
         setTableDisabled(false);
     };
+
 
     const handleCancel = () => {
         setButtonClicked(true);
