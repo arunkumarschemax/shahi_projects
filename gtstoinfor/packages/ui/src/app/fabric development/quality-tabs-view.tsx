@@ -3,7 +3,7 @@ import { Button, Card, Descriptions, Modal, Segmented, Table } from "antd"
 import { log } from "console";
 import { setOptions } from "highcharts";
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { __values } from "tslib";
 
 export const QualityTabsView = () =>{
@@ -17,9 +17,11 @@ export const QualityTabsView = () =>{
     const [style,setStyle] = useState([])
     const [color,setColor] = useState([])
     const [uom,setUom] = useState([])
+    const navigate = useNavigate()
 
 
-    const location = useLocation()
+
+  const location = useLocation()
   const [selectedQuality,setSelectedQuality] = useState<any>('Quality1')
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -150,7 +152,7 @@ uomServices.getAllActiveUoms().then(res=>{
       const tableData = filterData?.[0]?.fabricEntity
       
     return(
-        <Card>
+        <Card title ="Fabric Development Request Info" extra={<span> <Button type={"primary"} onClick={() => navigate("/fabricdevelopment/fabric-development-request/fabric-development-request-view")}>Back </Button></span> }>
         <Segmented
         options={optionLabels}
         defaultValue={'Quality1'}
