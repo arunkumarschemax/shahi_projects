@@ -64,6 +64,8 @@ import { SkuGenerationModule } from './sku-generation/sku-generation.module';
 import { SampleDevReqModule } from './sample-dev-request/sample-dev-request.module';
 import { StyleOrderModule } from './style-order/style-order.module';
 import { ItemCreationModule } from './fg-item/item_creation.module';
+import { GroupTechClassAdapter } from './group-tech-class/dto/group-tech-class.adapter';
+import { GroupTechClassModule } from './group-tech-class/group-tech-class.module';
 
 
 @Module({
@@ -119,7 +121,7 @@ import { ItemCreationModule } from './fg-item/item_creation.module';
     ColourModule,
     BuyersDestinationModule,
     BomModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule,GroupTechClassModule],
   controllers: [AppController],
   providers: [AppService],
 })
