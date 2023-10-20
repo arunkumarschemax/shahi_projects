@@ -39,6 +39,8 @@ export class BuyersAdapter {
     buyer.paymentMethodInfo.paymentMethodId=Number(buyersDTO.paymentMethodId);
     // buyer.buyerAccountType=buyersDTO.buyerAccountType;
     buyer.isActive=buyersDTO.isActive==undefined?true:buyersDTO.isActive;
+    buyer.fgItemCodeLength = buyersDTO.fgItemCodeLength;
+    buyer.rmItemCodeLength = buyersDTO.rmItemCodeLength;
     const addressItems: Address[] = [];
     for (const rec of buyersDTO.addressInfo) {
         const addressObj: Address = new Address();
@@ -106,6 +108,8 @@ export class BuyersAdapter {
     buyersDTO.createdUser = buyersObject.createdUser;
     buyersDTO.updatedUser = buyersObject.updatedUser;
     buyersDTO.versionFlag = buyersObject.versionFlag;
+    buyersDTO.fgItemCodeLength = buyersObject.fgItemCodeLength;
+    buyersDTO.rmItemCodeLength = buyersObject.rmItemCodeLength;
     return buyersDTO;
   }
 }
