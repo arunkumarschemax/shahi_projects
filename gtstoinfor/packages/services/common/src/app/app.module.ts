@@ -72,6 +72,8 @@ import { CompositionModule } from './composition/composition.module';
 import { ProductGroupModule } from './product group/product-group-module';
 import { ProcrumentGroupModule } from './procurment group/procurment-group-module';
 import { HierachyLevelModule } from './hirerachy level/hirerachy-level-module';
+import { RangeModule } from './range/range.module';
+import { SearchGrpModule } from './search-group/search-group.module';
 
 
 @Module({
@@ -130,7 +132,7 @@ import { HierachyLevelModule } from './hirerachy level/hirerachy-level-module';
     ProductGroupModule,
     ProcrumentGroupModule,
     HierachyLevelModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule,GroupTechClassModule,BusinessAreaModule,CoTypeModule,CompositionModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule,GroupTechClassModule,BusinessAreaModule,CoTypeModule,CompositionModule,RangeModule,SearchGrpModule],
   controllers: [AppController],
   providers: [AppService],
 })

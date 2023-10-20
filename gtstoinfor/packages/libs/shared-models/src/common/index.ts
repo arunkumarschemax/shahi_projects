@@ -78,3 +78,5 @@ export * from './hierarchy level'
 export * from './composition'
 export * from './business-area'
 export * from './co-types'
+export * from './range';
+export * from './search-group';
