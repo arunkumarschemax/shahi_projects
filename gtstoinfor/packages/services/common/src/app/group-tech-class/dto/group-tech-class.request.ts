@@ -3,19 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class GroupTechClassRequest {
     @ApiProperty()
-    groupTechClassId?: number;
-
-    @ApiProperty()
-    groupTechClassCode: string;
-
-    @ApiProperty()
-    groupTechClassDescription: string;
-
-    @ApiProperty()
-    buyerId: number;
-
-    @ApiProperty()
-    divisionId: number;
+    groupTechClassId: number;
 
     @ApiProperty()
     isActive?: boolean;
