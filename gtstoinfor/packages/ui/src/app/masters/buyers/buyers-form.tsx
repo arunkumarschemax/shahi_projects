@@ -380,6 +380,40 @@ export function BuyersForm(props: BuyersFormProps) {
                 <TextArea rows={1} placeholder="Enter Private Note" />
               </Form.Item>
             </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 12 }} xl={{ span: 4 }}>
+              <Form.Item
+                name="fgItemCodeLength"
+                label="FG Item Code Length"
+                rules={[
+                  {
+                    required: false,
+                  },
+                  {
+                    pattern: /^[0-9]*$/,
+                    message: `Don't Allow letters and Spaces`
+                  }
+                ]}
+              >
+                <Input placeholder="Enter FG Item Code Length" />
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 12 }} xl={{ span: 4 }}>
+              <Form.Item
+                name="rmItemCodeLength"
+                label="RM Item Code Length"
+                rules={[
+                  {
+                    required: false,
+                  },
+                  {
+                    pattern: /^[0-9]*$/,
+                    message: `Don't Allow letters and Spaces`
+                  }
+                ]}
+              >
+                <Input placeholder="Enter RM Item Code Length" />
+              </Form.Item>
+            </Col>
             </Row>
             <Row gutter={8}>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 12 }} xl={{ span: 24 }}>
