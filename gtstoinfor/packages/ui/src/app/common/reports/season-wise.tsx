@@ -7,6 +7,7 @@ import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { ColumnsType } from 'antd/es/table';
 import TabPane from "antd/es/tabs/TabPane"
 import React, { useEffect, useState } from 'react'
+import './seasonwise.css';
 
 const SeasonWiseReport = () => {
     const { Text } = Typography;
@@ -634,6 +635,7 @@ const SeasonWiseReport = () => {
           label: <b>23SS-WH </b>,
           children: (
             data?.[0]?.length > 0 ? (
+              <div className="specific-screen">
               <Table
                 bordered
                 dataSource={data?.[0]}
@@ -650,6 +652,7 @@ const SeasonWiseReport = () => {
                   }
               }}
               />
+              </div>
             ) : (
               <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
             )
@@ -660,6 +663,8 @@ const SeasonWiseReport = () => {
           label: <b>23SS-EXF </b>,
           children: (
             data?.[0]?.length > 0 ? (
+              <div className="specific-screen">
+
               <Table
                 bordered
                 dataSource={data?.[0]}
@@ -677,6 +682,7 @@ const SeasonWiseReport = () => {
                   }
               }}
               />
+              </div>
             ) : (
               <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
             )
@@ -687,6 +693,8 @@ const SeasonWiseReport = () => {
           label: <b>23FW-WH </b>,
           children: (
             data?.[1]?.length > 0 ? (
+              <div className="specific-screen">
+
               <Table
                 bordered
                 dataSource={data?.[1]}
@@ -704,6 +712,7 @@ const SeasonWiseReport = () => {
                   }
               }}
               />
+              </div>
             ) : (
               <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
             )
@@ -714,6 +723,8 @@ const SeasonWiseReport = () => {
           label: <b>23FW-EXF </b>,
           children: (
             data?.[1]?.length > 0 ? (
+              <div className="specific-screen">
+
               <Table
                 bordered
                 dataSource={data?.[1]}
@@ -731,6 +742,7 @@ const SeasonWiseReport = () => {
                   }
               }}
               />
+              </div>
             ) : (
               <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
             )
@@ -741,6 +753,8 @@ const SeasonWiseReport = () => {
           label: <b>24SS-WH</b>,
           children: (
             data?.[2]?.length > 0 ? (
+              <div className="specific-screen">
+
               <Table
                 bordered
                 dataSource={data?.[2]}
@@ -758,6 +772,7 @@ const SeasonWiseReport = () => {
                   }
               }}
               />
+              </div>
             ) : (
               <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
             )
@@ -768,6 +783,8 @@ const SeasonWiseReport = () => {
           label: <b>24SS-EXF </b>,
           children: (
             data?.[2]?.length > 0 ? (
+              <div className="specific-screen">
+
               <Table
                 bordered
                 dataSource={data?.[2]}
@@ -785,6 +802,7 @@ const SeasonWiseReport = () => {
                   }
               }}
               />
+              </div>
             ) : (
               <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
             )
