@@ -1,22 +1,27 @@
-import { ColourService, FabricDevelopmentService, StyleService } from "@project-management-system/shared-services";
+import { ColourService, FabricDevelopmentService, StyleService, UomService } from "@project-management-system/shared-services";
 import { Button, Card, Descriptions, Modal, Segmented, Table } from "antd"
 import { log } from "console";
 import { setOptions } from "highcharts";
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { __values } from "tslib";
 
 export const QualityTabsView = () =>{
     const [page, setPage] = React.useState(1);
     const styleService = new StyleService();
     const colorService = new ColourService();
+    const uomServices = new UomService();
     const [data,setData] = useState([])
     const [itemsData,setItemsData] = useState([])
     const [options,setOption] = useState([])
     const [style,setStyle] = useState([])
     const [color,setColor] = useState([])
+    const [uom,setUom] = useState([])
+    const navigate = useNavigate()
 
-    const location = useLocation()
+
+
+  const location = useLocation()
   const [selectedQuality,setSelectedQuality] = useState<any>('Quality1')
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -41,7 +46,17 @@ colorService.getAllActiveColour().then(res=>{
     setColor([])
   }
 })
+
+uomServices.getAllActiveUoms().then(res=>{
+  if(res.data){
+    setUom(res.data)
+  }else{
+    setUom([])
+  }
+})
 }
+
+
 
     const columnsSkelton: any = [
         {
@@ -51,14 +66,14 @@ colorService.getAllActiveColour().then(res=>{
           responsive: ["sm"],
           render: (text, object, index) => (page - 1) * 10 + (index + 1),
         },
-        {
-          title: "Style",
-          dataIndex: "styleId",
-          render: (data) => {
-            const styleId = style.find((res) => res.styleId === data);
-            return styleId? styleId.style : "N/A";
-          }
-        },
+        // {
+        //   title: "Style",
+        //   dataIndex: "styleId",
+        //   render: (data) => {
+        //     const styleId = style.find((res) => res.styleId === data);
+        //     return styleId? styleId.style : "N/A";
+        //   }
+        // },
         {
           title: "Color",
           dataIndex: "colorId",
@@ -68,10 +83,36 @@ colorService.getAllActiveColour().then(res=>{
           }
         },
         {
-          title: "Garment",
+          title: "Garment Quantity",
           dataIndex: "garmentQuantity",
        
         },
+        {
+          title: "Consumption(YY)",
+          dataIndex: "consumption",
+       
+        },
+        {
+          title: "Wastage(X%)",
+          dataIndex: "wastage",
+       
+        },
+
+        {
+          title: "Fabric Quantity",
+          dataIndex: "fabricQuantity",
+       
+        },
+        {
+          title: "UOM",
+          dataIndex: "uomId",
+          render: (data) => {
+            const uomId = uom.find((res) => res.uomId === data);
+            return uomId? uomId.uom : "N/A";
+          }
+       
+        },
+
        
           {
             title: 'Mapped',
@@ -111,7 +152,7 @@ colorService.getAllActiveColour().then(res=>{
       const tableData = filterData?.[0]?.fabricEntity
       
     return(
-        <Card>
+        <Card title ="Fabric Development Request Info" extra={<span> <Button type={"primary"} onClick={() => navigate("/fabricdevelopment/fabric-development-request/fabric-development-request-view")}>Back </Button></span> }>
         <Segmented
         options={optionLabels}
         defaultValue={'Quality1'}

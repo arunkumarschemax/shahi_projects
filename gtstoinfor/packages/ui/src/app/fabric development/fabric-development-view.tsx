@@ -1,4 +1,4 @@
-import { BuyersService, FabricDevelopmentService, LocationsService, ProfitControlHeadService } from "@project-management-system/shared-services";
+import { BuyersService, EmployeeDetailsService, FabricDevelopmentService, LocationsService, ProfitControlHeadService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Table } from "antd"
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,10 +12,16 @@ export const FabricDevelopmentView = () =>{
     const LocService = new LocationsService();
     const pchService = new ProfitControlHeadService();
     const buyerService = new BuyersService();
+    const employeeService = new EmployeeDetailsService()
+    const styleService = new StyleService()
     const [data,setData] = useState([])
     const[locId,setLocId] = useState([]);
     const[pchId,setPchId] = useState([]);
     const[buyerId,setBuyerId] = useState([]);
+    const[empId,setEmpId] = useState([]);
+    const[styId,setStyId] = useState([]);
+
+
 
 
     useEffect  (()=>{
@@ -60,6 +66,22 @@ export const FabricDevelopmentView = () =>{
                         console.log(buyerId,'buyer');
                   }
                 })
+
+                employeeService.getAllActiveEmploee().then(res =>{
+                  console.log(res.data,"emp")
+                  if (res.data){
+                   setEmpId(res.data)
+                  }
+                })
+
+
+                styleService.getAllActiveStyle().then(res =>{
+                  console.log(res.data,"emp")
+                  if (res.data){
+                   setStyId(res.data)
+                  }
+                })
+                
         }
       })
      
@@ -85,6 +107,14 @@ export const FabricDevelopmentView = () =>{
           },
         },
         {
+          title: "Style",
+          dataIndex: "styleId",
+          render: (data) => {
+            const style = styId.find((loc) => loc.styleId === data);
+            return style ? style.style : "N/A";
+          },
+        },
+        {
           title: "PCH",
           dataIndex: "pchId",
           render: (data) => {
@@ -107,6 +137,11 @@ export const FabricDevelopmentView = () =>{
         {
             title: `Fabric Responsible`,
             dataIndex: "fabricResponsible",
+            render: (data) => {
+              const emp = empId.find((res) => res.employeeId === data);
+              const ftname = `${emp?.firstName} ${emp?.lastName}`;
+              return ftname;
+            }
           },
           {
             title: 'Mapped',

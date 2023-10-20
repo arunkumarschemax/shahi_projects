@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, CustomerOrderStatusEnum, StyleOrderIdReq, StyleOrderModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, CustomerOrderStatusEnum, StyleOrderIdReq, StyleOrderItemsModel, StyleOrderModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
 import { StyleOrder } from "./style-order.entity";
 import { Item } from "../items/item-entity";
 import { Warehouse } from "../warehouse/warehouse.entity";
@@ -243,8 +243,21 @@ export class StyleOrderService{
 
    async getCOInfoById(req:StyleOrderIdReq):Promise<StyleOrderResponseModel>{
     try{
-        const data = await this.repo.find({where:{id:req.styleOrderId},relations:[]})
-        return new StyleOrderResponseModel(true,1,'Data retrieved',[])
+        const data = await this.repo.getInfoById(req)
+        const COMap = new Map<number,StyleOrderModel>()
+        if(data.length == 0){
+            return new StyleOrderResponseModel(false,0,'No data found',[])
+        } else{
+            for(const rec of data){
+                if(!COMap.has(rec.id)){
+                    COMap.set(rec.id,new StyleOrderModel(rec.id,rec.item_code,rec.order_date,rec.buyer_po_number,rec.shipment_type,rec.buyer_style,rec.agent,rec.buyer_address,rec.exfactory_date,rec.delivery_date,rec.instore_date,rec.sale_price,rec.price_quantity,rec.discount_per,rec.discount_amount,rec.status,rec.remarks,rec.item_id,rec.warehouse_id,rec.facility_id,rec.style_id,rec.package_terms_id,rec.delivery_method_id,rec.delivery_terms_id,rec.currency_id,rec.payment_method_id,rec.payment_terms_id,[],rec.buyer_id,rec.item_name,rec.buyer_code,rec.buyer_name,rec.factoryName,rec.warehouse_name,rec.agentName,rec.agentCode,rec.buyerLandmark,rec.buyerCity,rec.buyerState,rec.package_terms_name,rec.delivery_method,rec.delivery_terms_name,rec.currency_name,rec.payment_method,rec.payment_terms_name))
+                }
+                COMap.get(rec.id).styleOrderItems.push(new StyleOrderItemsModel(rec.coLineId,rec.delivery_address,rec.order_quantity,rec.color,rec.size,rec.destination,rec.uom,rec.status,rec.discount,rec.salePrice,rec.coPercentage,rec.color_id,rec.size_id,rec.uom_id,rec.delLandmark,rec.delCity,rec.delState))
+            }
+            const styleOrderModel: StyleOrderModel[] = [];
+            COMap.forEach((e) => styleOrderModel.push(e))
+            return new StyleOrderResponseModel(true,1,'Data retrieved',styleOrderModel)
+        }
 
     } catch(err){
         throw err

@@ -21,11 +21,11 @@ export class ItemSkuController{
         }
     }
 
-    @Post('/cancelSKUById')
+    @Post('/closeSKUById')
     @ApiBody({type: ItemSKusReq})
-    async cancelSKUById(@Body() req:any):Promise<SKUGenerationResponseModel>{
+    async closeSKUById(@Body() req:any):Promise<SKUGenerationResponseModel>{
         try{
-            return await this.itemSkuService.cancelSKUById(req)
+            return await this.itemSkuService.closeSKUById(req)
         }catch(err){
             return this.applicationExceptionHandler.returnException(SKUGenerationResponseModel,err)
         }

@@ -43,7 +43,7 @@ export const StyleOrderGrid = () => {
     const[currencyId,setCurrencyId] = useState([]);
     const currencyService = new CurrencyService()
     const [drawerVisible, setDrawerVisible] = useState(false);
-    const [selectedBuyersData, setSelectedBuyersData] = useState<any>(undefined);
+    const [selectedId, setSelectedId] = useState<number>(0);
   
 
 let location = useLocation()
@@ -118,7 +118,7 @@ let val = 0
   const openFormWithData = (data) => {
     
     setDrawerVisible(true);
-    setSelectedBuyersData(data);
+    setSelectedId(data.id);
   }
     const getColumnSearchProps = (dataIndex: string) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -492,7 +492,7 @@ let val = 0
             updateDetails={updateCoLine}
             isUpdate={true}
             // saveItem={saveVariant}
-            coData={selectedBuyersData}
+            coData={selectedId}
             closeForm={closeDrawer} />
         </Card>
       </Drawer>

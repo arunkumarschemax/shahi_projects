@@ -1,12 +1,13 @@
 import { FabricRequestEntity } from "./fabric-request.entity";
 import { Injectable } from "@nestjs/common";
 import { FabricRequestRepository } from "./repository/fabric-request.repository";
-import { CommonResponseModel, FabricDevelopmentRequestResponse, StatusEnum, UploadResponse } from "@project-management-system/shared-models";
+import { CommonResponseModel, FabricDevelopmentRequestResponse, QualitiesEnum, StatusEnum, SubContractStatus, UploadResponse } from "@project-management-system/shared-models";
 import { FabricRequestDto } from "./dto/fabric-request.dto";
 import { FabricRequestQualitiesInfoEntity } from "./fabric-request-quality-info.entity";
 import { FabricRequestItemsEntity } from "./fabric-request-items.entity";
 import { FabricRequestQualitiesEntity } from "./fabric-request-qualities.entity";
 import { FabricRequestQualitiesRepository } from "./repository/fabric-request-qualities.repository";
+import { FabricApprovalReq } from "./dto/fabric-approval-req";
 
 @Injectable()
 export class FabricDevelopmentService {
@@ -56,6 +57,7 @@ export class FabricDevelopmentService {
             entity.quality= qualityData.quality
             entity.placement = qualityData.placement
             entity.width = qualityData.width
+            entity.isApproved = SubContractStatus.NO
             entity.description = qualityData.description
             entity.fabricDescription = qualityData.fabricDescription
             entity.fabricCode = "FABRIC"+"/"+ (MaxId1)
@@ -114,34 +116,34 @@ export class FabricDevelopmentService {
         }
       }
 
-      async updatePath(files:any[]): Promise<UploadResponse> {
-        // filePath: string,filename: string,fabricRequestId: number,name: string
-        console.log(files,"id------------")
+      async updatePath(
+        filePath: string,
+        filename: string,
+        fabricRequestId: number,
+        name: string 
+      ): Promise<UploadResponse> {
+        console.log(fabricRequestId,"id------------")
         try {
-          // let filePathUpdate;
+          let filePathUpdate;
           
-          //   filePathUpdate = await this.FabricRepo.update(
-          //     { fabricRequestId : fabricRequestId },
-          //     { filePath: filePath, fileName: filename }
-          //   );
+            filePathUpdate = await this.FabricRepo.update(
+              { fabricRequestId : fabricRequestId },
+              { filePath: filePath, fileName: filename }
+            );
           
-          // const result = await this.FabricRepo.findOne({ where: { fabricRequestId: fabricRequestId } });
-          // if (filePathUpdate.affected > 0) {
-          //   return new UploadResponse(true, 11, "uploaded successfully", filePath);
-          // } else {
-            return new UploadResponse(false, 11, "uploaded failed", []);
-          // }
+          const result = await this.FabricRepo.findOne({ where: { fabricRequestId: fabricRequestId } });
+          if (filePathUpdate.affected > 0) {
+            return new UploadResponse(true, 11, "uploaded successfully", filePath);
+          } else {
+            return new UploadResponse(false, 11, "uploaded failed", filePath);
+          }
         } catch (error) {
           console.log(error);
         }
       }
 
 
-      // async createFabricDevelopmentRequest(req: any, files: any[]) {
-      //   console.log('----------------------------------------');
-      //   console.log(req)
-      // }
-     
+
 
    async getFabricDevReqData(): Promise<CommonResponseModel> {
       try {
@@ -154,6 +156,32 @@ export class FabricDevelopmentService {
         } catch (err) {
           throw err;
         }
-      }    
+      }
+
+      async fabricApproval(request : FabricApprovalReq): Promise<CommonResponseModel> {
+        try {
+          const fabricReq = await this.FabricRepo.find({ where: { fabricRequestId: request.fabricRequestId,requestNo: request.requestNo  },relations:['fabricQuantityEntity'] })
+          if (fabricReq) {
+            const updateResult = await this.qualityrepo.update({data:{ fabricRequestId: request.fabricRequestId}, quality: request.quality }, { isApproved: SubContractStatus.YES })
+            if (updateResult) {
+              return new CommonResponseModel(true, 1, 'Fabric Request Approved successfully', fabricReq)
+            }
+          } else {
+            return new CommonResponseModel(false, 0, 'No records found', [])
+          }
+        } catch (err) {
+          throw err;
+        }
+      }
+
+      async getAllFabricRequestNo():Promise<CommonResponseModel>{
+        const fabricData = await this.FabricRepo.getAllFabricRequestNo()
+        if(fabricData.length > 0){
+          return new CommonResponseModel(true,1,'Fabric Request data retrieved successfully', fabricData)
+        }else{
+          return new CommonResponseModel(false,0,'No data found', [])
+        }
+      }
+      
 
 }

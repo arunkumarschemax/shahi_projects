@@ -1,4 +1,4 @@
-import { QualitiesEnum } from "@project-management-system/shared-models";
+import { QualitiesEnum, SubContractStatus } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { FabricRequestQualitiesInfoEntity } from "./fabric-request-quality-info.entity";
 import { FabricRequestEntity } from "./fabric-request.entity";
@@ -54,6 +54,13 @@ export class FabricRequestQualitiesEntity {
         
     })
     fabricCode: string;
+
+    @Column('enum', {
+      name: 'is_approved',
+      nullable: false,
+      enum: SubContractStatus
+    })
+    isApproved: SubContractStatus;
 
     @CreateDateColumn({
         name: "created_at",

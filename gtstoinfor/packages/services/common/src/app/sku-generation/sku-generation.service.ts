@@ -118,7 +118,7 @@ export class ItemSkuService{
       }
     }
 
-    async cancelSKUById(req : ItemSKusReq): Promise<SKUGenerationResponseModel> {
+    async closeSKUById(req : ItemSKusReq): Promise<SKUGenerationResponseModel> {
       try {
         const sampleReq = await this.itemSkuRepo.findOne({ where: { itemSkuId: req.itemId  } })
         if (sampleReq) {

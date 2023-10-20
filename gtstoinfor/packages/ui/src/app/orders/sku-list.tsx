@@ -67,9 +67,9 @@ export const SkuList = () => {
 
 
 
-  const cancelSKU = (id: number) => {
+  const closeSKU = (id: number) => {
     const req = new ItemSKusReq(id, "", null, null, null, null, "", 0);
-    services.cancelSKUById(req).then((res: any) => {
+    services.closeSKUById(req).then((res: any) => {
       if (res.status) {
         message.success(res.internalMessage);
       } else {
@@ -283,14 +283,14 @@ export const SkuList = () => {
       render: (text, rowData, index) => (
         <span>
           {rowData.status !== "CANCELLED" ? (
-            <Tooltip placement="top" title="Cancel SKU">
+            <Tooltip placement="top" title="Close SKU">
               <Popconfirm
-                onConfirm={(vale) => {
-                  cancelSKU(rowData.id);
+                onConfirm={(value) => {
+                  closeSKU(rowData.id);
                 }}
-                title={"Are you sure to Cancel ?"}
+                title={"Are you sure to Close ?"}
               >
-                <CloseOutlined style={{ color: "red", fontSize: "20" }} />
+                <Button type="primary" shape="circle">Close</Button>
               </Popconfirm>
             </Tooltip>
           ) : null}

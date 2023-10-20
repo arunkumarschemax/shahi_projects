@@ -95,6 +95,7 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
       props.updateFabricWeave(values, fileList);
     } else {
       saveFabricWeave(values);
+      console.log(values,'ooooooooooooooooooooooooo')
     }
   };
 
