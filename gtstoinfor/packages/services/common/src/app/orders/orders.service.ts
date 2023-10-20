@@ -2274,5 +2274,19 @@ async getYearDropdown():Promise<CommonResponseModel>{
         throw err
     }
 }
+
+async getLatestPreviousFilesData():Promise<CommonResponseModel>{
+    try{
+        const info = await this.fileUploadRepo.getLatestPreviousFilesData()
+        if(info.length >0){
+            return new CommonResponseModel(true,1,'Data retrieved',info)
+        } else{
+            return new CommonResponseModel(false,0,'No dat found')
+        }
+
+    } catch(err){
+        throw err
+    }
+}
 }
   

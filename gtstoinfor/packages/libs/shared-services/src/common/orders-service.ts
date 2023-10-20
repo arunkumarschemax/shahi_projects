@@ -221,4 +221,8 @@ export class OrdersService extends CommonAxiosService {
     async getYearDropdown():Promise<CommonResponseModel>{
         return this.axiosPostCall(this.ordersController + "/getYearDropdown")
     }
+
+    async getLatestPreviousFilesData():Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.ordersController + "/getLatestPreviousFilesData")
+    }
 }

@@ -569,4 +569,13 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/getLatestPreviousFilesData')
+    async getLatestPreviousFilesData(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getLatestPreviousFilesData();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
