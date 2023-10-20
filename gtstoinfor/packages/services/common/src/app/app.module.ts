@@ -60,10 +60,13 @@ import { SampleSubTypesModule } from './sample-sub-types/sample-sub-type.module'
 import { OperationSequenceModule } from './operation-sequence/operation-sequence.module';
 import { FabricWeaveModule } from './fabric weave/fabric-weave.module';
 import { FabricDevelopmentModule } from './fabric-development-request/fabric-development.module';
-import { ItemSkus } from './sku-generation/sku-generation.entity';
 import { SkuGenerationModule } from './sku-generation/sku-generation.module';
 import { SampleDevReqModule } from './sample-dev-request/sample-dev-request.module';
 import { StyleOrderModule } from './style-order/style-order.module';
+import { ItemCreationModule } from './fg-item/item_creation.module';
+import { BusinessAreaModule } from './business-area/business-area.module';
+import { CoTypeModule } from './co-type/co-type.module';
+import { CompositionModule } from './composition/composition.module';
 import { ProductGroupModule } from './product group/product-group-module';
 import { ProcrumentGroupModule } from './procurment group/procurment-group-module';
 import { HierachyLevelModule } from './hirerachy level/hirerachy-level-module';
@@ -81,7 +84,7 @@ import { HierachyLevelModule } from './hirerachy level/hirerachy-level-module';
       database: appConfig.database.dbName,
       autoLoadEntities: true,
       synchronize: false,
-      logging: true,
+      logging: false,
       extra: {
         connectionLimit: 20
       }
@@ -125,7 +128,7 @@ import { HierachyLevelModule } from './hirerachy level/hirerachy-level-module';
     ProductGroupModule,
     ProcrumentGroupModule,
     HierachyLevelModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule,BusinessAreaModule,CoTypeModule,CompositionModule],
   controllers: [AppController],
   providers: [AppService],
 })

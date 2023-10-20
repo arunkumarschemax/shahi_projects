@@ -7,6 +7,7 @@ import { StyleOrderController } from './style-order.controller';
 import { CoLine } from './co-line.entity';
 import { StyleOrderRepository } from './style-order-repo';
 import { CoLineRepository } from './co-line.repo';
+import { ItemCreation } from '../fg-item/item_creation.entity';
 
 
 @Module({
@@ -14,7 +15,7 @@ import { CoLineRepository } from './co-line.repo';
         TypeOrmModule.forFeature([StyleOrder,CoLine
         ]),
       ],
-      providers: [ApplicationExceptionHandler,StyleOrderService,StyleOrderRepository,CoLineRepository],
+      providers: [ApplicationExceptionHandler,StyleOrderService,StyleOrderRepository,CoLineRepository,ItemCreation],
       controllers: [StyleOrderController],
       exports: []
 })

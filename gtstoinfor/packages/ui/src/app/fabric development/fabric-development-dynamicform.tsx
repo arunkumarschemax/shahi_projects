@@ -37,11 +37,19 @@ export interface FabricDevelopmentDynamicFormProps {
   form: FormInstance<any>;
   itemsData: (itemsInfo: any[]) => void;
   dynamicformData: (dynamicInfo: any[]) => void;
+  form1:FormInstance<any>;
+  filesList:(file: any) => void;
+  
 }
+  
+
 
 export const FabricDevelopmentDynamicForm = (
   props: FabricDevelopmentDynamicFormProps
 ) => {
+
+ 
+
   // const [form] = Form.useForm();
   const [modalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState([]);
@@ -65,7 +73,7 @@ export const FabricDevelopmentDynamicForm = (
     multiple: false,
     onRemove: (file: any) => {
       setQualitiesFilelist([]);
-      // uploadFileList([]);
+     
     },
     beforeUpload: (file: any) => {
       if (!file.name.match(/\.(jpg|jpeg|png)$/)) {
@@ -80,7 +88,7 @@ export const FabricDevelopmentDynamicForm = (
           return true;
         } else {
           setQualitiesFilelist([...qualitiesFilelist, file]);
-          // uploadFileList([...filelist, file]);
+         
 
           return false;
         }
@@ -110,22 +118,19 @@ export const FabricDevelopmentDynamicForm = (
 
 
   const onChangeGarment = (e) => {
-    // console.log( props.form.getFieldValue("garmentQuantity"),"khyg")
     e.target.value;
     setGarmentQuantity(e.target.value);
   };
 
   const onChangeConsumption = (e) => {
-    // console.log(props.form.getFieldValue("consumption"),"7777")
     setConsumptionData(e.target.value);
   };
 
   const onChangeWastage = (e) => {
-    // console.log(props.form.getFieldValue("wastage"),"8888")
     setWastageData(e.target.value);
   };
 
-  //  useEffect(()=>{
+  //  useEffect(()=> {
   //   if(wastageData){
   //     const cal = ((garmentQuantity*consumptionData)+( (garmentQuantity*consumptionData/100)))
   //     props.form.setFieldsValue({FabricQuantity:cal})
@@ -197,6 +202,10 @@ export const FabricDevelopmentDynamicForm = (
 
   const onReset = () => {
     props.form.resetFields();
+    props.form1.resetFields();
+    setFormData([])
+    setShowTable(false)
+    
   };
 
   //  const addData = () => {
@@ -252,6 +261,7 @@ export const FabricDevelopmentDynamicForm = (
         setItemsFilelist([...itemsFilelist,qualitiesFilelist])
         setQualitiesFilelist([])
         props.dynamicformData([...formData, record]);
+        props.filesList(qualitiesFilelist);
       }
       props.form.resetFields();
       setShowTable(true); // Set showTable to true when data is added

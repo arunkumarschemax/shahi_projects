@@ -16,8 +16,13 @@ export class StyleOrderItemsModel{
     sizeId: number;
     destinationId: number;
     uomId: number;
+    landmark?: string;
+    city?: string;
+    state?: string;
+    skuCode?: string;
 
-    constructor(styleOrderItemsId: number,deliveryAddress : string,orderQuantity: number,color : string,size : string,destination : string,uom : string,status : CustomerOrderStatusEnum,discount: number,salePrice: number,coPercentage: number,colorId: number,sizeId: number,destinationId: number,uomId: number){
+
+    constructor(styleOrderItemsId: number,deliveryAddress : string,orderQuantity: number,color : string,size : string,destination : string,uom : string,status : CustomerOrderStatusEnum,discount: number,salePrice: number,coPercentage: number,colorId: number,sizeId: number,destinationId: number,uomId: number,landmark?: string,city?: string,state?: string,skuCode?: string){
     this.styleOrderItemsId = styleOrderItemsId
     this.deliveryAddress = deliveryAddress
     this.orderQuantity = orderQuantity
@@ -33,6 +38,10 @@ export class StyleOrderItemsModel{
     this.sizeId= sizeId
     this.destinationId= destinationId
     this.uomId= uomId
+    this.landmark = landmark
+    this.city = city
+    this.state = state
+    this.skuCode = skuCode
 
     }
 

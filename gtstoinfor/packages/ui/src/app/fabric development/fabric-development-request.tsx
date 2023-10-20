@@ -1,3 +1,4 @@
+
 import { UndoOutlined, UploadOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -29,8 +30,6 @@ export interface FabricDevelopmentRequestProps {
 }
 
 
-
-
 export const FabricDevelopmentRequest = (props:FabricDevelopmentRequestProps) => {
   const [form] = Form.useForm();
   const [pchData,setPchData] = useState<any>([])
@@ -42,6 +41,8 @@ export const FabricDevelopmentRequest = (props:FabricDevelopmentRequestProps) =>
   const [qualitieData,setqualitieData] = useState<any>()
   const [fabricFilelist,setFabricFilelist] = useState<any[]>([]);
   const [disable, setDisable] = useState<boolean>(false)
+  const [resetData, setResetData] = useState<boolean>(false)
+
   let navigate = useNavigate();
 
 
@@ -58,7 +59,7 @@ export const FabricDevelopmentRequest = (props:FabricDevelopmentRequestProps) =>
 
 
 
-
+   const filefinal = []
    const filesArray = [];
 
 // Loop through the qualities in the data object
@@ -70,7 +71,7 @@ for (const quality in qualitieData) {
             // Check if the "file" object exists in the info
             if (info.file) {
                 // Push the "file" object into the filesArray
-                filesArray.push(info.file);
+                filesArray.push(info.file,);
             }
         }
     }
@@ -79,38 +80,21 @@ filesArray.push(fabricFilelist)
 console.log(fabricFilelist,"fab")
 // Now, filesArray contains all the "file" objects
 console.log(filesArray,"######");
-  
-//  console.log(props?.dynamicForm?.getFieldValue("garmentQuantity"),"props.dyna")
-//  console.log(props?.placementForm?.getFieldValue("placement"),"props.place")
-
- 
 
 
-
-    const onFinish = (values:any) => {
+  const onFinish = (values:any) => {
       const data =[]
       Object.values(qualitieData).forEach(val => { data.push(val)});
 
-      const req = new FabricDevelopmentRequestModel (values.locationId,values.styleId,values.pchId,values.buyerId,values.type,1,values.remarks,values.fabricResponsible,1,values.lightSourcePrimary,values.lightSourceSecondary,values.lightSourceTertiary,fabricFilelist[0]?.uid,"","",data,StatusEnum.OPEN)
-  
+      const req = new FabricDevelopmentRequestModel (values.locationId,values.styleId,values.pchId,values.buyerId,values.type,1,values.remarks,values.fabricResponsible,1,values.lightSourcePrimary,values.lightSourceSecondary,values.lightSourceTertiary,fabricFilelist,"","",data,StatusEnum.OPEN,fabricFilelist[0]?.uid)
+
+    
       service.createFabricDevelopmentRequest(req).then((res)=>{
         console.log(res,"res.........")
         setDisable(false)
 
          if (res.status){
            
-          if (fabricFilelist.length > 0) {
-            const formData = new FormData();
-            fabricFilelist.forEach((file: any) => {
-                formData.append('file', file);
-            });
-            formData.append('fabricRequestId', `${res.data.fabricRequestId}`)
-            formData.append('name', 'fabric')
-            service.fabricFileUpload(formData).then(fileres => {
-               res.data.filePath = fileres.data
-      
-            })
-        }
           onReset()
           navigate("/fabricdevelopment/fabric-development-request/fabric-development-request-view");
 
@@ -128,6 +112,64 @@ console.log(filesArray,"######");
     
     }
 
+  // const onFinish = (values:any) => {
+  //   const data =[]
+  //   Object.values(qualitieData).forEach(val => { data.push(val)});
+
+  //   const req = new FabricDevelopmentRequestModel (values.locationId,values.styleId,values.pchId,values.buyerId,values.type,1,values.remarks,values.fabricResponsible,1,values.lightSourcePrimary,values.lightSourceSecondary,values.lightSourceTertiary,"","",data,StatusEnum.OPEN,fabricFilelist[0]?.uid,)
+
+  //   // service.createFabricDevelopmentRequest(req).then((res)=>{
+  //   //   console.log(res,"res.........")
+  //   //   setDisable(false)
+
+  //   //    if (res.status){
+  //       console.log(filesArray);
+
+  //       const test = [ { fieldname: 'files[]',
+  //       originalname: 'image1.png',
+  //       encoding: '7bit',
+  //       mimetype: 'image/png',
+  //       buffer:
+  //        "<Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 01 52 00 00 02 58 08 02 00 00 00 bf c4 f9 43 00 00 00 09 70 48 59 73 00 00 0b 13 00 00 0b 13 01 ... >",
+  //       size: 109693 },
+  //     { fieldname: 'files[]',
+  //       originalname: 'image2.png',
+  //       encoding: '7bit',
+  //       mimetype: 'image/png',
+  //       buffer:
+  //        "<Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 01 2c 00 00 00 fa 08 02 00 00 00 94 0f ed a4 00 00 00 09 70 48 59 73 00 00 0b 13 00 00 0b 13 01 ... >",
+  //       size: 20538 } ]
+
+
+  //       service.fabricFileUpload(test).then((res) => {
+  //         if(res.status){
+  //           AlertMessages.getSuccessMessage("Uploaded Successfully. ")
+  //         }
+  //         else{
+  //           AlertMessages.getErrorMessage("Something went wrong. ")
+  //         }
+  //       }).catch(err => {
+  //         AlertMessages.getWarningMessage("file Not uploaded. ")
+  //       })
+  // //       onReset()
+  // //       navigate("/fabricdevelopment/fabric-development-request/fabric-development-request-view");
+
+  // //       setFabricFilelist([])
+  // //       message.success(res.internalMessage);
+       
+  // //   } else{
+
+  // //     AlertMessages.getErrorMessage(res.internalMessage);
+  // //      }
+  // // }).catch(err => {
+
+  // //    AlertMessages.getErrorMessage(err.message);
+  // //  })
+  
+  // }
+
+
+  
     const itemsInfo = (data) => {
   }
 
@@ -244,7 +286,6 @@ const getAllstyle=() =>{
   multiple: false,
   onRemove: (file:any) => {
       setFabricFilelist([]);
-    // uploadFileList([]);
   },
   beforeUpload: (file: any) => {
     if (!file.name.match(/\.(jpg|jpeg|png)$/)) {
@@ -259,13 +300,11 @@ const getAllstyle=() =>{
         return true;
       } else {
           setFabricFilelist([...fabricFilelist, file]);
-        // uploadFileList([...filelist, file]);
 
         return false;
       }
     };
 
-    // Add a default return value for cases where none of the conditions are met
     return false;
   },
   progress: {
@@ -282,11 +321,23 @@ const getAllstyle=() =>{
 
   const onReset = () => {
     form.resetFields();
-    // props.dynamicForm.resetFields();
-    // props.placementForm.resetFields();
-  };
-  
+    setFabricFilelist([])
+    setResetData(true)
 
+  };
+
+  const fileList = (val) =>{
+
+     console.log(val,"FILEEEEEEEEEE")
+    //  setFabricFilelist([...fabricFilelist,val])
+  }
+  
+  console.log(fabricFilelist,"filellllllllllllllllll")
+
+  const fileobt = (data) =>{
+    console.log(data,"fileObt")
+
+  }
 
   
   return (
@@ -342,7 +393,9 @@ const getAllstyle=() =>{
               lg={{ span: 4 }}
               xl={{ span: 4 }}
             >
-              <Form.Item label="Style" name="styleId">
+              <Form.Item label="Style" name="styleId"
+              rules={[{ required: true, message: "Style" }]}
+              >
               <Select placeholder="Style" allowClear>
               {styleData.map((rec) => (
                   <option key={rec.styleId} value={rec.styleId}>
@@ -413,11 +466,7 @@ const getAllstyle=() =>{
                 name="lightSourcePrimary"
               >
                 <Select placeholder="lightSource" allowClear>
-                {BuyerData.map((rec) => (
-                  <option key={rec.buyerId} value={rec.buyerId}>
-                    {rec.buyerName}
-                   </option>
-                       ))}
+                <option value="Primary">Primary</option>
                        
 
                 </Select>
@@ -435,11 +484,8 @@ const getAllstyle=() =>{
                 name="lightSourceSecondary"
               >
                 <Select placeholder="lightSource" allowClear>
-                {BuyerData.map((rec) => (
-                  <option key={rec.buyerId} value={rec.buyerId}>
-                    {rec.buyerName}
-                   </option>
-                       ))}
+                <option value="Secondary">Secondary</option>
+              
                        
 
                 </Select>
@@ -457,11 +503,8 @@ const getAllstyle=() =>{
                 name="lightSourceTertiary"
               >
                 <Select placeholder="lightSource" allowClear>
-                {BuyerData.map((rec) => (
-                  <option key={rec.buyerId} value={rec.buyerId}>
-                    {rec.buyerName}
-                   </option>
-                       ))}
+                <option value="Teritiary">Teritiary</option>
+               
                        
 
                 </Select>
@@ -533,7 +576,7 @@ const getAllstyle=() =>{
                 name="file"
               >
                 
-              <Upload {...fileuploadFieldProps}  accept='.jpeg,.png,.jpg'>
+              <Upload {...fileuploadFieldProps}  accept='.jpeg,.png,.jpg' >
              <Button icon={<UploadOutlined />}>
               Choose File
              </Button>
@@ -542,42 +585,10 @@ const getAllstyle=() =>{
             </Col>
           </Row>
           <Row gutter={24} justify="space-around" style={{ marginLeft: 350 }}>
-            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
-              <Form.Item>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Button type="primary"style= {{ marginLeft: 10 }}>Back</Button>
-
-                  <Upload>
-                    <Button icon={<UploadOutlined />} style={{ marginLeft: 10 }}>
-                      Attached File
-                    </Button>
-                  </Upload>
-
-                  <Button type="primary" style={{ marginLeft: 10 }}>Link another CRM</Button>
-
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    className="ant-submit-btn"
-                    style={{ marginLeft: 10}}
-                  >
-                    Submit
-                  </Button>
-                  <Button
-                    type="default"
-                    danger
-                    icon={<UndoOutlined />}
-                    onClick={onReset}
-                    style={{ marginLeft: 10 }}
-                  >
-                    Reset
-                  </Button>
-                </div>
-              </Form.Item>
-            </Col> */}
+           
           </Row>
           <div>
-            <FabricDevelopmentTabs key="1"  qualities={qualities} />
+            <FabricDevelopmentTabs key="1"  qualities={qualities} fileList={fileList} fileobt={fileobt} />
           </div>
           {/* <Card>
           <div>

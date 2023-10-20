@@ -14,11 +14,12 @@ export class FabricDevelopmentRequestModel{
     lightSourcePrimary: string;
     lightSourceSecondary: string;
     lightSourceTertiary: string;
-    uid:string;
+    file:any;
     fileName: string;
     filePath: string;
     qualities:FabricRequestQualitiesRequest[]
     status?: StatusEnum;
+    uid?:string;
     requestNo?: number;    
     fabricRequestId?: number;
 
@@ -36,11 +37,12 @@ export class FabricDevelopmentRequestModel{
         lightSourcePrimary: string,
         lightSourceSecondary: string,
         lightSourceTertiary: string,
-        uid:string,
+        file:any,
         fileName: string,
         filePath: string,
         qualities:FabricRequestQualitiesRequest[],
         status?: StatusEnum,
+        uid?:string,
         requestNo?: number,    
         fabricRequestId?: number){
       
@@ -56,11 +58,12 @@ export class FabricDevelopmentRequestModel{
         this.lightSourcePrimary = lightSourcePrimary
         this.lightSourceSecondary = lightSourceSecondary
         this.lightSourceTertiary = lightSourceTertiary
-        this.uid= uid
+        this.file = file
         this.fileName = fileName
         this.filePath = filePath
         this.qualities = qualities
         this.status = status
+        this.uid= uid
         this.requestNo = requestNo
         this.fabricRequestId = fabricRequestId
 

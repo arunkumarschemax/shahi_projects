@@ -52,7 +52,7 @@ export class FabricRequestEntity {
 
     @Column('varchar', {
         name: 'remarks',
-        nullable: true,
+        
     })
     remarks: string;
 
@@ -102,13 +102,13 @@ export class FabricRequestEntity {
 
     @Column('varchar', {
         name: 'file_name',
-        nullable: true
+       
     })
     fileName: string;
 
     @Column('varchar', {
         name: 'file_path',
-        nullable: true
+        
     })
     filePath: string;
 

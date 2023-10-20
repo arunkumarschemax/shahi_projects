@@ -21,13 +21,14 @@ export class SKUGenerationService extends CommonAxiosService{
     } 
 
     async getSkuList(req:SKUlistFilterRequest):Promise<CommonResponseModel>{
+        console.log(req,'tttttttttttt')
         return this.axiosPostCall(this.URL +"/getSkuList",req)
     }
     async getAllitemsCode ():Promise<CommonResponseModel>{
         return this.axiosPostCall(this.URL +"/getAllitemsCode")
     }
 
-    async cancelSKUById(req :ItemSKusReq): Promise<any>{
-        return this.axiosPostCall(this.URL + '/cancelSKUById')
+    async closeSKUById(req :ItemSKusReq): Promise<any>{
+        return this.axiosPostCall(this.URL + '/closeSKUById')
     }
 }

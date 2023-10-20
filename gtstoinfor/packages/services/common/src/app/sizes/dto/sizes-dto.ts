@@ -15,6 +15,11 @@ export class SizeDto{
   size:string;
   
   @ApiProperty()
+  @IsNotEmpty()
+ divisionId:number;
+ divisionName:string;
+ 
+  @ApiProperty()
   isActive: boolean;
   
   createdAt: Date;

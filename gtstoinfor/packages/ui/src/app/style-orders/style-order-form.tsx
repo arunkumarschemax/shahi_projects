@@ -1,15 +1,23 @@
-import { BuyerIdReq, BuyersDestinationRequest, CustomerOrderStatusEnum, ItemCodeReq, SKUGenerationReq, StyleOrderItemsReq, StyleOrderReq } from "@project-management-system/shared-models";
-import { BuyerDestinationService, BuyersService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DestinationService, EmployeeDetailsService, FactoryService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, SKUGenerationService, StyleOrderService, WarehouseService } from "@project-management-system/shared-services"
+import { BuyerIdReq, BuyersDestinationRequest, CustomerOrderStatusEnum, ItemCodeReq, SKUGenerationReq, StyleOrderIdReq, StyleOrderItemsReq, StyleOrderReq } from "@project-management-system/shared-models";
+import { BuyerDestinationService, BuyersService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DestinationService, EmployeeDetailsService, FactoryService, ItemCreationService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, SKUGenerationService, StyleOrderService, WarehouseService } from "@project-management-system/shared-services"
 import { Button, Card, Col, DatePicker, Form, Input, Row, Segmented, Select, Space, Table } from "antd"
 import TextArea from "antd/es/input/TextArea";
 import { ColumnProps } from "antd/es/table";
 import { useEffect, useState } from "react"
 import AlertMessages from "../common/common-functions/alert-messages";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 const {Option} = Select;
 
-export const StyleOrderCreation = () => {
+export interface StyleOrderCreationProps {
+    coData: any;
+    updateDetails: (data: StyleOrderReq) => void;
+    isUpdate: boolean;
+    closeForm: () => void;
+  }
+
+export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
 
     const [itemCodes,setItemCodes] = useState<any[]>([])
     const itemService = new ItemsService()
@@ -46,6 +54,59 @@ export const StyleOrderCreation = () => {
     const styleOrderService = new StyleOrderService()
     const navigate = useNavigate();
     const [tableVisible,setTableVisible] = useState<boolean>(false)
+    const fgItemService = new ItemCreationService()
+    const [initialData,setInitialData] = useState<any[]>([])
+    const { state } = useLocation();
+    console.log(state,'------')
+
+    useEffect(()=>{
+        if(initialData.length > 0){
+            console.log(initialData[0],'--------')
+            form.setFieldsValue({
+                'itemCode':initialData[0].itemCode,
+                'buyer': initialData[0].buyerId,
+                'facility':initialData[0].facilityId,
+                'warehouse':initialData[0].warehouseId,
+                'remarks':initialData[0].remarks,
+                'buyerPoNumber':initialData[0].buyerPoNumber,
+                'CODate':dayjs(initialData[0].orderDate),
+                'shipmentType': initialData[0].shipmentType,
+                'buyerStyle': initialData[0].buyerStyle,
+                'agent': Number(initialData[0].agent),
+                'buyerAddress': Number(initialData[0].buyerAddress),
+                'exfactoryDate': dayjs(initialData[0].exfactoryDate),
+                'deliveryDate': dayjs(initialData[0].deliveryDate),
+                'packageTerms': initialData[0].packageTermsId,
+                'deliveryMethod': initialData[0].deliveryMethodId,
+                'deliveryTerms': initialData[0].deliverytermId,
+                'inStoreDate' : dayjs(initialData[0].inStoreDate),
+                'currency': initialData[0].currencyId,
+                'salePrice': initialData[0].salePrice,
+                'priceQuantity': initialData[0].priceQuantity,
+                'discount': initialData[0].discount,
+                'paymentMethod': initialData[0].paymentMethodId,
+                'paymentTerms': initialData[0].paymentTermId,
+                'styleOrderId': state?.id,
+                'coNumber':initialData[0].coNumber
+
+            })
+            setItemId(initialData[0].itemId)
+            getDestinationsByItem()
+        }
+    
+    },[initialData])
+
+    useEffect(() => {
+        if(state?.id){
+            const req = new StyleOrderIdReq(state?.id)
+            styleOrderService.getCOInfoById(req).then(res => {
+                if(res.status){
+                    setInitialData(res.data)
+                }
+            })
+        }
+
+    },[state?.id])
 
 
     useEffect(() => {
@@ -63,7 +124,7 @@ export const StyleOrderCreation = () => {
     },[])
 
     const getItemCodes = () => {
-        itemService.getAllItems().then(res => {
+        fgItemService.getFgItemsDropdown().then(res => {
             if(res.status){
                 setItemCodes(res.data)
             }
@@ -204,12 +265,22 @@ export const StyleOrderCreation = () => {
     const onSegmentChange = (e) => {
         console.log(e)
         setTableVisible(true)
-        const req = new ItemCodeReq(form.getFieldValue('itemCode'),e)
-        skuService.getDataByDestinationAgainstItem(req).then(res => {
-            if(res.status){
-                setData(res.data)
-            }
-        })
+        if(state !== null && initialData[0].styleOrderItems.length > 0){
+            const req = new StyleOrderIdReq(state?.id,e)
+            styleOrderService.getCoLineItemsByDestination(req).then(res => {
+                if(res.status){
+                    setData(res.data)
+                }
+            })
+
+        } else{
+            const req = new ItemCodeReq(form.getFieldValue('itemCode'),e)
+            skuService.getDataByDestinationAgainstItem(req).then(res => {
+                if(res.status){
+                    setData(res.data)
+                }
+            })
+        }
     }
 
     const setQuantityValue = (e,index,rowData) => {
@@ -217,8 +288,7 @@ export const StyleOrderCreation = () => {
         console.log(e.target.value)
         data[index].quantity = e.target.value
         data[index].deliveryAddress = form.getFieldValue('deliveryAddress')
-        console.log(data)
-        const req = new StyleOrderItemsReq(form.getFieldValue('deliveryAddress'),e.target.value,rowData.color,rowData.size,rowData.destination,null,CustomerOrderStatusEnum.OPEN,null,null,null,rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId,null)
+        const req = new StyleOrderItemsReq(form.getFieldValue('deliveryAddress'),e.target.value,rowData.color,rowData.size,rowData.destination,null,CustomerOrderStatusEnum.OPEN,null,null,null,rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId,null,rowData.id,rowData.coLineNumber,rowData.skuCode)
         setOrderQuantityData([...orderQuantityData,req])
     }
 
@@ -247,8 +317,16 @@ export const StyleOrderCreation = () => {
             dataIndex:'quantity',
             render:(text,row,index) => {
                 return(
-                    <Input key={row.itemSkuId} placeholder="Enter value"
-                        onBlur={e=> setQuantityValue(e,index,row)}/>
+                    <span>
+                    {row.orderQuantity ? (<>
+                        <Input key={row.itemSkuId} placeholder="Enter value"
+                        onBlur={e=> setQuantityValue(e,index,row)} defaultValue={row.orderQuantity}/>
+                    </>) : (<>
+                        <Input key={row.itemSkuId} placeholder="Enter value"
+                        onBlur={e=> setQuantityValue(e,index,row)}/></>)}
+
+                    </span>
+                    
                 )
             }
         },
@@ -264,15 +342,14 @@ export const StyleOrderCreation = () => {
     const [firstHalfData, secondHalfData] = splitData(data);
 
     const onFinish = (val) => {
-        const req = new StyleOrderReq(val.itemCode,val.CODate,val.buyerPoNumber,val.shipmentType,val.buyerStyle,val.agent,val.buyerAddress,val.exfactoryDate,val.deliveryDate,val.inStoreDate,val.salePrice,val.priceQuantity,val.discount,null,CustomerOrderStatusEnum.OPEN,val.remarks,itemId,val.warehouse,val.facility,null,val.packageTerms,val.deliveryMethod,val.deliveryTerms,val.currency,val.paymentMethod,val.paymentTerms,orderQuantityData,val.buyer,'admin')
-        console.log(req,'---')
+        const req = new StyleOrderReq(val.itemCode,val.CODate,val.buyerPoNumber,val.shipmentType,val.buyerStyle,val.agent,val.buyerAddress,val.exfactoryDate,val.deliveryDate,val.inStoreDate,val.salePrice,val.priceQuantity,val.discount,null,orderQuantityData.length > 0 ? CustomerOrderStatusEnum.CONFIRMED : CustomerOrderStatusEnum.OPEN,val.remarks,itemId,val.warehouse,val.facility,null,val.packageTerms,val.deliveryMethod,val.deliveryTerms,val.currency,val.paymentMethod,val.paymentTerms,orderQuantityData,val.buyer,'admin',val.styleOrderId,val.coNumber)
         styleOrderService.createCustomerOrder(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
             } else{
                 AlertMessages.getSuccessMessage(res.internalMessage)
             }
-        })
+        }) 
     }
     return(
         <Card title='Style Order Creation' size='small'  extra={
@@ -286,6 +363,12 @@ export const StyleOrderCreation = () => {
             </span>
           }>
             <Form layout="vertical" form={form} onFinish={onFinish}>
+                <Form.Item name='styleOrderId' style={{display:'none'}}>
+                    <Input disabled/>
+                </Form.Item>
+                <Form.Item name='coNumber' style={{display:'none'}}>
+                    <Input disabled/>
+                </Form.Item>
                <Row gutter={[8,4]}>
                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 12}}>
                <Card size='small' bordered={false}>
@@ -298,7 +381,7 @@ export const StyleOrderCreation = () => {
                         {
                             itemCodes.map((e) => {
                                 return(
-                                    <Option key={e.itemId} value={e.itemCode}>{e.itemCode}-{e.itemName}</Option>
+                                    <Option key={e.fgitemId} value={e.itemCode}>{e.itemCode}-{e.itemName}</Option>
                                 )
                             })
                         }
@@ -540,7 +623,7 @@ export const StyleOrderCreation = () => {
                </Row>
                <Row>
                 {
-                    form.getFieldValue('itemCode') !== undefined ? (<>
+                    form.getFieldValue('itemCode') !== undefined || state?.id ? (<>
                         <Card style={{width:'100%'}}>
                 <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}>
                 <Segmented 
@@ -550,7 +633,6 @@ export const StyleOrderCreation = () => {
                 />
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
                     <Form.Item label='Delivery Address' name='deliveryAddress'>
-                        {/* <Input placeholder="Enter delivery address"/> */}
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Delivery Address'>
                         {
                             delivAdd[0]?.destination.map((e) => {
@@ -563,9 +645,8 @@ export const StyleOrderCreation = () => {
                     </Form.Item>
                 </Col>
                 {
-                    tableVisible ? (<>
+                    tableVisible || state?.id ? (<>
                     
-                    {/* <Table columns={columns} dataSource={data}/> */}
                     {
                     data.length <= 10 ? (<>
                     <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 18 }}>

@@ -14,6 +14,7 @@ export class FabricQuantitiesInfo {
     FilePath: string;
     remarks: string;
     itemsinfo:FabricItemInfoRequest[];
+    file?:any
     status?: StatusEnum;
     fabricRequestQualityInfoId?: number;
 
@@ -29,6 +30,7 @@ export class FabricQuantitiesInfo {
         FilePath: string,
         remarks: string,
         itemsinfo:FabricItemInfoRequest[],
+        file?:any,
         status?: StatusEnum,
         fabricRequestQualityInfoId?: number
     ){
@@ -40,6 +42,7 @@ export class FabricQuantitiesInfo {
         this.fabricQuantity = fabricQuantity
         this.uid = uid
         this.uomId = uomId
+        this.file = file
         this.FileName = FileName
          this.FilePath = FilePath
          this.remarks = remarks

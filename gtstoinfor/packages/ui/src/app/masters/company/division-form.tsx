@@ -21,13 +21,12 @@ export const DivisionForm = (props:DivisionFormProps) => {
   let history = useLocation();
 
   let createdUser="";
-//   if(!props.isUpdate){
-    // createdUser= localStorage.getItem("createdUser");
+  if(!props.isUpdate){
     createdUser= 'admin';
-//   }
+  }
   
   const saveDivision = (Data: DivisionDto) => {
-    setDisable(true)
+    // setDisable(true)
     Data.divisionId = 0;
     service.createDivision(Data).then((res) => {
       setDisable(false)
@@ -44,16 +43,9 @@ export const DivisionForm = (props:DivisionFormProps) => {
         AlertMessages.getErrorMessage(err.message);
       });
   };
-  /**
-   *
-   * @param values //Dto values
-   */
+  
   const saveData = (values: DivisionDto) => {
     setDisable(false)
-    // console.log(values);
-
-    // if(values.currencyName.startsWith(" "))
-    //   AlertMessages.getErrorMessage("Invalid Input");
    
       if (props.isUpdate) {
         props.updateItem(values);
@@ -66,16 +58,15 @@ export const DivisionForm = (props:DivisionFormProps) => {
     
   };
 
-  /**
-   * To reset form fields
-   */
   const onReset = () => {
     form.resetFields();
   };
   return (
 <Card title={<span style={{color:'white'}}>Division</span>}
-    style={{textAlign:'center'}}
-    extra={props.isUpdate==true?"":<Link to='/masters/division/division-grid' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
+    style={{textAlign:'center'}} headStyle={{ border: 0 }}
+    extra={props.isUpdate==true? (
+      ""):(
+    <Link to='/masters/division/division-view' ><span ><Button className='panel_button' type={'primary'} >View {""}</Button> {""}</span></Link>)}
  
       >
       <Form
@@ -97,13 +88,26 @@ export const DivisionForm = (props:DivisionFormProps) => {
               </Form.Item>
             </Col>
             <Col span={4}>
-              <Form.Item label="Division Name" name="divisionName">
-                <Input  />
+              <Form.Item label="Division Name" name="divisionName"  rules={[
+                {
+                  required: true,
+                  message: " Division Is Required",
+                },
+                {
+                  pattern:
+                    /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+                  message: `Division Should contain only alphabets.`,
+                },
+              ]}>
+                <Input placeholder='Enter Division Name'/>
               </Form.Item>
             </Col>
             <Col span={4}>
-              <Form.Item label="Division Code" name="divisionCode">
-                <Input  />
+              <Form.Item label="Division Code" name="divisionCode"  rules={[ {
+                  required: true,
+                  message: " Division Code Is Required",
+                },]}>
+                <Input placeholder='Enter Division Code'/>
               </Form.Item>
             </Col>
           </Row>

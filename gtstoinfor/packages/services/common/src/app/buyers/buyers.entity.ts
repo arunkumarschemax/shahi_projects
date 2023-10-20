@@ -200,6 +200,16 @@ export class Buyers {
   })
   versionFlag: number;
 
+  @Column('int',{
+    name:'fg_item_code_length',
+  })
+  fgItemCodeLength: number;
+
+  @Column('int',{
+    name:'rm_item_code_length',
+  })
+  rmItemCodeLength: number;
+
   @ManyToOne(type=>PaymentMethod, paymentMethod=>paymentMethod.buyerInfo,{  nullable:false, })
   @JoinColumn({ name:"payment_method_id"})
   paymentMethodInfo: PaymentMethod;

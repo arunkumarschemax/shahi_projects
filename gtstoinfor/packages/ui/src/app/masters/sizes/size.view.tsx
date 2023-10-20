@@ -109,15 +109,20 @@ const getAllSize=()=>{
     service.getAllSize().then(res=>{
         if(res.status){
             setVariantData(res.data)
-            console.log(res,'dataaaaaaaaaaaaa')
         }else{
+          if(res.status) {
+            setVariantData([])
             AlertMessages.getErrorMessage(res.internalMessage);
+        }else{
+          AlertMessages.getErrorMessage(res.internalMessage);
         }
+      }
     }).catch(err => {
+      setVariantData([]);
         AlertMessages.getErrorMessage(err.message);
-        setVariantData([]);
       })
 }
+
 const closeDrawer = () => {
     setDrawerVisible(false);
   }
@@ -175,7 +180,13 @@ service.createsize(variantData).then(res=>{
             responsive: ['sm'],
             render: (text, object, index) => (page - 1) * 10 + (index + 1)
           },
-
+          {
+            title: 'Division',
+            dataIndex: 'divisionName',
+            sorter: (a, b) => a.divisionName.localeCompare(b.divisionName),
+            sortDirections: ['descend', 'ascend'],
+            ...getColumnSearchProps('divisionName')
+          },
           {
             title: 'Size',
             dataIndex: 'size',
