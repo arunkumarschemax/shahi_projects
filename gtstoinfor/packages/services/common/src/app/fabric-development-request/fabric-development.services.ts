@@ -116,34 +116,34 @@ export class FabricDevelopmentService {
         }
       }
 
-      async updatePath(files:any[]): Promise<UploadResponse> {
-        // filePath: string,filename: string,fabricRequestId: number,name: string
-        console.log(files,"id------------")
+      async updatePath(
+        filePath: string,
+        filename: string,
+        fabricRequestId: number,
+        name: string 
+      ): Promise<UploadResponse> {
+        console.log(fabricRequestId,"id------------")
         try {
-          // let filePathUpdate;
+          let filePathUpdate;
           
-          //   filePathUpdate = await this.FabricRepo.update(
-          //     { fabricRequestId : fabricRequestId },
-          //     { filePath: filePath, fileName: filename }
-          //   );
+            filePathUpdate = await this.FabricRepo.update(
+              { fabricRequestId : fabricRequestId },
+              { filePath: filePath, fileName: filename }
+            );
           
-          // const result = await this.FabricRepo.findOne({ where: { fabricRequestId: fabricRequestId } });
-          // if (filePathUpdate.affected > 0) {
-          //   return new UploadResponse(true, 11, "uploaded successfully", filePath);
-          // } else {
-            return new UploadResponse(false, 11, "uploaded failed", []);
-          // }
+          const result = await this.FabricRepo.findOne({ where: { fabricRequestId: fabricRequestId } });
+          if (filePathUpdate.affected > 0) {
+            return new UploadResponse(true, 11, "uploaded successfully", filePath);
+          } else {
+            return new UploadResponse(false, 11, "uploaded failed", filePath);
+          }
         } catch (error) {
           console.log(error);
         }
       }
 
 
-      // async createFabricDevelopmentRequest(req: any, files: any[]) {
-      //   console.log('----------------------------------------');
-      //   console.log(req)
-      // }
-     
+
 
    async getFabricDevReqData(): Promise<CommonResponseModel> {
       try {

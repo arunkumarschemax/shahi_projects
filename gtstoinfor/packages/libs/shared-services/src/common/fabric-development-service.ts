@@ -6,6 +6,7 @@ export class FabricDevelopmentService extends CommonAxiosService{
 URL = '/FabricDevelopment';
 
 async createFabricDevelopmentRequest(req: FabricDevelopmentRequestModel): Promise<FabricDevelopmentRequestResponse> {
+    console.log(req,"share req")
     return this.axiosPostCall(this.URL + "/createFabricDevelopmentRequest", req)
 }
 

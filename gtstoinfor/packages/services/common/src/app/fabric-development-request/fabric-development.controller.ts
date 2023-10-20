@@ -42,24 +42,21 @@ export class FabricDevelopmentController {
         }
     }
 
+
     @Post('/fileUpload')
     @ApiConsumes('multipart/form-data')
-    // uploadFile(@UploadedFiles() files: Array<Express.Multer.File>) {
-    //     console.log(files);
-    //     }
     @UseInterceptors(FileInterceptor('file', {
-    //   limits: { files: 1 },
+      limits: { files: 1 },
       storage: diskStorage({
         destination: './upload-files',
         filename: (req, file, callback) => {
-            console.log(file);
-        //   const name = files.originalname.split('.')[0];
-        //   const fileExtName = extname(files.originalname);
-        //   const randomName = Array(4)
-        //     .fill(null)
-        //     .map(() => Math.round(Math.random() * 16).toString(16))
-        //     .join('');
-        //   callback(null, `${name}-${randomName}${fileExtName}`);
+          const name = file.originalname.split('.')[0];
+          const fileExtName = extname(file.originalname);
+          const randomName = Array(4)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 16).toString(16))
+            .join('');
+            callback(null, `${name}-${randomName}${fileExtName}`);
         },
       }),
       fileFilter: (req, file, callback) => {
@@ -70,14 +67,51 @@ export class FabricDevelopmentController {
       },
     }))
   
-    async fileUpload(@UploadedFile() file, @Body() uploadData: any): Promise<UploadResponse> {
-        console.log(file,"file//////////////");
+    async updatePath(@UploadedFile() file, @Body() uploadData: any): Promise<UploadResponse> {
+        console.log(file,"file//////////////")
       try {
-        return await this.fabricDevelopmentService.updatePath(file)
+        return await this.fabricDevelopmentService.updatePath(file.path,file.filename, uploadData.fabricRequestId,uploadData.name)
       } catch (error) {
         return this.applicationExceptionHandler.returnException(UploadResponse, error);
       }
     }
+
+    // @Post('/fileUpload')
+    // @ApiConsumes('multipart/form-data')
+    // uploadFile(@UploadedFiles() files: Array<Express.Multer.File>) {
+    //     console.log(files);
+    //     }
+    // @UseInterceptors(FileInterceptor('file', {
+    // //   limits: { files: 1 },
+    //   storage: diskStorage({
+    //     destination: './upload-files',
+    //     filename: (req, file, callback) => {
+    //         console.log(file);
+    //     //   const name = files.originalname.split('.')[0];
+    //     //   const fileExtName = extname(files.originalname);
+    //     //   const randomName = Array(4)
+    //     //     .fill(null)
+    //     //     .map(() => Math.round(Math.random() * 16).toString(16))
+    //     //     .join('');
+    //     //   callback(null, `${name}-${randomName}${fileExtName}`);
+    //     },
+    //   }),
+    //   fileFilter: (req, file, callback) => {
+    //     if (!file.originalname.match(/\.(png|jpeg|PNG|jpg|JPG)$/)) {
+    //       return callback(new Error('Only png,jpeg,PNG,jpg,JPG,xls,xlsx files are allowed!'), false);
+    //     }
+    //     callback(null, true);
+    //   },
+    // }))
+  
+    // async fileUpload(@UploadedFile() file, @Body() uploadData: any): Promise<UploadResponse> {
+    //     console.log(file,"file//////////////");
+    //   try {
+    //     return await this.fabricDevelopmentService.updatePath(file)
+    //   } catch (error) {
+    //     return this.applicationExceptionHandler.returnException(UploadResponse, error);
+    //   }
+    // }
 
 
     @Post('/fabricApproval')
