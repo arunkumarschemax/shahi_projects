@@ -88,24 +88,24 @@ const PPMReport = () => {
   };
   const handleCheckboxChange = (column, poAndLine) => {
     if (column === 'ActualUnit') {
-        setExpandedActualUnit((prevRows) => ({
-            ...prevRows,
-            [poAndLine]: !prevRows[poAndLine],
-        }));
+      setExpandedActualUnit((prevRows) => ({
+        ...prevRows,
+        [poAndLine]: !prevRows[poAndLine],
+      }));
     } else if (column === 'QuantityAllocation') {
-        setExpandedQuantityAllocation((prevRows) => ({
-            ...prevRows,
-            [poAndLine]: !prevRows[poAndLine],
-        }));
+      setExpandedQuantityAllocation((prevRows) => ({
+        ...prevRows,
+        [poAndLine]: !prevRows[poAndLine],
+      }));
     }
-};
+  };
 
-const handleTextareaChange = (column, poAndLine, value) => {
+  const handleTextareaChange = (column, poAndLine, value) => {
     if (column === 'ActualUnit') {
-        setTextareaValuesActualUnit((prevValues) => ({
-            ...prevValues,
-            [poAndLine]: value,
-        }));
+      setTextareaValuesActualUnit((prevValues) => ({
+        ...prevValues,
+        [poAndLine]: value,
+      }));
     }
     //  else if (column === 'QuantityAllocation') {
     //     setTextareaValuesQuantityAllocation((prevValues) => ({
@@ -113,36 +113,36 @@ const handleTextareaChange = (column, poAndLine, value) => {
     //         [poAndLine]: value,
     //     }));
     // }
-};
-const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
-  const req: FactoryUpdateRequest = {
-      poAndLine: poAndLine,
   };
+  const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
+    const req: FactoryUpdateRequest = {
+      poAndLine: poAndLine,
+    };
 
-  if (actualUnit !== null && actualUnit !== undefined && actualUnit !== '') {
+    if (actualUnit !== null && actualUnit !== undefined && actualUnit !== '') {
       req.actualUnit = actualUnit;
-  }
+    }
 
-  // if (
-  //     allocatedQuantity !== null &&
-  //     allocatedQuantity !== undefined &&
-  //     allocatedQuantity !== ''
-  // ) {
-  //     req.allocatedQuantity = allocatedQuantity;
-  // }
+    // if (
+    //     allocatedQuantity !== null &&
+    //     allocatedQuantity !== undefined &&
+    //     allocatedQuantity !== ''
+    // ) {
+    //     req.allocatedQuantity = allocatedQuantity;
+    // }
 
-  service.updateFactoryStatusColumns(req).then((res) => {
+    service.updateFactoryStatusColumns(req).then((res) => {
       if (res.status) {
-          getData();
-          message.success(res.internalMessage);
+        getData();
+        message.success(res.internalMessage);
 
-          // window.location.reload();
+        // window.location.reload();
 
       } else {
-          message.error(res.internalMessage);
+        message.error(res.internalMessage);
       }
-  });
-};
+    });
+  };
 
 
   const getProductCode = () => {
@@ -1446,62 +1446,62 @@ const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
         dataIndex: '', width: 70,
         align: "center",
         render: (text, rowData) => (
-            <span>
-                <Form.Item>
-                    <Checkbox
-                        onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
-                        checked={expandedActualUnit[rowData.poAndLine] || false}
-                    />
-                </Form.Item>
-            </span>
+          <span>
+            <Form.Item>
+              <Checkbox
+                onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
+                checked={expandedActualUnit[rowData.poAndLine] || false}
+              />
+            </Form.Item>
+          </span>
         ),
-    },
-    {
-        title: 'Text Area',
-        align: 'center', width: 165,
+      },
+      {
+        title: 'Enter Unit',
+        align: 'center', width: 160,
         render: (text, rowData) => (
-            <div>
-                {expandedActualUnit[rowData.poAndLine] && (
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <Input
-                            name='actualUnit'
-                            allowClear
-                            style={{ marginRight: '10px' }}
-                            placeholder="Enter text"
-                            value={textareaValuesActualUnit[rowData.poAndLine] || ''}
-                            onChange={(e) =>
-                                handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
-                            }
-                        />
-                        <Button
-                            type="primary"
-                            onClick={() => {
-                                updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
-                                handleCheckboxChange('ActualUnit', rowData.poAndLine);
-                                handleTextareaChange('ActualUnit', rowData.poAndLine, '');
-                            }}
-                        >
-                            Submit
-                        </Button>
-                    </div>
-                )}
-            </div>
+          <div>
+            {expandedActualUnit[rowData.poAndLine] && (
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Input
+                  name='actualUnit'
+                  allowClear
+                  style={{ marginRight: '10px' }}
+                  placeholder="Enter text"
+                  value={textareaValuesActualUnit[rowData.poAndLine] || ''}
+                  onChange={(e) =>
+                    handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
+                  }
+                />
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
+                    handleCheckboxChange('ActualUnit', rowData.poAndLine);
+                    handleTextareaChange('ActualUnit', rowData.poAndLine, '');
+                  }}
+                >
+                  Submit
+                </Button>
+              </div>
+            )}
+          </div>
         ),
 
-    },
-    {
+      },
+      {
         title: 'Actual Unit',
         dataIndex: 'actualUnit',
         width: 70,
         align: 'center',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
         }
-    },
+      },
       {
         title: 'PCD',
         dataIndex: 'PCD',
@@ -1524,14 +1524,7 @@ const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
       {
         title: 'Trading Co PO Number',
         dataIndex: 'tradingCoPoNumber',
-        width: 80,
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        width: 80
       },
       {
         title: 'DPOM Line Item Status',
@@ -1570,24 +1563,17 @@ const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
       {
         title: 'Planning Season Code',
         dataIndex: 'planningSeasonCode', width: 80,
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        }
       },
       {
         title: 'Planning Season Year',
         dataIndex: 'planningSeasonYear', width: 80, align: 'center',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        }
+        // render: (text, record) => {
+        //   if (!text || text.trim() === '') {
+        //     return '-';
+        //   } else {
+        //     return text;
+        //   }
+        // }
 
       },
       {
@@ -1605,7 +1591,8 @@ const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
       },
       {
         title: 'Lead Time',
-        dataIndex: 'leadTime', width: 80, align: 'left',
+        dataIndex: 'leadTime',
+        width: 80, align: 'left',
         render: (text) => {
           if (!isNaN(parseFloat(text))) {
             // If it's a valid number, render it
@@ -1687,37 +1674,37 @@ const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
         title: 'Ship To Customer Name',
         dataIndex: 'shipToCustomerName', width: 80,
         align: 'center',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        // render: (text, record) => {
+        //   if (!text || text.trim() === '') {
+        //     return '-';
+        //   } else {
+        //     return text;
+        //   }
+        // },
       },
       {
         title: 'Ship to Address Legal PO',
         dataIndex: 'shipToAddressLegalPO', width: 150,
         align: 'center',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        // render: (text, record) => {
+        //   if (!text || text.trim() === '') {
+        //     return '-';
+        //   } else {
+        //     return text;
+        //   }
+        // },
       },
       {
         title: 'Ship to Address DIA',
         dataIndex: 'shipToAddressDIA', width: 150,
         align: 'center',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        // render: (text, record) => {
+        //   if (!text || text.trim() === '') {
+        //     return '-';
+        //   } else {
+        //     return text;
+        //   }
+        // },
       },
       {
         title: 'Diff of Ship to Address',
@@ -1788,39 +1775,41 @@ const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
       {
         title: 'Shipping Type',
         dataIndex: 'shippingType', width: 80,
-        render: (text) => {
-          // Replace underscores (_) with spaces
-          const transformedText = text ? text.replace(/_/g, ' ') : '-';
-
-          return transformedText;
-        },
+        // render: (text) => {
+        //   // Replace underscores (_) with spaces
+        //   const transformedText = text ? text.replace(/_/g, ' ') : '-';
+        //   return transformedText;
+        // },
       },
       {
-        title: 'Planning Priority Number', width: 80, dataIndex: 'planningPriorityCode', align: 'center', className: 'centered-column', render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        title: 'Planning Priority Number', width: 80, dataIndex: 'planningPriorityCode', align: 'center', className: 'centered-column',
+        // render: (text, record) => {
+        //   if (!text || text.trim() === '') {
+        //     return '-';
+        //   } else {
+        //     return text;
+        //   }
+        // },
       },
       {
-        title: 'Planning Priority Description', width: 80, dataIndex: 'planningPriorityDesc', render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        title: 'Planning Priority Description', width: 80, dataIndex: 'planningPriorityDesc',
+        // render: (text, record) => {
+        //   if (!text || text.trim() === '') {
+        //     return '-';
+        //   } else {
+        //     return text;
+        //   }
+        // },
       },
       {
-        title: 'Launch Code', dataIndex: 'launchCode', width: 80, render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        title: 'Launch Code', dataIndex: 'launchCode', width: 80,
+        // render: (text, record) => {
+        //   if (!text || text.trim() === '') {
+        //     return '-';
+        //   } else {
+        //     return text;
+        //   }
+        // },
       },
       { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode', width: 90, },
       { title: 'In Co Terms', dataIndex: 'inCoTerms', width: 80, },
@@ -1969,7 +1958,6 @@ const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
                 return (diff).toFixed(2);
               }
             }
-
           },
           {
             title: (
@@ -1982,7 +1970,17 @@ const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
             ),
             dataIndex: '',
             width: 90,
-
+            render: (text, record) => {
+              const currency1 = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobCurrencyCode;
+              const currency2 = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobCurrencyCode;
+              // Using the equality operator (strict equality)
+              const areEqual = currency1 === currency2;
+              if (areEqual) {
+                return '-'
+              } else {
+                return 'Different'
+              }
+            }
           },
           {
             title: (
@@ -2154,14 +2152,14 @@ const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
             align: 'center',
             width: 70,
             render: (text, record) => {
-              const Poprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoPrice;
-              const coprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPrice;
-              let diff = Number(Poprice) - Number(coprice)
-              if (Number(Poprice) && Number(coprice) !== null) {
-                return diff
-              }
-              else {
-                return "-"
+              const currency1 = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoCurrencyCode;
+              const currency2 = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPriceCurrencyCode;
+              // Using the equality operator (strict equality)
+              const areEqual = currency1 === currency2;
+              if (areEqual) {
+                return '-'
+              } else {
+                return 'Different'
               }
             }
           },
