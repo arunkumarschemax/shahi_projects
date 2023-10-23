@@ -294,7 +294,7 @@ export function SearchGroupGrid(
               <SearchGroupForm key={Date.now()}
                 updateDetails={updateTerm}
                 isUpdate={true}
-                Data={setSelectedData}
+                Data={selectedData}
                 closeForm={closeDrawer}
                  />
             </Card> 
