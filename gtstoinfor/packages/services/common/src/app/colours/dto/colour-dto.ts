@@ -14,6 +14,18 @@ colour:string;
 
 @ApiProperty()
   @IsNotEmpty()
+  colourCode:string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  description:string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  optionGroup:string;
+
+@ApiProperty()
+  @IsNotEmpty()
  divisionId:number;
  divisionName:string;
  

@@ -11,6 +11,15 @@ export class ColourRequest {
     colour: string;
 
     @ApiProperty()
+    colourCode: string;
+
+    @ApiProperty()
+    description: string;
+
+    @ApiProperty()
+    optionGroup: string;
+
+    @ApiProperty()
     createdUser: string;
 
     @ApiProperty()

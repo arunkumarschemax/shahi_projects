@@ -11,8 +11,10 @@ export class styleOrderReq {
 
 export class StyleOrderIdReq {
     styleOrderId:number
-    constructor(styleOrderId:number){
+    destinationId?: number
+    constructor(styleOrderId:number,destinationId?: number){
         this.styleOrderId = styleOrderId
+        this.destinationId =destinationId
     }
 }
 

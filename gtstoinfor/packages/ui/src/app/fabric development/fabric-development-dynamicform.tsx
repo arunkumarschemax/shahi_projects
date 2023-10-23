@@ -73,7 +73,7 @@ export const FabricDevelopmentDynamicForm = (
     multiple: false,
     onRemove: (file: any) => {
       setQualitiesFilelist([]);
-      // uploadFileList([]);
+     
     },
     beforeUpload: (file: any) => {
       if (!file.name.match(/\.(jpg|jpeg|png)$/)) {
@@ -88,7 +88,7 @@ export const FabricDevelopmentDynamicForm = (
           return true;
         } else {
           setQualitiesFilelist([...qualitiesFilelist, file]);
-          // uploadFileList([...filelist, file]);
+         
 
           return false;
         }
@@ -118,22 +118,19 @@ export const FabricDevelopmentDynamicForm = (
 
 
   const onChangeGarment = (e) => {
-    // console.log( props.form.getFieldValue("garmentQuantity"),"khyg")
     e.target.value;
     setGarmentQuantity(e.target.value);
   };
 
   const onChangeConsumption = (e) => {
-    // console.log(props.form.getFieldValue("consumption"),"7777")
     setConsumptionData(e.target.value);
   };
 
   const onChangeWastage = (e) => {
-    // console.log(props.form.getFieldValue("wastage"),"8888")
     setWastageData(e.target.value);
   };
 
-  //  useEffect(()=>{
+  //  useEffect(()=> {
   //   if(wastageData){
   //     const cal = ((garmentQuantity*consumptionData)+( (garmentQuantity*consumptionData/100)))
   //     props.form.setFieldsValue({FabricQuantity:cal})

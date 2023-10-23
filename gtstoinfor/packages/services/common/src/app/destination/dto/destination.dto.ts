@@ -14,6 +14,24 @@ export class DestinationDTO {
   destination: string;
 
   @ApiProperty()
+  @IsNotEmpty({ message: "destinationCode should not be empty" })
+  @IsAlphanumeric()
+  @IsOptional()
+  destinationCode: string;
+
+  @ApiProperty()
+  @IsNotEmpty({ message: "description should not be empty" })
+  @IsAlphanumeric()
+  @IsOptional()
+  description: string;
+
+  @ApiProperty()
+  @IsNotEmpty({ message: "optionGroup should not be empty" })
+  @IsAlphanumeric()
+  @IsOptional()
+  optionGroup: string;
+
+  @ApiProperty()
   @IsNotEmpty()
  divisionId:number;
  divisionName:string;

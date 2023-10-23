@@ -145,7 +145,9 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                 AlertMessages.getErrorMessage(err.message)
             })
          }
-
+         const onReset = () => {
+          form.resetFields()
+      }
          const saveItem=()=>{
           form.validateFields().then((values) => {
             console.log(values);
@@ -163,101 +165,29 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
          }
          return (
          <>
-        <Card title="Item Creation">
-            <Form form={form}
-          style={{ fontSize: "10px" }}
-          layout="vertical"
-          onFinish = {saveItem}>
-
-          
-        <Row gutter ={8} >
-       <Card size="small" bordered={false} style={{width:"100%"}} >
-       <h1 style={{color:"grey",fontSize:"15px" }}>
-        Item Details
-       </h1>
-       <Col>
-                <Form.Item 
-                name="trim" style={{display:'none'}}>
-                {/* <Select
-                 placeholder="Select Item No" allowClear>
-                 <option value="item9001"> item9001</option>
-                 <option value="item9002"> item9002</option>
-                 <option value="item9003"> item9003</option>
-                 </Select> */}
-                 <Input disabled/>
-                    </Form.Item>
-                    </Col>
-                    
-                   <Row gutter ={16}>
-       
-                    <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24}}
-                    md={{ span: 4 }}
-                    lg={{ span: 4}}
-                    xl={{ span: 5 }}
-                    
-                  >
-                    <Form.Item
-                    style={{flexDirection:'row'}}
-                      label="Style"
-                      name="style"
-                      rules={[{ required: true, message: "Enter Style" }]}
-                    >
-                      {/* <Select
-                      placeholder="Select Style"
-                      allowClear
-                      >
-                    {styledata.map((e)=>{
-                        return(
-                            <Option key={e.styleId} value={e.styleId}>
-                             {e.style}
-                            </Option>
-                        )
-                    })}
-                      </Select> */
-                      }
-
-                      <Input placeholder="Style" allowClear/>
-                  
-                    </Form.Item>
-                  </Col>
-
-                  <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24}}
-                    md={{ span: 4 }}
-                    lg={{ span: 4}}
-                    xl={{ span: 5 }}
-                    
-                  >
-                    <Form.Item
-                    label="Type"
-                    name="type"
-                    rules={[{ required: true, message: "Enter Style" }]}
-                    >
-                <Select
-                 placeholder="Select Type" allowClear>
-                 
-                 </Select>
-                    </Form.Item>
-                    </Col>
-                    {/* </Row>
-                    <Row gutter={24}> */}
-                     <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24}}
-                    md={{ span: 4 }}
-                    lg={{ span: 4}}
-                    xl={{ span: 5 }}
-                    
-                  >
-                    <Form.Item
-                      label="Brand"
-                      name="brand"
-                      rules={[{ required: true, message: "Enter Brand" }]}
-                    >
-                       <Select
+         <Card title='Item Creation' size='small'>
+               <Form  form={form} style={{ fontSize: "10px" }} layout="vertical" onFinish = {saveItem}>
+               <Form.Item name='trim' style={{display:'none'}}>
+                    <Input hidden/>
+                </Form.Item>
+                <Row gutter={16}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                 <Card bordered={false}>
+                  <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Item Details</h1>
+                  <Row gutter={8}>
+                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8}}>
+                              <Form.Item style={{flexDirection:'row'}} label="Style" name="style" rules={[{ required: true, message: "Enter Style" }]} >
+                                   <Input placeholder="Style" allowClear/>
+                              </Form.Item>
+                   </Col>
+                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                   <Form.Item  label="Type" name="type" rules={[{ required: true, message: "Enter Type" }]}>
+                   <Select placeholder="Select Type" allowClear></Select>
+                    </Form.Item> 
+                   </Col>
+                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                    <Form.Item label="Brand" name="brand" rules={[{ required: true, message: "Enter Brand" }]} >
+                    <Select
                         placeholder="Select Brand"
                         allowClear
                       >
@@ -270,25 +200,12 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     })}
                       </Select>
                     </Form.Item>
-                  </Col>
-                  
-                  <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24}}
-                    md={{ span: 4 }}
-                    lg={{ span: 4}}
-                    xl={{ span: 5 }}
-                    
-                  >
-                    <Form.Item
-                      label="Category"
-                      name="category"
-                      rules={[{ required: true, message: "Enter category" }]}
-                    >
-                       <Select
-                      placeholder="Select Category"
-                      allowClear
-                      >
+                    </Col>
+                   </Row>
+                   <Row gutter={8}>
+                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                    <Form.Item label="Category" name="category" rules={[{ required: true, message: "Enter category" }]}>
+                       <Select placeholder="Select Category" allowClear>
                     {itemCategory.map((e)=>{
                         return(
                             <Option key={e.itemCategoryId} value={e.itemCategoryId}>
@@ -298,72 +215,25 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                     })}
                       </Select>
                     </Form.Item>
-                  </Col>
-                  
-
-                                     
-                  <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24}}
-                    md={{ span: 4 }}
-                    lg={{ span: 4}}
-                    xl={{ span: 5 }}
-                    
-                  >
-                    <Form.Item
-                    label="Item Group"
-                    name="itemgroup"
-                    rules={[{ required: true, message: "Enter Item Group" }]}
-                    >
-                <Select
-                 placeholder="Select Item Group" allowClear>
+                   </Col>
+                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                    <Form.Item label="Item Group" name="itemgroup" rules={[{ required: true, message: "Enter Item Group" }]}>
+                    <Select
+                     placeholder="Select Item Group" allowClear>
                  
-                 </Select>
+                    </Select>
                     </Form.Item>
-                    </Col>
-                    {/* </Row>
-                 <Row gutter={24}> */}
-                    <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24}}
-                    md={{ span: 4 }}
-                    lg={{ span: 4}}
-                    xl={{ span: 5 }}
-                    
-                  >
-                    <Form.Item
-                      label="Season"
-                      name="season"
-                      // rules={[{ required: true, message: "Enter Season" }]}
-                    >
-                      <Input placeholder="Season" 
-                      allowClear
-                      
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24}}
-                    md={{ span: 4 }}
-                    lg={{ span: 4}}
-                    xl={{ span: 5 }}
-                    
-                  >
-                    <Form.Item
-                    label="Shahi Style"
-                    // name="Shahi Style"
-                    rules={[{ required: true, message: "Fill Shahi Style" }]}
-                    >
-
-                <Select
-                 showSearch
-                 placeholder="Select Shahi Style"
-                 allowClear
-                 suffixIcon={<SearchOutlined />}
-
-                 >
-                {styledata.map((e)=>{
+                   </Col>
+                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                     <Form.Item  label="Season"name="season">
+                     <Input placeholder="Season"  allowClear/>
+                     </Form.Item>
+                     </Col>
+                   </Row>
+                   <Row gutter={8}>
+                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                      <Form.Item  label="Shahi Style" rules={[{ required: true, message: "Fill Shahi Style" }]}>
+                      <Select showSearch placeholder="Select Shahi Style" allowClear suffixIcon={<SearchOutlined />}>{styledata.map((e)=>{
                         return(
                             <Option key={e.styleId} value={e.styleId}>
                              {e.style}
@@ -371,223 +241,58 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                         )
                     })}
                  </Select>
-                    </Form.Item>
+                      </Form.Item>
                     </Col>
-                      </Row>
+                    </Row>
 
-
-                   <h1 style={{ color: "grey", fontSize: "15px", textAlign: "left" }}>
-                    Performance Responsible Team
-                    </h1> 
-                    <Row gutter={16}>
-                    <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                     <Form.Item
-                      name="responsible"
-                      label="Responsible"
-                      rules={[{ required: true, message: "Enter Responsible" }]}
-                    >
-                      <Input placeholder="Responsible" allowClear />
-                    </Form.Item>
-                  </Col>
-                  <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                    <Form.Item
-                      name="Approve"
-                      label="Approve"
-                      rules={[{ required: true, message: "Enter Approve" }]}
-
-                    >
-                      <Select
-                        placeholder="Select Approve"
-                        allowClear
-                      >
-                    
-
-                         
-                      </Select>
-                    </Form.Item>
-                    </Col>
-                    <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                     <Form.Item
-                      name="Product Designer"
-                      label="Product Designer"
-                    //   rules={[{ required: true, message: "Enter Product Designer" }]}
-                    >
-                      <Input placeholder="Product Designer" allowClear />
-                    </Form.Item>
-                  </Col>
-                  <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                    <Form.Item
-                      name="production Merchant"
-                      label="Production Merchant"
-                      rules={[{ required: true, message: "Enter Production Merchant" }]}
-
-                    >
-                      <Select
-                        placeholder="Select Production Merchant"
-                        allowClear
-                      >
-                     
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                    <Form.Item
-                      name="pd Merchant"
-                      label="PD Merchant"
-                    //   rules={[{ required: true, message: "Enter PD Merchant" }]}
-
-                    >
-                      <Select
-                        placeholder="Select PD Merchant"
-                        allowClear
-                      >
-                                     
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                    <Form.Item
-                      name="factory Merchant"
-                      label="Factory Merchant"
-                    //   rules={[{ required: true, message: "Enter Factory Merchant" }]}
-
-                    >
-                      <Select
-                        placeholder="Select Factory Merchant"
-                        allowClear
-                      >
-                                       
-                      </Select>
-                    </Form.Item>
-                  </Col>
-               
-                <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                     <Form.Item
-                      name="salesPerson"
-                      label="Sales Person"
-                      rules={[{ required: true, message: "Enter Sales Person" }]}
-                    >
-                      <Input placeholder="Sales Person" allowClear />
-                    </Form.Item>
-                  </Col>
-                  </Row>
-
-                  <h1 style={{ color: "grey", fontSize: "15px", textAlign: "left" }}>
-                    Sales Price Information
-                    </h1> 
-
-                    <Row gutter={16}>
-                    <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                    <Form.Item
-                      name="basicUOM"
-                      label="Basic UOM"
-                      rules={[{ required: true, message: "Enter Basic UOM" }]}
+                    <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Manufacturing Information</h1>
+                              <Row gutter={8}>
+                              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                              <Form.Item
+                      name="property"
+                      label="Property"
                     >
                        <Select
-                        placeholder="Select Basic UOM"
+                        placeholder="Select Property"
                         allowClear
                       >
-                     
-
-                         
+                      
                       </Select>
                     </Form.Item>
-                  </Col>
-                  <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                    <Form.Item
-                      name="altUOM"
-                      label="Alt UOM"
+                           </Col>
+                           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                           <Form.Item name="isSubcontracted">
+                <div style={{ padding: '25px' }}>
+                  <Checkbox>Check if Manufacturing Subcontracted</Checkbox>
+                </div>
+              </Form.Item>
+
+                           </Col>
+                           </Row>
                    
-                    >
-                      <Input placeholder="Alt UOM" allowClear />
-                    </Form.Item>
-                  </Col>
-                  <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                  <Form.Item
-                      name="conversionFactor"
-                      label="Conversion Factor"
-                   
-                    >
+                         <h1 style={{ color: "grey", fontSize: "15px", textAlign: "left" }}>Sales Price Information</h1>
+                         <Row gutter={8}>
+                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                <Form.Item   name="basicUOM" label="Basic UOM" rules={[{ required: true, message: "Enter Basic UOM" }]}>
+                <Select placeholder="Select Basic UOM" allowClear></Select>
+                </Form.Item>
+                       </Col>
+                       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                        <Form.Item  name="altUOM" label="Alt UOM">
+                        <Input placeholder="Alt UOM" allowClear />
+                        </Form.Item>
+                       </Col>
+                       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                        <Form.Item name="conversionFactor"
+                      label="Conversion Factor">
                       <Input placeholder="Conversion Factor" allowClear />
-                    </Form.Item>
-                  </Col>
-                    <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                    <Form.Item
-                      name="currency"
-                      label="Currency"
-                      rules={[{ required: true, message: "Enter Currency" }]}
-                    >
-                       <Select
-                        placeholder="Select Currency"
-                        allowClear
-                      >
-                    {currencydata.map((e) => {
+                        </Form.Item>
+                      </Col>
+                     </Row>
+                     <Row gutter={8}>
+                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                      <Form.Item  name="currency" label="Currency" rules={[{ required: true, message: "Enter Currency" }]}>
+                      <Select placeholder="Select Currency" allowClear>{currencydata.map((e) => {
                   return (
                     <Option key={e.currencyId} value={e.currencyId}>
                       {e.currencyName}
@@ -595,98 +300,36 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                   );
                 })}               
                       </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                  <Form.Item
-                      name="salesPrice"
-                      label="Sales Price"
-                      rules={[{ required: true, message: "Enter Sales Price" }]}
-                    >
-                      <Input placeholder="Sales  Price" allowClear />
-                    </Form.Item>
-                  </Col>
-                  <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                  <Form.Item
-                      name="salesPriceQty"
-                      label="Sales Price Qty"
-                      rules={[{ required: true, message: "Enter Sales Price Qty" }]}
-                    >
-                      <Input placeholder="Sales  Price Qty" allowClear />
-                    </Form.Item>
-                  </Col>
-                  <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                    <Form.Item
-                      name="targetCurrency"
-                      label="Target Currency"
-                      rules={[{ required: true, message: "Enter Target Currency" }]}
-                    >
-                       <Select
-                        placeholder="Select Target Currency"
-                        allowClear
-                      >
-                     
+                      </Form.Item>
+                      </Col>
+                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                        <Form.Item  name="salesPrice" label="Sales Price" rules={[{ required: true, message: "Enter Sales Price" }]}>
+                        <Input placeholder="Sales  Price" allowClear />
+                        </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                        <Form.Item name="targetCurrency" label="Target Currency" rules={[{ required: true, message: "Enter Target Currency" }]}>
+                       <Select placeholder="Select Target Currency" allowClear></Select>
+                       </Form.Item>
+                        </Col>
+                        </Row>
+                        <Row>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                          <Form.Item name="projection Order" label="Projection Order">
+                          <Select showSearch placeholder="Select Projection Order" allowClear suffixIcon={<SearchOutlined />}>
                       </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                    <Form.Item
-                      name="projection Order"
-                      label="Projection Order"
-                    >
-                       <Select
-                         showSearch
-                         placeholder="Select Projection Order"
-                         allowClear
-                         suffixIcon={<SearchOutlined />}
-                      >
-                    
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                    </Row>
-
-                    <h1
-                  style={{ color: "grey", fontSize: "15px", textAlign: "left" }}>
-               Profit Controllers
-                </h1>
-                <Row gutter={16}>
-                <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                    <Form.Item
-                      name="buyingHouseCommission"
-                      label="Buying House Commission"
-                    >
-                       <Select
+                          </Form.Item>
+                       </Col>
+                        </Row>
+                        </Card>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                          <Card bordered={false}>
+                          <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Profit Controllers</h1>
+                          <Row gutter={8}>
+                          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                            <Form.Item name="buyingHouseCommission" label="Buying House Commission">
+                            <Select
                         placeholder="Select BuyingHouseCommission"
                         allowClear
                       >
@@ -698,20 +341,11 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                         )
                       })}
                       </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                  <Form.Item
-                      name="licence"
-                      label="Licence"
-                    >
-                       <Select
+                            </Form.Item>
+                          </Col>
+                          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                            <Form.Item  name="licence" label="Licence">
+                            <Select
                         placeholder="Select Currency"
                         allowClear
                       >
@@ -723,16 +357,10 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                             )
                         })}
                       </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                    <Form.Item
+                            </Form.Item>
+                           </Col>
+                           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                           <Form.Item
                       name="customGroup"
                       label="Custom Group"
                     >
@@ -749,30 +377,19 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                       })}
                       </Select>
                     </Form.Item>
-                  </Col>
-
-                  <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                  <Form.Item
+                         </Col>
+                            </Row>
+                            <Row gutter={8}>
+                            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                            <Form.Item
                       name="nationalDBK"
                       label="National DBK%"
                     >
                       <Input placeholder="National DBK%" allowClear />
                     </Form.Item>
-                  </Col>
-                  <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                    <Form.Item
+                                  </Col>
+                                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                                  <Form.Item
                       name="roslGroup"
                       label="Rosl Group"
                     >
@@ -789,20 +406,61 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                       })}
                       </Select>
                     </Form.Item>
-                  </Col>
-                </Row>
-                <h1  style={{ color: "grey", fontSize: "15px", textAlign: "left" }}>
-                    Manufacturing Information
-                </h1>
-                <Row gutter={16}>
-                <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                    <Form.Item
+                       </Col>
+                      
+                              </Row>
+                              <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Performance Responsible Team</h1>
+                    <Row gutter={8}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                      <Form.Item name="responsible"label="Responsible" rules={[{ required: true, message: "Enter Responsible" }]}>
+                      <Input placeholder="Responsible" allowClear />
+                      </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                      <Form.Item name="Approve" label="Approve" rules={[{ required: true, message: "Enter Approve" }]}>
+                      <Select placeholder="Select Approve" allowClear>                        
+                      </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                      <Form.Item name="Product Designer" label="Product Designer">
+                      <Input placeholder="Product Designer" allowClear />
+                      </Form.Item>
+                     </Col>
+                    </Row>
+                    <Row gutter={8}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                      <Form.Item   name="production Merchant" label="Production Merchant" rules={[{ required: true, message: "Enter Production Merchant" }]}>
+                      <Select
+                        placeholder="Select Production Merchant"
+                        allowClear>
+                      </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                      <Form.Item  name="pd Merchant" label="PD Merchant">
+                      <Select placeholder="Select PD Merchant" allowClear>
+                      </Select>
+                      </Form.Item>
+                     </Col>
+                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                     <Form.Item  name="factory Merchant" label="Factory Merchant">
+                     <Select placeholder="Select Factory Merchant" allowClear>
+                      </Select>
+                      </Form.Item>
+                     </Col>
+                      </Row>
+                      <Row gutter={8}>
+                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                        <Form.Item name="salesPerson" label="Sales Person" rules={[{ required: true, message: "Enter Sales Person" }]}>
+                        <Input placeholder="Sales Person" allowClear />
+                        </Form.Item>
+                         </Col>
+                         </Row>
+                              {/* <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Manufacturing Information</h1>
+                              <Row gutter={8}>
+                              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                              <Form.Item
                       name="property"
                       label="Property"
                     >
@@ -813,115 +471,80 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                       
                       </Select>
                     </Form.Item>
-                  </Col>
-                  <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 5 }}
-                >
-                
-                <Form.Item name="isSubcontracted">
+                           </Col>
+                           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                           <Form.Item name="isSubcontracted">
                 <div style={{ padding: '25px' }}>
                   <Checkbox>Check if Manufacturing Subcontracted</Checkbox>
                 </div>
               </Form.Item>
-              </Col>
-                </Row>
-                <h1
-                 style={{ color: "grey", fontSize: "15px", textAlign: "left" }}>
-                TNA
-                </h1>
-           <Row gutter={16}>
-           <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 6 }}
-                ><Form.Item
+
+                           </Col>
+                           </Row> */}
+                           <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>TNA</h1>
+                           <Row gutter={16}>
+                           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                           <Form.Item
                 label="Order Confirmation Date"
                 name="orderConfirmationDate"
               >
                 <DatePicker style={{ width: "100%" }} />
               </Form.Item>
-            </Col>
-            <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 6 }}
-                >
-              <Form.Item
+</Col>
+<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+<Form.Item
                 label="PCD"
                 name="pcd"
               >
                 <DatePicker style={{ width: "100%" }} />
               </Form.Item>
-            </Col>
-            <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 6 }}
-                >
-              <Form.Item
+</Col>
+<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+<Form.Item
                 label="1stEx-Factory Date"
                 name="1stExFactoryDate"
               >
                 <DatePicker style={{ width: "100%" }} />
               </Form.Item>
-            </Col>
-           <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 6 }}
-                >
-                  <Form.Item
+</Col>
+</Row>
+<Row gutter={16}>
+<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+<Form.Item
                       name="FR TNA"
                       label="FR TNA"
                     >
                       <Input placeholder="FR TNA" allowClear />
                     </Form.Item>
-                  </Col>
-                  <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 6 }}
-                >
-                  <Form.Item
+</Col>
+<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+<Form.Item
                       name="total orderqty"
                       label="Total Order Qty"
                     >
                       <Input placeholder="Total Order Qty" allowClear />
                     </Form.Item>
-                  </Col>
-                  </Row>
-                </Card>
+                     </Col>
+                      </Row>
+                      
+                      </Card>
+                    </Col>
+                     
                 </Row>
-                <Row gutter={24} justify="end">
-                <Space size={16}>
-                  <Button type="primary" >
-                   Submit
-                  </Button>
-                  {/* <Link to="">
-                    <Button type="primary" icon={<HomeOutlined />}>
-                      Item Home
-                    </Button>
-                  </Link> */}
-                </Space>
-              </Row>
-                </Form>
-        </Card>
-        </>
-             )
-                
+
+
+                <Row justify={'end'} style={{marginTop: '-80px'}}>
+  <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}>
+    <Button type='primary' htmlType='submit'>Submit</Button>
+  </Col>
+  <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}>
+    <Button onClick={onReset}>Reset</Button>
+  </Col>
+</Row>
+
+          </Form>
+         </Card>
+         </>
+       )              
 }
 export default ItemCreation
