@@ -1,7 +1,7 @@
 
 export class searchGroupDto{
 
-    id: number;
+    id?: number;
 
     searchGrpCode: string;
 

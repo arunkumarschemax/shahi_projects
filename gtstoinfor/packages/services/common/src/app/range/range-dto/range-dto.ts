@@ -3,8 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class RangeDTO {
 
-  @ApiProperty()
-  id?: number;
+  
 
   @ApiProperty()
   rangeCode: string;
@@ -27,5 +26,7 @@ export class RangeDTO {
 
   @ApiProperty()
   versionFlag : number;
+  @ApiProperty()
+  id : number;
 }
 
