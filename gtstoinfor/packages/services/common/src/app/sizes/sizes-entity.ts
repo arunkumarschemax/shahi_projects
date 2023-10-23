@@ -14,9 +14,30 @@ sizeId:number;
 @Column("varchar",{
     nullable: true,
     length:20,
+    name:"size_Code"
+})
+sizeCode:string;
+
+@Column("varchar",{
+    nullable: true,
+    length:20,
     name:"sizes"
 })
 size:string;
+
+@Column("varchar",{
+    nullable: true,
+    length:250,
+    name:"description"
+})
+description:string;
+
+@Column("varchar",{
+    nullable: true,
+    length:20,
+    name:"option_Group"
+})
+optionGroup:string;
 
 @Column("boolean",{
     default:true,

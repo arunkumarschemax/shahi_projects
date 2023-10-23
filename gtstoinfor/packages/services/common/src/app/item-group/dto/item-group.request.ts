@@ -1,23 +1,15 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { ItemGroupEnum } from "@project-management-system/shared-models";
 import { IsNotEmpty, IsNumber, IsOptional } from "class-validator";
 
 
-export class ColourRequest {
+export class ItemGroupRequest {
     @ApiProperty()
     @IsNotEmpty()
-    colourId:number;
-
-    @ApiProperty()
-    colour: string;
-
-    @ApiProperty()
-    colourCode: string;
-
-    @ApiProperty()
-    description: string;
-
-    @ApiProperty()
-    optionGroup: string;
+    itemGroupId:number;
+    
+    // @ApiProperty()
+    // itemGroup: ItemGroupEnum;
 
     @ApiProperty()
     createdUser: string;

@@ -5,6 +5,12 @@ export class SizeDto {
     sizeId: number;
     
     size: string;
+
+    sizeCode:string;
+
+    description:string;
+
+    optionGroup:string;
     
     divisionId:number;
 
@@ -26,6 +32,9 @@ export class SizeDto {
 export const sizeDtoDefault : SizeDto = {
     sizeId:0,
     size:"",
+    sizeCode:"",
+    description:"",
+    optionGroup:"",
     divisionId:0,
     divisionName:"",
     isActive: true,

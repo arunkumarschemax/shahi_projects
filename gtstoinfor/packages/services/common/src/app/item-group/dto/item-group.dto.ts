@@ -1,38 +1,19 @@
 import {IsInt, IsEmail, IsString, IsDateString, IsNumber, IsDate,IsAlphanumeric, MaxLength, Matches, IsOptional, IsNotEmpty, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { ItemGroupEnum } from '@project-management-system/shared-models';
 
 
-export class SizeDto{
+export class ItemGroupDto{
 
     @ApiProperty()
     @IsNotEmpty({message:"size Id should not be empty"})
     @IsOptional()
-    sizeId: number;
+    itemGroupId: number;
   
     @ApiProperty()
-  @MaxLength(15,{message:"sizeCode allows maxmum 20s characters"})
+  @MaxLength(15,{message:"itemGroup allows maxmum 20s characters"})
   @IsNotEmpty()
-  sizeCode:string;
-
-  @ApiProperty()
-  @MaxLength(15,{message:"description allows maxmum 250 characters"})
-  @IsNotEmpty()
-  description:string;
-
-  @ApiProperty()
-  @MaxLength(15,{message:"optionGroup allows maxmum 250 characters"})
-  @IsNotEmpty()
-  optionGroup:string;
-  
-  @ApiProperty()
-  @MaxLength(15,{message:"size allows maxmum 20s characters"})
-  @IsNotEmpty()
-  size:string;
-  
-  @ApiProperty()
-  @IsNotEmpty()
- divisionId:number;
- divisionName:string;
+  // itemGroup:ItemGroupEnum;
  
   @ApiProperty()
   isActive: boolean;
