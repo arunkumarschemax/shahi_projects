@@ -8,8 +8,8 @@ export class ItemGroupRequest {
     @IsNotEmpty()
     itemGroupId:number;
     
-    // @ApiProperty()
-    // itemGroup: ItemGroupEnum;
+    @ApiProperty()
+    itemGroup: ItemGroupEnum;
 
     @ApiProperty()
     createdUser: string;

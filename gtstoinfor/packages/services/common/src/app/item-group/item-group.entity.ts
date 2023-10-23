@@ -9,11 +9,11 @@ export class ItemGroup{
     itemGroupId: number;
 
 
-    // @Column('enum', {
-    //     name: 'item_Group',
-    //     enum: ItemGroup
-    // })
-    // itemGroup: ItemGroupEnum;
+    @Column('enum', {
+        name: 'item_Group',
+        enum: ItemGroup
+    })
+    itemGroup: ItemGroupEnum;
 
   
     @Column("boolean",{

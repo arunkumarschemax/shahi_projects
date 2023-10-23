@@ -42,7 +42,7 @@ export class ItemGroupService{
         try {
           const itemdto: ItemGroupDto[] = [];
           const itementity: ItemGroup[] = await this.ItemGroupRepository.find({ 
-            // order :{itemGroup:'ASC'},
+            order :{itemGroup:'ASC'},
           });
           if (itementity.length > 0) {
             itementity.forEach(itementity => {
