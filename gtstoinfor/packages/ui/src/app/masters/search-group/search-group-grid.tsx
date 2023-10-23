@@ -265,7 +265,7 @@ export function SearchGroupGrid(
      <br></br>
       <Row gutter={40}>
          <Col>
-         <Card title={'Total Payment Terms: ' + groupData.length} style={{textAlign: 'left', width: 230, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+         <Card title={'Total Search Group: ' + groupData.length} style={{textAlign: 'left', width: 230, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
           <Card title={'Active: ' + groupData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>

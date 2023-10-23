@@ -344,7 +344,7 @@ const getAllActiveDivision=() =>{
      <br></br>
       <Row gutter={40}>
          <Col>
-         <Card title={'Total Payment Terms: ' + groupTechClassData.length} style={{textAlign: 'left', width: 230, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+         <Card title={'Total Group Tech Class: ' + groupTechClassData.length} style={{textAlign: 'left', width: 230, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
           <Card title={'Active: ' + groupTechClassData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
