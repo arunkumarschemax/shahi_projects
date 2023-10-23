@@ -66,6 +66,12 @@ export class BuyersDTO {
   @ApiProperty()
   versionFlag : number;
 
+  @ApiProperty()
+  fgItemCodeLength: number;
+
+  @ApiProperty()
+  rmItemCodeLength: number;
+
 
 }
 

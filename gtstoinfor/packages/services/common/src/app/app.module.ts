@@ -65,6 +65,16 @@ import { SampleDevReqModule } from './sample-dev-request/sample-dev-request.modu
 import { StyleOrderModule } from './style-order/style-order.module';
 import { ItemCreationModule } from './fg-item/item_creation.module';
 import { ItemGroupModule } from './item-group/item-group.module';
+import { GroupTechClassAdapter } from './group-tech-class/dto/group-tech-class.adapter';
+import { GroupTechClassModule } from './group-tech-class/group-tech-class.module';
+import { BusinessAreaModule } from './business-area/business-area.module';
+import { CoTypeModule } from './co-type/co-type.module';
+import { CompositionModule } from './composition/composition.module';
+import { ProductGroupModule } from './product group/product-group-module';
+import { ProcrumentGroupModule } from './procurment group/procurment-group-module';
+import { HierachyLevelModule } from './hirerachy level/hirerachy-level-module';
+import { RangeModule } from './range/range.module';
+import { SearchGrpModule } from './search-group/search-group.module';
 
 
 @Module({
@@ -121,7 +131,10 @@ import { ItemGroupModule } from './item-group/item-group.module';
     BuyersDestinationModule,
     BomModule,
     ItemGroupModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule],
+    ProductGroupModule,
+    ProcrumentGroupModule,
+    HierachyLevelModule,
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule,GroupTechClassModule,BusinessAreaModule,CoTypeModule,CompositionModule,RangeModule,SearchGrpModule],
   controllers: [AppController],
   providers: [AppService],
 })
