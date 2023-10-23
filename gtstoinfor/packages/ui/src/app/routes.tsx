@@ -17,7 +17,7 @@ import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
 import CompanyForm from "./masters/company/company-form"
 import CompanyGrid from "./masters/company/company-grid"
-import { CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto } from "@project-management-system/shared-models"
+import { CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto, GroupTechClassDto, searchGroupDto } from "@project-management-system/shared-models"
 import MasterBrandsForm from "./masters/master-brands/master-brands-form"
 import MasterBrandsGrid from "./masters/master-brands/master.brands-gridt"
 import OperationsForm from "./masters/operations/operations-form"
@@ -129,6 +129,11 @@ import StyleOrderGrid from "./style-orders/style-order-grid"
 import StyleOrderDetailView from "./style-orders/style-order-detail-view"
 import FabricReqApproval from "./fabric development/fabric-req-approval"
 import DivisionForm from "./masters/company/division-form"
+import FeatureCreation from "./BOM/feature-creation"
+import GroupTechClassGrid from "./group-tech-class/group-tech-class-grid"
+import GroupTechClassForm from "./group-tech-class/group-tech-class-form"
+import SearchGroupForm from "./masters/search-group/search-group-form"
+import SearchGroupGrid from "./masters/search-group/search-group-grid"
 import CompositionForm from "./masters/composition/composition-form"
 import CompositionGrid from "./masters/composition/composition-grid"
 
@@ -392,6 +397,18 @@ export const AppRoutes = () => {
                         } } isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
                         } }/>}/>
+                    <Route path='groupTechClass/groupTechClass-grid' element={<GroupTechClassGrid/>}/>
+                    <Route path='groupTechClass/groupTechClass-form' element={<GroupTechClassForm Data={new GroupTechClassDto} updateDetails={function (dto: GroupTechClassDto): void {
+                            throw new Error("Function not implemented.")
+                        } } isUpdate={false} closeForm={function (): void {
+                            throw new Error("Function not implemented.")
+                        } } />}  />  
+                         <Route path='searchGroup/searchGroup-grid' element={<SearchGroupGrid/>}/>
+                    <     Route path='searchGroup/searchGroup-form' element={<SearchGroupForm Data={undefined} updateDetails={function (dto: searchGroupDto): void {
+                            throw new Error("Function not implemented.")
+                        } } isUpdate={false} closeForm={function (): void {
+                            throw new Error("Function not implemented.")
+                        } } />}  />  
                    <Route path='composition/composition-grid' element={<CompositionGrid/>}/>
                     <Route path='composition/composition-form' element={<CompositionForm compositionData={undefined}
                     isUpdate={false}
@@ -515,6 +532,8 @@ export const AppRoutes = () => {
                 <Route path='style-order-creation' element={<StyleOrderCreation coData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
                 <Route path='style-order-view' element={<StyleOrderGrid />} />
                 <Route path='style-order-detail-view' element={<StyleOrderDetailView />} />
+                <Route path='feature-creation' element={<FeatureCreation />} />
+
                 </Route>
                 <Route path='/operation-tracking'>
                 <Route path='operation-tracking/issuing' element={<IssueScreen/>}/>

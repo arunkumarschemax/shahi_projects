@@ -1,6 +1,9 @@
 export class ColourDto {
     colourId?: number;
     colour: string;
+    colourCode:string;
+    description:string;
+    optionGroup:string;
     divisionId:number;
     divisionName:string;
     isActive: boolean;
@@ -14,6 +17,9 @@ export class ColourDto {
 export const colourDtoDefault : ColourDto = {
     colourId:0,
     colour:"",
+    colourCode:"",
+    description:"",
+    optionGroup:"",
     divisionId:0,
     divisionName:"",
     isActive: true,

@@ -1,6 +1,7 @@
 export class ColourDropDownDto{
     colourId : number;
     colour : string;
+    
     // itemSubCategoryCode? : string;
     
     /**

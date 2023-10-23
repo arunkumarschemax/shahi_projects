@@ -17,6 +17,9 @@ export class SizeAdapter{
         const size = new Size();
         size.sizeId=sizeDtos.sizeId;
         size.size=sizeDtos.size;
+        size.sizeCode=sizeDtos.sizeCode;
+        size.description=sizeDtos.description;
+        size.optionGroup=sizeDtos.optionGroup;
         size.division= new Division();
         size.division.divisionId=sizeDtos.divisionId;
         size.division.divisionName=sizeDtos.divisionName;
@@ -37,6 +40,9 @@ export class SizeAdapter{
         const sizesvariable= new SizeDto();
         sizesvariable.sizeId=sizes.sizeId;
         sizesvariable.size=sizes.size;
+        sizesvariable.sizeCode=sizes.sizeCode;
+        sizesvariable.description=sizes.description;
+        sizesvariable.optionGroup=sizes.optionGroup;
         sizesvariable.divisionId=(sizes.division)?.divisionId;
         sizesvariable.divisionName=(sizes.division)?.divisionName;
         sizesvariable.isActive=sizes.isActive;

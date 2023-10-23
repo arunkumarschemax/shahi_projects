@@ -1,5 +1,8 @@
 export class ColourRequestDto{
     colourId:number;
+    colourCode:string;
+    description:string;
+    optionGroup:string;
     updatedUser:string;
     colour:string;
     isActive:boolean;
@@ -13,8 +16,11 @@ export class ColourRequestDto{
      * @param isActive This is a boolean
      */
 
-    constructor(colourId:number,updatedUser:string, colour:string, isActive:boolean,versionFlag:number){
+    constructor(colourId:number,colourCode:string,description:string,optionGroup:string,updatedUser:string, colour:string, isActive:boolean,versionFlag:number){
         this.colourId = colourId;
+        this.colourCode=colourCode;
+        this.description=description;
+        this.optionGroup=optionGroup;
         this.updatedUser = updatedUser;
         this.colour = colour;
         this.isActive=isActive;

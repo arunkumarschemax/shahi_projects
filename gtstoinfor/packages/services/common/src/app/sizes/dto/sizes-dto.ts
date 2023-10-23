@@ -9,6 +9,21 @@ export class SizeDto{
     @IsOptional()
     sizeId: number;
   
+    @ApiProperty()
+  @MaxLength(15,{message:"sizeCode allows maxmum 20s characters"})
+  @IsNotEmpty()
+  sizeCode:string;
+
+  @ApiProperty()
+  @MaxLength(15,{message:"description allows maxmum 250 characters"})
+  @IsNotEmpty()
+  description:string;
+
+  @ApiProperty()
+  @MaxLength(15,{message:"optionGroup allows maxmum 250 characters"})
+  @IsNotEmpty()
+  optionGroup:string;
+  
   @ApiProperty()
   @MaxLength(15,{message:"size allows maxmum 20s characters"})
   @IsNotEmpty()

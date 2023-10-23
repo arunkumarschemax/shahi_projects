@@ -15,9 +15,12 @@ export class DestinationAdapter {
     const destination = new Destination();
     destination.destinationId = destinationDto.destinationId;
     destination.destination = destinationDto.destination;
+    destination.destinationCode = destinationDto.destinationCode;
+    destination.description = destinationDto.description;
+    destination.optionGroup = destinationDto.optionGroup;
     destination.division= new Division();
-        destination.division.divisionId=destinationDto.divisionId;
-        destination.division.divisionName=destinationDto.divisionName;
+    destination.division.divisionId=destinationDto.divisionId;
+    destination.division.divisionName=destinationDto.divisionName;
     destination.isActive = destinationDto.isActive == undefined ? true : destinationDto.isActive;
     if (isUpdate) {
       destination.updatedUser = destinationDto.updatedUser;
@@ -31,6 +34,9 @@ export class DestinationAdapter {
     const destinationDto = new DestinationDTO;
     destinationDto.destinationId = destinationObject.destinationId;
     destinationDto.destination = destinationObject.destination;
+    destinationDto.optionGroup = destinationObject.optionGroup;
+    destinationDto.destinationCode = destinationObject.destinationCode;
+    destinationDto.description = destinationObject.description;
     destinationDto.divisionId=(destinationObject.division)?.divisionId;
     destinationDto.divisionName=(destinationObject.division)?.divisionName;
     destinationDto.isActive = destinationObject.isActive;
