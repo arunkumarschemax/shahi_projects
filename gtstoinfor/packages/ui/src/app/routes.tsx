@@ -136,6 +136,8 @@ import SearchGroupForm from "./masters/search-group/search-group-form"
 import SearchGroupGrid from "./masters/search-group/search-group-grid"
 import CompositionForm from "./masters/composition/composition-form"
 import CompositionGrid from "./masters/composition/composition-grid"
+import RangeGrid from "./masters/range/range-grid"
+import RangeForm from "./masters/range/range.-form"
 
 
 export const AppRoutes = () => {
@@ -411,6 +413,11 @@ export const AppRoutes = () => {
                         } } />}  />  
                    <Route path='composition/composition-grid' element={<CompositionGrid/>}/>
                     <Route path='composition/composition-form' element={<CompositionForm compositionData={undefined}
+                    isUpdate={false}
+                    closeForm={()=> {}}
+                    updateData={(undefined) => { }}/>}/>
+                     <Route path='range/range-grid' element={<RangeGrid/>}/>
+                    <Route path='range/range-form' element={<RangeForm RangeData={undefined}
                     isUpdate={false}
                     closeForm={()=> {}}
                     updateData={(undefined) => { }}/>}/>

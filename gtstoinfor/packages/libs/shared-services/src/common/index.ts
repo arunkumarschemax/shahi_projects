@@ -77,3 +77,4 @@ export * from './item-creation.service'
 export * from './group-tech-class-service'
 export * from './composition-service'
 export * from './search-group-services'
+export * from './range-fe-services';

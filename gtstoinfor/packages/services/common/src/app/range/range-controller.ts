@@ -5,6 +5,7 @@ import { AllCountriesResponseModel, CompositionResponse, CountriesResponseModel,
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { RangeService } from './range-service';
 import { RangeDTO } from './range-dto/range-dto';
+import { RangeRequestAct } from './range-dto/range-act-req';
 
 @ApiTags('range')
 @Controller('range')
@@ -54,8 +55,9 @@ async updateRange(@Body()request:any): Promise<RangeResponse> {
         }
     }
 
-    @Post("/ActivateOrDeactivate")
-  async ActivateOrDeactivate(@Body() activateDeactivateReq:any) : Promise<RangeResponse>{
-    return await this.Service.ActivateOrDeactivate(activateDeactivateReq)
+    @Post("/activateOrDeactivateRange")
+    @ApiBody({type:RangeRequestAct})
+  async activateOrDeactivateRange(@Body() activateDeactivateReq:any) : Promise<RangeResponse>{
+    return await this.Service.activateOrDeactivateRange(activateDeactivateReq)
     }
 }
