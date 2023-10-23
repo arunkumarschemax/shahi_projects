@@ -366,6 +366,12 @@ export const baseRouterList = [
                 path: "division/division-view",
                 filepath: "division/division-view",
             },
+            {
+                label: "Group Tech Class",
+                key: "grouptechclass",
+                path: "groupTechClass/groupTechClass-grid",
+                filepath: "groupTechClass/groupTechClass-grid",
+            },
         ],
     }, 
     {

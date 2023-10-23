@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Raw, Repository } from 'typeorm';
 import { GroupTechClassEntity,} from './group-tech-class.entity';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { AllGroupTechClassResponse, AllItemCategoryResponse, CommonResponseModel, GroupTechClassRequest, GroupTechClassResponse, ItemCategoriesDropDownResponseModel, ItemCategoryDropDownDto, ItemCategoryResponse } from '@project-management-system/shared-models';
@@ -13,6 +13,138 @@ export class GroupTechClassService {
         @InjectRepository(GroupTechClassEntity) private groupTechClassRepository: Repository<GroupTechClassEntity>,
         private groupTechClassAdapter: GroupTechClassAdapter,
       ) { }
+
+    //   async getGroupTechClassDetailsWithoutRelations(groupTechClassId: number ): Promise<GroupTechClassEntity> {
+    //     // tslint:disable-next-line: typedef
+    //     const Response = await this.groupTechClassRepository.findOne({
+    //       where: {groupTechClassId: Raw(alias => `group-tech-class_id = '${groupTechClassId}'`)},
+    //     });
+    //     if (Response) {
+    //         console.log(Response,"response")
+    //       return Response;
+    //     } else {
+    //       return null;
+    //     }
+    // }
+
+    // async createGroupTechClass(Dto: GroupTechClassDto, isUpdate: boolean): Promise<GroupTechClassResponse> {
+    //     console.log(Dto,"////")
+    //   try {
+    //     let previousValue;
+    //     if (!isUpdate) {
+    //       const GroupsEntity = await this.groupTechClassRepository.find({where:{groupTechClassCode:Dto.groupTechClassCode}});
+    //       console.log(GroupsEntity,"group")
+    //       if (GroupsEntity.length > 0) {
+    //         //return new InformationMessageError(11104, "State already exists");
+    //         return new GroupTechClassResponse(false,11104, 'Group Tech Class already exists');
+    //       }
+    //     }
+    //     else{
+    //       const previous = await this.groupTechClassRepository.findOne({where:{groupTechClassId:Dto.groupTechClassId}})
+    //       previousValue = previous.groupTechClassCode+","+previous.groupTechClassDescription;
+    //       console.log(previous,"77778888")
+    //       const GroupsEntity = await this.getGroupTechClassDetailsWithoutRelations(Dto.groupTechClassId);
+    //       if (GroupsEntity) {
+    //         if(GroupsEntity.groupTechClassId!=Dto.groupTechClassId) {
+    //           return new GroupTechClassResponse(false,11104, 'Group Tech Class already exists');      
+    //         }
+    //       }
+        
+    //     }
+    //     // const getVendor = await this.vendorsRepository.find({where:{vendorName:vendorsDto.vendorName}})
+    //     // if(getVendor){
+    //     //   return new VendorsResponseModel(false,11106,'Vendor already exist');
+    //     // } else {
+    //     const convertedGroupsEntity: GroupTechClassDto = this.groupTechClassAdapter.convertDtoToEntity(Dto,isUpdate);
+    //     const savedEntity: GroupTechClassDto = await this.groupTechClassRepository.save(
+    //       convertedGroupsEntity
+    //     );
+        
+    //     const savedGroupDto: GroupTechClassDto = this.groupTechClassAdapter.convertEntityToDto(convertedGroupsEntity);
+    //     if (savedGroupDto) {
+    //       const present = savedGroupDto.groupTechClassCode+","+savedGroupDto.groupTechClassDescription;
+    //       // generating resposnse
+    //   const response = new GroupTechClassResponse(true,1,isUpdate? 'Group Tech Class Updated Successfully': 'Group Tech Class Created Successfully',savedGroupDto,)
+    //   const name =isUpdate ? 'update':'create'
+    //   const userName = isUpdate ? savedGroupDto.updatedUser : savedGroupDto.createdUser
+    //   const displayValue = isUpdate? 'Group Tech Class Updated Successfully': 'Group Tech Class Created Successfully'
+    // //  const newLogDto = new LogsDto(1,name, 'Vendors', savedHolidayDto.vendorId, true, displayValue,userName,previousValue,present)
+    // //  let res = await this.logService.createLog(newLogDto);
+    //   return response;
+
+    //     } else {
+    //       //return new InformationMessageError(11106, "State saved but issue while transforming into DTO");
+    //       return new GroupTechClassResponse(false,11106,'Group Tech Class saved but issue while transforming into DTO');
+    //     }
+    //   //}
+    //   } catch (error) {
+    //     // when error occures while saving the data , the execution will come to catch block.
+    //     // tslint:disable-next-line: typedef
+    //     throw error;
+    //   }
+    // } 
+
+    async getGroupTechClassDetailsWithoutRelations(groupTechClassId: number): Promise<GroupTechClassEntity> {
+  try {
+    const Response = await this.groupTechClassRepository.findOne({
+      where: { groupTechClassId },
+    });
+    if (Response) {
+      console.log(Response, "response");
+      return Response;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    // Handle the error or log it.
+    console.error(error);
+    throw error;
+  }
+}
+
+async createGroupTechClass(Dto: GroupTechClassDto, isUpdate: boolean): Promise<GroupTechClassResponse> {
+  try {
+    console.log(Dto,"service")
+    console.log(isUpdate,"service")
+
+    let previousValue;
+    if (!isUpdate) {
+      const GroupsEntity = await this.groupTechClassRepository.findOne({
+        where: { groupTechClassCode: Dto.groupTechClassCode },
+      });
+      if (GroupsEntity) {
+        return new GroupTechClassResponse(false, 11104, 'Group Tech Class already exists');
+      }
+    } else {
+      const previous = await this.getGroupTechClassDetailsWithoutRelations(Dto.groupTechClassId);
+      if (previous) {
+        previousValue = previous.groupTechClassCode + "," + previous.groupTechClassDescription;
+      }
+      const GroupsEntity = await this.groupTechClassRepository.findOne({
+        where: { groupTechClassId: Dto.groupTechClassId },
+      });
+      if (GroupsEntity && GroupsEntity.groupTechClassId !== Dto.groupTechClassId) {
+        return new GroupTechClassResponse(false, 11104, 'Group Tech Class already exists');
+      }
+    }
+
+    const convertedGroupsEntity: GroupTechClassDto = this.groupTechClassAdapter.convertDtoToEntity(Dto, isUpdate);
+    const savedEntity: GroupTechClassDto = await this.groupTechClassRepository.save(convertedGroupsEntity);
+
+    const savedGroupDto: GroupTechClassDto = this.groupTechClassAdapter.convertEntityToDto(savedEntity);
+    if (savedGroupDto) {
+      const present = savedGroupDto.groupTechClassCode + "," + savedGroupDto.groupTechClassDescription;
+      const response = new GroupTechClassResponse(true, 1, isUpdate ? 'Group Tech Class Updated Successfully' : 'Group Tech Class Created Successfully', savedGroupDto);
+      return response;
+    } else {
+      return new GroupTechClassResponse(false, 11106, 'Group Tech Class saved but issue while transforming into DTO');
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 
 
       
