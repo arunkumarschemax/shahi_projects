@@ -5,6 +5,7 @@ import { AllCountriesResponseModel, CompositionResponse, CountriesResponseModel 
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { CompositionService } from './composition.services';
 import { CompositionDTO } from './composition-dto/composition.dto';
+import { CompositionRequestAct } from './composition-dto/composition-act-req.tdto';
 
 @ApiTags('composition')
 @Controller('composition')
@@ -55,8 +56,10 @@ async updateComposition(@Body()request:any): Promise<CompositionResponse> {
         }
     }
 
-    @Post("/ActivateOrDeactivate")
-  async ActivateOrDeactivate(@Body() activateDeactivateReq:any) : Promise<CompositionResponse>{
-    return await this.Service.ActivateOrDeactivate(activateDeactivateReq)
+    @Post("/activateOrDeactivateComposition")
+    @ApiBody({type: CompositionRequestAct})
+  async activateOrDeactivateComposition(@Body() activateDeactivateReq:any) : Promise<CompositionResponse>{
+    console.log(activateDeactivateReq,"activateDeactivateReq")
+    return await this.Service.activateOrDeactivateComposition(activateDeactivateReq)
     }
 }

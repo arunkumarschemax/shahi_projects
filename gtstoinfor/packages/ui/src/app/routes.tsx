@@ -129,6 +129,8 @@ import StyleOrderGrid from "./style-orders/style-order-grid"
 import StyleOrderDetailView from "./style-orders/style-order-detail-view"
 import FabricReqApproval from "./fabric development/fabric-req-approval"
 import DivisionForm from "./masters/company/division-form"
+import CompositionForm from "./masters/composition/composition-form"
+import CompositionGrid from "./masters/composition/composition-grid"
 
 
 export const AppRoutes = () => {
@@ -390,6 +392,12 @@ export const AppRoutes = () => {
                         } } isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
                         } }/>}/>
+                   <Route path='composition/composition-grid' element={<CompositionGrid/>}/>
+                    <Route path='composition/composition-form' element={<CompositionForm compositionData={undefined}
+                    isUpdate={false}
+                    closeForm={()=> {}}
+                    updateData={(undefined) => { }}/>}/>
+
             </Route>
                     <Route path='/global'>
                     <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
