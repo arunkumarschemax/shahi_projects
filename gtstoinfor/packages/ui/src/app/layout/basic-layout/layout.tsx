@@ -372,6 +372,13 @@ export const baseRouterList = [
                 path: "groupTechClass/groupTechClass-grid",
                 filepath: "groupTechClass/groupTechClass-grid",
             },
+            {
+                label: "Search Group",
+                key: "searchgroup",
+                path: 'searchGroup/searchGroup-grid',
+                filepath: 'searchGroup/searchGroup-grid',
+                
+            },
         ],
     }, 
     {

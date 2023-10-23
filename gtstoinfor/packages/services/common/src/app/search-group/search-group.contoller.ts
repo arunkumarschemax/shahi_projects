@@ -24,7 +24,7 @@ export class SearchGroupController {
       return this.applicationExceptionHandler.returnException(SearchGrpResponse, error);
     }
   }
-  @Post('/createRange')
+  @Post('/createSearchGroup')
   @ApiBody({type:SearchGroupDTO})
   async createSearchGroup(@Body() Dto:any): Promise<SearchGrpResponse>{
       try{

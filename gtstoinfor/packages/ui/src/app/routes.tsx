@@ -17,7 +17,7 @@ import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
 import CompanyForm from "./masters/company/company-form"
 import CompanyGrid from "./masters/company/company-grid"
-import { CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto, GroupTechClassDto } from "@project-management-system/shared-models"
+import { CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto, GroupTechClassDto, searchGroupDto } from "@project-management-system/shared-models"
 import MasterBrandsForm from "./masters/master-brands/master-brands-form"
 import MasterBrandsGrid from "./masters/master-brands/master.brands-gridt"
 import OperationsForm from "./masters/operations/operations-form"
@@ -131,6 +131,8 @@ import FabricReqApproval from "./fabric development/fabric-req-approval"
 import DivisionForm from "./masters/company/division-form"
 import GroupTechClassGrid from "./group-tech-class/group-tech-class-grid"
 import GroupTechClassForm from "./group-tech-class/group-tech-class-form"
+import SearchGroupForm from "./masters/search-group/search-group-form"
+import SearchGroupGrid from "./masters/search-group/search-group-grid"
 
 
 export const AppRoutes = () => {
@@ -397,7 +399,13 @@ export const AppRoutes = () => {
                             throw new Error("Function not implemented.")
                         } } isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
-                        } } />}  />    
+                        } } />}  />  
+                         <Route path='searchGroup/searchGroup-grid' element={<SearchGroupGrid/>}/>
+                    <     Route path='searchGroup/searchGroup-form' element={<SearchGroupForm Data={undefined} updateDetails={function (dto: searchGroupDto): void {
+                            throw new Error("Function not implemented.")
+                        } } isUpdate={false} closeForm={function (): void {
+                            throw new Error("Function not implemented.")
+                        } } />}  />  
             </Route>
                     <Route path='/global'>
                     <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />

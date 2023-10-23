@@ -4,16 +4,17 @@ import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,
 import { ColumnProps } from 'antd/lib/table';
 import { Link, useNavigate } from 'react-router-dom';
 import Highlighter from 'react-highlight-words';
-import PaymentTermsForm, { GroupTechClassForm } from './group-tech-class-form';
-import { GroupTechClassDto, PaymentTermsCategory, PaymentTermsDto } from '@project-management-system/shared-models';
-import { BuyersService, DivisionService, GroupTechClassService, PaymentTermsService, UserRequestDto } from '@project-management-system/shared-services';
-import AlertMessages from '../common/common-functions/alert-messages';
+// import PaymentTermsForm from './payment-terms-form';
+import { PaymentTermsCategory, PaymentTermsDto, searchGroupDto } from '@project-management-system/shared-models';
+import { PaymentTermsService, SearchGroupService, UserRequestDto } from '@project-management-system/shared-services';
+import AlertMessages from '../../common/common-functions/alert-messages';
+import SearchGroupForm from './search-group-form';
 
 /* eslint-disable-next-line */
-export interface GroupTechClassGridProps {}
+export interface SearchGroupGridProps {}
 
-export function GroupTechClassGrid(
-  props: GroupTechClassGridProps
+export function SearchGroupGrid(
+  props: SearchGroupGridProps
 ) {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -21,80 +22,36 @@ export function GroupTechClassGrid(
   const [page, setPage] = React.useState(1);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const navigate = useNavigate()
-  const service = new GroupTechClassService ();
+  const service = new SearchGroupService;
+
   const [selectedData, setSelectedData] = useState<any>(undefined);
-  const [groupTechClassData, setGroupTechClassData] = useState<GroupTechClassDto[]>([]);
-  const [buyerData,setBuyerData] = useState<any>([])
-  const [divisionData,setDivisionData] = useState<any>([])
+  const [groupData, setGroupData] = useState<searchGroupDto[]>([]);
 
 
-
-  const openFormWithData=(viewData: GroupTechClassDto)=>{
+  const openFormWithData=(viewData: searchGroupDto)=>{
     setDrawerVisible(true);
     setSelectedData(viewData);
   }
   useEffect(() => {
     getAll();
-    getAllActiveBuyers();
-   getAllActiveDivision()
-
-
-
   }, []);
-
   const getAll= () => {
-  service.getAllGroupTechClass().then(res => {
+  service.getSearchGroupData().then(res => {
       if (res.status) {
-       setGroupTechClassData(res.data);
+       setGroupData(res.data);
       } else {
         if (res.status) {
-         setGroupTechClassData([]);
+         setGroupData([]);
             AlertMessages.getErrorMessage(res.internalMessage);
         } else {
          AlertMessages.getErrorMessage(res.internalMessage);
         }
       }
     }).catch(err => {
-     setGroupTechClassData([]);
+     setGroupData([]);
       AlertMessages.getErrorMessage(err.message);
     })
   }
-
-  const buyerService = new BuyersService();
-  const divisionService = new DivisionService();
-
-
-
-  const getAllActiveBuyers=() =>{
-    buyerService.getAllActiveBuyers().then(res =>{
-    if (res.status){
-      setBuyerData(res.data);
-       
-    } else{
-      AlertMessages.getErrorMessage(res.internalMessage);
-       }
-  }).catch(err => {
-    setBuyerData([]);
-     AlertMessages.getErrorMessage(err.message);
-   })
-  
-}
-
-const getAllActiveDivision=() =>{
-  divisionService.getAllActiveDivision().then(res =>{
-  if (res.status){
-    setDivisionData(res.data);
-     
-  } else{
-    AlertMessages.getErrorMessage(res.internalMessage);
-     }
-}).catch(err => {
-  setDivisionData([]);
-   AlertMessages.getErrorMessage(err.message);
- })
-
-}
-
 
 
   const getColumnSearchProps = (dataIndex:string) => ({
@@ -160,9 +117,9 @@ const getAllActiveDivision=() =>{
     setSearchText('');
   };
  
-  const deleteTerm = (Data:GroupTechClassDto) => {
+  const deleteTerm = (Data:searchGroupDto) => {
     Data.isActive=Data.isActive?false:true;
-    service.activateOrDeactivateGroupTechClass(Data).then(res => { console.log(res);
+    service.ActivateOrDeactivate(Data).then(res => { console.log(res);
       if (res.status) {
         getAll();
         // AlertMessages.getSuccessMessage('Success'); 
@@ -189,53 +146,17 @@ const getAllActiveDivision=() =>{
        render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-      title: 'GroupTech Code',
-      dataIndex: 'groupTechClassCode',
-      width:"20",
-      //  responsive: ['lg'],
-       sorter: (a, b) => a.groupClassTechCode.length - b.groupClassTechCode.length,
-       sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('groupClassTechCode')
+      title: 'Search Group Code',
+      dataIndex:'searchGrpCode',
+     
     },
+   
     {
-      title: 'GroupTech Description',
-      dataIndex: 'groupTechClassDescription',
-      width:"20",
-      //  responsive: ['lg'],
-       sorter: (a, b) => a.groupClassTechDescription.length - b.groupClassTechDescription.length,
+      title: 'Search Group Name',
+      dataIndex: 'searchGrpName',
+       sorter: (a, b) => a.searchGrpName.length - b.searchGrpName.length,
        sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('groupClassTechDescription')
-    },
-    {
-    title: 'Buyer',
-    dataIndex: 'buyerId',
-    render: (rec, index) => {
-      const data = buyerData.find((item) => item.buyerId === rec);
-      return data ? data.buyerName : "-";
-    },
-    sorter: (a, b) => {
-      const buyerA = buyerData.find((item) => item.buyerId === a.buyerId)?.buyerName || '';
-      const buyerB = buyerData.find((item) => item.buyerId === b.buyerId)?.buyerName || '';
-      return buyerA.localeCompare(buyerB);
-    },
-    sortDirections: ['descend', 'ascend'],
-    // responsive: ['lg'],
-  },
-    {
-      title: 'Division',
-      dataIndex: 'divisionId',
-      render: (rec) => {
-        const data = divisionData.find((item) => item.divisionId === rec);
-        return data ? data.divisionName : "-";
-      },
-      
-       sorter: (a, b) => {
-      const divisionA = divisionData.find((item) => item.divisionId === a.divisionId)?.divisionName || '';
-      const divisionB = divisionData.find((item) => item.divisionId === b.divisionId)?.divisionName || '';
-      return divisionA.localeCompare(divisionB);
-    },
-       sortDirections: ['descend', 'ascend'],
-      //   ...getColumnSearchProps('paymentTermsName')
+        ...getColumnSearchProps('searchGrpName')
     },
        {
       title: 'Status',
@@ -267,7 +188,7 @@ const getAllActiveDivision=() =>{
       title:`Action`,
       dataIndex: 'action',
       render: (text, rowData) => (
-        // rowData.groupClassTechCode.trim()=="N/A"?<span></span>:
+        // rowData.paymentTermsName.trim()=="N/A"?<span></span>:
         <span>
           <Tooltip title="Edit">      
             <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
@@ -276,7 +197,7 @@ const getAllActiveDivision=() =>{
                    openFormWithData(rowData);
                    console.log(rowData,"rowData")
                 } else {
-                   AlertMessages.getErrorMessage('You Cannot Edit Deactivated Group Tech Class');
+                   AlertMessages.getErrorMessage('You Cannot Edit Deactivated Payment term');
                 }
               }}
               style={{ color: '#1890ff', fontSize: '14px' }}
@@ -305,9 +226,9 @@ const getAllActiveDivision=() =>{
   ];
 
 
-  const updateTerm = (Data: GroupTechClassDto) => {
+  const updateTerm = (Data: searchGroupDto) => {
     Data.updatedUser= JSON.parse(localStorage.getItem('username'))
-    service.updateGroupTechClass(Data).then(res => { console.log(res);
+    service.UpdateSearchGroup(Data).then(res => { console.log(res);
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Successfully');
         getAll();
@@ -332,25 +253,25 @@ const getAllActiveDivision=() =>{
   }
 
   return (
-    <Card title ="Group Tech Class"
+    <Card title ="Search Group"
     style={{textAlign:'center'}} headStyle={{ border: 0 }} 
     extra={
-    <Link to = "/masters/groupTechClass/groupTechClass-form"  >
+    <Link to = "/masters/searchGroup/searchGroup-form"  >
       <span><Button type={'primary'} >New </Button> </span>
-     </Link>
+      </Link>
       } 
 
     >
      <br></br>
       <Row gutter={40}>
          <Col>
-         <Card title={'Total Payment Terms: ' + groupTechClassData.length} style={{textAlign: 'left', width: 230, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+         <Card title={'Total Payment Terms: ' + groupData.length} style={{textAlign: 'left', width: 230, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
-          <Card title={'Active: ' + groupTechClassData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
+          <Card title={'Active: ' + groupData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
            </Col>
            <Col>
-           <Card title={'In-Active: ' + groupTechClassData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
+           <Card title={'In-Active: ' + groupData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
            </Col>
            <Col>
         </Col>
@@ -358,7 +279,7 @@ const getAllActiveDivision=() =>{
           <br></br>
           <Table
           columns={columnsSkelton}
-          dataSource={groupTechClassData}
+          dataSource={groupData}
           scroll={{x:true}}
           pagination={{
             onChange(current) {
@@ -370,10 +291,10 @@ const getAllActiveDivision=() =>{
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>
              <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
-              <GroupTechClassForm key={Date.now()}
+              <SearchGroupForm key={Date.now()}
                 updateDetails={updateTerm}
                 isUpdate={true}
-                Data={selectedData}
+                Data={setSelectedData}
                 closeForm={closeDrawer}
                  />
             </Card> 
@@ -382,4 +303,4 @@ const getAllActiveDivision=() =>{
   );
 }
 
-export default GroupTechClassGrid;
+export default SearchGroupGrid;
