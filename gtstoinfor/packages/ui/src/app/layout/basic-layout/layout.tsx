@@ -379,6 +379,20 @@ export const baseRouterList = [
                 filepath: 'searchGroup/searchGroup-grid',
                 
             },
+            {
+                label: "Composition",
+                key: "composition",
+                path: 'composition/composition-grid',
+                filepath: 'composition/composition-grid',
+                
+            },
+            {
+                label: "Range",
+                key: "range",
+                path: 'range/range-grid',
+                filepath: 'range/range-grid',
+                
+            },
         ],
     }, 
     {
