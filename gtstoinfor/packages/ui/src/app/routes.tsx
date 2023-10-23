@@ -129,6 +129,7 @@ import StyleOrderGrid from "./style-orders/style-order-grid"
 import StyleOrderDetailView from "./style-orders/style-order-detail-view"
 import FabricReqApproval from "./fabric development/fabric-req-approval"
 import DivisionForm from "./masters/company/division-form"
+import FeatureCreation from "./BOM/feature-creation"
 
 
 export const AppRoutes = () => {
@@ -507,6 +508,8 @@ export const AppRoutes = () => {
                 <Route path='style-order-creation' element={<StyleOrderCreation coData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
                 <Route path='style-order-view' element={<StyleOrderGrid />} />
                 <Route path='style-order-detail-view' element={<StyleOrderDetailView />} />
+                <Route path='feature-creation' element={<FeatureCreation />} />
+
                 </Route>
                 <Route path='/operation-tracking'>
                 <Route path='operation-tracking/issuing' element={<IssueScreen/>}/>
