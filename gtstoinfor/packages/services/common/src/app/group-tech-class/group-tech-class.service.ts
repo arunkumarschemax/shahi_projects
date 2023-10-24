@@ -104,6 +104,7 @@ export class GroupTechClassService {
 
 async createGroupTechClass(Dto: GroupTechClassDto, isUpdate: boolean): Promise<GroupTechClassResponse> {
   try {
+    console.log(Dto,"sevices")
     if (!isUpdate) {
       const GroupsEntity = await this.groupTechClassRepository.findOne({
         where: { groupTechClassCode: Dto.groupTechClassCode },
@@ -119,6 +120,10 @@ async createGroupTechClass(Dto: GroupTechClassDto, isUpdate: boolean): Promise<G
       if (existingEntity) {
         existingEntity.groupTechClassCode = Dto.groupTechClassCode;
         existingEntity.groupTechClassDescription = Dto.groupTechClassDescription;
+        existingEntity.buyerId = Dto.buyerId;
+        existingEntity.divisionId = Dto.divisionId;
+        
+
         const updatedEntity = await this.groupTechClassRepository.save(existingEntity);
         const updatedDto: GroupTechClassDto = this.groupTechClassAdapter.convertEntityToDto(updatedEntity);
 

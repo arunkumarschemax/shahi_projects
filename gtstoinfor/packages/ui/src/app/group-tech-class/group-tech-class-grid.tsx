@@ -26,7 +26,8 @@ export function GroupTechClassGrid(
   const [groupTechClassData, setGroupTechClassData] = useState<GroupTechClassDto[]>([]);
   const [buyerData,setBuyerData] = useState<any>([])
   const [divisionData,setDivisionData] = useState<any>([])
-
+  const [dataFetched, setDataFetched] = useState(false); 
+ 
 
 
   const openFormWithData=(viewData: GroupTechClassDto)=>{
@@ -34,13 +35,18 @@ export function GroupTechClassGrid(
     setSelectedData(viewData);
   }
   useEffect(() => {
-    getAll();
-    getAllActiveBuyers();
-   getAllActiveDivision()
+   
+    if(!dataFetched){
+      getAll();
+      getAllActiveBuyers();
+      getAllActiveDivision()
+      setDataFetched(true)
+    }
+   
 
 
 
-  }, []);
+  }, [dataFetched]);
 
   const getAll= () => {
   service.getAllGroupTechClass().then(res => {
@@ -274,6 +280,7 @@ const getAllActiveDivision=() =>{
               onClick={() => {
                 if (rowData.isActive) {
                    openFormWithData(rowData);
+
                    console.log(rowData,"rowData")
                 } else {
                    AlertMessages.getErrorMessage('You Cannot Edit Deactivated Group Tech Class');
@@ -373,7 +380,7 @@ const getAllActiveDivision=() =>{
               <GroupTechClassForm key={Date.now()}
                 updateDetails={updateTerm}
                 isUpdate={true}
-                Data={selectedData}
+                data={selectedData}
                 closeForm={closeDrawer}
                  />
             </Card> 

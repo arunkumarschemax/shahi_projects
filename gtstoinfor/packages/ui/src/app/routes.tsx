@@ -400,7 +400,7 @@ export const AppRoutes = () => {
                             throw new Error("Function not implemented.")
                         } }/>}/>
                     <Route path='groupTechClass/groupTechClass-grid' element={<GroupTechClassGrid/>}/>
-                    <Route path='groupTechClass/groupTechClass-form' element={<GroupTechClassForm Data={new GroupTechClassDto} updateDetails={function (dto: GroupTechClassDto): void {
+                    <Route path='groupTechClass/groupTechClass-form' element={<GroupTechClassForm data={new GroupTechClassDto} updateDetails={function (dto: GroupTechClassDto): void {
                             throw new Error("Function not implemented.")
                         } } isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
