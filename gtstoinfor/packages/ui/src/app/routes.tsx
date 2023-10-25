@@ -129,6 +129,12 @@ import StyleOrderGrid from "./style-orders/style-order-grid"
 import StyleOrderDetailView from "./style-orders/style-order-detail-view"
 import FabricReqApproval from "./fabric development/fabric-req-approval"
 import DivisionForm from "./masters/company/division-form"
+import ProductGroupGrid from "./masters/product group/productGroup-gridt"
+import ProductGroupForm from "./masters/product group/productGroup-form"
+import ProcurmentGroupGrid from "./masters/procurment group/procurmentGroup-gridt"
+import ProcurmentGroupForm from "./masters/procurment group/procurmentGroup-form"
+import HierarchyLevelGrid from "./masters/hierarchy level/hierarchy-level-gridt"
+import HierarchyLevelForm from "./masters/hierarchy level/hierarchy-level-form"
 
 
 export const AppRoutes = () => {
@@ -207,7 +213,21 @@ export const AppRoutes = () => {
                     isUpdate={false}
                     closeForm={() => { }}
                     updateItem={(undefined) => { }}/>} />
-
+                         <Route path='productGroup/productGroup-view' element={<ProductGroupGrid/>} />
+                         <Route path='productGroup/productGroup-form' element={<ProductGroupForm ProductGroupData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateProductGroup={(undefined) => { }}/>} />
+                <Route path='procurmentGroup/procurmentGroup-view' element={<ProcurmentGroupGrid/>} />
+                         <Route path='pocurmentGroup/pocurmentGroup-form' element={<ProcurmentGroupForm ProcurmentGroupData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateProcurmentGroup={(undefined) => { }}/>} />
+                <Route path='hierarchyLevel/hierarchyLevel-view' element={<HierarchyLevelGrid/>} />
+                         <Route path='hierarchyLevel/hierarchyLevel-form' element={<HierarchyLevelForm hierarchyLevelData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateHierarchyLevel={(undefined) => { }}/>} />
                         <Route path='destination/destination-form' element={<DestinationForm Data={undefined}
                 isUpdate={false}
                 closeForm={() => { }}

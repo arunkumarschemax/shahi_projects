@@ -1,13 +1,13 @@
 export class ProductGroupDto{
     productGroupId : number;
-    productGroupName : string;
+    productGroup : string;
     isActive: boolean;
     createdUser : string;
     updatedUser : string;
 
-    constructor(productGroupId : number,productGroupName : string,isActive: boolean,createdUser : string,updatedUser:string){
+    constructor(productGroupId : number,productGroup : string,isActive: boolean,createdUser : string,updatedUser:string){
         this.productGroupId = productGroupId;
-        this.productGroupName = productGroupName;
+        this.productGroup = productGroup;
         this.isActive= isActive;
         this.createdUser= createdUser;
         this.updatedUser= updatedUser;

@@ -366,6 +366,24 @@ export const baseRouterList = [
                 path: "division/division-view",
                 filepath: "division/division-view",
             },
+            {
+                label: "Product Group",
+                key: "productGroup",
+                path: "productGroup/productGroup-view",
+                filepath: "productGroup/productGroup-view",
+            },
+            {
+                label: "Procurment Group",
+                key: "procurmentGroup",
+                path: "procurmentGroup/procurmentGroup-view",
+                filepath: "procurmentGroup/procurmentGroup-view",
+            },
+            {
+                label: "Hierarchy Level",
+                key: "hierarchyLevel",
+                path: "hierarchyLevel/hierarchyLevel-view",
+                filepath: "hierarchyLevel/hierarchyLevel-view",
+            },
         ],
     }, 
     {
