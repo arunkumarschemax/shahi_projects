@@ -167,8 +167,8 @@ const DivertReport = () => {
             dataIndex: ['oldPo', 'poLine'],
             render: (text, record) => { return record.oldPo.poLine ? record.oldPo.poLine : '-'; }
         },
-        { title: 'Old Qantity', dataIndex: ['oldPo', 'Quantity'], render: (text,record) => {
-                const oldQty = Number(record.oldPo.Quantity) + Number(record.newpo.nQuantity)
+        { title: 'Old Qantity', dataIndex: ['oldPo', 'oldQty'], render: (text,record) => {
+                 const oldQty = Number(record.oldPo.oldQty)
                 return oldQty ? oldQty :'-'
               
         }
@@ -414,14 +414,10 @@ const DivertReport = () => {
                 },
                 {
                     title: 'Old Qantity',
-                    //from yesterdays ppm
-                    dataIndex: ['oldPo', 'Quantity'],
+                    dataIndex: ['oldPo', 'oldQty'],
                     width:70,align:'right',  render: (text,record) => {
-                        // if(record.oldPo.Quantity !== null){
-                            const oldQty = Number(record.oldPo.Quantity) + Number(record.newpo.nQuantity)
+                            const oldQty = Number(record.oldPo.oldQty) 
                             return oldQty ? oldQty :'-'
-                        // }else
-                        // return "-"   
                     }
 
                 },

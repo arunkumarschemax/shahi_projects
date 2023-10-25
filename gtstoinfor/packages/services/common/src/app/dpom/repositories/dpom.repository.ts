@@ -291,13 +291,15 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getDivertReport(): Promise<any[]> {
         const query = this.createQueryBuilder('dpm')
-            .select(`po_and_line,id, LEFT(item, 4) AS item,plant AS Plant,dpom_item_line_status AS LineStatus,
-            plant_name AS PlantName,document_date AS DocumentDate,
-            po_number AS poNumber, po_line_item_number AS poLine ,destination_country AS destination,
-            shipping_type AS shipmentType,inventory_segment_code AS inventorySegmentCode,
-            ogac AS ogac ,gac AS gac ,product_code AS productCode,
-            item_vas_text AS itemVasText,total_item_qty AS Quantity,created_at AS dpomCreatedDates,diverted_to_pos, factory,gross_price_fob,trading_net_inc_disc`)
+            .select(`dpm.po_and_line,dpm.id, LEFT(dpm.item, 4) AS item,dpm.plant AS Plant,dpm.dpom_item_line_status AS LineStatus,
+            dpm.plant_name AS PlantName,dpm.document_date AS DocumentDate,
+            dpm.po_number AS poNumber, dpm.po_line_item_number AS poLine ,dpm.destination_country AS destination,
+            dpm.shipping_type AS shipmentType,dpm.inventory_segment_code AS inventorySegmentCode,
+            dpm.ogac AS ogac ,dpm.gac AS gac ,dpm.product_code AS productCode,
+            dpm.item_vas_text AS itemVasText,dpm.total_item_qty AS Quantity,dpm.created_at AS dpomCreatedDates,dpm.diverted_to_pos, dpm.factory,dpm.gross_price_fob,dpm.trading_net_inc_disc,od.old_val AS oldQty`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpm.po_number AND od.po_line_item_number = dpm.po_line_item_number AND od.schedule_line_item_number = dpm.schedule_line_item_number')
             .where(`diverted_to_pos IS NOT null`)
+            .andWhere(` od.column_name='total_item_qty' `)
             .groupBy(`po_and_line  `)
         return await query.getRawMany()
     }
