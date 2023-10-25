@@ -1,23 +1,23 @@
-import { BusinessAreaReq } from "@project-management-system/shared-models";
-import { BusinessAreaService } from "@project-management-system/shared-services";
+import { BusinessAreaReq, CoTypeReq } from "@project-management-system/shared-models";
+import { BusinessAreaService, CoTypeService } from "@project-management-system/shared-services";
 import { Button, Card, Form, Row, Col, Input } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AlertMessages from "../../common/common-functions/alert-messages";
 
 
-export interface BusinessAreaFormProps {
-    businessAreaData: BusinessAreaReq;
-    updateDetails: (busarea: BusinessAreaReq) => void;
+export interface CoTypeProps {
+    coTypeData: CoTypeReq;
+    updateDetails: (cotype: CoTypeReq) => void;
     isUpdate: boolean;
     closeForm: () => void;
   }
 
-export const BusinessAreaForm = (props:BusinessAreaFormProps) => {
+export const CoTypeForm = (props:CoTypeProps) => {
     const navigate = useNavigate()
     const [form] = Form.useForm()
     const [disable, setDisable] = useState<boolean>(false)
-    const service = new BusinessAreaService()
+    const service = new CoTypeService()
 
 
     const onReset = () => {
@@ -30,18 +30,18 @@ export const BusinessAreaForm = (props:BusinessAreaFormProps) => {
       props.updateDetails(val);
     } else {
       setDisable(false)
-      saveBusinessArea(val);
+      saveCoType(val);
     }
     }
 
-    const saveBusinessArea = (val) => {
+    const saveCoType = (val) => {
         setDisable(true)
-        const req = new BusinessAreaReq(val.businessAreaCode,val.businessAreaName,'admin')
-        service.createBusinessArea(req).then(res => {
+        const req = new CoTypeReq(val.coType,'admin')
+        service.createCoType(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
                 onReset();
-                navigate('/masters/business-area/business-area-view')
+                navigate('/masters/co-type/co-type-view')
             } else{
                 AlertMessages.getErrorMessage(res.internalMessage)
             }
@@ -54,20 +54,15 @@ export const BusinessAreaForm = (props:BusinessAreaFormProps) => {
     
     return(
         <>
-        <Card title={props.isUpdate ? 'Update Business Area' : 'Add Business Area'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/business-area/business-area-view')} type={'primary'}>View</Button></span>} size='small'>
-            <Form form={form} layout="vertical" onFinish={onFinish} initialValues={props.businessAreaData}>
-            <Form.Item name='businessAreaId' style={{display:'none'}}>
+        <Card title={props.isUpdate ? 'Update Co Type' : 'Add Co Type'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/co-type/co-type-view')} type={'primary'}>View</Button></span>} size='small'>
+            <Form form={form} layout="vertical" onFinish={onFinish} initialValues={props.coTypeData}>
+            <Form.Item name='coTypeId' style={{display:'none'}}>
                         <Input disabled/>
                     </Form.Item>
                 <Row gutter={24}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
-                    <Form.Item label='Business Area Code' name='businessAreaCode' rules={[{required:true}]}>
-                        <Input placeholder="Enter Business Area Code"/>
-                    </Form.Item>
-                </Col>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
-                    <Form.Item label='Business Area Name' name='businessAreaName' rules={[{required:true}]}>
-                        <Input placeholder="Enter Business Area Name"/>
+                    <Form.Item label='Co Type' name='coType' rules={[{required:true}]}>
+                        <Input placeholder="Enter Co Type"/>
                     </Form.Item>
                 </Col>
                 </Row>
@@ -86,4 +81,4 @@ export const BusinessAreaForm = (props:BusinessAreaFormProps) => {
 
 }
 
-export default BusinessAreaForm
+export default CoTypeForm

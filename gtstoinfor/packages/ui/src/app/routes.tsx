@@ -129,6 +129,10 @@ import StyleOrderGrid from "./style-orders/style-order-grid"
 import StyleOrderDetailView from "./style-orders/style-order-detail-view"
 import FabricReqApproval from "./fabric development/fabric-req-approval"
 import DivisionForm from "./masters/company/division-form"
+import BusinessAreaForm from "./masters/business-area/business-area-form"
+import BusinessAreaView from "./masters/business-area/business-area-view"
+import CoTypeForm from "./masters/co-type/co-type-form"
+import CoTypeView from "./masters/co-type/co-type-view"
 
 
 export const AppRoutes = () => {
@@ -173,11 +177,22 @@ export const AppRoutes = () => {
                     <Route path='/user-management/users-view' element={<UsersView />} />
 
                     <Route path='/masters'>
+                    <Route path='business-area/business-area-form' element={<BusinessAreaForm businessAreaData={undefined}
+                    isUpdate={false}
+                    closeForm={()=> {}}
+                    updateDetails={(undefined) => { }}/>}/>   
+                   <Route path='business-area/business-area-view' element={<BusinessAreaView/>}/>  
+                   <Route path='co-type/co-type-form' element={<CoTypeForm coTypeData={undefined}
+                    isUpdate={false}
+                    closeForm={()=> {}}
+                    updateDetails={(undefined) => { }}/>}/>   
+                   <Route path='co-type/co-type-view' element={<CoTypeView/>}/>                      
                     <Route path='locations/locations-view' element={<LocationsGrid/>}/>                       
                     <Route path='locations/locations-form' element={<LocationsForm locationsData={undefined}
                         isUpdate={false}
                         closeForm={()=> {}}
-                        updateDetails={(undefined) => { }}/>}/>                        <Route path='factories/factories-view' element={<FactoriesView />} />
+                        updateDetails={(undefined) => { }}/>}/>                        
+                        <Route path='factories/factories-view' element={<FactoriesView />} />
                         <Route path='factories/factories-form' element={<FactoriesForm factoryData={undefined}
                         isUpdate={false}
                         closeForm={()=> {}}
