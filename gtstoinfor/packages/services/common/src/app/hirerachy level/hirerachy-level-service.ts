@@ -21,7 +21,6 @@ export class HierachyLevelService{
       
         async createhierachyLevel(req:HierarchyLevelRequest):Promise<hierachyLevelModel>{
           const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
-          console.log(req,'hhhhhhhh');
           
   try{
       await transactionalEntityManager.startTransaction();
@@ -84,7 +83,7 @@ async updatehierachyLevel(req:HierarchyLevelRequest): Promise<hierachyLevelModel
          const data = await this.hierachyLevelRepository.find()
 let response=[]
          for(const res of data){
-            response.push(new HierarchyLevelDto(res.hierarchyLevelId,res.hierarchyLevel,res.isActive,res.createdUser,res.updatedUser))
+            response.push(new HierarchyLevelDto(res.hierarchyLevelId,res.hierarchyLevel,res.isActive,res.createdUser,res.updatedUser,res.versionFlag))
          }
          if (data.length>0){
           return new hierachyLevelModel(true,1,'data retrived Sucessfully',response)
@@ -111,7 +110,6 @@ let response=[]
    
     async ActivateOrDeactivatehierachyLevel(req: HierarchyLevelRequest): Promise<hierachyLevelModel> {
         try {
-          console.log(req.isActive,'service-----------')
             const Exists = await this.hierachyLevelRepository.findOne({where:{hierarchyLevelId:req.hierarchyLevelId}});
             if (Exists) {
                 if (!Exists) {
