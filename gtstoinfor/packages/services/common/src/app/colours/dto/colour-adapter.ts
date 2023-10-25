@@ -18,6 +18,9 @@ export class ColourAdapter{
         const colour = new Colour();
         colour.colourId=colourDto.colourId;
         colour.colour=colourDto.colour;
+        colour.colourCode=colourDto.colourCode;
+        colour.description=colourDto.description;
+        colour.optionGroup=colourDto.optionGroup;
         colour.division= new Division();
         colour.division.divisionId=colourDto.divisionId;
         colour.division.divisionName=colourDto.divisionName;
@@ -38,6 +41,9 @@ export class ColourAdapter{
         const colors= new ColourDTO();
         colors.colourId=colour.colourId;
         colors.colour=colour.colour;
+        colors.colourCode=colour.colourCode;
+        colors.description=colour.description;
+        colors.optionGroup=colour.optionGroup;
         colors.divisionId=(colour.division)?.divisionId;
         colors.divisionName=(colour.division)?.divisionName;
         colors.isActive=colour.isActive;

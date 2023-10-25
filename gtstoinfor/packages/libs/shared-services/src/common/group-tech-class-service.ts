@@ -1,10 +1,17 @@
-import {  AllGroupTechClassResponse, GroupTechClassRequest } from '@project-management-system/shared-models';
+import {  AllGroupTechClassResponse, GroupTechClassDto, GroupTechClassRequest, GroupTechClassResponse } from '@project-management-system/shared-models';
 import axios, { AxiosRequestConfig } from 'axios';
 import { CommonAxiosService } from '../common-axios-service-prs';
 
 export class GroupTechClassService extends CommonAxiosService{
     URL =  '/group-tech-class';
+
+    async createGroupTechClass(dto: GroupTechClassDto): Promise<GroupTechClassResponse>{
+        return this.axiosPostCall(this.URL + '/createGroupTechClass', dto)
+    }   
     
+    async updateGroupTechClass(dto: GroupTechClassDto): Promise<GroupTechClassResponse>{
+        return this.axiosPostCall(this.URL + '/updateGroupTechClass', dto)
+    }    
 
     async getAllActiveGroupTechClass(): Promise<AllGroupTechClassResponse> {
         return this.axiosPostCall(this.URL + '/getAllActiveGroupTechClass')

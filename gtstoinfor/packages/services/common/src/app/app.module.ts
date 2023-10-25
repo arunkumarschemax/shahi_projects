@@ -64,6 +64,7 @@ import { SkuGenerationModule } from './sku-generation/sku-generation.module';
 import { SampleDevReqModule } from './sample-dev-request/sample-dev-request.module';
 import { StyleOrderModule } from './style-order/style-order.module';
 import { ItemCreationModule } from './fg-item/item_creation.module';
+import { ItemGroupModule } from './item-group/item-group.module';
 import { GroupTechClassAdapter } from './group-tech-class/dto/group-tech-class.adapter';
 import { GroupTechClassModule } from './group-tech-class/group-tech-class.module';
 import { BusinessAreaModule } from './business-area/business-area.module';
@@ -129,6 +130,7 @@ import { SearchGrpModule } from './search-group/search-group.module';
     ColourModule,
     BuyersDestinationModule,
     BomModule,
+    ItemGroupModule,
     ProductGroupModule,
     ProcrumentGroupModule,
     HierachyLevelModule,

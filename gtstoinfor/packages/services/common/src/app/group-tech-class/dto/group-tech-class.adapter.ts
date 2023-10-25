@@ -13,13 +13,16 @@ export class GroupTechClassAdapter {
             entity.createdUser = dto.createdUser
             entity.updatedAt = dto.updatedAt
             entity.createdAt = dto.createdAt
-            if (dto.groupTechClassId){
-                entity.groupTechClassId = dto.groupTechClassId;
-                entity.updatedUser = dto.updatedUser;
-            }
             entity.versionFlag = dto.versionFlag
+            entity.isActive=dto.isActive==undefined?true:dto.isActive;
 
-            entity.isActive = dto.isActive
+            if (isUpdate) {
+                entity.updatedUser = dto.updatedUser;
+            } else {
+                entity.isActive = true;
+                entity.createdUser = dto.createdUser;
+            }
+
             
             
             return entity
@@ -27,6 +30,8 @@ export class GroupTechClassAdapter {
             throw Error;
         }
     }
+    
+
 
     public convertEntityToDto(entity: GroupTechClassEntity): GroupTechClassDto {
         const DTO = new GroupTechClassDto;

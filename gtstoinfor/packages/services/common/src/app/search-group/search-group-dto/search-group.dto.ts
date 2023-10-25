@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class SearchGroupDTO {
 
   @ApiProperty()
-  id?: number;
+  id: number;
 
   @ApiProperty()
   searchGrpCode: string;
@@ -19,6 +19,7 @@ export class SearchGroupDTO {
 
   @ApiProperty()
   createdUser : string;
+  
   @ApiProperty()
   updatedAt : Date;
   

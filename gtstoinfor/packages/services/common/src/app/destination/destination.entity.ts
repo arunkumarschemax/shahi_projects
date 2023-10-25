@@ -17,6 +17,30 @@ export class Destination {
   // @Index({ unique: true })
   destination: string;
 
+  @Column("char", {
+    nullable: false,
+    length: 50,
+    name: "destination_Code"
+  })
+  // @Index({ unique: true })
+  destinationCode: string;
+
+  @Column("char", {
+    nullable: false,
+    length: 250,
+    name: "description"
+  })
+  // @Index({ unique: true })
+  description: string;
+
+  @Column("char", {
+    nullable: false,
+    length: 10,
+    name: "option_Group"
+  })
+  // @Index({ unique: true })
+  optionGroup: string;
+
   @Column("boolean", {
     nullable: false,
     default: true,

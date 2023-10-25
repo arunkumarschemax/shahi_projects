@@ -6,9 +6,18 @@ export class SizeRequest {
     @ApiProperty()
     @IsNotEmpty()
     sizeId:number;
+    
+    @ApiProperty()
+    sizeCode: string;
 
     @ApiProperty()
     size: string;
+
+    @ApiProperty()
+    decsription: string;
+
+    @ApiProperty()
+    optionGroup: string;
 
     @ApiProperty()
     createdUser: string;

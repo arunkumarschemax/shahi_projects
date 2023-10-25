@@ -9,7 +9,7 @@ export  class  CompositionEnitty {
 
     @Column("varchar", {
         nullable: false,
-        length: 25,
+        length: 50,
         name: "composition_code"
       })
       compositionCode: string;
@@ -17,7 +17,7 @@ export  class  CompositionEnitty {
       
     @Column("varchar", {
         nullable: false,
-        length: 25,
+        length: 70,
         name: "composition_description"
       })
       compositionDescription: string;

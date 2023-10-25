@@ -12,9 +12,30 @@ colourId:number;
 @Column("varchar",{
     nullable: true,
     length:15,
+    name:"colour_Code"
+})
+colourCode:string;
+
+@Column("varchar",{
+    nullable: true,
+    length:15,
     name:"colour"
 })
 colour:string;
+
+@Column("varchar",{
+    nullable: true,
+    length:250,
+    name:"description"
+})
+description:string;
+
+@Column("varchar",{
+    nullable: true,
+    length:15,
+    name:"option_Group"
+})
+optionGroup:string;
 
 @Column("boolean",{
     default:true,
