@@ -1,8 +1,6 @@
-import { AttributeAgainstEnum } from "../../enum";
-
 export class CompositionDto{
 
-    id: number;
+    
 
     compositionCode: string;
 
@@ -20,6 +18,7 @@ export class CompositionDto{
     versionFlag : number;
     
     isActive: boolean;
+    id?: number;
 
 
 }

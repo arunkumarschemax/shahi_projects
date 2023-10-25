@@ -1,6 +1,9 @@
 export class DestinationDto{
     destinationId:number;
     destination:string;
+    destinationCode:string;
+    description:string;
+    optionGroup:string;
     createdUser:string;
     updatedUser:string;
     isActive:boolean;
@@ -14,9 +17,12 @@ export class DestinationDto{
      * @param isActive This is a boolean
      */
     
-    constructor(destinationId:number,destination:string,createdUser:string,updatedUser:string,isActive:boolean){
+    constructor(destinationId:number,    destinationCode:string,description:string,optionGroup:string,destination:string,createdUser:string,updatedUser:string,isActive:boolean){
         this.destinationId = destinationId;
         this.destination = destination;
+        this.destinationCode=destinationCode;
+        this.description=description;
+        this.optionGroup=optionGroup;
         this.createdUser = createdUser;
         this.updatedUser = updatedUser;
         this.isActive = isActive;

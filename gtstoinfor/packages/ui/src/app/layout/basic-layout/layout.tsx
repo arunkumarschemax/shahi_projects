@@ -199,6 +199,12 @@ export const baseRouterList = [
                 filepath: "buying-house/buying-house-view",
             },
             {
+                label: "Business Area",
+                key: "buisness-area-view",
+                path: "business-area/business-area-view",
+                filepath: "business-area/business-area-view",
+            },
+            {
                 label: "Colors",
                 key: "colours",
                 path: "colour/colour-view",
@@ -215,6 +221,12 @@ export const baseRouterList = [
                 key: "components",
                 path: "components/components-view",
                 filepath: "components/components-view",
+            },
+            {
+                label: "Co Type",
+                key: "co-type",
+                path: "co-type/co-type-view",
+                filepath: "co-type/co-type-view",
             },
             {
                 label: "Custom Groups",
@@ -365,6 +377,33 @@ export const baseRouterList = [
                 key: "division",
                 path: "division/division-view",
                 filepath: "division/division-view",
+            },
+            {
+                label: "Group Tech Class",
+                key: "grouptechclass",
+                path: "groupTechClass/groupTechClass-grid",
+                filepath: "groupTechClass/groupTechClass-grid",
+            },
+            {
+                label: "Search Group",
+                key: "searchgroup",
+                path: 'searchGroup/searchGroup-grid',
+                filepath: 'searchGroup/searchGroup-grid',
+                
+            },
+            {
+                label: "Composition",
+                key: "composition",
+                path: 'composition/composition-grid',
+                filepath: 'composition/composition-grid',
+                
+            },
+            {
+                label: "Range",
+                key: "range",
+                path: 'range/range-grid',
+                filepath: 'range/range-grid',
+                
             },
             {
                 label: "Product Group",
