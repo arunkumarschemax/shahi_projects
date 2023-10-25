@@ -16,6 +16,10 @@ export class OldDivertModel {
     oInventorySegmentCode: string;
     oItemVasText: string;
     factory?:string;
+    oFOBPrice?:string;
+    otradingCoNetIncDis?:string;
+    // oNetIncDis?:string;
+
   
     constructor(
         oItem: string,
@@ -31,7 +35,9 @@ export class OldDivertModel {
         oOGAC: string,
         oGAC: string,
         oInventorySegmentCode: string,
-        oItemVasText: string,factory?:string ) {
+        oItemVasText: string,factory?:string,oFOBPrice?:string,otradingCoNetIncDis?:string,oNetIncDis?:string,
+
+        ) {
 
         this.oItem = oItem
         this.oPlant = oPlant
@@ -48,6 +54,11 @@ export class OldDivertModel {
         this.oInventorySegmentCode = oInventorySegmentCode
         this.oItemVasText = oItemVasText
         this.factory = factory
+        this.oFOBPrice = oFOBPrice
+        this.otradingCoNetIncDis= otradingCoNetIncDis
+        // this.oNetIncDis= oNetIncDis
+
+ 
         
     };
 }

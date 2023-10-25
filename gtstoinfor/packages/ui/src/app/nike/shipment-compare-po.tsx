@@ -148,7 +148,7 @@ const ShipmentChangesCompareGrid = () => {
 
         {
             title: 'Report Generate Date',
-            dataIndex: 'document_date',
+            dataIndex: 'created_at',
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
@@ -446,16 +446,30 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'Report Generate Date',
-            dataIndex: 'document_date',
+            dataIndex: 'created_at',
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
-            title: 'Item',
-            dataIndex: 'item',width: 60,
+            title: 'Item',align:'center',
+            dataIndex: 'item',width: 60, render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    const firstFourDigits = text.substring(0, 4);
+                    return firstFourDigits;
+                }
+            },
         },
         {
-            title: 'Unit',
-            dataIndex: 'factory',width: 60,
+            title: 'Unit',align:'center',
+            dataIndex: 'factory',width: 60, render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    const firstFourDigits = text.substring(0, 4);
+                    return firstFourDigits;
+                }
+            },
         },
         {
             title: 'PO Number',
@@ -493,7 +507,14 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'RC Code',
-            dataIndex: 'rc_code',width:70
+            dataIndex: 'rc_code',width:70, render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    const firstFourDigits = text.substring(0, 4);
+                    return firstFourDigits;
+                }
+            },
         }
     ];
 
@@ -517,7 +538,7 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'Report Generate Date',
-            dataIndex: 'report_generate_date',
+            dataIndex: 'created_at',
         },
         {
             title: 'Item',
@@ -644,66 +665,67 @@ const ShipmentChangesCompareGrid = () => {
         {
             title: 'S No',
             key: 'sno',
-            width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),fixed:'left'
-        },
+            width: 60,
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1), fixed: 'left'
+        }, 
         {
-            title: 'PO Number',
-            dataIndex: 'po_number',
-            fixed: 'left',
-            ...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number',
-            fixed: 'left',
-        },
-        {
-            title: 'Report Genarate Date',
+            title: 'Report Generate Date',
             dataIndex: 'created_at',
-            // ...getColumnSearchProps('po_number')
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Item',
             dataIndex: 'item',
-            // ...getColumnSearchProps('item')
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    const firstFourDigits = text.substring(0, 4);
+                    return firstFourDigits;
+                }
+            },
         },
         {
-            title: 'Factory',
+            title: 'PO Number',
+            dataIndex: 'po_number',
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number', 
+            // fixed: 'left'
+        },
+        {
+            title: 'Unit',
             dataIndex: 'factory',
-            ...getColumnSearchProps('factory')
-        },
-        {
-            title: 'Document Date',
-            dataIndex: 'documentDate',
-            //...getColumnSearchProps('factory')
         },
         {
             title: 'CO Number',
             dataIndex: '',
-            ...getColumnSearchProps('')
         },
+        {
+            title: 'Document Date',
+            dataIndex: 'documentDate',
+            render: (text) => moment(text).format('MM/DD/YYYY')
+        },
+       
         {
             title: 'OGAC',
             dataIndex: 'ogac',
-            ...getColumnSearchProps('ogac')
+            render: (text) => moment(text).format('MM/DD/YYYY'),
         },
         {
             title: 'GAC',
             dataIndex: 'gac',
-            ...getColumnSearchProps('gac')
+            render: (text) => moment(text).format('MM/DD/YYYY'),
         },
         {
             title: 'Mode of Transportation Code in DPOM',
             dataIndex: '',
-            ...getColumnSearchProps('')
         },
         {
             title: 'Mode of Transportation Code in CRM CO',
             dataIndex: '',
-            ...getColumnSearchProps('')
         },
-
     ];
 
     const columns4: any = [
@@ -744,96 +766,94 @@ const ShipmentChangesCompareGrid = () => {
             title: 'S No',
             key: 'sno',
             width: 60,
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),fixed:'left'
-        },
-        {
-            title: 'PO Number',
-            dataIndex: 'po_number', width: 70,
-            ...getColumnSearchProps('po_number'),fixed:'left'
-        },
-        {
-            title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number', width: 70,fixed:'left'
-        },
-        {
-            title: 'Report Genarate Date',
-            dataIndex: '', width: 70,
-        },
-        {
-            title: 'Item',
-            dataIndex: 'item', width: 70,
-            ...getColumnSearchProps('item')
-        },
-        {
-            title: 'Factory',
-            dataIndex: 'factory', width: 70,
-            ...getColumnSearchProps('factory')
-        },
-        {
-            title: 'Document Date',
-            dataIndex: '', width: 70,
-            //  ...getColumnSearchProps('factory')
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1), fixed: 'left'
         },
         
         {
-            title: 'PRODUCT CODE',
-            dataIndex: '', width: 70,
+            title: 'Report Generate Date',
+            dataIndex: 'created_at',
+            render: (text) => moment(text).format('MM/DD/YYYY'), width: 80
+        },
+        {
+            title: 'Item',
+            dataIndex: 'item', width: 80,
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    const firstFourDigits = text.substring(0, 4);
+                    return firstFourDigits;
+                }
+            },
+        },
+        {
+            title: 'Factory',
+            dataIndex: 'factory',
+           width: 80
+        },
+        {
+            title: 'Document Date',
+            dataIndex: 'document_date',
+            render: (text) => moment(text).format('MM/DD/YYYY'), width: 80
+        },{
+            title: 'PO Number',
+            dataIndex: 'po_number',
+           width: 80
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number',  width: 80
+        },
+        {
+            title: 'Product Code',
+            dataIndex: 'product_code', width: 80
         },
         {
             title: 'OGAC',
-            dataIndex: 'ogac', width: 70,
-            ...getColumnSearchProps('ogac')
+            dataIndex: 'ogac', width: 80,
+            render: (text) => moment(text).format('MM/DD/YYYY'),
         },
         {
             title: 'GAC',
-            dataIndex: 'gac', width: 80,
-            ...getColumnSearchProps('gac')
+            dataIndex: 'gac',
+            render: (text) => moment(text).format('MM/DD/YYYY'),
         },
         {
             title: 'Change from Inventory Segment Code',
-            dataIndex: '', width: 80,
-            // ...getColumnSearchProps('')
+            dataIndex: '', width: 100,
         },
         {
             title: 'Change To Inventory Segment Code',
-            dataIndex: '', width: 80,
-            // ...getColumnSearchProps('')
+            dataIndex: '', width: 100,
         },
         {
             title: 'Change from Destination Country Name',
-            dataIndex: '', width: 80,
-            // ...getColumnSearchProps('')
+            dataIndex: '', width: 105,
         },
         {
             title: 'Change To Destination Country Name',
-            dataIndex: '', width: 90,
-            // ...getColumnSearchProps('')
+            dataIndex: '', width: 100,
         },
         {
             title: 'Change from Ship To Customer Number',
             dataIndex: '', width: 90,
-            // ...getColumnSearchProps('')
         },
         {
             title: 'Change to Ship To Customer Number',
-            dataIndex: '', width: 80,
-            // ...getColumnSearchProps('schedule_line_item_number')
+            dataIndex: '', width: 90,
         },
         {
             title: 'Ship To Customer Number in DIA',
-            dataIndex: '', width: 80,
-            // ...getColumnSearchProps('schedule_line_item_number')
+            dataIndex: '', width: 90,
         },
         {
             title: 'Change from Plant Code',
-            dataIndex: '', width: 80,
-            // ...getColumnSearchProps('schedule_line_item_number')
+            dataIndex: '', width: 90,
         },
         {
             title: 'Change to Plant Code',
-            dataIndex: '', width: 80,
-            // ...getColumnSearchProps('schedule_line_item_number')
-        }
+            dataIndex: '',
+        },
     ];
 
     const EstimatedETDDate = (value) => {

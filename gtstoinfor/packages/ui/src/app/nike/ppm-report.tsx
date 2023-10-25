@@ -1,7 +1,7 @@
-import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import { FileExcelFilled, RightSquareOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { FactoryUpdateRequest, MarketingModel, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 import { NikeService } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag, Statistic, Modal, TreeSelect, Tooltip, Checkbox } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag, Statistic, Modal, TreeSelect, Tooltip, Checkbox, Popconfirm, Switch } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { ColumnsType } from 'antd/es/table';
@@ -86,6 +86,64 @@ const PPMReport = () => {
     setIsModalOpen1(false);
 
   };
+  const handleCheckboxChange = (column, poAndLine) => {
+    if (column === 'ActualUnit') {
+      setExpandedActualUnit((prevRows) => ({
+        ...prevRows,
+        [poAndLine]: !prevRows[poAndLine],
+      }));
+    } else if (column === 'QuantityAllocation') {
+      setExpandedQuantityAllocation((prevRows) => ({
+        ...prevRows,
+        [poAndLine]: !prevRows[poAndLine],
+      }));
+    }
+  };
+
+  const handleTextareaChange = (column, poAndLine, value) => {
+    if (column === 'ActualUnit') {
+      setTextareaValuesActualUnit((prevValues) => ({
+        ...prevValues,
+        [poAndLine]: value,
+      }));
+    }
+    //  else if (column === 'QuantityAllocation') {
+    //     setTextareaValuesQuantityAllocation((prevValues) => ({
+    //         ...prevValues,
+    //         [poAndLine]: value,
+    //     }));
+    // }
+  };
+  const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
+    const req: FactoryUpdateRequest = {
+      poAndLine: poAndLine,
+    };
+
+    if (actualUnit !== null && actualUnit !== undefined && actualUnit !== '') {
+      req.actualUnit = actualUnit;
+    }
+
+    // if (
+    //     allocatedQuantity !== null &&
+    //     allocatedQuantity !== undefined &&
+    //     allocatedQuantity !== ''
+    // ) {
+    //     req.allocatedQuantity = allocatedQuantity;
+    // }
+
+    service.updateFactoryStatusColumns(req).then((res) => {
+      if (res.status) {
+        getData();
+        message.success(res.internalMessage);
+
+        // window.location.reload();
+
+      } else {
+        message.error(res.internalMessage);
+      }
+    });
+  };
+
 
   const getProductCode = () => {
     service.getPpmProductCodeForMarketing().then(res => {
@@ -254,7 +312,7 @@ const PPMReport = () => {
               'CO': item.customerOrder,
               'CO Final Approval Date': item.coFinalApprovalDate,
               'Plan No': item.planNo,
-              'Lead Time': (item.leadTime) * -1,
+              'Lead Time': item.leadTime ? Math.abs(item.leadTime) : '-',
               'Category': item.categoryCode,
               'Category Description': item.categoryDesc,
               'Vendor Code': item.vendorCode,
@@ -1141,6 +1199,7 @@ const PPMReport = () => {
 
   const toggleHideChildren = () => {
     setHideChildren(!hideChildren);
+    // getData()
   };
 
   const getColumnSearchProps = (dataIndex: string) => ({
@@ -1384,18 +1443,67 @@ const PPMReport = () => {
         align: 'center',
       },
       {
+        title: 'Edit Unit Allocation',
+        dataIndex: '', width: 70,
+        align: "center",
+        render: (text, rowData) => (
+          <span>
+            <Form.Item>
+              <Checkbox
+                onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
+                checked={expandedActualUnit[rowData.poAndLine] || false}
+              />
+            </Form.Item>
+          </span>
+        ),
+      },
+      {
         title: 'Actual Unit',
         dataIndex: 'actualUnit',
-        width: 70,
-        align: 'center',
-        render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }
-        }
-    },
+        align: 'center', width: 160,
+        render: (text, rowData) => (
+          <div>
+            {expandedActualUnit[rowData.poAndLine] ? (
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Input
+                  name='actualUnit'
+                  allowClear
+                  style={{ marginRight: '10px' }}
+                  placeholder={rowData.actualUnit ? rowData.actualUnit : "Enter text"}
+                  value={textareaValuesActualUnit[rowData.poAndLine] || ''}
+                  onChange={(e) =>
+                    handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
+                  }
+                />
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
+                    handleCheckboxChange('ActualUnit', rowData.poAndLine);
+                    handleTextareaChange('ActualUnit', rowData.poAndLine, '');
+                  }}
+                >
+                  Submit
+                </Button>
+              </div>
+            ) : rowData.actualUnit}
+          </div>
+        ),
+
+      },
+      // {
+      //   title: 'Actual Unit',
+      //   dataIndex: 'actualUnit',
+      //   width: 70,
+      //   align: 'center',
+      //   render: (text, record) => {
+      //     if (!text || text.trim() === '') {
+      //       return '-';
+      //     } else {
+      //       return text;
+      //     }
+      //   }
+      // },
       {
         title: 'PCD',
         dataIndex: 'PCD',
@@ -1418,14 +1526,7 @@ const PPMReport = () => {
       {
         title: 'Trading Co PO Number',
         dataIndex: 'tradingCoPoNumber',
-        width: 80,
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        width: 80
       },
       {
         title: 'DPOM Line Item Status',
@@ -1464,24 +1565,17 @@ const PPMReport = () => {
       {
         title: 'Planning Season Code',
         dataIndex: 'planningSeasonCode', width: 80,
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        }
       },
       {
         title: 'Planning Season Year',
         dataIndex: 'planningSeasonYear', width: 80, align: 'center',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        }
+        // render: (text, record) => {
+        //   if (!text || text.trim() === '') {
+        //     return '-';
+        //   } else {
+        //     return text;
+        //   }
+        // }
 
       },
       {
@@ -1499,11 +1593,12 @@ const PPMReport = () => {
       },
       {
         title: 'Lead Time',
-        dataIndex: 'leadTime', width: 80,align:'left',
+        dataIndex: 'leadTime',
+        width: 80, align: 'left',
         render: (text) => {
           if (!isNaN(parseFloat(text))) {
             // If it's a valid number, render it
-            return parseFloat(text) * -1; // You can format it as needed
+            return Math.abs(text); // You can format it as needed
           } else {
             return '-'; // Or any other desired text
           }
@@ -1581,37 +1676,37 @@ const PPMReport = () => {
         title: 'Ship To Customer Name',
         dataIndex: 'shipToCustomerName', width: 80,
         align: 'center',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        // render: (text, record) => {
+        //   if (!text || text.trim() === '') {
+        //     return '-';
+        //   } else {
+        //     return text;
+        //   }
+        // },
       },
       {
         title: 'Ship to Address Legal PO',
         dataIndex: 'shipToAddressLegalPO', width: 150,
         align: 'center',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        // render: (text, record) => {
+        //   if (!text || text.trim() === '') {
+        //     return '-';
+        //   } else {
+        //     return text;
+        //   }
+        // },
       },
       {
         title: 'Ship to Address DIA',
         dataIndex: 'shipToAddressDIA', width: 150,
         align: 'center',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        // render: (text, record) => {
+        //   if (!text || text.trim() === '') {
+        //     return '-';
+        //   } else {
+        //     return text;
+        //   }
+        // },
       },
       {
         title: 'Diff of Ship to Address',
@@ -1682,39 +1777,41 @@ const PPMReport = () => {
       {
         title: 'Shipping Type',
         dataIndex: 'shippingType', width: 80,
-        render: (text) => {
-          // Replace underscores (_) with spaces
-          const transformedText = text ? text.replace(/_/g, ' ') : '-';
-
-          return transformedText;
-        },
+        // render: (text) => {
+        //   // Replace underscores (_) with spaces
+        //   const transformedText = text ? text.replace(/_/g, ' ') : '-';
+        //   return transformedText;
+        // },
       },
       {
-        title: 'Planning Priority Number', width: 80, dataIndex: 'planningPriorityCode', align: 'center', className: 'centered-column', render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        title: 'Planning Priority Number', width: 80, dataIndex: 'planningPriorityCode', align: 'center', className: 'centered-column',
+        // render: (text, record) => {
+        //   if (!text || text.trim() === '') {
+        //     return '-';
+        //   } else {
+        //     return text;
+        //   }
+        // },
       },
       {
-        title: 'Planning Priority Description', width: 80, dataIndex: 'planningPriorityDesc', render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        title: 'Planning Priority Description', width: 80, dataIndex: 'planningPriorityDesc',
+        // render: (text, record) => {
+        //   if (!text || text.trim() === '') {
+        //     return '-';
+        //   } else {
+        //     return text;
+        //   }
+        // },
       },
       {
-        title: 'Launch Code', dataIndex: 'launchCode', width: 80, render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        title: 'Launch Code', dataIndex: 'launchCode', width: 80,
+        // render: (text, record) => {
+        //   if (!text || text.trim() === '') {
+        //     return '-';
+        //   } else {
+        //     return text;
+        //   }
+        // },
       },
       { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode', width: 90, },
       { title: 'In Co Terms', dataIndex: 'inCoTerms', width: 80, },
@@ -1738,448 +1835,497 @@ const PPMReport = () => {
     sizeHeaders?.forEach(version => {
       isOdd = !isOdd;
       const sizeClass = isOdd ? 'odd-version' : 'even-version';
-      columns.push({
-        title: (
-          <div
-            style={{
-              backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-              height: 40, justifyContent: 'center', padding: '1px', color: 'white',
-            }}
-          >
-            {version}
-          </div>
-        ),
-        dataIndex: version,
-        key: version,
-        // width: 130,
-        align: 'center',
-        className: sizeClass,
-        children: [
-          {
-            title: (
-              <div
-                style={{
-                  background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >Quantity</div>
-            ),
-            dataIndex: '',
-            key: '',
-            width: 60,
-            align: 'right',
-            render: (text, record) => {
-              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.sizeQty
-              // const formattedQty = Number(sizeData).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-              return sizeData ? sizeData : '-';
-            }
-          },
-          {
-            title: (
-              <div
-                style={{
-                  background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >Gross FOB or Price</div>
-            ),
-            dataIndex: 'grossFobPrice',
-            width: 70,
-            align: 'right',
-            render: (text, record) => {
-              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
-              return sizeData ? sizeData : '-'
-            }
-          },
-          {
-            title: (
-              <div
-                style={{
-                  background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >Gross/FOB Currency </div>
-            ),
-            dataIndex: 'grossFobCurrencyCode',
-            width: 70,
-            render: (text, record) => {
-              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobCurrencyCode;
-              return sizeData ? sizeData : '-'
-            }
-          },
-          {
-            title: (
-              <div
-                style={{
-                  background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >Buyer Confirmed Gross/FOB Price </div>
-            ),
-            dataIndex: 'buyerGrossFobPrice',
-            align: 'right',
-            width: 70,
-            render: (text, record) => {
-              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobPrice;
-              return sizeData ? sizeData : '-'
-            }
-          },
-          {
-            title: (
-              <div
-                style={{
-                  background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >Buyer Confirmed Gross/FOB Currency </div>
-            ),
-            dataIndex: 'buyerGrossFobCurrencyCode',
-            align: 'right', width: 90,
-            render: (text, record) => {
-              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobCurrencyCode;
-              return sizeData ? sizeData : '-'
-            }
-          },
-          {
-            title: (
-              <div
-                style={{
-                  background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '1px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >Diff of Price</div>
-            ),
-            dataIndex: '',
-            align: 'center',
-            width: 50,
-            render: (text, record) => {
-              const shprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
-              const buyerprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobPrice;
-
-              if (isNaN(shprice) || isNaN(buyerprice)) {
-                return '-';
-              } else {
-                let diff = Number(shprice) - Number(buyerprice);
-                return (diff).toFixed(2);
-              }
-            }
-
-          },
-          {
-            title: (
-              <div
-                style={{
-                  background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >Diff of Currency</div>
-            ),
-            dataIndex: '',
-            width: 90,
-
-          },
-          {
-            title: (
-              <div
-                style={{
-                  background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >Net including discounts</div>
-            ),
-            dataIndex: 'netIncludingDisc',
-            align: 'center',
-            width: 70,
-            render: (text, record) => {
-              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.netIncludingDisc;
-              return sizeData ? sizeData : '-'
-            }
-          },
-          {
-            title: (
-              <div
-                style={{
-                  background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >Net including discounts currency</div>
-            ),
-            dataIndex: 'netIncludingDiscCurrencyCode',
-            width: 70,
-            render: (text, record) => {
-              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.netIncludingDiscCurrencyCode;
-              return sizeData ? sizeData : '-'
-            }
-          },
-          {
-            title: (
-              <div
-                style={{
-                  background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >Trading Co Net including discounts</div>
-            ),
-            dataIndex: 'trConetIncludingDisc',
-            align: 'right',
-            width: 70,
-            render: (text, record) => {
-              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.trConetIncludingDisc;
-              return sizeData ? sizeData : '-'
-            }
-          },
-          {
-            title: (<div
+      if (hideChildren) {
+        columns.push({
+          title: (
+            <div
               style={{
-                background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                height: 130, justifyContent: 'center', color: 'Black',
+                backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                height: 40, justifyContent: 'center', padding: '1px', color: 'white',
               }}
-            >Trading Co Net incl.disc currency</div>
-            ),
-            dataIndex: 'trConetIncludingDiscCurrencyCode',
-            className: sizeClass ? 'odd-version' : 'even-version',
-            width: 70,
-            render: (text, record) => {
-              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.trConetIncludingDiscCurrencyCode;
-              return sizeData ? sizeData : '-'
-            }
-          },
-          {
-            title: (
-              <div
-                style={{
-                  background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',
-                  display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >Legal PO Price</div>
-            ),
-            dataIndex: 'legalPoPrice',
-            align: 'right',
-            width: 60,
-            render: (text, record) => {
-              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoPrice;
-              return sizeData ? sizeData : '-'
-            }
-          },
-          {
-            title: (
-              <div
-                style={{
-                  background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >Legal PO currency</div>
-            ),
-            dataIndex: 'legalPoCurrencyCode',
-            width: 60,
-            render: (text, record) => {
-              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoCurrencyCode;
-              return sizeData ? sizeData : '-'
-            }
-          },
-          {
-            title: (
-              <div
-                style={{
-                  backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >CO Price</div>
-            ),
-            dataIndex: 'coPrice',
-            align: 'right',
-            width: 60,
-            render: (text, record) => {
-              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPrice;
-              return sizeData ? sizeData : '-'
-            }
-          },
-          {
-            title: (
-              <div
-                style={{
-                  backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >CO currency</div>
-            ),
-            dataIndex: 'coPriceCurrencyCode',
-            width: 65,
-            render: (text, record) => {
-              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPriceCurrencyCode;
-              return sizeData ? sizeData : '-'
-            }
-          },
-          {
-            title: (
-              <div
-                style={{
-                  backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >Diff of legal Po,Co Price</div>
-            ),
-            dataIndex: '',
-            align: 'center',
-            width: 70,
-            render: (text, record) => {
-              const poCurrency = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoCurrencyCode;
-              const coCurrency = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPriceCurrencyCode;
-              // let diff = Number(Poprice) - Number(coprice)
-              if (poCurrency && coCurrency !== null) {
-                return poCurrency + ' ' + coCurrency
+            >
+              {version}
+            </div>
+          ),
+          dataIndex: version,
+          key: version,
+          // width: 130,
+          align: 'center',
+          className: sizeClass,
+          children: [
+            {
+              title: (
+                <div
+                  style={{
+                    background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Quantity</div>
+              ),
+              dataIndex: '',
+              key: '',
+              width: 60,
+              align: 'right',
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.sizeQty
+                // const formattedQty = Number(sizeData).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+                return sizeData ? sizeData : '-';
               }
-              else {
-                return "-"
+            },
+          ]
+        })
+      } else {
+        columns.push({
+          title: (
+            <div
+              style={{
+                backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                height: 40, justifyContent: 'center', padding: '1px', color: 'white',
+              }}
+            >
+              {version}
+            </div>
+          ),
+          dataIndex: version,
+          key: version,
+          // width: 130,
+          align: 'center',
+          className: sizeClass,
+          children: [
+            {
+              title: (
+                <div
+                  style={{
+                    background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Quantity</div>
+              ),
+              dataIndex: '',
+              key: '',
+              width: 60,
+              align: 'right',
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.sizeQty
+                // const formattedQty = Number(sizeData).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+                return sizeData ? sizeData : '-';
               }
-            }
-          },
-          {
-            title: (
-              <div
-                style={{
-                  backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >Diff of legal Po,Co Currency</div>
-            ),
-            dataIndex: '',
-            align: 'center',
-            width: 70,
-            render: (text, record) => {
-              const Poprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoPrice;
-              const coprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPrice;
-              let diff = Number(Poprice) - Number(coprice)
-              if (Number(Poprice) && Number(coprice) !== null) {
-                return diff
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Gross FOB or Price</div>
+              ),
+              dataIndex: 'grossFobPrice',
+              width: 70,
+              align: 'right',
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
+                return sizeData ? sizeData : '-'
               }
-              else {
-                return "-"
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Gross/FOB Currency </div>
+              ),
+              dataIndex: 'grossFobCurrencyCode',
+              width: 70,
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobCurrencyCode;
+                return sizeData ? sizeData : '-'
               }
-            }
-          },
-          {
-            title: (
-              <div
-                style={{
-                  backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >CRM CO QTY</div>
-            ),
-            dataIndex: 'CRMCoQty',
-            width: 60, align: 'right',
-            render: (text, record) => {
-              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.CRMCoQty;
-              return sizeData ? sizeData : '-'
-            }
-          },
-          {
-            title: (
-              <div
-                style={{
-                  backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >Legal PO QTY</div>
-            ),
-            dataIndex: 'legalPoQty',
-            align: 'right',
-            width: 60,
-            render: (text, record) => {
-              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoQty;
-              return sizeData ? sizeData : '-'
-            }
-          },
-          {
-            title: (
-              <div
-                style={{
-                  backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >Diff of Quantity</div>
-            ),
-            dataIndex: '',
-            align: 'right',
-            width: 60,
-            render: (text, record) => {
-              const PoQty = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoQty;
-              const coQty = sizeWiseMap?.get(record.poAndLine)?.get(version)?.CRMCoQty;
-              let diff = Number(PoQty) - Number(coQty)
-              if (Number(PoQty) && Number(coQty) !== null) {
-                return diff
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Buyer Confirmed Gross/FOB Price </div>
+              ),
+              dataIndex: 'buyerGrossFobPrice',
+              align: 'right',
+              width: 70,
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobPrice;
+                return sizeData ? sizeData : '-'
               }
-              else {
-                return "-"
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Buyer Confirmed Gross/FOB Currency </div>
+              ),
+              dataIndex: 'buyerGrossFobCurrencyCode',
+              align: 'right', width: 90,
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobCurrencyCode;
+                return sizeData ? sizeData : '-'
               }
-            }
-          },
-          {
-            title: (
-              <div
-                style={{
-                  backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >Allowed Excess Ship Qty</div>
-            ),
-            dataIndex: '',
-            align: 'right',
-            width: 70,
-            render: (text, record) => {
-              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.sizeQty;
-              if (record.sizeQty === null || isNaN(sizeData)) {
-                return '-';
-              } else {
-                if (record.shippingType === 'DIRECT') {
-                  return 0;
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '1px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Diff of Price</div>
+              ),
+              dataIndex: '',
+              align: 'center',
+              width: 50,
+              render: (text, record) => {
+                const shprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
+                const buyerprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobPrice;
+
+                if (isNaN(shprice) || isNaN(buyerprice)) {
+                  return '-';
                 } else {
-                  const result = 0.03 * sizeData;
-                  return result.toFixed(3);
+                  let diff = Number(shprice) - Number(buyerprice);
+                  return (diff).toFixed(2);
                 }
               }
-            }
-          },
-          {
-            title: (
-              <div
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Diff of Currency</div>
+              ),
+              dataIndex: '',
+              width: 90,
+              render: (text, record) => {
+                const currency1 = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobCurrencyCode;
+                const currency2 = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobCurrencyCode;
+                // Using the equality operator (strict equality)
+                const areEqual = currency1 === currency2;
+                if (areEqual) {
+                  return '-'
+                } else {
+                  return 'Different'
+                }
+              }
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Net including discounts</div>
+              ),
+              dataIndex: 'netIncludingDisc',
+              align: 'center',
+              width: 70,
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.netIncludingDisc;
+                return sizeData ? sizeData : '-'
+              }
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Net including discounts currency</div>
+              ),
+              dataIndex: 'netIncludingDiscCurrencyCode',
+              width: 70,
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.netIncludingDiscCurrencyCode;
+                return sizeData ? sizeData : '-'
+              }
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Trading Co Net including discounts</div>
+              ),
+              dataIndex: 'trConetIncludingDisc',
+              align: 'right',
+              width: 70,
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.trConetIncludingDisc;
+                return sizeData ? sizeData : '-'
+              }
+            },
+            {
+              title: (<div
                 style={{
-                  backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                  background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
                   height: 130, justifyContent: 'center', color: 'Black',
                 }}
-              >Actual Shipped Qty</div>
-            ),
-            dataIndex: 'actualShippedQty',
-            align: 'right',
-            width: 70,
-            render: (text, record) => {
-              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.actualShippedQty;
-              return sizeData ? sizeData : '-'
-            }
-          },
-          {
-            title: (
-              <div
-                style={{
-                  backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ',
-                  borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 130, justifyContent: 'center', color: 'Black',
-                }}
-              >Actual Ship %</div>
-            ),
-            align: 'right',
-            width: 70,
-            dataIndex: '',
-            render: (text, record) => {
-              const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
-              return sizeData ? sizeData : '-'
-            }
-          },
-        ],
-      });
-
+              >Trading Co Net incl.disc currency</div>
+              ),
+              dataIndex: 'trConetIncludingDiscCurrencyCode',
+              className: sizeClass ? 'odd-version' : 'even-version',
+              width: 70,
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.trConetIncludingDiscCurrencyCode;
+                return sizeData ? sizeData : '-'
+              }
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',
+                    display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Legal PO Price</div>
+              ),
+              dataIndex: 'legalPoPrice',
+              align: 'right',
+              width: 60,
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoPrice;
+                return sizeData ? sizeData : '-'
+              }
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Legal PO currency</div>
+              ),
+              dataIndex: 'legalPoCurrencyCode',
+              width: 60,
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoCurrencyCode;
+                return sizeData ? sizeData : '-'
+              }
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >CO Price</div>
+              ),
+              dataIndex: 'coPrice',
+              align: 'right',
+              width: 60,
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPrice;
+                return sizeData ? sizeData : '-'
+              }
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >CO currency</div>
+              ),
+              dataIndex: 'coPriceCurrencyCode',
+              width: 65,
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPriceCurrencyCode;
+                return sizeData ? sizeData : '-'
+              }
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Diff of legal Po,Co Price</div>
+              ),
+              dataIndex: '',
+              align: 'center',
+              width: 70,
+              render: (text, record) => {
+                const poCurrency = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoCurrencyCode;
+                const coCurrency = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPriceCurrencyCode;
+                // let diff = Number(Poprice) - Number(coprice)
+                if (poCurrency && coCurrency !== null) {
+                  return poCurrency + ' ' + coCurrency
+                }
+                else {
+                  return "-"
+                }
+              }
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Diff of legal Po,Co Currency</div>
+              ),
+              dataIndex: '',
+              align: 'center',
+              width: 70,
+              render: (text, record) => {
+                const currency1 = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoCurrencyCode;
+                const currency2 = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPriceCurrencyCode;
+                // Using the equality operator (strict equality)
+                const areEqual = currency1 === currency2;
+                if (areEqual) {
+                  return '-'
+                } else {
+                  return 'Different'
+                }
+              }
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >CRM CO QTY</div>
+              ),
+              dataIndex: 'CRMCoQty',
+              width: 60, align: 'right',
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.CRMCoQty;
+                return sizeData ? sizeData : '-'
+              }
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Legal PO QTY</div>
+              ),
+              dataIndex: 'legalPoQty',
+              align: 'right',
+              width: 60,
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoQty;
+                return sizeData ? sizeData : '-'
+              }
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Diff of Quantity</div>
+              ),
+              dataIndex: '',
+              align: 'right',
+              width: 60,
+              render: (text, record) => {
+                const PoQty = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoQty;
+                const coQty = sizeWiseMap?.get(record.poAndLine)?.get(version)?.CRMCoQty;
+                let diff = Number(PoQty) - Number(coQty)
+                if (Number(PoQty) && Number(coQty) !== null) {
+                  return diff
+                }
+                else {
+                  return "-"
+                }
+              }
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Allowed Excess Ship Qty</div>
+              ),
+              dataIndex: '',
+              align: 'right',
+              width: 70,
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.sizeQty;
+                if (record.sizeQty === null || isNaN(sizeData)) {
+                  return '-';
+                } else {
+                  if (record.shippingType === 'DIRECT') {
+                    return 0;
+                  } else {
+                    const result = 0.03 * sizeData;
+                    return result.toFixed(3);
+                  }
+                }
+              }
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Actual Shipped Qty</div>
+              ),
+              dataIndex: 'actualShippedQty',
+              align: 'right',
+              width: 70,
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.actualShippedQty;
+                return sizeData ? sizeData : '-'
+              }
+            },
+            {
+              title: (
+                <div
+                  style={{
+                    backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ',
+                    borderRadius: '2px', display: 'flex', alignItems: 'center',
+                    height: 130, justifyContent: 'center', color: 'Black',
+                  }}
+                >Actual Ship %</div>
+              ),
+              align: 'right',
+              width: 70,
+              dataIndex: '',
+              render: (text, record) => {
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
+                return sizeData ? sizeData : '-'
+              }
+            },
+          ],
+        });
+      }
       // summaryColumns.push({
       //   title: version,
       //   dataIndex: '',
@@ -2947,12 +3093,29 @@ const PPMReport = () => {
   return (
     <>
       <Card title="PPM Marketing Report" headStyle={{ color: 'black', fontWeight: 'bold' }}
-        extra={filteredData.length > 0 ? (<Button
-          type="default"
-          style={{ color: 'green' }}
-          icon={<FileExcelFilled />}><CSVLink className="downloadbtn" filename="marketing-ppm-report.csv" data={csvData}>
-            Export to CSV
-          </CSVLink></Button>) : null}>
+        extra={
+          <>
+            <Popconfirm onConfirm={e => { toggleHideChildren() }}
+              title={
+                hideChildren
+                  ? 'Unhide Columns?'
+                  : 'Hide Columns?'
+              }
+            > Hide/Unhide Columns
+              <Switch size="default"
+                className={hideChildren ? 'toggle-activated' : 'toggle-deactivated'}
+                checkedChildren={<RightSquareOutlined type="check" />}
+                unCheckedChildren={<RightSquareOutlined type="close" />}
+                checked={hideChildren}
+              />
+            </Popconfirm>&nbsp;&nbsp;
+            {filteredData.length > 0 ? (
+              <Button
+                type="default"
+                style={{ color: 'green' }}
+                icon={<FileExcelFilled />}><CSVLink className="downloadbtn" filename="marketing-ppm-report.csv" data={csvData}>
+                  Export to CSV
+                </CSVLink></Button>) : null} </>}>
         <Form
           onFinish={getData}
           form={form}
@@ -2997,8 +3160,7 @@ const PPMReport = () => {
               <Form.Item name='item' label='Item' >
                 <Select showSearch placeholder="Select Item" optionFilterProp="children" allowClear>
                   {item?.map((inc: any) => {
-                    const firstFourDigits = inc.item.substring(0, 4);
-                    return <Option key={inc.id} value={inc.item}>{firstFourDigits}</Option>
+                    return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
                   })}
                 </Select>
               </Form.Item>
@@ -3165,8 +3327,7 @@ const PPMReport = () => {
                 <RangePicker />
               </Form.Item>
             </Col>
-
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 10 }} style={{ padding: '15px' }}>
               <Form.Item>
                 <Button htmlType="submit"
                   icon={<SearchOutlined />}
@@ -3176,14 +3337,9 @@ const PPMReport = () => {
                 >
                   RESET
                 </Button>
+                {/* <Button style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={toggleHideChildren}>Hide Columns</Button> */}
               </Form.Item>
             </Col>
-            {/* <Col>
-              <Row>
-                <Form.Item>
-                  <Button onClick={toggleHideChildren}>Toggle Hide</Button>
-                </Form.Item>
-              </Row></Col> */}
           </Row>
         </Form>
         <Row gutter={24} justify={'space-evenly'}>

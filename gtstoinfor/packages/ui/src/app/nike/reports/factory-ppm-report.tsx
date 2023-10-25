@@ -18,7 +18,7 @@ interface ExpandedRows {
 interface FactoryUpdateRequest {
     poAndLine: string;
     actualUnit?: string;
-    allocatedQuantity?: string;
+    // allocatedQuantity?: string;
 }
 
 const FactoryPPMReport = () => {
@@ -79,13 +79,13 @@ const FactoryPPMReport = () => {
             req.actualUnit = actualUnit;
         }
 
-        if (
-            allocatedQuantity !== null &&
-            allocatedQuantity !== undefined &&
-            allocatedQuantity !== ''
-        ) {
-            req.allocatedQuantity = allocatedQuantity;
-        }
+        // if (
+        //     allocatedQuantity !== null &&
+        //     allocatedQuantity !== undefined &&
+        //     allocatedQuantity !== ''
+        // ) {
+        //     req.allocatedQuantity = allocatedQuantity;
+        // }
 
         service.updateFactoryStatusColumns(req).then((res) => {
             if (res.status) {
@@ -340,7 +340,7 @@ const FactoryPPMReport = () => {
                             'CO': item.customerOrder,
                             'CO Final Approval Date': item.coFinalApprovalDate,
                             'Plan No': item.planNo,
-                            'Lead Time': item.leadTime ? (Number(item.leadTime) * -1) : '-',
+                            'Lead Time': item.leadTime ? Math.abs(item.leadTime) : '-',
                             'Category': item.categoryCode,
                             'Category Description': item.categoryDesc,
                             'Vendor Code': item.vendorCode,
@@ -381,7 +381,7 @@ const FactoryPPMReport = () => {
                             'Inventory Segment Code': String(item.inventorySegmentCode),
                             'Purchase Group': item.purchaseGroupCode,
                             'Purchase Group Name': item.purchaseGroupName,
-                            'Reallocated Quantity': item.allocatedQuantity,
+                            // 'Reallocated Quantity': item.allocatedQuantity,
                             'Total Item Quantity': item.totalItemQty,
                             '2XL (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.sizeQty,
                             '2XL (Allowed Excess Ship Qty)': item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.sizeQty ? ((item.shippingType === 'DIRECT') ? 0 : (item.sizeWiseData.find(i => i.sizeDescription === '2XL')?.sizeQty * 0.03).toFixed(3)) : '-',
@@ -688,54 +688,54 @@ const FactoryPPMReport = () => {
                 }
                 // ...getColumnSearch('factory'),
             },
-            {
-                title: 'Edit Unit Allocation',
-                dataIndex: '', width: 70,
-                align: "center",
-                render: (text, rowData) => (
-                    <span>
-                        <Form.Item>
-                            <Checkbox
-                                onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
-                                checked={expandedActualUnit[rowData.poAndLine] || false}
-                            />
-                        </Form.Item>
-                    </span>
-                ),
-            },
-            {
-                title: 'Text Area',
-                align: 'center', width: 165,
-                render: (text, rowData) => (
-                    <div>
-                        {expandedActualUnit[rowData.poAndLine] && (
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <Input
-                                    name='actualUnit'
-                                    allowClear
-                                    style={{ marginRight: '10px' }}
-                                    placeholder="Enter text"
-                                    value={textareaValuesActualUnit[rowData.poAndLine] || ''}
-                                    onChange={(e) =>
-                                        handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
-                                    }
-                                />
-                                <Button
-                                    type="primary"
-                                    onClick={() => {
-                                        updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
-                                        handleCheckboxChange('ActualUnit', rowData.poAndLine);
-                                        handleTextareaChange('ActualUnit', rowData.poAndLine, '');
-                                    }}
-                                >
-                                    Submit
-                                </Button>
-                            </div>
-                        )}
-                    </div>
-                ),
+            // {
+            //     title: 'Edit Unit Allocation',
+            //     dataIndex: '', width: 70,
+            //     align: "center",
+            //     render: (text, rowData) => (
+            //         <span>
+            //             <Form.Item>
+            //                 <Checkbox
+            //                     onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
+            //                     checked={expandedActualUnit[rowData.poAndLine] || false}
+            //                 />
+            //             </Form.Item>
+            //         </span>
+            //     ),
+            // },
+            // {
+            //     title: 'Text Area',
+            //     align: 'center', width: 165,
+            //     render: (text, rowData) => (
+            //         <div>
+            //             {expandedActualUnit[rowData.poAndLine] && (
+            //                 <div style={{ display: 'flex', alignItems: 'center' }}>
+            //                     <Input
+            //                         name='actualUnit'
+            //                         allowClear
+            //                         style={{ marginRight: '10px' }}
+            //                         placeholder="Enter text"
+            //                         value={textareaValuesActualUnit[rowData.poAndLine] || ''}
+            //                         onChange={(e) =>
+            //                             handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
+            //                         }
+            //                     />
+            //                     <Button
+            //                         type="primary"
+            //                         onClick={() => {
+            //                             updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
+            //                             handleCheckboxChange('ActualUnit', rowData.poAndLine);
+            //                             handleTextareaChange('ActualUnit', rowData.poAndLine, '');
+            //                         }}
+            //                     >
+            //                         Submit
+            //                     </Button>
+            //                 </div>
+            //             )}
+            //         </div>
+            //     ),
 
-            },
+            // },
             {
                 title: 'Actual Unit',
                 dataIndex: 'actualUnit',
@@ -841,7 +841,7 @@ const FactoryPPMReport = () => {
                 render: (text) => {
                     if (!isNaN(parseFloat(text))) {
                         // If it's a valid number, render it
-                        return parseFloat(text).toFixed(2); // You can format it as needed
+                        return Math.abs(text); // You can format it as needed
                     } else {
                         // If it's not a valid number, render a placeholder or an empty string
                         return 'N/A'; // Or any other desired text
@@ -956,7 +956,6 @@ const FactoryPPMReport = () => {
                     }
                 },
             },
-
             {
                 title: 'Planning Season Code',
                 dataIndex: 'planningSeasonCode',
@@ -989,7 +988,6 @@ const FactoryPPMReport = () => {
                     return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-';
                 },
             },
-
             {
                 title: 'Truck Out Date', dataIndex: 'truckOutDate', width: 70, className: "right-column", render: (text, record) => {
                     if (!text || text.trim() === '') {
@@ -1041,11 +1039,9 @@ const FactoryPPMReport = () => {
                 render: (text) => {
                     // Replace underscores (_) with spaces
                     const transformedText = text ? text.replace(/_/g, ' ') : '-';
-
                     return transformedText;
                 },
             },
-
             { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', width: 70, className: 'centered-column', },
             { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc', width: 75 },
             {
@@ -1226,7 +1222,6 @@ const FactoryPPMReport = () => {
             // });
         });
         columns.push(
-
             {
                 title: 'Change Register',
                 dataIndex: 'displayName', width: 70,
@@ -1295,7 +1290,6 @@ const FactoryPPMReport = () => {
                     }
                 },
             }
-
         )
         // exportingColumns.push(
 
@@ -1603,9 +1597,6 @@ const FactoryPPMReport = () => {
                     <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card style={{ backgroundColor: '#B1BDF5', height: 100, alignItems: 'center' }}>
                         <b><Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
                         </b> </Card> </Col>
-                    {/* <Col>
-                        <Card title={'Cancelled PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
-                    </Col> */}
                 </Row><br></br>
                 <Card >
                     {/* <Table
@@ -1615,7 +1606,6 @@ const FactoryPPMReport = () => {
                         scroll={{ x: 1000 }}
                         bordered /> */}
                     {renderReport(filterData)}
-
                 </Card>
                 <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
                     <Card>

@@ -311,27 +311,29 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getDivertReport(): Promise<any[]> {
         const query = this.createQueryBuilder('dpm')
-            .select(`DISTINCT po_and_line,id,LEFT(REGEXP_REPLACE(item, '[^0-9]+', ''), 4) AS item,plant AS Plant,dpom_item_line_status AS LineStatus,
-            plant_name AS PlantName,document_date AS DocumentDate,
-            po_number AS poNumber, po_line_item_number AS poLine ,destination_country AS destination,
-            shipping_type AS shipmentType,inventory_segment_code AS inventorySegmentCode,
-            ogac AS ogac ,gac AS gac ,product_code AS productCode,
-            item_vas_text AS itemVasText,total_item_qty AS Quantity,created_at AS dpomCreatedDates,diverted_to_pos, factory`)
+            .select(`dpm.po_and_line,dpm.id, LEFT(dpm.item, 4) AS item,dpm.plant AS Plant,dpm.dpom_item_line_status AS LineStatus,
+            dpm.plant_name AS PlantName,dpm.document_date AS DocumentDate,
+            dpm.po_number AS poNumber, dpm.po_line_item_number AS poLine ,dpm.destination_country AS destination,
+            dpm.shipping_type AS shipmentType,dpm.inventory_segment_code AS inventorySegmentCode,
+            dpm.ogac AS ogac ,dpm.gac AS gac ,dpm.product_code AS productCode,
+            dpm.item_vas_text AS itemVasText,dpm.total_item_qty AS Quantity,dpm.created_at AS dpomCreatedDates,dpm.diverted_to_pos, dpm.factory,dpm.gross_price_fob,dpm.trading_net_inc_disc,od.old_val AS oldQty`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpm.po_number AND od.po_line_item_number = dpm.po_line_item_number AND od.schedule_line_item_number = dpm.schedule_line_item_number')
             .where(`diverted_to_pos IS NOT null`)
-        // .groupBy(`po_number AND diverted_to_pos `)LEFT(REGEXP_REPLACE(item, '[^0-9]+', ''), 4) as 4digitonly
+            .andWhere(` od.column_name='total_item_qty' `)
+            .groupBy(`po_and_line  `)
         return await query.getRawMany()
     }
 
     async getDivertWithNewDataReport(req: [po: string, line: string]): Promise<any[]> {
         const [po, line] = req;
         const query = this.createQueryBuilder('dpm')
-            .select(` id AS nId,LEFT(REGEXP_REPLACE(item, '[^0-9]+', ''), 4) AS item, plant AS nPlant, dpom_item_line_status AS nLineStatus,
+            .select(` id AS nId, LEFT(item, 4) AS item, plant AS nPlant, dpom_item_line_status AS nLineStatus,
             plant_name AS nPlantName, document_date AS nDocumentDate,
             po_number AS npoNumber, po_line_item_number AS npoLine, destination_country AS ndestination,
             shipping_type AS nshipmentType, inventory_segment_code AS ninventorySegmentCode,
             ogac AS nogac, gac AS ngac, product_code AS nproductCode, dpom_item_line_status AS nDPOMLineItemStatus,
-            item_vas_text AS nitemVasText, total_item_qty AS nQuantity, created_at AS ndpomCreatedDates, diverted_to_pos,factory`)
-            .where(`diverted_to_pos IS NOT null`)
+            item_vas_text AS nitemVasText, total_item_qty AS nQuantity, created_at AS ndpomCreatedDates, diverted_to_pos,factory,gross_price_fob,trading_net_inc_disc`)
+            // .where(`diverted_to_pos IS NOT null`)
             .groupBy(`dpm.po_number AND item`)
             .andWhere(`po_number = :po AND po_line_item_number = :line`, { po, line });
 
@@ -415,9 +417,9 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getItemforMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
-            .select(` dpom.item,dpom.id`)
+            .select(` DISTINCT LEFT(dpom.item, 4) as item`)
             .where(`dpom.doc_type_code != :docType AND dpom.item <> ' '`, { docType: 'ZP26' },)
-            .groupBy(`dpom.item`)
+        // .groupBy(`dpom.item`)
         return await query.getRawMany();
     }
     // async getItemforMarketing(): Promise<any[]> {
@@ -610,7 +612,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             query.andWhere(`dpom.plant ='${req.plant}'`)
         }
         if (req.item !== undefined) {
-            query.andWhere(`dpom.item ='${req.item}'`)
+            query.andWhere(` LEFT(dpom.item, 4) ='${req.item}'`)
         }
         if (req.factory !== undefined) {
             query.andWhere(`dpom.factory ='${req.factory}'`)

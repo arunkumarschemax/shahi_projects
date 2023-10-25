@@ -145,9 +145,12 @@ const DivertReport = () => {
     let i = 1;
     const data = [
         { title: 'S No', dataIndex: 'sNo', render: (text, object, index) => { return i++; } },
-        { title: 'Old Request Date', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => { return record.oldPo.DocumentDate ? record.oldPo.DocumentDate : '-'; } },
-        { title: 'O.From Item', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => { return record.oldPo.Plnt ? record.oldPo.Plant : '-'; } },
-        { title: 'O.Unit', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => { return record.oldPo.Plnt ? record.oldPo.Plant : '-'; } },
+        { title: 'Old Request Date', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => {
+            const date = record.oldPo.DocumentDate;
+            return date ? moment(date).format('MM/DD/YYYY') : '-';
+          } },
+        { title: 'O.From Item', dataIndex: ['oldPo', 'item'], render: (text, record) => { return record.oldPo.item ? record.oldPo.item : '-'; } },
+        { title: 'O.Unit', dataIndex: ['oldPo', 'factory'], render: (text, record) => { return record.oldPo.factory ? record.oldPo.factory : '-'; } },
         { title: 'O.Plant', dataIndex: ['oldPo', 'Plant'], render: (text, record) => { return record.oldPo.Plant ? record.oldPo.Plant : '-'; } },
         { title: 'O.Product Code', dataIndex: ['oldPo', 'productCode'], render: (text, record) => { return record.oldPo.productCode ? record.oldPo.productCode : '-'; } },
         { title: 'O.Line Status', dataIndex: ['oldPo', 'LineStatus'], render: (text, record) => { return record.oldPo.LineStatus ? record.oldPo.LineStatus : '-'; } },
@@ -164,10 +167,20 @@ const DivertReport = () => {
             dataIndex: ['oldPo', 'poLine'],
             render: (text, record) => { return record.oldPo.poLine ? record.oldPo.poLine : '-'; }
         },
-        { title: 'Old Qantity', dataIndex: ['oldPo', 'Quantity'], render: (text, record) => { return record.oldPo.Quantity ? record.oldPo.Quantity : '-'; } },
+        { title: 'Old Qantity', dataIndex: ['oldPo', 'oldQty'], render: (text,record) => {
+                 const oldQty = Number(record.oldPo.oldQty)
+                return oldQty ? oldQty :'-'
+              
+        }
+},
         { title: 'Balance Qty', dataIndex: ['oldPo', 'Quantity'], render: (text, record) => { return record.oldPo.Quantity ? record.oldPo.Quantity : '-'; } },
         { title: 'Destination', dataIndex: ['oldPo', 'destination'], render: (text, record) => { return record.oldPo.destination ? record.oldPo.destination : '-'; } },
-        { title: 'Shipment Type', dataIndex: ['oldPo', 'shipmentType'], render: (text, record) => { return record.oldPo.shipmentType ? record.oldPo.shipmentType : '-'; } },
+        { title: 'Shipment Type', dataIndex: ['oldPo', 'shipmentType'],render: (text) => {
+            // Replace underscores (_) with spaces
+            const transformedText = text ? text.replace(/_/g, ' ') : '-';
+  
+            return transformedText;
+          },},
         // {
         //     title: 'No of Days to GAC',
         //     dataIndex: ['oldPo', 'DocumentDate'],
@@ -220,7 +233,7 @@ const DivertReport = () => {
         { title: "To item",
         dataIndex: ['newpo', 'item'],  render: (text, record) => { return record.newpo.item ? record.newpo.item : '-'; } },
 
-        { title: 'N.Unit', dataIndex: 'unit', render: (text, record) => { return record.oldPo.Plnt ? record.oldPo.Plnt : '-'; } },
+        { title: 'N.Unit', dataIndex: 'unit', render: (text, record) => { return record.newpo.factory ? record.newpo.factory : '-'; } },
         { title: 'N.Plant', dataIndex: ['newpo', 'nPlant'], render: (text, record) => { return record.newpo.nPlant ? record.newpo.nPlant : '-'; } },
         { title: 'N.Product Code', dataIndex: ['newpo', 'nproductCode'], render: (text, record) => { return record.newpo.nproductCode ? record.newpo.nproductCode : '-'; } },
         { title: 'N.Line Status', dataIndex: ['newpo', 'nLineStatus'], render: (text, record) => { return record.newpo.nLineStatus ? record.newpo.nLineStatus : '-'; } },
@@ -237,12 +250,83 @@ const DivertReport = () => {
         { title: 'N.Inventory Segment Code', dataIndex: ['newpo', 'ninventorySegmentCode'], render: (text, record) => { return record.newpo.ninventorySegmentCode ? record.newpo.ninventorySegmentCode : '-'; } },
         { title: 'Item Vas', dataIndex: ['newpo', 'nitemVasText'], render: (text, record) => { return record.newpo.nitemVasText ? record.nitemVasText : '-'; } },
         { title: 'Shipment Type', dataIndex: 'nshipmentType', render: (text, record) => { return record.nshipmentType ? record.newpo.nshipmentType : '-'; } },
-        { title: 'Item Vas Diff Check', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => { return record.oldPo.Plant ? record.oldPo.Pant : '-'; } },
-        { title: 'Qty Tally-Check	', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => { return record.oldPo.Plant ? record.oldPo.Pant : '-'; } },
-        { title: 'Price-Fob Tally-Check', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => { return record.oldPo.Plnt ? record.oldPo.Plant : '-'; } },
-        { title: 'Price-Net Includding Discount Tally-Check', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => { return record.oldPo.Plant ? record.oldPo.Pant : '-'; } },
-        { title: 'Price-Trading Co Net Includding Discount Tally-Check', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => { return record.oldPo.Plnt ? record.oldPo.Plant : '-'; } },
-    ];
+        {
+            title: 'Item Vas Diff Check',dataIndex:'',
+            render: (text, record) => {
+                const text1 = record.oldPo.itemVasText
+                const text2 = record.newpo.nitemVasText
+                if (text1 == null && text2 == null) {
+                  return '-';
+                } else if (text1 == null) {
+                  return text2
+                } else if (text2 == null) {
+                  return text1
+                } else {
+                  const normalizeText = (text) => text.toLowerCase().replace(/\s/g, '');
+                  const normalizedText1 = normalizeText(text1);
+                  const normalizedText2 = normalizeText(text2);
+                  const differences = diffChars(normalizedText1, normalizedText2);
+                  // Map the differences to display added and removed parts
+                  const result = differences
+                    .filter((part) => part.added || part.removed)
+                    .map((part, index) => {
+                      const style = part.added ? { backgroundColor: 'lightgreen' } : { backgroundColor: 'lightcoral' };
+                      return (
+                        <span key={index} style={style}>
+                          {part.value}
+                        </span>
+                      );
+                    });
+                  return result ? result :'-'
+                }
+              },
+        },  
+        {
+            title: 'Qty Tally-Check',
+            dataIndex: '',
+            render: (text, record) => {
+              if (record.oldPo.Quantity !== null) {
+                const oldQuantity = Number(record.oldPo.Quantity);
+                const newQuantity = Number(record.newpo.nQuantity);
+                const QtyTally = oldQuantity - newQuantity;
+                if (QtyTally === 0) {
+                  return <span style={{ color: 'green' }}>Matching</span>;
+                } else {
+                  return <span style={{ color: 'red' }}>Deprecation</span>;
+                }
+              } else {
+                return '-';
+              }
+            }
+          }, 
+          {
+            title: 'Price-Fob Tally-Check',
+            dataIndex: '',
+            render: (text, record) => {
+                  const oldprice = Number(record.oldPo.gross_price_fob);
+                  const newprice = Number(record.newpo.gross_price_fob);
+                  const priceTally = oldprice - newprice;
+                  if (priceTally === 0) {
+                    return <span style={{ color: 'green' }}>Matching</span>;
+                  } else {
+                    return <span style={{ color: 'red' }}>Deprecation</span>;
+                  }
+              }
+        },        { title: 'Price-Net Includding Discount Tally-Check', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => { return record.oldPo.Plant ? record.oldPo.Pant : '-'; } },
+        {
+            title: 'Price-Trading Co Net Including Discount Tally-Check',
+            dataIndex: '',
+            render: (text, record) => {
+                  const oldTradingcO = Number(record.oldPo.trading_net_inc_disc);
+                  const newTradingcO = Number(record.newpo.trading_net_inc_disc);
+                  const COTally = oldTradingcO - newTradingcO;
+                  if (COTally === 0) {
+                    return <span style={{ color: 'green' }}>Matching</span>;
+                  } else {
+                    return <span style={{ color: 'red' }}>Deprecation</span>;
+                  }
+              }
+        },    ];
 
     const exportExcel = () => {
         const excel = new Excel();
@@ -330,16 +414,10 @@ const DivertReport = () => {
                 },
                 {
                     title: 'Old Qantity',
-                    //from yesterdays ppm
-                    dataIndex: ['oldPo', 'Quantity'],
-                    // sorter: (a, b) => a.oldPo.Quantity.localeCompare(b.oldPo.Quantity),
-                    // sortDirections: ["descend", "ascend"],
+                    dataIndex: ['oldPo', 'oldQty'],
                     width:70,align:'right',  render: (text,record) => {
-                        if(record.oldPo.Quantity !== null){
-                            const oldQty = Number(record.oldPo.Quantity) + Number(record.newpo.nQuantity)
+                            const oldQty = Number(record.oldPo.oldQty) 
                             return oldQty ? oldQty :'-'
-                        }else
-                        return "-"   
                     }
 
                 },
@@ -442,7 +520,7 @@ const DivertReport = () => {
                         if (record.oldPo.dpomCreatedDates && record.newpo.nogac) {
                             const dpomCreatedDate = moment(record.oldPo.dpomCreatedDates);
                             const nogacDate = moment(record.newpo.nogac);
-                            const daysDifference = nogacDate.diff(dpomCreatedDate, 'days');
+                            const daysDifference =  nogacDate.diff(dpomCreatedDate, 'days');
                             return daysDifference + ' days';
                         } else {
                             return "-";
@@ -550,20 +628,38 @@ const DivertReport = () => {
                       },
                 },
                 {
-                    title: 'Qty Tally-Check',width:70,
-                    dataIndex: '',align:'right',
-                    render: (text,record) => {
-                        if(record.oldPo.Quantity !== null){
-                            const QtyTally = Number(record.oldPo.Quantity) - Number(record.newpo.nQuantity)
-                            return QtyTally ? QtyTally :'-'
-                        }else
-                        return "-"
-                        
-                    }
-                },
+                    title: 'Qty Tally-Check',
+                    width: 70,
+                    dataIndex: '',
+                    align: 'right',
+                    // render: (text, record) => {
+                    //   if (record.oldPo.Quantity !== null) {
+                    //     const oldQuantity = Number(record.oldPo.Quantity);
+                    //     const newQuantity = Number(record.newpo.nQuantity);
+                    //     const QtyTally = oldQuantity - newQuantity;
+                    //     if (QtyTally === 0) {
+                    //       return <span style={{ color: 'green' }}>Matching</span>;
+                    //     } else {
+                    //       return <span style={{ color: 'red' }}>Deprecation</span>;
+                    //     }
+                    //   } else {
+                    //     return '-';
+                    //   }
+                    // }
+                  },                  
                 {
                     title: 'Price-Fob Tally-Check',
                     dataIndex: '',width:70,
+                    render: (text, record) => {
+                          const oldprice = Number(record.oldPo.gross_price_fob);
+                          const newprice = Number(record.newpo.gross_price_fob);
+                          const priceTally = oldprice - newprice;
+                          if (priceTally === 0) {
+                            return <span style={{ color: 'green' }}>Matching</span>;
+                          } else {
+                            return <span style={{ color: 'red' }}>Deprecation</span>;
+                          }
+                      }
                 },
                 {
                     title: 'Price-Net Includding Discount Tally-Check',
@@ -572,6 +668,16 @@ const DivertReport = () => {
                 {
                     title: 'Price-Trading Co Net Including Discount Tally-Check',
                     dataIndex: '',width:100,
+                    render: (text, record) => {
+                          const oldTradingcO = Number(record.oldPo.trading_net_inc_disc);
+                          const newTradingcO = Number(record.newpo.trading_net_inc_disc);
+                          const COTally = oldTradingcO - newTradingcO;
+                          if (COTally === 0) {
+                            return <span style={{ color: 'green' }}>Matching</span>;
+                          } else {
+                            return <span style={{ color: 'red' }}>Deprecation</span>;
+                          }
+                      }
                 },
                 {
                     title: 'CO-update',width:70,

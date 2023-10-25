@@ -38,7 +38,7 @@ import { FabricContentModule } from './fabric-content/fabric-content.module';
     FactoriesModule,
     SupplierModule,
     UsersModule,
-    AuthModule, JwtModule, DpomModule, AdobeAcrobatApiModule, FobModule,FabricContentModule],
+    AuthModule, JwtModule, DpomModule, AdobeAcrobatApiModule, FobModule, FabricContentModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,
