@@ -36,7 +36,7 @@ export const DocReader = (props: DocReaderProps) => {
             if (info?.fileList[0]) {
                 setFile(info.fileList[0]);
                 displayPdf(info.fileList[0].originFileObj);
-                message.success(`${info.file.name} file uploaded successfully`);
+                // message.success(`${info.file.name} file uploaded successfully`);
             } else {
                 setFile(null);
                 setPdfData(null);
@@ -285,6 +285,7 @@ export const DocReader = (props: DocReaderProps) => {
             const extractionTime = new Date().toLocaleString();
             setTimeout(() => {
                 setIsLoading(false);
+                message.success(' File Uploaded Successfully');
                 setExtractionCompleted(true);
                 setShowCancelButton(true);
             }, 2000);
