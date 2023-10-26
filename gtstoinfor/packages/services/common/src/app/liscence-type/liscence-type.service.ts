@@ -121,7 +121,6 @@ export class LiscenceTypeService {
     }  
 
 async activateOrDeactivateLiscenceType(liscenceTypeReq: LiscenceTypeRequest): Promise<LiscenceTypeResponseModel> {
- // console.log(liscenceTypeReq,'hoioooo')
   try {
       const liscenceTypeExists = await this.getLiscenceTypeById(liscenceTypeReq.liscenceTypeId);
       //console.log(liscenceTypeExists,'sdfghjk')

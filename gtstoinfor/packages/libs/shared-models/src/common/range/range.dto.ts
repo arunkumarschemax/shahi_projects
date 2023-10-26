@@ -1,5 +1,3 @@
-import { AttributeAgainstEnum } from "../../enum";
-
 export class RangeDto{
 
     id: number;

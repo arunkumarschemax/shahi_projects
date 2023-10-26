@@ -1,17 +1,18 @@
 export class HierarchyLevelDto{
     hierarchyLevelId : number;
-    hierarchyLevelName : string;
+    hierarchyLevel : string;
     isActive: boolean;
     createdUser : string;
     updatedUser : string;
+    versionFlag:number
 
-    constructor(hierarchyLevelId : number,hierarchyLevelName : string,isActive: boolean,createdUser : string,updatedUser:string){
+    constructor(hierarchyLevelId : number,hierarchyLevel : string,isActive: boolean,createdUser : string,updatedUser:string,versionFlag:number        ){
         this.hierarchyLevelId = hierarchyLevelId;
-        this.hierarchyLevelName = hierarchyLevelName;
+        this.hierarchyLevel = hierarchyLevel;
         this.isActive= isActive;
         this.createdUser= createdUser;
         this.updatedUser= updatedUser;
-
+        this.versionFlag = versionFlag
     }
 }
 

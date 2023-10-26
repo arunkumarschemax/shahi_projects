@@ -65,7 +65,7 @@ export function LiscenceTypesForm(props: LiscenceTypesFormProps) {
       <Input hidden/>
     </Form.Item>
     <Row>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}}>
               <Form.Item
                   name="liscenceType"
                   label="Liscence Type"

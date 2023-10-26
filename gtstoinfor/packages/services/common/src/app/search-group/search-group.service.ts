@@ -31,18 +31,18 @@ export class SearchGrpService {
                 throw new SearchGrpResponse(false, 11107, 'Search Group data is empty. At least one value is required.');
             }
     
-            const existingEntity: SearchGroupEnitty  | undefined = await this.repository.findOne({
+            const existingEntity: SearchGroupEnitty | undefined = await this.repository.findOne({
                 where: {
                     searchGrpCode: Dto.searchGrpCode,
                 }
             });
     
-            if (existingEntity) {
+            if (existingEntity && (!isUpdate || existingEntity.id !== Dto.id)) {
                 throw new SearchGrpResponse(false, 11108, 'Search Group code must be unique.');
             }
     
-            const convertedEntity: SearchGroupEnitty  = this.adaptor.convertDtoToEntity(Dto, isUpdate);
-            const savedEntity: SearchGroupEnitty  = await this.repository.save(convertedEntity);
+            const convertedEntity: SearchGroupEnitty = this.adaptor.convertDtoToEntity(Dto, isUpdate);
+            const savedEntity: SearchGroupEnitty = await this.repository.save(convertedEntity);
             const savedDto: SearchGroupDTO = this.adaptor.convertEntityToDto(savedEntity);
     
             if (savedDto) {
@@ -58,6 +58,8 @@ export class SearchGrpService {
             return error;
         }
     }
+    
+    
     async getSearchGrpById(id: number): Promise<SearchGroupEnitty> {
         const Response = await this.repository.findOne({ where: { id: id }, });
         if (Response) {
