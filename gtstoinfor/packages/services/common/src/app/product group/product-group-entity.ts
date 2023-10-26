@@ -1,5 +1,6 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 import { SampleRequest } from "../sample-dev-request/entities/sample-dev-request.entity";
+import { ItemTypeEntity } from "../item-type/item-type.entity";
 
 
 @Entity('product_group')
@@ -51,4 +52,9 @@ updatedUser: string | null;
 })
 versionFlag: number;
 
+// @OneToOne(()=> ItemTypeEntity,itemtype=>itemtype.productgroup)
+// ItemType:ItemTypeEntity[]
+
+@OneToMany(type => ItemTypeEntity, itemType => itemType.productGroup)
+  itemTypes: ItemTypeEntity[];
 }

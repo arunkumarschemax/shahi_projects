@@ -10,9 +10,9 @@ import { StyleOrder } from "./style-order.entity";
 export class CoLine{
 
     @PrimaryGeneratedColumn("increment",{
-        name:'id'
+        name:'co_line_id'
     })
-    id:number;
+    coLineId:number;
 
     @Column('varchar',{
         name:'coline_number',

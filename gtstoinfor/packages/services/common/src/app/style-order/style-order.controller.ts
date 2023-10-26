@@ -36,9 +36,7 @@ export class StyleOrderController{
     @Post('/getAllCoLinesById')
     @ApiBody({type:styleOrderReq})
     async getAllCoLinesById(@Body() req:any):Promise<CommonResponseModel>{
-        try{
-            console.log(req,'controller');
-            
+        try{            
             return await this.styleOrderService.getAllCoLinesById(req)
         }catch(err){
             return this.applicationExceptionHandler.returnException(CommonResponseModel,err)

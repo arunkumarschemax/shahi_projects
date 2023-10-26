@@ -27,7 +27,7 @@ export class StyleOrderRepository extends Repository<StyleOrder> {
 
     async getAllCOCount(): Promise<any> {
         const query =  this.createQueryBuilder('co')
-            .select(`MAX(id) as id `)
+            .select(`MAX(co_id) as id `)
             .orderBy(`created_at`, 'DESC')
         return await query.getRawOne()
 
@@ -35,16 +35,16 @@ export class StyleOrderRepository extends Repository<StyleOrder> {
     
     async getAllStyleOrders(req: styleOrderReq):Promise<any>{
         const query = await this.createQueryBuilder('co')
-        .select(`item_code,co_number,package_terms_id,agent,discount_amount,discount_per,discount_per,Payment_terms_id,facility_id,warehouse_id,currency_id,order_date,Payment_method_id,instore_date,co.sale_price,buyer_po_number,shipment_type,buyer_style,exfactory_date,buyer_id,delivery_terms_id,delivery_method_id,price_quantity,SUM(c.order_quantity)AS qty,co.id, co.status`)
-        .leftJoin(CoLine,'c','c.co_id = co.id ')
+        .select(`item_code,co_number,package_terms_id,agent,discount_amount,discount_per,discount_per,Payment_terms_id,facility_id,warehouse_id,currency_id,order_date,Payment_method_id,instore_date,co.sale_price,buyer_po_number,shipment_type,buyer_style,exfactory_date,buyer_id,delivery_terms_id,delivery_method_id,price_quantity,SUM(c.order_quantity)AS qty,co.co_id, co.status`)
+        .leftJoin(CoLine,'c','c.co_id = co.co_id ')
         // .where(`co.item_id =${req.itemId}`)
-        .groupBy(`co.buyer_id`)
+        .groupBy(`co.co_number`)
         return query.getRawMany()
     }
 
     async getInfoById(req:StyleOrderIdReq):Promise<any>{
         const query = await this.createQueryBuilder('co')
-        .select(`co.item_code,co.buyer_id,bu.buyer_name,bu.buyer_code,co.facility_id,fa.name as factoryName,co.warehouse_id,w.warehouse_name,co.remarks,co.buyer_po_number,co.order_date,co.shipment_type,co.buyer_style,co.agent,emp.first_name AS agentName,emp.employee_code as AgentCode,co.buyer_address,add.landmark as buyerLandmark,add.city as buyerCity,add.state as buyerState,co.exfactory_date,co.delivery_date,co.package_terms_id,pacter.package_terms_name,co.delivery_terms_id,delter.delivery_terms_name,co.delivery_method_id,delimet.delivery_method,co.instore_date,co.sale_price,co.currency_id,cu.currency_name,co.price_quantity,co.discount_per,payter.payment_terms_name,payme.payment_method,co.Payment_method_id,co.Payment_terms_id,co.fg_item_id,fgi.item_name,col.id as coLineId,col.coline_number,delad.landmark as delLandmark,delad.city as delCity,delad.state as delState,col.order_quantity,col.color,col.size,col.destination,col.uom,col.status,col.delivery_address,col.color_id,col.size_id,col.destination_id,col.uom_id`)
+        .select(`co.item_code,co.buyer_id,bu.buyer_name,bu.buyer_code,co.facility_id,fa.name as factoryName,co.warehouse_id,w.warehouse_name,co.remarks,co.buyer_po_number,co.order_date,co.shipment_type,co.buyer_style,co.agent,emp.first_name AS agentName,emp.employee_code as AgentCode,co.buyer_address,add.landmark as buyerLandmark,add.city as buyerCity,add.state as buyerState,co.exfactory_date,co.delivery_date,co.package_terms_id,pacter.package_terms_name,co.delivery_terms_id,delter.delivery_terms_name,co.delivery_method_id,delimet.delivery_method,co.instore_date,co.sale_price,co.currency_id,cu.currency_name,co.price_quantity,co.discount_per,payter.payment_terms_name,payme.payment_method,co.Payment_method_id,co.Payment_terms_id,co.fg_item_id,fgi.item_name,col.co_line_id as coLineId,col.coline_number,delad.landmark as delLandmark,delad.city as delCity,delad.state as delState,col.order_quantity,col.color,col.size,col.destination,col.uom,col.status,col.delivery_address,col.color_id,col.size_id,col.destination_id,col.uom_id`)
         .leftJoin(Buyers,'bu',`bu.buyer_id = co.buyer_id`)
         .leftJoin(FactoriesEntity,'fa',`fa.id = co.facility_id`)
         .leftJoin(Warehouse,'w',`w.warehouse_id = co.warehouse_id`)
@@ -57,9 +57,9 @@ export class StyleOrderRepository extends Repository<StyleOrder> {
         .leftJoin(PaymentMethod,'payme','payme.payment_method_id = co.Payment_method_id')
         .leftJoin(PaymentTerms,'payter','payter.payment_terms_id = co.Payment_terms_id')
         .leftJoin(ItemCreation,'fgi','fgi.fg_item_id = co.fg_item_id')
-        .leftJoin(CoLine,'col','col.co_id = co.id')
+        .leftJoin(CoLine,'col','col.co_id = co.co_id')
         .leftJoin(Address,'delad','delad.address_id = col.delivery_address')
-        .where(`co.id = ${req.styleOrderId}`)
+        .where(`co.co_id = ${req.styleOrderId}`)
         return query.getRawMany()
 
     }

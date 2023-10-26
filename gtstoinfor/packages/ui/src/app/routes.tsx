@@ -129,6 +129,10 @@ import StyleOrderGrid from "./style-orders/style-order-grid"
 import StyleOrderDetailView from "./style-orders/style-order-detail-view"
 import FabricReqApproval from "./fabric development/fabric-req-approval"
 import DivisionForm from "./masters/company/division-form"
+import ItemGroupForm from "./masters/item-group/item-group-form"
+import ItemGroupGrid from "./masters/item-group/item-group-view"
+import ItemTypeView from "./masters/itemtype.tsx/item-type-view"
+import ItemTypeForm from "./masters/itemtype.tsx/item-type-form"
 import BusinessAreaForm from "./masters/business-area/business-area-form"
 import BusinessAreaView from "./masters/business-area/business-area-view"
 import CoTypeForm from "./masters/co-type/co-type-form"
@@ -229,9 +233,9 @@ export const AppRoutes = () => {
                         <Route path='company/company-grid' element={<CompanyGrid />} />
                         <Route path='company/division-grid' element={<DivisionGrid />} />
                         <Route path='warehouse/warehouse-form' element={<WarehouseForm Data={undefined}
-                isUpdate={false}
-                closeForm={() => { }}
-                updateItem={(undefined) => { }}/>} />
+                          isUpdate={false}
+                         closeForm={() => { }}
+                          updateItem={(undefined) => { }}/>} />
                         <Route path='warehouse/warehouse-grid' element={<WarehouseGrid />} />
                     <Route path='division/division-view' element={<DivisionGrid/>} />
                     <Route path='division/division-form' key ='division/division-form' element={<DivisionForm  Data={undefined}
@@ -436,6 +440,16 @@ export const AppRoutes = () => {
                         } } isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
                         } }/>}/>
+                           <Route path='item-group/item-group-view' element={<ItemGroupGrid/>} />
+                    <Route path='item-group/item-group-form' key ='item-group/item-group-form' element={<ItemGroupForm  groupData={undefined}
+               isUpdate={false}
+            closeForm={() => { }}
+           updateItem={(undefined) => { }}/>} />
+              <Route path='item-type/item-type-view' element={<ItemTypeView/>} />
+                    <Route path='item-type-form/item-type-form' key ='item-type-form/item-type-form' element={<ItemTypeForm  itemtypeData={undefined}
+               isUpdate={false}
+            closeForm={() => { }}
+           updateData={(undefined) => { }}/>} />
                     <Route path='groupTechClass/groupTechClass-grid' element={<GroupTechClassGrid/>}/>
                     <Route path='groupTechClass/groupTechClass-form' element={<GroupTechClassForm data={new GroupTechClassDto} updateDetails={function (dto: GroupTechClassDto): void {
                             throw new Error("Function not implemented.")
