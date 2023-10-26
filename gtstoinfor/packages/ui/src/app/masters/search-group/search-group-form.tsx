@@ -110,9 +110,13 @@ export function SearchGroupForm(props:SearchGroupFormProps) {
               required: true,
               message: 'Search Group Code Is Required'
             },
+            {
+              pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+              message: `Should contain only alphabets and numbers.`
+            }
           ]}
         >
-         <Input />
+         <Input placeholder='Enter Search Group Code' />
 
         </Form.Item>
         </Col>
@@ -126,10 +130,14 @@ export function SearchGroupForm(props:SearchGroupFormProps) {
               required: true,
               message:"Search Group Name Is Required."
             },
+            {
+              pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+              message: `Should contain only alphabets and numbers.`
+            }
             
           ]}
         >
-          <Input  />
+          <Input placeholder='Enter Search Group Name' />
         </Form.Item>
         </Col>
         </Row>
