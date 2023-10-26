@@ -313,16 +313,51 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                        </Form.Item>
                         </Col>
                         </Row>
-                        <Row>
+                        <Row gutter={8}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                           <Form.Item name="projection Order" label="Projection Order">
                           <Select showSearch placeholder="Select Projection Order" allowClear suffixIcon={<SearchOutlined />}>
                       </Select>
                           </Form.Item>
                        </Col>
+
+                       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                          <Form.Item name="itemGroup" label="Item Group">
+                          <Select showSearch placeholder="Select Item Group" allowClear >
+                      </Select>
+                          </Form.Item>
+                       </Col>
+                       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                          <Form.Item name="businessArea" label="Business Area">
+                          <Select showSearch placeholder="Select Business Area" allowClear >
+                      </Select>
+                          </Form.Item>
+                       </Col>
                         </Row>
-                        </Card>
-                        </Col>
+                        
+                        <Row gutter={8}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                          <Form.Item name="basicUom" label="Basic Uom">
+                          <Select showSearch placeholder="Select Basic Uom" allowClear >
+                      </Select>
+                          </Form.Item>
+                       </Col>
+                       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                          <Form.Item name="groupTechClass" label="Group Tech Class">
+                          <Select showSearch placeholder="Select Group Tech Class" allowClear >
+                      </Select>
+                          </Form.Item>
+                       </Col>
+                       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                          <Form.Item name="composition" label="Composition">
+                          <Select showSearch placeholder="Select Composition" allowClear >
+                      </Select>
+                          </Form.Item>
+                       </Col>
+                        </Row>
+</Card>
+</Col>
+
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
                           <Card bordered={false}>
                           <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Profit Controllers</h1>
@@ -457,30 +492,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                         </Form.Item>
                          </Col>
                          </Row>
-                              {/* <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Manufacturing Information</h1>
-                              <Row gutter={8}>
-                              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                              <Form.Item
-                      name="property"
-                      label="Property"
-                    >
-                       <Select
-                        placeholder="Select Property"
-                        allowClear
-                      >
-                      
-                      </Select>
-                    </Form.Item>
-                           </Col>
-                           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                           <Form.Item name="isSubcontracted">
-                <div style={{ padding: '25px' }}>
-                  <Checkbox>Check if Manufacturing Subcontracted</Checkbox>
-                </div>
-              </Form.Item>
-
-                           </Col>
-                           </Row> */}
+                           
                            <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>TNA</h1>
                            <Row gutter={16}>
                            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -525,15 +537,50 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                       <Input placeholder="Total Order Qty" allowClear />
                     </Form.Item>
                      </Col>
+                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                      <Form.Item   name="range" label="Range" rules={[{ required: true, message: "Enter Range" }]}>
+                      <Select
+                        placeholder="Select Range"
+                        allowClear>
+                      </Select>
+                      </Form.Item>
+                    </Col>
                       </Row>
-                      
+                      <Row gutter={8}>
+               
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                      <Form.Item   name="noOfLacePanel" label="No Of Lace Panel" rules={[{ required: true, message: "Enter No Of Lace Panel" }]}>
+                      <Select
+                        placeholder="Select No Of Lace Panel"
+                        allowClear>
+                      </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                      <Form.Item   name="searchGroup" label="Search Group" rules={[{ required: true, message: "Enter Search Group" }]}>
+                      <Select
+                        placeholder="Select Range"
+                        allowClear>
+                      </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                      <Form.Item   name="referenced" label="Referenced" rules={[{ required: true, message: "Enter Referenced" }]}>
+                      <Select
+                        placeholder="Select Range"
+                        allowClear>
+                      </Select>
+                      </Form.Item>
+                    </Col>
+                </Row>
+
                       </Card>
                     </Col>
                      
                 </Row>
+                
 
-
-                <Row justify={'end'} style={{marginTop: '-80px'}}>
+                <Row justify={'end'} style={{marginTop: '-30px'}}>
   <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}>
     <Button type='primary' htmlType='submit'>Submit</Button>
   </Col>

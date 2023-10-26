@@ -30,7 +30,7 @@ export function ItemTypeView(
   },[]);
 
   const getAllItemType = () => {
-    Service.getAllActiveItemType().then(res =>{
+    Service.getAllItemType().then(res =>{
       console.log(res,'asdfghj')
       if(res.status){
         setItemTypeData(res.data);

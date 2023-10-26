@@ -99,14 +99,12 @@ export class ItemTypeService{
             order :{itemType:'ASC'},
             relations: ['division','productgroup']
           });
+          console.log(itemEntity,"itemEntity")
           if (itemEntity.length > 0) {
             itemEntity.forEach(itemEntity => {
               const converteditemDto: ItemTypeDtos = this.ItemTypeAdapter.convertEntityToDto(itemEntity);
               itemTypedto.push(converteditemDto);
-            });
-    
-            //generated response
-  
+            });    
             const response = new AllItemTypeResponseModel(true,1,'ItemType retrieved successfully',itemTypedto);
         
             return response;
