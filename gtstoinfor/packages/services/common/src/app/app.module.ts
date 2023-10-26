@@ -92,6 +92,7 @@ import { RmSkusModule } from './rm-skus/rm-skus.module';
       autoLoadEntities: true,
       synchronize: false,
       logging: false,
+      
       extra: {
         connectionLimit: 20
       }
@@ -136,7 +137,7 @@ import { RmSkusModule } from './rm-skus/rm-skus.module';
     ProductGroupModule,
     ProcrumentGroupModule,
     HierachyLevelModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule,GroupTechClassModule,BusinessAreaModule,CoTypeModule,CompositionModule,RangeModule,SearchGrpModule,RmSkusModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule,GroupTechClassModule,BusinessAreaModule,CoTypeModule,CompositionModule,RangeModule,SearchGrpModule,RmSkusModule,ItemTypeModule],
   controllers: [AppController],
   providers: [AppService],
 })
