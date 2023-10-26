@@ -46,6 +46,19 @@ export class ItemCreationService {
             return err
         }
     }
+
+    async getAllFgItems():Promise<CommonResponseModel>{
+        try{
+            const data = await this.itemCreationRepository.find()
+            if(data.length >0){
+                return new CommonResponseModel(true,1,'Data retrieved',data)
+            } else{
+                return new CommonResponseModel(false,0,'No data found')
+            }
+        } catch(err){
+            return err
+        }
+    }
 }
 
 

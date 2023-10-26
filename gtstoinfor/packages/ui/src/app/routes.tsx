@@ -148,6 +148,8 @@ import ProcurmentGroupGrid from "./masters/procurment group/procurmentGroup-grid
 import ProcurmentGroupForm from "./masters/procurment group/procurmentGroup-form"
 import HierarchyLevelGrid from "./masters/hierarchy level/hierarchy-level-gridt"
 import HierarchyLevelForm from "./masters/hierarchy level/hierarchy-level-form"
+import ItemCreationView from "./orders/item-creation-view"
+import ItemCreationDetailView from "./orders/item-creation-detail-view"
 
 
 export const AppRoutes = () => {
@@ -575,7 +577,8 @@ export const AppRoutes = () => {
                 <Route path='style-order-view' element={<StyleOrderGrid />} />
                 <Route path='style-order-detail-view' element={<StyleOrderDetailView />} />
                 <Route path='feature-creation' element={<FeatureCreation />} />
-
+                <Route path='item-creation-view' element={<ItemCreationView/>}/>    
+                <Route path='item-creation-detail-view' element={<ItemCreationDetailView data={''}/>}/>
                 </Route>
                 <Route path='/operation-tracking'>
                 <Route path='operation-tracking/issuing' element={<IssueScreen/>}/>

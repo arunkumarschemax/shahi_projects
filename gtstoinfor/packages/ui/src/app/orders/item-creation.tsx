@@ -165,7 +165,9 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
          }
          return (
          <>
-         <Card title='Item Creation' size='small'>
+         <Card title='Item Creation' size='small' extra={<Link to='/materialCreation/item-creation-view' >
+      <span style={{color:'white'}} ><Button type={'primary'} >View</Button> </span>
+      </Link>}>
                <Form  form={form} style={{ fontSize: "10px" }} layout="vertical" onFinish = {saveItem}>
                <Form.Item name='trim' style={{display:'none'}}>
                     <Input hidden/>
@@ -370,8 +372,8 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                       >
                       {customGroup.map((e)=>{
                         return(
-                            <Option key={e.customGroupId} value={e.customGroupId}>
-                            {e.customGroup}
+                            <Option key={e.currencyId} value={e.currencyId}>
+                            {e.currencyName}
                             </Option>
                         )
                       })}
