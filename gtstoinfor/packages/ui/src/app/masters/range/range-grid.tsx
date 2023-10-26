@@ -253,7 +253,7 @@ const RangeGrid = () => {
 
   return (
       <>
-      <Card title={<span >Range Master</span>}
+      <Card title={<span >Range</span>}
     style={{textAlign:'center'}} headStyle={{ border: 0 }} 
     extra={<Link to='/masters/range/range-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>

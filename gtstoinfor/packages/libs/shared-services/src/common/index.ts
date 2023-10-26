@@ -75,8 +75,13 @@ export * from './bom-trim-services'
 export * from './style-order-service'
 export * from './item-creation.service'
 export * from './group-tech-class-service'
+export * from './item-group-service'
+export * from './item-type-service'
 export * from './business-area-service'
 export * from './co-type.service'
 export * from './composition-service'
 export * from './search-group-services'
-export * from './range-fe-services';
+export * from './range-fe-services'
+export * from './product-group-service';
+export * from './procurment-group-service';
+export * from './hierarchy-level-service';

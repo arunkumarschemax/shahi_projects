@@ -110,7 +110,7 @@ export function PackagesTermsForm(props:PackagesTermsFormProps) {
             }
           ]}
         >
-          <Input  />
+          <Input placeholder='Enter Package Term Name'  />
         </Form.Item>
         </Col>
         </Row>

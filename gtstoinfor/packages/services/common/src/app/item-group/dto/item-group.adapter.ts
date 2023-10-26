@@ -15,7 +15,7 @@ export class ItemGroupAdapter{
     public convertDtoToEntity (itemgroupDtos :ItemGroupDto, isUpdate:boolean=false):ItemGroup {
         const item = new ItemGroup();
         item.itemGroupId=itemgroupDtos.itemGroupId;
-        // item.itemGroup=itemgroupDtos.itemGroup;
+        item.itemGroup=itemgroupDtos.itemGroup;
 
         item.isActive=itemgroupDtos.isActive==undefined?true:itemgroupDtos.isActive;
         if(isUpdate){
@@ -33,7 +33,7 @@ export class ItemGroupAdapter{
     public convertEntityToDto (item:ItemGroup):ItemGroupDto{
         const Itemvariable= new ItemGroupDto();
         Itemvariable.itemGroupId=item.itemGroupId;
-        // Itemvariable.itemGroup=item.itemGroup;
+        Itemvariable.itemGroup=item.itemGroup;
         Itemvariable.isActive=item.isActive;
         Itemvariable.createdAt=item.createdAt;
         Itemvariable.updatedAt=item.updatedAt;

@@ -159,9 +159,14 @@ const getAllActiveDivision=() =>{
             required: true,
             message: 'GroupTech Code Is Required'
           },
+          
+            {
+              pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+              message: `Should contain only alphabets and numbers.`
+            }
         ]}
         >
-        <Input />
+        <Input  placeholder='Enter GroupTech Code'/>
       </Form.Item>
       </Col >
 
@@ -173,15 +178,20 @@ const getAllActiveDivision=() =>{
               xl={{ span: 5 }}
             > 
      {/* <Col xs={{span:24}} sm={{span:24}} md={{span:5,offset:1}} lg={{span:5,offset:1}} xl={{span:5,offset:1}} style={{margin:'1%'}}> */}
-        <Form.Item name="groupTechClassDescription" label=" GroupTech Description"
+        <Form.Item name="groupTechClassDescription" label=" GroupTech Description" 
            rules={[
             {
               required: true,
               message: 'GroupTech DescriptionIs Required'
-            },
+            }
+            ,
+            {
+              pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+              message: `Should contain only alphabets and numbers.`
+            }
           ]}
         >
-        <Input />
+        <Input placeholder='Enter GroupTech Description '/>
       </Form.Item>
       </Col >
       <Col

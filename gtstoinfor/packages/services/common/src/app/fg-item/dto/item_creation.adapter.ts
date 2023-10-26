@@ -43,6 +43,17 @@ export class ItemCreationAdapter {
             entityObj.subCategoryId = dtoObj.subCategoryId
             entityObj.targetCurrency = dtoObj.targetCurrency
             entityObj.uom = dtoObj.uom
+            entityObj.composition = dtoObj.composition
+            entityObj.basicUom = dtoObj.basicUom
+            entityObj.groupTechClass = dtoObj.groupTechClass
+            entityObj.productGroup = dtoObj.productGroup
+            entityObj.range = dtoObj.range
+            entityObj.searchGroup = dtoObj.searchGroup
+            entityObj.referenceId = dtoObj.referenceId
+            entityObj.itemGroup = dtoObj.itemGroup
+            entityObj.businessArea = dtoObj.businessArea
+            entityObj.groupTechClass = dtoObj.groupTechClass
+            entityObj.noOfLacePanel = dtoObj.noOfLacePanel
             entityObj.versionFlag = dtoObj.versionFlag
             if (isUpdate) {
                 entityObj.updatedUser = dtoObj.createdUser;
@@ -98,6 +109,17 @@ export class ItemCreationAdapter {
         itemCreationDto.subCategoryId = itemCreation.subCategoryId
         itemCreationDto.targetCurrency = itemCreation.targetCurrency
         itemCreationDto.uom = itemCreation.uom
+        itemCreationDto.composition = itemCreation.composition
+        itemCreationDto.basicUom = itemCreation.basicUom
+        itemCreationDto.groupTechClass = itemCreation.groupTechClass
+        itemCreationDto.productGroup = itemCreation.productGroup
+        itemCreationDto.range = itemCreation.range
+        itemCreationDto.searchGroup = itemCreation.searchGroup
+        itemCreationDto.referenceId = itemCreation.referenceId
+        itemCreationDto.itemGroup = itemCreation.itemGroup
+        itemCreationDto.businessArea = itemCreation.businessArea
+        itemCreationDto.groupTechClass = itemCreation.groupTechClass
+        itemCreationDto.noOfLacePanel = itemCreation.noOfLacePanel
         itemCreationDto.updatedUser = itemCreation.updatedUser
         itemCreationDto.versionFlag = itemCreation.versionFlag
         return itemCreationDto;

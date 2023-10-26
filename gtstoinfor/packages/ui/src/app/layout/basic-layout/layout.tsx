@@ -373,10 +373,22 @@ export const baseRouterList = [
                 filepath: "size/size-view",
             },
             {
+                label: "Item Group",
+                key: "itemgroup",
+                path: "item-group/item-group-view",
+                filepath: "item-group/item-group-view",
+            },
+            {
                 label: "Division",
                 key: "division",
                 path: "division/division-view",
                 filepath: "division/division-view",
+            },
+            {
+                label: "Item Type",
+                key: "itemtype",
+                path: "item-Type/item-Type-view",
+                filepath: "item-Type/item-Type-view",
             },
             {
                 label: "Group Tech Class",
@@ -404,6 +416,24 @@ export const baseRouterList = [
                 path: 'range/range-grid',
                 filepath: 'range/range-grid',
                 
+            },
+            {
+                label: "Product Group",
+                key: "productGroup",
+                path: "productGroup/productGroup-view",
+                filepath: "productGroup/productGroup-view",
+            },
+            {
+                label: "Procurment Group",
+                key: "procurmentGroup",
+                path: "procurmentGroup/procurmentGroup-view",
+                filepath: "procurmentGroup/procurmentGroup-view",
+            },
+            {
+                label: "Hierarchy Level",
+                key: "hierarchyLevel",
+                path: "hierarchyLevel/hierarchyLevel-view",
+                filepath: "hierarchyLevel/hierarchyLevel-view",
             },
         ],
     }, 

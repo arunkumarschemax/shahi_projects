@@ -10,7 +10,7 @@ export class ItemGroup{
 
 
     @Column('enum', {
-        name: 'item_Group',
+        name: 'item_group',
         enum: ItemGroupEnum
     })
     itemGroup: ItemGroupEnum;
