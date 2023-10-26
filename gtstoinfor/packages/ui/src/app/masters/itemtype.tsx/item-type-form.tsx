@@ -43,7 +43,7 @@ const [master,setmaster]=useState<ItemTypeDto[]>([])
     services.createItemType(Data).then(res => {
       if (res.status) {
         AlertMessages.getSuccessMessage('Created Successfully');
-        navigate("/masters/item-type-view/item-type-view")
+        navigate("/masters/item-type/item-type-view")
         onReset();
       } else {
         if (res.status) {
