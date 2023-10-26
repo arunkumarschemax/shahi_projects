@@ -373,10 +373,22 @@ export const baseRouterList = [
                 filepath: "size/size-view",
             },
             {
+                label: "Item Group",
+                key: "itemgroup",
+                path: "item-group/item-group-view",
+                filepath: "item-group/item-group-view",
+            },
+            {
                 label: "Division",
                 key: "division",
                 path: "division/division-view",
                 filepath: "division/division-view",
+            },
+            {
+                label: "Item Type",
+                key: "itemtype",
+                path: "item-Type/item-Type-view",
+                filepath: "item-Type/item-Type-view",
             },
             {
                 label: "Group Tech Class",

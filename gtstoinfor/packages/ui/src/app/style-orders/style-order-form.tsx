@@ -262,26 +262,26 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
 
       const segmentedOptions = generateSegmentedOptions();
 
-    const onSegmentChange = (e) => {
-        console.log(e)
-        setTableVisible(true)
-        if(state !== null && initialData[0].styleOrderItems.length > 0){
-            const req = new StyleOrderIdReq(state?.id,e)
-            styleOrderService.getCoLineItemsByDestination(req).then(res => {
-                if(res.status){
-                    setData(res.data)
-                }
-            })
+    // const onSegmentChange = (e) => {
+    //     console.log(e)
+    //     setTableVisible(true)
+    //     if(state !== null && initialData[0].styleOrderItems.length > 0){
+    //         const req = new StyleOrderIdReq(state?.id,e)
+    //         styleOrderService.getCoLineItemsByDestination(req).then(res => {
+    //             if(res.status){
+    //                 setData(res.data)
+    //             }
+    //         })
 
-        } else{
-            const req = new ItemCodeReq(form.getFieldValue('itemCode'),e)
-            skuService.getDataByDestinationAgainstItem(req).then(res => {
-                if(res.status){
-                    setData(res.data)
-                }
-            })
-        }
-    }
+    //     } else{
+    //         const req = new ItemCodeReq(form.getFieldValue('itemCode'),e)
+    //         skuService.getDataByDestinationAgainstItem(req).then(res => {
+    //             if(res.status){
+    //                 setData(res.data)
+    //             }
+    //         })
+    //     }
+    // }
 
     const setQuantityValue = (e,index,rowData) => {
         console.log(e,index,rowData)
@@ -629,7 +629,7 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
                 <Segmented 
                 style={{backgroundColor:'#dde5b6'}}
                 options={segmentedOptions} 
-                onChange={onSegmentChange}
+                // onChange={onSegmentChange}
                 />
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
                     <Form.Item label='Delivery Address' name='deliveryAddress'>

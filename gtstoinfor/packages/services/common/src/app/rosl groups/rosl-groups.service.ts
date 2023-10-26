@@ -62,7 +62,7 @@ export class ROSLGroupsService {
 
     async getAllROSLGroups(): Promise<AllROSLGroupsResponseModel> {
       try {
-        const roslGroupDTO: ROSLGroups[] = [];
+        const roslGroupDTO: ROSLGroupsDTO[] = [];
         const roslGroupEntity: ROSLGroups[] = await this.roslGroupsRepository.find({ 
           order :{roslGroup:'ASC'}});
         if (roslGroupEntity) {

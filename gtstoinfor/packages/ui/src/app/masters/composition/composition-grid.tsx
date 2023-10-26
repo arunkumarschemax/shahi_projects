@@ -44,7 +44,7 @@ const CompositionGrid = () => {
   }
 
   const deleteLiscenceType = (compositionData:CompositionDto) => {
-     console.log(compositionData,'hiiiiiiiiii')
+    //  console.log(compositionData,'hiiiiiiiiii')
     compositionData.isActive=compositionData.isActive?false:true;
     service.activateOrDeactivateComposition(compositionData).then(res => { console.log(res);
       if (res.status) {
@@ -180,7 +180,7 @@ const CompositionGrid = () => {
       dataIndex: 'isActive',
        // width:'80px',
       render: (isActive, rowData) => (
-        <>
+        < >
           {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
         </>
       ),
@@ -196,7 +196,6 @@ const CompositionGrid = () => {
       ],
       filterMultiple: false,
       onFilter: (value, record) => {
-        // === is not work
         return record.isActive === value;
       },
 
