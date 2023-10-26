@@ -2,7 +2,7 @@ import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne
 import { Settings } from "../settings/settings.entity";
 import { Size } from "../sizes/sizes-entity";
 import { Colour } from "../colours/colour.entity";
-
+import {ItemTypeEntity} from "../item-type/item-type.entity"
 @Entity('division')
 export class Division {
 
@@ -85,10 +85,12 @@ updatedUser: string | null;
   @OneToMany(type => Settings, settings => settings.divisionInfo,{cascade: true})
   settingsInfo : Settings
 
-  @OneToOne(()=> Size,size=>size.division)
+  @OneToOne(()=> Size,size=>size.division,{cascade: true})
   sizes:Size[]
-  @OneToOne(()=> Colour,color=>color.division)
+  @OneToOne(()=> Colour,color=>color.division,{cascade: true})
   Colour:Size[]
-  @OneToOne(()=> Colour,destination=>destination.division)
+  @OneToOne(()=> Colour,destination=>destination.division,{cascade: true})
   Destination:Size[]
+  @OneToOne(()=> ItemTypeEntity,itemtype=>itemtype.division,{cascade: true})
+  ItemType:ItemTypeEntity[]
 }
