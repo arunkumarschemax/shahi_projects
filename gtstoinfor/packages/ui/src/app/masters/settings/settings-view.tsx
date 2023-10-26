@@ -45,7 +45,7 @@ export const SettingsView = () => {
                 <DescriptionsItem label='Facility'>{data[0]?.name}</DescriptionsItem>
                 <DescriptionsItem label='Division'>{data[0]?.divisionName}</DescriptionsItem>
                 <DescriptionsItem label='Warehouse'>{data[0]?.warehouseName}</DescriptionsItem>
-                <DescriptionsItem label='CO Type'>{}</DescriptionsItem>
+                <DescriptionsItem label='CO Type'>{data[0]?.coType}</DescriptionsItem>
             </Descriptions>
             <br/>
             <Descriptions title={<Tag color="lime" style={{fontSize:'15px'}}>TEAM DETAILS</Tag>} size='small'>

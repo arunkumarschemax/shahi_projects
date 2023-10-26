@@ -31,4 +31,13 @@ export class ItemCreationController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
+
+    @Post('/getAllFgItems')
+    async getAllFgItems(): Promise<CommonResponseModel> {
+        try {
+            return await this.itemCreationService.getAllFgItems();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
 }

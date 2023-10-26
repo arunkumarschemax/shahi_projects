@@ -57,11 +57,8 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
     const fgItemService = new ItemCreationService()
     const [initialData,setInitialData] = useState<any[]>([])
     const { state } = useLocation();
-    console.log(state,'------')
-
     useEffect(()=>{
         if(initialData.length > 0){
-            console.log(initialData[0],'--------')
             form.setFieldsValue({
                 'itemCode':initialData[0].itemCode,
                 'buyer': initialData[0].buyerId,
@@ -91,6 +88,8 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
 
             })
             setItemId(initialData[0].itemId)
+            getBuyersAddressInfo(initialData[0].buyerId)
+            getBuyerDestinations(initialData[0].buyerId)
             getDestinationsByItem()
         }
     
@@ -262,34 +261,46 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
 
       const segmentedOptions = generateSegmentedOptions();
 
-    // const onSegmentChange = (e) => {
-    //     console.log(e)
-    //     setTableVisible(true)
-    //     if(state !== null && initialData[0].styleOrderItems.length > 0){
-    //         const req = new StyleOrderIdReq(state?.id,e)
-    //         styleOrderService.getCoLineItemsByDestination(req).then(res => {
-    //             if(res.status){
-    //                 setData(res.data)
-    //             }
-    //         })
+    const onSegmentChange = (e) => {
+        setTableVisible(true)
+        if(state !== null && initialData[0].styleOrderItems[0].styleOrderItemsId !== null){
+            const req = new StyleOrderIdReq(state?.id,e)
+            styleOrderService.getCoLineItemsByDestination(req).then(res => {
+                if(res.status){
+                    setData(res.data)
+                    form.setFieldsValue({'deliveryAddress':Number(res.data[0].deliveryAddress)})
+                    // setOrderQuantityData(res.data)
+                }
+            })
 
-    //     } else{
-    //         const req = new ItemCodeReq(form.getFieldValue('itemCode'),e)
-    //         skuService.getDataByDestinationAgainstItem(req).then(res => {
-    //             if(res.status){
-    //                 setData(res.data)
-    //             }
-    //         })
-    //     }
-    // }
+        } else{
+            const req = new ItemCodeReq(form.getFieldValue('itemCode'),e)
+            skuService.getDataByDestinationAgainstItem(req).then(res => {
+                if(res.status){
+                    setData(res.data)
+                }
+            })
+        }
+    }
 
     const setQuantityValue = (e,index,rowData) => {
-        console.log(e,index,rowData)
-        console.log(e.target.value)
-        data[index].quantity = e.target.value
-        data[index].deliveryAddress = form.getFieldValue('deliveryAddress')
-        const req = new StyleOrderItemsReq(form.getFieldValue('deliveryAddress'),e.target.value,rowData.color,rowData.size,rowData.destination,null,CustomerOrderStatusEnum.OPEN,null,null,null,rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId,null,rowData.id,rowData.coLineNumber,rowData.skuCode)
-        setOrderQuantityData([...orderQuantityData,req])
+        // if(state !== null && initialData[0].styleOrderItems[0].styleOrderItemsId !== null){
+        //     const req = new StyleOrderItemsReq(form.getFieldValue('deliveryAddress'),e.target.value,rowData.color,rowData.size,rowData.destination,null,rowData.status,null,null,null,rowData.colorId,rowData.sizeId,rowData.destinationId,null,rowData.styleOrderItemsId,rowData.coLineNumber,rowData.skuCode,state !== null ? state?.id : null)
+        //     orderQuantityData[index] = req
+        //     // orderQuantityData[index].orderQuantity = e.target.value;
+        //     // orderQuantityData[index].deliveryAddress = form.getFieldValue('deliveryAddress')
+        // } else{
+            data[index].quantity = e.target.value
+            data[index].deliveryAddress = form.getFieldValue('deliveryAddress')
+            const req = new StyleOrderItemsReq(form.getFieldValue('deliveryAddress'),e.target.value,rowData.color,rowData.size,rowData.destination,null,CustomerOrderStatusEnum.OPEN,null,null,null,rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId,null,rowData.coLineId,rowData.coLineNumber,rowData.skuCode,state !== null ? state?.id : null,rowData.styleOrderInfo)
+            const iniIndex =orderQuantityData.findIndex(e => e.coLineId === rowData.coLineId)
+            if(iniIndex != -1){
+                orderQuantityData[index] = req
+            } else{
+                setOrderQuantityData([...orderQuantityData,req])
+            }
+
+        // }
     }
 
     const columns: ColumnProps<any>[] = [
@@ -342,12 +353,13 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
     const [firstHalfData, secondHalfData] = splitData(data);
 
     const onFinish = (val) => {
-        const req = new StyleOrderReq(val.itemCode,val.CODate,val.buyerPoNumber,val.shipmentType,val.buyerStyle,val.agent,val.buyerAddress,val.exfactoryDate,val.deliveryDate,val.inStoreDate,val.salePrice,val.priceQuantity,val.discount,null,orderQuantityData.length > 0 ? CustomerOrderStatusEnum.CONFIRMED : CustomerOrderStatusEnum.OPEN,val.remarks,itemId,val.warehouse,val.facility,null,val.packageTerms,val.deliveryMethod,val.deliveryTerms,val.currency,val.paymentMethod,val.paymentTerms,orderQuantityData,val.buyer,'admin',val.styleOrderId,val.coNumber)
+        const req = new StyleOrderReq(val.itemCode,val.CODate,val.buyerPoNumber,val.shipmentType,val.buyerStyle,val.agent,val.buyerAddress,val.exfactoryDate,val.deliveryDate,val.inStoreDate,val.salePrice,val.priceQuantity,val.discount,null,orderQuantityData.length > 0 ? CustomerOrderStatusEnum.CONFIRMED : CustomerOrderStatusEnum.OPEN,val.remarks,itemId,val.warehouse,val.facility,null,val.packageTerms,val.deliveryMethod,val.deliveryTerms,val.currency,val.paymentMethod,val.paymentTerms,orderQuantityData,val.buyer,'admin',val.styleOrderId,val.coNumber,val.styleOrderId)
         styleOrderService.createCustomerOrder(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
+                navigate('/materialCreation/style-order-view')
             } else{
-                AlertMessages.getSuccessMessage(res.internalMessage)
+                AlertMessages.getErrorMessage(res.internalMessage)
             }
         }) 
     }
@@ -377,7 +389,7 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
                 <Row gutter={[8,8]}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                 <Form.Item name='itemCode' label='Item' rules={[{required:true,message:'Item is required'}]}>
-                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select Item' onChange={onItemCodeChange}>
+                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select Item' onChange={onItemCodeChange} disabled={state !== null ? true : false}>
                         {
                             itemCodes.map((e) => {
                                 return(
@@ -629,7 +641,9 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
                 <Segmented 
                 style={{backgroundColor:'#dde5b6'}}
                 options={segmentedOptions} 
-                // onChange={onSegmentChange}
+                onChange={onSegmentChange}
+                default={true}
+                defaultValue={segmentedOptions[0]?.label?.props?.children}
                 />
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
                     <Form.Item label='Delivery Address' name='deliveryAddress'>

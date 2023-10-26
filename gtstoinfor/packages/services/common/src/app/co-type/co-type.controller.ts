@@ -49,4 +49,13 @@ export class CoTypeController {
         }
     }
 
+    @Post('/getAllActiveCoTypeInfo')
+    async getAllActiveCoTypeInfo(): Promise<CoTypeResponseModel> {
+        try {
+            return await this.coTypeService.getAllActiveCoTypeInfo();
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CoTypeResponseModel, error)
+        }
+    }
+
 }

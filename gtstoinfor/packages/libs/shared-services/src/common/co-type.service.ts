@@ -19,4 +19,8 @@ export class CoTypeService extends CommonAxiosService{
     async activateOrDeactivateCoType(req:CoTypeActivateReq): Promise<CoTypeResponseModel> {
       return this.axiosPostCall(this.URL + "/activateOrDeactivateCoType",req)
     }
+
+    async getAllActiveCoTypeInfo(): Promise<CoTypeResponseModel> {
+      return this.axiosPostCall(this.URL + "/getAllActiveCoTypeInfo")
+    }
 }

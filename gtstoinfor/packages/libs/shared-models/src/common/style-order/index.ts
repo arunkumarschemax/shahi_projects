@@ -1,6 +1,6 @@
 export * from './style-order-items-model'
-export * from './style-order-items-req'
 export * from './style-order-model'
-export * from './style-order-req'
 export * from './style-order-response-model'
 export * from './style-orders-itemid-req '
+export * from './style-order-items-req'
+export * from './style-order-req'

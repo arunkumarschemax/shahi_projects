@@ -12,6 +12,7 @@ import { PaymentMethod } from "../payment-methods/payment-method-entity";
 import { DeliveryMethod } from "../delivery-method/delivery-method.entity";
 import { DeliveryTerms } from "../delivery-terms/delivery-terms.entity";
 import { Address } from "../buyers/address.entity";
+import { CoTypes } from "../co-type/co-type.entity";
 
 @Entity('settings')
 export class Settings {
@@ -152,5 +153,9 @@ export class Settings {
     @ManyToOne(type => Address,address => address.settingsInfo,{nullable:true})
     @JoinColumn({name:'buyer_address_id'})
     addressInfo: Address
+
+    @ManyToOne(type => CoTypes,coTypes => coTypes.settingsInfo,{nullable:true})
+    @JoinColumn({name:'co_type_id'})
+    coTypeInfo: CoTypes
 
 }

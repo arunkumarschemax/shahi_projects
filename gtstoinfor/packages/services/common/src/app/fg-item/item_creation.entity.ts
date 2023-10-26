@@ -137,15 +137,85 @@ export class ItemCreation {
   @Column("varchar", {
     nullable: true,
     length: 40,
+    name: "item_group"
+  })
+  itemGroup: string;
+
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
+    name: "product_group"
+  })
+  productGroup: string;
+
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
+    name: "business_area"
+  })
+  businessArea: string;
+
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
+    name: "basic_uom"
+  })
+  basicUom: string;
+
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
+    name: "group_tech_class"
+  })
+  groupTechClass: string;
+
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
+    name: "composition"
+  })
+  composition: string;
+
+
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
     name: "target_currency"
   })
   targetCurrency: string;
 
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
+    name: "range"
+  })
+  range: string;
+
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
+    name: "no_of_lace_panel"
+  })
+  noOfLacePanel: string;
+
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
+    name: "search_group"
+  })
+  searchGroup: string;
+  
   @Column("int", {
     nullable: false,
     name: "conversion_factor_id" /// foregn key
   })
   conversionFactorId: number;
+
+  @Column("int", {
+    nullable: false,
+    name: "reference_id" /// foregn key
+  })
+  referenceId: number;
 
   @Column("int", {
     nullable: false,
