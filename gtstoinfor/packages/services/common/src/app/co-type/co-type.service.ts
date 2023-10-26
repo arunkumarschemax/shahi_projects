@@ -81,12 +81,31 @@ export class CoTypeService {
                     }
                 }
                 // }
-            }
+                }
         } else {
             return new CoTypeResponseModel(false,99998, 'No Records Found');
         }
-    } catch (err) {
-        return err;
+        } catch (err) {
+            return err;
+        }
     }
-}
+
+    
+    async getAllActiveCoTypeInfo():Promise<CoTypeResponseModel>{
+        try{
+            const data = await this.repo.find({where:{isActive:true}})
+            let info = []
+            if(data.length > 0){
+                for(const rec of data){
+                    info.push(new CoTypeModel(rec.coTypeId,rec.coType,rec.isActive,rec.versionFlag))
+                }
+                return new CoTypeResponseModel(true,1,'Data retrieved',info)
+            } else{
+                return new CoTypeResponseModel(false,0,'No data found',info)
+            }
+
+        } catch(err){
+            throw err
+        }
+   }
 }

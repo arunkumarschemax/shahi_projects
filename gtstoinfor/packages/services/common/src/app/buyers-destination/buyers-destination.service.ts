@@ -59,15 +59,11 @@ async createBuyersDestination(
                 const size = new Size()
                 const sizesInfo = new BuyersSize();
                 size.sizeId = res.id
-                console.log(res.id,'----------res   ')
                 size.size = res.name
                 sizesInfo.sizeInfo = size
                 sizesInfo.buyerInfo = new Buyers();
                 sizesInfo.buyerInfo.buyerId = dto.buyerId
                 const saveSize = await this.buyerSizeRepo.save(sizesInfo);
-                console.log(sizesInfo,'----------rec')
-
-                console.log(saveSize,'size')
                 }
                 else{
                   return new BuyersDestinationResponseModel(false,0,`Buyer Size  "${res.name}" Already exists`);
@@ -90,7 +86,6 @@ async createBuyersDestination(
                 desInfo.buyerInfo = new Buyers()
                 desInfo.buyerInfo.buyerId = dto.buyerId
                 const saveDest = await this.buyersDesRepo.save(desInfo);
-                console.log(saveDest,'saveDest')
               }
               else{
                 return new BuyersDestinationResponseModel(false,0,`Buyer Destination  "${res.name}" Already exists`);
@@ -114,7 +109,6 @@ async createBuyersDestination(
                 color.colour = res.name
                 colorInfo.buyerInfo.buyerId = dto.buyerId
                 const saveColor = await this.buyerColorRepo.save(colorInfo);
-                console.log(saveColor,'saveColor')
               }
               else{
                 return new BuyersDestinationResponseModel(false,0,`Buyer Colour ${res.name} Already exists`);
@@ -135,8 +129,6 @@ async createBuyersDestination(
         const size = await this.buyerSizeRepo.getAll(req)
         const des = await this.buyersDesRepo.getAll(req)
         const color = await this.buyerColorRepo.getAll(req)
-        console.log(size,'size-------')
-        console.log(des,'des-------')
        let mappDetails : MappingModel[] =[]
        let sizeInfo:SizeInfoModel[] =[]
        let colorInfo=[]
@@ -162,7 +154,6 @@ async createBuyersDestination(
            }
        
            buyersInfo[buyerId].color.push({ colourId: res.colour_id, colour: res.colour });
-           console.log(buyersInfo,'buyerscolor')
        }
        
        for (const sizeRes of size) {
@@ -180,7 +171,6 @@ async createBuyersDestination(
            }
        
            buyersInfo[buyerId].size.push({ sizeId: sizeRes.size_id, size: sizeRes.sizes });
-           console.log(buyersInfo,'buyerssize')
 
        }
        
@@ -199,7 +189,6 @@ async createBuyersDestination(
            }
        
            buyersInfo[buyerId].destination.push({ destinationId: desRes.destination_id, destination: desRes.destination });
-           console.log(buyersInfo,'buyersdes')
 
        }
        

@@ -18,9 +18,9 @@ import { ItemCreation } from "../fg-item/item_creation.entity";
 export class StyleOrder{
 
     @PrimaryGeneratedColumn("increment",{
-        name:'id'
+        name:'co_id'
     })
-    id:number;
+    coId:number;
 
     @Column('varchar',{
         name:'co_number',

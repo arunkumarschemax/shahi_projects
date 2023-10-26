@@ -15,11 +15,14 @@ export class StyleOrderItemsReq{
     sizeId: number;
     destinationId: number;
     uomId: number;
-    styleOrderItemId?: number;
+    coLineId?: number;
     coLineNumber?: string;
     skuCode?: string;
+    coId?: number;
+    styleOrderInfo?: any;
 
-    constructor(deliveryAddress : string,orderQuantity: number,color : string,size : string,destination : string,uom : string,status : CustomerOrderStatusEnum,discount: number,salePrice: number,coPercentage: number,colorId: number,sizeId: number,destinationId: number,uomId: number,styleOrderItemId?:number,coLineNumber?: string,skuCode?: string){
+
+    constructor(deliveryAddress : string,orderQuantity: number,color : string,size : string,destination : string,uom : string,status : CustomerOrderStatusEnum,discount: number,salePrice: number,coPercentage: number,colorId: number,sizeId: number,destinationId: number,uomId: number,coLineId?:number,coLineNumber?: string,skuCode?: string,coId?: number,styleOrderInfo?:any){
     this.deliveryAddress = deliveryAddress
     this.orderQuantity = orderQuantity
     this.color = color
@@ -34,9 +37,11 @@ export class StyleOrderItemsReq{
     this.sizeId= sizeId
     this.destinationId= destinationId
     this.uomId= uomId
-    this.styleOrderItemId = styleOrderItemId
+    this.coLineId = coLineId
     this.coLineNumber = coLineNumber
     this.skuCode = skuCode
+    this.coId = coId
+    this.styleOrderInfo = styleOrderInfo
 
     }
 

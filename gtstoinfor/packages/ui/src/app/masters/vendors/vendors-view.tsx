@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Form, Select } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Form, Select, Space } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined, CheckOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
@@ -143,56 +143,67 @@ export function VendorsView(
       })
     }
   
-    const getColumnSearchProps = (dataIndex:any): ColumnType<string> => ({
-      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-        <div style={{ padding: 8 }}>
+    const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+        <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
           <Input
-            ref={ searchInput }
+            ref={searchInput}
             placeholder={`Search ${dataIndex}`}
             value={selectedKeys[0]}
-            onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-            onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            style={{ width: 188, marginBottom: 8, display: 'block' }}
+            onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            style={{ marginBottom: 8, display: 'block' }}
           />
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90, marginRight: 8 }}
-          >
-            Search
-          </Button>
-          <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-            Reset
-          </Button>
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+              icon={<SearchOutlined />}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Search
+            </Button>
+            <Button
+              onClick={() =>{
+                handleReset(clearFilters)
+                setSearchedColumn(dataIndex)
+                confirm({closeDropdown:true})
+              }
+                 }
+              size="small"
+              style={{ width: 90 }}
+            >
+              Reset
+            </Button>
+           
+          </Space>
         </div>
       ),
-      filterIcon: filtered => (
-        <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+      filterIcon: (filtered: boolean) => (
+        <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
       ),
       onFilter: (value, record) =>
-      record[dataIndex]
-      ? record[dataIndex]
-         .toString()
+        record[dataIndex] ?record[dataIndex]     
+           .toString()
           .toLowerCase()
           .includes((value as string).toLowerCase()):false,
-      onFilterDropdownVisibleChange: visible => {
-        if (visible) {    setTimeout(() => searchInput.current.select());   }
+      onFilterDropdownOpenChange: (visible) => {
+        if (visible) {
+          setTimeout(() => searchInput.current?.select(), 100);
+        }
       },
-      render: text =>
-        text ?(
+      render: (text) =>
         searchedColumn === dataIndex ? (
           <Highlighter
             highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
             searchWords={[searchText]}
             autoEscape
-            textToHighlight={text.toString()}
+            textToHighlight={text ? text.toString() : ''}
           />
-        ) :text
-        )
-        : null
-       
+        ) : (
+          text
+        ),
     });
   
     /**
@@ -236,9 +247,9 @@ export function VendorsView(
         },
         {
           dataIndex:"vendorCode",
-          title:"VendorCode",
+          title:"Vendor Code",
           // responsive: ['lg'],
-          sorter: (a, b) => a.deptName.length - b.deptName.length,
+          sorter: (a, b) => a.vendorCode?.localeCompare(b.vendorCode),
           sortDirections: ['descend', 'ascend'],
           ...getColumnSearchProps('vendorCode')
         },
@@ -317,7 +328,7 @@ export function VendorsView(
           dataIndex:"city",
           title:"City",
           // responsive: ['lg'],
-          sorter: (a, b) => a.deptName.length - b.deptName.length,
+          sorter: (a, b) => a.city?.localeCompare(b.city),
           sortDirections: ['descend', 'ascend'],
           // ...getColumnSearchProps('city')
         },
