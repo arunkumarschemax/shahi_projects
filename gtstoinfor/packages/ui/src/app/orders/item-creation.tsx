@@ -4,9 +4,15 @@ import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link } from "react-router-dom";
 import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryService, ItemCreationService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, StyleService } from "@project-management-system/shared-services";
+ 
+export interface FormProps {
+  // itemCreationData:CompositionDto;
+  // updateData:(item:CompositionDto)=>void;
+  isUpdate:boolean;
+  closeForm: () => void;
+}
 
-
-        export const ItemCreation =()=>{
+        export function ItemCreation (props: FormProps){
          const [form] = Form.useForm();
          const currencyServices = new CurrencyService();
          const styleService = new StyleService();
@@ -165,10 +171,10 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
          }
          return (
          <>
-         <Card title='Item Creation' size='small' extra={<Link to='/materialCreation/item-creation-view' >
-      <span style={{color:'white'}} ><Button type={'primary'} >View</Button> </span>
-      </Link>}>
-               <Form  form={form} style={{ fontSize: "10px" }} layout="vertical" onFinish = {saveItem}>
+        <Card title="Item Creation" size="small" extra={!props.isUpdate && (<Link to="/materialCreation/item-creation-view">
+         <span style={{ color: 'white' }}><Button type="primary">View</Button></span></Link> )}>
+
+               <Form  form={form} style={{ fontSize: "10px" }}  layout="vertical" onFinish = {saveItem}>
                <Form.Item name='trim' style={{display:'none'}}>
                     <Input hidden/>
                 </Form.Item>
