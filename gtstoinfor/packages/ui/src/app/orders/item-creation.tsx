@@ -3,11 +3,17 @@ import { HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link } from "react-router-dom";
-import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryService, ItemCreationService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, StyleService } from "@project-management-system/shared-services";
+import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, ItemCategoryService, ItemCreationService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
+ 
+export interface FormProps {
+  // itemCreationData:CompositionDto;
+  // updateData:(item:CompositionDto)=>void;
+  isUpdate:boolean;
+  closeForm: () => void;
+}
 
-
-        export const ItemCreation =()=>{
-         const [form] = Form.useForm();
+export function ItemCreation (props: FormProps){    
+       const [form] = Form.useForm();
          const currencyServices = new CurrencyService();
          const styleService = new StyleService();
          const LicenceService = new LiscenceTypeService();
@@ -17,7 +23,17 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
          const customGroupservice = new CustomGroupsService();
          const buyingHouseservice = new BuyingHouseService();
          const itemCreationService = new ItemCreationService();
+         const searchgroup = new SearchGroupService();
+         const employeservice = new EmployeeDetailsService();
+         const Rangeservice = new RangeService();
+         const compositionservice = new CompositionService();
+         const uomservice = new UomService();
          const [currencydata,setCurrencyData] = useState([]);
+         const [uomdata,setUomData] = useState([]);
+         const [compositiondata,setCompositionData] = useState([]);
+         const [searchdata,setSearchData] = useState([]);
+         const [employedata,setEmployeData] = useState([]);
+         const [rangedata,setRangeData] = useState([]);
          const [customGroup,setCustomGroup]= useState([]);
          const [licence,setLicence]=useState([])
          const [itemCategory,setItemCategory]= useState([])
@@ -37,6 +53,11 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
             getAllCustomGrops();
             getAllROSL();
             getAllBuyingHouse();
+            getAllSearchgroup();
+            getAllRanges();
+            getAllComposition();
+            getAllUoms();
+            getAllEmployes();
           },[])
 
          const getAllCurrencies=() =>{
@@ -53,7 +74,63 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                AlertMessages.getErrorMessage(err.message);
              })        
           }
-          
+
+          const getAllEmployes=() =>{
+            employeservice.getAllActiveEmploee().then(res =>{
+              if (res.status){
+                // console.log(res,'llllll')
+                setEmployeData(res.data);
+                 
+              } else{
+                AlertMessages.getErrorMessage(res.internalMessage);
+                 }
+            }).catch(err => {
+              setEmployeData([]);
+               AlertMessages.getErrorMessage(err.message);
+             })        
+          }
+
+          const getAllUoms=() =>{
+            uomservice.getAllActiveUoms().then(res =>{
+              if (res.status){
+                // console.log(res,'llllll')
+                setUomData(res.data);
+                 
+              } else{
+                AlertMessages.getErrorMessage(res.internalMessage);
+                 }
+            }).catch(err => {
+              setUomData([]);
+               AlertMessages.getErrorMessage(err.message);
+             })        
+          }
+
+const getAllComposition=()=>{
+compositionservice.getActiveComposition().then(res=>{
+  if(res.status){
+    setCompositionData(res.data);
+  }else{
+    AlertMessages.getErrorMessage(res.internalMessage);
+  }
+}).catch(err => {
+  setCompositionData([]);
+   AlertMessages.getErrorMessage(err.message);
+ })
+}
+
+          const getAllSearchgroup=()=>{
+            searchgroup.getActiveSearchGroup().then(res=>{
+              if(res.status){
+                setSearchData(res.data)
+              }else{
+                AlertMessages.getErrorMessage(res.internalMessage);
+              }
+            }).catch(err => {
+              setSearchData([]);
+               AlertMessages.getErrorMessage(err.message);
+             })        
+          }
+
           const getAllStyles=()=>{
          styleService.getAllActiveStyle().then(res=>{
            if(res.status){
@@ -95,6 +172,19 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
             })
           }
 
+           const getAllRanges=()=>{
+            Rangeservice.getActiveRange().then(res=>{
+              if(res.status){
+                setRangeData(res.data);
+              }else{
+                AlertMessages.getErrorMessage(res.internalMessage)
+
+              }
+            }).catch(err=>{setRangeData([])
+              AlertMessages.getErrorMessage(err.message)
+
+            })
+           }
           const getAllCategory=()=>{
             categoryService.getActiveItemCategories().then(res=>{
                 if(res.status){
@@ -165,10 +255,10 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
          }
          return (
          <>
-         <Card title='Item Creation' size='small' extra={<Link to='/materialCreation/item-creation-view' >
-      <span style={{color:'white'}} ><Button type={'primary'} >View</Button> </span>
-      </Link>}>
-               <Form  form={form} style={{ fontSize: "10px" }} layout="vertical" onFinish = {saveItem}>
+        <Card title="Item Creation" size="small" extra={!props.isUpdate && (<Link to="/materialCreation/item-creation-view">
+         <span style={{ color: 'white' }}><Button type="primary">View</Button></span></Link> )}>
+
+               <Form  form={form} style={{ fontSize: "10px" }}  layout="vertical" onFinish = {saveItem}>
                <Form.Item name='trim' style={{display:'none'}}>
                     <Input hidden/>
                 </Form.Item>
@@ -235,7 +325,8 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                    <Row gutter={8}>
                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                       <Form.Item  label="Shahi Style" rules={[{ required: true, message: "Fill Shahi Style" }]}>
-                      <Select showSearch placeholder="Select Shahi Style" allowClear suffixIcon={<SearchOutlined />}>{styledata.map((e)=>{
+                      <Select showSearch placeholder="Select Shahi Style" allowClear suffixIcon={<SearchOutlined />}>
+                        {styledata.map((e)=>{
                         return(
                             <Option key={e.styleId} value={e.styleId}>
                              {e.style}
@@ -243,6 +334,15 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                         )
                     })}
                  </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                      <Form.Item   name="referenced" label="Referenced" rules={[{ required: true, message: "Enter Referenced" }]}>
+                      <Select
+                        placeholder="Select Referenced"
+                        allowClear>
+                         
+                      </Select>
                       </Form.Item>
                     </Col>
                     </Row>
@@ -276,13 +376,26 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                          <Row gutter={8}>
                          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                 <Form.Item   name="basicUOM" label="Basic UOM" rules={[{ required: true, message: "Enter Basic UOM" }]}>
-                <Select placeholder="Select Basic UOM" allowClear></Select>
+                <Select placeholder="Select Basic UOM" allowClear>
+                  {uomdata.map((e)=>{
+                    return(<Option key={e.id} values={e.id}>{e.uom}</Option>)
+                  })
+
+                  }
+                </Select>
                 </Form.Item>
                        </Col>
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                         <Form.Item  name="altUOM" label="Alt UOM">
-                        <Input placeholder="Alt UOM" allowClear />
-                        </Form.Item>
+                        <Select placeholder="Select Basic UOM" allowClear>
+
+                        {uomdata.map((e)=>{
+                    return(<Option key={e.id} values={e.id}>{e.uom}</Option>)
+                  })
+
+                  }                    
+                                  </Select>
+                                 </Form.Item>
                        </Col>
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                         <Form.Item name="conversionFactor"
@@ -317,51 +430,39 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                         </Row>
                         <Row gutter={8}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                          <Form.Item name="projection Order" label="Projection Order">
+                          <Form.Item name="projectionOrder" label="Projection Order">
                           <Select showSearch placeholder="Select Projection Order" allowClear suffixIcon={<SearchOutlined />}>
                       </Select>
                           </Form.Item>
                        </Col>
 
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                          <Form.Item name="itemGroup" label="Item Group">
-                          <Select showSearch placeholder="Select Item Group" allowClear >
+                          <Form.Item name="businessArea" label="Business Area">
+                          <Select showSearch placeholder="Select Business Area" allowClear >
                       </Select>
                           </Form.Item>
                        </Col>
+                         
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                          <Form.Item name="businessArea" label="Business Area">
-                          <Select showSearch placeholder="Select Business Area" allowClear >
+                          <Form.Item name="composition" label="Composition">
+                          <Select showSearch placeholder="Select Composition" allowClear >
+                            {compositiondata.map((e)=>{
+                              return(<Option key={e.id} value={e.id}>{e.compositionCode}</Option>)
+                            })}
                       </Select>
                           </Form.Item>
                        </Col>
                         </Row>
                         
                         <Row gutter={8}>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                          <Form.Item name="basicUom" label="Basic Uom">
-                          <Select showSearch placeholder="Select Basic Uom" allowClear >
-                      </Select>
-                          </Form.Item>
-                       </Col>
-                       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                          <Form.Item name="groupTechClass" label="Group Tech Class">
-                          <Select showSearch placeholder="Select Group Tech Class" allowClear >
-                      </Select>
-                          </Form.Item>
-                       </Col>
-                       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                          <Form.Item name="composition" label="Composition">
-                          <Select showSearch placeholder="Select Composition" allowClear >
-                      </Select>
-                          </Form.Item>
-                       </Col>
+                      
+                     
                         </Row>
 </Card>
 </Col>
 
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                          <Card bordered={false}>
+                          <Card bordered={false} >
                           <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Profit Controllers</h1>
                           <Row gutter={8}>
                           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -444,24 +545,86 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                       </Select>
                     </Form.Item>
                        </Col>
-                      
+                       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                          <Form.Item name="groupTechClass" label="Group Tech Class">
+                          <Select showSearch placeholder="Select Group Tech Class" allowClear >
+                      </Select>
+                          </Form.Item>
+                       </Col>
+
+                              </Row>
+                              <Row gutter={8}>
+                              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                      <Form.Item   name="searchGroup" label="Search Group" rules={[{ required: true, message: "Enter Search Group" }]}>
+                      <Select
+                        placeholder="Select searchGroup"
+                        allowClear>
+                          {searchdata.map((e)=>{
+                            return(
+                            <Option key={e.id} values={e.id}>{e.searchGrpName}</Option>
+                            )
+                          })}
+                      </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                        <Form.Item name="salesPerson" label="Sales Person" rules={[{ required: true, message: "Enter Sales Person" }]}>
+                        <Input placeholder="Sales Person" allowClear />
+                        </Form.Item>
+                         </Col>
+                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                      <Form.Item   name="noOfLacePanel" label="No Of Lace Panel" rules={[{ required: true, message: "Enter No Of Lace Panel" }]}>
+                      <Input placeholder="No Of Lace Panel" allowClear />
+
+                      {/* <Select
+                        placeholder="Select No Of Lace Panel"
+                        allowClear>
+                      </Select> */}
+                      </Form.Item>
+                    </Col>
                               </Row>
                               <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Performance Responsible Team</h1>
                     <Row gutter={8}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                       <Form.Item name="responsible"label="Responsible" rules={[{ required: true, message: "Enter Responsible" }]}>
-                      <Input placeholder="Responsible" allowClear />
+                      {/* <Input placeholder="Responsible" allowClear /> */}
+                      <Select placeholder="Select Responsible" allowClear>
+
+                      {employedata.map((e)=>{
+                        return(
+                          <Option key={e.employeeId} values={e.employeeId}>{e.firstName}
+
+                          </Option>
+                        )
+                      })}
+                      </Select>
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                       <Form.Item name="Approve" label="Approve" rules={[{ required: true, message: "Enter Approve" }]}>
-                      <Select placeholder="Select Approve" allowClear>                        
+                      <Select placeholder="Select Approve" allowClear> 
+                      {employedata.map((e)=>{
+                        return(
+                          <Option key={e.employeeId} values={e.employeeId}>{e.firstName}
+
+                          </Option>
+                        )
+                      })}                       
                       </Select>
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                       <Form.Item name="Product Designer" label="Product Designer">
-                      <Input placeholder="Product Designer" allowClear />
+                        <Select placeholder="Select Product Designer"
+                        allowClear>
+                      {employedata.map((e)=>{
+                        return(
+                          <Option key={e.employeeId} values={e.employeeId}>{e.firstName}
+
+                          </Option>
+                        )
+                      })}
+                          </Select>
                       </Form.Item>
                      </Col>
                     </Row>
@@ -471,29 +634,45 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                       <Select
                         placeholder="Select Production Merchant"
                         allowClear>
+                          {employedata.map((e)=>{
+                        return(
+                          <Option key={e.employeeId} values={e.employeeId}>{e.firstName}
+
+                          </Option>
+                        )
+                      })}
                       </Select>
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                       <Form.Item  name="pd Merchant" label="PD Merchant">
                       <Select placeholder="Select PD Merchant" allowClear>
+                      {employedata.map((e)=>{
+                        return(
+                          <Option key={e.employeeId} values={e.employeeId}>{e.firstName}
+
+                          </Option>
+                        )
+                      })}
                       </Select>
+
                       </Form.Item>
                      </Col>
                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                      <Form.Item  name="factory Merchant" label="Factory Merchant">
                      <Select placeholder="Select Factory Merchant" allowClear>
+                     {employedata.map((e)=>{
+                        return(
+                          <Option key={e.employeeId} values={e.employeeId}>{e.firstName}
+
+                          </Option>
+                        )
+                      })}
                       </Select>
                       </Form.Item>
                      </Col>
                       </Row>
-                      <Row gutter={8}>
-                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item name="salesPerson" label="Sales Person" rules={[{ required: true, message: "Enter Sales Person" }]}>
-                        <Input placeholder="Sales Person" allowClear />
-                        </Form.Item>
-                         </Col>
-                         </Row>
+                      
                            
                            <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>TNA</h1>
                            <Row gutter={16}>
@@ -544,37 +723,15 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                       <Select
                         placeholder="Select Range"
                         allowClear>
+                          {rangedata.map((e)=>{
+                            return(
+                            <Option key={e.id} values={e.id}>{e.rangeCode}</Option>)
+                            })}
                       </Select>
                       </Form.Item>
                     </Col>
                       </Row>
-                      <Row gutter={8}>
-               
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                      <Form.Item   name="noOfLacePanel" label="No Of Lace Panel" rules={[{ required: true, message: "Enter No Of Lace Panel" }]}>
-                      <Select
-                        placeholder="Select No Of Lace Panel"
-                        allowClear>
-                      </Select>
-                      </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                      <Form.Item   name="searchGroup" label="Search Group" rules={[{ required: true, message: "Enter Search Group" }]}>
-                      <Select
-                        placeholder="Select Range"
-                        allowClear>
-                      </Select>
-                      </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                      <Form.Item   name="referenced" label="Referenced" rules={[{ required: true, message: "Enter Referenced" }]}>
-                      <Select
-                        placeholder="Select Range"
-                        allowClear>
-                      </Select>
-                      </Form.Item>
-                    </Col>
-                </Row>
+                     
 
                       </Card>
                     </Col>
@@ -582,7 +739,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                 </Row>
                 
 
-                <Row justify={'end'} style={{marginTop: '-30px'}}>
+                <Row justify={'end'} style={{marginTop: '-40px'}}>
   <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}>
     <Button type='primary' htmlType='submit'>Submit</Button>
   </Col>

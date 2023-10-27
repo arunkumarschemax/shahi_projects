@@ -41,6 +41,7 @@ export class ItemTypeController{
         @Post('/getAllItemType')
         async getAllItemType(): Promise<AllItemTypeResponseModel> {
           try {
+            // console.log('ooooooooooo')
             return await this.itemTypeService.getAllItemTypes();
           } catch (error) {
             // return errorHandler(AllSizeResponseModel, error);
@@ -49,7 +50,7 @@ export class ItemTypeController{
         }
 
         @Post('/getAllActiveItemType')
-  @ApiBody({type:ItemTypeDtos})
+  // @ApiBody({type:ItemTypeDtos})
   async getAllActiveItemType(): Promise<AllItemTypeResponseModel> {
     try {
       return await this.itemTypeService.getAllActiveItemTypes();

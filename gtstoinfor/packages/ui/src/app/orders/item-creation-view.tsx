@@ -10,6 +10,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import {   CompositionService, ItemCreationService, ItemsService, LiscenceTypeService } from '@project-management-system/shared-services';
 import { CompositionDto, LiscenceTypesdDto } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
+import ItemCreation from './item-creation';
 
 
 const ItemCreationView = () => {
@@ -20,7 +21,7 @@ const ItemCreationView = () => {
   const searchInput = useRef(null);
   const [page, setPage] = React.useState(1);
   const navigate = useNavigate();
-  const [selectedcompositionData, setSelectedCompositionData] = useState<any>(undefined);
+  const [selectedItemCreationData, setSelectedItemCreationData] = useState<any>(undefined);
 
 
   const service = new ItemCreationService();
@@ -118,7 +119,7 @@ const ItemCreationView = () => {
 
   const openFormWithData=(viewData: LiscenceTypesdDto)=>{
     setDrawerVisible(true);
-    setSelectedCompositionData(viewData);
+    setSelectedItemCreationData(viewData);
   }
 
   const DetailView = (rowData) => {
@@ -264,16 +265,17 @@ const ItemCreationView = () => {
           onChange={onChange}
           bordered />
       </Card>
-      {/* <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
+      <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
         <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
-          <CompositionForm key={Date.now()}
-            updateData={updateComposition}
+          <ItemCreation key={Date.now()}
+            // updateData={updateComposition}
+            
             isUpdate={true}
-            compositionData={selectedcompositionData}
+            // itemCreationData={selectedcompositionData}
             closeForm={closeDrawer} />
         </Card>
-      </Drawer> */}
+      </Drawer>
      
       </Card> </>
       
