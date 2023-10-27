@@ -95,7 +95,7 @@ export class ItemTypeService{
         try {
           const itemTypedto: ItemTypeDtos[] = [];
           const itemEntity: ItemTypeEntity[] = await this.ItemTypeRepository.find({order :{itemType:'ASC'}, relations:['division','productGroup']});
-          console.log(itemEntity,"itemEntity")
+          // console.log(itemEntity,"itemEntity")
           if (itemEntity.length > 0) {
             itemEntity.forEach(itemEntity => {
               const converteditemDto: ItemTypeDtos = this.ItemTypeAdapter.convertEntityToDto(itemEntity);
@@ -116,27 +116,47 @@ export class ItemTypeService{
         // const page: number = 1;
         try {
             const SampleSubTypeDto: ItemTypeDtos[] = [];
+          
             //retrieves all companies
-            const SampleSubTypeEntities:ItemTypeEntity [] = await this.ItemTypeRepository.find({ order: { 'itemType': 'ASC' },where:{isActive:true}
+            const SampleSubTypeEntities:ItemTypeEntity [] = await this.ItemTypeRepository.find({where:{"isActive":true}, order: { 'itemType': 'ASC' }
+            
            });
-         console.log(SampleSubTypeEntities)
+
             if (SampleSubTypeEntities) {
+
                 // converts the data fetched from the database which of type companies array to type StateDto array.
                 SampleSubTypeEntities.forEach(Entity => {
+
                     const convertedBrandsDtos: ItemTypeDtos = this.ItemTypeAdapter.convertEntityToDto(
+
                       Entity
                     );
+                    console.log(convertedBrandsDtos,"2222222222222222222");
+
                     SampleSubTypeDto.push(convertedBrandsDtos);
                 });
+
                 const response = new AllItemTypeResponseModel(true, 11108, "ItemType retrieved successfully",SampleSubTypeDto);
                 return response;
             } else {
                 throw new AllItemTypeResponseModel(false,99998, 'Data not found'); 
             }
+            
         } catch (err) {
             return err;
         }
     }
+    // async getAllActiveItemTypes(): Promise<AllItemTypeResponseModel> {
+    //   const data = await this.ItemTypeRepository.find({ where: { isActive: true } })
+    //   const activeData: ItemTypeDtos[] = []
+    //   for (const record of data) {
+    //     const adapterData = this.ItemTypeAdapter.convertEntityToDto(record)
+    //     activeData.push(adapterData)
+    //     console.log(adapterData,"llllllllll");
+        
+    //   }
+    //   return new AllItemTypeResponseModel(true, 1111, 'Data retreived', activeData)
+    // }
       // async getAllActiveSizes(): Promise<AllSizeResponseModel> {
       //   // const page: number = 1;
       //   // const response = new AllSizeResponseModel();
