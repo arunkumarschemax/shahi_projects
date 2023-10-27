@@ -16,7 +16,6 @@ import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res
 export class ItemTypeService{
     constructor(
         @InjectRepository(ItemTypeEntity)
-
         private ItemTypeRepository: Repository<ItemTypeEntity>,
         private ItemTypeAdapter: ItemTypeAdapter,
       ){}
@@ -95,10 +94,7 @@ export class ItemTypeService{
        
         try {
           const itemTypedto: ItemTypeDtos[] = [];
-          const itemEntity: ItemTypeEntity[] = await this.ItemTypeRepository.find({ 
-            order :{itemType:'ASC'},
-            relations: ['division','productgroup']
-          });
+          const itemEntity: ItemTypeEntity[] = await this.ItemTypeRepository.find({order :{itemType:'ASC'}, relations:['division','productGroup']});
           console.log(itemEntity,"itemEntity")
           if (itemEntity.length > 0) {
             itemEntity.forEach(itemEntity => {
@@ -109,7 +105,7 @@ export class ItemTypeService{
         
             return response;
           } else {
-            throw new ErrorResponse(99998, 'Data not found');
+            return new AllItemTypeResponseModel(false,99998, 'Data not found');
           }
           // return response;
         } catch (err) {

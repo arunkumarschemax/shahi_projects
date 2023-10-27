@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Card, Row, Col, Select } from 'antd';
-import { DivisionDto, ItemTypeDto } from '@project-management-system/shared-models';
-import { DivisionService, FabricTypeService, ItemTypeService } from '@project-management-system/shared-services';
+import { DivisionDto, ItemTypeDto, ProductGroupDto } from '@project-management-system/shared-models';
+import { DivisionService, FabricTypeService, ItemTypeService, ProductGroupService } from '@project-management-system/shared-services';
 import { Link, useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
  
@@ -25,20 +25,28 @@ export function ItemTypeForm(
   let navigate = useNavigate();
   const[ type, settype] = useState<DivisionDto[]>([]);
   // const FabricSubtypeService = new FabricTypeService();
-const [master,setmaster]=useState<ItemTypeDto[]>([])
+const [master,setmaster]=useState<ProductGroupDto[]>([])
+ const service2 = new ProductGroupService
   useEffect(() => {
     getAllDivision();
+    getAllProductGroups();
   }, []);
 
   const getAllDivision = () => {
     service.getAllActiveDivision().then(res => {
       if (res.status) {
         settype(res.data);
-        console.log(res.data,'kkkkkkkkkkkkkkkkkkkkkkkk')
       } 
     })
   }
 
+  const getAllProductGroups=()=>{
+    service2.getAllActiveProductGroup().then(res=>{
+      if (res.status) {
+        setmaster(res.data);
+      } 
+    })
+  }
   const save = (Data: ItemTypeDto) => {
     services.createItemType(Data).then(res => {
       if (res.status) {
@@ -110,6 +118,30 @@ const [master,setmaster]=useState<ItemTypeDto[]>([])
             </Form.Item>
           </Col>
 
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Form.Item
+              name="productGroupId"
+              label="Product Group"
+              rules={[
+                {
+                  required: true,
+                  message: 'Product Group is required'
+                },
+              ]}>
+              <Select
+                placeholder="Select Product Group"
+                onSelect={handleItemType}
+                showSearch
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }
+              >
+                {master?.map(dropData => {
+                  return <Option key={dropData.productGroupId} value={dropData.productGroupId}>{dropData.productGroup}</Option>
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
             <Form.Item
               name="itemType"

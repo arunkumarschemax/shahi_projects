@@ -55,6 +55,6 @@ versionFlag: number;
 // @OneToOne(()=> ItemTypeEntity,itemtype=>itemtype.productgroup)
 // ItemType:ItemTypeEntity[]
 
-@OneToMany(type => ItemTypeEntity, itemType => itemType.productGroup)
+@OneToMany(type => ItemTypeEntity, itemType => itemType.productGroup,{cascade: true})
   itemTypes: ItemTypeEntity[];
 }
