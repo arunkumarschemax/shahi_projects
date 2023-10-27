@@ -7,10 +7,11 @@ import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, 
 import Highlighter from 'react-highlight-words';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import {   CompositionService, ItemCreationService, ItemsService, LiscenceTypeService } from '@project-management-system/shared-services';
+import {   BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, ItemCategoryService, ItemCreationService, ItemsService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from '@project-management-system/shared-services';
 import { CompositionDto, LiscenceTypesdDto } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
 import ItemCreation from './item-creation';
+import moment from 'moment';
 
 
 const ItemCreationView = () => {
@@ -22,12 +23,48 @@ const ItemCreationView = () => {
   const [page, setPage] = React.useState(1);
   const navigate = useNavigate();
   const [selectedItemCreationData, setSelectedItemCreationData] = useState<any>(undefined);
+  const currencyServices = new CurrencyService();
+         const styleService = new StyleService();
+         const LicenceService = new LiscenceTypeService();
+         const brandservice = new MasterBrandsService();
+         const categoryService = new ItemCategoryService();
+         const roslservice = new ROSLGroupsService();
+         const buyingHouseservice = new BuyingHouseService();
+         const itemCreationService = new ItemCreationService();
+         const searchgroup = new SearchGroupService();
+         const employeservice = new EmployeeDetailsService();
+         const Rangeservice = new RangeService();
+         const compositionservice = new CompositionService();
+         const uomservice = new UomService();
+         const [searchdata,setSearchData] = useState([]);
+         const [employedata,setEmployeData] = useState([]);
+         const [rangedata,setRangeData] = useState([]);
+         const [customGroup,setCustomGroup]= useState([]);
+         const [licence,setLicence]=useState([])
+         const [itemCategory,setItemCategory]= useState([])
+         const [rosl,setRosl] = useState([])
+         const [house,setHouse]= useState([])
+         const [styledata,setStyle]=useState([])
+         const[brand,setBrand]=useState([])
+         const [compositiondata,setCompositionData] = useState([]);
+
 
 
   const service = new ItemCreationService();
 
   useEffect(() => {
     getAllfgItemViewData();
+    getAllStyles();
+    getAllLicense();
+    getAllBrands();
+    getAllCategory();
+    getAllCustomGrops();
+    getAllROSL();
+    getAllBuyingHouse();
+    getAllSearchgroup();
+    getAllRanges();
+    getAllComposition();
+    getAllEmployes();
   }, [])
 
     const getAllfgItemViewData= () => {
@@ -48,7 +85,155 @@ const ItemCreationView = () => {
   const closeDrawer = () => {
     setDrawerVisible(false);
   }
-  
+
+
+  const getAllEmployes=() =>{
+    employeservice.getAllActiveEmploee().then(res =>{
+      if (res.status){
+        // console.log(res,'llllll')
+        setEmployeData(res.data);
+         
+      } else{
+        AlertMessages.getErrorMessage(res.internalMessage);
+         }
+    }).catch(err => {
+      setEmployeData([]);
+       AlertMessages.getErrorMessage(err.message);
+     })        
+  }
+
+
+
+const getAllComposition=()=>{
+compositionservice.getActiveComposition().then(res=>{
+if(res.status){
+setCompositionData(res.data);
+}else{
+AlertMessages.getErrorMessage(res.internalMessage);
+}
+}).catch(err => {
+setCompositionData([]);
+AlertMessages.getErrorMessage(err.message);
+})
+}
+
+  const getAllSearchgroup=()=>{
+    searchgroup.getActiveSearchGroup().then(res=>{
+      if(res.status){
+        setSearchData(res.data)
+      }else{
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch(err => {
+      setSearchData([]);
+       AlertMessages.getErrorMessage(err.message);
+     })        
+  }
+
+  const getAllStyles=()=>{
+ styleService.getAllActiveStyle().then(res=>{
+   if(res.status){
+   setStyle(res.data);
+
+  }else{
+    AlertMessages.getErrorMessage(res.internalMessage);
+  }
+  }).catch(err=>{
+    setStyle([]);
+    AlertMessages.getErrorMessage(err.message)
+  })
+  }
+
+  const getAllLicense=()=>{
+    LicenceService.getAllActiveLiscenceTypes().then(res=>{
+        if(res.status){
+            setLicence(res.data);
+        }else{
+            AlertMessages.getErrorMessage(res.internalMessage);
+
+        }
+    }).catch(err=>{
+        setLicence([]);
+        AlertMessages.getErrorMessage(err.message)
+    })
+  }
+
+  const getAllBrands=()=>{
+    brandservice.getAllActiveBrands().then(res=>{
+        if(res.status){
+            setBrand(res.data);
+        }else{
+            AlertMessages.getErrorMessage(res.internalMessage)
+        }
+    }).catch(err=>{
+        setBrand([]);
+        AlertMessages.getErrorMessage(err.message)
+    })
+  }
+
+   const getAllRanges=()=>{
+    Rangeservice.getActiveRange().then(res=>{
+      if(res.status){
+        setRangeData(res.data);
+      }else{
+        AlertMessages.getErrorMessage(res.internalMessage)
+
+      }
+    }).catch(err=>{setRangeData([])
+      AlertMessages.getErrorMessage(err.message)
+
+    })
+   }
+  const getAllCategory=()=>{
+    categoryService.getActiveItemCategories().then(res=>{
+        if(res.status){
+            setItemCategory(res.data);
+        }else{
+            AlertMessages.getErrorMessage(res.internalMessage)
+        }
+    }).catch(err=>{
+        setItemCategory([]);
+        AlertMessages.getErrorMessage(err.message)
+    })
+}
+
+const getAllROSL=()=>{
+    roslservice.getAllActiveROSLGroups().then(res=>{
+        if(res.status){
+            setRosl(res.data);
+        }else{
+            AlertMessages.getErrorMessage(res.internalMessage)
+        }
+    }).catch(err=>{
+        setRosl([]);
+        AlertMessages.getErrorMessage(err.message)
+    })
+}
+
+ const getAllCustomGrops=()=>{
+    currencyServices.getAllActiveCurrencys().then(res=>{
+        if(res.status){
+            setCustomGroup(res.data);
+        }else{
+            AlertMessages.getErrorMessage(res.internalMessage)
+        }
+    }).catch(err=>{
+        setCustomGroup([]);
+        AlertMessages.getErrorMessage(err.message)
+    })
+ }
+ const getAllBuyingHouse=()=>{
+    buyingHouseservice.getAllActiveBuyingHouse().then(res=>{
+        if(res.status){
+            setHouse(res.data);
+        }else{
+            AlertMessages.getErrorMessage(res.internalMessage)
+        }
+    }).catch(err=>{
+        setHouse([]);
+        AlertMessages.getErrorMessage(err.message)
+    })
+ }
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
         <div style={{ padding: 8 }}>
@@ -140,37 +325,72 @@ const ItemCreationView = () => {
     {
         title: "Style",
         dataIndex: "",
-        // width:'60px',
-    //     sorter: (a, b) => a.compositionCode?.localeCompare(b.compositionCode),
-    //   ...getColumnSearchProps("compositionCode"),
+        align:'center',
+        render: (data) => {
+          const style = styledata.find((sty) => sty.styleNo === data);
+          return style ? style.style : "-";
+        },
       },
       {
         title: "Type",
         dataIndex: "itemTypeId",
+        align:'center',
+        render: (data) => {
+          const style = styledata.find((loc) => loc.styleNo === data);
+          return style ? style.style : "-";
+        },
       },
       {
         title: "Brand",
-        dataIndex: "",
+        dataIndex: "brandId",
+        align:'center',
+        render: (data) => {
+          const branddata = brand.find((bran) => bran.brandId === data);
+          return branddata ? branddata.brandName : "-";
+        },
       },
       {
         title: "Category",
         dataIndex: "categoryId",
+        render: (data) => {
+          const catdata = itemCategory.find((cat) => cat.itemCategoryId === data);
+          return catdata ? catdata.itemCategory : "-";
+        },
       },
       {
         title: "Item Group",
         dataIndex: "",
+        render: (data) => {
+          const catdata = itemCategory.find((cat) => cat.itemCategoryId === data);
+          return catdata ? catdata.itemCategory : "-";
+        },
       },
       {
         title: "Responsible",
         dataIndex: "responsiblePersonId",
+        render: (data) => {
+          const empdata = employedata.find((emp) => emp.employeeId === data);
+          const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
+          return ftname ? ftname : '-';
+        },
       },
       {
         title: "Approve",
         dataIndex: "approver",
+        render: (data) => {
+          const empdata = employedata.find((emp) => emp.employeeId === data);
+          const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
+          return ftname ? ftname : '-';
+        },
       },
       {
         title: "Production Merchant",
         dataIndex: "productionMerchant",
+        render: (data) => {
+          const empdata = employedata.find((emp) => emp.employeeId === data);
+          const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
+          return ftname ? ftname : '-';
+        },
       },
       {
         title: "Sales Person",
@@ -179,6 +399,7 @@ const ItemCreationView = () => {
       {
         title: "Basic UOM",
         dataIndex: "uom",
+        align:'center'
       },
       {
         title: "Currency",
@@ -187,18 +408,27 @@ const ItemCreationView = () => {
       {
         title: "Sales Price",
         dataIndex: "salePrice",
+        align:'right',
       },
       {
         title: "Target Currency",
         dataIndex: "targetCurrency",
+        align:'center',
       },
       {
         title: "Total Order Qty",
-        dataIndex: "orderQty",
+        dataIndex: "orderQty",align:'right',
+        render: (text, record) => (
+          <>
+              {Number(record.orderQty).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+          </>
+      )
+
       },
       {
         title: "Order Confirmation Date",
         dataIndex: "orderConfirmedDate",
+        render: (text) => moment(text).format('DD/MM/YYYY')
       },
     {
       title: `Action`,

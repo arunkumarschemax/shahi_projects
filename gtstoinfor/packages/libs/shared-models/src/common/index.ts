@@ -81,4 +81,5 @@ export * from './business-area'
 export * from './co-types'
 export * from './range';
 export * from './search-group';
+export * from './feature'
 export * from './item-type';

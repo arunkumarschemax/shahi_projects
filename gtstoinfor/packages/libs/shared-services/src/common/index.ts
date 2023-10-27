@@ -81,6 +81,7 @@ export * from './business-area-service'
 export * from './co-type.service'
 export * from './composition-service'
 export * from './search-group-services'
+export * from './feature-service'
 export * from './range-fe-services'
 export * from './product-group-service';
 export * from './procurment-group-service';
