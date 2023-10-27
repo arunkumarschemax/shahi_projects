@@ -50,7 +50,7 @@ export class ItemTypeController{
         }
 
         @Post('/getAllActiveItemType')
-  // @ApiBody({type:ItemTypeDtos})
+  @ApiBody({type:ItemTypeDtos})
   async getAllActiveItemType(): Promise<AllItemTypeResponseModel> {
     try {
       return await this.itemTypeService.getAllActiveItemTypes();
@@ -60,7 +60,7 @@ export class ItemTypeController{
     }
   }
 
-  @Post('/activeteOrDeactivateItemType')
+  @Post('/activeteOrDeactivateItemi')
   @ApiBody({type:ItemTypeDtos})
   async activeteOrDeactivateItemType( @Body()request:any ): Promise<AllItemTypeResponseModel> {
     try {

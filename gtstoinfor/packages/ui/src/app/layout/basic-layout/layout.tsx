@@ -495,6 +495,12 @@ export const baseRouterList = [
                 path: "FabricDevelopmentrequest/Fabric-Development-Request",
                 filepath: "FabricDevelopmentrequest/Fabric-Development-Request",
             },
+            {
+                label: "Fabric Approval",
+                key: "fabric-approval-request",
+                path: "fabric-approval-request",
+                filepath: "fabric-approval-request",
+            },
         ]
     },
     {
