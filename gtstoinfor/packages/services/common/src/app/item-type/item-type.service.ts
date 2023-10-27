@@ -118,9 +118,7 @@ export class ItemTypeService{
             const SampleSubTypeDto: ItemTypeDtos[] = [];
           
             //retrieves all companies
-            const SampleSubTypeEntities:ItemTypeEntity [] = await this.ItemTypeRepository.find({where:{"isActive":true}, order: { 'itemType': 'ASC' }
-            
-           });
+            const SampleSubTypeEntities:ItemTypeEntity [] = await this.ItemTypeRepository.find({where:{"isActive":true}, order: { 'itemType': 'ASC' },relations:['division','productGroup'] });
 
             if (SampleSubTypeEntities) {
 
@@ -131,7 +129,7 @@ export class ItemTypeService{
 
                       Entity
                     );
-                    console.log(convertedBrandsDtos,"2222222222222222222");
+                    // console.log(convertedBrandsDtos,"2222222222222222222");
 
                     SampleSubTypeDto.push(convertedBrandsDtos);
                 });
@@ -139,7 +137,7 @@ export class ItemTypeService{
                 const response = new AllItemTypeResponseModel(true, 11108, "ItemType retrieved successfully",SampleSubTypeDto);
                 return response;
             } else {
-                throw new AllItemTypeResponseModel(false,99998, 'Data not found'); 
+                return new AllItemTypeResponseModel(false,99998, 'Data not found'); 
             }
             
         } catch (err) {
