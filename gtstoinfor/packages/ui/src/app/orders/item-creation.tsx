@@ -3,7 +3,8 @@ import { HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link } from "react-router-dom";
-import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, ItemCategoryService, ItemCreationService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
+import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
+import { ItemGroupEnum } from "@project-management-system/shared-models";
 
         export const ItemCreation =()=>{
          const [form] = Form.useForm();
@@ -20,9 +21,12 @@ import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsSe
          const employeservice = new EmployeeDetailsService();
          const Rangeservice = new RangeService();
          const compositionservice = new CompositionService();
+         const itemGroupservice = new ItemGroupService();
          const uomservice = new UomService();
+         const itemTypeservice =new ItemTypeService();
          const [currencydata,setCurrencyData] = useState([]);
          const [uomdata,setUomData] = useState([]);
+         const [itemgroup,setitemgroup] = useState([]);
          const [compositiondata,setCompositionData] = useState([]);
          const [searchdata,setSearchData] = useState([]);
          const [employedata,setEmployeData] = useState([]);
@@ -30,6 +34,7 @@ import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsSe
          const [customGroup,setCustomGroup]= useState([]);
          const [licence,setLicence]=useState([])
          const [itemCategory,setItemCategory]= useState([])
+         const [ItemType,setItemType]= useState([])
          const [rosl,setRosl] = useState([])
          const [house,setHouse]= useState([])
          const [styledata,setStyle]=useState([])
@@ -51,6 +56,8 @@ import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsSe
             getAllComposition();
             getAllUoms();
             getAllEmployes();
+            getAllItemType();
+            getAllItemGroups();
           },[])
 
          const getAllCurrencies=() =>{
@@ -68,6 +75,34 @@ import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsSe
              })        
           }
 
+          const getAllItemType=() =>{
+            itemTypeservice.getAllActiveItemType().then(res =>{
+              if (res.status){
+                // console.log(res,'llllll')
+                setItemType(res.data);
+                 
+              } else{
+                AlertMessages.getErrorMessage(res.internalMessage);
+                 }
+            }).catch(err => {
+              setItemType([]);
+               AlertMessages.getErrorMessage(err.message);
+             })        
+          }
+          const getAllItemGroups=() =>{
+            itemGroupservice.getAllActiveItemGroup().then(res =>{
+              if (res.status){
+                // console.log(res,'llllll')
+                setitemgroup(res.data);
+                 
+              } else{
+                AlertMessages.getErrorMessage(res.internalMessage);
+                 }
+            }).catch(err => {
+              setitemgroup([]);
+               AlertMessages.getErrorMessage(err.message);
+             })        
+          }
           const getAllEmployes=() =>{
             employeservice.getAllActiveEmploee().then(res =>{
               if (res.status){
@@ -266,8 +301,14 @@ compositionservice.getActiveComposition().then(res=>{
                               </Form.Item>
                    </Col>
                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                   <Form.Item  label="Type" name="type" rules={[{ required: true, message: "Enter Type" }]}>
-                   <Select placeholder="Select Type" allowClear></Select>
+                   <Form.Item  label="ItemType" name="type" rules={[{ required: true, message: "Enter Type" }]}>
+                   <Select placeholder="Select ItemType" allowClear>
+                    {ItemType.map((e)=>{
+                      return(<Option key={e.itemTypeId} value={e.itemTypeId}>
+                          {e.itemType}
+                      </Option>)
+                    })}
+                   </Select>
                     </Form.Item> 
                    </Col>
                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -305,6 +346,9 @@ compositionservice.getActiveComposition().then(res=>{
                     <Form.Item label="Item Group" name="itemgroup" rules={[{ required: true, message: "Enter Item Group" }]}>
                     <Select
                      placeholder="Select Item Group" allowClear>
+                     {Object.values(ItemGroupEnum).map((key,value)=>{
+            return <Option key={key} value={key}>{key}</Option>
+           })}
                  
                     </Select>
                     </Form.Item>
@@ -318,7 +362,7 @@ compositionservice.getActiveComposition().then(res=>{
                    <Row gutter={8}>
                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                       <Form.Item  label="Shahi Style" rules={[{ required: true, message: "Fill Shahi Style" }]}>
-                      <Select showSearch placeholder="Select Shahi Style" allowClear suffixIcon={<SearchOutlined />}>
+                      <Select showSearch placeholder="Select Shahi Style" allowClear >
                         {styledata.map((e)=>{
                         return(
                             <Option key={e.styleId} value={e.styleId}>
@@ -371,7 +415,9 @@ compositionservice.getActiveComposition().then(res=>{
                 <Form.Item   name="basicUOM" label="Basic UOM" rules={[{ required: true, message: "Enter Basic UOM" }]}>
                 <Select placeholder="Select Basic UOM" allowClear>
                   {uomdata.map((e)=>{
-                    return(<Option key={e.id} values={e.id}>{e.uom}</Option>)
+                    return(
+                    <Option key={e.uomId} value={e.uomId}>{e.uom}
+                    </Option>)
                   })
 
                   }
@@ -383,7 +429,7 @@ compositionservice.getActiveComposition().then(res=>{
                         <Select placeholder="Select Basic UOM" allowClear>
 
                         {uomdata.map((e)=>{
-                    return(<Option key={e.id} values={e.id}>{e.uom}</Option>)
+                    return(<Option key={e.id} value={e.id}>{e.uom}</Option>)
                   })
 
                   }                    
@@ -424,7 +470,7 @@ compositionservice.getActiveComposition().then(res=>{
                         <Row gutter={8}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                           <Form.Item name="projectionOrder" label="Projection Order">
-                          <Select showSearch placeholder="Select Projection Order" allowClear suffixIcon={<SearchOutlined />}>
+                          <Select showSearch placeholder="Select Projection Order" allowClear >
                       </Select>
                           </Form.Item>
                        </Col>
