@@ -104,10 +104,7 @@ export class GroupTechClassService {
 
 async createGroupTechClass(Dto: GroupTechClassDto, isUpdate: boolean): Promise<GroupTechClassResponse> {
   try {
-    console.log(Dto,"service")
-    console.log(isUpdate,"service")
-
-    let previousValue;
+    console.log(Dto,"sevices")
     if (!isUpdate) {
       const GroupsEntity = await this.groupTechClassRepository.findOne({
         where: { groupTechClassCode: Dto.groupTechClassCode },
@@ -116,15 +113,24 @@ async createGroupTechClass(Dto: GroupTechClassDto, isUpdate: boolean): Promise<G
         return new GroupTechClassResponse(false, 11104, 'Group Tech Class already exists');
       }
     } else {
-      const previous = await this.getGroupTechClassDetailsWithoutRelations(Dto.groupTechClassId);
-      if (previous) {
-        previousValue = previous.groupTechClassCode + "," + previous.groupTechClassDescription;
-      }
-      const GroupsEntity = await this.groupTechClassRepository.findOne({
+      const existingEntity = await this.groupTechClassRepository.findOne({
         where: { groupTechClassId: Dto.groupTechClassId },
       });
-      if (GroupsEntity && GroupsEntity.groupTechClassId !== Dto.groupTechClassId) {
-        return new GroupTechClassResponse(false, 11104, 'Group Tech Class already exists');
+
+      if (existingEntity) {
+        existingEntity.groupTechClassCode = Dto.groupTechClassCode;
+        existingEntity.groupTechClassDescription = Dto.groupTechClassDescription;
+        existingEntity.buyerId = Dto.buyerId;
+        existingEntity.divisionId = Dto.divisionId;
+        
+
+        const updatedEntity = await this.groupTechClassRepository.save(existingEntity);
+        const updatedDto: GroupTechClassDto = this.groupTechClassAdapter.convertEntityToDto(updatedEntity);
+
+        const response = new GroupTechClassResponse(true, 1, 'Group Tech Class Updated Successfully', updatedDto);
+        return response;
+      } else {
+        return new GroupTechClassResponse(false, 11104, 'Group Tech Class does not exist');
       }
     }
 
@@ -144,8 +150,6 @@ async createGroupTechClass(Dto: GroupTechClassDto, isUpdate: boolean): Promise<G
     throw error;
   }
 }
-
-
 
       
       async getAllGroupTechClass(): Promise<AllGroupTechClassResponse> {  

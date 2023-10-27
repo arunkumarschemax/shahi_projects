@@ -27,7 +27,7 @@ const tailLayout = {
 /* eslint-disable-next-line */
 export interface SearchGroupFormProps {
   // Data: PaymentTermsDto;
-  Data:any
+  Data:searchGroupDto
   updateDetails:(dto:searchGroupDto)=>void;
   isUpdate:boolean;
   closeForm: () => void;
@@ -42,6 +42,8 @@ export function SearchGroupForm(props:SearchGroupFormProps) {
   const service = new SearchGroupService;
 
   let history = useLocation();
+
+  console.log(props.Data,"iiiiiiiiiii")
 
   const save = (Data: searchGroupDto) => {
     setDisable(true)
@@ -92,7 +94,7 @@ export function SearchGroupForm(props:SearchGroupFormProps) {
      } type={'primary'}>View</Button></span>}>
     <Form layout="vertical" form={form} onFinish={saveData} initialValues={props.Data} >
     <Row>
-    <Form.Item name="Id" style={{ display: 'none' }}>
+    <Form.Item name="id" style={{ display: 'none' }}>
         <Input hidden />
       </Form.Item>
   
@@ -108,9 +110,13 @@ export function SearchGroupForm(props:SearchGroupFormProps) {
               required: true,
               message: 'Search Group Code Is Required'
             },
+            {
+              pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+              message: `Should contain only alphabets and numbers.`
+            }
           ]}
         >
-         <Input />
+         <Input placeholder='Enter Search Group Code' />
 
         </Form.Item>
         </Col>
@@ -124,10 +130,14 @@ export function SearchGroupForm(props:SearchGroupFormProps) {
               required: true,
               message:"Search Group Name Is Required."
             },
+            {
+              pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+              message: `Should contain only alphabets and numbers.`
+            }
             
           ]}
         >
-          <Input  />
+          <Input placeholder='Enter Search Group Name' />
         </Form.Item>
         </Col>
         </Row>

@@ -5,7 +5,7 @@ import { ItemGroupEnum } from "../../enum";
 export class ItemGroupDto {
     itemGroupId: number;
     
-    // itemGroup: ItemGroupEnum;
+    itemGroup: ItemGroupEnum;
 
     isActive: boolean;
 
@@ -21,7 +21,7 @@ export class ItemGroupDto {
 
     constructor(itemGroupId:number,itemGroup:ItemGroupEnum,isActive: boolean,createdUser : string,updatedUser : string,versionFlag : number){
     this.itemGroupId=itemGroupId
-    // this.itemGroup=itemGroup
+    this.itemGroup=itemGroup
     this.createdUser=createdUser
     this.isActive=isActive
     this.updatedUser = updatedUser

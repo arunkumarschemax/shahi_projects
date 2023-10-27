@@ -4,8 +4,8 @@ import { ApplicationExceptionHandler } from "@project-management-system/backend-
 import { CoTypeService } from "./co-type.service";
 import { CoTypeResponseModel } from "@project-management-system/shared-models";
 
-@ApiTags('co_types')
-@Controller('co_types')
+@ApiTags('CoTypes')
+@Controller('co-types')
 export class CoTypeController {
     constructor(
         private coTypeService: CoTypeService,
@@ -13,10 +13,46 @@ export class CoTypeController {
 
     ) { }
 
+    @Post('/createCoType')
+    async createCoType(@Body() req:any): Promise<CoTypeResponseModel> {
+        try {
+            return await this.coTypeService.createCoType(req,false);
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CoTypeResponseModel, error)
+        }
+    }
+
+    @Post('/updateCoType')
+    async updateCoType(@Body() req:any): Promise<CoTypeResponseModel> {
+        try {
+            return await this.coTypeService.createCoType(req,true);
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CoTypeResponseModel, error)
+        }
+    }
+
     @Post('/getAllCoTypeInfo')
     async getAllCoTypeInfo(): Promise<CoTypeResponseModel> {
         try {
             return await this.coTypeService.getAllCoTypeInfo();
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CoTypeResponseModel, error)
+        }
+    }
+
+    @Post('/activateOrDeactivateCoType')
+    async activateOrDeactivateCoType(@Body() req:any): Promise<CoTypeResponseModel> {
+        try {
+            return await this.coTypeService.activateOrDeactivateCoType(req);
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CoTypeResponseModel, error)
+        }
+    }
+
+    @Post('/getAllActiveCoTypeInfo')
+    async getAllActiveCoTypeInfo(): Promise<CoTypeResponseModel> {
+        try {
+            return await this.coTypeService.getAllActiveCoTypeInfo();
         } catch (error) {
             return this.applicationExceptionhandler.returnException(CoTypeResponseModel, error)
         }

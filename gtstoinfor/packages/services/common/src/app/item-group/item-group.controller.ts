@@ -13,6 +13,27 @@ export class ItemGroupController{
         private readonly applicationExceptionHandler: ApplicationExceptionHandler
         ) {}
 
+        @Post('/createItemGroup')
+        @ApiBody({type: ItemGroupDto})
+        async createItemGroup(@Body() itemDTO:any,isUpdate:boolean=false): Promise<ItemGroupResponseModel> {
+        try {
+            return await this.iteGroupService.createItemGroup(itemDTO, false);
+        } catch (error) {
+            // return errorHandler(SizeResponseModel,error);
+            return this.applicationExceptionHandler.returnException(ItemGroupResponseModel, error);
+        }
+        }
+
+        @Post('/updateItemGroup')
+        @ApiBody({type:ItemGroupDto})
+        async updateItemGroup(@Body() itemDTO: any): Promise<ItemGroupResponseModel> {
+          try {
+            return await this.iteGroupService.createItemGroup(itemDTO, true);
+          } catch (error) {
+            // return errorHandler(ItemTypeResponseModel, error);
+            return this.applicationExceptionHandler.returnException(ItemGroupResponseModel, error);
+          }
+        }
         @Post('/getAllItemGroup')
         async getAllItemGroup(): Promise<AllItemGroupResponseModel> {
           try {
@@ -22,4 +43,27 @@ export class ItemGroupController{
             return this.applicationExceptionHandler.returnException(AllItemGroupResponseModel, error);
           }
         }
+
+        
+        @Post('/getAllActiveItemGroup')
+  @ApiBody({type:ItemGroupDto})
+  async getAllActiveItemGroup(): Promise<AllItemGroupResponseModel> {
+    try {
+      return await this.iteGroupService.getAllActiveItemGroup();
+    } catch (error) {
+      // return errorHandler(AllSizeResponseModel, error);
+      return this.applicationExceptionHandler.returnException(AllItemGroupResponseModel, error);
+    }
+  }
+
+  @Post('/activeteOrDeactivateItemGroup')
+  @ApiBody({type:ItemGroupDto})
+  async activeteOrDeactivateItemGroup( @Body()request:any ): Promise<AllItemGroupResponseModel> {
+    try {
+      return await this.iteGroupService.activateOrDeactivateItemGroup(request);
+    } catch (error) {
+      // return errorHandler(AllSizeResponseModel, error);
+      return this.applicationExceptionHandler.returnException(AllItemGroupResponseModel, error);
+    }
+  }
     }

@@ -15,6 +15,7 @@ import { DeliveryMethod } from "../delivery-method/delivery-method.entity";
 import { DeliveryTerms } from "../delivery-terms/delivery-terms.entity";
 import { Address } from "../buyers/address.entity";
 import { ProfitControlHead } from "../profit-control-head/profit-control-head-entity";
+import { CoTypes } from "../co-type/co-type.entity";
 
 @Injectable()
 export class SettingsService{
@@ -72,6 +73,9 @@ export class SettingsService{
             const address = new Address()
             address.addressId = req.buyerAddress;
             settingsEntity.addressInfo = address;
+            const coType = new CoTypes()
+            coType.coTypeId = req.coTypeId
+            settingsEntity.coTypeInfo = coType
             if(isUpdate){
                 settingsEntity.settingsId = req.settingsId
                 settingsEntity.updatedUser = req.updatedUser
@@ -97,7 +101,7 @@ export class SettingsService{
             const info = await this.settingsRepo.getAllSettingsInfo(req.settingsId)
             if(info){
                 for(const rec of info){
-                    data.push(new SettingsModel(rec.settings_id,rec.account_control_id,rec.pch_id,rec.company_id,rec.factory_id,rec.division_id,rec.warehouse_id,null,rec.currency_id,rec.license_type_id,rec.discount,rec.sales_person_id,rec.fabric_responsible_id,rec.item_responsible_id,rec.trim_responsible_id,rec.buyer_address_id,rec.buyer_group,rec.agentId,rec.package_terms_id,rec.payment_method_id,rec.payment_terms_id,rec.delivery_method_id,rec.delivery_terms_id,null,null,rec.accountControlName,rec.profit_control_head,rec.companyName,rec.name,rec.division_name,rec.warehouse_name,rec.currency_name,rec.liscence_type,rec.salesPerson,rec.fabricResponsible,rec.itemResponsible,rec.trimRespondsible,rec.address,rec.buyerName,rec.agentName,rec.package_terms_name,rec.payment_method,rec.payment_terms_name,rec.delivery_method,rec.delivery_terms_name))
+                    data.push(new SettingsModel(rec.settings_id,rec.account_control_id,rec.pch_id,rec.company_id,rec.factory_id,rec.division_id,rec.warehouse_id,rec.co_type_id,rec.currency_id,rec.license_type_id,rec.discount,rec.sales_person_id,rec.fabric_responsible_id,rec.item_responsible_id,rec.trim_responsible_id,rec.buyer_address_id,rec.buyer_group,rec.agentId,rec.package_terms_id,rec.payment_method_id,rec.payment_terms_id,rec.delivery_method_id,rec.delivery_terms_id,null,null,rec.accountControlName,rec.profit_control_head,rec.companyName,rec.name,rec.division_name,rec.warehouse_name,rec.currency_name,rec.liscence_type,rec.salesPerson,rec.fabricResponsible,rec.itemResponsible,rec.trimRespondsible,rec.address,rec.buyerName,rec.agentName,rec.package_terms_name,rec.payment_method,rec.payment_terms_name,rec.delivery_method,rec.delivery_terms_name,rec.co_type))
                 }
                 return new SettingsResponseModel(true,1,'Data retrieved',data)
             } else{

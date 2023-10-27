@@ -199,6 +199,12 @@ export const baseRouterList = [
                 filepath: "buying-house/buying-house-view",
             },
             {
+                label: "Business Area",
+                key: "buisness-area-view",
+                path: "business-area/business-area-view",
+                filepath: "business-area/business-area-view",
+            },
+            {
                 label: "Colors",
                 key: "colours",
                 path: "colour/colour-view",
@@ -215,6 +221,12 @@ export const baseRouterList = [
                 key: "components",
                 path: "components/components-view",
                 filepath: "components/components-view",
+            },
+            {
+                label: "Co Type",
+                key: "co-type",
+                path: "co-type/co-type-view",
+                filepath: "co-type/co-type-view",
             },
             {
                 label: "Custom Groups",
@@ -361,10 +373,22 @@ export const baseRouterList = [
                 filepath: "size/size-view",
             },
             {
+                label: "Item Group",
+                key: "itemgroup",
+                path: "item-group/item-group-view",
+                filepath: "item-group/item-group-view",
+            },
+            {
                 label: "Division",
                 key: "division",
                 path: "division/division-view",
                 filepath: "division/division-view",
+            },
+            {
+                label: "Item Type",
+                key: "itemtype",
+                path: "item-Type/item-Type-view",
+                filepath: "item-Type/item-Type-view",
             },
             {
                 label: "Group Tech Class",
@@ -378,6 +402,38 @@ export const baseRouterList = [
                 path: 'searchGroup/searchGroup-grid',
                 filepath: 'searchGroup/searchGroup-grid',
                 
+            },
+            {
+                label: "Composition",
+                key: "composition",
+                path: 'composition/composition-grid',
+                filepath: 'composition/composition-grid',
+                
+            },
+            {
+                label: "Range",
+                key: "range",
+                path: 'range/range-grid',
+                filepath: 'range/range-grid',
+                
+            },
+            {
+                label: "Product Group",
+                key: "productGroup",
+                path: "productGroup/productGroup-view",
+                filepath: "productGroup/productGroup-view",
+            },
+            {
+                label: "Procurment Group",
+                key: "procurmentGroup",
+                path: "procurmentGroup/procurmentGroup-view",
+                filepath: "procurmentGroup/procurmentGroup-view",
+            },
+            {
+                label: "Hierarchy Level",
+                key: "hierarchyLevel",
+                path: "hierarchyLevel/hierarchyLevel-view",
+                filepath: "hierarchyLevel/hierarchyLevel-view",
             },
         ],
     }, 
@@ -577,6 +633,13 @@ export const baseRouterList = [
          
         ]
     },
+    // {
+    //     label: "RM Sku",
+    //     key: "rmSkus",
+    //     // icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>⚙️</div>,
+    //     path: "rmskus/rm-skus",
+    //     filepath: "rmskus/rm-skus"
+    // }
     // {
     //     label: "Orders",
     //     key: "excel-import",

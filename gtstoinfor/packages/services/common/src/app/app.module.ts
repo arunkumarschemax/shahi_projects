@@ -77,6 +77,8 @@ import { RangeModule } from './range/range.module';
 import { SearchGrpModule } from './search-group/search-group.module';
 import { FeatureModule } from './feature-creation/feature-module';
 
+import { ItemTypeModule } from './item-type/item-type.module';
+import { RmSkusModule } from './rm-skus/rm-skus.module';
 
 @Module({
   imports: [
@@ -91,6 +93,7 @@ import { FeatureModule } from './feature-creation/feature-module';
       autoLoadEntities: true,
       synchronize: false,
       logging: false,
+      
       extra: {
         connectionLimit: 20
       }
@@ -135,7 +138,7 @@ import { FeatureModule } from './feature-creation/feature-module';
     ProductGroupModule,
     ProcrumentGroupModule,
     HierachyLevelModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule,GroupTechClassModule,BusinessAreaModule,CoTypeModule,CompositionModule,RangeModule,SearchGrpModule,FeatureModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule,GroupTechClassModule,BusinessAreaModule,CoTypeModule,CompositionModule,RangeModule,SearchGrpModule,FeatureModule,RmSkusModule,ItemTypeModule],
   controllers: [AppController],
   providers: [AppService],
 })

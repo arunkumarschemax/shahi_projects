@@ -26,7 +26,7 @@ const tailLayout = {
 };
 /* eslint-disable-next-line */
 export interface GroupTechClassFormProps {
-  Data: GroupTechClassDto;
+  data: GroupTechClassDto;
   updateDetails:(dto:GroupTechClassDto)=>void;
   isUpdate:boolean;
   closeForm: () => void;
@@ -46,19 +46,18 @@ export function GroupTechClassForm(props:GroupTechClassFormProps) {
   const service = new GroupTechClassService;
   const buyerService = new BuyersService();
   const divisionService = new DivisionService();
+  const [dataFetched, setDataFetched] = useState(false); 
 
 
   let history = useLocation();
 
-  useEffect(()=>{
-    if(buyerService && divisionService && props.updateDetails){
-      getAllActiveBuyers()
-      getAllActiveDivision()
+  useEffect(() => {
+    if (!dataFetched) { // Check if data has not been fetched already
+      getAllActiveBuyers();
+      getAllActiveDivision();
+      setDataFetched(true); // Set the flag to true after fetching data
     }
-   
-
-
-  },[])
+  }, [dataFetched]);
 
   const getAllActiveBuyers=() =>{
     buyerService.getAllActiveBuyers().then(res =>{
@@ -122,7 +121,9 @@ const getAllActiveDivision=() =>{
     form.resetFields();
   };
 
- console.log(GroupTechClassDto,"999999")
+//  console.log(GroupTechClassDto,"999999")
+ console.log(props.data,"999999")
+
 
   return (
     <Card title='Group Tech Class' 
@@ -133,7 +134,7 @@ const getAllActiveDivision=() =>{
     onClick={() => navigate('/masters/groupTechClass/groupTechClass-grid')} type={'primary'}>View</Button></span>}>
 
     <Form layout="vertical" form={form} onFinish={saveData} 
-    initialValues={props.Data}
+    initialValues={props.data}
      >
     <Row gutter={12}>
     <Form.Item name="groupTechClassId" style={{ display: 'none' }}>
@@ -158,9 +159,14 @@ const getAllActiveDivision=() =>{
             required: true,
             message: 'GroupTech Code Is Required'
           },
+          
+            {
+              pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+              message: `Should contain only alphabets and numbers.`
+            }
         ]}
         >
-        <Input />
+        <Input  placeholder='Enter GroupTech Code'/>
       </Form.Item>
       </Col >
 
@@ -172,15 +178,20 @@ const getAllActiveDivision=() =>{
               xl={{ span: 5 }}
             > 
      {/* <Col xs={{span:24}} sm={{span:24}} md={{span:5,offset:1}} lg={{span:5,offset:1}} xl={{span:5,offset:1}} style={{margin:'1%'}}> */}
-        <Form.Item name="groupTechClassDescription" label=" GroupTech Description"
+        <Form.Item name="groupTechClassDescription" label=" GroupTech Description" 
            rules={[
             {
               required: true,
               message: 'GroupTech DescriptionIs Required'
-            },
+            }
+            ,
+            {
+              pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+              message: `Should contain only alphabets and numbers.`
+            }
           ]}
         >
-        <Input />
+        <Input placeholder='Enter GroupTech Description '/>
       </Form.Item>
       </Col >
       <Col
