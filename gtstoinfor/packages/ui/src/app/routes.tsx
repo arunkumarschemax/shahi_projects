@@ -155,6 +155,7 @@ import HierarchyLevelForm from "./masters/hierarchy level/hierarchy-level-form"
 import ItemCreationView from "./orders/item-creation-view"
 import ItemCreationDetailView from "./orders/item-creation-detail-view"
 import RmSkusGeneration from "./rm-skus/rm-skus-generation"
+import SmvEfficiencyForm from "./common/product-structure(BOM)/smv-efficiency-form"
 
 
 export const AppRoutes = () => {
@@ -601,8 +602,14 @@ export const AppRoutes = () => {
                 <Route path='operation-tracking/issuing' element={<IssueScreen/>}/>
                 <Route path='operation-reporting' element={<OperationReportingView/>} />
 
-                
+            
 
+                </Route>
+                <Route path='/product-structure'>
+                <Route path='productstructure/smv-efficiency' element={<SmvEfficiencyForm/>}/>
+
+            
+                            
                 </Route>
 
 

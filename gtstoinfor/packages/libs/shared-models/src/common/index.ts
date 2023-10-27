@@ -82,3 +82,4 @@ export * from './co-types'
 export * from './range';
 export * from './search-group';
 export * from './item-type';
+export * from './product-structure(BOM)'
