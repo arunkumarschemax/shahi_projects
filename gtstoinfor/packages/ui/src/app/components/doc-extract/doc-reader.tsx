@@ -4,7 +4,7 @@ import { Button, Card, Col, Form, FormInstance, Radio, Row, Select, Spin, Upload
 import { useState } from 'react';
 import { pdfjs } from 'react-pdf';;
 import { extractDhl, extractDart, extractExpeditors, extractEfl, extractOocl, extractNagel, extractApl, extractMaersk, checkIsScannedPdf } from './schemax-ai-docx-pdf';
-import { convertScannedPdfToSelectablePdf, extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
+import { convertScannedPdfToSelectablePdf, extractAplInvoiceDataFromScanned, extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 import { PDFDocument, rgb } from 'pdf-lib';
 import loadingSymbol from '../../../assets/images/1_yE-S7HG0Rg-ACAcnjvKf5Q.gif';
@@ -61,7 +61,7 @@ export const DocReader = (props: DocReaderProps) => {
             const response = await fetch(pdfDataUrl);
             const pdfBuffer = await response.arrayBuffer();
             const pdfData = await pdfjs.getDocument({ data: pdfBuffer }).promise;
-            let processedData;
+            let processedData:any={};
             switch (selectedVendor) {
                 case VendorNameEnum.extractedDhl:
                     processedData = await extractDhl(pdfData);
@@ -266,10 +266,26 @@ export const DocReader = (props: DocReaderProps) => {
                     processedData = await extractNagel(pdfData);
                     console.log('PDF DATA Nagel:', processedData);
                     break;
-                case VendorNameEnum.extractedApl:
-                    processedData = await extractApl(pdfData);
-                    console.log('PDF DATA Apl:', processedData);
+                // case VendorNameEnum.extractedApl:
+                //     processedData = await extractApl(pdfData);
+                //     console.log('PDF DATA Apl:', processedData);
+                //     break;
+
+                case VendorNameEnum.extractedApl: {
+                    const aplPDFData = await extractApl(pdfData);
+                    const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                    const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                    const scannedData = await extractAplInvoiceDataFromScanned(allLines);
+                    processedData['extractedData'] = scannedData.extractedData;
+                    processedData['extractedData']['invoiceAmount']=aplPDFData.extractedData.invoiceAmount;
+                    processedData['extractedData']['igst']=aplPDFData.extractedData.igst;
+                    processedData['extractedData']['cgst']=aplPDFData.extractedData.cgst;
+                    processedData['extractedData']['sgst']=aplPDFData.extractedData.sgst;
+
+                    processedData['extractedHsnData'] = aplPDFData.extractedHsnData;
                     break;
+                }
+
                 case VendorNameEnum.extractedMaersk:
                     processedData = await extractMaersk(pdfData);
                     console.log('PDF DATA Maersk:', processedData);

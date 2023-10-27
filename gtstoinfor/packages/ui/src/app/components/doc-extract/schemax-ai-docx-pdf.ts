@@ -216,6 +216,7 @@ export const extractDart = async (pdf) => {
                     }
                 }
                 currentHSN.description += ' ' + line.content.trim();
+                currentHSN.description = currentHSN.description.replace(/[^a-zA-Z ]/g, '');
             }
         }
 
@@ -492,6 +493,7 @@ export const extractExpeditors = async (pdf) => {
         }
     }
 
+    console.log("APL PDF DATA", JSON.stringify(allLines, null, 2))
     console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
     console.log("PDF INVOICE Data", JSON.stringify(InvoiceLines, null, 2));
     return {
@@ -596,6 +598,7 @@ export const extractEfl = async (pdf) => {
                     }
                 }
                 currentHSN.description += ' ' + line.content.trim();
+                currentHSN.description = currentHSN.description.replace(/(\d+).*/, '$1');
             }
         }
 
