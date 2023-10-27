@@ -154,6 +154,7 @@ import HierarchyLevelGrid from "./masters/hierarchy level/hierarchy-level-gridt"
 import HierarchyLevelForm from "./masters/hierarchy level/hierarchy-level-form"
 import ItemCreationView from "./orders/item-creation-view"
 import ItemCreationDetailView from "./orders/item-creation-detail-view"
+import RmSkusGeneration from "./rm-skus/rm-skus-generation"
 
 
 export const AppRoutes = () => {
@@ -575,7 +576,7 @@ export const AppRoutes = () => {
                 <Route path='settings/settings-form' element={<SettingsForm/>}/>
                 <Route path='settings/settings-view' element={<SettingsView/>}/>
                 {/* </Route> */}
-
+                <Route path='rmskus/rm-skus' element={<RmSkusGeneration/>}/>
                 <Route path='sample-development' >
                     <Route path="sample-development-form" element={<SampleDevForm />}/>
                     <Route path="sample-development-view" element={<SampleDevView />}/>

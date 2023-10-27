@@ -2,8 +2,8 @@ import { Card } from "antd"
 
 export const RmSkusGeneration = () => {
     return (
-        <Card>
-            
+        <Card title='Rm Skus'>
+
         </Card>
     )
 
