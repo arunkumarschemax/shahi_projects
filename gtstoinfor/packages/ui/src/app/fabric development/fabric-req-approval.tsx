@@ -143,24 +143,6 @@ export const FabricReqApproval = () => {
           dataIndex: 'fabricDescription',
           align:"center",
         },
-        // {
-        //   title: <div style={{textAlign: "center"}}>Fabric Responsible</div>,
-        //   dataIndex: 'fabricResponsible',
-        //   align:"center",
-        //   render: (text, record) => {
-        //     const fabricResponsible = fabricApproval[0]?.fabricResponsible;
-        //     return <span>{fabricResponsible}</span>;
-        //   },
-        // },
-        // {
-        //   title: <div style={{textAlign: "center"}}>PCH</div>,
-        //   dataIndex: 'pchId',
-        //   align:"center",
-        //   render: (text, record) => {
-        //     const pch = fabricApproval[0]?.pchId;
-        //     return <span>{pch}</span>;
-        //   },
-        // },
         {
             title: <div style={{ textAlign: "center" }}>Approval</div>,
             align:"center",
@@ -229,7 +211,7 @@ export const FabricReqApproval = () => {
                 </Col>
                 <Col xs={24} sm={12} md={8} lg={6} xl={6} >
                     <Form.Item>
-                    <Button htmlType="submit" icon={<SearchOutlined />}style={{marginRight: "15px",marginLeft:"15px", backgroundColor:'green'}}type="primary">
+                    <Button htmlType="submit" icon={<SearchOutlined />}style={{marginRight: "15px",marginLeft:"15px"}}type="primary">
                         Search
                     </Button>
                     <Button danger htmlType='button' icon={<UndoOutlined />} style={{position: "relative" }} onClick={onReset}>
@@ -238,11 +220,11 @@ export const FabricReqApproval = () => {
                     </Form.Item>
                 </Col>
             {/* </Row> */}
-            {fabricApproval?.length > 0?(<>
+            {selectedQuality?.length > 0?(<>
             {/* <Row > */}
                 <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }}>
                     <Form.Item>
-                        <Button htmlType="submit" style={{marginLeft:"490px", backgroundColor: 'green' }} type="primary">
+                        <Button htmlType="submit" style={{marginLeft:"490px"}} type="primary">
                         Submit
                         </Button>
                     </Form.Item>

@@ -75,6 +75,7 @@ import { ProcrumentGroupModule } from './procurment group/procurment-group-modul
 import { HierachyLevelModule } from './hirerachy level/hirerachy-level-module';
 import { RangeModule } from './range/range.module';
 import { SearchGrpModule } from './search-group/search-group.module';
+import { FeatureModule } from './feature-creation/feature-module';
 
 
 @Module({
@@ -134,7 +135,7 @@ import { SearchGrpModule } from './search-group/search-group.module';
     ProductGroupModule,
     ProcrumentGroupModule,
     HierachyLevelModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule,GroupTechClassModule,BusinessAreaModule,CoTypeModule,CompositionModule,RangeModule,SearchGrpModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule,GroupTechClassModule,BusinessAreaModule,CoTypeModule,CompositionModule,RangeModule,SearchGrpModule,FeatureModule],
   controllers: [AppController],
   providers: [AppService],
 })
