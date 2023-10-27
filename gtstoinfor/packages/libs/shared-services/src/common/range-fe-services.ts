@@ -26,7 +26,7 @@ URL = '/range';
         }
         
         async  getActiveRange(): Promise<RangeResponse> {
-            return this.axiosPostCall(this.URL + '/getActiveComposition')
+            return this.axiosPostCall(this.URL + '/getActiveRange')
         }
         
         
