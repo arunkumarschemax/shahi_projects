@@ -634,6 +634,23 @@ export const baseRouterList = [
         ]
     },
     {
+        label: "Product Structure(BOM)",
+        key: "productstructure",
+        path: "product-structure",
+        filepath: "product-structure",
+        children:[
+            
+            {
+                label: "SMV Efficiency",
+                key: "smvefficiency",
+                path: "productstructure/smv-efficiency",
+                filepath: "productstructure/smv-efficiency",
+            },
+          
+         
+        ]
+    },
+    {
         label: "RM Sku",
         key: "rmSkus",
         // icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>⚙️</div>,

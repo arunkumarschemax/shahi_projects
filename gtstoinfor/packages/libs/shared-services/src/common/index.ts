@@ -87,3 +87,4 @@ export * from './product-group-service';
 export * from './procurment-group-service';
 export * from './hierarchy-level-service';
 export * from './rm-sku-service'
+export * from './product-structure-services'
