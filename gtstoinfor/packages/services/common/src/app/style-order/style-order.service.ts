@@ -136,7 +136,6 @@ export class StyleOrderService{
                     const styleOrderEntity = new StyleOrder();
                     styleOrderEntity.coId = rec.coId;
                     itemsEntity.styleOrderInfo = styleOrderEntity;
-                    // itemsEntity.styleOrderInfo = styleOrderEntity
                     itemsEntity.updatedUser = req.createdUser
                     itemsEntity.coLineNumber = rec.coLineNumber
 
