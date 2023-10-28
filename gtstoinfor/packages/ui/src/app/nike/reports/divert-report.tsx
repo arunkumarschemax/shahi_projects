@@ -386,8 +386,6 @@ const DivertReport = () => {
                     title: "From Item",
                     dataIndex: ['oldPo', 'item'], align: 'center',
                     width: 70, render: (text) => (text !== null ? text : '-')
-
-
                 },
                 {
                     title: "Unit",
