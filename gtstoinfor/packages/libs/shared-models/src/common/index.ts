@@ -84,3 +84,4 @@ export * from './search-group';
 export * from './feature'
 export * from './item-type';
 export * from './item-creation-filter.req';
+export * from './product-structure(BOM)'
