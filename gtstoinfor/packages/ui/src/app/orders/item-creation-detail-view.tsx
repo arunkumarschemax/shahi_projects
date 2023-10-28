@@ -225,7 +225,7 @@ export function ItemCreationDetailView  (props: Props)  {
                     </Descriptions></Card></Col>
                 </Row><br></br>
                 <Row gutter={16}>
-                <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:11}}>
+                <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:12}}>
                 <Card title='Performance Responsible Team' bordered={false}>
                 <Descriptions  style={{ alignItems: 'right' }} >
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Responsible</span>} >{getEmpreaponse(stateData.responsible_person_id)}</Descriptions.Item>
@@ -237,7 +237,7 @@ export function ItemCreationDetailView  (props: Props)  {
 
                     </Descriptions>
                 </Card></Col>
-                <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:13}}>
+                <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:12}}>
                 <Card title='TNA' bordered={false}> <Descriptions  style={{ alignItems: 'right' }} >
                 <Descriptions.Item label={<span style={{ fontWeight: 'bold', color: '',whiteSpace: 'nowrap' }}> Order Confom Date</span>}>
                  <span style={{ whiteSpace: 'nowrap' }}>
