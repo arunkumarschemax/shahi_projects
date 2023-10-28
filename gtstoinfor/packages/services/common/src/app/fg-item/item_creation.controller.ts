@@ -2,7 +2,7 @@ import { Body, Controller, Post, Req } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { ItemCreationService } from './item_creation.service';
-import { CommonResponseModel } from '@project-management-system/shared-models';
+import { CommonResponseModel, ItemCreFilterRequest } from '@project-management-system/shared-models';
 import { ItemCreationDto } from './dto/item-creation.dto';
 
 @Controller('fg-item')
@@ -33,9 +33,10 @@ export class ItemCreationController {
     }
 
     @Post('/getAllFgItems')
-    async getAllFgItems(): Promise<CommonResponseModel> {
+    @ApiBody({type:ItemCreFilterRequest})
+    async getAllFgItems(@Body() req:any): Promise<CommonResponseModel> {
         try {
-            return await this.itemCreationService.getAllFgItems();
+            return await this.itemCreationService.getAllFgItems(req);
         } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }

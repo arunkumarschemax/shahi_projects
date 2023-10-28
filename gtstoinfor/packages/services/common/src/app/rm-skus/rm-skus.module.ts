@@ -2,8 +2,8 @@ import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { RmSkus } from "./rm-sku.entity";
-import { RmSkusService } from "./rm-skus.controller";
-import { RmSkusController } from "./rm-skus.service";
+import { RmSkusController } from "./rm-skus.controller";
+import { RmSkusService } from "./rm-skus.service";
 import { RmSKusRepository } from "./rm-sku.repo";
 
 @Module({

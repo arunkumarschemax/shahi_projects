@@ -26,4 +26,9 @@ export class StyleOrderService extends CommonAxiosService{
         return this.axiosPostCall(this.URL + '/getCoLineItemsByDestination',req)
     }
 
+    async getCoLine():Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL + '/getCoLine')
+    }
+
+
 }

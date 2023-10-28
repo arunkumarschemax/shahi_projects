@@ -7,13 +7,14 @@ import { ItemCreationService } from './item_creation.service';
 import { ItemCreationAdapter } from './dto/item_creation.adapter';
 import { ItemSkus } from '../sku-generation/sku-generation.entity';
 import { StyleOrder } from '../style-order/style-order.entity';
+import { ItemCreationRepository } from './item-repo/item-creation.repository';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ItemCreation]),
   ],
   controllers: [ItemCreationController],
-  providers: [ItemCreationService,ItemCreationAdapter,ApplicationExceptionHandler,ItemSkus,StyleOrder],
+  providers: [ItemCreationService,ItemCreationAdapter,ApplicationExceptionHandler,ItemSkus,StyleOrder,ItemCreationRepository],
   exports:[]
 })
 export class ItemCreationModule {}

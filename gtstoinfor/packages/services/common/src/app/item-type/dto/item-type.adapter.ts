@@ -36,6 +36,7 @@ export class ItemTypeAdapter{
 
 
     public convertEntityToDto (item:ItemTypeEntity):ItemTypeDtos{
+        console.log(item,'**')
         const itemvariable= new ItemTypeDtos();
         itemvariable.itemTypeId=item.itemTypeId;
         itemvariable.itemType=item.itemType;
@@ -48,6 +49,7 @@ export class ItemTypeAdapter{
         itemvariable.updatedAt=item.updatedAt;
         itemvariable.updatedUser=item.updatedUser;
         itemvariable.versionFlag=item.versionFlag;
+        console.log(itemvariable,'-')
         return  itemvariable;
 
     }
