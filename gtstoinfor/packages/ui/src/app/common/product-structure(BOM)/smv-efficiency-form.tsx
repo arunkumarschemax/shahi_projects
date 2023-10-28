@@ -1,7 +1,7 @@
 
 import { UndoOutlined, UploadOutlined } from "@ant-design/icons";
-import { DepartmentsDtos, OperationsDTO } from "@project-management-system/shared-models";
-import { DepartmentService, OperationsService } from "@project-management-system/shared-services";
+import { DepartmentsDtos, OperationsDTO, SMVEfficiencyRequest } from "@project-management-system/shared-models";
+import { DepartmentService, OperationsService, productStructureService } from "@project-management-system/shared-services";
 import {
   Button,
   Card,
@@ -12,6 +12,7 @@ import {
   Input,
   Row,
   Select,
+  message,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import AlertMessages from "../common-functions/alert-messages";
@@ -28,6 +29,7 @@ export const SmvEfficiencyForm = () => {
 
   const operationsService = new OperationsService();
   const service =new DepartmentService();
+  const productService = new productStructureService()
 
 
 
@@ -36,6 +38,23 @@ export const SmvEfficiencyForm = () => {
 
   const onFinish = (values:any) => {
     console.log(values,"values")
+    const req = new SMVEfficiencyRequest(values.operationId,values.capacityType,values.validFromDate,values.validToDate,values.revisionNo,values.workCenter,values.operationDescription,values.departmentId,values.planingArea,values.runTime,values.priceTimeQty,values.setupTime,values.externalSetup,values.fixedTime,values.plnnoMachine,values.plnnoWorkers,values.plnnoSetup,values.phantom,values.leadtmOffset,values.pdays,values.optionsPercent,values.scrapPct,values.setupScrap,values.documentId,values.toolNo,values.subcontrCtrl,values.finite,values.qtyPerHour,values.critResource,values.addMtrlOffset,values.shippingBuffer)
+    console.log(req,"req")
+     
+    productService.createSMVEfficency(req).then((res)=>{
+      if (res.status){
+       onReset();
+       message.success(res.internalMessage);
+      
+   } else{
+
+     AlertMessages.getErrorMessage(res.internalMessage);
+      }
+ }).catch(err => {
+
+    AlertMessages.getErrorMessage(err.message);
+  })
+      
    }
 
 
@@ -82,12 +101,7 @@ export const SmvEfficiencyForm = () => {
     <Card
       size="small"
       title="SMV Efficiency "
-    //   extra={
-    //     <span>
-    //       <Button type={"primary"}>View </Button>
-    //     </span>
 
-    //   }
     >
       <Form
         form={form}
@@ -576,7 +590,7 @@ export const SmvEfficiencyForm = () => {
             >
               <Form.Item
                 label="Qty per Hour"
-                name="qtyperHour"
+                name="qtyPerHour"
                 rules={[{ required: true, message: "Enter Qty per Hour" }]}
               >
                 <Input placeholder="Enter  Qty per Hour" allowClear />

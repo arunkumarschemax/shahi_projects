@@ -58,7 +58,7 @@ export class ProductStructureService {
 
           if (save){
 
-            return new ProductStructureResponseModel(false, 0, "SMV Efficency Created Sucessfully");
+            return new ProductStructureResponseModel(true, 0, "SMV Efficency Created Sucessfully");
 
           } else {
 
