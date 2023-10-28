@@ -76,4 +76,15 @@ export class FileUploadEntity {
         length:20
     })
     uploadType: string;
+    @Column("text", {
+        nullable: true,
+        name: "columns"
+      })
+    columns: string;
+    @Column('varchar', {
+        name: 'failed_reason',
+        nullable: false,
+        length:20
+    })
+    failedReason: string;
 }

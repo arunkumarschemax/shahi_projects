@@ -6,6 +6,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
+import { Cron } from '@nestjs/schedule';
 import { extname } from 'path'; 
 import { FileIdReq } from './models/file-id.req';
 import { type } from 'os';
@@ -431,6 +432,9 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+
+    //cron job to fetch mails autmatically once per a day
+    @Cron('* 1 * * *')
     @Get('/processEmails')
     async processEmails() {
         try {
@@ -449,6 +453,8 @@ export class OrdersController {
         // );
         // }
     }
+
+    @Cron('* 2 * * *')
     @Post('/readCell')
     async readCell(@Body() req:any): Promise<CommonResponseModel> {
         try {

@@ -35,6 +35,7 @@ import { resolve } from 'path';
 import { isNumberObject } from 'util/types';
 import { monthOrderDtoKeys, yearOrderDtoKeys } from '../../../../../libs/shared-models/src/enum';
 const xlsxFile = require('read-excel-file/node');
+import {readSheetNames} from 'read-excel-file'
 const csv = require('csv-parser');
 const Excel = require('exceljs');
 import { CoLine } from './entities/co-line.entity';
@@ -665,7 +666,7 @@ if(data.Order_Plan_Number !== null){
     async updateFileStatus(req: FileStatusReq): Promise<CommonResponseModel> {
         let update
         if (req.status === 'Failed') {
-            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, isActive: false, createdUser: req.userName });
+            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, isActive: false, createdUser: req.userName,failedReason:req.failedReason,columns:req.columns });
         } else {
             update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, createdUser: req.userName })
         }
@@ -1362,6 +1363,8 @@ async getWareHouseComparisionExcelData(req:YearReq): Promise<CommonResponseModel
     }
     return new CommonResponseModel(true, 1, 'data retrieved', data);
 }
+
+//cron job to fetch mails autmatically once per a day
 async processEmails() {
     // Set the environment variable to allow TLS
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
@@ -1379,9 +1382,9 @@ async processEmails() {
 
     // Define your email configuration
     const imap = new Imap({
-      user: 'uniqlo.projection@shahi.co.in',
-      password: 'SH@hi@98765435',
-      host: 'zimbra.xmission.com',
+        user: 'karthikeyan.nallamuthu@shahi.co.in',
+        password: 'auao smhl wkmu uuht',
+      host: 'imap.gmail.com',
       port: 993,
       tls: true,
       authTimeout: 30000,
@@ -1453,9 +1456,11 @@ async processEmails() {
           throw err;
         }
 
-        const searchCriteria = [['FROM', 'jaswanthpappala3@gmail.com']];
+        // const searchCriteria = [['FROM', '']];
+        const searchCriteria = [['SUBJECT', 'UNIQLO ORDER MANAGEMENT'],['FROM', 'karthikeyan.nallamuthu@shahi.co.in']];
+        // const searchCriteria = [['SUBJECT', 'testing mail'],['FROM', 'uma.boddeda@schemaxtech.com']];
 
-        imap.search(searchCriteria, (err, results) => {
+        imap.search(searchCriteria,(err, results) => {
           if (err) {
             const logMessage = `Error searching emails: ${err}`;
             this.logger.error(logMessage);
@@ -1566,54 +1571,89 @@ async processEmails() {
     // const req = [{filePath:'./upload-files/pro_orders_1.xlsx',fileName:'pro_orders_1.xlsx'},{filePath:'./upload-files/projection_orders_1.xlsx',fileName:'projection_orders_1.xlsx'}]
     for(const filerec of files){
         const filename = filerec
+        console.log(filerec,'filename')
         const filepath = './upload-files/'+filerec
 
         // // filename = 'pro_order_sep3.xlsx';
             // console.log(filename.split('.').pop(),'extension')
             // console.log(filename,'filename')
+            const promiseA = () => new Promise((resolve, reject) => {
+                xlsxFile(filepath, { getSheets: true }).then((sheets:any[])=>{
+                    resolve(sheets)
+                });
+            })
+            const sheets:any = await promiseA()
+            console.log('hhhhhoo',sheets)
+
+
+
             const promise = () => new Promise((resolve, reject) => {
                 if(filename.split('.').pop() == 'csv'){
-                    const dataArray = []
-                    fs.createReadStream(filepath)
-                        .on('error', () => {
-                            // handle error
-                        })
+                    // const dataArray = []
+                    // fs.createReadStream(filepath)
+                    //     .on('error', () => {
+                    //         // handle error
+                    //     })
         
-                        .pipe(csv())
-                        .on('data', (row) => {
-                            dataArray.push(Object(row))
-                        })
+                    //     .pipe(csv())
+                    //     .on('data', (row) => {
+                    //         dataArray.push(Object(row))
+                    //     })
         
-                        .on('end', () => {
-                            resolve(dataArray)
-                        })
-                }else if(filename.split('.').pop() == 'xlsx'){
-                    xlsxFile(filepath,{sheet:'Production Plan Rawdata Export' || 'RawData'|| 'Rawdata'},{transformData(data){
-                        console.log(data)
-                        // data.slice(0,3)
-                        // console.log(data)
-                        return data}})
-                    
-                      .then((rows) => {
-                        const dataArray = []
-                        // console.log(rows,'---------------')
-                        rows.shift(); // Separate first row with column names
-                        rows.shift(); // Separate first row with column names
-                        rows.shift(); // Separate first row with column name
-                        const columnNames = rows.shift(); // Separate first row with column names
-                        console.log(columnNames,'----------cccccccc')
-                        rows.map((row) => { // Map the rest of the rows into objects
-                          const obj = {}; // Create object literal for current row
-                          row.forEach((cell, i) => {
-                                obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
-                          });
-                        //   console.log(obj)
-                          dataArray.push(Object(obj));
-                          resolve(dataArray)
-                        //   console.log(objs); // Display the array of objects on the console
-                        //   return obj;
-                        });
-                      });
+                    //     .on('end', () => {
+                    //         resolve(dataArray)
+                    //     })
+                }else if(filename.split('.').pop() == 'xlsx'){ 
+                    // xlsxFile(filepath, { getSheets: true }).then((sheets)=>{
+                    //     resolve(sheets)
+                    // });
+                    // const sheets = await promise()
+                    // console.log('hhhhhoo',sheets)
+                    let finalSheetName = ''
+                    for(const sheetname of sheets){
+                        if(sheetname.name == 'Production Plan Rawdata Export' || sheetname.name =='RawData' || sheetname.name =='Rawdata'){
+                            finalSheetName = sheetname.name
+                            break
+                        }
+                    }
+                    console.log(sheets,'sheets')
+                            xlsxFile(filepath,{sheet:finalSheetName},{transformData(data){
+                                console.log(data)
+                                // data.slice(0,3)
+                                // console.log(data)
+                                return data}})
+                            
+                              .then((rows) => {
+                                let columnNames
+                                const dataArray = []
+                                while(rows.length){
+                                    columnNames = rows.shift(); // Separate first row with column names
+                                    if(columnNames[0] != null){
+                                        break;
+                                    }
+                                }
+                                console.log(columnNames,'oooooooo')
+                                // console.log(rows,'---------------')
+                                // rows.shift(); // Separate first row with column names
+                                // rows.shift(); // Separate first row with column names
+                                // rows.shift(); // Separate first row with column name
+                                // rows.shift(); // Separate first row with column name
+                                // rows.shift(); // Separate first row with column name
+                                // rows.shift(); // Separate first row with column name
+                                // const columnNames = rows.shift(); // Separate first row with column names
+                                console.log(columnNames,'----------cccccccc')
+                                rows.map((row) => { // Map the rest of the rows into objects
+                                  const obj = {}; // Create object literal for current row
+                                  row.forEach((cell, i) => {
+                                        obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
+                                  });
+                                //   console.log(obj)
+                                  dataArray.push(Object(obj));
+                                  resolve(dataArray)
+                                //   console.log(objs); // Display the array of objects on the console
+                                //   return obj;
+                                });
+                              });
                 }else{
                     
                 }
@@ -1630,14 +1670,24 @@ async processEmails() {
                 if(saveFilePath.status){
                     // console.log(dataArray,'------------------------------------')
                     const saveProjOrders = await this.saveOrdersData(dataArray,saveFilePath.data.id,9)
+                    console.log(saveProjOrders,'saveProjOrders')
                     let req = new FileStatusReq();
                     req.fileId = saveFilePath.data.id;
                     req.userName = 'Bidhun'
                     if(saveProjOrders.status){
                         req.status = 'Success';
                     }else{
+                        req.failedReason = saveProjOrders.internalMessage
+                        if(saveProjOrders?.data){
+                            console.log(saveProjOrders.data,'hhhhh')
+                            req.columns = saveProjOrders.data
+                            // const resData = saveProjOrders.data
+                        }else{
+                            req.columns = ''
+                        }
                         req.status = 'Failed';
                     }
+                    console.log(req,'valuuuuu')
                     const updateFileStatus = await this.updateFileStatus(req)
                 }else{
                     // return false
