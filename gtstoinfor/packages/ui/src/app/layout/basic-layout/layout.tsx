@@ -633,13 +633,13 @@ export const baseRouterList = [
          
         ]
     },
-    // {
-    //     label: "RM Sku",
-    //     key: "rmSkus",
-    //     // icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>⚙️</div>,
-    //     path: "rmskus/rm-skus",
-    //     filepath: "rmskus/rm-skus"
-    // }
+    {
+        label: "RM Sku",
+        key: "rmSkus",
+        // icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>⚙️</div>,
+        path: "rmskus/rm-skus",
+        filepath: "rmskus/rm-skus"
+    }
     // {
     //     label: "Orders",
     //     key: "excel-import",

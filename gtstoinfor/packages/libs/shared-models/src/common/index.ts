@@ -83,3 +83,4 @@ export * from './range';
 export * from './search-group';
 export * from './feature'
 export * from './item-type';
+export * from './rm-skus'

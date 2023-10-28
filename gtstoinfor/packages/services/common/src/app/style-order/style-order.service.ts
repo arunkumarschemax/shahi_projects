@@ -129,13 +129,14 @@ export class StyleOrderService{
                 uom.id = rec.uomId
                 itemsEntity.uomInfo = uom
                 itemsEntity.skuCode = rec.skuCode
-                const styleOrderEntity = new StyleOrder();
-                styleOrderEntity.coId = rec.coId;
-                itemsEntity.styleOrderInfo = styleOrderEntity;
+              
 
                 if(rec.coLineId){
                     itemsEntity.coLineId = rec.coLineId
                     // itemsEntity.styleOrderInfo = styleOrderEntity
+                    const styleOrderEntity = new StyleOrder();
+                    styleOrderEntity.coId = rec.coId;
+                    itemsEntity.styleOrderInfo = styleOrderEntity;
                     itemsEntity.updatedUser = req.createdUser
                     itemsEntity.coLineNumber = rec.coLineNumber
 
