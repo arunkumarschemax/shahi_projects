@@ -36,6 +36,7 @@ const ItemCreationView = () => {
          const employeservice = new EmployeeDetailsService();
          const Rangeservice = new RangeService();
          const compositionservice = new CompositionService();
+         const service = new ItemCreationService();
          const uomservice = new UomService();
          const [searchdata,setSearchData] = useState([]);
          const [employedata,setEmployeData] = useState([]);
@@ -52,7 +53,7 @@ const ItemCreationView = () => {
          const [form] = Form.useForm();
          const { Option } = Select;
 
-  const service = new ItemCreationService();
+
 
   useEffect(() => {
     getAllfgItemViewData();
@@ -61,13 +62,13 @@ const ItemCreationView = () => {
     getAllBrands();
     getAllCategory();
     getAllCustomGrops();
-    getAllROSL();
     getAllBuyingHouse();
     getAllSearchgroup();
     getAllRanges();
     getAllComposition();
     getAllEmployes();
     getAllItemType();
+    getAllCategory();
   }, [])
 
   const resetHandler = () => {
@@ -139,17 +140,21 @@ const ItemCreationView = () => {
 
 
 const getAllComposition=()=>{
-compositionservice.getActiveComposition().then(res=>{
-if(res.status){
-setCompositionData(res.data);
-}else{
-AlertMessages.getErrorMessage(res.internalMessage);
-}
-}).catch(err => {
-setCompositionData([]);
-AlertMessages.getErrorMessage(err.message);
-})
-}
+    compositionservice.getActiveComposition().then(res=>{
+   if(res.status){
+     setCompositionData(res.data);
+    }else{
+  AlertMessages.getErrorMessage(res.internalMessage);
+  }})} 
+    const getAllCategory=()=>{
+     categoryService.getActiveItemCategories().then(res=>{
+      if(res.status){
+          setItemCategory(res.data);
+        }else{
+          AlertMessages.getErrorMessage(res.internalMessage)
+      }
+  })
+    } 
 
   const getAllSearchgroup=()=>{
     searchgroup.getActiveSearchGroup().then(res=>{
@@ -218,31 +223,9 @@ AlertMessages.getErrorMessage(err.message);
 
     })
    }
-  const getAllCategory=()=>{
-    categoryService.getActiveItemCategories().then(res=>{
-        if(res.status){
-            setItemCategory(res.data);
-        }else{
-            AlertMessages.getErrorMessage(res.internalMessage)
-        }
-    }).catch(err=>{
-        setItemCategory([]);
-        AlertMessages.getErrorMessage(err.message)
-    })
-}
+ 
 
-const getAllROSL=()=>{
-    roslservice.getAllActiveROSLGroups().then(res=>{
-        if(res.status){
-            setRosl(res.data);
-        }else{
-            AlertMessages.getErrorMessage(res.internalMessage)
-        }
-    }).catch(err=>{
-        setRosl([]);
-        AlertMessages.getErrorMessage(err.message)
-    })
-}
+
 
  const getAllCustomGrops=()=>{
     currencyServices.getAllActiveCurrencys().then(res=>{
@@ -388,7 +371,7 @@ const getAllROSL=()=>{
       },
       {
         title: "Category",
-        dataIndex: "categoryId",
+        dataIndex: "category_id",
         render: (data) => {
           const catdata = itemCategory.find((cat) => cat.itemCategoryId === data);
           return catdata ? catdata.itemCategory : "-";

@@ -1,6 +1,6 @@
  
 
-import { EmployeeDetailsService, LiscenceTypeService, StyleService } from "@project-management-system/shared-services";
+import { CompositionService, EmployeeDetailsService, ItemCategoryService, LiscenceTypeService, MasterBrandsService, SearchGroupService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Descriptions, Row, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import moment from "moment";
@@ -24,11 +24,26 @@ export function ItemCreationDetailView  (props: Props)  {
     
     const [licence,setLicence]=useState([])
     const [employedata,setEmployeData] = useState([]);
-    const [styledata,setStyle]=useState([])
+    const [styledata,setStyle]=useState([]);
+    const [compositiondata,setCompositionData] = useState([]);
+    const [searchdata,setSearchData] = useState([]);
+    const[brand,setBrand]=useState([]);
+    const [itemCategory,setItemCategory]= useState([]);
+
+
+
 
     const employeservice = new EmployeeDetailsService();
     const styleService = new StyleService();
     const LicenceService = new LiscenceTypeService();
+    const searchgroup = new SearchGroupService();
+    const compositionservice = new CompositionService();
+    const brandservice = new MasterBrandsService();
+    const categoryService = new ItemCategoryService();
+
+
+
+
 
 
 
@@ -40,7 +55,10 @@ export function ItemCreationDetailView  (props: Props)  {
        getAllLicense();
        getAllEmployes();
        getAllStyles();
-
+    //    getAllSearchgroup();
+       getAllComposition();
+       getAllBrands();
+       getAllCategory();
 
       }, [])
 
@@ -70,7 +88,47 @@ export function ItemCreationDetailView  (props: Props)  {
            AlertMessages.getErrorMessage(err.message)
          })
          }
+         const getAllComposition=()=>{
+            compositionservice.getActiveComposition().then(res=>{
+              if(res.status){
+                setCompositionData(res.data);
+              }else{
+                AlertMessages.getErrorMessage(res.internalMessage);
+              }
+            })
+            }
+            const getAllBrands=()=>{
+                brandservice.getAllActiveBrands().then(res=>{
+                    if(res.status){
+                        setBrand(res.data);
+                    }else{
+                        AlertMessages.getErrorMessage(res.internalMessage)
+                    }
+                })
+              }
 
+              const getAllCategory=()=>{
+                categoryService.getActiveItemCategories().then(res=>{
+                    if(res.status){
+                        setItemCategory(res.data);
+                    }else{
+                        AlertMessages.getErrorMessage(res.internalMessage)
+                    }
+                })
+            }
+
+        //  const getAllSearchgroup=()=>{
+        //     searchgroup.getActiveSearchGroup().then(res=>{
+        //       if(res.status){
+        //         setSearchData(res.data)
+        //       }else{
+        //         AlertMessages.getErrorMessage(res.internalMessage);
+        //       }
+        //     }).catch(err => {
+        //       setSearchData([]);
+        //        AlertMessages.getErrorMessage(err.message);
+        //      })        
+        //   }
       function getLicenseType(licenseId) {
         const foundLicense = Object.assign(licence).find(license => license.liscenceTypeId === licenseId);
         return foundLicense ? foundLicense.liscenceType : "-";
@@ -110,9 +168,30 @@ export function ItemCreationDetailView  (props: Props)  {
         const ftname = `${foundemp?.firstName} ${foundemp?.lastName}`;
         return ftname ? ftname : '-';
       }
+      function getEmpSalePerson(data) {
+        const foundemp = Object.assign(employedata).find((emp) => emp.employeeId === data);
+        const ftname = `${foundemp?.firstName} ${foundemp?.lastName}`;
+        return ftname ? ftname : '-';
+      }
       function getStyle(data) {
         const foundStyle = Object.assign(styledata).find(dat => dat.style_no === data);
         return foundStyle ? foundStyle.style : "-";
+      }
+    //   function getSearchGroup(data) {
+    //     const foundStyle = Object.assign(searchdata).find(dat => dat.style_no === data);
+    //     return foundStyle ? foundStyle.style : "-";
+    //   }
+    function getComposition(data) {
+        const foundComp = Object.assign(compositiondata).find(dat => dat.id === data);
+        return foundComp ? foundComp.compositionCode : "-";
+      }
+      function getBrand(data) {
+        const foundComp = Object.assign(brand).find(dat => dat.brandId === data);
+        return foundComp ? foundComp.brandName : "-";
+      }
+      function ItemCategory(data) {
+        const foundIC = Object.assign(itemCategory).find(dat => dat.itemCategoryId === data);
+        return foundIC ? foundIC.itemCategory : "-";
       }
     return(
         <Card title={<span style={{ color: 'black' }}>Item Creation Detailed View - <span style={{color:'#0A93E1  '}}></span></span>}  headStyle={{ fontWeight: 'bold' }} extra={<Link to='/materialCreation/item-creation-view' ><span style={{color:'white'}} >
@@ -121,27 +200,27 @@ export function ItemCreationDetailView  (props: Props)  {
             <span>      
                 <Row gutter={16}><Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:12}}><Card bordered={false} title='Item Details'>
                 <Descriptions  style={{ alignItems: 'right' }} >
-                    <Descriptions.Item label={<span style={{ color:'' }}>Style</span>} >{getStyle(stateData.style_no)}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'' }}>ItemType</span>} >{stateData.item_type_id}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'' }}>Brand</span>} >{stateData.brand_id}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'' }}>Category</span>} >{stateData.category_id}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'' }}>Item Group</span>} >{stateData.item_group}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'' }}>Season</span>} >{stateData.season_id}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'' }}>Shahi Style</span>} >{stateData?.internal_style_id}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'' }}>Referenced</span>} >{stateData.reference_id}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ color:'',fontWeight: 'bold' }}>Style</span>} >{getStyle(stateData.style_no)}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>ItemType</span>} >{stateData.item_type_id}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Brand</span>} >{getBrand(stateData.brand_id)}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Category</span>} >{ItemCategory(stateData.category_id)}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Item Group</span>} >{stateData.item_group}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Season</span>} >{stateData.season_id}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Shahi Style</span>} >{stateData?.internal_style_id}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Referenced</span>} >{stateData.reference_id}</Descriptions.Item>
 
                     </Descriptions>
 </Card></Col>
                 <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:12}}><Card bordered={false} title='Profit Controllers'> <Descriptions  style={{ alignItems: 'right' }} >
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'' }}>Buying House Commission</span>} >{stateData.buying_house_commision}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'' }}>Licence</span>} >{getLicenseType(stateData.license_id)}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'' }}>Custom Group</span>} >{stateData.altUom}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'' }}>National DBK%</span>} >{stateData.altUom}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'' }}>Rosl Group</span>} >{stateData.altUom}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'' }}>Group Tech Class</span>} >{stateData.altUom}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'' }}>Search Group</span>} >{stateData.altUom}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'' }}>Sales Person</span>} >{stateData.altUom}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'' }}>No Of Lace Panel</span>} >{stateData.altUom}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Buying House Commission</span>} >{stateData.buying_house_commision}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Licence</span>} >{getLicenseType(stateData.license_id)}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Custom Group</span>} >{stateData.custom_group_id}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>National DBK%</span>} >{stateData.national_dbk}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Rosl Group</span>} >{stateData.rosl_group}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Group Tech Class</span>} >{stateData.altUom}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Search Group</span>} >{stateData.search_group}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Sales Person</span>} >{getEmpSalePerson(stateData.sale_person_id)}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>No Of Lace Panel</span>} >{stateData.no_of_lace_panel}</Descriptions.Item>
 
                     </Descriptions></Card></Col>
                 </Row><br></br>
@@ -149,26 +228,26 @@ export function ItemCreationDetailView  (props: Props)  {
                 <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:11}}>
                 <Card title='Performance Responsible Team' bordered={false}>
                 <Descriptions  style={{ alignItems: 'right' }} >
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'' }}>Responsible</span>} >{getEmpreaponse(stateData.responsible_person_id)}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'' }}>Approve</span>} >{getEmp(stateData.approver)}</Descriptions.Item>            
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'' }}>Product Designer</span>} >{getEmpProductDesigne(stateData.product_designer_id)}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'' }}>Production Merchant</span>} >{getEmpProductionMerchant(stateData.production_merchant)}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'' }}>PD Merchant</span>} >{getEmpPdMerchant(stateData.pd_merchant)}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'' }}>Factory Merchant</span>} >{getEmpFactoryMerchant(stateData.factory_merchant)}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Responsible</span>} >{getEmpreaponse(stateData.responsible_person_id)}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Approve</span>} >{getEmp(stateData.approver)}</Descriptions.Item>            
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Product Designer</span>} >{getEmpProductDesigne(stateData.product_designer_id)}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Production Merchant</span>} >{getEmpProductionMerchant(stateData.production_merchant)}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>PD Merchant</span>} >{getEmpPdMerchant(stateData.pd_merchant)}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Factory Merchant</span>} >{getEmpFactoryMerchant(stateData.factory_merchant)}</Descriptions.Item>
 
                     </Descriptions>
                 </Card></Col>
                 <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:13}}>
                 <Card title='TNA' bordered={false}> <Descriptions  style={{ alignItems: 'right' }} >
-                <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer', color: '',whiteSpace: 'nowrap' }}> Order Confirmation Date</span>}>
+                <Descriptions.Item label={<span style={{ fontWeight: 'bold', color: '',whiteSpace: 'nowrap' }}> Order Confom Date</span>}>
                  <span style={{ whiteSpace: 'nowrap' }}>
                  {moment(stateData.order_confirmed_date).format('DD-MM-YYYY')}</span></Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'',whiteSpace: 'nowrap' }}>PCD</span>} >{moment(stateData.order_close_date).format('DD-MM-YYYY')}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'' }}>1stEx-Factory Date</span>} >{stateData.altUom}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'' }}>FR TNA</span>} >{moment(stateData.first_ex_factory_date).format('DD-MM-YYYY')}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer', color: '' }}>Total Order Qty</span>}>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'',whiteSpace: 'nowrap' }}>PCD</span>} >{moment(stateData.order_close_date).format('DD-MM-YYYY')}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>1stEx-Factory Date</span>} >{moment(stateData.first_ex_factory_date).format('DD-MM-YYYY')}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>FR TNA</span>} >-</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold', color: '' }}>Total Order Qty</span>}>
                      {Number(stateData.order_qty).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'revert-layer',color:'' }}>Range</span>} >{stateData.range}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Range</span>} >{stateData.range}</Descriptions.Item>
 
                     </Descriptions></Card>
                     
@@ -186,7 +265,7 @@ export function ItemCreationDetailView  (props: Props)  {
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Target Currency</span>} >{stateData.target_currency}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Projection Order</span>} >{stateData.projection_order_id}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Business Area</span>} >{stateData.business_area}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Composition</span>} >{stateData.composition}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Composition</span>} >{getComposition(stateData.composition)}</Descriptions.Item>
                     </Descriptions></Card>
              </Col>
                     <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:12}}>
