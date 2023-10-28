@@ -27,7 +27,7 @@ URL = '/liscenc-type';
 
            
 
-            async getActiveLiscenceTypeById(liscenceTypeReq : LiscenceTypeIdRequest): Promise<DeliveryMethodResponseModel> {
+            async getActiveLiscenceTypeById(liscenceTypeReq : LiscenceTypeIdRequest): Promise<LiscenceTypeResponseModel> {
                 return this.axiosPostCall(this.URL + '/getActiveLiscenceTypeById',liscenceTypeReq)
               }
 

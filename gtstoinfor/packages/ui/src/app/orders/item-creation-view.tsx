@@ -3,12 +3,12 @@
 
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import {   BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, ItemCategoryService, ItemCreationService, ItemsService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from '@project-management-system/shared-services';
-import { CompositionDto, LiscenceTypesdDto } from '@project-management-system/shared-models';
+import {   BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, ItemCategoryService, ItemCreationService, ItemTypeService, ItemsService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from '@project-management-system/shared-services';
+import { CompositionDto, ItemCreFilterRequest, LiscenceTypesdDto } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
 import ItemCreation from './item-creation';
 import moment from 'moment';
@@ -32,6 +32,7 @@ const ItemCreationView = () => {
          const buyingHouseservice = new BuyingHouseService();
          const itemCreationService = new ItemCreationService();
          const searchgroup = new SearchGroupService();
+         const itemTypeservice =new ItemTypeService();
          const employeservice = new EmployeeDetailsService();
          const Rangeservice = new RangeService();
          const compositionservice = new CompositionService();
@@ -47,8 +48,9 @@ const ItemCreationView = () => {
          const [styledata,setStyle]=useState([])
          const[brand,setBrand]=useState([])
          const [compositiondata,setCompositionData] = useState([]);
-
-
+         const [ItemType,setItemType]= useState([]);
+         const [form] = Form.useForm();
+         const { Option } = Select;
 
   const service = new ItemCreationService();
 
@@ -65,12 +67,31 @@ const ItemCreationView = () => {
     getAllRanges();
     getAllComposition();
     getAllEmployes();
+    getAllItemType();
   }, [])
 
+  const resetHandler = () => {
+    form.resetFields();
+    getAllfgItemViewData();
+
+}
     const getAllfgItemViewData= () => {
-    service.getAllFgItems().then(res => {
+      const req = new ItemCreFilterRequest();
+
+     
+      if (form.getFieldValue('style') !== undefined) {
+          req.style = form.getFieldValue('style');
+      }
+      if (form.getFieldValue('itemName') !== undefined) {
+          req.itemName = form.getFieldValue('itemName');
+      }
+      if (form.getFieldValue('brandId') !== undefined) {
+          req.brandId = form.getFieldValue('brandId');
+      }
+    service.getAllFgItems(req).then(res => {
       if (res.status) {
         setItemData(res.data);
+        
       } else
        {
         setItemData([])
@@ -81,11 +102,24 @@ const ItemCreationView = () => {
       setItemData([]);
     })
   }
-
+// console.log(ItemData,"itemData")
   const closeDrawer = () => {
     setDrawerVisible(false);
   }
-
+  const getAllItemType=() =>{
+    itemTypeservice.getAllActiveItemType().then(res =>{
+      if (res.status){
+        // console.log(res,'llllll')
+        setItemType(res.data);
+         
+      } else{
+        AlertMessages.getErrorMessage(res.internalMessage);
+         }
+    }).catch(err => {
+      setItemType([]);
+       AlertMessages.getErrorMessage(err.message);
+     })        
+  }
 
   const getAllEmployes=() =>{
     employeservice.getAllActiveEmploee().then(res =>{
@@ -317,8 +351,6 @@ const getAllROSL=()=>{
     {
       title: 'S No',
       key: 'sno',
-      // width: '70px',
-      
       responsive: ['sm'],
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
@@ -332,17 +364,22 @@ const getAllROSL=()=>{
         },
       },
       {
+        title: "Item Name",
+        dataIndex: "item_name",
+        align:'center',
+      },
+      {
         title: "Type",
-        dataIndex: "itemTypeId",
+        dataIndex: "item_type_id",
         align:'center',
         render: (data) => {
-          const style = styledata.find((loc) => loc.styleNo === data);
-          return style ? style.style : "-";
+          const style = ItemType.find((loc) => loc.item_type_id === data);
+          return style ? style.itemType : "-";
         },
       },
       {
         title: "Brand",
-        dataIndex: "brandId",
+        dataIndex: "brand_id",
         align:'center',
         render: (data) => {
           const branddata = brand.find((bran) => bran.brandId === data);
@@ -367,7 +404,7 @@ const getAllROSL=()=>{
       },
       {
         title: "Responsible",
-        dataIndex: "responsiblePersonId",
+        dataIndex: "responsible_person_id",
         render: (data) => {
           const empdata = employedata.find((emp) => emp.employeeId === data);
           const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
@@ -385,7 +422,7 @@ const getAllROSL=()=>{
       },
       {
         title: "Production Merchant",
-        dataIndex: "productionMerchant",
+        dataIndex: "production_merchant",
         render: (data) => {
           const empdata = employedata.find((emp) => emp.employeeId === data);
           const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
@@ -394,7 +431,12 @@ const getAllROSL=()=>{
       },
       {
         title: "Sales Person",
-        dataIndex: "salePersonId",
+        dataIndex: "sale_person_id",
+        render: (data) => {
+          const empdata = employedata.find((emp) => emp.employeeId === data);
+          const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
+          return ftname ? ftname : '-';
+        },
       },
       {
         title: "Basic UOM",
@@ -407,28 +449,36 @@ const getAllROSL=()=>{
       },
       {
         title: "Sales Price",
-        dataIndex: "salePrice",
+        dataIndex: "sale_price",
         align:'right',
       },
       {
         title: "Target Currency",
-        dataIndex: "targetCurrency",
+        dataIndex: "target_currency",
         align:'center',
       },
       {
         title: "Total Order Qty",
-        dataIndex: "orderQty",align:'right',
+        dataIndex: "order_qty",align:'right',
         render: (text, record) => (
           <>
-              {Number(record.orderQty).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+              {Number(record.order_qty).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
           </>
       )
 
       },
       {
         title: "Order Confirmation Date",
-        dataIndex: "orderConfirmedDate",
+        dataIndex: "orderConfirmedDate",align:'center',
         render: (text) => moment(text).format('DD/MM/YYYY')
+      },
+      {
+        title: "Range",
+        dataIndex: "",
+        render: (data) => {
+          const randata = rangedata.find((cat) => cat.id === data);
+          return randata ? randata.rangeCode : "-";
+        },
       },
     {
       title: `Action`,
@@ -466,7 +516,7 @@ const getAllROSL=()=>{
    * @param extra 
    */
   const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
+    // console.log('params', pagination, filters, sorter, extra);
   }
 
   
@@ -474,12 +524,66 @@ const getAllROSL=()=>{
 
   return (
       <>
-      <Card title={<span >Item Creation</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+      <Card title={<span >Item Creation</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }} 
     extra={<Link to='/materialCreation/item-creation' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
       <Card >
+      <Form onFinish={getAllfgItemViewData} form={form} layout='vertical'>
+                <Row gutter={24}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                        <Form.Item name='style' label='Style' >
+                            <Select showSearch placeholder="Select Style" optionFilterProp="children" allowClear >
+                                {
+                                    styledata?.map((inc: any) => {
+                                        return <Option key={inc.styleId} value={inc.styleId}>{inc.style}</Option>
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                        <Form.Item name='itemName' label='Item Name' >
+                            <Select showSearch placeholder="Select Item Name" optionFilterProp="children" allowClear>
+                                {
+                                    ItemData?.map((inc: any) => {
+                                        return <Option key={inc.fg_item_id} value={inc.item_name}>{inc.item_name}</Option>
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                        <Form.Item name='brandId' label='Brand' >
+                            <Select
+                                showSearch
+                                placeholder="Select Size Description"
+                                optionFilterProp="children"
+                                allowClear
+                            >
+                                {
+                                    brand?.map((inc: any) => {
+                                        return <Option key={inc.brandId} value={inc.brandId}>{inc.brandName}</Option>
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
+                        <Form.Item>
+                            <Button htmlType="submit"
+                                icon={<SearchOutlined />}
+                                type="primary">GET REPORT</Button>
+                            <Button
+                                htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
+                            >
+                                RESET
+                            </Button>
+                        </Form.Item>
+                    </Col>
+                </Row>
+            </Form>
+            <>
         <Table
          size='middle'
         rowKey={record => record}
@@ -491,9 +595,9 @@ const getAllROSL=()=>{
               setPage(current);
             }
           }}
-          scroll={{x: 'max-content'}}
+          // scroll={{x: 'max-content'}}
           onChange={onChange}
-          bordered />
+          bordered /></>
       </Card>
       <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
