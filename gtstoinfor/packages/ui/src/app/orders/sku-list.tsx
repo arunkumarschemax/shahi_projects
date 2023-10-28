@@ -68,7 +68,8 @@ export const SkuList = () => {
 
 
   const closeSKU = (id: number) => {
-    const req = new ItemSKusReq(id, "", null, null, null, null, "", 0);
+    const req = new ItemSKusReq(null, "",null, null, null, null, "", 0,id);
+    console.log(req,'0000===============')
     services.closeSKUById(req).then((res: any) => {
       if (res.status) {
         message.success(res.internalMessage);
@@ -286,7 +287,8 @@ export const SkuList = () => {
             <Tooltip placement="top" title="Close SKU">
               <Popconfirm
                 onConfirm={(value) => {
-                  closeSKU(rowData.id);
+                  closeSKU(rowData.itemskuID);
+                  console.log(rowData.itemskuID,'666666666666666666666666')
                 }}
                 title={"Are you sure to Close ?"}
               >
@@ -322,7 +324,7 @@ export const SkuList = () => {
                   placeholder="Select Item No"
                   onChange={(val,data)=>Sku(val,data)}
                 >
-                  {data.map((e) => (
+                  {data?.map((e) => (
                     <Option key={e.item_id} val={e.item_id} code={e.item_code}>
                       {e.item_code}
                     </Option>
@@ -349,7 +351,7 @@ export const SkuList = () => {
                   optionFilterProp="children"
                   onChange={(val, text) => Size(val, text)}
                 >
-                  {data.map((e) => {
+                  {data?.map((e) => {
                     return (
                       <Option key={e.sizeId} value={e.sizeId} code={e.sizes}>
                         {e.sizes}
@@ -378,7 +380,7 @@ export const SkuList = () => {
                   optionFilterProp="children"
                   onChange={(val, text) => colour(val, text)}
                 >
-                  {data.map((e) => {
+                  {data?.map((e) => {
                     return (
                       <Option key={e.colourId} value={e.colourId}>
                         {e.colour}
@@ -407,7 +409,7 @@ export const SkuList = () => {
                   optionFilterProp="children"
                   onChange={(val, text) => destination(val, text)}
                 >
-                  {data.map((e) => {
+                  {data?.map((e) => {
                     return (
                       <Option key={e.destinationsId} value={e.destinationsId}>
                         {e.destinations}

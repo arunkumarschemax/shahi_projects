@@ -120,9 +120,12 @@ export class ItemSkuService{
 
     async closeSKUById(req : ItemSKusReq): Promise<SKUGenerationResponseModel> {
       try {
-        const sampleReq = await this.itemSkuRepo.findOne({ where: { itemSkuId: req.itemId  } })
-        if (sampleReq) {
-          const updateResult = await this.itemSkuRepo.update({ itemSkuId: req.itemId }, { status: SkuStatusEnum.CLOSED })
+        console.log(req.itemSkuId,'----------------------')
+        const skuReq = await this.itemSkuRepo.findOne({ where: { itemSkuId: req.itemSkuId  } })
+        console.log(skuReq,'&&&&&&&&&&&&&&&&&&&&')
+        if (skuReq) {
+          const updateResult = await this.itemSkuRepo.update({ itemSkuId: req.itemSkuId }, { status: SkuStatusEnum.CLOSED })
+          console.log(updateResult,'======================')
           if (updateResult) {
             return new SKUGenerationResponseModel(true, 1, 'SKU cancelled successfully', undefined)
           }
@@ -291,7 +294,7 @@ console.log(req,'service');
 async getItemCode():Promise<CommonResponseModel>{
   try{
     const getData = await this.itemSkuRepo.getItemCode()
-    console.log(getData,'dara');
+    // console.log(getData,'dara');
     
     if(getData ){
       return new CommonResponseModel(true,1,'Data retreived',getData)

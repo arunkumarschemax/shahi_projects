@@ -156,6 +156,7 @@ import ItemCreationView from "./orders/item-creation-view"
 import ItemCreationDetailView from "./orders/item-creation-detail-view"
 import RmSkusGeneration from "./rm-skus/rm-skus-generation"
 import SmvEfficiencyForm from "./common/product-structure(BOM)/smv-efficiency-form"
+import COAmendmentTabs from "./common/co-amendment/co-amendment-tabs"
 
 
 export const AppRoutes = () => {
@@ -597,6 +598,7 @@ export const AppRoutes = () => {
                 <Route path='feature-creation' element={<FeatureCreation />} />
                 <Route path='item-creation-view' element={<ItemCreationView/>}/>    
                 <Route path='item-creation-detail-view' element={<ItemCreationDetailView data={''}/>}/>
+                <Route path="co-amendment" element ={<COAmendmentTabs key={""} />} />
                 </Route>
                 <Route path='/operation-tracking'>
                 <Route path='operation-tracking/issuing' element={<IssueScreen/>}/>

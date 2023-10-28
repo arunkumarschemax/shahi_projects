@@ -220,7 +220,7 @@ export const FabricReqApproval = () => {
                     </Form.Item>
                 </Col>
             {/* </Row> */}
-            {selectedQuality?.length > 0?(<>
+            {/* {selectedQuality?.length > 0?(<> */}
             {/* <Row > */}
                 <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }}>
                     <Form.Item>
@@ -230,7 +230,7 @@ export const FabricReqApproval = () => {
                     </Form.Item>
                 </Col>
             {/* </Row> */}
-            </>):(<></>)}
+            {/* </>):(<></>)} */}
             </Row>
         </Form>
         {fabricApproval?.length > 0?(<>

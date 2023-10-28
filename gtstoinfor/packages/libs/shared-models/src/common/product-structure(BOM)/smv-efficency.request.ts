@@ -5,7 +5,7 @@ import { ApiProperty } from "@nestjs/swagger";
 export class SMVEfficiencyRequest {
 
     
-    SmvEfficiencyId: number;
+    // SmvEfficiencyId: number;
     operationId: number;
     capacityType: string;     
     validFromDate: Date;
@@ -39,7 +39,7 @@ export class SMVEfficiencyRequest {
     shippingBuffer: string;
 
     constructor(
-      SmvEfficiencyId: number,
+      // SmvEfficiencyId: number,
     operationId: number,
     capacityType: string,     
     validFromDate: Date,
@@ -72,7 +72,7 @@ export class SMVEfficiencyRequest {
     addMtrlOffset: string,
     shippingBuffer: string,
     ){
-      this.SmvEfficiencyId = SmvEfficiencyId
+      // this.SmvEfficiencyId = SmvEfficiencyId
       this.operationId = operationId
       this.capacityType = capacityType
       this.validFromDate = validFromDate
