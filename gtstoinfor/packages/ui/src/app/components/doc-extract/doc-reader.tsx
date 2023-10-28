@@ -4,7 +4,7 @@ import { Button, Card, Col, Form, FormInstance, Radio, Row, Select, Spin, Upload
 import { useState } from 'react';
 import { pdfjs } from 'react-pdf';;
 import { extractDhl, extractDart, extractExpeditors, extractEfl, extractOocl, extractNagel, extractApl, extractMaersk, checkIsScannedPdf } from './schemax-ai-docx-pdf';
-import { convertScannedPdfToSelectablePdf, extractAplInvoiceDataFromScanned, extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
+import { convertScannedPdfToSelectablePdf, extractAplInvoiceDataFromScanned, extractDataFromScannedImages, extractDpInvoiceDataFromScanned,extractEflInvoiceDataFromScanned,extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNagelInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractOoclInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 import { PDFDocument, rgb } from 'pdf-lib';
 import loadingSymbol from '../../../assets/images/1_yE-S7HG0Rg-ACAcnjvKf5Q.gif';
@@ -75,18 +75,18 @@ export const DocReader = (props: DocReaderProps) => {
                     processedData = await extractExpeditors(pdfData);
                     console.log('PDF DATA EXPEDITORS:', processedData);
                     break;
-                case VendorNameEnum.extractedEfl:
-                    {
-                        const isScannedPdf = await checkIsScannedPdf(pdfData)
-                        if (isScannedPdf) {
-                            const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
-                            const allLines = await extractDataFromScannedImages(pageImages, [0]);
-                            processedData = await extractEflInvoiceDataFromScanned(allLines);
-                        } else {
-                            processedData = await extractEfl(pdfData);
-                        }
-                        break;
-                    }
+                // case VendorNameEnum.extractedEfl:
+                //     {
+                //         const isScannedPdf = await checkIsScannedPdf(pdfData)
+                //         if (isScannedPdf) {
+                //             const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                //             const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                //             processedData = await extractAplInvoiceDataFromScanned(allLines);
+                //         } else {
+                //             processedData = await extractEfl(pdfData);
+                //         }
+                //         break;
+                //     }
 
                 case VendorNameEnum.extractedKrsna:
                     {
@@ -258,14 +258,14 @@ export const DocReader = (props: DocReaderProps) => {
                         break;
                     }
 
-                case VendorNameEnum.extractedOocl:
-                    processedData = await extractOocl(pdfData);
-                    console.log('PDF DATA OOCL:', processedData);
-                    break;
-                case VendorNameEnum.extractedNagel:
-                    processedData = await extractNagel(pdfData);
-                    console.log('PDF DATA Nagel:', processedData);
-                    break;
+                // case VendorNameEnum.extractedOocl:
+                //     processedData = await extractOocl(pdfData);
+                //     console.log('PDF DATA OOCL:', processedData);
+                //     break;
+                // case VendorNameEnum.extractedNagel:
+                //     processedData = await extractNagel(pdfData);
+                //     console.log('PDF DATA Nagel:', processedData);
+                //     break;
                 // case VendorNameEnum.extractedApl:
                 //     processedData = await extractApl(pdfData);
                 //     console.log('PDF DATA Apl:', processedData);
@@ -277,12 +277,97 @@ export const DocReader = (props: DocReaderProps) => {
                     const allLines = await extractDataFromScannedImages(pageImages, [0]);
                     const scannedData = await extractAplInvoiceDataFromScanned(allLines);
                     processedData['extractedData'] = scannedData.extractedData;
-                    processedData['extractedData']['invoiceAmount']=aplPDFData.extractedData.invoiceAmount;
-                    processedData['extractedData']['igst']=aplPDFData.extractedData.igst;
-                    processedData['extractedData']['cgst']=aplPDFData.extractedData.cgst;
-                    processedData['extractedData']['sgst']=aplPDFData.extractedData.sgst;
+                    // processedData['extractedData']['invoiceAmount']=aplPDFData.extractedData.invoiceAmount;
+                    // processedData['extractedData']['igst']=aplPDFData.extractedData.igst;
+                    // processedData['extractedData']['cgst']=aplPDFData.extractedData.cgst;
+                    // processedData['extractedData']['sgst']=aplPDFData.extractedData.sgst;
 
                     processedData['extractedHsnData'] = aplPDFData.extractedHsnData;
+                    break;
+                }
+
+                
+                // case VendorNameEnum.extractedDhl: {
+                //     const dhlPDFData = await extractDhl(pdfData);
+                //     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                //     const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                //     const scannedData = await extractDhlInvoiceDataFromScanned(allLines);
+                //     processedData['extractedData'] = scannedData.extractedData||{};
+                //     processedData['extractedData']['invoiceAmount']=dhlPDFData.extractedData.invoiceAmount;
+                //     processedData['extractedData']['igst']=dhlPDFData.extractedData.igst;
+                //     processedData['extractedData']['cgst']=dhlPDFData.extractedData.cgst;
+                //     processedData['extractedData']['sgst']=dhlPDFData.extractedData.sgst;
+                //     processedData['extractedHsnData'] = dhlPDFData.extractedHsnData;
+                //     break;
+                // }
+
+                // case VendorNameEnum.extractedDart: {
+                //     const dartPDFData = await extractDart(pdfData);
+                //     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                //     const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                //     const scannedData = await extractDartInvoiceDataFromScanned(allLines);
+                //     processedData['extractedData'] = scannedData.extractedData||{};
+                //     processedData['extractedData']['invoiceAmount']=dartPDFData.extractedData.invoiceAmount;
+                //     processedData['extractedData']['igst']=dartPDFData.extractedData.igst;
+                //     processedData['extractedData']['cgst']=dartPDFData.extractedData.cgst;
+                //     processedData['extractedData']['sgst']=dartPDFData.extractedData.sgst;
+                //     processedData['extractedHsnData'] = dartPDFData.extractedHsnData;
+                //     break;
+                // }
+
+                case VendorNameEnum.extractedEfl: {
+                    const eflPDFData = await extractEfl(pdfData);
+                    const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                    const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                    const scannedData = await extractEflInvoiceDataFromScanned(allLines);
+                    processedData['extractedData'] = scannedData.extractedData||{};
+                    processedData['extractedData']['invoiceAmount']=eflPDFData.extractedData.invoiceAmount;
+                    processedData['extractedData']['igst']=eflPDFData.extractedData.igst;
+                    processedData['extractedData']['cgst']=eflPDFData.extractedData.cgst;
+                    processedData['extractedData']['sgst']=eflPDFData.extractedData.sgst;
+                    processedData['extractedHsnData'] = eflPDFData.extractedHsnData;
+                    break;
+                }
+
+                // case VendorNameEnum.extractedExpeditors: {
+                //     const expeditorsPDFData = await extractExpeditors(pdfData);
+                //     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                //     const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                //     const scannedData = await extractExpeditorsInvoiceDataFromScanned(allLines);
+                //     processedData['extractedData'] = scannedData.extractedData||{};
+                //     processedData['extractedData']['invoiceAmount']=expeditorsPDFData.extractedData.invoiceAmount;
+                //     processedData['extractedData']['igst']=expeditorsPDFData.extractedData.igst;
+                //     processedData['extractedData']['cgst']=expeditorsPDFData.extractedData.cgst;
+                //     processedData['extractedData']['sgst']=expeditorsPDFData.extractedData.sgst;
+                //     processedData['extractedHsnData'] = expeditorsPDFData.extractedHsnData;
+                //     break;
+                // }
+
+                case VendorNameEnum.extractedOocl: {
+                    const ooclPDFData = await extractOocl(pdfData);
+                    const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                    const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                    const scannedData = await extractOoclInvoiceDataFromScanned(allLines);
+                    processedData['extractedData'] = scannedData.extractedData||{};
+                    processedData['extractedData']['invoiceAmount']=ooclPDFData.extractedData.invoiceAmount;
+                    processedData['extractedData']['igst']=ooclPDFData.extractedData.igst;
+                    processedData['extractedData']['cgst']=ooclPDFData.extractedData.cgst;
+                    processedData['extractedData']['sgst']=ooclPDFData.extractedData.sgst;
+                    processedData['extractedHsnData'] = ooclPDFData.extractedHsnData;
+                    break;
+                }
+
+                case VendorNameEnum.extractedNagel: {
+                    const nagelPDFData = await extractNagel(pdfData);
+                    const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                    const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                    const scannedData = await extractNagelInvoiceDataFromScanned(allLines);
+                    processedData['extractedData'] = scannedData.extractedData||{};
+                    processedData['extractedData']['invoiceAmount']=nagelPDFData.extractedData.invoiceAmount;
+                    processedData['extractedData']['igst']=nagelPDFData.extractedData.igst;
+                    processedData['extractedData']['cgst']=nagelPDFData.extractedData.cgst;
+                    processedData['extractedData']['sgst']=nagelPDFData.extractedData.sgst;
+                    processedData['extractedHsnData'] = nagelPDFData.extractedHsnData;
                     break;
                 }
 
