@@ -129,12 +129,13 @@ export class StyleOrderService{
                 uom.id = rec.uomId
                 itemsEntity.uomInfo = uom
                 itemsEntity.skuCode = rec.skuCode
-                const styleOrderEntity = new StyleOrder();
-                styleOrderEntity.coId = rec.coId;
-                itemsEntity.styleOrderInfo = styleOrderEntity;
+               
 
                 if(rec.coLineId){
                     itemsEntity.coLineId = rec.coLineId
+                    const styleOrderEntity = new StyleOrder();
+                    styleOrderEntity.coId = rec.coId;
+                    itemsEntity.styleOrderInfo = styleOrderEntity;
                     // itemsEntity.styleOrderInfo = styleOrderEntity
                     itemsEntity.updatedUser = req.createdUser
                     itemsEntity.coLineNumber = rec.coLineNumber
@@ -279,4 +280,17 @@ export class StyleOrderService{
         throw err
     }
    }
+
+   async getCoLine(): Promise<CommonResponseModel> {
+    try {
+   const data = await this.CoLineRepo.find({
+    relations:["styleOrderInfo"]
+   })
+   console.log(data,'-----------')
+   return new CommonResponseModel(true, 0, "CO line Data retrieved  successfully", data);
+
+      } catch (err) {
+        throw err;
+      }
+    }
 }
