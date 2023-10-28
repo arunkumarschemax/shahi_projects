@@ -3,7 +3,7 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Any } from 'typeorm';
 import { FeatureService } from './feature.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { FeatureDTO, FeatureResponseModel } from '@project-management-system/shared-models';
+import { CommonResponseModel, FeatureDTO, FeatureResponseModel } from '@project-management-system/shared-models';
 
 
 @ApiTags('feature')
@@ -21,5 +21,14 @@ export class FeatureController {
       } catch (error) {
         return this.applicationExceptionHandler.returnException(FeatureResponseModel, error)
       }
+    }
+    @Post('/getAllFeatures')
+   // @ApiBody({type:ItemCreFilterRequest})
+    async getAllFeatures(): Promise<CommonResponseModel> {
+        try {
+            return await this.featureService.getAllFeatures();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
     }
 }

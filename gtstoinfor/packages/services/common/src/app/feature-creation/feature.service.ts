@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FeatureRepository } from './repo/feature-repository';
-import { FeatureDTO, FeatureResponseModel } from '@project-management-system/shared-models';
+import { CommonResponseModel, FeatureDTO, FeatureResponseModel } from '@project-management-system/shared-models';
 import { FeatureEntity } from './entities/feature.entity';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { FeatureOptionEntity } from './entities/feature-option-entity';
@@ -47,6 +47,20 @@ export class FeatureService {
         throw err
       }
     }
+
+    async getAllFeatures():Promise<CommonResponseModel>{
+      try{
+          const data = await this.featureRepo.getAllFeatureData()
+          if(data.length === 0){
+              return new CommonResponseModel(false,0,'No data found')
+          } else{
+              return new CommonResponseModel(true,1,'Data retrieved',data)
+
+          }
+      } catch(err){
+          return err
+      }
+  }
 
 
 }

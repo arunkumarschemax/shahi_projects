@@ -3,7 +3,7 @@
 
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select, DatePicker } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -52,6 +52,8 @@ const ItemCreationView = () => {
          const [ItemType,setItemType]= useState([]);
          const [form] = Form.useForm();
          const { Option } = Select;
+         const { RangePicker } = DatePicker;
+
 
 
 
@@ -78,8 +80,12 @@ const ItemCreationView = () => {
 }
     const getAllfgItemViewData= () => {
       const req = new ItemCreFilterRequest();
-
-     
+      if (form.getFieldValue('orderConfirmedDate') !== undefined) {
+        req.confirmStartDate = (form.getFieldValue('orderConfirmedDate')[0]).format('YYYY-MM-DD');
+      }
+      if (form.getFieldValue('orderConfirmedDate') !== undefined) {
+        req.confirmEndDate = (form.getFieldValue('orderConfirmedDate')[1]).format('YYYY-MM-DD');
+      }
       if (form.getFieldValue('style') !== undefined) {
           req.style = form.getFieldValue('style');
       }
@@ -339,17 +345,21 @@ const getAllComposition=()=>{
     },
     {
         title: "Style",
-        dataIndex: "",
+        dataIndex: "style_no",
         align:'center',
         render: (data) => {
           const style = styledata.find((sty) => sty.styleNo === data);
           return style ? style.style : "-";
         },
+        sorter: (a, b) => a.style_no.localeCompare(b.style_no),
+            sortDirections: ['descend', 'ascend'],
       },
       {
         title: "Item Name",
         dataIndex: "item_name",
         align:'center',
+        sorter: (a, b) => a.item_name.localeCompare(b.item_name),
+        sortDirections: ['descend', 'ascend'],
       },
       {
         title: "Type",
@@ -359,6 +369,8 @@ const getAllComposition=()=>{
           const style = ItemType.find((loc) => loc.item_type_id === data);
           return style ? style.itemType : "-";
         },
+        sorter: (a, b) => a.item_type_id.localeCompare(b.item_type_id),
+        sortDirections: ['descend', 'ascend'],
       },
       {
         title: "Brand",
@@ -368,6 +380,9 @@ const getAllComposition=()=>{
           const branddata = brand.find((bran) => bran.brandId === data);
           return branddata ? branddata.brandName : "-";
         },
+        sorter: (a, b) => a.brand_id.localeCompare(b.brand_id),
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Category",
@@ -376,14 +391,26 @@ const getAllComposition=()=>{
           const catdata = itemCategory.find((cat) => cat.itemCategoryId === data);
           return catdata ? catdata.itemCategory : "-";
         },
+        sortDirections: ['descend', 'ascend'],
+        sorter: (a, b) => {
+          const icatA = itemCategory.find((cat) => cat.itemCategoryId === a.itemCategoryId)?.itemCategory || '';
+          const icatB = itemCategory.find((cat) => cat.itemCategoryId === b.itemCategoryId)?.itemCategory || '';
+          return icatA.localeCompare(icatB);
+        },
       },
       {
         title: "Item Group",
-        dataIndex: "",
+        dataIndex: "item_group",
         render: (data) => {
           const catdata = itemCategory.find((cat) => cat.itemCategoryId === data);
           return catdata ? catdata.itemCategory : "-";
         },
+        sorter: (a, b) => {
+          const icatA = itemCategory.find((cat) => cat.itemCategoryId === a.itemCategoryId)?.itemCategory || '';
+          const icatB = itemCategory.find((cat) => cat.itemCategoryId === b.itemCategoryId)?.itemCategory || '';
+          return icatA.localeCompare(icatB);
+        },        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Responsible",
@@ -393,6 +420,13 @@ const getAllComposition=()=>{
           const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
           return ftname ? ftname : '-';
         },
+        sorter: (a, b) => {
+          const icatA = employedata.find((cat) => cat.employeeId === a.employeeId)?.ftname || '';
+          const icatB = employedata.find((cat) => cat.employeeId === b.employeeId)?.ftname || '';
+          return icatA.localeCompare(icatB);
+        },
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Approve",
@@ -402,6 +436,13 @@ const getAllComposition=()=>{
           const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
           return ftname ? ftname : '-';
         },
+        sorter: (a, b) => {
+          const icatA = employedata.find((cat) => cat.employeeId === a.employeeId)?.ftname || '';
+          const icatB = employedata.find((cat) => cat.employeeId === b.employeeId)?.ftname || '';
+          return icatA.localeCompare(icatB);
+        },
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Production Merchant",
@@ -411,6 +452,13 @@ const getAllComposition=()=>{
           const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
           return ftname ? ftname : '-';
         },
+        sorter: (a, b) => {
+          const icatA = employedata.find((cat) => cat.employeeId === a.employeeId)?.ftname || '';
+          const icatB = employedata.find((cat) => cat.employeeId === b.employeeId)?.ftname || '';
+          return icatA.localeCompare(icatB);
+        },
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Sales Person",
@@ -420,25 +468,44 @@ const getAllComposition=()=>{
           const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
           return ftname ? ftname : '-';
         },
+        sorter: (a, b) => {
+          const icatA = employedata.find((cat) => cat.employeeId === a.employeeId)?.ftname || '';
+          const icatB = employedata.find((cat) => cat.employeeId === b.employeeId)?.ftname || '';
+          return icatA.localeCompare(icatB);
+        },
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Basic UOM",
         dataIndex: "uom",
-        align:'center'
+        align:'center',
+        sorter: (a, b) => a.uom.localeCompare(b.uom),
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Currency",
         dataIndex: "currency",
+        sorter: (a, b) => a.currency.localeCompare(b.currency),
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Sales Price",
         dataIndex: "sale_price",
         align:'right',
+        sorter: (a, b) => a.sale_price.localeCompare(b.sale_price),
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Target Currency",
         dataIndex: "target_currency",
         align:'center',
+        sorter: (a, b) => a.target_currency.localeCompare(b.target_currency),
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Total Order Qty",
@@ -447,21 +514,30 @@ const getAllComposition=()=>{
           <>
               {Number(record.order_qty).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
           </>
-      )
+      ),
+      sorter: (a, b) => a.order_qty.localeCompare(b.order_qty),
+      sortDirections: ['descend', 'ascend'],
+
 
       },
       {
         title: "Order Confirmation Date",
         dataIndex: "orderConfirmedDate",align:'center',
-        render: (text) => moment(text).format('DD/MM/YYYY')
+        render: (text) => moment(text).format('DD/MM/YYYY'),
       },
       {
         title: "Range",
-        dataIndex: "",
+        dataIndex: "irange",
         render: (data) => {
           const randata = rangedata.find((cat) => cat.id === data);
           return randata ? randata.rangeCode : "-";
         },
+        sorter: (a, b) => {
+          const icatA = rangedata.find((cat) => cat.id === a.id)?.rangeCode || '';
+          const icatB = rangedata.find((cat) => cat.id === b.id)?.rangeCode || '';
+          return icatA.localeCompare(icatB);
+        },
+        sortDirections: ['descend', 'ascend'],
       },
     {
       title: `Action`,
@@ -552,11 +628,16 @@ const getAllComposition=()=>{
                             </Select>
                         </Form.Item>
                     </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
+                    <Form.Item label="Last Modified Date" name="orderConfirmedDate">
+                    <RangePicker />
+                    </Form.Item>
+                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
                         <Form.Item>
                             <Button htmlType="submit"
                                 icon={<SearchOutlined />}
-                                type="primary">GET REPORT</Button>
+                                type="primary">GET DETAILS</Button>
                             <Button
                                 htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
                             >
@@ -573,6 +654,7 @@ const getAllComposition=()=>{
         className='custom-table-wrapper'
           columns={columnsSkelton}
           dataSource={ItemData}
+        
           pagination={{
             onChange(current) {
               setPage(current);

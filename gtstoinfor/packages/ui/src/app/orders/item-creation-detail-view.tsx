@@ -239,7 +239,7 @@ export function ItemCreationDetailView  (props: Props)  {
                 </Card></Col>
                 <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:12}}>
                 <Card title='TNA' bordered={false}> <Descriptions  style={{ alignItems: 'right' }} >
-                <Descriptions.Item label={<span style={{ fontWeight: 'bold', color: '',whiteSpace: 'nowrap' }}> Order Confom Date</span>}>
+                <Descriptions.Item label={<span style={{ fontWeight: 'bold', color: '',whiteSpace: 'nowrap' }}> Order Confirm Date</span>}>
                  <span style={{ whiteSpace: 'nowrap' }}>
                  {moment(stateData.order_confirmed_date).format('DD-MM-YYYY')}</span></Descriptions.Item>
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'',whiteSpace: 'nowrap' }}>PCD</span>} >{moment(stateData.order_close_date).format('DD-MM-YYYY')}</Descriptions.Item>
