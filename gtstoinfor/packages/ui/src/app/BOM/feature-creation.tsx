@@ -1,7 +1,6 @@
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { FeatureDTO, OptionEnum } from '@project-management-system/shared-models';
 import { ColourService, DestinationService, FeatureService, SizeService } from '@project-management-system/shared-services';
-import { Form, Input, Button, Select,Card, Row, Col, message, Space } from 'antd';
+import { Form, Input, Button, Select,Card, Row, Col, message } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
@@ -48,6 +47,7 @@ export const FeatureCreation = () => {
         })
     }
 
+
     const handleOptionChange = (value) => {
         setSelectedOption(value);
       };
@@ -57,8 +57,7 @@ export const FeatureCreation = () => {
         setSelectedOption(null)
       };
 
-      const saveData = (values:any) => {
-        console.log(values,'_________________')
+      const saveData = (values) => {
     form.validateFields().then(() => {
     const selectedOption = values.option;
     let optionInfo = [];
@@ -75,6 +74,7 @@ export const FeatureCreation = () => {
       }));
     } else if (selectedOption === 'DESTINATION') {
       optionInfo = values.optionId.map(destinationId => ({
+        option: selectedOption,
         optionId: destinationId,
       }));
     }
@@ -85,7 +85,6 @@ export const FeatureCreation = () => {
       option: selectedOption,
       optionInfo,
     };
-    console.log(data,'---------------')
 
     service.createFeature(data).then((res) => {
       if (res.status) {
@@ -104,17 +103,10 @@ export const FeatureCreation = () => {
   return (
   <Card title={<span >Feature</span>} style={{textAlign:'left'}} >
     <Form form={form} layout={'vertical'} name="control-hooks"  onFinish={saveData}>
-    <Form.List name='FeatureDTO' initialValue={[{}]}>
-      {(fields, { add, remove }) => (
-        <>
-        <Row gutter={24}>
-        {fields.map(({ key, name, ...restField }) => (
-            <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-            <Col >
+        <Row gutter={10}>
+            <Col xs={24} sm={12} md={8} lg={6} xl={6}>
               <Form.Item
-              {...restField}
-              name = {[name,'featureName']}
-                  // name="featureName"
+                  name="featureName"
                   label="Name"
                   rules={[
                     {
@@ -130,21 +122,17 @@ export const FeatureCreation = () => {
                   <Input placeholder='Enter Name'/>
                 </Form.Item>
         </Col>
-        <Col >
+        <Col xs={24} sm={12} md={8} lg={6} xl={6}>
               <Form.Item
-              {...restField}
-              name = {[name,'description']}
-                  // name="description"
+                  name="description"
                   label="Description"
                 >
                   <TextArea placeholder='Enter Description' rows={1}/>
                 </Form.Item>
         </Col>
-        <Col >
+        <Col xs={24} sm={12} md={8} lg={4} xl={4}>
               <Form.Item
-              {...restField}
-                  // name="option"
-                  name = {[name,'option']}
+                  name="option"
                   label="Options"
                   rules={[
                     {
@@ -168,12 +156,8 @@ export const FeatureCreation = () => {
                 </Form.Item>
         </Col>
         {selectedOption === 'COLOR' && (
-            <Col >
-              <Form.Item 
-              name ={[name,'optionId']}
-              // name="optionId" 
-              label="Color" 
-              {...restField}
+            <Col xs={24} sm={12} md={8} lg={4} xl={4}>
+              <Form.Item name="optionId" label="Color"
               rules={[
                 {
                   required: true,
@@ -198,8 +182,8 @@ export const FeatureCreation = () => {
             </Col>
           )}
         {selectedOption === 'SIZE' && (
-            <Col >
-              <Form.Item name ={[name,'optionId']} label="Size" {...restField}
+            <Col xs={24} sm={12} md={8} lg={4} xl={4}>
+              <Form.Item name="optionId" label="Size"
               rules={[
                 {
                   required: true,
@@ -225,8 +209,8 @@ export const FeatureCreation = () => {
             </Col>
           )}
           {selectedOption === 'DESTINATION' && (
-            <Col >
-              <Form.Item name ={[name,'optionId']} label="Destination" {...restField}
+            <Col xs={24} sm={12} md={8} lg={4} xl={4}>
+              <Form.Item name="optionId" label="Destination"
               rules={[
                 {
                   required: true,
@@ -251,30 +235,19 @@ export const FeatureCreation = () => {
               </Form.Item>
             </Col>
           )}
-          <MinusCircleOutlined onClick={() => remove(name)} />
-            </Space>
-          ))}
       </Row>
-          <Form.Item>
-            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-              Add field
-            </Button>
-          </Form.Item>
-        </>
-      )}
-    </Form.List>
-      <Row>
+        <Row>
         <Col span={24} style={{ textAlign: 'right' }}>
-          <Button type="primary" htmlType="submit" >
-            Submit
-          </Button>
-          <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset} danger>
+            <Button type="primary" htmlType="submit" >
+              Submit
+            </Button>
+         <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset} danger>
             Reset
           </Button>
-        </Col>
-      </Row>
-    </Form>
-  </Card>
+            </Col>
+          </Row>
+      </Form>
+    </Card>
   );
 }
 
