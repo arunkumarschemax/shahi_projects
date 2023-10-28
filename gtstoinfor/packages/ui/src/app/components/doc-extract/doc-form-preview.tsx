@@ -105,7 +105,29 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             getVendorPrice(props.hsnData.venName)
 
         };
-        setHsnData(props.hsnData);
+        const vendor = props.form.getFieldValue('venName');
+        const filteredPriceData = price.filter(rec => rec.vendor === vendor);
+        const modifiedHsnData = props.hsnData.map(rec => {
+            const matchingPriceRec = filteredPriceData.find(priceRec => {
+                const value = priceRec.hsnCode === rec.HSN && priceRec.serviceDescription === rec.description
+                if (value === true) {
+                    return priceRec;
+                }
+            });
+            if (matchingPriceRec) {
+                return {
+                    ...rec,
+                    quotation: matchingPriceRec.unitPrice
+                };
+            }
+            else {
+                return {
+                    ...rec,
+                    quotation: 0
+                };
+            }//test cheyyu bro
+        });
+        setHsnData(modifiedHsnData);
     }, [props?.hsnData]);
 
 
@@ -159,6 +181,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                 setPrice(res.data);
                 console.log(res.data?.unitPrice)
                 props.form.setFieldsValue({ quotation: res.data?.unitPrice })
+                console.log(res.data, "***********************")
             } else {
                 setPrice([]);
             }
@@ -199,7 +222,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             const initial = [...hsnData];
             const singleObject = {};
             for (const rec of formKeys) {
-                    singleObject[rec] = props.form.getFieldValue(rec)
+                singleObject[rec] = props.form.getFieldValue(rec)
                 props.form.resetFields([rec]);
             };
             initial.push(singleObject);
