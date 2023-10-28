@@ -708,8 +708,8 @@ export default function ExcelImport() {
         <>
         <Form form = {form}>
         <Row gutter = {24}>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
-                <Form.Item name="fileType" label="File Type" >
+          <Col>
+                <Form.Item name="fileType" label="File Type" style={{display:'none'}}>
                     <Select
                         showSearch
                         placeholder="Select File Type"

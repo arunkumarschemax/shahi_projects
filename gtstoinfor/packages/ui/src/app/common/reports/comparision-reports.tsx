@@ -128,8 +128,8 @@ export const MonthWiseComparisionReport = () => {
     const ths = [];
     for (let i = 0; i < noOfTh; i++) {
       const exCls= i%2 ?'even-color' : 'odd-color';
-      ths.push(<th className={`ant-table-cell ${exCls}`} scope="col" style={{ width: `${colWidth.latest}px` }}>Latest</th>)
       ths.push(<th className={`ant-table-cell ${exCls}`} scope="col" style={{ width: `${colWidth.pre}px` }}>Previous</th>)
+      ths.push(<th className={`ant-table-cell ${exCls}`} scope="col" style={{ width: `${colWidth.latest}px` }}>Latest</th>)
     }
     return ths;
   }

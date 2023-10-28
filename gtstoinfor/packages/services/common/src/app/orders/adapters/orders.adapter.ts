@@ -3,7 +3,7 @@ import { OrdersEntity } from "../entities/orders.entity";
 
 export class OrdersAdapter {
 
-    public convertDtoToEntity(dto: SaveOrderDto , id?:number,month?:number): OrdersEntity {
+    public convertDtoToEntity(dto: SaveOrderDto , id?:number,month?:number,exf?:any): OrdersEntity {
         const entity = new OrdersEntity()
         entity.productionPlanId = dto.productionPlanId;
         entity.year = dto.year;
@@ -152,7 +152,7 @@ export class OrdersAdapter {
         entity.updateFunction = dto.updateFunction
         entity.countY = dto.countY
         entity.sample = dto.sample
-        entity.exf = dto.exf
+        entity.exf = exf
         entity.bddl = dto.bddl
         entity.bddlPast = dto.bddlPast
         entity.ltBdExf = dto.ltBdExf

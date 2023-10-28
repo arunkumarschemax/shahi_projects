@@ -23,9 +23,9 @@ import { PriceListModule } from './price-list/pricelist.module';
       database: appConfig.database.dbName,
       autoLoadEntities: true,
       synchronize: false,
-      logging: true,
+      logging: false,
       extra: {
-        connectionLimit: 20
+        connectionLimit: 100
       }
     }),
     FactoriesModule,

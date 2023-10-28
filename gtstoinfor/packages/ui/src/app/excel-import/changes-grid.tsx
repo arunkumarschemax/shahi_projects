@@ -28,6 +28,7 @@ const ChangesGrid = () => {
     const [diffquantitydata, setDiffquantitydata] = useState([])
     const [orderNumbers,setOrderNumbers] = useState<any[]>([])
     const [yearData,setYearData] = useState<any[]>([])
+    const [fileData,setFileData] = useState<any[]>([])
 
 
     useEffect(() => {
@@ -36,7 +37,16 @@ const ChangesGrid = () => {
         getItemCode()
         getOrderNumber()
         getYearDropdown()
+        getFilesData()
     }, [])
+
+    const getFilesData = () => {
+        service.getLatestPreviousFilesData().then(res => {
+            if(res.status){
+                setFileData(res.data)
+            }
+        })
+    }
 
     const getYearDropdown = () => {
         service.getYearDropdown().then(res => {
@@ -744,6 +754,29 @@ const ChangesGrid = () => {
             style={{ color: 'green' }}
             onClick={exportExcel}
             icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
+                <Row gutter={8}>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 6 }}>
+          <Tooltip title={fileData ? fileData[1]?.fileName : '-'} arrow={false}>
+            <Card size='small'
+              title={'Previous File Name: ' +`${fileData ?  fileData[1]?.fileName : '-'}`}
+              style={{ textAlign: 'left', maxWidth: 330, width: "100%", height: 30, backgroundColor: '#B1F8E2' }}
+            />
+          </Tooltip>
+        </Col>
+
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 6 }}>
+          <Card size='small' title={'Previous File Date:' +`${fileData ?  fileData[1]?.uploadedDate : '-'}` } style={{ textAlign: 'left', width: 270, height: 30, backgroundColor: '#CBB1F8' }}></Card>
+        </Col>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 6 }}>
+        <Tooltip title={fileData ? fileData[0]?.fileName :''} arrow={false}>
+          <Card size='small' title={'Latest File Name: ' +`${fileData ?  fileData[0]?.fileName : '-'}` } style={{ textAlign: 'left', maxWidth: 330,  width:"100%",height: 30, backgroundColor: '#B1F8E2' }}></Card>
+        </Tooltip>
+        </Col>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
+          <Card size='small' title={'Latest File Date: ' +`${fileData ?   fileData[0]?.uploadedDate : '-'}`} style={{ textAlign: 'left', width: 270, height: 30, backgroundColor: '#CBB1F8' }}></Card>
+        </Col>
+      </Row>
+      <br></br>
             <Form form={form} layout={"vertical"}  onFinish={getFilterdData}>
                 <Row gutter={8}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 3 }}>

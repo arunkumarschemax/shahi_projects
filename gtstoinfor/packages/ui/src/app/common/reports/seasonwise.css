@@ -1,0 +1,6 @@
+.specific-screen .ant-table-thead .ant-table-cell:nth-child(odd) {
+    background: #8cbbb9 !important;}
+
+.specific-screen .ant-table-thead .ant-table-cell:nth-child(even) {
+    background: #e2d7a7 !important;
+}

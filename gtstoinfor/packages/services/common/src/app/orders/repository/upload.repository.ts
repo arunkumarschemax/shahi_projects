@@ -17,16 +17,22 @@ export class FileUploadRepository extends Repository<FileUploadEntity> {
     async getFilesData(req?:FileTypeDto): Promise<any[]> {
        
         const query = this.createQueryBuilder('fup')
-            .select(`fup.id as fileId , fup.file_name as fileName , fup.file_path as filePath,DATE_FORMAT(fup.created_at, '%Y-%m-%d %h:%i %p') as uploadedDate, fup.created_user as createdUser, fup.status as status,fup.file_type as fileType,COUNT(oc.order_plan_number) AS projectionRecords, COUNT(tc.order_no) as trimRecords,SUM(oc.order_plan_qty) AS proorderqty,SUM(tc.order_qty_pcs) AS trimorderqty,fup.upload_type AS uploadType`)
+            .select(`fup.id as fileId , fup.file_name as fileName , fup.file_path as filePath,DATE_FORMAT(fup.created_at, '%Y-%m-%d %h:%i %p') as uploadedDate, fup.created_user as createdUser, fup.status as status,fup.file_type as fileType,COUNT(oc.order_plan_number) AS projectionRecords, COUNT(tc.order_no) as trimRecords,SUM(oc.order_plan_qty) AS proorderqty,SUM(tc.order_qty_pcs) AS trimorderqty,fup.upload_type AS uploadType,fup.columns, fup.failed_reason as failedReason,fup.is_active as isActive`)
             .leftJoin(OrdersChildEntity,`oc`,`oc.file_id = fup.id`)
             .leftJoin(TrimOrdersChildEntity,'tc',`tc.file_id = fup.id`)
-            .where(`fup.is_active = 1 AND fup.status = 'Success'`)
+            .where(`fup.id > 0`)
             if( req){
                 if(req.fileType){
                     query.andWhere(`fup.file_type = '${req.fileType}'`)
                 } 
                 if(req.fromDate){
                     query.andWhere(`DATE(fup.created_at) BETWEEN '${req.fromDate}' AND '${req.toDate}'`)
+                }
+                if(req.type !== 'UploadView'){
+                    query.andWhere(`fup.is_active = 1 AND fup.status = 'Success'`)
+                }
+                if(req.uploadStatus){
+                    query.andWhere(`fup.status = '${req.uploadStatus}'`)
                 }
             }
             query.groupBy(`fup.id`)
@@ -53,5 +59,17 @@ export class FileUploadRepository extends Repository<FileUploadEntity> {
         const queryBuilder = this.createQueryBuilder('fup');
         queryBuilder.where(`id = '${id}'`);
         await queryBuilder.delete().execute();
+    }
+
+    async getLatestPreviousFilesData(): Promise<any[]> {
+       
+        const query = this.createQueryBuilder('fup')
+            .select(`fup.id as fileId , fup.file_name as fileName , fup.file_path as filePath,DATE_FORMAT(fup.created_at, '%Y-%m-%d %h:%i %p') as uploadedDate, fup.created_user as createdUser, fup.status as status,fup.file_type as fileType,COUNT(oc.order_plan_number) AS projectionRecords,SUM(oc.order_plan_qty) AS proorderqty,fup.upload_type AS uploadType`)
+            .leftJoin(OrdersChildEntity,`oc`,`oc.file_id = fup.id`)
+            .where(`fup.is_active = 1 AND fup.status = 'Success'`)
+            .groupBy(`fup.id`)
+            .orderBy(`fup.created_at`, 'DESC')
+            .limit(2)
+        return await query.getRawMany();
     }
 }
