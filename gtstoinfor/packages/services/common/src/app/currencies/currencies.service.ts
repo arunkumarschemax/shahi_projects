@@ -31,7 +31,7 @@ export class CurrenciesService {
       }
 
       async createCurrency(currenciesDto: CurrenciesDTO, isUpdate: boolean): Promise<CurrencyResponseModel> {
-        console.log(currenciesDto,'nnnnnh');
+        // console.log(currenciesDto,'nnnnnh');
         
         try {
           let previousValue
@@ -116,7 +116,7 @@ export class CurrenciesService {
             //retrieves all companies
             const CurrenciesEntities: Currencies[] = await this.currenciesRepository.find({ order: { 'currencyName': 'ASC' },where:{isActive:true}
            });
-         console.log(CurrenciesEntities)
+        //  console.log(CurrenciesEntities)
             if (CurrenciesEntities) {
                 // converts the data fetched from the database which of type companies array to type StateDto array.
                 CurrenciesEntities.forEach(countriesEntity => {

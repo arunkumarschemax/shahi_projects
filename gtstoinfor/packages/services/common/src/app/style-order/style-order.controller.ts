@@ -78,4 +78,13 @@ export class StyleOrderController{
             return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
         }
     }
+
+    @Post('/getCoLine')
+    async getCoLine(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return await this.styleOrderService.getCoLine()
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
 }

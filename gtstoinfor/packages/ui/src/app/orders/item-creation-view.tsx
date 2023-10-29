@@ -3,12 +3,12 @@
 
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select, DatePicker } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import {   BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, ItemCategoryService, ItemCreationService, ItemsService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from '@project-management-system/shared-services';
-import { CompositionDto, LiscenceTypesdDto } from '@project-management-system/shared-models';
+import {   BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, ItemCategoryService, ItemCreationService, ItemTypeService, ItemsService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from '@project-management-system/shared-services';
+import { CompositionDto, ItemCreFilterRequest, LiscenceTypesdDto } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
 import ItemCreation from './item-creation';
 import moment from 'moment';
@@ -32,9 +32,11 @@ const ItemCreationView = () => {
          const buyingHouseservice = new BuyingHouseService();
          const itemCreationService = new ItemCreationService();
          const searchgroup = new SearchGroupService();
+         const itemTypeservice =new ItemTypeService();
          const employeservice = new EmployeeDetailsService();
          const Rangeservice = new RangeService();
          const compositionservice = new CompositionService();
+         const service = new ItemCreationService();
          const uomservice = new UomService();
          const [searchdata,setSearchData] = useState([]);
          const [employedata,setEmployeData] = useState([]);
@@ -47,10 +49,13 @@ const ItemCreationView = () => {
          const [styledata,setStyle]=useState([])
          const[brand,setBrand]=useState([])
          const [compositiondata,setCompositionData] = useState([]);
+         const [ItemType,setItemType]= useState([]);
+         const [form] = Form.useForm();
+         const { Option } = Select;
+         const { RangePicker } = DatePicker;
 
 
 
-  const service = new ItemCreationService();
 
   useEffect(() => {
     getAllfgItemViewData();
@@ -59,18 +64,41 @@ const ItemCreationView = () => {
     getAllBrands();
     getAllCategory();
     getAllCustomGrops();
-    getAllROSL();
     getAllBuyingHouse();
     getAllSearchgroup();
     getAllRanges();
     getAllComposition();
     getAllEmployes();
+    getAllItemType();
+    getAllCategory();
   }, [])
 
+  const resetHandler = () => {
+    form.resetFields();
+    getAllfgItemViewData();
+
+}
     const getAllfgItemViewData= () => {
-    service.getAllFgItems().then(res => {
+      const req = new ItemCreFilterRequest();
+      if (form.getFieldValue('orderConfirmedDate') !== undefined) {
+        req.confirmStartDate = (form.getFieldValue('orderConfirmedDate')[0]).format('YYYY-MM-DD');
+      }
+      if (form.getFieldValue('orderConfirmedDate') !== undefined) {
+        req.confirmEndDate = (form.getFieldValue('orderConfirmedDate')[1]).format('YYYY-MM-DD');
+      }
+      if (form.getFieldValue('style') !== undefined) {
+          req.style = form.getFieldValue('style');
+      }
+      if (form.getFieldValue('itemName') !== undefined) {
+          req.itemName = form.getFieldValue('itemName');
+      }
+      if (form.getFieldValue('brandId') !== undefined) {
+          req.brandId = form.getFieldValue('brandId');
+      }
+    service.getAllFgItems(req).then(res => {
       if (res.status) {
         setItemData(res.data);
+        
       } else
        {
         setItemData([])
@@ -81,11 +109,24 @@ const ItemCreationView = () => {
       setItemData([]);
     })
   }
-
+// console.log(ItemData,"itemData")
   const closeDrawer = () => {
     setDrawerVisible(false);
   }
-
+  const getAllItemType=() =>{
+    itemTypeservice.getAllActiveItemType().then(res =>{
+      if (res.status){
+        // console.log(res,'llllll')
+        setItemType(res.data);
+         
+      } else{
+        AlertMessages.getErrorMessage(res.internalMessage);
+         }
+    }).catch(err => {
+      setItemType([]);
+       AlertMessages.getErrorMessage(err.message);
+     })        
+  }
 
   const getAllEmployes=() =>{
     employeservice.getAllActiveEmploee().then(res =>{
@@ -105,17 +146,21 @@ const ItemCreationView = () => {
 
 
 const getAllComposition=()=>{
-compositionservice.getActiveComposition().then(res=>{
-if(res.status){
-setCompositionData(res.data);
-}else{
-AlertMessages.getErrorMessage(res.internalMessage);
-}
-}).catch(err => {
-setCompositionData([]);
-AlertMessages.getErrorMessage(err.message);
-})
-}
+    compositionservice.getActiveComposition().then(res=>{
+   if(res.status){
+     setCompositionData(res.data);
+    }else{
+  AlertMessages.getErrorMessage(res.internalMessage);
+  }})} 
+    const getAllCategory=()=>{
+     categoryService.getActiveItemCategories().then(res=>{
+      if(res.status){
+          setItemCategory(res.data);
+        }else{
+          AlertMessages.getErrorMessage(res.internalMessage)
+      }
+  })
+    } 
 
   const getAllSearchgroup=()=>{
     searchgroup.getActiveSearchGroup().then(res=>{
@@ -184,31 +229,9 @@ AlertMessages.getErrorMessage(err.message);
 
     })
    }
-  const getAllCategory=()=>{
-    categoryService.getActiveItemCategories().then(res=>{
-        if(res.status){
-            setItemCategory(res.data);
-        }else{
-            AlertMessages.getErrorMessage(res.internalMessage)
-        }
-    }).catch(err=>{
-        setItemCategory([]);
-        AlertMessages.getErrorMessage(err.message)
-    })
-}
+ 
 
-const getAllROSL=()=>{
-    roslservice.getAllActiveROSLGroups().then(res=>{
-        if(res.status){
-            setRosl(res.data);
-        }else{
-            AlertMessages.getErrorMessage(res.internalMessage)
-        }
-    }).catch(err=>{
-        setRosl([]);
-        AlertMessages.getErrorMessage(err.message)
-    })
-}
+
 
  const getAllCustomGrops=()=>{
     currencyServices.getAllActiveCurrencys().then(res=>{
@@ -317,62 +340,93 @@ const getAllROSL=()=>{
     {
       title: 'S No',
       key: 'sno',
-      // width: '70px',
-      
       responsive: ['sm'],
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
         title: "Style",
-        dataIndex: "",
+        dataIndex: "style_no",
         align:'center',
         render: (data) => {
           const style = styledata.find((sty) => sty.styleNo === data);
           return style ? style.style : "-";
         },
+        sorter: (a, b) => a.style_no.localeCompare(b.style_no),
+            sortDirections: ['descend', 'ascend'],
+      },
+      {
+        title: "Item Name",
+        dataIndex: "item_name",
+        align:'center',
+        sorter: (a, b) => a.item_name.localeCompare(b.item_name),
+        sortDirections: ['descend', 'ascend'],
       },
       {
         title: "Type",
-        dataIndex: "itemTypeId",
+        dataIndex: "item_type_id",
         align:'center',
         render: (data) => {
-          const style = styledata.find((loc) => loc.styleNo === data);
-          return style ? style.style : "-";
+          const style = ItemType.find((loc) => loc.item_type_id === data);
+          return style ? style.itemType : "-";
         },
+        sorter: (a, b) => a.item_type_id.localeCompare(b.item_type_id),
+        sortDirections: ['descend', 'ascend'],
       },
       {
         title: "Brand",
-        dataIndex: "brandId",
+        dataIndex: "brand_id",
         align:'center',
         render: (data) => {
           const branddata = brand.find((bran) => bran.brandId === data);
           return branddata ? branddata.brandName : "-";
         },
+        sorter: (a, b) => a.brand_id.localeCompare(b.brand_id),
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Category",
-        dataIndex: "categoryId",
+        dataIndex: "category_id",
         render: (data) => {
           const catdata = itemCategory.find((cat) => cat.itemCategoryId === data);
           return catdata ? catdata.itemCategory : "-";
+        },
+        sortDirections: ['descend', 'ascend'],
+        sorter: (a, b) => {
+          const icatA = itemCategory.find((cat) => cat.itemCategoryId === a.itemCategoryId)?.itemCategory || '';
+          const icatB = itemCategory.find((cat) => cat.itemCategoryId === b.itemCategoryId)?.itemCategory || '';
+          return icatA.localeCompare(icatB);
         },
       },
       {
         title: "Item Group",
-        dataIndex: "",
+        dataIndex: "item_group",
         render: (data) => {
           const catdata = itemCategory.find((cat) => cat.itemCategoryId === data);
           return catdata ? catdata.itemCategory : "-";
         },
+        sorter: (a, b) => {
+          const icatA = itemCategory.find((cat) => cat.itemCategoryId === a.itemCategoryId)?.itemCategory || '';
+          const icatB = itemCategory.find((cat) => cat.itemCategoryId === b.itemCategoryId)?.itemCategory || '';
+          return icatA.localeCompare(icatB);
+        },        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Responsible",
-        dataIndex: "responsiblePersonId",
+        dataIndex: "responsible_person_id",
         render: (data) => {
           const empdata = employedata.find((emp) => emp.employeeId === data);
           const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
           return ftname ? ftname : '-';
         },
+        sorter: (a, b) => {
+          const icatA = employedata.find((cat) => cat.employeeId === a.employeeId)?.ftname || '';
+          const icatB = employedata.find((cat) => cat.employeeId === b.employeeId)?.ftname || '';
+          return icatA.localeCompare(icatB);
+        },
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Approve",
@@ -382,53 +436,108 @@ const getAllROSL=()=>{
           const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
           return ftname ? ftname : '-';
         },
+        sorter: (a, b) => {
+          const icatA = employedata.find((cat) => cat.employeeId === a.employeeId)?.ftname || '';
+          const icatB = employedata.find((cat) => cat.employeeId === b.employeeId)?.ftname || '';
+          return icatA.localeCompare(icatB);
+        },
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Production Merchant",
-        dataIndex: "productionMerchant",
+        dataIndex: "production_merchant",
         render: (data) => {
           const empdata = employedata.find((emp) => emp.employeeId === data);
           const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
           return ftname ? ftname : '-';
         },
+        sorter: (a, b) => {
+          const icatA = employedata.find((cat) => cat.employeeId === a.employeeId)?.ftname || '';
+          const icatB = employedata.find((cat) => cat.employeeId === b.employeeId)?.ftname || '';
+          return icatA.localeCompare(icatB);
+        },
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Sales Person",
-        dataIndex: "salePersonId",
+        dataIndex: "sale_person_id",
+        render: (data) => {
+          const empdata = employedata.find((emp) => emp.employeeId === data);
+          const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
+          return ftname ? ftname : '-';
+        },
+        sorter: (a, b) => {
+          const icatA = employedata.find((cat) => cat.employeeId === a.employeeId)?.ftname || '';
+          const icatB = employedata.find((cat) => cat.employeeId === b.employeeId)?.ftname || '';
+          return icatA.localeCompare(icatB);
+        },
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Basic UOM",
         dataIndex: "uom",
-        align:'center'
+        align:'center',
+        sorter: (a, b) => a.uom.localeCompare(b.uom),
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Currency",
         dataIndex: "currency",
+        sorter: (a, b) => a.currency.localeCompare(b.currency),
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Sales Price",
-        dataIndex: "salePrice",
+        dataIndex: "sale_price",
         align:'right',
+        sorter: (a, b) => a.sale_price.localeCompare(b.sale_price),
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Target Currency",
-        dataIndex: "targetCurrency",
+        dataIndex: "target_currency",
         align:'center',
+        sorter: (a, b) => a.target_currency.localeCompare(b.target_currency),
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Total Order Qty",
-        dataIndex: "orderQty",align:'right',
+        dataIndex: "order_qty",align:'right',
         render: (text, record) => (
           <>
-              {Number(record.orderQty).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+              {Number(record.order_qty).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
           </>
-      )
+      ),
+      sorter: (a, b) => a.order_qty.localeCompare(b.order_qty),
+      sortDirections: ['descend', 'ascend'],
+
 
       },
       {
         title: "Order Confirmation Date",
-        dataIndex: "orderConfirmedDate",
-        render: (text) => moment(text).format('DD/MM/YYYY')
+        dataIndex: "orderConfirmedDate",align:'center',
+        render: (text) => moment(text).format('DD/MM/YYYY'),
+      },
+      {
+        title: "Range",
+        dataIndex: "irange",
+        render: (data) => {
+          const randata = rangedata.find((cat) => cat.id === data);
+          return randata ? randata.rangeCode : "-";
+        },
+        sorter: (a, b) => {
+          const icatA = rangedata.find((cat) => cat.id === a.id)?.rangeCode || '';
+          const icatB = rangedata.find((cat) => cat.id === b.id)?.rangeCode || '';
+          return icatA.localeCompare(icatB);
+        },
+        sortDirections: ['descend', 'ascend'],
       },
     {
       title: `Action`,
@@ -466,7 +575,7 @@ const getAllROSL=()=>{
    * @param extra 
    */
   const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
+    // console.log('params', pagination, filters, sorter, extra);
   }
 
   
@@ -474,26 +583,86 @@ const getAllROSL=()=>{
 
   return (
       <>
-      <Card title={<span >Item Creation</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+      <Card title={<span >Item Creation</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }} 
     extra={<Link to='/materialCreation/item-creation' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
       <Card >
+      <Form onFinish={getAllfgItemViewData} form={form} layout='vertical'>
+                <Row gutter={24}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                        <Form.Item name='style' label='Style' >
+                            <Select showSearch placeholder="Select Style" optionFilterProp="children" allowClear >
+                                {
+                                    styledata?.map((inc: any) => {
+                                        return <Option key={inc.styleId} value={inc.styleId}>{inc.style}</Option>
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                        <Form.Item name='itemName' label='Item Name' >
+                            <Select showSearch placeholder="Select Item Name" optionFilterProp="children" allowClear>
+                                {
+                                    ItemData?.map((inc: any) => {
+                                        return <Option key={inc.fg_item_id} value={inc.item_name}>{inc.item_name}</Option>
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                        <Form.Item name='brandId' label='Brand' >
+                            <Select
+                                showSearch
+                                placeholder="Select Size Description"
+                                optionFilterProp="children"
+                                allowClear
+                            >
+                                {
+                                    brand?.map((inc: any) => {
+                                        return <Option key={inc.brandId} value={inc.brandId}>{inc.brandName}</Option>
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
+                    <Form.Item label="Last Modified Date" name="orderConfirmedDate">
+                    <RangePicker />
+                    </Form.Item>
+                     </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
+                        <Form.Item>
+                            <Button htmlType="submit"
+                                icon={<SearchOutlined />}
+                                type="primary">GET DETAILS</Button>
+                            <Button
+                                htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
+                            >
+                                RESET
+                            </Button>
+                        </Form.Item>
+                    </Col>
+                </Row>
+            </Form>
+            <>
         <Table
          size='middle'
         rowKey={record => record}
         className='custom-table-wrapper'
           columns={columnsSkelton}
           dataSource={ItemData}
+        
           pagination={{
             onChange(current) {
               setPage(current);
             }
           }}
-          scroll={{x: 'max-content'}}
+          // scroll={{x: 'max-content'}}
           onChange={onChange}
-          bordered />
+          bordered /></>
       </Card>
       <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>

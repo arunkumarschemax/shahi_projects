@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { FeatureRepository } from './repo/feature-repository';
-import { FeatureDTO, FeatureResponseModel } from '@project-management-system/shared-models';
+import { CommonResponseModel, FeatureDTO, FeatureResponseModel } from '@project-management-system/shared-models';
 import { FeatureEntity } from './entities/feature.entity';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { FeatureOptionEntity } from './entities/feature-option-entity';
+import { FeatureOpitionRepository } from './repo/feature-option-repository';
 
 @Injectable()
 export class FeatureService {
   
     constructor(
       private featureRepo: FeatureRepository,
+      private featureoptioonrepo : FeatureOpitionRepository,
       ){}
       
     
@@ -47,6 +49,65 @@ export class FeatureService {
         throw err
       }
     }
+
+  //   async getAllFeatures():Promise<CommonResponseModel>{
+  //     try{
+  //         const data = await this.featureoptioonrepo.getAllFeatureOptionData()
+  //         if(data.length === 0){
+  //             return new CommonResponseModel(false,0,'No data found')
+  //         } else{
+  //             return new CommonResponseModel(true,1,'Data retrieved',data)
+
+  //         }
+  //     } catch(err){
+  //         return err
+  //     }
+  // } this can also be used , please dont remove 
+ 
+
+  async getAllFeatures(): Promise<CommonResponseModel> {
+    try {
+        const data = await this.featureoptioonrepo.getAllFeatureOptionData();
+
+        const formattedData: any[] = [];
+
+        for (const item of data) {
+            const existingFeature = formattedData.find((formattedItem) => formattedItem.feature_code === item.feature_code);
+
+            if (existingFeature) {
+                const existingOptionGroup = existingFeature[item.optiongroupForFeature];
+
+                if (existingOptionGroup) {
+                    existingOptionGroup.push({
+                        option_id: item.option_id,
+                    });
+                } else {
+                    existingFeature[item.optiongroupForFeature] = [{
+                        option_id: item.option_id,
+                    }];
+                }
+            } else {
+                const newFeature = {
+                    feature_option_id: item.feature_option_id,
+                    feature_code: item.feature_code,
+                    option_group: item.optiongroupForFeature,
+                    [item.optiongroupForFeature]: [{
+                        option_id: item.option_id,
+                    }],
+                };
+                formattedData.push(newFeature);
+            }
+        }
+
+        if (formattedData.length === 0) {
+            return new CommonResponseModel(false, 0, 'No data found');
+        } else {
+            return new CommonResponseModel(true, formattedData.length, 'Data retrieved', formattedData);
+        }
+    } catch (err) {
+        return err;
+    }
+}
 
 
 }

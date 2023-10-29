@@ -29,6 +29,6 @@ export class SKUGenerationService extends CommonAxiosService{
     }
 
     async closeSKUById(req :ItemSKusReq): Promise<any>{
-        return this.axiosPostCall(this.URL + '/closeSKUById')
+        return this.axiosPostCall(this.URL + '/closeSKUById',req)
     }
 }

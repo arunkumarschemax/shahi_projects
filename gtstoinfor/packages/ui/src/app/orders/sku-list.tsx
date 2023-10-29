@@ -68,7 +68,8 @@ export const SkuList = () => {
 
 
   const closeSKU = (id: number) => {
-    const req = new ItemSKusReq(id, "", null, null, null, null, "", 0);
+    const req = new ItemSKusReq(null, "",null, null, null, null, "", 0,id);
+    console.log(req,'0000===============')
     services.closeSKUById(req).then((res: any) => {
       if (res.status) {
         message.success(res.internalMessage);
@@ -289,7 +290,8 @@ export const SkuList = () => {
             <Tooltip placement="top" title="Close SKU">
               <Popconfirm
                 onConfirm={(value) => {
-                  closeSKU(rowData.id);
+                  closeSKU(rowData.itemskuID);
+                  console.log(rowData.itemskuID,'666666666666666666666666')
                 }}
                 title={"Are you sure to Close ?"}
               >

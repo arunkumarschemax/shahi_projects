@@ -3,6 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { groupBy } from "rxjs";
 import { FeatureEntity } from "../entities/feature.entity";
+import { FeatureOptionEntity } from "../entities/feature-option-entity";
 
 
 
@@ -16,6 +17,12 @@ export class FeatureRepository extends Repository<FeatureEntity> {
     async getFeatureId(): Promise<any> {
         const query = this.createQueryBuilder()
             .select(` MAX(feature_id) as featureId`)
+        return await query.getRawOne();
+    }
+    async getAllFeatureData(): Promise<any> {
+        const query = this.createQueryBuilder('fe')
+            .select(`fe.feature_id ,fe.feature_name , fe.feature_code ,fe.option_group,feo.option_group,feo.option_id`)
+            .leftJoin(FeatureOptionEntity,'feo',`feo.feature_id = fe.feature_id`)
         return await query.getRawOne();
     }
 }
