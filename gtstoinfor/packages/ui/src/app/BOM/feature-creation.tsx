@@ -101,7 +101,8 @@ export const FeatureCreation = () => {
       
 
   return (
-  <Card title={<span >Feature</span>} style={{textAlign:'left'}} >
+  <Card title={<span >Feature</span>}extra={(<Link to="/materialCreation/feature-creation-view">
+  <span style={{ color: 'white' }}><Button type="primary">View</Button></span></Link> )} style={{textAlign:'left'}} >
     <Form form={form} layout={'vertical'} name="control-hooks"  onFinish={saveData}>
         <Row gutter={10}>
             <Col xs={24} sm={12} md={8} lg={6} xl={6}>
