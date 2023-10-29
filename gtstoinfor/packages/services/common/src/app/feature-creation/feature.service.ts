@@ -91,6 +91,7 @@ export class FeatureService {
                     feature_option_id: item.feature_option_id,
                     feature_code: item.feature_code,
                     option_group: item.optiongroupForFeature,
+                    feature_name: item.feature_name,
                     [item.optiongroupForFeature]: [{
                         option_id: item.option_id,
                     }],
