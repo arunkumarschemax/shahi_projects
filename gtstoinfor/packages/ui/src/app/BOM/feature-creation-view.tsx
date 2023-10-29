@@ -1,11 +1,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message } from 'antd';
+import { Table, Card,  Input, Button,} from 'antd';
 import Highlighter from 'react-highlight-words';
-import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
+import {  SearchOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import {   ColourService, CompositionService, DestinationService, FeatureService, ItemsService, LiscenceTypeService, RangeService, SizeService } from '@project-management-system/shared-services';
-import { CompositionDto, LiscenceTypesdDto, RangeDto } from '@project-management-system/shared-models';
+import {   ColourService, DestinationService, FeatureService, SizeService } from '@project-management-system/shared-services';
 import AlertMessages from '../common/common-functions/alert-messages';
 import { CSSProperties } from 'react';
 
@@ -20,7 +19,6 @@ const FeatureCreationView = () => {
   const [color, setColor] = useState<any[]>([])
   const [des, setDes] = useState<any[]>([])
   const [size, setSize] = useState<any[]>([])
-
   const colorService = new ColourService()
   const sizeService = new SizeService()
   const desService = new DestinationService()
@@ -235,11 +233,7 @@ const columnsSkelton: any = [
           );
         },
       }
-      
-      
-      
-      
-      
+
     ];
   
 
@@ -249,7 +243,7 @@ const columnsSkelton: any = [
 
   return (
       <>
-      <Card title={<span >Feature Creation View</span>}
+      <Card title={<span >Feature Creation</span>}
     style={{textAlign:'left'}} headStyle={{ border: 0 }} 
     extra={<Link to='/materialCreation/feature-creation' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
@@ -269,16 +263,12 @@ const columnsSkelton: any = [
             scroll={{ x: true }}
             // onChange={onChange}
             bordered
-            //expandable={expandableConfig} 
           />
       </Card>
-
       </Card> </>
       
   );
 }
-
-
 export default FeatureCreationView
 
 
