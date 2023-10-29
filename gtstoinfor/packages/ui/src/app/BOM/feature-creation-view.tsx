@@ -229,20 +229,73 @@ const columnsSkelton: any = [
     //       }
     //     },
     //   }, test 1
+    // {
+    //     title: 'Options',
+    //     dataIndex: 'option_group',
+    //     render: (optionGroup, record) => {
+    //       if (optionGroup === 'SIZE') {
+    //         return (
+    //           <div>
+    //             <strong>Size Options</strong>
+    //             <ul>
+    //               {record.SIZE.map((sizeOption) => (
+    //                 <li key={sizeOption.option_id}>
+    //                   {console.log(sizeOptions[sizeOption.option_id])}
+    //                   {sizeOptions[sizeOption.option_id] || 'N/A'}
+    //                 </li>
+    //               ))}
+    //             </ul>
+    //           </div>
+    //         );
+    //       } else {
+    //         return null;
+    //       }
+    //     },
+    //   }
+      //test 2
+      
+      
     {
         title: 'Options',
         dataIndex: 'option_group',
         render: (optionGroup, record) => {
-          if (optionGroup === 'SIZE') {
+          if (optionGroup === 'DESTINATION') {
+            const destinationIds = record.DESTINATION.map((option) => option.option_id);
+            const destinationValues = destinationIds.map((id) => destinationOptions[id] || 'N/A');
+      
             return (
               <div>
-              {/* //  <strong>Size Options</strong> */}
+                <strong>Destination Options</strong>
                 <ul>
-                  {record.SIZE.map((sizeOption) => (
-                    <li key={sizeOption.option_id}>
-                      {console.log(sizeOptions[sizeOption.option_id])}
-                      {sizeOptions[sizeOption.option_id] || 'N/A'}
-                    </li>
+                  {destinationValues.map((value, index) => (
+                    <li key={destinationIds[index]}>{value}</li>
+                  ))}
+                </ul>
+              </div>
+            );
+          } else if (optionGroup === 'SIZE') {
+            const sizeIds = record.SIZE.map((option) => option.option_id);
+            const sizeValues = sizeIds.map((id) => sizeOptions[id] || 'N/A');
+            return (
+              <div>
+                <strong>Size Options</strong>
+                <ul>
+                  {sizeValues.map((value, index) => (
+                    <li key={sizeIds[index]}>{value}</li>
+                  ))}
+                </ul>
+              </div>
+            );
+          } else if (optionGroup === 'COLOR') {
+            const colorIds = record.COLOR.map((option) => option.option_id);
+            const colorValues = colorIds.map((id) => colorOptions[id] || 'N/A');
+      
+            return (
+              <div>
+                <strong>Color Options</strong>
+                <ul>
+                  {colorValues.map((value, index) => (
+                    <li key={colorIds[index]}>{value}</li>
                   ))}
                 </ul>
               </div>
@@ -252,59 +305,7 @@ const columnsSkelton: any = [
           }
         },
       }
-      
-      
-      
-    // {
-    //     title: 'Options',
-    //     dataIndex: 'option_group',
-    //     render: (optionGroup, record) => {
-    //       if (optionGroup === 'DESTINATION') {
-    //         const destinationIds = record.DESTINATION.map((option) => option.option_id);
-    //         const destinationValues = destinationIds.map((id) => destinationOptions[id] || 'N/A');
-      
-    //         return (
-    //           <div>
-    //             <strong>Destination Options</strong>
-    //             <ul>
-    //               {destinationValues.map((value, index) => (
-    //                 <li key={destinationIds[index]}>{value}</li>
-    //               ))}
-    //             </ul>
-    //           </div>
-    //         );
-    //       } else if (optionGroup === 'SIZE') {
-    //         const sizeIds = record.SIZE.map((option) => option.option_id);
-    //         const sizeValues = sizeIds.map((id) => sizeOptions[id] || 'N/A');
-    //         return (
-    //           <div>
-    //             <strong>Size Options</strong>
-    //             <ul>
-    //               {sizeValues.map((value, index) => (
-    //                 <li key={sizeIds[index]}>{value}</li>
-    //               ))}
-    //             </ul>
-    //           </div>
-    //         );
-    //       } else if (optionGroup === 'COLOR') {
-    //         const colorIds = record.COLOR.map((option) => option.option_id);
-    //         const colorValues = colorIds.map((id) => colorOptions[id] || 'N/A');
-      
-    //         return (
-    //           <div>
-    //             <strong>Color Options</strong>
-    //             <ul>
-    //               {colorValues.map((value, index) => (
-    //                 <li key={colorIds[index]}>{value}</li>
-    //               ))}
-    //             </ul>
-    //           </div>
-    //         );
-    //       } else {
-    //         return null;
-    //       }
-    //     },
-    //   }/test 2
+    //test 3
       
       
       
@@ -324,9 +325,10 @@ const columnsSkelton: any = [
       </Link>} >
       <Card >
       <Table
-            size="small"
+            size='middle'
             rowKey={(record) => record.feature_option_id}
             columns={columnsSkelton}
+            className='custom-table-wrapper'
             dataSource={lTData}
             pagination={{
               onChange(current) {
