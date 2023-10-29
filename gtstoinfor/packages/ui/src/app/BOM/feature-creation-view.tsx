@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import {   ColourService, CompositionService, DestinationService, FeatureService, ItemsService, LiscenceTypeService, RangeService, SizeService } from '@project-management-system/shared-services';
 import { CompositionDto, LiscenceTypesdDto, RangeDto } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
+import { CSSProperties } from 'react';
 
 
 const FeatureCreationView = () => {
@@ -16,19 +17,14 @@ const FeatureCreationView = () => {
   const searchInput = useRef(null);
   const [page, setPage] = React.useState(1);
   const navigate = useNavigate();
-  const [selectedRangeData, setSelectedRangeData] = useState<any>(undefined);
-  const [color, setColor] = useState({})
-  const [size, setSize] = useState({})
-  const [des, setDes] = useState({})
+  const [color, setColor] = useState<any[]>([])
+  const [des, setDes] = useState<any[]>([])
+  const [size, setSize] = useState<any[]>([])
 
   const colorService = new ColourService()
   const sizeService = new SizeService()
   const desService = new DestinationService()
   const service = new FeatureService()
-
-   const [sizeOptions, setSizeOptions] = useState({});
-const [colorOptions, setColorOptions] = useState({});
-const [destinationOptions, setDestinationOptions] = useState({});
 
   useEffect(() => {
     getAllFeatureData();
@@ -122,64 +118,31 @@ const [destinationOptions, setDestinationOptions] = useState({});
     setSearchText('');
   };
 
-//   const sizeData = () => {
-//     sizeService.getAllActiveSize().then((res) => {
-//       if (res.status) {
-//         const sizeMapping = mapOptionsToNames(res.data);
-//         setSizeOptions(sizeMapping);
-//       }
-//     });
-//   }
-const sizeData = () => {
-    sizeService.getAllActiveSize()
-      .then((res) => {
-        if (res.status) {
-          const sizeData = res.data;
-          setSize(mapOptionsToNames(sizeData));
-          console.log(sizeData,"size data")
 
+const sizeData = () =>{
+    sizeService.getAllActiveSize().then((res)=>{
+        if(res.status){
+            setSize(res.data)
         }
-      })
-      .catch((err) => {
-        console.error('Error fetching size data:', err);
-        setSize({});
-      });
-  };
+    })
+}
 
 
   const colorData = () => {
-    colorService.getAllActiveColour().then((res) => {
-      if (res.status) {
-        const colorMapping = mapOptionsToNames(res.data);
-        setColorOptions(colorMapping);
-      }
-    });
+    colorService.getAllActiveColour().then((res)=>{
+        if(res.status){
+            setColor(res.data)
+        }
+    })
   }
   
   const desData = () => {
-    desService.getAllActiveDestination().then((res) => {
-      if (res.status) {
-        const destinationMapping = mapOptionsToNames(res.data);
-        setDestinationOptions(destinationMapping);
-      }
-    });
+    desService.getAllActiveDestination().then((res)=>{
+        if(res.status){
+            setDes(res.data)
+        }
+    })
   }
-const mapOptionsToNames = (options) => {
-    const names = {};
-
-    options.forEach((option) => {
-      names[option.option_id] = option.name; 
-    });
-
-    return names;
-  };
-
- 
-  const headings = {
-    SIZE: 'Size Options',
-    COLOR: 'Color Options',
-    DESTINATION: 'Destination Options',
-  };
 
 
 const columnsSkelton: any = [
@@ -203,118 +166,86 @@ const columnsSkelton: any = [
       sorter: (a, b) => a.feature_name?.localeCompare(b.feature_name),
       ...getColumnSearchProps('feature_name'),
     },
-    // {
-    //     title: 'Options',
-    //     dataIndex: 'option_group',
-    //     render: (optionGroup, record) => {
-    //       const headings = {
-    //         SIZE: 'Size Options',
-    //         DESTINATION: 'Destination Options',
-    //         COLOR: 'Color Options',
-    //       };
     
-    //       if (optionGroup in headings) {
-    //         return (
-    //           <div>
-    //            {headings[optionGroup]}
-    //             <ul>
-    //               {record[optionGroup].map((option) => (
-    //                 <li key={option.option_id}>{option.option_id}</li>
-    //               ))}
-    //             </ul>
-    //           </div>
-    //         );
-    //       } else {
-    //         return null;
-    //       }
-    //     },
-    //   }, test 1
-    // {
-    //     title: 'Options',
-    //     dataIndex: 'option_group',
-    //     render: (optionGroup, record) => {
-    //       if (optionGroup === 'SIZE') {
-    //         return (
-    //           <div>
-    //             <strong>Size Options</strong>
-    //             <ul>
-    //               {record.SIZE.map((sizeOption) => (
-    //                 <li key={sizeOption.option_id}>
-    //                   {console.log(sizeOptions[sizeOption.option_id])}
-    //                   {sizeOptions[sizeOption.option_id] || 'N/A'}
-    //                 </li>
-    //               ))}
-    //             </ul>
-    //           </div>
-    //         );
-    //       } else {
-    //         return null;
-    //       }
-    //     },
-    //   }
-      //test 2
-      
-      
     {
-        title: 'Options',
+        title: 'Option',
         dataIndex: 'option_group',
         render: (optionGroup, record) => {
-          if (optionGroup === 'DESTINATION') {
-            const destinationIds = record.DESTINATION.map((option) => option.option_id);
-            const destinationValues = destinationIds.map((id) => destinationOptions[id] || 'N/A');
+          const options = record[optionGroup];
       
-            return (
-              <div>
-                <strong>Destination Options</strong>
-                <ul>
-                  {destinationValues.map((value, index) => (
-                    <li key={destinationIds[index]}>{value}</li>
-                  ))}
-                </ul>
-              </div>
-            );
-          } else if (optionGroup === 'SIZE') {
-            const sizeIds = record.SIZE.map((option) => option.option_id);
-            const sizeValues = sizeIds.map((id) => sizeOptions[id] || 'N/A');
-            return (
-              <div>
-                <strong>Size Options</strong>
-                <ul>
-                  {sizeValues.map((value, index) => (
-                    <li key={sizeIds[index]}>{value}</li>
-                  ))}
-                </ul>
-              </div>
-            );
-          } else if (optionGroup === 'COLOR') {
-            const colorIds = record.COLOR.map((option) => option.option_id);
-            const colorValues = colorIds.map((id) => colorOptions[id] || 'N/A');
+          return (
+            <div>
+              {optionGroup === 'SIZE' && options
+                ? options.map((option, index) => {
+                    const sizeData = size.find((bran) => bran.sizeId === option.option_id);
+                    const sizeText = sizeData ? sizeData.size : "-";
+                    const element = (
+                      <span key={option.option_id}>
+                        {sizeText}
+                        {index < options.length - 1 ? ', ' : ''}
+                      </span>
+                    );
       
-            return (
-              <div>
-                <strong>Color Options</strong>
-                <ul>
-                  {colorValues.map((value, index) => (
-                    <li key={colorIds[index]}>{value}</li>
-                  ))}
-                </ul>
-              </div>
-            );
-          } else {
-            return null;
-          }
+                    index++;
+                    return element;
+                  })
+                : null
+              }
+              {optionGroup === 'DESTINATION' && options
+                ? options.map((option, index) => {
+                    const DestinationData = des.find((bran) => bran.destinationId === option.option_id);
+                    const destText = DestinationData ? DestinationData.destination : "-";
+                    return (
+                      <span key={option.option_id}>
+                        {destText}
+                        {index < options.length - 1 ? ', ' : ''}
+                      </span>
+                    );
+                  })
+                : null
+              }
+              {optionGroup === 'COLOR' && options
+                ? options.map((option, index) => {
+                    const colorData = color.find((bran) => bran.colourId === option.option_id);
+              const colorText = colorData ? colorData.colour : "-";
+              const isWhite = colorText.toLowerCase() === 'white';
+              const colorStyle: CSSProperties = {
+                display: 'inline-block',
+                padding: '4px',
+                backgroundColor: isWhite ? 'white' : colorText,
+                color: isWhite ? 'black' : 'white',
+                borderRadius: '4px',
+                width: '10%',
+                height: '35px',
+                margin: '4px',
+                border: `1px solid ${isWhite ? 'black' : 'transparent'}`,
+                textAlign: 'center', 
+                lineHeight: '40px', 
+              };
+                    return (
+                      <span key={option.option_id} style={colorStyle}>
+                        {colorText}
+                        {/* {index < options.length - 1 ? ', ' : ''} */}
+                      </span>
+                    );
+                  })
+                : null
+              }
+            </div>
+          );
         },
       }
-    //test 3
+      
+      
       
       
       
     ];
   
 
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
-  }
+//   const onChange = (pagination, filters, sorter, extra) => {
+//     console.log('params', pagination, filters, sorter, extra);
+//   }
 
   return (
       <>
@@ -336,7 +267,7 @@ const columnsSkelton: any = [
               },
             }}
             scroll={{ x: true }}
-            onChange={onChange}
+            // onChange={onChange}
             bordered
             //expandable={expandableConfig} 
           />
@@ -349,3 +280,5 @@ const columnsSkelton: any = [
 
 
 export default FeatureCreationView
+
+
