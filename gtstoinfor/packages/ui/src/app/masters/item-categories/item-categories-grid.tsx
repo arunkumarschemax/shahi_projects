@@ -293,6 +293,8 @@ export function ItemCategoriesGrid(
           {/* <br></br> */}
           <Table
           // rowKey={record => record.productId}
+          rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
+
           columns={columnsSkelton}
           dataSource={itemcategoryData}
           pagination={{

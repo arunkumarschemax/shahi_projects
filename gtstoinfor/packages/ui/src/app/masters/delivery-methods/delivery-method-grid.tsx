@@ -286,6 +286,8 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
           <Table
           size='small'
           rowKey={record => record.deliveryMethodId}
+          rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
+
           columns={columnsSkelton}
           dataSource={deliveryMethodData}
           scroll={{x:true}}

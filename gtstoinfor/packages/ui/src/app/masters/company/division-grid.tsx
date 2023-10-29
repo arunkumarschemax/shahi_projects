@@ -310,6 +310,8 @@ export const DivisionGrid = (props: DivisionGridProps) => {
 
         <Table
           size='small'
+          rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
+
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}
