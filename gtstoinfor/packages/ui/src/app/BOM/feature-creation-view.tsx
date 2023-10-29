@@ -214,11 +214,11 @@ const columnsSkelton: any = [
                 color: isWhite ? 'black' : 'white',
                 borderRadius: '4px',
                 width: '10%',
-                height: '35px',
+                height: '30px',
                 margin: '4px',
                 border: `1px solid ${isWhite ? 'black' : 'transparent'}`,
                 textAlign: 'center', 
-                lineHeight: '40px', 
+               // lineHeight: '40px', 
               };
                     return (
                       <span key={option.option_id} style={colorStyle}>
