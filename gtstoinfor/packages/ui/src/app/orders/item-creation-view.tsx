@@ -650,6 +650,8 @@ const getAllComposition=()=>{
             <>
         <Table
          size='middle'
+         rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
+
         rowKey={record => record}
         className='custom-table-wrapper'
           columns={columnsSkelton}

@@ -1,8 +1,14 @@
-import { CloseOutlined } from '@ant-design/icons';
-import { Button, Table } from 'antd'
+import { CloseOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { CustomerOrderStatusEnum } from '@project-management-system/shared-models';
+import { Button, Divider, Table } from 'antd'
 import React from 'react'
+export interface TestProps {
+  poData:any
+  key:any
+}
+const Test = (props: TestProps) => {
+  console.log(props?.poData[0]?.coLineInfo)
 
-function Test() {
 
   const [page, setPage] = React.useState(1);
 
@@ -13,6 +19,11 @@ function Test() {
           key: "sno",
           responsive: ["sm"],
           render: (text, object, index) => (page - 1) * 10 + (index + 1),
+        },
+        {
+          title: "SKU Code",
+          dataIndex: "skuCode",
+          
         },
         {
           title: "Size",
@@ -31,14 +42,12 @@ function Test() {
         },
         {
           title: "Qty",
-          dataIndex: "order_quantity",
-        render:(data,val) =>{
-           return( <span>{val.order_quantity}-{val.uom}</span>)
-        }
+          dataIndex: "orderQuantity",
+      
         },
         {
           title: "CO Line Number",
-          dataIndex: "coline_number",
+          dataIndex: "coLineNumber",
           
           //   sorter: (a, b) => a.coNum.localeCompare(b.coNum),
           // ...getColumnSearchProps("coNum"),
@@ -52,20 +61,36 @@ function Test() {
           // ...getColumnSearchProps("coNum"),
         },
         {
-      
+  
           title: `Action`,
           dataIndex: 'action',
           render: (text, rowData) => (
-            <>
-            
-            //   rowData.status != CustomerOrderStatusEnum.CLOSED ? 
+            <><span>
+             <Button 
+            //  title={"Detail View"} onClick={() => details(rowData)}
+             >
+                <EyeOutlined />
+              </Button>
+            </span>
+            <Divider type="vertical"/>
+            {
+              rowData.status != CustomerOrderStatusEnum.CLOSED ? 
             <span>
-                <Button  >
+                <Button 
+                // title={"Cancel Order"} onClick={() => cancelOrder(rowData)}
+                 >
                   <CloseOutlined />
                 </Button>
               </span>
-              
-            
+              : ""
+            }
+            <Divider type="vertical"/>
+            <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
+              // onClick={() => {
+              //     openFormWithData(rowData);
+              // }}
+              style={{ color: '#1890ff', fontSize: '14px' }}
+            />
             </>
           )
         }
@@ -74,7 +99,7 @@ function Test() {
   return (
     <Table
         size="small"
-        // dataSource={data}
+        dataSource={props?.poData[0]?.coLineInfo}
         rowClassName={(record, index) =>
           index % 2 === 0 ? "table-row-light" : "table-row-dark"
         }
