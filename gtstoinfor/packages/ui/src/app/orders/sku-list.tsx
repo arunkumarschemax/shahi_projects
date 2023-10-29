@@ -68,8 +68,7 @@ export const SkuList = () => {
 
 
   const closeSKU = (id: number) => {
-    const req = new ItemSKusReq(null, "",null, null, null, null, "", 0,id);
-    console.log(req,'0000===============')
+    const req = new ItemSKusReq(id, "", null, null, null, null, "", 0);
     services.closeSKUById(req).then((res: any) => {
       if (res.status) {
         message.success(res.internalMessage);
@@ -290,8 +289,7 @@ export const SkuList = () => {
             <Tooltip placement="top" title="Close SKU">
               <Popconfirm
                 onConfirm={(value) => {
-                  closeSKU(rowData.itemskuID);
-                  console.log(rowData.itemskuID,'666666666666666666666666')
+                  closeSKU(rowData.id);
                 }}
                 title={"Are you sure to Close ?"}
               >
@@ -495,7 +493,7 @@ export const SkuList = () => {
                       title={`Item No: ${selectedItemNo}`}
                       style={{ cursor: "pointer" }}
                     >
-                                            <Row gutter={[20,16]}>
+                            <Row gutter={[20, 16]}>
 
                   {itemData.map((item) => {
                       let co;
@@ -507,13 +505,12 @@ export const SkuList = () => {
                  
                      return(
                        
-                     
                       <Col
                          xs={{ span: 24 }}
                          sm={{ span: 12 }}
-                         md={{ span: 3 }}
+                         md={{ span: 8 }}
                          lg={{ span: 6 }}
-                         xl={{ span: 5 }}
+                         xl={{ span: 6 }}
                          key={item.sku_code} 
                          >
 
@@ -526,7 +523,7 @@ export const SkuList = () => {
                                     width: "100%",
                                     height: "100%",
                                     backgroundColor: "#E3F1E1 ",
-                                    marginRight: "-16px",
+                                    marginRight: "-50px",
                                   }}
                                 >
                                   <Descriptions
@@ -570,13 +567,11 @@ export const SkuList = () => {
                                   </Descriptions>
                                 </Card>
                               
-                          
-                        {/* })} */}
                         </Col>
-                     );
+                   );
                                             })}
                       </Row>
-                   
+                  
                    </Card>
                 </div>
               ) : (
