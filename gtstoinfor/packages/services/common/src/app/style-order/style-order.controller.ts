@@ -79,12 +79,25 @@ export class StyleOrderController{
         }
     }
 
-    @Post('/getCoLine')
-    async getCoLine(@Body() req:any):Promise<CommonResponseModel>{
+    @Post('/getCoNumber')
+    async getCoNumber(@Body() req:any):Promise<CommonResponseModel>{
         try{
-            return await this.styleOrderService.getCoLine()
+            return await this.styleOrderService.getCoNumber()
         }catch(err){
             return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
         }
     }
+
+    @Post('/getCoDataByCoId')
+    @ApiBody({type:StyleOrderId})
+
+    async getCoDataByCoId(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return await this.styleOrderService.getCoDataByCoId(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+  
+    
 }
