@@ -33,7 +33,7 @@ export class SizeService{
 
 
       async createSize(sizedto: SizeDto, isUpdate: boolean): Promise<SizeResponseModel>{
-        console.log('ggggggggg============',isUpdate)
+        // console.log('ggggggggg============',isUpdate)
         // const response = new ProfitControlHeadResponseModel();
         try{
           let previousValue

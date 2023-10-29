@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Select, Card, Row, Col } from "antd";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { DivisionDto, SizeDto } from "@project-management-system/shared-models";
 import AlertMessages from "../../common/common-functions/alert-messages";
 import { DivisionService, SizeService } from "@project-management-system/shared-services";
@@ -25,6 +25,7 @@ export const SizeForm = (props: SizeFormProps) => {
   const [division, setdivision] = useState<number>(null);
  const services= new DivisionService
   let history = useLocation();
+  let navigate = useNavigate()
 
 
   useEffect(()=>{
@@ -55,13 +56,14 @@ services.getAllActiveDivision().then(res=>{
 
   const savePayment = (sizeData: SizeDto) => {
     // setDisable(true)
-    sizeData.sizeId = 0;
+    sizeData.sizeId == 0;
     service
       .createsize(sizeData)
       .then((res) => {
         setDisable(false);
         if (res.status) {
           AlertMessages.getSuccessMessage("Size Created Successfully");
+          navigate('/masters/size/size-view')
           //   location.push("/Currencies-view");
           onReset();
         } else {
@@ -92,23 +94,11 @@ services.getAllActiveDivision().then(res=>{
   }
   return (
     <Card
-      title={<span>Size </span>}
-      style={{ textAlign: "center" }}
-      headStyle={{ border: 0 }}
-      extra={
-        props.isUpdate == true ? (
-          ""
-        ) : (
-          <Link to="/masters/size/size-view">
-            <span style={{ color: "white" }}>
-              <Button className="panel_button" type={"primary"}>
-                View{" "}
-              </Button>{" "}
-            </span>
-          </Link>
-        )
-      }
-    >
+      title={props.isUpdate?
+      'Size':'Size'}
+      extra={( props.isUpdate == true) && <span> <Button onClick={()=>navigate('/masters/size/size-view')} type={'primary'}>View</Button></span>}>
+        
+       
       <Form
         layout={"vertical"}
         form={form}
@@ -158,7 +148,59 @@ services.getAllActiveDivision().then(res=>{
             </Select>
           </Form.Item>
           </Col>
-
+          
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 8 }}
+            lg={{ span: 8 }}
+            xl={{ span: 6 }}
+          >
+            {" "}
+            <Form.Item
+              name="optionGroup"
+              label="Option Group"
+              rules={[
+                {
+                  required: true,
+                  message: " Option Group Is Required",
+                },
+                {
+                  pattern:
+                    /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+                  message: `Option Group Should contain only alphabets.`,
+                },
+              ]}
+            >
+                <Input placeholder='Enter Option Group'/>
+            </Form.Item>
+          </Col>
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 8 }}
+            lg={{ span: 8 }}
+            xl={{ span: 6 }}
+          >
+            {" "}
+            <Form.Item
+              name="sizeCode"
+              label="Size Code"
+              rules={[
+                {
+                  required: true,
+                  message: " Size Code Is Required",
+                },
+                // {
+                //   pattern:
+                //     /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+                //   message: `Size Code Should contain only alphabets.`,
+                // },
+              ]}
+            >
+                <Input placeholder='Enter Size Code'/>
+            </Form.Item>
+          </Col>
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
@@ -175,14 +217,42 @@ services.getAllActiveDivision().then(res=>{
                   required: true,
                   message: " Size Is Required",
                 },
-                {
-                  pattern:
-                    /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
-                  message: `Size Should contain only alphabets.`,
-                },
+                // {
+                //   pattern:
+                //     /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+                //   message: `Size Should contain only alphabets.`,
+                // },
               ]}
             >
                 <Input placeholder='Enter Size'/>
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+        <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 8 }}
+            lg={{ span: 8 }}
+            xl={{ span: 6 }}
+          >
+            {" "}
+            <Form.Item
+              name="description"
+              label="Description"
+              rules={[
+                {
+                  required: true,
+                  message: " Description Is Required",
+                },
+                // {
+                //   pattern:
+                //     /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+                //   message: `Description Should contain only alphabets.`,
+                // },
+              ]}
+            >
+                <Input placeholder='Enter Description'/>
             </Form.Item>
           </Col>
         </Row>

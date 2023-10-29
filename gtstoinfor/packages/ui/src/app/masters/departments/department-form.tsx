@@ -61,7 +61,7 @@ export const DepartmentForm=(props:DepartmentFromProps)=>{
       
 
       return(
-        <Card title={<span>Profit Control Head</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+        <Card title={<span>Departments</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} 
         extra={props.isUpdate==true?"":<Link to='/masters/department/department-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
        >
 <Form
@@ -77,8 +77,8 @@ onFinish={saveData}>
 <FormItem name="createdUser"  initialValue={createdUser} style={{display:'none'}}>
     <Input hidden/>
 </FormItem>
-<Row>
-<Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}>
+<Row gutter={8}>
+<Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}}>
      <Form.Item
           name="deptName"
           label="Department"
@@ -93,10 +93,10 @@ onFinish={saveData}>
             }
           ]}
         >
-          <Input />
+          <Input placeholder='Enter Department' />
         </Form.Item>
         </Col>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}}>
      <Form.Item
           name="deptHead"
           label="Department Head"
@@ -111,7 +111,7 @@ onFinish={saveData}>
             }
           ]}
         >
-          <Input />
+          <Input placeholder='Enter Department Head' />
         </Form.Item>
         </Col>
 </Row>

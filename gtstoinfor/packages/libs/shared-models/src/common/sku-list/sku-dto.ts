@@ -2,11 +2,11 @@ import { SKUListDto } from "./skulist-dto";
 
 export class SKUDTO{
     itemNo:string;
-    itemNoId:number;
+    itemCode:number;
  sku:SKUListDto[];
- constructor(itemNo:string,itemNoId:number,sku:SKUListDto[]){
+ constructor(itemNo:string,itemCode:number,sku:SKUListDto[]){
     this.itemNo=itemNo;
-    this.itemNoId=itemNoId;
+    this.itemCode=itemCode;
     this.sku=sku
  }
 }

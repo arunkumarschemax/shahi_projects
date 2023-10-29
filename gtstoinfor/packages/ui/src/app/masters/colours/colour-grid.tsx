@@ -177,16 +177,48 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
         {
           title: 'Division',
           dataIndex: 'divisionName',
-          sorter: (a, b) => a.divisionName.localeCompare(b.divisionName),
+          sorter: (a, b) => {
+            const valueA = a.divisionName || '';
+            const valueB = b.divisionName || '';
+            return valueA.localeCompare(valueB);
+          },
           sortDirections: ['descend', 'ascend'],
           ...getColumnSearchProps('divisionName')
+        },
+       
+        
+        {
+          title: 'Option Group',
+          dataIndex: 'optionGroup',
+          sorter: (a, b) => {
+            const valueA = a.optionGroup || '';
+            const valueB = b.optionGroup || '';
+            return valueA.localeCompare(valueB);
+          },
+          sortDirections: ['descend', 'ascend'],
+          ...getColumnSearchProps('optionGroup')
+        },
+        
+        {
+          title:'Colour Code',
+          dataIndex: 'colourCode',
+          ...getColumnSearchProps('optionGroup')
         },
         {
             title: 'Colour',
             dataIndex: 'colour',
-            sorter: (a, b) => a.colour.localeCompare(b.colour),
+            sorter: (a, b) => {
+              const valueA = a.colour || '';
+              const valueB = b.colour || '';
+              return valueA.localeCompare(valueB);
+            },
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('colour')
+        },
+        {
+          title: 'Description',
+          dataIndex: 'description',
+          // ...getColumnSearchProps('description')
         },
         {
             title: 'Status',
@@ -253,9 +285,8 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
       ];
 
       return (
-        <Card title={<span>Colours</span>}
-        style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/colour/colour-form"  ><span><Button type={'primary'} >New </Button> </span></Link>}>
-<br></br>
+        <Card title='Colours' extra={<span><Button onClick={()=>navigate('/masters/colour/colour-form')} type={'primary'}>New</Button></span>}>
+<br/>
 <>
 <Row gutter={40}>
     <Col>

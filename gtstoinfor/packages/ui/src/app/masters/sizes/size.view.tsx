@@ -188,11 +188,32 @@ service.createsize(variantData).then(res=>{
             ...getColumnSearchProps('divisionName')
           },
           {
+            title: 'Option Group',
+            dataIndex: 'optionGroup',
+            sorter: (a, b) => a.optionGroup.localeCompare(b.optionGroup),
+            sortDirections: ['descend', 'ascend'],
+            ...getColumnSearchProps('optionGroup')
+          },
+          {
+            title: 'Size Code',
+            dataIndex: 'sizeCode',
+            sorter: (a, b) => a.sizeCode.localeCompare(b.sizeCode),
+            sortDirections: ['descend', 'ascend'],
+            ...getColumnSearchProps('sizeCode')
+          },
+          {
             title: 'Size',
             dataIndex: 'size',
             sorter: (a, b) => a.size.localeCompare(b.size),
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('size')
+          },
+          {
+            title: 'Description',
+            dataIndex: 'description',
+            sorter: (a, b) => a.description.localeCompare(b.description),
+            sortDirections: ['descend', 'ascend'],
+            ...getColumnSearchProps('description')
           },
           {
             title: 'Status',
@@ -259,9 +280,9 @@ service.createsize(variantData).then(res=>{
     ];
 
 return (
-  <Card title={<span>Size</span>}
-  style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/size/size-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
-  <br></br>
+  <Card title='Size' 
+  extra={<span><Button onClick={()=>navigate('/masters/size/size-form')} type={'primary'}>New</Button></span>}>
+  <br/>
     <>
     <Row gutter={40}>
     <Col>
