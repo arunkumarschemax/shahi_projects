@@ -14,8 +14,9 @@ export class ItemSKusReq {
     styleId: number;
     itemSkuId?: number;
     skuCode?: string;
+    divisonId?: number;
 
-    constructor(itemId: number,itemCode: string,status: SkuStatusEnum,colorInfo:ColorInfoReq[],sizeInfo:SizeInfoReq[],destinationInfo:DestinationInfoReq[],createdUser: string,styleId:number,itemSkuId?: number,skuCode?: string){
+    constructor(itemId: number,itemCode: string,status: SkuStatusEnum,colorInfo:ColorInfoReq[],sizeInfo:SizeInfoReq[],destinationInfo:DestinationInfoReq[],createdUser: string,styleId:number,itemSkuId?: number,skuCode?: string,divisionId?: number){
         this.itemId = itemId;
         this.itemCode = itemCode;
         this.status = status;
@@ -26,6 +27,7 @@ export class ItemSKusReq {
         this.styleId = styleId;
         this.itemSkuId = itemSkuId;
         this.skuCode = skuCode;
+        this.divisonId = divisionId;
     }
     
 }

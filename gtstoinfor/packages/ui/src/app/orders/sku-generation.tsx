@@ -1,6 +1,6 @@
 import { Button, Card, Col, Descriptions, Form, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
-import { ColourService, DestinationService, ItemCreationService, ItemsService, SKUGenerationService, SizeService, StyleService } from '@project-management-system/shared-services';
+import { ColourService, DestinationService, DivisionService, ItemCreationService, ItemsService, SKUGenerationService, SizeService, StyleService } from '@project-management-system/shared-services';
 import { ItemCodeReq, ItemSKusReq, SKUGenerationReq, SkuStatusEnum } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
 
@@ -28,6 +28,8 @@ export const SKUGeneration = () => {
     const styleService = new StyleService()
     const [itemData,setItemData] = useState<any[]>([])
     const fgItemService = new ItemCreationService()
+    const [division,setDivision] = useState<any[]>([])
+    const divisionService = new DivisionService()
 
 
     useEffect(() => {
@@ -36,6 +38,7 @@ export const SKUGeneration = () => {
         getAllDestinations()
         getAllItemCodes()
         getAllStyles()
+        getDivisions()
     },[])
 
     useEffect(() => {
@@ -65,8 +68,7 @@ export const SKUGeneration = () => {
 
     const generateSKU = () => {
       // const req = new SKUGenerationReq(form.getFieldValue('itemCode'),selectedColors,selectedSizes,selectedDestinations,'admin','')
-      const req = new ItemSKusReq(itemId,form.getFieldValue('itemCode'),SkuStatusEnum.OPEN,selectedColors,selectedSizes,selectedDestinations,'admin',form.getFieldValue('style'))
-      console.log(req,'------')
+      const req = new ItemSKusReq(itemId,form.getFieldValue('itemCode'),SkuStatusEnum.OPEN,selectedColors,selectedSizes,selectedDestinations,'admin',form.getFieldValue('style'),null,null,form.getFieldValue('divisionName'))
       skuService.skuGeneration(req).then(res => {
         if(res.status){
           resetHandler()
@@ -115,6 +117,14 @@ export const SKUGeneration = () => {
           if(res.status){
               setStyles(res.data)
           }
+      })
+    }
+
+    const getDivisions = () => {
+      divisionService.getAllActiveDivision().then(res => {
+        if(res.status){
+          setDivision(res.data)
+        }
       })
     }
 
@@ -240,6 +250,20 @@ export const SKUGeneration = () => {
                         styles.map((e)=>{
                             return(
                                 <Option key={e.styleId} value={e.styleId}>{e.style}</Option>
+                            )
+                        })
+                    }
+                </Select>
+            </Form.Item>
+        </Col>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>
+            <Form.Item label='Division' name='divisionName' rules={[{required:true,message:'Divison is required'}]}>
+                <Select showSearch allowClear placeholder='Select Division'>
+                    {/* <Option key='itemcode' value='itemcode' itemId='itemId'>Item Codes </Option> */}
+                    {
+                        division.map((e)=>{
+                            return(
+                                <Option key={e.divisionId} value={e.divisionId}>{e.divisionName}</Option>
                             )
                         })
                     }

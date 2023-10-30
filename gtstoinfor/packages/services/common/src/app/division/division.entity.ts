@@ -3,6 +3,7 @@ import { Settings } from "../settings/settings.entity";
 import { Size } from "../sizes/sizes-entity";
 import { Colour } from "../colours/colour.entity";
 import {ItemTypeEntity} from "../item-type/item-type.entity"
+import { ItemSkus } from "../sku-generation/sku-generation.entity";
 @Entity('division')
 export class Division {
 
@@ -93,4 +94,7 @@ updatedUser: string | null;
   Destination:Size[]
   @OneToOne(()=> ItemTypeEntity,itemtype=>itemtype.division,{cascade: true})
   ItemType:ItemTypeEntity[]
+
+  @OneToMany(type=>ItemSkus, item=>item.styleInfo,{cascade: true})
+  itemSkuInfo:ItemSkus;
 }
