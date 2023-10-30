@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FeatureRepository } from './repo/feature-repository';
-import { CommonResponseModel, FeatureDTO, FeatureResponseModel } from '@project-management-system/shared-models';
+import { CommonResponseModel, FeatureDTO, FeatureFilterRequest, FeatureResponseModel } from '@project-management-system/shared-models';
 import { FeatureEntity } from './entities/feature.entity';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { FeatureOptionEntity } from './entities/feature-option-entity';
@@ -50,24 +50,12 @@ export class FeatureService {
       }
     }
 
-  //   async getAllFeatures():Promise<CommonResponseModel>{
-  //     try{
-  //         const data = await this.featureoptioonrepo.getAllFeatureOptionData()
-  //         if(data.length === 0){
-  //             return new CommonResponseModel(false,0,'No data found')
-  //         } else{
-  //             return new CommonResponseModel(true,1,'Data retrieved',data)
 
-  //         }
-  //     } catch(err){
-  //         return err
-  //     }
-  // } this can also be used , please dont remove 
  
 
-  async getAllFeatures(): Promise<CommonResponseModel> {
+  async getAllFeatures(req?:FeatureFilterRequest): Promise<CommonResponseModel> {
     try {
-        const data = await this.featureoptioonrepo.getAllFeatureOptionData();
+        const data = await this.featureoptioonrepo.getAllFeatureOptionData(req);
 
         const formattedData: any[] = [];
 
@@ -109,6 +97,26 @@ export class FeatureService {
         return err;
     }
 }
-
+async getFeatureCode(): Promise<CommonResponseModel> {
+  const data = await this.featureoptioonrepo.getFeatureCode()
+  if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+  else
+      return new CommonResponseModel(false, 0, 'No data found');
+}
+async getFeatureName(): Promise<CommonResponseModel> {
+  const data = await this.featureRepo.getFeatureName()
+  if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+  else
+      return new CommonResponseModel(false, 0, 'No data found');
+}
+async getOptionGropup(): Promise<CommonResponseModel> {
+  const data = await this.featureoptioonrepo.getOptionGropup()
+  if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+  else
+      return new CommonResponseModel(false, 0, 'No data found');
+}
 
 }
