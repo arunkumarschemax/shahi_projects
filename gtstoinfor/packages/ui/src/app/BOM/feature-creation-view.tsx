@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Card,  Input, Button,} from 'antd';
+import { Table, Card,  Input, Button, Form, Row, Col, Select,} from 'antd';
 import Highlighter from 'react-highlight-words';
-import {  SearchOutlined } from '@ant-design/icons';
+import {  SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import {   ColourService, DestinationService, FeatureService, SizeService } from '@project-management-system/shared-services';
 import AlertMessages from '../common/common-functions/alert-messages';
 import { CSSProperties } from 'react';
+import { FeatureFilterRequest } from '@project-management-system/shared-models';
 
 
 const FeatureCreationView = () => {
@@ -16,6 +17,7 @@ const FeatureCreationView = () => {
   const searchInput = useRef(null);
   const [page, setPage] = React.useState(1);
   const navigate = useNavigate();
+  const [form] = Form.useForm();
   const [color, setColor] = useState<any[]>([])
   const [des, setDes] = useState<any[]>([])
   const [size, setSize] = useState<any[]>([])
@@ -23,17 +25,36 @@ const FeatureCreationView = () => {
   const sizeService = new SizeService()
   const desService = new DestinationService()
   const service = new FeatureService()
+  const { Option } = Select;
+  const [featureCode, setFeatureCode] = useState<any[]>([])
+  const [featureName, setFeatureName] = useState<any[]>([])
+  const [optGroup, setOptionGroup] = useState<any[]>([])
+
 
   useEffect(() => {
     getAllFeatureData();
     colorData();
     sizeData();
-        desData();
+    desData();
+    featureNameData();
+    featureCodeData();
+    optionGroupData();
   }, [])
-
+  
 
     const getAllFeatureData= () => {
-    service.getAllFeatures().then(res => {
+        const req = new FeatureFilterRequest();
+        
+        if (form.getFieldValue('featureCode') !== undefined) {
+            req.featureCode = form.getFieldValue('featureCode');
+        }
+        if (form.getFieldValue('featureName') !== undefined) {
+            req.featureName = form.getFieldValue('featureName');
+        }
+        if (form.getFieldValue('optionGroup') !== undefined) {
+            req.optionGroup = form.getFieldValue('optionGroup');
+        }
+    service.getAllFeatures(req).then(res => {
       if (res.status) {
         setLTData(res.data);
       } else
@@ -115,7 +136,11 @@ const FeatureCreationView = () => {
     clearFilters();
     setSearchText('');
   };
+  const resetHandler = () => {
+    form.resetFields();
+    getAllFeatureData();
 
+}
 
 const sizeData = () =>{
     sizeService.getAllActiveSize().then((res)=>{
@@ -141,6 +166,27 @@ const sizeData = () =>{
         }
     })
   }
+  const featureNameData = () =>{
+    service.getFeatureName().then((res)=>{
+        if(res.status){
+            setFeatureName(res.data)
+        }
+    })
+}
+const featureCodeData = () =>{
+    service.getFeatureCode().then((res)=>{
+        if(res.status){
+            setFeatureCode(res.data)
+        }
+    })
+}
+const optionGroupData = () =>{
+    service.getOptionGropup().then((res)=>{
+        if(res.status){
+            setOptionGroup(res.data)
+        }
+    })
+}
 
 
 const columnsSkelton: any = [
@@ -170,7 +216,6 @@ const columnsSkelton: any = [
         dataIndex: 'option_group',
         render: (optionGroup, record) => {
           const options = record[optionGroup];
-      
           return (
             <div>
               {optionGroup === 'SIZE' && options
@@ -249,6 +294,60 @@ const columnsSkelton: any = [
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
       <Card >
+      <Form onFinish={getAllFeatureData} form={form} layout='vertical'>
+                <Row gutter={24}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                        <Form.Item name='featureCode' label='Feature Code' >
+                            <Select showSearch placeholder="Select Feature Code" optionFilterProp="children" allowClear >
+                                {
+                                    featureCode?.map((inc: any) => {
+                                        return <Option key={inc.feature_option_id} value={inc.feature_code}>{inc.feature_code}</Option>
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                        <Form.Item name='featureName' label='Feature Name' >
+                            <Select
+                                showSearch
+                                placeholder="Select Size Feature Name"
+                                optionFilterProp="children"
+                                allowClear
+                            >
+                                {
+                                    featureName?.map((inc: any) => {
+                                        return <Option key={inc.feature_id} value={inc.feature_name}>{inc.feature_name}</Option>
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                        <Form.Item name='optionGroup' label='Option' >
+                            <Select showSearch placeholder="Select Option" optionFilterProp="children" allowClear>
+                                {
+                                    optGroup?.map((inc: any) => {
+                                        return <Option key={inc.feature_option_id} value={inc.option_group}>{inc.option_group}</Option>
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
+                        <Form.Item>
+                            <Button htmlType="submit"
+                                icon={<SearchOutlined />}
+                                type="primary">GET DETAILS</Button>
+                            <Button
+                                htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
+                            >
+                                RESET
+                            </Button>
+                        </Form.Item>
+                    </Col>
+                </Row>
+            </Form>
       <Table
             size='middle'
             rowKey={(record) => record.feature_option_id}
@@ -260,7 +359,6 @@ const columnsSkelton: any = [
                 setPage(current);
               },
             }}
-            scroll={{ x: true }}
             // onChange={onChange}
             bordered
           />

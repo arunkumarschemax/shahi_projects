@@ -99,7 +99,7 @@ const Test = (props: TestProps) => {
   return (
     <Table
         size="small"
-        dataSource={props?.poData[0]?.coLineInfo}
+        dataSource={props?.poData[0]?.styleOrderItems}
         rowClassName={(record, index) =>
           index % 2 === 0 ? "table-row-light" : "table-row-dark"
         }

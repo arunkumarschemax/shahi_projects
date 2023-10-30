@@ -9,8 +9,17 @@ URL = '/feature';
         async createFeature(req: FeatureDTO): Promise<FeatureResponseModel> {
             return this.axiosPostCall(this.URL +  '/createFeature',req)
         }
-        async getAllFeatures(): Promise<CommonResponseModel> {
-            return this.axiosPostCall(this.URL +  '/getAllFeatures')
+        async getAllFeatures(req:any): Promise<CommonResponseModel> {
+            return this.axiosPostCall(this.URL +  '/getAllFeatures',req)
+        }
+        async getFeatureName(): Promise<CommonResponseModel> {
+            return this.axiosPostCall(this.URL +  '/getFeatureName')
+        }
+        async getFeatureCode(): Promise<CommonResponseModel> {
+            return this.axiosPostCall(this.URL +  '/getFeatureCode')
+        }
+        async getOptionGropup(): Promise<CommonResponseModel> {
+            return this.axiosPostCall(this.URL +  '/getOptionGropup')
         }
 
 }

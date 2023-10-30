@@ -25,4 +25,10 @@ export class FeatureRepository extends Repository<FeatureEntity> {
             .leftJoin(FeatureOptionEntity,'feo',`feo.feature_id = fe.feature_id`)
         return await query.getRawOne();
     }
+    async getFeatureName(): Promise<any[]> {
+        const query = this.createQueryBuilder('fe')
+            .select(` fe.feature_name,fe.feature_id`)
+            .groupBy(`fe.feature_name`)
+        return await query.getRawMany();
+    }
 }
