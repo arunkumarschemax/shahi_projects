@@ -9,6 +9,7 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { appConfig } from '../../config';
 import { OrdersModule } from './orders/orders.module';
 import { PriceListModule } from './price-list/pricelist.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 
 @Module({
@@ -28,6 +29,7 @@ import { PriceListModule } from './price-list/pricelist.module';
         connectionLimit: 100
       }
     }),
+    ScheduleModule.forRoot(),
     FactoriesModule,
     UsersModule,
     OrdersModule,
