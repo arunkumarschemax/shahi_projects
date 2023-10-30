@@ -11,6 +11,7 @@ import { GenericTransactionManager } from "../../typeorm-transactions";
 import { ItemSkuRepository } from "./sku-generation-repo";
 import { Style } from "../style/dto/style-entity";
 import { ItemCreation } from "../fg-item/item_creation.entity";
+import { Division } from "../division/division.entity";
 
 @Injectable()
 export class ItemSkuService{
@@ -49,6 +50,9 @@ export class ItemSkuService{
             const style = new Style()
             style.styleId = req.styleId
             entity.styleInfo = style
+            const division = new Division()
+            division.divisionId = req.divisonId
+            entity.divisionInfo = division
             entity.status = req.status
             entity.createdUser = req.createdUser
             const destinationEntity = new Destination()
@@ -164,7 +168,7 @@ export class ItemSkuService{
 
   async getDataByItem(req:ItemCodeReq):Promise<SKUGenerationResponseModel>{
     try{
-      const data = await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo','fgitemInfo','styleInfo'],where:{itemCode:req.itemCode}})
+      const data = await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo','fgitemInfo','styleInfo','divisionInfo'],where:{itemCode:req.itemCode}})
       // const data = await this.itemSkuRepo.getDataByItem(req.itemCode)
       if(data.length > 0){
         let colorInfo = []
@@ -182,8 +186,8 @@ export class ItemSkuService{
           destinationInfo.push(new DestinationInfoReq(rec.destinationInfo.destinationId,rec.destination))
           }
         }
-        info.push(new ItemSKusModel(data[0].itemSkuId,data[0].skuCode,data[0].fgitemInfo.fgitemId,data[0].itemCode,data[0].status,colorInfo,sizeInfo,destinationInfo,data[0].createdUser,data[0].styleInfo.styleId,data[0].styleInfo.style))
-        // console.log(info,'----------')
+        console.log(info,'----info')
+        info.push(new ItemSKusModel(data[0].itemSkuId,data[0].skuCode,data[0].fgitemInfo.fgitemId,data[0].itemCode,data[0].status,colorInfo,sizeInfo,destinationInfo,data[0].createdUser,data[0].styleInfo.styleId,data[0].styleInfo.style,data[0].divisionInfo.divisionId,data[0].divisionInfo.divisionName))
         return new SKUGenerationResponseModel(true,1,'Data retreived',info)
       } else{
         return new SKUGenerationResponseModel(false,0,'No data found')

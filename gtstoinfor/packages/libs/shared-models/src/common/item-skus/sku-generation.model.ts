@@ -34,8 +34,11 @@ export class ItemSKusModel {
     createdUser: string;
     styleId: number;
     style: string;
+    divisionId?: number;
+    divisionName?: string;
 
-    constructor(skuId:number,skuCode:string,itemId: number,itemCode: string,status: SkuStatusEnum,colorInfo:ColorInfoReq[],sizeInfo:SizeInfoReq[],destinationInfo:DestinationInfoReq[],createdUser: string,styleId: number,style:string){
+    constructor(skuId:number,skuCode:string,itemId: number,itemCode: string,status: SkuStatusEnum,colorInfo:ColorInfoReq[],sizeInfo:SizeInfoReq[],destinationInfo:DestinationInfoReq[],createdUser: string,styleId: number,style:string,divisionId?: number,
+        divisionName?: string){
         this.skuId = skuId;
         this.skuCode = skuCode;
         this.itemId = itemId;
@@ -47,6 +50,8 @@ export class ItemSKusModel {
         this.createdUser = createdUser;
         this.styleId = styleId
         this.style = style
+        this.divisionId = divisionId
+        this.divisionName = divisionName
     }
     
 }

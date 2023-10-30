@@ -1,5 +1,5 @@
 import { RmItemTypeEnum, RmSkuFeatureReq, RmSkuReq, RmStatusEnum } from "@project-management-system/shared-models";
-import { RmSkuService } from "@project-management-system/shared-services";
+import { FabricStructuresService, RmSkuService } from "@project-management-system/shared-services";
 import { Badge, Button, Card, Checkbox, Col, Form ,Row,Select, Space, Tag, Tooltip} from "antd"
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
@@ -14,8 +14,7 @@ export const RmSkusGeneration = () => {
     const [features,setFeatures] = useState<any[]>([])
     const service = new RmSkuService()
     const [form] = Form.useForm()
-    const [array,setArray] = useState<any[]>(['blue','pink'])
-
+    const fabricItemCodeService = new FabricStructuresService()
 
     useEffect(() => {
         getFeatures()
@@ -63,25 +62,21 @@ export const RmSkusGeneration = () => {
         })
     }
 
-    const getOptions = (rec) => {
-        if(rec != undefined){
-            rec.optionInfo[0].option.map(e => {
-                return <Tag>{e}</Tag>
-            })
-        } else{
-            return null
-        }
-      
+    const onItemTypeChange = (val) => {
+        if(val === RmItemTypeEnum.FABRIC){
 
+        } else{
+
+        }
     }
 
     return (
-        <Card title='Rm Skus'>
+        <Card title='Rm Sku Generation'>
             <Form layout="vertical" form={form} onFinish={onFinish}>
                 <Row gutter={8}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
                 <Form.Item name={'itemType'} label='Item Type' rules={[{required:true,message:'Item Type is required'}]}>
-                    <Select allowClear showSearch optionFilterProp="children" placeholder='Select Item Type'>
+                    <Select allowClear showSearch optionFilterProp="children" placeholder='Select Item Type' onChange={onItemTypeChange}>
                         {
                             Object.values(RmItemTypeEnum).map(e => {
                                 return(
@@ -110,37 +105,36 @@ export const RmSkusGeneration = () => {
                 <Row gutter={24}>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 24 }}>
                     <Card  style={{height:'100%'}}>
-                        <h1>Fetures</h1>
+                        <span>Features</span>
+                        {/* <h1>Fetures</h1> */}
                     <CheckboxGroup style={{ width: '100%' }} value={features.map((feature) => feature.featureId)} onChange={onChange}>
-                    <Row>
+                    <Row gutter={24}>
                         {featuresInfo.map((option) => (
-                        <Col span={8} key={option.featureId} xl={{ span: 6 }}>
-                            {/* <Tooltip title={[option.optionInfo[0].option]} color="cyan"> */}
+                        <Col key={option.featureId} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+                            <Row gutter={24}>
+                                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
                             <Checkbox value={option.featureId} key={option.featureName}>
-                            <Space direction="vertical" size="middle" style={{ width: '150%' }}>
-                            <Badge.Ribbon text={option.featureName}>
-                            <Card title={`${option.option}`} size='small'>
-                                <div>
-                                    <Tag>{option.optionInfo[0].option}</Tag>
-                                    {
-                                        option.optionInfo[0].option.forEach(e => {
-                                            
-                                        })
-                                    }
-                                    {getOptions(option)}
-                                </div>
-                                {/* <span>
-                                {
-                                    option.optionInfo[0].option.map(e => {
-                                        <Tag>xxxxxxxxx</Tag>
-                                    })
-                                }
-                                </span> */}
+                            <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+                            <Badge.Ribbon text={option.featureName} color="volcano">    
+                                <Card title={`${option.option}`} size='small' style={{width:'300px'}}>
+                                <Row gutter={24}>
+                                    {option.optionInfo[0].option.map((e, index) => (
+                                        <>
+                                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6}}>
+                                        <Tag key={index} color="#cde5d7" style={{color:'black',fontSize:'15px'}}>{e}</Tag>
+                                    </Col>
+                                    <br/>
+                                    <br/>
+                                    </>
+                                    
+                                    ))}
+                                    </Row>
                             </Card>
                             </Badge.Ribbon>
                             </Space>
                             </Checkbox>
-                            {/* </Tooltip> */}
+                                </Col>
+                            </Row>
                         </Col>
                         ))}
                     </Row>
@@ -148,6 +142,7 @@ export const RmSkusGeneration = () => {
                     </Card>
                     </Col>
                 </Row>
+                <br/>
                 <Row justify={'end'}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 2 }}>
                     <Form.Item>
