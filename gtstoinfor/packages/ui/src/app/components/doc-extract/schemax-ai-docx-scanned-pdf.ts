@@ -2340,7 +2340,7 @@ export const extractRingoCargoInvoiceDataFromScanned = async (allLines: any[]) =
 
 }
 
-export const extractTriwayInvoiceDataFromScanned = async (allLines: any[]) => {
+export const extractTriwayInvoiceDataFromScanned = async (allLines: any[]): Promise<any> => {
     const structuredHSNLines = [];
     let currentHSN = null;
     console.log(allLines, 'allLines');
@@ -2412,6 +2412,117 @@ export const extractTriwayInvoiceDataFromScanned = async (allLines: any[]) => {
     });
 
 
+    // const InvoiceLines = [];
+    // let currentInvoice = null;
+    // let gstNumberExtracted = false;
+    // const invoiceCurrency = 'INR';
+    // const currentYear = new Date().getFullYear();
+    // const nextYear = currentYear + 1;
+    // const financialYear = `${currentYear}-${nextYear}`;
+
+    // const gstVendorMapping = {
+    //     '33AAACT2874)228': 'TRIWAY FORWARDERS PRIVATE LIMITED',
+    //     '33AAACT2874J228': 'TRIWAY FORWARDERS PRIVATE LIMITED'
+    // };
+
+    // const invoiceDateIds = [' Dt. ', 'Invoice Date  '];
+    // const invoiceNumberIds = ['Invoice No /Date ', 'Invoice No. _ '];
+
+    // const extractInvoiceData = (data) => {
+    //     const extractedData = {
+    //         invoiceDate: '',
+    //         invoiceNumber: ''
+    //     };
+
+    //     for (const invoiceDateId of invoiceDateIds) {
+    //         const InvoiceDateItem = data.find(item => item.content.includes(invoiceDateId));
+    //         if (InvoiceDateItem) {
+    //             extractedData.invoiceDate = InvoiceDateItem.content.split(invoiceDateId)[1].trim();
+    //             break;
+    //         }
+    //     }
+    //     for (const invoiceNumberId of invoiceNumberIds) {
+    //         const InvoiceNumberItem = data.find(item => item.content.includes(invoiceNumberId));
+    //         if (InvoiceNumberItem) {
+    //             extractedData.invoiceNumber = InvoiceNumberItem.content.split(invoiceNumberId)[1].trim();
+    //             break;
+    //         }
+    //     }
+    //     return extractedData;
+    // };
+
+
+    // if (allLines && Array.isArray(allLines)) {
+    //     const invoiceData = extractInvoiceData(allLines);
+
+    //     for (const line of allLines) {
+    //         const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
+    //         const regex = /GSTIN\.NQ:\s([A-Z0-9]{15})/;
+    //         const regex1 = /GSTIN\.NO:\s([A-Z0-9]{15})/;
+    //         // const regex1=/GSTIN\.NO:\s([A-Z0-9]{15})/;
+    //         // /GST NO\.\s*([\dA-Z]{15})/
+    //         // /GST NO:\s*([\dA-Z]{15})/
+    //         const match = regex.exec(line.content);
+    //         const match1 = regex1.exec(line.content);
+    //         // const match1 = regex1.exec(line.content);
+    //         if ((match1 && !gstNumberExtracted) || (match && !gstNumberExtracted)) {
+    //             // const gstNumber = gstMatch[0];
+
+    //             const gstNumber = match?.[0] ? match[0] : match1?.[1];
+    //             const vendorName = gstVendorMapping[gstNumber];
+
+    //             const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
+    //                 const amount = parseFloat(hsnLine.amount) || 0;
+    //                 const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
+    //                 return add + amount + taxAmount * 2;
+    //             }, 0).toFixed(2);
+
+    //             let igst = "0.00";
+    //             let cgst = "0.00";
+    //             let sgst = "0.00";
+
+    //             for (const hsnLine of structuredHSNLines) {
+    //                 if (hsnLine.taxPercentage === 18) {
+    //                     igst = (parseFloat(igst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+    //                 } else if (hsnLine.taxPercentage === 9) {
+    //                     cgst = (parseFloat(cgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+    //                     sgst = (parseFloat(sgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+    //                 }
+    //             }
+
+    //             currentInvoice = {
+    //                 "venName": vendorName || '',
+    //                 "gstNumber": gstNumber,
+    //                 "invoiceDate": invoiceData.invoiceDate,
+    //                 "invoiceNumber": invoiceData.invoiceNumber,
+    //                 "invoiceCurrency": invoiceCurrency,
+    //                 "financialYear": financialYear,
+    //                 "invoiceAmount": invoiceAmount,
+    //                 "cgst": cgst,
+    //                 "sgst": sgst,
+    //                 "igst": igst,
+    //             };
+
+    //             InvoiceLines.push(currentInvoice);
+    //             gstNumberExtracted = true;
+    //         }
+    //     }
+    // }
+
+    // console.log(
+    //     "IMAGE HSN DATA",
+    //     JSON.stringify(structuredHSNLines, null, 2)
+    // );
+
+    // console.log(
+    //     "IMAGE Invoice DATA",
+    //     JSON.stringify(InvoiceLines, null, 2)
+    // );
+
+    // return {
+    //     extractedData: InvoiceLines[0],
+    //     extractedHsnData: structuredHSNLines
+    // };
     const InvoiceLines = [];
     let currentInvoice = null;
     let gstNumberExtracted = false;
@@ -2421,12 +2532,12 @@ export const extractTriwayInvoiceDataFromScanned = async (allLines: any[]) => {
     const financialYear = `${currentYear}-${nextYear}`;
 
     const gstVendorMapping = {
-        '33AAACT2874)228': 'TRIWAY FORWARDERS PRIVATE LIMITED',
+         '33AAACT2874)228': 'TRIWAY FORWARDERS PRIVATE LIMITED',
         '33AAACT2874J228': 'TRIWAY FORWARDERS PRIVATE LIMITED'
     };
 
-    const invoiceDateIds = [' Dt. ', 'Invoice Date  '];
-    const invoiceNumberIds = ['Invoice No /Date ', 'Invoice No. _ '];
+    const invoiceNumberIds = [/TCSE\/\d{5}\/\d{4}/];
+    const invoiceDateIds = [/^\d{2}\/\d{2}\/\d{4}$/];    
 
     const extractInvoiceData = (data) => {
         const extractedData = {
@@ -2435,22 +2546,31 @@ export const extractTriwayInvoiceDataFromScanned = async (allLines: any[]) => {
         };
 
         for (const invoiceDateId of invoiceDateIds) {
-            const InvoiceDateItem = data.find(item => item.content.includes(invoiceDateId));
-            if (InvoiceDateItem) {
-                extractedData.invoiceDate = InvoiceDateItem.content.split(invoiceDateId)[1].trim();
-                break;
+            for (const item of data) {
+                const invoiceDateRegex = invoiceDateId;
+                if (invoiceDateRegex.test(item.content)) {
+                    const match = item.content.match(invoiceDateRegex);
+                    if (match) {
+                        extractedData.invoiceDate = match[0];
+                    }
+                }
             }
         }
+
         for (const invoiceNumberId of invoiceNumberIds) {
-            const InvoiceNumberItem = data.find(item => item.content.includes(invoiceNumberId));
-            if (InvoiceNumberItem) {
-                extractedData.invoiceNumber = InvoiceNumberItem.content.split(invoiceNumberId)[1].trim();
-                break;
+            for (const item of data) {
+                const invoiceNumberRegex = invoiceNumberId;
+                if (invoiceNumberRegex.test(item.content)) {
+                    const match = item.content.match(invoiceNumberRegex);
+                    if (match) {
+                        extractedData.invoiceNumber = match[0];
+                    }
+                }
             }
         }
+
         return extractedData;
     };
-
 
     if (allLines && Array.isArray(allLines)) {
         const invoiceData = extractInvoiceData(allLines);
@@ -2458,11 +2578,9 @@ export const extractTriwayInvoiceDataFromScanned = async (allLines: any[]) => {
         for (const line of allLines) {
             const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
             const regex = /GSTIN\.NQ:\s([A-Z0-9]{15})/;
-            const regex1 = /GSTIN\.NO:\s([A-Z0-9]{15})/;
-            // const regex1=/GSTIN\.NO:\s([A-Z0-9]{15})/;
-            // /GST NO\.\s*([\dA-Z]{15})/
-            // /GST NO:\s*([\dA-Z]{15})/
-            const match = regex.exec(line.content);
+             const regex1 = /GSTIN\.NO:\s([A-Z0-9]{15})/;
+
+             const match = regex.exec(line.content);
             const match1 = regex1.exec(line.content);
             // const match1 = regex1.exec(line.content);
             if ((match1 && !gstNumberExtracted) || (match && !gstNumberExtracted)) {
@@ -2470,7 +2588,6 @@ export const extractTriwayInvoiceDataFromScanned = async (allLines: any[]) => {
 
                 const gstNumber = match?.[0] ? match[0] : match1?.[1];
                 const vendorName = gstVendorMapping[gstNumber];
-
                 const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
                     const amount = parseFloat(hsnLine.amount) || 0;
                     const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
@@ -2507,22 +2624,22 @@ export const extractTriwayInvoiceDataFromScanned = async (allLines: any[]) => {
                 gstNumberExtracted = true;
             }
         }
+
+        console.log(
+            "IMAGE HSN DATA",
+            JSON.stringify(structuredHSNLines, null, 2)
+        );
+
+        console.log(
+            "IMAGE Invoice DATA",
+            JSON.stringify(InvoiceLines, null, 2)
+        );
+
+        return {
+            extractedData: InvoiceLines[0],
+            extractedHsnData: structuredHSNLines
+        };
     }
-
-    console.log(
-        "IMAGE HSN DATA",
-        JSON.stringify(structuredHSNLines, null, 2)
-    );
-
-    console.log(
-        "IMAGE Invoice DATA",
-        JSON.stringify(InvoiceLines, null, 2)
-    );
-
-    return {
-        extractedData: InvoiceLines[0],
-        extractedHsnData: structuredHSNLines
-    };
 
 }
 
