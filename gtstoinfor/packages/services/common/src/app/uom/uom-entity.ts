@@ -1,6 +1,7 @@
 import { UomCategoryEnum } from '@project-management-system/shared-models';
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, VersionColumn, OneToMany } from 'typeorm';
 import { CoLine } from '../style-order/co-line.entity';
+import { StyleOrder } from '../style-order/style-order.entity';
 // import { CommonColumns } from '../../common/common-columns.entity';
 // import { UomCategoryEnum } from '@transport-management-system/shared-models';
 
@@ -86,4 +87,7 @@ export class UomEntity {
 
     @OneToMany(type=>CoLine, co=>co.uomInfo,{cascade: true})
     coLineInfo:CoLine;
+
+    @OneToMany(type=>StyleOrder, co=>co.uomInfo,{cascade: true})
+    styleOrderInfo:StyleOrder;
 }

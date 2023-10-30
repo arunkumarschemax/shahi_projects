@@ -1,5 +1,5 @@
-import { BuyerIdReq, BuyersDestinationRequest, CustomerOrderStatusEnum, ItemCodeReq, SKUGenerationReq, StyleOrderIdReq, StyleOrderItemsReq, StyleOrderReq } from "@project-management-system/shared-models";
-import { BuyerDestinationService, BuyersService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DestinationService, EmployeeDetailsService, FactoryService, ItemCreationService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, SKUGenerationService, StyleOrderService, WarehouseService } from "@project-management-system/shared-services"
+import { BuyerIdReq, BuyersDestinationRequest, CustomerOrderStatusEnum, ItemCodeReq, SKUGenerationReq, StyleOrderIdReq, StyleOrderItemsReq, StyleOrderReq, UomCategoryEnum, UomCategoryRequest } from "@project-management-system/shared-models";
+import { BuyerDestinationService, BuyersService, CoTypeService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DestinationService, EmployeeDetailsService, FactoryService, ItemCreationService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, SKUGenerationService, StyleOrderService, UomService, WarehouseService } from "@project-management-system/shared-services"
 import { Button, Card, Col, DatePicker, Form, Input, Row, Segmented, Select, Space, Table } from "antd"
 import TextArea from "antd/es/input/TextArea";
 import { ColumnProps } from "antd/es/table";
@@ -57,6 +57,11 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
     const fgItemService = new ItemCreationService()
     const [initialData,setInitialData] = useState<any[]>([])
     const { state } = useLocation();
+    const coTypeService = new CoTypeService()
+    const [coType,setCoType] = useState<any[]>([])
+    const uomService = new UomService()
+    const [uomInfo,setUomInfo] = useState<any[]>([])
+    
     useEffect(()=>{
         if(initialData.length > 0){
             form.setFieldsValue({
@@ -120,6 +125,8 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
         getPaymentMethodInfo()
         getPaymentTermsInfo()
         getCurrencyInfo()
+        getCoType()
+        getAllUoms()
     },[])
 
     const getItemCodes = () => {
@@ -249,6 +256,28 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
 
     }
 
+    const getCoType = () => {
+        coTypeService.getAllActiveCoTypeInfo().then(res => {
+            if(res.status){
+                setCoType(res.data)
+            }
+        })
+    }
+
+    const getAllUoms = () => {
+        // const req = new UomCategoryRequest(UomCategoryEnum.LENGTH,'admin')
+        // uomService.getUomByCategory(req).then(res => {
+        //     if(res.status){
+        //         setUomInfo(res.data)
+        //     }
+        // })
+        uomService.getAllActiveUoms().then(res =>{
+            if(res.status){
+                setUomInfo(res.data)
+            }
+        })
+    }
+
     const generateSegmentedOptions = () => {
         return destinations.map((rec, index) => (
             {
@@ -341,6 +370,24 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
                 )
             }
         },
+        {
+            title:'FOB',
+            dataIndex:'salePrice',
+            render:(text,row,index) => {
+                return(
+                    <span>
+                    {row.orderQuantity ? (<>
+                        <Input key={row.itemSkuId} placeholder="Enter value"
+                        onBlur={e=> setQuantityValue(e,index,row)} defaultValue={row.orderQuantity}/>
+                    </>) : (<>
+                        <Input key={row.itemSkuId} placeholder="Enter value"
+                        onBlur={e=> setQuantityValue(e,index,row)}/></>)}
+
+                    </span>
+                    
+                )
+            }
+        },
     ]
 
     const splitData = (data) => {
@@ -353,7 +400,7 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
     const [firstHalfData, secondHalfData] = splitData(data);
 
     const onFinish = (val) => {
-        const req = new StyleOrderReq(val.itemCode,val.CODate,val.buyerPoNumber,val.shipmentType,val.buyerStyle,val.agent,val.buyerAddress,val.exfactoryDate,val.deliveryDate,val.inStoreDate,val.salePrice,val.priceQuantity,val.discount,null,orderQuantityData.length > 0 ? CustomerOrderStatusEnum.CONFIRMED : CustomerOrderStatusEnum.OPEN,val.remarks,itemId,val.warehouse,val.facility,null,val.packageTerms,val.deliveryMethod,val.deliveryTerms,val.currency,val.paymentMethod,val.paymentTerms,orderQuantityData,val.buyer,'admin',val.styleOrderId,val.coNumber,val.styleOrderId)
+        const req = new StyleOrderReq(val.itemCode,val.CODate,val.buyerPoNumber,val.shipmentType,val.buyerStyle,val.agent,val.buyerAddress,val.exfactoryDate,val.deliveryDate,val.inStoreDate,val.salePrice,val.priceQuantity,val.discount,null,orderQuantityData.length > 0 ? CustomerOrderStatusEnum.CONFIRMED : CustomerOrderStatusEnum.OPEN,val.remarks,itemId,val.warehouse,val.facility,null,val.packageTerms,val.deliveryMethod,val.deliveryTerms,val.currency,val.paymentMethod,val.paymentTerms,orderQuantityData,val.buyer,'admin',val.styleOrderId,val.coNumber,val.styleOrderId,val.season,val.merchandiser,val.planner,val.coTypeId,val.uomId)
         styleOrderService.createCustomerOrder(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
@@ -413,6 +460,14 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
                         </Select>
                     </Form.Item>
                 </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
+                    <Form.Item name='season' label='Season' >
+                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Season'>
+                            <Option key='ss' value='SS'>SS</Option>
+                            <Option key='fw' value='FW'>FW</Option>
+                        </Select>
+                    </Form.Item>
+                </Col>
                 </Row>
                 {/* <h4 style={{ color: 'grey', textAlign: 'left' }}>CO Information</h4> */}
                 <span style={{color:'blue'}}><b>CO Information</b></span>
@@ -444,37 +499,8 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
                     </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-                <Form.Item name='remarks' label='Remarks'>
-                        <TextArea rows={1} placeholder='Enter Remarks'/>
-                    </Form.Item>
-                </Col>
-                </Row>
-                {/* <h4 style={{ color: 'grey', textAlign: 'left' }}>Customer PO Information</h4> */}
-                <span style={{color:'blue'}}><b>Customer PO Information</b></span>
-                <Row gutter={[8,4]}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-            <Form.Item name='buyerPoNumber' label='Buyer PO' rules={[{required:true,message:'Buyer PO is required'}]}>
-                    <Input placeholder="Enter Buyer PO"/>
-                </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-            <Form.Item name='CODate' label='CO Date' rules={[{required:true,message:'CO Date is required'}]}>
-                    <DatePicker style={{width:'100%'}}/>
-                </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-            <Form.Item name='shipmentType' label='Shipment Type'>
-                    <Input placeholder="Enter Shipment Type"/>
-                </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-            <Form.Item name='buyerStyle' label='Buyer Style' rules={[{required:true,message:'Buyer Style is required'}]}>
-                    <Input placeholder="Enter Buyer Style"/>
-                </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-            <Form.Item name='agent' label='Agent'>
-                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select Agent'>
+                <Form.Item name='merchandiser' label='Merchandiser'>
+                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Merchandiser'>
                         {
                             agent.map((e) => {
                                 return(
@@ -482,29 +508,43 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
                                 )
                             })
                         }
-                    </Select>
-                </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-            <Form.Item name='buyerAddress' label='Buyer Address' rules={[{required:true,message:'Buyer Address is required'}]}>
-                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select Address'>
+                        </Select>
+                    </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
+                <Form.Item name='planner' label='Planner'>
+                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Planner'>
                         {
-                            buyerAddress.map((e) => {
+                            agent.map((e) => {
                                 return(
-                                    <Option key={e.addressId} value={e.addressId}>{e.landmark}-{e.city}-{e.state}</Option>
+                                    <Option key={e.employeeId} value={e.employeeId}>{e.firstName}-{e.employeeCode}</Option>
                                 )
                             })
                         }
-                    </Select>
-                </Form.Item>
-            </Col>
-            </Row>
-                </Card>
+                        </Select>
+                    </Form.Item>
                 </Col>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 12}}>
-               <Card size='small' bordered={false}>
-               {/* <h4 style={{ color: 'grey', textAlign: 'left' }}>Shipment Information</h4> */}
-               <span style={{color:'blue'}}><b>Shipment Information</b></span>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
+                <Form.Item name='uomId' label='Quantity UOM'>
+                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select UOM'>
+                        {
+                            uomInfo.map((e) => {
+                                return(
+                                    <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
+                                )
+                            })
+                        }
+                        </Select>
+                    </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
+                <Form.Item name='remarks' label='Remarks'>
+                        <TextArea rows={1} placeholder='Enter Remarks'/>
+                    </Form.Item>
+                </Col>
+                </Row>
+                {/* <h4 style={{ color: 'grey', textAlign: 'left' }}>Customer PO Information</h4> */}
+                <span style={{color:'blue'}}><b>Shipment Information</b></span>
                 <Row gutter={8}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
                 <Form.Item name='exfactoryDate' label='Ex-factory Date' rules={[{required:true,message:'Ex-factory Date is required'}]}>
@@ -561,6 +601,73 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
                     </Form.Item>
                 </Col>
                 </Row>
+                
+                </Card>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 12}}>
+               <Card size='small' bordered={false}>
+               {/* <h4 style={{ color: 'grey', textAlign: 'left' }}>Shipment Information</h4> */}
+               <span style={{color:'blue'}}><b>Customer PO Information</b></span>
+                <Row gutter={[8,4]}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
+            <Form.Item name='buyerPoNumber' label='Buyer PO' rules={[{required:true,message:'Buyer PO is required'}]}>
+                    <Input placeholder="Enter Buyer PO"/>
+                </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
+            <Form.Item name='CODate' label='CO Date' rules={[{required:true,message:'CO Date is required'}]}>
+                    <DatePicker style={{width:'100%'}}/>
+                </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                <Form.Item name='coTypeId' label='CO Type' rules={[{required:true,message:'CO Type is requried'}]}>
+                <Select allowClear showSearch optionFilterProp="children" placeholder='Select CO Type'>
+                        {coType.map((e) => {
+                            return(
+                                <Option key={e.coTypeId} value={e.coTypeId}>{e.coType}</Option>
+                            )
+                        })}
+                    </Select>
+                    {/* <Input/> */}
+                </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
+            <Form.Item name='shipmentType' label='Shipment Type'>
+                    <Input placeholder="Enter Shipment Type"/>
+                </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
+            <Form.Item name='buyerStyle' label='Buyer Style' rules={[{required:true,message:'Buyer Style is required'}]}>
+                    <Input placeholder="Enter Buyer Style"/>
+                </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
+            <Form.Item name='agent' label='Agent'>
+                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select Agent'>
+                        {
+                            agent.map((e) => {
+                                return(
+                                    <Option key={e.employeeId} value={e.employeeId}>{e.firstName}-{e.employeeCode}</Option>
+                                )
+                            })
+                        }
+                    </Select>
+                </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
+            <Form.Item name='buyerAddress' label='Buyer Address' rules={[{required:true,message:'Buyer Address is required'}]}>
+                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select Address'>
+                        {
+                            buyerAddress.map((e) => {
+                                return(
+                                    <Option key={e.addressId} value={e.addressId}>{e.landmark}-{e.city}-{e.state}</Option>
+                                )
+                            })
+                        }
+                    </Select>
+                </Form.Item>
+            </Col>
+            </Row>
                 {/* <h4 style={{ color: 'grey', textAlign: 'left' }}>Payment Information</h4> */}
                <span style={{color:'blue'}}><b>Payment Information</b></span>
                 <Row gutter={8}>
