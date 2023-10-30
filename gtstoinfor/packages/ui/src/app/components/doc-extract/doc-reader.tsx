@@ -274,7 +274,7 @@ export const DocReader = (props: DocReaderProps) => {
                 case VendorNameEnum.extractedApl: {
                     const aplPDFData = await extractApl(pdfData);
                     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
-                    const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                    const allLines = await extractDataFromScannedImages(pageImages, [0,pageImages.length-1]);
                     const scannedData = await extractAplInvoiceDataFromScanned(allLines);
                     processedData['extractedData'] = scannedData.extractedData;
                     // processedData['extractedData']['invoiceAmount']=aplPDFData.extractedData.invoiceAmount;
