@@ -1,4 +1,4 @@
-import { AllStyleResponseModel, StyleDto, StyleIdReq, UploadResponse } from "@project-management-system/shared-models";
+import { AllStyleResponseModel, StyleDto, StyleIdReq, UploadResponse, styleOrderReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class StyleService extends CommonAxiosService{
@@ -21,6 +21,9 @@ export class StyleService extends CommonAxiosService{
   }
 async ActivateOrDeactivateStyle(dto: StyleIdReq): Promise<AllStyleResponseModel> {
   return this.axiosPostCall(this.URL + "/ActivateOrDeactivateStyle", dto)
+}
+async getActiveStyleById(request:StyleIdReq): Promise<AllStyleResponseModel> {
+  return this.axiosPostCall(this.URL + '/getActiveStyleById',request)
 }
 
 }

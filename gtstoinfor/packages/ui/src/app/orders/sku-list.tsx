@@ -35,7 +35,7 @@ import { useEffect, useRef, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link } from "react-router-dom";
 import FormItem from "antd/es/form/FormItem";
-import { SKUGenerationService, SKUlistService } from "@project-management-system/shared-services";
+import { DivisionService, SKUGenerationService, SKUlistService, StyleOrderService, StyleService } from "@project-management-system/shared-services";
 import {
   ItemSKusReq,
   SKUlistFilterRequest,
@@ -51,14 +51,20 @@ export const SkuList = () => {
   const [Value, setValue] = useState("cards");
   const service = new SKUlistService();
   const services = new SKUGenerationService();
+  const service1 = new StyleService();
+  const service2 = new DivisionService();
   const [data, setData] = useState([]);
   const { Option } = Select;
   const { TabPane } = Tabs;
   const searchInput = useRef(null);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [style, setStyle] = useState([]);
+  const [divsion, setDivsion] = useState([]);
+
   const [selectView, setSelectedView] = useState<any>("cards");
   const [options, setOptions] = useState(["Cards", "View"]);
+  const [searchClicked, setSearchClicked] = useState(false);
   useEffect(() => {
     Dropdown();
     getAllData();
@@ -109,27 +115,42 @@ export const SkuList = () => {
       req.itemsCode=form.getFieldValue('item_code')
     }
     services.getSkuList(req).then(res=>{
-      console.log(res,"PPPPPPPP");
       if(res.status){
 
         setValue(res.data)
         
       }
     })
+    service1.getAllStyle().then(res=>{
+      if(res.status){
+        console.log(res.data,'[[[[[[[[[');
+        
+        setStyle(res.data)
+      }
+    })
+    service2.getAllDivision().then(res=>{
+      if(res.status){
+        console.log(res.data,'[[[[[[[[[');
+        
+        setDivsion(res.data)
+      }
+    })
   }
+
   const handleSearch = () => {
     // console.log('eeeeeeeeee',selectedItemNo);
     const req = new SKUlistFilterRequest()
     if (form.getFieldValue('item_code') != undefined) {
       req.itemsCode = selectedItemNo
-      console.log(req,'777777');
+      setSearchClicked(true);
+      // console.log(req,'777777');
     }
       services.getSkuList(req).then((res) => {
         console.log(req,'okkkkk');
 
         if (res) {
           setItemData(res.data);
-          console.log(res.data,'data');
+          // console.log(res.data,'data');
           
         }
       });
@@ -141,6 +162,7 @@ export const SkuList = () => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
+    setSearchClicked(true);
   }
 
   function handleReset(clearFilters) {
@@ -228,6 +250,17 @@ export const SkuList = () => {
         )
       ) : null,
   });
+  const getStyleName = (styleId) => {
+    const styleData = style.find((style) => style.styleId === styleId);
+    return styleData ? styleData.style : "N/A";
+  };
+
+  const getDivisionName = (divisionId) => {
+    const styleData = divsion.find((div) => div.divisionId === divisionId);
+    return styleData ? styleData.divisionName : "N/A";
+  };
+
+  
   const columnsSkelton: any = [
     {
       title: "SKU Code",
@@ -278,6 +311,57 @@ export const SkuList = () => {
         </Tag>
       ),
     
+    },
+    {
+      title: "Style",
+      dataIndex: "style_id",
+      key: "style_id",
+      width: "300px",
+      sorter: (a, b) => a.style_id.localeCompare(b.style_id),
+      sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("destination"),
+      render:(data)=>{
+  console.log(data,'id');
+  
+  const syle= style.find((style)=>style.styleId === data);
+  console.log(syle,"ppppp")
+
+  return syle ? syle.style:"N/A"
+}
+      // render: (skus) => skus.map((sku) => sku.destination),
+    },
+    {
+      title: "Division",
+      dataIndex: "division_id",
+                width: "300px",
+      sorter: (a, b) => a.division_id.localeCompare(b.division_id),
+      sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("destination"),
+      render:(data)=>{
+  const syle= divsion.find((div)=>div.divisionId === data);
+  return syle ? syle.divisionName:"N/A"
+}
+      // render: (skus) => skus.map((sku) => sku.destination),
+    },
+    {
+      title: "RM Mapping",
+      dataIndex: "rm_mapping_status",
+      key: "rm_mapping_status",
+      width: "300px",
+      // sorter: (a, b) => a.rm_mapping_status.localeCompare(b.rm_mapping_status),
+      // sortDirections: ["descend", "ascend"],
+      // ...getColumnSearchProps("rm_mapping_status"),
+filters:[
+  {
+    text:'Yes',
+    value:'Yes',
+  },
+  {
+    text:'No',
+    value:'No',
+  }
+],
+onFilter:(value,record)=>{return record.rm_mapping_status === value}
     },
     {
       title: "Action",
@@ -487,8 +571,10 @@ export const SkuList = () => {
               {/* {selectView === 'grid'?(
         <SKUGrid/>
       ):(<div> */}
-              {selectView === "cards" ? (
-                <div>
+              
+              {selectedItemNo !== undefined && searchClicked ? (
+                   selectView === "cards" ? (
+                    <div>
                    <Card
                       title={`Item No: ${selectedItemNo}`}
                       style={{ cursor: "pointer" }}
@@ -564,6 +650,16 @@ export const SkuList = () => {
                                     <Descriptions.Item label="Destination">
                                       {item.destination}
                                     </Descriptions.Item>
+                                    
+                                    <Descriptions.Item label="Style">
+                             {getStyleName(item.style_id)}
+                                </Descriptions.Item>
+                                <Descriptions.Item label="Division">
+                                      {getDivisionName(item.division_id)}
+                                    </Descriptions.Item>
+                                    <Descriptions.Item label="RM Mapping">
+                                      {item.rm_mapping_status}
+                                    </Descriptions.Item>
                                   </Descriptions>
                                 </Card>
                               
@@ -600,9 +696,11 @@ key={e.item_code}
                     </Card>
                    ))} */}
                 </div>
-              )}
+              )
+              ):null}
             </Space>
           </div>
+              
         </Col>
       </Row>
     </>

@@ -7,6 +7,7 @@ export class StyleDto {
   description:string;
   styleFileName: string;
   styleFilePath:string;
+
   isActive:boolean;
   createdUser: string | null;
   updatedUser: string | null;
