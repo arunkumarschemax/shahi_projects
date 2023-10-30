@@ -26,6 +26,7 @@ import { ItemCreation } from "../fg-item/item_creation.entity";
 import { StyleOrderId } from "./style-order-id.request";
 import { VariantIdReq } from "./variant-id.req";
 import { Raw } from 'typeorm';
+import { CoTypes } from "../co-type/co-type.entity";
 
 @Injectable()
 
@@ -95,6 +96,15 @@ export class StyleOrderService{
             const buyer = new Buyers()
             buyer.buyerId = req.buyerId
             entity.buyerInfo = buyer
+            const coType = new CoTypes()
+            coType.coTypeId = req.coTypeId
+            entity.coTypeInfo = coType
+            entity.merchandiser = req.merchandiser
+            entity.planner = req.planner
+            const uom = new UomEntity()
+            uom.id = req.uomId
+            entity.uomInfo = uom
+            entity.season = req.season
             let coLineItem:CoLine[]  = []
             let val = 0
             if(req.coId){
@@ -249,9 +259,9 @@ export class StyleOrderService{
         } else{
             for(const rec of data){
                 if(!COMap.has(rec.co_id)){
-                    COMap.set(rec.co_id,new StyleOrderModel(rec.co_id,rec.item_code,rec.order_date,rec.buyer_po_number,rec.shipment_type,rec.buyer_style,rec.agent,rec.buyer_address,rec.exfactory_date,rec.delivery_date,rec.instore_date,rec.sale_price,rec.price_quantity,rec.discount_per,rec.discount_amount,rec.status,rec.remarks,rec.fg_item_id,rec.warehouse_id,rec.facility_id,rec.style_id,rec.package_terms_id,rec.delivery_method_id,rec.delivery_terms_id,rec.currency_id,rec.Payment_method_id,rec.Payment_terms_id,[],rec.buyer_id,rec.item_name,rec.buyer_code,rec.buyer_name,rec.factoryName,rec.warehouse_name,rec.agentName,rec.agentCode,rec.buyerLandmark,rec.buyerCity,rec.buyerState,rec.package_terms_name,rec.delivery_method,rec.delivery_terms_name,rec.currency_name,rec.payment_method,rec.payment_terms_name,rec.co_id))
+                    COMap.set(rec.co_id,new StyleOrderModel(rec.co_id,rec.item_code,rec.order_date,rec.buyer_po_number,rec.shipment_type,rec.buyer_style,rec.agent,rec.buyer_address,rec.exfactory_date,rec.delivery_date,rec.instore_date,rec.sale_price,rec.price_quantity,rec.discount_per,rec.discount_amount,rec.status,rec.remarks,rec.fg_item_id,rec.warehouse_id,rec.facility_id,rec.style_id,rec.package_terms_id,rec.delivery_method_id,rec.delivery_terms_id,rec.currency_id,rec.Payment_method_id,rec.Payment_terms_id,[],rec.buyer_id,rec.item_name,rec.buyer_code,rec.buyer_name,rec.factoryName,rec.warehouse_name,rec.agentName,rec.agentCode,rec.buyerLandmark,rec.buyerCity,rec.buyerState,rec.package_terms_name,rec.delivery_method,rec.delivery_terms_name,rec.currency_name,rec.payment_method,rec.payment_terms_name,rec.co_id,rec.co_number))
                 }
-                COMap.get(rec.co_id).styleOrderItems.push(new StyleOrderItemsModel(rec.co_line_id,rec.delivery_address,rec.order_quantity,rec.color,rec.size,rec.destination,rec.uom,rec.status,rec.discount,rec.salePrice,rec.coPercentage,rec.color_id,rec.size_id,rec.uom_id,rec.delLandmark,rec.delCity,rec.delState))
+                COMap.get(rec.co_id).styleOrderItems.push(new StyleOrderItemsModel(rec.co_line_id,rec.delivery_address,rec.order_quantity,rec.color,rec.size,rec.destination,rec.uom,rec.status,rec.discount,rec.salePrice,rec.coPercentage,rec.color_id,rec.size_id,rec.destination_id,rec.uom_id,rec.delLandmark,rec.delCity,rec.delState,rec.sku_code,rec.coline_number,rec.co_id,))
             }
             const styleOrderModel: StyleOrderModel[] = [];
             COMap.forEach((e) => styleOrderModel.push(e))
