@@ -6,6 +6,7 @@ import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { StyleIdReq } from "./dto/style-id-req";
 
 @ApiTags('style')
 @Controller('style')
@@ -94,6 +95,5 @@ export class StyleController{
       }
     }
 
-
-
+   
 }

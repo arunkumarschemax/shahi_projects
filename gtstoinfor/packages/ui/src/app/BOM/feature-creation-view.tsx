@@ -210,10 +210,17 @@ const columnsSkelton: any = [
       sorter: (a, b) => a.feature_name?.localeCompare(b.feature_name),
       ...getColumnSearchProps('feature_name'),
     },
-    
     {
         title: 'Option',
         dataIndex: 'option_group',
+        align: 'center',
+        sorter: (a, b) => a.option_group?.localeCompare(b.option_group),
+        ...getColumnSearchProps('option_group'),
+      },
+    {
+        title: 'Option Values',
+        dataIndex: 'option_group',
+        align:'center',
         render: (optionGroup, record) => {
           const options = record[optionGroup];
           return (
@@ -247,33 +254,28 @@ const columnsSkelton: any = [
                   })
                 : null
               }
-              {optionGroup === 'COLOR' && options
-                ? options.map((option, index) => {
-                    const colorData = color.find((bran) => bran.colourId === option.option_id);
-              const colorText = colorData ? colorData.colour : "-";
-              const isWhite = colorText.toLowerCase() === 'white';
-              const colorStyle: CSSProperties = {
-                display: 'inline-block',
-                padding: '4px',
-                backgroundColor: isWhite ? 'white' : colorText,
-                color: isWhite ? 'black' : 'white',
-                borderRadius: '4px',
-                width: '10%',
-                height: '30px',
-                margin: '4px',
-                border: `1px solid ${isWhite ? 'black' : 'transparent'}`,
-                textAlign: 'center', 
-               // lineHeight: '40px', 
-              };
-                    return (
-                      <span key={option.option_id} style={colorStyle}>
-                        {colorText}
-                        {/* {index < options.length - 1 ? ', ' : ''} */}
-                      </span>
-                    );
-                  })
-                : null
-              }
+              {optionGroup === 'COLOR' && options? (
+               <div style={{ display: 'flex', flexWrap: 'wrap',  justifyContent: 'center'}}>
+                {options.map((option, index) => {
+                 const colorData = color.find((bran) => bran.colourId === option.option_id);
+                const colorText = colorData ? colorData.colour : "-";
+                const isWhite = colorText.toLowerCase() === 'white';
+                 const colorStyle = {
+                 display: 'inline-block',
+                 padding: '4px',
+                 backgroundColor: isWhite ? 'white' : colorText,
+                 color: isWhite ? 'black' : 'white',
+                 borderRadius: '4px',
+                 minWidth: '30px',
+                 height: '30px', 
+                 margin: '4px',
+                 border: `1px solid ${isWhite ? 'black' : 'transparent'}`,
+                 };
+                 return (
+                <span key={option.option_id} style={{ ...colorStyle, textAlign: 'center' }}>{colorText}</span> );
+                    })}</div>): null
+                    }
+
             </div>
           );
         },
@@ -359,6 +361,7 @@ const columnsSkelton: any = [
                 setPage(current);
               },
             }}
+            scroll={{ x: 'max-content',y:1000}}
             // onChange={onChange}
             bordered
           />
