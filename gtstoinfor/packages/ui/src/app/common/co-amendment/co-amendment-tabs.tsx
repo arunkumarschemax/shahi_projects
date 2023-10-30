@@ -2,8 +2,8 @@ import { Button, Card, Col, Descriptions, Form, Row, Select, Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import { useEffect, useState } from 'react';
 import Test from './test';
-import { StyleOrderService } from '@project-management-system/shared-services';
-import { StyleOrderIdReq, styleOrderReq } from '@project-management-system/shared-models';
+import { BuyersService, EmployeeDetailsService, StyleOrderService } from '@project-management-system/shared-services';
+import { BuyerIdReq, StyleOrderIdReq, styleOrderReq } from '@project-management-system/shared-models';
 import moment from 'moment';
 
 export interface COAmendmentTabsProps {}
@@ -14,10 +14,14 @@ const COAmendmentTabs = (props: COAmendmentTabsProps) => {
   const {Option} = Select;
 
   const styleorderService = new StyleOrderService()
+  const buyerService = new BuyersService()
+  const empService = new EmployeeDetailsService()
+
+
   const [codata, setCOData] = useState<any[]>([]);
   const [coId, setCoId] = useState<any>();
   const [data, setData] = useState<any[]>([]);
-
+ 
 
 
 
@@ -33,6 +37,7 @@ const COAmendmentTabs = (props: COAmendmentTabsProps) => {
 
   useEffect(() => {
     getCoData();
+   
   }, []);
 
   const getCoData = () => {
@@ -49,14 +54,21 @@ const COAmendmentTabs = (props: COAmendmentTabsProps) => {
   
   const getData = () =>{
     const req = new StyleOrderIdReq(coId,undefined)
-    styleorderService.getCoDataByCoId(req).then((res) => {
+    styleorderService.getCOInfoById(req).then((res) => {
       if (res.status) {
         setData(res.data);
        }
     });
 
   }
+
   console.log(data,"data1111111111111")
+ 
+
+ 
+  
+
+
   const items: TabsProps['items'] = [
     {
       key: 'orderline',
@@ -152,7 +164,6 @@ const COAmendmentTabs = (props: COAmendmentTabsProps) => {
           </Col>
         </Row>
     </Row>
-
     </Form>
    { data.length > 0 ? 
      <Descriptions >
@@ -164,19 +175,19 @@ const COAmendmentTabs = (props: COAmendmentTabsProps) => {
             <Descriptions.Item label='Shipment Type'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.shipmentType}</Descriptions.Item>
             <Descriptions.Item label='Buyer PO Number'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.buyerPoNumber}</Descriptions.Item>
             <Descriptions.Item label='Price Quantity'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.priceQuantity}</Descriptions.Item> 
-            <Descriptions.Item label='Agent'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.agent}</Descriptions.Item>
-            <Descriptions.Item label='BuyerAddress'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.buyerAddress}</Descriptions.Item> 
+            <Descriptions.Item label='Agent'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.agentName}</Descriptions.Item>
+            <Descriptions.Item label='BuyerAddress'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.landmark}-{data[0]?.city}-{data[0]?.state}</Descriptions.Item> 
             <Descriptions.Item label='ExFactoryDate'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.exFactoryDate ? moment(data[0].exFactoryDate).format('DD-MM-YYYY') : ''}</Descriptions.Item> 
             <Descriptions.Item label='Delivery Date'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.deliveryDate ? moment(data[0].deliveryDate).format('DD-MM-YYYY') : ''}</Descriptions.Item> 
             <Descriptions.Item label='Instore Date'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.instoreDate ? moment(data[0].instoreDate).format('DD-MM-YYYY') : ''}</Descriptions.Item> 
             <Descriptions.Item label='Price Quantity'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.priceQuantity}</Descriptions.Item>
             <Descriptions.Item label='Discount Percent'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.discountPercent}</Descriptions.Item>
             <Descriptions.Item label='Discount Amount 'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.discountAmount}</Descriptions.Item>
-            <Descriptions.Item label='Payment Method'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.paymentMethodInfo.paymentMethod}</Descriptions.Item>
-            <Descriptions.Item label='Packing Terms'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.packageTermsInfo.packageTermsName}</Descriptions.Item>
-            <Descriptions.Item label='Ware House'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.warehouseInfo?.warehouseName}</Descriptions.Item>
-            <Descriptions.Item label='Delivery Method'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.deliveryMethodInfo.deliveryMethod}</Descriptions.Item>
-            <Descriptions.Item label='Delivery Term'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.deliveryTermsInfo.deliveryTermsName}</Descriptions.Item>
+            <Descriptions.Item label='Payment Method'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.paymentMethod}</Descriptions.Item>
+            <Descriptions.Item label='Packing Terms'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.packageTermsName}</Descriptions.Item>
+            <Descriptions.Item label='Ware House'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.warehouseName}</Descriptions.Item>
+            <Descriptions.Item label='Delivery Method'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.deliveryMethod}</Descriptions.Item>
+            <Descriptions.Item label='Delivery Term'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.deliveryTermsName}</Descriptions.Item>
             <Descriptions.Item label='Remarks'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.remarks}</Descriptions.Item>
             <Descriptions.Item label='Status'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.status}</Descriptions.Item>
 
