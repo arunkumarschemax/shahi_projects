@@ -2,12 +2,12 @@ import { UploadOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/ico
 import { VendorNameEnum } from '@xpparel/shared-models';
 import { Button, Card, Col, Form, FormInstance, Radio, Row, Select, Spin, Upload, UploadProps, message } from 'antd';
 import { useState } from 'react';
-import { pdfjs } from 'react-pdf';;
-import { extractDhl, extractDart, extractExpeditors, extractEfl, extractOocl, extractNagel, extractApl, extractMaersk, checkIsScannedPdf } from './schemax-ai-docx-pdf';
-import { convertScannedPdfToSelectablePdf, extractAplInvoiceDataFromScanned, extractDataFromScannedImages, extractDpInvoiceDataFromScanned,extractEflInvoiceDataFromScanned,extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNagelInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractOoclInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
-import { PDFDocument, rgb } from 'pdf-lib';
+import { pdfjs } from 'react-pdf';
 import loadingSymbol from '../../../assets/images/1_yE-S7HG0Rg-ACAcnjvKf5Q.gif';
+import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractEfl, extractExpeditors, extractMaersk, extractNagel, extractOocl } from './schemax-ai-docx-pdf';
+import { extractAplInvoiceDataFromScanned, extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNagelInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractOoclInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
+;
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 export interface DocReaderProps {
     form: FormInstance<any>;
     extractedData: (data: any) => void;

@@ -2,6 +2,33 @@ import { createWorker } from "tesseract.js";
 import { rgb } from 'pdf-lib';
 import { SizeConverter } from "./helper/sizeConverter";
 
+const cleanOcrDate = (dateString) => {
+    // Remove extra spaces and leading/trailing whitespace
+    dateString = dateString.trim();
+    dateString = dateString.replace(/\s+/g, ' ');
+
+    // Use regular expressions to match and correct the date format
+    const datePattern = /(\d{1,2})?-((\d{1,2})?[A-Za-z]*?)-(\d{2})/;
+    const match = dateString.match(datePattern);
+    if (match) {
+        console.log(match)
+        const day = (match[1] || '').padStart(2, '0');
+        let month = match[2].replace(/[^A-Za-z]/g, ''); // Remove non-alphabet characters
+        const year = Number(match[3]) ? match[3].padStart(2, '0') : match[4].padStart(2, '0');
+
+        // Convert the date to a standardized format
+        const cleanedDate = `${day}-${month}-${year}`;
+
+        // Validate the date to ensure it's a valid date
+        const parsedDate = new Date(cleanedDate);
+        if (!isNaN(parsedDate.getTime())) {
+            return cleanedDate;
+        }
+    }
+
+    // Return null for invalid dates or non-matching formats
+    return null;
+}
 const loadImage = (url) => new Promise((resolve, reject) => {
     const img = new Image();
     img.addEventListener('load', () => resolve(img));
@@ -91,8 +118,11 @@ export const extractDataFromScannedImages = async (pageImages: any[], invoicePag
     await worker.initialize('eng');
     const allPageLines = [];
     let indexStart = 0;
+    const alreadyProcessedPages = [];
     for (let i = 0; i < pageImages.length; i++) {
         if (!invoicePageNos.includes(i))
+            continue;
+        if (alreadyProcessedPages.includes(i))
             continue;
         const imageBase64 = pageImages[i];
         const { data: { text } } = await worker.recognize(imageBase64);
@@ -100,6 +130,7 @@ export const extractDataFromScannedImages = async (pageImages: any[], invoicePag
         const allLines = parseExtractedText(text, indexStart);
         indexStart += allLines.length;
         allPageLines.push(...allLines);
+        alreadyProcessedPages.push(i)
     }
     await worker.terminate();
     return allPageLines;
@@ -2496,10 +2527,8 @@ export const extractTriwayInvoiceDataFromScanned = async (allLines: any[]) => {
 }
 
 export const extractAplInvoiceDataFromScanned = async (allLines: any[]) => {
-    console.log(allLines, '-----------')
     const structuredHSNLines = [];
     let currentHSN = null;
-    console.log(allLines, 'allLines');
 
     for (const line of allLines) {
         const hsnMatch = line.content.match(/\b996\d{3}\b/);
@@ -2569,114 +2598,116 @@ export const extractAplInvoiceDataFromScanned = async (allLines: any[]) => {
 
 
     const InvoiceLines = [];
-let currentInvoice = null;
-let gstNumberExtracted = false;
-const invoiceCurrency = 'INR';
-const currentYear = new Date().getFullYear();
-const nextYear = currentYear + 1;
-const financialYear = `${currentYear}-${nextYear}`;
+    let currentInvoice = null;
+    let gstNumberExtracted = false;
+    const invoiceCurrency = 'INR';
+    const currentYear = new Date().getFullYear();
+    const nextYear = currentYear + 1;
+    const financialYear = `${currentYear}-${nextYear}`;
 
-const gstVendorMapping = {
-    '27ARCCA9694B1ZK': 'APL Logistics (India) Private Ltd',
-    '33AACCA9694B1ZR': 'APL Logistics (India) Private Ltd'
-};
-
-const invoiceDateIds = ['Invoice date :'];
-const invoiceNumberIds = ['Invoice No :'];
-const invoiceAmountIds = ['TOTAL AMOUNT (INR)'];
-const igstPattern = /IGST 18 \$ OF ([\d.]+) ([\d.]+)/;
-
-const extractInvoiceData = (data) => {
-    const extractedData = {
-        invoiceDate: '',
-        invoiceNumber: '',
-        invoiceAmount: '',
-        igst: '0.00'
+    const gstVendorMapping = {
+        '27ARCCA9694B1ZK': 'APL Logistics (India) Private Ltd',
+        '33AACCA9694B1ZR': 'APL Logistics (India) Private Ltd'
     };
 
-    for (const invoiceDateId of invoiceDateIds) {
-        const InvoiceDateItem = data.find(item => item.content.includes(invoiceDateId));
-        if (InvoiceDateItem) {
-            extractedData.invoiceDate = InvoiceDateItem.content.split(invoiceDateId)[1].trim();
-            break;
+    const invoiceDateIds = ['Invoice date '];
+    const invoiceNumberIds = ['Invoice No :'];
+    const invoiceAmountIds = ['TOTAL AMOUNT (INR)'];
+    const igstPattern = /IGST 18 [%$] OF ([\d.]+) ([\d.]+)/;
+
+    const extractInvoiceData = (data) => {
+        const extractedData = {
+            invoiceDate: '',
+            invoiceNumber: '',
+            invoiceAmount: '',
+            igst: '0.00'
+        };
+
+        for (const invoiceDateId of invoiceDateIds) {
+            const InvoiceDateItem = data.find(item => item.content.includes(invoiceDateId));
+            if (InvoiceDateItem) {
+                let invoiceDate = InvoiceDateItem.content.split(invoiceDateId)[1].trim();
+                invoiceDate = invoiceDate.replace(/:/, '');
+                const cleanedOcrDate = cleanOcrDate(invoiceDate)
+                extractedData.invoiceDate = cleanedOcrDate ? cleanedOcrDate : invoiceDate;
+                break;
+            }
+        }
+
+        for (const invoiceNumberId of invoiceNumberIds) {
+            const InvoiceNumberItem = data.find(item => item.content.includes(invoiceNumberId));
+            if (InvoiceNumberItem) {
+                extractedData.invoiceNumber = InvoiceNumberItem.content.split(invoiceNumberId)[1].trim();
+                break;
+            }
+        }
+
+        for (const invoiceAmountId of invoiceAmountIds) {
+            const InvoiceAmountItem = data.find(item => item.content.includes(invoiceAmountId));
+            if (InvoiceAmountItem) {
+                let invoiceAmount=InvoiceAmountItem.content.split(invoiceAmountId)[1].trim();
+                 invoiceAmount = invoiceAmount.replace(/[^0-9.]/g, '');
+                extractedData.invoiceAmount = invoiceAmount;
+                break;
+            }
+        }
+
+        for (let i = data.length - 1; i >= 0; i--) {
+            const line = data[i];
+            const igstMatch = igstPattern.exec(line.content);
+            if (igstMatch) {
+                extractedData.igst = igstMatch[2];
+                break;
+            }
+        }
+
+        return extractedData;
+    };
+
+    if (allLines && Array.isArray(allLines)) {
+        const invoiceData = extractInvoiceData(allLines);
+
+        for (const line of allLines) {
+            const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
+            const regex = /GST REG No:\s([A-Z0-9]{15})/;
+            const match = regex.exec(line.content);
+            if (match && !gstNumberExtracted) {
+                const gstNumber = match[1];
+                const vendorName = gstVendorMapping[gstNumber] ? gstVendorMapping[gstNumber] : gstVendorMapping['27ARCCA9694B1ZK'];
+
+                currentInvoice = {
+                    "venName": vendorName || '',
+                    "gstNumber": gstNumber,
+                    "invoiceDate": invoiceData.invoiceDate,
+                    "invoiceNumber": invoiceData.invoiceNumber,
+                    "invoiceCurrency": invoiceCurrency,
+                    "financialYear": financialYear,
+                    "invoiceAmount": invoiceData.invoiceAmount,
+                    "cgst": "0.00",
+                    "sgst": "0.00",
+                    "igst": invoiceData.igst,
+                };
+
+                InvoiceLines.push(currentInvoice);
+                gstNumberExtracted = true;
+            }
         }
     }
 
-    for (const invoiceNumberId of invoiceNumberIds) {
-        const InvoiceNumberItem = data.find(item => item.content.includes(invoiceNumberId));
-        if (InvoiceNumberItem) {
-            extractedData.invoiceNumber = InvoiceNumberItem.content.split(invoiceNumberId)[1].trim();
-            break;
-        }
-    }
+    console.log(
+        "IMAGE HSN DATA",
+        JSON.stringify(structuredHSNLines, null, 2)
+    );
 
-    for (const invoiceAmountId of invoiceAmountIds) {
-        const InvoiceAmountItem = data.find(item => item.content.includes(invoiceAmountId));
-        if (InvoiceAmountItem) {
-            extractedData.invoiceAmount = InvoiceAmountItem.content.split(invoiceAmountId)[1].trim();
-            break;
-        }
-    }
+    console.log(
+        "IMAGE Invoice DATA",
+        JSON.stringify(InvoiceLines, null, 2)
+    );
 
-    for (let i = data.length - 1; i >= 0; i--) {
-        const line = data[i];
-        const igstMatch = igstPattern.exec(line.content);
-        if (igstMatch) {
-            extractedData.igst = igstMatch[2];
-            break;
-        }
-    }
-
-    return extractedData;
-};
-
-if (allLines && Array.isArray(allLines)) {
-    const invoiceData = extractInvoiceData(allLines);
-
-    for (const line of allLines) {
-        const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
-        const regex = /GST REG No:\s([A-Z0-9]{15})/;
-        const match = regex.exec(line.content);
-        if (match && !gstNumberExtracted) {
-            const gstNumber = match[1];
-            const vendorName = gstVendorMapping[gstNumber];
-
-            currentInvoice = {
-                "venName": vendorName || '',
-                "gstNumber": gstNumber,
-                "invoiceDate": invoiceData.invoiceDate,
-                "invoiceNumber": invoiceData.invoiceNumber,
-                "invoiceCurrency": invoiceCurrency,
-                "financialYear": financialYear,
-                "invoiceAmount": invoiceData.invoiceAmount,
-                "cgst": "0.00",
-                "sgst": "0.00",
-                "igst": invoiceData.igst,
-            };
-
-            InvoiceLines.push(currentInvoice);
-            gstNumberExtracted = true;
-        }
-    }
-}
-
-console.log(
-    "IMAGE HSN DATA",
-    JSON.stringify(structuredHSNLines, null, 2)
-);
-
-console.log(
-    "IMAGE Invoice DATA",
-    JSON.stringify(InvoiceLines, null, 2)
-);
-
-return {
-    extractedData: InvoiceLines[0],
-    extractedHsnData: structuredHSNLines
-};
-
-    
-
+    return {
+        extractedData: InvoiceLines[0],
+        extractedHsnData: structuredHSNLines
+    };
 }
 
 // export const extractDartInvoiceDataFromScanned = async (allLines: any[]): Promise<any> => {
@@ -2923,7 +2954,7 @@ export const extractOoclInvoiceDataFromScanned = async (allLines: any[]): Promis
 
     const gstVendorMapping = {
         '33AAACO7690K1Z4': 'OOCL Logistics (India) Private Limited',
-        '33AAACO7690K124':'OOCL Logistics (India) Private Limited'
+        '33AAACO7690K124': 'OOCL Logistics (India) Private Limited'
     };
 
     const invoiceNumberIds = [/724515\d{4}/];
@@ -3277,7 +3308,7 @@ export const extractNagelInvoiceDataFromScanned = async (allLines: any[]): Promi
 
     const gstVendorMapping = {
         '33AAACK2676H7ZH': 'KUEHNE NAGEL PRIVATE LIMITED',
-        '33AAACO7690K124':'OOCL Logistics (India) Private Limited'
+        '33AAACO7690K124': 'OOCL Logistics (India) Private Limited'
     };
 
     const invoiceNumberIds = [/MAA\d{7}/];
