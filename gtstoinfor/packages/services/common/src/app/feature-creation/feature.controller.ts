@@ -3,7 +3,7 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Any } from 'typeorm';
 import { FeatureService } from './feature.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { CommonResponseModel, FeatureDTO, FeatureResponseModel } from '@project-management-system/shared-models';
+import { CommonResponseModel, FeatureDTO, FeatureFilterRequest, FeatureResponseModel } from '@project-management-system/shared-models';
 
 
 @ApiTags('feature')
@@ -23,10 +23,34 @@ export class FeatureController {
       }
     }
     @Post('/getAllFeatures')
-   // @ApiBody({type:ItemCreFilterRequest})
-    async getAllFeatures(): Promise<CommonResponseModel> {
+    @ApiBody({type:FeatureFilterRequest})
+    async getAllFeatures(@Body() req:any): Promise<CommonResponseModel> {
         try {
-            return await this.featureService.getAllFeatures();
+            return await this.featureService.getAllFeatures(req);
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+    @Post('/getFeatureCode')
+    async getFeatureCode(): Promise<CommonResponseModel> {
+        try {
+            return await this.featureService.getFeatureCode();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+    @Post('/getFeatureName')
+    async getFeatureName(): Promise<CommonResponseModel> {
+        try {
+            return await this.featureService.getFeatureName();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+    @Post('/getOptionGropup')
+    async getOptionGropup(): Promise<CommonResponseModel> {
+        try {
+            return await this.featureService.getOptionGropup();
         } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }

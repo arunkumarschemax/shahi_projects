@@ -616,7 +616,7 @@ const getAllComposition=()=>{
                         <Form.Item name='brandId' label='Brand' >
                             <Select
                                 showSearch
-                                placeholder="Select Size Description"
+                                placeholder="Select Brand"
                                 optionFilterProp="children"
                                 allowClear
                             >
