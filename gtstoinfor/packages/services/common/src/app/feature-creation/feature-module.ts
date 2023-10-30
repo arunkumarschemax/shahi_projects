@@ -7,12 +7,13 @@ import { FeatureService } from './feature.service';
 import { FeatureRepository } from './repo/feature-repository';
 import { FeatureOptionEntity } from './entities/feature-option-entity';
 import { FeatureOpitionRepository } from './repo/feature-option-repository';
+import { ColourService, DestinationService, SizeService } from '@project-management-system/shared-services';
 
 @Module({
   imports: [
   TypeOrmModule.forFeature([FeatureEntity, FeatureOptionEntity]),
 ],
   controllers: [FeatureController],
-  providers: [FeatureService,ApplicationExceptionHandler,FeatureRepository,FeatureOpitionRepository]
+  providers: [FeatureService,ApplicationExceptionHandler,FeatureRepository,FeatureOpitionRepository,ColourService,SizeService,DestinationService]
 })
 export class FeatureModule {}
