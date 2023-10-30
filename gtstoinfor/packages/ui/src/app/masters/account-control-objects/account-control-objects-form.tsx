@@ -72,7 +72,7 @@ export const AccountControlObjectForm = (props:AccountControlobjectFormProps) =>
             props.updateDetails(values);
           } else {
             setDisable(false)
-            
+            saveOperationGroup(values)
           }
     };
 

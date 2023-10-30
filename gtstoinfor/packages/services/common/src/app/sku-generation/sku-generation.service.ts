@@ -124,9 +124,12 @@ export class ItemSkuService{
 
     async closeSKUById(req : ItemSKusReq): Promise<SKUGenerationResponseModel> {
       try {
-        const sampleReq = await this.itemSkuRepo.findOne({ where: { itemSkuId: req.itemId  } })
-        if (sampleReq) {
-          const updateResult = await this.itemSkuRepo.update({ itemSkuId: req.itemId }, { status: SkuStatusEnum.CLOSED })
+        console.log(req.itemSkuId,'----------------------')
+        const skuReq = await this.itemSkuRepo.findOne({ where: { itemSkuId: req.itemSkuId  } })
+        console.log(skuReq,'&&&&&&&&&&&&&&&&&&&&')
+        if (skuReq) {
+          const updateResult = await this.itemSkuRepo.update({ itemSkuId: req.itemSkuId }, { status: SkuStatusEnum.CLOSED })
+          console.log(updateResult,'======================')
           if (updateResult) {
             return new SKUGenerationResponseModel(true, 1, 'SKU cancelled successfully', undefined)
           }
@@ -258,44 +261,48 @@ export class ItemSkuService{
 //   }
 
 
-async getSkuList(req: SKUlistFilterRequest): Promise<CommonResponseModel> {
-  const data = await this.itemSkuRepo.getSkuList(req);
-console.log(req,'service');
-  if (data.length === 0) {
-    return new CommonResponseModel(false, 0, 'data not found');
-  }
+// async getSkuList(req?: SKUlistFilterRequest): Promise<CommonResponseModel> {
+//   const data = await this.itemSkuRepo.getSkuList(req);
+//   console.log(data,"data")
 
-  const DataMap = new Map<string, SKUDTO>();
+//   if (data.length === 0) {
+//     return new CommonResponseModel(false, 0, 'data not found');
+//   }
 
-  for (const res of data) {
-    if (!DataMap.has(res.item_id)) {
-      DataMap.set(res.item_id, new SKUDTO(res.item_code, res.item_id, []));
-    }
-    const Sku = DataMap.get(res.item_id)?.sku;
-    // const phase = monthData.find(e => e.phasetype === rec.prod_plan_type
-    if (Sku) {
-      const data1 = new SKUListDto(
-        res.item_sku_id,
-        res.sku_code,
-        res.size_id,
-        res.size,
-        res.color_id,
-        res.color,
-        res.destination_id,
-        res.destination
-      );
-      Sku.push(data1);
-    }
-  }
+//   const DataMap = new Map<string, SKUDTO>();
+//   for (const res of data) {
+//     if (!DataMap.has(res.fg_item_id)) {
+//       DataMap.set(res.fg_item_id, new SKUDTO(res.item_code, res.fg_item_id, []));
+//       // console.log( res.fg_item_id,'service item id');
 
-  const ListArray: SKUDTO[] = Array.from(DataMap.values());
-  return new CommonResponseModel(true, 1, 'data retrieved', ListArray);
-}
+//     }
+//     const Sku = DataMap.get(res.fg_item_id)?.sku;
+//     // console.log( res.item_id,'service item id/ x`out sidex');
+//     if (Sku) {
+//       const data1 = new SKUListDto(
+//         res.item_sku_id,
+//         res.sku_code,
+//         res.size_id,
+//         res.size,
+//         res.color_id,
+//         res.color,
+//         res.destination_id,
+//         res.destination
+//       );
+//       Sku.push(data1);
+//     }
+//   }
 
-async getItemCode():Promise<CommonResponseModel>{
+//   const ListArray: SKUDTO[] = Array.from(DataMap.values());
+//   console.log(ListArray,'service');
+
+//   return new CommonResponseModel(true, 1, 'data retrieved', ListArray);
+// }
+
+async getItemCode(req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
   try{
-    const getData = await this.itemSkuRepo.getItemCode()
-    console.log(getData,'dara');
+    const getData = await this.itemSkuRepo.getItemCode(req)
+    // console.log(getData,'dara');
     
     if(getData ){
       return new CommonResponseModel(true,1,'Data retreived',getData)
@@ -308,4 +315,22 @@ async getItemCode():Promise<CommonResponseModel>{
   }
 }
 
+async getSkuList (req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
+  try{
+    const getdata = await this.itemSkuRepo.getSkuList(req)
+
+    if(getdata.length>0){
+
+      return new CommonResponseModel(true,1,'data retreived', getdata)
+
+    }else{
+
+      return new CommonResponseModel(false,0,'No data found')
+
+    }
+    
+  }catch(err){
+    throw err
+  }
+}
 }

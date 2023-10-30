@@ -285,6 +285,8 @@ export function ComponentsGrid(props: ComponentsProps) {
           <br></br>
           <Table
           rowKey={record => record.componentId}
+          rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
+
           columns={columnsSkelton}
           dataSource={componentsData}
           scroll={{x:true}}

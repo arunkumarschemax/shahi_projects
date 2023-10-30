@@ -6,12 +6,13 @@ import { FeatureController } from './feature.controller';
 import { FeatureService } from './feature.service';
 import { FeatureRepository } from './repo/feature-repository';
 import { FeatureOptionEntity } from './entities/feature-option-entity';
+import { FeatureOpitionRepository } from './repo/feature-option-repository';
 
 @Module({
   imports: [
   TypeOrmModule.forFeature([FeatureEntity, FeatureOptionEntity]),
 ],
   controllers: [FeatureController],
-  providers: [FeatureService,ApplicationExceptionHandler,FeatureRepository]
+  providers: [FeatureService,ApplicationExceptionHandler,FeatureRepository,FeatureOpitionRepository]
 })
 export class FeatureModule {}

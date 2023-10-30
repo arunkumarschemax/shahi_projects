@@ -371,6 +371,8 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
           <br></br>
           <Table
           rowKey={record => record.brandId}
+          rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
+
           columns={columnsSkelton}
           dataSource={masterBrandData}
           scroll = {{x:true}}

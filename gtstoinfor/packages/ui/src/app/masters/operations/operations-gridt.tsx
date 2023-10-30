@@ -307,6 +307,8 @@ export function OperationsGrid(
           </Row>
           <br></br>
           <Table
+                  rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
+
           rowKey={record => record.operationId}
           columns={columnsSkelton}
           dataSource={operationsData}

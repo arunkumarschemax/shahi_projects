@@ -421,6 +421,7 @@ export const SampleDevView = () => {
       <Table
         size="small"
         rowKey={(record) => record.buyingHouseId}
+        rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
         columns={columnsSkelton}
         dataSource={sampleData}
         scroll={{ x: true }}

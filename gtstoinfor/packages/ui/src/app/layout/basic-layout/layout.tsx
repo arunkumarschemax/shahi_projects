@@ -577,6 +577,13 @@ export const baseRouterList = [
                 path: "style-order-view",
                 filepath: "style-order-view",
             },
+            {
+                label: "CO Amendment",
+                key: "co-amendment",
+                path: "co-amendment",
+                filepath: "co-amendment",
+            },
+           
            
         ]
     },
