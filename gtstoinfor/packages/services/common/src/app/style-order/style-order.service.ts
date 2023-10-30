@@ -26,6 +26,7 @@ import { ItemCreation } from "../fg-item/item_creation.entity";
 import { StyleOrderId } from "./style-order-id.request";
 import { VariantIdReq } from "./variant-id.req";
 import { Raw } from 'typeorm';
+import { CoTypes } from "../co-type/co-type.entity";
 
 @Injectable()
 
@@ -95,6 +96,15 @@ export class StyleOrderService{
             const buyer = new Buyers()
             buyer.buyerId = req.buyerId
             entity.buyerInfo = buyer
+            const coType = new CoTypes()
+            coType.coTypeId = req.coTypeId
+            entity.coTypeInfo = coType
+            entity.merchandiser = req.merchandiser
+            entity.planner = req.planner
+            const uom = new UomEntity()
+            uom.id = req.uomId
+            entity.uomInfo = uom
+            entity.season = req.season
             let coLineItem:CoLine[]  = []
             let val = 0
             if(req.coId){

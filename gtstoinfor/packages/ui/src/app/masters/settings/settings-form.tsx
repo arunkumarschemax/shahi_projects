@@ -19,7 +19,7 @@ export const SettingsForm = () => {
     const [facility,setFacility] = useState<any[]>([])
     const warehouseService = new WarehouseService()
     const [warehouse,setWarehouse] = useState<any[]>([])
-    // const cotypeService = new COTypeService()
+    const coTypeService = new CoTypeService()
     const [coType,setCoType] = useState<any[]>([])
     const currencyService = new CurrencyService()
     const [currency,setCurrency] = useState<any[]>([]);
@@ -49,8 +49,6 @@ export const SettingsForm = () => {
     const navigate = useNavigate()
     const [initialData,setInitialData] = useState<any>()
     const [updateKey,setUpdateKey] = useState<number>(0)
-    const coTypeService = new CoTypeService()
-    const [coTypes,setCoTypes] = useState<any[]>([])
     const { state } = useLocation();
 
 

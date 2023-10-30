@@ -34,9 +34,14 @@ export class StyleOrderReq{
     coId?: number;
     coNumber?: string;
     co_id?: number;
+    season?: string;
+    merchandiser?: number;
+    planner?: number;
+    coTypeId?: number;
+    uomId?: number;
 
 
-    constructor(itemCode: string,orderDate : any,buyerPoNumber: string,shipmentType: string,buyerStyle : string,agent : string,buyerAddress : string,exFactoryDate: Date,deliveryDate: Date,instoreDate: Date,salePrice: number,priceQuantity: number,discountPercent: number,discountAmount: number,status: CustomerOrderStatusEnum,remarks: string,itemId: number,warehouseId: number,facilityId: number,styleId: number,packageTermsId: number,deliveryMethodId: number,deliverytermId: number,currencyId: number,paymentMethodId: number,paymentTermId: number,    styleOrderItems: StyleOrderItemsReq[],buyerId:number,createdUser: string,coId?: number,coNumber?: string,co_id?: number){
+    constructor(itemCode: string,orderDate : any,buyerPoNumber: string,shipmentType: string,buyerStyle : string,agent : string,buyerAddress : string,exFactoryDate: Date,deliveryDate: Date,instoreDate: Date,salePrice: number,priceQuantity: number,discountPercent: number,discountAmount: number,status: CustomerOrderStatusEnum,remarks: string,itemId: number,warehouseId: number,facilityId: number,styleId: number,packageTermsId: number,deliveryMethodId: number,deliverytermId: number,currencyId: number,paymentMethodId: number,paymentTermId: number,    styleOrderItems: StyleOrderItemsReq[],buyerId:number,createdUser: string,coId?: number,coNumber?: string,co_id?: number,season?: string,merchandiser?: number,planner?: number,coTypeId?: number,uomId?:number){
     this.itemCode = itemCode
     this.orderDate = orderDate
     this.buyerPoNumber = buyerPoNumber
@@ -69,5 +74,10 @@ export class StyleOrderReq{
     this.coId = coId
     this.coNumber = coNumber
     this.co_id = co_id
+    this.season = season
+    this.merchandiser = merchandiser
+    this.planner = planner
+    this.coTypeId = coTypeId
+    this.uomId = uomId
     }
 }
