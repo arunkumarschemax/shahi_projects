@@ -35,6 +35,7 @@ export class StyleOrderService{
         // @InjectRepository(StyleOrder)
       
          private CoLineRepo : CoLineRepository,
+         private styleorderRepo:StyleOrderRepository,
         private readonly dataSource: DataSource,
 
     ){}
@@ -280,16 +281,32 @@ export class StyleOrderService{
     }
    }
 
-   async getCoLine(): Promise<CommonResponseModel> {
+   async getCoNumber(): Promise<CommonResponseModel> {
     try {
-   const data = await this.CoLineRepo.find({
-    relations:["styleOrderInfo"]
-   })
+   const data = await this.styleorderRepo.find()
    console.log(data,'-----------')
-   return new CommonResponseModel(true, 0, "CO line Data retrieved  successfully", data);
+   return new CommonResponseModel(true, 0, "CO Number Data retrieved  successfully", data);
 
       } catch (err) {
         throw err;
       }
     }
+
+    async getCoDataByCoId(req:StyleOrderId): Promise<CommonResponseModel> {
+        try {
+       const data = await this.styleorderRepo.find({
+        where:{coId:req.styleOrderId},
+        relations:["coLineInfo","fgitemInfo","warehouseInfo","factoryInfo","styleInfo","packageTermsInfo","deliveryMethodInfo","deliveryTermsInfo","currenciesInfo","paymentMethodInfo","paymentTermsInfo","buyerInfo"]
+       })
+       console.log(data,'-----------')
+       return new CommonResponseModel(true, 0, "CO Number Data retrieved  successfully", data);
+    
+          } catch (err) {
+            throw err;
+          }
+        }
+
+   
+
+    
 }

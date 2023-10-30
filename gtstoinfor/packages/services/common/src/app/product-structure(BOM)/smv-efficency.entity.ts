@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity,PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
-@Entity('smv-efficiency')
+@Entity('smv_efficiency')
 export class SMVEfficiencyEntity {
 
     @PrimaryGeneratedColumn("increment", { name: 'smv_efficiency_id' })
