@@ -337,7 +337,7 @@ export const extractExpeditors = async (pdf) => {
     let currentHSN = null;
     let hsnId = null;
     let linesId = 0;
-    
+
     for (const line of extractedData) {
         if (line.content.match(/^\d{6}$/)) {
             hsnId = linesId;
@@ -349,15 +349,15 @@ export const extractExpeditors = async (pdf) => {
                 }
                 structuredHSNLines.push(currentHSN);
             }
-    
+
             const taxPercentageContent = extractedData[hsnId + 4].content;
             const taxPercentage = parseFloat(taxPercentageContent.replace('%', ''));
-    
+
             let igst = 0;
             let cgst = 0;
             let sgst = 0;
             let taxType = "No Tax";
-    
+
             if (taxPercentage === 18) {
                 igst = parseFloat(extractedData[hsnId + 6].content.replace(/,/g, '')) || 0;
                 taxType = "IGST";
@@ -366,9 +366,9 @@ export const extractExpeditors = async (pdf) => {
                 sgst = parseFloat(extractedData[hsnId + 6].content.replace(/,/g, '')) || 0;
                 taxType = "CGST & SGST";
             }
-    
+
             const unitQuantityContent = extractedData[hsnId + 1].content;
-    
+
             currentHSN = {
                 description: extractedData[hsnId - 2].content,
                 HSN: line.content.includes("HSN") ? line.content.match(/\d+/) : line.content.trim(),
@@ -386,7 +386,7 @@ export const extractExpeditors = async (pdf) => {
         }
         linesId += 1;
     }
-    
+
     if (currentHSN) {
         if (currentHSN.taxType === "IGST") {
             currentHSN.amount = (parseFloat(currentHSN.charge) + currentHSN.taxAmount).toFixed(2);
@@ -395,7 +395,7 @@ export const extractExpeditors = async (pdf) => {
         }
         structuredHSNLines.push(currentHSN);
     }
-    
+
 
     // const InvoiceLines = [];
     // let currentInvoice = null;
@@ -631,6 +631,9 @@ export const extractEfl = async (pdf: PDFDocumentProxy) => {
                 currentHSN.description = currentHSN.description.replace(/(\d+).*/, '$1');
             }
         }
+        if (currentHSN?.description?.includes('-')) {
+            currentHSN.description = currentHSN.description.split('-')[0];
+        }
 
         const calculateChargeForItem = (item) => {
             const taxAmountFloat = parseFloat(item.taxAmount);
@@ -669,7 +672,7 @@ export const extractEfl = async (pdf: PDFDocumentProxy) => {
                 currentHSN.taxAmount = parseFloat(taxAmountString);
             }
         }
-        
+
         if (currentHSN) {
             const { charge, amount } = calculateChargeAndAmountForItem(currentHSN);
             currentHSN.charge = charge;
@@ -1204,7 +1207,7 @@ export const extractMaersk = async (pdf) => {
             const unitPrice = (amount / unitQuantity).toFixed(2);
 
             currentHSN = {
-                description: extractedData[hsnId - 6].content+extractedData[hsnId - 5].content,
+                description: extractedData[hsnId - 6].content + extractedData[hsnId - 5].content,
                 HSN: line.content.includes("996") ? line.content.match(/\d+/) : line.content.trim(),
                 unitQuantity: unitQuantity,
                 unitPrice: unitPrice,
@@ -1413,7 +1416,7 @@ export const checkIsScannedPdf = async (pdf) => {
 };
 
 
-const extractPDFDataToLinesData = async (pdf: PDFDocumentProxy) => {
+export const extractPDFDataToLinesData = async (pdf: PDFDocumentProxy) => {
     const numPages = pdf.numPages;
     const extractedData = [];
     let idCounter = 1;

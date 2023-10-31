@@ -4,7 +4,7 @@ import { Button, Card, Col, Form, FormInstance, Radio, Row, Select, Spin, Upload
 import { useState } from 'react';
 import { pdfjs } from 'react-pdf';
 import loadingSymbol from '../../../assets/images/1_yE-S7HG0Rg-ACAcnjvKf5Q.gif';
-import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractEfl, extractExpeditors, extractMaersk, extractNagel, extractOocl } from './schemax-ai-docx-pdf';
+import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractEfl, extractExpeditors, extractMaersk, extractNagel, extractOocl, extractPDFDataToLinesData } from './schemax-ai-docx-pdf';
 import { extractAplInvoiceDataFromScanned, extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNagelInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractOoclInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 ;
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
@@ -61,7 +61,7 @@ export const DocReader = (props: DocReaderProps) => {
             const response = await fetch(pdfDataUrl);
             const pdfBuffer = await response.arrayBuffer();
             const pdfData = await pdfjs.getDocument({ data: pdfBuffer }).promise;
-            let processedData:any={};
+            let processedData: any = {};
             switch (selectedVendor) {
                 case VendorNameEnum.extractedDhl:
                     processedData = await extractDhl(pdfData);
@@ -231,18 +231,18 @@ export const DocReader = (props: DocReaderProps) => {
                         break;
                     }
 
-                    // case VendorNameEnum.extractedApl:
-                    //     {
-                    //         const isScannedPdf = await checkIsScannedPdf(pdfData)
-                    //         if (isScannedPdf) {
-                    //             const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
-                    //             const allLines = await extractDataFromScannedImages(pageImages, [0]);
-                    //             processedData = await extractAplInvoiceDataFromScanned(allLines);
-                    //         } else {
-                    //             processedData = await extractEfl(pdfData);
-                    //         }
-                    //         break;
-                    //     }
+                // case VendorNameEnum.extractedApl:
+                //     {
+                //         const isScannedPdf = await checkIsScannedPdf(pdfData)
+                //         if (isScannedPdf) {
+                //             const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                //             const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                //             processedData = await extractAplInvoiceDataFromScanned(allLines);
+                //         } else {
+                //             processedData = await extractEfl(pdfData);
+                //         }
+                //         break;
+                //     }
 
                 case VendorNameEnum.extractedSrivaru:
                     {
@@ -274,7 +274,8 @@ export const DocReader = (props: DocReaderProps) => {
                 case VendorNameEnum.extractedApl: {
                     const aplPDFData = await extractApl(pdfData);
                     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
-                    const allLines = await extractDataFromScannedImages(pageImages, [0,pageImages.length-1]);
+                    const allLines = await extractDataFromScannedImages(pageImages, [0, pageImages.length - 1]);
+                    // const allLines = await extractPDFDataToLinesData(pdfData);
                     const scannedData = await extractAplInvoiceDataFromScanned(allLines);
                     processedData['extractedData'] = scannedData.extractedData;
                     // processedData['extractedData']['invoiceAmount']=aplPDFData.extractedData.invoiceAmount;
@@ -286,7 +287,7 @@ export const DocReader = (props: DocReaderProps) => {
                     break;
                 }
 
-                
+
                 // case VendorNameEnum.extractedDhl: {
                 //     const dhlPDFData = await extractDhl(pdfData);
                 //     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
@@ -326,7 +327,7 @@ export const DocReader = (props: DocReaderProps) => {
                     // processedData['extractedData']['cgst']=eflPDFData.extractedData.cgst;
                     // processedData['extractedData']['sgst']=eflPDFData.extractedData.sgst;
                     // processedData['extractedHsnData'] = eflPDFData.extractedHsnData;
-                    processedData=eflPDFData;
+                    processedData = eflPDFData;
                     break;
                 }
 
@@ -349,11 +350,11 @@ export const DocReader = (props: DocReaderProps) => {
                     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
                     const allLines = await extractDataFromScannedImages(pageImages, [0]);
                     const scannedData = await extractOoclInvoiceDataFromScanned(allLines);
-                    processedData['extractedData'] = scannedData.extractedData||{};
-                    processedData['extractedData']['invoiceAmount']=ooclPDFData.extractedData.invoiceAmount;
-                    processedData['extractedData']['igst']=ooclPDFData.extractedData.igst;
-                    processedData['extractedData']['cgst']=ooclPDFData.extractedData.cgst;
-                    processedData['extractedData']['sgst']=ooclPDFData.extractedData.sgst;
+                    processedData['extractedData'] = scannedData.extractedData || {};
+                    processedData['extractedData']['invoiceAmount'] = ooclPDFData.extractedData.invoiceAmount;
+                    processedData['extractedData']['igst'] = ooclPDFData.extractedData.igst;
+                    processedData['extractedData']['cgst'] = ooclPDFData.extractedData.cgst;
+                    processedData['extractedData']['sgst'] = ooclPDFData.extractedData.sgst;
                     processedData['extractedHsnData'] = ooclPDFData.extractedHsnData;
                     break;
                 }
@@ -363,11 +364,11 @@ export const DocReader = (props: DocReaderProps) => {
                     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
                     const allLines = await extractDataFromScannedImages(pageImages, [0]);
                     const scannedData = await extractNagelInvoiceDataFromScanned(allLines);
-                    processedData['extractedData'] = scannedData.extractedData||{};
-                    processedData['extractedData']['invoiceAmount']=nagelPDFData.extractedData.invoiceAmount;
-                    processedData['extractedData']['igst']=nagelPDFData.extractedData.igst;
-                    processedData['extractedData']['cgst']=nagelPDFData.extractedData.cgst;
-                    processedData['extractedData']['sgst']=nagelPDFData.extractedData.sgst;
+                    processedData['extractedData'] = scannedData.extractedData || {};
+                    processedData['extractedData']['invoiceAmount'] = nagelPDFData.extractedData.invoiceAmount;
+                    processedData['extractedData']['igst'] = nagelPDFData.extractedData.igst;
+                    processedData['extractedData']['cgst'] = nagelPDFData.extractedData.cgst;
+                    processedData['extractedData']['sgst'] = nagelPDFData.extractedData.sgst;
                     processedData['extractedHsnData'] = nagelPDFData.extractedHsnData;
                     break;
                 }
