@@ -1,30 +1,8 @@
 import { PDFDocumentProxy } from "pdfjs-dist/types/src/display/api";
 
 export const extractDhl = async (pdf) => {
-    const numPages = pdf.numPages;
-    const extractedData = [];
-    let idCounter = 1;
-
-    for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
-        const page = await pdf.getPage(pageNumber);
-        const textContent: any = await page.getTextContent();
-        let line = '';
-        let rec = null;
-        // eslint-disable-next-line no-loop-func
-        textContent.items.forEach((item) => {
-            if (rec !== null) {
-                rec = item.transform[5];
-            }
-            if (item.transform[5]) {
-                extractedData.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
-                idCounter++;
-                line = '';
-            }
-            line += item.str + ' ';
-        });
-        extractedData.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
-    }
-
+    const allLines = await extractPDFData(pdf);
+    const extractedData = allLines;
     const structuredHSNLines = [];
     let currentHSN = null;
     let hsnId = null;
@@ -170,33 +148,8 @@ export const extractDhl = async (pdf) => {
 }
 
 export const extractDart = async (pdf) => {
-    const numPages = pdf.numPages;
-    const extractedData = [];
-    let idCounter = 1;
-    const allLines = [];
-
-    for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
-        const page = await pdf.getPage(pageNumber);
-        const textContent: any = await page.getTextContent();
-
-        let line = '';
-        let rec = null;
-
-        // eslint-disable-next-line no-loop-func
-        textContent.items.forEach((item) => {
-            if (rec !== null) {
-                rec = item.transform[5];
-            }
-
-            if (item.transform[5]) {
-                extractedData.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
-                allLines.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
-                idCounter++;
-                line = '';
-            }
-            line += item.str + ' ';
-        });
-    }
+    const allLines = await extractPDFData(pdf);
+    const extractedData = allLines;
 
     const structuredHSNLines = [];
     let currentHSN = null;
@@ -378,34 +331,8 @@ export const extractDart = async (pdf) => {
 }
 
 export const extractExpeditors = async (pdf) => {
-    const numPages = pdf.numPages;
-    const extractedData = [];
-    let idCounter = 1;
-    const allLines = [];
-
-    for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
-        const page = await pdf.getPage(pageNumber);
-        const textContent: any = await page.getTextContent();
-
-        let line = '';
-        let rec = null;
-
-        // eslint-disable-next-line no-loop-func
-        textContent.items.forEach((item) => {
-            if (rec !== null) {
-                rec = item.transform[5];
-            }
-
-            if (item.transform[5]) {
-                extractedData.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
-                allLines.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
-                idCounter++;
-                line = '';
-            }
-            line += item.str + ' ';
-        });
-    }
-
+    const allLines = await extractPDFData(pdf);
+    const extractedData = allLines;
     const structuredHSNLines = [];
     let currentHSN = null;
     let hsnId = null;
@@ -823,33 +750,8 @@ export const extractEfl = async (pdf: PDFDocumentProxy) => {
 }
 
 export const extractOocl = async (pdf) => {
-    const numPages = pdf.numPages;
-    const extractedData = [];
-    let idCounter = 1;
-    const allLines = [];
-
-    for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
-        const page = await pdf.getPage(pageNumber);
-        const textContent: any = await page.getTextContent();
-
-        let line = '';
-        let rec = null;
-
-        // eslint-disable-next-line no-loop-func
-        textContent.items.forEach((item) => {
-            if (rec !== null) {
-                rec = item.transform[5];
-            }
-
-            if (item.transform[5]) {
-                extractedData.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
-                allLines.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
-                idCounter++;
-                line = '';
-            }
-            line += item.str + ' ';
-        });
-    }
+    const allLines = await extractPDFData(pdf);
+    const extractedData = allLines;
 
     const structuredHSNLines = [];
     let currentHSN = null;
@@ -991,35 +893,8 @@ export const extractOocl = async (pdf) => {
 }
 
 export const extractNagel = async (pdf) => {
-    const numPages = pdf.numPages;
-    const extractedData = [];
-    let idCounter = 1;
-    const allLines = [];
-
-    for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
-        const page = await pdf.getPage(pageNumber);
-        const textContent: any = await page.getTextContent();
-
-        let line = '';
-        let rec = null;
-
-        // eslint-disable-next-line no-loop-func
-        textContent.items.forEach((item) => {
-            if (rec !== null) {
-                rec = item.transform[5];
-            }
-
-            if (item.transform[5]) {
-                extractedData.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
-                allLines.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
-                idCounter++;
-                line = '';
-            }
-            line += item.str + ' ';
-        });
-    }
-
-
+    const allLines = await extractPDFData(pdf);
+    const extractedData = allLines;
 
     const structuredHSNLines = [];
     let currentHSN = null;
@@ -1150,34 +1025,8 @@ export const extractNagel = async (pdf) => {
 }
 
 export const extractApl = async (pdf) => {
-    const numPages = pdf.numPages;
-    const extractedData = [];
-    let idCounter = 1;
-    const allLines = [];
-
-    for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
-        const page = await pdf.getPage(pageNumber);
-        const textContent: any = await page.getTextContent();
-
-        let line = '';
-        let rec = null;
-
-        // eslint-disable-next-line no-loop-func
-        textContent.items.forEach((item) => {
-            if (rec !== null) {
-                rec = item.transform[5];
-            }
-
-            if (item.transform[5]) {
-                extractedData.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
-                allLines.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
-                idCounter++;
-                line = '';
-            }
-            line += item.str + ' ';
-        });
-    }
-
+    const allLines = await extractPDFData(pdf);
+    const extractedData = allLines;
     const structuredHSNLines = [];
     let currentHSN = null;
     let hsnId = null;
@@ -1312,34 +1161,8 @@ export const extractApl = async (pdf) => {
 }
 
 export const extractMaersk = async (pdf) => {
-    const numPages = pdf.numPages;
-    const extractedData = [];
-    let idCounter = 1;
-    const allLines = [];
-
-    for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
-        const page = await pdf.getPage(pageNumber);
-        const textContent: any = await page.getTextContent();
-
-        let line = '';
-        let rec = null;
-
-        // eslint-disable-next-line no-loop-func 
-        textContent.items.forEach((item) => {
-            if (rec !== null) {
-                rec = item.transform[5];
-            }
-
-            if (item.transform[5]) {
-                extractedData.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
-                allLines.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
-                idCounter++;
-                line = '';
-            }
-            line += item.str + ' ';
-        });
-    }
-
+    const allLines = await extractPDFData(pdf);
+    const extractedData = allLines;
     const structuredHSNLines = [];
     let currentHSN = null;
     let hsnId = null;
