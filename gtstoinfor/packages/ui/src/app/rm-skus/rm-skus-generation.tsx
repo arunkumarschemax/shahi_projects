@@ -1,5 +1,5 @@
 import { RmItemTypeEnum, RmSkuFeatureReq, RmSkuReq, RmStatusEnum } from "@project-management-system/shared-models";
-import { FabricStructuresService, RmSkuService } from "@project-management-system/shared-services";
+import { FabricStructuresService, FeatureService, RmSkuService } from "@project-management-system/shared-services";
 import { Badge, Button, Card, Checkbox, Col, Form ,Row,Select, Space, Tag, Tooltip} from "antd"
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
@@ -15,6 +15,7 @@ export const RmSkusGeneration = () => {
     const service = new RmSkuService()
     const [form] = Form.useForm()
     const fabricItemCodeService = new FabricStructuresService()
+    const featureService = new FeatureService()
 
     useEffect(() => {
         getFeatures()
@@ -25,7 +26,7 @@ export const RmSkusGeneration = () => {
     },[features])
 
     const getFeatures = () => {
-        service.getFeatures().then(res => {
+        featureService.getAllFeatures('').then(res => {
             if(res.status){
                 setFeaturesInfo(res.data)
             }
@@ -38,7 +39,7 @@ export const RmSkusGeneration = () => {
 
     const onChange = (checkedValues) => {
         const selectedComponentDetails = featuresInfo.filter(
-          (option) => checkedValues.includes(option.featureId)
+          (option) => checkedValues.includes(option.feature_option_id)
         );
         setFeatures(selectedComponentDetails);
     };
@@ -107,18 +108,18 @@ export const RmSkusGeneration = () => {
                     <Card  style={{height:'100%'}}>
                         <span>Features</span>
                         {/* <h1>Fetures</h1> */}
-                    <CheckboxGroup style={{ width: '100%' }} value={features.map((feature) => feature.featureId)} onChange={onChange}>
+                    <CheckboxGroup style={{ width: '100%' }} value={features.map((feature) => feature.feature_option_id)} onChange={onChange}>
                     <Row gutter={24}>
                         {featuresInfo.map((option) => (
-                        <Col key={option.featureId} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+                        <Col key={option.feature_option_id} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
                             <Row gutter={24}>
                                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
-                            <Checkbox value={option.featureId} key={option.featureName}>
+                            <Checkbox value={option.feature_option_id} key={option.feature_name}>
                             <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-                            <Badge.Ribbon text={option.featureName} color="volcano">    
-                                <Card title={`${option.option}`} size='small' style={{width:'300px'}}>
+                            <Badge.Ribbon text={option.feature_name} color="volcano">    
+                                <Card title={`${option.option_group}`} size='small' style={{width:'300px'}}>
                                 <Row gutter={24}>
-                                    {option.optionInfo[0].option.map((e, index) => (
+                                    {option.optionInfo[0]?.option.map((e, index) => (
                                         <>
                                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6}}>
                                         <Tag key={index} color="#cde5d7" style={{color:'black',fontSize:'15px'}}>{e}</Tag>

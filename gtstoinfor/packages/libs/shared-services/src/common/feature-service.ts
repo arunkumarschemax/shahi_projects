@@ -22,4 +22,8 @@ URL = '/feature';
             return this.axiosPostCall(this.URL +  '/getOptionGropup')
         }
 
+        async getFeaturesInfo(): Promise<CommonResponseModel> {
+            return this.axiosPostCall(this.URL +  '/getFeaturesInfo')
+        }
+
 }

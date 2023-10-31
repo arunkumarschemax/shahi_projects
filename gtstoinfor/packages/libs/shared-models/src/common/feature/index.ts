@@ -1,3 +1,5 @@
 export * from './feature-dto'
 export * from './feature-model'
 export * from './feature-option-dto'
+export * from './feature-option.model'
+export * from './feature-parent-model'

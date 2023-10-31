@@ -89,7 +89,12 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
                 'paymentMethod': initialData[0].paymentMethodId,
                 'paymentTerms': initialData[0].paymentTermId,
                 'styleOrderId': state?.id,
-                'coNumber':initialData[0].coNumber
+                'coNumber':initialData[0].coNumber,
+                'season' : initialData[0].season,
+                'merchandiser' : initialData[0].merchandiser,
+                'planner': initialData[0].planner,
+                'uomId': initialData[0].uomId,
+                'coTypeId' : initialData[0].coTypeId
 
             })
             setItemId(initialData[0].itemId)
@@ -370,24 +375,24 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
                 )
             }
         },
-        {
-            title:'FOB',
-            dataIndex:'salePrice',
-            render:(text,row,index) => {
-                return(
-                    <span>
-                    {row.orderQuantity ? (<>
-                        <Input key={row.itemSkuId} placeholder="Enter value"
-                        onBlur={e=> setQuantityValue(e,index,row)} defaultValue={row.orderQuantity}/>
-                    </>) : (<>
-                        <Input key={row.itemSkuId} placeholder="Enter value"
-                        onBlur={e=> setQuantityValue(e,index,row)}/></>)}
+        // {
+        //     title:'FOB',
+        //     dataIndex:'salePrice',
+        //     render:(text,row,index) => {
+        //         return(
+        //             <span>
+        //             {row.orderQuantity ? (<>
+        //                 <Input key={row.itemSkuId} placeholder="Enter value"
+        //                 onBlur={e=> setQuantityValue(e,index,row)} defaultValue={row.orderQuantity}/>
+        //             </>) : (<>
+        //                 <Input key={row.itemSkuId} placeholder="Enter value"
+        //                 onBlur={e=> setQuantityValue(e,index,row)}/></>)}
 
-                    </span>
+        //             </span>
                     
-                )
-            }
-        },
+        //         )
+        //     }
+        // },
     ]
 
     const splitData = (data) => {
