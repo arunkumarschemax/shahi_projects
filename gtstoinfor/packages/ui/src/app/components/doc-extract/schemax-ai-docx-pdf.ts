@@ -410,7 +410,7 @@ export const extractExpeditors = async (pdf) => {
     let currentHSN = null;
     let hsnId = null;
     let linesId = 0;
-
+    
     for (const line of extractedData) {
         if (line.content.match(/^\d{6}$/)) {
             hsnId = linesId;
@@ -422,35 +422,35 @@ export const extractExpeditors = async (pdf) => {
                 }
                 structuredHSNLines.push(currentHSN);
             }
-
+    
             const taxPercentageContent = extractedData[hsnId + 4].content;
             const taxPercentage = parseFloat(taxPercentageContent.replace('%', ''));
-
+    
             let igst = 0;
             let cgst = 0;
             let sgst = 0;
             let taxType = "No Tax";
-
+    
             if (taxPercentage === 18) {
-                igst = parseFloat(extractedData[hsnId + 6].content) || 0;
+                igst = parseFloat(extractedData[hsnId + 6].content.replace(/,/g, '')) || 0;
                 taxType = "IGST";
             } else if (taxPercentage === 9) {
-                cgst = parseFloat(extractedData[hsnId + 6].content) || 0;
-                sgst = parseFloat(extractedData[hsnId + 6].content) || 0;
+                cgst = parseFloat(extractedData[hsnId + 6].content.replace(/,/g, '')) || 0;
+                sgst = parseFloat(extractedData[hsnId + 6].content.replace(/,/g, '')) || 0;
                 taxType = "CGST & SGST";
             }
-
+    
             const unitQuantityContent = extractedData[hsnId + 1].content;
-
+    
             currentHSN = {
                 description: extractedData[hsnId - 2].content,
                 HSN: line.content.includes("HSN") ? line.content.match(/\d+/) : line.content.trim(),
                 unitQuantity: unitQuantityContent || "1",
                 unitPrice: extractedData[hsnId + 2].content.replace(/,/g, ''),
                 taxType: taxType,
-                charge: extractedData[hsnId + 2].content,
+                charge: extractedData[hsnId + 2].content.replace(/,/g, ''),
                 taxPercentage: taxPercentage,
-                taxAmount: parseFloat(extractedData[hsnId + 6].content) || 0,
+                taxAmount: parseFloat(extractedData[hsnId + 6].content.replace(/,/g, '')) || 0,
                 amount: 0,
                 igst: igst,
                 cgst: cgst,
@@ -459,16 +459,16 @@ export const extractExpeditors = async (pdf) => {
         }
         linesId += 1;
     }
-
+    
     if (currentHSN) {
         if (currentHSN.taxType === "IGST") {
-            currentHSN.amount = (parseFloat(currentHSN.charge.replace(/,/g, '')) + currentHSN.taxAmount).toFixed(2);
+            currentHSN.amount = (parseFloat(currentHSN.charge) + currentHSN.taxAmount).toFixed(2);
         } else if (currentHSN.taxType === "CGST & SGST") {
-            currentHSN.amount = (parseFloat(currentHSN.charge.replace(/,/g, '')) + currentHSN.taxAmount * 2).toFixed(2);
+            currentHSN.amount = (parseFloat(currentHSN.charge) + currentHSN.taxAmount * 2).toFixed(2);
         }
         structuredHSNLines.push(currentHSN);
     }
-
+    
 
     // const InvoiceLines = [];
     // let currentInvoice = null;
@@ -544,7 +544,7 @@ export const extractExpeditors = async (pdf) => {
     let gstNumberExtracted = false;
 
     const invoiceDateRegex = /INVOICE DATE:\s*(\d{2}\/\d{2}\/\d{4})/;
-    const invoiceNumberRegex = /INVOICE NUMBER:\s*([A-Z]{2}\d{6}T\d{6})/;
+    const invoiceNumberRegex = /INVOICE NUMBER:\s*([A-Z]{2}\d{6}[A-Z]\d{6})/;
     const invoiceCurrency = 'INR';
     const currentYear = new Date().getFullYear();
     const nextYear = currentYear + 1;
@@ -583,7 +583,8 @@ export const extractExpeditors = async (pdf) => {
                 });
                 const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
                     const amount = parseFloat(hsnLine.amount) || 0;
-                    // const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
+                    const charge = parseFloat(hsnLine.charge) || 0;
+                    const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
                     return add + amount;
                 }, 0).toFixed(2);
 
