@@ -21,3 +21,8 @@
 .custom-table-wrapper .ant-table-thead > tr > th {
     background-color: lavender;
   }
+
+  .doc-form-preview {
+    max-height: 90vh; /* Adjust the maximum height as needed */
+    overflow-y: auto; /* Add vertical scrollbar when content exceeds the max height */
+  }

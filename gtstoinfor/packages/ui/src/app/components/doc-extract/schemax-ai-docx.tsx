@@ -31,7 +31,7 @@ export const SchemaxAIDocx = () => {
                             <DocReader form={readerForm} extractedData = {getData} extractedHsnData = {getHsnData}/>
                         </Col>
 
-                        <Col span={12}>
+                        <Col span={12}  className="doc-form-preview">
                             <DocFormPreview form={previewForm} formData={data} hsnData={hsnData} />
                         </Col>
                     </Row>
