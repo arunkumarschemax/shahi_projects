@@ -559,7 +559,7 @@ export const extractExpeditors = async (pdf) => {
 }
 
 export const extractEfl = async (pdf: PDFDocumentProxy) => {
-    const allLines = await extractPDFDataToLinesData(pdf);
+    const allLines = await extractPDFData(pdf);
     const extractedData = allLines;
 
     const structuredHSNLines = [];
@@ -662,14 +662,14 @@ export const extractEfl = async (pdf: PDFDocumentProxy) => {
         if (percentageMatch && currentHSN) {
             currentHSN.taxPercentage = parseFloat(percentageMatch[1]);
         }
-
         if (line.content.includes("=") && currentHSN) {
-            const taxAmountMatch = line.content.match(/=(\d+(\.\d+)?)/);
+            const taxAmountMatch = line.content.match(/=(\d+(,\d+)?(\.\d+)?)/);
             if (taxAmountMatch) {
-                currentHSN.taxAmount = parseFloat(taxAmountMatch[1]);
+                const taxAmountString = taxAmountMatch[1].replace(/,/g, '');
+                currentHSN.taxAmount = parseFloat(taxAmountString);
             }
         }
-
+        
         if (currentHSN) {
             const { charge, amount } = calculateChargeAndAmountForItem(currentHSN);
             currentHSN.charge = charge;
@@ -1204,7 +1204,7 @@ export const extractMaersk = async (pdf) => {
             const unitPrice = (amount / unitQuantity).toFixed(2);
 
             currentHSN = {
-                description: extractedData[hsnId - 5].content,
+                description: extractedData[hsnId - 6].content+extractedData[hsnId - 5].content,
                 HSN: line.content.includes("996") ? line.content.match(/\d+/) : line.content.trim(),
                 unitQuantity: unitQuantity,
                 unitPrice: unitPrice,
