@@ -260,7 +260,7 @@ export const DocReader = (props: DocReaderProps) => {
 
                 // case VendorNameEnum.extractedOocl:
                 //     processedData = await extractOocl(pdfData);
-                //     console.log('PDF DATA OOCL:', processedData);
+                //     console.log('PDF DATA OOCL:', processedData)
                 //     break;
                 // case VendorNameEnum.extractedNagel:
                 //     processedData = await extractNagel(pdfData);
@@ -317,15 +317,16 @@ export const DocReader = (props: DocReaderProps) => {
 
                 case VendorNameEnum.extractedEfl: {
                     const eflPDFData = await extractEfl(pdfData);
-                    const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
-                    const allLines = await extractDataFromScannedImages(pageImages, [0]);
-                    const scannedData = await extractEflInvoiceDataFromScanned(allLines);
-                    processedData['extractedData'] = scannedData.extractedData||{};
-                    processedData['extractedData']['invoiceAmount']=eflPDFData.extractedData.invoiceAmount;
-                    processedData['extractedData']['igst']=eflPDFData.extractedData.igst;
-                    processedData['extractedData']['cgst']=eflPDFData.extractedData.cgst;
-                    processedData['extractedData']['sgst']=eflPDFData.extractedData.sgst;
-                    processedData['extractedHsnData'] = eflPDFData.extractedHsnData;
+                    // const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                    // const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                    // const scannedData = await extractEflInvoiceDataFromScanned(allLines);
+                    // processedData['extractedData'] = scannedData.extractedData||{};
+                    // processedData['extractedData']['invoiceAmount']=eflPDFData.extractedData.invoiceAmount;
+                    // processedData['extractedData']['igst']=eflPDFData.extractedData.igst;
+                    // processedData['extractedData']['cgst']=eflPDFData.extractedData.cgst;
+                    // processedData['extractedData']['sgst']=eflPDFData.extractedData.sgst;
+                    // processedData['extractedHsnData'] = eflPDFData.extractedHsnData;
+                    processedData=eflPDFData;
                     break;
                 }
 

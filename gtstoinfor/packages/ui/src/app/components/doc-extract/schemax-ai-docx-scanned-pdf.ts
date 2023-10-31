@@ -116,6 +116,10 @@ export const extractDataFromScannedImages = async (pageImages: any[], invoicePag
     await worker.load();
     await worker.loadLanguage('eng');
     await worker.initialize('eng');
+    const customWhitelist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789%@#()-: .,/$';
+    await worker.setParameters({
+        tessedit_char_whitelist: customWhitelist,
+    });
     const allPageLines = [];
     let indexStart = 0;
     const alreadyProcessedPages = [];
@@ -2645,8 +2649,8 @@ export const extractAplInvoiceDataFromScanned = async (allLines: any[]) => {
         for (const invoiceAmountId of invoiceAmountIds) {
             const InvoiceAmountItem = data.find(item => item.content.includes(invoiceAmountId));
             if (InvoiceAmountItem) {
-                let invoiceAmount=InvoiceAmountItem.content.split(invoiceAmountId)[1].trim();
-                 invoiceAmount = invoiceAmount.replace(/[^0-9.]/g, '');
+                let invoiceAmount = InvoiceAmountItem.content.split(invoiceAmountId)[1].trim();
+                invoiceAmount = invoiceAmount.replace(/[^0-9.]/g, '');
                 extractedData.invoiceAmount = invoiceAmount;
                 break;
             }
