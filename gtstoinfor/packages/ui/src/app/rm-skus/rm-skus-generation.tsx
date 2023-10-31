@@ -21,12 +21,8 @@ export const RmSkusGeneration = () => {
         getFeatures()
     },[])
 
-    useEffect(() => {
-        console.log(features)
-    },[features])
-
     const getFeatures = () => {
-        featureService.getAllFeatures('').then(res => {
+        featureService.getFeaturesInfo().then(res => {
             if(res.status){
                 setFeaturesInfo(res.data)
             }
@@ -39,13 +35,14 @@ export const RmSkusGeneration = () => {
 
     const onChange = (checkedValues) => {
         const selectedComponentDetails = featuresInfo.filter(
-          (option) => checkedValues.includes(option.feature_option_id)
+          (option) => checkedValues.includes(option.featureId)
         );
         setFeatures(selectedComponentDetails);
     };
 
     const onReset = () => {
         form.resetFields()
+        setFeatures([])
     }
 
     const onFinish = (val) => {
@@ -57,6 +54,7 @@ export const RmSkusGeneration = () => {
         service.createRmSkus(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
+                onReset()
             } else{
                 AlertMessages.getErrorMessage(res.internalMessage)
             }
@@ -108,16 +106,16 @@ export const RmSkusGeneration = () => {
                     <Card  style={{height:'100%'}}>
                         <span>Features</span>
                         {/* <h1>Fetures</h1> */}
-                    <CheckboxGroup style={{ width: '100%' }} value={features.map((feature) => feature.feature_option_id)} onChange={onChange}>
+                    <CheckboxGroup style={{ width: '100%' }} value={features.map((feature) => feature.featureId)} onChange={onChange}>
                     <Row gutter={24}>
                         {featuresInfo.map((option) => (
-                        <Col key={option.feature_option_id} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+                        <Col key={option.featureId} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
                             <Row gutter={24}>
                                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
-                            <Checkbox value={option.feature_option_id} key={option.feature_name}>
+                            <Checkbox value={option.featureId} key={option.featureName}>
                             <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-                            <Badge.Ribbon text={option.feature_name} color="volcano">    
-                                <Card title={`${option.option_group}`} size='small' style={{width:'300px'}}>
+                            <Badge.Ribbon text={option.featureName} color="volcano">    
+                                <Card title={`${option.option}`} size='small' style={{width:'300px'}}>
                                 <Row gutter={24}>
                                     {option.optionInfo[0]?.option.map((e, index) => (
                                         <>
@@ -147,7 +145,7 @@ export const RmSkusGeneration = () => {
                 <Row justify={'end'}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 2 }}>
                     <Form.Item>
-                        <Button type="primary" htmlType="submit">Submit</Button>
+                        <Button type="primary" htmlType="submit" disabled={features.length > 0 && form.getFieldValue('itemType')!= undefined && form.getFieldValue('itemCode') != undefined ? false : true}>Submit</Button>
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 2 }}>
