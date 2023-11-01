@@ -529,9 +529,15 @@ const getAllComposition=()=>{
         title: "Range",
         dataIndex: "irange",
         render: (data) => {
-          const randata = rangedata.find((cat) => cat.id === data);
-          return randata ? randata.rangeCode : "-";
+          const dataAsString = data.toString();
+          const randata = rangedata[dataAsString];
+          if (randata) {
+            return randata.rangeCode;
+          } else {
+            return "-";
+          }
         },
+                
         sorter: (a, b) => {
           const icatA = rangedata.find((cat) => cat.id === a.id)?.rangeCode || '';
           const icatB = rangedata.find((cat) => cat.id === b.id)?.rangeCode || '';
