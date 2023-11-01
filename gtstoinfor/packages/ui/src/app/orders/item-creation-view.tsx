@@ -347,10 +347,10 @@ const getAllComposition=()=>{
         title: "Style",
         dataIndex: "style_no",
         align:'center',
-        render: (data) => {
-          const style = styledata.find((sty) => sty.styleNo === data);
-          return style ? style.style : "-";
-        },
+        // render: (data) => {
+        //   const style = styledata.find((sty) => sty.styleNo === data);
+        //   return style ? style.style : "-";
+        // },
         sorter: (a, b) => a.style_no.localeCompare(b.style_no),
             sortDirections: ['descend', 'ascend'],
       },
@@ -358,6 +358,9 @@ const getAllComposition=()=>{
         title: "Item Name",
         dataIndex: "item_name",
         align:'center',
+        render: (item_name) => {
+          return item_name ? item_name : "-";
+        },
         sorter: (a, b) => a.item_name.localeCompare(b.item_name),
         sortDirections: ['descend', 'ascend'],
       },
