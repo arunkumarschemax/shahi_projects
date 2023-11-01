@@ -10,7 +10,7 @@ export class ItemCreation {
   fgitemId: number;
 
   @Column("varchar", {
-    nullable: false,
+    nullable: true,
     length: 255,
     name: "item_name"
   })
@@ -47,13 +47,13 @@ export class ItemCreation {
   categoryId: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "sub_category_id" /// foregn key
   })
   subCategoryId: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "season_id" /// foregn key
   })
   seasonId: number;
@@ -65,7 +65,7 @@ export class ItemCreation {
   responsiblePersonId: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "product_designer_id" /// foregn key
   })
   productDesignerId: number;
@@ -83,13 +83,13 @@ export class ItemCreation {
   productionMerchant: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "pd_merchant" /// foregn key
   })
   pdMerchant: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "factory_merchant" /// foregn key
   })
   factoryMerchant: number;
@@ -212,13 +212,13 @@ export class ItemCreation {
   conversionFactorId: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "reference_id" /// foregn key
   })
   referenceId: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "projection_order_id" /// foregn key
   })
   projectionOrderId: number;
@@ -231,6 +231,7 @@ export class ItemCreation {
 
   @Column("int", {
     nullable: false,
+    default: "0",
     name: "sale_price_qty" /// foregn key
   })
   salePriceQty: number;
@@ -305,7 +306,7 @@ export class ItemCreation {
   })
   orderQty: number;
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "facility_id" /// foregn key
   })
   facilityId: number;
