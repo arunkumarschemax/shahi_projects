@@ -5,7 +5,7 @@ export class DivisionService extends CommonAxiosService{
   URL = "/division";
 
   async createDivision(division: DivisionDto): Promise<DivisionResponseModel> {
-    console.log('testss',division)
+    // console.log('testss',division)
     return this.axiosPostCall(this.URL + "/createDivision", division)
 }
 

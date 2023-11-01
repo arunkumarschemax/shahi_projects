@@ -6,7 +6,7 @@ export class ProfitControlHeadService extends CommonAxiosService{
     URL ="/profitcontrolhead";
 
     async createProfitControlHead(profitcontrol: ProfitControlHeadDto): Promise<ProfitControlHeadResponseModel> {
-        console.log('testss',profitcontrol)
+        // console.log('testss',profitcontrol)
         return this.axiosPostCall(this.URL + "/createProfitControlHead", profitcontrol)
     }
   

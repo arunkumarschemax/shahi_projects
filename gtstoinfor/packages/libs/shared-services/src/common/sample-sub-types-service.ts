@@ -5,7 +5,7 @@ export class SampleSubTypesService extends CommonAxiosService{
   URL = "/sampleSubTypes";
 
   async createSampleSubType(sampleSubType: SampleSubTypesDTO): Promise<SampleSubTypesResponseModel> {
-    console.log('testss',sampleSubType)
+    // console.log('testss',sampleSubType)
     return this.axiosPostCall(this.URL + "/createSampleSubType", sampleSubType)
 }
 
@@ -24,7 +24,7 @@ export class SampleSubTypesService extends CommonAxiosService{
   }
 
   async activateOrDeactivateSampleSubType(Req: SampleSubTypesDTO): Promise<SampleSubTypesResponseModel> {
-    console.log(Req,'shared-----------')
+    // console.log(Req,'shared-----------')
     return  this.axiosPostCall(this.URL + '/activateOrDeactivateSampleSubType', Req)
 }
 }

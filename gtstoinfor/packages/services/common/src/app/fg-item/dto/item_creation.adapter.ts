@@ -42,7 +42,6 @@ export class ItemCreationAdapter {
             entityObj.styleNo = dtoObj.styleNo
             entityObj.subCategoryId = dtoObj.subCategoryId
             entityObj.targetCurrency = dtoObj.targetCurrency
-            entityObj.uom = dtoObj.uom
             entityObj.composition = dtoObj.composition
             entityObj.basicUom = dtoObj.basicUom
             entityObj.groupTechClass = dtoObj.groupTechClass
@@ -52,7 +51,6 @@ export class ItemCreationAdapter {
             entityObj.referenceId = dtoObj.referenceId
             entityObj.itemGroup = dtoObj.itemGroup
             entityObj.businessArea = dtoObj.businessArea
-            entityObj.groupTechClass = dtoObj.groupTechClass
             entityObj.noOfLacePanel = dtoObj.noOfLacePanel
             entityObj.versionFlag = dtoObj.versionFlag
             if (isUpdate) {

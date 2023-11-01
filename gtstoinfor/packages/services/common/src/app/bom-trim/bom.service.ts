@@ -14,11 +14,11 @@ export class BomService {
     ){}
 
     async createBomTrim(req: BomTrimDto, isUpdate: boolean): Promise<BomTrimResponseModel> {
-        console.log(req,"service")
+        // console.log(req,"service")
 
          const data = await this.TrimRepo.getAllCount();
          const maxId = data.id
-         console.log(data,"data")
+        //  console.log(data,"data")
 
         try {
           

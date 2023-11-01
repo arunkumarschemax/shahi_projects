@@ -20,7 +20,7 @@ export function ItemCreationDetailView  (props: Props)  {
     let location = useLocation();
     const stateData = location.state;
 
-    console.log(stateData,"stateData")
+    // console.log(stateData,"stateData")
     
     const [licence,setLicence]=useState([])
     const [employedata,setEmployeData] = useState([]);

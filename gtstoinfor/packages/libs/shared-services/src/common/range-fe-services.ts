@@ -13,7 +13,7 @@ URL = '/range';
         }
 
         async  updateRange(req: RangeDto): Promise<RangeResponse> {
-            console.log(req,"reqqqqq")
+            // console.log(req,"reqqqqq")
             return this.axiosPostCall(this.URL + '/createRange', req)
         }
         
