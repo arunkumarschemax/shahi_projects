@@ -30,8 +30,8 @@ export class StyleOrderService extends CommonAxiosService{
         return this.axiosPostCall(this.URL + '/getCoNumber')
     }
 
-    async getCoDataByCoId(req:StyleOrderIdReq):Promise<CommonResponseModel>{
-        return this.axiosPostCall(this.URL + '/getCoDataByCoId',req)
+    async getCoDataByCoLineId(req:StyleOrderIdReq):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL + '/getCoDataByCoLineId',req)
     }
 
     async updateCoData(req:CoUpdateReq):Promise<CoUpdateResponseModel>{

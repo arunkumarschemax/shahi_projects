@@ -1,6 +1,6 @@
 
 import { Button, Col, Divider, Form, Input, Table, message } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AlertMessages from '../common-functions/alert-messages'
 
 import { StyleOrderService } from 'packages/libs/shared-services/src/common'
@@ -12,6 +12,12 @@ export interface COAmendmentGridProps {
   const COAmendmentGrid = (props: COAmendmentGridProps) => {
   console.log(props.activeTab,"key")
   console.log(props?.poData[0]?.styleOrderItems,"props data")
+ 
+  // useEffect(()=>{
+   
+
+  // })
+  
 
 
 
@@ -153,41 +159,6 @@ export interface COAmendmentGridProps {
       
     }
 
-    const fobInfo = (e,index,rowData) => {
-    
-      console.log(e.target.value,"fobInfo")
-      setFobData(e.target.value)
-      
-    }
-
-    const vpoInfo = (e,index,rowData) => {
-    
-      console.log(e.target.value,"vpoInfo")
-      setVpoData(e.target.value)
-      
-    }
-   
-    
-    const deliveryDateInfo = (e,index,rowData) => {
-    
-      console.log(e.target.value,"deliveryDateInfo")
-      setDeliveryDateData(e.target.value)
-    }
-
-    const destinationInfo = (e,index,rowData) => {
-    
-      console.log(e.target.value,"destinationInfo")
-      setDestinationData(e.target.value)
-      
-    }
-
-    const quantityInfo = (e,index,rowData) => {
-    
-      console.log(e.target.value,"quantityInfo")
-      setQuantityData(e.target.value)
-    }
-
-
  
   
     const columnsSkelton1: any = [
@@ -236,7 +207,8 @@ export interface COAmendmentGridProps {
                 <Form.Item  >
                  <Input key={index} placeholder="Enter CO Line Number" 
                   // defaultValue={row.coLineNumber}
-                    onBlur={e=> colineInfo(e,index,row)}
+                    // onBlur={(e)> colineInfo(e,index,row)}
+                    onBlur={(e) => setCoLineData(e.target.value)}
                     required={true}
                     /> 
                     </Form.Item>
@@ -311,7 +283,9 @@ export interface COAmendmentGridProps {
             >
                 <Form.Item  >
                  <Input key={index} placeholder="Enter FOB" 
-                    onBlur={e=> fobInfo(e,index,row)}
+                    // onBlur={e=> fobInfo(e,index,row)}
+                    onBlur={(e) => setFobData(e.target.value)}
+
                     required={true}
                     /> 
                     </Form.Item>
@@ -385,7 +359,9 @@ export interface COAmendmentGridProps {
             >
                 <Form.Item  >
                  <Input key={index} placeholder="Enter VPO" 
-                    onBlur={e=> vpoInfo(e,index,row)}
+                    // onBlur={e=> vpoInfo(e,index,row)}
+                    onBlur={(e) => setVpoData(e.target.value)}
+
                     required={true}
                     /> 
                     </Form.Item>
@@ -461,7 +437,9 @@ export interface COAmendmentGridProps {
             >
                 <Form.Item  >
                  <Input key={index} placeholder="Enter Delivery Date" 
-                    onBlur={e=> deliveryDateInfo(e,index,row)}
+                    // onBlur={e=> deliveryDateInfo(e,index,row)}
+                    onBlur={(e) => setDeliveryDateData(e.target.value)}
+
                     required={true}
                     /> 
                     </Form.Item>
@@ -533,7 +511,9 @@ export interface COAmendmentGridProps {
             >
                 <Form.Item  >
                  <Input key={index} placeholder="Enter Destination Address" 
-                    onBlur={e=> destinationInfo(e,index,row)}
+                    // onBlur={e=> destinationInfo(e,index,row)}
+                    onBlur={(e) => setDestinationData(e.target.value)}
+
                     required={true}
                     /> 
                     </Form.Item>
@@ -607,7 +587,9 @@ export interface COAmendmentGridProps {
             >
                 <Form.Item  >
                  <Input key={index} placeholder="Enter Quantity" 
-                    onBlur={e=> quantityInfo(e,index,row)}
+                    // onBlur={e=> quantityInfo(e,index,row)}
+                    onBlur={(e) => setQuantityData(e.target.value)}
+
                     required={true}
                     /> 
                     </Form.Item>

@@ -31,6 +31,7 @@ import { CoUpdateDto } from "./dto/co-update.dto";
 import { CoUpdateRepository } from "./co-updates.repo";
 import { CoUpdateEntity } from "./co-updates.entity";
 import { stringify } from "querystring";
+import { StyleOrderColineIdReq } from "./style-order.colineId.request";
 
 @Injectable()
 
@@ -307,14 +308,17 @@ export class StyleOrderService{
       }
     }
 
-    async getCoDataByCoId(req:StyleOrderId): Promise<CommonResponseModel> {
+    async getCoDataByCoLineId(req:StyleOrderColineIdReq): Promise<CommonResponseModel> {
         try {
-       const data = await this.styleorderRepo.find({
-        where:{coId:req.styleOrderId},
-        relations:["coLineInfo","fgitemInfo","warehouseInfo","factoryInfo","styleInfo","packageTermsInfo","deliveryMethodInfo","deliveryTermsInfo","currenciesInfo","paymentMethodInfo","paymentTermsInfo","buyerInfo"]
-       })
-       console.log(data,'-----------')
-       return new CommonResponseModel(true, 0, "CO Number Data retrieved  successfully", data);
+        const data = await this.repo.getInfoByCoLineId(req)
+        let data1 = []
+        
+        for(const rec of data){
+            data1.push(new StyleOrderItemsModel(rec.coLineId,rec.delivery_address,rec.order_quantity,rec.color,rec.size,rec.destination,rec.uom,rec.status,rec.discount,rec.SalePrice,rec.coPercentage,rec.color_id,rec.size_id,rec.destination_id,rec.uom_id,rec.delLandmark,rec.delCity,rec.delState,rec.sku_code,rec.coline_number,rec.co_id,"",rec.co_number))
+        }
+
+       console.log(data1,'-----------')
+       return new CommonResponseModel(true, 0, "CO LineData retrieved  successfully", data1);
     
           } catch (err) {
             throw err;

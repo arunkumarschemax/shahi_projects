@@ -5,6 +5,7 @@ import { StyleOrderService } from "./style-order.service";
 import { CoUpdateResponseModel, CommonResponseModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
 import { StyleOrderId } from "./style-order-id.request";
 import { CoUpdateDto } from "./dto/co-update.dto";
+import { StyleOrderColineIdReq } from "./style-order.colineId.request";
 
 
 @ApiTags('styleOrder')
@@ -89,12 +90,12 @@ export class StyleOrderController{
         }
     }
 
-    @Post('/getCoDataByCoId')
-    @ApiBody({type:StyleOrderId})
+    @Post('/getCoDataByCoLineId')
+    @ApiBody({type:StyleOrderColineIdReq})
 
-    async getCoDataByCoId(@Body() req:any):Promise<CommonResponseModel>{
+    async getCoDataByCoLineId(@Body() req:any):Promise<CommonResponseModel>{
         try{
-            return await this.styleOrderService.getCoDataByCoId(req)
+            return await this.styleOrderService.getCoDataByCoLineId(req)
         }catch(err){
             return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
         }
