@@ -408,6 +408,11 @@ compositionservice.getActiveComposition().then(res=>{
                       </Select>
                       </Form.Item>
                     </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                     <Form.Item  label="FacilityId"name="facilityId">
+                     <Input placeholder="FacilityId"  allowClear/>
+                     </Form.Item>
+                     </Col>
                     </Row>
 
                     <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Manufacturing Information</h1>
@@ -514,21 +519,28 @@ compositionservice.getActiveComposition().then(res=>{
                       </Select>
                           </Form.Item>
                        </Col>
-                         
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                          <Form.Item name="composition" label="Composition">
-                          <Select showSearch placeholder="Select Composition" allowClear >
-                            {compositiondata.map((e)=>{
-                              return(<Option key={e.id} value={e.id}>{e.compositionCode}</Option>)
-                            })}
-                      </Select>
-                          </Form.Item>
-                       </Col>
+                            <Form.Item
+                      name="salePriceQty"
+                      label="Sales Price Qty"
+                    >
+                      <Input placeholder="Moq" allowClear />
+                    </Form.Item>
+                                  </Col>
+                                 
+                     
+                     
                         </Row>
                         
                         <Row gutter={8}>
-                      
-                     
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                            <Form.Item
+                      name="description"
+                      label="Description"
+                    >
+                      <Input placeholder="Description" allowClear />
+                    </Form.Item>
+                                  </Col>
                         </Row>
 </Card>
 </Col>
@@ -670,7 +682,7 @@ compositionservice.getActiveComposition().then(res=>{
                       </Form.Item>
                     </Col>
                     </Row>
-                    <Row >
+                    <Row gutter={8} >
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                       <Form.Item  name="productGroup" label="Product Group" >
                       <Select
@@ -680,6 +692,26 @@ compositionservice.getActiveComposition().then(res=>{
                       </Select>
                       </Form.Item>
                     </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                            <Form.Item
+                      name="moq"
+                      label="Moq"
+                    >
+                      <Input placeholder="Moq" allowClear />
+                    </Form.Item>
+                                  </Col>
+                                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                          <Form.Item name="composition" label="Composition">
+                          <Select showSearch placeholder="Select Composition" allowClear >
+                            {compositiondata.map((e)=>{
+                              return(<Option key={e.id} value={e.id}>{e.compositionCode}</Option>)
+                            })}
+                      </Select>
+                          </Form.Item>
+                       </Col>
+                    </Row>
+                    <Row >
+                   
                     </Row>
                               
                               <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Performance Responsible Team</h1>
@@ -834,10 +866,8 @@ compositionservice.getActiveComposition().then(res=>{
 
                       </Card>
                     </Col>
-                     
                 </Row>
-                
-
+                <br></br>
                 <Row justify={'end'} style={{marginTop: '-30px'}}>
   <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}>
     <Button type='primary' htmlType='submit'>Submit</Button>
@@ -846,9 +876,11 @@ compositionservice.getActiveComposition().then(res=>{
     <Button onClick={onReset}>Reset</Button>
   </Col>
 </Row>
+                
 
           </Form>
          </Card>
+         
          </>
        )              
 }

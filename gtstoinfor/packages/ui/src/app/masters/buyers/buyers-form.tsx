@@ -39,6 +39,8 @@ export function BuyersForm(props: BuyersFormProps) {
   const [disable, setDisable] = useState<boolean>(false)
   const [paymentTerms,setPaymentTerms] = useState<PaymentTermsDto[]>([])
   const paymentTermsService = new PaymentTermsService()
+  let logInUserData = JSON.parse(localStorage.getItem('currentUser'))
+  
 
   useEffect(() => {
     getAllActiveCountries()

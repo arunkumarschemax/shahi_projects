@@ -55,7 +55,10 @@ export function ComponentsForm(props: ComponentsFormProps) {
   };
 
   return (
-    <Card title={<span >Components</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={props.isUpdate==true?"":<Link to='/masters/components/components-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
+    <Card title={props.isUpdate ?
+      'Components':'Components' }
+      extra={(props.isUpdate === false) && <span><Button onClick={()=>navigate('/masters/components/components-view')} type={'primary'}>View</Button></span>}>
+    
       <Form form={form } layout={'vertical'} initialValues={props.componentsData} name="control-hooks" onFinish={saveData}  >   
       <Form.Item name="componentId" style={{display:"none"}} >
         <Input hidden/>

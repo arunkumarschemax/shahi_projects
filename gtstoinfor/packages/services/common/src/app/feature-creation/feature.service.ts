@@ -136,9 +136,9 @@ async getOptionGropup(): Promise<CommonResponseModel> {
       destInfo.data.forEach(des => destMap.set(des.destinationId,des.destination))
       const data = await this.featureRepo.find({relations:['fChild']})
       let featureInfo = []
-      let featureOptions: FeatureOptionModel[] =[]
       if (data.length > 0){
         for(const rec of data){
+          let featureOptions: FeatureOptionModel[] =[]
           let featureOptionInfo = []
           for(const val of rec.fChild){
             if(rec.option === OptionEnum.COLOR){
