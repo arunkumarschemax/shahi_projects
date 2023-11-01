@@ -45,7 +45,7 @@ export class DeliveryTermsService extends CommonAxiosService{
     // return new DeliveryTermsDropDownResponseModel(true,11,'customersData retrived successfully',[new DeliveryTermsDropDownDto(1,'Dterm1'),new DeliveryTermsDropDownDto(2,'Dterm2')])
   }
   async getDeliveryTermsById(deliveryTermsRequest: DeliveryTermsRequest): Promise<DeliveryTermsResponseModel> {
-    console.log(this.URL);
+    // console.log(this.URL);
     return this.axiosPostCall(this.URL + "/getDeliveryTermsById", deliveryTermsRequest)
       
   }

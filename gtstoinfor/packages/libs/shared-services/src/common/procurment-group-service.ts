@@ -17,7 +17,7 @@ export class ProcurmentGroupService extends CommonAxiosService{
 
 
     async  activateOrDeactivateProcurmentGroup(Dto: ProcurmentGroupRequest): Promise<ProcurmentGroupModel> {
-        console.log(Dto ,"front activate")
+        // console.log(Dto ,"front activate")
          return this.axiosPostCall(this.URL + '/ActivateOrDeactivateProcurmentGroup', Dto)
                     
      }
