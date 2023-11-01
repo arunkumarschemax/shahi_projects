@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, CustomerOrderStatusEnum, StyleOrderIdReq, StyleOrderItemsModel, StyleOrderModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
+import { CoUpdateReq, CoUpdateResponseModel, CommonResponseModel, CustomerOrderStatusEnum, StyleOrderIdReq, StyleOrderItemsModel, StyleOrderModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
 import { StyleOrder } from "./style-order.entity";
 import { Item } from "../items/item-entity";
 import { Warehouse } from "../warehouse/warehouse.entity";
@@ -27,6 +27,10 @@ import { StyleOrderId } from "./style-order-id.request";
 import { VariantIdReq } from "./variant-id.req";
 import { Raw } from 'typeorm';
 import { CoTypes } from "../co-type/co-type.entity";
+import { CoUpdateDto } from "./dto/co-update.dto";
+import { CoUpdateRepository } from "./co-updates.repo";
+import { CoUpdateEntity } from "./co-updates.entity";
+import { stringify } from "querystring";
 
 @Injectable()
 
@@ -37,6 +41,7 @@ export class StyleOrderService{
       
          private CoLineRepo : CoLineRepository,
          private styleorderRepo:StyleOrderRepository,
+         private Coupdate: CoUpdateRepository,
         private readonly dataSource: DataSource,
 
     ){}
@@ -262,7 +267,7 @@ export class StyleOrderService{
                 if(!COMap.has(rec.co_id)){
                     COMap.set(rec.co_id,new StyleOrderModel(rec.co_id,rec.item_code,rec.order_date,rec.buyer_po_number,rec.shipment_type,rec.buyer_style,rec.agent,rec.buyer_address,rec.exfactory_date,rec.delivery_date,rec.instore_date,rec.sale_price,rec.price_quantity,rec.discount_per,rec.discount_amount,rec.status,rec.remarks,rec.fg_item_id,rec.warehouse_id,rec.facility_id,rec.style_id,rec.package_terms_id,rec.delivery_method_id,rec.delivery_terms_id,rec.currency_id,rec.Payment_method_id,rec.Payment_terms_id,[],rec.buyer_id,rec.item_name,rec.buyer_code,rec.buyer_name,rec.factoryName,rec.warehouse_name,rec.agentName,rec.agentCode,rec.buyerLandmark,rec.buyerCity,rec.buyerState,rec.package_terms_name,rec.delivery_method,rec.delivery_terms_name,rec.currency_name,rec.payment_method,rec.payment_terms_name,rec.co_id,rec.co_number,rec.season,rec.merchandiser,rec.merchandiserName,rec.merchandiserCode,rec.planner,rec.plannerName,rec.plannerCode,rec.uomId,rec.uom,rec.coTypeId,rec.coType,rec.item_sale_price_qty))
                 }
-                COMap.get(rec.co_id).styleOrderItems.push(new StyleOrderItemsModel(rec.coLineId,rec.delivery_address,rec.order_quantity,rec.color,rec.size,rec.destination,rec.uom,rec.status,rec.discount,rec.salePrice,rec.coPercentage,rec.color_id,rec.size_id,rec.destination_id,rec.uom_id,rec.delLandmark,rec.delCity,rec.delState,rec.sku_code,rec.coline_number,rec.co_id,))
+                COMap.get(rec.co_id).styleOrderItems.push(new StyleOrderItemsModel(rec.coLineId,rec.delivery_address,rec.order_quantity,rec.color,rec.size,rec.destination,rec.uom,rec.status,rec.discount,rec.SalePrice,rec.coPercentage,rec.color_id,rec.size_id,rec.destination_id,rec.uom_id,rec.delLandmark,rec.delCity,rec.delState,rec.sku_code,rec.coline_number,rec.co_id,"",rec.co_number))
             }
             const styleOrderModel: StyleOrderModel[] = [];
             COMap.forEach((e) => styleOrderModel.push(e))
@@ -315,8 +320,84 @@ export class StyleOrderService{
             throw err;
           }
         }
+  
 
-   
+        async updateCoData(req:CoUpdateDto):Promise<CoUpdateResponseModel>{
+            try{
+                
+               const entity = new  CoUpdateEntity()
+               entity.coId = req.coId
+               entity.coLineId = req.coLineId
+               entity.coNumber = req.coNumber 
+               entity.oldValue = req.oldValue
+               entity.updatedValue = req.updateValue
+               entity.parameter = req.parameter
+               entity.createdUser =  req.createdUser
+               entity.updatedUser = req.updatedUser
+               entity.coUpdateId = req.coUpdateId
+
+            const save = await this.Coupdate.save(entity)
+
+
+             
+            if (save){
+               
+                if (req.parameter === "orderline"){
+                   
+                    const Update = await this.CoLineRepo.update(
+                        { coLineId: req.coLineId, styleOrderInfo: { coId: req.coId  } },
+                        { coLineNumber: req.updateValue }
+                      );
+                } else if (req.parameter === "fob"){
+
+                    const Update = await this.CoLineRepo.update(
+                        { coLineId: req.coLineId, styleOrderInfo: { coId: req.coId  } },
+                        { salePrice: Number(req.updateValue) }
+                      );
+                } else if (req.parameter === "deliverydate"){
+
+                    const Update = await this.CoLineRepo.update(
+                        { coLineId: req.coLineId, styleOrderInfo: { coId: req.coId  } },
+                        { coLineNumber: req.updateValue }
+                      );
+                } else if (req.parameter === "quantity"){
+                    const orderQuantity = parseInt(req.updateValue, 10);
+                    const Update = await this.CoLineRepo.update(
+                        { coLineId: req.coLineId, styleOrderInfo: { coId: req.coId  } },
+                        { orderQuantity: Number(req.updateValue) }
+                      );
+
+                } else if (req.parameter === "vponumber"){
+
+                    const Update = await this.CoLineRepo.update(
+                        { coLineId: req.coLineId, styleOrderInfo: { coId: req.coId  } },
+                        { coLineNumber: req.updateValue }
+                      );
+
+                } else if (req.parameter === "destinationaddress") {
+                    
+                    const Update = await this.CoLineRepo.update(
+                        { coLineId: req.coLineId, styleOrderInfo: { coId: req.coId  } },
+                        { deliveryAddress: req.updateValue }
+     
+
+                      );
+
+                }
+                
+
+                return new CoUpdateResponseModel(true, 0, "CO Updated Sucessfully");
+    
+              } else {
+    
+                return new CoUpdateResponseModel(false, 0, "Something went Wrong");
+               
+              }
+          
+              } catch (err) {
+                throw err;
+              }
+            }
 
     
 }

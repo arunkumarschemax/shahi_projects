@@ -1,4 +1,4 @@
-import { CommonResponseModel, StyleOrderIdReq, StyleOrderReq, StyleOrderResponseModel, VariantIdReq, styleOrderReq } from "@project-management-system/shared-models";
+import {  CoUpdateReq, CoUpdateResponseModel, CommonResponseModel, StyleOrderIdReq, StyleOrderReq, StyleOrderResponseModel, VariantIdReq, styleOrderReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class StyleOrderService extends CommonAxiosService{
@@ -32,6 +32,10 @@ export class StyleOrderService extends CommonAxiosService{
 
     async getCoDataByCoId(req:StyleOrderIdReq):Promise<CommonResponseModel>{
         return this.axiosPostCall(this.URL + '/getCoDataByCoId',req)
+    }
+
+    async updateCoData(req:CoUpdateReq):Promise<CoUpdateResponseModel>{
+        return this.axiosPostCall(this.URL + '/updateCoData',req)
     }
 
 

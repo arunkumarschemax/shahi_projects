@@ -2,8 +2,9 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { StyleOrderService } from "./style-order.service";
-import { CommonResponseModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
+import { CoUpdateResponseModel, CommonResponseModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
 import { StyleOrderId } from "./style-order-id.request";
+import { CoUpdateDto } from "./dto/co-update.dto";
 
 
 @ApiTags('styleOrder')
@@ -96,6 +97,17 @@ export class StyleOrderController{
             return await this.styleOrderService.getCoDataByCoId(req)
         }catch(err){
             return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+
+    @Post('/updateCoData')
+    @ApiBody({type:CoUpdateDto})
+
+    async updateCoData(@Body() req:any):Promise<CoUpdateResponseModel>{
+        try{
+            return await this.styleOrderService.updateCoData(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CoUpdateResponseModel,err)
         }
     }
   

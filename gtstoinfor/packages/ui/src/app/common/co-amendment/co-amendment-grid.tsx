@@ -1,68 +1,149 @@
 
-import { Button, Col, Divider, Form, Input, Table } from 'antd'
+import { Button, Col, Divider, Form, Input, Table, message } from 'antd'
 import React, { useState } from 'react'
+import AlertMessages from '../common-functions/alert-messages'
+
+import { StyleOrderService } from 'packages/libs/shared-services/src/common'
+import { CoUpdateReq } from '@project-management-system/shared-models'
 export interface COAmendmentGridProps {
   poData:any
   activeTab:any
 }
   const COAmendmentGrid = (props: COAmendmentGridProps) => {
   console.log(props.activeTab,"key")
+  console.log(props?.poData[0]?.styleOrderItems,"props data")
+
 
 
   const [page, setPage] = React.useState(1);
-  const [coLineData,setCoLineData] = useState<any[]>([])
-  const [fobData,setFobData] = useState<any[]>([])
-  const [vpoData,setVpoData] = useState<any[]>([])
-  const [deliveryDateData,setDeliveryDateData] = useState<any[]>([])
-  const [destinationData,setDestinationData] = useState<any[]>([])
-  const [quantityData,setQuantityData] = useState<any[]>([])
+  const [coLineData,setCoLineData] = useState<any>()
+  const [fobData,setFobData] = useState<any>()
+  const [vpoData,setVpoData] = useState<any>()
+  const [deliveryDateData,setDeliveryDateData] = useState<any>()
+  const [destinationData,setDestinationData] = useState<any>()
+  const [quantityData,setQuantityData] = useState<any>()
 
-
-
-
-
-
-
+  const services = new StyleOrderService()
+  
+   
+      
+  
   const onButtonChange1 = (rowData) => { 
-    console.log(rowData,"rowdata")}
-    const req1 = {
-      coLineNumber: coLineData
+    console.log(rowData,"rowdata")
+    const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.coLineNumber,coLineData,"orderline","admin")
+    services.updateCoData(req).then((res)=>{
+      if (res.status){
+        
 
-    }
+      //  onReset();
+       message.success(res.internalMessage);
+       setCoLineData("")
+      
+   } else{
+
+     AlertMessages.getErrorMessage(res.internalMessage);
+      }
+ }).catch(err => {
+
+    AlertMessages.getErrorMessage(err.message);
+  })
+
+}
+    
 
     const onButtonChange2 = (rowData) => { 
-      console.log(rowData,"rowdata")}
-      const req2 = {
-        fob: fobData
-  
+      console.log(rowData,"rowdata")
+      const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.salePrice,fobData,"fob","admin")
+    services.updateCoData(req).then((res)=>{
+      if (res.status){
+       message.success(res.internalMessage);
+      
+   } else{
+
+     AlertMessages.getErrorMessage(res.internalMessage);
       }
+ }).catch(err => {
+
+    AlertMessages.getErrorMessage(err.message);
+  })
+    }
+     
+      
 
     const onButtonChange3 = (rowData) => { 
-        console.log(rowData,"rowdata")}
-        const req3 = {
-          vpo: vpoData
+        console.log(rowData,"rowdata")
+        const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.vpo,vpoData,"vponumber","admin")
+        services.updateCoData(req).then((res)=>{
+          if (res.status){
+          //  onReset();
+           message.success(res.internalMessage);
+          
+       } else{
     
-        }
+         AlertMessages.getErrorMessage(res.internalMessage);
+          }
+     }).catch(err => {
+    
+        AlertMessages.getErrorMessage(err.message);
+      })
+    }
+       
 
     const onButtonChange4 = (rowData) => { 
-         console.log(rowData,"rowdata")}
-          const req4 = {
-            deliveryDate: deliveryDateData
-      
-          }  
+         console.log(rowData,"rowdata")
+         const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.deliveryDate,deliveryDateData,"deliverydate","admin")
+        services.updateCoData(req).then((res)=>{
+          if (res.status){
+          //  onReset();
+           message.success(res.internalMessage);
+          
+       } else{
+    
+         AlertMessages.getErrorMessage(res.internalMessage);
+          }
+     }).catch(err => {
+    
+        AlertMessages.getErrorMessage(err.message);
+      })
+        
+      }
+
+        
    const onButtonChange5 = (rowData) => { 
-            console.log(rowData,"rowdata")}
-             const req5 = {
-            destination: destinationData
-         
-          }  
+            console.log(rowData,"rowdata")
+            const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.deliveryAddress,destinationData,"destinationaddress","admin")
+            services.updateCoData(req).then((res)=>{
+              if (res.status){
+            
+               message.success(res.internalMessage);
+              
+           } else{
+        
+             AlertMessages.getErrorMessage(res.internalMessage);
+              }
+         }).catch(err => {
+        
+            AlertMessages.getErrorMessage(err.message);
+          })
+         }  
           
    const onButtonChange6 = (rowData) => { 
-        console.log(rowData,"rowdata")}
-        const req6 = {
-          orderQuantity: quantityData
-         
-      }  
+        console.log(rowData,"rowdata")
+        const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.orderQuantity,quantityData,"quantity","admin")
+            services.updateCoData(req).then((res)=>{
+              if (res.status){
+            
+               message.success(res.internalMessage);
+              
+           } else{
+        
+             AlertMessages.getErrorMessage(res.internalMessage);
+              }
+         }).catch(err => {
+        
+            AlertMessages.getErrorMessage(err.message);
+          })
+      }
 
 
     const colineInfo = (e,index,rowData) => {
@@ -210,14 +291,14 @@ export interface COAmendmentGridProps {
        
         {
           title: "FOB",
-          dataIndex: "fob",
+          dataIndex: "salePrice",
         
         },
      
     
         {
           title: 'FOB',
-          dataIndex: 'fob',
+          dataIndex: 'salePrice',
           render:(value,row,index) => {
             return(
                 <>
@@ -433,13 +514,13 @@ export interface COAmendmentGridProps {
         },
         {
           title: "Destination Address",
-          dataIndex: "destination",
+          dataIndex: "deliveryAddress",
         
         },
         
           {
           title: 'Destination Address',
-          dataIndex: 'destination',
+          dataIndex: 'deliveryAddress',
           render:(value,row,index) => {
             return(
                 <>
