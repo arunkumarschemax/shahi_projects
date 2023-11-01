@@ -631,6 +631,9 @@ export const extractEfl = async (pdf: PDFDocumentProxy) => {
                 currentHSN.description = currentHSN.description.replace(/(\d+).*/, '$1');
             }
         }
+        if (currentHSN?.description?.includes('-')) {
+            currentHSN.description = currentHSN.description.split('-')[0];
+        }
 
         const calculateChargeForItem = (item) => {
             const taxAmountFloat = parseFloat(item.taxAmount);
@@ -1412,7 +1415,7 @@ export const checkIsScannedPdf = async (pdf) => {
 };
 
 
-const extractPDFDataToLinesData = async (pdf: PDFDocumentProxy) => {
+export const extractPDFDataToLinesData = async (pdf: PDFDocumentProxy) => {
     const numPages = pdf.numPages;
     const extractedData = [];
     let idCounter = 1;
