@@ -180,7 +180,7 @@ export class StyleOrderService{
         }
     }
    async getAllStyleOrders(req:styleOrderReq):Promise<CommonResponseModel>{
-    try{
+        try{
         const data = await this.repo.getAllStyleOrders(req)
         
         return new CommonResponseModel(true,1,'',data)
