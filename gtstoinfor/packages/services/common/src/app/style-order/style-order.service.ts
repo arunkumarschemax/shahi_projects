@@ -308,9 +308,9 @@ export class StyleOrderService{
       }
     }
 
-    async getCoDataByCoLineId(req:StyleOrderColineIdReq): Promise<CommonResponseModel> {
+    async getCoLineDataById(req:StyleOrderIdReq): Promise<CommonResponseModel> {
         try {
-        const data = await this.repo.getInfoByCoLineId(req)
+        const data = await this.repo.getCoLineInfoById(req)
         let data1 = []
         
         for(const rec of data){

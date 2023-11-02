@@ -25,3 +25,11 @@ export class VariantIdReq {
     }
 }
 
+export class CoLineIdReq {
+    CoLineId:number
+    constructor(CoLineId:number){
+        this.CoLineId = CoLineId
+    }
+}
+
+
