@@ -3,7 +3,7 @@ import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps } from 'antd/lib/table';
 import Highlighter from 'react-highlight-words';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FabricSubTypeDto } from '@project-management-system/shared-models';
 import { FabricSubtypeservice } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
@@ -20,7 +20,7 @@ export function FabricSubTypeGrid(
   const searchInput = useRef(null);
   const [page, setPage] = React.useState(1);
   const [drawerVisible, setDrawerVisible] = useState(false);
-
+let navigate = useNavigate()
   const fabricsubTypeService = new FabricSubtypeservice();
   const [selectedFabricSubTypeData, setSelectedFabricSubTypeData] = useState<any>(undefined);
   const [FabricSubTypeData, setFabricSubTyepData] = useState<FabricSubTypeDto[]>([]);
@@ -263,8 +263,7 @@ export function FabricSubTypeGrid(
   ];
 
   return (
-    <Card title={<span >Fabric Sub-Type</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/fabric-sub-type-form/fabric-sub-type-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
+    <Card title="Fabric Sub-Type" extra={<span><Button onClick={()=> navigate('/masters/fabric-sub-type-form/fabric-sub-type-form"')} type={'primary'}>New</Button></span>}> 
      <br></br>
       <Row gutter={40}>
       <Col>

@@ -261,8 +261,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
       ];
 
       return (
-        <Card title={<span>Fabrics</span>}
-        style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/fabrics/fabrics-form"  ><span><Button type={'primary'} >New </Button> </span></Link>}>
+        <Card title='Fabrics' extra={<span><Button onClick={()=> navigate('/masters/fabrics/fabrics-form')} type={'primary'}>New</Button></span>}>
 <br></br>
 <>
 <Row gutter={40}>

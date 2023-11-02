@@ -210,12 +210,12 @@ export class Buyers {
   })
   rmItemCodeLength: number;
 
-  // @Column('varchar',{
-  //   name:'external_ref_number',
-  //   length: 30,
-  //   nullable : true
-  // })
-  // externalRefNumber: string;
+  @Column('varchar',{
+    name:'external_ref_number',
+    length: 30,
+    nullable : true
+  })
+  externalRefNumber: string;
 
   @ManyToOne(type=>PaymentMethod, paymentMethod=>paymentMethod.buyerInfo,{  nullable:false, })
   @JoinColumn({ name:"payment_method_id"})

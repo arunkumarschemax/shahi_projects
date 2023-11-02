@@ -29,10 +29,10 @@ import {
 import Highlighter from "react-highlight-words";
 import { ColumnProps } from "antd/lib/table";
 import { Link } from "react-router-dom";
-import { SampleDevelopmentService } from "@project-management-system/shared-services";
+import { BuyersService, SampleDevelopmentService } from "@project-management-system/shared-services";
 import { useNavigate } from "react-router-dom";
 import form from "antd/es/form";
-import { SampleDevelopmentStatusDisplay, SampleDevelopmentStatusEnum, SampleFilterRequest } from "@project-management-system/shared-models";
+import { MenusAndScopesEnum, SampleDevelopmentStatusDisplay, SampleDevelopmentStatusEnum, SampleFilterRequest } from "@project-management-system/shared-models";
 
 
 export const SampleDevView = () => {
@@ -51,7 +51,12 @@ export const SampleDevView = () => {
   const [styleNo,setStyleNo] = useState<any[]>([])
   const [form] = Form.useForm();
   const { Option } = Select;
-
+  const [userId, setUserId] = useState([]); 
+  const [loginBuyer,setLoginBuyer] = useState<number>(0)
+  const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+  const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
+let userRef
+const buyerService = new BuyersService();
 
   useEffect(() => {
     getAllSampleDevData();
@@ -59,7 +64,17 @@ export const SampleDevView = () => {
     getAllPCH()
     getAllStyleNo()
   }, []);
-
+  const Login = () =>{
+    if(role === MenusAndScopesEnum.roles.Buyer){
+      userRef = externalRefNo
+    }
+    buyerService.getBuyerByRefId(userRef).then(res=>{
+      if(res.status){
+        setUserId(res.data)
+  setLoginBuyer(res.data.buyerId)
+      }
+    })
+  }
   const getAllSampleDevData = () => {
     const req = new SampleFilterRequest()
     if (form.getFieldValue('reqNo') !== undefined) {
@@ -74,6 +89,10 @@ export const SampleDevView = () => {
     if (form.getFieldValue('status') !== undefined) {
       req.status = form.getFieldValue('status')
     }
+    if(role === MenusAndScopesEnum.roles.Buyer){
+      req.buyerId = loginBuyer
+  }
+   
     service.getAllSampleDevData(req).then((res) => {
       if (res.data) {
         setSampleData(res.data);

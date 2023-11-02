@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { Button, Tooltip, theme } from 'antd';
-import { Footer } from 'antd/es/layout/layout';
+import React, { useEffect, useState } from 'react'
+import { Button, Layout, Menu, Tooltip, theme } from 'antd';
+import { Content, Footer } from 'antd/es/layout/layout';
 import { UserOutlined, DashboardOutlined, LogoutOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
 import { ProBreadcrumb, ProConfigProvider } from '@ant-design/pro-components';
@@ -11,6 +11,11 @@ import { DarkModeIcon } from '../../icons/darkmode.icon';
 import { LightModeIcon } from '../../icons/lightmode.icon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGears, faGlobe, faHatCowboy, faLayerGroup, faPeopleRoof, faShirt, faShoppingCart} from '@fortawesome/free-solid-svg-icons';
+import { logout, useIAMClientState } from '../../common/iam-client-react';
+import SubMenu from 'antd/es/menu/SubMenu';
+import * as antdIcons from '@ant-design/icons';
+import Sider from 'antd/es/layout/Sider';
+import { CommonHeader } from '../header/header';
 
 const { useToken } = theme
 
@@ -182,9 +187,9 @@ export const baseRouterList = [
         children: [
             {
                 label: "Account Control Object",
-                key: "accountcontrolobjects",
-                path: "accountcontrolobjects/accountcontrolobjects-view",
-                filepath: "accountcontrolobjects/accountcontrolobjects-view",
+                key: "accountcontrolobject",
+                path: "accountcontrolobject/accountcontrolobject-view",
+                filepath: "accountcontrolobject/accountcontrolobject-view",
             },
             {
                 label: "Brands",
@@ -391,6 +396,23 @@ export const baseRouterList = [
                 filepath: "item-Type/item-Type-view",
             },
             {
+                label: "Product Group",
+                key: "productGroup",
+                path: "productGroup/productGroup-view",
+                filepath: "productGroup/productGroup-view",
+            },
+            {
+                label: "Procurment Group",
+                key: "procurmentGroup",
+                path: "procurmentGroup/procurmentGroup-view",
+                filepath: "procurmentGroup/procurmentGroup-view",
+            },
+            {
+                label: "Hierarchy Level",
+                key: "hierarchyLevel",
+                path: "hierarchyLevel/hierarchyLevel-view",
+                filepath: "hierarchyLevel/hierarchyLevel-view",
+            },{
                 label: "Group Tech Class",
                 key: "grouptechclass",
                 path: "groupTechClass/groupTechClass-grid",
@@ -416,24 +438,6 @@ export const baseRouterList = [
                 path: 'range/range-grid',
                 filepath: 'range/range-grid',
                 
-            },
-            {
-                label: "Product Group",
-                key: "productGroup",
-                path: "productGroup/productGroup-view",
-                filepath: "productGroup/productGroup-view",
-            },
-            {
-                label: "Procurment Group",
-                key: "procurmentGroup",
-                path: "procurmentGroup/procurmentGroup-view",
-                filepath: "procurmentGroup/procurmentGroup-view",
-            },
-            {
-                label: "Hierarchy Level",
-                key: "hierarchyLevel",
-                path: "hierarchyLevel/hierarchyLevel-view",
-                filepath: "hierarchyLevel/hierarchyLevel-view",
             },
         ],
     }, 
@@ -737,31 +741,86 @@ export default function BasicLayout() {
     const navigate = useNavigate();
     const [settings, setSettings] = useState<any>({ colorPrimary: '1890ff', fixedHeader: true })
     const { token: { colorPrimary, colorPrimaryActive, colorPrimaryBg } } = useToken()
+    const [collapsed, setCollapsed] = useState(true);
+    const [menuData, setMenuData] = useState([]);
+    const { IAMClientAuthContext, dispatch } = useIAMClientState();
+    const userData = JSON.parse(localStorage.getItem('currentUser'))
+    const loginUser = userData.user.userName
+    const loginUserRole = userData.user.roles
+    console.log(userData)
+    
+    const toggle = () => {
+         setCollapsed(prevCollapsed => !prevCollapsed);
+    };
+    
+    function renderIcon(iconType, iconName) {
+        // if (iconType === "antd") { 
+            const SpecificIcon = antdIcons["SolutionOutlined"]; 
+            return <SpecificIcon /> 
+        // }
+        // else {
+        //     const SpecificIcon = icons[iconName];
+        //     return <Icon component={SpecificIcon} style={{ fontSize: '20px' }} /
 
+    }
+
+  
+   
+    const getAllSubMenus = () => {
+        const menuData = IAMClientAuthContext.menuAccessObject ? IAMClientAuthContext.menuAccessObject : [];
+      
+        const processedMenuData = menuData.map(menuItem => {
+            
+          const processedSubMenuItems =  menuItem.subMenuData?.map(subMenuItem => (
+            {
+            key: subMenuItem.subMenuId, 
+            label: subMenuItem.subMenuName,
+            icon: subMenuItem.subMenuIconName,
+            path: subMenuItem.path, 
+          }))
+          return {
+            key: menuItem.menuId, 
+            label: menuItem.menuName,
+            icon: menuItem.menuIconName,
+            path:menuItem.path?menuItem.path:'/',
+            children: processedSubMenuItems.length > 0 ? processedSubMenuItems : null,
+
+          };
+        });
+      
+        return processedMenuData;
+      };
+      
+    const logOut = () => {
+        logout(dispatch);
+    }
+    
+    const {
+        token: { colorBgContainer },
+    } = theme.useToken();
+
+    const [key, setKey] = useState("");
+
+    const handleClick = (e) => {
+        setKey(e)
+    }
 
 
     return (
-        <ProConfigProvider dark={dark}  >
-
-            <div
-                id="main-layout"
-                style={{
-                    height: '100vh',
-                }}
-            >
-                <ProLayout
+        <ProConfigProvider dark={dark} >
+       
+        <ProLayout
                     title='SHAHI'
                     locale='en-US'
                     siderWidth={240}
                     colorPrimary='#29397d'
                     headerContentRender={(props) => props.layout !== 'side' && document.body.clientWidth > 1000 ? <ProBreadcrumb /> : undefined}
                     logo={<img src={logo} />}
-                    fixSiderbar
-                    layout='mix'
+                    layout={'mix'}
                     token={{ header: { colorBgHeader: 'transparent' }, sider: { colorBgMenuItemSelected: colorPrimaryBg } }}
                     route={{
                         path: '/',
-                        routes: treeRouter(baseRouterList),
+                        routes:treeRouter(getAllSubMenus()),
                     }}
                     location={{
                         pathname,
@@ -776,49 +835,10 @@ export default function BasicLayout() {
                         // if (props.isMobile) return [];
                         return [
 
-                            // <div
-                            //     key="SearchOutlined"
-                            //     aria-hidden
-                            //     style={{
-                            //         display: 'flex',
-                            //         alignItems: 'center',
-                            //         marginInlineEnd: 24,
-                            //     }}
-                            //     onMouseDown={(e) => {
-                            //         e.stopPropagation();
-                            //         e.preventDefault();
-                            //     }}
-                            // >
-                            //     <Input
-                            //         style={{
-                            //             borderRadius: 4,
-                            //             marginInlineEnd: 12,
-                            //             backgroundColor: 'rgba(0,0,0,0.03)',
-                            //         }}
-                            //         prefix={
-                            //             <SearchOutlined
-                            //                 style={{
-                            //                     color: 'rgba(0, 0, 0, 0.15)',
-                            //                 }}
-                            //             />
-                            //         }
-                            //         placeholder="Search"
-                            //         bordered={false}
-                            //     />
-                            //     <PlusCircleFilled
-                            //         style={{
-                            //             color: 'var(--ant-primary-color)',
-                            //             fontSize: 24,
-                            //         }}
-                            //     />
-                            // </div>
+                           
                             <Tooltip placement="bottom" title={'Switch mode'}>
-                                {/* <Switch
-                                    checkedChildren="🌜"
-                                    unCheckedChildren="🌞"
-                                    checked={dark}
-                                    onChange={(v) => setDark(v)}
-                                /> */}
+                               
+                               
                                 <Button
                                     size="middle"
                                     style={{ borderRadius: "5px" }}
@@ -834,10 +854,7 @@ export default function BasicLayout() {
                                     style={{ borderRadius: "5px" }}
                                     icon={
                                         <LogoutOutlined
-                                            onClick={async () => {
-                                                // await signOut(dispatch);
-                                                navigate("/login");
-                                            }}
+                                            onClick={logOut}
                                         />
                                     }
                                 ></Button>
@@ -856,11 +873,65 @@ export default function BasicLayout() {
                             </Link>
                         );
                     }}
+                    
                     onMenuHeaderClick={() => navigate("/")}
                 >
-                    <Outlet />
-                </ProLayout>
-            </div>
+                  
+                  
+                        <Outlet />
+                        <Footer style={{ textAlign: 'center', background: '#f0f2f5' }}>©2023 Design and Developed by SchemaX</Footer>
+
+             </ProLayout> 
+        
+
+           {/* <div
+                id="main-layout"
+                style={{
+                    height: '100vh',
+                }}
+            >
+                <Layout
+               
+                className="site-layout" style={{ background: ' #f0f2f5' }}>
+                    <Sider
+                        className='layout'
+                        trigger={null}
+                        breakpoint='lg'
+                        collapsedWidth='60'
+                        style={{
+                            overflow: 'auto',
+                            height: '100vh',
+                            position: 'fixed',
+                            left: 0,
+                            background: '#fff',
+                            marginTop: '56px' ,
+                            borderRadius:'5px'
+                        }}
+                    >           
+                    <Menu
+                    theme="light"
+                    mode="inline"
+                    selectedKeys={[key]}
+                >
+                  {getAllSubMenus()}
+                </Menu>         
+                  </Sider>
+                    <CommonHeader key={Date.now()} collapsed={collapsed} toggle={toggle}/>
+                    <Content
+                        className="site-layout-background"
+                        style={{
+                            marginTop: '40px',
+                            padding: 14,
+                            height: '100%',
+                            marginLeft: 198
+                        }}
+                    >
+                        <Outlet />
+                    </Content>
+                    <Footer style={{ textAlign: 'center', background: '#f0f2f5' }}>©2023 Design and Developed by SchemaX</Footer>
+                </Layout>
+
+            </div>  */}
         </ProConfigProvider>
-    );
+             );
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, Card, Row, Col } from 'antd';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FabricsDto } from '@project-management-system/shared-models';
 import { FabricsService } from '@project-management-system/shared-services';
 import { __values } from 'tslib';
@@ -18,6 +18,7 @@ export interface FabricsFromProps{
 export const FabricsForm=(props:FabricsFromProps)=>{
     const [form] = Form.useForm();
     const [disable, setDisable] = useState<boolean>(false)
+    let navigate = useNavigate()
 
     const service = new FabricsService();
     let history =useLocation();
@@ -61,9 +62,10 @@ export const FabricsForm=(props:FabricsFromProps)=>{
       
 
       return(
-        <Card title={<span>Fabrics</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} 
-        extra={props.isUpdate==true?"":<Link to='/masters/fabrics/fabrics-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
-       >
+        <Card title={props.isUpdate ? 'Fabrics' : 'Fabrics'} 
+        extra={(props.isUpdate==false ) && <span><Button onClick={()=> navigate('/masters/fabrics/fabrics-view')} type={'primary'}>View</Button></span>}>
+        
+      
 <Form
 layout={'vertical'}
 form={form}

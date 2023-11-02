@@ -1,12 +1,12 @@
 import { Body, Controller, Post, Req } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 import { BuyersService } from './buyers.service';
 import { BuyersRequest } from './dto/buyers.request';
 import { BuyersDTO } from './dto/buyers.dto';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { BuyersResponseModel } from 'packages/libs/shared-models/src/common/buyers/buyers.response.model';
-import { AllBuyersResponseModel, BuyerRequest, BuyersGeneralAttributeResponseModel, CommonResponseModel, BuyersOrderAttributeResponseModel } from '@project-management-system/shared-models';
+import { AllBuyersResponseModel, BuyerRequest, BuyersGeneralAttributeResponseModel, CommonResponseModel, BuyersOrderAttributeResponseModel, BuyerIdReq } from '@project-management-system/shared-models';
 import { BuyersGeneralAttributeDto } from './dto/buyers-general-attributes.dto';
 import { BuyersGeneralAttributeService } from './buyers-general-attributes.service';
 import { BuyersOrderAttributeService } from './buyers-order-attributes.service';
@@ -54,17 +54,17 @@ export class BuyersController {
      * @param request 
      */
     @Post('/getAllBuyer')
-    async getAllBuyer(): Promise<AllBuyersResponseModel> {
+    async getAllBuyer(req?:BuyerIdReq): Promise<AllBuyersResponseModel> {
         try {
-            return await this.buyersService.getAllBuyers();
+            return await this.buyersService.getAllBuyers(req);
         } catch (error) {
             return this.applicationExceptionhandler.returnException(AllBuyersResponseModel, error)
         }
     }
     @Post('/getAllActiveBuyers')
-    async getAllActiveBuyers(@Req() request: Request): Promise<AllBuyersResponseModel> {
+    async getAllActiveBuyers(@Req() req?: string): Promise<AllBuyersResponseModel> {
         try {
-            return await this.buyersService.getAllActiveBuyersInfo();
+            return await this.buyersService.getAllActiveBuyersInfo(req);
         } catch (error) {
             return this.applicationExceptionhandler.returnException(AllBuyersResponseModel, error)
         }
@@ -153,9 +153,9 @@ export class BuyersController {
     }
 
     @Post('/getAllBuyersInfo')
-    async getAllBuyersInfo(): Promise<CommonResponseModel> {
+    async getAllBuyersInfo(@Body()req?:string): Promise<CommonResponseModel> {
         try {
-            return await this.buyersService.getAllBuyersInfo();
+            return await this.buyersService.getAllBuyersInfo(req);
         } catch (error) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
@@ -183,6 +183,14 @@ export class BuyersController {
     async getAllAddress(): Promise<CommonResponseModel> {
         try {
             return await this.buyersService.getAllAddress();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getBuyerByRefId')
+    async getBuyerByRefId(@Body() req:string): Promise<CommonResponseModel> {
+        try {
+            return await this.buyersService.getBuyerByRefId(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

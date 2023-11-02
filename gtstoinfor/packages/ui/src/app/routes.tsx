@@ -161,35 +161,36 @@ import FeatureCreationView from "./BOM/feature-creation-view"
 
 
 export const AppRoutes = () => {
-    const router = createBrowserRouter(createRoutesFromElements(
-        <Route  >
-            <Route path='/' key='/' element={
-                <ChildProtectionWrapper>
-                    <>
-                        <BasicLayout />
-                    </>
-                </ChildProtectionWrapper>
-            } >
-                <Route path='/user-management/users-from' key='/user-management/users-from' element={<UserCreationForm />} />
-                <Route path='/user-management/users-view' key='/user-management/users-view' element={<UsersView />} />
+    // const router = createBrowserRouter(createRoutesFromElements(
+    //     <Route  >
+    //         <Route path='/' key='/' element={
+    //             <ChildProtectionWrapper>
+    //                 <>
+    //                     <BasicLayout />
+    //                 </>
+    //             </ChildProtectionWrapper>
+    //         } >
+    //             <Route path='/user-management/users-from' key='/user-management/users-from' element={<UserCreationForm />} />
+    //             <Route path='/user-management/users-view' key='/user-management/users-view' element={<UsersView />} />
               
-                <Route path='/excel-import' key='/excel-import'>
-                    <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
-                    <Route path='changes-view' key='/changes-view' element={<ChangesGrid />} />
-                    <Route path='grid-view' key='/grid-view' element={<AllOrdersGridView />} />
-                    <Route path='revert-orders' key='/revert-orders' element={<FileRevert />} />
-                    <Route path='version-grid' key='/version-grid' element={<VersionChanges />} />
-                    {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
-                </Route>
-                <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
-                <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
-            </Route>
-            <Route path="/login" key='/login' element={<Login />} />
-        </Route>
-    ))
+    //             <Route path='/excel-import' key='/excel-import'>
+    //                 <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
+    //                 <Route path='changes-view' key='/changes-view' element={<ChangesGrid />} />
+    //                 <Route path='grid-view' key='/grid-view' element={<AllOrdersGridView />} />
+    //                 <Route path='revert-orders' key='/revert-orders' element={<FileRevert />} />
+    //                 <Route path='version-grid' key='/version-grid' element={<VersionChanges />} />
+    //                 {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
+    //             </Route>
+    //             <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
+    //             <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
+    //         </Route>
+    //         <Route path="/login" key='/login' element={<Login />} />
+    //     </Route>
+    // ))
 
+    
     return (
-        <Router>
+        // <Router>
             <Routes>
                 <Route path='/' element={
                     <ChildProtectionWrapper>
@@ -198,6 +199,7 @@ export const AppRoutes = () => {
                         </>
                     </ChildProtectionWrapper>
                 } >
+
                     <Route path='/user-management/users-from' element={<UserCreationForm />} />
                     <Route path='/user-management/users-view' element={<UsersView />} />
 
@@ -212,11 +214,7 @@ export const AppRoutes = () => {
                     closeForm={()=> {}}
                     updateDetails={(undefined) => { }}/>}/>   
                    <Route path='co-type/co-type-view' element={<CoTypeView/>}/>                      
-                    <Route path='locations/locations-view' element={<LocationsGrid/>}/>                       
-                    <Route path='locations/locations-form' element={<LocationsForm locationsData={undefined}
-                        isUpdate={false}
-                        closeForm={()=> {}}
-                        updateDetails={(undefined) => { }}/>}/>                        
+                                        
                         <Route path='factories/factories-view' element={<FactoriesView />} />
                         <Route path='factories/factories-form' element={<FactoriesForm factoryData={undefined}
                         isUpdate={false}
@@ -266,7 +264,7 @@ export const AppRoutes = () => {
                 isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
-                        <Route path='destination/destination-grid' element={<DestinationGrid />} />
+                        {/* <Route path='destination/destination-grid' element={<DestinationGrid />} /> */}
 
                         <Route path='brands/brand-form' element={<MasterBrandsForm masterBrandData={undefined}
                 isUpdate={false}
@@ -409,7 +407,7 @@ export const AppRoutes = () => {
                  isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
-                 <Route path='accountcontrolobjects/accountcontrolobjects-view' element={<AccountControlObjectGrid/>} />
+                 <Route path='accountcontrolobject/accountcontrolobject-view' element={<AccountControlObjectGrid/>} />
                          <Route path='accountcontrolobjects/accountcontrolobjects-form' key ='accountcontrolobjects/accountcontrolobjects-form' element={<AccountControlObjectForm  accountControlData={undefined}
 
                  isUpdate={false}
@@ -479,6 +477,11 @@ export const AppRoutes = () => {
 
             </Route>
                     <Route path='/global'>
+                    <Route path='locations/locations-view' element={<LocationsGrid/>}/>                       
+                    <Route path='locations/locations-form' element={<LocationsForm locationsData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateDetails={(undefined) => { }}/>}/>   
                     <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
                         <Route path='buyers-destination/buyers-destination-grid' element={<BuyersDestinationGrid/>}/>
 
@@ -586,25 +589,25 @@ export const AppRoutes = () => {
                     <Route path="sample-development-detail" element={<SampleDevDetail />}/>
                 </Route>
                 <Route path='/materialCreation'>
-                <Route path='sku-list' element={<SkuList/>}/>
-                <Route path='sku-mapping' element={<SKUGeneration/>}/>
-                <Route path='item-creation' element={<ItemCreation itemCreationData={undefined} isUpdate={false} closeForm={function (): void {
+                    <Route path='sku-list' element={<SkuList/>}/>
+                    <Route path='sku-mapping' element={<SKUGeneration/>}/>
+                    <Route path='item-creation' element={<ItemCreation itemCreationData={undefined} isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
                         } }/>}/>
-                <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
-                <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation />} />
-                <Route path='style-order-creation' element={<StyleOrderCreation coData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
-                <Route path='style-order-view' element={<StyleOrderGrid />} />
-                <Route path='style-order-detail-view' element={<StyleOrderDetailView />} />
-                <Route path='feature-creation' element={<FeatureCreation />} />
+                    <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
+                    <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation />} />
+                    <Route path='style-order-creation' element={<StyleOrderCreation coData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
+                    <Route path='style-order-view' element={<StyleOrderGrid />} />
+                    <Route path='style-order-detail-view' element={<StyleOrderDetailView />} />
+                    <Route path='feature-creation' element={<FeatureCreation />} />
                 <Route path='feature-creation-view' element={<FeatureCreationView />} />
                 <Route path='item-creation-view' element={<ItemCreationView/>}/>    
                 <Route path='item-creation-detail-view' element={<ItemCreationDetailView data={''}/>}/>
                 <Route path="co-amendment" element ={<COAmendmentTabs key={""} />} />
                 </Route>
                 <Route path='/operation-tracking'>
-                <Route path='operation-tracking/issuing' element={<IssueScreen/>}/>
-                <Route path='operation-reporting' element={<OperationReportingView/>} />
+                    <Route path='operation-tracking/issuing' element={<IssueScreen/>}/>
+                    <Route path='operation-reporting' element={<OperationReportingView/>} />
 
             
 
@@ -630,9 +633,9 @@ export const AppRoutes = () => {
                     </Route>
                     <Route path='/dashboard' element={<Dashboard />} />
                     <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
-                </Route>
-                <Route path="/login" element={<Login />} />
-            </Routes>
-        </Router>
+                {/* </Route> */}
+
+</Route>            </Routes>
+        // </Router>
     )
 }

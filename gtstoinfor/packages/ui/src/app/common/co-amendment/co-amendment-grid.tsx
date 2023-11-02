@@ -4,23 +4,20 @@ import React, { useEffect, useState } from 'react'
 import AlertMessages from '../common-functions/alert-messages'
 
 import { StyleOrderService } from 'packages/libs/shared-services/src/common'
-import { CoUpdateReq } from '@project-management-system/shared-models'
+import { CoLineIdReq, CoUpdateReq, StyleOrderIdReq } from '@project-management-system/shared-models'
 export interface COAmendmentGridProps {
   poData:any
   activeTab:any
 }
   const COAmendmentGrid = (props: COAmendmentGridProps) => {
   console.log(props.activeTab,"key")
-  console.log(props?.poData[0]?.styleOrderItems,"props data")
- 
-  // useEffect(()=>{
-   
-
-  // })
+  console.log(props?.poData)
+  console.log((props?.poData[0]?.styleOrderId),"88")
   
 
 
-
+  const [form] = Form.useForm()
+  
   const [page, setPage] = React.useState(1);
   const [coLineData,setCoLineData] = useState<any>()
   const [fobData,setFobData] = useState<any>()
@@ -28,10 +25,28 @@ export interface COAmendmentGridProps {
   const [deliveryDateData,setDeliveryDateData] = useState<any>()
   const [destinationData,setDestinationData] = useState<any>()
   const [quantityData,setQuantityData] = useState<any>()
-
+  const [codata, setCoData] = useState<any[]>([]);
   const services = new StyleOrderService()
+
+
+  useEffect(()=>{
+    if(props?.poData[0]?.styleOrderId){
+    getCoLineData();
+     
+    }
+  },[])
+
+  const getCoLineData = () =>{
+    const req = new StyleOrderIdReq(props?.poData[0]?.styleOrderId)
+    services.getCoLineDataById(req).then((res) => {
+      if (res.status) {
+        setCoData(res.data);
+       }
+    });
+
+  }
   
-   
+   console.log(codata)
       
   
   const onButtonChange1 = (rowData) => { 
@@ -39,11 +54,9 @@ export interface COAmendmentGridProps {
     const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.coLineNumber,coLineData,"orderline","admin")
     services.updateCoData(req).then((res)=>{
       if (res.status){
-        
-
-      //  onReset();
+        getCoLineData();
        message.success(res.internalMessage);
-       setCoLineData("")
+       rowData.coLineData
       
    } else{
 
@@ -63,7 +76,8 @@ export interface COAmendmentGridProps {
     services.updateCoData(req).then((res)=>{
       if (res.status){
        message.success(res.internalMessage);
-      
+       getCoLineData();
+        
    } else{
 
      AlertMessages.getErrorMessage(res.internalMessage);
@@ -81,8 +95,9 @@ export interface COAmendmentGridProps {
         const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.vpo,vpoData,"vponumber","admin")
         services.updateCoData(req).then((res)=>{
           if (res.status){
-          //  onReset();
            message.success(res.internalMessage);
+          getCoLineData();
+
           
        } else{
     
@@ -100,8 +115,9 @@ export interface COAmendmentGridProps {
          const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.deliveryDate,deliveryDateData,"deliverydate","admin")
         services.updateCoData(req).then((res)=>{
           if (res.status){
-          //  onReset();
            message.success(res.internalMessage);
+          //  form.setFieldValue({})
+
           
        } else{
     
@@ -120,8 +136,9 @@ export interface COAmendmentGridProps {
             const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.deliveryAddress,destinationData,"destinationaddress","admin")
             services.updateCoData(req).then((res)=>{
               if (res.status){
-            
                message.success(res.internalMessage);
+              getCoLineData();
+
               
            } else{
         
@@ -137,9 +154,10 @@ export interface COAmendmentGridProps {
         console.log(rowData,"rowdata")
         const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.orderQuantity,quantityData,"quantity","admin")
             services.updateCoData(req).then((res)=>{
-              if (res.status){
-            
+              if (res.status){ 
                message.success(res.internalMessage);
+               getCoLineData();
+
               
            } else{
         
@@ -152,12 +170,6 @@ export interface COAmendmentGridProps {
       }
 
 
-    const colineInfo = (e,index,rowData) => {
-    
-      console.log(e.target.value,"colineInfo")
-      setCoLineData(e.target.value)
-      
-    }
 
  
   
@@ -193,10 +205,11 @@ export interface COAmendmentGridProps {
         },
         {
           title: 'CO Line Number',
-          dataIndex: 'coLineNumber',
+          dataIndex: 'Line',
           render:(value,row,index) => {
             return(
                 <>
+                <Form form ={form} >
                 <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
@@ -204,17 +217,29 @@ export interface COAmendmentGridProps {
               lg={{ span: 10 }}
               xl={{ span: 10 }}
             >
-                <Form.Item  >
+                <Form.Item 
+                  rules={[
+                    {
+                      required: true,
+                      message:"Enter valid CO Line Number."
+                    },
+                    {
+                      pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                      message: `Should contain only alphabets and numbers.`
+                    }
+                  ]}
+                 >
                  <Input key={index} placeholder="Enter CO Line Number" 
                   // defaultValue={row.coLineNumber}
                     // onBlur={(e)> colineInfo(e,index,row)}
                     onBlur={(e) => setCoLineData(e.target.value)}
-                    required={true}
+                    // required={true}
+                    
                     /> 
                     </Form.Item>
                     </Col>
     
-                
+                    </Form>
                 
                 </>
             )
@@ -281,7 +306,18 @@ export interface COAmendmentGridProps {
               lg={{ span: 10 }}
               xl={{ span: 10 }}
             >
-                <Form.Item  >
+                <Form.Item 
+                rules={[
+                  {
+                    required: true,
+                    message:"Enter valid FOB"
+                  },
+                  {
+                    pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                    message: `Should contain only alphabets and numbers.`
+                  }
+                ]}
+                 >
                  <Input key={index} placeholder="Enter FOB" 
                     // onBlur={e=> fobInfo(e,index,row)}
                     onBlur={(e) => setFobData(e.target.value)}
@@ -357,7 +393,18 @@ export interface COAmendmentGridProps {
               lg={{ span: 10 }}
               xl={{ span: 10 }}
             >
-                <Form.Item  >
+                <Form.Item 
+                 rules={[
+                  {
+                    required: true,
+                    message:"Enter valid VPO"
+                  },
+                  {
+                    pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                    message: `Should contain only alphabets and numbers.`
+                  }
+                ]}
+                 >
                  <Input key={index} placeholder="Enter VPO" 
                     // onBlur={e=> vpoInfo(e,index,row)}
                     onBlur={(e) => setVpoData(e.target.value)}
@@ -435,7 +482,18 @@ export interface COAmendmentGridProps {
               lg={{ span: 10 }}
               xl={{ span: 10 }}
             >
-                <Form.Item  >
+                <Form.Item 
+                rules={[
+                  {
+                    required: true,
+                    message:"Enter valid Delivery Date"
+                  },
+                  {
+                    pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                    message: `Should contain only alphabets and numbers.`
+                  }
+                ]}
+                 >
                  <Input key={index} placeholder="Enter Delivery Date" 
                     // onBlur={e=> deliveryDateInfo(e,index,row)}
                     onBlur={(e) => setDeliveryDateData(e.target.value)}
@@ -509,7 +567,18 @@ export interface COAmendmentGridProps {
               lg={{ span: 10 }}
               xl={{ span: 10 }}
             >
-                <Form.Item  >
+                <Form.Item 
+                rules={[
+                  {
+                    required: true,
+                    message:"Enter valid Destination Address"
+                  },
+                  {
+                    pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                    message: `Should contain only alphabets and numbers.`
+                  }
+                ]}
+                 >
                  <Input key={index} placeholder="Enter Destination Address" 
                     // onBlur={e=> destinationInfo(e,index,row)}
                     onBlur={(e) => setDestinationData(e.target.value)}
@@ -585,7 +654,18 @@ export interface COAmendmentGridProps {
               lg={{ span: 10 }}
               xl={{ span: 10 }}
             >
-                <Form.Item  >
+                 <Form.Item 
+                rules={[
+                  {
+                    required: true,
+                    message:"Enter valid Quantity"
+                  },
+                  {
+                    pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                    message: `Should contain only alphabets and numbers.`
+                  }
+                ]}
+                 >
                  <Input key={index} placeholder="Enter Quantity" 
                     // onBlur={e=> quantityInfo(e,index,row)}
                     onBlur={(e) => setQuantityData(e.target.value)}
@@ -646,7 +726,8 @@ export interface COAmendmentGridProps {
   return (
     <Table
         size="small"
-        dataSource={props?.poData[0]?.styleOrderItems}
+        // dataSource={props?.poData[0]?.styleOrderItems}
+        dataSource={codata}
         // rowClassName={(record, index) =>
         //   index % 2 === 0 ? "table-row-light" : "table-row-dark"
         // }

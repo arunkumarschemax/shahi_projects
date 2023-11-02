@@ -65,6 +65,9 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             if (req.status !== undefined) {
                 query.andWhere(`sr.status ='${req.status}'`)
             }
+            if (req.buyerId !== undefined) {
+                query.andWhere(`sr.sr.buyer_id ='${req.buyerId}'`)
+            }
             query.orderBy(`sample_request_id`)
         return await query.getRawMany()
     }

@@ -1,4 +1,4 @@
-import { BuyerIdReq, BuyersDestinationRequest, CustomerOrderStatusEnum, ItemCodeReq, SKUGenerationReq, StyleOrderIdReq, StyleOrderItemsReq, StyleOrderReq, UomCategoryEnum, UomCategoryRequest } from "@project-management-system/shared-models";
+import { BuyerIdReq, BuyersDestinationRequest, CustomerOrderStatusEnum, ItemCodeReq, MenusAndScopesEnum, SKUGenerationReq, StyleOrderIdReq, StyleOrderItemsReq, StyleOrderReq, UomCategoryEnum, UomCategoryRequest } from "@project-management-system/shared-models";
 import { BuyerDestinationService, BuyersService, CoTypeService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DestinationService, EmployeeDetailsService, FactoryService, ItemCreationService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, SKUGenerationService, StyleOrderService, UomService, WarehouseService } from "@project-management-system/shared-services"
 import { Button, Card, Col, DatePicker, Form, Input, Row, Segmented, Select, Space, Table } from "antd"
 import TextArea from "antd/es/input/TextArea";
@@ -64,7 +64,11 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
     const [salePrice,setSalePrice] = useState<number>()
     const [salePriceQty,setSalePriceQty] = useState<number>()
     const [pricecurrency,setPriceCurrency] = useState<number>()
-    
+    const [userId, setUserId] = useState([]); 
+    const [loginBuyer,setLoginBuyer] = useState<number>(0)
+    const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+    const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
+  let userRef    
     useEffect(()=>{
         if(initialData.length > 0){
             form.setFieldsValue({
@@ -133,10 +137,21 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
         getPaymentMethodInfo()
         getPaymentTermsInfo()
         getCurrencyInfo()
+        Login()
         getCoType()
         getAllUoms()
     },[])
-
+    const Login = () =>{
+        if(role === MenusAndScopesEnum.roles.Buyer){
+          userRef = externalRefNo
+        }
+        buyerService.getBuyerByRefId(userRef).then(res=>{
+          if(res.status){
+            setUserId(res.data)
+      setLoginBuyer(res.data.buyerId)
+          }
+        })
+      }
     const getItemCodes = () => {
         fgItemService.getFgItemsDropdown().then(res => {
             if(res.status){
@@ -146,7 +161,8 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
     }
 
     const getBuyersInfo = () => {
-        buyerService.getAllActiveBuyers().then(res => {
+        const loginId = new BuyerIdReq(loginBuyer)
+        buyerService.getAllActiveBuyers(loginId).then(res => {
             if(res.status){
                 setBuyers(res.data)
             }
