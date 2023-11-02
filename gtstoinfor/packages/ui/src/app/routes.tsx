@@ -588,7 +588,7 @@ export const AppRoutes = () => {
                 <Route path='/materialCreation'>
                 <Route path='sku-list' element={<SkuList/>}/>
                 <Route path='sku-mapping' element={<SKUGeneration/>}/>
-                <Route path='item-creation' element={<ItemCreation isUpdate={false} closeForm={function (): void {
+                <Route path='item-creation' element={<ItemCreation itemCreationData={undefined} isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
                         } }/>}/>
                 <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
