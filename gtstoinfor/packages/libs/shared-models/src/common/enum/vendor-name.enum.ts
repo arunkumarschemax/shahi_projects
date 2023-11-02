@@ -20,6 +20,8 @@ export enum VendorNameEnum {
     extractedNikkou="NIKKOU",
     extractedTriway="TRIWAY",
     extractedRingoCarago="RINGO CARGO",
+    extractedMsn="MSN",
+
     
 
 

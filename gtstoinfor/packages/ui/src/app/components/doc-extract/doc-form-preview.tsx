@@ -328,15 +328,15 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             title: "Charge",
             dataIndex: "charge",
             key: "charge",
-            render: (charge, record, index) => (
-                <div style={{ textAlign: "right" }}>
-                    {record.taxAmount !== null && record.taxPercentage !== null
-                        ? `${(record.taxAmount * 100 / record.taxPercentage).toFixed(2)}`
-                        : record.taxAmount !== null
-                            ? `${record.taxAmount}`
-                            : `${charge || "0"}`}
-                </div>
-            ),
+            // render: (charge, record, index) => (
+            //     <div style={{ textAlign: "right" }}>
+            //         {record.taxAmount !== null && record.taxPercentage !== null
+            //             ? `${(record.taxAmount * 100 / record.taxPercentage).toFixed(2)}`
+            //             : record.taxAmount !== null
+            //                 ? `${record.taxAmount}`
+            //                 : `${charge || "0"}`}
+            //     </div>
+            // ),
         },
         {
             title: "Tax Percentage",
