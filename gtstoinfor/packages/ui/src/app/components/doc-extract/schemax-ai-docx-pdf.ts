@@ -1584,6 +1584,7 @@ export const extractMsn = async (pdf) => {
 
     const invoiceDateRegex = /\d{2}\/\d{2}\/\d{4}/;
     const invoiceNumberRegex = /CHE[A-Z0-9]{11}/;
+    const invoiceAmountRegex=[" E & O E   Total   "];
     const invoiceCurrency = 'INR';
     const currentYear = new Date().getFullYear();
     const nextYear = currentYear + 1;
@@ -1593,6 +1594,7 @@ export const extractMsn = async (pdf) => {
         let venName = '';
         let invoiceDate = '';
         let invoiceNumber = '';
+        let invoiceAmount = '';
 
         for (const line of extractedData) {
             const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
@@ -1613,10 +1615,9 @@ export const extractMsn = async (pdf) => {
                 const invoiceNumberMatch = invoiceNumber.match(/CHE[A-Z0-9]{11}/);
                 invoiceNumber = invoiceNumberMatch ? invoiceNumberMatch[0] : '';
 
-                const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
-                    const taxAmount = parseFloat(hsnLine.amount) || 0;
-                    return add + taxAmount;
-                }, 0).toFixed(2);
+                const invoiceAmountData = extractedData.find((item) => item.content.match(invoiceAmountRegex));
+                invoiceAmount = invoiceAmountData ? invoiceAmountData.content.replace(/E & O E\s+Total\s+/i, '').trim() : '';
+
 
                 const igst = structuredHSNLines.reduce((acc, hsnLine) => {
                     const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
@@ -1650,9 +1651,9 @@ export const extractMsn = async (pdf) => {
         }
     }
 
-    // console.log("MSN PDF DATA", JSON.stringify(extractedData, null, 2));
-    // console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
-    // console.log("PDF INVOICE Data", JSON.stringify(InvoiceLines, null, 2));
+    console.log("MSN PDF DATA", JSON.stringify(extractedData, null, 2));
+    console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
+    console.log("PDF INVOICE Data", JSON.stringify(InvoiceLines, null, 2));
 
     return {
         extractedData: InvoiceLines[0],
