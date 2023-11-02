@@ -558,7 +558,7 @@ const getAllComposition=()=>{
                 if (rowData.isActive) {
                   openFormWithData(rowData);
                 } else {
-                  AlertMessages.getErrorMessage('You Cannot Edit Composition');
+                  AlertMessages.getErrorMessage('You Cannot Edit Item Creation');
                 }
               }}
               style={{ color: '#1890ff', fontSize: '14px' }}

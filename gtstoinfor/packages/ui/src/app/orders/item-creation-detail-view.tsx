@@ -1,6 +1,6 @@
  
 
-import { CompositionService, EmployeeDetailsService, ItemCategoryService, ItemTypeService, LiscenceTypeService, MasterBrandsService, SearchGroupService, StyleService } from "@project-management-system/shared-services";
+import { BuyingHouseService, CompositionService, CurrencyService, EmployeeDetailsService, GroupTechClassService, ItemCategoryService, ItemTypeService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Descriptions, Row, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import moment from "moment";
@@ -20,7 +20,7 @@ export function ItemCreationDetailView  (props: Props)  {
     let location = useLocation();
     const stateData = location.state;
 
-    // console.log(stateData,"stateData")
+     console.log(stateData,"stateData")
     
     const [licence,setLicence]=useState([])
     const [employedata,setEmployeData] = useState([]);
@@ -30,8 +30,13 @@ export function ItemCreationDetailView  (props: Props)  {
     const[brand,setBrand]=useState([]);
     const [itemCategory,setItemCategory]= useState([]);
     const [ItemType,setItemType]= useState([]);
+    const [house,setHouse]= useState([]);
+    const [rosl,setRosl] = useState([]);
+    const [customGroup,setCustomGroup]= useState([]);
+    const [uomdata,setUomData] = useState([]);
+    const [group,setGroup] = useState([]);
 
-
+    const currencyServices = new CurrencyService();
     const employeservice = new EmployeeDetailsService();
     const styleService = new StyleService();
     const LicenceService = new LiscenceTypeService();
@@ -40,27 +45,28 @@ export function ItemCreationDetailView  (props: Props)  {
     const brandservice = new MasterBrandsService();
     const categoryService = new ItemCategoryService();
     const itemTypeservice =new ItemTypeService();
-
-
-
-
-
-
+    const buyingHouseservice = new BuyingHouseService();
+    const roslservice = new ROSLGroupsService();
+    const uomservice = new UomService();
+    const grouptech = new GroupTechClassService();
 
 
 
     useEffect(() => {
 
-       
        getAllLicense();
        getAllEmployes();
        getAllStyles();
-    //    getAllSearchgroup();
+       getAllSearchgroup();
        getAllComposition();
        getAllBrands();
        getAllCategory();
        getAllItemType();
-
+       getAllBuyingHouse();
+       getAllCustomGrops();
+       getAllROSL();
+       getAllUoms();
+       getAllGroupTech();
       }, [])
 
       const getAllLicense=()=>{
@@ -76,6 +82,15 @@ export function ItemCreationDetailView  (props: Props)  {
             setEmployeData(res.data);
           } })        
       }
+      const getAllROSL=()=>{
+        roslservice.getAllActiveROSLGroups().then(res=>{
+            if(res.status){
+                setRosl(res.data);
+            }else{
+                AlertMessages.getErrorMessage(res.internalMessage)
+            }
+        })
+    }
       const getAllStyles=()=>{
         styleService.getAllActiveStyle().then(res=>{
           if(res.status){
@@ -120,7 +135,6 @@ export function ItemCreationDetailView  (props: Props)  {
             const getAllItemType=() =>{
               itemTypeservice.getAllActiveItemType().then(res =>{
                 if (res.status){
-                  // console.log(res,'llllll')
                   setItemType(res.data);
                    
                 } else{
@@ -128,21 +142,56 @@ export function ItemCreationDetailView  (props: Props)  {
                    }
               })       
             }
+            const getAllBuyingHouse=()=>{
+              buyingHouseservice.getAllActiveBuyingHouse().then(res=>{
+                  if(res.status){
+                      setHouse(res.data);
+                  }else{
+                      AlertMessages.getErrorMessage(res.internalMessage)
+                  }
+              })
+           }
 
-        //  const getAllSearchgroup=()=>{
-        //     searchgroup.getActiveSearchGroup().then(res=>{
-        //       if(res.status){
-        //         setSearchData(res.data)
-        //       }else{
-        //         AlertMessages.getErrorMessage(res.internalMessage);
-        //       }
-        //     }).catch(err => {
-        //       setSearchData([]);
-        //        AlertMessages.getErrorMessage(err.message);
-        //      })        
-        //   }
-      function getLicenseType(licenseId) {
-        const foundLicense = Object.assign(licence).find(license => license.liscenceTypeId === licenseId);
+           const getAllCustomGrops=()=>{
+            currencyServices.getAllActiveCurrencys().then(res=>{
+                if(res.status){
+                    setCustomGroup(res.data);
+                }else{
+                    AlertMessages.getErrorMessage(res.internalMessage)
+                }
+            })
+         }
+         const getAllSearchgroup=()=>{
+          searchgroup.getActiveSearchGroup().then(res=>{
+            if(res.status){
+              setSearchData(res.data)
+            }else{
+              AlertMessages.getErrorMessage(res.internalMessage);
+            }
+          })       
+        }
+        const getAllUoms=() =>{
+          uomservice.getAllActiveUoms().then(res =>{
+            if (res.status){
+              setUomData(res.data);
+               
+            } else{
+              AlertMessages.getErrorMessage(res.internalMessage);
+               }
+          })        
+        }
+        const getAllGroupTech=() =>{
+          grouptech.getAllActiveGroupTechClass().then(res =>{
+             if (res.status){
+               setGroup(res.data);
+                
+             } else{
+               AlertMessages.getErrorMessage(res.internalMessage);
+                }
+           })        
+         }
+      function getLicenseType(DATA) {
+        const foundLicense = Object.assign(licence).find(license => license.liscenceTypeId === DATA);
         return foundLicense ? foundLicense.liscenceType : "-";
       }
     
@@ -189,17 +238,26 @@ export function ItemCreationDetailView  (props: Props)  {
         const foundiType = Object.assign(ItemType).find(itemDta => itemDta.liscenceTypeId === data);
         return foundiType ? foundiType.itemType : "-";
       }
+      function getRoslGroup(data) {
+        const foundiType = Object.assign(rosl).find(itemDta => itemDta.roslGroupId === data);
+        return foundiType ? foundiType.roslGroup : "-";
+      }
+      function getUomdata(data) {
+        const foundiType = Object.assign(uomdata).find(itemDta => itemDta.uomId === data);
+        return foundiType ? foundiType.uom : "-";
+      }
       
       // function getStyle(data) {
       //   const foundStyle = Object.assign(styledata).find(dat => dat.style_no === data);
       //   return foundStyle ? foundStyle.style : "-";
       // }
-    //   function getSearchGroup(data) {
-    //     const foundStyle = Object.assign(searchdata).find(dat => dat.style_no === data);
-    //     return foundStyle ? foundStyle.style : "-";
-    //   }
+      function getSearchGroup(data) {
+        const foundStyle = Object.assign(searchdata).find(dat => dat.id === data);
+        return foundStyle ? foundStyle.searchGrpName : "-";
+      }
     function getComposition(data) {
-        const foundComp = Object.assign(compositiondata).find(dat => dat.id === data);
+        const foundComp = compositiondata[data].filter(dat => dat.id === data);
+         console.log(compositiondata[data],"foundComp")
         return foundComp ? foundComp.compositionCode : "-";
       }
       function getBrand(data) {
@@ -210,8 +268,22 @@ export function ItemCreationDetailView  (props: Props)  {
         const foundIC = Object.assign(itemCategory).find(dat => dat.itemCategoryId === data);
         return foundIC ? foundIC.itemCategory : "-";
       }
+
+      function BuyingHouse(data) {
+        const foundIC = Object.assign(house).find(dat => dat.buyingHouseId === data);
+        return foundIC ? foundIC.buyingHouse : "-";
+      }
+      
+      function custom(data) {
+        const foundIC = Object.assign(customGroup).find(dat => dat.currencyId === data);
+        return foundIC ? foundIC.currencyName : "-";
+      }
+      function GroupTechClass(data) {
+        const foundIC = Object.assign(group).find(dat => dat.groupTechClassId === data);
+        return foundIC ? foundIC.groupTechClassCode : "-";
+      }
     return(
-        <Card title={<span style={{ color: 'black' }}>Item Creation Detailed View - <span style={{color:'#0A93E1  '}}></span></span>}  headStyle={{ fontWeight: 'bold' }} extra={<Link to='/materialCreation/item-creation-view' ><span style={{color:'white'}} >
+        <Card title={<span style={{ color: 'black' }}>Item Creation Detailed View<span style={{color:'#0A93E1  '}}></span></span>}  headStyle={{ fontWeight: 'bold' }} extra={<Link to='/materialCreation/item-creation-view' ><span style={{color:'white'}} >
           <Button className='panel_button' >Back </Button>
            </span></Link>}>
             <span>      
@@ -229,13 +301,13 @@ export function ItemCreationDetailView  (props: Props)  {
                     </Descriptions>
 </Card></Col>
                 <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:12}}><Card bordered={false} title='Profit Controllers'> <Descriptions  style={{ alignItems: 'right' }} >
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Buying House Commission</span>} >{stateData.buying_house_commision}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Buying House</span>} >{BuyingHouse(stateData.buying_house_commision)}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Licence</span>} >{getLicenseType(stateData.license_id)}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Custom Group</span>} >{stateData.custom_group_id}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Custom Group</span>} >{custom(stateData.custom_group_id)}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>National DBK%</span>} >{stateData.national_dbk}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Rosl Group</span>} >{stateData.rosl_group}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Group Tech Class</span>} >{stateData.altUom}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Search Group</span>} >{stateData.search_group}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Rosl Group</span>} >{getRoslGroup(stateData.rosl_group)}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Group Tech Class</span>} >{GroupTechClass(stateData.altUom)}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Search Group</span>} >{getSearchGroup(stateData.search_group)}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Sales Person</span>} >{getEmpSalePerson(stateData.sale_person_id)}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>No Of Lace Panel</span>} >{stateData.no_of_lace_panel}</Descriptions.Item>
 
@@ -274,12 +346,12 @@ export function ItemCreationDetailView  (props: Props)  {
                 <br></br>
                     <Row gutter={16}><Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:12}}>
                     <Card title='Sales Price Information' bordered={false}> <Descriptions  style={{ alignItems: 'right' }} >
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Basic UOM</span>} >{stateData.basic_uom}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Alt UOM</span>} >{stateData.altUom}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Basic UOM</span>} >{getUomdata(stateData.basic_uom)}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Alt UOM</span>} >{getUomdata(stateData.altUom)}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Conversion Factor</span>} >{stateData.conversion_factor_id}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Currency</span>} >{stateData.currency}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Currency</span>} >{custom(stateData.currency)}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Sales Price</span>} >{stateData.sale_price}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Target Currency</span>} >{stateData.target_currency}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Target Currency</span>} >{custom(stateData.target_currency)}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Projection Order</span>} >{stateData.projection_order_id}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Business Area</span>} >{stateData.business_area}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Composition</span>} >{getComposition(stateData.composition)}</Descriptions.Item>
