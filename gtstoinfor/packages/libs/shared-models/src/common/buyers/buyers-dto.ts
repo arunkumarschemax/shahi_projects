@@ -24,6 +24,7 @@ export class BuyersDto{
     addressInfo: AddressDto[];
     fgItemCodeLength: number;
     rmItemCodeLength: number;
+    externalRefNumber :  string;
     
     /**
     * @param buyerId  number
@@ -48,7 +49,7 @@ export class BuyersDto{
     * @param rmItemCodeLength number
     * 
     */
-    constructor(buyerId : number,buyerCode : string,buyerName : string,gstNumber : string,contactPerson :string,phoneNo : string,email : string, currency : string, publicNote : string,privateNote : string,paymentTerms : string, shipmentTerms : string,paymentMethodId : number,isActive: boolean,createdUser : string,updatedUser : string,versionFlag:number,paymentTermsId: number,paymentMethod : string,addressInfo: AddressDto[],fgItemCodeLength: number,rmItemCodeLength: number)
+    constructor(buyerId : number,buyerCode : string,buyerName : string,gstNumber : string,contactPerson :string,phoneNo : string,email : string, currency : string, publicNote : string,privateNote : string,paymentTerms : string, shipmentTerms : string,paymentMethodId : number,isActive: boolean,createdUser : string,updatedUser : string,versionFlag:number,paymentTermsId: number,paymentMethod : string,addressInfo: AddressDto[],fgItemCodeLength: number,rmItemCodeLength: number,externalRefNumber :  string)
     {
         this.buyerId = buyerId;
         this.buyerCode = buyerCode;     
@@ -73,6 +74,6 @@ export class BuyersDto{
         this.addressInfo = addressInfo;
         this.fgItemCodeLength = fgItemCodeLength;
         this.rmItemCodeLength = rmItemCodeLength
-
+        this.externalRefNumber = externalRefNumber
     }
 }
