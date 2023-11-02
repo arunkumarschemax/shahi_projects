@@ -1227,6 +1227,7 @@ export const extractMaersk = async (pdf) => {
     if (currentHSN) {
         structuredHSNLines.push(currentHSN);
     }
+
     const InvoiceLines = [];
     let currentInvoice = null;
     let gstNumberExtracted = false;
@@ -1242,15 +1243,12 @@ export const extractMaersk = async (pdf) => {
         let venName = '';
         let invoiceDate = '';
         let invoiceNumber = '';
+        let gstNumber = '';
 
         for (const line of extractedData) {
-            const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
-            if (gstMatch && !gstNumberExtracted) {
-                const gstNumber = gstMatch[0];
-
-                if (gstNumber === '29AAJCS1175L1ZU' || gstNumber === '06AAJCS1175L1Z2') {
-                    venName = 'Damco India Pvt. Ltd';
-                }
+            if (line.content.includes('DAMCO GSTIN:')) {
+                gstNumber = line.content.split('DAMCO GSTIN:')[1].trim();
+                venName = 'Damco India Pvt. Ltd';
 
                 const invoiceDateData = extractedData.find((item) => item.content.match(invoiceDateRegex));
                 invoiceDate = invoiceDateData ? invoiceDateData.content : '';
@@ -1297,13 +1295,14 @@ export const extractMaersk = async (pdf) => {
         }
     }
 
-    console.log("DART PDF DATA", JSON.stringify(allLines, null, 2))
+    console.log("DART PDF DATA", JSON.stringify(allLines, null, 2));
     console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
     console.log("PDF INVOICE Data", JSON.stringify(InvoiceLines, null, 2));
     return {
         extractedData: InvoiceLines[0],
         extractedHsnData: structuredHSNLines
-    }
+    };
+
     // const InvoiceLines = [];
     // let currentInvoice = null;
     // let gstNumberExtracted = false;
