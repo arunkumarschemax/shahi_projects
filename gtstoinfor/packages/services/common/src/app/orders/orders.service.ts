@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders, CoLineStatusReq, TrimOrdersReq, ordersPlanNo, RequiredColumns } from '@project-management-system/shared-models';
+import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders, CoLineStatusReq, TrimOrdersReq, ordersPlanNo, RequiredColumns, ordersMailFileStatusArrayReq } from '@project-management-system/shared-models';
 import axios, { Axios } from 'axios';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
@@ -42,10 +42,11 @@ import { CoLine } from './entities/co-line.entity';
 import { CoLineRepository } from './repository/co-line-repo';
 let moment = require('moment');
 moment().format();
+import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class OrdersService {
-
+    private transporter: nodemailer.Transporter;
     constructor(
         private ordersAdapter: OrdersAdapter,
         private trimordersAdapter: TrimOrdersAdapter,
@@ -64,7 +65,16 @@ export class OrdersService {
         @InjectEntityManager() private readonly entityManager: EntityManager,
         
 
-    ) { }
+    ) { 
+        this.transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: 'uma.boddeda@schemaxtech.com',
+              pass: 'nizt qqgq lech eoyj',
+            },
+          });
+      
+    }
     //for email integration
     private logger = winston.createLogger({
         level: 'info',
@@ -103,7 +113,9 @@ export class OrdersService {
                         missedColumns.add(requiredKey)
                     }
                 }
+                console.log(missedColumns,'--------------missedcolumn------------------')
                 if((missedColumns.size !==0 )){
+                    console.log('release')
                     await transactionManager.releaseTransaction()
                     return new CommonResponseModel(false,24,'Required Columns missed',Array.from(missedColumns));
                 }
@@ -113,18 +125,19 @@ export class OrdersService {
                     if(!lowerCasedProductionOrderColumns.includes(rec))
                        mismatchColumns.add(rec);
                 })
-                
+                console.log(mismatchColumns,'-------------------mismatchColumns--------')
                 if((mismatchColumns.size !==0 )){
+                    console.log('release_mismatch')
                     await transactionManager.releaseTransaction()
                     return new CommonResponseModel(false,23,'Columns does not match!',Array.from(mismatchColumns))
                 }
 
                 let dtoData:SaveOrderDto;
                 if(updatedObj.Order_Plan_Number !== null){
-                    dtoData = new SaveOrderDto(null,updatedObj.Year,updatedObj.Planning_Ssn_Cd,updatedObj.Planning_Ssn,updatedObj.Tgt_Ssn_Cd,updatedObj.Tgt_Ssn,updatedObj.Biz_Cd,updatedObj.Biz,updatedObj.Planning_Region_Code,updatedObj.Planning_Region_Name,updatedObj.Channel_Code,updatedObj.Channel_Name,updatedObj.Department,updatedObj.Dept_Cd,updatedObj.Cls1_Cd,updatedObj.Cls2_Cd,updatedObj.G_Dept,updatedObj.Sub_Category1,updatedObj.Core_Category,updatedObj.Sub_Category2,updatedObj.Sub_Category3,updatedObj.Production_Category_Fabric,updatedObj.Production_Category_FabricProcessing,updatedObj.Production_Category_Sewing,updatedObj.Production_Category_SewingProcessing,updatedObj.Planning_Sum_Code,updatedObj.Planning_Sum,updatedObj.Local_NameGHQ,updatedObj.Item_Cd,updatedObj.Item,updatedObj.Orig_Price,updatedObj.Main_Sample_Code,updatedObj.FR_Fabric_Code,updatedObj.FR_Fabric,updatedObj.Supplier_Raw_Material_Code,updatedObj.Supplier_Raw_Material,updatedObj.Raw_Material_Supplier_Code,updatedObj.Raw_Material_Supplier,updatedObj.Vendor_Code,updatedObj.Vendor,updatedObj.Sewing_Factory_Code,updatedObj.Sewing_Factory,updatedObj.Branch_Factory_Code,updatedObj.Branch_Factory,updatedObj.Coeff,updatedObj.month,updatedObj.Item_Brunch_Number,(updatedObj.Official_Plan_Std_Qty).toString().replace(/,/g,''),(updatedObj.Official_Plan_Fab_Prp_Pln_Qty).toString().replace(/,/g,''),(updatedObj.Official_Plan_PO_pr_Sls_Qty).toString().replace(/,/g,''),(updatedObj.Official_Plan_CO_Qty).toString().replace(/,/g,''),(updatedObj.Official_Plan_Stock_Qty).toString().replace(/,/g,''),updatedObj.Sls_Start_Dy ? moment(updatedObj.Sls_Start_Dy).format('MM-DD') : null,updatedObj.Publish_Flag_for_Factory,updatedObj.Publish_Date,updatedObj.Allc_End_Dy ? moment(updatedObj.Allc_End_Dy).format('MM-DD') : null,updatedObj.Sls_End_Dy ? moment(updatedObj.Sls_End_Dy).format('MM-DD') : null,updatedObj.GWH ? moment(updatedObj.GWH).format('MM-DD'): null,updatedObj.Order_Plan_Number,updatedObj.Order_Timing,updatedObj.Swng_Prd_Month ? moment(updatedObj.Swng_Prd_Month).format('YYYY-MM') : null,updatedObj.Swng_Prd_Week ? moment(updatedObj.Swng_Prd_Week).format('YYYY-MM-DD') : null,(updatedObj.Order_Plan_Qty).toString().replace(/,/g,''),(updatedObj.Order_Plan_QtyCoeff).toString().replace(/,/g,''),updatedObj.Trnsp_Mthd,updatedObj.Prod_Plan_Type,updatedObj.Ph11st,updatedObj.WH ? moment(updatedObj.WH).format('MM-DD') : null,updatedObj.WH_Act,updatedObj.WHAuto ? moment(updatedObj.WHAuto).format('MM-DD') : null,updatedObj.Yarn_DL_Requested,updatedObj.Yarn_DL_Answered,updatedObj.Yarn_DL_Auto,updatedObj.Yarn_Production_Due_Date_Auto,updatedObj.Yarn_Auto_Reflection_Date ? moment(updatedObj.Yarn_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.Yarn_Act_Dy,updatedObj.Yarn_Act_Qty,updatedObj.Yarn_Order_Number,updatedObj.Yarn_Order_Status,updatedObj.Yarn_Delivery_Date, updatedObj.Fbrc_DL_Requested ? moment(updatedObj.Fbrc_DL_Requested).format('MM-DD') : null,updatedObj.Fbrc_DL_Answered ? moment(updatedObj.Fbrc_DL_Answered).format('YYYY-MM-DD') : null,updatedObj.Fbrc_DL_Auto ? moment(updatedObj.Fbrc_DL_Auto).format('MM-DD') : null,updatedObj.Fbrc_Production_Due_Date_Auto,updatedObj.Fbrc_Auto_Reflection_Date ? moment(updatedObj.Fbrc_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.Fbrc_Act_Dy,updatedObj.Fbrc_Act_Qty,updatedObj.Fbrc_Order_Number,updatedObj.Fbrc_Order_Status,updatedObj.Fbrc_Delivery_Date ? moment(updatedObj.Fbrc_Delivery_Date).format('MM-DD') : null,updatedObj.Color_DL_Requested,updatedObj.Color_DL_Answered,updatedObj.Color_DL_Auto,updatedObj.Color_Production_Due_Date_Auto,updatedObj.Color_Auto_Reflection_Date ? moment(updatedObj.Color_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.Color_Act_Dy,updatedObj.Color_Act_Qty,updatedObj.Color_Order_Number,updatedObj.Color_Order_Status,updatedObj.Color_Delivery_Date,updatedObj.Trim_DL_Requested ? moment(updatedObj.Trim_DL_Requested).format('MM-DD') : null,updatedObj.Trim_DL_Answered ? moment(updatedObj.Trim_DL_Answered).format('YYYY-MM-DD') : null,updatedObj.Trim_DL_Auto ? moment(updatedObj.Trim_DL_Auto).format('MM-DD'): null,updatedObj.Trim_Production_Due_Date_Auto,updatedObj.Trim_Auto_Reflection_Date ? moment(updatedObj.Trim_Auto_Reflection_Date).format('MM-DD'):null,updatedObj.Trim_Act_Dy,updatedObj.Trim_Act_Qty,updatedObj.Trim_Order_Number,updatedObj.Trim_Order_Status,updatedObj.Trim_Delivery_Date,updatedObj.PO_DL_Requested ? moment(updatedObj.PO_DL_Requested).format('MM-DD') : null,updatedObj.PO_DL_Answered ? moment(updatedObj.PO_DL_Answered).format('YYYY-MM-DD') : null,updatedObj.PO_DL_Auto ? moment(updatedObj.PO_DL_Auto).format('MM-DD') : null,updatedObj.PO_Production_Due_Date_Auto,updatedObj.PO_Auto_Reflection_Date ? moment(updatedObj.PO_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.PO_Act_Dy,updatedObj.PO_Act_Qty,updatedObj.PO_Order_Number,updatedObj.PO_Order_Status,updatedObj.Assort1,updatedObj.Assort2,updatedObj.NX_Assort,updatedObj.Solid,updatedObj.Order_Plan_QtySTOP,updatedObj.Fix_Flag,updatedObj.Alternative_Flag,updatedObj.Express_Line_Flag,updatedObj.Factory_Comment,updatedObj.Planned_EXF ? moment(updatedObj.Planned_EXF).format('YYYY-MM-DD') : null,updatedObj.EXF_ETD,updatedObj.ETD_WH,updatedObj.Sewing_Country_Region,updatedObj.Raw_Material_Original_Country_Region,updatedObj.Item_Drop,updatedObj.Create_Date ? moment(updatedObj.Create_Date).format('YYYY-MM-DD HH:mm') : null,updatedObj.Create_User_ID,updatedObj.Create_User_Name,updatedObj.Create_Function,updatedObj.Update_Date ? moment(updatedObj.Update_Date).format('YYYY-MM-DD HH:mm'): null,updatedObj.Update_User_ID,updatedObj.Update_User_Name,updatedObj.Update_Function,updatedObj.CountY,updatedObj.Sample,updatedObj.EXF ? moment(updatedObj.EXF).format('MM-DD'): null,updatedObj.BDDL ? moment(updatedObj.BDDL).format('MM-DD') : null,updatedObj.BDDLpast_Past,updatedObj.LTBD_EXF,updatedObj.New_BDDL,updatedObj.new_LTBD_EXF,updatedObj.LTPO_EXF,updatedObj.Qty_LTBD_EXF,updatedObj.Qty_LTPO_EXF,updatedObj.County2Y,updatedObj.PHASE,id,null,'bidhun');
+                    dtoData = new SaveOrderDto(null,updatedObj.Year,updatedObj.Planning_Ssn_Cd,updatedObj.Planning_Ssn,updatedObj.Tgt_Ssn_Cd,updatedObj.Tgt_Ssn,updatedObj.Biz_Cd,updatedObj.Biz,updatedObj.Planning_Region_Code,updatedObj.Planning_Region_Name,updatedObj.Channel_Code,updatedObj.Channel_Name,updatedObj.Department,updatedObj.Dept_Cd,updatedObj.Cls1_Cd,updatedObj.Cls2_Cd,updatedObj.G_Dept,updatedObj.Sub_Category1,updatedObj.Core_Category,updatedObj.Sub_Category2,updatedObj.Sub_Category3,updatedObj.Production_Category_Fabric,updatedObj.Production_Category_FabricProcessing,updatedObj.Production_Category_Sewing,updatedObj.Production_Category_SewingProcessing,updatedObj.Planning_Sum_Code,updatedObj.Planning_Sum,updatedObj.Local_NameGHQ,updatedObj.Item_Cd,updatedObj.Item,updatedObj.Orig_Price,updatedObj.Main_Sample_Code,updatedObj.FR_Fabric_Code,updatedObj.FR_Fabric,updatedObj.Supplier_Raw_Material_Code,updatedObj.Supplier_Raw_Material,updatedObj.Raw_Material_Supplier_Code,updatedObj.Raw_Material_Supplier,updatedObj.Vendor_Code,updatedObj.Vendor,updatedObj.Sewing_Factory_Code,updatedObj.Sewing_Factory,updatedObj.Branch_Factory_Code,updatedObj.Branch_Factory,updatedObj.Coeff,updatedObj.month,updatedObj.Item_Brunch_Number,(updatedObj.Official_Plan_Std_Qty)?.toString().replace(/,/g,''),(updatedObj.Official_Plan_Fab_Prp_Pln_Qty)?.toString().replace(/,/g,''),(updatedObj.Official_Plan_PO_pr_Sls_Qty)?.toString().replace(/,/g,''),(updatedObj.Official_Plan_CO_Qty)?.toString().replace(/,/g,''),(updatedObj.Official_Plan_Stock_Qty)?.toString().replace(/,/g,''),updatedObj.Sls_Start_Dy ? moment(updatedObj.Sls_Start_Dy).format('MM-DD') : null,updatedObj.Publish_Flag_for_Factory,updatedObj.Publish_Date,updatedObj.Allc_End_Dy ? moment(updatedObj.Allc_End_Dy).format('MM-DD') : null,updatedObj.Sls_End_Dy ? moment(updatedObj.Sls_End_Dy).format('MM-DD') : null,updatedObj.GWH ? moment(updatedObj.GWH).format('MM-DD'): null,updatedObj.Order_Plan_Number,updatedObj.Order_Timing,updatedObj.Swng_Prd_Month ? moment(updatedObj.Swng_Prd_Month).format('YYYY-MM') : null,updatedObj.Swng_Prd_Week ? moment(updatedObj.Swng_Prd_Week).format('YYYY-MM-DD') : null,(updatedObj.Order_Plan_Qty)?.toString().replace(/,/g,''),(updatedObj.Order_Plan_QtyCoeff)?.toString().replace(/,/g,''),updatedObj.Trnsp_Mthd,updatedObj.Prod_Plan_Type,updatedObj.Ph11st,updatedObj.WH ? moment(updatedObj.WH).format('MM-DD') : null,updatedObj.WH_Act,updatedObj.WHAuto ? moment(updatedObj.WHAuto).format('MM-DD') : null,updatedObj.Yarn_DL_Requested,updatedObj.Yarn_DL_Answered,updatedObj.Yarn_DL_Auto,updatedObj.Yarn_Production_Due_Date_Auto,updatedObj.Yarn_Auto_Reflection_Date ? moment(updatedObj.Yarn_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.Yarn_Act_Dy,updatedObj.Yarn_Act_Qty,updatedObj.Yarn_Order_Number,updatedObj.Yarn_Order_Status,updatedObj.Yarn_Delivery_Date, updatedObj.Fbrc_DL_Requested ? moment(updatedObj.Fbrc_DL_Requested).format('MM-DD') : null,updatedObj.Fbrc_DL_Answered ? moment(updatedObj.Fbrc_DL_Answered).format('YYYY-MM-DD') : null,updatedObj.Fbrc_DL_Auto ? moment(updatedObj.Fbrc_DL_Auto).format('MM-DD') : null,updatedObj.Fbrc_Production_Due_Date_Auto,updatedObj.Fbrc_Auto_Reflection_Date ? moment(updatedObj.Fbrc_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.Fbrc_Act_Dy,updatedObj.Fbrc_Act_Qty,updatedObj.Fbrc_Order_Number,updatedObj.Fbrc_Order_Status,updatedObj.Fbrc_Delivery_Date ? moment(updatedObj.Fbrc_Delivery_Date).format('MM-DD') : null,updatedObj.Color_DL_Requested,updatedObj.Color_DL_Answered,updatedObj.Color_DL_Auto,updatedObj.Color_Production_Due_Date_Auto,updatedObj.Color_Auto_Reflection_Date ? moment(updatedObj.Color_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.Color_Act_Dy,updatedObj.Color_Act_Qty,updatedObj.Color_Order_Number,updatedObj.Color_Order_Status,updatedObj.Color_Delivery_Date,updatedObj.Trim_DL_Requested ? moment(updatedObj.Trim_DL_Requested).format('MM-DD') : null,updatedObj.Trim_DL_Answered ? moment(updatedObj.Trim_DL_Answered).format('YYYY-MM-DD') : null,updatedObj.Trim_DL_Auto ? moment(updatedObj.Trim_DL_Auto).format('MM-DD'): null,updatedObj.Trim_Production_Due_Date_Auto,updatedObj.Trim_Auto_Reflection_Date ? moment(updatedObj.Trim_Auto_Reflection_Date).format('MM-DD'):null,updatedObj.Trim_Act_Dy,updatedObj.Trim_Act_Qty,updatedObj.Trim_Order_Number,updatedObj.Trim_Order_Status,updatedObj.Trim_Delivery_Date,updatedObj.PO_DL_Requested ? moment(updatedObj.PO_DL_Requested).format('MM-DD') : null,updatedObj.PO_DL_Answered ? moment(updatedObj.PO_DL_Answered).format('YYYY-MM-DD') : null,updatedObj.PO_DL_Auto ? moment(updatedObj.PO_DL_Auto).format('MM-DD') : null,updatedObj.PO_Production_Due_Date_Auto,updatedObj.PO_Auto_Reflection_Date ? moment(updatedObj.PO_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.PO_Act_Dy,updatedObj.PO_Act_Qty,updatedObj.PO_Order_Number,updatedObj.PO_Order_Status,updatedObj.Assort1,updatedObj.Assort2,updatedObj.NX_Assort,updatedObj.Solid,updatedObj.Order_Plan_QtySTOP,updatedObj.Fix_Flag,updatedObj.Alternative_Flag,updatedObj.Express_Line_Flag,updatedObj.Factory_Comment,updatedObj.Planned_EXF ? moment(updatedObj.Planned_EXF).format('YYYY-MM-DD') : null,updatedObj.EXF_ETD,updatedObj.ETD_WH,updatedObj.Sewing_Country_Region,updatedObj.Raw_Material_Original_Country_Region,updatedObj.Item_Drop,updatedObj.Create_Date ? moment(updatedObj.Create_Date).format('YYYY-MM-DD HH:mm') : null,updatedObj.Create_User_ID,updatedObj.Create_User_Name,updatedObj.Create_Function,updatedObj.Update_Date ? moment(updatedObj.Update_Date).format('YYYY-MM-DD HH:mm'): null,updatedObj.Update_User_ID,updatedObj.Update_User_Name,updatedObj.Update_Function,updatedObj.CountY,updatedObj.Sample,updatedObj.EXF ? moment(updatedObj.EXF).format('MM-DD'): null,updatedObj.BDDL ? moment(updatedObj.BDDL).format('MM-DD') : null,updatedObj.BDDLpast_Past,updatedObj.LTBD_EXF,updatedObj.New_BDDL,updatedObj.new_LTBD_EXF,updatedObj.LTPO_EXF,updatedObj.Qty_LTBD_EXF,updatedObj.Qty_LTPO_EXF,updatedObj.County2Y,updatedObj.PHASE,id,null,'bidhun');
                     let newDate
-                    if(dtoData.exf == null){
-                    let inputDate = moment(dtoData.wh).format('MM-DD');
+                    if(dtoData.exf == null && dtoData.wh != null){
+                    let inputDate = dtoData.wh ? moment(dtoData.wh).format('MM-DD') : null;
                     let parts = inputDate.split('-');
                     let months = parseInt(parts[0], 10);
                     let day = parseInt(parts[1], 10);
@@ -137,9 +150,11 @@ export class OrdersService {
                 } else {
                     break;
                 }
+                // console.log(dtoData,'_**********')
                 dtoArray.push(dtoData);
-                        
+                // console.log(dtoArray,'***************')
             };
+            console.log(dtoArray,'------------')
             const slicedDataArray=this.sliceIntoChunks(dtoArray,100);
             const promises=[]
             slicedDataArray.forEach(rec=>{
@@ -151,6 +166,7 @@ export class OrdersService {
 
      
         } catch (error) {
+            console.log(error,')((((((((')
             await transactionManager.releaseTransaction()
             return new CommonResponseModel(false, 0, error);
         }
@@ -1432,7 +1448,7 @@ async processEmails() {
           writeStream.on('finish', () => {
             const finishLogMessage = `${prefix}Done writing to file: ${filename}`;
             this.logger.info(finishLogMessage);
-            // console.log(finishLogMessage);
+                        // console.log(finishLogMessage);
             // console.log(finishLogMessage);
             // './upload-files/007Q2_Shahi_0807.csv
             // this.readCell(savePath + filename,filename)
@@ -1531,7 +1547,7 @@ async processEmails() {
     });
 
     imap.connect();
-
+    
     const findAttachmentParts = (struct, attachments = []) => {
       for (let i = 0; i < struct.length; ++i) {
         if (Array.isArray(struct[i])) {
@@ -1555,7 +1571,7 @@ async processEmails() {
           }
         }
       }
-      return attachments;
+          return attachments;
     };
 
     // console.log(filesArray)
@@ -1565,6 +1581,7 @@ async processEmails() {
 
 //   async getFiles 
   async readCell(filepath,filename):Promise<CommonResponseModel> {
+    let filesArray = []
     // console.log(req,'filesdataaaa')
     const fs = require('fs');
     const files = fs.readdirSync('./upload-files/');
@@ -1633,7 +1650,6 @@ async processEmails() {
                                         break;
                                     }
                                 }
-                                console.log(columnNames,'oooooooo')
                                 // console.log(rows,'---------------')
                                 // rows.shift(); // Separate first row with column names
                                 // rows.shift(); // Separate first row with column names
@@ -1642,7 +1658,6 @@ async processEmails() {
                                 // rows.shift(); // Separate first row with column name
                                 // rows.shift(); // Separate first row with column name
                                 // const columnNames = rows.shift(); // Separate first row with column names
-                                console.log(columnNames,'----------cccccccc')
                                 rows.map((row) => { // Map the rest of the rows into objects
                                   const obj = {}; // Create object literal for current row
                                   row.forEach((cell, i) => {
@@ -1690,8 +1705,10 @@ async processEmails() {
                     }
                     console.log(req,'valuuuuu')
                     const updateFileStatus = await this.updateFileStatus(req)
+                    filesArray.push(new ordersMailFileStatusArrayReq(filename,req.status,req.status === 'Failed' ? req.failedReason : '' , req.status === 'Failed' ? req.columns : ''))
                 }else{
                     // return false
+                    filesArray.push(new ordersMailFileStatusArrayReq(filename,'Failed',saveFilePath.internalMessage))
                 }
                 // return dataArray
             }else{
@@ -1699,7 +1716,7 @@ async processEmails() {
             }
     }
 
-    
+    this.sendMail('balirajeswari11@gmail.com','test mail',filesArray)
     return 
     
     }
@@ -2338,5 +2355,56 @@ async getLatestPreviousFilesData():Promise<CommonResponseModel>{
         throw err
     }
 }
+
+async sendMail(to: string, subject: string, message : any[]) {
+    // const name = to.replace(/@gmail.com/gi, '').replace(/[^a-zA-Z.@]/g, '').replace(/@schemaxtech.com/gi, '');
+    const name = to.replace(/[^a-zA-Z.@]/g, '').split("@")[0];
+    console.log(name);
+
+    // const emailBody = this.birthdayTemplate.replace(/{{name}}/g, name);
+    const emailBody = []
+    // for(const rec of message){
+    //     emailBody.push(Object.keys(rec))
+    // }
+    let content = message.reduce(function(a, b) {
+        return a + '<tr bgcolor="#ffffff"><td>' + b.fileName + '</a></td><td>' + b.status + '</td><td>' + b.reason + '</td><td>' + b.columns + '</td></tr>';
+    }, '');
+
+    // const pdfOptions = {
+    //   format: 'auto',
+    //   base: 'file:///' + path.resolve(process.cwd(), 'src', 'email', 'templates'),
+    // };
+
+    // const pdfBuffer = await new Promise<Buffer>((resolve, reject) => {
+    //   pdf.create(emailBody, pdfOptions).toBuffer((err, buffer) => {
+    //     if (err) {
+    //       reject(err);
+    //     } else {
+    //       resolve(buffer);
+    //     }
+    //   });
+    // });
+
+    // const attachments = [
+    //   {
+    //     filename: 'email_body.pdf',
+    //     content: pdfBuffer,
+    //   },
+    // ];
+
+    await this.transporter.sendMail({
+      from: 'uma.boddeda@schemaxtech.com',
+      to,
+      subject,
+      text:'',
+      html: '<div><table cellspacing="3" bgcolor="#000000"><thead><tr bgcolor="#ffffff"><th>File Name</th><th width="25%">Status</th><th>Reason</th><th>Columns</th></tr></thead><tbody>' + 
+      content + '</tbody></table></div>',
+    context:{
+
+    }
+    });
+  }
+
+
 }
   

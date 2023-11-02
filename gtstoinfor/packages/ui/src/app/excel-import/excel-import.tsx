@@ -211,7 +211,7 @@ export default function ExcelImport() {
           let currentIndex = 0; // Initialize an index variable
           while (currentIndex < csvData[0].length) {
               const rec = csvData[0][currentIndex];              
-              if (rec[0] === 'No') {
+              if (rec[0] != null) {
                   break;
               } else {
                   csvData[0].shift(); // Shift the row if rec[0] is not 'No'
@@ -220,9 +220,9 @@ export default function ExcelImport() {
           // csvData[0].shift()
           // csvData[0].shift()
           // csvData[0].shift()
-          console.log(csvData)
+          // console.log(csvData)
           const filteredNestedData = csvData.filter(innerData => innerData.some(row => row.length > 0));
-  
+          
           const output = filteredNestedData.map(innerData => {
             const header = innerData[0];
             return innerData.slice(1).map(row => {
