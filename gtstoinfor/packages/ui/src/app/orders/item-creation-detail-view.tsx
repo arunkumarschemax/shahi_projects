@@ -256,7 +256,7 @@ export function ItemCreationDetailView  (props: Props)  {
         return foundStyle ? foundStyle.searchGrpName : "-";
       }
     function getComposition(data) {
-        const foundComp = compositiondata[data].filter(dat => dat.id === data);
+        const foundComp =  Object.assign(compositiondata).find(dat => dat.id === data);
          console.log(compositiondata[data],"foundComp")
         return foundComp ? foundComp.compositionCode : "-";
       }
