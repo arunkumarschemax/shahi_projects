@@ -2,7 +2,7 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { StyleOrderService } from "./style-order.service";
-import { CoUpdateResponseModel, CommonResponseModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
+import { CoUpdateResponseModel, CommonResponseModel, StyleOrderIdReq, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
 import { StyleOrderId } from "./style-order-id.request";
 import { CoUpdateDto } from "./dto/co-update.dto";
 import { StyleOrderColineIdReq } from "./style-order.colineId.request";
@@ -90,12 +90,12 @@ export class StyleOrderController{
         }
     }
 
-    @Post('/getCoDataByCoLineId')
-    @ApiBody({type:StyleOrderColineIdReq})
+    @Post('/getCoLineDataById')
+    @ApiBody({type:StyleOrderId})
 
-    async getCoDataByCoLineId(@Body() req:any):Promise<CommonResponseModel>{
+    async getCoLineDataById(@Body() req:any):Promise<CommonResponseModel>{
         try{
-            return await this.styleOrderService.getCoDataByCoLineId(req)
+            return await this.styleOrderService.getCoLineDataById(req)
         }catch(err){
             return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
         }
@@ -105,6 +105,7 @@ export class StyleOrderController{
     @ApiBody({type:CoUpdateDto})
 
     async updateCoData(@Body() req:any):Promise<CoUpdateResponseModel>{
+        console.log(req,"contr")
         try{
             return await this.styleOrderService.updateCoData(req)
         }catch(err){

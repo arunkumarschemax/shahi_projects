@@ -1,6 +1,6 @@
 import { PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
-import { BuyerIdReq, BuyersDestinationRequest, DepartmentReq,MenusAndScopesEnum,SampleDevDto,SampleDevelopmentRequest } from "@project-management-system/shared-models";
+import { BuyerExtrnalRefIdReq, BuyerIdReq, BuyersDestinationRequest, DepartmentReq,MenusAndScopesEnum,SampleDevDto,SampleDevelopmentRequest } from "@project-management-system/shared-models";
 import {BuyerDestinationService, BuyersService,CountryService,CurrencyService,EmployeeDetailsService,LiscenceTypeService,LocationsService,MasterBrandsService,ProfitControlHeadService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Modal, Row, Select, message } from "antd";
 import { useEffect, useState } from "react";
@@ -64,15 +64,22 @@ let userRef
     Login()
   }, []);
   const Login = () =>{
-    if(role === MenusAndScopesEnum.roles.Buyer){
-      userRef = externalRefNo
+    const req = new BuyerExtrnalRefIdReq()
+    if(role === MenusAndScopesEnum.roles.crmBuyer){
+      req.extrnalRefId = externalRefNo
     }
-    buyerService.getBuyerByRefId(userRef).then(res=>{
+    buyerService.getBuyerByRefId(req).then(res=>{
       if(res.status){
         setUserId(res.data)
   setLoginBuyer(res.data.buyerId)
       }
     })
+
+    buyerService.getAllActiveBuyers(req).then((res) => {
+      if (res.status) {
+        setBuyer(res.data);
+      }
+    });
   }
   const handleBuyerChange = (value) => {
     setSelectedBuyerId(value);
@@ -125,12 +132,7 @@ let userRef
   };
 
   const getBuyers = () => {
-    const loginId = new BuyerIdReq(loginBuyer)
-    buyerService.getAllActiveBuyers(loginId).then((res) => {
-      if (res.status) {
-        setBuyer(res.data);
-      }
-    });
+
   };
 
   

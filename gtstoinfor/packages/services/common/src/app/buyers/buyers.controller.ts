@@ -6,7 +6,7 @@ import { BuyersRequest } from './dto/buyers.request';
 import { BuyersDTO } from './dto/buyers.dto';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { BuyersResponseModel } from 'packages/libs/shared-models/src/common/buyers/buyers.response.model';
-import { AllBuyersResponseModel, BuyerRequest, BuyersGeneralAttributeResponseModel, CommonResponseModel, BuyersOrderAttributeResponseModel, BuyerIdReq } from '@project-management-system/shared-models';
+import { AllBuyersResponseModel, BuyerRequest, BuyersGeneralAttributeResponseModel, CommonResponseModel, BuyersOrderAttributeResponseModel, BuyerIdReq, BuyerExtrnalRefIdReq } from '@project-management-system/shared-models';
 import { BuyersGeneralAttributeDto } from './dto/buyers-general-attributes.dto';
 import { BuyersGeneralAttributeService } from './buyers-general-attributes.service';
 import { BuyersOrderAttributeService } from './buyers-order-attributes.service';
@@ -62,7 +62,8 @@ export class BuyersController {
         }
     }
     @Post('/getAllActiveBuyers')
-    async getAllActiveBuyers(@Req() req?: string): Promise<AllBuyersResponseModel> {
+    @ApiBody({type:BuyerExtrnalRefIdReq})
+    async getAllActiveBuyers(@Req() req?: any): Promise<AllBuyersResponseModel> {
         try {
             return await this.buyersService.getAllActiveBuyersInfo(req);
         } catch (error) {
@@ -153,7 +154,8 @@ export class BuyersController {
     }
 
     @Post('/getAllBuyersInfo')
-    async getAllBuyersInfo(@Body()req?:string): Promise<CommonResponseModel> {
+    @ApiBody({type:BuyerExtrnalRefIdReq})
+    async getAllBuyersInfo(@Body() req:any): Promise<CommonResponseModel> {
         try {
             return await this.buyersService.getAllBuyersInfo(req);
         } catch (error) {
@@ -188,7 +190,8 @@ export class BuyersController {
         }
     }
     @Post('/getBuyerByRefId')
-    async getBuyerByRefId(@Body() req:string): Promise<CommonResponseModel> {
+    @ApiBody({type:BuyerExtrnalRefIdReq})
+    async getBuyerByRefId(@Body() req:any): Promise<CommonResponseModel> {
         try {
             return await this.buyersService.getBuyerByRefId(req);
         } catch (err) {

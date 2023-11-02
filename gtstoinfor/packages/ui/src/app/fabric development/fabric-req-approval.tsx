@@ -1,5 +1,5 @@
 import { SearchOutlined, UndoOutlined } from '@ant-design/icons'
-import { BuyerIdReq, FabricApprovalReq, MenusAndScopesEnum, QualitiesEnum } from '@project-management-system/shared-models'
+import { BuyerExtrnalRefIdReq, BuyerIdReq, FabricApprovalReq, MenusAndScopesEnum, QualitiesEnum } from '@project-management-system/shared-models'
 import { BuyersService, EmployeeDetailsService, FabricDevelopmentService, LocationsService, ProfitControlHeadService, SampleTypesService, StyleService } from '@project-management-system/shared-services'
 import { Button, Card, Checkbox, Col, Form, Row, Select } from 'antd'
 import Table, { ColumnsType } from 'antd/es/table'
@@ -40,14 +40,21 @@ export const FabricReqApproval = () => {
 
 
     const Login = () =>{
-        if(role === MenusAndScopesEnum.roles.Buyer){
-          userRef = externalRefNo
+        const req = new BuyerExtrnalRefIdReq()
+        if(role === MenusAndScopesEnum.roles.crmBuyer){
+          req.extrnalRefId = externalRefNo
         }
-        buyerService.getBuyerByRefId(userRef).then(res=>{
+      
+        buyerService.getBuyerByRefId(req).then(res=>{
           if(res.status){
             setUserId(res.data)
       setLoginBuyer(res.data.buyerId)
           }
+        })
+        buyerService.getAllBuyersInfo(req).then((res)=>{
+            if(res.status){
+                setBuyerId(res.data)
+            }
         })
       }
     const fabricApprovalData = (val) => {
@@ -74,11 +81,7 @@ export const FabricReqApproval = () => {
                         setPchId(res.data)
                     }
                 })
-                buyerService.getAllBuyersInfo(userRef).then((res)=>{
-                    if(res.status){
-                        setBuyerId(res.data)
-                    }
-                })
+               
 
                 sampleService.getAllSampleTypes().then((res)=>{
                     if(res.status){

@@ -1,4 +1,5 @@
 import {
+    BuyerExtrnalRefIdReq,
     BuyerIdReq,
     BuyersDestinationDto,
     // BuyersDestinationModel,
@@ -85,10 +86,11 @@ export const BuyersDestinationForm = () => {
         Login()
     }, []);
     const Login = () =>{
-  if(role === MenusAndScopesEnum.roles.Buyer){
-    userRef = externalRefNo
+        const req = new BuyerExtrnalRefIdReq()
+  if(role === MenusAndScopesEnum.roles.crmBuyer){
+    req.extrnalRefId = externalRefNo
   }
-  buyerService.getBuyerByRefId(userRef).then(res=>{
+  buyerService.getBuyerByRefId(req).then(res=>{
     if(res.status){
       setUserId(res.data)
 setLoginBuyer(res.data?.buyerId)

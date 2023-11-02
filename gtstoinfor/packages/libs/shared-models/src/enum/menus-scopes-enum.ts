@@ -77,7 +77,7 @@ export const MenusAndScopesEnum ={
     roles:{
        
         'Admin' : 'Admin',
-        'Buyer' : 'Buyer',
+        'crmBuyer' : 'crmBuyer',
     }
      
 }

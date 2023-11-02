@@ -1,4 +1,4 @@
-import { BuyerIdReq, BuyersDestinationRequest, CustomerOrderStatusEnum, ItemCodeReq, MenusAndScopesEnum, SKUGenerationReq, StyleOrderIdReq, StyleOrderItemsReq, StyleOrderReq, UomCategoryEnum, UomCategoryRequest } from "@project-management-system/shared-models";
+import { BuyerExtrnalRefIdReq, BuyerIdReq, BuyersDestinationRequest, CustomerOrderStatusEnum, ItemCodeReq, MenusAndScopesEnum, SKUGenerationReq, StyleOrderIdReq, StyleOrderItemsReq, StyleOrderReq, UomCategoryEnum, UomCategoryRequest } from "@project-management-system/shared-models";
 import { BuyerDestinationService, BuyersService, CoTypeService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DestinationService, EmployeeDetailsService, FactoryService, ItemCreationService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, SKUGenerationService, StyleOrderService, UomService, WarehouseService } from "@project-management-system/shared-services"
 import { Button, Card, Col, DatePicker, Form, Input, Row, Segmented, Select, Space, Table } from "antd"
 import TextArea from "antd/es/input/TextArea";
@@ -127,7 +127,7 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
 
     useEffect(() => {
         getItemCodes()
-        getBuyersInfo()
+        // getBuyersInfo()
         getfactoryInfo()
         getWarehouseInfo()
         getAgentInfo()
@@ -142,14 +142,20 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
         getAllUoms()
     },[])
     const Login = () =>{
-        if(role === MenusAndScopesEnum.roles.Buyer){
-          userRef = externalRefNo
+        const req = new BuyerExtrnalRefIdReq()
+        if(role === MenusAndScopesEnum.roles.crmBuyer){
+          req.extrnalRefId = externalRefNo
         }
         buyerService.getBuyerByRefId(userRef).then(res=>{
           if(res.status){
             setUserId(res.data)
       setLoginBuyer(res.data.buyerId)
           }
+        })
+        buyerService.getAllActiveBuyers(req).then(res => {
+            if(res.status){
+                setBuyers(res.data)
+            }
         })
       }
     const getItemCodes = () => {
@@ -160,14 +166,6 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
         })
     }
 
-    const getBuyersInfo = () => {
-        const loginId = new BuyerIdReq(loginBuyer)
-        buyerService.getAllActiveBuyers(loginId).then(res => {
-            if(res.status){
-                setBuyers(res.data)
-            }
-        })
-    }
 
     const getBuyersAddressInfo = (buyerId) => {
         const req = new BuyerIdReq(buyerId)
