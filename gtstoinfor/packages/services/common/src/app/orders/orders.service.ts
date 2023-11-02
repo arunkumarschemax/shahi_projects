@@ -113,7 +113,6 @@ export class OrdersService {
                         missedColumns.add(requiredKey)
                     }
                 }
-                console.log(missedColumns,'--------------missedcolumn------------------')
                 if((missedColumns.size !==0 )){
                     console.log('release')
                     await transactionManager.releaseTransaction()
@@ -125,7 +124,6 @@ export class OrdersService {
                     if(!lowerCasedProductionOrderColumns.includes(rec))
                        mismatchColumns.add(rec);
                 })
-                console.log(mismatchColumns,'-------------------mismatchColumns--------')
                 if((mismatchColumns.size !==0 )){
                     console.log('release_mismatch')
                     await transactionManager.releaseTransaction()
@@ -134,7 +132,7 @@ export class OrdersService {
 
                 let dtoData:SaveOrderDto;
                 if(updatedObj.Order_Plan_Number !== null){
-                    dtoData = new SaveOrderDto(null,updatedObj.Year,updatedObj.Planning_Ssn_Cd,updatedObj.Planning_Ssn,updatedObj.Tgt_Ssn_Cd,updatedObj.Tgt_Ssn,updatedObj.Biz_Cd,updatedObj.Biz,updatedObj.Planning_Region_Code,updatedObj.Planning_Region_Name,updatedObj.Channel_Code,updatedObj.Channel_Name,updatedObj.Department,updatedObj.Dept_Cd,updatedObj.Cls1_Cd,updatedObj.Cls2_Cd,updatedObj.G_Dept,updatedObj.Sub_Category1,updatedObj.Core_Category,updatedObj.Sub_Category2,updatedObj.Sub_Category3,updatedObj.Production_Category_Fabric,updatedObj.Production_Category_FabricProcessing,updatedObj.Production_Category_Sewing,updatedObj.Production_Category_SewingProcessing,updatedObj.Planning_Sum_Code,updatedObj.Planning_Sum,updatedObj.Local_NameGHQ,updatedObj.Item_Cd,updatedObj.Item,updatedObj.Orig_Price,updatedObj.Main_Sample_Code,updatedObj.FR_Fabric_Code,updatedObj.FR_Fabric,updatedObj.Supplier_Raw_Material_Code,updatedObj.Supplier_Raw_Material,updatedObj.Raw_Material_Supplier_Code,updatedObj.Raw_Material_Supplier,updatedObj.Vendor_Code,updatedObj.Vendor,updatedObj.Sewing_Factory_Code,updatedObj.Sewing_Factory,updatedObj.Branch_Factory_Code,updatedObj.Branch_Factory,updatedObj.Coeff,updatedObj.month,updatedObj.Item_Brunch_Number,(updatedObj.Official_Plan_Std_Qty)?.toString().replace(/,/g,''),(updatedObj.Official_Plan_Fab_Prp_Pln_Qty)?.toString().replace(/,/g,''),(updatedObj.Official_Plan_PO_pr_Sls_Qty)?.toString().replace(/,/g,''),(updatedObj.Official_Plan_CO_Qty)?.toString().replace(/,/g,''),(updatedObj.Official_Plan_Stock_Qty)?.toString().replace(/,/g,''),updatedObj.Sls_Start_Dy ? moment(updatedObj.Sls_Start_Dy).format('MM-DD') : null,updatedObj.Publish_Flag_for_Factory,updatedObj.Publish_Date,updatedObj.Allc_End_Dy ? moment(updatedObj.Allc_End_Dy).format('MM-DD') : null,updatedObj.Sls_End_Dy ? moment(updatedObj.Sls_End_Dy).format('MM-DD') : null,updatedObj.GWH ? moment(updatedObj.GWH).format('MM-DD'): null,updatedObj.Order_Plan_Number,updatedObj.Order_Timing,updatedObj.Swng_Prd_Month ? moment(updatedObj.Swng_Prd_Month).format('YYYY-MM') : null,updatedObj.Swng_Prd_Week ? moment(updatedObj.Swng_Prd_Week).format('YYYY-MM-DD') : null,(updatedObj.Order_Plan_Qty)?.toString().replace(/,/g,''),(updatedObj.Order_Plan_QtyCoeff)?.toString().replace(/,/g,''),updatedObj.Trnsp_Mthd,updatedObj.Prod_Plan_Type,updatedObj.Ph11st,updatedObj.WH ? moment(updatedObj.WH).format('MM-DD') : null,updatedObj.WH_Act,updatedObj.WHAuto ? moment(updatedObj.WHAuto).format('MM-DD') : null,updatedObj.Yarn_DL_Requested,updatedObj.Yarn_DL_Answered,updatedObj.Yarn_DL_Auto,updatedObj.Yarn_Production_Due_Date_Auto,updatedObj.Yarn_Auto_Reflection_Date ? moment(updatedObj.Yarn_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.Yarn_Act_Dy,updatedObj.Yarn_Act_Qty,updatedObj.Yarn_Order_Number,updatedObj.Yarn_Order_Status,updatedObj.Yarn_Delivery_Date, updatedObj.Fbrc_DL_Requested ? moment(updatedObj.Fbrc_DL_Requested).format('MM-DD') : null,updatedObj.Fbrc_DL_Answered ? moment(updatedObj.Fbrc_DL_Answered).format('YYYY-MM-DD') : null,updatedObj.Fbrc_DL_Auto ? moment(updatedObj.Fbrc_DL_Auto).format('MM-DD') : null,updatedObj.Fbrc_Production_Due_Date_Auto,updatedObj.Fbrc_Auto_Reflection_Date ? moment(updatedObj.Fbrc_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.Fbrc_Act_Dy,updatedObj.Fbrc_Act_Qty,updatedObj.Fbrc_Order_Number,updatedObj.Fbrc_Order_Status,updatedObj.Fbrc_Delivery_Date ? moment(updatedObj.Fbrc_Delivery_Date).format('MM-DD') : null,updatedObj.Color_DL_Requested,updatedObj.Color_DL_Answered,updatedObj.Color_DL_Auto,updatedObj.Color_Production_Due_Date_Auto,updatedObj.Color_Auto_Reflection_Date ? moment(updatedObj.Color_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.Color_Act_Dy,updatedObj.Color_Act_Qty,updatedObj.Color_Order_Number,updatedObj.Color_Order_Status,updatedObj.Color_Delivery_Date,updatedObj.Trim_DL_Requested ? moment(updatedObj.Trim_DL_Requested).format('MM-DD') : null,updatedObj.Trim_DL_Answered ? moment(updatedObj.Trim_DL_Answered).format('YYYY-MM-DD') : null,updatedObj.Trim_DL_Auto ? moment(updatedObj.Trim_DL_Auto).format('MM-DD'): null,updatedObj.Trim_Production_Due_Date_Auto,updatedObj.Trim_Auto_Reflection_Date ? moment(updatedObj.Trim_Auto_Reflection_Date).format('MM-DD'):null,updatedObj.Trim_Act_Dy,updatedObj.Trim_Act_Qty,updatedObj.Trim_Order_Number,updatedObj.Trim_Order_Status,updatedObj.Trim_Delivery_Date,updatedObj.PO_DL_Requested ? moment(updatedObj.PO_DL_Requested).format('MM-DD') : null,updatedObj.PO_DL_Answered ? moment(updatedObj.PO_DL_Answered).format('YYYY-MM-DD') : null,updatedObj.PO_DL_Auto ? moment(updatedObj.PO_DL_Auto).format('MM-DD') : null,updatedObj.PO_Production_Due_Date_Auto,updatedObj.PO_Auto_Reflection_Date ? moment(updatedObj.PO_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.PO_Act_Dy,updatedObj.PO_Act_Qty,updatedObj.PO_Order_Number,updatedObj.PO_Order_Status,updatedObj.Assort1,updatedObj.Assort2,updatedObj.NX_Assort,updatedObj.Solid,updatedObj.Order_Plan_QtySTOP,updatedObj.Fix_Flag,updatedObj.Alternative_Flag,updatedObj.Express_Line_Flag,updatedObj.Factory_Comment,updatedObj.Planned_EXF ? moment(updatedObj.Planned_EXF).format('YYYY-MM-DD') : null,updatedObj.EXF_ETD,updatedObj.ETD_WH,updatedObj.Sewing_Country_Region,updatedObj.Raw_Material_Original_Country_Region,updatedObj.Item_Drop,updatedObj.Create_Date ? moment(updatedObj.Create_Date).format('YYYY-MM-DD HH:mm') : null,updatedObj.Create_User_ID,updatedObj.Create_User_Name,updatedObj.Create_Function,updatedObj.Update_Date ? moment(updatedObj.Update_Date).format('YYYY-MM-DD HH:mm'): null,updatedObj.Update_User_ID,updatedObj.Update_User_Name,updatedObj.Update_Function,updatedObj.CountY,updatedObj.Sample,updatedObj.EXF ? moment(updatedObj.EXF).format('MM-DD'): null,updatedObj.BDDL ? moment(updatedObj.BDDL).format('MM-DD') : null,updatedObj.BDDLpast_Past,updatedObj.LTBD_EXF,updatedObj.New_BDDL,updatedObj.new_LTBD_EXF,updatedObj.LTPO_EXF,updatedObj.Qty_LTBD_EXF,updatedObj.Qty_LTPO_EXF,updatedObj.County2Y,updatedObj.PHASE,id,null,'bidhun');
+                    dtoData = new SaveOrderDto(null,updatedObj.Year,updatedObj.Planning_Ssn_Cd,updatedObj.Planning_Ssn,updatedObj.Tgt_Ssn_Cd,updatedObj.Tgt_Ssn,updatedObj.Biz_Cd,updatedObj.Biz,updatedObj.Planning_Region_Code,updatedObj.Planning_Region_Name,updatedObj.Channel_Code,updatedObj.Channel_Name,updatedObj.Department,updatedObj.Dept_Cd,updatedObj.Cls1_Cd,updatedObj.Cls2_Cd,updatedObj.G_Dept,updatedObj.Sub_Category1,updatedObj.Core_Category,updatedObj.Sub_Category2,updatedObj.Sub_Category3,updatedObj.Production_Category_Fabric,updatedObj.Production_Category_FabricProcessing,updatedObj.Production_Category_Sewing,updatedObj.Production_Category_SewingProcessing,updatedObj.Planning_Sum_Code,updatedObj.Planning_Sum,updatedObj.Local_NameGHQ,updatedObj.Item_Cd,updatedObj.Item,updatedObj.Orig_Price,updatedObj.Main_Sample_Code,updatedObj.FR_Fabric_Code,updatedObj.FR_Fabric,updatedObj.Supplier_Raw_Material_Code,updatedObj.Supplier_Raw_Material,updatedObj.Raw_Material_Supplier_Code,updatedObj.Raw_Material_Supplier,updatedObj.Vendor_Code,updatedObj.Vendor,updatedObj.Sewing_Factory_Code,updatedObj.Sewing_Factory,updatedObj.Branch_Factory_Code,updatedObj.Branch_Factory,updatedObj.Coeff,updatedObj.month,updatedObj.Item_Brunch_Number,(updatedObj.Official_Plan_Std_Qty)?.toString().replace(/,/g,''),(updatedObj.Official_Plan_Fab_Prp_Pln_Qty)?.toString().replace(/,/g,''),(updatedObj.Official_Plan_PO_pr_Sls_Qty)?.toString().replace(/,/g,''),(updatedObj.Official_Plan_CO_Qty)?.toString().replace(/,/g,''),(updatedObj.Official_Plan_Stock_Qty)?.toString().replace(/,/g,''),updatedObj.Sls_Start_Dy ? moment(updatedObj.Sls_Start_Dy).format('MM-DD') : null,updatedObj.Publish_Flag_for_Factory,updatedObj.Publish_Date,updatedObj.Allc_End_Dy ? moment(updatedObj.Allc_End_Dy).format('MM-DD') : null,updatedObj.Sls_End_Dy ? moment(updatedObj.Sls_End_Dy).format('MM-DD') : null,updatedObj.GWH ? moment(updatedObj.GWH).format('MM-DD'): null,updatedObj.Order_Plan_Number,updatedObj.Order_Timing,updatedObj.Swng_Prd_Month ? moment(updatedObj.Swng_Prd_Month).format('YYYY-MM') : null,updatedObj.Swng_Prd_Week ? moment(updatedObj.Swng_Prd_Week).format('YYYY-MM-DD') : null,(updatedObj.Order_Plan_Qty).toString().replace(/,/g,''),(updatedObj.Order_Plan_QtyCoeff)?.toString().replace(/,/g,''),updatedObj.Trnsp_Mthd,updatedObj.Prod_Plan_Type,updatedObj.Ph11st,updatedObj.WH ? moment(updatedObj.WH).format('MM-DD') : null,updatedObj.WH_Act,updatedObj.WHAuto ? moment(updatedObj.WHAuto).format('MM-DD') : null,updatedObj.Yarn_DL_Requested,updatedObj.Yarn_DL_Answered,updatedObj.Yarn_DL_Auto,updatedObj.Yarn_Production_Due_Date_Auto,updatedObj.Yarn_Auto_Reflection_Date ? moment(updatedObj.Yarn_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.Yarn_Act_Dy,updatedObj.Yarn_Act_Qty,updatedObj.Yarn_Order_Number,updatedObj.Yarn_Order_Status,updatedObj.Yarn_Delivery_Date, updatedObj.Fbrc_DL_Requested ? moment(updatedObj.Fbrc_DL_Requested).format('MM-DD') : null,updatedObj.Fbrc_DL_Answered ? moment(updatedObj.Fbrc_DL_Answered).format('YYYY-MM-DD') : null,updatedObj.Fbrc_DL_Auto ? moment(updatedObj.Fbrc_DL_Auto).format('MM-DD') : null,updatedObj.Fbrc_Production_Due_Date_Auto,updatedObj.Fbrc_Auto_Reflection_Date ? moment(updatedObj.Fbrc_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.Fbrc_Act_Dy,updatedObj.Fbrc_Act_Qty,updatedObj.Fbrc_Order_Number,updatedObj.Fbrc_Order_Status,updatedObj.Fbrc_Delivery_Date ? moment(updatedObj.Fbrc_Delivery_Date).format('MM-DD') : null,updatedObj.Color_DL_Requested,updatedObj.Color_DL_Answered,updatedObj.Color_DL_Auto,updatedObj.Color_Production_Due_Date_Auto,updatedObj.Color_Auto_Reflection_Date ? moment(updatedObj.Color_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.Color_Act_Dy,updatedObj.Color_Act_Qty,updatedObj.Color_Order_Number,updatedObj.Color_Order_Status,updatedObj.Color_Delivery_Date,updatedObj.Trim_DL_Requested ? moment(updatedObj.Trim_DL_Requested).format('MM-DD') : null,updatedObj.Trim_DL_Answered ? moment(updatedObj.Trim_DL_Answered).format('YYYY-MM-DD') : null,updatedObj.Trim_DL_Auto ? moment(updatedObj.Trim_DL_Auto).format('MM-DD'): null,updatedObj.Trim_Production_Due_Date_Auto,updatedObj.Trim_Auto_Reflection_Date ? moment(updatedObj.Trim_Auto_Reflection_Date).format('MM-DD'):null,updatedObj.Trim_Act_Dy,updatedObj.Trim_Act_Qty,updatedObj.Trim_Order_Number,updatedObj.Trim_Order_Status,updatedObj.Trim_Delivery_Date,updatedObj.PO_DL_Requested ? moment(updatedObj.PO_DL_Requested).format('MM-DD') : null,updatedObj.PO_DL_Answered ? moment(updatedObj.PO_DL_Answered).format('YYYY-MM-DD') : null,updatedObj.PO_DL_Auto ? moment(updatedObj.PO_DL_Auto).format('MM-DD') : null,updatedObj.PO_Production_Due_Date_Auto,updatedObj.PO_Auto_Reflection_Date ? moment(updatedObj.PO_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.PO_Act_Dy,updatedObj.PO_Act_Qty,updatedObj.PO_Order_Number,updatedObj.PO_Order_Status,updatedObj.Assort1,updatedObj.Assort2,updatedObj.NX_Assort,updatedObj.Solid,updatedObj.Order_Plan_QtySTOP,updatedObj.Fix_Flag,updatedObj.Alternative_Flag,updatedObj.Express_Line_Flag,updatedObj.Factory_Comment,updatedObj.Planned_EXF ? moment(updatedObj.Planned_EXF).format('YYYY-MM-DD') : null,updatedObj.EXF_ETD,updatedObj.ETD_WH,updatedObj.Sewing_Country_Region,updatedObj.Raw_Material_Original_Country_Region,updatedObj.Item_Drop,updatedObj.Create_Date ? moment(updatedObj.Create_Date).format('YYYY-MM-DD HH:mm') : null,updatedObj.Create_User_ID,updatedObj.Create_User_Name,updatedObj.Create_Function,updatedObj.Update_Date ? moment(updatedObj.Update_Date).format('YYYY-MM-DD HH:mm'): null,updatedObj.Update_User_ID,updatedObj.Update_User_Name,updatedObj.Update_Function,updatedObj.CountY,updatedObj.Sample,updatedObj.EXF ? moment(updatedObj.EXF).format('MM-DD'): null,updatedObj.BDDL ? moment(updatedObj.BDDL).format('MM-DD') : null,updatedObj.BDDLpast_Past,updatedObj.LTBD_EXF,updatedObj.New_BDDL,updatedObj.new_LTBD_EXF,updatedObj.LTPO_EXF,updatedObj.Qty_LTBD_EXF,updatedObj.Qty_LTPO_EXF,updatedObj.County2Y,updatedObj.PHASE,id,null,'bidhun');
                     let newDate
                     if(dtoData.exf == null && dtoData.wh != null){
                     let inputDate = dtoData.wh ? moment(dtoData.wh).format('MM-DD') : null;
@@ -147,6 +145,7 @@ export class OrdersService {
                     newDate = moment(dateObject).format('MM-DD');
                     dtoData.exf=newDate;
                     }
+                    // console.log(dtoData,'dtoDatadtoDatadtoData')
                 } else {
                     break;
                 }
@@ -154,7 +153,6 @@ export class OrdersService {
                 dtoArray.push(dtoData);
                 // console.log(dtoArray,'***************')
             };
-            console.log(dtoArray,'------------')
             const slicedDataArray=this.sliceIntoChunks(dtoArray,100);
             const promises=[]
             slicedDataArray.forEach(rec=>{
@@ -166,7 +164,6 @@ export class OrdersService {
 
      
         } catch (error) {
-            console.log(error,')((((((((')
             await transactionManager.releaseTransaction()
             return new CommonResponseModel(false, 0, error);
         }
@@ -1589,7 +1586,6 @@ async processEmails() {
     // const req = [{filePath:'./upload-files/pro_orders_1.xlsx',fileName:'pro_orders_1.xlsx'},{filePath:'./upload-files/projection_orders_1.xlsx',fileName:'projection_orders_1.xlsx'}]
     for(const filerec of files){
         const filename = filerec
-        console.log(filerec,'filename')
         const filepath = './upload-files/'+filerec
 
         // // filename = 'pro_order_sep3.xlsx';
@@ -1601,7 +1597,6 @@ async processEmails() {
                 });
             })
             const sheets:any = await promiseA()
-            console.log('hhhhhoo',sheets)
 
 
 
@@ -1634,9 +1629,8 @@ async processEmails() {
                             break
                         }
                     }
-                    console.log(sheets,'sheets')
                             xlsxFile(filepath,{sheet:finalSheetName},{transformData(data){
-                                console.log(data)
+                                // console.log(data)
                                 // data.slice(0,3)
                                 // console.log(data)
                                 return data}})
@@ -1677,16 +1671,15 @@ async processEmails() {
             const dataArray = await promise();
         
             if(dataArray){
-                // console.log('dataArraymmmm',dataArray)
+                console.log('dataArraymmmm',dataArray)
                 
                 const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS,'Email')
                 // console.log(filepath,'jjjjj')
                 // console.log(filename,'jjjjj')
-                // console.log('saveFilePathhhhh')
                 if(saveFilePath.status){
                     // console.log(dataArray,'------------------------------------')
                     const saveProjOrders = await this.saveOrdersData(dataArray,saveFilePath.data.id,9)
-                    console.log(saveProjOrders,'saveProjOrders')
+                    // console.log(saveProjOrders,'saveProjOrders')
                     let req = new FileStatusReq();
                     req.fileId = saveFilePath.data.id;
                     req.userName = 'Bidhun'
@@ -1695,7 +1688,7 @@ async processEmails() {
                     }else{
                         req.failedReason = saveProjOrders.internalMessage
                         if(saveProjOrders?.data){
-                            console.log(saveProjOrders.data,'hhhhh')
+                            // console.log(saveProjOrders.data,'hhhhh')
                             req.columns = saveProjOrders.data
                             // const resData = saveProjOrders.data
                         }else{
@@ -1703,10 +1696,11 @@ async processEmails() {
                         }
                         req.status = 'Failed';
                     }
-                    console.log(req,'valuuuuu')
+                    // console.log(req,'valuuuuu')
                     const updateFileStatus = await this.updateFileStatus(req)
                     filesArray.push(new ordersMailFileStatusArrayReq(filename,req.status,req.status === 'Failed' ? req.failedReason : '' , req.status === 'Failed' ? req.columns : ''))
                 }else{
+                    console.log('falseeee')
                     // return false
                     filesArray.push(new ordersMailFileStatusArrayReq(filename,'Failed',saveFilePath.internalMessage))
                 }
