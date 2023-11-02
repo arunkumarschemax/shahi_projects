@@ -10,4 +10,10 @@ export class OperationTrackingRepository extends Repository<OperationTracking> {
     ) {
         super(operationSequence.target, operationSequence.manager, operationSequence.queryRunner);
     }
+
+    async getTrackingId(): Promise<any> {
+        const query = this.createQueryBuilder()
+            .select(` MAX(operation_tracking_id) as trackingId`)
+        return await query.getRawOne();
+    }
 }

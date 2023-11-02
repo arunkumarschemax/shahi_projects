@@ -19,4 +19,4 @@ import { OperationTrackingRepository } from './repo/operation-tracking-repositor
   providers: [OperationTrackingService,ApplicationExceptionHandler,OperationInventoryRepository,OperationTrackingRepository],
   exports: [OperationTrackingService],
 })
-export class OperationSequenceModule {}
+export class OperationTrackingModule {}
