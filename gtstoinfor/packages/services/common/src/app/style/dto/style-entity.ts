@@ -3,6 +3,7 @@ import { ComponentMappingEntity } from "../../components-mapping/component-mappi
 import { OperationSequence } from "../../operation-sequence/operation-sequence.entity";
 import { SampleRequest } from "../../sample-dev-request/entities/sample-dev-request.entity";
 import { StyleOrder } from "../../style-order/style-order.entity";
+import { OperationTracking } from "../../operation-issuing/entity/operation-tracking-entity";
 
 @Entity('style')
 export class Style {
@@ -104,5 +105,8 @@ export class Style {
 
   @OneToMany(type=>StyleOrder, style=>style.styleInfo,{cascade: true})
   styleOrderInfo:StyleOrder;
+
+  @OneToMany(()=>OperationTracking, tracking => tracking.style, {cascade: true})
+  tracking : OperationTracking[]
 
 }

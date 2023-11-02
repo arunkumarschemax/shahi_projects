@@ -1,8 +1,9 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn,ManyToOne, JoinColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn,ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { OperationGroups } from "../operation-groups/operation-groups.entity";
 import { Operations } from "../operations/operation.entity";
 import { Item } from "../items/item-entity";
 import { Style } from "../style/dto/style-entity";
+import { OperationTracking } from "../operation-issuing/entity/operation-tracking-entity";
 
 @Entity('operation_sequence')
 export class OperationSequence{
@@ -92,5 +93,7 @@ export class OperationSequence{
     @JoinColumn({ name:"style_id"})
     styleInfo: Style;
 
+    @OneToMany(()=>OperationTracking, tracking => tracking.operationSequence, {cascade: true})
+    tracking : OperationTracking[]
 
 }
