@@ -4,8 +4,8 @@ import { OperationTrackingService } from "./operation-tracking.service";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { CommonResponseModel, OperationSequenceResponse } from "@project-management-system/shared-models";
 
-@ApiTags('operation-issuing')
-@Controller('operation-issuing')
+@ApiTags('operation-tracking')
+@Controller('operation-tracking')
 export class OperationIssuingController{
     constructor(
         private operationGroupsService: OperationTrackingService,
