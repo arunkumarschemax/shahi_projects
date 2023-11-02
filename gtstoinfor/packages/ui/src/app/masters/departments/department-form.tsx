@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, Card, Row, Col } from 'antd';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { DepartmentsDtos } from '@project-management-system/shared-models';
 import { DepartmentService } from '@project-management-system/shared-services';
 import { __values } from 'tslib';
@@ -21,6 +21,7 @@ export const DepartmentForm=(props:DepartmentFromProps)=>{
 
     const service = new DepartmentService();
     let history =useLocation();
+    let navigate = useNavigate()
 
     let createdUser="";
     if(!props.isUpdate){
@@ -61,9 +62,9 @@ export const DepartmentForm=(props:DepartmentFromProps)=>{
       
 
       return(
-        <Card title={<span>Departments</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} 
-        extra={props.isUpdate==true?"":<Link to='/masters/department/department-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
-       >
+        <Card title={props.isUpdate ? 'Departments' :'Departments'} 
+        extra={(props.isUpdate==false) && <span><Button onClick={()=> navigate('/masters/department/department-view')} type={'primary'}>View</Button></span>}>
+       
 <Form
 layout={'vertical'}
 form={form}
