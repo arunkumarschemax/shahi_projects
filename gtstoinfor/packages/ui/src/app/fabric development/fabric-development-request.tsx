@@ -20,7 +20,7 @@ import { BuyersService, EmployeeDetailsService, FabricDevelopmentService, Fabric
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link, useNavigate } from "react-router-dom";
 import FabricDevelopmentRequestQuality from "./fabric-development-quality-request";
-import { FabricDevelopmentRequestModel, StatusEnum } from "@project-management-system/shared-models";
+import { BuyerIdReq, FabricDevelopmentRequestModel, MenusAndScopesEnum, StatusEnum } from "@project-management-system/shared-models";
 
 export interface FabricDevelopmentRequestProps {
   placementForm:FormInstance<any>;
@@ -42,6 +42,11 @@ export const FabricDevelopmentRequest = (props:FabricDevelopmentRequestProps) =>
   const [fabricFilelist,setFabricFilelist] = useState<any[]>([]);
   const [disable, setDisable] = useState<boolean>(false)
   const [resetData, setResetData] = useState<boolean>(false)
+  const [userId, setUserId] = useState([]); 
+  const [loginBuyer,setLoginBuyer] = useState<number>(0)
+  const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+  const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
+let userRef
 
   let navigate = useNavigate();
 
@@ -186,10 +191,21 @@ console.log(filesArray,"######");
       getAllActiveEmploee();
       getAllActiveLocations();
       getAllstyle()
+     Login()
 
     },[])
   
-  
+  const Login = () =>{
+  if(role === MenusAndScopesEnum.roles.Buyer){
+    userRef = externalRefNo
+  }
+  buyerService.getBuyerByRefId(userRef).then(res=>{
+    if(res.status){
+      setUserId(res.data)
+setLoginBuyer(res.data.buyerId)
+    }
+  })
+}
     const getAllActiveProfitControlHead=() =>{
       Pchservice.getAllActiveProfitControlHead().then(res =>{
       if (res.status){
@@ -206,7 +222,8 @@ console.log(filesArray,"######");
   }
 
   const getAllActiveBuyers=() =>{
-    buyerService.getAllActiveBuyers().then(res =>{
+        // const loginId = new BuyerIdReq(loginBuyer)
+    buyerService.getAllActiveBuyers(userRef).then(res =>{
     if (res.status){
       setBuyerData(res.data);
        

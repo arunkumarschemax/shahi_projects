@@ -87,11 +87,14 @@ export class BuyersService {
     /**
      * get All Customers Details
      */
-    async getAllBuyers(): Promise<AllBuyersResponseModel> {
+    async getAllBuyers(req?:BuyerIdReq): Promise<AllBuyersResponseModel> {
         try {
             const buyersDTO: BuyersDTO[] = [];
-            const buyersEntities: Buyers[] = await this.buyersRepository.find({ order: { 'buyerName': 'ASC' },relations:['paymentTermsInfo','paymentMethodInfo','adressInfo']});
-            if (buyersEntities) {
+            const buyersEntities: Buyers[] = await this.buyersRepository.find({ 
+                order: { 'buyerName': 'ASC' },
+                relations:['paymentTermsInfo','paymentMethodInfo','adressInfo'],
+                where: {buyerId: req.buyerId}})
+                if (buyersEntities) {
                 // converts the data fetched from the database which of type companies array to type StateDto array.
                 buyersEntities.forEach(buyerEntity => {
                     const convertedbuyersDto: BuyersDTO = this.buyersAdapter.convertEntityToDto(
@@ -232,9 +235,9 @@ export class BuyersService {
         }
     }
 
-    async getAllBuyersInfo(): Promise<CommonResponseModel>{
+    async getAllBuyersInfo(req?:string): Promise<CommonResponseModel>{
         try{
-            const buyerInfo = await this.buyersRepository.getBuyerInfo()
+            const buyerInfo = await this.buyersRepository.getBuyerInfo(req)
             const buyerMap = new Map<number,BuyersDto>()
             if(buyerInfo.length == 0){
                 return new CommonResponseModel(false,1,'No buyers found',[])
@@ -279,9 +282,9 @@ export class BuyersService {
     //     }
     // }
 
-    async getAllActiveBuyersInfo(): Promise<CommonResponseModel>{
+    async getAllActiveBuyersInfo(req?:string): Promise<CommonResponseModel>{
         try{
-            const buyerInfo = await this.buyersRepository.getBuyerInfo()
+            const buyerInfo = await this.buyersRepository.getBuyerInfo(req)
             const buyerMap = new Map<number,BuyersDto>()
             if(buyerInfo.length == 0){
                 return new CommonResponseModel(false,1,'No buyers found',[])
@@ -313,6 +316,16 @@ export class BuyersService {
 
         }catch(err){
             throw err
+        }
+    }
+    async getBuyerByRefId(refId: string): Promise<CommonResponseModel> {
+        const Response = await this.buyersRepository.findOne({
+        // where: {buyerId: refId},
+        });
+        if (Response) {
+            return new CommonResponseModel(true,1,'Data retrieved',Response)
+        } else {
+            return new CommonResponseModel(false,1,'No buyers found',[]);
         }
     }
 

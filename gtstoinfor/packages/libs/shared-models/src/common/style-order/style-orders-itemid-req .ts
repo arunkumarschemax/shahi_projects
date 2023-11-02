@@ -1,9 +1,11 @@
 export class styleOrderReq {
     itemId:number
     coId?:number
-    constructor(itemId:number, coId?:number){
+    buyerId?:number
+    constructor(itemId:number, coId?:number,buyerId?:number){
         this.itemId = itemId
         this.coId = coId
+        this.buyerId = buyerId
     }
 }
 

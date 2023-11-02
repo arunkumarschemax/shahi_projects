@@ -1,5 +1,5 @@
 import { SearchOutlined, UndoOutlined } from '@ant-design/icons'
-import { FabricApprovalReq, QualitiesEnum } from '@project-management-system/shared-models'
+import { BuyerIdReq, FabricApprovalReq, MenusAndScopesEnum, QualitiesEnum } from '@project-management-system/shared-models'
 import { BuyersService, EmployeeDetailsService, FabricDevelopmentService, LocationsService, ProfitControlHeadService, SampleTypesService, StyleService } from '@project-management-system/shared-services'
 import { Button, Card, Checkbox, Col, Form, Row, Select } from 'antd'
 import Table, { ColumnsType } from 'antd/es/table'
@@ -28,13 +28,28 @@ export const FabricReqApproval = () => {
     const buyerService = new BuyersService()
     const sampleService = new SampleTypesService()
     const employeeService = new EmployeeDetailsService()
-
+    const [userId, setUserId] = useState([]); 
+    const [loginBuyer,setLoginBuyer] = useState<number>(0)
+    const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+    const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
+  let userRef
     useEffect(()=>{
         fabricReqData()
+        Login()
     },[])
 
 
-
+    const Login = () =>{
+        if(role === MenusAndScopesEnum.roles.Buyer){
+          userRef = externalRefNo
+        }
+        buyerService.getBuyerByRefId(userRef).then(res=>{
+          if(res.status){
+            setUserId(res.data)
+      setLoginBuyer(res.data.buyerId)
+          }
+        })
+      }
     const fabricApprovalData = (val) => {
         if(idReq){
         const req = new FabricApprovalReq(idReq,val.requestNo,selectedQuality);
@@ -59,8 +74,7 @@ export const FabricReqApproval = () => {
                         setPchId(res.data)
                     }
                 })
-
-                buyerService.getAllBuyersInfo().then((res)=>{
+                buyerService.getAllBuyersInfo(userRef).then((res)=>{
                     if(res.status){
                         setBuyerId(res.data)
                     }

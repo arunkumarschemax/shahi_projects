@@ -1,5 +1,5 @@
 import { ProColumns, ProTable } from '@ant-design/pro-components'
-import { BuyerIdReq, BuyerRequest, BuyersDto, FactoryActivateDeactivateDto, FactoryDto, OperationGroupsDto } from '@project-management-system/shared-models'
+import { BuyerIdReq, BuyerRequest, BuyersDto, FactoryActivateDeactivateDto, FactoryDto, MenusAndScopesEnum, OperationGroupsDto } from '@project-management-system/shared-models'
 import { BuyersService, FactoryService } from '@project-management-system/shared-services'
 import { Button, Card, Col, Divider, Drawer, Form, Input, Modal, Popconfirm, Radio, Row, Space, Switch, Table, Tag, Tooltip, message } from 'antd'
 import { forEachObject } from 'for-each'
@@ -27,22 +27,41 @@ export const  BuyersView = () => {
   const [form] = Form.useForm()
   const [addressModal,setAddressModal] = useState<boolean>(false)
   const [buyerId,setBuyerId] = useState<number>(0)
-
+  const [userId, setUserId] = useState([]); 
+  const [loginBuyer,setLoginBuyer] = useState<number>(0)
+  const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+  const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
+let userRef
 
 
 
   useEffect(() => {
+    // Login()
     getBuyersData()
   },[])
 
-
+// const Login = () =>{
+//   if(role === MenusAndScopesEnum.roles.Buyer){
+//     userRef = externalRefNo
+//   }
+//   buyerService.getBuyerByRefId(userRef).then(res=>{
+//     if(res.status){
+//       setUserId(res.data)
+// setLoginBuyer(res.data.buyerId)
+//     }
+//   })
+// }
 
   const getBuyersData = () => {
-    buyerService.getAllBuyersInfo().then(res => {
+   
+    // const loginId = new BuyerIdReq(loginBuyer)
+    buyerService.getAllBuyersInfo(externalRefNo).then(res => {
+      
       if(res.status){
         setBuyersData(res.data)
       }
     })
+    
   }
 
   const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
