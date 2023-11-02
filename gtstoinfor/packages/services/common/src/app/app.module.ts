@@ -24,7 +24,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       database: appConfig.database.dbName,
       autoLoadEntities: true,
       synchronize: false,
-      logging: false,
+      logging: true,
       extra: {
         connectionLimit: 100
       }
