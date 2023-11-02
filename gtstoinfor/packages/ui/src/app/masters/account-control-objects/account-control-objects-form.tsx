@@ -83,9 +83,7 @@ export const AccountControlObjectForm = (props:AccountControlobjectFormProps) =>
     return (
       <Card title={props.isUpdate ? 
         'Update account Control Object' : 'Add account Control Object'}
-         extra={(props.isUpdate === false) && <span><Button 
-          onClick={() => navigate('/masters/accountcontrolobject/accountcontrolobject-view')} 
-      type={'primary'}>View</Button></span>}>
+         extra={(props.isUpdate === false) && <span><Button  onClick={() => navigate('/masters/accountcontrolobject/accountcontrolobject-view')}   type={'primary'}>View</Button></span>}>
        <Form.Item name="accountControlObjectId" style={{ display: 'none' }}>
             <Input hidden />
           </Form.Item>

@@ -187,9 +187,9 @@ export const baseRouterList = [
         children: [
             {
                 label: "Account Control Object",
-                key: "accountcontrolobjects",
-                path: "accountcontrolobjects/accountcontrolobjects-view",
-                filepath: "accountcontrolobjects/accountcontrolobjects-view",
+                key: "accountcontrolobject",
+                path: "accountcontrolobject/accountcontrolobject-view",
+                filepath: "accountcontrolobject/accountcontrolobject-view",
             },
             {
                 label: "Brands",

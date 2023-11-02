@@ -407,7 +407,7 @@ export const AppRoutes = () => {
                  isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
-                 <Route path='accountcontrolobjects/accountcontrolobjects-view' element={<AccountControlObjectGrid/>} />
+                 <Route path='accountcontrolobject/accountcontrolobject-view' element={<AccountControlObjectGrid/>} />
                          <Route path='accountcontrolobjects/accountcontrolobjects-form' key ='accountcontrolobjects/accountcontrolobjects-form' element={<AccountControlObjectForm  accountControlData={undefined}
 
                  isUpdate={false}
@@ -591,7 +591,7 @@ export const AppRoutes = () => {
                 <Route path='/materialCreation'>
                     <Route path='sku-list' element={<SkuList/>}/>
                     <Route path='sku-mapping' element={<SKUGeneration/>}/>
-                    <Route path='item-creation' element={<ItemCreation isUpdate={false} closeForm={function (): void {
+                    <Route path='item-creation' element={<ItemCreation itemCreationData={undefined} isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
                         } }/>}/>
                     <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
