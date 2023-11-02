@@ -46,17 +46,20 @@ export interface COAmendmentGridProps {
 
   }
   
-   console.log(codata)
+   console.log(JSON.parse(localStorage.getItem('currentUser')).user.userName)
+
       
   
   const onButtonChange1 = (rowData) => { 
     console.log(rowData,"rowdata")
-    const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.coLineNumber,coLineData,"orderline","admin")
+    
+    const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.coLineNumber,coLineData,"orderline",JSON.parse(localStorage.getItem('currentUser')).user.userName)
     services.updateCoData(req).then((res)=>{
       if (res.status){
         getCoLineData();
        message.success(res.internalMessage);
-       rowData.coLineData
+       
+       
       
    } else{
 
@@ -72,7 +75,7 @@ export interface COAmendmentGridProps {
 
     const onButtonChange2 = (rowData) => { 
       console.log(rowData,"rowdata")
-      const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.salePrice,fobData,"fob","admin")
+      const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.salePrice,fobData,"fob",JSON.parse(localStorage.getItem('currentUser')).user.userName)
     services.updateCoData(req).then((res)=>{
       if (res.status){
        message.success(res.internalMessage);
@@ -92,7 +95,7 @@ export interface COAmendmentGridProps {
 
     const onButtonChange3 = (rowData) => { 
         console.log(rowData,"rowdata")
-        const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.vpo,vpoData,"vponumber","admin")
+        const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.vpo,vpoData,"vponumber",JSON.parse(localStorage.getItem('currentUser')).user.userName)
         services.updateCoData(req).then((res)=>{
           if (res.status){
            message.success(res.internalMessage);
@@ -112,7 +115,7 @@ export interface COAmendmentGridProps {
 
     const onButtonChange4 = (rowData) => { 
          console.log(rowData,"rowdata")
-         const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.deliveryDate,deliveryDateData,"deliverydate","admin")
+         const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.deliveryDate,deliveryDateData,"deliverydate",JSON.parse(localStorage.getItem('currentUser')).user.userName)
         services.updateCoData(req).then((res)=>{
           if (res.status){
            message.success(res.internalMessage);
@@ -133,7 +136,7 @@ export interface COAmendmentGridProps {
         
    const onButtonChange5 = (rowData) => { 
             console.log(rowData,"rowdata")
-            const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.deliveryAddress,destinationData,"destinationaddress","admin")
+            const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.deliveryAddress,destinationData,"destinationaddress",JSON.parse(localStorage.getItem('currentUser')).user.userName)
             services.updateCoData(req).then((res)=>{
               if (res.status){
                message.success(res.internalMessage);
@@ -152,7 +155,7 @@ export interface COAmendmentGridProps {
           
    const onButtonChange6 = (rowData) => { 
         console.log(rowData,"rowdata")
-        const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.orderQuantity,quantityData,"quantity","admin")
+        const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.orderQuantity,quantityData,"quantity",JSON.parse(localStorage.getItem('currentUser')).user.userName)
             services.updateCoData(req).then((res)=>{
               if (res.status){ 
                message.success(res.internalMessage);
@@ -205,7 +208,7 @@ export interface COAmendmentGridProps {
         },
         {
           title: 'CO Line Number',
-          dataIndex: 'Line',
+          dataIndex: 'newcoLineNumber',
           render:(value,row,index) => {
             return(
                 <>
@@ -218,6 +221,8 @@ export interface COAmendmentGridProps {
               xl={{ span: 10 }}
             >
                 <Form.Item 
+                  name = {`Co${row.styleOrderItemsId}`}
+
                   rules={[
                     {
                       required: true,
@@ -229,11 +234,12 @@ export interface COAmendmentGridProps {
                     }
                   ]}
                  >
-                 <Input key={index} placeholder="Enter CO Line Number" 
-                  // defaultValue={row.coLineNumber}
-                    // onBlur={(e)> colineInfo(e,index,row)}
+                 <Input
+                    name= {`Co${row.styleOrderItemsId}`}
+                    placeholder="Enter CO Line Number" 
                     onBlur={(e) => setCoLineData(e.target.value)}
-                    // required={true}
+                    required={true}
+                    
                     
                     /> 
                     </Form.Item>

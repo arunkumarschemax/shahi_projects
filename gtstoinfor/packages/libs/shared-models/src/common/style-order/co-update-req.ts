@@ -7,8 +7,8 @@ export class CoUpdateReq{
     oldValue:string;
     updateValue:string;
     parameter:string
-    createUser:string
-    updateUser?:string
+    createdUser:string
+    updatedUser?:string
 
 
     constructor(
@@ -18,8 +18,8 @@ export class CoUpdateReq{
     oldValue:string,
     updateValue:string,
     parameter:string,
-    createUser:string,
-    updateUser?:string)
+    createdUser:string,
+    updatedUser?:string)
     {
     this.coId = coId
     this.coLineId = coLineId
@@ -27,7 +27,7 @@ export class CoUpdateReq{
     this.oldValue = oldValue
     this.updateValue = updateValue
     this.parameter = parameter
-    this.createUser = createUser
-    this.updateUser = updateUser
+    this.createdUser = createdUser
+    this.updatedUser = updatedUser
     }
 }

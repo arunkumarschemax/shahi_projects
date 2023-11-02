@@ -1,5 +1,5 @@
 import { BgColorsOutlined, EnvironmentOutlined, SearchOutlined, SkinOutlined, UndoOutlined } from "@ant-design/icons"
-import { BuyerIdReq, BuyersDestinationRequest, MenusAndScopesEnum } from "@project-management-system/shared-models"
+import { BuyerExtrnalRefIdReq, BuyerIdReq, BuyersDestinationRequest, MenusAndScopesEnum } from "@project-management-system/shared-models"
 import { BuyerDestinationService, BuyersService, DestinationService, SizeService } from "@project-management-system/shared-services"
 import { Button, Row, Col, Select, Table,Form, Modal, Divider } from "antd"
 import Card from "antd/es/card/Card"
@@ -44,10 +44,11 @@ let userRef
     },[])
     
 const Login = () =>{
-  if(role === MenusAndScopesEnum.roles.Buyer){
-    userRef = externalRefNo
+  const req = new BuyerExtrnalRefIdReq()
+  if(role === MenusAndScopesEnum.roles.crmBuyer){
+    req.extrnalRefId = externalRefNo
   }
-  buyerService.getBuyerByRefId(userRef).then(res=>{
+  buyerService.getBuyerByRefId(req).then(res=>{
     if(res.status){
       setUserId(res.data)
 setLoginBuyer(res.data.buyerId)

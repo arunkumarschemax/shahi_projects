@@ -6,7 +6,7 @@ import { BuyersRequest } from './dto/buyers.request';
 import { BuyersAdapter } from './dto/buyers.adapter';
 import { BuyersDTO } from './dto/buyers.dto';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
-import { AllBuyersResponseModel, BuyerIdReq, BuyersDto, BuyersResponseModel, CommonResponseModel } from '@project-management-system/shared-models';
+import { AllBuyersResponseModel, BuyerExtrnalRefIdReq, BuyerIdReq, BuyersDto, BuyersResponseModel, CommonResponseModel } from '@project-management-system/shared-models';
 import { UserRequestDto } from '../currencies/dto/user-logs-dto';
 import { Address } from './address.entity';
 import { BuyerRepository } from './buyers.repository';
@@ -235,7 +235,7 @@ export class BuyersService {
         }
     }
 
-    async getAllBuyersInfo(req?:string): Promise<CommonResponseModel>{
+    async getAllBuyersInfo(req?:BuyerExtrnalRefIdReq): Promise<CommonResponseModel>{
         try{
             const buyerInfo = await this.buyersRepository.getBuyerInfo(req)
             const buyerMap = new Map<number,BuyersDto>()
@@ -282,7 +282,7 @@ export class BuyersService {
     //     }
     // }
 
-    async getAllActiveBuyersInfo(req?:string): Promise<CommonResponseModel>{
+    async getAllActiveBuyersInfo(req?:BuyerExtrnalRefIdReq): Promise<CommonResponseModel>{
         try{
             const buyerInfo = await this.buyersRepository.getBuyerInfo(req)
             const buyerMap = new Map<number,BuyersDto>()
@@ -318,9 +318,9 @@ export class BuyersService {
             throw err
         }
     }
-    async getBuyerByRefId(refId: string): Promise<CommonResponseModel> {
+    async getBuyerByRefId(refId: BuyerExtrnalRefIdReq): Promise<CommonResponseModel> {
         const Response = await this.buyersRepository.findOne({
-        // where: {buyerId: refId},
+         where: {externalRefNumber : refId.extrnalRefId},
         });
         if (Response) {
             return new CommonResponseModel(true,1,'Data retrieved',Response)

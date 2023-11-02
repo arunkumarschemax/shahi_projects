@@ -6,7 +6,7 @@ import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BuyersService, CurrencyService, DeliveryMethodService, DeliveryTermsService, PackageTermsService, PaymentMethodService, PaymentTermsService, StyleOrderService, WarehouseService } from "@project-management-system/shared-services";
-import { CustomerOrderStatusEnum, MenusAndScopesEnum, PackageTermsDto, PaymentMethodDto, PaymentTermsDto, StyleOrderReq, styleOrderReq } from "@project-management-system/shared-models";
+import { BuyerExtrnalRefIdReq, CustomerOrderStatusEnum, MenusAndScopesEnum, PackageTermsDto, PaymentMethodDto, PaymentTermsDto, StyleOrderReq, styleOrderReq } from "@project-management-system/shared-models";
 import moment from "moment";
 import StyleOrderCreation from "./style-order-form";
 import RolePermission from "../roles-permission";
@@ -59,13 +59,20 @@ let val = 0
       Login()
   },[])
   const Login = () =>{
-    if(role === MenusAndScopesEnum.roles.Buyer){
-      userRef = externalRefNo
+    const req = new BuyerExtrnalRefIdReq
+    if(role === MenusAndScopesEnum.roles.crmBuyer){
+      req.extrnalRefId = externalRefNo
     }
-    buyerService.getBuyerByRefId(userRef).then(res=>{
+    
+    buyerService.getBuyerByRefId(req).then(res=>{
       if(res.status){
         setUserId(res.data)
-  setLoginBuyer(res.data.buyerId)
+  setLoginBuyer(res.data.buyerId)  
+      }
+    })
+    buyerService.getAllActiveBuyers(req).then(res=>{
+      if(res.status){
+            setBuyerId(res.data)
       }
     })
   }
@@ -76,9 +83,10 @@ let val = 0
  
   const getData = () => {
     const req = new styleOrderReq(4)
-    if(role === MenusAndScopesEnum.roles.Buyer){
+    if(role === MenusAndScopesEnum.roles.crmBuyer){
       req.buyerId = loginBuyer
   }
+  
       service.getAllStyleOrdersByItem(req).then(res => {
           if(res.status){
               setData(res.data)
@@ -91,11 +99,7 @@ let val = 0
                
               }
      
-          buyerService.getAllActiveBuyers().then(res=>{
-            if(res.status){
-                  setBuyerId(res.data)
-            }
-          })
+        
           
       })
       deliveryTermService.getAllActiveDeliveryTerms().then(res=>{

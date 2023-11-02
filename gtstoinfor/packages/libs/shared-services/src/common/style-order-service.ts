@@ -8,7 +8,7 @@ export class StyleOrderService extends CommonAxiosService{
         return this.axiosPostCall(this.URL + '/createCustomerOrder',req)
     }
     async getAllStyleOrdersByItem(req:styleOrderReq): Promise<any>{
-        return this.axiosPostCall(this.URL + '/getAllStyleOrdersByItem',req)
+                return this.axiosPostCall(this.URL + '/getAllStyleOrdersByItem',req)
     }
     async getAllCoLinesById(req:styleOrderReq): Promise<any>{
         return this.axiosPostCall(this.URL + '/getAllCoLinesById',req)

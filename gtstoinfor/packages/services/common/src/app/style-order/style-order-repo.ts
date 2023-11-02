@@ -43,7 +43,7 @@ export class StyleOrderRepository extends Repository<StyleOrder> {
         .leftJoin(CoLine,'c','c.co_id = co.co_id ')
         // .where(`co.item_id =${req.itemId}`)
         if (req.buyerId !== undefined) {
-            query.andWhere(`sr.sr.buyer_id ='${req.buyerId}'`)
+            query.andWhere(`buyer_id ='${req.buyerId}'`)
         }
         query.groupBy(`co.co_number , c.co_id`)
         return query.getRawMany()

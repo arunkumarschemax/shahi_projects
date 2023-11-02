@@ -539,22 +539,24 @@ const getAllComposition=()=>{
       },
       {
         title: "Range",
-        dataIndex: "irange",
-        render: (data) => {
-          const dataAsString = data.toString();
-          const randata = rangedata[dataAsString];
-          if (randata) {
-            return randata.rangeCode;
-          } else {
-            return "-";
-          }
-        },
+        dataIndex: "range",
+        sorter: (a, b) => a.range.localeCompare(b.range),
+
+        // render: (data) => {
+        //   const dataAsString = data.toString();
+        //   const randata = rangedata[dataAsString];
+        //   if (randata) {
+        //     return randata.rangeCode;
+        //   } else {
+        //     return "-";
+        //   }
+        // },
                 
-        sorter: (a, b) => {
-          const icatA = rangedata.find((cat) => cat.id === a.id)?.rangeCode || '';
-          const icatB = rangedata.find((cat) => cat.id === b.id)?.rangeCode || '';
-          return icatA.localeCompare(icatB);
-        },
+        // sorter: (a, b) => {
+        //   const icatA = rangedata.find((cat) => cat.id === a.id)?.rangeCode || '';
+        //   const icatB = rangedata.find((cat) => cat.id === b.id)?.rangeCode || '';
+        //   return icatA.localeCompare(icatB);
+        // },
         sortDirections: ['descend', 'ascend'],
       },
     {
@@ -689,9 +691,8 @@ const getAllComposition=()=>{
         <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
           <ItemCreation key={Date.now()}
             // updateData={updateComposition}
-            
             isUpdate={true}
-            // itemCreationData={selectedcompositionData}
+            itemCreationData={selectedItemCreationData}
             closeForm={closeDrawer} />
         </Card>
       </Drawer>

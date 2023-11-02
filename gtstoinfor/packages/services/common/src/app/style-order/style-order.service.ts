@@ -180,7 +180,7 @@ export class StyleOrderService{
         }
     }
    async getAllStyleOrders(req:styleOrderReq):Promise<CommonResponseModel>{
-    try{
+        try{
         const data = await this.repo.getAllStyleOrders(req)
         
         return new CommonResponseModel(true,1,'',data)
@@ -328,7 +328,7 @@ export class StyleOrderService{
 
         async updateCoData(req:CoUpdateDto):Promise<CoUpdateResponseModel>{
             try{
-                
+                console.log(req,"serv")
                const entity = new  CoUpdateEntity()
                entity.coId = req.coId
                entity.coLineId = req.coLineId

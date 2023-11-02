@@ -7,7 +7,7 @@ import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsSe
 import { ItemGroupEnum } from "@project-management-system/shared-models";
  
 export interface FormProps {
-  // itemCreationData:CompositionDto;
+  itemCreationData:any;
   // updateData:(item:CompositionDto)=>void;
   isUpdate:boolean;
   closeForm: () => void;
@@ -309,7 +309,7 @@ compositionservice.getActiveComposition().then(res=>{
         <Card title="Item Creation" size="small" extra={!props.isUpdate && (<Link to="/materialCreation/item-creation-view">
          <span style={{ color: 'white' }}><Button type="primary">View</Button></span></Link> )}>
 
-               <Form  form={form} style={{ fontSize: "10px" }}  layout="vertical" onFinish = {saveItem}>
+               <Form  form={form} style={{ fontSize: "10px" }}  layout="vertical" onFinish = {saveItem} initialValues={props.itemCreationData}>
                <Form.Item name='trim' style={{display:'none'}}>
                     <Input hidden/>
                 </Form.Item>

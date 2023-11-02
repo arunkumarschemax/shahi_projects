@@ -59,7 +59,6 @@ export class CoUpdateEntity{
     @Column("varchar", {
         nullable: false,
         name: "created_user",
-        default:"ADMIN",
         length:50
     })
     createdUser: string | null;
