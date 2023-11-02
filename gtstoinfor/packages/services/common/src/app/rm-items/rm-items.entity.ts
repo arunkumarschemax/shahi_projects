@@ -14,26 +14,23 @@ rmitemId:number;
 })
 itemCode:string;
 
-@Column("varchar",{
+@Column("int",{
     nullable: false,
-    length: 255,
-    name:"item_category"
+    name:"item_category_id"
 })
-itemCategory:string;
+itemCategory:number;
 
-@Column("varchar",{
+@Column("int",{
     nullable: false,
-    length: 255,
-    name:"pch"
+    name:"pch_id"
 })
 pch:string;
 
-@Column("varchar",{
+@Column("int",{
     nullable: true,
-    length: 255,
-    name:"facility"
+    name:"facility_id"
 })
-facility:string;
+facility:number;
 
 @Column("varchar",{
     nullable: false,
@@ -63,10 +60,9 @@ quality:string;
 })
 description:string;
 
-@Column("varchar",{
+@Column("int",{
     nullable: false,
-    length: 255,
-    name:"item_type"
+    name:"item_type_id"
 })
 itemIype:string;
 
@@ -99,20 +95,18 @@ responsible:string;
 })
 devResponsible:string;
 
-@Column("varchar",{
+@Column("int",{
     nullable: false,
-    length: 155,
-    name:"basic_uom"
+    name:"basic_uom_id"
 })
-basicUom:string;
+basicUom:number;
 
 
-@Column("varchar",{
+@Column("int",{
     nullable: false,
-    length: 155,
-    name:"alt_uom"
+    name:"alt_uom_id"
 })
-altUom:string;
+altUom:number;
 
 
 @Column("varchar",{
@@ -122,12 +116,11 @@ altUom:string;
 })
 multiplicationFactor:string;
 
-@Column("varchar",{
+@Column("int",{
     nullable: false,
-    length: 255,
-    name:"currency"
+    name:"currency_id"
 })
-currency:string;
+currency:number;
 
 @Column("varchar",{
     nullable: false,
@@ -165,12 +158,11 @@ saleTax:string;
 exciseDuty:string;
 
 
-@Column("varchar",{
+@Column("int",{
     nullable: false,
-    length: 155,
-    name:"license"
+    name:"license_id"
 })
-license:string;
+license:number;
 
 @Column('enum',{
     name:'property',
@@ -206,12 +198,11 @@ costGroup:string;
 })
 remarks:string;
 
-@Column("varchar",{
+@Column("int",{
     nullable: true,
-    length: 255,
-    name:"item_group"
+    name:"item_group_id"
 })
-itemGroup:string;
+itemGroup:number;
 
 @Column("varchar",{
     nullable: false,
