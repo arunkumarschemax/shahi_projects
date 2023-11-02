@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest } from "@project-management-system/shared-models";
+import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationTrackingResponseModel } from "@project-management-system/shared-models";
 import { Item } from "../items/item-entity";
 import { OperationGroups } from "../operation-groups/operation-groups.entity";
 import { Operations } from "../operations/operation.entity";
@@ -15,7 +15,11 @@ export class OperationTrackingService{
     ){}
 
 
-    async createOperationIssuing() : Promise<any>{
-
+    async createOperationIssuing() : Promise<OperationTrackingResponseModel>{
+        try{
+            return
+        } catch (err) {
+            throw err;
+        }
     }
 }

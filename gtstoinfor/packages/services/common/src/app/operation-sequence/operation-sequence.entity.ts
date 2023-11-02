@@ -3,7 +3,7 @@ import { OperationGroups } from "../operation-groups/operation-groups.entity";
 import { Operations } from "../operations/operation.entity";
 import { Item } from "../items/item-entity";
 import { Style } from "../style/dto/style-entity";
-import { OperationTracking } from "../operation-issuing/entity/operation-tracking-entity";
+import { OperationTracking } from "../operation-tracking/entity/operation-tracking-entity";
 
 @Entity('operation_sequence')
 export class OperationSequence{
