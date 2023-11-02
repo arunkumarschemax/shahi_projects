@@ -1,6 +1,6 @@
  
 
-import { CompositionService, EmployeeDetailsService, ItemCategoryService, LiscenceTypeService, MasterBrandsService, SearchGroupService, StyleService } from "@project-management-system/shared-services";
+import { CompositionService, EmployeeDetailsService, ItemCategoryService, ItemTypeService, LiscenceTypeService, MasterBrandsService, SearchGroupService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Descriptions, Row, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import moment from "moment";
@@ -29,8 +29,7 @@ export function ItemCreationDetailView  (props: Props)  {
     const [searchdata,setSearchData] = useState([]);
     const[brand,setBrand]=useState([]);
     const [itemCategory,setItemCategory]= useState([]);
-
-
+    const [ItemType,setItemType]= useState([]);
 
 
     const employeservice = new EmployeeDetailsService();
@@ -40,6 +39,7 @@ export function ItemCreationDetailView  (props: Props)  {
     const compositionservice = new CompositionService();
     const brandservice = new MasterBrandsService();
     const categoryService = new ItemCategoryService();
+    const itemTypeservice =new ItemTypeService();
 
 
 
@@ -59,6 +59,7 @@ export function ItemCreationDetailView  (props: Props)  {
        getAllComposition();
        getAllBrands();
        getAllCategory();
+       getAllItemType();
 
       }, [])
 
@@ -115,6 +116,17 @@ export function ItemCreationDetailView  (props: Props)  {
                         AlertMessages.getErrorMessage(res.internalMessage)
                     }
                 })
+            }
+            const getAllItemType=() =>{
+              itemTypeservice.getAllActiveItemType().then(res =>{
+                if (res.status){
+                  // console.log(res,'llllll')
+                  setItemType(res.data);
+                   
+                } else{
+                  AlertMessages.getErrorMessage(res.internalMessage);
+                   }
+              })       
             }
 
         //  const getAllSearchgroup=()=>{
@@ -173,10 +185,15 @@ export function ItemCreationDetailView  (props: Props)  {
         const ftname = `${foundemp?.firstName} ${foundemp?.lastName}`;
         return ftname ? ftname : '-';
       }
-      function getStyle(data) {
-        const foundStyle = Object.assign(styledata).find(dat => dat.style_no === data);
-        return foundStyle ? foundStyle.style : "-";
+      function getItemType(data) {
+        const foundiType = Object.assign(ItemType).find(itemDta => itemDta.liscenceTypeId === data);
+        return foundiType ? foundiType.itemType : "-";
       }
+      
+      // function getStyle(data) {
+      //   const foundStyle = Object.assign(styledata).find(dat => dat.style_no === data);
+      //   return foundStyle ? foundStyle.style : "-";
+      // }
     //   function getSearchGroup(data) {
     //     const foundStyle = Object.assign(searchdata).find(dat => dat.style_no === data);
     //     return foundStyle ? foundStyle.style : "-";
@@ -200,8 +217,8 @@ export function ItemCreationDetailView  (props: Props)  {
             <span>      
                 <Row gutter={16}><Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:12}}><Card bordered={false} title='Item Details'>
                 <Descriptions  style={{ alignItems: 'right' }} >
-                    <Descriptions.Item label={<span style={{ color:'',fontWeight: 'bold' }}>Style</span>} >{getStyle(stateData.style_no)}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>ItemType</span>} >{stateData.item_type_id}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ color:'',fontWeight: 'bold' }}>Style</span>} >{stateData.style_no}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>ItemType</span>} >{getItemType(stateData.item_type_id)}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Brand</span>} >{getBrand(stateData.brand_id)}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Category</span>} >{ItemCategory(stateData.category_id)}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Item Group</span>} >{stateData.item_group}</Descriptions.Item>

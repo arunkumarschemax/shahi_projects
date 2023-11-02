@@ -1,68 +1,155 @@
 
-import { Button, Col, Divider, Form, Input, Table } from 'antd'
-import React, { useState } from 'react'
+import { Button, Col, Divider, Form, Input, Table, message } from 'antd'
+import React, { useEffect, useState } from 'react'
+import AlertMessages from '../common-functions/alert-messages'
+
+import { StyleOrderService } from 'packages/libs/shared-services/src/common'
+import { CoUpdateReq } from '@project-management-system/shared-models'
 export interface COAmendmentGridProps {
   poData:any
   activeTab:any
 }
   const COAmendmentGrid = (props: COAmendmentGridProps) => {
   console.log(props.activeTab,"key")
+  console.log(props?.poData[0]?.styleOrderItems,"props data")
+ 
+  // useEffect(()=>{
+   
+
+  // })
+  
+
 
 
   const [page, setPage] = React.useState(1);
-  const [coLineData,setCoLineData] = useState<any[]>([])
-  const [fobData,setFobData] = useState<any[]>([])
-  const [vpoData,setVpoData] = useState<any[]>([])
-  const [deliveryDateData,setDeliveryDateData] = useState<any[]>([])
-  const [destinationData,setDestinationData] = useState<any[]>([])
-  const [quantityData,setQuantityData] = useState<any[]>([])
+  const [coLineData,setCoLineData] = useState<any>()
+  const [fobData,setFobData] = useState<any>()
+  const [vpoData,setVpoData] = useState<any>()
+  const [deliveryDateData,setDeliveryDateData] = useState<any>()
+  const [destinationData,setDestinationData] = useState<any>()
+  const [quantityData,setQuantityData] = useState<any>()
 
-
-
-
-
-
-
+  const services = new StyleOrderService()
+  
+   
+      
+  
   const onButtonChange1 = (rowData) => { 
-    console.log(rowData,"rowdata")}
-    const req1 = {
-      coLineNumber: coLineData
+    console.log(rowData,"rowdata")
+    const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.coLineNumber,coLineData,"orderline","admin")
+    services.updateCoData(req).then((res)=>{
+      if (res.status){
+        
 
-    }
+      //  onReset();
+       message.success(res.internalMessage);
+       setCoLineData("")
+      
+   } else{
+
+     AlertMessages.getErrorMessage(res.internalMessage);
+      }
+ }).catch(err => {
+
+    AlertMessages.getErrorMessage(err.message);
+  })
+
+}
+    
 
     const onButtonChange2 = (rowData) => { 
-      console.log(rowData,"rowdata")}
-      const req2 = {
-        fob: fobData
-  
+      console.log(rowData,"rowdata")
+      const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.salePrice,fobData,"fob","admin")
+    services.updateCoData(req).then((res)=>{
+      if (res.status){
+       message.success(res.internalMessage);
+      
+   } else{
+
+     AlertMessages.getErrorMessage(res.internalMessage);
       }
+ }).catch(err => {
+
+    AlertMessages.getErrorMessage(err.message);
+  })
+    }
+     
+      
 
     const onButtonChange3 = (rowData) => { 
-        console.log(rowData,"rowdata")}
-        const req3 = {
-          vpo: vpoData
+        console.log(rowData,"rowdata")
+        const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.vpo,vpoData,"vponumber","admin")
+        services.updateCoData(req).then((res)=>{
+          if (res.status){
+          //  onReset();
+           message.success(res.internalMessage);
+          
+       } else{
     
-        }
+         AlertMessages.getErrorMessage(res.internalMessage);
+          }
+     }).catch(err => {
+    
+        AlertMessages.getErrorMessage(err.message);
+      })
+    }
+       
 
     const onButtonChange4 = (rowData) => { 
-         console.log(rowData,"rowdata")}
-          const req4 = {
-            deliveryDate: deliveryDateData
-      
-          }  
+         console.log(rowData,"rowdata")
+         const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.deliveryDate,deliveryDateData,"deliverydate","admin")
+        services.updateCoData(req).then((res)=>{
+          if (res.status){
+          //  onReset();
+           message.success(res.internalMessage);
+          
+       } else{
+    
+         AlertMessages.getErrorMessage(res.internalMessage);
+          }
+     }).catch(err => {
+    
+        AlertMessages.getErrorMessage(err.message);
+      })
+        
+      }
+
+        
    const onButtonChange5 = (rowData) => { 
-            console.log(rowData,"rowdata")}
-             const req5 = {
-            destination: destinationData
-         
-          }  
+            console.log(rowData,"rowdata")
+            const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.deliveryAddress,destinationData,"destinationaddress","admin")
+            services.updateCoData(req).then((res)=>{
+              if (res.status){
+            
+               message.success(res.internalMessage);
+              
+           } else{
+        
+             AlertMessages.getErrorMessage(res.internalMessage);
+              }
+         }).catch(err => {
+        
+            AlertMessages.getErrorMessage(err.message);
+          })
+         }  
           
    const onButtonChange6 = (rowData) => { 
-        console.log(rowData,"rowdata")}
-        const req6 = {
-          orderQuantity: quantityData
-         
-      }  
+        console.log(rowData,"rowdata")
+        const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.orderQuantity,quantityData,"quantity","admin")
+            services.updateCoData(req).then((res)=>{
+              if (res.status){
+            
+               message.success(res.internalMessage);
+              
+           } else{
+        
+             AlertMessages.getErrorMessage(res.internalMessage);
+              }
+         }).catch(err => {
+        
+            AlertMessages.getErrorMessage(err.message);
+          })
+      }
 
 
     const colineInfo = (e,index,rowData) => {
@@ -71,41 +158,6 @@ export interface COAmendmentGridProps {
       setCoLineData(e.target.value)
       
     }
-
-    const fobInfo = (e,index,rowData) => {
-    
-      console.log(e.target.value,"fobInfo")
-      setFobData(e.target.value)
-      
-    }
-
-    const vpoInfo = (e,index,rowData) => {
-    
-      console.log(e.target.value,"vpoInfo")
-      setVpoData(e.target.value)
-      
-    }
-   
-    
-    const deliveryDateInfo = (e,index,rowData) => {
-    
-      console.log(e.target.value,"deliveryDateInfo")
-      setDeliveryDateData(e.target.value)
-    }
-
-    const destinationInfo = (e,index,rowData) => {
-    
-      console.log(e.target.value,"destinationInfo")
-      setDestinationData(e.target.value)
-      
-    }
-
-    const quantityInfo = (e,index,rowData) => {
-    
-      console.log(e.target.value,"quantityInfo")
-      setQuantityData(e.target.value)
-    }
-
 
  
   
@@ -155,7 +207,8 @@ export interface COAmendmentGridProps {
                 <Form.Item  >
                  <Input key={index} placeholder="Enter CO Line Number" 
                   // defaultValue={row.coLineNumber}
-                    onBlur={e=> colineInfo(e,index,row)}
+                    // onBlur={(e)> colineInfo(e,index,row)}
+                    onBlur={(e) => setCoLineData(e.target.value)}
                     required={true}
                     /> 
                     </Form.Item>
@@ -210,14 +263,14 @@ export interface COAmendmentGridProps {
        
         {
           title: "FOB",
-          dataIndex: "fob",
+          dataIndex: "salePrice",
         
         },
      
     
         {
           title: 'FOB',
-          dataIndex: 'fob',
+          dataIndex: 'salePrice',
           render:(value,row,index) => {
             return(
                 <>
@@ -230,7 +283,9 @@ export interface COAmendmentGridProps {
             >
                 <Form.Item  >
                  <Input key={index} placeholder="Enter FOB" 
-                    onBlur={e=> fobInfo(e,index,row)}
+                    // onBlur={e=> fobInfo(e,index,row)}
+                    onBlur={(e) => setFobData(e.target.value)}
+
                     required={true}
                     /> 
                     </Form.Item>
@@ -304,7 +359,9 @@ export interface COAmendmentGridProps {
             >
                 <Form.Item  >
                  <Input key={index} placeholder="Enter VPO" 
-                    onBlur={e=> vpoInfo(e,index,row)}
+                    // onBlur={e=> vpoInfo(e,index,row)}
+                    onBlur={(e) => setVpoData(e.target.value)}
+
                     required={true}
                     /> 
                     </Form.Item>
@@ -380,7 +437,9 @@ export interface COAmendmentGridProps {
             >
                 <Form.Item  >
                  <Input key={index} placeholder="Enter Delivery Date" 
-                    onBlur={e=> deliveryDateInfo(e,index,row)}
+                    // onBlur={e=> deliveryDateInfo(e,index,row)}
+                    onBlur={(e) => setDeliveryDateData(e.target.value)}
+
                     required={true}
                     /> 
                     </Form.Item>
@@ -433,13 +492,13 @@ export interface COAmendmentGridProps {
         },
         {
           title: "Destination Address",
-          dataIndex: "destination",
+          dataIndex: "deliveryAddress",
         
         },
         
           {
           title: 'Destination Address',
-          dataIndex: 'destination',
+          dataIndex: 'deliveryAddress',
           render:(value,row,index) => {
             return(
                 <>
@@ -452,7 +511,9 @@ export interface COAmendmentGridProps {
             >
                 <Form.Item  >
                  <Input key={index} placeholder="Enter Destination Address" 
-                    onBlur={e=> destinationInfo(e,index,row)}
+                    // onBlur={e=> destinationInfo(e,index,row)}
+                    onBlur={(e) => setDestinationData(e.target.value)}
+
                     required={true}
                     /> 
                     </Form.Item>
@@ -526,7 +587,9 @@ export interface COAmendmentGridProps {
             >
                 <Form.Item  >
                  <Input key={index} placeholder="Enter Quantity" 
-                    onBlur={e=> quantityInfo(e,index,row)}
+                    // onBlur={e=> quantityInfo(e,index,row)}
+                    onBlur={(e) => setQuantityData(e.target.value)}
+
                     required={true}
                     /> 
                     </Form.Item>
