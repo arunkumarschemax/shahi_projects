@@ -352,17 +352,52 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                 </div>
             ),
         },
+
         {
-            title: "Tax Amount",
+            title: "IGST",
             dataIndex: "taxAmount",
             key: "taxAmount",
-            render: (taxAmount) => (
-                <div style={{ textAlign: "right" }}>
-                    {taxAmount !== undefined && taxAmount !== null
-                        ? parseFloat(taxAmount).toFixed(2)
-                        : "0"}
-                </div>
-            ),
+            render: (taxAmount, record) => {
+                return record.taxType === 'IGST' ?
+                    (
+
+                        <div style={{ textAlign: "right" }}>
+                            {taxAmount !== undefined && taxAmount !== null
+                                ? parseFloat(taxAmount).toFixed(2)
+                                : "0"}
+                        </div>
+                    ) : '-'
+            },
+        },
+        {
+            title: "CGST",
+            dataIndex: "taxAmount",
+            key: "taxAmount",
+            render: (taxAmount, record) => {
+                return record.taxType === 'CGST & SGST' ?
+                    (
+                        <div style={{ textAlign: "right" }}>
+                            {taxAmount !== undefined && taxAmount !== null
+                                ? parseFloat(taxAmount).toFixed(2)
+                                : "0"}
+                        </div>
+                    ) : '-'
+            },
+        },
+        {
+            title: "SGST",
+            dataIndex: "taxAmount",
+            key: "taxAmount",
+            render: (taxAmount, record) => {
+                return record.taxType === 'CGST & SGST' ?
+                    (
+                        <div style={{ textAlign: "right" }}>
+                            {taxAmount !== undefined && taxAmount !== null
+                                ? parseFloat(taxAmount).toFixed(2)
+                                : "0"}
+                        </div>
+                    ) : '-'
+            },
         },
         // {
         //     title: "Amount",
