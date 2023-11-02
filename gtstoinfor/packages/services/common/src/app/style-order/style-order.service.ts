@@ -328,7 +328,7 @@ export class StyleOrderService{
 
         async updateCoData(req:CoUpdateDto):Promise<CoUpdateResponseModel>{
             try{
-                
+                console.log(req,"serv")
                const entity = new  CoUpdateEntity()
                entity.coId = req.coId
                entity.coLineId = req.coLineId
