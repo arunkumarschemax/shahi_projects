@@ -8,10 +8,11 @@ import { OperationGroups } from '../operation-groups/operation-groups.entity';
 import { Operations } from '../operations/operation.entity';
 import { Item } from '../items/item-entity';
 import { OperationSequenceRepository } from './operation-sequence.repository';
+import { OperationTracking } from '../operation-issuing/entity/operation-tracking-entity';
 @Module({
   imports: [
     
-    TypeOrmModule.forFeature([OperationSequence,OperationGroups,Operations,Item]),
+    TypeOrmModule.forFeature([OperationSequence,OperationGroups,Operations,Item,OperationTracking]),
     // forwardRef(() => ClusterModule),
   ],
   controllers: [OperationSequenceController],
