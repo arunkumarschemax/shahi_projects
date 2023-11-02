@@ -14,4 +14,8 @@ export class OperationTrackingService{
         
     ){}
 
+
+    async createOperationIssuing() : Promise<any>{
+
+    }
 }

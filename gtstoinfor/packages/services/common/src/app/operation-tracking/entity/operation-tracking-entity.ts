@@ -8,6 +8,12 @@ export class OperationTracking {
 
   @PrimaryGeneratedColumn("increment",{name:'operation_tracking_id'})
   operationTrackingId:number;
+
+  @Column('varchar',{
+    nullable:false,
+    name:'job_number'
+    })
+    jobNumber:string;
    
   @ManyToOne(type=>Style, style=>style.tracking,{  nullable:false, })
   @JoinColumn({ name:"style_id"})

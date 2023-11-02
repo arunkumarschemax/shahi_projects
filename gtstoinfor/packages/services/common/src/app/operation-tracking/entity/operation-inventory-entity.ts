@@ -1,13 +1,12 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, VersionColumn, ManyToOne, JoinColumn } from "typeorm";
 import { OperationSequence } from "../../operation-sequence/operation-sequence.entity";
 import { Style } from "../../style/dto/style-entity";
-import { TrackingEnum } from "@project-management-system/shared-models";
 
 @Entity('operation_inventory')
 export class OperationInventory {
 
   @PrimaryGeneratedColumn("increment",{
-    name:'operation_tracking_id'
+    name:'operation_inventory_id'
 })
   operationIssuingId:number;
    
@@ -72,13 +71,6 @@ rejectedQuantity:number;
     name:'rejected_uom'
 })
 rejectedUom:string;
-
-@Column('enum',{
-  nullable:false,
-  name: 'status',
-  enum: TrackingEnum
-})
-status:TrackingEnum;
 
   @CreateDateColumn({
     name: "created_at",
