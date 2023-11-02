@@ -39,8 +39,11 @@ export function BuyersForm(props: BuyersFormProps) {
   const [disable, setDisable] = useState<boolean>(false)
   const [paymentTerms,setPaymentTerms] = useState<PaymentTermsDto[]>([])
   const paymentTermsService = new PaymentTermsService()
-  let logInUserData = JSON.parse(localStorage.getItem('currentUser'))
-  
+  const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNum
+  const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
+  // const externalRefNo = 'b001'
+  // const role = 'vendor'
+
 
   useEffect(() => {
     getAllActiveCountries()
@@ -103,6 +106,9 @@ export function BuyersForm(props: BuyersFormProps) {
   const saveBuyer = (buyersData: BuyersDto) => {
     buyersData.paymentMethodId = Number(buyersData.paymentMethodId)
     buyersData.createdUser = 'admin'
+    if(role === 'vendor'){
+      buyersData.externalRefNumber = externalRefNo
+    }
     setDisable(true)
     buyerService.createBuyer(buyersData).then(res => {
       setDisable(false)
@@ -153,6 +159,9 @@ export function BuyersForm(props: BuyersFormProps) {
             <Input hidden />
           </Form.Item>
           <Form.Item style={{ display: "none" }} name="createdUser" initialValue={createdUser}>
+            <Input hidden />
+          </Form.Item>
+          <Form.Item style={{ display: "none" }} name="externalRefNumber">
             <Input hidden />
           </Form.Item>
           <Row gutter={24}>
