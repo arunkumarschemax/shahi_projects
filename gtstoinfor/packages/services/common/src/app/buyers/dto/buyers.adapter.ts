@@ -41,6 +41,7 @@ export class BuyersAdapter {
     buyer.isActive=buyersDTO.isActive==undefined?true:buyersDTO.isActive;
     buyer.fgItemCodeLength = buyersDTO.fgItemCodeLength;
     buyer.rmItemCodeLength = buyersDTO.rmItemCodeLength;
+    buyer.externalRefNumber = buyersDTO.externalRefNumber
     const addressItems: Address[] = [];
     for (const rec of buyersDTO.addressInfo) {
         const addressObj: Address = new Address();
@@ -110,6 +111,7 @@ export class BuyersAdapter {
     buyersDTO.versionFlag = buyersObject.versionFlag;
     buyersDTO.fgItemCodeLength = buyersObject.fgItemCodeLength;
     buyersDTO.rmItemCodeLength = buyersObject.rmItemCodeLength;
+    buyersDTO.externalRefNumber = buyersObject.externalRefNumber
     return buyersDTO;
   }
 }

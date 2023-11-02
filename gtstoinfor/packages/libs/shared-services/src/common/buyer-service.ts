@@ -15,12 +15,12 @@ export class BuyersService extends CommonAxiosService{
         return this.axiosPostCall(this.URL + "/updateBuyer", req)
     }
 
-    async getAllBuyer(): Promise<AllBuyersResponseModel> {
-        return this.axiosPostCall(this.URL + "/getAllBuyer")
+    async getAllBuyer(req?: BuyerIdReq): Promise<AllBuyersResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllBuyer",req)
     }
 
-    async getAllActiveBuyers(): Promise<AllBuyersResponseModel> {
-        return this.axiosPostCall(this.URL + "/getAllActiveBuyers")
+    async getAllActiveBuyers(req?: BuyerIdReq): Promise<AllBuyersResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllActiveBuyers",req)
     }
 
     async getBuyerDataById(req:BuyerRequest): Promise<BuyersResponseModel> {
@@ -47,8 +47,8 @@ export class BuyersService extends CommonAxiosService{
         return this.axiosPostCall(this.URL + "/getAddressByBuyerId",req)
     }
 
-    async getAllBuyersInfo(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.URL + "/getAllBuyersInfo")
+    async getAllBuyersInfo(req?: string): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllBuyersInfo",req)
     }
     
     async createOrderAttribute(req:BuyersOrderAttributeRequest): Promise<BuyersOrderAttributeResponseModel> {
@@ -66,5 +66,7 @@ export class BuyersService extends CommonAxiosService{
     async getAllAddress(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getAllAddress")
     }
-
+    async getBuyerByRefId(req:string): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getBuyerByRefId",req)
+    }
 }

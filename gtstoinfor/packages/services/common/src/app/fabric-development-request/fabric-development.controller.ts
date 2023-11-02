@@ -3,7 +3,7 @@ import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 // import { FabricDevelopmentService } from "@project-management-system/shared-services";
 import { FabricRequestQualitiesDto } from "./dto/fabric-request-qualities.dto";
-import { CommonResponseModel, FabricDevelopmentRequestResponse, UploadResponse } from "@project-management-system/shared-models";
+import { BuyerIdReq, CommonResponseModel, FabricDevelopmentRequestResponse, UploadResponse } from "@project-management-system/shared-models";
 import { FabricDevelopmentService } from "./fabric-development.services";
 import { FabricRequestDto } from "./dto/fabric-request.dto";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
@@ -34,9 +34,10 @@ export class FabricDevelopmentController {
         }
     }  
     @Post('/getFabricDevReqData')
-    async getFabricDevReqData(): Promise<CommonResponseModel> {
+    @ApiBody({type:BuyerIdReq})
+    async getFabricDevReqData(@Body() req?:any): Promise<CommonResponseModel> {
         try {
-            return await this.fabricDevelopmentService.getFabricDevReqData()
+            return await this.fabricDevelopmentService.getFabricDevReqData(req)
         } catch (error) {
             return (this.applicationExceptionHandler.returnException(CommonResponseModel, error));
         }

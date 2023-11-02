@@ -77,8 +77,8 @@ export function FabricSubTypeForm(
   };
 
   return (
-    <Card title={<span >Fabric Sub-Type</span>} style={{ textAlign: 'center' }} headStyle={{ border: 0 }} extra={props.isUpdate == true ? "" : <Link to='/masters/fabricSubType/fabric-sub-type-view' ><Button type={'primary'} >View </Button></Link>}
-    >
+    <Card title={props.isUpdate ? 'Fabric SubType':'Fabric SubType'}  extra={(props.isUpdate == false) && <span><Button onClick={()=> navigate('/masters/fabricSubType/fabric-sub-type-view')} type={'primary'}>View</Button></span>}>
+    
       <Form layout="vertical" form={form} initialValues={props.fabricsubtypeData} name="control-hooks" onFinish={saveData}>
         <Form.Item name="fabricSubTypeId" style={{ display: "none" }} >
           <Input hidden />

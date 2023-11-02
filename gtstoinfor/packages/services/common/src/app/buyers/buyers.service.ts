@@ -87,11 +87,14 @@ export class BuyersService {
     /**
      * get All Customers Details
      */
-    async getAllBuyers(): Promise<AllBuyersResponseModel> {
+    async getAllBuyers(req?:BuyerIdReq): Promise<AllBuyersResponseModel> {
         try {
             const buyersDTO: BuyersDTO[] = [];
-            const buyersEntities: Buyers[] = await this.buyersRepository.find({ order: { 'buyerName': 'ASC' },relations:['paymentTermsInfo','paymentMethodInfo','adressInfo']});
-            if (buyersEntities) {
+            const buyersEntities: Buyers[] = await this.buyersRepository.find({ 
+                order: { 'buyerName': 'ASC' },
+                relations:['paymentTermsInfo','paymentMethodInfo','adressInfo'],
+                where: {buyerId: req.buyerId}})
+                if (buyersEntities) {
                 // converts the data fetched from the database which of type companies array to type StateDto array.
                 buyersEntities.forEach(buyerEntity => {
                     const convertedbuyersDto: BuyersDTO = this.buyersAdapter.convertEntityToDto(
@@ -232,16 +235,16 @@ export class BuyersService {
         }
     }
 
-    async getAllBuyersInfo(): Promise<CommonResponseModel>{
+    async getAllBuyersInfo(req?:string): Promise<CommonResponseModel>{
         try{
-            const buyerInfo = await this.buyersRepository.getBuyerInfo()
+            const buyerInfo = await this.buyersRepository.getBuyerInfo(req)
             const buyerMap = new Map<number,BuyersDto>()
             if(buyerInfo.length == 0){
                 return new CommonResponseModel(false,1,'No buyers found',[])
             } else {
                 for(const rec of buyerInfo){
                     if(!buyerMap.has(rec.buyer_id)){
-                        buyerMap.set(rec.buyer_id,new BuyersDto(rec.buyer_id,rec.buyer_code,rec.buyer_name,rec.gst_number,rec.contact_person,rec.phone_no,rec.email,rec.currency_name,rec.public_note,rec.private_note,rec.payment_terms,null,rec.payment_method_id,rec.is_active,null,null,rec.version_flag,rec.payment_terms_id,rec.payment_method,[],rec.fg_item_code_length,rec.rm_item_code_length))
+                        buyerMap.set(rec.buyer_id,new BuyersDto(rec.buyer_id,rec.buyer_code,rec.buyer_name,rec.gst_number,rec.contact_person,rec.phone_no,rec.email,rec.currency_name,rec.public_note,rec.private_note,rec.payment_terms,null,rec.payment_method_id,rec.is_active,null,null,rec.version_flag,rec.payment_terms_id,rec.payment_method,[],rec.fg_item_code_length,rec.rm_item_code_length,rec.external_ref_number))
                     }
                     buyerMap.get(rec.buyer_id).addressInfo.push(new AddressDto(rec.address_id,rec.country_id,rec.state,rec.district,rec.city,rec.landmark,rec.lane1,rec.lane2,rec.pincode,null,null,null,null,rec.country_name))
                 }
@@ -279,16 +282,16 @@ export class BuyersService {
     //     }
     // }
 
-    async getAllActiveBuyersInfo(): Promise<CommonResponseModel>{
+    async getAllActiveBuyersInfo(req?:string): Promise<CommonResponseModel>{
         try{
-            const buyerInfo = await this.buyersRepository.getBuyerInfo()
+            const buyerInfo = await this.buyersRepository.getBuyerInfo(req)
             const buyerMap = new Map<number,BuyersDto>()
             if(buyerInfo.length == 0){
                 return new CommonResponseModel(false,1,'No buyers found',[])
             } else {
                 for(const rec of buyerInfo){
                     if(!buyerMap.has(rec.id)){
-                        buyerMap.set(rec.buyer_id,new BuyersDto(rec.buyer_id,rec.buyer_code,rec.buyer_name,rec.gst_number,rec.contact_person,rec.phone_no,rec.email,rec.currency_name,rec.public_note,rec.private_note,rec.payment_terms,null,rec.payment_method_id,rec.is_active,null,null,rec.version_flag,rec.payment_terms_id,rec.payment_method,[],rec.fg_item_code_length,rec.rm_item_code_length))
+                        buyerMap.set(rec.buyer_id,new BuyersDto(rec.buyer_id,rec.buyer_code,rec.buyer_name,rec.gst_number,rec.contact_person,rec.phone_no,rec.email,rec.currency_name,rec.public_note,rec.private_note,rec.payment_terms,null,rec.payment_method_id,rec.is_active,null,null,rec.version_flag,rec.payment_terms_id,rec.payment_method,[],rec.fg_item_code_length,rec.rm_item_code_length,rec.external_ref_number))
                     }
                     buyerMap.get(rec.buyer_id).addressInfo.push(new AddressDto(rec.address_id,rec.country_id,rec.state,rec.district,rec.city,rec.landmark,rec.lane1,rec.lane2,rec.pincode,null,null,null,null,rec.country_name))
                 }
@@ -313,6 +316,16 @@ export class BuyersService {
 
         }catch(err){
             throw err
+        }
+    }
+    async getBuyerByRefId(refId: string): Promise<CommonResponseModel> {
+        const Response = await this.buyersRepository.findOne({
+        // where: {buyerId: refId},
+        });
+        if (Response) {
+            return new CommonResponseModel(true,1,'Data retrieved',Response)
+        } else {
+            return new CommonResponseModel(false,1,'No buyers found',[]);
         }
     }
 

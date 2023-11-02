@@ -1,5 +1,5 @@
 import { BgColorsOutlined, EnvironmentOutlined, SearchOutlined, SkinOutlined, UndoOutlined } from "@ant-design/icons"
-import { BuyersDestinationRequest } from "@project-management-system/shared-models"
+import { BuyerIdReq, BuyersDestinationRequest, MenusAndScopesEnum } from "@project-management-system/shared-models"
 import { BuyerDestinationService, BuyersService, DestinationService, SizeService } from "@project-management-system/shared-services"
 import { Button, Row, Col, Select, Table,Form, Modal, Divider } from "antd"
 import Card from "antd/es/card/Card"
@@ -30,14 +30,31 @@ const [colors,setColors] = useState<any[]>([])
 const [buyerId, setBuyerId] = useState<number>();
 const [buyers, setBuyers] = useState<any[]>([]);
 const buyerService = new BuyersService();
-
+const [userId, setUserId] = useState([]); 
+  const [loginBuyer,setLoginBuyer] = useState<number>(0)
+  const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+  const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
+let userRef
     useEffect(()=>{
         getSizes();
         getDestinations();
         getData();
         getBuyers();
+        Login()
     },[])
     
+const Login = () =>{
+  if(role === MenusAndScopesEnum.roles.Buyer){
+    userRef = externalRefNo
+  }
+  buyerService.getBuyerByRefId(userRef).then(res=>{
+    if(res.status){
+      setUserId(res.data)
+setLoginBuyer(res.data.buyerId)
+    }
+  })
+}
+
     const getSizes = ()=>{
         sizeService.getAllActiveSize().then(res=>{
             if(res.status){
@@ -59,7 +76,8 @@ const buyerService = new BuyersService();
         })
     }
     const getBuyers = () => {
-        buyerService.getAllBuyer().then((res) => {
+          const loginId = new BuyerIdReq(loginBuyer)
+        buyerService.getAllBuyer(loginId).then((res) => {
             if (res.status) {
                 setBuyers(res.data);
             }

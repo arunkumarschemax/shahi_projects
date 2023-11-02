@@ -1,7 +1,7 @@
 import { FabricRequestEntity } from "./fabric-request.entity";
 import { Injectable } from "@nestjs/common";
 import { FabricRequestRepository } from "./repository/fabric-request.repository";
-import { CommonResponseModel, FabricDevelopmentRequestResponse, QualitiesEnum, StatusEnum, SubContractStatus, UploadResponse } from "@project-management-system/shared-models";
+import { BuyerIdReq, CommonResponseModel, FabricDevelopmentRequestResponse, QualitiesEnum, StatusEnum, SubContractStatus, UploadResponse } from "@project-management-system/shared-models";
 import { FabricRequestDto } from "./dto/fabric-request.dto";
 import { FabricRequestQualitiesInfoEntity } from "./fabric-request-quality-info.entity";
 import { FabricRequestItemsEntity } from "./fabric-request-items.entity";
@@ -145,10 +145,11 @@ export class FabricDevelopmentService {
 
 
 
-   async getFabricDevReqData(): Promise<CommonResponseModel> {
+   async getFabricDevReqData(req?:BuyerIdReq): Promise<CommonResponseModel> {
       try {
      const data = await this.FabricRepo.find({
-      relations:["fabricQuantityEntity","fabricQuantityEntity.fabricEntity","fabricQuantityEntity.fabricEntity.fabricItemsEntity"]
+      relations:["fabricQuantityEntity","fabricQuantityEntity.fabricEntity","fabricQuantityEntity.fabricEntity.fabricItemsEntity"],
+      where:{buyerId:req.buyerId}
      })
      console.log(data,'-----------')
      return new CommonResponseModel(true, 0, "Fabric Development Request successfully", data);
