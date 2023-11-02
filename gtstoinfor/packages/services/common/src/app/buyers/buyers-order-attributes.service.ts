@@ -16,7 +16,7 @@ export class BuyersOrderAttributeService {
     ){}
 
     async createOrderAttribute(req:BuyersOrderAttributeDto,isUpdate:boolean ): Promise<BuyersOrderAttributeResponseModel>{
-        console.log(req,"order................")
+        // console.log(req,"order................")
         try{
             for(const record of req.attributeInfo){
                 const entity = new BuyerOrderAttributesEntity()
@@ -46,12 +46,12 @@ export class BuyersOrderAttributeService {
     }
 
     async getBuyerId(req:BuyersRequest) : Promise<BuyersOrderAttributeResponseModel>{
-        console.log(req,'------------------------')
+        // console.log(req,'------------------------')
         try{
             let info =[];
 
             const data = await this.buyerOrderAttrRepo.find({where:{buyerInfo:{buyerId:req.buyerId}},relations:['buyerInfo','attributeInfo']})
-            console.log(data,'------------------------data')
+            // console.log(data,'------------------------data')
             if(data.length > 0){
                 for(const rec of data){
                     info.push(new BuyersOrderAttributeModel(rec.buyerOrderAttributeId,rec.buyerInfo.buyerId,rec.attributeInfo.attributeId,rec.attributeName,rec.attributeValue,rec.isActive,rec.versionFlag))

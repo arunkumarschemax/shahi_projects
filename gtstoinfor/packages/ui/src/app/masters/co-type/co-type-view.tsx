@@ -243,7 +243,9 @@ export const CoTypeView = () => {
             <br></br>
             <div style={{overflowX :'auto' }}>
 
-            <Table columns={columns} dataSource={data} size='small' bordered/>
+            <Table columns={columns}
+                    rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
+                    dataSource={data} size='small' bordered/>
             </div>
             <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>

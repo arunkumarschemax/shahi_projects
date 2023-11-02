@@ -39,23 +39,26 @@ export class ItemSkuRepository extends Repository<ItemSkus> {
 
     }
 
-    async getItemCode():Promise<any>{
+    async getItemCode(req:SKUlistFilterRequest):Promise<any>{
         const query = await this.createQueryBuilder('i')
-        .select(`item_code,item_id `)
+        .select(`item_code,fg_item_id `)
         .groupBy(`item_code`)
         return await query.getRawMany()
     }
 
     async getSkuList(req:SKUlistFilterRequest):Promise<any>{
+        // console.log(req,"req in quary")
         const query = await this.createQueryBuilder('is')
         .select(`*`)
         // .leftJoin(Colour,`c`,`c.colourId = is.color_id`)
         // .leftJoin(Size,`s`,`s.size_id = is.size_id`)
         // .leftJoin(Destination,`d`,`d.destination_id = is.destination_id`)
-        .where(`is.item_id = '${req.itemNoId}'`)
+    //    .where(`item_code = '${req.itemsNo}'`)
+    .where('is.item_code = :itemCode', { itemCode: req.itemsCode })
         .groupBy(`is.color,is.size,is.destination`)
         return query.getRawMany()
 
     }
 
+    
 }

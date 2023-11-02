@@ -2,8 +2,10 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { StyleOrderService } from "./style-order.service";
-import { CommonResponseModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
+import { CoUpdateResponseModel, CommonResponseModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
 import { StyleOrderId } from "./style-order-id.request";
+import { CoUpdateDto } from "./dto/co-update.dto";
+import { StyleOrderColineIdReq } from "./style-order.colineId.request";
 
 
 @ApiTags('styleOrder')
@@ -36,9 +38,7 @@ export class StyleOrderController{
     @Post('/getAllCoLinesById')
     @ApiBody({type:styleOrderReq})
     async getAllCoLinesById(@Body() req:any):Promise<CommonResponseModel>{
-        try{
-            console.log(req,'controller');
-            
+        try{            
             return await this.styleOrderService.getAllCoLinesById(req)
         }catch(err){
             return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
@@ -80,4 +80,37 @@ export class StyleOrderController{
             return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
         }
     }
+
+    @Post('/getCoNumber')
+    async getCoNumber(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return await this.styleOrderService.getCoNumber()
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+
+    @Post('/getCoDataByCoLineId')
+    @ApiBody({type:StyleOrderColineIdReq})
+
+    async getCoDataByCoLineId(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return await this.styleOrderService.getCoDataByCoLineId(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+
+    @Post('/updateCoData')
+    @ApiBody({type:CoUpdateDto})
+
+    async updateCoData(@Body() req:any):Promise<CoUpdateResponseModel>{
+        try{
+            return await this.styleOrderService.updateCoData(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CoUpdateResponseModel,err)
+        }
+    }
+  
+    
 }

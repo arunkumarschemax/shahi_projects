@@ -1,4 +1,4 @@
-import { SizeResponseModel, SizesDropDownResponse } from '@project-management-system/shared-models';
+import { SizeResponseModel, SizesDropDownResponse, StyleIdReq } from '@project-management-system/shared-models';
 import { AllSizeResponseModel } from '@project-management-system/shared-models';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { Body, Controller, Post } from '@nestjs/common';
@@ -87,5 +87,7 @@ async getSizesforDivisionDropDown(@Body() req:any): Promise<SizesDropDownRespons
         return this.applicationExceptionHandler.returnException(SizesDropDownResponse, error);
    }
  }
+
+
 }
 

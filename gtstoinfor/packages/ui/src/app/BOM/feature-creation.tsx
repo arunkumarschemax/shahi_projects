@@ -1,4 +1,5 @@
-import { ColourService, DestinationService, SizeService } from '@project-management-system/shared-services';
+import { FeatureDTO, OptionEnum } from '@project-management-system/shared-models';
+import { ColourService, DestinationService, FeatureService, SizeService } from '@project-management-system/shared-services';
 import { Form, Input, Button, Select,Card, Row, Col, message } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import React, { useEffect, useState } from 'react'
@@ -14,6 +15,7 @@ export const FeatureCreation = () => {
     const colorService = new ColourService()
     const sizeService = new SizeService()
     const desService = new DestinationService()
+    const service = new FeatureService()
 
     useEffect(() => {
         colorData();
@@ -55,13 +57,53 @@ export const FeatureCreation = () => {
         setSelectedOption(null)
       };
 
-    const onFinish = (values) =>{
-        console.log(values,'=========')
+      const saveData = (values) => {
+    form.validateFields().then(() => {
+    const selectedOption = values.option;
+    let optionInfo = [];
+
+    if (selectedOption === 'COLOR') {
+      optionInfo = values.optionId.map(colorId => ({
+        option: selectedOption,
+        optionId: colorId,
+      }));
+    } else if (selectedOption === 'SIZE') {
+      optionInfo = values.optionId.map(sizeId => ({
+        option: selectedOption,
+        optionId: sizeId,
+      }));
+    } else if (selectedOption === 'DESTINATION') {
+      optionInfo = values.optionId.map(destinationId => ({
+        option: selectedOption,
+        optionId: destinationId,
+      }));
     }
 
+    const data = {
+      featureName: values.featureName,
+      description: values.description,
+      option: selectedOption,
+      optionInfo,
+    };
+
+    service.createFeature(data).then((res) => {
+      if (res.status) {
+        message.success(res.internalMessage, 2);
+        form.resetFields()
+        setSelectedOption(null)
+      } else {
+        message.error(res.internalMessage, 2);
+      }
+    });
+  });
+};
+
+      
+
   return (
-  <Card title={<span >Feature</span>} style={{textAlign:'center'}} >
-    <Form form={form} layout={'vertical'} name="control-hooks"  onFinish={onFinish}>
+  <Card title={<span >Feature</span>}extra={(<Link to="/materialCreation/feature-creation-view">
+  <span style={{ color: 'white' }}><Button type="primary">View</Button></span></Link> )} style={{textAlign:'left'}} >
+    <Form form={form} layout={'vertical'} name="control-hooks"  onFinish={saveData}>
         <Row gutter={10}>
             <Col xs={24} sm={12} md={8} lg={6} xl={6}>
               <Form.Item
@@ -91,8 +133,14 @@ export const FeatureCreation = () => {
         </Col>
         <Col xs={24} sm={12} md={8} lg={4} xl={4}>
               <Form.Item
-                  name="options"
+                  name="option"
                   label="Options"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Select at least one option',
+                    },
+                  ]}
                     >
                   <Select
                   placeholder='Select Option' 
@@ -100,15 +148,24 @@ export const FeatureCreation = () => {
                   optionFilterProp="children"
                   showSearch
                   onChange={handleOptionChange}>
-                <Option value="Color">Color</Option>
-                <Option value="Size">Size</Option>
-                <Option value="Destination">Destination</Option>
+                {Object.values(OptionEnum).map(e => {
+                                return(
+                                    <Option key={e} value={e}>{e}</Option>
+                                )
+                            })}
                   </Select>
                 </Form.Item>
         </Col>
-        {selectedOption === 'Color' && (
+        {selectedOption === 'COLOR' && (
             <Col xs={24} sm={12} md={8} lg={4} xl={4}>
-              <Form.Item name="color" label="Color">
+              <Form.Item name="optionId" label="Color"
+              rules={[
+                {
+                  required: true,
+                  message: 'Select at least one Color',
+                },
+              ]}
+              >
                 <Select
                 mode='multiple'
                   placeholder='Select Color'
@@ -125,9 +182,16 @@ export const FeatureCreation = () => {
               </Form.Item>
             </Col>
           )}
-        {selectedOption === 'Size' && (
+        {selectedOption === 'SIZE' && (
             <Col xs={24} sm={12} md={8} lg={4} xl={4}>
-              <Form.Item name="size" label="Size">
+              <Form.Item name="optionId" label="Size"
+              rules={[
+                {
+                  required: true,
+                  message: 'Select at least one Size',
+                },
+              ]}
+              >
                 <Select
                 mode='multiple'
                   placeholder='Select Size'
@@ -136,7 +200,8 @@ export const FeatureCreation = () => {
                   showSearch>
                   {size?.map((val) => {
                     return (
-                      <Option key={val.sizeId} value={val.sizeId}>{val.size}
+                      <Option key={val.sizeId} value={val.sizeId}>
+                        {val.size}
                       </Option>
                     )
                   })}
@@ -144,9 +209,16 @@ export const FeatureCreation = () => {
               </Form.Item>
             </Col>
           )}
-          {selectedOption === 'Destination' && (
+          {selectedOption === 'DESTINATION' && (
             <Col xs={24} sm={12} md={8} lg={4} xl={4}>
-              <Form.Item name="destination" label="Destination">
+              <Form.Item name="optionId" label="Destination"
+              rules={[
+                {
+                  required: true,
+                  message: 'Select at least one Destination',
+                },
+              ]}
+              >
                 <Select
                 mode='multiple'
                   placeholder='Select Destination'
@@ -155,7 +227,8 @@ export const FeatureCreation = () => {
                   showSearch>
                   {des?.map((val) => {
                     return (
-                      <Option key={val.destinationId} value={val.destinationId}>{val.destination}
+                      <Option key={val.destinationId} value={val.destinationId}>
+                        {val.destination}
                       </Option>
                     )
                   })}
@@ -169,7 +242,7 @@ export const FeatureCreation = () => {
             <Button type="primary" htmlType="submit" >
               Submit
             </Button>
-         <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset}>
+         <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset} danger>
             Reset
           </Button>
             </Col>

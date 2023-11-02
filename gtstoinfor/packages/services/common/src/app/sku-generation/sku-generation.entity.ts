@@ -1,4 +1,4 @@
-import { SkuStatusEnum } from "@project-management-system/shared-models";
+import { RmMappingStatusEnum, SkuStatusEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { Item } from "../items/item-entity";
 import { Colour } from "../colours/colour.entity";
@@ -6,6 +6,7 @@ import { Size } from "../sizes/sizes-entity";
 import { Destination } from "../destination/destination.entity";
 import { Style } from "../style/dto/style-entity";
 import { ItemCreation } from "../fg-item/item_creation.entity";
+import { Division } from "../division/division.entity";
 
 @Entity('item_skus')
 export class ItemSkus{
@@ -70,6 +71,13 @@ export class ItemSkus{
     })
     destination : string;
 
+    @Column('enum',{
+        name:'rm_mapping_status',
+        enum: RmMappingStatusEnum,
+        nullable:true
+    })
+    rmMappingStatus : RmMappingStatusEnum;
+
     @Column("boolean", {
         nullable: false,
         default: true,
@@ -128,6 +136,10 @@ export class ItemSkus{
     @ManyToOne(type=>Style, style=>style.itemSkuInfo,{  nullable:false, })
     @JoinColumn({ name:"style_id"})
     styleInfo: Style;
+
+    @ManyToOne(type=>Division, div=>div.itemSkuInfo,{  nullable:false, })
+    @JoinColumn({ name:"division_id"})
+    divisionInfo: Division;
     
 
 }

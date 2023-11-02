@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, Card, Row, Col } from 'antd';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ColourDto, DivisionDto } from '@project-management-system/shared-models';
 import { ColourService, DivisionService } from '@project-management-system/shared-services';
 import { __values } from 'tslib';
@@ -26,6 +26,7 @@ export const ColourForm=(props:ColourFromProps)=>{
     const services= new DivisionService();
     const service = new ColourService();
     let history =useLocation();
+    let navigate = useNavigate()
 
     let createdUser="";
     if(!props.isUpdate){
@@ -64,7 +65,7 @@ export const ColourForm=(props:ColourFromProps)=>{
           setDisable(false)
             if (res.status) {
               AlertMessages.getSuccessMessage('Colour Created Successfully');
-            //   location.push("/Currencies-view");
+          navigate('/masters/colour/colour-view')
               onReset();
             } else {
                 AlertMessages.getErrorMessage(res.internalMessage);
@@ -91,9 +92,12 @@ export const ColourForm=(props:ColourFromProps)=>{
       
 
       return(
-        <Card title={<span>Colour</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} 
-        extra={props.isUpdate==true?"":<Link to='/masters/colour/colour-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
-       >
+        <Card title={props.isUpdate ?
+        'Colours':'Colours'}
+        //  headStyle={{ border: 0 }} 
+        extra={(props.isUpdate ===false) && <span ><Button onClick={()=> navigate('/masters/colour/colour-view')} 
+          type={'primary'} >View </Button> </span>}>
+       
 <Form
 layout={'vertical'}
 form={form}
@@ -139,7 +143,60 @@ onFinish={saveData}>
             </Select>
           </Form.Item>
           </Col>
-<Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}> <Form.Item
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 8 }}
+            lg={{ span: 8 }}
+            xl={{ span: 6 }}
+          >
+            {" "}
+            <Form.Item
+              name="optionGroup"
+              label="Option Group"
+              rules={[
+                {
+                  required: true,
+                  message: " Option Group Is Required",
+                },
+                {
+                  pattern:
+                    /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+                  message: `Option Group Should contain only alphabets.`,
+                },
+              ]}
+            >
+                <Input placeholder='Enter Option Group'/>
+            </Form.Item>
+          </Col>
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 8 }}
+            lg={{ span: 8 }}
+            xl={{ span: 6 }}
+          >
+            {" "}
+            <Form.Item
+              name="colourCode"
+              label="Colour Code"
+              rules={[
+                {
+                  required: true,
+                  message: " Colour Code Is Required",
+                },
+                // {
+                //   pattern:
+                //     /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+                //   message: `Colour Code Should contain only alphabets.`,
+                // },
+              ]}
+            >
+                <Input placeholder='Enter Colour Code'/>
+            </Form.Item>
+          </Col>
+<Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}}>
+   <Form.Item
           name="colour"
           label="Colour"
           rules={[
@@ -153,10 +210,39 @@ onFinish={saveData}>
             }
           ]}
         >
-          <Input />
+          <Input placeholder='Enter Colour'/>
         </Form.Item>
         </Col>
 </Row>
+<Row>
+<Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 8 }}
+            lg={{ span: 8 }}
+            xl={{ span: 6 }}
+          >
+            {" "}
+            <Form.Item
+              name="description"
+              label="Description"
+              rules={[
+                {
+                  required: true,
+                  message: " Description Is Required",
+                },
+                // {
+                //   pattern:
+                //     /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+                //   message: `Description Should contain only alphabets.`,
+                // },
+              ]}
+            >
+                <Input placeholder='Enter Description'/>
+            </Form.Item>
+          </Col>
+</Row>
+
 <Row>
           <Col span={24} style={{ textAlign: 'right' }}>
             <Button type="primary" disabled={disable} htmlType="submit">

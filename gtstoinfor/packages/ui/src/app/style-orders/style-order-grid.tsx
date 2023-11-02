@@ -83,7 +83,6 @@ let val = 0
           if(res.status){
               setData(res.data)
               res.data.map(e =>{ 
-                console.log(e,'--------')
                 // const totalQuantity = res.data.reduce((total, item) => total + item.qty, 0);
                 // setTotalQty(totalQuantity);
                 val = val+Number(e.qty)
@@ -140,10 +139,9 @@ let val = 0
   };
 
   const openFormWithData = (data) => {
-    
     setDrawerVisible(true);
-    setSelectedId(data.id);
-    navigate('/materialCreation/style-order-creation',{state:{id:data.id}})
+    setSelectedId(data.co_id);
+    navigate('/materialCreation/style-order-creation',{state:{id:data.co_id}})
   }
     const getColumnSearchProps = (dataIndex: string) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -404,7 +402,7 @@ let val = 0
 }
       ];
       const cancelOrder =(val:any) =>{
-        service.cancelOrder({styleOrderId:val.id}).then(res => {
+        service.cancelOrder({styleOrderId:val.co_id}).then(res => {
           if(res.status){
             AlertMessages.getSuccessMessage("Order Cancelled successfully. ")
             getData();

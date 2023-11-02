@@ -280,6 +280,8 @@ export function HierarchyLevelGrid(
           </Row>
           <br></br>
           <Table
+                  rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
+size='small'
           rowKey={record => record.HierarchyLevelId}
           columns={columnsSkelton}
           dataSource={HierarchyLevelData}

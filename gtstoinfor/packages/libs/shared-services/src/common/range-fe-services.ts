@@ -13,7 +13,7 @@ URL = '/range';
         }
 
         async  updateRange(req: RangeDto): Promise<RangeResponse> {
-            console.log(req,"reqqqqq")
+            // console.log(req,"reqqqqq")
             return this.axiosPostCall(this.URL + '/createRange', req)
         }
         
@@ -26,7 +26,7 @@ URL = '/range';
         }
         
         async  getActiveRange(): Promise<RangeResponse> {
-            return this.axiosPostCall(this.URL + '/getActiveComposition')
+            return this.axiosPostCall(this.URL + '/getActiveRange')
         }
         
         

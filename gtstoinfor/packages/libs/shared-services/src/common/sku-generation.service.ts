@@ -20,15 +20,15 @@ export class SKUGenerationService extends CommonAxiosService{
         return this.axiosPostCall(this.URL + "/getDataByItem", req)
     } 
 
-    async getSkuList(req:SKUlistFilterRequest):Promise<CommonResponseModel>{
-        console.log(req,'tttttttttttt')
+    async getSkuList(req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
+        // console.log(req,'tttttttttttt')
         return this.axiosPostCall(this.URL +"/getSkuList",req)
     }
-    async getAllitemsCode ():Promise<CommonResponseModel>{
-        return this.axiosPostCall(this.URL +"/getAllitemsCode")
+    async getAllitemsCode (req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL +"/getAllitemsCode",req)
     }
 
     async closeSKUById(req :ItemSKusReq): Promise<any>{
-        return this.axiosPostCall(this.URL + '/closeSKUById')
+        return this.axiosPostCall(this.URL + '/closeSKUById',req)
     }
 }

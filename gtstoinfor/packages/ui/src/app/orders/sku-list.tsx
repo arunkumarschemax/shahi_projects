@@ -35,7 +35,7 @@ import { useEffect, useRef, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link } from "react-router-dom";
 import FormItem from "antd/es/form/FormItem";
-import { SKUGenerationService, SKUlistService } from "@project-management-system/shared-services";
+import { DivisionService, SKUGenerationService, SKUlistService, StyleOrderService, StyleService } from "@project-management-system/shared-services";
 import {
   ItemSKusReq,
   SKUlistFilterRequest,
@@ -51,14 +51,20 @@ export const SkuList = () => {
   const [Value, setValue] = useState("cards");
   const service = new SKUlistService();
   const services = new SKUGenerationService();
+  const service1 = new StyleService();
+  const service2 = new DivisionService();
   const [data, setData] = useState([]);
   const { Option } = Select;
   const { TabPane } = Tabs;
   const searchInput = useRef(null);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [style, setStyle] = useState([]);
+  const [divsion, setDivsion] = useState([]);
+
   const [selectView, setSelectedView] = useState<any>("cards");
   const [options, setOptions] = useState(["Cards", "View"]);
+  const [searchClicked, setSearchClicked] = useState(false);
   useEffect(() => {
     Dropdown();
     getAllData();
@@ -79,7 +85,7 @@ export const SkuList = () => {
   };
 
   const Sku = (val,data) => {
-    setSelectedItemNo(val);
+    setSelectedItemNo(data.code);
   };
 
   const Size = (val, data) => {
@@ -105,32 +111,50 @@ export const SkuList = () => {
 
   const getAllData=()=>{
     const req = new SKUlistFilterRequest()
-    console.log(req,'jjjjjjjjjjjjjjjjj')
     if(form.getFieldValue('item_code') !== undefined){
-      req.itemsNo=form.getFieldValue('item_code')
+      req.itemsCode=form.getFieldValue('item_code')
     }
     services.getSkuList(req).then(res=>{
-      if(res.data){
+      if(res.status){
+
         setValue(res.data)
+        
+      }
+    })
+    service1.getAllStyle().then(res=>{
+      if(res.status){
+        console.log(res.data,'[[[[[[[[[');
+        
+        setStyle(res.data)
+      }
+    })
+    service2.getAllDivision().then(res=>{
+      if(res.status){
+        console.log(res.data,'[[[[[[[[[');
+        
+        setDivsion(res.data)
       }
     })
   }
+
   const handleSearch = () => {
     // console.log('eeeeeeeeee',selectedItemNo);
-    
-    if (selectedItemNo) {
-      const req = new SKUlistFilterRequest(Number(selectedItemNo))
-      console.log(req,'777777');
-      
+    const req = new SKUlistFilterRequest()
+    if (form.getFieldValue('item_code') != undefined) {
+      req.itemsCode = selectedItemNo
+      setSearchClicked(true);
+      // console.log(req,'777777');
+    }
       services.getSkuList(req).then((res) => {
+        console.log(req,'okkkkk');
+
         if (res) {
           setItemData(res.data);
-          console.log(res.data,'data');
+          // console.log(res.data,'data');
           
         }
       });
-    } else {
-    }
+   
   };
 
   function handledSearch(selectedKeys, confirm, dataIndex) {
@@ -138,6 +162,7 @@ export const SkuList = () => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
+    setSearchClicked(true);
   }
 
   function handleReset(clearFilters) {
@@ -225,11 +250,22 @@ export const SkuList = () => {
         )
       ) : null,
   });
+  const getStyleName = (styleId) => {
+    const styleData = style.find((style) => style.styleId === styleId);
+    return styleData ? styleData.style : "N/A";
+  };
+
+  const getDivisionName = (divisionId) => {
+    const styleData = divsion.find((div) => div.divisionId === divisionId);
+    return styleData ? styleData.divisionName : "N/A";
+  };
+
+  
   const columnsSkelton: any = [
     {
       title: "SKU Code",
-      dataIndex: "skucode",
-      key: "skucode",
+      dataIndex: "sku_code",
+      key: "sku_code",
       width: "300px",
 
       // render: (skus) => skus.map((sku) => sku.skuId),
@@ -246,35 +282,86 @@ export const SkuList = () => {
     },
     {
       title: "Destinations",
-      dataIndex: "destinations",
-      key: "destinations",
+      dataIndex: "destination",
+      key: "destination",
       width: "300px",
-      sorter: (a, b) => a.destinations.localeCompare(b.destinations),
+      sorter: (a, b) => a.destination.localeCompare(b.destination),
       sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("destinations"),
+      ...getColumnSearchProps("destination"),
 
-      // render: (skus) => skus.map((sku) => sku.destinations),
+      // render: (skus) => skus.map((sku) => sku.destination),
     },
     {
       title: "Colours",
-      dataIndex: "colour",
-      key: "colours",
+      dataIndex: "color",
+      key: "color",
       width: "300px",
 
-      sorter: (a, b) => a.colours.localeCompare(b.colours),
+      sorter: (a, b) => a.color.localeCompare(b.color),
       sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("colours"),
-      render: (colours, rowData) => (
+      ...getColumnSearchProps("color"),
+      render: (color, rowData) => (
         <Tag
-          color={colours}
+          color={color}
           style={{
             color: rowData.colour === "White" ? "black" : rowData.colour === "Black" ? "white" : "inherit"
           }}
         >
-          {colours}
+          {color}
         </Tag>
       ),
     
+    },
+    {
+      title: "Style",
+      dataIndex: "style_id",
+      key: "style_id",
+      width: "300px",
+      sorter: (a, b) => a.style_id.localeCompare(b.style_id),
+      sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("destination"),
+      render:(data)=>{
+  console.log(data,'id');
+  
+  const syle= style.find((style)=>style.styleId === data);
+  console.log(syle,"ppppp")
+
+  return syle ? syle.style:"N/A"
+}
+      // render: (skus) => skus.map((sku) => sku.destination),
+    },
+    {
+      title: "Division",
+      dataIndex: "division_id",
+                width: "300px",
+      sorter: (a, b) => a.division_id.localeCompare(b.division_id),
+      sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("destination"),
+      render:(data)=>{
+  const syle= divsion.find((div)=>div.divisionId === data);
+  return syle ? syle.divisionName:"N/A"
+}
+      // render: (skus) => skus.map((sku) => sku.destination),
+    },
+    {
+      title: "RM Mapping",
+      dataIndex: "rm_mapping_status",
+      key: "rm_mapping_status",
+      width: "300px",
+      // sorter: (a, b) => a.rm_mapping_status.localeCompare(b.rm_mapping_status),
+      // sortDirections: ["descend", "ascend"],
+      // ...getColumnSearchProps("rm_mapping_status"),
+filters:[
+  {
+    text:'Yes',
+    value:'Yes',
+  },
+  {
+    text:'No',
+    value:'No',
+  }
+],
+onFilter:(value,record)=>{return record.rm_mapping_status === value}
     },
     {
       title: "Action",
@@ -322,8 +409,8 @@ export const SkuList = () => {
                   placeholder="Select Item No"
                   onChange={(val,data)=>Sku(val,data)}
                 >
-                  {data.map((e) => (
-                    <Option key={e.item_id} val={e.item_id} code={e.item_code}>
+                  {data?.map((e) => (
+                    <Option key={e.fg_item_id} val={e.fg_item_id} code={e.item_code}>
                       {e.item_code}
                     </Option>
                   ))}
@@ -349,7 +436,7 @@ export const SkuList = () => {
                   optionFilterProp="children"
                   onChange={(val, text) => Size(val, text)}
                 >
-                  {data.map((e) => {
+                  {data?.map((e) => {
                     return (
                       <Option key={e.sizeId} value={e.sizeId} code={e.sizes}>
                         {e.sizes}
@@ -378,7 +465,7 @@ export const SkuList = () => {
                   optionFilterProp="children"
                   onChange={(val, text) => colour(val, text)}
                 >
-                  {data.map((e) => {
+                  {data?.map((e) => {
                     return (
                       <Option key={e.colourId} value={e.colourId}>
                         {e.colour}
@@ -398,7 +485,7 @@ export const SkuList = () => {
               <Form.Item
                 style={{ flexDirection: "row" }}
                 label="Destination"
-                name="destinations"
+                name="destination"
               >
                 <Select
                   placeholder="Select Destination"
@@ -407,10 +494,10 @@ export const SkuList = () => {
                   optionFilterProp="children"
                   onChange={(val, text) => destination(val, text)}
                 >
-                  {data.map((e) => {
+                  {data?.map((e) => {
                     return (
                       <Option key={e.destinationsId} value={e.destinationsId}>
-                        {e.destinations}
+                        {e.destination}
                       </Option>
                     );
                   })}
@@ -423,7 +510,6 @@ export const SkuList = () => {
                   <Button
                     type="primary"
                     icon={<SearchOutlined />}
-                    // style={{ marginTop: "50"}}
                     onClick={handleSearch}
                   >
                     Search
@@ -485,32 +571,39 @@ export const SkuList = () => {
               {/* {selectView === 'grid'?(
         <SKUGrid/>
       ):(<div> */}
-              {selectView === "cards" ? (
-                <div>
-                  {itemData.map((item) => (
-                    <Card
-                      key={item.itemNoId}
-                      title={`Item No: ${item.itemNo}`}
+              
+              {selectedItemNo !== undefined && searchClicked ? (
+                   selectView === "cards" ? (
+                    <div>
+                   <Card
+                      title={`Item No: ${selectedItemNo}`}
                       style={{ cursor: "pointer" }}
                     >
-                      <Row gutter={[20, 16]}>
-                        {item.sku?.map((e) => {
-                          let co;
-                          if (e.color == "white") {
-                            co = "balck";
-                          } else {
-                            co = "white";
-                          }
-                          return (
-                            <Col
-                              xs={{ span: 24 }}
-                              sm={{ span: 24 }}
-                              md={{ span: 3 }}
-                              lg={{ span: 6 }}
-                              xl={{ span: 5 }}
-                              key={e.skucode}
-                            >
-                              <div>
+                            <Row gutter={[20, 16]}>
+
+                  {itemData.map((item) => {
+                      let co;
+                      if (item.color == "white") {
+                        co = "balck";
+                      } else {
+                        co = "white";
+                      }
+                 
+                     return(
+                       
+                      <Col
+                         xs={{ span: 24 }}
+                         sm={{ span: 12 }}
+                         md={{ span: 8 }}
+                         lg={{ span: 6 }}
+                         xl={{ span: 6 }}
+                         key={item.sku_code} 
+                         >
+
+                        {/* {item.sku?.map((e) => { */}
+                        
+                          
+                          
                                 <Card
                                   style={{
                                     width: "100%",
@@ -522,70 +615,92 @@ export const SkuList = () => {
                                   <Descriptions
                                     column={1}
                                     style={{ fontSize: "2px" }}
-                                    title={`SKU Code: ${e.skucode}`}
+                                    title={`SKU Code: ${item.sku_code}`}
                                   >
                                     <Descriptions.Item label="Size">
-                                      {e.size}
+                                      {item.size}
                                     </Descriptions.Item>
-                                    <Descriptions.Item label="Colour">
+                                    <Descriptions.Item label="Color">
                                       {/* <Tag
-                                        color={e.colour}
+                                        color={item.colour}
                                         // style={{
                                         //   color: item.colour === 'white' ? 'black' : 'inherit',
                                         //   borderColor: item.colour === 'white' ? 'black' : 'inherit'
                                         // }}
                                         style={{
                                           color:
-                                            e.colour == "White"
+                                            item.colour == "White"
                                               ? "black"
                                               : "white",
                                         }}
                                       >
-                                        {e.colour}
+                                        {item.colour}
                                       </Tag> */}
                                       <Tag
-                                     color={e.colour}
+                                     color={item.color}
                                             style={{
-                                            color: e.colour === "White" ? "black" : e.colour === "Black" ? "white" : "inherit"
+                                            color: item.color === "White" ? "black" : item.color === "Black" ? "white" : "inherit"
                                              }}
                                                    >
-                                                     {e.colour}
+                                                     {item.color}
                                             </Tag>
 
 
                                     </Descriptions.Item>
                                     <Descriptions.Item label="Destination">
-                                      {e.destinations}
+                                      {item.destination}
+                                    </Descriptions.Item>
+                                    
+                                    <Descriptions.Item label="Style">
+                             {getStyleName(item.style_id)}
+                                </Descriptions.Item>
+                                <Descriptions.Item label="Division">
+                                      {getDivisionName(item.division_id)}
+                                    </Descriptions.Item>
+                                    <Descriptions.Item label="RM Mapping">
+                                      {item.rm_mapping_status}
                                     </Descriptions.Item>
                                   </Descriptions>
                                 </Card>
-                              </div>
-                            </Col>
-                          );
-                        })}
+                              
+                        </Col>
+                   );
+                                            })}
                       </Row>
-                    </Card>
-                  ))}
+                  
+                   </Card>
                 </div>
               ) : (
                 <div>
-                  {itemData.map((e) => (
+                  <Card
+                   title={`item code:${selectedItemNo}`} 
+                     >
+                    <Table
+                    size="small"
+                    dataSource={itemData}
+                    columns={columnsSkelton}
+                    />
+                  </Card>
+                  {/* {itemData.map((e) => (
                     <Card
                       style={{ width: "1240px" }}
-                      key={e.itemNoId}
-                      title={`Item No: ${e.itemNo}`}
+key={e.item_code}
+                      title={`Item Code: ${e.item_code}`}
                     >
                       <Table
-                        dataSource={e.sku}
+                      key={e.item_code}
+                        dataSource={itemData}
                         columns={columnsSkelton}
                         size="small"
                       />
                     </Card>
-                  ))}
+                   ))} */}
                 </div>
-              )}
+              )
+              ):null}
             </Space>
           </div>
+              
         </Col>
       </Row>
     </>

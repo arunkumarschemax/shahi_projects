@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, Card, Row, Col } from 'antd';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FabricTypesDto } from '@project-management-system/shared-models';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import { FabricTypeService } from '@project-management-system/shared-services';
@@ -23,6 +23,7 @@ export interface FabricTypeFormProps{
        
         const service = new FabricTypeService();
         let history =useLocation();
+        let navigate = useNavigate()
 
         let createdUser="";
         if(!props.isUpdate){
@@ -63,8 +64,10 @@ export interface FabricTypeFormProps{
           };
 
           return(
-            <Card title={<span >Fabric Type</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} 
-            extra={props.isUpdate==true?"":<Link to='/masters/fabrictype/fabric-type-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
+            <Card title={props.isUpdate?
+            'Fabric Type':'FabricType'} 
+            extra={props.isUpdate==true
+            ?"":<Link to='/masters/fabrictype/fabric-type-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
 >
     <Form 
     layout={'vertical'}

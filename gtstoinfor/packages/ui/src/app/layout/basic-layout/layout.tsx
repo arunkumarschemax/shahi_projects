@@ -378,10 +378,22 @@ export const baseRouterList = [
                 filepath: "size/size-view",
             },
             {
+                label: "Item Group",
+                key: "itemgroup",
+                path: "item-group/item-group-view",
+                filepath: "item-group/item-group-view",
+            },
+            {
                 label: "Division",
                 key: "division",
                 path: "division/division-view",
                 filepath: "division/division-view",
+            },
+            {
+                label: "Item Type",
+                key: "itemtype",
+                path: "item-Type/item-Type-view",
+                filepath: "item-Type/item-Type-view",
             },
             {
                 label: "Product Group",
@@ -487,6 +499,12 @@ export const baseRouterList = [
                 path: "FabricDevelopmentrequest/Fabric-Development-Request",
                 filepath: "FabricDevelopmentrequest/Fabric-Development-Request",
             },
+            {
+                label: "Fabric Approval",
+                key: "fabric-approval-request",
+                path: "fabric-approval-request",
+                filepath: "fabric-approval-request",
+            },
         ]
     },
     {
@@ -563,6 +581,13 @@ export const baseRouterList = [
                 path: "style-order-view",
                 filepath: "style-order-view",
             },
+            {
+                label: "CO Amendment",
+                key: "co-amendment",
+                path: "co-amendment",
+                filepath: "co-amendment",
+            },
+           
            
         ]
     },
@@ -619,6 +644,30 @@ export const baseRouterList = [
          
         ]
     },
+    {
+        label: "Product Structure(BOM)",
+        key: "productstructure",
+        path: "product-structure",
+        filepath: "product-structure",
+        children:[
+            
+            {
+                label: "SMV Efficiency",
+                key: "smvefficiency",
+                path: "productstructure/smv-efficiency",
+                filepath: "productstructure/smv-efficiency",
+            },
+          
+         
+        ]
+    },
+    {
+        label: "RM Sku",
+        key: "rmSkus",
+        // icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>⚙️</div>,
+        path: "rmskus/rm-skus",
+        filepath: "rmskus/rm-skus"
+    }
     // {
     //     label: "Orders",
     //     key: "excel-import",

@@ -177,6 +177,8 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
   ) : data.length > 0 ? (
     <Table
       columns={columns}
+      rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
+
       dataSource={data}
       className="custom-table-wrapper"
       size="small"

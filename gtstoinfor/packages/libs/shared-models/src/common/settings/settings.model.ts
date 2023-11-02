@@ -44,8 +44,9 @@ export class SettingsModel{
     paymentTermsName?: string;
     deliveryMethod?: string;
     deliveryTermsName?: string;
+    coType?: string;
 
-    constructor(settingsId: number,accountControlId: number,pchId:number,companyId:number,facilityId:number,divisionId:number,warehouseId:number,coTypeId:number,currencyId:number,licencetypeId:number,discount:number,salesPersonId:number,fabricResponsibleId:number,itemResponsibleId:number,trimResponsibleId:number,buyerAddress:number,buyerGroup:string,agent : number,packageTerms: number,paymentMethodId:number,paymentTerms:number,deliveryMethodId:number,deliveryTerms:number,isActive : boolean,versionFlag: number,accountControlName?: string,profitControlHead?: string,companyName?: string,name?: string,divisionName?: string,warehouseName?: string,currencyName?: string,liscenceType?: string,salesPerson?: string,fabricResponsible?: string,itemResponsible?: string,trimRespondsible?: string,address?: string,buyerName?: string,agentName?: string,packageTermsName?: string,paymentMethod?: string,paymentTermsName?: string,deliveryMethod?: string,deliveryTermsName?: string){
+    constructor(settingsId: number,accountControlId: number,pchId:number,companyId:number,facilityId:number,divisionId:number,warehouseId:number,coTypeId:number,currencyId:number,licencetypeId:number,discount:number,salesPersonId:number,fabricResponsibleId:number,itemResponsibleId:number,trimResponsibleId:number,buyerAddress:number,buyerGroup:string,agent : number,packageTerms: number,paymentMethodId:number,paymentTerms:number,deliveryMethodId:number,deliveryTerms:number,isActive : boolean,versionFlag: number,accountControlName?: string,profitControlHead?: string,companyName?: string,name?: string,divisionName?: string,warehouseName?: string,currencyName?: string,liscenceType?: string,salesPerson?: string,fabricResponsible?: string,itemResponsible?: string,trimRespondsible?: string,address?: string,buyerName?: string,agentName?: string,packageTermsName?: string,paymentMethod?: string,paymentTermsName?: string,deliveryMethod?: string,deliveryTermsName?: string,coType?: string){
         this.settingsId = settingsId;
         this.accountControlId = accountControlId;
         this.pchId = pchId;
@@ -91,7 +92,7 @@ export class SettingsModel{
         this.paymentTermsName = paymentTermsName;
         this.deliveryMethod = deliveryMethod;
         this.deliveryTermsName = deliveryTermsName;
-
+        this.coType = coType
     }
 
 

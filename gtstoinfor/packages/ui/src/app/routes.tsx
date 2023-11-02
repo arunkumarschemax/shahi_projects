@@ -129,6 +129,10 @@ import StyleOrderGrid from "./style-orders/style-order-grid"
 import StyleOrderDetailView from "./style-orders/style-order-detail-view"
 import FabricReqApproval from "./fabric development/fabric-req-approval"
 import DivisionForm from "./masters/company/division-form"
+import ItemGroupForm from "./masters/item-group/item-group-form"
+import ItemGroupGrid from "./masters/item-group/item-group-view"
+import ItemTypeView from "./masters/itemtype.tsx/item-type-view"
+import ItemTypeForm from "./masters/itemtype.tsx/item-type-form"
 import BusinessAreaForm from "./masters/business-area/business-area-form"
 import BusinessAreaView from "./masters/business-area/business-area-view"
 import CoTypeForm from "./masters/co-type/co-type-form"
@@ -148,6 +152,12 @@ import ProcurmentGroupGrid from "./masters/procurment group/procurmentGroup-grid
 import ProcurmentGroupForm from "./masters/procurment group/procurmentGroup-form"
 import HierarchyLevelGrid from "./masters/hierarchy level/hierarchy-level-gridt"
 import HierarchyLevelForm from "./masters/hierarchy level/hierarchy-level-form"
+import ItemCreationView from "./orders/item-creation-view"
+import ItemCreationDetailView from "./orders/item-creation-detail-view"
+import RmSkusGeneration from "./rm-skus/rm-skus-generation"
+import SmvEfficiencyForm from "./common/product-structure(BOM)/smv-efficiency-form"
+import COAmendmentTabs from "./common/co-amendment/co-amendment-tabs"
+import FeatureCreationView from "./BOM/feature-creation-view"
 
 
 export const AppRoutes = () => {
@@ -225,9 +235,9 @@ export const AppRoutes = () => {
                         <Route path='company/company-grid' element={<CompanyGrid />} />
                         <Route path='company/division-grid' element={<DivisionGrid />} />
                         <Route path='warehouse/warehouse-form' element={<WarehouseForm Data={undefined}
-                isUpdate={false}
-                closeForm={() => { }}
-                updateItem={(undefined) => { }}/>} />
+                          isUpdate={false}
+                         closeForm={() => { }}
+                          updateItem={(undefined) => { }}/>} />
                         <Route path='warehouse/warehouse-grid' element={<WarehouseGrid />} />
                     <Route path='division/division-view' element={<DivisionGrid/>} />
                     <Route path='division/division-form' key ='division/division-form' element={<DivisionForm  Data={undefined}
@@ -432,6 +442,16 @@ export const AppRoutes = () => {
                         } } isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
                         } }/>}/>
+                           <Route path='item-group/item-group-view' element={<ItemGroupGrid/>} />
+                    <Route path='item-group/item-group-form' key ='item-group/item-group-form' element={<ItemGroupForm  groupData={undefined}
+               isUpdate={false}
+            closeForm={() => { }}
+           updateItem={(undefined) => { }}/>} />
+              <Route path='item-type/item-type-view' element={<ItemTypeView/>} />
+                    <Route path='item-type-form/item-type-form' key ='item-type-form/item-type-form' element={<ItemTypeForm  itemtypeData={undefined}
+               isUpdate={false}
+            closeForm={() => { }}
+           updateData={(undefined) => { }}/>} />
                     <Route path='groupTechClass/groupTechClass-grid' element={<GroupTechClassGrid/>}/>
                     <Route path='groupTechClass/groupTechClass-form' element={<GroupTechClassForm data={new GroupTechClassDto} updateDetails={function (dto: GroupTechClassDto): void {
                             throw new Error("Function not implemented.")
@@ -562,7 +582,7 @@ export const AppRoutes = () => {
                 <Route path='settings/settings-form' element={<SettingsForm/>}/>
                 <Route path='settings/settings-view' element={<SettingsView/>}/>
                 {/* </Route> */}
-
+                <Route path='rmskus/rm-skus' element={<RmSkusGeneration/>}/>
                 <Route path='sample-development' >
                     <Route path="sample-development-form" element={<SampleDevForm />}/>
                     <Route path="sample-development-view" element={<SampleDevView />}/>
@@ -571,21 +591,32 @@ export const AppRoutes = () => {
                 <Route path='/materialCreation'>
                     <Route path='sku-list' element={<SkuList/>}/>
                     <Route path='sku-mapping' element={<SKUGeneration/>}/>
-                    <Route path='item-creation' element={<ItemCreation/>}/>
+                    <Route path='item-creation' element={<ItemCreation isUpdate={false} closeForm={function (): void {
+                            throw new Error("Function not implemented.")
+                        } }/>}/>
                     <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
                     <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation />} />
                     <Route path='style-order-creation' element={<StyleOrderCreation coData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
                     <Route path='style-order-view' element={<StyleOrderGrid />} />
                     <Route path='style-order-detail-view' element={<StyleOrderDetailView />} />
                     <Route path='feature-creation' element={<FeatureCreation />} />
-
+                <Route path='feature-creation-view' element={<FeatureCreationView />} />
+                <Route path='item-creation-view' element={<ItemCreationView/>}/>    
+                <Route path='item-creation-detail-view' element={<ItemCreationDetailView data={''}/>}/>
+                <Route path="co-amendment" element ={<COAmendmentTabs key={""} />} />
                 </Route>
                 <Route path='/operation-tracking'>
                     <Route path='operation-tracking/issuing' element={<IssueScreen/>}/>
                     <Route path='operation-reporting' element={<OperationReportingView/>} />
 
-                
+            
 
+                </Route>
+                <Route path='/product-structure'>
+                <Route path='productstructure/smv-efficiency' element={<SmvEfficiencyForm/>}/>
+
+            
+                            
                 </Route>
 
 

@@ -4,8 +4,9 @@ import { Repository } from 'typeorm';
 import { ItemCreationAdapter } from './dto/item_creation.adapter';
 import { ItemCreationDto } from './dto/item-creation.dto';
 import { ItemCreation } from './item_creation.entity';
-import { CommonResponseModel } from '@project-management-system/shared-models';
+import { CommonResponseModel, ItemCreFilterRequest } from '@project-management-system/shared-models';
 import { error } from 'console';
+import { ItemCreationRepository } from './item-repo/item-creation.repository';
 
 
 @Injectable()
@@ -13,6 +14,8 @@ export class ItemCreationService {
     constructor(
         @InjectRepository(ItemCreation) private itemCreationRepository: Repository<ItemCreation>,
         private itemCreationAdapter: ItemCreationAdapter,
+        private repository: ItemCreationRepository,
+
     ) { }
 
     async createItem(itemCreationDto: ItemCreationDto, isUpdate: boolean): Promise<CommonResponseModel> {
@@ -36,11 +39,25 @@ export class ItemCreationService {
 
     async getFgItemsDropdown():Promise<CommonResponseModel>{
         try{
-            const data = await this.itemCreationRepository.find({select:['fgitemId','itemName','itemCode']})
+            const data = await this.itemCreationRepository.find({select:['fgitemId','itemName','itemCode','salePrice','salePriceQty','currency']})
             if(data.length >0){
                 return new CommonResponseModel(true,1,'Data retrieved',data)
             } else{
                 return new CommonResponseModel(false,0,'No data found')
+            }
+        } catch(err){
+            return err
+        }
+    }
+
+    async getAllFgItems(req?:ItemCreFilterRequest):Promise<CommonResponseModel>{
+        try{
+            const data = await this.repository.getAllFgItemCrted(req)
+            if(data.length === 0){
+                return new CommonResponseModel(false,0,'No data found')
+            } else{
+                return new CommonResponseModel(true,1,'Data retrieved',data)
+
             }
         } catch(err){
             return err

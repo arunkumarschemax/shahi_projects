@@ -50,7 +50,7 @@ export function  CompositionForm (props: FormProps) {
   };
 
   return (
-    <Card title={<span >Composition Master</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={props.isUpdate==true?"":<Link to='/masters/composition/composition-grid' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
+    <Card title={<span >Composition</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={props.isUpdate==true?"":<Link to='/masters/composition/composition-grid' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
       <Form form={form } layout={'vertical'} initialValues={props.compositionData} name="control-hooks" onFinish={saveData}  >   
       <Form.Item name="id" style={{display:"none"}} >
         <Input hidden/>
@@ -69,10 +69,10 @@ export function  CompositionForm (props: FormProps) {
                       message:"Composition Code Is Required"
                       
                     },
-                    // {
-                    //   pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                    //   message: `Should contain only alphabets and numbers.`
-                    // }
+                    {
+                      pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                      message: `Should contain only alphabets and numbers.`
+                    }
                   ]}>
                   <Input placeholder='Enter Composition Code'/>
                 </Form.Item>
@@ -87,10 +87,10 @@ export function  CompositionForm (props: FormProps) {
                       message:"Composition Description Is Required"
                       
                     },
-                    // {
-                    //   pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                    //   message: `Should contain only alphabets and numbers.`
-                    // }
+                    {
+                      pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                      message: `Should contain only alphabets and numbers.`
+                    }
                   ]}>
                   <Input placeholder='Enter Composition Description'/>
                 </Form.Item>

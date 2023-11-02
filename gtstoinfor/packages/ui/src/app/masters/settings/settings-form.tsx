@@ -1,7 +1,7 @@
 import { UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
 import { DepartmentReq, SettingsIdReq, SettingsRequest } from "@project-management-system/shared-models";
-import { BuyersService, CompanyService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DivisionService, EmployeeDetailsService, FactoryService, LiscenceTypeService, PackageTermsService, PaymentMethodService, PaymentTermsService, ProfitControlHeadService, SettingsService, WarehouseService } from "@project-management-system/shared-services";
+import { BuyersService, CoTypeService, CompanyService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DivisionService, EmployeeDetailsService, FactoryService, LiscenceTypeService, PackageTermsService, PaymentMethodService, PaymentTermsService, ProfitControlHeadService, SettingsService, WarehouseService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Row, Select } from "antd"
 import { useEffect, useState } from "react";
 import AlertMessages from "../../common/common-functions/alert-messages";
@@ -19,7 +19,7 @@ export const SettingsForm = () => {
     const [facility,setFacility] = useState<any[]>([])
     const warehouseService = new WarehouseService()
     const [warehouse,setWarehouse] = useState<any[]>([])
-    // const cotypeService = new COTypeService()
+    const coTypeService = new CoTypeService()
     const [coType,setCoType] = useState<any[]>([])
     const currencyService = new CurrencyService()
     const [currency,setCurrency] = useState<any[]>([]);
@@ -49,7 +49,6 @@ export const SettingsForm = () => {
     const navigate = useNavigate()
     const [initialData,setInitialData] = useState<any>()
     const [updateKey,setUpdateKey] = useState<number>(0)
-
     const { state } = useLocation();
 
 
@@ -72,6 +71,7 @@ export const SettingsForm = () => {
         getFabricResponsible()
         getEmployees()
         getBuyerAddress()
+        getCoType()
     },[])
 
     useEffect(() => {
@@ -79,12 +79,6 @@ export const SettingsForm = () => {
             getAllInfo()
         }
     },[state])
-
-    useEffect(()=> {
-        if(initialData){
-            console.log(initialData)
-        }
-    },[initialData])
 
     useEffect(()=>{
         if(initialData){
@@ -162,9 +156,13 @@ export const SettingsForm = () => {
         })
     }
 
-    // const getCoType = () => {
-        
-    // }
+    const getCoType = () => {
+        coTypeService.getAllActiveCoTypeInfo().then(res => {
+            if(res.status){
+                setCoType(res.data)
+            }
+        })
+    }
 
     const getCurrency = () => {
         currencyService.getAllActiveCurrencys().then(res => {
@@ -408,14 +406,14 @@ export const SettingsForm = () => {
                     <Row gutter={8}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                         <Form.Item name='coTypeId' label='CO Type' rules={[{required:true,message:'CO Type is requried'}]}>
-                        {/* <Select allowClear showSearch optionFilterProp="children" placeholder='Select CO Type'>
+                        <Select allowClear showSearch optionFilterProp="children" placeholder='Select CO Type'>
                                 {coType.map((e) => {
                                     return(
                                         <Option key={e.coTypeId} value={e.coTypeId}>{e.coType}</Option>
                                     )
                                 })}
-                            </Select> */}
-                            <Input/>
+                            </Select>
+                            {/* <Input/> */}
                         </Form.Item>
                     </Col>
                     </Row>

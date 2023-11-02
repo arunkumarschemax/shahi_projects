@@ -115,6 +115,36 @@ export class ItemCreationDto {
     facilityId: number;
 
     @ApiProperty()
+    itemGroup: string;
+
+    @ApiProperty()
+    productGroup: string;
+
+    @ApiProperty()
+    businessArea: string;
+
+    @ApiProperty()
+    basicUom: string;
+
+    @ApiProperty()
+    groupTechClass: string;
+
+    @ApiProperty()
+    composition: string;
+
+    @ApiProperty()
+    range: string;
+
+    @ApiProperty()
+    noOfLacePanel: string;
+
+    @ApiProperty()
+    searchGroup: string;
+
+    @ApiProperty()
+    referenceId: number;
+
+    @ApiProperty()
     isActive: boolean;
     
     @ApiProperty()

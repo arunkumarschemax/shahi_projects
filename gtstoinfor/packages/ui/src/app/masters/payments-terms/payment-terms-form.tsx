@@ -105,7 +105,7 @@ export function PaymentTermsForm(props:PaymentTermsFormProps) {
             },
           ]}
         >
-         <Select placeholder="Select category" 
+         <Select placeholder="Select Category" 
          //style={{ width: 200}} 
          >
           <Option value="Customer">Customer</Option>
@@ -130,7 +130,7 @@ export function PaymentTermsForm(props:PaymentTermsFormProps) {
             }
           ]}
         >
-          <Input  />
+          <Input placeholder='Enter Payment Term Name' />
         </Form.Item>
         </Col>
         </Row>

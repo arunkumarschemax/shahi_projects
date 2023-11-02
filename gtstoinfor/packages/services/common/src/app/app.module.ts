@@ -75,7 +75,11 @@ import { ProcrumentGroupModule } from './procurment group/procurment-group-modul
 import { HierachyLevelModule } from './hirerachy level/hirerachy-level-module';
 import { RangeModule } from './range/range.module';
 import { SearchGrpModule } from './search-group/search-group.module';
+import { FeatureModule } from './feature-creation/feature-module';
 
+import { ItemTypeModule } from './item-type/item-type.module';
+import { RmSkusModule } from './rm-skus/rm-skus.module';
+import { ProductStructureModule } from './product-structure(BOM)/product-structure-module';
 
 @Module({
   imports: [
@@ -90,6 +94,7 @@ import { SearchGrpModule } from './search-group/search-group.module';
       autoLoadEntities: true,
       synchronize: false,
       logging: false,
+      
       extra: {
         connectionLimit: 20
       }
@@ -134,7 +139,7 @@ import { SearchGrpModule } from './search-group/search-group.module';
     ProductGroupModule,
     ProcrumentGroupModule,
     HierachyLevelModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule,GroupTechClassModule,BusinessAreaModule,CoTypeModule,CompositionModule,RangeModule,SearchGrpModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule,GroupTechClassModule,BusinessAreaModule,CoTypeModule,CompositionModule,RangeModule,SearchGrpModule,FeatureModule,RmSkusModule,ItemTypeModule,ProductStructureModule],
   controllers: [AppController],
   providers: [AppService],
 })

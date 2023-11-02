@@ -47,8 +47,23 @@ export class StyleOrderModel{
     currencyName?: string;
     paymentMethod?: string;
     paymentTermsName?: string;
+    coId?: number;
+    coNumber?:number;
+    season?: string;
+    merchandiser?: number;
+    merchandiserName?: string;
+    merchandiserCode?: string;
+    planner?: number;
+    plannerName?: string;
+    plannerCode?: string;
+    uomId?: number;
+    uom?: string;
+    coTypeId?: number;
+    coType?: string;
+    itemSalePriceQty?: number;
 
-    constructor(styleOrderId: number,itemCode: string,orderDate : any,buyerPoNumber: string,shipmentType: string,buyerStyle : string,agent : number,buyerAddress : number,exFactoryDate: Date,deliveryDate: Date,instoreDate: Date,salePrice: number,priceQuantity: number,discountPercent: number,discountAmount: number,status: CustomerOrderStatusEnum,remarks: string,itemId: number,warehouseId: number,facilityId: number,styleId: number,packageTermsId: number,deliveryMethodId: number,deliverytermId: number,currencyId: number,paymentMethodId: number,paymentTermId: number,styleOrderItems: StyleOrderItemsModel[],buyerId: number,itemName?: string,buyerCode?: string,buyerName?: string,factoryName?: string,warehouseName?: string,agentName?: string,agentCode?: string,landmark?: string,city?: string,state?: string,packageTermsName?: string,deliveryMethod?: string,deliveryTermsName?: string,currencyName?: string,paymentMethod?: string,paymentTermsName?: string){
+
+    constructor(styleOrderId: number,itemCode: string,orderDate : any,buyerPoNumber: string,shipmentType: string,buyerStyle : string,agent : number,buyerAddress : number,exFactoryDate: Date,deliveryDate: Date,instoreDate: Date,salePrice: number,priceQuantity: number,discountPercent: number,discountAmount: number,status: CustomerOrderStatusEnum,remarks: string,itemId: number,warehouseId: number,facilityId: number,styleId: number,packageTermsId: number,deliveryMethodId: number,deliverytermId: number,currencyId: number,paymentMethodId: number,paymentTermId: number,styleOrderItems: StyleOrderItemsModel[],buyerId: number,itemName?: string,buyerCode?: string,buyerName?: string,factoryName?: string,warehouseName?: string,agentName?: string,agentCode?: string,landmark?: string,city?: string,state?: string,packageTermsName?: string,deliveryMethod?: string,deliveryTermsName?: string,currencyName?: string,paymentMethod?: string,paymentTermsName?: string,coId?: number,coNumber?:number,season?: string,merchandiser?: number,merchandiserName?: string,merchandiserCode?: string,planner?: number,plannerName?: string,plannerCode?: string,uomId?: number,uom?: string,coTypeId?: number,coType?: string,itemSalePriceQty?: number){
     this.styleOrderId = styleOrderId
     this.itemCode = itemCode
     this.orderDate = orderDate
@@ -94,5 +109,20 @@ export class StyleOrderModel{
     this.currencyName = currencyName
     this.paymentMethod = paymentMethod
     this.paymentTermsName = paymentTermsName
+    this.coId = coId
+    this.coNumber = coNumber
+    this.season = season
+    this.merchandiser = merchandiser
+    this.merchandiserCode = merchandiserCode
+    this.merchandiserName = merchandiserName
+    this.planner = planner
+    this.plannerCode = plannerCode
+    this.plannerName = plannerName
+    this.uomId = uomId
+    this.uom = uom
+    this.coTypeId = coTypeId
+    this.coType = coType
+    this.itemSalePriceQty = itemSalePriceQty
+
     }
 }

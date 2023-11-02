@@ -10,7 +10,7 @@ export class ItemCreation {
   fgitemId: number;
 
   @Column("varchar", {
-    nullable: false,
+    nullable: true,
     length: 255,
     name: "item_name"
   })
@@ -47,13 +47,13 @@ export class ItemCreation {
   categoryId: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "sub_category_id" /// foregn key
   })
   subCategoryId: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "season_id" /// foregn key
   })
   seasonId: number;
@@ -65,7 +65,7 @@ export class ItemCreation {
   responsiblePersonId: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "product_designer_id" /// foregn key
   })
   productDesignerId: number;
@@ -83,13 +83,13 @@ export class ItemCreation {
   productionMerchant: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "pd_merchant" /// foregn key
   })
   pdMerchant: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "factory_merchant" /// foregn key
   })
   factoryMerchant: number;
@@ -137,10 +137,74 @@ export class ItemCreation {
   @Column("varchar", {
     nullable: true,
     length: 40,
+    name: "item_group"
+  })
+  itemGroup: string;
+
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
+    name: "product_group"
+  })
+  productGroup: string;
+
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
+    name: "business_area"
+  })
+  businessArea: string;
+
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
+    name: "basic_uom"
+  })
+  basicUom: string;
+
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
+    name: "group_tech_class"
+  })
+  groupTechClass: string;
+
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
+    name: "composition"
+  })
+  composition: string;
+
+
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
     name: "target_currency"
   })
   targetCurrency: string;
 
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
+    name: "range"
+  })
+  range: string;
+
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
+    name: "no_of_lace_panel"
+  })
+  noOfLacePanel: string;
+
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
+    name: "search_group"
+  })
+  searchGroup: string;
+  
   @Column("int", {
     nullable: false,
     name: "conversion_factor_id" /// foregn key
@@ -148,7 +212,13 @@ export class ItemCreation {
   conversionFactorId: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
+    name: "reference_id" /// foregn key
+  })
+  referenceId: number;
+
+  @Column("int", {
+    nullable: true,
     name: "projection_order_id" /// foregn key
   })
   projectionOrderId: number;
@@ -161,6 +231,7 @@ export class ItemCreation {
 
   @Column("int", {
     nullable: false,
+    default: "0",
     name: "sale_price_qty" /// foregn key
   })
   salePriceQty: number;
@@ -235,7 +306,7 @@ export class ItemCreation {
   })
   orderQty: number;
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "facility_id" /// foregn key
   })
   facilityId: number;

@@ -13,14 +13,16 @@ import { PaymentTerms } from "../payment-terms/payment-terms.entity";
 import { CoLine } from "./co-line.entity";
 import { Buyers } from "../buyers/buyers.entity";
 import { ItemCreation } from "../fg-item/item_creation.entity";
+import { CoTypes } from "../co-type/co-type.entity";
+import { UomEntity } from "../uom/uom-entity";
 
 @Entity('customer_order')
 export class StyleOrder{
 
     @PrimaryGeneratedColumn("increment",{
-        name:'id'
+        name:'co_id'
     })
-    id:number;
+    coId:number;
 
     @Column('varchar',{
         name:'co_number',
@@ -126,52 +128,77 @@ export class StyleOrder{
     })
     status: CustomerOrderStatusEnum;
 
-    @Column('text',{
+   @Column('text',{
         name:'remarks',
         nullable:true
     })
     remarks: string;
 
+    @Column('varchar',{
+        name:'season',
+        nullable:true,
+        length:30
+    })
+    season : string;
+
+    @Column('int',{
+        name:'merchandiser',
+        nullable:true,
+    })
+    merchandiser : number;
+
+    @Column('int',{
+        name:'planner',
+        nullable:true,
+    })
+    planner : number;
+
+    @Column('int',{
+        name:'item_sale_price_qty',
+        nullable:true,
+    })
+    itemSalePriceQty : number;
+
     @Column("boolean",{
-        nullable:false,
-        default:true,
-        name:"is_active"
-        })
-      isActive:boolean;
-    
-      @CreateDateColumn({
-        name: "created_at",
-        type:"datetime"
-      })
-      createdAt: Date;
-    
-      @Column("varchar", {
-          nullable: false,
-          name: "created_user",
-          default:"ADMIN",
-          length:50
-      })
-      createdUser: string | null;
-    
-    
-      @UpdateDateColumn({
-          name: "updated_at",
-          type:'datetime'
-      })
-      updatedAt: Date;
-    
-      @Column("varchar", {
-          nullable: true,
-          name: "updated_user",
-          length:50
-      })
-      updatedUser: string | null;
-    
-      @VersionColumn({
-          default:1,
-          name: "version_flag"
-      })
-      versionFlag: number;
+    nullable:false,
+    default:true,
+    name:"is_active"
+    })
+    isActive:boolean;
+
+    @CreateDateColumn({
+    name: "created_at",
+    type:"datetime"
+    })
+    createdAt: Date;
+
+    @Column("varchar", {
+        nullable: false,
+        name: "created_user",
+        default:"ADMIN",
+        length:50
+    })
+    createdUser: string | null;
+
+
+    @UpdateDateColumn({
+        name: "updated_at",
+        type:'datetime'
+    })
+    updatedAt: Date;
+
+    @Column("varchar", {
+        nullable: true,
+        name: "updated_user",
+        length:50
+    })
+    updatedUser: string | null;
+
+    @VersionColumn({
+        default:1,
+        name: "version_flag"
+    })
+    versionFlag: number;
 
     @ManyToOne(type=>ItemCreation, item=>item.styleOrderInfo,{  nullable:false, })
     @JoinColumn({ name:"fg_item_id"})
@@ -216,6 +243,14 @@ export class StyleOrder{
     @ManyToOne(type=>Buyers, buyer=>buyer.styleOrderInfo,{  nullable:false, })
     @JoinColumn({ name:"buyer_id"})
     buyerInfo: Buyers;
+
+    @ManyToOne(type=>CoTypes, cotype=>cotype.styleOrderInfo,{  nullable:false, })
+    @JoinColumn({ name:"co_type_id"})
+    coTypeInfo: CoTypes;
+
+    @ManyToOne(type=>UomEntity, uom=>uom.styleOrderInfo,{  nullable:true, })
+    @JoinColumn({ name:"quantity_uom_id"})
+    uomInfo: UomEntity;
 
     @OneToMany(type=>CoLine, co=>co.styleOrderInfo,{cascade: true})
     coLineInfo:CoLine[];

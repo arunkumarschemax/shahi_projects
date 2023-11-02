@@ -24,7 +24,7 @@ import {
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { ColumnProps } from "antd/lib/table";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CommissionDto } from "@project-management-system/shared-models";
 import { CommissionService } from "@project-management-system/shared-services";
 import { CommissionForm } from "./commission-form";
@@ -36,6 +36,7 @@ export function CommissionGrid(props: CommissionProps) {
   const [page, setPage] = React.useState(1);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const navigate = useNavigate()
 
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [commissionData, setCommissionData] = useState<CommissionDto[]>([]);
@@ -318,17 +319,8 @@ export function CommissionGrid(props: CommissionProps) {
   };
   return (
     <Card
-      title={<span>Commission</span>}
-      style={{ textAlign: "center" }}
-      headStyle={{ border: 0 }}
-      extra={
-        <Link to="/masters/commission/commission-form">
-          <span style={{ color: "white" }}>
-            <Button type={"primary"}>New </Button>{" "}
-          </span>
-        </Link>
-      }
-    >
+      title='Commision' extra={<span><Button onClick={()=>('/masters/commission/commission-form')} type={'primary'}>New </Button></span>}>
+      
       <br></br>
       <Row gutter={40}>
         <Col>
@@ -373,6 +365,8 @@ export function CommissionGrid(props: CommissionProps) {
       <br></br>
       <Table
         size="small"
+        rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
+
         rowKey={(record) => record.commissionId}
         columns={columnsSkelton}
         dataSource={commissionData}

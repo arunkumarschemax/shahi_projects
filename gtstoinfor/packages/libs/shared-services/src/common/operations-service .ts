@@ -5,7 +5,7 @@ export class OperationsService extends CommonAxiosService{
   URL = "/operations";
 
   async createOperations(operations: OperationsDTO): Promise<OperationsResponseModel> {
-    console.log('testss',operations)
+    // console.log('testss',operations)
     return this.axiosPostCall(this.URL + "/createOperation", operations)
 }
 
@@ -29,7 +29,7 @@ export class OperationsService extends CommonAxiosService{
   }
 
   async ActivateDeActivateOperation(Req: OperationsDTO): Promise<OperationsResponseModel> {
-    console.log(Req,'shared-----------')
+    // console.log(Req,'shared-----------')
     return  this.axiosPostCall(this.URL + '/activateOrDeactivateOperations', Req)
 }
 }

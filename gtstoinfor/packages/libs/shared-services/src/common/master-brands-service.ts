@@ -5,7 +5,7 @@ export class MasterBrandsService extends CommonAxiosService{
   URL = "/master-brands";
 
   async createBrand(brand: MasterBrandsDto): Promise<MasterBrandsResponseModel> {
-    console.log('testss',brand)
+    // console.log('testss',brand)
     return this.axiosPostCall(this.URL + "/createMasterBrand", brand)
 }
 
@@ -29,7 +29,7 @@ export class MasterBrandsService extends CommonAxiosService{
   }
 
   async ActivateDeActivateBrand(brandReq: MasterBrandsDto): Promise<MasterBrandsResponseModel> {
-    console.log(brandReq,'shared-----------')
+    // console.log(brandReq,'shared-----------')
     return  this.axiosPostCall(this.URL + '/activateOrDeactivateBrand', brandReq)
 }
 }

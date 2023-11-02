@@ -67,10 +67,10 @@ export function  RangeForm (props: FormProps) {
                       message:"Range Code Is Required"
                       
                     },
-                    // {
-                    //   pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                    //   message: `Should contain only alphabets and numbers.`
-                    // }
+                    {
+                      pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                      message: `Should contain only alphabets and numbers.`
+                    }
                   ]}>
                   <Input placeholder='Enter Range Code'/>
                 </Form.Item>
@@ -85,10 +85,10 @@ export function  RangeForm (props: FormProps) {
                       message:"Range Description Is Required"
                       
                     },
-                    // {
-                    //   pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                    //   message: `Should contain only alphabets and numbers.`
-                    // }
+                    {
+                      pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                      message: `Should contain only alphabets and numbers.`
+                    }
                   ]}>
                   <Input placeholder='Enter Range Description'/>
                 </Form.Item>

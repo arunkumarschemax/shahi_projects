@@ -341,7 +341,9 @@ let userRef
           <br></br>
           <div style={{overflowX :'auto' }}>
 
-    <Table columns={columnsSkelton} dataSource={buyersData} size='small' bordered/>
+    <Table columns={columnsSkelton} 
+            rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
+            dataSource={buyersData} size='small' bordered/>
           </div>
     <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>

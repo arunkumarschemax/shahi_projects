@@ -11,6 +11,7 @@ import { GenericTransactionManager } from "../../typeorm-transactions";
 import { ItemSkuRepository } from "./sku-generation-repo";
 import { Style } from "../style/dto/style-entity";
 import { ItemCreation } from "../fg-item/item_creation.entity";
+import { Division } from "../division/division.entity";
 
 @Injectable()
 export class ItemSkuService{
@@ -49,6 +50,9 @@ export class ItemSkuService{
             const style = new Style()
             style.styleId = req.styleId
             entity.styleInfo = style
+            const division = new Division()
+            division.divisionId = req.divisonId
+            entity.divisionInfo = division
             entity.status = req.status
             entity.createdUser = req.createdUser
             const destinationEntity = new Destination()
@@ -120,9 +124,12 @@ export class ItemSkuService{
 
     async closeSKUById(req : ItemSKusReq): Promise<SKUGenerationResponseModel> {
       try {
-        const sampleReq = await this.itemSkuRepo.findOne({ where: { itemSkuId: req.itemId  } })
-        if (sampleReq) {
-          const updateResult = await this.itemSkuRepo.update({ itemSkuId: req.itemId }, { status: SkuStatusEnum.CLOSED })
+        console.log(req.itemSkuId,'----------------------')
+        const skuReq = await this.itemSkuRepo.findOne({ where: { itemSkuId: req.itemSkuId  } })
+        console.log(skuReq,'&&&&&&&&&&&&&&&&&&&&')
+        if (skuReq) {
+          const updateResult = await this.itemSkuRepo.update({ itemSkuId: req.itemSkuId }, { status: SkuStatusEnum.CLOSED })
+          console.log(updateResult,'======================')
           if (updateResult) {
             return new SKUGenerationResponseModel(true, 1, 'SKU cancelled successfully', undefined)
           }
@@ -164,7 +171,7 @@ export class ItemSkuService{
 
   async getDataByItem(req:ItemCodeReq):Promise<SKUGenerationResponseModel>{
     try{
-      const data = await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo','fgitemInfo','styleInfo'],where:{itemCode:req.itemCode}})
+      const data = await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo','fgitemInfo','styleInfo','divisionInfo'],where:{itemCode:req.itemCode}})
       // const data = await this.itemSkuRepo.getDataByItem(req.itemCode)
       if(data.length > 0){
         let colorInfo = []
@@ -182,8 +189,8 @@ export class ItemSkuService{
           destinationInfo.push(new DestinationInfoReq(rec.destinationInfo.destinationId,rec.destination))
           }
         }
-        info.push(new ItemSKusModel(data[0].itemSkuId,data[0].skuCode,data[0].fgitemInfo.fgitemId,data[0].itemCode,data[0].status,colorInfo,sizeInfo,destinationInfo,data[0].createdUser,data[0].styleInfo.styleId,data[0].styleInfo.style))
-        // console.log(info,'----------')
+        console.log(info,'----info')
+        info.push(new ItemSKusModel(data[0].itemSkuId,data[0].skuCode,data[0].fgitemInfo.fgitemId,data[0].itemCode,data[0].status,colorInfo,sizeInfo,destinationInfo,data[0].createdUser,data[0].styleInfo.styleId,data[0].styleInfo.style,data[0].divisionInfo.divisionId,data[0].divisionInfo.divisionName))
         return new SKUGenerationResponseModel(true,1,'Data retreived',info)
       } else{
         return new SKUGenerationResponseModel(false,0,'No data found')
@@ -194,104 +201,51 @@ export class ItemSkuService{
   }
 
 
-  // async getSkuList(req:SKUlistFilterRequest):Promise<CommonResponseModel>{
-  //   try{
-  //     const getData= await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo'],
-  //     // const getData = await this.itemSkuRepo.getDestinationsByItem(req.itemCode)
-
-  //     where:{fgitemInfo:{fgitemId:req.itemNoId}}
-  //   })
-  //     if(getData.length> 0){
-  //       return new CommonResponseModel(true,1,'Data retreived',getData)
-  //     }else{
-  //       return new CommonResponseModel(false,0,'No data found')
-  //     }
-  //   }catch (err){
-  //     throw err
-  //   }
-  // }
-   
-
-  // async getSkuList(req:SKUlistFilterRequest):Promise<CommonResponseModel>{
-  //   try{
-  //     const getData= await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo'],
-  //     // const getData = await this.itemSkuRepo.getDestinationsByItem(req.itemCode)
-
-  //     where:{itemInfo:{itemId:req.itemNoId}}
-  //   })
-  //     if(getData.length> 0){
-  //       return new CommonResponseModel(true,1,'Data retreived',getData)
-  //     }else{
-  //       return new CommonResponseModel(false,0,'No data found')
-  //     }
-  //   }catch (err){
-  //     throw err
-  //   }
-  // }
-   
-
-//   async getSkuList(req:SKUlistFilterRequest):Promise<CommonResponseModel>{
-//     const data = await this.itemSkuRepo.getSkuList(req);
-//     if(data.length ===0){
-//       return new CommonResponseModel(false,0,'data not found');
-//     }
-//     const DataMap =new Map<string, SKUDTO>();
-// console.log(data,'ppppppppp');
-
-//     for(const res of data){
-//       if(!DataMap.has(res.item_code)){
-//         DataMap.set(res.item_id,new SKUDTO(res.item_code,res.item_id,[]));
-//       }
-//       const Sku =DataMap.get(res.itemNoId).sku;
-//       if(Sku){
-//       const data1 = new SKUListDto(res.item_sku_id,res.size_id,res.size,res.color_id,res.color,res.destination_id,res.destination)
-//       Sku.push(data1)
-//       }
-//     }
   
-//     const ListArray: SKUDTO[] = Array.from(DataMap.values());
-//     return new CommonResponseModel(true,1,'data retrived', ListArray);
+
+
+// async getSkuList(req?: SKUlistFilterRequest): Promise<CommonResponseModel> {
+//   const data = await this.itemSkuRepo.getSkuList(req);
+//   console.log(data,"data")
+
+//   if (data.length === 0) {
+//     return new CommonResponseModel(false, 0, 'data not found');
 //   }
 
+//   const DataMap = new Map<string, SKUDTO>();
+//   for (const res of data) {
+//     if (!DataMap.has(res.fg_item_id)) {
+//       DataMap.set(res.fg_item_id, new SKUDTO(res.item_code, res.fg_item_id, []));
+//       // console.log( res.fg_item_id,'service item id');
 
-async getSkuList(req: SKUlistFilterRequest): Promise<CommonResponseModel> {
-  const data = await this.itemSkuRepo.getSkuList(req);
-console.log(req,'service');
-  if (data.length === 0) {
-    return new CommonResponseModel(false, 0, 'data not found');
-  }
+//     }
+//     const Sku = DataMap.get(res.fg_item_id)?.sku;
+//     // console.log( res.item_id,'service item id/ x`out sidex');
+//     if (Sku) {
+//       const data1 = new SKUListDto(
+//         res.item_sku_id,
+//         res.sku_code,
+//         res.size_id,
+//         res.size,
+//         res.color_id,
+//         res.color,
+//         res.destination_id,
+//         res.destination
+//       );
+//       Sku.push(data1);
+//     }
+//   }
 
-  const DataMap = new Map<string, SKUDTO>();
+//   const ListArray: SKUDTO[] = Array.from(DataMap.values());
+//   console.log(ListArray,'service');
 
-  for (const res of data) {
-    if (!DataMap.has(res.item_id)) {
-      DataMap.set(res.item_id, new SKUDTO(res.item_code, res.item_id, []));
-    }
-    const Sku = DataMap.get(res.item_id)?.sku;
-    // const phase = monthData.find(e => e.phasetype === rec.prod_plan_type
-    if (Sku) {
-      const data1 = new SKUListDto(
-        res.item_sku_id,
-        res.sku_code,
-        res.size_id,
-        res.size,
-        res.color_id,
-        res.color,
-        res.destination_id,
-        res.destination
-      );
-      Sku.push(data1);
-    }
-  }
+//   return new CommonResponseModel(true, 1, 'data retrieved', ListArray);
+// }
 
-  const ListArray: SKUDTO[] = Array.from(DataMap.values());
-  return new CommonResponseModel(true, 1, 'data retrieved', ListArray);
-}
-
-async getItemCode():Promise<CommonResponseModel>{
+async getItemCode(req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
   try{
-    const getData = await this.itemSkuRepo.getItemCode()
-    console.log(getData,'dara');
+    const getData = await this.itemSkuRepo.getItemCode(req)
+    // console.log(getData,'dara');
     
     if(getData ){
       return new CommonResponseModel(true,1,'Data retreived',getData)
@@ -304,4 +258,22 @@ async getItemCode():Promise<CommonResponseModel>{
   }
 }
 
+async getSkuList (req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
+  try{
+    const getdata = await this.itemSkuRepo.getSkuList(req)
+
+    if(getdata.length>0){
+
+      return new CommonResponseModel(true,1,'data retreived', getdata)
+
+    }else{
+
+      return new CommonResponseModel(false,0,'No data found')
+
+    }
+    
+  }catch(err){
+    throw err
+  }
+}
 }

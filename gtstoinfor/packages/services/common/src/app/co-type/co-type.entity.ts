@@ -1,4 +1,6 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Settings } from "../settings/settings.entity";
+import { StyleOrder } from "../style-order/style-order.entity";
 
 @Entity('co_types')
 export class CoTypes {
@@ -53,5 +55,11 @@ export class CoTypes {
       name: "version_flag"
   })
   versionFlag: number;
+
+  @OneToMany(type => Settings, settings => settings.coTypeInfo ,{cascade: true})
+  settingsInfo : Settings
+
+  @OneToMany(type=>StyleOrder, styleorder=>styleorder.coTypeInfo,{cascade: true})
+  styleOrderInfo:StyleOrder;
 
 }
