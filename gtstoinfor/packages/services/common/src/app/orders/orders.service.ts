@@ -1712,7 +1712,7 @@ async processEmails() {
             }
     }
 
-    this.sendMail('balirajeswari11@gmail.com','test mail',filesArray)
+    this.sendMail('karthikeyan.nallamuthu@shahi.co.in','Uploded Files Status',filesArray)
     return 
     
     }
