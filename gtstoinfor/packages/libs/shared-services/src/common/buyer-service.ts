@@ -1,4 +1,4 @@
-import { AllBuyersResponseModel, BuyerIdReq, BuyerRequest, BuyersDto, BuyersGeneralAttributeModel, BuyersGeneralAttributeRequest, BuyersGeneralAttributeResponseModel, BuyersOrderAttributeRequest, BuyersOrderAttributeResponseModel, BuyersResponseModel, CommonResponseModel } from '@project-management-system/shared-models';
+import { AllBuyersResponseModel, BuyerExtrnalRefIdReq, BuyerIdReq, BuyerRequest, BuyersDto, BuyersGeneralAttributeModel, BuyersGeneralAttributeRequest, BuyersGeneralAttributeResponseModel, BuyersOrderAttributeRequest, BuyersOrderAttributeResponseModel, BuyersResponseModel, CommonResponseModel } from '@project-management-system/shared-models';
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class BuyersService extends CommonAxiosService{
@@ -19,7 +19,7 @@ export class BuyersService extends CommonAxiosService{
         return this.axiosPostCall(this.URL + "/getAllBuyer",req)
     }
 
-    async getAllActiveBuyers(req?: BuyerIdReq): Promise<AllBuyersResponseModel> {
+    async getAllActiveBuyers(req?: BuyerExtrnalRefIdReq): Promise<AllBuyersResponseModel> {
         return this.axiosPostCall(this.URL + "/getAllActiveBuyers",req)
     }
 
@@ -47,7 +47,8 @@ export class BuyersService extends CommonAxiosService{
         return this.axiosPostCall(this.URL + "/getAddressByBuyerId",req)
     }
 
-    async getAllBuyersInfo(req?: string): Promise<CommonResponseModel> {
+    async getAllBuyersInfo(req?: BuyerExtrnalRefIdReq): Promise<CommonResponseModel> {
+        console.log(req,'sharedddddddd');
         return this.axiosPostCall(this.URL + "/getAllBuyersInfo",req)
     }
     
@@ -66,7 +67,7 @@ export class BuyersService extends CommonAxiosService{
     async getAllAddress(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getAllAddress")
     }
-    async getBuyerByRefId(req:string): Promise<CommonResponseModel> {
+    async getBuyerByRefId(req:BuyerExtrnalRefIdReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getBuyerByRefId",req)
     }
 }

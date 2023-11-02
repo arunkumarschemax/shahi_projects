@@ -1,5 +1,5 @@
 import { ProColumns, ProTable } from '@ant-design/pro-components'
-import { BuyerIdReq, BuyerRequest, BuyersDto, FactoryActivateDeactivateDto, FactoryDto, MenusAndScopesEnum, OperationGroupsDto } from '@project-management-system/shared-models'
+import { BuyerExtrnalRefIdReq, BuyerIdReq, BuyerRequest, BuyersDto, FactoryActivateDeactivateDto, FactoryDto, MenusAndScopesEnum, OperationGroupsDto } from '@project-management-system/shared-models'
 import { BuyersService, FactoryService } from '@project-management-system/shared-services'
 import { Button, Card, Col, Divider, Drawer, Form, Input, Modal, Popconfirm, Radio, Row, Space, Switch, Table, Tag, Tooltip, message } from 'antd'
 import { forEachObject } from 'for-each'
@@ -40,22 +40,18 @@ let userRef
     getBuyersData()
   },[])
 
-// const Login = () =>{
-//   if(role === MenusAndScopesEnum.roles.Buyer){
-//     userRef = externalRefNo
-//   }
-//   buyerService.getBuyerByRefId(userRef).then(res=>{
-//     if(res.status){
-//       setUserId(res.data)
-// setLoginBuyer(res.data.buyerId)
-//     }
-//   })
-// }
+
 
   const getBuyersData = () => {
+    const req = new BuyerExtrnalRefIdReq()
    
+    if(role === MenusAndScopesEnum.roles.crmBuyer){
+   
+      req.extrnalRefId = externalRefNo
+    }
+    
     // const loginId = new BuyerIdReq(loginBuyer)
-    buyerService.getAllBuyersInfo(externalRefNo).then(res => {
+    buyerService.getAllBuyersInfo(req).then(res => {
       
       if(res.status){
         setBuyersData(res.data)

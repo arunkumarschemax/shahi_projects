@@ -20,7 +20,7 @@ import { BuyersService, EmployeeDetailsService, FabricDevelopmentService, Fabric
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link, useNavigate } from "react-router-dom";
 import FabricDevelopmentRequestQuality from "./fabric-development-quality-request";
-import { BuyerIdReq, FabricDevelopmentRequestModel, MenusAndScopesEnum, StatusEnum } from "@project-management-system/shared-models";
+import { BuyerExtrnalRefIdReq, BuyerIdReq, FabricDevelopmentRequestModel, MenusAndScopesEnum, StatusEnum } from "@project-management-system/shared-models";
 
 export interface FabricDevelopmentRequestProps {
   placementForm:FormInstance<any>;
@@ -191,21 +191,11 @@ console.log(filesArray,"######");
       getAllActiveEmploee();
       getAllActiveLocations();
       getAllstyle()
-     Login()
+     
 
     },[])
   
-  const Login = () =>{
-  if(role === MenusAndScopesEnum.roles.Buyer){
-    userRef = externalRefNo
-  }
-  buyerService.getBuyerByRefId(userRef).then(res=>{
-    if(res.status){
-      setUserId(res.data)
-setLoginBuyer(res.data.buyerId)
-    }
-  })
-}
+ 
     const getAllActiveProfitControlHead=() =>{
       Pchservice.getAllActiveProfitControlHead().then(res =>{
       if (res.status){
@@ -222,8 +212,18 @@ setLoginBuyer(res.data.buyerId)
   }
 
   const getAllActiveBuyers=() =>{
+    const req = new BuyerExtrnalRefIdReq
+    if(role === MenusAndScopesEnum.roles.crmBuyer){
+      req.extrnalRefId = externalRefNo
+    }
+    buyerService.getBuyerByRefId(req).then(res=>{
+      if(res.status){
+        setUserId(res.data)
+  setLoginBuyer(res.data.buyerId)
+      }
+    })
         // const loginId = new BuyerIdReq(loginBuyer)
-    buyerService.getAllActiveBuyers(userRef).then(res =>{
+    buyerService.getAllActiveBuyers(req).then(res =>{
     if (res.status){
       setBuyerData(res.data);
        

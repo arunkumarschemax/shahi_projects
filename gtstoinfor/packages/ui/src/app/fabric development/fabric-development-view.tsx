@@ -1,4 +1,4 @@
-import { BuyerIdReq, MenusAndScopesEnum } from "@project-management-system/shared-models";
+import { BuyerExtrnalRefIdReq, BuyerIdReq, MenusAndScopesEnum } from "@project-management-system/shared-models";
 import { BuyersService, EmployeeDetailsService, FabricDevelopmentService, LocationsService, ProfitControlHeadService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Table } from "antd"
 import React, { useEffect, useState } from "react";
@@ -35,18 +35,27 @@ export const FabricDevelopmentView = () =>{
     },[])
     
     const Login = () =>{
-      if(role === MenusAndScopesEnum.roles.Buyer){
-        userRef = externalRefNo
+      const req = new BuyerExtrnalRefIdReq()
+      if(role === MenusAndScopesEnum.roles.crmBuyer){
+        req.extrnalRefId = externalRefNo
       }
-      buyerService.getBuyerByRefId(userRef).then(res=>{
+      buyerService.getBuyerByRefId(req).then(res=>{
         if(res.status){
           setUserId(res.data)
     setLoginBuyer(res.data.buyerId)
         }
       })
+      buyerService.getAllActiveBuyers(req).then(res=>{
+        if(res.status){
+              setBuyerId(res.data)
+              console.log(buyerId,'buyer');
+        }
+      })
     }
     const getData = ()=>{
       const loginId = new BuyerIdReq(loginBuyer)
+      console.log(loginId,'/////////');
+      
       service.getFabricDevReqData(loginId).then(res=>{
         if(res.status){
               setData(res.data)
@@ -76,15 +85,7 @@ export const FabricDevelopmentView = () =>{
                         console.log(pchId,'pch');
                   }
                 })
-                
-                buyerService.getAllActiveBuyers().then(res=>{
-                  console.log(res.data,'----88888----')
-
-                  if(res.status){
-                        setBuyerId(res.data)
-                        console.log(buyerId,'buyer');
-                  }
-                })
+              
 
                 employeeService.getAllActiveEmploee().then(res =>{
                   console.log(res.data,"emp")

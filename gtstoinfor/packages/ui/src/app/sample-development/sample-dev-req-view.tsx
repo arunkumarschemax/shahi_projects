@@ -32,7 +32,7 @@ import { Link } from "react-router-dom";
 import { BuyersService, SampleDevelopmentService } from "@project-management-system/shared-services";
 import { useNavigate } from "react-router-dom";
 import form from "antd/es/form";
-import { MenusAndScopesEnum, SampleDevelopmentStatusDisplay, SampleDevelopmentStatusEnum, SampleFilterRequest } from "@project-management-system/shared-models";
+import { BuyerExtrnalRefIdReq, MenusAndScopesEnum, SampleDevelopmentStatusDisplay, SampleDevelopmentStatusEnum, SampleFilterRequest } from "@project-management-system/shared-models";
 
 
 export const SampleDevView = () => {
@@ -63,12 +63,14 @@ const buyerService = new BuyersService();
     getAllSampleReqNo()
     getAllPCH()
     getAllStyleNo()
+    Login()
   }, []);
   const Login = () =>{
-    if(role === MenusAndScopesEnum.roles.Buyer){
-      userRef = externalRefNo
+    const req = new BuyerExtrnalRefIdReq()
+    if(role === MenusAndScopesEnum.roles.crmBuyer){
+      req.extrnalRefId = externalRefNo
     }
-    buyerService.getBuyerByRefId(userRef).then(res=>{
+    buyerService.getBuyerByRefId(req).then(res=>{
       if(res.status){
         setUserId(res.data)
   setLoginBuyer(res.data.buyerId)
@@ -89,7 +91,7 @@ const buyerService = new BuyersService();
     if (form.getFieldValue('status') !== undefined) {
       req.status = form.getFieldValue('status')
     }
-    if(role === MenusAndScopesEnum.roles.Buyer){
+    if(role === MenusAndScopesEnum.roles.crmBuyer){
       req.buyerId = loginBuyer
   }
    
