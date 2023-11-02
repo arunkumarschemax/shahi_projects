@@ -1623,10 +1623,13 @@ async processEmails() {
                     // const sheets = await promise()
                     // console.log('hhhhhoo',sheets)
                     let finalSheetName = ''
-                    for(const sheetname of sheets){
+                     for(const sheetname of sheets){
                         if(sheetname.name == 'Production Plan Rawdata Export' || sheetname.name =='RawData' || sheetname.name =='Rawdata'){
                             finalSheetName = sheetname.name
                             break
+                        } else{
+                            filesArray.push(new ordersMailFileStatusArrayReq(filename,'Failed',`Sheet name doesn't match`,'-'))
+                            continue
                         }
                     }
                             xlsxFile(filepath,{sheet:finalSheetName},{transformData(data){
@@ -1671,7 +1674,6 @@ async processEmails() {
             const dataArray = await promise();
         
             if(dataArray){
-                console.log('dataArraymmmm',dataArray)
                 
                 const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS,'Email')
                 // console.log(filepath,'jjjjj')
@@ -1702,7 +1704,7 @@ async processEmails() {
                 }else{
                     console.log('falseeee')
                     // return false
-                    filesArray.push(new ordersMailFileStatusArrayReq(filename,'Failed',saveFilePath.internalMessage))
+                    filesArray.push(new ordersMailFileStatusArrayReq(filename,'Failed',saveFilePath.internalMessage,'-'))
                 }
                 // return dataArray
             }else{
