@@ -18,7 +18,7 @@ export class BomController {
       @ApiBody({type:BomTrimDto})   
     @Post('/createBomTrim')
     async createBomTrim(@Body() req:any): Promise<BomTrimResponseModel> {
-        console.log(req)
+        // console.log(req)
         try {
             return await this.bomServie.createBomTrim(req, false)
         } catch (error) {

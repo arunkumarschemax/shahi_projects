@@ -6,7 +6,7 @@ export class DepartmentService extends CommonAxiosService{
     URL ="/departments";
 
   async createDepartment(depart: DepartmentsDtos): Promise<DepartmentResponseModel> {
-        console.log('testss',depart)
+        // console.log('testss',depart)
         return this.axiosPostCall(this.URL + "/createDepartment", depart)
     }
   
@@ -22,7 +22,7 @@ export class DepartmentService extends CommonAxiosService{
     }
 
   async ActivateorDeactivateDepartment(departmentsDtos: DepartmentsDtos): Promise<AllDepartmentsResponseModel> {
-    console.log(departmentsDtos);
+    // console.log(departmentsDtos);
     return this.axiosPostCall(this.URL + '/activateorDeactivateDepartment', departmentsDtos)
      
   }

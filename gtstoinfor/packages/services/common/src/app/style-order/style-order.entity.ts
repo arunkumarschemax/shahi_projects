@@ -153,6 +153,12 @@ export class StyleOrder{
     })
     planner : number;
 
+    @Column('int',{
+        name:'item_sale_price_qty',
+        nullable:true,
+    })
+    itemSalePriceQty : number;
+
     @Column("boolean",{
     nullable:false,
     default:true,

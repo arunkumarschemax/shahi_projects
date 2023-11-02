@@ -1,3 +1,4 @@
+import { BuyerIdReq, MenusAndScopesEnum } from "@project-management-system/shared-models";
 import { BuyersService, EmployeeDetailsService, FabricDevelopmentService, LocationsService, ProfitControlHeadService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Table } from "antd"
 import React, { useEffect, useState } from "react";
@@ -20,15 +21,33 @@ export const FabricDevelopmentView = () =>{
     const[buyerId,setBuyerId] = useState([]);
     const[empId,setEmpId] = useState([]);
     const[styId,setStyId] = useState([]);
-
+    const [userId, setUserId] = useState([]); 
+    const [loginBuyer,setLoginBuyer] = useState<number>(0)
+    const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+    const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
+  let userRef
 
 
 
     useEffect  (()=>{
       getData()
+      Login()
     },[])
+    
+    const Login = () =>{
+      if(role === MenusAndScopesEnum.roles.Buyer){
+        userRef = externalRefNo
+      }
+      buyerService.getBuyerByRefId(userRef).then(res=>{
+        if(res.status){
+          setUserId(res.data)
+    setLoginBuyer(res.data.buyerId)
+        }
+      })
+    }
     const getData = ()=>{
-      service.getFabricDevReqData().then(res=>{
+      const loginId = new BuyerIdReq(loginBuyer)
+      service.getFabricDevReqData(loginId).then(res=>{
         if(res.status){
               setData(res.data)
               console.log(res,'data');

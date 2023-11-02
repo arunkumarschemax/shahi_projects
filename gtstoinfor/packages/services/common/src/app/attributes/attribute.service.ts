@@ -80,10 +80,10 @@ export class AttributeService {
       }
 
       async activateOrDeactivateAttributes(req: AttributeRequest): Promise<AttributeResponse> {
-        console.log(req,'hoioooo')
+        // console.log(req,'hoioooo')
         try {
             const attributeExists = await this.getAttributeById(req.attributeId);
-            console.log(attributeExists,'sdfghjk')
+            // console.log(attributeExists,'sdfghjk')
             if (attributeExists) {
                 if (!attributeExists) {
                     throw new ErrorResponse(10113, 'Someone updated the current Attribute information. Refresh and try again');
@@ -176,7 +176,7 @@ export class AttributeService {
 
 
   async getAttributeByAttributeAgainst(attributeAgainst: AttributeAgainstRequest): Promise<AllAttributesResponse> {
-    console.log(attributeAgainst,'???????????????????????')
+    // console.log(attributeAgainst,'???????????????????????')
       const Response = await this.attributeRepository.find({ where: {
           attributeAgainst: attributeAgainst.attributeAgainst,
           isActive: attributeAgainst.isActive

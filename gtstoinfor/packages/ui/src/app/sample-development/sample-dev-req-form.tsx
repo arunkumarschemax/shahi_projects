@@ -1,6 +1,6 @@
 import { PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
-import { BuyersDestinationRequest, DepartmentReq,SampleDevDto,SampleDevelopmentRequest } from "@project-management-system/shared-models";
+import { BuyerIdReq, BuyersDestinationRequest, DepartmentReq,MenusAndScopesEnum,SampleDevDto,SampleDevelopmentRequest } from "@project-management-system/shared-models";
 import {BuyerDestinationService, BuyersService,CountryService,CurrencyService,EmployeeDetailsService,LiscenceTypeService,LocationsService,MasterBrandsService,ProfitControlHeadService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Modal, Row, Select, message } from "antd";
 import { useEffect, useState } from "react";
@@ -42,7 +42,11 @@ export const SampleDevForm = () => {
   const sampleService = new SampleDevelopmentService()
   const sampleTypeService = new SampleTypesService()
   const subTypeService = new SampleSubTypesService()
-
+  const [userId, setUserId] = useState([]); 
+  const [loginBuyer,setLoginBuyer] = useState<number>(0)
+  const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+  const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
+let userRef
 
   useEffect(() => {
     getLocations();
@@ -57,8 +61,19 @@ export const SampleDevForm = () => {
     getSampleTypes();
     getSampleSubTypes();
     getDMM()
+    Login()
   }, []);
-
+  const Login = () =>{
+    if(role === MenusAndScopesEnum.roles.Buyer){
+      userRef = externalRefNo
+    }
+    buyerService.getBuyerByRefId(userRef).then(res=>{
+      if(res.status){
+        setUserId(res.data)
+  setLoginBuyer(res.data.buyerId)
+      }
+    })
+  }
   const handleBuyerChange = (value) => {
     setSelectedBuyerId(value);
   };
@@ -110,7 +125,8 @@ export const SampleDevForm = () => {
   };
 
   const getBuyers = () => {
-    buyerService.getAllActiveBuyers().then((res) => {
+    const loginId = new BuyerIdReq(loginBuyer)
+    buyerService.getAllActiveBuyers(loginId).then((res) => {
       if (res.status) {
         setBuyer(res.data);
       }

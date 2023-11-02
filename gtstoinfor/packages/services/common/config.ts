@@ -14,4 +14,6 @@ export const appConfig = {
         poolLimit: parseInt(process.env[`APP_DB_POOL_LIMIT`]) || 50
     },
     
+    
+    
 }

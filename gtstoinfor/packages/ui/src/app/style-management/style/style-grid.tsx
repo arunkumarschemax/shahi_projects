@@ -227,7 +227,7 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
   }
 
   const openFormWithData = (viewdata: StyleDto) => {
-    console.log(viewdata)
+    // console.log(viewdata)
     setDrawerVisible(true);
     setSelectedVariant(viewdata);
   }
@@ -236,7 +236,7 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
   const updateStyle = (data: StyleDto,filelist:any) => {
     // data.updateUser = JSON.parse(localStorage.getItem('username'))
     service.updateStyle(data).then(res => {
-      console.log(res);
+      // console.log(res);
       if (res.status) {
         console.log(res.data[0].styleId,'updatee')
         if (filelist.length > 0) {
@@ -265,7 +265,7 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
   const deleteStyle = (data:StyleIdReq ) => {
     data.isActive = data.isActive ? false : true;
     service.ActivateOrDeactivateStyle(data).then(res => {
-      console.log(res);
+      // console.log(res);
       if (res.status) {
         getAllStyles();
         AlertMessages.getSuccessMessage(res.internalMessage);

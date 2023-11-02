@@ -12,7 +12,7 @@ async createSmapleDevlopmentRequest(req: SampleDevDto):Promise<AllSampleDevReqRe
 }
 
 async getAllSampleDevData(req? : SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
-    console.log(req,'shared service')
+    // console.log(req,'shared service')
     return this.axiosPostCall(this.URL + "/getAllSampleDevData",req)
 }
 

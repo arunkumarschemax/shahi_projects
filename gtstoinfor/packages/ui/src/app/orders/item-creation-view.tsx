@@ -347,10 +347,10 @@ const getAllComposition=()=>{
         title: "Style",
         dataIndex: "style_no",
         align:'center',
-        render: (data) => {
-          const style = styledata.find((sty) => sty.styleNo === data);
-          return style ? style.style : "-";
-        },
+        // render: (data) => {
+        //   const style = styledata.find((sty) => sty.styleNo === data);
+        //   return style ? style.style : "-";
+        // },
         sorter: (a, b) => a.style_no.localeCompare(b.style_no),
             sortDirections: ['descend', 'ascend'],
       },
@@ -358,6 +358,9 @@ const getAllComposition=()=>{
         title: "Item Name",
         dataIndex: "item_name",
         align:'center',
+        render: (item_name) => {
+          return item_name ? item_name : "-";
+        },
         sorter: (a, b) => a.item_name.localeCompare(b.item_name),
         sortDirections: ['descend', 'ascend'],
       },
@@ -529,9 +532,15 @@ const getAllComposition=()=>{
         title: "Range",
         dataIndex: "irange",
         render: (data) => {
-          const randata = rangedata.find((cat) => cat.id === data);
-          return randata ? randata.rangeCode : "-";
+          const dataAsString = data.toString();
+          const randata = rangedata[dataAsString];
+          if (randata) {
+            return randata.rangeCode;
+          } else {
+            return "-";
+          }
         },
+                
         sorter: (a, b) => {
           const icatA = rangedata.find((cat) => cat.id === a.id)?.rangeCode || '';
           const icatB = rangedata.find((cat) => cat.id === b.id)?.rangeCode || '';
