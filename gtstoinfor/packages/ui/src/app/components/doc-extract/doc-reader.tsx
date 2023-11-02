@@ -4,7 +4,7 @@ import { Button, Card, Col, Form, FormInstance, Radio, Row, Select, Spin, Upload
 import { useState } from 'react';
 import { pdfjs } from 'react-pdf';
 import loadingSymbol from '../../../assets/images/1_yE-S7HG0Rg-ACAcnjvKf5Q.gif';
-import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractDhlCourier, extractEfl, extractMsn,extractExpeditors, extractMaersk, extractNagel, extractOocl, extractPDFDataToLinesData } from './schemax-ai-docx-pdf';
+import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractDhlCourier, extractEfl, extractMsn, extractExpeditors, extractMaersk, extractNagel, extractOocl, extractPDFDataToLinesData, extractFredexfrieght } from './schemax-ai-docx-pdf';
 import { extractAplInvoiceDataFromScanned, extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNagelInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractOoclInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 ;
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
@@ -82,6 +82,10 @@ export const DocReader = (props: DocReaderProps) => {
                 case VendorNameEnum.extractedExpeditors:
                     processedData = await extractExpeditors(pdfData);
                     console.log('PDF DATA EXPEDITORS:', processedData);
+                    break;
+                case VendorNameEnum.extractedFredexFrieght:
+                    processedData = await extractFredexfrieght(pdfData);
+                    console.log('PDF DATA Fredexfrieght:', processedData);
                     break;
                 // case VendorNameEnum.extractedEfl:
                 //     {
