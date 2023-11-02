@@ -1541,33 +1541,7 @@ export const extractMaersk = async (pdf) => {
 export const extractMsn = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
-
     const structuredHSNLines = [];
-    let currentHSN = null;
-
-    const calculateChargeAndAmountForItem = (item) => {
-        const taxAmountFloat = parseFloat(item.taxAmount);
-        const taxPercentageFloat = parseFloat(item.taxPercentage);
-        if (!isNaN(taxAmountFloat) && !isNaN(taxPercentageFloat) && taxPercentageFloat !== 0) {
-            const equivalentFor100Percent = (taxAmountFloat * 100) / taxPercentageFloat;
-            const charge = equivalentFor100Percent.toFixed(2);
-            const amount = calculateAmountForItem(charge, item.unitQuantity);
-            return { charge, amount };
-        } else {
-            return { charge: "0.00", amount: "0.00" };
-        }
-    };
-
-    const calculateAmountForItem = (charge, unitQuantity) => {
-        if (!isNaN(charge) && !isNaN(unitQuantity) && unitQuantity !== 0) {
-            const unitPrice = (charge / unitQuantity).toFixed(2);
-            const amount = (unitQuantity * parseFloat(unitPrice)).toFixed(2);
-            return amount;
-        } else {
-            return "0.00";
-        }
-    };
-
     const hsns = [];
     const hsnTaxes = [];
     const hsnTaxesRegex = /\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b/g;
@@ -1580,14 +1554,14 @@ export const extractMsn = async (pdf) => {
             hsnTaxes.push(line.content);
         }
     });
-    console.log(hsns, hsnTaxes)
     if (hsns.length === hsnTaxes.length) {
-        hsns.forEach((rec, index) => {
-            let unitQuantity = rec.match(/\d{6}\s+(\d+\.\d{3})/)?.[1]?.trim();
-            let unitPrice = rec.match(/[A-Z]{3}\s+([\d,]*\d+\.\d{2})/)?.[1]?.trim();
-            const hsnTaxesArray = hsnTaxes[index].split(' ').filter(rec => rec != '');
+        let hsnIndex = 0;
+        for (const rec of hsns) {
+            const unitQuantity = rec.match(/\d{6}\s+(\d+\.\d{3})/)?.[1]?.trim();
+            const unitPrice = rec.match(/[A-Z]{3}\s+([\d,]*\d+\.\d{2})/)?.[1]?.trim();
+            const hsnTaxesArray = hsnTaxes[hsnIndex].split(' ').filter(rec => rec != '');
             console.log(hsnTaxesArray)
-            let taxType = (hsnTaxesArray[1] == 0 && hsnTaxesArray[3] == 0 && hsnTaxesArray[5] == 0) ? "No Tax" : (hsnTaxesArray[1] == 0 && hsnTaxesArray[3] == 0) ? "IGST" : "CGST & SGST";
+            const taxType = (hsnTaxesArray[1] == 0 && hsnTaxesArray[3] == 0 && hsnTaxesArray[5] == 0) ? "No Tax" : (hsnTaxesArray[1] == 0 && hsnTaxesArray[3] == 0) ? "IGST" : "CGST & SGST";
             const hsnLinesData = {
                 HSN: rec.match(/ \d{6} /g)?.[0]?.trim(),
                 taxType,
@@ -1601,7 +1575,8 @@ export const extractMsn = async (pdf) => {
                 description: rec.match(/^(.*?)\s+\d{6}\b/)?.[1]?.trim(),
             }
             structuredHSNLines.push(hsnLinesData);
-        })
+            hsnIndex += 1;
+        }
     }
 
     const InvoiceLines = [];
@@ -1639,8 +1614,7 @@ export const extractMsn = async (pdf) => {
                 invoiceNumber = invoiceNumberMatch ? invoiceNumberMatch[0] : '';
 
                 const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
-                    const charge = parseFloat(hsnLine.charge) || 0;
-                    const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
+                    const taxAmount = parseFloat(hsnLine.amount) || 0;
                     return add + taxAmount;
                 }, 0).toFixed(2);
 
