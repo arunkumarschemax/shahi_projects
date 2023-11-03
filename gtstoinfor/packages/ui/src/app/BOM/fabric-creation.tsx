@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import TextArea from "antd/es/input/TextArea";
 import { ItemGroupEnum } from "@project-management-system/shared-models";
+import { Link } from "react-router-dom";
 
 export const FabricBomCreation = () => {
   const [form] = Form.useForm();
@@ -350,7 +351,8 @@ console.log(calculateTotal(),'4444444 ');
 
   return (
     <>
-    <Card title="Fabric Creation">
+    <Card title="Fabric Creation" extra={(<Link to="/materialCreation/rm-creation-view">
+         <span style={{ color: 'white' }}><Button type="primary">View</Button></span></Link> )}>
         <Form
           form={form}
           style={{ fontSize: "10px" }}
@@ -487,7 +489,7 @@ console.log(calculateTotal(),'4444444 ');
                   <Form.Item
                     label="Description"
                     name="description"
-                    rules={[{ required: true, message: "Enter Description" }]}
+                    //rules={[{ required: true, message: "Enter Description" }]}
                   >
                     <TextArea rows={1} placeholder="Enter Description"/>
                   </Form.Item>

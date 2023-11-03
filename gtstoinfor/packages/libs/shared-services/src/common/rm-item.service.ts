@@ -7,6 +7,11 @@ export class RmCreationService extends CommonAxiosService{
   async createRm(req: RmCreationDTO): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/createRm", req)
 }
-
+async getRmItemsData(): Promise<CommonResponseModel> {
+  return this.axiosPostCall(this.URL + "/getRmItemsData")
+}
+async getAllRMItems(req:any): Promise<CommonResponseModel> {
+  return this.axiosPostCall(this.URL + "/getAllRMItems",req)
+}
  
 }
