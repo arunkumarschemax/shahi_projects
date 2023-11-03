@@ -2,7 +2,7 @@ import { PropertyEnum } from "@project-management-system/shared-models";
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 
 @Entity('rm-items')
-export class FabricCreationEntity{
+export class RmCreationEntity{
     
 @PrimaryGeneratedColumn("increment", { name: 'rm_item_id' })
 rmitemId:number;
@@ -18,19 +18,19 @@ itemCode:string;
     nullable: false,
     name:"item_category_id"
 })
-itemCategory:number;
+itemCategoryId:number;
 
 @Column("int",{
     nullable: false,
     name:"pch_id"
 })
-pch:string;
+pchId:number;
 
 @Column("int",{
     nullable: true,
     name:"facility_id"
 })
-facility:number;
+facilityID:number;
 
 @Column("varchar",{
     nullable: false,
@@ -64,7 +64,7 @@ description:string;
     nullable: false,
     name:"item_type_id"
 })
-itemIype:string;
+itemIypeId:number;
 
 @Column("varchar",{
     nullable: false,
@@ -73,13 +73,11 @@ itemIype:string;
 })
 placement:string;
 
-
-
 @Column("int", {
     nullable: false,
     name: "fabric_finish_id" 
   })
-  fabricFinish: number;
+  fabricFinishId: number;
 
 @Column("varchar",{
     nullable: false,
@@ -99,14 +97,14 @@ devResponsible:string;
     nullable: false,
     name:"basic_uom_id"
 })
-basicUom:number;
+basicUomId:number;
 
 
 @Column("int",{
     nullable: false,
     name:"alt_uom_id"
 })
-altUom:number;
+altUomId:number;
 
 
 @Column("varchar",{
@@ -120,7 +118,7 @@ multiplicationFactor:string;
     nullable: false,
     name:"currency_id"
 })
-currency:number;
+currencyId:number;
 
 @Column("varchar",{
     nullable: false,
@@ -162,7 +160,7 @@ exciseDuty:string;
     nullable: false,
     name:"license_id"
 })
-license:number;
+licenseId:number;
 
 @Column('enum',{
     name:'property',
@@ -202,7 +200,7 @@ remarks:string;
     nullable: true,
     name:"item_group_id"
 })
-itemGroup:number;
+itemGroupId:number;
 
 @Column("varchar",{
     nullable: false,
@@ -210,4 +208,44 @@ itemGroup:number;
     name:"use_in_operation"
 })
 useInOperation:string;
+
+@Column("boolean", {
+    nullable: false,
+    default: true,
+    name: "is_active"
+  })
+  isActive: boolean;
+
+  @CreateDateColumn({
+    name: "created_at",
+    type: "datetime"
+  })
+  createdAt: Date;
+
+  @Column("varchar", {
+    nullable: false,
+    name: "created_user",
+    length: 50
+  })
+  createdUser: string | null;
+
+
+  @UpdateDateColumn({
+    name: "updated_at",
+    type: 'datetime'
+  })
+  updatedAt: Date;
+
+  @Column("varchar", {
+    nullable: true,
+    name: "updated_user",
+    length: 50
+  })
+  updatedUser: string | null;
+
+  @VersionColumn({
+    default: 1,
+    name: "version_flag"
+  })
+  versionFlag: number;
 }

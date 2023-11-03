@@ -753,7 +753,6 @@ export default function BasicLayout() {
     const userData = JSON.parse(localStorage.getItem('currentUser'))
     const loginUser = userData.user.userName
     const loginUserRole = userData.user.roles
-    console.log(userData)
     
     const toggle = () => {
          setCollapsed(prevCollapsed => !prevCollapsed);
