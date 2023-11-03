@@ -1,10 +1,11 @@
 import { GlobalResponseObject } from "../global-response-object";
+import { OperationTrackingDto } from "./operation-tracking-dto";
 
 
 export class OperationTrackingResponseModel extends GlobalResponseObject {
-    data?: any;
+    data?: OperationTrackingDto[];
 
-    constructor(status: boolean, intlCode: number, internalMessage: string, data?: any){
+    constructor(status: boolean, intlCode: number, internalMessage: string, data?: OperationTrackingDto[]){
         super(status,intlCode,internalMessage);
         this.data = data;
     }
