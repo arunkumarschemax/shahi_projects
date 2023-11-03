@@ -657,6 +657,12 @@ export const baseRouterList = [
                 path: "productstructure/smv-efficiency",
                 filepath: "productstructure/smv-efficiency",
             },
+            {
+                label: "Fg-Rm Mapping",
+                key: "fgrmmapping",
+                path: "fg-rm-mapping",
+                filepath: "fg-rm-mapping",
+            },
           
          
         ]
