@@ -371,14 +371,14 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
         },
         {
             title: "CGST",
-            dataIndex: "taxAmount",
-            key: "taxAmount",
-            render: (taxAmount, record) => {
+            dataIndex: "cgst",
+            key: "cgst",
+            render: (cgst, record) => {
                 return record.taxType === 'CGST & SGST' ?
                     (
                         <div style={{ textAlign: "right" }}>
-                            {taxAmount !== undefined && taxAmount !== null
-                                ? parseFloat(taxAmount).toFixed(2)
+                            {cgst !== undefined && cgst !== null
+                                ? parseFloat(cgst).toFixed(2)
                                 : "0"}
                         </div>
                     ) : '-'
@@ -386,14 +386,14 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
         },
         {
             title: "SGST",
-            dataIndex: "taxAmount",
-            key: "taxAmount",
-            render: (taxAmount, record) => {
+            dataIndex: "sgst",
+            key: "sgst",
+            render: (sgst, record) => {
                 return record.taxType === 'CGST & SGST' ?
                     (
                         <div style={{ textAlign: "right" }}>
-                            {taxAmount !== undefined && taxAmount !== null
-                                ? parseFloat(taxAmount).toFixed(2)
+                            {sgst !== undefined && sgst !== null
+                                ? parseFloat(sgst).toFixed(2)
                                 : "0"}
                         </div>
                     ) : '-'

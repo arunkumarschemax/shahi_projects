@@ -1719,10 +1719,14 @@ export const extractFredexfrieght = async (pdf) => {
                 taxType,
                 taxAmount: taxType === "No Tax" ? 0 : taxType === "IGST" ? hsnTaxesArray[6] : Number(unitPrice[5]) + Number(unitPrice[6]),
                 taxPercentage: taxType === "No Tax" ? 0 : taxType === "IGST" ? hsnTaxesArray[5] : unitPrice[1],
-                charge: hsnTaxesArray.length < 12 ? hsnTaxesArray[hsnTaxesArray.length - 1] : 0,
+                // charge: hsnTaxesArray.length < 12 ? hsnTaxesArray[hsnTaxesArray.length - 1] : 0,
                 quotation: null,
                 unitPrice: unitPrice.length ? taxType === "No Tax" ? unitPrice[2] : unitPrice[2] : 0,
                 innAmount: unitPrice.length ? taxType === "No Tax" ? unitPrice[2] : unitPrice[2] : 0,
+                igst: unitPrice.length ? taxType === "IGST" ? unitPrice[7] : unitPrice[7] : 0,
+                cgst: unitPrice.length ? taxType === "CGST & SGST" ? unitPrice[5] : unitPrice[5] : 0,
+                sgst: unitPrice.length ? taxType === "CGST & SGST" ? unitPrice[6] : unitPrice[6] : 0,
+                charge: (unitPrice[4] || '').trim() !== '' ? unitPrice[4] : unitPrice[3],
                 unitQuantity: unitQuantity ? unitQuantity : 0,
                 amount: taxType === "No Tax" ? hsnTaxesArray[hsnTaxesArray.length - 1] : 0,
                 description: hsnTaxesArray.splice(1, hsnTaxesArray.length).filter(rec => (!rec.match(/([\d,]*\d+\.\d{2})/) && !currency_list.includes(rec) && !itemCodesArray.includes(rec))).join(' '),
@@ -1768,22 +1772,12 @@ export const extractFredexfrieght = async (pdf) => {
                 invoiceNumber = invoiceNumberData ? invoiceNumberData.content.match(invoiceNumberRegex)[1] : '';
 
                 const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
+                    const cgst = parseFloat(hsnLine.cgst) || 0;
+                    const igst = parseFloat(hsnLine.igst) || 0;
+                    const sgst = parseFloat(hsnLine.sgst) || 0;
                     const innAmount = hsnLine.innAmount && typeof hsnLine.innAmount === 'string' ? parseFloat(hsnLine.innAmount.replace(/,/g, '')) : 0;
-                    return add + innAmount;
+                    return add + innAmount + cgst + igst + sgst;
                 }, 0).toFixed(2);
-
-                // let igst = "0.00";
-                // let cgst = "0.00";
-                // let sgst = "0.00";
-
-                // for (const hsnLine of structuredHSNLines) {
-                //     if (hsnLine.taxPercentage === 18) {
-                //         igst = (parseFloat(igst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
-                //     } else if (hsnLine.taxPercentage === 9) {
-                //         cgst = (parseFloat(cgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
-                //         sgst = (parseFloat(sgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
-                //     }
-                // }
 
                 let igst = "0.00";
                 let cgst = "0.00";
@@ -1791,10 +1785,10 @@ export const extractFredexfrieght = async (pdf) => {
 
                 for (const hsnLine of structuredHSNLines) {
                     if (hsnLine.taxType === "IGST") {
-                        igst = (parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+                        igst = (parseFloat(igst) + parseFloat(hsnLine.isgt || 0)).toFixed(2);
                     } else if (hsnLine.taxType === "CGST & SGST") {
-                        cgst = (parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
-                        sgst = (parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+                        cgst = (parseFloat(cgst) + parseFloat(hsnLine.cgst || 0)).toFixed(2);
+                        sgst = (parseFloat(sgst) + parseFloat(hsnLine.sgst || 0)).toFixed(2);
                     }
                 }
 
