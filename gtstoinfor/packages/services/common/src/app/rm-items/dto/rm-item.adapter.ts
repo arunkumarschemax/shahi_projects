@@ -25,6 +25,12 @@ export class RmCreationAdapter{
             entityObj.currencyId=dtoObj.currencyId;
             entityObj.price=dtoObj.price;
             entityObj.tax=dtoObj.tax;
+            entityObj.attachedWareHouse=dtoObj.attachedWareHouse;
+            entityObj.planner=dtoObj.planner;
+            entityObj.businessArea=dtoObj.businessArea;
+            entityObj.procurementGroupId=dtoObj.procurementGroupId
+            entityObj.productGroupId=dtoObj.productGroupId
+            entityObj.hierarchyLevelId=dtoObj.hierarchyLevelId
             entityObj.purchasePriceQty=dtoObj.purchasePriceQty;
             entityObj.saleTax=dtoObj.saleTax;
             entityObj.exciseDuty=dtoObj.exciseDuty;
@@ -72,6 +78,12 @@ return entityObj;
             rmcreationDto.currencyId=rmcreation.currencyId;
             rmcreationDto.price=rmcreation.price;
             rmcreationDto.tax=rmcreation.tax;
+           rmcreationDto.attachedWareHouse= rmcreation.attachedWareHouse;
+            rmcreationDto.planner=rmcreation.planner;
+            rmcreationDto.businessArea=rmcreation.businessArea;
+            rmcreationDto.procurementGroupId=rmcreation.procurementGroupId
+            rmcreationDto.productGroupId=rmcreation.productGroupId
+            rmcreationDto.hierarchyLevelId=rmcreation.hierarchyLevelId
             rmcreationDto.purchasePriceQty=rmcreation.purchasePriceQty;
             rmcreationDto.saleTax=rmcreation.saleTax;
             rmcreationDto.wastage=rmcreation.wastage;

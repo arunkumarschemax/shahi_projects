@@ -32,12 +32,19 @@ export class RmCreationDTO{
     costGroup:string;
     remarks:string;
     itemGroupId:number;
+    procurementGroupId:number;
+    productGroupId:number;
+    hierarchyLevelId:number;
+    businessArea:string;
+    planner:string;
+    attachedWareHouse:string;
     useInOperation:string;
     isActive: boolean;
     createdUser: string;
     updatedUser: string;
     versionFlag: number;
-    constructor(rmitemId:string,itemCode:string,itemCategoryId:number, pchId:number,facilityID:number,genericCode:string,structure:string,quality:string,description:string,itemIypeId:number,placement:string, fabricFinishId:number,responsibleId:number,devResponsible:string, basicUomId:number,altUomId:number,multiplicationFactor:string,currencyId:number,price:string,tax:string,purchasePriceQty:string,saleTax:string,exciseDuty:string,licenseId:number,property:PropertyEnum,SaleItem:string,wastage:string, costGroup:string, remarks:string,itemGroup:number,useInOperation:string,isActive: boolean,createdUser: string,updatedUser: string,versionFlag: number){
+    constructor(rmitemId:string,itemCode:string,itemCategoryId:number, pchId:number,facilityID:number,genericCode:string,structure:string,quality:string,description:string,itemIypeId:number,placement:string, fabricFinishId:number,responsibleId:number,devResponsible:string, basicUomId:number,altUomId:number,multiplicationFactor:string,currencyId:number,price:string,tax:string,purchasePriceQty:string,saleTax:string,exciseDuty:string,licenseId:number,property:PropertyEnum,SaleItem:string,wastage:string, costGroup:string, remarks:string,itemGroup:number,procurementGroupId:number,productGroupId:number,
+          hierarchyLevelId:number,businessArea:string,planner:string,attachedWareHouse:string,useInOperation:string,isActive: boolean,createdUser: string,updatedUser: string,versionFlag: number){
         this.rmitemId=rmitemId;
         this.itemCode=itemCode;
         this.itemCategoryId=itemCategoryId;
@@ -65,6 +72,12 @@ export class RmCreationDTO{
         this.property=property;
         this.SaleItem=SaleItem;
         this.wastage=wastage;
+        this.procurementGroupId=procurementGroupId;
+        this.productGroupId=productGroupId;
+        this.attachedWareHouse=attachedWareHouse;
+        this.planner=planner;
+        this.hierarchyLevelId=hierarchyLevelId;
+        this.businessArea=businessArea;
         this.costGroup=costGroup;
         this.remarks=remarks;
         this.itemGroupId=itemIypeId;

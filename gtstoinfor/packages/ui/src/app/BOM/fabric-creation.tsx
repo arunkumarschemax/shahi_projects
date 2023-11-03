@@ -297,8 +297,15 @@ useEffect(() => {
     })
   }
 
+  const onPriceChange = () => {
+    if(form.getFieldValue('tax') != undefined){
+      calculateTotal()
+    }
+  }
+
   const handleTaxChange = (value) => {
     setTaxRate(Number(value));
+    calculateTotal()
   };
 
   const saveFabric=()=>{
@@ -317,20 +324,21 @@ rmservice.createRm(values).then((res)=>{
     })
   }
   const calculateTotal = () => {
-
     const price = form.getFieldValue("price");
     const selectedTaxId = form.getFieldValue("tax");
     
     const selectedTax = tax.find((e) => e.taxId === selectedTaxId);
   
     if (price && selectedTax) {
-     
+      console.log(selectedTax,"**",price)
       const total = Number(price) + ( Number(price) * Number(selectedTax.taxPercentage)) / 100;
-     
+      console.log(total,"total")
+      form.setFieldsValue({'total': isNaN(total) ? 0 : Number(total).toFixed(2)})
       return isNaN(total) ? 0 : Number(total).toFixed(2);
-    } else{    return 0;
     }
+    return 0;
   };
+console.log(calculateTotal(),'4444444 ');
 
   const onReset = () => {
     form.resetFields();
@@ -872,7 +880,7 @@ rmservice.createRm(values).then((res)=>{
                     name="price"
                     rules={[{ required: true, message: "Enter Price" }]}
                   >
-                    <Input placeholder="Price" allowClear />
+                    <Input placeholder="Price" allowClear onChange={onPriceChange}/>
                   </Form.Item>
                 </Col>
                 <span style={{ fontSize: "24px", lineHeight: "70px" }}>+</span>
@@ -895,8 +903,9 @@ rmservice.createRm(values).then((res)=>{
                 </Row>
                 <Row gutter={8}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+
                     <Form.Item label="Total" name="total">
-                        <Input disabled value={calculateTotal()} />
+                        <Input disabled  />
                     </Form.Item>
                 </Col>
                 </Row>

@@ -98,6 +98,25 @@ i
     useInOperation:string
 
     @ApiProperty()
+    businessArea:string
+
+    @ApiProperty()
+    attachedWareHouse:string
+
+    @ApiProperty()
+    planner:string
+
+    @ApiProperty()
+    hierarchyLevelId:number
+
+    @ApiProperty()
+    productGroupId:number
+
+
+    @ApiProperty()
+    procurementGroupId:number
+
+    @ApiProperty()
     isActive: boolean;
     
     @ApiProperty()

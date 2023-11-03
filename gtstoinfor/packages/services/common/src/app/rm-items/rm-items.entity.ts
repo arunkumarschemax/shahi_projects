@@ -1,7 +1,7 @@
 import { PropertyEnum } from "@project-management-system/shared-models";
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 
-@Entity('rm-items')
+@Entity('rm_items')
 export class RmCreationEntity{
     
 @PrimaryGeneratedColumn("increment", { name: 'rm_item_id' })
@@ -194,6 +194,45 @@ costGroup:string;
     name:"remarks"
 })
 remarks:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 255,
+    name:"attached_warehouse"
+})
+attachedWareHouse:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 255,
+    name:"planner"
+})
+planner:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 255,
+    name:"business_area"
+})
+businessArea:string;
+
+@Column("int",{
+    nullable: false,
+    name:"hierarchy_Level_id"
+})
+hierarchyLevelId:number;
+
+@Column("int",{
+    nullable: false,
+    name:"product_group_id"
+})
+productGroupId:number;
+
+@Column("int",{
+    nullable: false,
+    name:"procurement_gorup_id"
+})
+procurementGroupId:number;
 
 @Column("int",{
     nullable: true,
