@@ -59,7 +59,6 @@ export interface MenuItem {
   };
   
   export const treeRouter = (list: MenuItem[]) => {
-    console.log(list,'--------------')
     return list.map((item) => {
       return {
         path: item.path,

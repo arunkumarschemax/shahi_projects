@@ -390,7 +390,7 @@ export class StyleOrderService{
                 }
                 
 
-                return new CoUpdateResponseModel(true, 0, "CO Updated Sucessfully");
+                return new CoUpdateResponseModel(true, 0, "CO Updated Sucessfully",);
     
               } else {
     
