@@ -3,7 +3,7 @@ import { HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link } from "react-router-dom";
-import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
+import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, FactoryService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
 import { ItemGroupEnum } from "@project-management-system/shared-models";
  
 export interface FormProps {
@@ -32,11 +32,13 @@ export function ItemCreation (props: FormProps){
          const uomservice = new UomService();
          const grouptech = new GroupTechClassService();
          const itemTypeservice =new ItemTypeService();
+         const facilityservice =new FactoryService();
          const [currencydata,setCurrencyData] = useState([]);
          const [uomdata,setUomData] = useState([]);
          const [itemgroup,setitemgroup] = useState([]);
          const [group,setGroup] = useState([]);
          const [compositiondata,setCompositionData] = useState([]);
+         const [facilitydata,setfacilityData] = useState([]);
          const [searchdata,setSearchData] = useState([]);
          const [employedata,setEmployeData] = useState([]);
          const [rangedata,setRangeData] = useState([]);
@@ -68,6 +70,7 @@ export function ItemCreation (props: FormProps){
             getAllItemType();
             getAllItemGroups();
             getAllGroupTech();
+            getAllFacilitys();
           },[])
 
          const getAllCurrencies=() =>{
@@ -81,6 +84,21 @@ export function ItemCreation (props: FormProps){
                  }
             }).catch(err => {
               setCurrencyData([]);
+               AlertMessages.getErrorMessage(err.message);
+             })        
+          }
+
+          const getAllFacilitys=() =>{
+            facilityservice.getFactories().then(res =>{
+              if (res.status){
+                // console.log(res,'llllll')
+                setfacilityData(res.data);
+                 
+              } else{
+                AlertMessages.getErrorMessage(res.internalMessage);
+                 }
+            }).catch(err => {
+              setfacilityData([]);
                AlertMessages.getErrorMessage(err.message);
              })        
           }
@@ -409,8 +427,23 @@ compositionservice.getActiveComposition().then(res=>{
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                     <Form.Item  label="FacilityId"name="facilityId">
-                     <Input placeholder="FacilityId"  allowClear/>
+                     <Form.Item  label="Facility"name="name">
+                     <Select
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                    placeholder="Select facility"
+                    >
+
+                     {facilitydata.map((e)=>{
+                    return(
+                    <Option key={e.id} value={e.id}>{e.name}
+                    </Option>)
+                  })
+
+                  }
+                  </Select>
+
                      </Form.Item>
                      </Col>
                     </Row>

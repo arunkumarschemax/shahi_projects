@@ -4,8 +4,9 @@ import { Repository } from 'typeorm';
 import { RmCreationAdapter } from './dto/rm-item.adapter';
 import { RmCreationDto } from './dto/rm-item.dto';
 import { RmCreationEntity } from './rm-items.entity';
-import { CommonResponseModel } from '@project-management-system/shared-models';
+import { CommonResponseModel, RMCreFilterRequest } from '@project-management-system/shared-models';
 import { error } from 'console';
+import { RmCreationRepository } from './rm-item.repo';
 
 
 @Injectable()
@@ -13,6 +14,7 @@ export class RmCreationservice{
     constructor(
         @InjectRepository(RmCreationEntity) private Rmrepository:Repository<RmCreationEntity>,
         private rmAdapter :RmCreationAdapter,
+        private repository: RmCreationRepository,
     ){}
 
     async  CreateRm(rmDto:RmCreationDto,isUpdate:boolean):Promise<CommonResponseModel>{
@@ -32,6 +34,22 @@ return response;
             return err;
         }
     }
+
+    async getAllRMItems(req?:RMCreFilterRequest):Promise<CommonResponseModel>{
+        try{
+            const data = await this.repository.getAllRmCrted(req)
+            if(data.length === 0){
+                return new CommonResponseModel(false,0,'No data found')
+            } else{
+                return new CommonResponseModel(true,1,'Data retrieved',data)
+
+            }
+        } catch(err){
+            return err
+        }
+    }
+
+
 
     async getRmItemsData(): Promise<CommonResponseModel> {
         try {
