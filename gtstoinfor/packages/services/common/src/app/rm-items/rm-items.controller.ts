@@ -22,4 +22,15 @@ export class RmCreationController{
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
+
+    @Post('/getRmItemsData')
+    async getRmItemsData(): Promise<CommonResponseModel> {
+        try {
+            return await this.rmCreationService.getRmItemsData();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+
+
 }

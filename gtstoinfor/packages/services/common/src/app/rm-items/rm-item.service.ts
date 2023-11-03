@@ -32,4 +32,17 @@ return response;
             return err;
         }
     }
+
+    async getRmItemsData(): Promise<CommonResponseModel> {
+        try {
+       const data = await this.Rmrepository.find()
+       console.log(data,'-----------')
+       return new CommonResponseModel(true, 0, "Rm ItemsData  retrieved  successfully", data);
+    
+          } catch (err) {
+            throw err;
+          }
+        }
+
+
 }
