@@ -1,5 +1,5 @@
 import { PDFDocumentProxy } from "pdfjs-dist/types/src/display/api";
-const currency_list = ["AED","AFA","ALL","AMD","ANG","AOA","ARS","AUD","AWG","AZN","BAM","BBD","BDT","BEF","BGN","BHD","BIF","BMD","BND","BOB","BRL","BSD","BTC","BTN","BWP","BYR","BZD","CAD","CDF","CHF","CLF","CLP","CNY","COP","CRC","CUC","CVE","CZK","DEM","DJF","DKK","DOP","DZD","EEK","EGP","ERN","ETB","EUR","FJD","FKP","GBP","GEL","GHS","GIP","GMD","GNF","GRD","GTQ","GYD","HKD","HNL","HRK","HTG","HUF","IDR","ILS","INR","IQD","IRR","ISK","ITL","JMD","JOD","JPY","KES","KGS","KHR","KMF","KPW","KRW","KWD","KYD","KZT","LAK","LBP","LKR","LRD","LSL","LTC","LTL","LVL","LYD","MAD","MDL","MGA","MKD","MMK","MNT","MOP","MRO","MUR","MVR","MWK","MXN","MYR","MZM","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PAB","PEN","PGK","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","RWF","SAR","SBD","SCR","SDG","SEK","SGD","SHP","SKK","SLL","SOS","SRD","SSP","STD","SVC","SYP","SZL","THB","TJS","TMT","TND","TOP","TRY","TTD","TWD","TZS","UAH","UGX","USD","UYU","UZS","VEF","VND","VUV","WST","XAF","XCD","XDR","XOF","XPF","YER","ZAR","ZMK","ZWL"];
+const currency_list = ["AED", "AFA", "ALL", "AMD", "ANG", "AOA", "ARS", "AUD", "AWG", "AZN", "BAM", "BBD", "BDT", "BEF", "BGN", "BHD", "BIF", "BMD", "BND", "BOB", "BRL", "BSD", "BTC", "BTN", "BWP", "BYR", "BZD", "CAD", "CDF", "CHF", "CLF", "CLP", "CNY", "COP", "CRC", "CUC", "CVE", "CZK", "DEM", "DJF", "DKK", "DOP", "DZD", "EEK", "EGP", "ERN", "ETB", "EUR", "FJD", "FKP", "GBP", "GEL", "GHS", "GIP", "GMD", "GNF", "GRD", "GTQ", "GYD", "HKD", "HNL", "HRK", "HTG", "HUF", "IDR", "ILS", "INR", "IQD", "IRR", "ISK", "ITL", "JMD", "JOD", "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTC", "LTL", "LVL", "LYD", "MAD", "MDL", "MGA", "MKD", "MMK", "MNT", "MOP", "MRO", "MUR", "MVR", "MWK", "MXN", "MYR", "MZM", "NAD", "NGN", "NIO", "NOK", "NPR", "NZD", "OMR", "PAB", "PEN", "PGK", "PHP", "PKR", "PLN", "PYG", "QAR", "RON", "RSD", "RUB", "RWF", "SAR", "SBD", "SCR", "SDG", "SEK", "SGD", "SHP", "SKK", "SLL", "SOS", "SRD", "SSP", "STD", "SVC", "SYP", "SZL", "THB", "TJS", "TMT", "TND", "TOP", "TRY", "TTD", "TWD", "TZS", "UAH", "UGX", "USD", "UYU", "UZS", "VEF", "VND", "VUV", "WST", "XAF", "XCD", "XDR", "XOF", "XPF", "YER", "ZAR", "ZMK", "ZWL"];
 
 export const extractDhl = async (pdf) => {
     const allLines = await extractPDFData(pdf);
@@ -1585,7 +1585,7 @@ export const extractMsn = async (pdf) => {
 
     const invoiceDateRegex = /\d{2}\/\d{2}\/\d{4}/;
     const invoiceNumberRegex = /CHE[A-Z0-9]{11}/;
-    const invoiceAmountRegex=[" E & O E   Total   "];
+    const invoiceAmountRegex = [" E & O E   Total   "];
     const invoiceCurrency = 'INR';
     const currentYear = new Date().getFullYear();
     const nextYear = currentYear + 1;
@@ -1672,7 +1672,7 @@ export const extractFredexfrieght = async (pdf) => {
     const hsns = [];
     const hsnTaxes = [];
     const hsnTaxesRegex = / \d+\.\d{6} /;
-    const qtyArray=[]
+    const qtyArray = []
     for (const line of allLines) {
         if (line.content.includes("996", /^\d{3}$/)) {
             hsns.push(line.content);
@@ -1689,6 +1689,7 @@ export const extractFredexfrieght = async (pdf) => {
         }
     };
     console.log(hsns, hsnTaxes)
+    const itemCodesArray = ['OTC1', 'DOFD1', 'CCOD1', '%']
     if (hsns.length != 0 && hsnTaxes.length != 0) {
         let hsnIndex = 0;
         for (const rec of hsnTaxes) {
@@ -1703,14 +1704,14 @@ export const extractFredexfrieght = async (pdf) => {
             const hsnLinesData = {
                 HSN: hsns[0].match(/ \d{6} /g)?.[0]?.trim(),
                 taxType,
-                taxAmount: taxType === "No Tax" ? 0 : taxType === "IGST" ? hsnTaxesArray[6] : Number(hsnTaxesArray[2]) + Number(hsnTaxesArray[4]),
-                taxPercentage: taxType === "No Tax" ? 0 : taxType === "IGST" ? hsnTaxesArray[5] : hsnTaxesArray[1],
+                taxAmount: taxType === "No Tax" ? 0 : taxType === "IGST" ? hsnTaxesArray[6] : Number(unitPrice[5]) + Number(unitPrice[6]),
+                taxPercentage: taxType === "No Tax" ? 0 : taxType === "IGST" ? hsnTaxesArray[5] : unitPrice[1],
                 charge: hsnTaxesArray.length < 12 ? hsnTaxesArray[hsnTaxesArray.length - 1] : 0,
                 quotation: null,
                 unitPrice: unitPrice.length ? taxType === "No Tax" ? unitPrice[2] : unitPrice[2] : 0,
                 unitQuantity: unitQuantity ? unitQuantity : 0,
                 amount: taxType === "No Tax" ? hsnTaxesArray[hsnTaxesArray.length - 1] : 0,
-                description: hsnTaxesArray.splice(1,hsnTaxesArray.length).filter(rec => (!rec.match(/([\d,]*\d+\.\d{2})/)&&!currency_list.includes(rec))).join(' '),
+                description: hsnTaxesArray.splice(1, hsnTaxesArray.length).filter(rec => (!rec.match(/([\d,]*\d+\.\d{2})/) && !currency_list.includes(rec) && !itemCodesArray.includes(rec))).join(' '),
             }
             structuredHSNLines.push(hsnLinesData);
             hsnIndex += 1;
