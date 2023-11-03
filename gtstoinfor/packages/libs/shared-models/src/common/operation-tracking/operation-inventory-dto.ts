@@ -1,10 +1,10 @@
 import { OperationSequenceModel } from "../operation-sequence";
 import { StyleDto } from "../style-management";
 
-export class OperationInventory{
-    operationIssuingId:number;
-    style: StyleDto[]
-    operationSequence: OperationSequenceModel[]
+export class OperationInventoryDto{
+    operationInventoryId:number;
+    styleId: number
+    operationSequenceId: number
     operation:string;
     physicalQuantity:number;
     physicalUom:string;
@@ -21,9 +21,9 @@ export class OperationInventory{
     versionFlag: number;
 
     constructor(
-        operationIssuingId:number,
-        style: StyleDto[],
-        operationSequence: OperationSequenceModel[],
+        operationInventoryId:number,
+        styleId: number,
+        operationSequenceId: number,
         operation:string,
         physicalQuantity:number,
         physicalUom:string,
@@ -39,10 +39,9 @@ export class OperationInventory{
         updatedUser: string | null,
         versionFlag: number
     ){
-        this.operationIssuingId = operationIssuingId
-        this.style = style
-        this.operationSequence = operationSequence
-        this.style = style
+        this.operationInventoryId = operationInventoryId
+        this.styleId = styleId
+        this.operationSequenceId = operationSequenceId
         this.operation = operation
         this.physicalQuantity = physicalQuantity
         this.physicalUom = physicalUom
