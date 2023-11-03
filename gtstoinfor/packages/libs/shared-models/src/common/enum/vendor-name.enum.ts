@@ -22,6 +22,8 @@ export enum VendorNameEnum {
     extractedRingoCarago="RINGO CARGO",
     extractedMsn="MSN",
     extractedFredexFrieght="FREDEX FRIEGHT",
+    extractedFredexCourier="FREDEX  COURIER",
+
 
 
     

@@ -1814,6 +1814,246 @@ export const extractFredexfrieght = async (pdf) => {
 
 }
 
+export const extractFredexCourier = async (pdf) => {
+    const allLines = await extractPDFDataToLinesData(pdf);
+    const extractedData = allLines;
+
+    const structuredHSNLines = [];
+    let currentHSN = null;
+    let hsnId = null;
+    let linesId = 0;
+    
+    for (const line of extractedData) {
+        const hsnMatch = line.content.match(/\b996\d{3}\b/);
+        if (hsnMatch) {
+            hsnId = linesId;
+            if (currentHSN) {
+                structuredHSNLines.push(currentHSN);
+            }
+    
+            const taxPercentageContent = extractedData[hsnId - 2].content;
+            const taxPercentageMatch = taxPercentageContent.match(/\d+(\.\d+)?/);
+            const taxPercentage = taxPercentageMatch ? parseFloat(taxPercentageMatch[0]) : 0;
+
+            let igst = 0;
+            let cgst = 0;
+            let sgst = 0;
+            let taxType = "No Tax";
+
+            if (taxPercentage === 18) {
+                igst = parseFloat(extractedData[hsnId + 6].content) || 0;
+                taxType = "IGST";
+            } else if (taxPercentage === 9) {
+                cgst = parseFloat(extractedData[hsnId + 6].content) || 0;
+                sgst = parseFloat(extractedData[hsnId + 6].content) || 0;
+                taxType = "CGST & SGST";
+            }
+
+            const taxAmountContent = extractedData[hsnId + 17].content.replace(/,/g, '');
+            const taxAmount = parseFloat(taxAmountContent).toFixed(2);
+
+            const unitQuantityContent = extractedData[hsnId + 12].content;
+            const unitQuantity = parseFloat(unitQuantityContent) || 1;
+
+            const charge=  parseFloat(extractedData[hsnId - 2].content.replace(/,/g, '')).toFixed(2);
+            const amount = parseFloat(extractedData[hsnId - 2].content.replace(/,/g, ''));
+            const unitPrice = (amount/ unitQuantity).toFixed(2);
+
+            currentHSN = {
+                description: extractedData[hsnId - 1].content,
+                HSN: hsnMatch[0],
+                unitQuantity: unitQuantity,
+                unitPrice: unitPrice,
+                taxType: taxType,
+                charge: charge,
+                taxPercentage: taxPercentage,
+                taxAmount: taxAmount,
+                amount: amount,
+                igst: igst,
+                cgst: cgst,
+                sgst: sgst,
+            };
+        }
+        linesId += 1;
+    }
+    
+    if (currentHSN) {
+        structuredHSNLines.push(currentHSN);
+    }
+    const InvoiceLines = [];
+    let currentInvoice = null;
+    let gstNumberExtracted = false;
+
+    const invoiceDateRegex = /\d{1,2}\/\d{1,2}\/\d{4}/;
+    const invoiceNumberRegex = /263\d{6}/;
+    const invoiceAmountRegex=[" Total Amount Due   INR   "];
+    const invoiceCurrency = 'INR';
+    const currentYear = new Date().getFullYear();
+    const nextYear = currentYear + 1;
+    const financialYear = `${currentYear}-${nextYear}`;
+
+    if (extractedData && Array.isArray(extractedData)) {
+        let venName = '';
+        let invoiceDate = '';
+        let invoiceNumber = '';
+        let invoiceAmount = '';
+
+        for (const line of extractedData) {
+            const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
+            if (gstMatch && !gstNumberExtracted) {
+                const gstNumber = gstMatch[0];
+
+                if (gstNumber === '29AABCF6516A1ZZ') {
+                    venName = 'FedEx Express Transportation and Supply Chain Services (India) Pvt. Ltd';
+                }
+
+                const invoiceDateData = extractedData.find((item) => item.content.match(invoiceDateRegex));
+                invoiceDate = invoiceDateData ? invoiceDateData.content : '';
+
+                const invoiceNumberData = extractedData.find((item) => item.content.match(invoiceNumberRegex));
+                invoiceNumber = invoiceNumberData ? invoiceNumberData.content : '';
+
+                invoiceNumber = invoiceNumber.replace(/\bTAX\s*INVOICE\b/, '').trim();
+                const invoiceAmountData = extractedData.find((item) => item.content.match(invoiceAmountRegex));
+                invoiceAmount = invoiceAmountData ? invoiceAmountData.content.replace(/ Total\s+Amount\s+Due\s+INR\s+/i, '').trim() : '';
+
+                let igst = "0.00";
+                let cgst = "0.00";
+                let sgst = "0.00";
+
+                for (const hsnLine of structuredHSNLines) {
+                    if (hsnLine.taxPercentage === 18) {
+                        igst = (parseFloat(igst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+                    } else if (hsnLine.taxPercentage === 9) {
+                        cgst = (parseFloat(cgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+                        sgst = (parseFloat(sgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+                    }
+                }
+
+                currentInvoice = {
+                    "venName": venName,
+                    "gstNumber": gstNumber,
+                    "invoiceDate": invoiceDate,
+                    "invoiceNumber": invoiceNumber,
+                    "invoiceCurrency": invoiceCurrency,
+                    "financialYear": financialYear,
+                    "invoiceAmount": invoiceAmount,
+                    "igst": igst,
+                    "cgst": cgst,
+                    "sgst": sgst,
+                };
+
+                InvoiceLines.push(currentInvoice);
+                gstNumberExtracted = true;
+            }
+        }
+    }
+
+    console.log("DART PDF DATA", JSON.stringify(allLines, null, 2));
+    console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
+    console.log("PDF INVOICE Data", JSON.stringify(InvoiceLines, null, 2));
+    return {
+        extractedData: InvoiceLines[0],
+        extractedHsnData: structuredHSNLines
+    };
+
+    // const InvoiceLines = [];
+    // let currentInvoice = null;
+    // let gstNumberExtracted = false;
+    // let venName = '';
+    // const vendorNameId = '1-2';
+    // const invoiceDateId = '1-9';
+    // const invoiceDateId2 = '1-10';
+    // const invoiceNumberId = '1-254';
+    // const invoiceNumberId2 = '1-224';
+    // const invoiceCurrency = 'INR';
+    // const currentYear = new Date().getFullYear();
+    // const nextYear = currentYear + 1;
+    // const financialYear = `${currentYear}-${nextYear}`;
+
+    // if (extractedData && Array.isArray(extractedData)) {
+    //     let invoiceDate = '';
+    //     let invoiceNumber = '';
+
+    //     for (const line of extractedData) {
+    //         if (line.id >= '1-201' && line.id <= '2-300') {
+    //             const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
+    //             if (gstMatch && !gstNumberExtracted) {
+    //                 const gstNumber = gstMatch[0];
+
+    //                 if (gstNumber === '33AAHCA6078Q1Z3') {
+    //                     venName = 'Damco India Pvt. Ltd';
+    //                 } else {
+    //                     const vendorNameData = extractedData.find((item) => item.id === vendorNameId);
+    //                     venName = vendorNameData ? vendorNameData.content : '';
+    //                 }
+
+    //                 const invoiceDateData = extractedData.find((item) => item.id === invoiceDateId);
+    //                 if (invoiceDateData && invoiceDateData.content.trim() !== '') {
+    //                     invoiceDate = invoiceDateData.content.replace(/^INVOICE DATE:\s*/, '');
+    //                 } else {
+    //                     const invoiceDateData2 = extractedData.find((item) => item.id === invoiceDateId2);
+    //                     if (invoiceDateData2 && invoiceDateData2.content.trim() !== '') {
+    //                         invoiceDate = invoiceDateData2.content.replace(/^INVOICE DATE:\s*/, '');
+    //                     }
+    //                 }
+
+    //                 const invoiceNumberData = extractedData.find((item) => item.id === invoiceNumberId);
+    //                 if (invoiceNumberData && invoiceNumberData.content.trim() !== '') {
+    //                     invoiceNumber = invoiceNumberData.content.replace(/^INVOICE NUMBER:\s*/, '');
+    //                 } else {
+    //                     const invoiceNumberData2 = extractedData.find((item) => item.id === invoiceNumberId2);
+    //                     if (invoiceNumberData2 && invoiceNumberData2.content.trim() !== '') {
+    //                         invoiceNumber = invoiceNumberData2.content.replace(/^INVOICE NUMBER:\s*/, '');
+    //                     }
+    //                 }
+
+    //                 const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
+    //                     const amount = parseFloat(hsnLine.amount) || 0;
+    //                     const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
+    //                     return add + amount + taxAmount;
+    //                 }, 0).toFixed(2);
+
+    //                 const igst = structuredHSNLines.reduce((acc, hsnLine) => {
+    //                     const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
+    //                     return acc + taxAmount;
+    //                 }, 0).toFixed(2);
+
+    //                 const cgst = structuredHSNLines.reduce((add, hsnLine) => {
+    //                     return add + parseFloat(hsnLine.cgst) || 0;
+    //                 }, 0).toFixed(2);
+
+    //                 const sgst = structuredHSNLines.reduce((acc, hsnLine) => {
+    //                     return acc + parseFloat(hsnLine.sgst) || 0;
+    //                 }, 0).toFixed(2);
+
+    //                 currentInvoice = {
+    //                     "venName": venName,
+    //                     "gstNumber": gstNumber,
+    //                     "invoiceDate": invoiceDate,
+    //                     "invoiceNumber": invoiceNumber,
+    //                     "invoiceCurrency": invoiceCurrency,
+    //                     "financialYear": financialYear,
+    //                     "invoiceAmount": invoiceAmount,
+    //                     "igst": igst,
+    //                     "cgst": cgst,
+    //                     "sgst": sgst,
+    //                 };
+    //                 InvoiceLines.push(currentInvoice);
+    //                 gstNumberExtracted = true;
+    //             }
+    //         }
+    //     }
+    // }
+    // console.log("ALL LINES", JSON.stringify(allLines, null, 2));
+    // return {
+    //     extractedData: InvoiceLines[0],
+    //     extractedHsnData: structuredHSNLines
+    // };
+
+
+}
+
 export const checkIsScannedPdf = async (pdf) => {
     // Analyze each page for text or images
     for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
