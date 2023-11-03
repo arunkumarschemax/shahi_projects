@@ -46,18 +46,26 @@ export interface COAmendmentGridProps {
 
   }
   
-   console.log(codata)
+   console.log(JSON.parse(localStorage.getItem('currentUser')).user.userName)
+
       
   
   const onButtonChange1 = (rowData) => { 
     console.log(rowData,"rowdata")
-    const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.coLineNumber,coLineData,"orderline","admin")
+    if(!coLineData ){
+     AlertMessages.getErrorMessage("Please Enter the CO Line");
+       return
+
+    }
+    
+    const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.coLineNumber,coLineData,"orderline",JSON.parse(localStorage.getItem('currentUser')).user.userName)
     services.updateCoData(req).then((res)=>{
       if (res.status){
         getCoLineData();
        message.success(res.internalMessage);
-       rowData.coLineData
-      
+       setCoLineData(null);
+       
+          
    } else{
 
      AlertMessages.getErrorMessage(res.internalMessage);
@@ -72,11 +80,17 @@ export interface COAmendmentGridProps {
 
     const onButtonChange2 = (rowData) => { 
       console.log(rowData,"rowdata")
-      const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.salePrice,fobData,"fob","admin")
+      if(!fobData ){
+        AlertMessages.getErrorMessage("Please Enter the FOB");
+          return
+   
+       }
+      const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.salePrice,fobData,"fob",JSON.parse(localStorage.getItem('currentUser')).user.userName)
     services.updateCoData(req).then((res)=>{
       if (res.status){
        message.success(res.internalMessage);
        getCoLineData();
+       setFobData(null)
         
    } else{
 
@@ -89,14 +103,19 @@ export interface COAmendmentGridProps {
     }
      
       
-
     const onButtonChange3 = (rowData) => { 
         console.log(rowData,"rowdata")
-        const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.vpo,vpoData,"vponumber","admin")
+        if(!vpoData ){
+          AlertMessages.getErrorMessage("Please Enter the VPO");
+            return
+     
+         }
+        const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.vpo,vpoData,"vponumber",JSON.parse(localStorage.getItem('currentUser')).user.userName)
         services.updateCoData(req).then((res)=>{
           if (res.status){
            message.success(res.internalMessage);
           getCoLineData();
+          setVpoData(null)
 
           
        } else{
@@ -112,11 +131,17 @@ export interface COAmendmentGridProps {
 
     const onButtonChange4 = (rowData) => { 
          console.log(rowData,"rowdata")
-         const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.deliveryDate,deliveryDateData,"deliverydate","admin")
+         if(!deliveryDateData ){
+          AlertMessages.getErrorMessage("Please Enter the Delivery Date");
+            return
+     
+         }
+         const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.deliveryDate,deliveryDateData,"deliverydate",JSON.parse(localStorage.getItem('currentUser')).user.userName)
         services.updateCoData(req).then((res)=>{
           if (res.status){
            message.success(res.internalMessage);
-          //  form.setFieldValue({})
+           setDeliveryDateData(null)
+
 
           
        } else{
@@ -133,11 +158,17 @@ export interface COAmendmentGridProps {
         
    const onButtonChange5 = (rowData) => { 
             console.log(rowData,"rowdata")
-            const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.deliveryAddress,destinationData,"destinationaddress","admin")
+            if(!destinationData ){
+              AlertMessages.getErrorMessage("Please Enter the Destination Address");
+                return
+         
+             }
+            const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.deliveryAddress,destinationData,"destinationaddress",JSON.parse(localStorage.getItem('currentUser')).user.userName)
             services.updateCoData(req).then((res)=>{
               if (res.status){
                message.success(res.internalMessage);
               getCoLineData();
+              setDestinationData(null)
 
               
            } else{
@@ -152,11 +183,17 @@ export interface COAmendmentGridProps {
           
    const onButtonChange6 = (rowData) => { 
         console.log(rowData,"rowdata")
-        const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.orderQuantity,quantityData,"quantity","admin")
+        if(!quantityData ){
+          AlertMessages.getErrorMessage("Please Enter the Quantity");
+            return
+     
+         }
+        const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.orderQuantity,quantityData,"quantity",JSON.parse(localStorage.getItem('currentUser')).user.userName)
             services.updateCoData(req).then((res)=>{
               if (res.status){ 
                message.success(res.internalMessage);
                getCoLineData();
+               setQuantityData(null)
 
               
            } else{
@@ -205,11 +242,11 @@ export interface COAmendmentGridProps {
         },
         {
           title: 'CO Line Number',
-          dataIndex: 'Line',
+          dataIndex: 'newcoLineNumber',
           render:(value,row,index) => {
             return(
                 <>
-                <Form form ={form} >
+               
                 <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
@@ -218,6 +255,7 @@ export interface COAmendmentGridProps {
               xl={{ span: 10 }}
             >
                 <Form.Item 
+                  
                   rules={[
                     {
                       required: true,
@@ -229,17 +267,19 @@ export interface COAmendmentGridProps {
                     }
                   ]}
                  >
-                 <Input key={index} placeholder="Enter CO Line Number" 
-                  // defaultValue={row.coLineNumber}
-                    // onBlur={(e)> colineInfo(e,index,row)}
+                 <Input
+                    name= {`Co${row.styleOrderItemsId}`}
+                    placeholder="Enter CO Line Number" 
                     onBlur={(e) => setCoLineData(e.target.value)}
-                    // required={true}
+                    required={true}
+                    key={Date.now()}
+                    
                     
                     /> 
                     </Form.Item>
                     </Col>
     
-                    </Form>
+                    
                 
                 </>
             )
@@ -318,11 +358,15 @@ export interface COAmendmentGridProps {
                   }
                 ]}
                  >
-                 <Input key={index} placeholder="Enter FOB" 
-                    // onBlur={e=> fobInfo(e,index,row)}
-                    onBlur={(e) => setFobData(e.target.value)}
+                 <Input 
+                  name= {`Co${row.styleOrderItemsId}`}
 
-                    required={true}
+                 key={Date.now()} 
+                 placeholder="Enter FOB" 
+                  onBlur={(e) => setFobData(e.target.value)}
+
+
+                  required={true}
                     /> 
                     </Form.Item>
                     </Col>
@@ -405,9 +449,12 @@ export interface COAmendmentGridProps {
                   }
                 ]}
                  >
-                 <Input key={index} placeholder="Enter VPO" 
-                    // onBlur={e=> vpoInfo(e,index,row)}
-                    onBlur={(e) => setVpoData(e.target.value)}
+                 <Input
+                  key={Date.now()} 
+                  placeholder="Enter VPO" 
+                  onBlur={(e) => setVpoData(e.target.value)}
+                  name= {`Co${row.styleOrderItemsId}`}
+
 
                     required={true}
                     /> 
@@ -494,11 +541,13 @@ export interface COAmendmentGridProps {
                   }
                 ]}
                  >
-                 <Input key={index} placeholder="Enter Delivery Date" 
-                    // onBlur={e=> deliveryDateInfo(e,index,row)}
-                    onBlur={(e) => setDeliveryDateData(e.target.value)}
+                 <Input 
+                 name= {`Co${row.styleOrderItemsId}`}
 
-                    required={true}
+                 key={Date.now()} 
+                 placeholder="Enter Delivery Date" 
+                 onBlur={(e) => setDeliveryDateData(e.target.value)}
+                 required={true}
                     /> 
                     </Form.Item>
                     </Col>
@@ -579,9 +628,12 @@ export interface COAmendmentGridProps {
                   }
                 ]}
                  >
-                 <Input key={index} placeholder="Enter Destination Address" 
-                    // onBlur={e=> destinationInfo(e,index,row)}
-                    onBlur={(e) => setDestinationData(e.target.value)}
+                 <Input
+                  name= {`Co${row.styleOrderItemsId}`}
+
+                  key={Date.now()} 
+                  placeholder="Enter Destination Address" 
+                  onBlur={(e) => setDestinationData(e.target.value)}
 
                     required={true}
                     /> 
@@ -666,7 +718,10 @@ export interface COAmendmentGridProps {
                   }
                 ]}
                  >
-                 <Input key={index} placeholder="Enter Quantity" 
+                 <Input 
+                  name= {`Co${row.styleOrderItemsId}`}
+                   key={Date.now()} 
+                   placeholder="Enter Quantity" 
                     // onBlur={e=> quantityInfo(e,index,row)}
                     onBlur={(e) => setQuantityData(e.target.value)}
 

@@ -87,3 +87,4 @@ export * from './rm-skus'
 export * from './item-creation-filter.req';
 export * from './product-structure(BOM)';
 export * from './feature-filter-request';
+export * from './rm- filtrer.req';

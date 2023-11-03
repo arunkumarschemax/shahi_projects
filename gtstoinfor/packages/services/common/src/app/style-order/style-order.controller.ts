@@ -105,6 +105,7 @@ export class StyleOrderController{
     @ApiBody({type:CoUpdateDto})
 
     async updateCoData(@Body() req:any):Promise<CoUpdateResponseModel>{
+        console.log(req,"contr")
         try{
             return await this.styleOrderService.updateCoData(req)
         }catch(err){
