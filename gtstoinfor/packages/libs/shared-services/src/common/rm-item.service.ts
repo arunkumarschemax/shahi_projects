@@ -8,5 +8,8 @@ export class RmCreationService extends CommonAxiosService{
     return this.axiosPostCall(this.URL + "/createRm", req)
 }
 
+async getAllRMItems(req:any): Promise<CommonResponseModel> {
+  return this.axiosPostCall(this.URL + "/getAllRMItems",req)
+}
  
 }

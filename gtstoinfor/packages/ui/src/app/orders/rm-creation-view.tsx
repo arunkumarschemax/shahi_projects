@@ -3,7 +3,7 @@ import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, 
 import Highlighter from 'react-highlight-words';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import {   BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, ItemsService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from '@project-management-system/shared-services';
+import {   BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, ItemsService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, RmCreationService, SearchGroupService, StyleService, UomService } from '@project-management-system/shared-services';
 import { CompositionDto, ItemCreFilterRequest, LiscenceTypesdDto, RMCreFilterRequest } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
 import ItemCreation from './item-creation';
@@ -33,6 +33,7 @@ const RMCreationView = () => {
          const service = new ItemCreationService();
          const uomservice = new UomService();
          const itemGroupservice = new ItemGroupService();
+         const rmservice = new RmCreationService();
 
 
          const [searchdata,setSearchData] = useState([]);
@@ -47,35 +48,34 @@ const RMCreationView = () => {
          const [house,setHouse]= useState([])
          const [styledata,setStyle]=useState([])
          const[brand,setBrand]=useState([])
-         const [compositiondata,setCompositionData] = useState([]);
          const [ItemType,setItemType]= useState([]);
          const [form] = Form.useForm();
          const { Option } = Select;
+         const [uomdata,setUomData] = useState([]);
          const { RangePicker } = DatePicker;
 
 
 
 
   useEffect(() => {
-    getAllfgItemViewData();
+    getAllRMItemViewData();
     getAllStyles();
     getAllCategory();
     getAllCurrency();
     getAllBuyingHouse();
-    getAllSearchgroup();
-    getAllComposition();
     getAllEmployes();
     getAllItemType();
     getAllCategory();
     getAllItemGroups();
+    getAllUoms();
   }, [])
 
   const resetHandler = () => {
     form.resetFields();
-    getAllfgItemViewData();
+    getAllRMItemViewData();
 
 }
-    const getAllfgItemViewData= () => {
+    const getAllRMItemViewData= () => {
       const req = new RMCreFilterRequest();
       if (form.getFieldValue('style') !== undefined) {
           req.buyer = form.getFieldValue('style');
@@ -95,7 +95,7 @@ const RMCreationView = () => {
   if (form.getFieldValue('brandId') !== undefined) {
     req.productGroup = form.getFieldValue('brandId');
 }
-    service.getAllFgItems(req).then(res => {
+rmservice.getAllRMItems(req).then(res => {
       if (res.status) {
         setItemData(res.data);
         
@@ -121,12 +121,17 @@ const RMCreationView = () => {
       } else{
         AlertMessages.getErrorMessage(res.internalMessage);
          }
-    }).catch(err => {
-      setItemType([]);
-       AlertMessages.getErrorMessage(err.message);
-     })        
+    })      
   }
-
+  const getAllCategory=()=>{
+    categoryService.getActiveItemCategories().then(res=>{
+     if(res.status){
+         setItemCategory(res.data);
+       }else{
+         AlertMessages.getErrorMessage(res.internalMessage)
+     }
+ })
+   } 
   const getAllEmployes=() =>{
     employeservice.getAllActiveEmploee().then(res =>{
       if (res.status){
@@ -136,30 +141,9 @@ const RMCreationView = () => {
       } else{
         AlertMessages.getErrorMessage(res.internalMessage);
          }
-    }).catch(err => {
-      setEmployeData([]);
-       AlertMessages.getErrorMessage(err.message);
-     })        
+    })       
   }
 
-
-
-const getAllComposition=()=>{
-    compositionservice.getActiveComposition().then(res=>{
-   if(res.status){
-     setCompositionData(res.data);
-    }else{
-  AlertMessages.getErrorMessage(res.internalMessage);
-  }})} 
-    const getAllCategory=()=>{
-     categoryService.getActiveItemCategories().then(res=>{
-      if(res.status){
-          setItemCategory(res.data);
-        }else{
-          AlertMessages.getErrorMessage(res.internalMessage)
-      }
-  })
-    } 
 
   const getAllSearchgroup=()=>{
     searchgroup.getActiveSearchGroup().then(res=>{
@@ -297,8 +281,19 @@ const getAllComposition=()=>{
 
   const DetailView = (rowData) => {
 
-    navigate(`/materialCreation/item-creation-detail-view`,{state:rowData})
+    navigate(`/materialCreation/fabric-bom-creation`,{state:rowData})
     
+}
+
+const getAllUoms=() =>{
+  uomservice.getAllActiveUoms().then(res =>{
+    if (res.status){
+      setUomData(res.data);
+       
+    } else{
+      AlertMessages.getErrorMessage(res.internalMessage);
+       }
+  })        
 }
 
   const columnsSkelton: any = [
@@ -309,58 +304,84 @@ const getAllComposition=()=>{
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
-        title: "Buyer",
-        dataIndex: "",
+      title: "Item Type",
+      dataIndex: "item_type_id",
+      align:'center',
+      render: (data) => {
+        const style = ItemType.find((loc) => loc.itemTypeId === data);
+        return style ? style.itemType : "-";
+      },
+      sorter: (a, b) => a.itemTypeId.localeCompare(b.itemTypeId),
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+        title: "Item Code",
+        dataIndex: "item_code",
         align:'center',
-        // render: (data) => {
-        //   const style = styledata.find((sty) => sty.styleNo === data);
-        //   return style ? style.style : "-";
-        // },
-        sorter: (a, b) => a.style_no.localeCompare(b.style_no),
+        sorter: (a, b) => a.item_code.localeCompare(b.item_code),
             sortDirections: ['descend', 'ascend'],
       },
-      {
-        title: "Item Name",
-        dataIndex: "item_name",
-        align:'center',
-        render: (item_name) => {
-          return item_name ? item_name : "-";
-        },
-        sorter: (a, b) => a.item_name.localeCompare(b.item_name),
-        sortDirections: ['descend', 'ascend'],
-      },
-      {
-        title: "Item Resp",
-        dataIndex: "",
-        align:'center',
-        render: (data) => {
-          const style = ItemType.find((loc) => loc.item_type_id === data);
-          return style ? style.itemType : "-";
-        },
-        sorter: (a, b) => a.item_type_id.localeCompare(b.item_type_id),
-        sortDirections: ['descend', 'ascend'],
-      },
-      {
-        title: "Item Type",
-        dataIndex: "item_type_id",
-        align:'center',
-        render: (data) => {
-          const style = ItemType.find((loc) => loc.item_type_id === data);
-          return style ? style.itemType : "-";
-        },
-        sorter: (a, b) => a.item_type_id.localeCompare(b.item_type_id),
-        sortDirections: ['descend', 'ascend'],
-      },
+      // {
+      //   title: "Item Name",
+      //   dataIndex: "item_name",
+      //   align:'center',
+      //   render: (item_name) => {
+      //     return item_name ? item_name : "-";
+      //   },
+      //   sorter: (a, b) => a.item_name.localeCompare(b.item_name),
+      //   sortDirections: ['descend', 'ascend'],
+      // },
 
       {
         title: "Item Group",
         dataIndex: "brand_id",
         align:'center',
         render: (data) => {
-          const branddata = brand.find((bran) => bran.brandId === data);
-          return branddata ? branddata.brandName : "-";
+          const catdata = itemCategory.find((cat) => cat.itemCategoryId === data);
+          return catdata ? catdata.itemCategory : "-";
         },
-        sorter: (a, b) => a.brand_id.localeCompare(b.brand_id),
+        sorter: (a, b) => {
+          const icatA = itemCategory.find((cat) => cat.itemCategoryId === a.itemCategoryId)?.itemCategory || '';
+          const icatB = itemCategory.find((cat) => cat.itemCategoryId === b.itemCategoryId)?.itemCategory || '';
+          return icatA.localeCompare(icatB);
+        },        sortDirections: ['descend', 'ascend'],
+      }, {
+        title: "PCH",
+        dataIndex: "",
+        // render: (data) => {
+        //   const catdata = itemCategory.find((cat) => cat.itemCategoryId === data);
+        //   return catdata ? catdata.itemCategory : "-";
+        // },
+        // sortDirections: ['descend', 'ascend'],
+        // sorter: (a, b) => {
+        //   const icatA = itemCategory.find((cat) => cat.itemCategoryId === a.itemCategoryId)?.itemCategory || '';
+        //   const icatB = itemCategory.find((cat) => cat.itemCategoryId === b.itemCategoryId)?.itemCategory || '';
+        //   return icatA.localeCompare(icatB);
+        // },
+      },
+      {
+        title: "Placemen",
+        dataIndex: "",
+       
+      },
+      {
+        title: "Facility",
+        dataIndex: "",
+       
+      },
+      {
+        title: "Responsible",
+        dataIndex: "responsible_person_id",
+        render: (data) => {
+          const empdata = employedata.find((emp) => emp.employeeId === data);
+          const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
+          return ftname ? ftname : '-';
+        },
+        sorter: (a, b) => {
+          const icatA = employedata.find((cat) => cat.employeeId === a.employeeId)?.ftname || '';
+          const icatB = employedata.find((cat) => cat.employeeId === b.employeeId)?.ftname || '';
+          return icatA.localeCompare(icatB);
+        },
         sortDirections: ['descend', 'ascend'],
 
       },
@@ -392,22 +413,85 @@ const getAllComposition=()=>{
         },        sortDirections: ['descend', 'ascend'],
 
       },
-    //   {
-    //     title: "Responsible",
-    //     dataIndex: "responsible_person_id",
-    //     render: (data) => {
-    //       const empdata = employedata.find((emp) => emp.employeeId === data);
-    //       const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
-    //       return ftname ? ftname : '-';
-    //     },
-    //     sorter: (a, b) => {
-    //       const icatA = employedata.find((cat) => cat.employeeId === a.employeeId)?.ftname || '';
-    //       const icatB = employedata.find((cat) => cat.employeeId === b.employeeId)?.ftname || '';
-    //       return icatA.localeCompare(icatB);
-    //     },
-    //     sortDirections: ['descend', 'ascend'],
+      {
+        title: "Attached WareHouse",
+        dataIndex: "item_group",
+        render: (data) => {
+          const catdata = itemCategory.find((cat) => cat.itemCategoryId === data);
+          return catdata ? catdata.itemCategory : "-";
+        },
+        sorter: (a, b) => {
+          const icatA = itemCategory.find((cat) => cat.itemCategoryId === a.itemCategoryId)?.itemCategory || '';
+          const icatB = itemCategory.find((cat) => cat.itemCategoryId === b.itemCategoryId)?.itemCategory || '';
+          return icatA.localeCompare(icatB);
+        },        sortDirections: ['descend', 'ascend'],
 
-    //   },
+      },
+      {
+        title: "Planner",
+        dataIndex: "item_group",
+        render: (data) => {
+          const catdata = itemCategory.find((cat) => cat.itemCategoryId === data);
+          return catdata ? catdata.itemCategory : "-";
+        },
+        sorter: (a, b) => {
+          const icatA = itemCategory.find((cat) => cat.itemCategoryId === a.itemCategoryId)?.itemCategory || '';
+          const icatB = itemCategory.find((cat) => cat.itemCategoryId === b.itemCategoryId)?.itemCategory || '';
+          return icatA.localeCompare(icatB);
+        },        sortDirections: ['descend', 'ascend'],
+
+      },
+      {
+        title: "Business Area ",
+        dataIndex: "item_group",
+        render: (data) => {
+          const catdata = itemCategory.find((cat) => cat.itemCategoryId === data);
+          return catdata ? catdata.itemCategory : "-";
+        },
+        sorter: (a, b) => {
+          const icatA = itemCategory.find((cat) => cat.itemCategoryId === a.itemCategoryId)?.itemCategory || '';
+          const icatB = itemCategory.find((cat) => cat.itemCategoryId === b.itemCategoryId)?.itemCategory || '';
+          return icatA.localeCompare(icatB);
+        },        sortDirections: ['descend', 'ascend'],
+
+      },
+      {
+        title: "Basic UOM",
+        dataIndex: "",
+        align:'center',
+        render: (data) => {
+          const UOM = uomdata.find((bran) => bran.uomId === data);
+          return UOM ? UOM.itemType : "-";
+        },
+        sorter: (a, b) => a.brand_id.localeCompare(b.brand_id),
+        sortDirections: ['descend', 'ascend'],
+      },
+   
+      {
+        title: "Currency",
+        dataIndex: "currency",
+        render: (data) => {
+         
+          const abc = currency.find((cat) => (cat.currencyId).toLocaleString() === data);
+          return abc ? abc.currencyName : "-";
+        },
+      },
+      {
+        title: "Sales Price",
+        dataIndex: "sale_price",
+        align:'right',
+        sorter: (a, b) => a.sale_price.localeCompare(b.sale_price),
+        sortDirections: ['descend', 'ascend'],
+
+      },
+      {
+        title: "Supplier",
+        dataIndex: "sale_price",
+        align:'right',
+        sorter: (a, b) => a.sale_price.localeCompare(b.sale_price),
+        sortDirections: ['descend', 'ascend'],
+
+      },
       
   ];
 
@@ -428,15 +512,15 @@ const getAllComposition=()=>{
   return (
       <>
       <Card title={<span >RM Creation</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }} 
-    extra={<Link to='/materialCreation/item-creation' >
+    extra={<Link to='/materialCreation/fabric-bom-creation' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
       <Card >
-      <Form onFinish={getAllfgItemViewData} form={form} layout='vertical'>
+      {/* <Form onFinish={getAllRMItemViewData} form={form} layout='vertical'>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='style' label='Buyer' >
-                            <Select showSearch placeholder="Select Buyer" optionFilterProp="children" allowClear >
+                        <Form.Item name='style' label='Item Code' >
+                            <Select showSearch placeholder="Select Item Code" optionFilterProp="children" allowClear >
                                 {
                                     styledata?.map((inc: any) => {
                                         return <Option key={inc.styleId} value={inc.styleId}>{inc.style}</Option>
@@ -523,7 +607,7 @@ const getAllComposition=()=>{
                         </Form.Item>
                     </Col>
                 </Row>
-            </Form>
+            </Form> */}
             <>
         <Table
          size='small'
