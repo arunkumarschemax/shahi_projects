@@ -45,11 +45,11 @@ export class SampleDevReqController {
     }
   }
 
-  @Post('/createSmapleDevlopmentRequest')
+  @Post('/createSampleDevelopmentRequest')
   @ApiBody({type: SampleRequestDto})
-  async createSmapleDevlopmentRequest(@Body() req:any):Promise<AllSampleDevReqResponseModel>{
+  async createSampleDevelopmentRequest(@Body() req:any):Promise<AllSampleDevReqResponseModel>{
     try{
-    return await this.sampleService.createSmapleDevlopmentRequest(req)
+    return await this.sampleService.createSampleDevelopmentRequest(req)
     }
     catch(err){
       return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, err);

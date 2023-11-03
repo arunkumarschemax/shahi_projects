@@ -39,7 +39,7 @@ export class SampleReqFabricinfoEntity{
     })
       remarks : string;
 
-    @ManyToOne(type =>SampleRequest,sampleReqFabric =>sampleReqFabric.samplereqfabricinfo)
+    @ManyToOne(type =>SampleRequest,sampleReqFabric =>sampleReqFabric.sampleReqFabricInfo)
     @JoinColumn({name:'sample_request_id'})
     samplerReqFabricEntity:SampleRequest
 
