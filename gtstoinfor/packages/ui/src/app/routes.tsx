@@ -159,6 +159,7 @@ import SmvEfficiencyForm from "./common/product-structure(BOM)/smv-efficiency-fo
 import COAmendmentTabs from "./common/co-amendment/co-amendment-tabs"
 import FeatureCreationView from "./BOM/feature-creation-view"
 import RMCreationView from "./orders/rm-creation-view"
+import FgRMMappingForm from "./common/product-structure(BOM)/fg-rm-items-mapping"
 
 
 export const AppRoutes = () => {
@@ -616,6 +617,8 @@ export const AppRoutes = () => {
                 </Route>
                 <Route path='/product-structure'>
                 <Route path='productstructure/smv-efficiency' element={<SmvEfficiencyForm/>}/>
+                <Route path='fg-rm-mapping' element={<FgRMMappingForm/>}/>
+
 
             
                             
