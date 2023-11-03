@@ -1,11 +1,12 @@
 import { CloseOutlined } from "@ant-design/icons";
-import { CustomerOrderStatusEnum, PackageTermsDto, PaymentMethodDto, PaymentTermsDto, styleOrderReq } from "@project-management-system/shared-models";
+import { CustomerOrderStatusEnum, MenusAndScopesEnum, PackageTermsDto, PaymentMethodDto, PaymentTermsDto, styleOrderReq } from "@project-management-system/shared-models";
 import { DeliveryMethodService, DeliveryTermsService, PackageTermsService, PaymentMethodService, PaymentTermsService, StyleOrderService, WarehouseService } from "@project-management-system/shared-services";
 import { Button, Card, Descriptions, Table } from "antd";
 import React from "react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AlertMessages from "../common/common-functions/alert-messages";
+import RolePermission from "../roles-permission";
 
 export const StyleOrderDetailView = () => {
   const service = new StyleOrderService();
@@ -31,7 +32,10 @@ export const StyleOrderDetailView = () => {
   useEffect(() => {
     getData();
   }, []);
-
+  const checkAccess = (buttonParam) => {
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Material Creation"],MenusAndScopesEnum.SubMenus["Style Order View"],buttonParam)
+    return !accessValue
+}
   const getData = () => {
     const req = new styleOrderReq(undefined, stateData.id);
     console.log(req, "reqqqqqqqqqqq");
@@ -97,9 +101,7 @@ export const StyleOrderDetailView = () => {
     {
       title: "Size",
       dataIndex: "size",
-      
     },
-
     {
       title: "Color",
       dataIndex: "color",
@@ -107,7 +109,10 @@ export const StyleOrderDetailView = () => {
     {
       title: "Destination",
       dataIndex: "destination",
-    
+    },
+    {
+      title: "FOB",
+      dataIndex: "sale_price",
     },
     {
       title: "Qty",
@@ -119,7 +124,6 @@ export const StyleOrderDetailView = () => {
     {
       title: "CO Line Number",
       dataIndex: "coline_number",
-      
       //   sorter: (a, b) => a.coNum.localeCompare(b.coNum),
       // ...getColumnSearchProps("coNum"),
     },
@@ -127,18 +131,16 @@ export const StyleOrderDetailView = () => {
     {
       title: "Status",
       dataIndex: "status",
-      
       //   sorter: (a, b) => a.coNum.localeCompare(b.coNum),
       // ...getColumnSearchProps("coNum"),
     },
     {
-  
       title: `Action`,
       dataIndex: 'action',
       render: (text, rowData) => (
         <>
         {
-          rowData.status != CustomerOrderStatusEnum.CLOSED ? 
+          rowData.status != CustomerOrderStatusEnum.CLOSED || checkAccess('Cancel')  ? 
         <span>
             <Button title={"Cancel Order"} onClick={() => cancelOrder(rowData)} >
               <CloseOutlined />

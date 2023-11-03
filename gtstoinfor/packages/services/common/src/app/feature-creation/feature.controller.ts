@@ -55,4 +55,13 @@ export class FeatureController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
+
+    @Post('/getFeaturesInfo')
+    async getFeaturesInfo(): Promise<CommonResponseModel> {
+        try {
+            return await this.featureService.getFeaturesInfo();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
 }

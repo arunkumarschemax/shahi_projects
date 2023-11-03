@@ -247,8 +247,8 @@ service.createFabricType(variantData).then(res=>{
     ];
 
 return (
-  <Card title={<span>Fabric Type</span>}
-  style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/fabrictype/fabric-type-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
+  <Card title='Fabric' 
+  extra={<span><Button onClick={()=>navigate('/masters/fabrictype/fabric-type-form')} type={'primary'} >New</Button></span>}>
   <br></br>
     <>
     <Row gutter={40}>

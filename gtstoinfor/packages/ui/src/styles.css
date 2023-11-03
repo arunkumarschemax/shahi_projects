@@ -17,3 +17,30 @@
 .custom-table-wrapper .ant-table-thead > tr > th {
   background-color: lavender;
 }
+
+.custom-tab-styles .ant-tabs-tab:nth-child(even) {
+  background-color: #d6e4ff; /* Background color for even tabs */
+  color: white; /* Text color for even tabs */
+}
+
+.custom-tab-styles .ant-tabs-tab:nth-child(odd) {
+  background-color: #d3adf7; /* Background color for odd tabs */
+  color: white; /* Text color for odd tabs */
+}
+
+.custom-tab-styles .ant-tabs-tab-active {
+  background-color: red; /* Background color for the active tab */
+  color: white; /* Text color for the active tab */
+}
+
+.custom-tab-styles .ant-tabs-ink-bar {
+  background-color: red; /* Color of the tab indicator (the line under the active tab) */
+}
+
+
+
+
+
+
+
+

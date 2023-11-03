@@ -63,14 +63,14 @@ export interface MenuItem {
       return {
         path: item.path,
         name: item.label,
-        icon: item.icon,
+        // icon: item.icon,
         routes:
           'children' in item
             ? item.children!.map(({ children, icon, label, path }) => {
                 return {
                   path: path,
                   name: label,
-                  icon: icon,
+                  // icon: icon,
                   routes: children,
                 };
               })

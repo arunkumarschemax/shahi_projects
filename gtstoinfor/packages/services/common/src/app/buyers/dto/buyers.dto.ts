@@ -72,6 +72,9 @@ export class BuyersDTO {
   @ApiProperty()
   rmItemCodeLength: number;
 
+  @ApiProperty()
+  externalRefNumber: string;
+
 
 }
 

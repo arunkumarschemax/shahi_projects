@@ -5,7 +5,7 @@ export class SizeService extends CommonAxiosService{
     URL ="/size";
 
     async createsize(sizes: SizeDto): Promise<SizeResponseModel> {
-        console.log('testss',sizes)
+        // console.log('testss',sizes)
         return this.axiosPostCall(this.URL + '/createsize', sizes)
     }
   

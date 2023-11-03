@@ -55,20 +55,10 @@ export function BuyingHouseForm(props: BuyingHouseFormProps) {
 
   return (
     <Card
-      title={<span>Buying House</span>}
-      style={{ textAlign: "center" }}
-      headStyle={{ border: 0 }}
-      extra={
-        props.isUpdate == true ? (
-          ""
-        ) : (
-          <Link to="/masters/buying-house/buying-house-view">
-            <span style={{ color: "white" }}>
-              <Button type={"primary"}>View </Button>{" "}
-            </span>
-          </Link>
-        )
-      }
+      title={props.isUpdate ?
+      'Buying House':'Buying House'}
+      extra={(props.isUpdate === false) && <span><Button onClick={()=> navigate('//masters/buying-house/buying-house-view')} type={"primary"}>View</Button></span>}
+      
     >
       <Form
         form={form}

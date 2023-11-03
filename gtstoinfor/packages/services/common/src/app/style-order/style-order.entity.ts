@@ -153,6 +153,12 @@ export class StyleOrder{
     })
     planner : number;
 
+    @Column('int',{
+        name:'item_sale_price_qty',
+        nullable:true,
+    })
+    itemSalePriceQty : number;
+
     @Column("boolean",{
     nullable:false,
     default:true,
@@ -243,7 +249,7 @@ export class StyleOrder{
     coTypeInfo: CoTypes;
 
     @ManyToOne(type=>UomEntity, uom=>uom.styleOrderInfo,{  nullable:true, })
-    @JoinColumn({ name:"qunatity_uom_id"})
+    @JoinColumn({ name:"quantity_uom_id"})
     uomInfo: UomEntity;
 
     @OneToMany(type=>CoLine, co=>co.styleOrderInfo,{cascade: true})

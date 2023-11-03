@@ -24,7 +24,7 @@ import {
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { ColumnProps } from "antd/lib/table";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BuyingHouseDto } from "@project-management-system/shared-models";
 import { BuyingHouseService } from "@project-management-system/shared-services";
 import { BuyingHouseForm } from "./buying-house-form";
@@ -41,6 +41,7 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
   const [buyingHouseData, setBuyingHouseData] = useState<BuyingHouseDto[]>([]);
   const [selectedBuyingHouse, setSelectedBuyingHouse] =
     useState<any>(undefined);
+    const navigate = useNavigate()
 
   const Service = new BuyingHouseService();
 
@@ -376,17 +377,11 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
   };
   return (
     <Card
-      title={<span>Buying House</span>}
-      style={{ textAlign: "center" }}
-      headStyle={{ border: 0 }}
+      title="Buying House"
+
       extra={
-        <Link to="/masters/buying-house/buying-house-form">
-          <span style={{ color: "white" }}>
-            <Button type={"primary"}>New </Button>{" "}
-          </span>
-        </Link>
-      }
-    >
+        <span><Button onClick={()=>navigate('/masters/buying-house/buying-house-form')} type={'primary'}>New</Button></span>}>
+       
       <br></br>
       <Row gutter={40}>
         <Col>

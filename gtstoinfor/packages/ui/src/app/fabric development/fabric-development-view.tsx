@@ -1,3 +1,4 @@
+import { BuyerExtrnalRefIdReq, BuyerIdReq, MenusAndScopesEnum } from "@project-management-system/shared-models";
 import { BuyersService, EmployeeDetailsService, FabricDevelopmentService, LocationsService, ProfitControlHeadService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Table } from "antd"
 import React, { useEffect, useState } from "react";
@@ -20,15 +21,42 @@ export const FabricDevelopmentView = () =>{
     const[buyerId,setBuyerId] = useState([]);
     const[empId,setEmpId] = useState([]);
     const[styId,setStyId] = useState([]);
-
+    const [userId, setUserId] = useState([]); 
+    const [loginBuyer,setLoginBuyer] = useState<number>(0)
+    const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+    const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
+  let userRef
 
 
 
     useEffect  (()=>{
       getData()
+      Login()
     },[])
+    
+    const Login = () =>{
+      const req = new BuyerExtrnalRefIdReq()
+      if(role === MenusAndScopesEnum.roles.crmBuyer){
+        req.extrnalRefId = externalRefNo
+      }
+      buyerService.getBuyerByRefId(req).then(res=>{
+        if(res.status){
+          setUserId(res.data)
+    setLoginBuyer(res.data.buyerId)
+        }
+      })
+      buyerService.getAllActiveBuyers(req).then(res=>{
+        if(res.status){
+              setBuyerId(res.data)
+              console.log(buyerId,'buyer');
+        }
+      })
+    }
     const getData = ()=>{
-      service.getFabricDevReqData().then(res=>{
+      const loginId = new BuyerIdReq(loginBuyer)
+      console.log(loginId,'/////////');
+      
+      service.getFabricDevReqData(loginId).then(res=>{
         if(res.status){
               setData(res.data)
               console.log(res,'data');
@@ -57,15 +85,7 @@ export const FabricDevelopmentView = () =>{
                         console.log(pchId,'pch');
                   }
                 })
-                
-                buyerService.getAllActiveBuyers().then(res=>{
-                  console.log(res.data,'----88888----')
-
-                  if(res.status){
-                        setBuyerId(res.data)
-                        console.log(buyerId,'buyer');
-                  }
-                })
+              
 
                 employeeService.getAllActiveEmploee().then(res =>{
                   console.log(res.data,"emp")

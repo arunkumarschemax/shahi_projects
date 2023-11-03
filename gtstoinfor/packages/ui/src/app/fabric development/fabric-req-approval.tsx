@@ -1,5 +1,5 @@
 import { SearchOutlined, UndoOutlined } from '@ant-design/icons'
-import { FabricApprovalReq, QualitiesEnum } from '@project-management-system/shared-models'
+import { BuyerExtrnalRefIdReq, BuyerIdReq, FabricApprovalReq, MenusAndScopesEnum, QualitiesEnum } from '@project-management-system/shared-models'
 import { BuyersService, EmployeeDetailsService, FabricDevelopmentService, LocationsService, ProfitControlHeadService, SampleTypesService, StyleService } from '@project-management-system/shared-services'
 import { Button, Card, Checkbox, Col, Form, Row, Select } from 'antd'
 import Table, { ColumnsType } from 'antd/es/table'
@@ -28,13 +28,35 @@ export const FabricReqApproval = () => {
     const buyerService = new BuyersService()
     const sampleService = new SampleTypesService()
     const employeeService = new EmployeeDetailsService()
-
+    const [userId, setUserId] = useState([]); 
+    const [loginBuyer,setLoginBuyer] = useState<number>(0)
+    const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+    const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
+  let userRef
     useEffect(()=>{
         fabricReqData()
+        Login()
     },[])
 
 
-
+    const Login = () =>{
+        const req = new BuyerExtrnalRefIdReq()
+        if(role === MenusAndScopesEnum.roles.crmBuyer){
+          req.extrnalRefId = externalRefNo
+        }
+      
+        buyerService.getBuyerByRefId(req).then(res=>{
+          if(res.status){
+            setUserId(res.data)
+      setLoginBuyer(res.data.buyerId)
+          }
+        })
+        buyerService.getAllBuyersInfo(req).then((res)=>{
+            if(res.status){
+                setBuyerId(res.data)
+            }
+        })
+      }
     const fabricApprovalData = (val) => {
         if(idReq){
         const req = new FabricApprovalReq(idReq,val.requestNo,selectedQuality);
@@ -59,12 +81,7 @@ export const FabricReqApproval = () => {
                         setPchId(res.data)
                     }
                 })
-
-                buyerService.getAllBuyersInfo().then((res)=>{
-                    if(res.status){
-                        setBuyerId(res.data)
-                    }
-                })
+               
 
                 sampleService.getAllSampleTypes().then((res)=>{
                     if(res.status){

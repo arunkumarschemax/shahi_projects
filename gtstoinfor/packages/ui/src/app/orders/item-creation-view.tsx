@@ -38,10 +38,13 @@ const ItemCreationView = () => {
          const compositionservice = new CompositionService();
          const service = new ItemCreationService();
          const uomservice = new UomService();
+
          const [searchdata,setSearchData] = useState([]);
          const [employedata,setEmployeData] = useState([]);
          const [rangedata,setRangeData] = useState([]);
          const [customGroup,setCustomGroup]= useState([]);
+         const [currency,setCurrency]= useState([]);
+
          const [licence,setLicence]=useState([])
          const [itemCategory,setItemCategory]= useState([])
          const [rosl,setRosl] = useState([])
@@ -63,7 +66,7 @@ const ItemCreationView = () => {
     getAllLicense();
     getAllBrands();
     getAllCategory();
-    getAllCustomGrops();
+    getAllCurrency();
     getAllBuyingHouse();
     getAllSearchgroup();
     getAllRanges();
@@ -233,16 +236,13 @@ const getAllComposition=()=>{
 
 
 
- const getAllCustomGrops=()=>{
+ const getAllCurrency=()=>{
     currencyServices.getAllActiveCurrencys().then(res=>{
         if(res.status){
-            setCustomGroup(res.data);
+          setCurrency(res.data);
         }else{
             AlertMessages.getErrorMessage(res.internalMessage)
         }
-    }).catch(err=>{
-        setCustomGroup([]);
-        AlertMessages.getErrorMessage(err.message)
     })
  }
  const getAllBuyingHouse=()=>{
@@ -347,10 +347,10 @@ const getAllComposition=()=>{
         title: "Style",
         dataIndex: "style_no",
         align:'center',
-        render: (data) => {
-          const style = styledata.find((sty) => sty.styleNo === data);
-          return style ? style.style : "-";
-        },
+        // render: (data) => {
+        //   const style = styledata.find((sty) => sty.styleNo === data);
+        //   return style ? style.style : "-";
+        // },
         sorter: (a, b) => a.style_no.localeCompare(b.style_no),
             sortDirections: ['descend', 'ascend'],
       },
@@ -358,7 +358,10 @@ const getAllComposition=()=>{
         title: "Item Name",
         dataIndex: "item_name",
         align:'center',
-        sorter: (a, b) => a.item_name.localeCompare(b.item_name),
+        render: (data) => {
+          return data ? data : "-";
+        },
+        sorter: (a, b) => a.data.localeCompare(b.data),
         sortDirections: ['descend', 'ascend'],
       },
       {
@@ -366,10 +369,12 @@ const getAllComposition=()=>{
         dataIndex: "item_type_id",
         align:'center',
         render: (data) => {
-          const style = ItemType.find((loc) => loc.item_type_id === data);
+          console.log(ItemType,'===');
+          
+          const style = ItemType.find((loc) => loc.itemTypeId === data);
           return style ? style.itemType : "-";
         },
-        sorter: (a, b) => a.item_type_id.localeCompare(b.item_type_id),
+        sorter: (a, b) => a.itemTypeId.localeCompare(b.itemTypeId),
         sortDirections: ['descend', 'ascend'],
       },
       {
@@ -465,6 +470,7 @@ const getAllComposition=()=>{
         dataIndex: "sale_person_id",
         render: (data) => {
           const empdata = employedata.find((emp) => emp.employeeId === data);
+          console.log(employedata,"employedata")
           const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
           return ftname ? ftname : '-';
         },
@@ -484,12 +490,15 @@ const getAllComposition=()=>{
         sortDirections: ['descend', 'ascend'],
 
       },
+   
       {
         title: "Currency",
         dataIndex: "currency",
-        sorter: (a, b) => a.currency.localeCompare(b.currency),
-        sortDirections: ['descend', 'ascend'],
-
+        render: (data) => {
+         
+          const abc = currency.find((cat) => (cat.currencyId).toLocaleString() === data);
+          return abc ? abc.currencyName : "-";
+        },
       },
       {
         title: "Sales Price",
@@ -503,8 +512,11 @@ const getAllComposition=()=>{
         title: "Target Currency",
         dataIndex: "target_currency",
         align:'center',
-        sorter: (a, b) => a.target_currency.localeCompare(b.target_currency),
-        sortDirections: ['descend', 'ascend'],
+        render: (data) => {
+          const Curdata = currency.find((cat) => (cat.currencyId ).toLocaleString() === data);
+          console.log(currency[data], "Curdata")
+          return Curdata ? Curdata.currencyName: "-";
+        },
 
       },
       {
@@ -527,16 +539,24 @@ const getAllComposition=()=>{
       },
       {
         title: "Range",
-        dataIndex: "irange",
-        render: (data) => {
-          const randata = rangedata.find((cat) => cat.id === data);
-          return randata ? randata.rangeCode : "-";
-        },
-        sorter: (a, b) => {
-          const icatA = rangedata.find((cat) => cat.id === a.id)?.rangeCode || '';
-          const icatB = rangedata.find((cat) => cat.id === b.id)?.rangeCode || '';
-          return icatA.localeCompare(icatB);
-        },
+        dataIndex: "range",
+        sorter: (a, b) => a.range.localeCompare(b.range),
+
+        // render: (data) => {
+        //   const dataAsString = data.toString();
+        //   const randata = rangedata[dataAsString];
+        //   if (randata) {
+        //     return randata.rangeCode;
+        //   } else {
+        //     return "-";
+        //   }
+        // },
+                
+        // sorter: (a, b) => {
+        //   const icatA = rangedata.find((cat) => cat.id === a.id)?.rangeCode || '';
+        //   const icatB = rangedata.find((cat) => cat.id === b.id)?.rangeCode || '';
+        //   return icatA.localeCompare(icatB);
+        // },
         sortDirections: ['descend', 'ascend'],
       },
     {
@@ -549,7 +569,7 @@ const getAllComposition=()=>{
                 if (rowData.isActive) {
                   openFormWithData(rowData);
                 } else {
-                  AlertMessages.getErrorMessage('You Cannot Edit Composition');
+                  AlertMessages.getErrorMessage('You Cannot Edit Item Creation');
                 }
               }}
               style={{ color: '#1890ff', fontSize: '14px' }}
@@ -649,7 +669,7 @@ const getAllComposition=()=>{
             </Form>
             <>
         <Table
-         size='middle'
+         size='small'
          rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
 
         rowKey={record => record}
@@ -671,9 +691,8 @@ const getAllComposition=()=>{
         <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
           <ItemCreation key={Date.now()}
             // updateData={updateComposition}
-            
             isUpdate={true}
-            // itemCreationData={selectedcompositionData}
+            itemCreationData={selectedItemCreationData}
             closeForm={closeDrawer} />
         </Card>
       </Drawer>

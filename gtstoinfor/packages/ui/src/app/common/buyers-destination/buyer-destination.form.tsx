@@ -1,9 +1,12 @@
 import {
+    BuyerExtrnalRefIdReq,
+    BuyerIdReq,
     BuyersDestinationDto,
     // BuyersDestinationModel,
     BuyersDestinationRequest,
     BuyersDestinationResponseModel,
     MappingResponseModel,
+    MenusAndScopesEnum,
 } from "@project-management-system/shared-models";
 import {
     BuyerDestinationService,
@@ -65,7 +68,11 @@ export const BuyersDestinationForm = () => {
     const [desCheck, setDesCheck] = useState('');
     const [colorCheck, setColorCheck] = useState('');
     const [isBuyerSelected, setIsBuyerSelected] = useState(false);
-    
+    const [userId, setUserId] = useState([]); 
+  const [loginBuyer,setLoginBuyer] = useState<number>(0)
+      const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+    const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
+  let userRef
     let sizedata = []
     let Desdata = []
     let colourData = []
@@ -76,7 +83,20 @@ export const BuyersDestinationForm = () => {
         getDestinations();
         getColours();
         getBuyers();
+        Login()
     }, []);
+    const Login = () =>{
+        const req = new BuyerExtrnalRefIdReq()
+  if(role === MenusAndScopesEnum.roles.crmBuyer){
+    req.extrnalRefId = externalRefNo
+  }
+  buyerService.getBuyerByRefId(req).then(res=>{
+    if(res.status){
+      setUserId(res.data)
+setLoginBuyer(res.data?.buyerId)
+    }
+  })
+}
 let tableData = []
     const getSizes = () => {
         sizeService.getAllActiveSize().then((res) => {
@@ -106,7 +126,8 @@ let tableData = []
         });
     };
     const getBuyers = () => {
-        buyerService.getAllBuyer().then((res) => {
+   const loginId = new BuyerIdReq(loginBuyer)
+        buyerService.getAllBuyer(loginId).then((res) => {
             if (res.status) {
                 setBuyers(res.data);
             }

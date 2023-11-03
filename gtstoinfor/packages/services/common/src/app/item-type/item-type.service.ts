@@ -33,7 +33,7 @@ export class ItemTypeService{
 
 
       async createItemType(itemdto: ItemTypeDtos, isUpdate: boolean): Promise<ItemTypeResponseModel>{
-        console.log('ggggggggg============',isUpdate)
+      //  console.log('ggggggggg============',isUpdate)
         // const response = new ProfitControlHeadResponseModel();
         try{
           let previousValue

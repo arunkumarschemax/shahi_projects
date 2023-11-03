@@ -3,7 +3,7 @@ import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/lib/table';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import { ComponentsDto } from '@project-management-system/shared-models';
 import { ComponentService } from '@project-management-system/shared-services';
@@ -18,7 +18,7 @@ export function ComponentsGrid(props: ComponentsProps) {
   const [page, setPage] = React.useState(1);
   const [searchText, setSearchText] = useState(''); 
   const [searchedColumn, setSearchedColumn] = useState('');
-
+  const navigate = useNavigate()
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [componentsData, setComponentsData] = useState<ComponentsDto[]>([]);
   const [selectedComponentsData, setSelectedComponentsData] = useState<any>(undefined);
@@ -264,12 +264,8 @@ export function ComponentsGrid(props: ComponentsProps) {
     console.log('params', pagination, filters, sorter, extra);
   }
   return (
-    <Card title={<span >Components</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
-    extra={<Link to='/masters/components/components-form' >
-      <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
-      </Link>} >
-     <br></br>
+    <Card title='Components' extra={<span><Button onClick={()=> navigate('/masters/components/components-form')} type={'primary'}>New</Button></span>}>
+   <br></br>
      <Row gutter={40}>
       
         <Col>

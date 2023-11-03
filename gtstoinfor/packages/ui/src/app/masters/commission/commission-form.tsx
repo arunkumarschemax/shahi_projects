@@ -55,21 +55,11 @@ export function CommissionForm(props: CommissionFormProps) {
 
   return (
     <Card
-      title={<span>Commission</span>}
-      style={{ textAlign: "center" }}
-      headStyle={{ border: 0 }}
-      extra={
-        props.isUpdate == true ? (
-          ""
-        ) : (
-          <Link to="/masters/commission/commission-view">
-            <span style={{ color: "white" }}>
-              <Button type={"primary"}>View </Button>{" "}
-            </span>
-          </Link>
-        )
-      }
-    >
+      title={props.isUpdate ?
+      'Commision':'Commision'}
+      extra={(props.isUpdate === false) && <span><Button onClick={()=>navigate('/masters/commission/commission-view')} type={'primary'}>View</Button></span> }>
+      
+    
       <Form
         form={form}
         layout={"vertical"}

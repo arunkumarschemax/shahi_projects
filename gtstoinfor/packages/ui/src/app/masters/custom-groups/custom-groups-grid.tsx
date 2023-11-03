@@ -3,7 +3,7 @@ import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/lib/table';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { CustomGroupsDto } from '@project-management-system/shared-models';
 import { CustomGroupsService } from '@project-management-system/shared-services';
 import { CustomGroupForm } from './custom-groups-form';
@@ -20,7 +20,7 @@ export function CustomGroupsGrid(props: CustomGroupProps) {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [customGroupsData, setCustomGroupsData] = useState<CustomGroupsDto[]>([]);
   const [selectedCustomGroupsData, setSelectedCustomGroupsData] = useState<any>(undefined);
-  
+  const navigate = useNavigate()
   const Service=new CustomGroupsService();
 
   useEffect(() => {
@@ -262,11 +262,8 @@ export function CustomGroupsGrid(props: CustomGroupProps) {
     console.log('params', pagination, filters, sorter, extra);
   }
   return (
-    <Card title={<span >Custom Group</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
-    extra={<Link to='/masters/custom-groups/custom-groups-form' >
-      <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
-      </Link>} >
+    <Card title="Custom Group" extra={<span><Button onClick={()=> navigate('/masters/custom-groups/custom-groups-form')} type={'primary'}>New</Button></span>}>
+   
      <br></br>
      <Row gutter={40}>
       

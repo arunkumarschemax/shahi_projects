@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { FeatureRepository } from './repo/feature-repository';
-import { CommonResponseModel, FeatureDTO, FeatureFilterRequest, FeatureResponseModel } from '@project-management-system/shared-models';
+import { CommonResponseModel, FeatureDTO, FeatureFilterRequest, FeatureModel, FeatureOptionModel, FeatureResponseModel, OptionEnum } from '@project-management-system/shared-models';
 import { FeatureEntity } from './entities/feature.entity';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { FeatureOptionEntity } from './entities/feature-option-entity';
 import { FeatureOpitionRepository } from './repo/feature-option-repository';
+import { ColourService, DestinationService, SizeService } from '@project-management-system/shared-services';
 
 @Injectable()
 export class FeatureService {
@@ -12,6 +13,9 @@ export class FeatureService {
     constructor(
       private featureRepo: FeatureRepository,
       private featureoptioonrepo : FeatureOpitionRepository,
+      private colorService : ColourService,
+      private sizeService : SizeService,
+      private destinationService: DestinationService
       ){}
       
     
@@ -118,5 +122,43 @@ async getOptionGropup(): Promise<CommonResponseModel> {
   else
       return new CommonResponseModel(false, 0, 'No data found');
 }
+
+  async getFeaturesInfo(): Promise<CommonResponseModel>{
+    try{
+      const colorInfo = await this.colorService.getAllColour()
+      const colorMap = new Map<number,string>()
+      colorInfo.data.forEach(co => colorMap.set(co.colourId,co.colour))
+      const sizeInfo = await this.sizeService.getAllSize()
+      const sizeMap = new Map<number,string>()
+      sizeInfo.data.forEach(s => sizeMap.set(s.sizeId,s.size))
+      const destInfo = await this.destinationService.getAllDestination()
+      const destMap = new Map<number,string>()
+      destInfo.data.forEach(des => destMap.set(des.destinationId,des.destination))
+      const data = await this.featureRepo.find({relations:['fChild']})
+      let featureInfo = []
+      if (data.length > 0){
+        for(const rec of data){
+          let featureOptions: FeatureOptionModel[] =[]
+          let featureOptionInfo = []
+          for(const val of rec.fChild){
+            if(rec.option === OptionEnum.COLOR){
+              featureOptionInfo.push(colorMap.get(val.optionId))
+            } else if(rec.option === OptionEnum.SIZE){
+              featureOptionInfo.push(sizeMap.get(val.optionId))
+            } else if(rec.option === OptionEnum.DESTINATION){
+              featureOptionInfo.push(destMap.get(val.optionId))
+            }
+          }
+          featureOptions.push(new FeatureOptionModel(featureOptionInfo))
+          featureInfo.push(new FeatureModel(rec.featureId,rec.featureCode,rec.featureName,rec.option,featureOptions,rec.description))
+        }
+      return new CommonResponseModel(true, 1, 'data retrived', featureInfo)
+      } else {
+      return new CommonResponseModel(false, 0, 'No data found');
+      }
+    }catch(err){
+      throw err
+    }
+  }
 
 }

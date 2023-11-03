@@ -3,11 +3,11 @@ import { HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link } from "react-router-dom";
-import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
+import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, FactoryService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
 import { ItemGroupEnum } from "@project-management-system/shared-models";
  
 export interface FormProps {
-  // itemCreationData:CompositionDto;
+  itemCreationData:any;
   // updateData:(item:CompositionDto)=>void;
   isUpdate:boolean;
   closeForm: () => void;
@@ -32,11 +32,13 @@ export function ItemCreation (props: FormProps){
          const uomservice = new UomService();
          const grouptech = new GroupTechClassService();
          const itemTypeservice =new ItemTypeService();
+         const facilityservice =new FactoryService();
          const [currencydata,setCurrencyData] = useState([]);
          const [uomdata,setUomData] = useState([]);
          const [itemgroup,setitemgroup] = useState([]);
          const [group,setGroup] = useState([]);
          const [compositiondata,setCompositionData] = useState([]);
+         const [facilitydata,setfacilityData] = useState([]);
          const [searchdata,setSearchData] = useState([]);
          const [employedata,setEmployeData] = useState([]);
          const [rangedata,setRangeData] = useState([]);
@@ -68,6 +70,7 @@ export function ItemCreation (props: FormProps){
             getAllItemType();
             getAllItemGroups();
             getAllGroupTech();
+            getAllFacilitys();
           },[])
 
          const getAllCurrencies=() =>{
@@ -81,6 +84,21 @@ export function ItemCreation (props: FormProps){
                  }
             }).catch(err => {
               setCurrencyData([]);
+               AlertMessages.getErrorMessage(err.message);
+             })        
+          }
+
+          const getAllFacilitys=() =>{
+            facilityservice.getFactories().then(res =>{
+              if (res.status){
+                // console.log(res,'llllll')
+                setfacilityData(res.data);
+                 
+              } else{
+                AlertMessages.getErrorMessage(res.internalMessage);
+                 }
+            }).catch(err => {
+              setfacilityData([]);
                AlertMessages.getErrorMessage(err.message);
              })        
           }
@@ -309,8 +327,11 @@ compositionservice.getActiveComposition().then(res=>{
         <Card title="Item Creation" size="small" extra={!props.isUpdate && (<Link to="/materialCreation/item-creation-view">
          <span style={{ color: 'white' }}><Button type="primary">View</Button></span></Link> )}>
 
-               <Form  form={form} style={{ fontSize: "10px" }}  layout="vertical" onFinish = {saveItem}>
+               <Form  form={form} style={{ fontSize: "10px" }}  layout="vertical" onFinish = {saveItem} initialValues={props.itemCreationData}>
                <Form.Item name='trim' style={{display:'none'}}>
+                    <Input hidden/>
+                </Form.Item>
+                <Form.Item name='createdUser' style={{display:'none'}} initialValue={"Admin"}>
                     <Input hidden/>
                 </Form.Item>
                 <Row gutter={16}>
@@ -319,12 +340,12 @@ compositionservice.getActiveComposition().then(res=>{
                   <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Item Details</h1>
                   <Row gutter={8}>
                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8}}>
-                              <Form.Item style={{flexDirection:'row'}} label="Style" name="style" rules={[{ required: true, message: "Enter Style" }]} >
+                              <Form.Item style={{flexDirection:'row'}} label="Style" name="styleNo" rules={[{ required: true, message: "Enter Style" }]} >
                                    <Input placeholder="Style" allowClear/>
                               </Form.Item>
                    </Col>
                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                   <Form.Item  label="Item Type" name="itemType" rules={[{ required: true, message: "Enter Type" }]}>
+                   <Form.Item  label="Item Type" name="itemTypeId" rules={[{ required: true, message: "Enter Type" }]}>
                    <Select placeholder="Select ItemType" allowClear>
                     {ItemType.map((e)=>{
                       return(<Option key={e.itemTypeId} value={e.itemTypeId}>
@@ -335,7 +356,7 @@ compositionservice.getActiveComposition().then(res=>{
                     </Form.Item> 
                    </Col>
                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                    <Form.Item label="Brand" name="brand" rules={[{ required: true, message: "Enter Brand" }]} >
+                    <Form.Item label="Brand" name="brandId" rules={[{ required: true, message: "Enter Brand" }]} >
                     <Select
                         placeholder="Select Brand"
                         allowClear
@@ -353,7 +374,7 @@ compositionservice.getActiveComposition().then(res=>{
                    </Row>
                    <Row gutter={8}>
                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                    <Form.Item label="Category" name="category" rules={[{ required: true, message: "Enter category" }]}>
+                    <Form.Item label="Category" name="categoryId" rules={[{ required: true, message: "Enter category" }]}>
                        <Select placeholder="Select Category" allowClear>
                     {itemCategory.map((e)=>{
                         return(
@@ -366,7 +387,7 @@ compositionservice.getActiveComposition().then(res=>{
                     </Form.Item>
                    </Col>
                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                    <Form.Item label="Item Group" name="itemgroup" >
+                    <Form.Item label="Item Group" name="itemGroup" >
                     <Select
                      placeholder="Select Item Group" allowClear>
                      {Object.values(ItemGroupEnum).map((key,value)=>{
@@ -377,14 +398,14 @@ compositionservice.getActiveComposition().then(res=>{
                     </Form.Item>
                    </Col>
                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                     <Form.Item  label="Season"name="season">
+                     <Form.Item  label="Season"name="seasonId">
                      <Input placeholder="Season"  allowClear/>
                      </Form.Item>
                      </Col>
                    </Row>
                    <Row gutter={8}>
                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                      <Form.Item  label="Shahi Style" rules={[{ required: true, message: "Fill Shahi Style" }]}>
+                      <Form.Item  label="Shahi Style" name="internalStyleId" rules={[{ required: true, message: "Fill Shahi Style" }]}>
                       <Select showSearch placeholder="Select Shahi Style" allowClear >
                         {styledata.map((e)=>{
                         return(
@@ -397,7 +418,7 @@ compositionservice.getActiveComposition().then(res=>{
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                      <Form.Item   name="referenced" label="Referenced">
+                      <Form.Item   name="referenceId" label="Referenced" >
                       <Select
                         placeholder="Select Referenced"
                         allowClear>
@@ -405,6 +426,26 @@ compositionservice.getActiveComposition().then(res=>{
                       </Select>
                       </Form.Item>
                     </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                     <Form.Item  label="Facility"name="name">
+                     <Select
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                    placeholder="Select facility"
+                    >
+
+                     {facilitydata.map((e)=>{
+                    return(
+                    <Option key={e.id} value={e.id}>{e.name}
+                    </Option>)
+                  })
+
+                  }
+                  </Select>
+
+                     </Form.Item>
+                     </Col>
                     </Row>
 
                     <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Manufacturing Information</h1>
@@ -423,7 +464,7 @@ compositionservice.getActiveComposition().then(res=>{
                     </Form.Item>
                            </Col>
                            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                           <Form.Item name="isSubcontracted">
+                           <Form.Item name="isSubContract">
                 <div style={{ padding: '25px' }}>
                   <Checkbox>Check if Manufacturing Subcontracted</Checkbox>
                 </div>
@@ -435,7 +476,7 @@ compositionservice.getActiveComposition().then(res=>{
                          <h1 style={{ color: "grey", fontSize: "15px", textAlign: "left" }}>Sales Price Information</h1>
                          <Row gutter={8}>
                          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                <Form.Item   name="basicUOM" label="Basic UOM" rules={[{ required: true, message: "Enter Basic UOM" }]}>
+                <Form.Item   name="basicUom" label="Basic UOM" rules={[{ required: true, message: "Enter Basic UOM" }]}>
                 <Select placeholder="Select Basic UOM" allowClear>
                   {uomdata.map((e)=>{
                     return(
@@ -460,7 +501,7 @@ compositionservice.getActiveComposition().then(res=>{
                                  </Form.Item>
                        </Col>
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item name="conversionFactor"
+                        <Form.Item name="conversionFactorId"
                       label="Conversion Factor">
                       <Input placeholder="Conversion Factor" allowClear />
                         </Form.Item>
@@ -480,7 +521,7 @@ compositionservice.getActiveComposition().then(res=>{
                       </Form.Item>
                       </Col>
                       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item  name="salesPrice" label="Sales Price" rules={[{ required: true, message: "Enter Sales Price" }]}>
+                        <Form.Item  name="salePrice" label="Sales Price" rules={[{ required: true, message: "Enter Sales Price" }]}>
                         <Input placeholder="Sales  Price" allowClear />
                         </Form.Item>
                         </Col>
@@ -499,7 +540,7 @@ compositionservice.getActiveComposition().then(res=>{
                         </Row>
                         <Row gutter={8}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                          <Form.Item name="projectionOrder" label="Projection Order">
+                          <Form.Item name="projectionOrderId" label="Projection Order">
                           <Select showSearch placeholder="Select Projection Order" allowClear >
                       </Select>
                           </Form.Item>
@@ -511,21 +552,28 @@ compositionservice.getActiveComposition().then(res=>{
                       </Select>
                           </Form.Item>
                        </Col>
-                         
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                          <Form.Item name="composition" label="Composition">
-                          <Select showSearch placeholder="Select Composition" allowClear >
-                            {compositiondata.map((e)=>{
-                              return(<Option key={e.id} value={e.id}>{e.compositionCode}</Option>)
-                            })}
-                      </Select>
-                          </Form.Item>
-                       </Col>
+                            <Form.Item
+                      name="salePriceQty"
+                      label="Sales Price Qty"
+                    >
+                      <Input placeholder="Moq" allowClear />
+                    </Form.Item>
+                                  </Col>
+                                 
+                     
+                     
                         </Row>
                         
                         <Row gutter={8}>
-                      
-                     
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                            <Form.Item
+                      name="description"
+                      label="Description"
+                    >
+                      <Input placeholder="Description" allowClear />
+                    </Form.Item>
+                                  </Col>
                         </Row>
 </Card>
 </Col>
@@ -535,7 +583,7 @@ compositionservice.getActiveComposition().then(res=>{
                           <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Profit Controllers</h1>
                           <Row gutter={8}>
                           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                            <Form.Item name="buyingHouseCommission" label="Buying House Commission">
+                            <Form.Item name="buyingHouseCommision" label="Buying House Commission">
                             <Select
                         placeholder="Select BuyingHouseCommission"
                         allowClear
@@ -551,7 +599,7 @@ compositionservice.getActiveComposition().then(res=>{
                             </Form.Item>
                           </Col>
                           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                            <Form.Item  name="licence" label="Licence">
+                            <Form.Item  name="licenseId" label="Licence">
                             <Select
                         placeholder="Select Currency"
                         allowClear
@@ -568,7 +616,7 @@ compositionservice.getActiveComposition().then(res=>{
                            </Col>
                            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                            <Form.Item
-                      name="customGroup"
+                      name="customGroupId"
                       label="Custom Group"
                     >
                        <Select
@@ -589,7 +637,7 @@ compositionservice.getActiveComposition().then(res=>{
                             <Row gutter={8}>
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                             <Form.Item
-                      name="nationalDBK"
+                      name="nationalDbk"
                       label="National DBK%"
                     >
                       <Input placeholder="National DBK%" allowClear />
@@ -644,8 +692,16 @@ compositionservice.getActiveComposition().then(res=>{
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item name="salesPerson" label="Sales Person" rules={[{ required: true, message: "Enter Sales Person" }]}>
-                        <Input placeholder="Sales Person" allowClear />
+                        <Form.Item name="salePersonId" label="Sales Person" rules={[{ required: true, message: "Enter Sales Person" }]}>
+                        <Select placeholder="Select Approve" allowClear> 
+                          {employedata.map((e)=>{
+                            return(
+                              <Option key={e.employeeId} values={e.employeeId}>{e.firstName}
+
+                              </Option>
+                            )
+                          })}                       
+                        </Select>
                         </Form.Item>
                          </Col>
                          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -659,9 +715,9 @@ compositionservice.getActiveComposition().then(res=>{
                       </Form.Item>
                     </Col>
                     </Row>
-                    <Row >
+                    <Row gutter={8} >
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                      <Form.Item   name="productionGroup" label="Product Group" >
+                      <Form.Item  name="productGroup" label="Product Group" >
                       <Select
                         placeholder="Select Product Group"
                         allowClear>
@@ -669,12 +725,32 @@ compositionservice.getActiveComposition().then(res=>{
                       </Select>
                       </Form.Item>
                     </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                            <Form.Item
+                      name="moq"
+                      label="Moq"
+                    >
+                      <Input placeholder="Moq" allowClear />
+                    </Form.Item>
+                                  </Col>
+                                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                          <Form.Item name="composition" label="Composition">
+                          <Select showSearch placeholder="Select Composition" allowClear >
+                            {compositiondata.map((e)=>{
+                              return(<Option key={e.id} value={e.id}>{e.compositionCode}</Option>)
+                            })}
+                      </Select>
+                          </Form.Item>
+                       </Col>
+                    </Row>
+                    <Row >
+                   
                     </Row>
                               
                               <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Performance Responsible Team</h1>
                     <Row gutter={8}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                      <Form.Item name="responsible"label="Responsible" rules={[{ required: true, message: "Enter Responsible" }]}>
+                      <Form.Item name="responsiblePersonId"label="Responsible" rules={[{ required: true, message: "Enter Responsible" }]}>
                       {/* <Input placeholder="Responsible" allowClear /> */}
                       <Select placeholder="Select Responsible" allowClear>
 
@@ -689,7 +765,7 @@ compositionservice.getActiveComposition().then(res=>{
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                      <Form.Item name="approve" label="Approve" rules={[{ required: true, message: "Enter Approve" }]}>
+                      <Form.Item name="approver" label="Approve" rules={[{ required: true, message: "Enter Approve" }]}>
                       <Select placeholder="Select Approve" allowClear> 
                       {employedata.map((e)=>{
                         return(
@@ -702,7 +778,7 @@ compositionservice.getActiveComposition().then(res=>{
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                      <Form.Item name="productDesigner" label="Product Designer">
+                      <Form.Item name="productDesignerId" label="Product Designer">
                         <Select placeholder="Select Product Designer"
                         allowClear>
                       {employedata.map((e)=>{
@@ -767,15 +843,15 @@ compositionservice.getActiveComposition().then(res=>{
                            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                            <Form.Item
                 label="Order Confirmation Date"
-                name="orderConfirmationDate"
+                name="orderConfirmedDate"
               >
                 <DatePicker style={{ width: "100%" }} />
               </Form.Item>
 </Col>
 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
 <Form.Item
-                label="PCD"
-                name="pcd"
+                label="Order Close Date"
+                name="orderCloseDate"
               >
                 <DatePicker style={{ width: "100%" }} />
               </Form.Item>
@@ -783,7 +859,7 @@ compositionservice.getActiveComposition().then(res=>{
 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
 <Form.Item
                 label="1stEx-Factory Date"
-                name="1stExFactoryDate"
+                name="firstExFactoryDate"
               >
                 <DatePicker style={{ width: "100%" }} />
               </Form.Item>
@@ -800,8 +876,8 @@ compositionservice.getActiveComposition().then(res=>{
 </Col>
 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
 <Form.Item
-                      name="total orderqty"
-                      label="Total Order Qty"
+                      name="orderQty"
+                      label="Order Qty"
                     >
                       <Input placeholder="Total Order Qty" allowClear />
                     </Form.Item>
@@ -823,10 +899,8 @@ compositionservice.getActiveComposition().then(res=>{
 
                       </Card>
                     </Col>
-                     
                 </Row>
-                
-
+                <br></br>
                 <Row justify={'end'} style={{marginTop: '-30px'}}>
   <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}>
     <Button type='primary' htmlType='submit'>Submit</Button>
@@ -835,9 +909,11 @@ compositionservice.getActiveComposition().then(res=>{
     <Button onClick={onReset}>Reset</Button>
   </Col>
 </Row>
+                
 
           </Form>
          </Card>
+         
          </>
        )              
 }

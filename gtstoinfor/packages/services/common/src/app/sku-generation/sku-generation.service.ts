@@ -201,64 +201,7 @@ export class ItemSkuService{
   }
 
 
-  // async getSkuList(req:SKUlistFilterRequest):Promise<CommonResponseModel>{
-  //   try{
-  //     const getData= await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo'],
-  //     // const getData = await this.itemSkuRepo.getDestinationsByItem(req.itemCode)
-
-  //     where:{fgitemInfo:{fgitemId:req.itemNoId}}
-  //   })
-  //     if(getData.length> 0){
-  //       return new CommonResponseModel(true,1,'Data retreived',getData)
-  //     }else{
-  //       return new CommonResponseModel(false,0,'No data found')
-  //     }
-  //   }catch (err){
-  //     throw err
-  //   }
-  // }
-   
-
-  // async getSkuList(req:SKUlistFilterRequest):Promise<CommonResponseModel>{
-  //   try{
-  //     const getData= await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo'],
-  //     // const getData = await this.itemSkuRepo.getDestinationsByItem(req.itemCode)
-
-  //     where:{itemInfo:{itemId:req.itemNoId}}
-  //   })
-  //     if(getData.length> 0){
-  //       return new CommonResponseModel(true,1,'Data retreived',getData)
-  //     }else{
-  //       return new CommonResponseModel(false,0,'No data found')
-  //     }
-  //   }catch (err){
-  //     throw err
-  //   }
-  // }
-   
-
-//   async getSkuList(req:SKUlistFilterRequest):Promise<CommonResponseModel>{
-//     const data = await this.itemSkuRepo.getSkuList(req);
-//     if(data.length ===0){
-//       return new CommonResponseModel(false,0,'data not found');
-//     }
-//     const DataMap =new Map<string, SKUDTO>();
-// console.log(data,'ppppppppp');
-
-//     for(const res of data){
-//       if(!DataMap.has(res.item_code)){
-//         DataMap.set(res.item_id,new SKUDTO(res.item_code,res.item_id,[]));
-//       }
-//       const Sku =DataMap.get(res.itemNoId).sku;
-//       if(Sku){
-//       const data1 = new SKUListDto(res.item_sku_id,res.size_id,res.size,res.color_id,res.color,res.destination_id,res.destination)
-//       Sku.push(data1)
-//       }
-//     }
   
-//     const ListArray: SKUDTO[] = Array.from(DataMap.values());
-//     return new CommonResponseModel(true,1,'data retrived', ListArray);
-//   }
 
 
 // async getSkuList(req?: SKUlistFilterRequest): Promise<CommonResponseModel> {

@@ -1,5 +1,5 @@
 import { RmItemTypeEnum, RmSkuFeatureReq, RmSkuReq, RmStatusEnum } from "@project-management-system/shared-models";
-import { FabricStructuresService, RmSkuService } from "@project-management-system/shared-services";
+import { FabricStructuresService, FeatureService, RmSkuService } from "@project-management-system/shared-services";
 import { Badge, Button, Card, Checkbox, Col, Form ,Row,Select, Space, Tag, Tooltip} from "antd"
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
@@ -15,17 +15,14 @@ export const RmSkusGeneration = () => {
     const service = new RmSkuService()
     const [form] = Form.useForm()
     const fabricItemCodeService = new FabricStructuresService()
+    const featureService = new FeatureService()
 
     useEffect(() => {
         getFeatures()
     },[])
 
-    useEffect(() => {
-        console.log(features)
-    },[features])
-
     const getFeatures = () => {
-        service.getFeatures().then(res => {
+        featureService.getFeaturesInfo().then(res => {
             if(res.status){
                 setFeaturesInfo(res.data)
             }
@@ -45,6 +42,7 @@ export const RmSkusGeneration = () => {
 
     const onReset = () => {
         form.resetFields()
+        setFeatures([])
     }
 
     const onFinish = (val) => {
@@ -56,6 +54,7 @@ export const RmSkusGeneration = () => {
         service.createRmSkus(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
+                onReset()
             } else{
                 AlertMessages.getErrorMessage(res.internalMessage)
             }
@@ -118,7 +117,7 @@ export const RmSkusGeneration = () => {
                             <Badge.Ribbon text={option.featureName} color="volcano">    
                                 <Card title={`${option.option}`} size='small' style={{width:'300px'}}>
                                 <Row gutter={24}>
-                                    {option.optionInfo[0].option.map((e, index) => (
+                                    {option.optionInfo[0]?.option.map((e, index) => (
                                         <>
                                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6}}>
                                         <Tag key={index} color="#cde5d7" style={{color:'black',fontSize:'15px'}}>{e}</Tag>
@@ -146,7 +145,7 @@ export const RmSkusGeneration = () => {
                 <Row justify={'end'}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 2 }}>
                     <Form.Item>
-                        <Button type="primary" htmlType="submit">Submit</Button>
+                        <Button type="primary" htmlType="submit" disabled={features.length > 0 && form.getFieldValue('itemType')!= undefined && form.getFieldValue('itemCode') != undefined ? false : true}>Submit</Button>
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 2 }}>
