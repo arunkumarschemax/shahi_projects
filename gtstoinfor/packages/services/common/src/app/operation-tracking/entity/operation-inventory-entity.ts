@@ -9,14 +9,26 @@ export class OperationInventory {
     name:'operation_inventory_id'
 })
   operationIssuingId:number;
-   
-  @ManyToOne(type=>Style, style=>style.tracking,{  nullable:false, })
-  @JoinColumn({ name:"style_id"})
-  style: Style;
 
-  @ManyToOne(type=>OperationSequence, sequence=>sequence.tracking,{  nullable:false, })
-  @JoinColumn({ name:"operation_sequence_id"})
-  operationSequence: OperationSequence;
+  @Column('int',{
+    nullable:false,
+    name:'style_id'
+})
+styleId:number;
+
+@Column('int',{
+  nullable:false,
+  name:'operation_sequence_id'
+})
+operationSequenceId:number;
+   
+  // @ManyToOne(type=>Style, style=>style.tracking,{  nullable:false, })
+  // @JoinColumn({ name:"style_id"})
+  // style: Style;
+
+  // @ManyToOne(type=>OperationSequence, sequence=>sequence.tracking,{  nullable:false, })
+  // @JoinColumn({ name:"operation_sequence_id"})
+  // operationSequence: OperationSequence;
 
   @Column('varchar',{
     nullable:false,

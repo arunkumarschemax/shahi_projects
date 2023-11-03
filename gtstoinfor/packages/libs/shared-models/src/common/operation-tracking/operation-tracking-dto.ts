@@ -5,8 +5,9 @@ import { StyleDto } from "../style-management";
 export class OperationTrackingDto{
     operationTrackingId:number
     jobNumber:string;
-    style: StyleDto[]
-    operationSequence: OperationSequenceModel[]
+    styleId: number
+    operationSequenceId: number
+    operationInventoryId:number;
     operation:string;
     nextOperation:string;
     issuedQuantity:number;
@@ -27,8 +28,9 @@ export class OperationTrackingDto{
     constructor(
         operationTrackingId:number,
         jobNumber:string,
-        style: StyleDto[],
-        operationSequence: OperationSequenceModel[],
+        styleId: number,
+        operationSequenceId: number,
+        operationInventoryId:number,
         operation:string,
         nextOperation:string,
         issuedQuantity:number,
@@ -49,8 +51,9 @@ export class OperationTrackingDto{
     ){
         this.operationTrackingId = operationTrackingId
         this.jobNumber = jobNumber
-        this.style = style
-        this.operationSequence = operationSequence
+        this.styleId = styleId
+        this.operationSequenceId = operationSequenceId
+        this.operationInventoryId = operationInventoryId
         this.operation = operation
         this.nextOperation = nextOperation
         this.issuedQuantity = issuedQuantity
