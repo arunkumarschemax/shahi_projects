@@ -433,10 +433,11 @@ export class OrdersController {
 
     //cron job to fetch mails autmatically once per a day
     @Cron('* 1 * * *')
-    @Get('/processEmails')
-    async processEmails() {
+    @Post('/processEmails')
+    async processEmails() :Promise<CommonResponseModel>{
         try {
-            return this.ordersService.processEmails();
+            const test = await this.ordersService.processEmails();
+            console.log(test,'testttt')
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
@@ -457,7 +458,7 @@ export class OrdersController {
     async readCell(@Body() req:any): Promise<CommonResponseModel> {
         try {
             const pathval = './upload-files/pro_orders_1.xlsx'
-             this.ordersService.readCell(pathval,pathval);
+             return this.ordersService.readCell(pathval,pathval);
             } catch (err) {
                 return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
             }

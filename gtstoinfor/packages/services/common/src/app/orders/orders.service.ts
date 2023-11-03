@@ -114,7 +114,6 @@ export class OrdersService {
                     }
                 }
                 if((missedColumns.size !==0 )){
-                    console.log('release')
                     await transactionManager.releaseTransaction()
                     return new CommonResponseModel(false,24,'Required Columns missed',Array.from(missedColumns));
                 }
@@ -125,7 +124,6 @@ export class OrdersService {
                        mismatchColumns.add(rec);
                 })
                 if((mismatchColumns.size !==0 )){
-                    console.log('release_mismatch')
                     await transactionManager.releaseTransaction()
                     return new CommonResponseModel(false,23,'Columns does not match!',Array.from(mismatchColumns))
                 }
@@ -134,16 +132,22 @@ export class OrdersService {
                 if(updatedObj.Order_Plan_Number !== null){
                     dtoData = new SaveOrderDto(null,updatedObj.Year,updatedObj.Planning_Ssn_Cd,updatedObj.Planning_Ssn,updatedObj.Tgt_Ssn_Cd,updatedObj.Tgt_Ssn,updatedObj.Biz_Cd,updatedObj.Biz,updatedObj.Planning_Region_Code,updatedObj.Planning_Region_Name,updatedObj.Channel_Code,updatedObj.Channel_Name,updatedObj.Department,updatedObj.Dept_Cd,updatedObj.Cls1_Cd,updatedObj.Cls2_Cd,updatedObj.G_Dept,updatedObj.Sub_Category1,updatedObj.Core_Category,updatedObj.Sub_Category2,updatedObj.Sub_Category3,updatedObj.Production_Category_Fabric,updatedObj.Production_Category_FabricProcessing,updatedObj.Production_Category_Sewing,updatedObj.Production_Category_SewingProcessing,updatedObj.Planning_Sum_Code,updatedObj.Planning_Sum,updatedObj.Local_NameGHQ,updatedObj.Item_Cd,updatedObj.Item,updatedObj.Orig_Price,updatedObj.Main_Sample_Code,updatedObj.FR_Fabric_Code,updatedObj.FR_Fabric,updatedObj.Supplier_Raw_Material_Code,updatedObj.Supplier_Raw_Material,updatedObj.Raw_Material_Supplier_Code,updatedObj.Raw_Material_Supplier,updatedObj.Vendor_Code,updatedObj.Vendor,updatedObj.Sewing_Factory_Code,updatedObj.Sewing_Factory,updatedObj.Branch_Factory_Code,updatedObj.Branch_Factory,updatedObj.Coeff,updatedObj.month,updatedObj.Item_Brunch_Number,(updatedObj.Official_Plan_Std_Qty)?.toString().replace(/,/g,''),(updatedObj.Official_Plan_Fab_Prp_Pln_Qty)?.toString().replace(/,/g,''),(updatedObj.Official_Plan_PO_pr_Sls_Qty)?.toString().replace(/,/g,''),(updatedObj.Official_Plan_CO_Qty)?.toString().replace(/,/g,''),(updatedObj.Official_Plan_Stock_Qty)?.toString().replace(/,/g,''),updatedObj.Sls_Start_Dy ? moment(updatedObj.Sls_Start_Dy).format('MM-DD') : null,updatedObj.Publish_Flag_for_Factory,updatedObj.Publish_Date,updatedObj.Allc_End_Dy ? moment(updatedObj.Allc_End_Dy).format('MM-DD') : null,updatedObj.Sls_End_Dy ? moment(updatedObj.Sls_End_Dy).format('MM-DD') : null,updatedObj.GWH ? moment(updatedObj.GWH).format('MM-DD'): null,updatedObj.Order_Plan_Number,updatedObj.Order_Timing,updatedObj.Swng_Prd_Month ? moment(updatedObj.Swng_Prd_Month).format('YYYY-MM') : null,updatedObj.Swng_Prd_Week ? moment(updatedObj.Swng_Prd_Week).format('YYYY-MM-DD') : null,(updatedObj.Order_Plan_Qty).toString().replace(/,/g,''),(updatedObj.Order_Plan_QtyCoeff)?.toString().replace(/,/g,''),updatedObj.Trnsp_Mthd,updatedObj.Prod_Plan_Type,updatedObj.Ph11st,updatedObj.WH ? moment(updatedObj.WH).format('MM-DD') : null,updatedObj.WH_Act,updatedObj.WHAuto ? moment(updatedObj.WHAuto).format('MM-DD') : null,updatedObj.Yarn_DL_Requested,updatedObj.Yarn_DL_Answered,updatedObj.Yarn_DL_Auto,updatedObj.Yarn_Production_Due_Date_Auto,updatedObj.Yarn_Auto_Reflection_Date ? moment(updatedObj.Yarn_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.Yarn_Act_Dy,updatedObj.Yarn_Act_Qty,updatedObj.Yarn_Order_Number,updatedObj.Yarn_Order_Status,updatedObj.Yarn_Delivery_Date, updatedObj.Fbrc_DL_Requested ? moment(updatedObj.Fbrc_DL_Requested).format('MM-DD') : null,updatedObj.Fbrc_DL_Answered ? moment(updatedObj.Fbrc_DL_Answered).format('YYYY-MM-DD') : null,updatedObj.Fbrc_DL_Auto ? moment(updatedObj.Fbrc_DL_Auto).format('MM-DD') : null,updatedObj.Fbrc_Production_Due_Date_Auto,updatedObj.Fbrc_Auto_Reflection_Date ? moment(updatedObj.Fbrc_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.Fbrc_Act_Dy,updatedObj.Fbrc_Act_Qty,updatedObj.Fbrc_Order_Number,updatedObj.Fbrc_Order_Status,updatedObj.Fbrc_Delivery_Date ? moment(updatedObj.Fbrc_Delivery_Date).format('MM-DD') : null,updatedObj.Color_DL_Requested,updatedObj.Color_DL_Answered,updatedObj.Color_DL_Auto,updatedObj.Color_Production_Due_Date_Auto,updatedObj.Color_Auto_Reflection_Date ? moment(updatedObj.Color_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.Color_Act_Dy,updatedObj.Color_Act_Qty,updatedObj.Color_Order_Number,updatedObj.Color_Order_Status,updatedObj.Color_Delivery_Date,updatedObj.Trim_DL_Requested ? moment(updatedObj.Trim_DL_Requested).format('MM-DD') : null,updatedObj.Trim_DL_Answered ? moment(updatedObj.Trim_DL_Answered).format('YYYY-MM-DD') : null,updatedObj.Trim_DL_Auto ? moment(updatedObj.Trim_DL_Auto).format('MM-DD'): null,updatedObj.Trim_Production_Due_Date_Auto,updatedObj.Trim_Auto_Reflection_Date ? moment(updatedObj.Trim_Auto_Reflection_Date).format('MM-DD'):null,updatedObj.Trim_Act_Dy,updatedObj.Trim_Act_Qty,updatedObj.Trim_Order_Number,updatedObj.Trim_Order_Status,updatedObj.Trim_Delivery_Date,updatedObj.PO_DL_Requested ? moment(updatedObj.PO_DL_Requested).format('MM-DD') : null,updatedObj.PO_DL_Answered ? moment(updatedObj.PO_DL_Answered).format('YYYY-MM-DD') : null,updatedObj.PO_DL_Auto ? moment(updatedObj.PO_DL_Auto).format('MM-DD') : null,updatedObj.PO_Production_Due_Date_Auto,updatedObj.PO_Auto_Reflection_Date ? moment(updatedObj.PO_Auto_Reflection_Date).format('MM-DD') : null,updatedObj.PO_Act_Dy,updatedObj.PO_Act_Qty,updatedObj.PO_Order_Number,updatedObj.PO_Order_Status,updatedObj.Assort1,updatedObj.Assort2,updatedObj.NX_Assort,updatedObj.Solid,updatedObj.Order_Plan_QtySTOP,updatedObj.Fix_Flag,updatedObj.Alternative_Flag,updatedObj.Express_Line_Flag,updatedObj.Factory_Comment,updatedObj.Planned_EXF ? moment(updatedObj.Planned_EXF).format('YYYY-MM-DD') : null,updatedObj.EXF_ETD,updatedObj.ETD_WH,updatedObj.Sewing_Country_Region,updatedObj.Raw_Material_Original_Country_Region,updatedObj.Item_Drop,updatedObj.Create_Date ? moment(updatedObj.Create_Date).format('YYYY-MM-DD HH:mm') : null,updatedObj.Create_User_ID,updatedObj.Create_User_Name,updatedObj.Create_Function,updatedObj.Update_Date ? moment(updatedObj.Update_Date).format('YYYY-MM-DD HH:mm'): null,updatedObj.Update_User_ID,updatedObj.Update_User_Name,updatedObj.Update_Function,updatedObj.CountY,updatedObj.Sample,updatedObj.EXF ? moment(updatedObj.EXF).format('MM-DD'): null,updatedObj.BDDL ? moment(updatedObj.BDDL).format('MM-DD') : null,updatedObj.BDDLpast_Past,updatedObj.LTBD_EXF,updatedObj.New_BDDL,updatedObj.new_LTBD_EXF,updatedObj.LTPO_EXF,updatedObj.Qty_LTBD_EXF,updatedObj.Qty_LTPO_EXF,updatedObj.County2Y,updatedObj.PHASE,id,null,'bidhun');
                     let newDate
-                    if(dtoData.exf == null && dtoData.wh != null){
+                    if(dtoData.exf == null){
                     let inputDate = dtoData.wh ? moment(dtoData.wh).format('MM-DD') : null;
-                    let parts = inputDate.split('-');
-                    let months = parseInt(parts[0], 10);
-                    let day = parseInt(parts[1], 10);
-                    let numberOfDays = Number(dtoData.exfEtd);
-                    let dateObject = new Date(2023, months - 1, day);
-                    dateObject.setDate(dateObject.getDate() - numberOfDays);
-                    newDate = moment(dateObject).format('MM-DD');
-                    dtoData.exf=newDate;
+                    if(inputDate === null){
+                        await transactionManager.releaseTransaction()
+                        return new CommonResponseModel(false,101,'Null value in WH column')
+                    } else{
+
+                        let parts = inputDate.split('-');
+                        let months = parseInt(parts[0], 10);
+                        let day = parseInt(parts[1], 10);
+                        let numberOfDays = Number(dtoData.exfEtd);
+                        let dateObject = new Date(2023, months - 1, day);
+                        dateObject.setDate(dateObject.getDate() - numberOfDays);
+                        newDate = moment(dateObject).format('MM-DD');
+                        dtoData.exf=newDate;
+                    }
                     }
                     // console.log(dtoData,'dtoDatadtoDatadtoData')
                 } else {
@@ -1379,7 +1383,8 @@ async getWareHouseComparisionExcelData(req:YearReq): Promise<CommonResponseModel
 }
 
 //cron job to fetch mails autmatically once per a day
-async processEmails() {
+async processEmails():Promise<CommonResponseModel> {
+    const promiseA = () =>  new Promise((resolve, reject) => {
     // Set the environment variable to allow TLS
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     let filesArray = []
@@ -1507,12 +1512,16 @@ async processEmails() {
                 //   await this.readCell(savePath + attachment.params.name,attachment.params.name)
                 }
               });
+              fetch.on('end', () => {
+                resolve(attachments);
+              });
             });
             msg.once('end', () => {
               const logMessage = `${prefix}Finished email`;
               this.logger.info(logMessage);
             //   console.log(logMessage);
             });
+            
           });
 
           fetch.once('error', (err) => {
@@ -1540,10 +1549,11 @@ async processEmails() {
     imap.once('end', () => {
       const logMessage = 'IMAP Connection ended';
       this.logger.info(logMessage);
-    //   console.log(logMessage);
+      console.log();
     });
 
     imap.connect();
+    let testt = []
     
     const findAttachmentParts = (struct, attachments = []) => {
       for (let i = 0; i < struct.length; ++i) {
@@ -1563,80 +1573,92 @@ async processEmails() {
             const fileExtension = filename.split('.').pop().toLowerCase();
             if (allowedExtensions.includes('.' + fileExtension)) {
               attachments.push(struct[i]);
+              testt.push(struct[i])
               
             }
           }
         }
       }
+        // resolve(attachments)
           return attachments;
     };
+    console.log(testt,'ooooo')
+
 
     // console.log(filesArray)
             // this.readCell(savePath + filename,filename)
+        })
+        const getAttachments:any = await promiseA()
+        return new CommonResponseModel(true,2,'',getAttachments)
 
   }
 
 //   async getFiles 
   async readCell(filepath,filename):Promise<CommonResponseModel> {
-    let filesArray = []
-    // console.log(req,'filesdataaaa')
-    const fs = require('fs');
-    const files = fs.readdirSync('./upload-files/');
-    // console.log(files,'filesssss')
-    // const req = [{filePath:'./upload-files/pro_orders_1.xlsx',fileName:'pro_orders_1.xlsx'},{filePath:'./upload-files/projection_orders_1.xlsx',fileName:'projection_orders_1.xlsx'}]
-    for(const filerec of files){
-        const filename = filerec
-        const filepath = './upload-files/'+filerec
+    try{
+        let filesArray = []
+        // console.log(req,'filesdataaaa')
+        const fs = require('fs');
+        const files = fs.readdirSync('./upload-files/');
+        // console.log(files,'filesssss')
+        // const req = [{filePath:'./upload-files/pro_orders_1.xlsx',fileName:'pro_orders_1.xlsx'},{filePath:'./upload-files/projection_orders_1.xlsx',fileName:'projection_orders_1.xlsx'}]
+        for(const filerec of files){
+            const filename = filerec
+            const filepath = './upload-files/'+filerec
+    
+            // // filename = 'pro_order_sep3.xlsx';
+                // console.log(filename.split('.').pop(),'extension')
+                // console.log(filename,'filename')
+                const promiseA = () => new Promise((resolve, reject) => {
+                    xlsxFile(filepath, { getSheets: true }).then((sheets:any[])=>{
+                        resolve(sheets)
+                    });
+                })
+                const sheets:any = await promiseA()
+    
+    
+    
+                const promise = () => new Promise((resolve, reject) => {
+                    if(filename.split('.').pop() == 'csv'){
+                        resolve(null)
 
-        // // filename = 'pro_order_sep3.xlsx';
-            // console.log(filename.split('.').pop(),'extension')
-            // console.log(filename,'filename')
-            const promiseA = () => new Promise((resolve, reject) => {
-                xlsxFile(filepath, { getSheets: true }).then((sheets:any[])=>{
-                    resolve(sheets)
-                });
-            })
-            const sheets:any = await promiseA()
-
-
-
-            const promise = () => new Promise((resolve, reject) => {
-                if(filename.split('.').pop() == 'csv'){
-                    // const dataArray = []
-                    // fs.createReadStream(filepath)
-                    //     .on('error', () => {
-                    //         // handle error
-                    //     })
-        
-                    //     .pipe(csv())
-                    //     .on('data', (row) => {
-                    //         dataArray.push(Object(row))
-                    //     })
-        
-                    //     .on('end', () => {
-                    //         resolve(dataArray)
-                    //     })
-                }else if(filename.split('.').pop() == 'xlsx'){ 
-                    // xlsxFile(filepath, { getSheets: true }).then((sheets)=>{
-                    //     resolve(sheets)
-                    // });
-                    // const sheets = await promise()
-                    // console.log('hhhhhoo',sheets)
-                    let finalSheetName = ''
-                     for(const sheetname of sheets){
-                        if(sheetname.name == 'Production Plan Rawdata Export' || sheetname.name =='RawData' || sheetname.name =='Rawdata'){
-                            finalSheetName = sheetname.name
-                            break
-                        } else{
-                            filesArray.push(new ordersMailFileStatusArrayReq(filename,'Failed',`Sheet name doesn't match`,'-'))
-                            continue
+                        // const dataArray = []
+                        // fs.createReadStream(filepath)
+                        //     .on('error', () => {
+                        //         // handle error
+                        //     })
+            
+                        //     .pipe(csv())
+                        //     .on('data', (row) => {
+                        //         dataArray.push(Object(row))
+                        //     })
+            
+                        //     .on('end', () => {
+                        //         resolve(dataArray)
+                        //     })
+                    }else if(filename.split('.').pop() == 'xlsx'){ 
+                        // xlsxFile(filepath, { getSheets: true }).then((sheets)=>{
+                        //     resolve(sheets)
+                        // });
+                        // const sheets = await promise()
+                        // console.log('hhhhhoo',sheets)
+                        let finalSheetName = ''
+                         for(const sheetname of sheets){
+                            if(sheetname.name == 'Production Plan Rawdata Export' || sheetname.name =='RawData' || sheetname.name =='Rawdata'){
+                                finalSheetName = sheetname.name
+                                break
+                            } else{
+                                continue
+                            }
                         }
-                    }
+                        if(finalSheetName){
+    
                             xlsxFile(filepath,{sheet:finalSheetName},{transformData(data){
                                 // console.log(data)
                                 // data.slice(0,3)
-                                // console.log(data)
-                                return data}})
+                                console.log(data,'-----------data')
+                                return data
+                            }})
                             
                               .then((rows) => {
                                 let columnNames
@@ -1667,53 +1689,64 @@ async processEmails() {
                                 //   return obj;
                                 });
                               });
-                }else{
-                    
-                }
-            })
-            const dataArray = await promise();
-        
-            if(dataArray){
-                
-                const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS,'Email')
-                // console.log(filepath,'jjjjj')
-                // console.log(filename,'jjjjj')
-                if(saveFilePath.status){
-                    // console.log(dataArray,'------------------------------------')
-                    const saveProjOrders = await this.saveOrdersData(dataArray,saveFilePath.data.id,9)
-                    // console.log(saveProjOrders,'saveProjOrders')
-                    let req = new FileStatusReq();
-                    req.fileId = saveFilePath.data.id;
-                    req.userName = 'Bidhun'
-                    if(saveProjOrders.status){
-                        req.status = 'Success';
-                    }else{
-                        req.failedReason = saveProjOrders.internalMessage
-                        if(saveProjOrders?.data){
-                            // console.log(saveProjOrders.data,'hhhhh')
-                            req.columns = saveProjOrders.data
-                            // const resData = saveProjOrders.data
                         }else{
-                            req.columns = ''
+                            filesArray.push(new ordersMailFileStatusArrayReq(filename,'Failed',`Sheet name doesn't match`,'-'))
+                           resolve(null)
                         }
-                        req.status = 'Failed';
+                    }else{
+                        
                     }
-                    // console.log(req,'valuuuuu')
-                    const updateFileStatus = await this.updateFileStatus(req)
-                    filesArray.push(new ordersMailFileStatusArrayReq(filename,req.status,req.status === 'Failed' ? req.failedReason : '' , req.status === 'Failed' ? req.columns : ''))
+                })
+                const dataArray = await promise();
+            
+                if(dataArray){
+                    
+                    const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS,'Email')
+                    // console.log(filepath,'jjjjj')
+                    // console.log(filename,'jjjjj')
+                    if(saveFilePath.status){
+                        // console.log(dataArray,'------------------------------------')
+                        const saveProjOrders = await this.saveOrdersData(dataArray,saveFilePath.data.id,9)
+                        // console.log(saveProjOrders,'saveProjOrders')
+                        let req = new FileStatusReq();
+                        req.fileId = saveFilePath.data.id;
+                        req.userName = 'Bidhun'
+                        if(saveProjOrders.status){
+                            req.status = 'Success';
+                        }else{
+                            req.failedReason = saveProjOrders.internalMessage
+                            if(saveProjOrders?.data){
+                                // console.log(saveProjOrders.data,'hhhhh')
+                                req.columns = saveProjOrders.data
+                                // const resData = saveProjOrders.data
+                            }else{
+                                req.columns = ''
+                            }
+                            req.status = 'Failed';
+                        }
+                        // console.log(req,'valuuuuu')
+                        const updateFileStatus = await this.updateFileStatus(req)
+                        filesArray.push(new ordersMailFileStatusArrayReq(filename,req.status,req.status === 'Failed' ? req.failedReason : '' , req.status === 'Failed' ? req.columns : ''))
+                    }else{
+                        // return false
+                        filesArray.push(new ordersMailFileStatusArrayReq(filename,'Failed',saveFilePath.internalMessage,'-'))
+                    }
+                    // return dataArray
                 }else{
-                    console.log('falseeee')
-                    // return false
-                    filesArray.push(new ordersMailFileStatusArrayReq(filename,'Failed',saveFilePath.internalMessage,'-'))
+                    // return dataArray
                 }
-                // return dataArray
-            }else{
-                // return dataArray
-            }
+        }
+    
+        const sendMail = this.sendMail('karthikeyan.nallamuthu@shahi.co.in','Uploded Files Status',filesArray)
+        if(sendMail){
+            return new CommonResponseModel(true,1,'',filesArray)
+        } else{
+            return new CommonResponseModel(true,1,'Something went wrong in sending mail',filesArray)
+        }
+    } catch(err){
+        throw err
     }
-
-    this.sendMail('karthikeyan.nallamuthu@shahi.co.in','Uploded Files Status',filesArray)
-    return 
+ 
     
     }
 
@@ -2353,42 +2386,10 @@ async getLatestPreviousFilesData():Promise<CommonResponseModel>{
 }
 
 async sendMail(to: string, subject: string, message : any[]) {
-    // const name = to.replace(/@gmail.com/gi, '').replace(/[^a-zA-Z.@]/g, '').replace(/@schemaxtech.com/gi, '');
-    const name = to.replace(/[^a-zA-Z.@]/g, '').split("@")[0];
-    console.log(name);
-
-    // const emailBody = this.birthdayTemplate.replace(/{{name}}/g, name);
-    const emailBody = []
-    // for(const rec of message){
-    //     emailBody.push(Object.keys(rec))
-    // }
     let content = message.reduce(function(a, b) {
         return a + '<tr bgcolor="#ffffff"><td>' + b.fileName + '</a></td><td>' + b.status + '</td><td>' + b.reason + '</td><td>' + b.columns + '</td></tr>';
     }, '');
-
-    // const pdfOptions = {
-    //   format: 'auto',
-    //   base: 'file:///' + path.resolve(process.cwd(), 'src', 'email', 'templates'),
-    // };
-
-    // const pdfBuffer = await new Promise<Buffer>((resolve, reject) => {
-    //   pdf.create(emailBody, pdfOptions).toBuffer((err, buffer) => {
-    //     if (err) {
-    //       reject(err);
-    //     } else {
-    //       resolve(buffer);
-    //     }
-    //   });
-    // });
-
-    // const attachments = [
-    //   {
-    //     filename: 'email_body.pdf',
-    //     content: pdfBuffer,
-    //   },
-    // ];
-
-    await this.transporter.sendMail({
+    const sendMail = await this.transporter.sendMail({
       from: 'uma.boddeda@schemaxtech.com',
       to,
       subject,
@@ -2399,6 +2400,8 @@ async sendMail(to: string, subject: string, message : any[]) {
 
     }
     });
+    console.log(sendMail,'---------------sendmail')
+    return sendMail
   }
 
 

@@ -225,4 +225,12 @@ export class OrdersService extends CommonAxiosService {
     async getLatestPreviousFilesData():Promise<CommonResponseModel>{
         return this.axiosPostCall(this.ordersController + "/getLatestPreviousFilesData")
     }
+
+    async processEmails():Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.ordersController + "/processEmails")
+    }
+
+    async readCell():Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.ordersController + "/readCell")
+    }
 }
