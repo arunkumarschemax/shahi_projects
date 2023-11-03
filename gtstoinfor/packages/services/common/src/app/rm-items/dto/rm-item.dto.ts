@@ -41,7 +41,7 @@ export class RmCreationDto{
     fabricFinishId:number
 
     @ApiProperty()
-    responsible:string
+    responsibleId:number
 
     @ApiProperty()
     devResponsible:string

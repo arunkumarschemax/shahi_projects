@@ -79,12 +79,11 @@ placement:string;
   })
   fabricFinishId: number;
 
-@Column("varchar",{
+@Column("int",{
     nullable: false,
-    length: 255,
-    name:"responsible"
+    name:"responsible_id"
 })
-responsible:string;
+responsibleId:number;
 
 @Column("varchar",{
     nullable: false,

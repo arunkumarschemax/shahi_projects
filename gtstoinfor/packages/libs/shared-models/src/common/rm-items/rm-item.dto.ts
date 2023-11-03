@@ -14,7 +14,7 @@ export class RmCreationDTO{
     itemIypeId:number;
     placement:string;
     fabricFinishId:number;
-    responsible:string;
+    responsibleId:number;
     devResponsible:string;
     basicUomId:number;
     altUomId:number;
@@ -37,7 +37,7 @@ export class RmCreationDTO{
     createdUser: string;
     updatedUser: string;
     versionFlag: number;
-    constructor(rmitemId:string,itemCode:string,itemCategoryId:number, pchId:number,facilityID:number,genericCode:string,structure:string,quality:string,description:string,itemIypeId:number,placement:string, fabricFinishId:number,responsible:string,devResponsible:string, basicUomId:number,altUomId:number,multiplicationFactor:string,currencyId:number,price:string,tax:string,purchasePriceQty:string,saleTax:string,exciseDuty:string,licenseId:number,property:PropertyEnum,SaleItem:string,wastage:string, costGroup:string, remarks:string,itemGroup:number,useInOperation:string,isActive: boolean,createdUser: string,updatedUser: string,versionFlag: number){
+    constructor(rmitemId:string,itemCode:string,itemCategoryId:number, pchId:number,facilityID:number,genericCode:string,structure:string,quality:string,description:string,itemIypeId:number,placement:string, fabricFinishId:number,responsibleId:number,devResponsible:string, basicUomId:number,altUomId:number,multiplicationFactor:string,currencyId:number,price:string,tax:string,purchasePriceQty:string,saleTax:string,exciseDuty:string,licenseId:number,property:PropertyEnum,SaleItem:string,wastage:string, costGroup:string, remarks:string,itemGroup:number,useInOperation:string,isActive: boolean,createdUser: string,updatedUser: string,versionFlag: number){
         this.rmitemId=rmitemId;
         this.itemCode=itemCode;
         this.itemCategoryId=itemCategoryId;
@@ -50,7 +50,7 @@ export class RmCreationDTO{
         this.itemIypeId=itemIypeId;
         this.placement=placement;
         this.fabricFinishId=fabricFinishId;
-        this.responsible=responsible;
+        this.responsibleId=responsibleId;
         this.devResponsible=devResponsible;
         this.basicUomId=basicUomId;
         this.altUomId=altUomId;
