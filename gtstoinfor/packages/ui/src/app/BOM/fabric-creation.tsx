@@ -4,6 +4,7 @@ import Commonscreen from "./common-screen";
 import {
   CurrencyService,
   LiscenceTypeService,
+  RmCreationService,
   TaxesService,
   UomService,
 } from "@project-management-system/shared-services";
@@ -23,7 +24,7 @@ export const FabricBomCreation = () => {
   const [taxRate, setTaxRate] = useState(0);
   const [tax,setTax] = useState([])
   const taxService = new TaxesService
-
+const rmservice = new RmCreationService
 
   useEffect(() => {
     getAllCurrencies();
@@ -90,6 +91,21 @@ export const FabricBomCreation = () => {
     setTaxRate(Number(value));
   };
 
+  const saveFabric=()=>{
+    form.validateFields().then((values)=>{
+rmservice.createRm(values).then((res)=>{
+  if(res.status){
+    AlertMessages.getSuccessMessage(res.internalMessage)
+
+  }
+  else{
+    AlertMessages.getWarningMessage(res.internalMessage)
+  }
+}).catch(err =>{
+  AlertMessages.getWarningMessage(err.message)
+})
+    })
+  }
   const calculateTotal = () => {
     const price = form.getFieldValue("price");
     const selectedTaxId = form.getFieldValue("tax");
