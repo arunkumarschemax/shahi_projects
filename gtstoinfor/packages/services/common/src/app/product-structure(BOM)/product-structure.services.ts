@@ -62,7 +62,7 @@ export class ProductStructureService {
 
           if (save){
 
-            return new ProductStructureResponseModel(true, 0, "SMV Efficency Created Sucessfully");
+            return new ProductStructureResponseModel(true, 0, "SMV Efficency Created Sucessfully",save);
 
           } else {
 
@@ -98,7 +98,7 @@ export class ProductStructureService {
   
             if (save){
   
-              return new FgRmMappingResponseModel(true, 0, "FG-RM Mapping Sucessfully");
+              return new FgRmMappingResponseModel(true, 0, "FG-RM Mapping Sucessfully",save);
   
             } else {
   

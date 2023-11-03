@@ -217,7 +217,7 @@ export function ItemCreationDetailView  (props: Props)  {
            })        
          }
       function getLicenseType(DATA) {
-        const foundLicense = Object.assign(licence).find(license => license.liscenceTypeId === DATA);
+        const foundLicense = Object.assign(licence).find(license => (license.liscenceTypeId).toLocaleString() === DATA);
         return foundLicense ? foundLicense.liscenceType : "-";
       }
     
@@ -246,7 +246,6 @@ export function ItemCreationDetailView  (props: Props)  {
         return ftname ? ftname : '-';
       }
       function getEmpPdMerchant(data) {
-        console.log(data,'mer');
         
         const foundemp = Object.assign(employedata).find((emp) => emp.employeeId === data);
         const ftname = `${foundemp?.firstName} ${foundemp?.lastName}`;
@@ -263,7 +262,6 @@ export function ItemCreationDetailView  (props: Props)  {
         return ftname ? ftname : '-';
       }
       function getItemType(data) {
-        console.log(ItemType,'0');
         
         const foundiType = ItemType.find(itemDta => itemDta.itemTypeId === data);
         return foundiType ? foundiType.itemType : "-";
@@ -278,7 +276,6 @@ export function ItemCreationDetailView  (props: Props)  {
         return foundiType ? foundiType.uom : "-";
       }
       function getItemGroups(data) {
-        console.log(data,'----------------');
         
         const foundiType = itemgroup.find(itemDta => itemDta.itemGroupId=== data);
         return foundiType ? foundiType.itemGroup : "-";
@@ -289,14 +286,12 @@ export function ItemCreationDetailView  (props: Props)  {
       //   return foundStyle ? foundStyle.style : "-";
       // }
       function getSearchGroup(data) {
-        console.log(searchdata,'seraaaa');
         
         const foundStyle = searchdata.find(dat => dat.id === data);
         return foundStyle ? foundStyle.searchGrpName : "-";
       }
     function getComposition(data) {
         const foundComp =  compositiondata.find(dat => (dat.id ).toLocaleString()=== data);
-         console.log(compositiondata[data],"foundComp")
         return foundComp ? foundComp.compositionCode : "-";
       }
       function getBrand(data) {
@@ -323,7 +318,6 @@ export function ItemCreationDetailView  (props: Props)  {
       }
       function getCurrency(data) {
         const foundC = currency.find(dat => (dat.currencyId).toLocaleString() === data);
-         console.log(currency, "foundC")
         return foundC ? foundC.currencyName : "-";
       }
       
