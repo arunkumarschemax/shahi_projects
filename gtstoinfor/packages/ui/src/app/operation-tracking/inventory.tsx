@@ -73,24 +73,24 @@ export const InventoryView = () => {
             width:"50px"
 
         },
-        {
-            title: 'UOM ',
-            dataIndex: 'physicalUom',
-            align:"right",
-            width:"100px"
-        },
+        // {
+        //     title: 'UOM ',
+        //     dataIndex: 'physicalUom',
+        //     align:"right",
+        //     width:"100px"
+        // },
         {
             title: 'ISSUEDQUANTITY ',
             dataIndex: 'issuedQuantity',
             align:"right",
             width:"100px"
         },
-        {
-            title: 'ISSUEDUOM` ',
-            dataIndex: 'issuedUom',
-            align:"right",
-            width:"100px"
-        },
+        // {
+        //     title: 'ISSUEDUOM` ',
+        //     dataIndex: 'issuedUom',
+        //     align:"right",
+        //     width:"100px"
+        // },
         // {
         //     title: 'DAMAGEDQUANTITY ',
         //     dataIndex: 'damagedQuantity'
@@ -103,7 +103,7 @@ export const InventoryView = () => {
             title: 'REJECTEDQUANTITY`',
             dataIndex: 'rejectedQuantity',
             align:"right",
-            width:"200px"
+            width:"100px"
 
         },
         // {
