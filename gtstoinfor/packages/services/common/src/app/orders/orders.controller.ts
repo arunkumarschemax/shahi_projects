@@ -432,7 +432,7 @@ export class OrdersController {
     }
 
     //cron job to fetch mails autmatically once per a day
-    @Cron('* 1 * * *')
+    @Cron('0 1 * * *')
     @Post('/processEmails')
     async processEmails() :Promise<CommonResponseModel>{
         try {
@@ -453,7 +453,7 @@ export class OrdersController {
         // }
     }
 
-    @Cron('* 2 * * *')
+    @Cron('0 2 * * *')
     @Post('/readCell')
     async readCell(@Body() req:any): Promise<CommonResponseModel> {
         try {
