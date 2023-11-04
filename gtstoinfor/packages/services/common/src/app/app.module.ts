@@ -66,6 +66,7 @@ import { SkuGenerationModule } from './sku-generation/sku-generation.module';
 import { SampleDevReqModule } from './sample-dev-request/sample-dev-request.module';
 import { StyleOrderModule } from './style-order/style-order.module';
 import { OperationTrackingModule } from './operation-tracking/operation-tracking.module';
+import { RackPositionModule } from './rm_locations/rack-position.module';
 
 
 @Module({
@@ -121,6 +122,7 @@ import { OperationTrackingModule } from './operation-tracking/operation-tracking
     ColourModule,
     BuyersDestinationModule,
     BomModule,
+    RackPositionModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,M3MastersModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,OperationTrackingModule],
   controllers: [AppController],
   providers: [AppService],

@@ -143,6 +143,8 @@ import MarketIssueDetail from "./sample-development/market-detail"
 import IssueScreen from "./operation-tracking/issue"
 import { InventoryView } from "./operation-tracking/inventory"
 import StyleOrderCreation from "./style-orders/style-order-form"
+import RackPosition from "./rm_locations/rack-positions"
+import PositionGrid from "./rm_locations/rack-positions grid"
 
 
 export const AppRoutes = () => {
@@ -185,8 +187,12 @@ export const AppRoutes = () => {
                 } >
                     <Route path='/user-management/users-from' element={<UserCreationForm />} />
                     <Route path='/user-management/users-view' element={<UsersView />} />
+                    
 
                     <Route path='/masters'>
+                        
+                    <Route path='rackPosition-form' element={<RackPosition/>}/>
+                    <Route path='rackPosition-view' element={<PositionGrid/>}/>
                     <Route path='m3-itemcodes' element={<M3Masters
                         isUpdate={false}
                         closeForm={() => { } }
@@ -557,6 +563,9 @@ export const AppRoutes = () => {
                     <Route path='/sourcing-requisition-report' element={<SourcingRequisitionReport/>}/>
                     <Route path='/indent-form' element={<SourcingRequisitionDynamicForm/>}/>
                     <Route path='/requisition-view' element={<SourcingRequisitionDynamicView/>}/>
+
+
+
                  
 
 

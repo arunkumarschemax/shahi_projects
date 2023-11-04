@@ -25,6 +25,12 @@ export const baseMRouterList = [
         filepath: "masters",
         children: [
             {
+                label: "Rack Positions",
+                key: "rackPosition-view",
+                path: "rackPosition-view",
+                filepath: "/rackPosition-view",
+            },
+            {
                 label: "M3 Items",
                 key: "m3-itemcodes-view",
                 path: "m3-itemcodes-view",
@@ -160,6 +166,7 @@ export const baseMRouterList = [
 ]
 
 export const baseRouterList = [
+    
     {
         label: "Masters",
         key: "masters",
@@ -167,6 +174,12 @@ export const baseRouterList = [
         // icon: <PicCenterOutlined />,
         filepath: "masters",
         children: [
+            {
+                label: "Rack Positions",
+                key: "rm-locations-view",
+                path: "rm-locations-view",
+                filepath: "/rackPosition-view",
+            },
             {
                 label: "M3 Items",
                 key: "m3-itemcodes-view",
