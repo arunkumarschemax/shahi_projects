@@ -130,7 +130,7 @@ export const SampleDevForm = () => {
 
   const getBrands = () => {
     brandService.getAllBrands().then((res) => {
-      if (res.status) {
+      if (res.status) { 
         setBrands(res.data);
       }
     });
@@ -176,9 +176,9 @@ export const SampleDevForm = () => {
 
   const onFinish = (val) =>{
     console.log(tabsData)
-    const req = new SampleDevelopmentRequest(val.locationId,val.styleId,val.pchId,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.brandId,
-      val.costRef,val.m3Style,val.contact,val.extension,val.samValue,val.dmmId,val.technicianId,val.product,val.type,val.conversion,val.madeIn,tabsData.sizeData)
-      sampleService.createSampleDev(req).then((res)=>{
+    const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.samValue,val.dmmId,val.technicianId,val.product,val.type,val.conversion,val.madeIn,val.remarks,tabsData.sizeData,tabsData.fabricsData,tabsData.trimsData,tabsData.processData)
+    console.log(req)
+      sampleService.createSampleDevelopmentRequest(req).then((res)=>{
         if(res.status){
           message.success(res.internalMessage,2)
         }else{
@@ -417,12 +417,7 @@ export const SampleDevForm = () => {
               <Input />
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}
           >
             <Form.Item name="image" label="Attach File">
               <Upload
@@ -582,7 +577,7 @@ export const SampleDevForm = () => {
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
-              name="typeId"
+              name="type"
               label="Type"
               rules={[{ required: false, message: "" }]}
             >
@@ -613,7 +608,7 @@ export const SampleDevForm = () => {
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
-              name="countryId"
+              name="madeIn"
               label="Made In"
               rules={[{ required: true, message: "" }]}
             >
