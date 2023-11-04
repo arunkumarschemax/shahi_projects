@@ -63,7 +63,7 @@ issuedQuantity:number;
     nullable:false,
     name:'issued_uom_id'
 })
-issuedUomId:string;
+issuedUomId:number;
 
   @Column('int',{
     nullable:false,
