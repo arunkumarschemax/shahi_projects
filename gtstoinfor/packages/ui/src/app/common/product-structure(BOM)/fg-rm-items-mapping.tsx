@@ -5,6 +5,7 @@ import AlertMessages from '../common-functions/alert-messages';
 import Checkbox from 'antd/lib/checkbox';
 import { GlobalVariables, ProductGroupFilter } from '@project-management-system/shared-models';
 import { UndoOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
 
 export const FgRMMappingForm = () => {
@@ -97,7 +98,9 @@ const getRmItemsDatabyProductGroupId1 = () => {
 
 
   return (
-    <Card size="small" title="RM TO FG Mapping"  >
+    <Card size="small" title="RM TO FG Mapping"  extra={<Link to='/product-structure/fg-rm-mapping-view' >
+    <span style={{color:'white'}} ><Button type={'primary'} >View</Button> </span>
+    </Link>} >
       <Form layout="horizontal" form={form} onFinish={onFinish}>
       <Row gutter={24}>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5}} lg={{ span:6 }} xl={{ span: 8 }}>

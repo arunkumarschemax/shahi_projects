@@ -1,4 +1,4 @@
-import { productStructureService } from "@project-management-system/shared-services"
+import { ItemCreationService, RmCreationService, productStructureService } from "@project-management-system/shared-services"
 import React, { useState, useEffect, useRef } from 'react';
 import { Table, Card,  Input, Button, Form, Row, Col, Select,} from 'antd';
 import Highlighter from 'react-highlight-words';
@@ -18,35 +18,31 @@ const FgRmItemBomView   = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
-  const service = new FeatureService()
+  const fgservice = new ItemCreationService()
+  const Rmservice = new RmCreationService()
   const productstructureservice = new productStructureService()
 
   const { Option } = Select;
-  const [featureCode, setFeatureCode] = useState<any[]>([])
-  const [featureName, setFeatureName] = useState<any[]>([])
-  const [optGroup, setOptionGroup] = useState<any[]>([])
-
+  const [fgCode, setFgCode] = useState<any[]>([])
+  const [RmCode, setRMCode] = useState<any[]>([])
 
   useEffect(() => {
-    getAllFeatureData();
-    featureNameData();
-    featureCodeData();
-    optionGroupData();
+    getAllRmSkuData();
+    RmCodeData();
+    getFgItemsDropdown();
   }, [])
   
 
-    const getAllFeatureData= () => {
+    const getAllRmSkuData= () => {
         const req = new RmMappingFilterRequest();
         
-        if (form.getFieldValue('featureCode') !== undefined) {
-            req.featureName = form.getFieldValue('featureCode');
+        if (form.getFieldValue('rmItcode') !== undefined) {
+            req.rmItemCode = form.getFieldValue('rmItcode');
         }
-        if (form.getFieldValue('featureName') !== undefined) {
-            req.fgItemCode = form.getFieldValue('featureName');
+        if (form.getFieldValue('fgItemCode') !== undefined) {
+            req.fgItemCode = form.getFieldValue('fgItemCode');
         }
-        if (form.getFieldValue('optionGroup') !== undefined) {
-            req.optionGroup = form.getFieldValue('optionGroup');
-        }
+      
         productstructureservice.getRmMapped(req).then(res => {
       if (res.status) {
         setLTData(res.data);
@@ -131,31 +127,28 @@ const FgRmItemBomView   = () => {
   };
   const resetHandler = () => {
     form.resetFields();
-    getAllFeatureData();
+    getAllRmSkuData();
 
 }
 
-  const featureNameData = () =>{
-    service.getFeatureName().then((res)=>{
+const getFgItemsDropdown = () =>{
+    fgservice.getFgItemsDropdown().then(res=>{
+      if(res.status){
+        setFgCode(res.data)
+      } else {
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    })
+
+  }
+const RmCodeData = () =>{
+    Rmservice.getRmItemsData().then((res)=>{
         if(res.status){
-            setFeatureName(res.data)
+            setRMCode(res.data)
         }
     })
 }
-const featureCodeData = () =>{
-    service.getFeatureCode().then((res)=>{
-        if(res.status){
-            setFeatureCode(res.data)
-        }
-    })
-}
-const optionGroupData = () =>{
-    service.getOptionGropup().then((res)=>{
-        if(res.status){
-            setOptionGroup(res.data)
-        }
-    })
-}
+
 
 
 const columnsSkelton: any = [
@@ -166,26 +159,24 @@ const columnsSkelton: any = [
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
-      title: 'Feature Code',
-      dataIndex: 'feature_code',
+      title: 'Fg Item Code',
+      dataIndex: 'fg_item_code',
       align: 'center',
       sorter: (a, b) => a.feature_code?.localeCompare(b.feature_code),
       ...getColumnSearchProps('feature_code'),
     },
     {
-      title: 'Feature Name',
-      dataIndex: 'feature_name',
-      align: 'center',
+      title: 'RM Item Code',
+      dataIndex: 'rm_item_code',
+      align: 'center', 
+    //   render: (text, record) => {
+    //     return <>
+    //       <Button type='link' onClick={() => { showModal1(record) }}>{record.poAndLine}</Button>
+    //     </>
+    //   },
       sorter: (a, b) => a.feature_name?.localeCompare(b.feature_name),
       ...getColumnSearchProps('feature_name'),
     },
-    {
-        title: 'Option',
-        dataIndex: 'option_group',
-        align: 'center',
-        sorter: (a, b) => a.option_group?.localeCompare(b.option_group),
-        ...getColumnSearchProps('option_group'),
-      },
 
     ];
   
@@ -197,46 +188,36 @@ const columnsSkelton: any = [
   return (
       <>
       <Card title={<span >Fg Rm Mapping</span>}
-    style={{textAlign:'left'}} headStyle={{ border: 0 }} 
-    extra={<Link to='/materialCreation/feature-creation' >
+    // style={{textAlign:'left'}} headStyle={{ border: 0 }} 
+    extra={<Link to='/product-structure/fg-rm-mapping' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
       <Card >
-      <Form onFinish={getAllFeatureData} form={form} layout='vertical'>
+      <Form onFinish={getAllRmSkuData} form={form} layout='vertical'>
                 <Row gutter={24}>
+                
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='featureCode' label='Feature Code' >
-                            <Select showSearch placeholder="Select Feature Code" optionFilterProp="children" allowClear >
-                                {
-                                    featureCode?.map((inc: any) => {
-                                        return <Option key={inc.feature_option_id} value={inc.feature_code}>{inc.feature_code}</Option>
-                                    })
-                                }
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='featureName' label='Feature Name' >
+                        <Form.Item name='rmItcode' label='Rm Item Code' >
                             <Select
                                 showSearch
-                                placeholder="Select Size Feature Name"
+                                placeholder="Select Size Rm Item Code"
                                 optionFilterProp="children"
                                 allowClear
                             >
                                 {
-                                    featureName?.map((inc: any) => {
-                                        return <Option key={inc.feature_id} value={inc.feature_name}>{inc.feature_name}</Option>
+                                    RmCode?.map((inc: any) => {
+                                        return <Option key={inc.rmitemId} value={inc.itemCode}>{inc.itemCode}</Option>
                                     })
                                 }
                             </Select>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='optionGroup' label='Option' >
-                            <Select showSearch placeholder="Select Option" optionFilterProp="children" allowClear>
+                        <Form.Item name='fgItemCode' label='Fg Item Code' >
+                            <Select showSearch placeholder="Select Fg Item Code" optionFilterProp="children" allowClear>
                                 {
-                                    optGroup?.map((inc: any) => {
-                                        return <Option key={inc.feature_option_id} value={inc.option_group}>{inc.option_group}</Option>
+                                    fgCode?.map((inc: any) => {
+                                        return <Option key={inc.fgitemId} value={inc.itemCode}>{inc.itemCode}</Option>
                                     })
                                 }
                             </Select>
