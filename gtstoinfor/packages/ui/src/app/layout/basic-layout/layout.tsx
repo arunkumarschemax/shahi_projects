@@ -84,6 +84,12 @@ export const baseMRouterList = [
                 path: "size/size-view",
                 filepath: "size/size-view",
             },
+            {
+                label: "Buyers",
+                key: "buyers",
+                path: "buyers/buyers-view",
+                filepath: "buyers/buyers-view",
+            },
           
         ],
     },
@@ -215,6 +221,12 @@ export const baseRouterList = [
                 key: "Size",
                 path: "size/size-view",
                 filepath: "size/size-view",
+            },
+            {
+                label: "Buyers",
+                key: "buyers",
+                path: "buyers/buyers-view",
+                filepath: "buyers/buyers-view",
             },
           
         ],

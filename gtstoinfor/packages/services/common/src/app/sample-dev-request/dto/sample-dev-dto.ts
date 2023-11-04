@@ -69,7 +69,7 @@ export class SampleDevReqDto {
   conversion:string;
 
   @ApiProperty()
-  madeIn:string;
+  madeIn:number;
 
   @ApiProperty()
   facilityId : number;
