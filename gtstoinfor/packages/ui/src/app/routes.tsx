@@ -597,7 +597,9 @@ export const AppRoutes = () => {
                     <Route path='item-creation' element={<ItemCreation itemCreationData={undefined} isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
                         } }/>}/>
-                    <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
+                    <Route path="fabric-bom-creation" element={<FabricBomCreation rmCreationData={undefined} isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.")
+                    } }/>}/>
                     <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation />} />
                     <Route path='style-order-creation' element={<StyleOrderCreation coData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
                     <Route path='style-order-view' element={<StyleOrderGrid />} />

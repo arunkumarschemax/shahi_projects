@@ -6,6 +6,7 @@ import {
   DeliveryMethodService,
   DeliveryTermsService,
   EmployeeDetailsService,
+  FabricFinishTypeService,
   FactoryService,
   HierachyLevelService,
   ItemCategoryService,
@@ -25,7 +26,12 @@ import TextArea from "antd/es/input/TextArea";
 import { ItemGroupEnum } from "@project-management-system/shared-models";
 import { Link } from "react-router-dom";
 
-export const FabricBomCreation = () => {
+export interface FormProps{
+  rmCreationData:any;
+  isUpdate:boolean;
+  closeForm:()=> void;
+}
+export const FabricBomCreation = (props:FormProps) => {
   const [form] = Form.useForm();
  
   const [tax,setTax] = useState([])
@@ -45,6 +51,8 @@ export const FabricBomCreation = () => {
   const [ItemCategory,setItemCategory]= useState([])
   const [Deliveryterms,setDeliveryTerms]= useState([])
   const [DeliveryMethod,setDeliveryMethod]= useState([])
+  const [fabric,setFabric]= useState([])
+
   const taxService = new TaxesService
   const currencyServices = new CurrencyService();
   const licenseservice = new LiscenceTypeService();
@@ -61,7 +69,7 @@ const procurementservice = new ProcurmentGroupService();
 const proDUCTService = new ProductGroupService();
 const DeliveryServive = new DeliveryMethodService();
 const deliveryTermsService= new DeliveryTermsService()
-
+const fabricfinishservice = new  FabricFinishTypeService
 
 useEffect(() => {
     getAllCurrencies();
@@ -79,6 +87,7 @@ useEffect(() => {
     getAllHierarchy();
     getAllDeliveryTerms();
     getAllDeliveryMethod();
+    getAllFabricFinish();
   }, []);
 
   const getAllCurrencies = () => {
@@ -95,6 +104,22 @@ useEffect(() => {
         setCurrencyData([]);
         AlertMessages.getErrorMessage(err.message);
       });
+  };
+  const getAllFabricFinish = () => {
+    fabricfinishservice
+      .getAllActiveFabricFinishType()
+      .then((res) => {
+        if (res.status) {
+          setFabric(res.data);
+        } else {
+          AlertMessages.getErrorMessage(res.internalMessage);
+        }
+      })
+      // .catch((err) => {
+      //   setFabric(res.data);
+      //   ([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
   const getAllHierarchy = () => {
     hierarchyLevelservice
@@ -310,8 +335,13 @@ useEffect(() => {
   };
 
   const saveFabric=()=>{
+    
     form.validateFields().then((values)=>{
+      console.log(values,'$$$$$$$$$$$$');
+
 rmservice.createRm(values).then((res)=>{
+  console.log(res.data,"PPPPPPPPPP");
+
   if(res.status){
     AlertMessages.getSuccessMessage(res.internalMessage)
 
@@ -357,8 +387,15 @@ console.log(calculateTotal(),'4444444 ');
           form={form}
           style={{ fontSize: "10px" }}
           layout="vertical"
-          onFinish={onFinish}
+          onFinish={saveFabric}
+          initialValues={props.rmCreationData}
         >
+           <Form.Item name='trim' style={{display:'none'}}>
+                    <Input hidden/>
+                </Form.Item>
+                <Form.Item name='createdUser' style={{display:'none'}} initialValue={"Admin"}>
+                    <Input hidden/>
+                </Form.Item>
           <Row gutter={16}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
             <Card  bordered={false} >
@@ -382,7 +419,7 @@ console.log(calculateTotal(),'4444444 ');
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8}}>
                   <Form.Item
                     label="Item Type"
-                    name="itemType"
+                    name="itemIypeId"
                     rules={[{ required: true, message: "Enter Item Type" }]}
                   >
 
@@ -404,7 +441,7 @@ console.log(calculateTotal(),'4444444 ');
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8}}>
                   <Form.Item
                     label="Item Group"
-                    name="itemGroup"
+                    name="itemGroupId"
                     rules={[{ required: true, message: "Enter Item Group" }]}
                   >
                     <Select
@@ -422,7 +459,7 @@ console.log(calculateTotal(),'4444444 ');
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8}}>
                   <Form.Item
                     label="PCH"
-                    name="profitControlHead"
+                    name="pchId"
                     rules={[{ required: true, message: "Enter PCH" }]}
                   >
                     <Select
@@ -489,7 +526,7 @@ console.log(calculateTotal(),'4444444 ');
                   <Form.Item
                     label="Description"
                     name="description"
-                    //rules={[{ required: true, message: "Enter Description" }]}
+                    rules={[{ required: true, message: "Enter Description" }]}
                   >
                     <TextArea rows={1} placeholder="Enter Description"/>
                   </Form.Item>
@@ -514,7 +551,7 @@ console.log(calculateTotal(),'4444444 ');
                   </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8}}>
-                <Form.Item  label="Facility"name="name">
+                <Form.Item  label="Facility"name="facilityID">
                      <Select
                     allowClear
                     optionFilterProp="children"
@@ -538,10 +575,10 @@ console.log(calculateTotal(),'4444444 ');
 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8}}>
                   <Form.Item
                     label="Item Category"
-                    name="itemCategory"
+                    name="itemCategoriesId"
                     
                   >
- <Select placeholder="Select Item Category" allowClear> 
+                    <Select placeholder="Select Item Category" allowClear> 
                           {ItemCategory.map((e)=>{
                             return(
                               <Option key={e.itemCategoryId} values={e.itemCategoryId}>{e.itemCategory}
@@ -549,7 +586,8 @@ console.log(calculateTotal(),'4444444 ');
                               </Option>
                             )
                           })}                       
-                        </Select>                  </Form.Item>
+                        </Select>               
+                           </Form.Item>
                 </Col>
 
                 
@@ -560,7 +598,7 @@ console.log(calculateTotal(),'4444444 ');
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                 
                   <Form.Item
-                    name="responsible"
+                    name="responsibleId"
                     label="Responsible"
                     rules={[{ required: true, message: "Enter Responsible" }]}
                   >
@@ -580,7 +618,7 @@ console.log(calculateTotal(),'4444444 ');
                 <Row> */}
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                   <Form.Item
-                    name="developmentResponsible"
+                    name="devResponsible"
                     label="Development Responsible"
                   >
                                        <Input placeholder="Development Responsible" allowClear />
@@ -599,7 +637,7 @@ console.log(calculateTotal(),'4444444 ');
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                   <Form.Item
                     label="Product Group"
-                    name="productGroup"
+                    name="productGroupId"
                     rules={[{ required: true, message: "Enter Product Group" }]}
                   >
                     <Select placeholder="Select Product Group" allowClear> 
@@ -617,7 +655,7 @@ console.log(calculateTotal(),'4444444 ');
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                   <Form.Item
                     label="Procurement Group"
-                    name="producurementGroup"
+                    name="procurementGroupId"
                     rules={[{ required: true, message: "Enter Procurement Group" }]}
                   >
                     <Select placeholder="Select Product Group" allowClear> 
@@ -651,11 +689,7 @@ console.log(calculateTotal(),'4444444 ');
                   </Form.Item>
                 </Col>
                 </Row>
-                <Row gutter={8}>
                 
-               
-             
-                </Row>
                 <Row gutter={8}>
 
                 
@@ -712,9 +746,48 @@ console.log(calculateTotal(),'4444444 ');
                 </Row>
                 <Row gutter={8}>
                 
-              {/* </Card> */}
-             
-              </Row>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                  <Form.Item
+                    name="genericCode"
+                    label="Generic Code"
+                  >
+                                       <Input placeholder="Generic Code" allowClear />
+
+                  </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                  <Form.Item
+                    label="Fabric Finish"
+                    name="fabricFinishId"
+                    // rules={[{ required: true, message: "Enter Fabric Finish" }]}
+                  >
+                    <Select placeholder="Select Fabric Finish" allowClear>
+                      {fabric.map((rec) => (
+                        <option key={rec.fabricFinishTypeId} value={rec.fabricFinishTypeId}>
+                          {rec.fabricFinishType}
+                        </option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                  <Form.Item
+                    label="Use In Operation"
+                    name="useInOperation"
+                    // rules={[{ required: true, message: "Enter Fabric Finish" }]}
+                  >
+                    {/* <Select placeholder="Select Fabric Finish" allowClear>
+                      {fabric.map((rec) => (
+                        <option key={rec.fabricFinishTypeId} value={rec.fabricFinishTypeId}>
+                          {rec.fabricFinishType}
+                        </option>
+                      ))}
+                    </Select> */}
+                         <Input placeholder="Use In Operation" allowClear />
+
+                  </Form.Item>
+                </Col>
+                </Row>
               </Card>
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
@@ -727,7 +800,7 @@ console.log(calculateTotal(),'4444444 ');
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                   <Form.Item
                     label="Basic UOM"
-                    name="Basicuom"
+                    name="basicUomId"
                     rules={[{ required: true, message: "Enter Basic UOM" }]}
                   >
                     <Select placeholder="Select Basic UOM" allowClear>
@@ -741,7 +814,7 @@ console.log(calculateTotal(),'4444444 ');
                 </Col>
 
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                  <Form.Item label="Alt UOM" name="alternateUom">
+                  <Form.Item label="Alt UOM" name="altUomId">
                     <Select placeholder="Alt UOM" allowClear>
                       {uomData.map((rec) => (
                         <option key={rec.uomId} value={rec.uomId}>
@@ -768,7 +841,7 @@ console.log(calculateTotal(),'4444444 ');
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                   <Form.Item
                     label="Currency"
-                    name="currency"
+                    name="currencyId"
                     rules={[{ required: true, message: "Select the Currency" }]}
                   >
                     <Select placeholder="Select Currency" allowClear>
@@ -784,13 +857,13 @@ console.log(calculateTotal(),'4444444 ');
                 
                 <Form.Item
                   label="Purchase Price Quantity"
-                  name="purchaseorderquantity"
+                  name="purchasePriceQty"
                 >
                   <Input placeholder="Purchase Price Quantity" allowClear />
                 </Form.Item>
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                  <Form.Item label="Sales Tax" name="salesTax">
+                  <Form.Item label="Sales Tax" name="saleTax">
                   <Input placeholder="Sales Tax" allowClear />
 
                     {/* <Select placeholder="Select Sales Tax" allowClear>
@@ -809,12 +882,12 @@ console.log(calculateTotal(),'4444444 ');
                 </Row>
                 <Row gutter={8}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                  <Form.Item label="Excise Duty" name="Exciseduty">
+                  <Form.Item label="Excise Duty" name="exciseDuty">
                     <Input placeholder="Excise Duty" allowClear />
                   </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                  <Form.Item label="License" name="license">
+                  <Form.Item label="License" name="licenseId">
                     <Select placeholder="Select License" allowClear>
                       {licenseTypeData.map((rec) => (
                         <option
@@ -837,7 +910,7 @@ console.log(calculateTotal(),'4444444 ');
                 <Row> */}
                 <Row gutter={8}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                  <Form.Item name="salesItem" label="Sales Item">
+                  <Form.Item name="saleItem" label="Sales Item">
                     {/* <Select placeholder="SaleItem" allowClear>
                     </Select> */}
                                         <Input placeholder="Sales Item" allowClear />
@@ -854,7 +927,7 @@ console.log(calculateTotal(),'4444444 ');
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                   <Form.Item
                     label="Hierarchy Level"
-                    name="hierarchyLevel"
+                    name="hierarchyLevelId"
                     rules={[{ required: true, message: "Enter Hierarchy Level" }]}
                   >
                     <Select
@@ -929,7 +1002,7 @@ console.log(calculateTotal(),'4444444 ');
                   </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                  <Form.Item label="Cost Group" name="costgroup">
+                  <Form.Item label="Cost Group" name="costGroup">
                     <Input placeholder="Cost Group" allowClear />
                   </Form.Item>
                 </Col>
@@ -937,8 +1010,8 @@ console.log(calculateTotal(),'4444444 ');
               <Row gutter={8}>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                   <Form.Item
-                    label="Placement/Usage Remarks"
-                    name="placementremarks"
+                    label="Usage Remarks"
+                    name="remarks"
                   >
                     <Input placeholder="Remarks" allowClear />
                   </Form.Item>
