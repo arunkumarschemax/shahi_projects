@@ -1,7 +1,7 @@
 
 import { UndoOutlined, UploadOutlined } from "@ant-design/icons";
 import { DepartmentsDtos, OperationsDTO, SMVEfficiencyRequest } from "@project-management-system/shared-models";
-import { DepartmentService, OperationsService, productStructureService } from "@project-management-system/shared-services";
+import { DepartmentService, OperationsService, ProductStructureService } from "@project-management-system/shared-services";
 import {
   Button,
   Card,
@@ -30,7 +30,7 @@ export const SmvEfficiencyForm = () => {
 
   const operationsService = new OperationsService();
   const service =new DepartmentService();
-  const productService = new productStructureService()
+  const productService = new ProductStructureService()
 
 
 
