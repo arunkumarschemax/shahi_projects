@@ -16,6 +16,12 @@ export class MaterialTrimEntity {
     })
     description:string;
 
+    @Column('int',{
+      nullable:false,
+      name:'color_id'
+      })
+      colorId:number;
+
   @Column('int',{
     nullable:false,
     name:'consumption'

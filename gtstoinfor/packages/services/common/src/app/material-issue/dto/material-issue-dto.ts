@@ -13,6 +13,12 @@ export class MaterialIssueDto{
     requestNo: string
 
     @ApiProperty()
+    poNumber: string
+
+    @ApiProperty()
+    issueDate: Date
+
+    @ApiProperty()
     locationId:number;
 
     @ApiProperty()
@@ -88,6 +94,8 @@ export class MaterialIssueDto{
         materialIssueId:number,
         consumptionCode:string,
         requestNo: string,
+        poNumber: string,
+        issueDate: Date,
         locationId:number,
         pchId:number,
         buyerId:number,
@@ -116,6 +124,8 @@ export class MaterialIssueDto{
         this.materialIssueId = materialIssueId
         this.consumptionCode = consumptionCode
         this.requestNo = requestNo
+        this.poNumber = poNumber
+        this.issueDate = issueDate
         this.locationId = locationId
         this.pchId = pchId
         this.buyerId = buyerId

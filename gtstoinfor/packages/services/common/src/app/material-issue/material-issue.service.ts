@@ -51,6 +51,8 @@ export class MaterialIssueService{
                 const issueData = new MaterialIssueEntity()
                 issueData.consumptionCode = consumptionCode
                 issueData.requestNo = req.requestNo
+                issueData.poNumber = req.poNumber
+                issueData.issueDate = req.issueDate
                 issueData.locationId = req.locationId
                 issueData.pchId = req.pchId
                 issueData.buyerId = req.buyerId
@@ -89,6 +91,7 @@ export class MaterialIssueService{
                 for(const trim of req.trimInfo){
                     const trimEntity = new MaterialTrimEntity()
                     trimEntity.description = trim.description
+                    trimEntity.colorId = trim.colorId
                     trimEntity.consumption = trim.consumption
                     trimEntity.consumptionUom = trim.consumptionUom
                     trimEntity.issuedQuantity = trim.issuedQuantity
