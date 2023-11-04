@@ -1,6 +1,6 @@
 
 
-import { DepartmentService, ItemCreationService, OperationsService, RmCreationService, productStructureService } from "@project-management-system/shared-services"
+import { DepartmentService, ItemCreationService, OperationsService, ProductStructureService, RmCreationService } from "@project-management-system/shared-services"
 import React, { useState, useEffect, useRef } from 'react';
 import { Table, Card,  Input, Button, Form, Row, Col, Select, Tooltip,} from 'antd';
 import Highlighter from 'react-highlight-words';
@@ -22,7 +22,7 @@ const SMVEffciencyView = () => {
 
   const operationsService = new OperationsService();
   const service =new DepartmentService();
-  const productService = new productStructureService()
+  const productService = new ProductStructureService()
 
   const { Option } = Select;
   const [operationsData, setOperationsData] = useState<any[]>([]);
