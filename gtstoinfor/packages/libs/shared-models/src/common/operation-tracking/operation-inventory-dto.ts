@@ -1,7 +1,7 @@
 import { OperationSequenceModel } from "../operation-sequence";
 import { StyleDto } from "../style-management";
 
-export class OperationInventory{
+export class OperationInventoryDto{
     operationIssuingId:number;
     style: StyleDto[]
     operationSequence: OperationSequenceModel[]
