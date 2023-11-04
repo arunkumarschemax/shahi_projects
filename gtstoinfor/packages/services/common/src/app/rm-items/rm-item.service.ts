@@ -20,7 +20,11 @@ export class RmCreationservice{
     async  CreateRm(rmDto:RmCreationDto,isUpdate:boolean):Promise<CommonResponseModel>{
         try{
             const convertedRmCreationEntity:RmCreationEntity = this.rmAdapter.convertDtoToEntity(rmDto,isUpdate);
+            // console.log(convertedRmCreationEntity,"%%%%%%%%%%")
+
             const savedRmCreationEntity:RmCreationEntity =  await this.Rmrepository.save(convertedRmCreationEntity);
+            // console.log(savedRmCreationEntity,"%%%%%%%%%%")
+
             const savedRmcreationDto:RmCreationDto= this.rmAdapter.convertEntityToDto(savedRmCreationEntity)
             if (savedRmcreationDto){
                 const response = new CommonResponseModel(true, isUpdate ? 11101: 11100, isUpdate ? 'RmCreation Updated Successfully' : 'RmCreation Created Successfully',savedRmcreationDto)

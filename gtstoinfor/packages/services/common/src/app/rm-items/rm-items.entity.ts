@@ -18,7 +18,7 @@ itemCode:string;
     nullable: false,
     name:"item_category_id"
 })
-itemCategoryId:number;
+itemCategoriesId:number;
 
 @Column("int",{
     nullable: false,
@@ -38,6 +38,48 @@ facilityID:number;
     name:"generic_code"
 })
 genericCode:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 150,
+    name:"supply_lead_time"
+})
+supplyLeadTime:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 200,
+    name:"supplier"
+})
+supplier:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 200,
+    name:"consumption"
+})
+consumption:string;
+
+
+@Column("int",{
+    nullable: false,
+    name:"total"
+})
+total:number;
+
+@Column("varchar",{
+    nullable: false,
+    length: 200,
+    name:"delivery_terms"
+})
+deliveryTerms:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 200,
+    name:"delivery_method"
+})
+deliveryMethod:string;
 
 @Column("varchar",{
     nullable: false,
@@ -172,7 +214,7 @@ property:PropertyEnum;
     length: 155,
     name:"is_sale_item"
 })
-SaleItem:string;
+saleItem:string;
 
 @Column("varchar",{
     nullable: false,

@@ -4,14 +4,13 @@ import { IsNotEmpty, IsNumber, IsOptional } from "class-validator";
 
 
 export class RmCreationDto{
-    @ApiProperty()
-    rmitemId:number;
+    
 
     @ApiProperty()
     itemCode:string;
 
     @ApiProperty()
-    itemCategoryId:number
+    itemCategoriesId:number
 
     @ApiProperty()
     pchId:number
@@ -80,7 +79,30 @@ export class RmCreationDto{
     property:PropertyEnum
 
     @ApiProperty()
-    SaleItem:string
+    supplyLeadTime:string
+
+    @ApiProperty()
+    supplier:string;
+
+
+    @ApiProperty()
+    consumption:string;
+
+
+    @ApiProperty()
+    total:number;
+
+
+    @ApiProperty()
+    deliveryTerms:string;
+
+
+    @ApiProperty()
+    deliveryMethod:string;
+
+
+    @ApiProperty()
+    saleItem:string
 
     @ApiProperty()
     wastage:string
@@ -93,7 +115,7 @@ export class RmCreationDto{
 
     @ApiProperty()
     itemGroupId:number
-i
+
     @ApiProperty()
     useInOperation:string
 
