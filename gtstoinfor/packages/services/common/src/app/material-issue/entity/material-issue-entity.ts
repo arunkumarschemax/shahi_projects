@@ -21,6 +21,19 @@ export class MaterialIssueEntity{
     })
     requestNo:string;
 
+    @Column('varchar',{
+        nullable:false,
+        name:'po_number'
+    })
+    poNumber:string;
+
+    @CreateDateColumn({
+        nullable:false,
+        name:'issue_date',
+        type: "date"
+    })
+    issueDate:Date;
+
     @Column('int',{
         nullable:false,
         name:'location_id'

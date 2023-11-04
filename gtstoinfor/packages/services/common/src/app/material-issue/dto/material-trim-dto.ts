@@ -8,6 +8,9 @@ export class MaterialTrimDto{
     description:string;
 
     @ApiProperty()
+    colorId:number;
+
+    @ApiProperty()
     consumption:number;
 
     @ApiProperty()
@@ -31,6 +34,7 @@ export class MaterialTrimDto{
     constructor(
         materialTrimId:number,
         description:string,
+        colorId: number,
         consumption:number,
         consumptionUom:string,
         issuedQuantity: number,
@@ -41,6 +45,7 @@ export class MaterialTrimDto{
     ){
         this.materialTrimId = materialTrimId
         this.description = description
+        this.colorId = colorId
         this.consumption = consumption
         this.consumptionUom = consumptionUom
         this.issuedQuantity = issuedQuantity
