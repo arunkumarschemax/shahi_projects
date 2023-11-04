@@ -111,11 +111,11 @@ export class SampleRequest {
   @JoinColumn({ name: 'technician_id' })
   technician: EmplyeeDetails;
 
-  @Column("varchar", {
+  @Column("int", {
     nullable: false,
     name: "product"
   })
-  product: string;
+  product: number;
 
   @Column("varchar", {
     nullable: false,
@@ -129,11 +129,11 @@ export class SampleRequest {
   })
   conversion: string;
 
-  @Column("varchar", {
+  @Column("int", {
     nullable: false,
     name: "made_in"
   })
-  madeIn: string;
+  madeIn: number;
 
   @Column("int", {
     nullable: false,

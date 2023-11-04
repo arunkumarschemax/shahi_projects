@@ -3,7 +3,7 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
-import { SampleDevAdapter } from './dto/sample-dev-request.adapter';
+// import { SampleDevAdapter } from './dto/sample-dev-request.adapter';
 import { AllSampleDevReqResponseModel, CommonResponseModel, SampleDevDto, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleReqResponseModel } from '@project-management-system/shared-models';
 import { SampleDevReqDto } from './dto/sample-dev-dto';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
@@ -31,7 +31,7 @@ export class SampleRequestService {
   
     constructor(
         private sampleRepo: SampleRequestRepository,
-        private sampleAdapter: SampleDevAdapter,
+        // private sampleAdapter: SampleDevAdapter,
         private sizerepo:SampleSizeRepo,
         private fabricRepo:SampleFabricRepo,
         private sampletrimrepo:SampleTrimRepo
@@ -91,6 +91,7 @@ export class SampleRequestService {
       const sampleReqEntity = new SampleRequest();
       const locationEntity = new Location()
       locationEntity.locationId=req.locationId
+      console.log(req.locationId,"req.locationId")
       sampleReqEntity.location=locationEntity
       sampleReqEntity.requestNo=req.requestNo
       const profitHead = new ProfitControlHead()
@@ -141,7 +142,7 @@ export class SampleRequestService {
         sizeEntity.sizeId=size.sizeId
         sizeEntity.quantity=size.quantity
         sampleSizeInfo.push(sizeEntity)
-        console.log(sampleSizeInfo)
+        console.log(sampleSizeInfo,'sampleSizeInfo')
       }
       sampleReqEntity.sampleReqSizeInfo=sampleSizeInfo
       for(const fabricObj of req.sampleReqFabricInfo){
@@ -152,6 +153,7 @@ export class SampleRequestService {
         fabricEntity.consumption=fabricObj.consumption
         fabricEntity.remarks=fabricObj.remarks
         sampleFabricInfo.push(fabricEntity)
+        console.log(sampleFabricInfo,'sampleFabricInfo')
       }
       sampleReqEntity.sampleReqFabricInfo=sampleFabricInfo
       for(const trimObj of req.sampleTrimInfo){
@@ -174,10 +176,10 @@ export class SampleRequestService {
       console.log(sampleReqEntity,'sampleReqEntity')
       console.log(save,'save')
       if(save){
-        return new AllSampleDevReqResponseModel(true,1,'SampleDevelopmentRequest created sucessfullyy',[])
+        return new AllSampleDevReqResponseModel(true,1,'SampleDevelopmentRequest created successfully',[])
       }
       else{
-        return new AllSampleDevReqResponseModel(false,0,'SampleDevelopmentRequest creatation Failed',[])
+        return new AllSampleDevReqResponseModel(false,0,'SampleDevelopmentRequest creation Failed',[])
       }
     }
     catch(err){
