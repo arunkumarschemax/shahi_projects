@@ -2,7 +2,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { BomRequest, BomTrimResponseModel, CommonResponseModel, FgRmMappingResponseModel, ProductStructureResponseModel } from "@project-management-system/shared-models";
+import { BomRequest, BomTrimResponseModel, CommonResponseModel, FgRmMappingResponseModel, ProductStructureResponseModel, RmMappingFilterRequest } from "@project-management-system/shared-models";
 import { ProductStructureService } from "./product-structure.services";
 import { SMVEfficiencyDto } from "./dto/smv-efficency.dto";
 import { FgRMMappingDto } from "./dto/fg-rm-mapping.dto";
@@ -37,15 +37,34 @@ export class ProductStructureController {
       }
   }
 
+  @Post('/getAllInfoByItemCode')
+  async getAllInfoByItemCode(@Body() req:any): Promise<CommonResponseModel> {
+    console.log(req)
+    try {
+        return await this.Servie.getAllInfoByItemCode(req)
+    } catch (error) {
+      return (this.applicationExceptionHandler.returnException(CommonResponseModel, error));
+    }
+  }
+
   @Post('/getRmMapped')
+  @ApiBody({type: [RmMappingFilterRequest]})
   async getRmMapped(@Body() req:any): Promise<CommonResponseModel> {
     try {
         return await this.Servie.getRmMapped(req)
     } catch (error) {
       return (this.applicationExceptionHandler.returnException(CommonResponseModel, error));
     }
+  }
+
+  @Post('/getAllSmvData')
+   @ApiBody({type: [RmMappingFilterRequest]})
+  async getAllSmvData(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+        return await this.Servie.getAllSmvData(req)
+    } catch (error) {
+      return (this.applicationExceptionHandler.returnException(CommonResponseModel, error));
+    }
 }
-
-
 
     }

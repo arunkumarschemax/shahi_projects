@@ -135,7 +135,7 @@ async getOptionGropup(): Promise<CommonResponseModel> {
       const destMap = new Map<number,string>()
       destInfo.data.forEach(des => destMap.set(des.destinationId,des.destination))
       const data = await this.featureRepo.find({relations:['fChild']})
-      let featureInfo = []
+            let featureInfo = []
       if (data.length > 0){
         for(const rec of data){
           let featureOptions: FeatureOptionModel[] =[]
@@ -150,7 +150,7 @@ async getOptionGropup(): Promise<CommonResponseModel> {
             }
           }
           featureOptions.push(new FeatureOptionModel(featureOptionInfo))
-          featureInfo.push(new FeatureModel(rec.featureId,rec.featureCode,rec.featureName,rec.option,featureOptions,rec.description))
+          featureInfo.push(new FeatureModel(rec.featureId,rec.featureCode,rec.featureName,rec.option,featureOptions,rec.description,rec.fChild))
         }
       return new CommonResponseModel(true, 1, 'data retrived', featureInfo)
       } else {
