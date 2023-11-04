@@ -1,15 +1,17 @@
-import { ItemCreationService, ProductStructureService, RmCreationService } from "@project-management-system/shared-services"
+
+
+import { DepartmentService, ItemCreationService, OperationsService, ProductStructureService, RmCreationService } from "@project-management-system/shared-services"
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Card,  Input, Button, Form, Row, Col, Select,} from 'antd';
+import { Table, Card,  Input, Button, Form, Row, Col, Select, Tooltip,} from 'antd';
 import Highlighter from 'react-highlight-words';
-import {  SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import {  EyeOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import {   FeatureService } from '@project-management-system/shared-services';
 import AlertMessages from "../common-functions/alert-messages";
 import { RmMappingFilterRequest } from "@project-management-system/shared-models";
 
 
-const FgRmItemBomView   = () => {
+const SMVEffciencyView = () => {
     const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [lTData, setLTData] = useState<any[]>([]);
@@ -18,22 +20,46 @@ const FgRmItemBomView   = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
-  const fgservice = new ItemCreationService()
-  const Rmservice = new RmCreationService()
-  const productstructureservice = new ProductStructureService()
+  const operationsService = new OperationsService();
+  const service =new DepartmentService();
+  const productService = new ProductStructureService()
 
   const { Option } = Select;
-  const [fgCode, setFgCode] = useState<any[]>([])
-  const [RmCode, setRMCode] = useState<any[]>([])
+  const [operationsData, setOperationsData] = useState<any[]>([]);
+  const [departmentData, setDepartmentData] = useState<any[]>([]);
+
 
   useEffect(() => {
-    getAllRmSkuData();
-    RmCodeData();
-    getFgItemsDropdown();
+    getAllRmSMVData();
+    getAllDepartment();
+    getAllOperationsData();
   }, [])
+
+  const getAllOperationsData = () => {
+    
+    operationsService.getAllActiveOperations().then(res => {
+      if(res.status) {
+        setOperationsData(res.data);
+      } else {
+        AlertMessages.getErrorMessage(res.internalMessage)
+      }
+    })
+  }
+
+
+  const getAllDepartment=()=>{
+    service.getAllDepartments().then(res=>{
+        if(res.status){
+            setDepartmentData(res.data)
+        }else{
+            AlertMessages.getErrorMessage(res.internalMessage);
+        }
+    })
+  }
+
   
 
-    const getAllRmSkuData= () => {
+    const getAllRmSMVData= () => {
         const req = new RmMappingFilterRequest();
         
         if (form.getFieldValue('rmItcode') !== undefined) {
@@ -43,7 +69,7 @@ const FgRmItemBomView   = () => {
             req.fgItemCode = form.getFieldValue('fgItemCode');
         }
       
-        productstructureservice.getRmMapped(req).then(res => {
+        productService.getAllSmvData(req).then(res => {
       if (res.status) {
         setLTData(res.data);
       } else
@@ -98,9 +124,9 @@ const FgRmItemBomView   = () => {
                 .toLowerCase()
                 .includes(value.toLowerCase())
             : false,
-    onFilterDropdownVisibleChange: visible => {
-        if (visible) { setTimeout(() => searchInput.current.select()); }
-    },
+            onFilterDropdownOpenChange: open => {
+              if (open) { setTimeout(() => searchInput.current.select()); }
+          },
     render: text =>
         text ? (
             searchedColumn === dataIndex ? (
@@ -127,31 +153,19 @@ const FgRmItemBomView   = () => {
   };
   const resetHandler = () => {
     form.resetFields();
-    getAllRmSkuData();
+    getAllRmSMVData();
 
 }
 
-const getFgItemsDropdown = () =>{
-    fgservice.getFgItemsDropdown().then(res=>{
-      if(res.status){
-        setFgCode(res.data)
-      } else {
-        AlertMessages.getErrorMessage(res.internalMessage);
-      }
-    })
+const DetailView = (rowData) => {
 
-  }
-const RmCodeData = () =>{
-    Rmservice.getRmItemsData().then((res)=>{
-        if(res.status){
-            setRMCode(res.data)
-        }
-    })
+    navigate(`/product-structure/smv-efficiency-detail-view`,{state:rowData})
+    
 }
 
 
 
-const columnsSkelton: any = [
+const columns: any = [
     {
       title: 'S No',
       key: 'sno',
@@ -159,88 +173,85 @@ const columnsSkelton: any = [
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
-      title: 'Fg Item Code',
-      dataIndex: 'fg_item_code',
+      title: 'Operation',
+      dataIndex: 'operation_id',
       align: 'center',
+      render: (data) => {
+        const opdata = operationsData.find((cat) => cat.operationId  === data);
+        return opdata ? opdata.operationName: "-";
+      },
       sorter: (a, b) => a.feature_code?.localeCompare(b.feature_code),
-      ...getColumnSearchProps('feature_code'),
     },
     {
-      title: 'RM Item Code',
-      dataIndex: 'rm_item_code',
+      title: 'Work Center',
+      dataIndex: 'work_center',
       align: 'center', 
-    //   render: (text, record) => {
-    //     return <>
-    //       <Button type='link' onClick={() => { showModal1(record) }}>{record.poAndLine}</Button>
-    //     </>
-    //   },
+   
       sorter: (a, b) => a.feature_name?.localeCompare(b.feature_name),
-      ...getColumnSearchProps('feature_name'),
+      ...getColumnSearchProps('work_center')
     },
-
+    {
+        title: 'Department',
+        dataIndex: 'department_id',
+        align: 'center',
+        render: (data) => {
+          const Curdata = departmentData.find((cat) => cat.deptId  === data);
+          return Curdata ? Curdata.deptName: "-";
+        },
+        sorter: (a, b) => a.department_id?.localeCompare(b.department_id),
+      },
+      {
+        title: 'Options Percent',
+        dataIndex: 'options_percent',
+        align: 'center',
+        render: (data) => {
+          return data ? (<span>{data}%</span>) : ('-');},      
+        sorter: (a, b) => a.options_percent?.localeCompare(b.options_percent),
+      },
+      {
+        title: 'Qty per Hour',
+        dataIndex: 'qty_per_hour',
+        align: 'center',
+        
+        sorter: (a, b) => a.feature_code?.localeCompare(b.feature_code),
+      },
+      {
+        title: `Action`,
+        dataIndex: 'action',
+        render: (text, rowData) => {
+          return( <span>
+ 
+              <Tooltip placement="top" title="Detail View">
+                      <Button type="link" onClick={() => DetailView(rowData)}>
+                        <EyeOutlined type="view" />
+                      </Button>
+                    </Tooltip>
+            </span>)
+          
+      }
+      }
     ];
   
 
-//   const onChange = (pagination, filters, sorter, extra) => {
-//     console.log('params', pagination, filters, sorter, extra);
-//   }
+  const onChange = (pagination, filters, sorter, extra) => {
+    console.log('params', pagination, filters, sorter, extra);
+  }
 
   return (
       <>
-      <Card title={<span >Fg Rm Mapping</span>}
+      <Card title={<span >SMV Efficiency </span>}
     // style={{textAlign:'left'}} headStyle={{ border: 0 }} 
-    extra={<Link to='/product-structure/fg-rm-mapping' >
+    extra={<Link to='/product-structure/productstructure/smv-efficiency' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
       <Card >
-      <Form onFinish={getAllRmSkuData} form={form} layout='vertical'>
-                <Row gutter={24}>
-                
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='rmItcode' label='Rm Item Code' >
-                            <Select
-                                showSearch
-                                placeholder="Select Size Rm Item Code"
-                                optionFilterProp="children"
-                                allowClear
-                            >
-                                {
-                                    RmCode?.map((inc: any) => {
-                                        return <Option key={inc.rmitemId} value={inc.itemCode}>{inc.itemCode}</Option>
-                                    })
-                                }
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='fgItemCode' label='Fg Item Code' >
-                            <Select showSearch placeholder="Select Fg Item Code" optionFilterProp="children" allowClear>
-                                {
-                                    fgCode?.map((inc: any) => {
-                                        return <Option key={inc.fgitemId} value={inc.itemCode}>{inc.itemCode}</Option>
-                                    })
-                                }
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
-                        <Form.Item>
-                            <Button htmlType="submit"
-                                icon={<SearchOutlined />}
-                                type="primary">GET DETAILS</Button>
-                            <Button
-                                htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
-                            >
-                                RESET
-                            </Button>
-                        </Form.Item>
-                    </Col>
-                </Row>
-            </Form>
+      <Form onFinish={getAllRmSMVData} form={form} layout='vertical'>
+           
+     </Form>
       <Table
             size='middle'
-            rowKey={(record) => record.feature_option_id}
-            columns={columnsSkelton}
+            rowKey={(record) => record.smv_efficiency_id}
+            columns={columns}
             className='custom-table-wrapper'
             dataSource={lTData}
             pagination={{
@@ -248,7 +259,6 @@ const columnsSkelton: any = [
                 setPage(current);
               },
             }}
-            scroll={{ x: 'max-content',y:1000}}
             // onChange={onChange}
             bordered
           />
@@ -257,6 +267,6 @@ const columnsSkelton: any = [
       
   );
 }
-export default FgRmItemBomView
+export default SMVEffciencyView
 
 

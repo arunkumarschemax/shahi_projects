@@ -19,5 +19,9 @@ async getRmMapped(req:any): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getRmMapped",req)
   }
 
+  async getAllSmvData(req:any): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllSmvData",req)
+  }
+
 
 }

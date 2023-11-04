@@ -16,7 +16,7 @@ export class ItemCreationController {
     @Post('/createItem')
     async createItem(@Body() itemCreationDto:any,isUpdate:boolean=false,@Req() request:Request): Promise<CommonResponseModel> {
         try {
-            console.log(itemCreationDto);
+            console.log(itemCreationDto,"uuuuuuuuuuuuu");
             return await this.itemCreationService.createItem(itemCreationDto, false);
         } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)

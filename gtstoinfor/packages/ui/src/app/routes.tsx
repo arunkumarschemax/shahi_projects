@@ -162,6 +162,8 @@ import RMCreationView from "./orders/rm-creation-view"
 import FgRMMappingForm from "./common/product-structure(BOM)/fg-rm-items-mapping"
 import Substitution from "./BOM/substitution"
 import FgRmItemBomView from "./common/product-structure(BOM)/fg-rm-item-view"
+import SMVEffciencyView from "./common/product-structure(BOM)/smv-effciency-view"
+import SMKDetailView from "./common/product-structure(BOM)/smk-detail-view"
 
 
 export const AppRoutes = () => {
@@ -623,6 +625,8 @@ export const AppRoutes = () => {
                 <Route path='productstructure/smv-efficiency' element={<SmvEfficiencyForm/>}/>
                 <Route path='fg-rm-mapping' element={<FgRMMappingForm/>}/>
                 <Route path ='fg-rm-mapping-view' element={<FgRmItemBomView/>}/>
+                <Route path ='smv-efficiency-view' element={<SMVEffciencyView/>}/>
+                <Route path ='smv-efficiency-detail-view' element={<SMKDetailView data={''}/>}/>
 
 
             

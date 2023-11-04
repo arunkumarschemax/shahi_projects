@@ -25,7 +25,7 @@ export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
     }
 
     async getAllFgRmMapped(req: RmMappingFilterRequest ): Promise<any[]> {
-        const query = this.createQueryBuilder('fg_item')
+        const query = this.createQueryBuilder('fg')
         .select(`*`).where('1=1'); 
       
         if (req.fgItemCode !== undefined) {

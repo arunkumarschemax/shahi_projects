@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, Card, Row, Col } from 'antd';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { DestinationDto, DivisionDto } from '@project-management-system/shared-models';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import { DestinationService, DivisionService } from '@project-management-system/shared-services';
@@ -20,6 +20,7 @@ export const DestinationForm = (props: DestinationFormProps) => {
   const [DivsionData, setDivsionData] = useState<DivisionDto[]>([]);
   const service = new DestinationService();
   const services= new DivisionService()
+  let navigate = useNavigate()
 
   let history = useLocation();
 
@@ -99,10 +100,10 @@ export const DestinationForm = (props: DestinationFormProps) => {
     form.resetFields();
   };
   return (
-    <Card title={<span style={{ color: 'white' }}>Destination</span>}
-      style={{ textAlign: 'center' }}
-      extra={props.isUpdate == true ? "" : <Link to='/global/destination/destination-grid' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
-    >
+    <Card
+    title={props.isUpdate?
+    'Destination':'Destination'}
+    extra={( props.isUpdate == true) && <span> <Button onClick={()=>navigate('/global/destination/destination-grid')} type={'primary'}>View</Button></span>}>
 
 
 
@@ -149,9 +150,25 @@ export const DestinationForm = (props: DestinationFormProps) => {
 
            }
             </Select>
+            
+          </Form.Item>
+
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}> <Form.Item
+            name="destinationCode"
+            label="Destination Code"
+            
+            rules={[
+              {
+                required: true,
+                message: 'Destination Code Is Required'
+              }
+            ]}
+          >
+            <Input placeholder="select Destination Code" />
           </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}> <Form.Item
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6}}> <Form.Item
             name="destination"
             label="Destination"
             rules={[
@@ -161,8 +178,62 @@ export const DestinationForm = (props: DestinationFormProps) => {
               }
             ]}
           >
-            <Input />
+            <Input placeholder="select Destination " />
           </Form.Item>
+          </Col>
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 8 }}
+            lg={{ span: 8 }}
+            xl={{ span: 6 }}
+          >
+            {" "}
+            <Form.Item
+              name="optionGroup"
+              label="Option Group"
+              rules={[
+                {
+                  required: true,
+                  message: " Option Group Is Required",
+                },
+                {
+                  pattern:
+                    /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+                  message: `Option Group Should contain only alphabets.`,
+                },
+              ]}
+            >
+                <Input placeholder='Enter Option Group'/>
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+        <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 8 }}
+            lg={{ span: 8 }}
+            xl={{ span: 6 }}
+          >
+            {" "}
+            <Form.Item
+              name="description"
+              label="Description"
+              rules={[
+                {
+                  required: true,
+                  message: " Description Is Required",
+                },
+                // {
+                //   pattern:
+                //     /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+                //   message: `Description Should contain only alphabets.`,
+                // },
+              ]}
+            >
+                <Input placeholder='Enter Description'/>
+            </Form.Item>
           </Col>
         </Row>
         <Row>

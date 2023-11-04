@@ -55,8 +55,16 @@ export class ProductStructureController {
     } catch (error) {
       return (this.applicationExceptionHandler.returnException(CommonResponseModel, error));
     }
+  }
+
+  @Post('/getAllSmvData')
+   @ApiBody({type: [RmMappingFilterRequest]})
+  async getAllSmvData(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+        return await this.Servie.getAllSmvData(req)
+    } catch (error) {
+      return (this.applicationExceptionHandler.returnException(CommonResponseModel, error));
+    }
 }
-
-
 
     }
