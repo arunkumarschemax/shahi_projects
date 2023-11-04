@@ -35,11 +35,13 @@ export class ItemCreation {
     name: "item_type_id" /// foregn key
   })
   itemTypeId: number;
+
   @Column("int", {
     nullable: false,
     name: "brand_id" /// foregn key
   })
   brandId: number;
+
   @Column("int", {
     nullable: false,
     name: "category_id" /// foregn key
@@ -205,27 +207,27 @@ export class ItemCreation {
   })
   searchGroup: string;
   
+  @Column("varchar", {
+    nullable: false,
+    name: "conversion_factor" /// foregn key
+  })
+  conversionFactor:string ;
+
+  @Column("varchar", {
+    nullable: true,
+    name: "reference" /// foregn key
+  })
+  reference: string;
+
+  @Column("varchar", {
+    nullable: false,
+    name: "projection_order" /// foregn key
+  })
+  projectionOrder: string;
+
   @Column("int", {
     nullable: false,
-    name: "conversion_factor_id" /// foregn key
-  })
-  conversionFactorId: number;
-
-  @Column("int", {
-    nullable: true,
-    name: "reference_id" /// foregn key
-  })
-  referenceId: number;
-
-  @Column("int", {
-    nullable: true,
-    name: "projection_order_id" /// foregn key
-  })
-  projectionOrderId: number;
-
-  @Column("int", {
-    nullable: false,
-    name: "buying_house_commision" /// foregn key
+    name: "buying_house_commision_id" /// foregn key
   })
   buyingHouseCommision: number;
 
@@ -253,6 +255,7 @@ export class ItemCreation {
     name: "national_dbk" /// foregn key
   })
   nationalDbk: number;
+
   @Column("int", {
     nullable: false,
     name: "rosl_group" /// foregn key
@@ -305,6 +308,7 @@ export class ItemCreation {
     name: "order_qty" /// foregn key
   })
   orderQty: number;
+
   @Column("int", {
     nullable: true,
     name: "facility_id" /// foregn key

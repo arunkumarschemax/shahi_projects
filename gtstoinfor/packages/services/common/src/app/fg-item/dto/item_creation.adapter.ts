@@ -10,7 +10,7 @@ export class ItemCreationAdapter {
             entityObj.brandId = dtoObj.brandId
             entityObj.buyingHouseCommision = dtoObj.buyingHouseCommision
             entityObj.categoryId = dtoObj.categoryId
-            entityObj.conversionFactorId = dtoObj.conversionFactorId
+            entityObj.conversionFactor = dtoObj.conversionFactor
             entityObj.currency = dtoObj.currency
             entityObj.customGroupId = dtoObj.customGroupId
             entityObj.description = dtoObj.description
@@ -32,7 +32,7 @@ export class ItemCreationAdapter {
             entityObj.pdMerchant = dtoObj.pdMerchant
             entityObj.productDesignerId = dtoObj.productDesignerId
             entityObj.productionMerchant = dtoObj.productionMerchant
-            entityObj.projectionOrderId = dtoObj.projectionOrderId
+            entityObj.projectionOrder = dtoObj.projectionOrder
             entityObj.responsiblePersonId = dtoObj.responsiblePersonId
             entityObj.roslGroup = dtoObj.roslGroup
             entityObj.salePersonId = dtoObj.salePersonId
@@ -48,7 +48,7 @@ export class ItemCreationAdapter {
             entityObj.productGroup = dtoObj.productGroup
             entityObj.range = dtoObj.range
             entityObj.searchGroup = dtoObj.searchGroup
-            entityObj.referenceId = dtoObj.referenceId
+            entityObj.reference = dtoObj.reference
             entityObj.itemGroup = dtoObj.itemGroup
             entityObj.businessArea = dtoObj.businessArea
             entityObj.noOfLacePanel = dtoObj.noOfLacePanel
@@ -72,7 +72,7 @@ export class ItemCreationAdapter {
         itemCreationDto.brandId = itemCreation.brandId
         itemCreationDto.buyingHouseCommision = itemCreation.buyingHouseCommision
         itemCreationDto.categoryId = itemCreation.categoryId
-        itemCreationDto.conversionFactorId = itemCreation.conversionFactorId
+        itemCreationDto.conversionFactor = itemCreation.conversionFactor
         itemCreationDto.createdUser = itemCreation.createdUser
         itemCreationDto.currency = itemCreation.currency
         itemCreationDto.customGroupId = itemCreation.customGroupId
@@ -96,7 +96,7 @@ export class ItemCreationAdapter {
         itemCreationDto.pdMerchant = itemCreation.pdMerchant
         itemCreationDto.productDesignerId = itemCreation.productDesignerId
         itemCreationDto.productionMerchant = itemCreation.productionMerchant
-        itemCreationDto.projectionOrderId = itemCreation.projectionOrderId
+        itemCreationDto.projectionOrder = itemCreation.projectionOrder
         itemCreationDto.responsiblePersonId = itemCreation.responsiblePersonId
         itemCreationDto.roslGroup = itemCreation.roslGroup
         itemCreationDto.salePersonId = itemCreation.salePersonId
@@ -113,7 +113,7 @@ export class ItemCreationAdapter {
         itemCreationDto.productGroup = itemCreation.productGroup
         itemCreationDto.range = itemCreation.range
         itemCreationDto.searchGroup = itemCreation.searchGroup
-        itemCreationDto.referenceId = itemCreation.referenceId
+        itemCreationDto.reference= itemCreation.reference
         itemCreationDto.itemGroup = itemCreation.itemGroup
         itemCreationDto.businessArea = itemCreation.businessArea
         itemCreationDto.groupTechClass = itemCreation.groupTechClass

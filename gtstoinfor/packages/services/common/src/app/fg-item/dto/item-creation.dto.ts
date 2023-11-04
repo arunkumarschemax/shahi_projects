@@ -67,10 +67,10 @@ export class ItemCreationDto {
     targetCurrency: string;
 
     @ApiProperty()
-    conversionFactorId: number;
+    conversionFactor: string;
 
     @ApiProperty()
-    projectionOrderId: number;
+    projectionOrder: string;
 
     @ApiProperty()
     buyingHouseCommision: number;
@@ -142,7 +142,7 @@ export class ItemCreationDto {
     searchGroup: string;
 
     @ApiProperty()
-    referenceId: number;
+    reference: string;
 
     @ApiProperty()
     isActive: boolean;
