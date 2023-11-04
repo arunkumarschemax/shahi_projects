@@ -27,12 +27,13 @@ export class MaterialIssueEntity{
     })
     poNumber:string;
 
-    @CreateDateColumn({
-        nullable:false,
-        name:'issue_date',
-        type: "date"
+    @Column({
+        nullable: false,
+        name: 'issue_date',
+        type: 'date',
     })
-    issueDate:Date;
+    issueDate: Date;
+    
 
     @Column('int',{
         nullable:false,
