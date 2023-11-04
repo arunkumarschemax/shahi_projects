@@ -2,7 +2,9 @@ import { Controller, Get, Post } from "@nestjs/common";
 import { StocksService } from "./stocks.service";
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
 import { AllStocksResponseModel, CommonResponseModel } from "@project-management-system/shared-models";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('stocks')
 @Controller("/stocks")
 export class StocksController {
 
@@ -16,7 +18,7 @@ export class StocksController {
         return this.stocksService.testStocks();
     }
 
-    @Get("/getAllStocks")
+    @Post("/getAllStocks")
     async getAllStocks(): Promise<AllStocksResponseModel> {
         try {
             return await this.stocksService.getAllStocks();
