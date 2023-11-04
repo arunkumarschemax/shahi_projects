@@ -1,42 +1,42 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationTrackingResponseModel, OperationTrackingDto, OperationInventoryDto, OperationInventoryResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationTrackingResponseModel, TrackingEnum, OperationInventoryResponseModel, OperationTrackingDto } from "@project-management-system/shared-models";
 import { Item } from "../items/item-entity";
 import { OperationGroups } from "../operation-groups/operation-groups.entity";
 import { Operations } from "../operations/operation.entity";
 import { DataSource, Entity } from "typeorm";
-import { OperationTrackingRepository } from "./repo/operation-tracking-repository";
 import { OperationTracking } from "./entity/operation-tracking-entity";
 import { OperationInventory } from "./entity/operation-inventory-entity";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { Style } from "../style/dto/style-entity";
 import { OperationSequence } from "../operation-sequence/operation-sequence.entity";
 import { OperationInventoryRepository } from "./repo/operation-inventory-repository";
+import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
+import { StyleRepository } from "../style/dto/style-repo";
+import { OperationTrackingRepository } from "./repo/operation-tracking-repository";
+import { OperationInvRequest } from "./dto/operation-inventory-req";
 
 @Injectable()
-export class OperationTrackingService{
+export class OperationTrackingService {
     constructor(
         private repo: OperationTrackingRepository,
         private inventoryRepo: OperationInventoryRepository,
+        private styleRepo : StyleRepository,
         private readonly dataSource: DataSource,
-        
-    ){}
+
+    ) { }
 
 
-    async createOperationIssuing(dto: OperationInventoryDto) : Promise<OperationInventoryResponseModel>{
+    async createOperationReporting(dto: OperationTrackingDto) : Promise<OperationInventoryResponseModel>{
         const manager = new GenericTransactionManager(this.dataSource)
         try{
+            const issuingReq = await this.styleRepo.find({ where: { styleId: dto.styleId }})
+
             const inventoryEntity = new OperationInventory()
             inventoryEntity.styleId = dto.styleId
             inventoryEntity.operationSequenceId = dto.operationSequenceId
             inventoryEntity.operation = dto.operation
-            inventoryEntity.physicalQuantity = dto.physicalQuantity
-            inventoryEntity.physicalUom = dto.physicalUom
             inventoryEntity.issuedQuantity = dto.issuedQuantity
-            inventoryEntity.issuedUom = dto.issuedUom
-            inventoryEntity.damagedQuantity = dto.damagedQuantity
-            inventoryEntity.damagedUom = dto.damagedUom
-            inventoryEntity.rejectedQuantity = dto.rejectedQuantity
-            inventoryEntity.rejectedUom = dto.rejectedUom
+            inventoryEntity.issuedUomId = dto.issuedUomId
             await manager.startTransaction();
             const save = await manager.getRepository(OperationInventory).save(inventoryEntity)
 
@@ -63,10 +63,37 @@ export class OperationTrackingService{
             
             const trackingEntity = new OperationTracking()
             trackingEntity.jobNumber = operationJobNo
-            trackingEntity.styleId = inventoryEntity.styleId
-            return
-        } catch (err) {
-            throw err;
-        }
+            trackingEntity.styleId = dto.styleId
+            trackingEntity.operationSequenceId = dto.operationSequenceId
+            trackingEntity.operationInventoryId = dto.operationInventoryId
+            trackingEntity.operation = dto.operation
+            trackingEntity.operation = dto.nextOperation
+            trackingEntity.issuedQuantity = dto.issuedQuantity
+            trackingEntity.issuedUomId = dto.issuedUomId
+            trackingEntity.status = TrackingEnum.NO
+            const createLog = await manager.getRepository(OperationTracking).save(trackingEntity)
+
+            if (save && createLog) {
+                await manager.completeTransaction();
+                return new OperationInventoryResponseModel(true, 1111, 'Operation Information Updated Successfully');
+              } else {
+                await manager.releaseTransaction();
+                throw new ErrorResponse(9999, 'Failed To Update Operation');
+              }
+            } catch (error) {
+              await manager.releaseTransaction();
+              return error;
+            }
+    }
+
+    
+    async getOperationinventory(req:OperationInvRequest): Promise<OperationInventoryResponseModel> {
+        console.log(req,'kkkkkkkkkkkkkkk')
+        const data = await this.inventoryRepo.getOperationinventory(req)
+    
+            return new OperationInventoryResponseModel(true, 1, 'Inventory data Retrived Sucessfully', data)
+
     }
 }
+
+

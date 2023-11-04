@@ -36,86 +36,92 @@ operationSequenceId:number;
 })
 operation:string;
 
-  @Column('int',{
-    nullable:false,
-    name:'physical_quantity'
-})
-physicalQuantity:number;
-
 @Column('varchar',{
-    nullable:false,
-    name:'physical_uom'
+  nullable:false,
+  name:'next_operation'
 })
-physicalUom:string;
+nextOperation:string;
+
+  @Column('int', {
+    nullable: false,
+    name: 'physical_quantity'
+  })
+  physicalQuantity: number;
+
+  @Column('varchar', {
+    nullable: false,
+    name: 'physical_uom'
+  })
+  physicalUom: string;
+
+  @Column('int', {
+    nullable: false,
+    name: 'issued_quantity'
+  })
+  issuedQuantity: number;
 
 @Column('int',{
     nullable:false,
-    name:'issued_quantity'
+    name:'issued_uom_id'
 })
-issuedQuantity:number;
+issuedUomId:number;
 
-@Column('varchar',{
-    nullable:false,
-    name:'issued_uom'
-})
-issuedUom:string;
+  @Column('int', {
+    nullable: false,
+    name: 'damaged_quantity'
+  })
+  damagedQuantity: number;
 
-  @Column('int',{
+@Column('int',{
     nullable:false,
-    name:'damaged_quantity'
+    name:'damaged_uom_id'
 })
-damagedQuantity:number;
+damagedUomId:number;
 
-@Column('varchar',{
-    nullable:false,
-    name:'damaged_uom'
-})
-damagedUom:string;
+  @Column('int', {
+    nullable: false,
+    name: 'rejected_quantity'
+  })
+  rejectedQuantity: number;
 
-  @Column('int',{
+@Column('int',{
     nullable:false,
-    name:'rejected_quantity'
+    name:'rejected_uom_id'
 })
-rejectedQuantity:number;
-
-@Column('varchar',{
-    nullable:false,
-    name:'rejected_uom'
-})
-rejectedUom:string;
+rejectedUomId:number;
 
   @CreateDateColumn({
     name: "created_at",
-    type:"datetime"
+    type: "datetime"
   })
   createdAt: Date;
 
   @Column("varchar", {
-      nullable: false,
-      name: "created_user",
-      default:"ADMIN",
-      length:50
+    nullable: false,
+    name: "created_user",
+    default: "ADMIN",
+    length: 50
   })
   createdUser: string | null;
 
   @UpdateDateColumn({
-      name: "updated_at",
-      type:'datetime'
+    name: "updated_at",
+    type: 'datetime'
   })
   updatedAt: Date;
 
   @Column("varchar", {
-      nullable: true,
-      name: "updated_user",
-      length:50
+    nullable: true,
+    name: "updated_user",
+    length: 50
   })
   updatedUser: string | null;
 
   @VersionColumn({
-      default:1,
-      name: "version_flag"
+    default: 1,
+    name: "version_flag"
   })
   versionFlag: number;
-  
+
 
 }
