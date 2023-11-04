@@ -4,6 +4,7 @@ import { ApplicationExceptionHandler } from '@project-management-system/backend-
 import { RmCreationservice } from './rm-item.service';
 import { CommonResponseModel, RMCreFilterRequest } from '@project-management-system/shared-models';
 import { RmCreationDto } from './dto/rm-item.dto';
+import { productGroupDto } from './dto/product-group-filter';
 
 @Controller('rm-creat')
 @ApiTags('rm-creat')
@@ -36,6 +37,28 @@ export class RmCreationController{
     async getRmItemsData(): Promise<CommonResponseModel> {
         try {
             return await this.rmCreationService.getRmItemsData();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+
+    @Post('/getRmItemsDatabyProductGroupId')
+    @ApiBody({type:productGroupDto})
+    async getRmItemsDatabyProductGroupId(@Body() req:any): Promise<CommonResponseModel> {
+        console.log(req,"con")
+        try {
+            return await this.rmCreationService.getRmItemsDatabyProductGroupId(req);
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+
+    @Post('/getRmItemsDatabyProductGroupId1')
+    @ApiBody({type:productGroupDto})
+    async getRmItemsDatabyProductGroupId1(@Body() req:any): Promise<CommonResponseModel> {
+        console.log(req,"con")
+        try {
+            return await this.rmCreationService.getRmItemsDatabyProductGroupId1(req);
         } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }

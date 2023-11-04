@@ -1,4 +1,4 @@
-import { RmItemTypeEnum, RmSkuReq, RmSkuResponseModel } from "@project-management-system/shared-models";
+import { RmItemTypeEnum, RmSkuModel, RmSkuReq, RmSkuResponseModel } from "@project-management-system/shared-models";
 import { RmSkus } from "./rm-sku.entity";
 
 
@@ -60,5 +60,23 @@ export class RmSkusService {
             throw err
         }
 
+    }
+
+    async getAllRmSKUs(): Promise<RmSkuResponseModel> {
+        try {
+            const data = await this.repo.find({ order: { rmSkuCode: 'ASC' } });
+    
+            const rmSkuModels = data.map((rmSku) => {
+                return new RmSkuModel(rmSku.rmItemId,rmSku.itemType,[],rmSku.status,rmSku.itemCode);
+            });
+    
+            if (rmSkuModels.length > 0) {
+                return new RmSkuResponseModel(true, 1, "RM SKU's retrieved successfully", rmSkuModels);
+            } else {
+                return new RmSkuResponseModel(false, 0, "No data found", []);
+            }
+        } catch (err) {
+            throw err;
+        }
     }
 }

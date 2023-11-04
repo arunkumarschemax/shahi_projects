@@ -110,6 +110,14 @@ export class ProductStructureService {
               throw err;
             }
           }
+          async getRmMapped(req?:any): Promise<CommonResponseModel> {
+            const data = await this.fgrmRepo.getAllFgRmMapped(req)
+            if (data.length > 0){
+    
+                return new CommonResponseModel(true, 1111, 'Data retreived',data )
+            }
+            return new CommonResponseModel(false, 0, 'Data Not retreived',[])
+          }
 
       
 
