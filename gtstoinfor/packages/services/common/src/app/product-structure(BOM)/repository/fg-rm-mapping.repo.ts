@@ -11,5 +11,14 @@ export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
         super(Repo.target, Repo.manager, Repo.queryRunner);
     }
 
-   
+    async getAllFgRmMapped(req: any ): Promise<any[]> {
+        const query = this.createQueryBuilder('fg_item')
+        .select(`*`).where('1=1'); 
+      
+        if (req.style !== undefined) {
+          query.andWhere(`style_no = :style`, { style: req.style }); 
+        }
+        let data:FgRmMappingEntity[] = await query.getRawMany();
+        return data;
+      }
 }

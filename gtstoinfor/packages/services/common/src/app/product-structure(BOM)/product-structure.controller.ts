@@ -19,7 +19,6 @@ export class ProductStructureController {
       @ApiBody({type:SMVEfficiencyDto})   
       @Post('/createSMVEfficency')
       async createSMVEfficency(@Body() req:any): Promise<ProductStructureResponseModel> {
-        console.log(req)
         try {
             return await this.Servie.createSMVEfficency(req, false)
         } catch (error) {
@@ -38,6 +37,14 @@ export class ProductStructureController {
       }
   }
 
+  @Post('/getRmMapped')
+  async getRmMapped(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+        return await this.Servie.getRmMapped(req)
+    } catch (error) {
+      return (this.applicationExceptionHandler.returnException(CommonResponseModel, error));
+    }
+}
 
 
 

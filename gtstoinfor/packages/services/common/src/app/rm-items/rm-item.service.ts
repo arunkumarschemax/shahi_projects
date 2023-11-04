@@ -81,7 +81,6 @@ return response;
 
     async getRmItemsDatabyProductGroupId1(req: productGroupDto): Promise<CommonResponseModel> {
         try {
-          console.log(req, "ser");
       
           // Add a condition to filter out records with productGroupId = 1
           const data = await this.Rmrepository.find({
@@ -90,7 +89,6 @@ return response;
               },
           });
       
-          console.log(data, '-----------');
           return new CommonResponseModel(true, 0, "Data retrieved successfully", data);
         } catch (err) {
           throw err;
