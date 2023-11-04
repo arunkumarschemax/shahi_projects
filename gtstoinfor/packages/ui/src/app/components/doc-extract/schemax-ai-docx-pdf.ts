@@ -158,6 +158,12 @@ export const extractDhlCourier = async (pdf) => {
     let hsnId = null;
     let linesId = 0;
 
+    //CGST\s+(\d+\.\d+)\s*%\s*(\d+\.\d+)//
+    //SGST\s+(\d+\.\d+)\s*%\s*(\d+\.\d+)//
+
+    //CGST+\s+(\d+\.+\d+)+\s+%+\s+(\d+\.+\d+)//
+    //SGST+\s+(\d+\.+\d+)+\s+%+\s+(\d+\.+\d+)//
+
     for (const line of extractedData) {
         if (line.content.match(/^\d{6}$/)) {
             hsnId = linesId;
@@ -1741,7 +1747,7 @@ export const extractFredexfrieght = async (pdf) => {
     let currentInvoice = null;
     let gstNumberExtracted = false;
 
-    const invoiceDateRegex = /\d{1,2}\/\d{1,2}\/\d{4}/;
+    const invoiceDateRegex =/(\d+\/\d+\/\d+)\s+(\d+\/\d+\/\d+)/;
     const invoiceNumberRegex = /Invoice Number : (\w+)/;
     const invoiceCurrency = 'INR';
     const currentYear = new Date().getFullYear();
@@ -1766,7 +1772,7 @@ export const extractFredexfrieght = async (pdf) => {
                 venName = 'FedEx Trade Networks Transport & Brokerage Private Limited';
 
                 const invoiceDateData = extractedData.find((item) => item.content.match(invoiceDateRegex));
-                invoiceDate = invoiceDateData ? invoiceDateData.content : '';
+                invoiceDate = invoiceDateData ? invoiceDateData.content.match(invoiceDateRegex)[1] : '';
 
                 const invoiceNumberData = extractedData.find((item) => item.content.match(invoiceNumberRegex));
                 invoiceNumber = invoiceNumberData ? invoiceNumberData.content.match(invoiceNumberRegex)[1] : '';
