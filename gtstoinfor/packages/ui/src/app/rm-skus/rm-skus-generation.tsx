@@ -16,6 +16,7 @@ export const RmSkusGeneration = () => {
     const [form] = Form.useForm()
     const fabricItemCodeService = new FabricStructuresService()
     const featureService = new FeatureService()
+    
 
     useEffect(() => {
         getFeatures()
@@ -48,7 +49,7 @@ export const RmSkusGeneration = () => {
     const onFinish = (val) => {
         let featureReq = []
         for(const rec of features){
-            featureReq.push(new RmSkuFeatureReq(rec.featureCode))
+            featureReq.push(new RmSkuFeatureReq(rec.featureCode,rec.optionsData))
         }
         const req = new RmSkuReq(itemId,val.itemType,featureReq,RmStatusEnum.OPEN,val.itemCode,'admin')
         service.createRmSkus(req).then(res => {

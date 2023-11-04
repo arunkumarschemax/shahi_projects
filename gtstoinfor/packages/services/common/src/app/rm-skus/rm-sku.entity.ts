@@ -48,6 +48,32 @@ export class RmSkus {
   })
   itemCode : string
 
+  @Column('int',{
+    name:'feature_option_id',
+    nullable:false,
+  })
+  featureOptionId : number
+
+  @Column('varchar',{
+    name:'option_group',
+    nullable:false,
+    length: 30
+  })
+  optionGroup : string
+
+  @Column('int',{
+    name:'option_id',
+    nullable:false,
+  })
+  optionId : number
+
+  @Column('varchar',{
+    name:'option_value',
+    nullable:false,
+    length: 30
+  })
+  optionValue : string
+
   @Column("boolean",{
     default:true,
     name:"is_active"

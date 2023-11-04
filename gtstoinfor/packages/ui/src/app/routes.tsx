@@ -160,6 +160,7 @@ import COAmendmentTabs from "./common/co-amendment/co-amendment-tabs"
 import FeatureCreationView from "./BOM/feature-creation-view"
 import RMCreationView from "./orders/rm-creation-view"
 import FgRMMappingForm from "./common/product-structure(BOM)/fg-rm-items-mapping"
+import Substitution from "./BOM/substitution"
 
 
 export const AppRoutes = () => {
@@ -201,7 +202,7 @@ export const AppRoutes = () => {
                         </>
                     </ChildProtectionWrapper>
                 } >
-
+                    <Route path="/substituion" element={<Substitution/>}></Route>
                     <Route path='/user-management/users-from' element={<UserCreationForm />} />
                     <Route path='/user-management/users-view' element={<UsersView />} />
 
@@ -584,7 +585,6 @@ export const AppRoutes = () => {
                 <Route path='settings/settings-form' element={<SettingsForm/>}/>
                 <Route path='settings/settings-view' element={<SettingsView/>}/>
                 {/* </Route> */}
-                <Route path='rmskus/rm-skus' element={<RmSkusGeneration/>}/>
                 <Route path='sample-development' >
                     <Route path="sample-development-form" element={<SampleDevForm />}/>
                     <Route path="sample-development-view" element={<SampleDevView />}/>
@@ -607,6 +607,7 @@ export const AppRoutes = () => {
                 <Route path='item-creation-detail-view' element={<ItemCreationDetailView data={''}/>}/>
                 <Route path="co-amendment" element ={<COAmendmentTabs key={""} />} />
                 <Route path='rm-creation-view' element={<RMCreationView/>}/>
+                <Route path='rm-skus' element={<RmSkusGeneration/>}/>
                 </Route>
                 <Route path='/operation-tracking'>
                     <Route path='operation-tracking/issuing' element={<IssueScreen/>}/>

@@ -38,6 +38,16 @@ export class ProductStructureController {
       }
   }
 
+  @Post('/getAllInfoByItemCode')
+  async getAllInfoByItemCode(@Body() req:any): Promise<CommonResponseModel> {
+    console.log(req)
+    try {
+        return await this.Servie.getAllInfoByItemCode(req)
+    } catch (error) {
+      return (this.applicationExceptionHandler.returnException(CommonResponseModel, error));
+    }
+  }
+
 
 
 
