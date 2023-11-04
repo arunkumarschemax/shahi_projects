@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { RmCreationAdapter } from './dto/rm-item.adapter';
 import { RmCreationDto } from './dto/rm-item.dto';
 import { RmCreationEntity } from './rm-items.entity';
-import { CommonResponseModel, RMCreFilterRequest } from '@project-management-system/shared-models';
+import { CommonResponseModel, GlobalVariables, RMCreFilterRequest } from '@project-management-system/shared-models';
 import { error } from 'console';
 import { RmCreationRepository } from './rm-item.repo';
+import { productGroupDto } from './dto/product-group-filter';
 
 
 @Injectable()
@@ -61,6 +62,41 @@ return response;
             throw err;
           }
         }
+
+     async getRmItemsDatabyProductGroupId(req:productGroupDto): Promise<CommonResponseModel> {
+            try {
+                console.log(req,"ser")
+           const data = await this.Rmrepository.find({
+            where:{
+               productGroupId:req.productGroupId
+            }
+           })
+           console.log(data,'-----------')
+           return new CommonResponseModel(true, 0, "Data  retrieved  successfully", data);
+        
+              } catch (err) {
+                throw err;
+              }
+     }
+
+    async getRmItemsDatabyProductGroupId1(req: productGroupDto): Promise<CommonResponseModel> {
+        try {
+          console.log(req, "ser");
+      
+          // Add a condition to filter out records with productGroupId = 1
+          const data = await this.Rmrepository.find({
+            where: {
+                productGroupId: Not(GlobalVariables.productGroupId),
+              },
+          });
+      
+          console.log(data, '-----------');
+          return new CommonResponseModel(true, 0, "Data retrieved successfully", data);
+        } catch (err) {
+          throw err;
+        }
+      }
+    
 
 
 }
