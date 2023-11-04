@@ -106,7 +106,7 @@ export class Style {
   @OneToMany(type=>StyleOrder, style=>style.styleInfo,{cascade: true})
   styleOrderInfo:StyleOrder;
 
-  @OneToMany(()=>OperationTracking, tracking => tracking.style, {cascade: true})
-  tracking : OperationTracking[]
+  // @OneToMany(()=>OperationTracking, tracking => tracking.style, {cascade: true})
+  // tracking : OperationTracking[]
 
 }

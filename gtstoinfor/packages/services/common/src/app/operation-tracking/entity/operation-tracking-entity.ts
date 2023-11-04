@@ -14,14 +14,32 @@ export class OperationTracking {
     name:'job_number'
     })
     jobNumber:string;
-   
-  @ManyToOne(type=>Style, style=>style.tracking,{  nullable:false, })
-  @JoinColumn({ name:"style_id"})
-  style: Style;
 
-  @ManyToOne(type=>OperationSequence, sequence=>sequence.tracking,{  nullable:false, })
-  @JoinColumn({ name:"operation_sequence_id"})
-  operationSequence: OperationSequence;
+    @Column('int',{
+      nullable:false,
+      name:'style_id'
+  })
+  styleId:number;
+  
+  @Column('int',{
+    nullable:false,
+    name:'operation_sequence_id'
+  })
+  operationSequenceId:number;
+   
+  // @ManyToOne(type=>Style, style=>style.tracking,{  nullable:false, })
+  // @JoinColumn({ name:"style_id"})
+  // style: Style;
+
+  // @ManyToOne(type=>OperationSequence, sequence=>sequence.tracking,{  nullable:false, })
+  // @JoinColumn({ name:"operation_sequence_id"})
+  // operationSequence: OperationSequence;
+
+  @Column('int',{
+    nullable:false,
+    name:'operation_inventory_id'
+})
+operationInventoryId:number;
 
   @Column('varchar',{
     nullable:false,
@@ -29,11 +47,11 @@ export class OperationTracking {
 })
 operation:string;
 
-@Column('varchar',{
-    nullable:false,
-    name:'next_operation'
-})
-nextOperation:string;
+// @Column('varchar',{
+//     nullable:false,
+//     name:'next_operation'
+// })
+// nextOperation:string;
 
   @Column('int',{
     nullable:false,
@@ -41,11 +59,11 @@ nextOperation:string;
 })
 issuedQuantity:number;
 
-@Column('varchar',{
+@Column('int',{
     nullable:false,
-    name:'issued_uom'
+    name:'issued_uom_id'
 })
-issuedUom:string;
+issuedUomId:number;
 
   @Column('int',{
     nullable:false,
@@ -55,9 +73,9 @@ damagedQuantity:number;
 
 @Column('varchar',{
     nullable:false,
-    name:'damaged_uom'
+    name:'damaged_uom_id'
 })
-damagedUom:string;
+damagedUomId:number;
 
   @Column('int',{
     nullable:false,
@@ -65,11 +83,11 @@ damagedUom:string;
 })
 reportedQuantity:number;
 
-@Column('varchar',{
+@Column('int',{
     nullable:false,
-    name:'reported_uom'
+    name:'reported_uom_id'
 })
-reportedUom:string;
+reportedUomId:number;
 
 @Column('int',{
     nullable:false,
@@ -77,11 +95,11 @@ reportedUom:string;
 })
 rejectedQuantity:number;
 
-@Column('varchar',{
+@Column('int',{
     nullable:false,
-    name:'rejected_uom'
+    name:'rejected_uom_id'
 })
-rejectedUom:string;
+rejectedUomId:number;
 
 @Column('enum',{
     nullable:false,

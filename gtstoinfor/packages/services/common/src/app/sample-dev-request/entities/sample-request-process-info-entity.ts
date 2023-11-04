@@ -17,7 +17,7 @@ export class SampleRequestProcessInfoEntity{
         nullable:true
     })
     description:false
-    @ManyToOne(type =>SampleRequest,samplereq =>samplereq.sampleProcessInfo)
+    @ManyToOne(type =>SampleRequest,sampleReq =>sampleReq.sampleProcessInfo)
     @JoinColumn({name:'sample_request_id'})
     sampleReq:SampleRequest
 }
