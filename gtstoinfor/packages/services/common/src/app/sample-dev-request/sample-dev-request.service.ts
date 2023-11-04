@@ -86,62 +86,65 @@ export class SampleRequestService {
     }
 }
 
-  async createSmapleDevlopmentRequest(req:SampleRequestDto):Promise<AllSampleDevReqResponseModel>{
+  async createSampleDevelopmentRequest(req:SampleRequestDto):Promise<AllSampleDevReqResponseModel>{
     try{
-      const samplereqEntity = new SampleRequest();
-      const locationentity = new Location()
-      locationentity.locationId=req.locationId
-      samplereqEntity.location=locationentity
-      samplereqEntity.requestNo=req.requestNo
-      const styleEntity = new Style()
-      styleEntity.styleId=req.styleId
-      samplereqEntity.style=styleEntity
+      const sampleReqEntity = new SampleRequest();
+      const locationEntity = new Location()
+      locationEntity.locationId=req.locationId
+      sampleReqEntity.location=locationEntity
+      sampleReqEntity.requestNo=req.requestNo
       const profitHead = new ProfitControlHead()
       profitHead.profitControlHeadId=req.pchId
-      samplereqEntity.pch=profitHead
+      sampleReqEntity.pch=profitHead
+      sampleReqEntity.user=req.user
       const buyer = new Buyers()
       buyer.buyerId=req.buyerId
-      samplereqEntity.buyer=buyer
+      sampleReqEntity.buyer=buyer
       const samType = new SampleTypes()
       samType.sampleTypeId=req.sampleTypeId
-      samplereqEntity.sampleType=samType
+      sampleReqEntity.sampleType=samType
       const samSubType = new SampleSubTypes()
       samSubType.sampleSubTypeId=req.sampleSubTypeId
-      samplereqEntity.sampleSubType = samSubType
+      sampleReqEntity.sampleSubType = samSubType
+      const styleEntity = new Style()
+      styleEntity.styleId=req.styleId
+      sampleReqEntity.style=styleEntity
+      sampleReqEntity.description=req.description
       const brand = new Brands()
       brand.brandId=req.brandId
-      samplereqEntity.brand=brand
-      samplereqEntity.costRef=req.costRef
-      samplereqEntity.m3StyleNo=req.m3StyleNo
-      samplereqEntity.contact=req.contact
-      samplereqEntity.extension=req.extension
-      samplereqEntity.samValue=req.samValue
+      sampleReqEntity.brand=brand
+      sampleReqEntity.costRef=req.costRef
+      sampleReqEntity.m3StyleNo=req.m3StyleNo
+      sampleReqEntity.contact=req.contact
+      sampleReqEntity.extension=req.extension
+      sampleReqEntity.samValue=req.samValue
       const dmm = new EmplyeeDetails()
       dmm.employeeId=req.dmmId
-      samplereqEntity.dmm=dmm
+      sampleReqEntity.dmm=dmm
       const employee = new EmplyeeDetails()
       employee.employeeId=req.technicianId
-      samplereqEntity.technician=employee
-      samplereqEntity.product=req.product
-      samplereqEntity.type=req.type
-      samplereqEntity.conversion=req.conversion
-      samplereqEntity.madeIn=req.madeIn
-      samplereqEntity.facilityId=req.facilityId
-      samplereqEntity.status=req.status
+      sampleReqEntity.technician=employee
+      sampleReqEntity.product=req.product
+      sampleReqEntity.type=req.type
+      sampleReqEntity.conversion=req.conversion
+      sampleReqEntity.madeIn=req.madeIn
+      sampleReqEntity.facilityId=req.facilityId
+      sampleReqEntity.remarks=req.remarks
+      sampleReqEntity.status=req.status
       let sampleSizeInfo =[]
       let sampleFabricInfo =[]
       let sampleTrimInfo =[]
       let sampleProcessInfo =[]
-      for(const size of req.samplereqsizeinfo){
-        const sizeentity = new SampleReqSizeEntity()
-        sizeentity.colourId=size.colourId
-        sizeentity.sizeId=size.sizeId
-        sizeentity.quantity=size.quantity
-        sampleSizeInfo.push(sizeentity)
+      for(const size of req.sampleReqSizeInfo){
+        const sizeEntity = new SampleReqSizeEntity()
+        sizeEntity.colourId=size.colourId
+        sizeEntity.sizeId=size.sizeId
+        sizeEntity.quantity=size.quantity
+        sampleSizeInfo.push(sizeEntity)
         console.log(sampleSizeInfo)
       }
-      samplereqEntity.samplereqsizeinfo=sampleSizeInfo
-      for(const fabricObj of req.samplereqfabricinfo){
+      sampleReqEntity.sampleReqSizeInfo=sampleSizeInfo
+      for(const fabricObj of req.sampleReqFabricInfo){
         const fabricEntity = new SampleReqFabricinfoEntity()
         fabricEntity.fabricCode=fabricObj.fabricCode
         fabricEntity.description=fabricObj.description
@@ -150,7 +153,7 @@ export class SampleRequestService {
         fabricEntity.remarks=fabricObj.remarks
         sampleFabricInfo.push(fabricEntity)
       }
-      samplereqEntity.samplereqfabricinfo=sampleFabricInfo
+      sampleReqEntity.sampleReqFabricInfo=sampleFabricInfo
       for(const trimObj of req.sampleTrimInfo){
         const trimEntity = new SampleRequestTriminfoEntity()
         trimEntity.consumption=trimObj.consumption
@@ -158,15 +161,18 @@ export class SampleRequestService {
         trimEntity.remarks=trimObj.remarks
         sampleTrimInfo.push(trimEntity)
       }
-      samplereqEntity.sampleTrimInfo=sampleTrimInfo
-      for(const processobj of req.sampleProcessInfo){
+      sampleReqEntity.sampleTrimInfo=sampleTrimInfo
+      for(const processObj of req.sampleProcessInfo){
         const processEntity = new SampleRequestProcessInfoEntity()
-        processEntity.process=processobj.process
-        processEntity.description=processobj.description
+        processEntity.process=processObj.process
+        processEntity.description=processObj.description
         sampleProcessInfo.push(processEntity)
       }
-      samplereqEntity.sampleProcessInfo=sampleProcessInfo
-      const save = await this.sampleRepo.save(samplereqEntity)
+      sampleReqEntity.sampleProcessInfo=sampleProcessInfo
+      
+      const save = await this.sampleRepo.save(sampleReqEntity)
+      console.log(sampleReqEntity,'sampleReqEntity')
+      console.log(save,'save')
       if(save){
         return new AllSampleDevReqResponseModel(true,1,'SampleDevelopmentRequest created sucessfullyy',[])
       }

@@ -7,21 +7,25 @@ import { SampleProcessInfoReq } from './sample-dev-process-info-req';
 
 export class SampleRequestDto {
   @ApiProperty()
-  SampleRequestId:number;
+  SampleRequestId: number;
   @ApiProperty()
-  locationId : number;
+  locationId: number;
   @ApiProperty()
   requestNo: string;
   @ApiProperty()
-  styleId : number;
+  pchId: number;
   @ApiProperty()
-  pchId : number;
+  user: string;
   @ApiProperty()
-  buyerId : number;
+  buyerId: number;
   @ApiProperty()
-  sampleTypeId : number;
+  sampleTypeId: number;
   @ApiProperty()
-  sampleSubTypeId : number;
+  sampleSubTypeId: number;
+  @ApiProperty()
+  styleId: number;
+  @ApiProperty()
+  description: string;
   @ApiProperty()
   brandId: number;
   @ApiProperty()
@@ -29,90 +33,99 @@ export class SampleRequestDto {
   @ApiProperty()
   m3StyleNo: string;
   @ApiProperty()
-  contact:string;
+  contact: string;
   @ApiProperty()
-  extension:string;
+  extension: string;
   @ApiProperty()
-  samValue:number;
+  samValue: number;
   @ApiProperty()
-  dmmId : number;
+  dmmId: number;
   @ApiProperty()
-  technicianId : number;
+  technicianId: number;
   @ApiProperty()
-  product:string;
+  product: string;
   @ApiProperty()
-  type:string;
+  type: string;
   @ApiProperty()
-  conversion:string;
+  conversion: string;
   @ApiProperty()
-  madeIn:string;
+  madeIn: string;
   @ApiProperty()
   facilityId: number;
   @ApiProperty()
+  remarks: string;
+  @ApiProperty()
   status: SampleDevelopmentStatusEnum;
-  @ApiProperty({type:[SampleSizeReq]})
-  samplereqsizeinfo:SampleSizeReq[];
-  @ApiProperty({type:[SamplefabricReq]})
-  samplereqfabricinfo:SamplefabricReq[]
-  @ApiProperty({type:[SampleTrimReq]})
-  sampleTrimInfo:SampleTrimReq[]
-  @ApiProperty({type:[SampleProcessInfoReq]})
-  sampleProcessInfo:SampleProcessInfoReq[]
+  @ApiProperty({ type: [SampleSizeReq] })
+  sampleReqSizeInfo: SampleSizeReq[];
+  @ApiProperty({ type: [SamplefabricReq] })
+  sampleReqFabricInfo: SamplefabricReq[]
+  @ApiProperty({ type: [SampleTrimReq] })
+  sampleTrimInfo: SampleTrimReq[]
+  @ApiProperty({ type: [SampleProcessInfoReq] })
+  sampleProcessInfo: SampleProcessInfoReq[]
 
   constructor(
-  SampleRequestId:number,
-  locationId : number,
-  requestNo: string,
-  styleId : number,
-  pchId : number,
-  buyerId : number,
-  sampleTypeId : number,
-  sampleSubTypeId : number,
-  brandId: number,
-  costRef: string,
-  m3StyleNo: string,
-  contact:string,
-  extension:string,
-  samValue:number,
-  dmmId : number,
-  technicianId : number,
-  product:string,
-  type:string,
-  conversion:string,
-  madeIn:string,
-  facilityId: number,
-  status: SampleDevelopmentStatusEnum,
-  samplereqsizeinfo:SampleSizeReq[],
-  samplereqfabricinfo:SamplefabricReq[],
-  sampleTrimInfo:SampleTrimReq[],
-  sampleProcessInfo:SampleProcessInfoReq[]
-  ){
-    this.SampleRequestId=SampleRequestId
-    this.locationId=locationId
-    this.requestNo=requestNo
-    this.styleId=styleId
-    this.pchId=pchId
-    this.buyerId=buyerId
-    this.sampleTypeId=sampleTypeId
-    this.sampleSubTypeId=sampleSubTypeId
-    this.brandId=brandId
-    this.costRef=costRef
-    this.m3StyleNo=m3StyleNo
-    this.contact=contact
-    this.extension=extension
-    this.samValue=samValue
-    this.dmmId=dmmId
-    this.technicianId=technicianId
-    this.product=product
-    this.type=type
-    this.conversion=conversion
-    this.madeIn=madeIn
-    this.facilityId=facilityId
+
+    SampleRequestId: number,
+    locationId: number,
+    requestNo: string,
+    pchId: number,
+    user: string,
+    buyerId: number,
+    sampleTypeId: number,
+    sampleSubTypeId: number,
+    styleId: number,
+    description: string,
+    brandId: number,
+    costRef: string,
+    m3StyleNo: string,
+    contact: string,
+    extension: string,
+    samValue: number,
+    dmmId: number,
+    technicianId: number,
+    product: string,
+    type: string,
+    conversion: string,
+    madeIn: string,
+    facilityId: number,
+    remarks: string,
+    status:SampleDevelopmentStatusEnum,
+    sampleReqSizeInfo: SampleSizeReq[],
+    sampleReqFabricInfo: SamplefabricReq[],
+    sampleTrimInfo: SampleTrimReq[],
+    sampleProcessInfo: SampleProcessInfoReq[]
+  ) {
+    this.SampleRequestId = SampleRequestId
+    this.locationId = locationId
+    this.requestNo = requestNo
+    this.pchId = pchId
+    this.user = user
+    this.buyerId = buyerId
+    this.sampleTypeId = sampleTypeId
+    this.sampleSubTypeId = sampleSubTypeId
+    this.styleId = styleId
+    this.description = description
+    this.brandId = brandId
+    this.costRef = costRef
+    this.m3StyleNo = m3StyleNo
+    this.contact = contact
+    this.extension = extension
+    this.samValue = samValue
+    this.dmmId = dmmId
+    this.technicianId = technicianId
+    this.product = product
+    this.type = type
+    this.conversion = conversion
+    this.madeIn = madeIn
+    this.facilityId = facilityId
+    this.remarks = remarks
     this.status=status
-    this.samplereqsizeinfo=samplereqsizeinfo
-    this.samplereqfabricinfo=samplereqfabricinfo
-    this.sampleTrimInfo=sampleTrimInfo
-    this.sampleProcessInfo=sampleProcessInfo
+    this.sampleReqSizeInfo = sampleReqSizeInfo
+    this.sampleReqFabricInfo = sampleReqFabricInfo
+    this.sampleTrimInfo = sampleTrimInfo
+    this.sampleProcessInfo = sampleProcessInfo
 
   }
 }
