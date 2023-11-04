@@ -5,6 +5,7 @@ import { FgRmMappingEntity } from "../fg-rm-mapping.entity";
 import { FgItemCodeReq } from "@project-management-system/shared-models";
 import { RmSkus } from "../../rm-skus/rm-sku.entity";
 import { FeatureEntity } from "../../feature-creation/entities/feature.entity";
+import { RmMappingFilterRequest } from "@project-management-system/shared-models";
 
 @Injectable()
 export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
@@ -23,5 +24,17 @@ export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
         return data.getRawMany() 
     }
 
-   
+    async getAllFgRmMapped(req: RmMappingFilterRequest ): Promise<any[]> {
+        const query = this.createQueryBuilder('fg_item')
+        .select(`*`).where('1=1'); 
+      
+        if (req.fgItemCode !== undefined) {
+          query.andWhere(`fg_item_code = :fgCode`, { fgCode: req.fgItemCode }); 
+        }
+        if (req.rmItemCode !== undefined) {
+            query.andWhere(`rm_item_code = :RmCode`, { RmCode: req.rmItemCode }); 
+          }
+        let data:FgRmMappingEntity[] = await query.getRawMany();
+        return data;
+      }
 }

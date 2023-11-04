@@ -15,4 +15,9 @@ async getAllInfoByItemCode( req: FgItemCodeReq): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL +  '/getAllInfoByItemCode', req)
 }
 
+async getRmMapped(req:any): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getRmMapped",req)
+  }
+
+
 }

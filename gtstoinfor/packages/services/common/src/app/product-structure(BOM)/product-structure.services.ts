@@ -1,6 +1,6 @@
 
 import { Injectable } from "@nestjs/common";
-import { BomRequest, BomTrimResponseModel, CommonResponseModel, FgItemCodeReq, FgRmMappingResponseModel, ProductStructureResponseModel } from "@project-management-system/shared-models";
+import { BomRequest, BomTrimResponseModel, CommonResponseModel, FgItemCodeReq, FgRmMappingResponseModel, ProductStructureResponseModel, RmMappingFilterRequest } from "@project-management-system/shared-models";
 import { SMVEfficiencyRepository } from "./repository/smv-efficency.repository";
 import { SMVEfficiencyDto } from "./dto/smv-efficency.dto";
 import { SMVEfficiencyEntity } from "./smv-efficency.entity";
@@ -123,6 +123,14 @@ export class ProductStructureService {
       throw err
     }
    }       
+          async getRmMapped(req?:RmMappingFilterRequest): Promise<CommonResponseModel> {
+            const data = await this.fgrmRepo.getAllFgRmMapped(req)
+            if (data.length > 0){
+    
+                return new CommonResponseModel(true, 1111, 'Data retreived',data )
+            }
+            return new CommonResponseModel(false, 0, 'Data Not retreived',[])
+          }
 
       
 

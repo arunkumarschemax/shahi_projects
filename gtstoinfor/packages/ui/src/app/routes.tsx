@@ -161,6 +161,7 @@ import FeatureCreationView from "./BOM/feature-creation-view"
 import RMCreationView from "./orders/rm-creation-view"
 import FgRMMappingForm from "./common/product-structure(BOM)/fg-rm-items-mapping"
 import Substitution from "./BOM/substitution"
+import FgRmItemBomView from "./common/product-structure(BOM)/fg-rm-item-view"
 
 
 export const AppRoutes = () => {
@@ -596,7 +597,9 @@ export const AppRoutes = () => {
                     <Route path='item-creation' element={<ItemCreation itemCreationData={undefined} isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
                         } }/>}/>
-                    <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
+                    <Route path="fabric-bom-creation" element={<FabricBomCreation rmCreationData={undefined} isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.")
+                    } }/>}/>
                     <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation />} />
                     <Route path='style-order-creation' element={<StyleOrderCreation coData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
                     <Route path='style-order-view' element={<StyleOrderGrid />} />
@@ -619,6 +622,7 @@ export const AppRoutes = () => {
                 <Route path='/product-structure'>
                 <Route path='productstructure/smv-efficiency' element={<SmvEfficiencyForm/>}/>
                 <Route path='fg-rm-mapping' element={<FgRMMappingForm/>}/>
+                <Route path ='fg-rm-mapping-view' element={<FgRmItemBomView/>}/>
 
 
             

@@ -1,7 +1,7 @@
 import { PropertyEnum } from "@project-management-system/shared-models";
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 
-@Entity('rm-items')
+@Entity('rm_items')
 export class RmCreationEntity{
     
 @PrimaryGeneratedColumn("increment", { name: 'rm_item_id' })
@@ -18,7 +18,7 @@ itemCode:string;
     nullable: false,
     name:"item_category_id"
 })
-itemCategoryId:number;
+itemCategoriesId:number;
 
 @Column("int",{
     nullable: false,
@@ -38,6 +38,48 @@ facilityID:number;
     name:"generic_code"
 })
 genericCode:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 150,
+    name:"supply_lead_time"
+})
+supplyLeadTime:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 200,
+    name:"supplier"
+})
+supplier:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 200,
+    name:"consumption"
+})
+consumption:string;
+
+
+@Column("int",{
+    nullable: false,
+    name:"total"
+})
+total:number;
+
+@Column("varchar",{
+    nullable: false,
+    length: 200,
+    name:"delivery_terms"
+})
+deliveryTerms:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 200,
+    name:"delivery_method"
+})
+deliveryMethod:string;
 
 @Column("varchar",{
     nullable: false,
@@ -79,12 +121,11 @@ placement:string;
   })
   fabricFinishId: number;
 
-@Column("varchar",{
+@Column("int",{
     nullable: false,
-    length: 255,
-    name:"responsible"
+    name:"responsible_id"
 })
-responsible:string;
+responsibleId:number;
 
 @Column("varchar",{
     nullable: false,
@@ -173,7 +214,7 @@ property:PropertyEnum;
     length: 155,
     name:"is_sale_item"
 })
-SaleItem:string;
+saleItem:string;
 
 @Column("varchar",{
     nullable: false,
@@ -195,6 +236,45 @@ costGroup:string;
     name:"remarks"
 })
 remarks:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 255,
+    name:"attached_warehouse"
+})
+attachedWareHouse:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 255,
+    name:"planner"
+})
+planner:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 255,
+    name:"business_area"
+})
+businessArea:string;
+
+@Column("int",{
+    nullable: false,
+    name:"hierarchy_Level_id"
+})
+hierarchyLevelId:number;
+
+@Column("int",{
+    nullable: false,
+    name:"product_group_id"
+})
+productGroupId:number;
+
+@Column("int",{
+    nullable: false,
+    name:"procurement_gorup_id"
+})
+procurementGroupId:number;
 
 @Column("int",{
     nullable: true,

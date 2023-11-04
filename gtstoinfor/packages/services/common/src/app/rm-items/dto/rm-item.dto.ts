@@ -4,14 +4,13 @@ import { IsNotEmpty, IsNumber, IsOptional } from "class-validator";
 
 
 export class RmCreationDto{
-    @ApiProperty()
-    rmitemId:number;
+    
 
     @ApiProperty()
     itemCode:string;
 
     @ApiProperty()
-    itemCategoryId:number
+    itemCategoriesId:number
 
     @ApiProperty()
     pchId:number
@@ -41,7 +40,7 @@ export class RmCreationDto{
     fabricFinishId:number
 
     @ApiProperty()
-    responsible:string
+    responsibleId:number
 
     @ApiProperty()
     devResponsible:string
@@ -80,7 +79,30 @@ export class RmCreationDto{
     property:PropertyEnum
 
     @ApiProperty()
-    SaleItem:string
+    supplyLeadTime:string
+
+    @ApiProperty()
+    supplier:string;
+
+
+    @ApiProperty()
+    consumption:string;
+
+
+    @ApiProperty()
+    total:number;
+
+
+    @ApiProperty()
+    deliveryTerms:string;
+
+
+    @ApiProperty()
+    deliveryMethod:string;
+
+
+    @ApiProperty()
+    saleItem:string
 
     @ApiProperty()
     wastage:string
@@ -93,9 +115,28 @@ export class RmCreationDto{
 
     @ApiProperty()
     itemGroupId:number
-i
+
     @ApiProperty()
     useInOperation:string
+
+    @ApiProperty()
+    businessArea:string
+
+    @ApiProperty()
+    attachedWareHouse:string
+
+    @ApiProperty()
+    planner:string
+
+    @ApiProperty()
+    hierarchyLevelId:number
+
+    @ApiProperty()
+    productGroupId:number
+
+
+    @ApiProperty()
+    procurementGroupId:number
 
     @ApiProperty()
     isActive: boolean;

@@ -22,5 +22,14 @@ export class RmSkusController {
         }
     }
 
+    @Post('/getAllRmSKUs')
+    async getAllRmSKUs():Promise<RmSkuResponseModel>{
+        try{
+            return await this.rmSkuService.getAllRmSKUs()
+        }catch(err){
+            return this.applicationExceptionhandler.returnException(RmSkuResponseModel,err)
+        }
+    }
+
  
 }

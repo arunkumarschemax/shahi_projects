@@ -3,7 +3,7 @@ import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, 
 import Highlighter from 'react-highlight-words';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import {   BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, ItemsService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from '@project-management-system/shared-services';
+import {   BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, FactoryService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, ItemsService, LiscenceTypeService, MasterBrandsService, ProcurmentGroupService, ProductGroupService, ProfitControlHeadService, ROSLGroupsService, RangeService, RmCreationService, SearchGroupService, StyleService, UomService } from '@project-management-system/shared-services';
 import { CompositionDto, ItemCreFilterRequest, LiscenceTypesdDto, RMCreFilterRequest } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
 import ItemCreation from './item-creation';
@@ -33,11 +33,20 @@ const RMCreationView = () => {
          const service = new ItemCreationService();
          const uomservice = new UomService();
          const itemGroupservice = new ItemGroupService();
+         const rmservice = new RmCreationService();
+         const pchservice = new ProfitControlHeadService();
+         const facilityservice =new FactoryService();
+         const procurementservice = new ProcurmentGroupService();
+         const proDUCTService = new ProductGroupService();
 
 
+
+         const [facilitydata,setfacilityData] = useState([]);
+         const [Procurement,setProcurement] = useState([]);
+         const [Product,setProduct] = useState([]);       
+         const [pchData, setpchData] = useState([]);
          const [searchdata,setSearchData] = useState([]);
          const [employedata,setEmployeData] = useState([]);
-         const [rangedata,setRangeData] = useState([]);
          const [customGroup,setCustomGroup]= useState([]);
          const [currency,setCurrency]= useState([]);
          const [itemgroup,setitemgroup] = useState([]);
@@ -47,55 +56,55 @@ const RMCreationView = () => {
          const [house,setHouse]= useState([])
          const [styledata,setStyle]=useState([])
          const[brand,setBrand]=useState([])
-         const [compositiondata,setCompositionData] = useState([]);
          const [ItemType,setItemType]= useState([]);
          const [form] = Form.useForm();
          const { Option } = Select;
+         const [uomdata,setUomData] = useState([]);
          const { RangePicker } = DatePicker;
 
 
 
 
   useEffect(() => {
-    getAllfgItemViewData();
+    getAllRMItemViewData();
     getAllStyles();
     getAllCategory();
     getAllCurrency();
     getAllBuyingHouse();
-    getAllSearchgroup();
-    getAllComposition();
     getAllEmployes();
     getAllItemType();
     getAllCategory();
     getAllItemGroups();
+    getAllUoms();getAllFacilitys();
+    getAllProducts();
+    getAllProcurement();
+    getAllPch();
   }, [])
 
   const resetHandler = () => {
     form.resetFields();
-    getAllfgItemViewData();
+    getAllRMItemViewData();
 
 }
-    const getAllfgItemViewData= () => {
+    const getAllRMItemViewData= () => {
       const req = new RMCreFilterRequest();
-      if (form.getFieldValue('style') !== undefined) {
-          req.buyer = form.getFieldValue('style');
+  
+      if (form.getFieldValue('currency') !== undefined) {
+          req.Currency = form.getFieldValue('currency');
       }
-      if (form.getFieldValue('itemName') !== undefined) {
-          req.itemName = form.getFieldValue('itemName');
+      if (form.getFieldValue('itemGroup') !== undefined) {
+          req.itemGroup = form.getFieldValue('itemGroup');
       }
-      if (form.getFieldValue('brandId') !== undefined) {
-          req.itemGroup = form.getFieldValue('brandId');
-      }
-      if (form.getFieldValue('brandId') !== undefined) {
-        req.itemType = form.getFieldValue('brandId');
+      if (form.getFieldValue('itemType') !== undefined) {
+        req.itemType = form.getFieldValue('itemType');
     }
-    if (form.getFieldValue('brandId') !== undefined) {
-      req.procurementGroup = form.getFieldValue('brandId');
+    if (form.getFieldValue('procurement') !== undefined) {
+      req.procurementGroup = form.getFieldValue('procurement');
   }
   if (form.getFieldValue('brandId') !== undefined) {
     req.productGroup = form.getFieldValue('brandId');
 }
-    service.getAllFgItems(req).then(res => {
+rmservice.getAllRMItems(req).then(res => {
       if (res.status) {
         setItemData(res.data);
         
@@ -113,6 +122,18 @@ const RMCreationView = () => {
   const closeDrawer = () => {
     setDrawerVisible(false);
   }
+
+  const getAllFacilitys=() =>{
+    facilityservice.getFactories().then(res =>{
+      if (res.status){
+        // console.log(res,'llllll')
+        setfacilityData(res.data);
+         
+      } else{
+        AlertMessages.getErrorMessage(res.internalMessage);
+         }
+    })       
+  }
   const getAllItemType=() =>{
     itemTypeservice.getAllActiveItemType().then(res =>{
       if (res.status){
@@ -121,12 +142,17 @@ const RMCreationView = () => {
       } else{
         AlertMessages.getErrorMessage(res.internalMessage);
          }
-    }).catch(err => {
-      setItemType([]);
-       AlertMessages.getErrorMessage(err.message);
-     })        
+    })      
   }
-
+  const getAllCategory=()=>{
+    categoryService.getActiveItemCategories().then(res=>{
+     if(res.status){
+         setItemCategory(res.data);
+       }else{
+         AlertMessages.getErrorMessage(res.internalMessage)
+     }
+ })
+   } 
   const getAllEmployes=() =>{
     employeservice.getAllActiveEmploee().then(res =>{
       if (res.status){
@@ -136,30 +162,19 @@ const RMCreationView = () => {
       } else{
         AlertMessages.getErrorMessage(res.internalMessage);
          }
-    }).catch(err => {
-      setEmployeData([]);
-       AlertMessages.getErrorMessage(err.message);
-     })        
+    })       
   }
-
-
-
-const getAllComposition=()=>{
-    compositionservice.getActiveComposition().then(res=>{
-   if(res.status){
-     setCompositionData(res.data);
-    }else{
-  AlertMessages.getErrorMessage(res.internalMessage);
-  }})} 
-    const getAllCategory=()=>{
-     categoryService.getActiveItemCategories().then(res=>{
-      if(res.status){
-          setItemCategory(res.data);
-        }else{
-          AlertMessages.getErrorMessage(res.internalMessage)
-      }
-  })
-    } 
+  const getAllPch = () => {
+    pchservice.getAllActiveProfitControlHead()
+      .then((res) => {
+        if (res.status) {
+          setpchData(res.data);
+        } else {
+          AlertMessages.getErrorMessage(res.internalMessage);
+        }
+      })
+      
+  };
 
   const getAllSearchgroup=()=>{
     searchgroup.getActiveSearchGroup().then(res=>{
@@ -182,13 +197,35 @@ const getAllComposition=()=>{
   }else{
     AlertMessages.getErrorMessage(res.internalMessage);
   }
-  }).catch(err=>{
-    setStyle([]);
-    AlertMessages.getErrorMessage(err.message)
   })
   }
 
-
+  const getAllProducts = () => {
+    proDUCTService
+      .getAllActiveProductGroup()
+      .then((res) => {
+        if (res.status) {
+          setProduct(res.data);
+        } else {
+          AlertMessages.getErrorMessage(res.internalMessage);
+        }
+      })
+  };
+  const getAllProcurement = () => {
+    procurementservice
+      .getAllActiveProcurmentGroup()
+      .then((res) => {
+        if (res.status) {
+          setProcurement(res.data);
+        } else {
+          AlertMessages.getErrorMessage(res.internalMessage);
+        }
+      })
+      .catch((err) => {
+        setProcurement([]);
+        AlertMessages.getErrorMessage(err.message);
+      });
+  };
  
 
    const getAllItemGroups=() =>{
@@ -297,8 +334,19 @@ const getAllComposition=()=>{
 
   const DetailView = (rowData) => {
 
-    navigate(`/materialCreation/item-creation-detail-view`,{state:rowData})
+    navigate(`/materialCreation/fabric-bom-creation`,{state:rowData})
     
+}
+
+const getAllUoms=() =>{
+  uomservice.getAllActiveUoms().then(res =>{
+    if (res.status){
+      setUomData(res.data);
+       
+    } else{
+      AlertMessages.getErrorMessage(res.internalMessage);
+       }
+  })        
 }
 
   const columnsSkelton: any = [
@@ -309,78 +357,38 @@ const getAllComposition=()=>{
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
-        title: "Buyer",
-        dataIndex: "",
+      title: "Item Type",
+      dataIndex: "item_type_id",
+      align:'center',
+      render: (data) => {
+        const type = ItemType.find((loc) => loc.itemTypeId === data);
+        return type ? type.itemType : "-";
+      },
+      sorter: (a, b) => a.itemTypeId.localeCompare(b.itemTypeId),
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+        title: "Item Code",
+        dataIndex: "item_code",
         align:'center',
-        // render: (data) => {
-        //   const style = styledata.find((sty) => sty.styleNo === data);
-        //   return style ? style.style : "-";
-        // },
-        sorter: (a, b) => a.style_no.localeCompare(b.style_no),
+        sorter: (a, b) => a.item_code.localeCompare(b.item_code),
             sortDirections: ['descend', 'ascend'],
       },
-      {
-        title: "Item Name",
-        dataIndex: "item_name",
-        align:'center',
-        render: (item_name) => {
-          return item_name ? item_name : "-";
-        },
-        sorter: (a, b) => a.item_name.localeCompare(b.item_name),
-        sortDirections: ['descend', 'ascend'],
-      },
-      {
-        title: "Item Resp",
-        dataIndex: "",
-        align:'center',
-        render: (data) => {
-          const style = ItemType.find((loc) => loc.item_type_id === data);
-          return style ? style.itemType : "-";
-        },
-        sorter: (a, b) => a.item_type_id.localeCompare(b.item_type_id),
-        sortDirections: ['descend', 'ascend'],
-      },
-      {
-        title: "Item Type",
-        dataIndex: "item_type_id",
-        align:'center',
-        render: (data) => {
-          const style = ItemType.find((loc) => loc.item_type_id === data);
-          return style ? style.itemType : "-";
-        },
-        sorter: (a, b) => a.item_type_id.localeCompare(b.item_type_id),
-        sortDirections: ['descend', 'ascend'],
-      },
+      // {
+      //   title: "Item Name",
+      //   dataIndex: "item_name",
+      //   align:'center',
+      //   render: (item_name) => {
+      //     return item_name ? item_name : "-";
+      //   },
+      //   sorter: (a, b) => a.item_name.localeCompare(b.item_name),
+      //   sortDirections: ['descend', 'ascend'],
+      // },
 
       {
         title: "Item Group",
-        dataIndex: "brand_id",
+        dataIndex: "item_group_id",
         align:'center',
-        render: (data) => {
-          const branddata = brand.find((bran) => bran.brandId === data);
-          return branddata ? branddata.brandName : "-";
-        },
-        sorter: (a, b) => a.brand_id.localeCompare(b.brand_id),
-        sortDirections: ['descend', 'ascend'],
-
-      },
-      {
-        title: "Product Group",
-        dataIndex: "",
-        // render: (data) => {
-        //   const catdata = itemCategory.find((cat) => cat.itemCategoryId === data);
-        //   return catdata ? catdata.itemCategory : "-";
-        // },
-        // sortDirections: ['descend', 'ascend'],
-        // sorter: (a, b) => {
-        //   const icatA = itemCategory.find((cat) => cat.itemCategoryId === a.itemCategoryId)?.itemCategory || '';
-        //   const icatB = itemCategory.find((cat) => cat.itemCategoryId === b.itemCategoryId)?.itemCategory || '';
-        //   return icatA.localeCompare(icatB);
-        // },
-      },
-      {
-        title: "Procurement Group",
-        dataIndex: "item_group",
         render: (data) => {
           const catdata = itemCategory.find((cat) => cat.itemCategoryId === data);
           return catdata ? catdata.itemCategory : "-";
@@ -390,24 +398,134 @@ const getAllComposition=()=>{
           const icatB = itemCategory.find((cat) => cat.itemCategoryId === b.itemCategoryId)?.itemCategory || '';
           return icatA.localeCompare(icatB);
         },        sortDirections: ['descend', 'ascend'],
+      }, {
+        title: "PCH",
+        dataIndex: "pch_id",align:'center',
+        render: (data) => {
+          const pchDat = pchData.find((cat) => cat.itemCategoryId === data);
+          return pchDat ? pchDat.itemCategory : "-";
+        },
+        sortDirections: ['descend', 'ascend'],
+        sorter: (a, b) => {
+          const icatA = itemCategory.find((cat) => cat.itemCategoryId === a.itemCategoryId)?.itemCategory || '';
+          const icatB = itemCategory.find((cat) => cat.itemCategoryId === b.itemCategoryId)?.itemCategory || '';
+          return icatA.localeCompare(icatB);
+        },
+      },
+      {
+        title: "Placement",
+        dataIndex: "placement",align:'center',
+       
+      },
+      {
+        title: "Facility",
+        dataIndex: "facility_id",align:'center',
+        render: (data) => {
+          const pchDat = facilitydata.find((cat) => cat.id === data);
+          return pchDat ? pchDat.name : "-";
+        },
+       
+      },
+      {
+        title: "Responsible",
+        dataIndex: "responsible_person_id",align:'center',
+        render: (data) => {
+          const empdata = employedata.find((emp) => emp.employeeId === data);
+          const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
+          return ftname ? ftname : '-';
+        },
+        sorter: (a, b) => {
+          const icatA = employedata.find((cat) => cat.employeeId === a.employeeId)?.ftname || '';
+          const icatB = employedata.find((cat) => cat.employeeId === b.employeeId)?.ftname || '';
+          return icatA.localeCompare(icatB);
+        },
+        sortDirections: ['descend', 'ascend'],
 
       },
-    //   {
-    //     title: "Responsible",
-    //     dataIndex: "responsible_person_id",
-    //     render: (data) => {
-    //       const empdata = employedata.find((emp) => emp.employeeId === data);
-    //       const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
-    //       return ftname ? ftname : '-';
-    //     },
-    //     sorter: (a, b) => {
-    //       const icatA = employedata.find((cat) => cat.employeeId === a.employeeId)?.ftname || '';
-    //       const icatB = employedata.find((cat) => cat.employeeId === b.employeeId)?.ftname || '';
-    //       return icatA.localeCompare(icatB);
-    //     },
-    //     sortDirections: ['descend', 'ascend'],
+      {
+        title: "Product Group",
+        dataIndex: "product_group_id",align:'center',
+        render: (data) => {
 
-    //   },
+          const catdata = Product.find((cat) => cat.productGroupId === data);
+          return catdata ? catdata.productGroup : "-";
+        },
+       
+      },
+      {
+        title: "Procurement Group",
+        dataIndex: "procurement_gorup_id",align:'center',
+        render: (data) => {
+          const catdata = Procurement.find((cat) => cat.procurmentGroupId === data);          
+          return catdata ? catdata.procurmentGroup : "-";
+        },
+        sorter: (a, b) => {
+          const icatA = itemCategory.find((cat) => cat.itemCategoryId === a.itemCategoryId)?.itemCategory || '';
+          const icatB = itemCategory.find((cat) => cat.itemCategoryId === b.itemCategoryId)?.itemCategory || '';
+          return icatA.localeCompare(icatB);
+        },        sortDirections: ['descend', 'ascend'],
+
+      },
+      {
+        title: "Attached WareHouse",
+        dataIndex: "attached_warehouse",
+        align:'center',
+        render: (catdata) => {
+          return catdata ? catdata : "-";
+        },
+      },
+      {
+        title: "Planner",
+        dataIndex: "planner",        align:'center',
+
+
+      },
+      {
+        title: "Business Area ",
+        dataIndex: "business_area",        align:'center',
+
+
+      },
+      {
+        title: "Basic UOM",
+        dataIndex: "basic_uom_id",
+        align:'center',
+        render: (data) => {
+          const UOM = uomdata.find((bran) => bran.uomId === data);
+          return UOM ? UOM.uom : "-";
+        },
+        sorter: (a, b) => a.uomId.localeCompare(b.uomId),
+        sortDirections: ['descend', 'ascend'],
+      },
+      {
+        title: "Currency",
+        dataIndex: "currency",align:'center',
+        render: (data) => {
+          const Curdata = currency.find((cat) => cat.currencyId  === data);
+          console.log(typeof(currency), "Curdata")
+          return Curdata ? Curdata.currencyName: "-";
+        },
+      },
+      {
+        title: "Description",
+        dataIndex: "description",align:'center',
+      },
+      {
+        title: "Sales Price",
+        dataIndex: "sale_price",
+        align:'right',
+        sorter: (a, b) => a.sale_price.localeCompare(b.sale_price),
+        sortDirections: ['descend', 'ascend'],
+
+      },
+      {
+        title: "Supplier",
+        dataIndex: "sale_price",
+        align:'center',
+        sorter: (a, b) => a.sale_price.localeCompare(b.sale_price),
+        sortDirections: ['descend', 'ascend'],
+
+      },
       
   ];
 
@@ -428,36 +546,25 @@ const getAllComposition=()=>{
   return (
       <>
       <Card title={<span >RM Creation</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }} 
-    extra={<Link to='/materialCreation/item-creation' >
+    extra={<Link to='/materialCreation/fabric-bom-creation' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
       <Card >
-      <Form onFinish={getAllfgItemViewData} form={form} layout='vertical'>
+      <Form onFinish={getAllRMItemViewData} form={form} layout='vertical'>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='style' label='Buyer' >
-                            <Select showSearch placeholder="Select Buyer" optionFilterProp="children" allowClear >
+                        <Form.Item name='currency' label='Currency' >
+                            <Select showSearch placeholder="Select Currency" optionFilterProp="children" allowClear >
                                 {
-                                    styledata?.map((inc: any) => {
-                                        return <Option key={inc.styleId} value={inc.styleId}>{inc.style}</Option>
+                                    currency?.map((inc: any) => {
+                                        return <Option key={inc.currencyId} value={inc.currencyId}>{inc.currencyName}</Option>
                                     })
                                 }
                             </Select>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='itemName' label='Item Name' >
-                            <Select showSearch placeholder="Select Item Name" optionFilterProp="children" allowClear>
-                                {
-                                    ItemData?.map((inc: any) => {
-                                        return <Option key={inc.fg_item_id} value={inc.item_name}>{inc.item_name}</Option>
-                                    })
-                                }
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='itemGroup' label='Item Group' >
+                        <Form.Item name='itemGroup' label='Item Group'>
                             <Select showSearch placeholder="Select Item Group" optionFilterProp="children" allowClear>
                                 {
                                     itemgroup?.map((inc: any) => {
@@ -468,7 +575,7 @@ const getAllComposition=()=>{
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='itemName' label='Item Type' >
+                        <Form.Item name='itemType' label='Item Type' >
                             <Select showSearch placeholder="Select Item Type" optionFilterProp="children" allowClear>
                                 {
                                     ItemType?.map((inc: any) => {
@@ -479,7 +586,7 @@ const getAllComposition=()=>{
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='brandId' label='Product Group' >
+                        <Form.Item name='product' label='Product Group' >
                             <Select
                                 showSearch
                                 placeholder="Select Product Group"
@@ -487,30 +594,29 @@ const getAllComposition=()=>{
                                 allowClear
                             >
                                 {
-                                    brand?.map((inc: any) => {
-                                        return <Option key={inc.brandId} value={inc.brandId}>{inc.brandName}</Option>
+                                    Product?.map((inc: any) => {
+                                        return <Option key={inc.productGroupId} value={inc.productGroupId}>{inc.productGroup}</Option>
                                     })
                                 }
                             </Select>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='brandId' label='Procurement Group' >
+                        <Form.Item name='procurement' label='Procurement Group' >
                             <Select
                                 showSearch
                                 placeholder="Select Procurement Group"
                                 optionFilterProp="children"
-                                allowClear
-                            >
+                                allowClear>
                                 {
-                                    brand?.map((inc: any) => {
-                                        return <Option key={inc.brandId} value={inc.brandId}>{inc.brandName}</Option>
+                                    Procurement?.map((inc: any) => {
+                                        return <Option key={inc.procurmentGroupId} value={inc.procurmentGroupId}>{inc.procurmentGroup}</Option>
                                     })
                                 }
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ padding: '15px' }}>
                         <Form.Item>
                             <Button htmlType="submit"
                                 icon={<SearchOutlined />}
@@ -539,7 +645,7 @@ const getAllComposition=()=>{
               setPage(current);
             }
           }}
-          // scroll={{x: 'max-content'}}
+           scroll={{x: 'max-content'}}
           onChange={onChange}
           bordered /></>
       </Card>

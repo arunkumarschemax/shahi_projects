@@ -2,7 +2,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { BomRequest, BomTrimResponseModel, CommonResponseModel, FgRmMappingResponseModel, ProductStructureResponseModel } from "@project-management-system/shared-models";
+import { BomRequest, BomTrimResponseModel, CommonResponseModel, FgRmMappingResponseModel, ProductStructureResponseModel, RmMappingFilterRequest } from "@project-management-system/shared-models";
 import { ProductStructureService } from "./product-structure.services";
 import { SMVEfficiencyDto } from "./dto/smv-efficency.dto";
 import { FgRMMappingDto } from "./dto/fg-rm-mapping.dto";
@@ -19,7 +19,6 @@ export class ProductStructureController {
       @ApiBody({type:SMVEfficiencyDto})   
       @Post('/createSMVEfficency')
       async createSMVEfficency(@Body() req:any): Promise<ProductStructureResponseModel> {
-        console.log(req)
         try {
             return await this.Servie.createSMVEfficency(req, false)
         } catch (error) {
@@ -48,6 +47,15 @@ export class ProductStructureController {
     }
   }
 
+  @Post('/getRmMapped')
+  @ApiBody({type: [RmMappingFilterRequest]})
+  async getRmMapped(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+        return await this.Servie.getRmMapped(req)
+    } catch (error) {
+      return (this.applicationExceptionHandler.returnException(CommonResponseModel, error));
+    }
+}
 
 
 
