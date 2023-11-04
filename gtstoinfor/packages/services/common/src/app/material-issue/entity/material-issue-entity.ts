@@ -15,6 +15,26 @@ export class MaterialIssueEntity{
     })
     consumptionCode:string;
 
+    @Column('varchar',{
+        nullable:false,
+        name:'request_no'
+    })
+    requestNo:string;
+
+    @Column('varchar',{
+        nullable:false,
+        name:'po_number'
+    })
+    poNumber:string;
+
+    @Column({
+        nullable: false,
+        name: 'issue_date',
+        type: 'date',
+    })
+    issueDate: Date;
+    
+
     @Column('int',{
         nullable:false,
         name:'location_id'
@@ -39,6 +59,12 @@ export class MaterialIssueEntity{
     })
     sampleTypeId:number;
     
+    @Column('int',{
+        nullable:false,
+        name:'sample_sub_type_id'
+    })
+    sampleSubTypeId:number;
+
     @Column('varchar',{
         nullable:false,
         name:'style_no'
@@ -82,11 +108,12 @@ export class MaterialIssueEntity{
     })
     m3StyleNo:string;
 
-    @Column('int',{
+    @Column("varchar",{
         nullable:false,
-        name:'contact'
-    })
-    contact:number;
+        length:10,
+        name:"contact"
+      })
+      contact:string;
 
     @Column('varchar',{
         nullable:false,

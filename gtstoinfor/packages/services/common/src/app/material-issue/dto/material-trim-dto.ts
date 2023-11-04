@@ -1,20 +1,38 @@
+import { ApiProperty } from "@nestjs/swagger";
 
-export class MaterialFabricDto{
-    materialFabricId:number;
-    fabricCode:string;
+export class MaterialTrimDto{
+    @ApiProperty()
+    materialTrimId:number;
+
+    @ApiProperty()
     description:string;
-    colorId: number
+
+    @ApiProperty()
+    colorId:number;
+
+    @ApiProperty()
     consumption:number;
+
+    @ApiProperty()
     consumptionUom:string;
+
+    @ApiProperty()
     issuedQuantity: number
+
+    @ApiProperty()
     issuedQuantityUom: string
+
+    @ApiProperty()
     remarks:string;
+
+    @ApiProperty()
     createdAt: Date;
+
+    @ApiProperty()
     createdUser: string | null;
 
     constructor(
-        materialFabricId:number,
-        fabricCode:string,
+        materialTrimId:number,
         description:string,
         colorId: number,
         consumption:number,
@@ -25,8 +43,7 @@ export class MaterialFabricDto{
         createdAt: Date,
         createdUser: string | null,
     ){
-        this.materialFabricId = materialFabricId
-        this.fabricCode = fabricCode
+        this.materialTrimId = materialTrimId
         this.description = description
         this.colorId = colorId
         this.consumption = consumption

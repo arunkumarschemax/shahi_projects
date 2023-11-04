@@ -16,6 +16,12 @@ export class MaterialTrimEntity {
     })
     description:string;
 
+    @Column('int',{
+      nullable:false,
+      name:'color_id'
+      })
+      colorId:number;
+
   @Column('int',{
     nullable:false,
     name:'consumption'
@@ -27,6 +33,18 @@ export class MaterialTrimEntity {
     name:'consumption_uom'
     })
     consumptionUom:string;
+
+    @Column('int',{
+      nullable:false,
+      name:'issued_quantity'
+      })
+      issuedQuantity:number;
+  
+    @Column('varchar',{
+      nullable:false,
+      name:'issued_quantity_uom'
+      })
+      issuedQuantityUom:string;
 
   @CreateDateColumn({
     name: "created_at",

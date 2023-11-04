@@ -11,13 +11,13 @@ export class OperationTrackingDto{
     operation:string;
     nextOperation:string;
     issuedQuantity:number;
-    issuedUom:string;
+    issuedUomId:number;
     damagedQuantity:number;
-    damagedUom:string;
+    damagedUomId:number;
     reportedQuantity:number;
-    reportedUom:string;
+    reportedUomId:number;
     rejectedQuantity:number;
-    rejectedUom:string;
+    rejectedUomId:number;
     status:TrackingEnum;
     createdAt: Date;
     createdUser: string | null;
@@ -34,13 +34,13 @@ export class OperationTrackingDto{
         operation:string,
         nextOperation:string,
         issuedQuantity:number,
-        issuedUom:string,
+        issuedUomId:number,
         damagedQuantity:number,
-        damagedUom:string,
+        damagedUomId:number,
         reportedQuantity:number,
-        reportedUom:string,
+        reportedUomId:number,
         rejectedQuantity:number,
-        rejectedUom:string,
+        rejectedUomId:number,
         status:TrackingEnum,
         createdAt: Date,
         createdUser: string | null,
@@ -57,13 +57,13 @@ export class OperationTrackingDto{
         this.operation = operation
         this.nextOperation = nextOperation
         this.issuedQuantity = issuedQuantity
-        this.issuedUom = issuedUom
+        this.issuedUomId = issuedUomId
         this.damagedQuantity = damagedQuantity
-        this.damagedUom = damagedUom
+        this.damagedUomId = damagedUomId
         this.reportedQuantity = reportedQuantity
-        this.reportedUom = reportedUom
+        this.reportedUomId = reportedUomId
         this.rejectedQuantity = rejectedQuantity
-        this.rejectedUom = rejectedUom
+        this.rejectedUomId = rejectedUomId
         this.status = status
         this.createdAt = createdAt
         this.createdUser = createdUser
