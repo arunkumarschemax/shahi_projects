@@ -28,6 +28,18 @@ export class MaterialTrimEntity {
     })
     consumptionUom:string;
 
+    @Column('int',{
+      nullable:false,
+      name:'issued_quantity'
+      })
+      issuedQuantity:number;
+  
+    @Column('varchar',{
+      nullable:false,
+      name:'issued_quantity_uom'
+      })
+      issuedQuantityUom:string;
+
   @CreateDateColumn({
     name: "created_at",
     type:"datetime"

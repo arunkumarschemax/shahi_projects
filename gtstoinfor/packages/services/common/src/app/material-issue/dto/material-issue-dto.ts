@@ -1,33 +1,87 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { MaterialFabricDto } from "./material-fabric-dto";
 import { MaterialTrimDto } from "./material-trim-dto";
 
 export class MaterialIssueDto{
+    @ApiProperty()
     materialIssueId:number;
+
+    @ApiProperty()
     consumptionCode:string;
+
+    @ApiProperty()
     requestNo: string
+
+    @ApiProperty()
     locationId:number;
+
+    @ApiProperty()
     pchId:number;
+
+    @ApiProperty()
     buyerId:number;
+
+    @ApiProperty()
     sampleTypeId:number;
+
+    @ApiProperty()
     sampleSubTypeId:number;
+
+    @ApiProperty()
     styleNo:string;
+
+    @ApiProperty()
     brandId:number;
+
+    @ApiProperty()
     dmmId:number;
+
+    @ApiProperty()
     technicianId:number;
+
+    @ApiProperty()
     description:string;
+
+    @ApiProperty()
     costRef:string;
+
+    @ApiProperty()
     m3StyleNo:string;
+
+    @ApiProperty()
     contact:string;
+
+    @ApiProperty()
     extn:string;
+
+    @ApiProperty()
     SAM:number;
+
+    @ApiProperty()
     product:string;
+
+    @ApiProperty()
     type:string;
+
+    @ApiProperty()
     conversion:string;
+
+    @ApiProperty()
     madeIn:string;
+
+    @ApiProperty()
     remarks:string;
+
+    @ApiProperty()
     createdAt: Date;
+
+    @ApiProperty()
     createdUser: string | null;
+
+    @ApiProperty({type: [MaterialFabricDto]})
     fabricInfo: MaterialFabricDto[]
+
+    @ApiProperty({type: [MaterialTrimDto]})
     trimInfo: MaterialTrimDto[]
 
     constructor(

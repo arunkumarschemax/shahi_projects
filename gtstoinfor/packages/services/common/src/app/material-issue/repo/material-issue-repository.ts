@@ -11,4 +11,10 @@ export class MaterialIssueRepository extends Repository<MaterialIssueEntity> {
     ) {
         super(operationSequence.target, operationSequence.manager, operationSequence.queryRunner);
     }
+
+    async getMaterialIssueById(): Promise<any> {
+        const query = this.createQueryBuilder()
+            .select(` MAX(material_issue_id) as materialIssueId`)
+        return await query.getRawOne();
+    }
 }

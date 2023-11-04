@@ -15,6 +15,12 @@ export class MaterialIssueEntity{
     })
     consumptionCode:string;
 
+    @Column('varchar',{
+        nullable:false,
+        name:'request_no'
+    })
+    requestNo:string;
+
     @Column('int',{
         nullable:false,
         name:'location_id'
@@ -41,7 +47,7 @@ export class MaterialIssueEntity{
     
     @Column('int',{
         nullable:false,
-        name:'sample_type_id'
+        name:'sample_sub_type_id'
     })
     sampleSubTypeId:number;
 
@@ -88,11 +94,12 @@ export class MaterialIssueEntity{
     })
     m3StyleNo:string;
 
-    @Column('int',{
+    @Column("varchar",{
         nullable:false,
-        name:'contact'
-    })
-    contact:number;
+        length:10,
+        name:"contact"
+      })
+      contact:string;
 
     @Column('varchar',{
         nullable:false,
