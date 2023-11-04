@@ -400,7 +400,7 @@ const getAllUoms=() =>{
         },        sortDirections: ['descend', 'ascend'],
       }, {
         title: "PCH",
-        dataIndex: "pch_id",
+        dataIndex: "pch_id",align:'center',
         render: (data) => {
           const pchDat = pchData.find((cat) => cat.itemCategoryId === data);
           return pchDat ? pchDat.itemCategory : "-";
@@ -414,12 +414,12 @@ const getAllUoms=() =>{
       },
       {
         title: "Placement",
-        dataIndex: "placement",
+        dataIndex: "placement",align:'center',
        
       },
       {
         title: "Facility",
-        dataIndex: "facility_id",
+        dataIndex: "facility_id",align:'center',
         render: (data) => {
           const pchDat = facilitydata.find((cat) => cat.id === data);
           return pchDat ? pchDat.name : "-";
@@ -428,7 +428,7 @@ const getAllUoms=() =>{
       },
       {
         title: "Responsible",
-        dataIndex: "responsible_person_id",
+        dataIndex: "responsible_person_id",align:'center',
         render: (data) => {
           const empdata = employedata.find((emp) => emp.employeeId === data);
           const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
@@ -444,7 +444,7 @@ const getAllUoms=() =>{
       },
       {
         title: "Product Group",
-        dataIndex: "product_group_id",
+        dataIndex: "product_group_id",align:'center',
         render: (data) => {
 
           const catdata = Product.find((cat) => cat.productGroupId === data);
@@ -454,7 +454,7 @@ const getAllUoms=() =>{
       },
       {
         title: "Procurement Group",
-        dataIndex: "procurement_gorup_id",
+        dataIndex: "procurement_gorup_id",align:'center',
         render: (data) => {
           const catdata = Procurement.find((cat) => cat.procurmentGroupId === data);          
           return catdata ? catdata.procurmentGroup : "-";
@@ -499,7 +499,7 @@ const getAllUoms=() =>{
       },
       {
         title: "Currency",
-        dataIndex: "currency",
+        dataIndex: "currency",align:'center',
         render: (data) => {
           const Curdata = currency.find((cat) => cat.currencyId  === data);
           console.log(typeof(currency), "Curdata")
@@ -508,7 +508,7 @@ const getAllUoms=() =>{
       },
       {
         title: "Description",
-        dataIndex: "description",
+        dataIndex: "description",align:'center',
       },
       {
         title: "Sales Price",
@@ -521,7 +521,7 @@ const getAllUoms=() =>{
       {
         title: "Supplier",
         dataIndex: "sale_price",
-        align:'right',
+        align:'center',
         sorter: (a, b) => a.sale_price.localeCompare(b.sale_price),
         sortDirections: ['descend', 'ascend'],
 
