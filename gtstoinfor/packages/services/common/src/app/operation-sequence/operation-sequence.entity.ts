@@ -93,7 +93,7 @@ export class OperationSequence{
     @JoinColumn({ name:"style_id"})
     styleInfo: Style;
 
-    @OneToMany(()=>OperationTracking, tracking => tracking.operationSequence, {cascade: true})
-    tracking : OperationTracking[]
+    // @OneToMany(()=>OperationTracking, tracking => tracking.operationSequence, {cascade: true})
+    // tracking : OperationTracking[]
 
 }

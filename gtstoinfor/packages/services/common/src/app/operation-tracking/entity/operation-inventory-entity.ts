@@ -5,24 +5,42 @@ import { Style } from "../../style/dto/style-entity";
 @Entity('operation_inventory')
 export class OperationInventory {
 
-  @PrimaryGeneratedColumn("increment", {
-    name: 'operation_inventory_id'
-  })
-  operationIssuingId: number;
+  @PrimaryGeneratedColumn("increment",{
+    name:'operation_inventory_id'
+})
+  operationIssuingId:number;
 
-  @ManyToOne(type => Style, style => style.tracking, { nullable: false, })
-  @JoinColumn({ name: "style_id" })
-  style: Style;
+  @Column('int',{
+    nullable:false,
+    name:'style_id'
+})
+styleId:number;
 
-  @ManyToOne(type => OperationSequence, sequence => sequence.tracking, { nullable: false, })
-  @JoinColumn({ name: "operation_sequence_id" })
-  operationSequence: OperationSequence;
+@Column('int',{
+  nullable:false,
+  name:'operation_sequence_id'
+})
+operationSequenceId:number;
+   
+  // @ManyToOne(type=>Style, style=>style.tracking,{  nullable:false, })
+  // @JoinColumn({ name:"style_id"})
+  // style: Style;
 
-  @Column('varchar', {
-    nullable: false,
-    name: 'operation'
-  })
-  operation: string;
+  // @ManyToOne(type=>OperationSequence, sequence=>sequence.tracking,{  nullable:false, })
+  // @JoinColumn({ name:"operation_sequence_id"})
+  // operationSequence: OperationSequence;
+
+  @Column('varchar',{
+    nullable:false,
+    name:'operation'
+})
+operation:string;
+
+@Column('varchar',{
+  nullable:false,
+  name:'next_operation'
+})
+nextOperation:string;
 
   @Column('int', {
     nullable: false,
@@ -42,11 +60,11 @@ export class OperationInventory {
   })
   issuedQuantity: number;
 
-  @Column('varchar', {
-    nullable: false,
-    name: 'issued_uom'
-  })
-  issuedUom: string;
+@Column('int',{
+    nullable:false,
+    name:'issued_uom_id'
+})
+issuedUomId:number;
 
   @Column('int', {
     nullable: false,
@@ -54,11 +72,11 @@ export class OperationInventory {
   })
   damagedQuantity: number;
 
-  @Column('varchar', {
-    nullable: false,
-    name: 'damaged_uom'
-  })
-  damagedUom: string;
+@Column('int',{
+    nullable:false,
+    name:'damaged_uom_id'
+})
+damagedUomId:number;
 
   @Column('int', {
     nullable: false,
@@ -66,11 +84,11 @@ export class OperationInventory {
   })
   rejectedQuantity: number;
 
-  @Column('varchar', {
-    nullable: false,
-    name: 'rejected_uom'
-  })
-  rejectedUom: string;
+@Column('int',{
+    nullable:false,
+    name:'rejected_uom_id'
+})
+rejectedUomId:number;
 
   @CreateDateColumn({
     name: "created_at",

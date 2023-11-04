@@ -2,31 +2,31 @@ import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColu
 import { SampleRequest } from "./sample-dev-request.entity";
 
 @Entity('sample_request_trim_info')
-export class SampleRequestTriminfoEntity{
-    @PrimaryGeneratedColumn('increment',{
-        name:'trim_info_id'
+export class SampleRequestTriminfoEntity {
+    @PrimaryGeneratedColumn('increment', {
+        name: 'trim_info_id'
     })
-    trimInfoId:number
+    trimInfoId: number
 
-    @Column('text',{
-        name:'description',
-        nullable:false
+    @Column('text', {
+        name: 'description',
+        nullable: false
     })
-    description:string
+    description: string
 
-    @Column('decimal',{
-        name:'consumption',
-        precision: 4, 
+    @Column('decimal', {
+        name: 'consumption',
+        precision: 4,
         scale: 2,
     })
-    consumption:number
-    @Column('text',{
-        name:'remarks',
-        nullable:true
+    consumption: number
+    @Column('text', {
+        name: 'remarks',
+        nullable: true
     })
-    remarks:string
+    remarks: string
 
-    @ManyToOne(() =>SampleRequest,sampleDevReq =>sampleDevReq.sampleTrimInfo)
-    @JoinColumn({name:'sample_request_id'})
-    sampleDevReqInfo:SampleRequest
+    @ManyToOne(() => SampleRequest, sampleDevReq => sampleDevReq.sampleTrimInfo)
+    @JoinColumn({ name: 'sample_request_id' })
+    sampleDevReqInfo: SampleRequest
 }
