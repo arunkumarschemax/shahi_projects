@@ -39,12 +39,6 @@ export class MaterialIssueEntity{
     })
     sampleTypeId:number;
     
-    @Column('int',{
-        nullable:false,
-        name:'sample_type_id'
-    })
-    sampleSubTypeId:number;
-
     @Column('varchar',{
         nullable:false,
         name:'style_no'
