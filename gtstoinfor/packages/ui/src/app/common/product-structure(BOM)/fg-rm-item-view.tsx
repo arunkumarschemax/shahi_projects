@@ -1,4 +1,4 @@
-import { ItemCreationService, RmCreationService, productStructureService } from "@project-management-system/shared-services"
+import { ItemCreationService, RmCreationService, ProductStructureService } from "@project-management-system/shared-services"
 import React, { useState, useEffect, useRef } from 'react';
 import { Table, Card,  Input, Button, Form, Row, Col, Select,} from 'antd';
 import Highlighter from 'react-highlight-words';
@@ -20,7 +20,7 @@ const FgRmItemBomView   = () => {
 
   const fgservice = new ItemCreationService()
   const Rmservice = new RmCreationService()
-  const productstructureservice = new productStructureService()
+  const productstructureservice = new ProductStructureService()
 
   const { Option } = Select;
   const [fgCode, setFgCode] = useState<any[]>([])
