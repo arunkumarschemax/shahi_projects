@@ -18,18 +18,22 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
         const query = this.createQueryBuilder('rm_item')
         .select(`*`).where('1=1'); 
       
-        // if (req.buyer !== undefined) {
-        //   query.andWhere(`style_no = :style`, { style: req.style }); 
-        // }
-        // if (req.itemName !== undefined) {
-        //     query.andWhere(`item_name = :itemName`, { itemName: req.itemName }); 
-        //   }
-        //   if (req.brandId !== undefined) {
-        //     query.andWhere(`brand_id = :brandId`, { brandId: req.brandId }); 
-        //   }
-        //   if (req.confirmStartDate !== undefined) {
-        //     query.andWhere(`Date(order_confirmed_date) BETWEEN '${req.confirmStartDate}' AND '${req.confirmEndDate}'`)
-        // }
+        if (req.itemGroup !== undefined) {
+          query.andWhere(`item_group_id = :itemGP`, { itemGP: req.itemGroup }); 
+        }
+        if (req.Currency !== undefined) {
+            query.andWhere(`currency_id = Currency`, {Currency: req.Currency }); 
+          }
+          if (req.itemType !== undefined) {
+            query.andWhere(`brand_id = :brandId`, { brandId: req.itemType }); 
+          }
+          if (req.productGroup !== undefined) {
+            query.andWhere(`product_group_id = :brandId`, { brandId: req.productGroup }); 
+          }
+          if (req.procurementGroup !== undefined) {
+            query.andWhere(`procurement_gorup_id = :brandId`, { brandId: req.procurementGroup }); 
+          }
+          
       
         let data:RmCreationEntity[] = await query.getRawMany();
         return data;
