@@ -22,12 +22,18 @@ export class RmCreationDTO{
     currencyId:number;
     price:string;
     tax:string;
+    supplyLeadTime:string;
+    supplier:string;
+    consumption:string;
+    total:number;
+    deliveryTerms:string;
+    deliveryMethod:string;
     purchasePriceQty:string;
     saleTax:string;
     exciseDuty:string;
     licenseId:number;
     property:PropertyEnum;
-    SaleItem:string;
+    saleItem:string;
     wastage:string;
     costGroup:string;
     remarks:string;
@@ -43,8 +49,8 @@ export class RmCreationDTO{
     createdUser: string;
     updatedUser: string;
     versionFlag: number;
-    constructor(rmitemId:string,itemCode:string,itemCategoryId:number, pchId:number,facilityID:number,genericCode:string,structure:string,quality:string,description:string,itemIypeId:number,placement:string, fabricFinishId:number,responsibleId:number,devResponsible:string, basicUomId:number,altUomId:number,multiplicationFactor:string,currencyId:number,price:string,tax:string,purchasePriceQty:string,saleTax:string,exciseDuty:string,licenseId:number,property:PropertyEnum,SaleItem:string,wastage:string, costGroup:string, remarks:string,itemGroup:number,procurementGroupId:number,productGroupId:number,
-          hierarchyLevelId:number,businessArea:string,planner:string,attachedWareHouse:string,useInOperation:string,isActive: boolean,createdUser: string,updatedUser: string,versionFlag: number){
+    constructor(rmitemId:string,itemCode:string,itemCategoryId:number, pchId:number,facilityID:number,genericCode:string,structure:string,quality:string,description:string,itemIypeId:number,placement:string, fabricFinishId:number,responsibleId:number,devResponsible:string, basicUomId:number,altUomId:number,multiplicationFactor:string,currencyId:number,price:string,tax:string,purchasePriceQty:string,saleTax:string,exciseDuty:string,licenseId:number,property:PropertyEnum,saleItem:string,wastage:string, costGroup:string, remarks:string,deliveryTerms:string,deliveryMethod:string,itemGroupId:number,procurementGroupId:number,productGroupId:number,
+          hierarchyLevelId:number,businessArea:string,planner:string,attachedWareHouse:string,supplyLeadTime:string,supplier:string,consumption:string, total:number,useInOperation:string,isActive: boolean,createdUser: string,updatedUser: string,versionFlag: number){
         this.rmitemId=rmitemId;
         this.itemCode=itemCode;
         this.itemCategoryId=itemCategoryId;
@@ -70,7 +76,7 @@ export class RmCreationDTO{
         this.exciseDuty=exciseDuty;
         this.licenseId=licenseId;
         this.property=property;
-        this.SaleItem=SaleItem;
+        this.saleItem=saleItem;
         this.wastage=wastage;
         this.procurementGroupId=procurementGroupId;
         this.productGroupId=productGroupId;
@@ -79,8 +85,14 @@ export class RmCreationDTO{
         this.hierarchyLevelId=hierarchyLevelId;
         this.businessArea=businessArea;
         this.costGroup=costGroup;
+        this.supplyLeadTime=supplyLeadTime;
+        this.supplier=supplier;
+        this.consumption=consumption;
+        this.total=total;
+        this.deliveryTerms=deliveryTerms;
+        this.deliveryMethod=deliveryMethod
         this.remarks=remarks;
-        this.itemGroupId=itemIypeId;
+        this.itemGroupId=itemGroupId;
         this.useInOperation=useInOperation;
         this.isActive=isActive;
         this.createdUser=createdUser;

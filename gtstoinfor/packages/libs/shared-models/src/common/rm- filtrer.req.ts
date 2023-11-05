@@ -2,7 +2,7 @@ export class RMCreFilterRequest {
 
     
     buyer?: string;
-    itemName?: string;
+    Currency?: string;
     itemGroup?: string;
     itemType?:string;
     productGroup?:string;
@@ -10,10 +10,10 @@ export class RMCreFilterRequest {
     
     
         constructor(
-            buyer?: string,itemName?: string,itemGroup?: string, itemType?:string,productGroup?:string,procurementGroup?:string,
+            buyer?: string,Currency?: string,itemGroup?: string, itemType?:string,productGroup?:string,procurementGroup?:string,
         ) {
            this.buyer = buyer
-            this.itemName = itemName
+            this.Currency = Currency
             this.itemGroup =itemGroup 
             this.itemType = itemType 
             this.productGroup  = productGroup 

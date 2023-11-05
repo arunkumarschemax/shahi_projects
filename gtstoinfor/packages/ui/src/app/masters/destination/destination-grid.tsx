@@ -123,11 +123,32 @@ export const DestinationGrid = (props: DestinationGridProps) => {
       ...getColumnSearchProps('divisionName')
     },
     {
+      title: 'Destination Code',
+      dataIndex: 'destinationCode',
+      sorter: (a, b) => a.destinationCode.localeCompare(b.destinationCode),
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('destinationCode')
+    },
+    {
       title: "Destination Name",
       dataIndex: "destination",
       sorter: (a, b) => a.source.localeCompare(b.source),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("destination"),
+    },
+    {
+      title: 'Option Group',
+      dataIndex: 'optionGroup',
+      sorter: (a, b) => a.optionGroup.localeCompare(b.optionGroup),
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('optionGroup')
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      sorter: (a, b) => a.description.localeCompare(b.description),
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('description')
     },
     {
       title: 'Status',
@@ -310,7 +331,9 @@ export const DestinationGrid = (props: DestinationGridProps) => {
   }
 
   return (
-
+    <Card title='Destination' 
+    extra={<span><Button onClick={()=>navigate('/global/destination/destination-form')} type={'primary'}>New</Button></span>}>
+    <br/>
     <>
       <Row gutter={40}>
         <Col>
@@ -356,6 +379,7 @@ export const DestinationGrid = (props: DestinationGridProps) => {
         </Card>
       </Drawer>
     </>
+    </Card>
   );
 }
 

@@ -17,7 +17,7 @@ export class RmCreationController{
     @Post('/createRm')
     async createRm(@Body() rmDto:any,isUpdate:boolean=false,@Req() request:Request): Promise<CommonResponseModel> {
         try {
-            console.log(rmDto);
+            // console.log(rmDto,"000000000000");
             return await this.rmCreationService.CreateRm(rmDto, false);
         } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)

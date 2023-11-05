@@ -550,7 +550,12 @@ export const baseRouterList = [
                 // icon: <PicCenterOutlined />,
                 filepath: "fabric-bom-creation",
             },
-          
+            {
+                label: "Feature Creation",
+                key: "feature-creation",
+                path: "feature-creation",
+                filepath: "feature-creation",
+            },
             {
                 label: "Trim Creation",
                 key: "bomtrimcreation",
