@@ -7,6 +7,7 @@ import { SMVEfficiencyEntity } from "./smv-efficency.entity";
 import { FgRMMappingDto } from "./dto/fg-rm-mapping.dto";
 import { FgRmMappingEntity } from "./fg-rm-mapping.entity";
 import { FgRmMappingRepository } from "./repository/fg-rm-mapping.repo";
+import { FgRMItemsMappingDto } from "./dto/rm-item-dto";
 
 
 @Injectable()
@@ -75,35 +76,32 @@ export class ProductStructureService {
           }
         }
 
-        async createFgRmMapping(req: FgRMMappingDto[], isUpdate: boolean): Promise<FgRmMappingResponseModel> {
+        async createFgRmMapping(req: FgRMMappingDto, isUpdate: boolean): Promise<FgRmMappingResponseModel> {
           console.log(req,"service")
   
           try {
+            
+            let flag = true
+            
 
-            const FgRMMappingDto: FgRMMappingDto[] = [];
-
-            for(const data of req){
+            for (const data of req.itemInfo){
               const entity = new FgRmMappingEntity()
-              entity.FgRmId = data.FgRmId
-              entity.fgitemId = data.fgitemId
-              entity.fgitemCode = data.fgitemCode
+              entity.fgitemId = req.fgitemId
+              entity.fgitemCode = req.fgitemCode
+              entity.createdUser = req.createdUser  
               entity.rmitemId = data.rmitemId
-              entity.rmitemCode = data.fgitemCode
-              entity.createdUser = data.createdUser
-              FgRMMappingDto.push(entity)
-  
-            }
+              entity.rmitemCode = data.rmitemCode
+              const save = await this.fgrmRepo.save(entity)
+      
 
-              const save = await this.fgrmRepo.save(FgRMMappingDto)
+            }
   
-            if (save){
-  
-              return new FgRmMappingResponseModel(true, 0, "FG-RM Mapping Sucessfully",save);
+            if (!flag){
+              return new FgRmMappingResponseModel(false, 0, "Something went Wrong");   
   
             } else {
-  
-              return new FgRmMappingResponseModel(false, 0, "Something went Wrong");
-             
+              return new FgRmMappingResponseModel(true, 0, "FG-RM Mapping Sucessfully",);
+              
             }
         
             } catch (err) {

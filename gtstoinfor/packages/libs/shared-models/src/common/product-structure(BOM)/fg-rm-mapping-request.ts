@@ -1,3 +1,4 @@
+import { RmItemMappingRequest } from "./rm-item.request";
 
 
 
@@ -6,8 +7,7 @@ export class FgRmMappingRequest {
     
     fgitemId: number;
     fgitemCode: string;    
-    rmitemId: number;
-    rmitemCode: string;
+    itemInfo: RmItemMappingRequest[]
     createdUser?: string;
    
   
@@ -15,15 +15,13 @@ export class FgRmMappingRequest {
     constructor(
         fgitemId: number,
         fgitemCode: string,    
-        rmitemId: number,
-        rmitemCode: string,
+        itemInfo:RmItemMappingRequest[],
         createdUser?: string
   
     ){
       this.fgitemId = fgitemId
       this.fgitemCode = fgitemCode
-      this.rmitemId = rmitemId
-      this.rmitemCode = rmitemCode
+      this.itemInfo = itemInfo
       this.createdUser = createdUser
 
 

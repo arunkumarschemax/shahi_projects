@@ -3,7 +3,7 @@ import { GlobalResponseObject } from "../global-response-object";
 
 
 export class FgRmMappingResponseModel extends GlobalResponseObject{
-    data?: FgRmMappingRequest[];
+    data?: FgRmMappingRequest;
     /**
      * 
      * @param status 
@@ -11,7 +11,7 @@ export class FgRmMappingResponseModel extends GlobalResponseObject{
      * @param internalMessage 
      * @param data 
      */
-     constructor(status: boolean, intlCode: number, internalMessage: string, data?: FgRmMappingRequest[]) {
+     constructor(status: boolean, intlCode: number, internalMessage: string, data?: FgRmMappingRequest) {
         super(status, intlCode, internalMessage);
         this.data = data;
     }    
