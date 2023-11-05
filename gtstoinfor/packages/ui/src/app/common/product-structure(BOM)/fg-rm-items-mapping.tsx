@@ -1,4 +1,4 @@
-import { ItemCreationService, RmCreationService, productStructureService } from '@project-management-system/shared-services';
+import { ItemCreationService, RmCreationService, ProductStructureService } from '@project-management-system/shared-services';
 import { Button, Card, Col, Form, Input, Row, Select, message } from 'antd';
 import React, { useEffect, useState } from 'react'
 import AlertMessages from '../common-functions/alert-messages';
@@ -15,7 +15,7 @@ export const FgRMMappingForm = () => {
   const [rmData,setRmData] = useState<any[]>([]);
   const [data,setData] = useState<any[]>([]);
   const CheckboxGroup = Checkbox.Group;
-  const productStructureservice = new productStructureService()
+  const productStructureservice = new ProductStructureService()
   const { Option } = Select;
   const rmservice = new RmCreationService()
   const service = new ItemCreationService()
