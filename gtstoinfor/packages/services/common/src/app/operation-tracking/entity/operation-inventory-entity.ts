@@ -42,24 +42,24 @@ operation:string;
 })
 nextOperation:string;
 
-  @Column('int',{
-    nullable:false,
-    name:'physical_quantity',
+  @Column('int', {
+    nullable: false,
+    name: 'physical_quantity',
     default:0
-})
-physicalQuantity:number;
+  })
+  physicalQuantity: number;
 
-@Column('varchar',{
-    nullable:false,
-    name:'physical_uom'
-})
-physicalUom:string;
+  @Column('varchar', {
+    nullable: false,
+    name: 'physical_uom'
+  })
+  physicalUom: string;
 
-@Column('int',{
-    nullable:false,
-    name:'issued_quantity'
-})
-issuedQuantity:number;
+  @Column('int', {
+    nullable: false,
+    name: 'issued_quantity'
+  })
+  issuedQuantity: number;
 
 @Column('int',{
     nullable:false,
@@ -79,12 +79,12 @@ issuedUomId:number;
 // })
 // damagedUomId:number| null;
 
-  @Column('int',{
-    nullable:false,
-    name:'rejected_quantity',
+  @Column('int', {
+    nullable: false,
+    name: 'rejected_quantity',
     default:0
-})
-rejectedQuantity:number;
+  })
+  rejectedQuantity: number;
 
 @Column('int',{
     nullable:false,
@@ -95,36 +95,36 @@ rejectedUomId:number;
 
   @CreateDateColumn({
     name: "created_at",
-    type:"datetime"
+    type: "datetime"
   })
   createdAt: Date;
 
   @Column("varchar", {
-      nullable: false,
-      name: "created_user",
-      default:"ADMIN",
-      length:50
+    nullable: false,
+    name: "created_user",
+    default: "ADMIN",
+    length: 50
   })
   createdUser: string | null;
 
   @UpdateDateColumn({
-      name: "updated_at",
-      type:'datetime'
+    name: "updated_at",
+    type: 'datetime'
   })
   updatedAt: Date;
 
   @Column("varchar", {
-      nullable: true,
-      name: "updated_user",
-      length:50
+    nullable: true,
+    name: "updated_user",
+    length: 50
   })
   updatedUser: string | null;
 
   @VersionColumn({
-      default:1,
-      name: "version_flag"
+    default: 1,
+    name: "version_flag"
   })
   versionFlag: number;
-  
+
 
 }

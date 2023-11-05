@@ -1,10 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationInventoryResponseModel, TrackingEnum } from "@project-management-system/shared-models";
+import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationInventoryResponseModel, TrackingEnum, OperationTrackingDto } from "@project-management-system/shared-models";
 import { Item } from "../items/item-entity";
 import { OperationGroups } from "../operation-groups/operation-groups.entity";
 import { Operations } from "../operations/operation.entity";
 import { DataSource, Entity } from "typeorm";
-import { OperationTrackingRepository } from "./repo/operation-tracking-repository";
 import { OperationTracking } from "./entity/operation-tracking-entity";
 import { OperationInventory } from "./entity/operation-inventory-entity";
 import { GenericTransactionManager } from "../../typeorm-transactions";
@@ -13,17 +12,18 @@ import { OperationSequence } from "../operation-sequence/operation-sequence.enti
 import { OperationInventoryRepository } from "./repo/operation-inventory-repository";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
 import { StyleRepository } from "../style/dto/style-repo";
-import { OperationTrackingDto } from "./dto/operation-tracking-dto";
+import { OperationTrackingRepository } from "./repo/operation-tracking-repository";
+import { OperationInvRequest } from "./dto/operation-inventory-req";
 
 @Injectable()
-export class OperationTrackingService{
+export class OperationTrackingService {
     constructor(
         private repo: OperationTrackingRepository,
         private inventoryRepo: OperationInventoryRepository,
         private styleRepo : StyleRepository,
         private readonly dataSource: DataSource,
-        
-    ){}
+
+    ) { }
 
 
     async createOperationReporting(dto: OperationTrackingDto) : Promise<OperationInventoryResponseModel>{
@@ -93,4 +93,15 @@ export class OperationTrackingService{
               return error;
             }
     }
+
+    
+    async getOperationinventory(req:OperationInvRequest): Promise<OperationInventoryResponseModel> {
+        console.log(req,'kkkkkkkkkkkkkkk')
+        const data = await this.inventoryRepo.getOperationinventory(req)
+    
+            return new OperationInventoryResponseModel(true, 1, 'Inventory data Retrived Sucessfully', data)
+
+    }
 }
+
+

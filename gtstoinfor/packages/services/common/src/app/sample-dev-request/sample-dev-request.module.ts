@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
 import { SampleDevReqController } from './sample-dev-request.controller';
 import { SampleRequestService } from './sample-dev-request.service';
-import { SampleDevAdapter } from './dto/sample-dev-request.adapter';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { SampleReqSizeEntity } from './entities/sample-requset-size-info-entity';
 import { SampleReqFabricinfoEntity } from './entities/sample-request-fabric-info-entity';
@@ -26,6 +25,6 @@ import { SampleProcessRepo } from './repo/sample-dev-process-repo';
   ]),
   ],
   controllers: [SampleDevReqController],
-  providers: [SampleRequestService,SampleDevAdapter,ApplicationExceptionHandler,SampleRequestRepository,SampleSizeRepo,SampleFabricRepo,SampleTrimRepo,SampleProcessRepo]
+  providers: [SampleRequestService,ApplicationExceptionHandler,SampleRequestRepository,SampleSizeRepo,SampleFabricRepo,SampleTrimRepo,SampleProcessRepo]
 })
 export class SampleDevReqModule {}
