@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import Upload, { RcFile } from "antd/es/upload";
 import SampleDevTabs from "./sample-dev-tabs";
+import { Console } from "console";
 
 const { Option } = Select;
 
@@ -175,8 +176,10 @@ export const SampleDevForm = () => {
 
 
   const onFinish = (val) =>{
-    console.log(tabsData)
-    const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.samValue,val.dmmId,val.technicianId,val.product,val.type,val.conversion,val.madeIn,val.remarks,tabsData.sizeData,tabsData.fabricsData,tabsData.trimsData,tabsData.processData)
+   console.log(val)
+    console.log(val.requestNo)
+    console.log(tabsData.sizeData)
+    const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,'',val.conversion,val.madeIn,val.remarks,tabsData.sizeData,tabsData.fabricsData,tabsData.trimsData,tabsData.processData)
     console.log(req)
       sampleService.createSampleDevelopmentRequest(req).then((res)=>{
         if(res.status){
@@ -227,12 +230,11 @@ export const SampleDevForm = () => {
               label="Request No"
               rules={[
                 {
-                  pattern: /^[0-9]*$/,
-                  message: `Only numbers are accepted`,
+                 required:true
                 },
               ]}
             >
-              <Input disabled />
+              <Input disabled/>
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
