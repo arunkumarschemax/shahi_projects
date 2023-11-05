@@ -5,7 +5,7 @@ export class ItemCreationAdapter {
     convertDtoToEntity(dtoObj: ItemCreationDto,  isUpdate: boolean = false ): ItemCreation{
         try {
             const entityObj = new ItemCreation();
-            entityObj.altUom = dtoObj.altUom
+            entityObj.altUoms = dtoObj.altUoms
             entityObj.approver = dtoObj.approver
             entityObj.brandId = dtoObj.brandId
             entityObj.buyingHouseCommision = dtoObj.buyingHouseCommision
@@ -38,7 +38,7 @@ export class ItemCreationAdapter {
             entityObj.salePersonId = dtoObj.salePersonId
             entityObj.salePrice = dtoObj.salePrice
             entityObj.salePriceQty = dtoObj.salePriceQty
-            entityObj.seasonId = dtoObj.seasonId
+            entityObj.season = dtoObj.season
             entityObj.styleNo = dtoObj.styleNo
             entityObj.subCategoryId = dtoObj.subCategoryId
             entityObj.targetCurrency = dtoObj.targetCurrency
@@ -67,7 +67,7 @@ export class ItemCreationAdapter {
 
     public convertEntityToDto(itemCreation : ItemCreation): ItemCreationDto {
         const itemCreationDto = new ItemCreationDto;
-        itemCreationDto.altUom = itemCreation.altUom
+        itemCreationDto.altUoms = itemCreation.altUoms
         itemCreationDto.approver = itemCreation.approver
         itemCreationDto.brandId = itemCreation.brandId
         itemCreationDto.buyingHouseCommision = itemCreation.buyingHouseCommision
@@ -102,7 +102,7 @@ export class ItemCreationAdapter {
         itemCreationDto.salePersonId = itemCreation.salePersonId
         itemCreationDto.salePrice = itemCreation.salePrice
         itemCreationDto.salePriceQty = itemCreation.salePriceQty
-        itemCreationDto.seasonId = itemCreation.seasonId
+        itemCreationDto.season= itemCreation.season
         itemCreationDto.styleNo = itemCreation.styleNo
         itemCreationDto.subCategoryId = itemCreation.subCategoryId
         itemCreationDto.targetCurrency = itemCreation.targetCurrency

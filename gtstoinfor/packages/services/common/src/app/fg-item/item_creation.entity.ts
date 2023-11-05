@@ -54,11 +54,11 @@ export class ItemCreation {
   })
   subCategoryId: number;
 
-  @Column("int", {
+  @Column("varchar", {
     nullable: true,
-    name: "season_id" /// foregn key
+    name: "season" /// foregn key
   })
-  seasonId: number;
+  season: string;
 
   @Column("int", {
     nullable: false,
@@ -127,7 +127,7 @@ export class ItemCreation {
     length: 40,
     name: "alt_uom"
   })
-  altUom: string;
+  altUoms: string;
 
   @Column("varchar", {
     nullable: true,
@@ -200,12 +200,11 @@ export class ItemCreation {
   })
   noOfLacePanel: string;
 
-  @Column("varchar", {
+  @Column("int", {
     nullable: true,
-    length: 40,
     name: "search_group"
   })
-  searchGroup: string;
+  searchGroup: number;
   
   @Column("varchar", {
     nullable: false,

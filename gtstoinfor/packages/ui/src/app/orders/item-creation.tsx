@@ -330,7 +330,7 @@ compositionservice.getActiveComposition().then(res=>{
       }
          const saveItem=()=>{
           form.validateFields().then((values) => {
-            console.log(values);
+            console.log(values,"ooooooooooooooo");
               itemCreationService.createItem(values).then((res) => {
                 if(res.status){
                   AlertMessages.getSuccessMessage(res.internalMessage)
@@ -343,9 +343,11 @@ compositionservice.getActiveComposition().then(res=>{
               })
           })
          }
+
+        
          return (
          <>
-        <Card title="Item Creation" size="small" extra={!props.isUpdate && (<Link to="/materialCreation/item-creation-view">
+        <Card title=" FG Item Creation" size="small" extra={!props.isUpdate && (<Link to="/materialCreation/item-creation-view">
          <span style={{ color: 'white' }}><Button type="primary">View</Button></span></Link> )}>
 
                <Form  form={form} style={{ fontSize: "10px" }}  layout="vertical" onFinish = {saveItem} initialValues={props.itemCreationData}>
@@ -491,10 +493,12 @@ compositionservice.getActiveComposition().then(res=>{
                          <Row gutter={8}>
                          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                 <Form.Item   name="basicUom" label="Basic UOM" rules={[{ required: true, message: "Enter Basic UOM" }]}>
-                <Select placeholder="Select Basic UOM" allowClear>
+                <Select placeholder="Select Basic UOM" allowClear >
                   {uomdata.map((e)=>{
+
                     return(
                     <Option key={e.uomId} value={e.uomId}>{e.uom}
+
                     </Option>)
                   })
 
@@ -503,18 +507,35 @@ compositionservice.getActiveComposition().then(res=>{
                 </Form.Item>
                        </Col>
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item  name="altUom" label="Alt UOM">
-                        <Select placeholder="Select Basic UOM" allowClear>
+                <Form.Item   name="altUoms" label="Alt UOM" rules={[{ required: true, message: "Enter Alt UOM" }]}>
+                <Select placeholder="Select Alt UOM" allowClear >
+                  {uomdata.map((e)=>{
 
-                        {uomdata.map((e)=>{
                     return(
-                    <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>)
+                    <Option key={e.uomId} value={e.uomId}>{e.uom}
+
+                    </Option>)
                   })
 
-                  }                    
-                                  </Select>
-                                 </Form.Item>
+                  }
+                </Select>
+                </Form.Item>
                        </Col>
+                       {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                        <Form.Item  name="altUom" label="Alt UOM">
+                        <Select placeholder="Select Basic UOM" allowClear >
+                  {uomdata.map((e)=>{
+
+                    return(
+                    <Option key={e.uomId} value={e.uomId}>{e.uom}
+
+                    </Option>)
+                  })
+
+                  }
+                </Select>
+                                 </Form.Item>
+                       </Col> */}
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                         <Form.Item name="conversionFactor"
                       label="Conversion Factor">
@@ -610,7 +631,7 @@ compositionservice.getActiveComposition().then(res=>{
                      </Form.Item>
                      </Col>
                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                     <Form.Item  label="Season"name="seasonId">
+                     <Form.Item  label="Season"name="season">
                      <Input placeholder="Season"  allowClear/>
                      </Form.Item>
                      </Col>
