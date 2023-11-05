@@ -89,7 +89,7 @@ import { MaterialIssueModule } from './material-issue/material-issue.module';
       }
     }),
     FactoriesModule,
-    StocksModule,
+    
     CurrenciesModule,
     PaymentTermsModule,
     PackageTermsModule,
@@ -126,6 +126,7 @@ import { MaterialIssueModule } from './material-issue/material-issue.module';
     BuyersDestinationModule,
     BomModule,
     RackPositionModule,
+    StocksModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,M3MastersModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,OperationTrackingModule,MaterialIssueModule],
   controllers: [AppController],
   providers: [AppService],
