@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { DeliveryMethodDto, DeliveryMethodRequest } from 'packages/libs/shared-models/src/common/delivery-method';
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { AllSampleDevReqResponseModel, SampleDevelopmentRequest, SampleFilterRequest } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, SampleDevelopmentRequest, SampleFilterRequest, UploadResponse } from '@project-management-system/shared-models';
 
 
 export class SampleDevelopmentService extends CommonAxiosService {
@@ -31,7 +31,10 @@ export class SampleDevelopmentService extends CommonAxiosService {
   async getAllStyleNo(): Promise<AllSampleDevReqResponseModel> {
     return this.axiosPostCall(this.URL + "/getAllStyleNo")
   }
-
+  async fileUpload(file: any): Promise<UploadResponse> {
+    console.log(file)
+    return await this.axiosPostCall(this.URL + '/fileUpload', file);
+  }
   async getSampleDevById(): Promise<any> {
       const dummyData = [
           {

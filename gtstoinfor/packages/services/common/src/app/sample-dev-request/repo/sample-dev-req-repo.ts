@@ -24,7 +24,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
         async getsampleId(): Promise<any> {
             const query = this.createQueryBuilder('sm')
                 .select(` MAX(sample_request_id) as id`)
-                .orderBy(` created_at`, 'DESC')
+                // .orderBy(` created_at`, 'DESC')
             return await query.getRawOne();
         }
 

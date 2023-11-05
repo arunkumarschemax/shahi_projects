@@ -4,7 +4,7 @@ import { DataSource, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 // import { SampleDevAdapter } from './dto/sample-dev-request.adapter';
-import { AllSampleDevReqResponseModel, CommonResponseModel, SampleDevDto, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleReqResponseModel } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, CommonResponseModel, SampleDevDto, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleReqResponseModel, UploadResponse } from '@project-management-system/shared-models';
 import { SampleDevReqDto } from './dto/sample-dev-dto';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
@@ -23,6 +23,7 @@ import { SampleRequestTriminfoEntity } from './entities/sample-request-trim-info
 import { SampleRequestProcessInfoEntity } from './entities/sample-request-process-info-entity';
 import { SampleRequestRepository } from './repo/sample-dev-req-repo';
 import { SampleRequestDto } from './dto/samle-dev-req';
+import { sample } from 'rxjs';
 
 
 
@@ -183,7 +184,7 @@ export class SampleRequestService {
       console.log(sampleReqEntity,'sampleReqEntity')
       console.log(save,'save')
       if(save){
-        return new AllSampleDevReqResponseModel(true,1,'SampleDevelopmentRequest created successfully',[])
+        return new AllSampleDevReqResponseModel(true,1,'SampleDevelopmentRequest created successfully',[save])
       }
       else{
         return new AllSampleDevReqResponseModel(false,0,'SampleDevelopmentRequest creation Failed',[])
@@ -195,6 +196,27 @@ export class SampleRequestService {
 
   }
   
+
+
+  async UpdateFilePath(filePath: string, filename: string, sampleRequestId: number): Promise<UploadResponse> {
+    console.log('upload service id---------------', filePath)
+    console.log('upload service id---------------', filename)
+    console.log('upload service id---------------', sampleRequestId)
+    try {
+        let filePathUpdate;   
+            filePathUpdate = await this.sampleRepo.update({SampleRequestId:sampleRequestId},{fileName:filename,filepath:filePath} )
+        if (filePathUpdate.affected > 0) {
+            return new UploadResponse(true, 11, 'uploaded successfully', filePath);
+        }
+        else {
+            return new UploadResponse(false, 11, 'uploaded failed', filePath);
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
   async getAllStyleNo(): Promise<CommonResponseModel> {
     const details = await this.sampleRepo.getAllStyleNo();     
     if (details.length > 0) {
