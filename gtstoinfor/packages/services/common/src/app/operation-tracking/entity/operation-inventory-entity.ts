@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, VersionColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, VersionColumn, ManyToOne, JoinColumn, Generated } from "typeorm";
 import { OperationSequence } from "../../operation-sequence/operation-sequence.entity";
 import { Style } from "../../style/dto/style-entity";
 
@@ -8,7 +8,7 @@ export class OperationInventory {
   @PrimaryGeneratedColumn("increment",{
     name:'operation_inventory_id'
 })
-  operationIssuingId:number;
+  operationInventoryId:number;
 
   @Column('int',{
     nullable:false,
@@ -44,7 +44,8 @@ nextOperation:string;
 
   @Column('int',{
     nullable:false,
-    name:'physical_quantity'
+    name:'physical_quantity',
+    default:0
 })
 physicalQuantity:number;
 
@@ -66,27 +67,29 @@ issuedQuantity:number;
 })
 issuedUomId:number;
 
+//   @Column('int',{
+//     nullable:true,
+//     name:'damaged_quantity'
+// })
+// damagedQuantity:number | null;
+
+// @Column('int',{
+//     nullable:true,
+//     name:'damaged_uom_id'
+// })
+// damagedUomId:number| null;
+
   @Column('int',{
     nullable:false,
-    name:'damaged_quantity'
-})
-damagedQuantity:number;
-
-@Column('int',{
-    nullable:false,
-    name:'damaged_uom_id'
-})
-damagedUomId:number;
-
-  @Column('int',{
-    nullable:false,
-    name:'rejected_quantity'
+    name:'rejected_quantity',
+    default:0
 })
 rejectedQuantity:number;
 
 @Column('int',{
     nullable:false,
-    name:'rejected_uom_id'
+    name:'rejected_uom_id',
+    default:0
 })
 rejectedUomId:number;
 

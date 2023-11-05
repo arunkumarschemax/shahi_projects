@@ -1,7 +1,9 @@
 export class StyleRequest{
-    style: string;
+    styleId?: number;
+    style?:string
 
-    constructor(style:string){
+    constructor(styleId?:number,style?:string){
+        this.styleId = styleId
         this.style = style
     }
 }
