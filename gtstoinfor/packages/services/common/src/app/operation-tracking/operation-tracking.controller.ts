@@ -2,7 +2,7 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { OperationTrackingService } from "./operation-tracking.service";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { CommonResponseModel, OperationInventoryResponseModel, OperationInventoryDto, OperationInventoryResponseModel, OperationSequenceResponse, OperationTrackingResponseModel, OperationsRequest } from "@project-management-system/shared-models";
+import { CommonResponseModel, OperationInventoryResponseModel, OperationInventoryDto, OperationSequenceResponse, OperationTrackingResponseModel, OperationsRequest } from "@project-management-system/shared-models";
 import { OperationTrackingDto } from "./dto/operation-tracking-dto";
 import { OperationInvRequest } from "./dto/operation-inventory-req";
 
