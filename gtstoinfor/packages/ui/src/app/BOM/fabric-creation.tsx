@@ -337,10 +337,10 @@ useEffect(() => {
   const saveFabric=()=>{
     
     form.validateFields().then((values)=>{
-      console.log(values,'$$$$$$$$$$$$');
+      // console.log(values,'$$$$$$$$$$$$');
 
 rmservice.createRm(values).then((res)=>{
-  console.log(res.data,"PPPPPPPPPP");
+  // console.log(res.data,"PPPPPPPPPP");
 
   if(res.status){
     AlertMessages.getSuccessMessage(res.internalMessage)

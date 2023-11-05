@@ -6,6 +6,7 @@ import { FabricsService } from '@project-management-system/shared-services';
 import { __values } from 'tslib';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import FormItem from 'antd/es/form/FormItem';
+import TextArea from 'antd/es/input/TextArea';
 
 export interface FabricsFromProps{
     fabricData: FabricsDto;
@@ -82,7 +83,7 @@ onFinish={saveData}>
     <Input hidden/>
 </FormItem>
 
-<Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:4}} xl={{span:4}}> <Form.Item
+<Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:4}} xl={{span:6}}> <Form.Item
           name="fabricsName"
           label="Fabrics"
           rules={[
@@ -99,7 +100,7 @@ onFinish={saveData}>
           <Input placeholder=' Enter Fabrics' />
         </Form.Item>
         </Col>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:4}} lg={{span:4}} xl={{span:4}}> <Form.Item
+        <Col xs={{span:24}} sm={{span:24}} md={{span:4}} lg={{span:4}} xl={{span:6}}> <Form.Item
           name="fabricsCode"
           label="FabricsCode"
           rules={[
@@ -116,7 +117,7 @@ onFinish={saveData}>
           <Input  placeholder=' Enter FabricsCode'/>
         </Form.Item>
         </Col>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:4}} lg={{span:4}} xl={{span:4}}> <Form.Item
+        <Col xs={{span:24}} sm={{span:24}} md={{span:4}} lg={{span:4}} xl={{span:6}}> <Form.Item
           name="description"
           label="Description"
           rules={[
@@ -124,13 +125,10 @@ onFinish={saveData}>
             //   required: true,
             //   message:' Description Is Required'
             // },
-            {
-              pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
-              message: `Description Should contain only alphabets.`
-            }
+         
           ]}
         >
-          <Input placeholder=' Enter Description' />
+                    <TextArea rows={1} placeholder="Enter Description"/>
         </Form.Item>
         </Col>
         </Row>

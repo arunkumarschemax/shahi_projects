@@ -25,7 +25,7 @@ export class ItemCreationDto {
     subCategoryId: number;
 
     @ApiProperty()
-    seasonId: number;
+    season: string;
 
     @ApiProperty()
     responsiblePersonId: number;
@@ -58,7 +58,7 @@ export class ItemCreationDto {
     uom: string;
 
     @ApiProperty()
-    altUom: string;
+    altUoms: string;
 
     @ApiProperty()
     currency: string;
@@ -67,10 +67,10 @@ export class ItemCreationDto {
     targetCurrency: string;
 
     @ApiProperty()
-    conversionFactorId: number;
+    conversionFactor: string;
 
     @ApiProperty()
-    projectionOrderId: number;
+    projectionOrder: string;
 
     @ApiProperty()
     buyingHouseCommision: number;
@@ -139,10 +139,10 @@ export class ItemCreationDto {
     noOfLacePanel: string;
 
     @ApiProperty()
-    searchGroup: string;
+    searchGroup: number;
 
     @ApiProperty()
-    referenceId: number;
+    reference: string;
 
     @ApiProperty()
     isActive: boolean;

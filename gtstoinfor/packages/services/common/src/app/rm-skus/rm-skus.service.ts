@@ -27,7 +27,8 @@ export class RmSkusService {
                 entity.itemType = req.itemType
                 entity.rmItemId = req.rmItemId
                 entity.status = req.status
-                const code = req.itemType === RmItemTypeEnum.FABRIC ? 'FAB' : 'TR'
+                // const code = req.itemType === RmItemTypeEnum.FABRIC ? 'FAB' : 'TR'
+                const code = req.itemType.slice(0,3)
                 entity.featureCode = rec.featureCode
                 for(const opdetails of rec.optionsData){
                     len =len +1

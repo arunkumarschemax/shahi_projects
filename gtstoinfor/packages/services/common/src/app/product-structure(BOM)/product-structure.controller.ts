@@ -26,10 +26,10 @@ export class ProductStructureController {
         }
     }
 
-    @ApiBody({type:[FgRMMappingDto]})   
+    @ApiBody({type:FgRMMappingDto})   
     @Post('/createFgRmMapping')
     async createFgRmMapping(@Body() req:any): Promise<FgRmMappingResponseModel> {
-      console.log(req)
+      console.log(req,"cont")
       try {
           return await this.Servie.createFgRmMapping(req, false)
       } catch (error) {
