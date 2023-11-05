@@ -8,7 +8,7 @@ import {  EyeOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import {   FeatureService } from '@project-management-system/shared-services';
 import AlertMessages from "../common-functions/alert-messages";
-import { RmMappingFilterRequest } from "@project-management-system/shared-models";
+import { RmMappingFilterRequest, SMVFilterRequest } from "@project-management-system/shared-models";
 
 
 const SMVEffciencyView = () => {
@@ -60,13 +60,13 @@ const SMVEffciencyView = () => {
   
 
     const getAllRmSMVData= () => {
-        const req = new RmMappingFilterRequest();
+        const req = new SMVFilterRequest();
         
-        if (form.getFieldValue('rmItcode') !== undefined) {
-            req.rmItemCode = form.getFieldValue('rmItcode');
+        if (form.getFieldValue('operation') !== undefined) {
+            req.operationId = form.getFieldValue('operation');
         }
-        if (form.getFieldValue('fgItemCode') !== undefined) {
-            req.fgItemCode = form.getFieldValue('fgItemCode');
+        if (form.getFieldValue('dept') !== undefined) {
+            req.departmentId = form.getFieldValue('dept');
         }
       
         productService.getAllSmvData(req).then(res => {
@@ -180,14 +180,14 @@ const columns: any = [
         const opdata = operationsData.find((cat) => cat.operationId  === data);
         return opdata ? opdata.operationName: "-";
       },
-      sorter: (a, b) => a.feature_code?.localeCompare(b.feature_code),
+      // sorter: (a, b) => a.feature_code?.localeCompare(b.feature_code),
     },
     {
       title: 'Work Center',
       dataIndex: 'work_center',
       align: 'center', 
    
-      sorter: (a, b) => a.feature_name?.localeCompare(b.feature_name),
+      sorter: (a, b) => a.work_center?.localeCompare(b.work_center),
       ...getColumnSearchProps('work_center')
     },
     {
@@ -201,19 +201,19 @@ const columns: any = [
         sorter: (a, b) => a.department_id?.localeCompare(b.department_id),
       },
       {
-        title: 'Options Percent',
+        title: <div style={{ textAlign: 'center' }}>Options Percent</div>,
         dataIndex: 'options_percent',
-        align: 'center',
+        align: 'right',
         render: (data) => {
           return data ? (<span>{data}%</span>) : ('-');},      
         sorter: (a, b) => a.options_percent?.localeCompare(b.options_percent),
       },
       {
-        title: 'Qty per Hour',
+        title: <div style={{ textAlign: 'center' }}>Qty per Hour</div>,
         dataIndex: 'qty_per_hour',
-        align: 'center',
+        align: 'right',
         
-        sorter: (a, b) => a.feature_code?.localeCompare(b.feature_code),
+        sorter: (a, b) => a.qty_per_hour?.localeCompare(b.qty_per_hour),
       },
       {
         title: `Action`,
@@ -246,7 +246,48 @@ const columns: any = [
       </Link>} >
       <Card >
       <Form onFinish={getAllRmSMVData} form={form} layout='vertical'>
-           
+      <Row gutter={24}>
+                
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                    <Form.Item name='operation' label='Operation' >
+                        <Select
+                            showSearch
+                            placeholder="Select Operation"
+                            optionFilterProp="children"
+                            allowClear
+                        >
+                            {
+                                operationsData?.map((inc: any) => {
+                                    return <Option key={inc.operationId} value={inc.operationId}>{inc.operationName}</Option>
+                                })
+                            }
+                        </Select>
+                    </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                    <Form.Item name='dept' label='Department' >
+                        <Select showSearch placeholder="Select department" optionFilterProp="children" allowClear>
+                            {
+                                departmentData?.map((inc: any) => {
+                                    return <Option key={inc.deptId} value={inc.deptId}>{inc.deptName}</Option>
+                                })
+                            }
+                        </Select>
+                    </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
+                    <Form.Item>
+                        <Button htmlType="submit"
+                            icon={<SearchOutlined />}
+                            type="primary">GET DETAILS</Button>
+                        <Button
+                            htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
+                        >
+                            RESET
+                        </Button>
+                    </Form.Item>
+                </Col>
+            </Row> 
      </Form>
       <Table
             size='middle'

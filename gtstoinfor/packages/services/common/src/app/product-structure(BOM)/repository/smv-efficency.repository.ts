@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { SMVEfficiencyEntity } from "../smv-efficency.entity";
 import { InjectRepository } from "@nestjs/typeorm";
+import { SMVFilterRequest } from "@project-management-system/shared-models";
 
 @Injectable()
 export class SMVEfficiencyRepository extends Repository<SMVEfficiencyEntity> {
@@ -10,16 +11,16 @@ export class SMVEfficiencyRepository extends Repository<SMVEfficiencyEntity> {
     ) {
         super(SmvEffRepo.target, SmvEffRepo.manager, SmvEffRepo.queryRunner);
     }
-    async getSMV(req: any ): Promise<any[]> {
+    async getSMV(req: SMVFilterRequest ): Promise<any[]> {
         const query = this.createQueryBuilder('sm')
         .select(`*`).where('1=1'); 
       
-        // if (req.fgItemCode !== undefined) {
-        //   query.andWhere(`fg_item_code = :fgCode`, { fgCode: req.fgItemCode }); 
-        // }
-        // if (req.rmItemCode !== undefined) {
-        //     query.andWhere(`rm_item_code = :RmCode`, { RmCode: req.rmItemCode }); 
-        //   }
+        if (req.departmentId !== undefined) {
+          query.andWhere(`department_id = :dptid`, { dptid: req.departmentId }); 
+        }
+        if (req.operationId !== undefined) {
+            query.andWhere(`operation_id = :optid`, { optid: req.operationId }); 
+          }
         let data:SMVEfficiencyEntity[] = await query.getRawMany();
         return data;
       }

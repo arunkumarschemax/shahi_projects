@@ -1,6 +1,6 @@
 
 import { Injectable } from "@nestjs/common";
-import { BomRequest, BomTrimResponseModel, CommonResponseModel, FgItemCodeReq, FgRmMappingResponseModel, ProductStructureResponseModel, RmMappingFilterRequest } from "@project-management-system/shared-models";
+import { BomRequest, BomTrimResponseModel, CommonResponseModel, FgItemCodeReq, FgRmMappingResponseModel, ProductStructureResponseModel, RmMappingFilterRequest, SMVFilterRequest } from "@project-management-system/shared-models";
 import { SMVEfficiencyRepository } from "./repository/smv-efficency.repository";
 import { SMVEfficiencyDto } from "./dto/smv-efficency.dto";
 import { SMVEfficiencyEntity } from "./smv-efficency.entity";
@@ -123,16 +123,45 @@ export class ProductStructureService {
       throw err
     }
    }       
-          async getRmMapped(req?:RmMappingFilterRequest): Promise<CommonResponseModel> {
-            const data = await this.fgrmRepo.getAllFgRmMapped(req)
-            if (data.length > 0){
+          // async getRmMapped(req?:RmMappingFilterRequest): Promise<CommonResponseModel> {
+          //   const data = await this.fgrmRepo.getAllFgRmMapped(req)
+          //   if (data.length > 0){
     
-                return new CommonResponseModel(true, 1111, 'Data retreived',data )
-            }
-            return new CommonResponseModel(false, 0, 'Data Not retreived',[])
-          }
+          //       return new CommonResponseModel(true, 1111, 'Data retreived',data )
+          //   }
+          //   return new CommonResponseModel(false, 0, 'Data Not retreived',[])
+          // }
 
-          async getAllSmvData(req?:RmMappingFilterRequest): Promise<CommonResponseModel> {
+          async getRmMapped(req?: RmMappingFilterRequest): Promise<CommonResponseModel> {
+            const data = await this.fgrmRepo.getAllFgRmMapped(req);
+          
+            if (data.length > 0) {
+              const groupedData = data.reduce((result, item) => {
+                const fgItemCode = item.fg_item_code;
+                const fgItemId = item.fg_item_id;
+                if (!result[fgItemId]) {
+                  result[fgItemId] = {
+                    fg_item_id: fgItemId,
+                    fg_item_code: fgItemCode,
+                    rm_items: [],
+                  };
+                }
+                result[fgItemId].rm_items.push({
+                  rm_item_id: item.rm_item_id,
+                  rm_item_code: item.rm_item_code,
+                });
+                return result;
+              }, {});
+          
+              return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
+            }
+          
+            return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
+          }
+          
+          
+
+          async getAllSmvData(req?:SMVFilterRequest): Promise<CommonResponseModel> {
             const data = await this.Repo.getSMV(req)
             if (data.length > 0){
     
