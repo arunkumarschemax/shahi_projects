@@ -1,18 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip } from 'antd';
+import { Table, Button, Input, Select, Tooltip, message } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
-import { ColourService } from '@project-management-system/shared-services';
+import { BuyerDestinationService, ColourService } from '@project-management-system/shared-services';
 
-const SizeDetail = ({props}) => {
+const SizeDetail = ({props,buyerId}) => {
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
   const [color, setColor] = useState<any[]>([])
+  const [sizeData, setSizeData]=useState<any[]>([])
   const colorService = new ColourService()
+  const buyerDestinaytionService=new BuyerDestinationService()
   const { Option } = Select;
 
   useEffect(()=>{
     getColors()
   },[])
+console.log(props.buyerId)
+  useEffect(() =>{
+    if(props.buyerId != null){
+      getAllSizesAgainstBuyer(props.buyerId)
+    }
+  },[props])
 
   const getColors = () => {
     colorService.getAllActiveColour().then((res) => {
@@ -22,6 +30,17 @@ const SizeDetail = ({props}) => {
       }
     });
   };
+
+  const getAllSizesAgainstBuyer =(buyerId) =>{
+    buyerDestinaytionService.getAllSizesAgainstBuyer({buyerId:buyerId}).then(res=>{
+      if(res.status){
+        setSizeData(res.data)
+      }else{
+        setSizeData([])
+        message.info(res.internalMessage)
+      }
+    })
+  }
 
   const handleAddRow = () => {
     const newRow = {
