@@ -1,27 +1,57 @@
+import { FileExcelFilled } from '@ant-design/icons';
+import { MaterialIssueService } from '@project-management-system/shared-services';
 import { Button, Card, Col, Form, Input, Row, Select, Table } from 'antd';
-import Column from 'antd/es/table/Column';
-import { MaterrialIssueServices } from 'packages/libs/shared-services/src/common/material-issue-service';
-import React, { useEffect, useState } from 'react'
-
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
 
 const MaterialIssueReport = () => {
-  const service = new MaterrialIssueServices()
-  const [data, setData] = useState<any[]>([])
+  const service = new MaterialIssueService();
+  const [data, setData] = useState<any[]>([]);
   const page = 1;
-
 
   useEffect(() => {
     getAllMaterial();
-  }, [])
+  }, []);
+
   const getAllMaterial = () => {
     service.getAllMaterialIssues().then((res) => {
       if (res.status) {
         setData(res.data);
       }
-    })
-  }
- 
+    });
+  };
 
+  const columns1: any = [
+    {
+      // title: " Code",
+      dataIndex: "fabricCode",
+      render: (text, record) => {
+        return record.fabricCode
+          
+      },
+
+    },
+    {
+      // title: "Description",
+      dataIndex: "fbdescription",
+    },
+    {
+      // title: "Color",
+      dataIndex: "colour",
+    },
+    {
+      // title: "Consumption",
+      dataIndex: "consumption",
+    },
+    {
+      // title: "Issued Quantity",
+      dataIndex: "issuedQuantity",
+    },
+    {
+      // title: "Operation Status",
+      dataIndex: "remarks",
+    },
+  ];
 
   const columns: any = [
     {
@@ -29,121 +59,135 @@ const MaterialIssueReport = () => {
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
-      render: (text, object, index) => (page - 1) * 10 + (index + 1)
+      render: (text, object, index) => (page - 1) * 10 + (index + 1),
+      onCell: (record: any) => ({
+        rowSpan: record.rowSpan,
+      }),
+      fixed: 'left',
     },
-
-
     {
       title: "Request No",
-      dataIndex: "requestNo",
+      dataIndex: "request_no",
+      onCell: (record: any) => ({
+        rowSpan: record.rowSpan,
+      }),
+      fixed: 'left',
     },
     {
       title: "M3 Style No",
-      dataIndex: "styleno",
+      dataIndex: "m_style_no",
+      onCell: (record: any) => ({
+        rowSpan: record.rowSpan,
+      }),
+      fixed: 'left',
     },
     {
       title: "Consumption Code",
-      dataIndex: "consumptioncode",
+      dataIndex: "consumption_code",
+      onCell: (record: any) => ({
+        rowSpan: record.rowSpan,
+      }),
+      width: '150px',
+      fixed: 'left',
     },
     {
       title: "Sample Type",
-      dataIndex: "sampletype",
-
+      dataIndex: "sample_type_id",
+      onCell: (record: any) => ({
+        rowSpan: record.rowSpan,
+      }),
+      fixed: 'left',
     },
     {
       title: "PCH",
-      dataIndex: "pchId",
+      dataIndex: "pch_id",
+      onCell: (record: any) => ({
+        rowSpan: record.rowSpan,
+      }),
+      fixed: 'left',
     },
     {
       title: "Sample Indent Date",
-      dataIndex: "date",
+      dataIndex: "issue_date",
+      onCell: (record: any) => ({
+        rowSpan: record.rowSpan,
+      }),
+      render: (text, record) => {
+        return record.issue_date
+          ? moment(record.issue_date).format('YYYY-MM-DD')
+          : "";
+      },
     },
-
     {
       title: "Location",
-      dataIndex: "locationId",
+      dataIndex: "location_id",
+      onCell: (record: any) => ({
+        rowSpan: record.rowSpan,
+      }),
     },
     {
       title: "Style",
-      dataIndex: "style",
+      dataIndex: "style_no",
+      onCell: (record: any) => ({
+        rowSpan: record.rowSpan,
+      }),
     },
     {
       title: " Buyer",
-      dataIndex: "buyer",
+      dataIndex: "buyer_id",
+      onCell: (record: any) => ({
+        rowSpan: record.rowSpan,
+      }),
     },
     {
       title: "Issued Date",
-      dataIndex: "date",
+      dataIndex: "issue_date",
+      onCell: (record: any) => ({
+        rowSpan: record.rowSpan,
+      }),
+      render: (text, record) => {
+        return record.issue_date
+          ? moment(record.issue_date).format('YYYY-MM-DD')
+          : "";
+      },
     },
     {
-      title: "Remarks",
-      dataIndex: "remarks",
+      title: "Material Type",
+      dataIndex: "mi_items",
+      render: (miItems, record) => {
+        console.log(record,'record');
+        
+        return (
+          <Table
+            rowKey={(rec) => rec.material_fabric_id || rec.material_trim_id}
+            size="small"
+            columns={columns1}
+            dataSource={record.mi_items}
+            pagination={false}
+            showHeader={false}
+            bordered={false}
+          />
+        );
+      },
     },
-    {
-      title: "Status",
-      dataIndex: "status",
-    },
-  
-    {
-      title: "Fabric Code",
-      dataIndex: "fabricCode",
-    },
-    {
-      title: "	Description",
-      dataIndex: "description",
-    },
-    {
-      title: "color",
-      dataIndex: "colorId",
-    },
-    {
-      title: "Consumption",
-      dataIndex: "consumption",
-    },
-    {
-      title: "Issued Quantity",
-      dataIndex: "issuedQuantity",
-    },
-
-  ]
-
+  ];
 
   return (
     <div>
       <Card>
-        <Form><Row gutter={16}>
-          <Col span={6}>
-            <Form.Item name={'consumptioncode'} label={'Consumption Code'}>
-              <Select placeholder='Input Consumption Code'>
-                {data.map((rec) => {
-                  return <Select.Option key={rec.id} value={rec.consumptioncode}>{rec.consumptioncode}</Select.Option>
-                })}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col span={6}>
-            <Form.Item name={'requestNo'} label={'Request No'}>
-              <Select placeholder='Input Request No'>
-                {data.map((rec) => {
-                  return <Select.Option key={rec.id} value={rec.requestNo}>{rec.requestNo}</Select.Option>
-                })}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col span={2}>
-            <Button >Search</Button>
-          </Col>
-          <Col span={1}>
-            <Button htmlType='reset'>Reset</Button>
-          </Col>
-        </Row>
-        </Form>
-         <div style={{ overflowX: 'auto' }}>
-          <Table bordered columns={columns} dataSource={data}   />
-        </div>        
-
-
-        <br />
+        <div style={{ overflowX: 'auto' }}>
+          <Table
+            rowKey={(rec) => rec.request_no}
+            size="small"
+            columns={columns}
+            dataSource={data}
+            pagination={{
+              total: data.length,
+              showTotal: (total, range) =>
+                `${range[0]}-${range[1]} of ${total} items`,
+            }}scroll={{x:'1800'}}
+          />
+        </div>
       </Card>
     </div>
   );

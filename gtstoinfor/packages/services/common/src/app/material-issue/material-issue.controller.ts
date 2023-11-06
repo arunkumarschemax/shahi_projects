@@ -33,4 +33,13 @@ export class MaterialIssueController {
             return this.applicationExceptionHandler.returnException(MaterialIssueResponseModel, err);
         }
     }
+    @Post('/getAllMaterial')
+    @ApiBody({type: MaterialIssueRequest})
+    async getMaterialIssue(@Body() req: any):Promise<MaterialIssueResponseModel>{
+        try{
+            return await this.issueService.getMaterialIssue()
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(MaterialIssueResponseModel, err);
+        }
+    }
 }
