@@ -143,6 +143,7 @@ import MarketIssueDetail from "./sample-development/market-detail"
 import IssueScreen from "./operation-tracking/issue"
 import { InventoryView } from "./operation-tracking/inventory"
 import StyleOrderCreation from "./style-orders/style-order-form"
+import MaterialIssueReport from "./sample-development/material-issue-report"
 
 
 export const AppRoutes = () => {
@@ -540,6 +541,10 @@ export const AppRoutes = () => {
                 <Route path='inventory' element={<InventoryView/>} />
                 
 
+
+                </Route>
+                <Route path='/report'>
+                <Route path='material-issue-report' element={<MaterialIssueReport/>}/>
 
                 </Route>
                 <Route path='/stock-view' element={<StockView/>}/>

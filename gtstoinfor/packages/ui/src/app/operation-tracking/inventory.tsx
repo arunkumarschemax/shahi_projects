@@ -14,7 +14,6 @@ export const InventoryView = () => {
     const operationservice = new OperationsService()
     const service = new OperationInventoryService()
     const [data, setData] = useState<any[]>([])
-    console.log(data, 'gggggggggggg')
 
     useEffect(() => {
         getOperations()
@@ -30,7 +29,6 @@ export const InventoryView = () => {
 
     const onOperationChange = (OperationId: number) => {
         const req = new OperationsRequest(OperationId)
-        console.log(req, 'kkkkkkkkkkkk')
         service.getOperationinventory(req).then(res => {
             if (res.status) {
                 setData(res.data)
@@ -61,13 +59,13 @@ export const InventoryView = () => {
             // }
         },
         {
-            title: 'OPERATION',
+            title: 'Operation',
             dataIndex: 'operation',
             width:"100px"
 
         },
         {
-            title: 'QUANTITY',
+            title: 'Quantity',
             dataIndex: 'physicalQuantity',
             align:"right",
             width:"50px"
@@ -80,7 +78,7 @@ export const InventoryView = () => {
         //     width:"100px"
         // },
         {
-            title: 'ISSUEDQUANTITY ',
+            title: 'IssuedQuantity ',
             dataIndex: 'issuedQuantity',
             align:"right",
             width:"100px"
@@ -100,7 +98,7 @@ export const InventoryView = () => {
         //     dataIndex: 'damagedUom'
         // },
         {
-            title: 'REJECTEDQUANTITY`',
+            title: 'RejectedQuantity`',
             dataIndex: 'rejectedQuantity',
             align:"right",
             width:"100px"

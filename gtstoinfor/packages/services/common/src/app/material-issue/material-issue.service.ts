@@ -13,103 +13,125 @@ import { ProfitControlHead } from "../profit-control-head/profit-control-head-en
 import { MaterialFabricEntity } from "./entity/material-fabric-entity";
 import { MaterialTrimEntity } from "./entity/material-trim-entity";
 import { MaterialIssueDto } from "./dto/material-issue-dto";
+import { MaterialIssueRequest } from "./dto/material-report-req";
 
 
 @Injectable()
-export class MaterialIssueService{
+export class MaterialIssueService {
     constructor(
         private issueRepo: MaterialIssueRepository,
         private fabricRepo: MaterialFabricRepository,
         private trimRepo: MaterialTrimRepository
         // private readonly dataSource: DataSource,
-    ){}
+    ) { }
 
-        async createMaterialIssue(req: MaterialIssueDto): Promise<MaterialIssueResponseModel>{
-            try{
+    async createMaterialIssue(req: MaterialIssueDto): Promise<MaterialIssueResponseModel> {
+        try {
 
-                let today = new Date();
-                let CurrentYear = today.getFullYear();
-                let CurrentMonth = today.getMonth();
-                let fromDate = 0;
-                let toDate = 0;
-                let totalRecords = await (await this.issueRepo.getMaterialIssueById).length;
+            let today = new Date();
+            let CurrentYear = today.getFullYear();
+            let CurrentMonth = today.getMonth();
+            let fromDate = 0;
+            let toDate = 0;
+            let totalRecords = await (await this.issueRepo.getMaterialIssueById).length;
 
-                if (CurrentMonth < 4) {
-                    fromDate = (CurrentYear-1);
-                    toDate = (CurrentYear);
-                } else {
-                    fromDate = (CurrentYear);
-                    toDate = (CurrentYear + 1);
-                }
-                
-                totalRecords = totalRecords + 1;
-                var refNo = totalRecords + "";
-                while (refNo.length < 4) refNo = "0" + refNo;
-            
-                const consumptionCode = "CON/" + (fromDate.toString().substr(-2)) + "-" + (toDate.toString().substr(-2)) + "/" + refNo;
- 
-                const issueData = new MaterialIssueEntity()
-                issueData.consumptionCode = consumptionCode
-                issueData.requestNo = req.requestNo
-                issueData.poNumber = req.poNumber
-                issueData.issueDate = req.issueDate
-                issueData.locationId = req.locationId
-                issueData.pchId = req.pchId
-                issueData.buyerId = req.buyerId
-                issueData.sampleTypeId = req.sampleTypeId
-                issueData.sampleSubTypeId = req.sampleSubTypeId
-                issueData.styleNo = req.styleNo
-                issueData.brandId = req.brandId
-                issueData.dmmId = req.dmmId
-                issueData.technicianId = req.technicianId
-                issueData.description = req.description
-                issueData.costRef = req.costRef
-                issueData.m3StyleNo = req.m3StyleNo
-                issueData.contact = req.contact
-                issueData.extn = req.extn
-                issueData.SAM = req.SAM
-                issueData.product = req.product
-                issueData.type = req.type
-                issueData.conversion = req.conversion
-                issueData.madeIn = req.madeIn
-                issueData.remarks = req.remarks
-                let fabricInfo = []
-                let trimInfo = []
-                for(const fabric of req.fabricInfo){
-                    const fabricEntity = new MaterialFabricEntity()
-                    fabricEntity.fabricCode = fabric.fabricCode
-                    fabricEntity.description = fabric.description
-                    fabricEntity.colorId = fabric.colorId
-                    fabricEntity.consumption = fabric.consumption
-                    fabricEntity.consumptionUom = fabric.consumptionUom
-                    fabricEntity.issuedQuantity = fabric.issuedQuantity
-                    fabricEntity.issuedQuantityUom = fabric.issuedQuantityUom
-                    fabricEntity.remarks = fabric.remarks
-                    fabricInfo.push(fabricEntity)
-                }
-                issueData.fabric = fabricInfo
-                for(const trim of req.trimInfo){
-                    const trimEntity = new MaterialTrimEntity()
-                    trimEntity.description = trim.description
-                    trimEntity.colorId = trim.colorId
-                    trimEntity.consumption = trim.consumption
-                    trimEntity.consumptionUom = trim.consumptionUom
-                    trimEntity.issuedQuantity = trim.issuedQuantity
-                    trimEntity.issuedQuantityUom = trim.issuedQuantityUom
-                    trimEntity.remarks = trim.remarks
-                    trimInfo.push(trimEntity)
-                }
-                issueData.trim = trimInfo
-                const save = await this.issueRepo.save(issueData)
-                if(save){
-                    return new MaterialIssueResponseModel(true,1,'Material Issued successfully',[])
-                }
-                else{
-                    return new MaterialIssueResponseModel(false,0,'Material Issuing Failed',[])
-                }
-            }catch(err){
-                throw(err)
+            if (CurrentMonth < 4) {
+                fromDate = (CurrentYear - 1);
+                toDate = (CurrentYear);
+            } else {
+                fromDate = (CurrentYear);
+                toDate = (CurrentYear + 1);
             }
+
+            totalRecords = totalRecords + 1;
+            var refNo = totalRecords + "";
+            while (refNo.length < 4) refNo = "0" + refNo;
+
+            const consumptionCode = "CON/" + (fromDate.toString().substr(-2)) + "-" + (toDate.toString().substr(-2)) + "/" + refNo;
+
+            const issueData = new MaterialIssueEntity()
+            issueData.consumptionCode = consumptionCode
+            issueData.requestNo = req.requestNo
+            issueData.poNumber = req.poNumber
+            issueData.issueDate = req.issueDate
+            issueData.locationId = req.locationId
+            issueData.pchId = req.pchId
+            issueData.buyerId = req.buyerId
+            issueData.sampleTypeId = req.sampleTypeId
+            issueData.sampleSubTypeId = req.sampleSubTypeId
+            issueData.styleNo = req.styleNo
+            issueData.brandId = req.brandId
+            issueData.dmmId = req.dmmId
+            issueData.technicianId = req.technicianId
+            issueData.description = req.description
+            issueData.costRef = req.costRef
+            issueData.m3StyleNo = req.m3StyleNo
+            issueData.contact = req.contact
+            issueData.extn = req.extn
+            issueData.SAM = req.SAM
+            issueData.product = req.product
+            issueData.type = req.type
+            issueData.conversion = req.conversion
+            issueData.madeIn = req.madeIn
+            issueData.remarks = req.remarks
+            let fabricInfo = []
+            let trimInfo = []
+            for (const fabric of req.fabricInfo) {
+                const fabricEntity = new MaterialFabricEntity()
+                fabricEntity.fabricCode = fabric.fabricCode
+                fabricEntity.description = fabric.description
+                fabricEntity.colorId = fabric.colorId
+                fabricEntity.consumption = fabric.consumption
+                fabricEntity.consumptionUom = fabric.consumptionUom
+                fabricEntity.issuedQuantity = fabric.issuedQuantity
+                fabricEntity.issuedQuantityUom = fabric.issuedQuantityUom
+                fabricEntity.remarks = fabric.remarks
+                fabricInfo.push(fabricEntity)
+            }
+            issueData.fabric = fabricInfo
+            for (const trim of req.trimInfo) {
+                const trimEntity = new MaterialTrimEntity()
+                trimEntity.description = trim.description
+                trimEntity.colorId = trim.colorId
+                trimEntity.consumption = trim.consumption
+                trimEntity.consumptionUom = trim.consumptionUom
+                trimEntity.issuedQuantity = trim.issuedQuantity
+                trimEntity.issuedQuantityUom = trim.issuedQuantityUom
+                trimEntity.remarks = trim.remarks
+                trimInfo.push(trimEntity)
+            }
+            issueData.trim = trimInfo
+            const save = await this.issueRepo.save(issueData)
+            if (save) {
+                return new MaterialIssueResponseModel(true, 1, 'Material Issued successfully', [])
+            }
+            else {
+                return new MaterialIssueResponseModel(false, 0, 'Material Issuing Failed', [])
+            }
+        } catch (err) {
+            throw (err)
         }
-    
+    }
+
+    async getMaterialIssue(): Promise<CommonResponseModel> {
+        const data = await this.issueRepo.getMaterialIssue()
+
+        return new CommonResponseModel(true, 1, 'Inventory data Retrived Sucessfully', data)
+
+    }
+    async getAllActiveFabrics(): Promise<CommonResponseModel> {
+        const data = await this.fabricRepo.getAllActiveFabrics()
+
+        return new CommonResponseModel(true, 1, 'Inventory data Retrived Sucessfully', data)
+
+        
+    }
+    async getMaterialTrim(): Promise<CommonResponseModel> {
+        const data = await this.trimRepo.getMaterialTrim()
+
+        return new CommonResponseModel(true, 1, 'Inventory data Retrived Sucessfully', data)
+
+        
+    }
+
 }
