@@ -15,12 +15,12 @@ const SizeDetail = ({props,buyerId}) => {
   useEffect(()=>{
     getColors()
   },[])
-console.log(props.buyerId)
+
   useEffect(() =>{
-    if(props.buyerId != null){
-      getAllSizesAgainstBuyer(props.buyerId)
+    if(buyerId != null){
+      getAllSizesAgainstBuyer(buyerId)
     }
-  },[props])
+  },[buyerId])
 
   const getColors = () => {
     colorService.getAllActiveColour().then((res) => {
