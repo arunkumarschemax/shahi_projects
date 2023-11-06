@@ -1,4 +1,4 @@
-import { BuyersDestinationDto, BuyersDestinationResponseModel, BuyersDestinationRequest } from "@project-management-system/shared-models";
+import { BuyersDestinationDto, BuyersDestinationResponseModel, BuyersDestinationRequest, CommonResponseModel, BuyerIdReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class BuyerDestinationService  extends CommonAxiosService{
@@ -24,4 +24,7 @@ export class BuyerDestinationService  extends CommonAxiosService{
         return this.axiosPostCall(this.URL + '/getDestinationDropDown')
     }
 
+    async getAllSizesAgainstBuyer(req:BuyerIdReq):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL + '/getAllSizesAgainstBuyer',req)
+    }
 }

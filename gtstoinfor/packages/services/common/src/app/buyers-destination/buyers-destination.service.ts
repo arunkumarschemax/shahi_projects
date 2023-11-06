@@ -7,6 +7,7 @@ import { Size } from "../sizes/sizes-entity";
 import { Destination } from "../destination/destination.entity";
 import { Buyers } from "../buyers/buyers.entity";
 import {
+  BuyerIdReq,
   BuyersDestinationResponseModel, BuyersMappingResponseModel, ColourInfoModel, CommonResponseModel, DestinationInfoModel, MappingModel, MappingResponseModel, SizeInfoModel,
 } from "@project-management-system/shared-models";
 
@@ -244,7 +245,15 @@ async createBuyersDestination(
     }
 }
 
-
+  async getAllSizesAgainstBuyer(req:BuyerIdReq):Promise<CommonResponseModel>{
+    const query='select sizes as size,bs.buyer_id as buyerId,bs.size_id as sizeId from buyers_size bs left join size s on bs.size_id=s.size_id where bs.buyer_id='+req.buyerId+' group by bs.size_id'
+    const result = await this.buyerSizeRepo.query(query)
+    if(result){
+      return new CommonResponseModel(true,1,'data',result)
+    }else{
+      new CommonResponseModel(false,0,'No data found this buyer',[])
+    }
+  }
 
 
 }

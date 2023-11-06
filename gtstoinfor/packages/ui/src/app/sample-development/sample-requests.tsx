@@ -16,6 +16,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
   const [page, setPage] = React.useState(1);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [filterData, setFilterData] = useState<any[]>([]);
 
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [buyingHouseData, setBuyingHouseData] = useState<any[]>([]);
@@ -40,8 +41,10 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       req.reqNo = form.getFieldValue('reqNo')
     }
     Service.getAllSampleDevData().then((res) => {
+      console.log(res.data,'------------------------------')
       if (res.data) {
         console.table(res)
+        setFilterData(res.data);
         setBuyingHouseData(res.data);
         setReqNo(res.data)
       }
@@ -57,13 +60,25 @@ export const SampleRequests = (props: BuyingHouseProps) => {
     getAllSampleDevelopment();
   };
 
-  const DetailView = (val: any) => {
-    return navigate(`/sample-development/store-issue-detail`);
+  
+
+  const DetailView = (rowData,cancel?) => {
+    const navigateData = filterData.filter(req => req.SampleRequestId === rowData)
+    console.log("MarketIssueDetailView",rowData)
+    return navigate(`/sample-development/market-issue-detailview`, { state: { data: navigateData,cancelVisible : cancel } });
+
+    
   };
 
-  const MarketIssueDetailView = (val: any) => {
-    return navigate(`/sample-development/market-issue-detailview`);
+
+  const MarketIssueDetailView = (rowData,cancel?) => {
+    const navigateData = filterData.filter(req => req.SampleRequestId === rowData)
+    console.log("MarketIssueDetailView",rowData)
+    return navigate(`/sample-development/store-issue-detail`, { state: { data: navigateData,cancelVisible : cancel } });
+
   };
+
+  
 
   
 
@@ -186,11 +201,11 @@ export const SampleRequests = (props: BuyingHouseProps) => {
     },
     {
       title: "Style No",
-      dataIndex: "styleNo",
+      dataIndex: "m3StyleNo",
       // responsive: ['lg'],
-      sorter: (a, b) => a.styleNo.localeCompare(b.styleNo),
+      sorter: (a, b) => a.m3StyleNo.localeCompare(b.m3StyleNo),
       sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("styleNo"),
+      ...getColumnSearchProps("m3StyleNo"),
     },
     {
       title: "Date",
@@ -202,11 +217,13 @@ export const SampleRequests = (props: BuyingHouseProps) => {
     },
     {
       title: "Location",
-      dataIndex: "location",
+      dataIndex: "locationName",
       // responsive: ['lg'],
-      sorter: (a, b) => a.location.localeCompare(b.location),
+      sorter: (a, b) => a.locationName
+.localeCompare(b.locationName
+),
       sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("location"),
+      ...getColumnSearchProps("locationName"),
     },
     {
       title: "PCH",
@@ -226,11 +243,11 @@ export const SampleRequests = (props: BuyingHouseProps) => {
     },
     {
       title: "Buyer",
-      dataIndex: "buyer",
+      dataIndex: "buyerName",
       // responsive: ['lg'],
-      sorter: (a, b) => a.buyer.localeCompare(b.buyer),
+      sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
       sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("buyer"),
+      ...getColumnSearchProps("buyerName"),
     },
     {
       title: "Status",
@@ -264,10 +281,10 @@ export const SampleRequests = (props: BuyingHouseProps) => {
             />
           </Tooltip> */}
           <Tooltip title='Detail View'>
-          <EyeOutlined onClick={() => MarketIssueDetailView(rowData.id)} style={{fontSize:'15px',marginLeft:'-5px'}}/>
+          <EyeOutlined onClick={() => DetailView(rowData.SampleRequestId)} style={{fontSize:'15px',marginLeft:'-5px'}}/>
           </Tooltip>
           <Divider type="vertical"/>
-          <Button onClick={() => DetailView(rowData.id)} type='primary' disabled={logInUser == 'marketUser' ? true:false}>Issue Material</Button>
+          <Button onClick={() => MarketIssueDetailView(rowData.id)} type='primary' disabled={logInUser == 'marketUser' ? true:false}>Issue Material</Button>
         </span>
       ),
     },
