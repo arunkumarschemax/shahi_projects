@@ -1,5 +1,6 @@
 import { ItemGroupEnum, RmItemTypeEnum } from "@project-management-system/shared-models";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { RmCreationEntity } from "../rm-items/rm-items.entity";
 
 @Entity('fg_item_bom')
 export class FgItemBom{
@@ -91,6 +92,10 @@ export class FgItemBom{
             name:'is_active'
         })
         isActive: string
+
+        @ManyToOne(type=>RmCreationEntity, rm=>rm.fgItemBomInfo,{  nullable:true, })
+        @JoinColumn({ name:"rm_item_id"})
+        rmItemInfo: RmCreationEntity;
 
 
 }
