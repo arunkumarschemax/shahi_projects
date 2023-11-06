@@ -264,36 +264,36 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
         {
           title: "Brands Name",
           dataIndex: "brandName",
-          sorter: (a, b) => a.source.localeCompare(b.source),
+          sorter: (a, b) => a.brandName.localeCompare(b.brandName),
           sortDirections: ["ascend", "descend"],
           ...getColumnSearchProps("brandName"),
         },
         {
           title: 'Status',
           dataIndex: 'isActive',
-          sorter: (a, b) => a.isActive.localeCompare(b.isActive),
-          sortDirections: ["ascend", "descend"],
-          ...getColumnSearchProps("isActive"),
+          // sorter: (a, b) => a.isActive.localeCompare(b.isActive),
+          // sortDirections: ["ascend", "descend"],
+          // ...getColumnSearchProps("isActive"),
           render: (isActive, rowData) => (
             <>
               {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
             </>
           ),
-          // filters: [
-          //   {
-          //     text: 'Active',
-          //     value: true,
-          //   },
-          //   {
-          //     text: 'InActive',
-          //     value: false,
-          //   },
-          // ],
-          // filterMultiple: false,
-          // onFilter: (value, record) => {
-          //   // === is not work
-          //   return record.isActive === value;
-          // },
+          filters: [
+            {
+              text: 'Active',
+              value: true,
+            },
+            {
+              text: 'InActive',
+              value: false,
+            },
+          ],
+          filterMultiple: false,
+          onFilter: (value, record) => {
+            // === is not work
+            return record.isActive === value;
+          },
     
         },
         {

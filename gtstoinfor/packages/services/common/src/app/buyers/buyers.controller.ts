@@ -62,8 +62,9 @@ export class BuyersController {
         }
     }
     @Post('/getAllActiveBuyers')
-    @ApiBody({type:BuyerExtrnalRefIdReq})
-    async getAllActiveBuyers(@Req() req?: any): Promise<AllBuyersResponseModel> {
+    // @ApiBody({type:BuyerExtrnalRefIdReq})
+    async getAllActiveBuyers(@Body() req?: any): Promise<AllBuyersResponseModel> {
+    
         try {
             return await this.buyersService.getAllActiveBuyersInfo(req);
         } catch (error) {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Layout, Menu, Tooltip, theme } from 'antd';
 import { Content, Footer } from 'antd/es/layout/layout';
-import { UserOutlined, DashboardOutlined, LogoutOutlined } from '@ant-design/icons'
+import Icon, { UserOutlined, DashboardOutlined, LogoutOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
 import { ProBreadcrumb, ProConfigProvider } from '@ant-design/pro-components';
 import logo from './logo.png'
@@ -16,6 +16,8 @@ import SubMenu from 'antd/es/menu/SubMenu';
 import * as antdIcons from '@ant-design/icons';
 import Sider from 'antd/es/layout/Sider';
 import { CommonHeader } from '../header/header';
+import { icons } from 'antd/es/image/PreviewGroup';
+import { color } from 'highcharts';
 
 const { useToken } = theme
 
@@ -758,40 +760,63 @@ export default function BasicLayout() {
     const userData = JSON.parse(localStorage.getItem('currentUser'))
     const loginUser = userData.user.userName
     const loginUserRole = userData.user.roles
+    const [collapsedMenus, setCollapsedMenus] = useState({})   
+    let menu
+    function renderIcon(menuId, iconName) {
+        const emojiCodePattern = /^&#\d+;$/;
     
-    const toggle = () => {
-         setCollapsed(prevCollapsed => !prevCollapsed);
-    };
+        if (emojiCodePattern.test(iconName)) {
+            const emojiCharacter = String.fromCodePoint(parseInt(iconName.slice(2, -1), 10));
+            return <span key={menuId} dangerouslySetInnerHTML={{ __html: emojiCharacter }} />;
+        } else {
+            // Handle other icon types if needed
+            return null; // Return null if the icon is not valid
+        }
     
-    function renderIcon(iconType, iconName) {
-        // if (iconType === "antd") { 
-            const SpecificIcon = antdIcons["SolutionOutlined"]; 
-            return <SpecificIcon /> 
-        // }
-        // else {
-        //     const SpecificIcon = icons[iconName];
-        //     return <Icon component={SpecificIcon} style={{ fontSize: '20px' }} /
+   
+    //    return <p>{iconName}</p>
+        }
 
-    }
-
-  
+        const toggle = () => {
+            console.log("Toggling menu...");
+            setCollapsed(prevCollapsed => !prevCollapsed);
+        };
+        
+        const handleMenuHeaderClick = () => {
+            console.log("Menu header clicked...");
+            toggle();
+        };
+        
+        
+        const toggleMenu = (menuId) => {
+            setCollapsedMenus((prevMenus) => {
+                return {
+                    ...prevMenus,
+                    [menuId]: !prevMenus[menuId], // Toggle the collapse state for the specific menuId
+                };
+            });
+        };
    
     const getAllSubMenus = () => {
+        menu =IAMClientAuthContext.user ? IAMClientAuthContext.user : '';
         const menuData = IAMClientAuthContext.menuAccessObject ? IAMClientAuthContext.menuAccessObject : [];
-      
-        const processedMenuData = menuData.map(menuItem => {
+    //   console.log(menuData)
+        const processedMenuData = menuData
+        .filter(menuItem => menuItem.menuName !== " Fabric Development" && menuItem.menuName !== " Sample Development")
+        .map(menuItem => {
             
           const processedSubMenuItems =  menuItem.subMenuData?.map(subMenuItem => (
             {
+                path: subMenuItem.path,
+                label: subMenuItem.subMenuName,
+ 
             key: subMenuItem.subMenuId, 
-            label: subMenuItem.subMenuName,
-            icon: subMenuItem.subMenuIconName,
-            path: subMenuItem.path, 
+            //  icon:renderIcon(subMenuItem.subMenuIconType,subMenuItem.subMenuIconName),
           }))
           return {
             key: menuItem.menuId, 
             label: menuItem.menuName,
-            icon: menuItem.menuIconName,
+            icon: renderIcon(menuItem.menuId,menuItem.menuIconName),
             path:menuItem.path?menuItem.path:'/',
             children: processedSubMenuItems.length > 0 ? processedSubMenuItems : null,
 
@@ -814,7 +839,7 @@ export default function BasicLayout() {
     const handleClick = (e) => {
         setKey(e)
     }
-
+  
 
     return (
         <ProConfigProvider dark={dark} >
@@ -824,7 +849,7 @@ export default function BasicLayout() {
                     locale='en-US'
                     siderWidth={240}
                     colorPrimary='#29397d'
-                    headerContentRender={(props) => props.layout !== 'side' && document.body.clientWidth > 1000 ? <ProBreadcrumb /> : undefined}
+                                        headerContentRender={(props) => props.layout !== 'side' && document.body.clientWidth > 1000 ? <ProBreadcrumb /> : undefined}
                     logo={<img src={logo} />}
                     layout={'mix'}
                     token={{ header: { colorBgHeader: 'transparent' }, sider: { colorBgMenuItemSelected: colorPrimaryBg } }}
@@ -838,7 +863,13 @@ export default function BasicLayout() {
                     avatarProps={{
                         src: 'https://hzdjs.cn/blog/logo.jpg',
                         size: 'small',
-                        title: 'admin',
+                        title: menu.userName,
+                                            }}
+                    // collapsed={collapsed}
+                    onCollapse={toggle}
+                    // onMenuHeaderClick={handleMenuHeaderClick} 
+                    onMenuHeaderClick={(menuId) => {
+                        toggleMenu(menuId);
                     }}
                     contentStyle={{ paddingBlock: '10px', paddingInline: '10px' }}
                     actionsRender={(props) => {
@@ -872,19 +903,19 @@ export default function BasicLayout() {
                         ];
                     }}
                     menuItemRender={(item, dom) => {
-                        return (
+                                                return (
                             <Link
                                 to={item?.path || "/"}
                                 onClick={() => {
                                     setPathname(item.path || "/");
-                                }}
+                                                                    }}
                             >
                                 {dom}
                             </Link>
                         );
                     }}
                     
-                    onMenuHeaderClick={() => navigate("/")}
+                    
                 >
                   
                   
@@ -894,7 +925,7 @@ export default function BasicLayout() {
              </ProLayout> 
         
 
-           {/* <div
+{/* <div
                 id="main-layout"
                 style={{
                     height: '100vh',
@@ -942,6 +973,6 @@ export default function BasicLayout() {
                 </Layout>
 
             </div>  */}
-        </ProConfigProvider>
+                   </ProConfigProvider>
              );
 }

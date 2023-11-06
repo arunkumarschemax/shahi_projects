@@ -2,7 +2,7 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { GroupTechClassService } from './group-tech-class.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { Body, Controller, Post, Req } from '@nestjs/common';
-import { AllGroupTechClassResponse, CommonResponseModel,  GroupTechClassResponse } from '@project-management-system/shared-models';
+import { AllGroupTechClassResponse, BuyerIdReq, CommonResponseModel,  GroupTechClassResponse } from '@project-management-system/shared-models';
 import { GroupTechClassRequest } from './dto/group-tech-class.request';
 import { GroupTechClassDto } from './dto/group-tech-class.dto';
 
@@ -36,9 +36,10 @@ export class GroupTechClassController {
       }
 
       @Post('/getAllGroupTechClass')
-      async getAllGroupTechClass(): Promise<AllGroupTechClassResponse> {
+      @ApiBody({type:BuyerIdReq})
+      async getAllGroupTechClass(@Body() req?:any): Promise<AllGroupTechClassResponse> {
           try {
-              return await this.groupTechClassService.getAllGroupTechClass();
+              return await this.groupTechClassService.getAllGroupTechClass(req);
           } catch (error) {
              return this.applicationExceptionHandler.returnException(AllGroupTechClassResponse, error);
           }

@@ -211,8 +211,8 @@
 import { Button, Card, Col, Descriptions, Form, Row, Select, Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import { useEffect, useState } from 'react';
-import { StyleOrderService } from '@project-management-system/shared-services';
-import { StyleOrderIdReq } from '@project-management-system/shared-models';
+import { BuyersService, StyleOrderService } from '@project-management-system/shared-services';
+import { BuyerExtrnalRefIdReq, MenusAndScopesEnum, StyleOrderIdReq } from '@project-management-system/shared-models';
 import moment from 'moment';
 import COAmendmentGrid from './co-amendment-grid';
 
@@ -229,7 +229,12 @@ const COAmendmentTabs = (props: COAmendmentTabsProps) => {
   const [coId, setCoId] = useState<any>();
   const [data, setData] = useState<any[]>([]);
  
-
+  const [userId, setUserId] = useState([]); 
+  const [loginBuyer,setLoginBuyer] = useState<number>(0)
+  const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+  const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
+let userRef
+const buyerService = new BuyersService();
 
 
   const onChange = (key: string) =>  {
@@ -245,7 +250,20 @@ const COAmendmentTabs = (props: COAmendmentTabsProps) => {
     getCoData();
    
   }, []);
-
+  const Login = () =>{
+    const req = new BuyerExtrnalRefIdReq
+    if(role === MenusAndScopesEnum.roles.crmBuyer){
+      req.extrnalRefId = externalRefNo
+    }
+    
+    buyerService.getBuyerByRefId(req).then(res=>{
+      if(res.status){
+        setUserId(res.data)
+  setLoginBuyer(res.data.buyerId)  
+      }
+    })
+   
+  }
   const getCoData = () => {
 
     styleorderService.getCoNumber().then((res) => {
@@ -260,6 +278,10 @@ const COAmendmentTabs = (props: COAmendmentTabsProps) => {
   
   const getData = () =>{
     const req = new StyleOrderIdReq(coId,undefined)
+    if(role === MenusAndScopesEnum.roles.crmBuyer){
+      req.buyerId = loginBuyer
+  }
+  
     styleorderService.getCOInfoById(req).then((res) => {
       if (res.status) {
         setData(res.data);

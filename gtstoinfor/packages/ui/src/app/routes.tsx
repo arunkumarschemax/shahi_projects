@@ -598,6 +598,7 @@ export const AppRoutes = () => {
                     <Route path="sample-development-detail" element={<SampleDevDetail />}/>
                 </Route>
                 <Route path='/materialCreation'>
+                <Route path='rm-skus' element={<RmSkusGeneration/>}/>
                     <Route path='sku-list' element={<SkuList/>}/>
                     <Route path='sku-mapping' element={<SKUGeneration/>}/>
                     <Route path='item-creation' element={<ItemCreation itemCreationData={undefined} isUpdate={false} closeForm={function (): void {
