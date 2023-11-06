@@ -77,3 +77,6 @@ export * from './bom'
 export * from './item-skus'
 export * from './style-order'
 export * from './material-issue'
+export * from './indent'
+export * from './rm-positions'
+

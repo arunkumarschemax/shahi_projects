@@ -47,11 +47,11 @@ operationInventoryId:number;
 })
 operation:string;
 
-@Column('varchar',{
-    nullable:false,
-    name:'next_operation'
-})
-nextOperation:string;
+// @Column('varchar',{
+//     nullable:false,
+//     name:'next_operation'
+// })
+// nextOperation:string;
 
   @Column('int',{
     nullable:false,
@@ -59,23 +59,23 @@ nextOperation:string;
 })
 issuedQuantity:number;
 
-@Column('varchar',{
+@Column('int',{
     nullable:false,
-    name:'issued_uom'
+    name:'issued_uom_id'
 })
-issuedUom:string;
+issuedUomId:number;
 
-  @Column('int',{
-    nullable:false,
-    name:'damaged_quantity'
-})
-damagedQuantity:number;
+//   @Column('int',{
+//     nullable:false,
+//     name:'damaged_quantity'
+// })
+// damagedQuantity:number;
 
-@Column('varchar',{
-    nullable:false,
-    name:'damaged_uom'
-})
-damagedUom:string;
+// @Column('varchar',{
+//     nullable:false,
+//     name:'damaged_uom_id'
+// })
+// damagedUomId:number;
 
   @Column('int',{
     nullable:false,
@@ -83,11 +83,11 @@ damagedUom:string;
 })
 reportedQuantity:number;
 
-@Column('varchar',{
+@Column('int',{
     nullable:false,
-    name:'reported_uom'
+    name:'reported_uom_id'
 })
-reportedUom:string;
+reportedUomId:number;
 
 @Column('int',{
     nullable:false,
@@ -95,11 +95,11 @@ reportedUom:string;
 })
 rejectedQuantity:number;
 
-@Column('varchar',{
-    nullable:false,
-    name:'rejected_uom'
+@Column('int',{
+    nullable:true,
+    name:'rejected_uom_id'
 })
-rejectedUom:string;
+rejectedUomId:number | null;
 
 @Column('enum',{
     nullable:false,

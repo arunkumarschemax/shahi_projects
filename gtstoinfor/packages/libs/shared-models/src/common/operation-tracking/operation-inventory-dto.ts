@@ -7,13 +7,13 @@ export class OperationInventoryDto{
     operationSequenceId: number
     operation:string;
     physicalQuantity:number;
-    physicalUom:string;
+    physicalUomId:number;
     issuedQuantity:number;
-    issuedUom:string;
+    issuedUomId:number;
     damagedQuantity:number;
-    damagedUom:string;
+    damagedUomId:number;
     rejectedQuantity:number;
-    rejectedUom:string;
+    rejectedUomId:number;
     createdAt: Date;
     createdUser: string | null;
     updatedAt: Date;
@@ -26,13 +26,13 @@ export class OperationInventoryDto{
         operationSequenceId: number,
         operation:string,
         physicalQuantity:number,
-        physicalUom:string,
+        physicalUomId:number,
         issuedQuantity:number,
-        issuedUom:string,
+        issuedUomId:number,
         damagedQuantity:number,
-        damagedUom:string,
+        damagedUomId:number,
         rejectedQuantity:number,
-        rejectedUom:string,
+        rejectedUomId:number,
         createdAt: Date,
         createdUser: string | null,
         updatedAt: Date,
@@ -44,13 +44,13 @@ export class OperationInventoryDto{
         this.operationSequenceId = operationSequenceId
         this.operation = operation
         this.physicalQuantity = physicalQuantity
-        this.physicalUom = physicalUom
+        this.physicalUomId = physicalUomId
         this.issuedQuantity = issuedQuantity
-        this.issuedUom = issuedUom
+        this.issuedUomId = issuedUomId
         this.damagedQuantity = damagedQuantity
-        this.damagedUom = damagedUom
+        this.damagedUomId = damagedUomId
         this.rejectedQuantity = rejectedQuantity
-        this.rejectedUom = rejectedUom
+        this.rejectedUomId = rejectedUomId
         this.createdAt = createdAt
         this.createdUser = createdUser
         this.updatedAt = updatedAt

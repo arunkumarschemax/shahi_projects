@@ -10,6 +10,7 @@ export * from './common/factory/factory-activate-deactivate.dto'
 export * from './common/stocks/stock-response-model'
 export * from './common/stocks/stocks.dto'
 export * from './common/stocks/all-stocks-response-model'
+export * from './common/stocks/stock-filter-request'
 
 
 export * from './common/payment_terms_category/payment_terms_category.enum'

@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { MaterialIssueService } from "./material-issue.service";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { CommonResponseModel, MaterialIssueIdreq, MaterialIssueResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, MaterialIssueRequest, MaterialIssueIdreq, MaterialIssueResponseModel } from "@project-management-system/shared-models";
 import { MaterialIssueDto } from "./dto/material-issue-dto";
 
 @ApiTags('material-issue')
@@ -62,4 +62,14 @@ export class MaterialIssueController {
         }
     }
 
+    @Post('/getDataByStyleId')
+    @ApiBody({type: MaterialIssueRequest})
+    async getDataByStyleId(@Body() req: any):Promise<MaterialIssueResponseModel>{
+        try{
+            console.log(req,'-------')
+            return await this.issueService.getDataByStyleId(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(MaterialIssueResponseModel, err);
+        }
+    }
 }

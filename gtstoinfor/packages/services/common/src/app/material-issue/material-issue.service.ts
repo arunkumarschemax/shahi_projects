@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationTrackingResponseModel, OperationTrackingDto, OperationInventoryDto, OperationInventoryResponseModel, TrackingEnum, MaterialIssueResponseModel, MaterialIssueIdreq } from "@project-management-system/shared-models";
+import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationTrackingResponseModel, OperationTrackingDto, OperationInventoryDto, OperationInventoryResponseModel, TrackingEnum, MaterialIssueResponseModel, MaterialIssueRequest, MaterialIssueIdreq, MaterialFabricEnum } from "@project-management-system/shared-models";
 import { Item } from "../items/item-entity";
 import { OperationGroups } from "../operation-groups/operation-groups.entity";
 import { Operations } from "../operations/operation.entity";
@@ -25,28 +25,29 @@ export class MaterialIssueService {
         // private readonly dataSource: AppDataSource,
     ) { }
 
-    async createMaterialIssue(req: MaterialIssueDto): Promise<MaterialIssueResponseModel> {
-        try {
+    async createMaterialIssue(req: MaterialIssueDto): Promise<MaterialIssueResponseModel>{
+        try{
 
             let today = new Date();
             let CurrentYear = today.getFullYear();
             let CurrentMonth = today.getMonth();
             let fromDate = 0;
             let toDate = 0;
-            let totalRecords = await (await this.issueRepo.getMaterialIssueById).length;
+            const getLength = await this.issueRepo.getMaterialIssueById();
+            let totalRecords = getLength.materialIssueId
 
             if (CurrentMonth < 4) {
-                fromDate = (CurrentYear - 1);
+                fromDate = (CurrentYear-1);
                 toDate = (CurrentYear);
             } else {
                 fromDate = (CurrentYear);
                 toDate = (CurrentYear + 1);
             }
-
+            
             totalRecords = totalRecords + 1;
             var refNo = totalRecords + "";
             while (refNo.length < 4) refNo = "0" + refNo;
-
+        
             const consumptionCode = "CON/" + (fromDate.toString().substr(-2)) + "-" + (toDate.toString().substr(-2)) + "/" + refNo;
 
             const issueData = new MaterialIssueEntity()
@@ -59,6 +60,7 @@ export class MaterialIssueService {
             issueData.buyerId = req.buyerId
             issueData.sampleTypeId = req.sampleTypeId
             issueData.sampleSubTypeId = req.sampleSubTypeId
+            issueData.styleId = req.styleId
             issueData.styleNo = req.styleNo
             issueData.brandId = req.brandId
             issueData.dmmId = req.dmmId
@@ -76,43 +78,63 @@ export class MaterialIssueService {
             issueData.remarks = req.remarks
             let fabricInfo = []
             let trimInfo = []
-            for (const fabric of req.fabricInfo) {
+            for(const fabric of req.fabricInfo){
                 const fabricEntity = new MaterialFabricEntity()
                 fabricEntity.fabricCode = fabric.fabricCode
                 fabricEntity.description = fabric.description
                 fabricEntity.colorId = fabric.colorId
                 fabricEntity.consumption = fabric.consumption
                 fabricEntity.consumptionUom = fabric.consumptionUom
+                fabricEntity.uomId = fabric.uomId
                 fabricEntity.issuedQuantity = fabric.issuedQuantity
                 fabricEntity.issuedQuantityUom = fabric.issuedQuantityUom
+                fabricEntity.issuedUomId = fabric.issuedUomId
                 fabricEntity.remarks = fabric.remarks
+                fabricEntity.status = MaterialFabricEnum.OPEN
                 fabricInfo.push(fabricEntity)
             }
             issueData.fabric = fabricInfo
-            for (const trim of req.trimInfo) {
+            for(const trim of req.trimInfo){
                 const trimEntity = new MaterialTrimEntity()
                 trimEntity.description = trim.description
                 trimEntity.colorId = trim.colorId
                 trimEntity.consumption = trim.consumption
+                trimEntity.uomId = trim.uomId
                 trimEntity.consumptionUom = trim.consumptionUom
                 trimEntity.issuedQuantity = trim.issuedQuantity
                 trimEntity.issuedQuantityUom = trim.issuedQuantityUom
+                trimEntity.issuedUomId = trim.issuedUomId
                 trimEntity.remarks = trim.remarks
                 trimInfo.push(trimEntity)
             }
             issueData.trim = trimInfo
             const save = await this.issueRepo.save(issueData)
-            if (save) {
-                return new MaterialIssueResponseModel(true, 1, 'Material Issued successfully', [])
+            if(save){
+                return new MaterialIssueResponseModel(true,1,'Material Issued successfully',[])
             }
-            else {
-                return new MaterialIssueResponseModel(false, 0, 'Material Issuing Failed', [])
+            else{
+                return new MaterialIssueResponseModel(false,0,'Material Issuing Failed',[])
             }
-        } catch (err) {
-            throw (err)
+        }catch(err){
+            throw(err)
         }
     }
 
+async getDataByStyleId(req: MaterialIssueRequest):Promise<CommonResponseModel>{
+    try{
+        const data = await this.fabricRepo.getDataByStyleId(req)
+        console.log(req,'============')
+        if(data.length > 0){
+            return new CommonResponseModel(true,1,'Data retrieved successfully',data) 
+        }else{
+            return new CommonResponseModel(false,0,'No data found',[])
+        }
+    }catch(err){
+        throw(err)
+    }
+}
+
+    
     async getAllMaterialIssues() {
 
         try {
@@ -212,4 +234,7 @@ export class MaterialIssueService {
         }
     }
 
+
+    
+    
 }

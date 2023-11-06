@@ -92,7 +92,7 @@ const SizeDetail = ({props}) => {
           render: (_, record) => (
             <Input
               value={record.xs}
-              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
+              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
               type='number'
               min={0}
               placeholder='Quantity'
@@ -105,7 +105,7 @@ const SizeDetail = ({props}) => {
           render: (_, record) => (
             <Input
               value={record.s}
-              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
+              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
               type='number'
               min={0}
               placeholder='Quantity'
@@ -118,7 +118,7 @@ const SizeDetail = ({props}) => {
           render: (_, record) => (
             <Input
               value={record.m}
-              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
+              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
               type='number'
               min={0}
               placeholder='Quantity'
@@ -131,7 +131,7 @@ const SizeDetail = ({props}) => {
           render: (_, record) => (
             <Input
               value={record.l}
-              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
+              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
               type='number'
               min={0}
               placeholder='Quantity'
@@ -144,7 +144,7 @@ const SizeDetail = ({props}) => {
           render: (_, record) => (
             <Input
               value={record.xl}
-              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
+              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
               type='number'
               min={0}
               placeholder='Quantity'
@@ -157,7 +157,7 @@ const SizeDetail = ({props}) => {
           render: (_, record) => (
             <Input
               value={record.xxl}
-              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
+              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
               type='number'
               min={0}
               placeholder='Quantity'
