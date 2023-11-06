@@ -65,7 +65,12 @@ import { ItemSkus } from './sku-generation/sku-generation.entity';
 import { SkuGenerationModule } from './sku-generation/sku-generation.module';
 import { SampleDevReqModule } from './sample-dev-request/sample-dev-request.module';
 import { StyleOrderModule } from './style-order/style-order.module';
+import { StocksModule } from './stocks/stocks.module';
 import { OperationTrackingModule } from './operation-tracking/operation-tracking.module';
+import { RackPositionModule } from './rm_locations/rack-position.module';
+import { MaterialIssueModule } from './material-issue/material-issue.module';
+import { IndentService } from './indent/indent.service';
+import { IndentModule } from './indent/indent.module';
 
 
 @Module({
@@ -86,6 +91,7 @@ import { OperationTrackingModule } from './operation-tracking/operation-tracking
       }
     }),
     FactoriesModule,
+    
     CurrenciesModule,
     PaymentTermsModule,
     PackageTermsModule,
@@ -121,7 +127,7 @@ import { OperationTrackingModule } from './operation-tracking/operation-tracking
     ColourModule,
     BuyersDestinationModule,
     BomModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,M3MastersModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,OperationTrackingModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,M3MastersModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,OperationTrackingModule,MaterialIssueModule,IndentModule,RackPositionModule,StocksModule],
   controllers: [AppController],
   providers: [AppService],
 })

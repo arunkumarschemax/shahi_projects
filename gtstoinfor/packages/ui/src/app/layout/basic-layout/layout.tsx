@@ -25,6 +25,12 @@ export const baseMRouterList = [
         filepath: "masters",
         children: [
             {
+                label: "Rack Positions",
+                key: "rackPosition-view",
+                path: "rackPosition-view",
+                filepath: "/rackPosition-view",
+            },
+            {
                 label: "M3 Items",
                 key: "m3-itemcodes-view",
                 path: "m3-itemcodes-view",
@@ -83,6 +89,12 @@ export const baseMRouterList = [
                 key: "Size",
                 path: "size/size-view",
                 filepath: "size/size-view",
+            },
+            {
+                label: "Buyers",
+                key: "buyers",
+                path: "buyers/buyers-view",
+                filepath: "buyers/buyers-view",
             },
           
         ],
@@ -160,6 +172,7 @@ export const baseMRouterList = [
 ]
 
 export const baseRouterList = [
+    
     {
         label: "Masters",
         key: "masters",
@@ -167,6 +180,12 @@ export const baseRouterList = [
         // icon: <PicCenterOutlined />,
         filepath: "masters",
         children: [
+            {
+                label: "Rack Positions",
+                key: "rm-locations-view",
+                path: "rm-locations-view",
+                filepath: "/rackPosition-view",
+            },
             {
                 label: "M3 Items",
                 key: "m3-itemcodes-view",
@@ -215,6 +234,12 @@ export const baseRouterList = [
                 key: "Size",
                 path: "size/size-view",
                 filepath: "size/size-view",
+            },
+            {
+                label: "Buyers",
+                key: "buyers",
+                path: "buyers/buyers-view",
+                filepath: "buyers/buyers-view",
             },
           
         ],
@@ -800,6 +825,22 @@ export const baseRouterList = [
             
          
         ]
+    },
+    {
+        label: "Reports",
+        key: "reports",
+        // icon:<FontAwesomeIcon icon={faShirt} />,
+        path: "report",
+        filepath: "report",
+        childern:[
+            {
+                label: "Material Issues Report",
+                key: "report",
+                path: "material-report",
+                filepath: "material-report",
+            },
+        ]
+
     },
     // {
     //     label: "Orders",

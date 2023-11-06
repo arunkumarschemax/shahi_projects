@@ -8,7 +8,7 @@ import ProcessForm from "./process";
 
 export interface SampleDevTabsProps{
     handleSubmit: (value: any) => void;
-
+    buyerId:any
 }
 
 export const SampleDevTabs = (props:SampleDevTabsProps) => {
@@ -41,13 +41,13 @@ export const SampleDevTabs = (props:SampleDevTabsProps) => {
     const onConfirm = () => {
         props.handleSubmit(data)
     }
-
+    console.log(props.buyerId)
 
     return(
         <Card size='small'>
             <Tabs type={'card'} tabPosition={'top'}>
                 <TabPane key="1" tab={<span><b>{`Size Detail`}</b></span>}>
-                <SizeDetail props = {handleSizeDataUpdate}/>
+                <SizeDetail props = {handleSizeDataUpdate} buyerId={props.buyerId}/>
                 </TabPane>
                 <TabPane key="2" tab={<span><b>{`Fabric`}</b></span>}>
                 <FabricsForm props = {handleFabricsDataUpdate}/>

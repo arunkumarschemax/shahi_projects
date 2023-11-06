@@ -6,15 +6,15 @@ export class SourcingRequisitionReq{
     expectedDate: Date;
     requestNo: string;
     indentDate:Date;
-    fabricInfo: FabricInfoReq[];
-    trimInfo: TrimInfoReq[];
+    indentFabricDetails: FabricInfoReq[];
+    indentTrimDetails: TrimInfoReq[];
 
-    constructor(style:string,expectedDate: Date,requestNo: string,indentDate:Date,fabricInfo:FabricInfoReq[],trimInfo:TrimInfoReq[]){
+    constructor(style:string,expectedDate: Date,requestNo: string,indentDate:Date,indentFabricDetails:FabricInfoReq[],indentTrimDetails:TrimInfoReq[]){
         this.style = style;
         this.expectedDate = expectedDate;
         this.requestNo = requestNo;
         this.indentDate = indentDate;
-        this.fabricInfo = fabricInfo;
-        this.trimInfo = trimInfo
+        this.indentFabricDetails = indentFabricDetails;
+        this.indentTrimDetails = indentTrimDetails
     }
 }

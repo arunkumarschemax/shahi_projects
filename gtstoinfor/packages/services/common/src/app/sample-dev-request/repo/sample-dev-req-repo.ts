@@ -21,6 +21,12 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
     ) {
         super(repo.target, repo.manager, repo.queryRunner);
     }
+        async getsampleId(): Promise<any> {
+            const query = this.createQueryBuilder('sm')
+                .select(` MAX(sample_request_id) as id`)
+                // .orderBy(` created_at`, 'DESC')
+            return await query.getRawOne();
+        }
 
     async getAllSampleDevData(req?: SampleFilterRequest): Promise<any[]> {
         const query =  this.createQueryBuilder('sr')

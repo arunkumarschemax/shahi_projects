@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { SampleDevelopmentStatusEnum } from '@project-management-system/shared-models';
 import { SampleSizeReq } from './sample-req-size-req';
-import { SamplefabricReq } from './sample-dev-fabric-info-req';
+import { SampleFabricReq } from './sample-dev-fabric-info-req';
 import { SampleTrimReq } from './sample-dev-trim-req';
 import { SampleProcessInfoReq } from './sample-dev-process-info-req';
 
@@ -25,11 +25,11 @@ export class SampleDevDto {
   product:string;
   type:string;
   conversion:string;
-  madeIn:string;
+  madeIn:number;
   facilityId: number;
   status: SampleDevelopmentStatusEnum;
   samplereqsizeinfo:SampleSizeReq[];
-  samplereqfabricinfo:SamplefabricReq[]
+  samplereqfabricinfo:SampleFabricReq[]
   sampleTrimInfo:SampleTrimReq[]
   sampleProcessInfo:SampleProcessInfoReq[]
 
@@ -53,11 +53,11 @@ export class SampleDevDto {
   product:string,
   type:string,
   conversion:string,
-  madeIn:string,
+  madeIn:number,
   facilityId: number,
   status: SampleDevelopmentStatusEnum,
   samplereqsizeinfo:SampleSizeReq[],
-  samplereqfabricinfo:SamplefabricReq[],
+  samplereqfabricinfo:SampleFabricReq[],
   sampleTrimInfo:SampleTrimReq[],
   sampleProcessInfo:SampleProcessInfoReq[]
   ){

@@ -43,13 +43,15 @@ export class SampleRequestDto {
   @ApiProperty()
   technicianId: number;
   @ApiProperty()
-  product: string;
+  product: number;
   @ApiProperty()
   type: string;
   @ApiProperty()
   conversion: string;
   @ApiProperty()
-  madeIn: string;
+  countryId: number;
+  @ApiProperty()
+  madeIn: number;
   @ApiProperty()
   facilityId: number;
   @ApiProperty()
@@ -64,9 +66,7 @@ export class SampleRequestDto {
   sampleTrimInfo: SampleTrimReq[]
   @ApiProperty({ type: [SampleProcessInfoReq] })
   sampleProcessInfo: SampleProcessInfoReq[]
-
   constructor(
-
     SampleRequestId: number,
     locationId: number,
     requestNo: string,
@@ -85,10 +85,10 @@ export class SampleRequestDto {
     samValue: number,
     dmmId: number,
     technicianId: number,
-    product: string,
+    product: number,
     type: string,
     conversion: string,
-    madeIn: string,
+    madeIn: number,
     facilityId: number,
     remarks: string,
     status:SampleDevelopmentStatusEnum,

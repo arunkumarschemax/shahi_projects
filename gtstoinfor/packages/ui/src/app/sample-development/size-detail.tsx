@@ -1,18 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip } from 'antd';
+import { Table, Button, Input, Select, Tooltip, message } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
-import { ColourService } from '@project-management-system/shared-services';
+import { BuyerDestinationService, ColourService } from '@project-management-system/shared-services';
 
-const SizeDetail = ({props}) => {
+const SizeDetail = ({props,buyerId}) => {
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
   const [color, setColor] = useState<any[]>([])
+  const [sizeData, setSizeData]=useState<any[]>([])
   const colorService = new ColourService()
+  const buyerDestinaytionService=new BuyerDestinationService()
   const { Option } = Select;
 
   useEffect(()=>{
     getColors()
   },[])
+
+  useEffect(() =>{
+    if(buyerId != null){
+      getAllSizesAgainstBuyer(buyerId)
+    }
+  },[buyerId])
 
   const getColors = () => {
     colorService.getAllActiveColour().then((res) => {
@@ -22,6 +30,17 @@ const SizeDetail = ({props}) => {
       }
     });
   };
+
+  const getAllSizesAgainstBuyer =(buyerId) =>{
+    buyerDestinaytionService.getAllSizesAgainstBuyer({buyerId:buyerId}).then(res=>{
+      if(res.status){
+        setSizeData(res.data)
+      }else{
+        setSizeData([])
+        message.info(res.internalMessage)
+      }
+    })
+  }
 
   const handleAddRow = () => {
     const newRow = {
@@ -92,7 +111,7 @@ const SizeDetail = ({props}) => {
           render: (_, record) => (
             <Input
               value={record.xs}
-              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
+              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
               type='number'
               min={0}
               placeholder='Quantity'
@@ -105,7 +124,7 @@ const SizeDetail = ({props}) => {
           render: (_, record) => (
             <Input
               value={record.s}
-              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
+              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
               type='number'
               min={0}
               placeholder='Quantity'
@@ -118,7 +137,7 @@ const SizeDetail = ({props}) => {
           render: (_, record) => (
             <Input
               value={record.m}
-              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
+              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
               type='number'
               min={0}
               placeholder='Quantity'
@@ -131,7 +150,7 @@ const SizeDetail = ({props}) => {
           render: (_, record) => (
             <Input
               value={record.l}
-              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
+              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
               type='number'
               min={0}
               placeholder='Quantity'
@@ -144,7 +163,7 @@ const SizeDetail = ({props}) => {
           render: (_, record) => (
             <Input
               value={record.xl}
-              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
+              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
               type='number'
               min={0}
               placeholder='Quantity'
@@ -157,7 +176,7 @@ const SizeDetail = ({props}) => {
           render: (_, record) => (
             <Input
               value={record.xxl}
-              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
+              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
               type='number'
               min={0}
               placeholder='Quantity'

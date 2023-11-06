@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import Upload, { RcFile } from "antd/es/upload";
 import SampleDevTabs from "./sample-dev-tabs";
+import { Console } from "console";
 
 const { Option } = Select;
 
@@ -29,6 +30,7 @@ export const SampleDevForm = () => {
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState([]);
   const [tabsData,setTabsData] = useState<any>()
+  const [selectedBuyerId, setSelectedBuyerId] = useState(null)
   const pchService = new ProfitControlHeadService();
   const styleService = new StyleService();
   const brandService = new MasterBrandsService();
@@ -130,7 +132,7 @@ export const SampleDevForm = () => {
 
   const getBrands = () => {
     brandService.getAllBrands().then((res) => {
-      if (res.status) {
+      if (res.status) { 
         setBrands(res.data);
       }
     });
@@ -175,12 +177,28 @@ export const SampleDevForm = () => {
 
 
   const onFinish = (val) =>{
-    console.log(tabsData)
-    const req = new SampleDevelopmentRequest(val.locationId,val.styleId,val.pchId,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.brandId,
-      val.costRef,val.m3Style,val.contact,val.extension,val.samValue,val.dmmId,val.technicianId,val.product,val.type,val.conversion,val.madeIn,tabsData.sizeData)
-      sampleService.createSampleDev(req).then((res)=>{
+   console.log(val)
+    console.log(val.requestNo)
+    console.log(tabsData.sizeData)
+    const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,'',val.conversion,val.madeIn,val.remarks,tabsData.sizeData,tabsData.fabricsData,tabsData.trimsData,tabsData.processData)
+      sampleService.createSampleDevelopmentRequest(req).then((res)=>{
         if(res.status){
+          console.log(res.data)
           message.success(res.internalMessage,2)
+          if(fileList.length >0){
+            console.log(res.data[0].styleId)
+            const formData = new FormData();
+            fileList.forEach((file: any) => {
+                formData.append('file', file);
+            });
+
+            formData.append('styleId', `${res.data[0].styleId}`)
+            console.log(formData)
+            sampleService.fileUpload(formData).then(fileres => {
+                res.data[0].styleFilePath = fileres.data
+            })
+          }
+          
         }else{
           message.success(res.internalMessage,2)
         }
@@ -190,6 +208,9 @@ export const SampleDevForm = () => {
 
   const handleSubmit = (data) => {
     setTabsData(data)
+  }
+  const buyerOnchange =(value) =>{
+    setSelectedBuyerId(value)
   }
 
   return (
@@ -225,14 +246,13 @@ export const SampleDevForm = () => {
             <Form.Item
               name="requestNo"
               label="Request No"
-              rules={[
-                {
-                  pattern: /^[0-9]*$/,
-                  message: `Only numbers are accepted`,
-                },
-              ]}
+              // rules={[
+              //   {
+              //    required:true
+              //   },
+              // ]}
             >
-              <Input disabled />
+              <Input disabled/>
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
@@ -282,6 +302,7 @@ export const SampleDevForm = () => {
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select Buyer"
+                onChange={buyerOnchange}
               >
                 {buyer.map((e) => {
                   return (
@@ -417,12 +438,7 @@ export const SampleDevForm = () => {
               <Input />
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}
           >
             <Form.Item name="image" label="Attach File">
               <Upload
@@ -582,7 +598,7 @@ export const SampleDevForm = () => {
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
-              name="typeId"
+              name="type"
               label="Type"
               rules={[{ required: false, message: "" }]}
             >
@@ -613,7 +629,7 @@ export const SampleDevForm = () => {
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
-              name="countryId"
+              name="madeIn"
               label="Made In"
               rules={[{ required: true, message: "" }]}
             >
@@ -642,7 +658,9 @@ export const SampleDevForm = () => {
             </Form.Item>
           </Col>
         </Row>
-        <SampleDevTabs handleSubmit={handleSubmit}/>
+        {selectedBuyerId != null ?
+        <SampleDevTabs handleSubmit={handleSubmit} buyerId={selectedBuyerId}/>:''
+        }
         <Row>
           <Col span={24} style={{ textAlign: "right" }}>
             <div

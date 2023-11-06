@@ -9,6 +9,7 @@ import { OperationTracking } from './entity/operation-tracking-entity';
 import { OperationInventory } from './entity/operation-inventory-entity';
 import { OperationInventoryRepository } from './repo/operation-inventory-repository';
 import { OperationTrackingRepository } from './repo/operation-tracking-repository';
+import { StyleRepository } from '../style/dto/style-repo';
 @Module({
   imports: [
     
@@ -16,7 +17,7 @@ import { OperationTrackingRepository } from './repo/operation-tracking-repositor
     // forwardRef(() => ClusterModule),
   ],
   controllers: [OperationIssuingController],
-  providers: [OperationTrackingService,ApplicationExceptionHandler,OperationInventoryRepository,OperationTrackingRepository],
+  providers: [OperationTrackingService,ApplicationExceptionHandler,OperationInventoryRepository,OperationTrackingRepository,StyleRepository],
   exports: [OperationTrackingService],
 })
 export class OperationTrackingModule {}
