@@ -23,6 +23,7 @@ export enum VendorNameEnum {
     extractedMsn="MSN",
     extractedFredexFrieght="FREDEX FRIEGHT",
     extractedFredexCourier="FREDEX  COURIER",
+    extractedDhlairfreight="DHL AIR FREIGHT",
 
 
 

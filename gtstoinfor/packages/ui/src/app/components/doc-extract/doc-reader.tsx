@@ -4,7 +4,7 @@ import { Button, Card, Col, Form, FormInstance, Radio, Row, Select, Spin, Upload
 import { useState } from 'react';
 import { pdfjs } from 'react-pdf';
 import loadingSymbol from '../../../assets/images/1_yE-S7HG0Rg-ACAcnjvKf5Q.gif';
-import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractDhlCourier, extractEfl, extractMsn, extractExpeditors, extractMaersk, extractNagel, extractOocl, extractPDFDataToLinesData, extractFredexfrieght, extractFredexCourier,  } from './schemax-ai-docx-pdf';
+import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractDhlCourier, extractEfl, extractMsn, extractExpeditors, extractMaersk, extractNagel, extractOocl, extractPDFDataToLinesData, extractFredexfrieght, extractFredexCourier, extractDhlairfreight,  } from './schemax-ai-docx-pdf';
 import { extractAplInvoiceDataFromScanned, extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNagelInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractOoclInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 ;
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
@@ -71,6 +71,10 @@ export const DocReader = (props: DocReaderProps) => {
                     processedData = await extractDhlCourier(pdfData);
                     console.log('PDF DATA DHL COURIER:', processedData);
                     break;
+                    case VendorNameEnum.extractedDhlairfreight:
+                        processedData = await extractDhlairfreight(pdfData);
+                        console.log('PDF DATA DHL AIR FREIGHT:', processedData);
+                        break;
                 case VendorNameEnum.extractedMsn:
                     processedData = await extractMsn(pdfData);
                     console.log('PDF DATA MSN:', processedData);
