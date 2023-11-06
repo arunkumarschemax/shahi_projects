@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { TrackingEnum } from "@project-management-system/shared-models";
 
-export class OperationInventoryDto{
+export class OperationTrackingDto{
     @ApiProperty()
     operationTrackingId:number;
     @ApiProperty()
@@ -17,7 +17,7 @@ export class OperationInventoryDto{
     @ApiProperty()
     issuedQuantity:number;
     @ApiProperty()
-    issuedUomId:string;
+    issuedUomId:number;
     @ApiProperty()
     damagedQuantity:number;
     @ApiProperty()
@@ -42,6 +42,12 @@ export class OperationInventoryDto{
     updatedUser: string | null;
     @ApiProperty()
     versionFlag: number;
+    @ApiProperty()
+    nextOperation: string;
+    @ApiProperty()
+    physicalUom:string
+    @ApiProperty()
+    physicalQuantity:number
 
 
 }

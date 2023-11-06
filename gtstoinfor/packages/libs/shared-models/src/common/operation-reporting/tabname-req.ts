@@ -1,9 +1,9 @@
 export class TabNameReq{
     tabName:string;
-    itemCode:string;
-    constructor(tabName:string,itemCode:string){
+    styleNo:string;
+    constructor(tabName:string,styleNo:string){
         this.tabName = tabName
-        this.itemCode = itemCode
+        this.styleNo = styleNo
     }
 
 }

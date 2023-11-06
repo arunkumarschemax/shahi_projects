@@ -1,5 +1,5 @@
-import { StyleRequest, OperationReportingRequest, TabNameReq } from "@project-management-system/shared-models";
-import { ItemsService, OperationReportingService, OperationSequenceService, OperationsService, StyleService } from "@project-management-system/shared-services";
+import { StyleRequest, OperationReportingRequest, TabNameReq, MaterialIssueRequest, OperationTrackingDto } from "@project-management-system/shared-models";
+import { ItemsService, MaterialIssueService, OperationReportingService, OperationSequenceService, OperationsService, StyleService, UomService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Row, Segmented, Select, Space, Table } from "antd"
 import { ColumnProps } from "antd/es/table"
 import { useEffect, useState } from "react";
@@ -9,9 +9,10 @@ import Operation from "antd/es/transfer/operation";
 const {Option}  =Select
 export const OperationReportingView = () => {
     const [page, setPage] = useState<number>(1);
-    const [reportedQuantity,SetReportedQuantity] = useState<number>()
+    const [reportedQuantity, setReportedQuantity] = useState<number>();
     const [rejectedQuantity,SetRejectedQuantity] = useState<number>(0)
-    const [wastedQuantity,SetWastedQuantity] = useState<number>(0)
+    const [reportedUom,setReportedUom] = useState<number>()
+    const [rejectedUom,setRejectedUom] = useState<number>()
     const service = new OperationReportingService()
     const [data,setData] = useState<any[]>([])
     const operationSequenceService = new OperationSequenceService()
@@ -22,19 +23,36 @@ export const OperationReportingView = () => {
     const [form] = Form.useForm()
     const styleService = new StyleService()
     const [style,setStyle] = useState<any[]>([])
+    const issueService = new MaterialIssueService()
+    const [selectedOperationSequenceId, setSelectedOperationSequenceId] = useState(null);
+    const [selectedOperationName, setSelectedOperationName] = useState(null);
+    const [currentSequence, setCurrentSequence] = useState(1);
+    const [saveId, setSaveId] = useState<number>()
+    const uomService = new UomService()
+    const [uomData, setUomData] = useState<any[]>([])
+
+
 
     useEffect(() => {
         getItemCodes()
         getStyle()
+        getUom()
+        // getMaterialIssue()
     },[])
 
-    const getData = (val) => {
-        const req = new TabNameReq(val,form.getFieldValue('itemCode'))
-        service.getOperationReportingData(req).then(res => {
-            if(res.status){
-                setData(res.data)
-                setShowTable(true)
-            }
+    // const getData = (val) => {
+    //     const req = new TabNameReq(val,form.getFieldValue('styleNo'))
+    //     service.getOperationReportingData(req).then(res => {
+    //         if(res.status){
+    //             setData(res.data)
+    //             setShowTable(true)
+    //         }
+    //     })
+    // }
+
+    const getUom = () => {
+        uomService.getAllActiveUoms().then(res => {
+          setUomData(res.data)
         })
     }
 
@@ -42,7 +60,18 @@ export const OperationReportingView = () => {
         styleService.getAllActiveStyle().then(res => {
           setStyle(res.data)
         })
-       }
+    }
+
+    const getMaterialIssue = () => {
+        // console.log(sequence,'\\\\\\\\')
+        const req = new MaterialIssueRequest(form.getFieldValue('styleId'));
+        issueService.getDataByStyleId(req).then((res) => {
+          console.log("Data from getMaterialIssue:", res.data);
+          setData(res.data);
+          setShowTable(true);
+        });
+      };
+      
 
 
     const getSegmentLabel = (val) => {
@@ -63,19 +92,50 @@ export const OperationReportingView = () => {
     }
 
     const setReportedInfo = (e,index,record) => {
-        SetReportedQuantity(e.target.value)
-    }
+        // Update the state with the reported quantity
+        setReportedQuantity(e.target.value);
+        // console.log(value,'-------------------------')
+    };
+    
 
     const setRejectedInfo = (e,index,record) => {
         SetRejectedQuantity(e.target.value)
     }
 
-    const setWastedInfo = (e,index,record) => {
-        SetWastedQuantity(e.target.value)
+    const reportedUomId = (e, index, record) => {
+        console.log(e,'===============')
+        // if (e && e.target) {
+            setReportedUom(e);
+        // }
     }
 
+    const rejectedUomId = (e, index, record) => {
+        if (e && e.target) {
+            setRejectedUom(e);
+        }
+    }
+    
+
     const onJobCompleted = (record) => {
-        const req = new OperationReportingRequest(form.getFieldValue('itemCode'),record.jobNumber,record.skuCode,record.poNumber,record.issuedQuantity,reportedQuantity,rejectedQuantity,wastedQuantity)
+        const nextSequence = currentSequence + 1;
+
+        const nextOperation = operations.find((operation) => operation.sequence === nextSequence);
+
+        if(nextOperation){
+        const req = new OperationTrackingDto(
+            saveId,
+            record.requestNo,
+            selectedOperationSequenceId,
+            selectedOperationName,
+            nextOperation.operationName,
+            record.issuedQuantity,
+            record.issuedUomId,
+            reportedQuantity,
+            reportedUom,
+            rejectedQuantity,
+            record.rejectedUomId,
+            record.status,0,'')
+        console.log(req,'%%%%%%%%%%%%%%%%%%%%%%%%%%%')
         service.createOperationReporting(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
@@ -84,16 +144,17 @@ export const OperationReportingView = () => {
             }
         })
     }
+    }
 
     const generateSegmentedOptions = () => {
-        return operations.map((operation, index) => (
-            {
-          label: <b>{operation.operationName}</b>, // Change this to the appropriate property from your data
-          value: operation.operationName,    // Change this to the appropriate property from your data
-          key: index.toString(),           // Use a unique key for each option
-        }
-        ));
+        return operations.map((operation, index) => ({
+          label: <b>{operation.operationName}</b>,
+          value: operation.operationName,
+          key: index.toString(),
+          sequence: operation.sequence, // Add the 'sequence' property from your data
+        }));
       };
+      
 
       const segmentedOptions = generateSegmentedOptions();
 
@@ -106,33 +167,50 @@ export const OperationReportingView = () => {
             responsive: ['sm'],
             render: (text, object, index) => (page-1) * 10 +(index+1)
           },
-          {
-            title:'Job Number',
-            dataIndex:'jobNumber'
+        {
+            title:<div style={{textAlign:"center"}}>Issued Quantity</div>,
+            dataIndex:'issuedQuantity',
+            align: "right",
+            render: (issuedQuantity, row) => `${issuedQuantity} ${row.issuedUom}`,
           },
           {
-            title:'SKU Code',
-            dataIndex:'skuCode'
+            title: 'Reported Quantity',
+            dataIndex: 'reportedQuantity',
+            render: (text, record, index) => {
+              return (
+                <>
+                  <Input
+                    key={index}
+                    defaultValue={record.issuedQuantity}
+                    // value={reportedQuantity}
+                    onChange={(e) => setReportedInfo(e,index,record)}
+                  />
+                </>
+              );
+            },
           },
           {
-            title:'PO Number',
-            dataIndex:'poNumber'
-          },
-          {
-            title:'Issued Quantity',
-            dataIndex:'issuedQuantity'
-          },
-          {
-            title:'Reported Quantity',
-            dataIndex:'reportedQuantity',
-            render:(text,record,index) => {
-                return(
-                    <>
-                    {<Input key={index} defaultValue={record.issuedQuantity} 
-                    onChange={e=> setReportedInfo(e,index,record)}/>}
-                    </>
-                )
-            }
+            title: 'Uom',
+            dataIndex: 'reportedUomId',
+            render: (text,record,index) => (
+                <Select
+                value={reportedUom}
+                onChange={(e) => reportedUomId(e, index, record)}
+                allowClear
+                style={{ width: "100%" }}
+                showSearch
+                optionFilterProp="children"
+                placeholder="Select UOM"
+            >
+                {uomData?.map((e) => {
+                    return (
+                        <Option key={e.uomId} value={e.uomId}>
+                            {e.uom}
+                        </Option>
+                    );
+                })}
+            </Select>
+              ),
           },
           {
             title:'Rejected Quantity',
@@ -140,22 +218,36 @@ export const OperationReportingView = () => {
             render:(text,record,index) => {
                 return(
                     <>
-                    {<Input defaultValue={0} onChange={e=> setRejectedInfo(e,index,record)}/>}
+                    {<Input 
+                    // defaultValue={0} 
+                    onChange={e=> setRejectedInfo(e,index,record)}/>}
                     </>
                 )
             }
           },
-        //   {
-        //     title:'Wasted Quantity',
-        //     dataIndex:'wastedQuantity',
-        //     render:(text,record,index) => {
-        //         return(
-        //             <>
-        //             {<Input  defaultValue={0} onChange={e=> setWastedInfo(e,index,record)}/>}
-        //             </>
-        //         )
-        //     }
-        //   },
+          {
+            title: 'Uom',
+            dataIndex: 'rejectedUomId',
+            render: (text,record,index) => (
+                <Select
+                value={rejectedUom}
+                onChange={(e) => rejectedUomId(e, index, record)}
+                allowClear
+                style={{ width: "100%" }}
+                showSearch
+                optionFilterProp="children"
+                placeholder="Select UOM"
+            >
+                {uomData?.map((e) => {
+                    return (
+                        <Option key={e.uomId} value={e.uomId}>
+                            {e.uom}
+                        </Option>
+                    );
+                })}
+            </Select>
+            ),
+          },
           {
             title:'Job Completed',
             dataIndex:'jobCompleted',
@@ -169,13 +261,29 @@ export const OperationReportingView = () => {
           },
     ]
 
-    const onSegmentChange = (view) => {
-        getData(view)
-    }
+    const onSegmentChange = (selectedValue) => {
+        const selectedOption = segmentedOptions.find((option) => option.value === selectedValue);
+        if (selectedOption) {
+          setCurrentSequence(selectedOption.sequence);
+          setSelectedOperationSequenceId(selectedOption.sequence);
+          setSelectedOperationName(selectedOption.value);
+          if (selectedOption.sequence === 1) {
+            getMaterialIssue();
+          } else {
+            setShowTable(false);
+          }
+        }
+      };
+      
+      
+      
+
 
     const onStyleChange = (val) => {
+        console.log(val,'<<<<<<<<<<<<<')
         if(val){
             getSegmentLabel(val)
+            setSaveId(val)
             // setShowTable(true)
 
         }
@@ -183,16 +291,21 @@ export const OperationReportingView = () => {
 
     
     return(
-        <Card title='Operation Reporting' className='card-header'>
+        <Card title={data?.length > 0 ? (
+            <>
+            <span>{'Consumption Code : ' +(data[0].consumptionCode)}</span>
+            <span style={{marginLeft: "60px"}}>{'Request No : ' +(data[0].requestNo)}</span>
+            </>
+        ):"Operation Reporting"} className='card-header'>
             <Form form={form}>
                 <Row>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 6 }}>
-                    <Form.Item label='Style' name='itemCode'>
+                    <Form.Item label='Style' name='styleId'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Style' onChange={onStyleChange}>
                             {
                                 style.map(e => {
                                     return(
-                                        <Option key={e.styleId} value={e.style}>{e.style}-{e.description}</Option>
+                                        <Option key={e.styleId} value={e.styleId}>{e.style}-{e.description}</Option>
                                     )
                                 })
                             }
@@ -212,7 +325,7 @@ export const OperationReportingView = () => {
                 showTable ? (<>
             <div style={{width:'100%'}}>
 
-            <Table columns={columns} dataSource={data}/>
+            <Table columns={columns} dataSource={data} bordered/>
             </div>
             </>) : (<></>)
             }

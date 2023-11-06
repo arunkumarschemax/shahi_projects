@@ -65,17 +65,17 @@ issuedQuantity:number;
 })
 issuedUomId:number;
 
-  @Column('int',{
-    nullable:false,
-    name:'damaged_quantity'
-})
-damagedQuantity:number;
+//   @Column('int',{
+//     nullable:false,
+//     name:'damaged_quantity'
+// })
+// damagedQuantity:number;
 
-@Column('varchar',{
-    nullable:false,
-    name:'damaged_uom_id'
-})
-damagedUomId:number;
+// @Column('varchar',{
+//     nullable:false,
+//     name:'damaged_uom_id'
+// })
+// damagedUomId:number;
 
   @Column('int',{
     nullable:false,
@@ -96,10 +96,10 @@ reportedUomId:number;
 rejectedQuantity:number;
 
 @Column('int',{
-    nullable:false,
+    nullable:true,
     name:'rejected_uom_id'
 })
-rejectedUomId:number;
+rejectedUomId:number | null;
 
 @Column('enum',{
     nullable:false,
