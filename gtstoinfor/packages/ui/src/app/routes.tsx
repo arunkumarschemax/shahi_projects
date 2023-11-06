@@ -159,6 +159,14 @@ import SmvEfficiencyForm from "./common/product-structure(BOM)/smv-efficiency-fo
 import COAmendmentTabs from "./common/co-amendment/co-amendment-tabs"
 import FeatureCreationView from "./BOM/feature-creation-view"
 import RMCreationView from "./orders/rm-creation-view"
+import FgRMMappingForm from "./common/product-structure(BOM)/fg-rm-items-mapping"
+import Substitution from "./BOM/substitution"
+import FgRmItemBomView from "./common/product-structure(BOM)/fg-rm-item-view"
+import SMVEffciencyView from "./common/product-structure(BOM)/smv-effciency-view"
+import SMKDetailView from "./common/product-structure(BOM)/smk-detail-view"
+import SubstitutionView from "./BOM/substitution-view"
+import TrimOperationMappingView from "./common/product-structure(BOM)/trim-operation-mapping-view"
+import MOPReport from "./procurement/mop-report"
 
 
 export const AppRoutes = () => {
@@ -200,7 +208,7 @@ export const AppRoutes = () => {
                         </>
                     </ChildProtectionWrapper>
                 } >
-
+                    <Route path="/substituion" element={<Substitution/>}></Route>
                     <Route path='/user-management/users-from' element={<UserCreationForm />} />
                     <Route path='/user-management/users-view' element={<UsersView />} />
 
@@ -595,7 +603,9 @@ export const AppRoutes = () => {
                     <Route path='item-creation' element={<ItemCreation itemCreationData={undefined} isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
                         } }/>}/>
-                    <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
+                    <Route path="fabric-bom-creation" element={<FabricBomCreation rmCreationData={undefined} isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.")
+                    } }/>}/>
                     <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation />} />
                     <Route path='style-order-creation' element={<StyleOrderCreation coData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
                     <Route path='style-order-view' element={<StyleOrderGrid />} />
@@ -606,6 +616,10 @@ export const AppRoutes = () => {
                 <Route path='item-creation-detail-view' element={<ItemCreationDetailView data={''}/>}/>
                 <Route path="co-amendment" element ={<COAmendmentTabs key={""} />} />
                 <Route path='rm-creation-view' element={<RMCreationView/>}/>
+                
+                <Route path='rm-skus' element={<RmSkusGeneration/>}/>
+                <Route path='substitution-view' element={<SubstitutionView/>}/>
+
                 </Route>
                 <Route path='/operation-tracking'>
                     <Route path='operation-tracking/issuing' element={<IssueScreen/>}/>
@@ -616,9 +630,17 @@ export const AppRoutes = () => {
                 </Route>
                 <Route path='/product-structure'>
                 <Route path='productstructure/smv-efficiency' element={<SmvEfficiencyForm/>}/>
+                <Route path='fg-rm-mapping' element={<FgRMMappingForm/>}/>
+                <Route path ='fg-rm-mapping-view' element={<FgRmItemBomView/>}/>
+                <Route path ='smv-efficiency-view' element={<SMVEffciencyView/>}/>
+                <Route path ='smv-efficiency-detail-view' element={<SMKDetailView data={''}/>}/>
+                <Route path ='trim-operation-mapping-view' element={<TrimOperationMappingView />}/>
 
             
                             
+                </Route>
+                <Route path='/procurement'>
+                <Route path='procurement/mop-report' element={<MOPReport/>}/>           
                 </Route>
 
 

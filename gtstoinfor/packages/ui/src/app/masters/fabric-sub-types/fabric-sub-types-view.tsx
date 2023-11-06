@@ -263,7 +263,7 @@ let navigate = useNavigate()
   ];
 
   return (
-    <Card title="Fabric Sub-Type" extra={<span><Button onClick={()=> navigate('/masters/fabric-sub-type-form/fabric-sub-type-form"')} type={'primary'}>New</Button></span>}> 
+    <Card title="Fabric Sub-Type" extra={<span><Button onClick={()=> navigate('/masters/fabric-sub-type-form/fabric-sub-type-form')} type={'primary'}>New</Button></span>}> 
      <br></br>
       <Row gutter={40}>
       <Col>

@@ -1,7 +1,7 @@
 
 import { UndoOutlined, UploadOutlined } from "@ant-design/icons";
 import { DepartmentsDtos, OperationsDTO, SMVEfficiencyRequest } from "@project-management-system/shared-models";
-import { DepartmentService, OperationsService, productStructureService } from "@project-management-system/shared-services";
+import { DepartmentService, OperationsService, ProductStructureService } from "@project-management-system/shared-services";
 import {
   Button,
   Card,
@@ -16,6 +16,7 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import AlertMessages from "../common-functions/alert-messages";
+import { Link } from "react-router-dom";
 
 export interface SmvEfficiencyFormProps {}
 
@@ -29,7 +30,7 @@ export const SmvEfficiencyForm = () => {
 
   const operationsService = new OperationsService();
   const service =new DepartmentService();
-  const productService = new productStructureService()
+  const productService = new ProductStructureService()
 
 
 
@@ -101,6 +102,10 @@ export const SmvEfficiencyForm = () => {
     <Card
       size="small"
       title="SMV Efficiency "
+      smv-efficiency-view
+      extra={<Link to='/product-structure/smv-efficiency-view' >
+      <span style={{color:'white'}} ><Button type={'primary'} >View</Button> </span>
+      </Link>}
 
     >
       <Form

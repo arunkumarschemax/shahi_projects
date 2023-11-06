@@ -80,6 +80,9 @@ import { FeatureModule } from './feature-creation/feature-module';
 import { ItemTypeModule } from './item-type/item-type.module';
 import { RmSkusModule } from './rm-skus/rm-skus.module';
 import { ProductStructureModule } from './product-structure(BOM)/product-structure-module';
+import { RmCreationModule } from './rm-items/rm-items.module';
+import { CoBomModule } from './co-bom/co-module';
+import { SubstituionModule } from './substituion/substituion.model';
 
 @Module({
   imports: [
@@ -139,7 +142,7 @@ import { ProductStructureModule } from './product-structure(BOM)/product-structu
     ProductGroupModule,
     ProcrumentGroupModule,
     HierachyLevelModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule,GroupTechClassModule,BusinessAreaModule,CoTypeModule,CompositionModule,RangeModule,SearchGrpModule,FeatureModule,RmSkusModule,ItemTypeModule,ProductStructureModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule,GroupTechClassModule,BusinessAreaModule,CoTypeModule,CompositionModule,RangeModule,SearchGrpModule,FeatureModule,RmSkusModule,ItemTypeModule,ProductStructureModule,RmCreationModule,CoBomModule,SubstituionModule],
   controllers: [AppController],
   providers: [AppService],
 })

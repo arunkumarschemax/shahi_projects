@@ -1,5 +1,5 @@
-import { RmItemTypeEnum, RmSkuFeatureReq, RmSkuReq, RmStatusEnum } from "@project-management-system/shared-models";
-import { FabricStructuresService, FeatureService, RmSkuService } from "@project-management-system/shared-services";
+import { RMCreFilterRequest, RmItemTypeEnum, RmSkuFeatureReq, RmSkuReq, RmStatusEnum } from "@project-management-system/shared-models";
+import { FabricStructuresService, FeatureService, ProductGroupService, RmCreationService, RmSkuService } from "@project-management-system/shared-services";
 import { Badge, Button, Card, Checkbox, Col, Form ,Row,Select, Space, Tag, Tooltip} from "antd"
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
@@ -14,12 +14,24 @@ export const RmSkusGeneration = () => {
     const [features,setFeatures] = useState<any[]>([])
     const service = new RmSkuService()
     const [form] = Form.useForm()
-    const fabricItemCodeService = new FabricStructuresService()
+    const rmItemService = new RmCreationService()
     const featureService = new FeatureService()
+    const productGroupService = new ProductGroupService()
+    const [proGroups,setProGroups] = useState<any[]>([])
+    
 
     useEffect(() => {
         getFeatures()
+        getProdGroups()
     },[])
+
+    const getProdGroups = () => {
+        productGroupService.getAllActiveProductGroup().then(res => {
+            if(res.status){
+                setProGroups(res.data)
+            }
+        })
+    }
 
     const getFeatures = () => {
         featureService.getFeaturesInfo().then(res => {
@@ -48,7 +60,7 @@ export const RmSkusGeneration = () => {
     const onFinish = (val) => {
         let featureReq = []
         for(const rec of features){
-            featureReq.push(new RmSkuFeatureReq(rec.featureCode))
+            featureReq.push(new RmSkuFeatureReq(rec.featureCode,rec.optionsData))
         }
         const req = new RmSkuReq(itemId,val.itemType,featureReq,RmStatusEnum.OPEN,val.itemCode,'admin')
         service.createRmSkus(req).then(res => {
@@ -61,12 +73,15 @@ export const RmSkusGeneration = () => {
         })
     }
 
-    const onItemTypeChange = (val) => {
-        if(val === RmItemTypeEnum.FABRIC){
-
-        } else{
-
+    const onItemTypeChange = (val,option) => {
+       const req = new RMCreFilterRequest()
+       req.productGroup = option?.key
+       rmItemService.getAllRMItems(req).then(res => {
+        if(res.status){
+            setItemCodes(res.data)
         }
+       })
+       
     }
 
     return (
@@ -76,10 +91,17 @@ export const RmSkusGeneration = () => {
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
                 <Form.Item name={'itemType'} label='Item Type' rules={[{required:true,message:'Item Type is required'}]}>
                     <Select allowClear showSearch optionFilterProp="children" placeholder='Select Item Type' onChange={onItemTypeChange}>
-                        {
+                        {/* {
                             Object.values(RmItemTypeEnum).map(e => {
                                 return(
                                     <Option key={e} value={e}>{e}</Option>
+                                )
+                            })
+                        } */}
+                        {
+                            proGroups.map(e => {
+                                return(
+                                    <Option key={e.productGroupId} value={e.productGroup}>{e.productGroup}</Option>
                                 )
                             })
                         }
@@ -89,11 +111,11 @@ export const RmSkusGeneration = () => {
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
                 <Form.Item name={'itemCode'} label='Item Code' rules={[{required:true,message:'Item Code is required'}]}>
                     <Select allowClear showSearch optionFilterProp="children" placeholder='Select Item Code' onChange={onItemCodeChange}>
-                        <Option key='1' value='I001' itemId={1}>I001</Option>
+                        {/* <Option key='1' value='I001' itemId={1}>I001</Option> */}
                         {
                             itemCodes.map(e => {
                                 return(
-                                    <Option key={e.itemId} value={e.itemCode} itemId={e.itemId}>{e.itemCode}</Option>
+                                    <Option key={e.rm_item_id} value={e.item_code} itemId={e.rm_item_id}>{e.item_code}</Option>
                                 )
                             })
                         }

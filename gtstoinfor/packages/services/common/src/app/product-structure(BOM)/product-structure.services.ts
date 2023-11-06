@@ -1,12 +1,13 @@
 
 import { Injectable } from "@nestjs/common";
-import { BomRequest, BomTrimResponseModel, CommonResponseModel, FgRmMappingResponseModel, ProductStructureResponseModel } from "@project-management-system/shared-models";
+import { BomRequest, BomTrimResponseModel, CommonResponseModel, FgItemCodeReq, FgRmMappingResponseModel, ProductStructureResponseModel, RmMappingFilterRequest, SMVFilterRequest } from "@project-management-system/shared-models";
 import { SMVEfficiencyRepository } from "./repository/smv-efficency.repository";
 import { SMVEfficiencyDto } from "./dto/smv-efficency.dto";
 import { SMVEfficiencyEntity } from "./smv-efficency.entity";
 import { FgRMMappingDto } from "./dto/fg-rm-mapping.dto";
 import { FgRmMappingEntity } from "./fg-rm-mapping.entity";
 import { FgRmMappingRepository } from "./repository/fg-rm-mapping.repo";
+import { FgRMItemsMappingDto } from "./dto/rm-item-dto";
 
 
 @Injectable()
@@ -62,7 +63,7 @@ export class ProductStructureService {
 
           if (save){
 
-            return new ProductStructureResponseModel(true, 0, "SMV Efficency Created Sucessfully");
+            return new ProductStructureResponseModel(true, 0, "SMV Efficency Created Sucessfully",save);
 
           } else {
 
@@ -75,35 +76,32 @@ export class ProductStructureService {
           }
         }
 
-        async createFgRmMapping(req: FgRMMappingDto[], isUpdate: boolean): Promise<FgRmMappingResponseModel> {
+        async createFgRmMapping(req: FgRMMappingDto, isUpdate: boolean): Promise<FgRmMappingResponseModel> {
           console.log(req,"service")
   
           try {
+            
+            let flag = true
+            
 
-            const FgRMMappingDto: FgRMMappingDto[] = [];
-
-            for(const data of req){
+            for (const data of req.itemInfo){
               const entity = new FgRmMappingEntity()
-              entity.FgRmId = data.FgRmId
-              entity.fgitemId = data.fgitemId
-              entity.fgitemCode = data.fgitemCode
+              entity.fgitemId = req.fgitemId
+              entity.fgitemCode = req.fgitemCode
+              entity.createdUser = req.createdUser  
               entity.rmitemId = data.rmitemId
-              entity.rmitemCode = data.fgitemCode
-              entity.createdUser = data.createdUser
-              FgRMMappingDto.push(entity)
-  
-            }
+              entity.rmitemCode = data.rmitemCode
+              const save = await this.fgrmRepo.save(entity)
+      
 
-              const save = await this.fgrmRepo.save(FgRMMappingDto)
+            }
   
-            if (save){
-  
-              return new FgRmMappingResponseModel(true, 0, "FG-RM Mapping Sucessfully");
+            if (!flag){
+              return new FgRmMappingResponseModel(false, 0, "Something went Wrong");   
   
             } else {
-  
-              return new FgRmMappingResponseModel(false, 0, "Something went Wrong");
-             
+              return new FgRmMappingResponseModel(true, 0, "FG-RM Mapping Sucessfully",);
+              
             }
         
             } catch (err) {
@@ -111,6 +109,64 @@ export class ProductStructureService {
             }
           }
 
+   async getAllInfoByItemCode(req:FgItemCodeReq):Promise<CommonResponseModel>{
+    try{
+      const data = await this.fgrmRepo.getAllInfoByItemCode(req)
+      if(data.length > 0){
+        return new CommonResponseModel(true,1,'Data retrieved',data)
+      } else{
+        return new CommonResponseModel(false,0,'No data found')
+      }
+    } catch(err){
+      throw err
+    }
+   }       
+          // async getRmMapped(req?:RmMappingFilterRequest): Promise<CommonResponseModel> {
+          //   const data = await this.fgrmRepo.getAllFgRmMapped(req)
+          //   if (data.length > 0){
+    
+          //       return new CommonResponseModel(true, 1111, 'Data retreived',data )
+          //   }
+          //   return new CommonResponseModel(false, 0, 'Data Not retreived',[])
+          // }
+
+          async getRmMapped(req?: RmMappingFilterRequest): Promise<CommonResponseModel> {
+            const data = await this.fgrmRepo.getAllFgRmMapped(req);
+          
+            if (data.length > 0) {
+              const groupedData = data.reduce((result, item) => {
+                const fgItemCode = item.fg_item_code;
+                const fgItemId = item.fg_item_id;
+                if (!result[fgItemId]) {
+                  result[fgItemId] = {
+                    fg_item_id: fgItemId,
+                    fg_item_code: fgItemCode,
+                    rm_items: [],
+                  };
+                }
+                result[fgItemId].rm_items.push({
+                  rm_item_id: item.rm_item_id,
+                  rm_item_code: item.rm_item_code,
+                });
+                return result;
+              }, {});
+          
+              return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
+            }
+          
+            return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
+          }
+          
+          
+
+          async getAllSmvData(req?:SMVFilterRequest): Promise<CommonResponseModel> {
+            const data = await this.Repo.getSMV(req)
+            if (data.length > 0){
+    
+                return new CommonResponseModel(true, 1111, 'Data retreived',data )
+            }
+            return new CommonResponseModel(false, 0, 'Data Not retreived',[])
+          }
       
 
 }

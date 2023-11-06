@@ -25,6 +25,12 @@ export class FeatureOptionEntity {
   })
   optionId:number
 
+  @Column('varchar',{
+    name:'option_value',
+    nullable:false,
+  })
+  optionValue:string
+
   @Column("varchar",{
     nullable: true,
     length:15,

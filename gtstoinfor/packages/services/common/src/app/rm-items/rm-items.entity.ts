@@ -1,8 +1,8 @@
 import { PropertyEnum } from "@project-management-system/shared-models";
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 
-@Entity('rm-items')
-export class FabricCreationEntity{
+@Entity('rm_items')
+export class RmCreationEntity{
     
 @PrimaryGeneratedColumn("increment", { name: 'rm_item_id' })
 rmitemId:number;
@@ -18,19 +18,19 @@ itemCode:string;
     nullable: false,
     name:"item_category_id"
 })
-itemCategory:number;
+itemCategoriesId:number;
 
 @Column("int",{
     nullable: false,
     name:"pch_id"
 })
-pch:string;
+pchId:number;
 
 @Column("int",{
     nullable: true,
     name:"facility_id"
 })
-facility:number;
+facilityID:number;
 
 @Column("varchar",{
     nullable: false,
@@ -38,6 +38,48 @@ facility:number;
     name:"generic_code"
 })
 genericCode:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 150,
+    name:"supply_lead_time"
+})
+supplyLeadTime:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 200,
+    name:"supplier"
+})
+supplier:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 200,
+    name:"consumption"
+})
+consumption:string;
+
+
+@Column("int",{
+    nullable: false,
+    name:"total"
+})
+total:number;
+
+@Column("varchar",{
+    nullable: false,
+    length: 200,
+    name:"delivery_terms"
+})
+deliveryTerms:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 200,
+    name:"delivery_method"
+})
+deliveryMethod:string;
 
 @Column("varchar",{
     nullable: false,
@@ -64,7 +106,7 @@ description:string;
     nullable: false,
     name:"item_type_id"
 })
-itemIype:string;
+itemIypeId:number;
 
 @Column("varchar",{
     nullable: false,
@@ -73,20 +115,17 @@ itemIype:string;
 })
 placement:string;
 
-
-
 @Column("int", {
     nullable: false,
     name: "fabric_finish_id" 
   })
-  fabricFinish: number;
+  fabricFinishId: number;
 
-@Column("varchar",{
+@Column("int",{
     nullable: false,
-    length: 255,
-    name:"responsible"
+    name:"responsible_id"
 })
-responsible:string;
+responsibleId:number;
 
 @Column("varchar",{
     nullable: false,
@@ -99,14 +138,14 @@ devResponsible:string;
     nullable: false,
     name:"basic_uom_id"
 })
-basicUom:number;
+basicUomId:number;
 
 
 @Column("int",{
     nullable: false,
     name:"alt_uom_id"
 })
-altUom:number;
+altUomId:number;
 
 
 @Column("varchar",{
@@ -120,7 +159,7 @@ multiplicationFactor:string;
     nullable: false,
     name:"currency_id"
 })
-currency:number;
+currencyId:number;
 
 @Column("varchar",{
     nullable: false,
@@ -162,7 +201,7 @@ exciseDuty:string;
     nullable: false,
     name:"license_id"
 })
-license:number;
+licenseId:number;
 
 @Column('enum',{
     name:'property',
@@ -175,7 +214,7 @@ property:PropertyEnum;
     length: 155,
     name:"is_sale_item"
 })
-SaleItem:string;
+saleItem:string;
 
 @Column("varchar",{
     nullable: false,
@@ -198,11 +237,50 @@ costGroup:string;
 })
 remarks:string;
 
+@Column("varchar",{
+    nullable: false,
+    length: 255,
+    name:"attached_warehouse"
+})
+attachedWareHouse:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 255,
+    name:"planner"
+})
+planner:string;
+
+@Column("varchar",{
+    nullable: false,
+    length: 255,
+    name:"business_area"
+})
+businessArea:string;
+
+@Column("int",{
+    nullable: false,
+    name:"hierarchy_Level_id"
+})
+hierarchyLevelId:number;
+
+@Column("int",{
+    nullable: false,
+    name:"product_group_id"
+})
+productGroupId:number;
+
+@Column("int",{
+    nullable: false,
+    name:"procurement_gorup_id"
+})
+procurementGroupId:number;
+
 @Column("int",{
     nullable: true,
     name:"item_group_id"
 })
-itemGroup:number;
+itemGroupId:number;
 
 @Column("varchar",{
     nullable: false,
@@ -210,4 +288,44 @@ itemGroup:number;
     name:"use_in_operation"
 })
 useInOperation:string;
+
+@Column("boolean", {
+    nullable: false,
+    default: true,
+    name: "is_active"
+  })
+  isActive: boolean;
+
+  @CreateDateColumn({
+    name: "created_at",
+    type: "datetime"
+  })
+  createdAt: Date;
+
+  @Column("varchar", {
+    nullable: false,
+    name: "created_user",
+    length: 50
+  })
+  createdUser: string | null;
+
+
+  @UpdateDateColumn({
+    name: "updated_at",
+    type: 'datetime'
+  })
+  updatedAt: Date;
+
+  @Column("varchar", {
+    nullable: true,
+    name: "updated_user",
+    length: 50
+  })
+  updatedUser: string | null;
+
+  @VersionColumn({
+    default: 1,
+    name: "version_flag"
+  })
+  versionFlag: number;
 }

@@ -8,7 +8,7 @@ export class ItemCreationDTO{
     brandId: number;
     categoryId: number;
     subCategoryId: number;
-    seasonId: number;
+    season: string;
     responsiblePersonId: number;
     productDesignerId: number;
     approver: number;
@@ -19,11 +19,11 @@ export class ItemCreationDTO{
     styleNo: string;
     internalStyleId: number;
     uom: string;
-    altUom: string;
+    altUoms: string;
     currency: string;
     targetCurrency: string;
-    conversionFactorId: number;
-    projectionOrderId: number;
+    conversionFactor: string;
+    projectionOrder: string;
     buyingHouseCommision: number;
     salePriceQty: number;
     licenseId: number;
@@ -46,14 +46,14 @@ export class ItemCreationDTO{
     composition: string;
     range: string;
     noOfLacePanel: string;
-    searchGroup: string;
-    referenceId: number;
+    searchGroup: number;
+    reference: string;
     isActive: boolean;
     createdUser: string;
     updatedUser: string;
     versionFlag: number;
     fgitemId?:number;
-    constructor(itemName: string,itemCode: string,description: string,itemTypeId: number,brandId: number,categoryId: number,subCategoryId: number,seasonId: number,responsiblePersonId: number,productDesignerId: number,approver: number,productionMerchant: number,pdMerchant: number,factoryMerchant: number,salePersonId: number,styleNo: string,internalStyleId: number,uom: string,altUom: string,currency: string,targetCurrency: string,conversionFactorId: number,projectionOrderId: number,buyingHouseCommision: number,salePriceQty: number,licenseId: number,customGroupId: number,nationalDbk: number,roslGroup: number,isSubContract: SubContractStatus,salePrice: number,orderConfirmedDate: Date,firstExFactoryDate: Date,orderCloseDate: Date,moq: number,orderQty: number,facilityId: number,itemGroup: string,productGroup: string,businessArea: string,basicUom: string,groupTechClass: string,composition: string,range: string,noOfLacePanel: string,searchGroup: string,referenceId: number,isActive: boolean,createdUser: string,updatedUser: string,versionFlag: number,fgitemId?:number){
+    constructor(itemName: string,itemCode: string,description: string,itemTypeId: number,brandId: number,categoryId: number,subCategoryId: number,season: string,responsiblePersonId: number,productDesignerId: number,approver: number,productionMerchant: number,pdMerchant: number,factoryMerchant: number,salePersonId: number,styleNo: string,internalStyleId: number,uom: string,altUoms: string,currency: string,targetCurrency: string,conversionFactor: string,projectionOrder: string,buyingHouseCommision: number,salePriceQty: number,licenseId: number,customGroupId: number,nationalDbk: number,roslGroup: number,isSubContract: SubContractStatus,salePrice: number,orderConfirmedDate: Date,firstExFactoryDate: Date,orderCloseDate: Date,moq: number,orderQty: number,facilityId: number,itemGroup: string,productGroup: string,businessArea: string,basicUom: string,groupTechClass: string,composition: string,range: string,noOfLacePanel: string,searchGroup: number,reference: string,isActive: boolean,createdUser: string,updatedUser: string,versionFlag: number,fgitemId?:number){
         this.itemName=itemName;
         this.itemCode=itemCode;
         this.description=description;
@@ -61,7 +61,7 @@ export class ItemCreationDTO{
         this.brandId=brandId;
         this.categoryId=categoryId;
         this.subCategoryId=subCategoryId;
-        this.seasonId=seasonId;
+        this.season=season;
         this.responsiblePersonId=responsiblePersonId;
         this.productDesignerId=productDesignerId;
         this.approver=approver;
@@ -72,11 +72,11 @@ export class ItemCreationDTO{
         this.styleNo=styleNo;
         this.internalStyleId=internalStyleId;
         this.uom=uom;
-        this.altUom=altUom;
+        this.altUoms=altUoms;
         this.currency=currency;
         this.targetCurrency=targetCurrency;
-        this.conversionFactorId=conversionFactorId;
-        this.projectionOrderId=projectionOrderId;
+        this.conversionFactor=conversionFactor;
+        this.projectionOrder=projectionOrder;
         this.buyingHouseCommision=buyingHouseCommision;
         this.salePriceQty=salePriceQty;
         this.licenseId=licenseId;
@@ -100,7 +100,7 @@ export class ItemCreationDTO{
         this.range = range;
         this.noOfLacePanel = noOfLacePanel;
         this.searchGroup = searchGroup;
-        this.referenceId = referenceId;
+        this.reference = reference;
         this.isActive=isActive;
         this.createdUser=createdUser;
         this.updatedUser=updatedUser;

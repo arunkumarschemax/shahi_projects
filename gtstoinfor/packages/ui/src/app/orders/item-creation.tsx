@@ -3,8 +3,8 @@ import { HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link } from "react-router-dom";
-import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
-import { ItemGroupEnum } from "@project-management-system/shared-models";
+import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, FactoryService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, ProductGroupService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
+import { ItemGroupEnum, SubContractStatus } from "@project-management-system/shared-models";
  
 export interface FormProps {
   itemCreationData:any;
@@ -32,11 +32,15 @@ export function ItemCreation (props: FormProps){
          const uomservice = new UomService();
          const grouptech = new GroupTechClassService();
          const itemTypeservice =new ItemTypeService();
+         const facilityservice =new FactoryService();
+         const proDUCTService = new ProductGroupService();
+         const [Product,setProduct] = useState([]);
          const [currencydata,setCurrencyData] = useState([]);
          const [uomdata,setUomData] = useState([]);
          const [itemgroup,setitemgroup] = useState([]);
          const [group,setGroup] = useState([]);
          const [compositiondata,setCompositionData] = useState([]);
+         const [facilitydata,setfacilityData] = useState([]);
          const [searchdata,setSearchData] = useState([]);
          const [employedata,setEmployeData] = useState([]);
          const [rangedata,setRangeData] = useState([]);
@@ -68,8 +72,24 @@ export function ItemCreation (props: FormProps){
             getAllItemType();
             getAllItemGroups();
             getAllGroupTech();
+            getAllFacilitys();
+            getAllProducts();
           },[])
-
+          const getAllProducts = () => {
+            proDUCTService
+              .getAllActiveProductGroup()
+              .then((res) => {
+                if (res.status) {
+                  setProduct(res.data);
+                } else {
+                  AlertMessages.getErrorMessage(res.internalMessage);
+                }
+              })
+              .catch((err) => {
+                setProduct([]);
+                AlertMessages.getErrorMessage(err.message);
+              });
+          };
          const getAllCurrencies=() =>{
             currencyServices.getAllActiveCurrencys().then(res =>{
               if (res.status){
@@ -81,6 +101,21 @@ export function ItemCreation (props: FormProps){
                  }
             }).catch(err => {
               setCurrencyData([]);
+               AlertMessages.getErrorMessage(err.message);
+             })        
+          }
+
+          const getAllFacilitys=() =>{
+            facilityservice.getFactories().then(res =>{
+              if (res.status){
+                // console.log(res,'llllll')
+                setfacilityData(res.data);
+                 
+              } else{
+                AlertMessages.getErrorMessage(res.internalMessage);
+                 }
+            }).catch(err => {
+              setfacilityData([]);
                AlertMessages.getErrorMessage(err.message);
              })        
           }
@@ -263,16 +298,20 @@ compositionservice.getActiveComposition().then(res=>{
         }
 
          const getAllCustomGrops=()=>{
-            currencyServices.getAllActiveCurrencys().then(res=>{
+            customGroupservice.getAllActiveCustomGroups ().then(res=>{
                 if(res.status){
                     setCustomGroup(res.data);
+                    
                 }else{
                     AlertMessages.getErrorMessage(res.internalMessage)
                 }
+                
             }).catch(err=>{
                 setCustomGroup([]);
                 AlertMessages.getErrorMessage(err.message)
             })
+            console.log(customGroup,"customGroupId");
+            
          }
          const getAllBuyingHouse=()=>{
             buyingHouseservice.getAllActiveBuyingHouse().then(res=>{
@@ -291,7 +330,7 @@ compositionservice.getActiveComposition().then(res=>{
       }
          const saveItem=()=>{
           form.validateFields().then((values) => {
-            console.log(values);
+            console.log(values,"ooooooooooooooo");
               itemCreationService.createItem(values).then((res) => {
                 if(res.status){
                   AlertMessages.getSuccessMessage(res.internalMessage)
@@ -304,9 +343,11 @@ compositionservice.getActiveComposition().then(res=>{
               })
           })
          }
+
+        
          return (
          <>
-        <Card title="Item Creation" size="small" extra={!props.isUpdate && (<Link to="/materialCreation/item-creation-view">
+        <Card title=" FG Item Creation" size="small" extra={!props.isUpdate && (<Link to="/materialCreation/item-creation-view">
          <span style={{ color: 'white' }}><Button type="primary">View</Button></span></Link> )}>
 
                <Form  form={form} style={{ fontSize: "10px" }}  layout="vertical" onFinish = {saveItem} initialValues={props.itemCreationData}>
@@ -355,17 +396,11 @@ compositionservice.getActiveComposition().then(res=>{
                     </Col>
                    </Row>
                    <Row gutter={8}>
+                 
                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                    <Form.Item label="Category" name="categoryId" rules={[{ required: true, message: "Enter category" }]}>
-                       <Select placeholder="Select Category" allowClear>
-                    {itemCategory.map((e)=>{
-                        return(
-                            <Option key={e.itemCategoryId} value={e.itemCategoryId}>
-                             {e.itemCategory}
-                            </Option>
-                        )
-                    })}
-                      </Select>
+                    <Form.Item label="Item Code" name="itemCode" >
+                    <Input placeholder="Item Code" allowClear/>
+
                     </Form.Item>
                    </Col>
                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -380,10 +415,12 @@ compositionservice.getActiveComposition().then(res=>{
                     </Form.Item>
                    </Col>
                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                     <Form.Item  label="Season"name="seasonId">
-                     <Input placeholder="Season"  allowClear/>
-                     </Form.Item>
-                     </Col>
+                      <Form.Item   name="itemName" label="Item Name" 
+                      rules={[{ required: true, message: "Enter Item Name" }]}>
+                                                       <Input placeholder="Item Name" allowClear/>
+
+                      </Form.Item>
+                    </Col>
                    </Row>
                    <Row gutter={8}>
                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -400,19 +437,35 @@ compositionservice.getActiveComposition().then(res=>{
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                      <Form.Item   name="referenceId" label="Referenced" >
+                      <Form.Item   name="reference" label="Referenced" >
                       <Select
                         placeholder="Select Referenced"
                         allowClear>
-                         
+                          {employedata.map((e)=>{
+                        return(
+                          <Option key={e.employeeId} values={e.employeeId}>{e.firstName}
+
+                          </Option>
+                        )
+                      })}
                       </Select>
+
+
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                     <Form.Item  label="FacilityId"name="facilityId">
-                     <Input placeholder="FacilityId"  allowClear/>
-                     </Form.Item>
-                     </Col>
+                    <Form.Item label="Category" name="categoryId" rules={[{ required: true, message: "Enter category" }]}>
+                       <Select placeholder="Select Category" allowClear>
+                    {itemCategory.map((e)=>{
+                        return(
+                            <Option key={e.itemCategoryId} value={e.itemCategoryId}>
+                             {e.itemCategory}
+                            </Option>
+                        )
+                    })}
+                      </Select>
+                    </Form.Item>
+                   </Col>
                     </Row>
 
                     <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Manufacturing Information</h1>
@@ -422,12 +475,8 @@ compositionservice.getActiveComposition().then(res=>{
                       name="property"
                       label="Property"
                     >
-                       <Select
-                        placeholder="Select Property"
-                        allowClear
-                      >
-                      
-                      </Select>
+                         <Input placeholder="Property" allowClear/>
+
                     </Form.Item>
                            </Col>
                            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
@@ -444,10 +493,12 @@ compositionservice.getActiveComposition().then(res=>{
                          <Row gutter={8}>
                          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                 <Form.Item   name="basicUom" label="Basic UOM" rules={[{ required: true, message: "Enter Basic UOM" }]}>
-                <Select placeholder="Select Basic UOM" allowClear>
+                <Select placeholder="Select Basic UOM" allowClear >
                   {uomdata.map((e)=>{
+
                     return(
                     <Option key={e.uomId} value={e.uomId}>{e.uom}
+
                     </Option>)
                   })
 
@@ -456,19 +507,37 @@ compositionservice.getActiveComposition().then(res=>{
                 </Form.Item>
                        </Col>
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item  name="altUOM" label="Alt UOM">
-                        <Select placeholder="Select Basic UOM" allowClear>
+                <Form.Item   name="altUoms" label="Alt UOM" rules={[{ required: true, message: "Enter Alt UOM" }]}>
+                <Select placeholder="Select Alt UOM" allowClear >
+                  {uomdata.map((e)=>{
 
-                        {uomdata.map((e)=>{
-                    return(<Option key={e.id} value={e.id}>{e.uom}</Option>)
+                    return(
+                    <Option key={e.uomId} value={e.uomId}>{e.uom}
+
+                    </Option>)
                   })
 
-                  }                    
-                                  </Select>
-                                 </Form.Item>
+                  }
+                </Select>
+                </Form.Item>
                        </Col>
+                       {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                        <Form.Item  name="altUom" label="Alt UOM">
+                        <Select placeholder="Select Basic UOM" allowClear >
+                  {uomdata.map((e)=>{
+
+                    return(
+                    <Option key={e.uomId} value={e.uomId}>{e.uom}
+
+                    </Option>)
+                  })
+
+                  }
+                </Select>
+                                 </Form.Item>
+                       </Col> */}
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item name="conversionFactorId"
+                        <Form.Item name="conversionFactor"
                       label="Conversion Factor">
                       <Input placeholder="Conversion Factor" allowClear />
                         </Form.Item>
@@ -507,16 +576,16 @@ compositionservice.getActiveComposition().then(res=>{
                         </Row>
                         <Row gutter={8}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                          <Form.Item name="projectionOrderId" label="Projection Order">
-                          <Select showSearch placeholder="Select Projection Order" allowClear >
-                      </Select>
+                          <Form.Item name="projectionOrder" label="Projection Order">
+                          <Input placeholder="Projection Order" allowClear />
+
                           </Form.Item>
                        </Col>
 
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                           <Form.Item name="businessArea" label="Business Area">
-                          <Select showSearch placeholder="Select Business Area" allowClear >
-                      </Select>
+                          <Input placeholder="Business Area" allowClear />
+
                           </Form.Item>
                        </Col>
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -524,7 +593,7 @@ compositionservice.getActiveComposition().then(res=>{
                       name="salePriceQty"
                       label="Sales Price Qty"
                     >
-                      <Input placeholder="Moq" allowClear />
+                      <Input placeholder="Sales Price Qty" allowClear />
                     </Form.Item>
                                   </Col>
                                  
@@ -541,6 +610,67 @@ compositionservice.getActiveComposition().then(res=>{
                       <Input placeholder="Description" allowClear />
                     </Form.Item>
                                   </Col>
+                                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                     <Form.Item  label="Facility"name="facilityId">
+                     <Select
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                    placeholder="Select facility"
+                    >
+
+                     {facilitydata.map((e)=>{
+                    return(
+                    <Option key={e.id} value={e.id}>{e.name}
+                    </Option>)
+                  })
+
+                  }
+                  </Select>
+
+                     </Form.Item>
+                     </Col>
+                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                     <Form.Item  label="Season"name="season">
+                     <Input placeholder="Season"  allowClear/>
+                     </Form.Item>
+                     </Col>
+                     {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                     <Form.Item  label="Internal Style"name="internalStyleId">
+                     <Select
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                    placeholder="Select Internal Style"
+                    >
+
+                     {facilitydata.map((e)=>{
+                    return(
+                    <Option key={e.id} value={e.id}>{e.name}
+                    </Option>)
+                  })
+
+                  }
+                  </Select>
+
+                     </Form.Item>
+                     </Col> */}
+
+                   
+                        </Row>
+                        <Row gutter={8}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                      <Form.Item   name="range" label="Range" >
+                      <Select
+                        placeholder="Select Range"
+                        allowClear>
+                          {rangedata.map((e)=>{
+                            return(
+                            <Option key={e.id} values={e.id}>{e.rangeCode}</Option>)
+                            })}
+                      </Select>
+                      </Form.Item>
+                    </Col>
                         </Row>
 </Card>
 </Col>
@@ -568,7 +698,7 @@ compositionservice.getActiveComposition().then(res=>{
                           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                             <Form.Item  name="licenseId" label="Licence">
                             <Select
-                        placeholder="Select Currency"
+                        placeholder="Select Licence"
                         allowClear
                       >
                         {licence.map((e)=>{
@@ -591,9 +721,10 @@ compositionservice.getActiveComposition().then(res=>{
                         allowClear
                       >
                       {customGroup.map((e)=>{
+                        
                         return(
-                            <Option key={e.currencyId} value={e.currencyId}>
-                            {e.currencyName}
+                            <Option key={e.customGroupId} value={e.customGroupId}>
+                            {e.customGroup}
                             </Option>
                         )
                       })}
@@ -685,11 +816,15 @@ compositionservice.getActiveComposition().then(res=>{
                     <Row gutter={8} >
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                       <Form.Item  name="productGroup" label="Product Group" >
-                      <Select
-                        placeholder="Select Product Group"
-                        allowClear>
-                         
-                      </Select>
+                      <Select placeholder="Select Product Group" allowClear> 
+                          {Product.map((e)=>{
+                            return(
+                              <Option key={e.productGroupId} values={e.productGroupId}>{e.productGroup}
+
+                              </Option>
+                            )
+                          })}                       
+                        </Select>
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -710,8 +845,22 @@ compositionservice.getActiveComposition().then(res=>{
                           </Form.Item>
                        </Col>
                     </Row>
-                    <Row >
-                   
+                    <Row gutter={8}>
+                    <Form.Item
+                    label="Is SubContract Status"
+                    name="isSubContract"
+                    rules={[{ required: true, message: "Enter Is SubContract Status" }]}
+                  >
+                    <Select
+                    showSearch
+                  
+                        placeholder="Select Is SubControl Status" allowClear>
+                     {Object.values(SubContractStatus).map((key,value)=>{
+            return <Option key={key} value={key}>{key}</Option>
+           })}
+                    </Select>
+                    {/* <Input placeholder="Fabric code" allowClear /> */}
+                  </Form.Item>
                     </Row>
                               
                               <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Performance Responsible Team</h1>
@@ -833,14 +982,14 @@ compositionservice.getActiveComposition().then(res=>{
 </Col>
 </Row>
 <Row gutter={16}>
-<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+{/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
 <Form.Item
                       name="FR TNA"
                       label="FR TNA"
                     >
                       <Input placeholder="FR TNA" allowClear />
                     </Form.Item>
-</Col>
+</Col> */}
 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
 <Form.Item
                       name="orderQty"
@@ -849,18 +998,7 @@ compositionservice.getActiveComposition().then(res=>{
                       <Input placeholder="Total Order Qty" allowClear />
                     </Form.Item>
                      </Col>
-                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                      <Form.Item   name="range" label="Range" >
-                      <Select
-                        placeholder="Select Range"
-                        allowClear>
-                          {rangedata.map((e)=>{
-                            return(
-                            <Option key={e.id} values={e.id}>{e.rangeCode}</Option>)
-                            })}
-                      </Select>
-                      </Form.Item>
-                    </Col>
+                    
                       </Row>
                      
 
