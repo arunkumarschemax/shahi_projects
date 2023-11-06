@@ -1,18 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
-import { ColourService } from '@project-management-system/shared-services';
+import { Table, Button, Input, Select, Tooltip, message, Form } from 'antd';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { BuyerDestinationService, ColourService } from '@project-management-system/shared-services';
 
-const SizeDetail = ({props}) => {
+const SizeDetail = ({props,buyerId}) => {
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
   const [color, setColor] = useState<any[]>([])
+  const [sizeData, setSizeData]=useState<any[]>([])
+  const [colorId, setColorId]= useState<number>(null)
   const colorService = new ColourService()
+  const buyerDestinaytionService=new BuyerDestinationService()
   const { Option } = Select;
+  const [form] = Form.useForm();
 
   useEffect(()=>{
     getColors()
   },[])
+
+  useEffect(() =>{
+    if(buyerId != null){
+      getAllSizesAgainstBuyer(buyerId)
+    }
+  },[buyerId])
 
   const getColors = () => {
     colorService.getAllActiveColour().then((res) => {
@@ -23,6 +33,17 @@ const SizeDetail = ({props}) => {
     });
   };
 
+  const getAllSizesAgainstBuyer =(buyerId) =>{
+    buyerDestinaytionService.getAllSizesAgainstBuyer({buyerId:buyerId}).then(res=>{
+      if(res.status){
+        setSizeData(res.data)
+      }else{
+        setSizeData([])
+        message.info(res.internalMessage)
+      }
+    })
+  }
+
   const handleAddRow = () => {
     const newRow = {
       key: count,
@@ -31,26 +52,72 @@ const SizeDetail = ({props}) => {
     setCount(count + 1);
   };
 
-  const handleInputChange = (value, key, field) => {
-    const updatedData = data.map((record) => {
-      if (record.key === key) {
-        return { ...record, [field]: value };
-      }
-      return record;
-    });
-    setData(updatedData);
-    props(updatedData)
-  };
+  const onchangeData =[];
+  
+  const handleColorOnchange = (value,key) =>{
+    setColorId(value)
+    onchangeData.push({colorId:value})
+  }
+
+    const handleInputChange = (colourId,sizeId,quantity,key) =>{
+      const dataupDate= data.map((record) =>{
+        console.log(data)
+        if(record.key === key){
+            setColorId(colourId)
+            onchangeData.push({colorId, sizeId, quantity })
+            console.log(onchangeData)
+        }
+      })
+    }
+
 
   const handleDelete = (key) => {
     const updatedData = data.filter((record) => record.key !== key);
     setData(updatedData);
   };
+  const add =()=>{
+    form.validateFields().then((val) =>{
+      console.log(val)
+    })
+  }
 
   const calculateTotal = (size) => {
     return data.reduce((total, record) => total + parseInt(record[size] || 0), 0);
   };
 
+  const sizeColumns = sizeData.map(size => ({
+    title: size.size,
+    dataIndex: size.size,
+    render:(_, record) =>{
+      console.log(record)
+      return (
+        <><Form.Item name={`sizeId${size.sizeId}+${record.key}`} initialValue={size.sizeId} hidden>
+          <Input
+            name={`size`}
+            defaultValue={size.sizeId}
+            type='number'
+            min={0}
+            placeholder='size'
+            hidden
+          >
+          </Input>
+        </Form.Item>
+      <Form.Item name={`quantity${size.sizeId}+${record.key}`}>
+            <Input
+              name={`quantity${size.sizeId}`}
+              value={record[size.sizeId]}
+              onChange={(e) => handleInputChange(form.getFieldValue(`colorId${record.key}`),size.sizeId,e.target.value,record.key)}
+              type='number'
+              min={0}
+              placeholder='quantity'
+            >
+            </Input>
+          </Form.Item></>
+      )
+    }
+  }));
+
+  
   const columns = [
     {
       title: 'S.No',
@@ -59,122 +126,51 @@ const SizeDetail = ({props}) => {
     },
     {
       title: 'Color',
-      // dataIndex: 'colourId',
+      dataIndex: 'colourId',
       width:"25%",
       render: (_, record) => (
+        <Form.Item name={`colorId${record.key}`}>
         <Select
-          value={record.colourId}
-          onChange={(value) => handleInputChange(value, record.key, 'colourId')}
           style={{width:"100%"}}
           allowClear
           showSearch
           optionFilterProp="children"
           placeholder="Select Color"
+          onChange={value =>handleColorOnchange(value,record.key)}
         >
           {color.map((e) => {
                   return (
-                    <Option key={e.colourId} value={e.colourId}>
+                    <Option name={`colorId${record.key}`} key={e.colourId} value={e.colourId}>
                       {e.colour}
                     </Option>
                   );
                 })}
           </Select>
+        </Form.Item>
       ),
     },
     {
       title: 'Quantity by Size',
       dataIndex: 'size',
       width:"10%",
-      children :[
-        {
-          title: 'XS',
-          dataIndex: 'quantity',
-          render: (_, record) => (
-            <Input
-              value={record.xs}
-              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
-              type='number'
-              min={0}
-              placeholder='Quantity'
-            />
-          ),
-        },
-        {
-          title: 'S',
-          dataIndex: 'quantity',
-          render: (_, record) => (
-            <Input
-              value={record.s}
-              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
-              type='number'
-              min={0}
-              placeholder='Quantity'
-            />
-          ),
-        },
-        {
-          title: 'M',
-          dataIndex: 'quantity',
-          render: (_, record) => (
-            <Input
-              value={record.m}
-              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
-              type='number'
-              min={0}
-              placeholder='Quantity'
-            />
-          ),
-        },
-        {
-          title: 'L',
-          dataIndex: 'quantity',
-          render: (_, record) => (
-            <Input
-              value={record.l}
-              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
-              type='number'
-              min={0}
-              placeholder='Quantity'
-            />
-          ),
-        },
-        {
-          title: 'XL',
-          dataIndex: 'quantity',
-          render: (_, record) => (
-            <Input
-              value={record.xl}
-              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
-              type='number'
-              min={0}
-              placeholder='Quantity'
-            />
-          ),
-        },
-        {
-          title: 'XXL',
-          dataIndex: 'quantity',
-          render: (_, record) => (
-            <Input
-              value={record.xxl}
-              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
-              type='number'
-              min={0}
-              placeholder='Quantity'
-            />
-          ),
-        },
-      ],
+      children :sizeColumns,
     },
-    
+    {
+      title: 'Confirm',
+      dataIndex: 'action',
+      render: (_, record) => (
+        <Button onClick={() => add()}><Tooltip title="Add"><PlusOutlined /></Tooltip></Button>
+      ),
+    },
     {
       title: 'Action',
       dataIndex: 'action',
       render: (_, record) => (
-        <Button onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
+        <Button htmlType='submit' onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
       ),
     },
   ];
+
 
   const shouldShowSummary = data.length > 0;
 
@@ -194,6 +190,7 @@ const SizeDetail = ({props}) => {
 
   return (
     <div>
+      <Form  form={form}>
       <Button onClick={handleAddRow} style={{margin:"10px"}}>Add Row</Button>
       <Table 
       dataSource={data} 
@@ -201,6 +198,8 @@ const SizeDetail = ({props}) => {
       summary={summary}
       bordered={true}
       />
+      {/* <Button>Confirm</Button> */}
+      </Form>
     </div>
   );
 };

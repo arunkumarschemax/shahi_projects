@@ -4,7 +4,7 @@ import { Button, Card, Col, Descriptions, Input, Row, Table, Tabs, Tooltip } fro
 import DescriptionsItem from "antd/es/descriptions/Item"
 import TabPane from "antd/es/tabs/TabPane"
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import FabricsForm from "./fabrics"
 import TrimsForm from "./trims"
 import { DeleteOutlined } from "@ant-design/icons"
@@ -18,12 +18,16 @@ export const MarketIssueDetail = () => {
     const [data,setData] = useState<any[]>([])
     const [page, setPage] = React.useState(1);
     const [id, setId] = useState<any[]>([])
+    const location = useLocation();
+    const rowData = location.state.data
 
+    // useEffect(() => {
+    //   setRowData(location.state.val)
+    // },[])
 
-    useEffect(() => {
-        getData()
-    },[])
-
+    
+    console.log(rowData,"roowww")
+    console.log(rowData[0].locationName,"roowww")
     // const getSampleDevById = () => {
     //     service.getSampleDevById(req).then(res => {
     //       if(res){
@@ -32,12 +36,12 @@ export const MarketIssueDetail = () => {
     //     })
     //   }
 
-    const getData = ()=>{
-        service.getSampleDevById().then((res)=>{
-            setData(res)
-            console.log(res)
-        })
-    }
+    // const getData = ()=>{
+    //     service.getSampleDevById().then((res)=>{
+    //         setData(res)
+    //         console.log(res)
+    //     })
+    // }
 
     const handleInputChange = (e, key, field) => {
         const updatedData = data.map((record) => {
@@ -95,7 +99,7 @@ export const MarketIssueDetail = () => {
         },
         {
           title: 'Consumption',
-          dataIndex: 'consumption',
+          dataIndex: 'trim_consumption',
         },
         // {
         //   title: 'Issued Quantity',
@@ -146,27 +150,27 @@ export const MarketIssueDetail = () => {
     return(
         <Card title='Sample Request' className="card-header" extra={<Button onClick={onUpdate} type={'primary'}>View</Button>}>
              <Descriptions size='small'>
-                <DescriptionsItem label='Location'>{data[0]?.location}</DescriptionsItem>
-                <DescriptionsItem label='PCH'>{data[0]?.pch}</DescriptionsItem>
-                <DescriptionsItem label='User'>{data[0]?.user}</DescriptionsItem>
-                <DescriptionsItem label='Buyer'>{data[0]?.buyer}</DescriptionsItem>
-                <DescriptionsItem label='Sample Type'>{data[0]?.sampleType}</DescriptionsItem>
-                <DescriptionsItem label='Sample Sub Type'>{data[0]?.sampleSubType}</DescriptionsItem>
-                <DescriptionsItem label='Style'>{data[0]?.style}</DescriptionsItem>
-                <DescriptionsItem label='Description'>{data[0]?.description}</DescriptionsItem>
-                <DescriptionsItem label='Brand'>{data[0]?.brand}</DescriptionsItem>
-                <DescriptionsItem label='Cost Ref'>{data[0]?.costRef}</DescriptionsItem>
-                <DescriptionsItem label='M3 Style No'>{data[0]?.m3StyleNo}</DescriptionsItem>
-                <DescriptionsItem label='Contact No'>{data[0]?.contactNo}</DescriptionsItem>
-                <DescriptionsItem label='Extn'>{data[0]?.extn}</DescriptionsItem>
-                <DescriptionsItem label='SAM'>{data[0]?.sam}</DescriptionsItem>
-                <DescriptionsItem label='DMM'>{data[0]?.dmm}</DescriptionsItem>
-                <DescriptionsItem label='Technician'>{data[0]?.technician}</DescriptionsItem>
-                <DescriptionsItem label='Product'>{data[0]?.product}</DescriptionsItem>
-                <DescriptionsItem label='Type'>{data[0]?.productType}</DescriptionsItem>
-                <DescriptionsItem label='Conversion'>{data[0]?.Conversion}</DescriptionsItem>
-                <DescriptionsItem label='Made In'>{data[0]?.madeIn}</DescriptionsItem>
-                <DescriptionsItem label='Remarks'>{data[0]?.remarks}</DescriptionsItem>
+                <DescriptionsItem label='Location'>{rowData?.[0]?.locationName}</DescriptionsItem>
+                <DescriptionsItem label='PCH'>{rowData?.[0]?.pch}</DescriptionsItem>
+                <DescriptionsItem label='User'>{}</DescriptionsItem>
+                <DescriptionsItem label='Buyer'>{rowData?.[0]?.buyerName}</DescriptionsItem>
+                <DescriptionsItem label='Sample Type'>{rowData?.[0]?.sampleType}</DescriptionsItem>
+                <DescriptionsItem label='Sample Sub Type'>{rowData?.[0]?.sampleSubType}</DescriptionsItem>
+                <DescriptionsItem label='Style'>{rowData?.[0]?.style}</DescriptionsItem>
+                <DescriptionsItem label='Description'>{}</DescriptionsItem>
+                <DescriptionsItem label='Brand'>{rowData?.[0]?.brandName}</DescriptionsItem>
+                <DescriptionsItem label='Cost Ref'>{rowData?.[0]?.costRef}</DescriptionsItem>
+                <DescriptionsItem label='M3 Style No'>{rowData?.[0]?.m3StyleNo}</DescriptionsItem>
+                <DescriptionsItem label='Contact No'>{rowData?.[0]?.contact}</DescriptionsItem>
+                <DescriptionsItem label='Extn'>{rowData?.[0]?.extension}</DescriptionsItem>
+                <DescriptionsItem label='SAM'>{rowData?.[0]?.samValue}</DescriptionsItem>
+                <DescriptionsItem label='DMM'>{rowData?.[0]?.dmmName}</DescriptionsItem>
+                <DescriptionsItem label='Technician'>{rowData?.[0]?.techName}</DescriptionsItem>
+                <DescriptionsItem label='Product'>{rowData?.[0]?.product}</DescriptionsItem>
+                <DescriptionsItem label='Type'>{rowData?.[0]?.type}</DescriptionsItem>
+                <DescriptionsItem label='Conversion'>{rowData?.[0]?.conversion}</DescriptionsItem>
+                <DescriptionsItem label='Made In'>{rowData?.[0]?.madeIn}</DescriptionsItem>
+                <DescriptionsItem label='Remarks'>{}</DescriptionsItem>
             </Descriptions>
 
             <Tabs type={'card'} tabPosition={'top'}>

@@ -78,6 +78,12 @@ export class MaterialFabricEntity {
   })
   createdUser: string | null;
 
+  @Column("varchar", {
+      nullable: true,
+      name: "status"
+  })
+  status: string | null;
+
   @Column('varchar',{
     nullable:false,
     name:'remarks',
