@@ -166,6 +166,7 @@ import SMVEffciencyView from "./common/product-structure(BOM)/smv-effciency-view
 import SMKDetailView from "./common/product-structure(BOM)/smk-detail-view"
 import SubstitutionView from "./BOM/substitution-view"
 import TrimOperationMappingView from "./common/product-structure(BOM)/trim-operation-mapping-view"
+import MOPReport from "./procurement/mop-report"
 
 
 export const AppRoutes = () => {
@@ -636,6 +637,9 @@ export const AppRoutes = () => {
 
             
                             
+                </Route>
+                <Route path='/procurement'>
+                <Route path='procurement/mop-report' element={<MOPReport/>}/>           
                 </Route>
 
 
