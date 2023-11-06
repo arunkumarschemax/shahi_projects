@@ -164,6 +164,7 @@ import Substitution from "./BOM/substitution"
 import FgRmItemBomView from "./common/product-structure(BOM)/fg-rm-item-view"
 import SMVEffciencyView from "./common/product-structure(BOM)/smv-effciency-view"
 import SMKDetailView from "./common/product-structure(BOM)/smk-detail-view"
+import SubstitutionView from "./BOM/substitution-view"
 import TrimOperationMappingView from "./common/product-structure(BOM)/trim-operation-mapping-view"
 import MOPReport from "./procurement/mop-report"
 
@@ -614,7 +615,10 @@ export const AppRoutes = () => {
                 <Route path='item-creation-detail-view' element={<ItemCreationDetailView data={''}/>}/>
                 <Route path="co-amendment" element ={<COAmendmentTabs key={""} />} />
                 <Route path='rm-creation-view' element={<RMCreationView/>}/>
+                
                 <Route path='rm-skus' element={<RmSkusGeneration/>}/>
+                <Route path='substitution-view' element={<SubstitutionView/>}/>
+
                 </Route>
                 <Route path='/operation-tracking'>
                     <Route path='operation-tracking/issuing' element={<IssueScreen/>}/>
