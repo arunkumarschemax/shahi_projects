@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Raw, Repository } from 'typeorm';
 import { GroupTechClassEntity,} from './group-tech-class.entity';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
-import { AllGroupTechClassResponse, AllItemCategoryResponse, CommonResponseModel, GroupTechClassRequest, GroupTechClassResponse, ItemCategoriesDropDownResponseModel, ItemCategoryDropDownDto, ItemCategoryResponse } from '@project-management-system/shared-models';
+import { AllGroupTechClassResponse, AllItemCategoryResponse, BuyerIdReq, CommonResponseModel, GroupTechClassRequest, GroupTechClassResponse, ItemCategoriesDropDownResponseModel, ItemCategoryDropDownDto, ItemCategoryResponse } from '@project-management-system/shared-models';
 import { GroupTechClassAdapter } from './dto/group-tech-class.adapter';
 import { GroupTechClassDto } from './dto/group-tech-class.dto';
 
@@ -152,10 +152,11 @@ async createGroupTechClass(Dto: GroupTechClassDto, isUpdate: boolean): Promise<G
 }
 
       
-      async getAllGroupTechClass(): Promise<AllGroupTechClassResponse> {  
+      async getAllGroupTechClass(req?:BuyerIdReq): Promise<AllGroupTechClassResponse> {  
         try {
             const Dto: GroupTechClassDto[] = [];
             const Entities: GroupTechClassEntity[] = await this.groupTechClassRepository.find({
+              where:{buyerId:req?.buyerId},
                 order: { groupTechClassCode: "ASC" },
             });
             if (Entities.length>0) {

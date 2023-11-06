@@ -63,7 +63,13 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
   }
 
   const saveFabricWeave = (data: FabricWeaveDto) => {
-    Service.createFabricWeave(data).then((res) => {
+    const file:any = data.fabricWeaveImageName
+    // const abc:string =file.file.name
+    console.log(file.file.name,'data')
+    const req = new FabricWeaveDto(data.fabricWeaveId,data.fabricWeaveName,data.fabricWeaveCode,file.file.name,file.file.type,data.isActive,data.createdAt,data.createdUser,data.updatedAt,data.updatedUser,data.versionFlag)
+    Service.createFabricWeave(req).then((res) => {
+      console.log(req,'req');
+      
         if (res.status) {
           AlertMessages.getSuccessMessage('Fabric Weave Created Successfully');
           if(fileList.length > 0){
@@ -74,7 +80,7 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
 
             formData.append('fabricWeaveId', `${res.data[0].fabricWeaveId}`)
             Service.fabricWeaveImageUpload(formData).then(fileRes => {
-                res.data[0].fabricWeaveImageName = fileRes.data
+                res.data[0].fabricWeaveImageName = fileRes.data.file.name
             })
           }
           navigate("/masters/fabric-weave/fabric-weave-view")
@@ -122,7 +128,9 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
           setFileList([file]);
           getBase64(file, imageUrl =>
             setImageUrl(imageUrl)
+          
           );
+      
           return false;
         }
       }
@@ -178,10 +186,13 @@ return (
               <Form.Item name="fabricWeaveImageName" label='Fabric Weave Image'
               rules={[{required:true,message:'Upload Fabric Weave'}]}  
               initialValue={props.isUpdate ? props.data.fabricWeaveImageName:''}
+            
               >
-                <Upload  {...weaveUploadFieldProps} style={{  width:'100%' }} listType="picture-card">
+               { !imageUrl ? (
+                <Upload  {...weaveUploadFieldProps} style={{  width:'100%' }} listType="picture-card"  >
                   {uploadButton}
                 </Upload>
+                   ):"" }
               </Form.Item>
             </Col>
           </Row> 

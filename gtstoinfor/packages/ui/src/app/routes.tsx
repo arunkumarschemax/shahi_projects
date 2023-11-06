@@ -583,13 +583,13 @@ export const AppRoutes = () => {
                 <Route path='settings/settings-form' element={<SettingsForm/>}/>
                 <Route path='settings/settings-view' element={<SettingsView/>}/>
                 {/* </Route> */}
-                <Route path='rmskus/rm-skus' element={<RmSkusGeneration/>}/>
                 <Route path='sample-development' >
                     <Route path="sample-development-form" element={<SampleDevForm />}/>
                     <Route path="sample-development-view" element={<SampleDevView />}/>
                     <Route path="sample-development-detail" element={<SampleDevDetail />}/>
                 </Route>
                 <Route path='/materialCreation'>
+                <Route path='rm-skus' element={<RmSkusGeneration/>}/>
                     <Route path='sku-list' element={<SkuList/>}/>
                     <Route path='sku-mapping' element={<SKUGeneration/>}/>
                     <Route path='item-creation' element={<ItemCreation itemCreationData={undefined} isUpdate={false} closeForm={function (): void {

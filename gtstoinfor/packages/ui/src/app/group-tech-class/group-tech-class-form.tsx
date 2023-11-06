@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Select,Card, Row, Col } from 'antd';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { GroupTechClassDto, PaymentTermsDto } from '@project-management-system/shared-models';
+import { BuyerExtrnalRefIdReq, GroupTechClassDto, MenusAndScopesEnum, PaymentTermsDto } from '@project-management-system/shared-models';
 import { BuyersService, DivisionService, GroupTechClassService, PaymentTermsService } from '@project-management-system/shared-services';
 import AlertMessages from '../common/common-functions/alert-messages';
 
@@ -47,28 +47,45 @@ export function GroupTechClassForm(props:GroupTechClassFormProps) {
   const buyerService = new BuyersService();
   const divisionService = new DivisionService();
   const [dataFetched, setDataFetched] = useState(false); 
-
+  const [userId, setUserId] = useState([]); 
+  const [loginBuyer,setLoginBuyer] = useState<number>(0)
+  const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+  const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
+let userRef 
 
   let history = useLocation();
 
   useEffect(() => {
     if (!dataFetched) { // Check if data has not been fetched already
-      getAllActiveBuyers();
       getAllActiveDivision();
-      setDataFetched(true); // Set the flag to true after fetching data
+      setDataFetched(true);
+      Login()
     }
   }, [dataFetched]);
-
-  const getAllActiveBuyers=() =>{
-    buyerService.getAllActiveBuyers().then(res =>{
-    if (res.status){
-      setBuyerData(res.data);
-       
-    } else{
-      AlertMessages.getErrorMessage(res.internalMessage);
-       }
-  })
-}
+  const Login = () => {
+    const req = new BuyerExtrnalRefIdReq();
+    if (role === MenusAndScopesEnum.roles.crmBuyer) {
+      req.extrnalRefId = externalRefNo;
+    }
+    buyerService.getBuyerByRefId(req).then((res) => {
+      if (res.status) {
+        setUserId(res.data);
+        setLoginBuyer(res.data?.buyerId);
+        if(req.extrnalRefId){
+            form.setFieldsValue({'buyerId': res.data.buyerId})
+            }
+                  }
+    });
+    buyerService.getAllActiveBuyers().then((res) => {
+      if (res.status) {
+        setBuyerData(res.data);
+      }
+      else{
+        AlertMessages.getErrorMessage(res.internalMessage);
+         }
+    });
+  };
+  
 
 const getAllActiveDivision=() =>{
   divisionService.getAllActiveDivision().then(res =>{
@@ -203,6 +220,7 @@ const getAllActiveDivision=() =>{
             >
       {/* <Col xs={{span:24}} sm={{span:24}} md={{span:5,offset:1}} lg={{span:5,offset:1}} xl={{span:5,offset:1}} style={{margin:'1%'}}> */}
         <Form.Item
+        initialValue={userId.length>0 ?userId[0].buyerId:''}
           name="buyerId"
           label="Buyer"
           rules={[
@@ -212,7 +230,7 @@ const getAllActiveDivision=() =>{
             },
           ]}
         >
-         <Select placeholder="Select Buyer">
+         <Select defaultValue={userId.length>0 ?userId[0].buyerId:''} placeholder="Select Buyer">
          {buyerData.map((rec) => (
                   <option key={rec.buyerId} value={rec.buyerId}>
                     {rec.buyerName}

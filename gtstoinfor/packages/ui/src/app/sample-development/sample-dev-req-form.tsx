@@ -72,10 +72,12 @@ let userRef
       if(res.status){
         setUserId(res.data)
   setLoginBuyer(res.data.buyerId)
+  form.setFieldsValue({'buyer': res.data.buyerId})
+
       }
     })
 
-    buyerService.getAllActiveBuyers(req).then((res) => {
+    buyerService.getAllActiveBuyers().then((res) => {
       if (res.status) {
         setBuyer(res.data);
       }
@@ -311,12 +313,14 @@ let userRef
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
+            initialValue={userId.length>0 ? userId[0].buyerName :''}
               name="buyerId"
               label="Buyer"
               rules={[{ required: true, message: "Buyer is required" }]}
             >
               <Select
-                allowClear
+              defaultValue={userId.length>0 ? userId[0].buyerName :''}
+              allowClear
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select Buyer"

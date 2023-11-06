@@ -15,6 +15,8 @@ export class FabricWeaveAdapter {
         const fabricWeave = new FabricWeave();
         fabricWeave.fabricWeaveName = fabricWeaveDto.fabricWeaveName;
         fabricWeave.fabricWeaveCode = fabricWeaveDto.fabricWeaveCode;
+        fabricWeave.fabricWeaveImageName = fabricWeaveDto.fabricWeaveImageName;
+        fabricWeave.fabricWeaveImagePath = fabricWeaveDto.fabricWeaveImagePath
         fabricWeave.isActive = fabricWeaveDto.isActive == undefined?true:fabricWeaveDto.isActive;
         if (isUpdate) {
             fabricWeave.fabricWeaveId=fabricWeaveDto.fabricWeaveId;
@@ -30,6 +32,8 @@ export class FabricWeaveAdapter {
         const fabricWeaveDto = new FabriCWeaveDto;
         fabricWeaveDto.fabricWeaveId = fabricWeaveData.fabricWeaveId;
         fabricWeaveDto.fabricWeaveName = fabricWeaveData.fabricWeaveName;
+        fabricWeaveDto.fabricWeaveImageName = fabricWeaveData.fabricWeaveImageName
+        fabricWeaveDto.fabricWeaveImagePath = fabricWeaveData.fabricWeaveImagePath
         fabricWeaveDto.fabricWeaveCode = fabricWeaveData.fabricWeaveCode
         fabricWeaveDto.isActive = fabricWeaveData.isActive;
         fabricWeaveDto.createdAt = fabricWeaveData.createdAt;

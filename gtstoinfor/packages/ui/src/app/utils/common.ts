@@ -61,9 +61,10 @@ export interface MenuItem {
   export const treeRouter = (list: MenuItem[]) => {
     return list.map((item) => {
       return {
+        key: item.key,
         path: item.path,
         name: item.label,
-        // icon: item.icon,
+         icon: item.icon,
         routes:
           'children' in item
             ? item.children!.map(({ children, icon, label, path }) => {

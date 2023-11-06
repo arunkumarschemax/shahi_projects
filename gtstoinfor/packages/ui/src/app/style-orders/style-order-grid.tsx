@@ -55,7 +55,7 @@ let location = useLocation()
 const stateData = location.state
 let val = 0
     useEffect(() => {
-      getData()
+      // getData()
       Login()
   },[])
   const Login = () =>{
@@ -70,22 +70,25 @@ let val = 0
   setLoginBuyer(res.data.buyerId)  
       }
     })
-    buyerService.getAllActiveBuyers(req).then(res=>{
+    buyerService.getAllActiveBuyers().then(res=>{
       if(res.status){
             setBuyerId(res.data)
       }
     })
+    getData()
   }
   const checkAccess = (buttonParam) => {
     const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Material Creation"],MenusAndScopesEnum.SubMenus["Style Order View"],buttonParam)
     return !accessValue
 }
+ console.log(loginBuyer,'000000');
  
   const getData = () => {
     const req = new styleOrderReq(4)
     if(role === MenusAndScopesEnum.roles.crmBuyer){
       req.buyerId = loginBuyer
   }
+  console.log(req,'--------');
   
       service.getAllStyleOrdersByItem(req).then(res => {
           if(res.status){
@@ -427,7 +430,7 @@ let val = 0
       const updateCoLine = () =>{
       }
     return (
-        <Card title='Style Orders' extra={<span><Button onClick={() =>  navigate('/materialCreation/style-order-creation')}
+        <Card title='Style Orders'  extra={<span><Button onClick={() =>  navigate('/materialCreation/style-order-creation')}
               type={'primary'}>New</Button></span>} >
     <Form  form={form} onFinish={getData}>
     <Row gutter={[8,8]}>
