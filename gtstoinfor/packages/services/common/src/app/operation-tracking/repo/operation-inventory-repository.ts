@@ -5,6 +5,7 @@ import { OperationInventory } from "../entity/operation-inventory-entity";
 import { OperationInvRequest } from "../dto/operation-inventory-req";
 import { Style } from "../../style/dto/style-entity";
 import { UomEntity } from "../../uom/uom-entity";
+import { OperationTracking } from "../entity/operation-tracking-entity";
 
 @Injectable()
 export class OperationInventoryRepository extends Repository<OperationInventory> {
@@ -21,6 +22,16 @@ export class OperationInventoryRepository extends Repository<OperationInventory>
         .leftJoin(Style,'s','s.style_id = oi.style_id')
         .leftJoin(UomEntity,'u','u.id = oi.issued_uom_id')
         .where(`oi.operation_inventory_id = '${req.operationId}'`)
+        const data = await query.getRawMany()
+        return data
+    }
+
+
+    async getOperationInventoryData():Promise<any>{
+        const query = this.createQueryBuilder('oi')
+        .select(`oi.operation, oi.next_operation as nextOperation, oi.issued_quantity as quantity,oi.operation_inventory_id,oi.style_id,ot.status,ot.reported_quantity as issuedQuantity`)
+        .leftJoin(OperationTracking,'ot','ot.operation_inventory_id = oi.operation_inventory_id')
+        // .where(`oi.operation_inventory_id = '${req.operationId}'`)
         const data = await query.getRawMany()
         return data
     }

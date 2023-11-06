@@ -1,11 +1,17 @@
-import { OperationReportingRequest, OperationReportingResponseModel, OperationTrackingDto, TabNameReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, OperationReportingRequest, OperationReportingResponseModel, OperationTrackingDto, TabNameReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class OperationReportingService extends CommonAxiosService{
-  URL = "/operation-tracking";
+  URL = "/operation-inventory";
 
   async createOperationReporting(req: OperationTrackingDto): Promise<OperationReportingResponseModel> {
+    
+    console.log('++++++++++++++++++++++++++')
     return this.axiosPostCall(this.URL + "/createOperationReporting", req)
+  }
+
+  async getOperationInventoryData(): Promise<CommonResponseModel>{
+    return this.axiosPostCall(this.URL + "/getOperationInventoryData")
   }
 
   async getOperationReportingData(req:TabNameReq): Promise<OperationReportingResponseModel> {

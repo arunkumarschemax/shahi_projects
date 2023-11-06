@@ -92,6 +92,7 @@ export class MaterialIssueService {
                 fabricEntity.issuedUomId = fabric.issuedUomId
                 fabricEntity.remarks = fabric.remarks
                 fabricEntity.status = MaterialFabricEnum.OPEN
+                    fabricEntity.reportedStatus = MaterialFabricEnum.OPEN
                 fabricInfo.push(fabricEntity)
             }
             issueData.fabric = fabricInfo

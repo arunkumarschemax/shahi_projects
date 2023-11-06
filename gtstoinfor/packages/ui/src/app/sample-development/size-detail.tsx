@@ -52,24 +52,53 @@ const SizeDetail = ({props,buyerId}) => {
     setCount(count + 1);
   };
 
-  const onchangeData =[];
+  // const onchangeData =[];
   
-  const handleColorOnchange = (value,key) =>{
-    setColorId(value)
-    onchangeData.push({colorId:value})
-  }
+  // const handleColorOnchange = (value,key) =>{
+  //   setColorId(value)
+  //   onchangeData.push({colorId:value})
+  // }
 
-    const handleInputChange = (colourId,sizeId,quantity,key) =>{
-      const dataupDate= data.map((record) =>{
-        console.log(data)
-        if(record.key === key){
-            setColorId(colourId)
-            onchangeData.push({colorId, sizeId, quantity })
-            console.log(onchangeData)
+  //   const handleInputChange = (colourId,sizeId,quantity,key) =>{
+  //     const dataupDate= data.map((record) =>{
+  //       console.log(data)
+  //       if(record.key === key){
+  //           setColorId(colourId)
+  //           onchangeData.push({colorId, sizeId, quantity })
+  //           console.log(onchangeData)
+  //       }
+  //     })
+  //   }
+
+    const onchangeData = []; 
+    const handleInputChange = (colourId, sizeId, quantity, recordKey) => {
+      // Find the existing entry for the colorId, or create a new one
+      let existingEntry = onchangeData.find((entry) => entry.colour === colourId);
+      if (!existingEntry) {
+        existingEntry = {
+          colour: colourId,
+          sizeInfo: [],
+        };
+        onchangeData.push(existingEntry);
+      }
+
+      // Skip entries with quantity of 0
+      if (quantity !== 0) {
+        // Find the sizeInfo entry for the sizeId or create a new one
+        let sizeInfoEntry = existingEntry.sizeInfo.find((info) => info.sizeId === sizeId);
+        if (!sizeInfoEntry) {
+          sizeInfoEntry = {
+            sizeId: sizeId,
+            quantity: quantity,
+          };
+          existingEntry.sizeInfo.push(sizeInfoEntry);
+        } else {
+          // Update the quantity if the sizeInfo entry already exists
+          sizeInfoEntry.quantity = quantity;
         }
-      })
-    }
-
+      }
+      console.log(onchangeData);
+    };
 
   const handleDelete = (key) => {
     const updatedData = data.filter((record) => record.key !== key);
@@ -102,7 +131,7 @@ const SizeDetail = ({props,buyerId}) => {
           >
           </Input>
         </Form.Item>
-      <Form.Item name={`quantity${size.sizeId}+${record.key}`}>
+      {/* <Form.Item name={`quantity${size.sizeId}+${record.key}`}>
             <Input
               name={`quantity${size.sizeId}`}
               value={record[size.sizeId]}
@@ -112,7 +141,27 @@ const SizeDetail = ({props,buyerId}) => {
               placeholder='quantity'
             >
             </Input>
-          </Form.Item></>
+          </Form.Item> */}
+          
+          <Form.Item name={`quantity${size.sizeId}+${record.key}`}>
+            <Input
+              name={`quantity${size.sizeId}`}
+              value={record[size.sizeId]}
+              onChange={(e) =>
+                handleInputChange(
+                  form.getFieldValue(`colorId${record.key}`),
+                  size.sizeId,
+                  e.target.value,
+                  record.key
+                )
+              }
+              type='number'
+              min={0}
+              placeholder='quantity'
+            >
+            </Input>
+          </Form.Item>
+          </>
       )
     }
   }));
@@ -136,7 +185,8 @@ const SizeDetail = ({props,buyerId}) => {
           showSearch
           optionFilterProp="children"
           placeholder="Select Color"
-          onChange={value =>handleColorOnchange(value,record.key)}
+          // onChange={value =>handleColorOnchange(value,record.key)}
+          onChange={(value) => handleInputChange(value, 0, 0, record.key)}
         >
           {color.map((e) => {
                   return (
