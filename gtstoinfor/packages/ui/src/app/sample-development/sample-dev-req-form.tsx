@@ -30,6 +30,7 @@ export const SampleDevForm = () => {
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState([]);
   const [tabsData,setTabsData] = useState<any>()
+  const [selectedBuyerId, setSelectedBuyerId] = useState(null)
   const pchService = new ProfitControlHeadService();
   const styleService = new StyleService();
   const brandService = new MasterBrandsService();
@@ -208,6 +209,9 @@ export const SampleDevForm = () => {
   const handleSubmit = (data) => {
     setTabsData(data)
   }
+  const buyerOnchange =(value) =>{
+    setSelectedBuyerId(value)
+  }
 
   return (
     <Card title='Sample Development Request' className="card-header">
@@ -298,6 +302,7 @@ export const SampleDevForm = () => {
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select Buyer"
+                onChange={buyerOnchange}
               >
                 {buyer.map((e) => {
                   return (
@@ -653,7 +658,9 @@ export const SampleDevForm = () => {
             </Form.Item>
           </Col>
         </Row>
-        <SampleDevTabs handleSubmit={handleSubmit}/>
+        {selectedBuyerId != null ?
+        <SampleDevTabs handleSubmit={handleSubmit} buyerId={selectedBuyerId}/>:''
+        }
         <Row>
           <Col span={24} style={{ textAlign: "right" }}>
             <div
