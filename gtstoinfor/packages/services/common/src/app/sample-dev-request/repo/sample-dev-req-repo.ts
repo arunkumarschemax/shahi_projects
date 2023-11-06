@@ -50,6 +50,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             if (req.status !== undefined) {
                 query.andWhere(`sr.status ='${req.status}'`)
             }
+            query.groupBy(`sr.request_no`)
             query.orderBy(`sample_request_id`)
         return await query.getRawMany()
     }
