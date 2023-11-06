@@ -108,7 +108,7 @@ export class OperationSequenceService{
     async getOperationSequenceInfoByStyleCode(req:StyleRequest):Promise<OperationSequenceResponse>{
         console.log(req)
         try{
-            const info = await this.repo.find({relations:['styleInfo','operationsInfo','operationGroupInfo'],where:{style:req.style}})
+            const info = await this.repo.find({relations:['styleInfo','operationsInfo','operationGroupInfo'],where:{styleInfo:{styleId:req.styleId}}})
             const operationSequenceMap = new Map<string,OperationSequenceModel>()
             if(info.length > 0){
                 for(const rec of info){

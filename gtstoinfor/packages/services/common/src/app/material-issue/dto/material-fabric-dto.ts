@@ -20,10 +20,16 @@ export class MaterialFabricDto{
     consumptionUom:string;
 
     @ApiProperty()
+    uomId:number;
+
+    @ApiProperty()
     issuedQuantity: number
 
     @ApiProperty()
     issuedQuantityUom: string
+
+    @ApiProperty()
+    issuedUomId: number
 
     @ApiProperty()
     remarks:string;

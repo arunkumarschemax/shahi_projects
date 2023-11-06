@@ -1,9 +1,9 @@
 import { GlobalResponseObject } from "../global-response-object";
-import { SampleDevDto } from "./sample-dev-dto";
+import { SampleDevelopmentRequest } from "./sample-development-request";
 
 export class AllSampleDevReqResponseModel extends GlobalResponseObject {
-    data?: SampleDevDto[];
-    constructor(status: boolean, intlCode: number, internalMessage: string, data?: SampleDevDto[]) {
+    data?: any[];
+    constructor(status: boolean, intlCode: number, internalMessage: string, data?: any[]) {
         super(status, intlCode, internalMessage);
         this.data = data;
     }

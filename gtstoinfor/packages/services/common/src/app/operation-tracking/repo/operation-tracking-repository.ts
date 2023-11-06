@@ -2,11 +2,14 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { OperationTracking } from "../entity/operation-tracking-entity";
+import { OperationInventory } from "../entity/operation-inventory-entity";
+import { Style } from "../../style/dto/style-entity";
+import { OperationInvRequest } from "../dto/operation-inventory-req";
 
 @Injectable()
-export class OperationTrackingRepository extends Repository<OperationTracking> {
+export class OperationTrackingRepository extends Repository<OperationInventory> {
 
-    constructor(@InjectRepository(OperationTracking) private operationSequence: Repository<OperationTracking>
+    constructor(@InjectRepository(OperationInventory) private operationSequence: Repository<OperationInventory>
     ) {
         super(operationSequence.target, operationSequence.manager, operationSequence.queryRunner);
     }
@@ -16,4 +19,6 @@ export class OperationTrackingRepository extends Repository<OperationTracking> {
             .select(` MAX(operation_tracking_id) as trackingId`)
         return await query.getRawOne();
     }
+
+   
 }

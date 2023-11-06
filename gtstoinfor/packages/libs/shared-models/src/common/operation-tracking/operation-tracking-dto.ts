@@ -3,68 +3,77 @@ import { OperationSequenceModel } from "../operation-sequence";
 import { StyleDto } from "../style-management";
 
 export class OperationTrackingDto{
-    operationTrackingId:number
-    jobNumber:string;
     styleId: number
+    requestNo: string
     operationSequenceId: number
-    operationInventoryId:number;
     operation:string;
     nextOperation:string;
     issuedQuantity:number;
-    issuedUom:string;
-    damagedQuantity:number;
-    damagedUom:string;
+    issuedUomId:number;
+    // damagedQuantity:number;
+    // damagedUomId:number;
     reportedQuantity:number;
-    reportedUom:string;
+    reportedUomId:number;
     rejectedQuantity:number;
-    rejectedUom:string;
+    rejectedUomId:number;
     status:TrackingEnum;
-    createdAt: Date;
-    createdUser: string | null;
-    updatedAt: Date;
-    updatedUser: string | null;
-    versionFlag: number;
+    physicalQuantity:number
+    physicalUom: string
+    createdAt?: Date;
+    createdUser?: string | null;
+    updatedAt?: Date;
+    updatedUser?: string | null;
+    versionFlag?: number;
+    operationTrackingId?:number
+    jobNumber?:string;
+    operationInventoryId?:number;
 
     constructor(
-        operationTrackingId:number,
-        jobNumber:string,
         styleId: number,
+        requestNo: string,
         operationSequenceId: number,
-        operationInventoryId:number,
         operation:string,
         nextOperation:string,
         issuedQuantity:number,
-        issuedUom:string,
-        damagedQuantity:number,
-        damagedUom:string,
+        issuedUomId:number,
+        // damagedQuantity:number,
+        // damagedUomId:number,
         reportedQuantity:number,
-        reportedUom:string,
+        reportedUomId:number,
         rejectedQuantity:number,
-        rejectedUom:string,
+        rejectedUomId:number,
         status:TrackingEnum,
-        createdAt: Date,
-        createdUser: string | null,
-        updatedAt: Date,
-        updatedUser: string | null,
-        versionFlag: number,
+        physicalQuantity: number,
+        physicalUom:string,
+        createdAt?: Date,
+        createdUser?: string | null,
+        updatedAt?: Date,
+        updatedUser?: string | null,
+        versionFlag?: number,
+        operationTrackingId?:number,
+        jobNumber?:string,
+        operationInventoryId?:number,
     
     ){
         this.operationTrackingId = operationTrackingId
         this.jobNumber = jobNumber
         this.styleId = styleId
+        this.requestNo = requestNo
         this.operationSequenceId = operationSequenceId
         this.operationInventoryId = operationInventoryId
         this.operation = operation
         this.nextOperation = nextOperation
         this.issuedQuantity = issuedQuantity
-        this.issuedUom = issuedUom
-        this.damagedQuantity = damagedQuantity
-        this.damagedUom = damagedUom
+        this.issuedUomId = issuedUomId
+        // this.damagedQuantity = damagedQuantity
+        // this.damagedUomId = damagedUomId
         this.reportedQuantity = reportedQuantity
-        this.reportedUom = reportedUom
+        this.reportedUomId = reportedUomId
         this.rejectedQuantity = rejectedQuantity
-        this.rejectedUom = rejectedUom
+        this.rejectedUomId = rejectedUomId
         this.status = status
+        this.physicalQuantity = physicalQuantity
+        this.physicalUom = physicalUom
         this.createdAt = createdAt
         this.createdUser = createdUser
         this.updatedAt = updatedAt

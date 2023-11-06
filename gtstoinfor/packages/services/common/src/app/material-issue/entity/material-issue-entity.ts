@@ -27,12 +27,13 @@ export class MaterialIssueEntity{
     })
     poNumber:string;
 
-    @CreateDateColumn({
-        nullable:false,
-        name:'issue_date',
-        type: "date"
+    @Column({
+        nullable: false,
+        name: 'issue_date',
+        type: 'date',
     })
-    issueDate:Date;
+    issueDate: Date;
+    
 
     @Column('int',{
         nullable:false,
@@ -63,6 +64,12 @@ export class MaterialIssueEntity{
         name:'sample_sub_type_id'
     })
     sampleSubTypeId:number;
+
+    @Column('int',{
+        nullable:false,
+        name:'style_id'
+    })
+    styleId:number;
 
     @Column('varchar',{
         nullable:false,

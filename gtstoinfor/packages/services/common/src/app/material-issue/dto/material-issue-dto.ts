@@ -34,6 +34,9 @@ export class MaterialIssueDto{
     sampleSubTypeId:number;
 
     @ApiProperty()
+    styleId:number;
+
+    @ApiProperty()
     styleNo:string;
 
     @ApiProperty()
@@ -101,6 +104,7 @@ export class MaterialIssueDto{
         buyerId:number,
         sampleTypeId:number,
         sampleSubTypeId:number,
+        styleId:number,
         styleNo:string,
         brandId:number,
         dmmId:number,
@@ -131,6 +135,7 @@ export class MaterialIssueDto{
         this.buyerId = buyerId
         this.sampleTypeId = sampleTypeId
         this.sampleSubTypeId = sampleSubTypeId
+        this.styleId = styleId
         this.styleNo = styleNo
         this.brandId = brandId
         this.dmmId = dmmId
