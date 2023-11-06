@@ -1863,7 +1863,6 @@ export const extractFredexCourier = async (pdf) => {
                 taxPercentage: 0,
             };
             const cgstMatch = extractedData.find(line => line.content.match(/KA (SGST|CGST) (\d+%)/));
-            console.log("llll", cgstMatch);
             cgstId = cgstMatch.id;
             if (cgstMatch) {
                 const taxIdArray = taxId.split('-');
@@ -1921,14 +1920,13 @@ export const extractFredexCourier = async (pdf) => {
                     sgst: sgst,
                 };
             }
-            structuredHSNLines.push(currentHSN);
+
+            if (currentHSN) {
+                structuredHSNLines.push(currentHSN);
+            }
         }
 
         linesId += 1;
-    }
-
-    if (currentHSN) {
-        structuredHSNLines.push(currentHSN);
     }
 
 
