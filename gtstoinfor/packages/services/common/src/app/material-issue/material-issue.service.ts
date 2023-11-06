@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationTrackingResponseModel, OperationTrackingDto, OperationInventoryDto, OperationInventoryResponseModel, TrackingEnum, MaterialIssueResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationTrackingResponseModel, OperationTrackingDto, OperationInventoryDto, OperationInventoryResponseModel, TrackingEnum, MaterialIssueResponseModel, MaterialIssueRequest } from "@project-management-system/shared-models";
 import { Item } from "../items/item-entity";
 import { OperationGroups } from "../operation-groups/operation-groups.entity";
 import { Operations } from "../operations/operation.entity";
@@ -32,7 +32,8 @@ export class MaterialIssueService{
                 let CurrentMonth = today.getMonth();
                 let fromDate = 0;
                 let toDate = 0;
-                let totalRecords = await (await this.issueRepo.getMaterialIssueById).length;
+                const getLength = await this.issueRepo.getMaterialIssueById();
+                let totalRecords = getLength.materialIssueId
 
                 if (CurrentMonth < 4) {
                     fromDate = (CurrentYear-1);
@@ -58,6 +59,7 @@ export class MaterialIssueService{
                 issueData.buyerId = req.buyerId
                 issueData.sampleTypeId = req.sampleTypeId
                 issueData.sampleSubTypeId = req.sampleSubTypeId
+                issueData.styleId = req.styleId
                 issueData.styleNo = req.styleNo
                 issueData.brandId = req.brandId
                 issueData.dmmId = req.dmmId
@@ -82,8 +84,10 @@ export class MaterialIssueService{
                     fabricEntity.colorId = fabric.colorId
                     fabricEntity.consumption = fabric.consumption
                     fabricEntity.consumptionUom = fabric.consumptionUom
+                    fabricEntity.uomId = fabric.uomId
                     fabricEntity.issuedQuantity = fabric.issuedQuantity
                     fabricEntity.issuedQuantityUom = fabric.issuedQuantityUom
+                    fabricEntity.issuedUomId = fabric.issuedUomId
                     fabricEntity.remarks = fabric.remarks
                     fabricInfo.push(fabricEntity)
                 }
@@ -93,9 +97,11 @@ export class MaterialIssueService{
                     trimEntity.description = trim.description
                     trimEntity.colorId = trim.colorId
                     trimEntity.consumption = trim.consumption
+                    trimEntity.uomId = trim.uomId
                     trimEntity.consumptionUom = trim.consumptionUom
                     trimEntity.issuedQuantity = trim.issuedQuantity
                     trimEntity.issuedQuantityUom = trim.issuedQuantityUom
+                    trimEntity.issuedUomId = trim.issuedUomId
                     trimEntity.remarks = trim.remarks
                     trimInfo.push(trimEntity)
                 }
@@ -111,5 +117,19 @@ export class MaterialIssueService{
                 throw(err)
             }
         }
+
+    async getDataByStyleId(req: MaterialIssueRequest):Promise<CommonResponseModel>{
+        try{
+            const data = await this.fabricRepo.getDataByStyleId(req)
+            console.log(req,'============')
+            if(data.length > 0){
+                return new CommonResponseModel(true,1,'Data retrieved successfully',data) 
+            }else{
+                return new CommonResponseModel(false,0,'No data found',[])
+            }
+        }catch(err){
+            throw(err)
+        }
+    }
     
 }
