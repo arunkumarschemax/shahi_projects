@@ -1,142 +1,159 @@
-// import React, { useState, useEffect, useRef } from 'react';
-// import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select, DatePicker } from 'antd';
-// import Highlighter from 'react-highlight-words';
-// import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
-// import { Link, useNavigate } from 'react-router-dom';
-// import AlertMessages from '../common/common-functions/alert-messages';
-// import moment from 'moment';
+import React, { useState, useEffect, useRef } from 'react';
+import {Table, Card, Button, Row, Col, Form, Select, Tabs } from 'antd';
+import {SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import { StyleOrderService } from '@project-management-system/shared-services';
 
 
-// const BomReport=() =>{
-//     const [searchText, setSearchText] = useState('');
-//     const [searchedColumn, setSearchedColumn] = useState('');
-//     const searchInput = useRef(null);
-//     const [page, setPage] = React.useState(1);
-//     const navigate = useNavigate();
-//     const [form] = Form.useForm();
+const BomReport = () => {
+  const styleorderService = new StyleOrderService()
+
+  const [form] = Form.useForm();
+  const { TabPane } = Tabs;
+  const {Option} = Select;
+  const [page, setPage] = React.useState(1);
+  const [codata, setCOData] = useState<any[]>([]);
 
 
-//     useEffect(()=>{
 
-//     },[])
 
-//     const resetHandler = () => {
-//         form.resetFields();
+  useEffect(() => {
+    getCoData();
+   
+  }, []);
+
+  const getCoData = () => {
+
+    styleorderService.getCoNumber().then((res) => {
+      if (res.status) {
+        setCOData(res.data);
+       }
+    });
+}
+
     
+
+
+
+  const columnsSkelton: any = [
+    {
+      title: 'S No',
+      key: 'sno',
+      responsive: ['sm'],
+      render: (text, object, index) => (page - 1) * 10 + (index + 1)
+    },
+    {
+      title: "Customer Order",
+      dataIndex: "co_number",
+      align:'center',
     
-//     }
-//     const columnsSkelton:any=[
+      // sorter: (a, b) => a.itemTypeId.localeCompare(b.itemTypeId),
+      // sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: "Rm Item Sku",
+      dataIndex: "rm_sku_id",
+      align:'center',
     
-//         {
-//             title: 'S No',
-//             key: 'sno',
-//             responsive: ['sm'],
-//             render: (text, object, index) => (page - 1) * 10 + (index + 1)
-//           },
+      // sorter: (a, b) => a.itemTypeId.localeCompare(b.itemTypeId),
+      // sortDirections: ['descend', 'ascend'],
+    },
+    {
+        title: "Consumption",
+        dataIndex: "consumption",
+        align:'center',
+        // sorter: (a, b) => a.item_code.localeCompare(b.item_code),
+        //     sortDirections: ['descend', 'ascend'],
+      },
+     
 
-//           {
-//             title:'Fg ItemCode',
-//             dataIndex:'fgItemCode',
+      {
+        title: "Quantity",
+        dataIndex: "quantity",
+        align:'center',
+             sortDirections: ['descend', 'ascend'],
+      }, 
+      {
+        title: "Item Type",
+        dataIndex: "item_type_id",
+        align:'center',
+             sortDirections: ['descend', 'ascend'],
+      },
+      {
+        title: "RM item Code",
+        dataIndex: "rm_item_code",
+        align:'center',
+             sortDirections: ['descend', 'ascend'],
+      },
+    
+  ];
 
-//           },
-//           {
-//             title:'Fg Sku',
-//             dataIndex:'fgSku',
-
-//           },
-//           {
-
-//             title:'Rm ItemCode',
-//             dataIndex:'rmItemCode',
-
-//           },
-//           {
-//             title:'Rm Sku',
-//             dataIndex:'rmSku',
-//           }
-
-//         ]
-
-//         return(
-//             <>
-//             <Card title={<span>Substitution</span>} style={{textAlign:'center'}} headStyle={{border:0}}
-//             extra={<Link to='/'>
-//       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
-
-//       </Link>}>
-//             <Card>
-//                 <Form form={form} layout='vertical'>
-//              <Row gutter={24}>
-//              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-//                 <Form.Item name='' label='Fg ItemCode'>
-//                <Select showSearch placeholder="Select Fg ItemCode" optionFilterProp="children" allowClear>
-//           {
-
-//             }
-//                </Select>
-//                 </Form.Item>
-//             </Col>
-//             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-//                 <Form.Item name='' label='Rm ItemCode'>
-//                <Select showSearch placeholder="Select Rm ItemCode" optionFilterProp="children" allowClear>
-//           {
-
-//             }
-//                </Select>
-//                 </Form.Item>
-//             </Col>
-
-//             <Col >
-//                        <Form.Item>
-//                        <Button
-//   htmlType="submit"
-//   icon={<SearchOutlined />}
-//   type="primary"
-//   style={{ marginBottom: '20px' }}
-// >
-//   GET DETAILS
-// </Button>
-// <Button
-//   htmlType="button"
-//   icon={<UndoOutlined />}
-//   type="primary"
-//   style={{
-//     marginTop: '20px',margin:20,
-//     backgroundColor: '#162A6D',
-//     color: 'white',
-//     position: 'relative',
-//   }}
-//   onClick={resetHandler}
-// >
-//   RESET
-// </Button>
+  const  onReset =() =>{
+    form.resetFields();
+  }
 
 
-// </Form.Item>
 
-//                     </Col>
-//              </Row>
+  
 
-            
-//                 </Form>
-//                 <>
-//                 <Table size='small'
-//                 rowKey={record => record}
-//                 className='custom-table-wrapper'
-//                   columns={columnsSkelton}
-//                   pagination={{
-//                     onChange(current) {
-//                       setPage(current);
-//                     }
-//                   }}
-//                    scroll={{x: 'max-content'}}
-//                    bordered/>
+
+  return (
+       <Card title={<span >Bom Report</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }}>
+        <Form  form={form} layout="horizontal">
+                <Row gutter={24}>
+                    <Col xs={{ span: 24 }}
+                      sm={{ span: 24 }}
+                      md={{ span: 4 }}
+                      lg={{ span: 4 }}
+                      xl={{ span: 6}} >
+                        <Form.Item name='customerOrder' label='Customer Order' >
+                            <Select showSearch placeholder="Select Customer Order" optionFilterProp="children" allowClear >
+                            {
+                           codata.map((e) => {
+                                    return(
+                                        <Option key={e.coId} value={e.coId}>{e.coNumber}</Option>
+                                    )
+                                })
+                            } 
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                        <Form.Item name='itemGroup' label='Item Group'>
+                            <Select showSearch placeholder="Select Item Group" optionFilterProp="children" allowClear>
+                               
+                            </Select>
+                        </Form.Item>
+                    </Col> */}
+                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} style={{marginTop:'0%'}}>
+                    <Form.Item>
+                        <Button  icon={<SearchOutlined />} htmlType="submit" type="primary">Get Report</Button>
+                    </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 2 }} style={{marginTop:'0%'}}>
+                    <Form.Item>
+                        <Button danger icon={<UndoOutlined />} onClick={onReset}>Reset</Button>
+                    </Form.Item>
+                    </Col>
+                  
+                </Row>
                 
-//                 </>
-//             </Card>
-//             </Card>
+                  {/* </TabPane> */}
+                      <Table
+                      size="small"
+                      columns={columnsSkelton}
+                      // dataSource={rowData[0]?.sampleTrimInfo}
+                      scroll={{ x: true }}
+                      bordered
+                      pagination ={false}
+                  />
+        </Form>
 
-//             </>
-//         )
-// }
-// export default SubstituionView
+  
+     
+      </Card> 
+      
+  );
+}
+
+
+export default BomReport
