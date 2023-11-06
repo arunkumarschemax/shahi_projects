@@ -164,6 +164,7 @@ import Substitution from "./BOM/substitution"
 import FgRmItemBomView from "./common/product-structure(BOM)/fg-rm-item-view"
 import SMVEffciencyView from "./common/product-structure(BOM)/smv-effciency-view"
 import SMKDetailView from "./common/product-structure(BOM)/smk-detail-view"
+import TrimOperationMappingView from "./common/product-structure(BOM)/trim-operation-mapping-view"
 
 
 export const AppRoutes = () => {
@@ -627,7 +628,7 @@ export const AppRoutes = () => {
                 <Route path ='fg-rm-mapping-view' element={<FgRmItemBomView/>}/>
                 <Route path ='smv-efficiency-view' element={<SMVEffciencyView/>}/>
                 <Route path ='smv-efficiency-detail-view' element={<SMKDetailView data={''}/>}/>
-
+                <Route path ='trim-operation-mapping-view' element={<TrimOperationMappingView />}/>
 
             
                             
