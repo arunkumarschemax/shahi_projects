@@ -8,7 +8,6 @@ export class ProfitControlHeadDTO{
   profitControlHeadId: number;
 
 @ApiProperty()
-@MaxLength(15,{message:"profit Control head allows maxmum 15 characters"})
 @IsNotEmpty()
 profitControlHead:string;
 
