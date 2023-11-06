@@ -1,5 +1,6 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 import { MaterialIssueEntity } from "./material-issue-entity";
+import { MaterialFabricEnum, TrackingEnum } from "@project-management-system/shared-models";
 
 @Entity('material_fabric')
 export class MaterialFabricEntity {
@@ -83,6 +84,13 @@ export class MaterialFabricEntity {
     length: 255
     })
     remarks:string;
+
+    @Column('enum',{
+      nullable:false,
+      name: 'reported_status',
+      enum: MaterialFabricEnum
+  })
+  reportedStatus:MaterialFabricEnum;
 
     @ManyToOne(() => MaterialIssueEntity, (issue) => issue.fabric)
     @JoinColumn({ name: 'material_issue_id' })

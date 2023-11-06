@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationTrackingResponseModel, OperationTrackingDto, OperationInventoryDto, OperationInventoryResponseModel, TrackingEnum, MaterialIssueResponseModel, MaterialIssueRequest } from "@project-management-system/shared-models";
+import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationTrackingResponseModel, OperationTrackingDto, OperationInventoryDto, OperationInventoryResponseModel, TrackingEnum, MaterialIssueResponseModel, MaterialIssueRequest, MaterialFabricEnum } from "@project-management-system/shared-models";
 import { Item } from "../items/item-entity";
 import { OperationGroups } from "../operation-groups/operation-groups.entity";
 import { Operations } from "../operations/operation.entity";
@@ -89,6 +89,7 @@ export class MaterialIssueService{
                     fabricEntity.issuedQuantityUom = fabric.issuedQuantityUom
                     fabricEntity.issuedUomId = fabric.issuedUomId
                     fabricEntity.remarks = fabric.remarks
+                    fabricEntity.reportedStatus = MaterialFabricEnum.OPEN
                     fabricInfo.push(fabricEntity)
                 }
                 issueData.fabric = fabricInfo
