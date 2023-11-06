@@ -1,13 +1,13 @@
 export class SampleFabricReq {
     fabricCode: string
-    description: number
+    description: string
     colourId: number
     consumption?: number
     remarks: string
     fabricInfoId: number;
     constructor(
         fabricCode: string,
-        description: number,
+        description: string,
         colourId: number,
         consumption: number,
         remarks: string,

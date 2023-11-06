@@ -5,6 +5,7 @@ import { ColumnType, ColumnProps } from "antd/es/table";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import Highlighter from "react-highlight-words";
+import AlertMessages from "../common/common-functions/alert-messages";
 
 export const StockView = () => {
   const service = new StockService();
@@ -16,9 +17,22 @@ export const StockView = () => {
   useEffect(() => {
     getData();
   }, []);
-  const getData = () => {
-    service.getAllStock().then((res) => setData(res));
-  };
+
+  const getData = async () => {
+    service.getAllStocks().then(res => {
+      if (res.status) {
+        setData(res.data);
+        AlertMessages.getSuccessMessage("Stock retrived successfully. ")
+      } else {
+        setData([]);
+        AlertMessages.getErrorMessage("Something went wrong. ")
+      }
+    }).catch(err => {
+      console.log(err);
+      setData([]);
+      AlertMessages.getInfoMessage("Something went wrong. ")
+    })
+  }
 
   const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
     filterDropdown: ({
@@ -174,5 +188,8 @@ export const StockView = () => {
         size="small"
       />
     </Card>
+    // <div>
+    //   <h1>Hellooooooooooooooooooo</h1>
+    // </div>
   );
 };

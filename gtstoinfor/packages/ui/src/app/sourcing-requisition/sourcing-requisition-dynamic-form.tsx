@@ -2,7 +2,7 @@ import { Button, Card, Col, DatePicker, Divider, Form, Input, Popconfirm, Row, S
 import { ColumnProps } from "antd/es/table";
 import React, { useEffect } from "react";
 import { useState } from "react"
-import { BuyersService, ColourService, FabricWeaveService, M3MastersService, ProfitControlHeadService, SizeService, StyleService, VendorsService } from "@project-management-system/shared-services";
+import { BuyersService, ColourService, CurrencyService, FabricTypeService, FabricWeaveService, IndentService, M3MastersService, ProfitControlHeadService, SizeService, StyleService, UomService, VendorsService } from "@project-management-system/shared-services";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { EditOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
@@ -23,6 +23,8 @@ export const SourcingRequisitionDynamicForm = () => {
     const [fabricForm] = Form.useForm()
     const colorService = new ColourService();
     const [color,setColor] = useState<any[]>([])
+    const [uom,setUom] = useState<any[]>([])
+    const [currency,setCurrency] = useState<any[]>([])
     const [fabricColor,setFabricColor] = useState<string>('')
     const pchService = new ProfitControlHeadService()
     const [pch,setPch] = useState<any[]>([])
@@ -35,7 +37,9 @@ export const SourcingRequisitionDynamicForm = () => {
     const [fabricBuyer,setFabricBuyer] = useState<string>('')
     const navigate = useNavigate()
     const weaveService = new FabricWeaveService()
+    const fabricTypeService =  new FabricTypeService();
     const [weave,setWeave] = useState<any[]>([])
+    const [fabricType,setFabricType] = useState<any[]>([])
     const [fabricWeave,setFabricWeave] = useState<string>('')
     const [defaultFabricFormData, setDefaultFabricFormData] = useState<any>(undefined);
     const [fabricIndexVal, setFabricIndexVal] = useState(undefined);
@@ -60,7 +64,9 @@ export const SourcingRequisitionDynamicForm = () => {
     const [isUpdateimg, setisUpdateImg]=useState('')
     const [imageUrl, setImageUrl] = useState('');
     const [trimfilelist, setTrimfilelist] = useState<any>([]);
-
+    const indentService = new IndentService()
+    const uomService =  new UomService()
+    const currencyService = new CurrencyService()
 
 
     let tableData: any[] = []
@@ -77,8 +83,25 @@ export const SourcingRequisitionDynamicForm = () => {
         getSize()
         getM3FabricCodes()
         getM3TrimCodes()
+        getUom()
+        getCurrencies()
     },[])
 
+    const getUom = () => {
+        uomService.getAllUoms().then(res => {
+            if(res.status) {
+                setUom(res.data)
+            }
+        })
+    }
+
+    const getCurrencies = () => {
+        currencyService.getAllCurrencies().then(res => {
+            if(res.status) {
+                setCurrency(res.data)
+            }
+        })
+    }
     const getColor = () => {
         colorService.getAllActiveColour().then(res =>{
             if(res.status) {
@@ -119,6 +142,14 @@ export const SourcingRequisitionDynamicForm = () => {
         })
     }
 
+    const getFabricType = () => {
+        fabricTypeService.getAllActiveFabricType().then(res =>{
+            if(res.status) {
+                setFabricType(res.data)
+            }
+        })
+    }
+ 
     const getStyle = () => {
         styleService.getAllActiveStyle().then(res =>{
             if(res.status){
@@ -582,9 +613,17 @@ export const SourcingRequisitionDynamicForm = () => {
 
     const onSubmit = () =>{
         sourcingForm.validateFields().then(() => {
-
             const req = new SourcingRequisitionReq(sourcingForm.getFieldValue('style'),sourcingForm.getFieldValue('expectedDate'),sourcingForm.getFieldValue('requestNo'),sourcingForm.getFieldValue('indentDate'),fabricTableData,trimsTableData)
             console.log(req)
+            indentService.createItems(req).then(res => {
+                if(res.status){
+                    navigate('/requisition-view')
+                    AlertMessages.getSuccessMessage(res.internalMessage);
+                }
+                else{
+                    AlertMessages.getErrorMessage(res.internalMessage);
+                }
+            })
             onReset()
         }).catch(() => {
             message.error('Please fill all fields')
@@ -700,7 +739,7 @@ export const SourcingRequisitionDynamicForm = () => {
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
-                    <Form.Item name='requestNo' label='Request Number' rules={[{required:true,message:'Request Number is required'}]}>
+                    <Form.Item name='requestNo' label='Request Number' rules={[{required:false,message:'Request Number is required'}]} style={{display:'none'}}>
                         <Input placeholder="Enter Request Number"/>
                     </Form.Item>
                     </Col>
@@ -763,11 +802,17 @@ export const SourcingRequisitionDynamicForm = () => {
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='fabricType' label='Type of Fabric' rules={[{required:true,message:'Type of Fabric is required'}]}>
-                        <Input placeholder="Enter Fabric Type"/>
+                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Fabric Type'>
+                            {weave.map(e => {
+                                    return(
+                                        <Option key={e.fabricWeaveId} value={e.fabricWeaveId} name={e.fabricWeaveName}> {e.fabricWeaveName}</Option>
+                                    )
+                                })}
+                            </Select>
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='weave' label='Weave'>
+                    <Form.Item name='weaveId' label='Weave'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select weave' onChange={onWeaveChange}>
                         {weave.map(e => {
                                 return(
@@ -786,9 +831,11 @@ export const SourcingRequisitionDynamicForm = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
                     <Form.Item name='weightUnit'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
-                            <Option key='kg' value='kg'>
-                                Kg
-                            </Option>
+                            {uom.map(e => {
+                                return(
+                                    <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
+                                )
+                            })}
                         </Select>
                     </Form.Item>
                     </Col>
@@ -810,8 +857,11 @@ export const SourcingRequisitionDynamicForm = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
                     <Form.Item name='yarnUnit'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
-                            <Option key='tex' value='tex'>TEX</Option>
-
+                            {uom.map(e => {
+                                return(
+                                    <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
+                                )
+                            })}
                         </Select>
                     </Form.Item>
                     </Col>
@@ -877,11 +927,13 @@ export const SourcingRequisitionDynamicForm = () => {
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
-                    <Form.Item name='moqUnit' rules={[{required: fabricForm.getFieldValue('moq') !== undefined ? true : false}]}>
+                    <Form.Item name='moqUnit' rules={[{required:true,message:'Unit is required'}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
-                            <Option key='pieces' value='pieces'>
-                                Pieces
-                            </Option>
+                            {uom.map(e => {
+                                return(
+                                    <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
+                                )
+                            })}
                         </Select>
                     </Form.Item>
                     </Col>
@@ -904,9 +956,11 @@ export const SourcingRequisitionDynamicForm = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
                     <Form.Item name='moqPriceUnit' rules={[{required: fabricForm.getFieldValue('moqPrice') !== undefined ? true : false}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
-                            <Option key='inr' value='inr'>
-                                INR
-                            </Option>
+                            {currency.map(e => {
+                                return(
+                                    <Option key={e.currencyId} value={e.currencyId}>{e.currencyName}</Option>
+                                )
+                            })}
                         </Select>
                     </Form.Item>
                     </Col>
@@ -950,9 +1004,11 @@ export const SourcingRequisitionDynamicForm = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
                     <Form.Item name='quantityUnit'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
-                            <Option key='m' value='m'>
-                                m
-                            </Option>
+                            {uom.map(e => {
+                                return(
+                                    <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
+                                )
+                            })}
                         </Select>
                     </Form.Item>
                     </Col>
@@ -1097,9 +1153,11 @@ export const SourcingRequisitionDynamicForm = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
                     <Form.Item name='quantityUnit' rules={[{required:true,message:'Unit is required'}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
-                            <Option key='reel' value='reel'>Reels</Option>
-                            <Option key='m' value='m'>m</Option>
-                            <Option key='pieces' value='pieces'>Pieces</Option>
+                            {uom.map(e => {
+                                return(
+                                    <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
+                                )
+                            })}
                         </Select>
                     </Form.Item>
                     </Col>

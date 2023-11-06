@@ -16,14 +16,14 @@ export class SampleDevelopmentRequest {
     styleId: number;
     description: string;
     brandId: number;
-    costRef: number;
+    costRef: string;
     m3Style: string;
-    contact: number;
+    contact: string;
     extension: string;
     samValue: number;
     dmmId: number;
     technicianId: number;
-    product: string;
+    product: number;
     type: string;
     conversion: string;
     madeIn: number;
@@ -33,6 +33,9 @@ export class SampleDevelopmentRequest {
     trimInfo: SampleTrimReq[];
     processInfo: SampleProcessInfoReq[];
     status?: SampleDevelopmentStatusEnum
+    fileName?:string;
+    filePath?:string
+
 
     constructor(
         sampleRequestId: number,
@@ -46,14 +49,14 @@ export class SampleDevelopmentRequest {
         styleId: number,
         description: string,
         brandId: number,
-        costRef: number,
+        costRef: string,
         m3Style: string,
-        contact: number,
+        contact: string,
         extension: string,
         samValue: number,
         dmmId: number,
         technicianId: number,
-        product: string,
+        product: number,
         type: string,
         conversion: string,
         madeIn: number,
@@ -63,6 +66,8 @@ export class SampleDevelopmentRequest {
         trimInfo: SampleTrimReq[],
         processInfo: SampleProcessInfoReq[],
         status?: SampleDevelopmentStatusEnum,
+        fileName?:string,
+        filePath?:string
 
     ) {
         this.sampleRequestId = sampleRequestId
@@ -93,5 +98,7 @@ export class SampleDevelopmentRequest {
         this.fabricInfo = fabricInfo
         this.trimInfo = trimInfo
         this.processInfo = processInfo
+        this.fileName=fileName
+        this.filePath=filePath
     }
 }

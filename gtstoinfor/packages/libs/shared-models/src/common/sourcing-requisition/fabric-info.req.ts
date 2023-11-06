@@ -1,35 +1,35 @@
 export class FabricInfoReq{
     content:string;
     fabricType:string;
-    weave: number;
+    weaveId: number;
     weight: number;
-    weightUnit : string;
+    weightUnit : number;
     width : number;
     construction : string;
     yarnCount : number;
-    yarnUnit : string;
+    yarnUnit : number;
     finish : string;
     shrinkage : string;
     m3FabricCode:string;
     color : number;
     pch : number;
     moq : string;
-    moqUnit : string;
+    moqUnit : number;
     season : string;
     moqPrice : number;
-    moqPriceUnit : string;
+    moqPriceUnit : number;
     supplier : number;
     grnDate : Date;
     buyer : number;
     xlNo : string;
     quantity : number;
-    quantityUnit: string;
+    quantityUnit: number;
 
-    constructor(content:string,fabricType:string,weave: number,weight: number,weightUnit : string,width : number,construction : string,yarnCount : number,yarnUnit : string,finish : string,shrinkage : string,m3FabricCode:string,color : number,pch : number,moq : string,moqUnit : string,season : string,moqPrice : number,moqPriceUnit : string,supplier : number,grnDate : Date,buyer : number,xlNo : string,quantity : number,quantityUnit: string)
+    constructor(content:string,fabricType:string,weaveId: number,weight: number,weightUnit : number,width : number,construction : string,yarnCount : number,yarnUnit : number,finish : string,shrinkage : string,m3FabricCode:string,color : number,pch : number,moq : string,moqUnit : number,season : string,moqPrice : number,moqPriceUnit : number,supplier : number,grnDate : Date,buyer : number,xlNo : string,quantity : number,quantityUnit: number)
     {
         this.content = content;
         this.fabricType = fabricType;
-        this.weave = weave;
+        this.weaveId = weaveId;
         this.weight = weight;
         this.weightUnit = weightUnit;
         this.width = width;

@@ -36,6 +36,12 @@ export class MaterialTrimEntity {
 
     @Column('int',{
       nullable:false,
+      name:'uom_id'
+      })
+      uomId:number;
+
+    @Column('int',{
+      nullable:false,
       name:'issued_quantity'
       })
       issuedQuantity:number;
@@ -45,6 +51,12 @@ export class MaterialTrimEntity {
       name:'issued_quantity_uom'
       })
       issuedQuantityUom:string;
+
+      @Column('int',{
+        nullable:false,
+        name:'issued_uom_id'
+        })
+        issuedUomId:number;
 
   @CreateDateColumn({
     name: "created_at",

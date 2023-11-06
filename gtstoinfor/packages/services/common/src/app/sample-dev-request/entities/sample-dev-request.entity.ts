@@ -154,6 +154,20 @@ export class SampleRequest {
   })
   status: SampleDevelopmentStatusEnum;
 
+  @Column('varchar', {
+    name: 'file_name',
+    length: 200,
+    nullable: false
+  })
+  
+  fileName: string;
+  @Column('varchar', {
+    name: 'file_path',
+    length: 200,
+    nullable: false
+  })
+  filepath: string;
+
   @OneToMany(type => SampleReqSizeEntity, sampleReqSize => sampleReqSize.samplerReqEntity, { cascade: true })
   sampleReqSizeInfo: SampleReqSizeEntity[]
 

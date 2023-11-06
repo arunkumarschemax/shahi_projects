@@ -1,4 +1,4 @@
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, MaterialIssueRequest } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class MaterrialIssueServices extends CommonAxiosService {
@@ -13,5 +13,10 @@ export class MaterrialIssueServices extends CommonAxiosService {
   async getAllMaterialTrim(): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getAllMaterialTrim",)
   }
+  
+  async getDataByStyleId(req: MaterialIssueRequest): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getDataByStyleId",req)
+}
+
 
 }
