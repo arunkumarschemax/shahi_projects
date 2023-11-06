@@ -20,8 +20,9 @@ export const StockView = () => {
 
   const getData = async () => {
     service.getAllStocks().then(res => {
-      if (res.status) {
-        setData(res.data);
+      console.log(res, "???????????????????????????????????");
+      if (res) {
+        setData(res);
         AlertMessages.getSuccessMessage("Stock retrived successfully. ")
       } else {
         setData([]);
@@ -86,9 +87,9 @@ export const StockView = () => {
     onFilter: (value, record) =>
       record[dataIndex]
         ? record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes((value as string).toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes((value as string).toLowerCase())
         : false,
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
@@ -130,53 +131,53 @@ export const StockView = () => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
-        title: "M3 Item Code",
-      dataIndex: "itemCode",
-      ...getColumnSearchProps("itemCode"),
+      title: "M3 Item Code",
+      dataIndex: "m3_item_code",
+      ...getColumnSearchProps("m3_item_code"),
     },
     {
-        title: "Shahi Item Code",
-        dataIndex: "shahiItemCode",
-        ...getColumnSearchProps("shahiItemCode"),
-      },
+      title: "Shahi Item Code",
+      dataIndex: "shahi_item_code",
+      ...getColumnSearchProps("shahi_item_code"),
+    },
     {
       title: "Item Type",
-      dataIndex: "itemType",
-      filters: [
-        {
-          text: "Fabric",
-          value: "Fabric",
-        },
-        {
-          text: "Trim",
-          value: "Trim",
-        },
-      ],
-      filterSearch: true,
-      onFilter: (value, record) => record.itemType.startsWith(value),
+      dataIndex: "item_type",
+      // filters: [
+      //   {
+      //     text: "Fabric",
+      //     value: "Fabric",
+      //   },
+      //   {
+      //     text: "Trim",
+      //     value: "Trim",
+      //   },
+      // ],
+      // filterSearch: true,
+      // onFilter: (value, record) => record.itemType.startsWith(value),
     },
-    
- 
-    {
-        title: "Location",
-        dataIndex: "location",
-        ...getColumnSearchProps("location"),
 
-      },
-       {
-        title: "Plant",
-        dataIndex: "plant",
-        ...getColumnSearchProps("plant"),
-        // sorter: (a, b) => a.plant - b.plant,
-        // sortDirections: ['descend', 'ascend'],
-      },
-     
-      {
-        title: "Quantity",
-        dataIndex: "quantity",
-        // sorter: (a, b) => a.itemQuantity - b.itemQuantity,
-        // sortDirections: ['descend', 'ascend'],
-      },
+
+    {
+      title: "Location",
+      dataIndex: "location_name",
+      ...getColumnSearchProps("location_name"),
+
+    },
+    {
+      title: "Plant",
+      dataIndex: "name",
+      ...getColumnSearchProps("name"),
+      // sorter: (a, b) => a.plant - b.plant,
+      // sortDirections: ['descend', 'ascend'],
+    },
+
+    {
+      title: "Quantity",
+      dataIndex: "quantity",
+      // sorter: (a, b) => a.itemQuantity - b.itemQuantity,
+      // sortDirections: ['descend', 'ascend'],
+    },
   ];
 
   return (
@@ -188,8 +189,5 @@ export const StockView = () => {
         size="small"
       />
     </Card>
-    // <div>
-    //   <h1>Hellooooooooooooooooooo</h1>
-    // </div>
   );
 };
