@@ -1,17 +1,14 @@
-
-
 import { DepartmentService, ItemCreationService, OperationsService, ProductStructureService, RmCreationService } from "@project-management-system/shared-services"
 import React, { useState, useEffect, useRef } from 'react';
 import { Table, Card,  Input, Button, Form, Row, Col, Select, Tooltip,} from 'antd';
 import Highlighter from 'react-highlight-words';
 import {  EyeOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import {   FeatureService } from '@project-management-system/shared-services';
 import AlertMessages from "../common-functions/alert-messages";
-import { RmMappingFilterRequest, SMVFilterRequest } from "@project-management-system/shared-models";
+import { RmMappingFilterRequest } from "@project-management-system/shared-models";
 
+const TrimOperationMappingView = () => {
 
-const SMVEffciencyView = () => {
     const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [lTData, setLTData] = useState<any[]>([]);
@@ -27,12 +24,17 @@ const SMVEffciencyView = () => {
   const { Option } = Select;
   const [operationsData, setOperationsData] = useState<any[]>([]);
   const [departmentData, setDepartmentData] = useState<any[]>([]);
+  const fgservice = new ItemCreationService()
+  const Rmservice = new RmCreationService()
+  const [fgCode, setFgCode] = useState<any[]>([])
+  const [RmCode, setRMCode] = useState<any[]>([])
 
 
   useEffect(() => {
     getAllRmSMVData();
-    getAllDepartment();
     getAllOperationsData();
+    getFgItemsDropdown();
+    RmCodeData();
   }, [])
 
   const getAllOperationsData = () => {
@@ -57,20 +59,28 @@ const SMVEffciencyView = () => {
     })
   }
 
-  
+  const getFgItemsDropdown = () =>{
+    fgservice.getFgItemsDropdown().then(res=>{
+      if(res.status){
+        setFgCode(res.data)
+      } else {
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    })
+
+  }
 
     const getAllRmSMVData= () => {
-        const req = new SMVFilterRequest();
+        const req = new RmMappingFilterRequest();
         
         if (form.getFieldValue('operation') !== undefined) {
-            req.operationId = form.getFieldValue('operation');
+            req.fgItemCode = form.getFieldValue('operation');
         }
         if (form.getFieldValue('dept') !== undefined) {
-            req.departmentId = form.getFieldValue('dept');
+            req.rmItemCode = form.getFieldValue('dept');
         }
-        if (form.getFieldValue('optPer') !== undefined) {
-          req.optionsPercent = form.getFieldValue('optPer')
-        }
+       
+        
         productService.getAllSmvData(req).then(res => {
       if (res.status) {
         setLTData(res.data);
@@ -159,15 +169,14 @@ const SMVEffciencyView = () => {
 
 }
 
-const DetailView = (rowData) => {
-
-    navigate(`/product-structure/smv-efficiency-detail-view`,{state:rowData})
-    
+const RmCodeData = () =>{
+    Rmservice.getRmItemsData().then((res)=>{
+        if(res.status){
+            setRMCode(res.data)
+        }
+    })
 }
 
-function handleAgingFilter(values) {
-
-}
 
 const columns: any = [
     {
@@ -177,17 +186,16 @@ const columns: any = [
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
-      title: 'Operation',
+      title: 'Fabric',
       dataIndex: 'operation_id',
       align: 'center',
       render: (data) => {
         const opdata = operationsData.find((cat) => cat.operationId  === data);
         return opdata ? opdata.operationName: "-";
       },
-      // sorter: (a, b) => a.feature_code?.localeCompare(b.feature_code),
     },
     {
-      title: 'Work Center',
+      title: 'Fg Item Code',
       dataIndex: 'work_center',
       align: 'center', 
    
@@ -195,45 +203,31 @@ const columns: any = [
       ...getColumnSearchProps('work_center')
     },
     {
-        title: 'Department',
-        dataIndex: 'department_id',
-        align: 'center',
-        render: (data) => {
-          const Curdata = departmentData.find((cat) => cat.deptId  === data);
-          return Curdata ? Curdata.deptName: "-";
-        },
-        sorter: (a, b) => a.department_id?.localeCompare(b.department_id),
+        title: 'Operation',
+        dataIndex: 'work_center',
+        align: 'center', 
+     
+        sorter: (a, b) => a.work_center?.localeCompare(b.work_center),
+        ...getColumnSearchProps('work_center')
+      },
+    {
+        title: 'Rm Item Code',
+        dataIndex: 'work_center',
+        align: 'center', 
+     
+        sorter: (a, b) => a.work_center?.localeCompare(b.work_center),
+        ...getColumnSearchProps('work_center')
       },
       {
-        title: <div style={{ textAlign: 'center' }}>Options Percent</div>,
-        dataIndex: 'options_percent',
-        align: 'right',
-        render: (data) => {
-          return data ? (<span>{data}%</span>) : ('-');},      
-        sorter: (a, b) => a.options_percent?.localeCompare(b.options_percent),
+        title: 'Operation',
+        dataIndex: 'work_center',
+        align: 'center', 
+     
+        sorter: (a, b) => a.work_center?.localeCompare(b.work_center),
+        ...getColumnSearchProps('work_center')
       },
-      {
-        title: <div style={{ textAlign: 'center' }}>Qty per Hour</div>,
-        dataIndex: 'qty_per_hour',
-        align: 'right',
-        
-        sorter: (a, b) => a.qty_per_hour?.localeCompare(b.qty_per_hour),
-      },
-      {
-        title: `Action`,
-        dataIndex: 'action',
-        render: (text, rowData) => {
-          return( <span>
- 
-              <Tooltip placement="top" title="Detail View">
-                      <Button type="link" onClick={() => DetailView(rowData)}>
-                        <EyeOutlined type="view" />
-                      </Button>
-                    </Tooltip>
-            </span>)
-          
-      }
-      }
+    
+     
     ];
   
 
@@ -243,16 +237,42 @@ const columns: any = [
 
   return (
       <>
-      <Card title={<span >SMV Efficiency </span>}
-    // style={{textAlign:'left'}} headStyle={{ border: 0 }} 
+      <Card title={<span >Trim Opration Mapping </span>}
     extra={<Link to='/product-structure/productstructure/smv-efficiency' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
       <Card >
       <Form onFinish={getAllRmSMVData} form={form} layout='vertical'>
-      <Row gutter={24}>
+                <Row gutter={24}>
                 
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                        <Form.Item name='rmItcode' label='Rm Item Code' >
+                            <Select
+                                showSearch
+                                placeholder="Select Rm Item Code"
+                                optionFilterProp="children"
+                                allowClear
+                            >
+                                {
+                                    RmCode?.map((inc: any) => {
+                                        return <Option key={inc.rmitemId} value={inc.itemCode}>{inc.itemCode}</Option>
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                        <Form.Item name='fgItemCode' label='Fg Item Code' >
+                            <Select showSearch placeholder="Select Fg Item Code" optionFilterProp="children" allowClear>
+                                {
+                                    fgCode?.map((inc: any) => {
+                                        return <Option key={inc.fgitemId} value={inc.itemCode}>{inc.itemCode}</Option>
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
                     <Form.Item name='operation' label='Operation' >
                         <Select
                             showSearch
@@ -268,50 +288,23 @@ const columns: any = [
                         </Select>
                     </Form.Item>
                 </Col>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                    <Form.Item name='dept' label='Department' >
-                        <Select showSearch placeholder="Select department" optionFilterProp="children" allowClear>
-                            {
-                                departmentData?.map((inc: any) => {
-                                    return <Option key={inc.deptId} value={inc.deptId}>{inc.deptName}</Option>
-                                })
-                            }
-                        </Select>
-                    </Form.Item>
-                </Col>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-            <Form.Item label='Operation %' name='optPer'>
-              <Select
-                placeholder=' Select Operation %'
-                showSearch
-                allowClear
-                onChange={handleAgingFilter}
-              >
-                <Option key='1-20' value='1-20'>1-20 %</Option>
-                <Option key='21-40' value='21-40'>21-40 %</Option>
-                <Option key='41-60' value='41-60'>41-60 %</Option>
-                <Option key='61-80' value='61-80'>61-80 %</Option>
-                <Option key='81-100' value='81-100'>81-100 %</Option>
-              </Select>
-            </Form.Item>
-          </Col>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
-                    <Form.Item>
-                        <Button htmlType="submit"
-                            icon={<SearchOutlined />}
-                            type="primary">GET DETAILS</Button>
-                        <Button
-                            htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
-                        >
-                            RESET
-                        </Button>
-                    </Form.Item>
-                </Col>
-            </Row> 
-     </Form>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
+                        <Form.Item>
+                            <Button htmlType="submit"
+                                icon={<SearchOutlined />}
+                                type="primary">GET DETAILS</Button>
+                            <Button
+                                htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
+                            >
+                                RESET
+                            </Button>
+                        </Form.Item>
+                    </Col>
+                </Row>
+            </Form>
       <Table
             size='middle'
-            rowKey={(record) => record.smv_efficiency_id}
+           // rowKey={(record) => record.smv_efficiency_id}
             columns={columns}
             className='custom-table-wrapper'
             dataSource={lTData}
@@ -328,6 +321,6 @@ const columns: any = [
       
   );
 }
-export default SMVEffciencyView
 
+export default TrimOperationMappingView
 
