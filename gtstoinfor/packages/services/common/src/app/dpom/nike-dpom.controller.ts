@@ -855,10 +855,29 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
     @Post('/getPpmPoNumberForFactory')
     async getPpmPoNumberForFactory(): Promise<CommonResponseModel> {
         try {
             return this.dpomService.getPpmPoNumberForFactory();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/legalPOPdfBot')
+    async legalPOPdfBot(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.legalPOPdfBot();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/diaPdfBot')
+    async diaPdfBot(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.diaPdfBot();
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

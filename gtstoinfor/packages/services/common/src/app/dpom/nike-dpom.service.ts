@@ -5,7 +5,7 @@ import { DpomEntity } from './entites/dpom.entity';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { DpomAdapter } from './dto/dpom.adapter';
 import { DpomApproveReq } from './dto/dpom-approve.req';
-import { ChangePoandLineModel, CommonResponseModel, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FileTypeEnum, FobPriceDiffRequest, MarketingModel, MarketingReportModel, MarketingReportSizeModel, NewDivertModel, OldDivertModel, OrderChangePoModel, PoChangeSizeModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, TotalQuantityChangeModel, coLineRequest, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
+import { ChangePoandLineModel, CoLineRequest, Colors, CommonResponseModel, Destinations, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FileTypeEnum, FobPriceDiffRequest, MarketingModel, MarketingReportModel, MarketingReportSizeModel, NewDivertModel, OldDivertModel, OrderChangePoModel, PoChangeSizeModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, Sizes, TotalQuantityChangeModel, coLineRequest, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
 import { DpomChildRepository } from './repositories/dpom-child.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -23,13 +23,13 @@ const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 import { PoAndQtyReq } from './dto/po-qty.req';
 import { PoQty } from './dto/poqty.req';
 import { FactoryUpdate } from './dto/factory-update.req';
-// import { AppDataSource1, AppDataSource2 } from '../app-datasource';
-import { appConfig } from 'packages/services/common/config';
-import { construnctDataFromM3Result } from '@project-management-system/backend-utils';
 import { PDFFileInfoEntity } from './entites/pdf-file-info.entity';
 import { ChangeComparision } from './dto/change-comparision.req';
 import { COLineEntity } from './entites/co-line.entity';
 import { COLineRepository } from './repositories/co-line.repository';
+import puppeteer from 'puppeteer';
+const fs = require('fs');
+const path = require('path')
 
 const moment = require('moment');
 const qs = require('querystring');
@@ -247,75 +247,82 @@ export class DpomService {
         }
     }
 
-    // async createCOline(req: any): Promise<CommonResponseModel> {
-    //     try {
-    //         req.purchaseOrderNumber = 3504865987
-    //         req.poLineItemNumber = 10000
-    //         req.scheduleLineItemNumber = 100     
-    //         const styleNumber = 'FN389'
-    //         const m3Config = appConfig.m3Cred.headerRequest()
-    //         const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddBatchLine?CONO=111&ORNO=4857896325&ITNO=${req.itemNo}&ORQT=1000&PWNR=00010`;
-    //         const response = await axios.get(rptOperation, { headers: m3Config.headersRequest, httpsAgent: m3Config.agent });
-    //         console.log(response, 'response')
-    //         console.log(response.data?.MIRecord, 'MIRecord')
-    //         if (response.data['@type'])
-    //             return new CommonResponseModel(false, 0, "M3 error ,Error message " + " : '" + response.data['Message'] + "'")
-    //         if (!response.data?.MIRecord && !response.data?.MIRecord.length)
-    //             return new CommonResponseModel(false, 0, "No data found for this item")
-    //         // const meToCustomObj = [{ m3Key: 'STAT', yourKey: 'status' }, { m3Key: 'ORNO', yourKey: 'orderNO' }, { m3Key: 'PONR', yourKey: 'poLine' }]
-    //         // const myObj = construnctDataFromM3Result(meToCustomObj, response.data.MIRecord)
-    //         if (response.status !== 200)
-    //             return new CommonResponseModel(false, 1, `Validation failed as`)
-    //         await this.approveDpomLineItemStatus(req);
-    //         return new CommonResponseModel(true, 1, `COline created successfully`)
-    //     } catch (err) {
-    //         throw err
-    //     }
-    // }
-
     async createCOline(req: any): Promise<CommonResponseModel> {
-        const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
-            await transactionManager.startTransaction()
-            const coLineEntity = new COLineEntity()
-            coLineEntity.buyerPo = req.purchaseOrderNumber
-            coLineEntity.division = 100
-            coLineEntity.PCH = 'KNT'
-            coLineEntity.facility = 100
-            coLineEntity.orderNo = ''
-            coLineEntity.customerCode = 'NIK00001'
-            coLineEntity.itemNo = req.itemNo
-            coLineEntity.itemDesc = req.itemDesc
-            coLineEntity.orderQty = req.orderQty
-            coLineEntity.UOM = 'Pcs'
-            coLineEntity.size = req.size
-            coLineEntity.price = req.price
-            coLineEntity.currency = req.currency
-            coLineEntity.coFinalAppDate = ''
-            coLineEntity.PCD = ''
-            coLineEntity.commision = ''
-            coLineEntity.planNo = ''
-            coLineEntity.planUnit = ''
-            coLineEntity.payTerms = ''
-            coLineEntity.payTermsDesc = ''
-            coLineEntity.createdUser = 'nike'
-            const saveEntity: COLineEntity = await transactionManager.getRepository(COLineEntity).save(coLineEntity);
-            const data = await this.coLineRepository.find()
-            if (!saveEntity) {
-                await transactionManager.releaseTransaction()
-                return new CommonResponseModel(false, 0, 'something went wrong')
+            const data = await this.dpomRepository.gatDataForColine({ poNumber: req.purchaseOrderNumber, lineNumber: req.poLineItemNumber })
+            const coLine = new CoLineRequest()
+            coLine.buyerPo = data[0].po_number
+            coLine.deliveryDate = moment().format("DD/MM/YYYY")
+            const destinationsArr: Destinations[] = []
+            const destinations = new Destinations()
+            destinations.name = data[0].destination_country
+            const colorsArr: Colors[] = []
+            const colors = new Colors()
+            colors.name = data[0].color_desc
+            const sizesArr: Sizes[] = []
+
+            for (let item of data) {
+                const sizes = new Sizes()
+                sizes.name = item.size_description
+                sizes.qty = item.size_qty
+                sizesArr.push(sizes)
             }
-            const statusUpdate = await this.approveDpomLineItemStatus(req);
-            if (!statusUpdate.status) {
-                await transactionManager.releaseTransaction()
-                return new CommonResponseModel(false, 0, 'something went wrong')
-            }
-            await transactionManager.completeTransaction();
-            return new CommonResponseModel(true, 1, 'CO-line created successfully')
+            colors.sizes = sizesArr
+            colorsArr.push(colors)
+            destinations.colors = colorsArr
+            destinationsArr.push(destinations)
+            coLine.destinations = destinationsArr
+
+            console.log()
+            return new CommonResponseModel(true, 1, `COline created successfully`)
         } catch (err) {
             throw err
         }
     }
+
+    // async createCOline(req: any): Promise<CommonResponseModel> {
+    //     const transactionManager = new GenericTransactionManager(this.dataSource)
+    //     try {
+    //         await transactionManager.startTransaction()
+    //         const coLineEntity = new COLineEntity()
+    //         coLineEntity.buyerPo = req.purchaseOrderNumber
+    //         coLineEntity.division = 100
+    //         coLineEntity.PCH = 'KNT'
+    //         coLineEntity.facility = 100
+    //         coLineEntity.orderNo = ''
+    //         coLineEntity.customerCode = 'NIK00001'
+    //         coLineEntity.itemNo = req.itemNo
+    //         coLineEntity.itemDesc = req.itemDesc
+    //         coLineEntity.orderQty = req.orderQty
+    //         coLineEntity.UOM = 'Pcs'
+    //         coLineEntity.size = req.size
+    //         coLineEntity.price = req.price
+    //         coLineEntity.currency = req.currency
+    //         coLineEntity.coFinalAppDate = ''
+    //         coLineEntity.PCD = ''
+    //         coLineEntity.commision = ''
+    //         coLineEntity.planNo = ''
+    //         coLineEntity.planUnit = ''
+    //         coLineEntity.payTerms = ''
+    //         coLineEntity.payTermsDesc = ''
+    //         coLineEntity.createdUser = 'nike'
+    //         const saveEntity: COLineEntity = await transactionManager.getRepository(COLineEntity).save(coLineEntity);
+    //         const data = await this.coLineRepository.find()
+    //         if (!saveEntity) {
+    //             await transactionManager.releaseTransaction()
+    //             return new CommonResponseModel(false, 0, 'something went wrong')
+    //         }
+    //         const statusUpdate = await this.approveDpomLineItemStatus(req);
+    //         if (!statusUpdate.status) {
+    //             await transactionManager.releaseTransaction()
+    //             return new CommonResponseModel(false, 0, 'something went wrong')
+    //         }
+    //         await transactionManager.completeTransaction();
+    //         return new CommonResponseModel(true, 1, 'CO-line created successfully')
+    //     } catch (err) {
+    //         throw err
+    //     }
+    // }
 
     @Cron('0 2 * * *')
     async saveDPOMApiDataToDataBase(): Promise<CommonResponseModel> {
@@ -521,7 +528,7 @@ export class DpomService {
                     return new CommonResponseModel(false, 0, 'file save failed')
                 }
                 await transactionManager.completeTransaction()
-                return new CommonResponseModel(true, 1, 'Data retrived successfully')
+                return new CommonResponseModel(true, 1, 'PDF data saved successfully')
             } else {
                 await transactionManager.releaseTransaction();
                 return new CommonResponseModel(false, 0, 'No POs found')
@@ -596,7 +603,7 @@ export class DpomService {
                     return new CommonResponseModel(false, 0, 'file save failed')
                 }
                 await transactionManager.completeTransaction()
-                return new CommonResponseModel(true, 1, 'Data retrived successfully')
+                return new CommonResponseModel(true, 1, 'PDF data saved successfully')
             } else {
                 await transactionManager.releaseTransaction();
                 return new CommonResponseModel(false, 0, 'No POs data found relavent to PDF uploaded')
@@ -942,7 +949,7 @@ export class DpomService {
 
     async getOrderAcceptanceData(req: nikeFilterRequest): Promise<CommonResponseModel> {
         try {
-            const data = await this.dpomRepository.getOrderAcceptanceDat(req);
+            const data = await this.dpomRepository.getOrderAcceptanceData(req);
             if (data.length > 0) {
                 return new CommonResponseModel(true, 1, 'Data retrieved', data);
             } else {
@@ -1818,6 +1825,135 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
+    async legalPOPdfBot() {
+        try {
+            const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
+            const page = await browser.newPage();
+            // Set screen size
+            await page.setViewport({ width: 1580, height: 1024 });
+            // Navigate the page to a URL
+            await page.goto('http://localhost:4200/#/login', {
+                timeout: 100000,
+                waitUntil: 'networkidle0', // Wait until there are no more network connections
+            });
+            await page.waitForSelector('#login-form_username');
+            await page.type('#login-form_username', 'nike@gmail.com');
+
+            await page.waitForSelector('#login-form_password');
+            await page.type('#login-form_password', 'nike@shahi')
+            await page.click('button.ant-btn-primary');
+            // Wait for a while to see the result (you can adjust the wait time)
+            setTimeout(async () => {
+                await page.goto('http://localhost:4200/#/nike/pdf-upload/', {
+                    timeout: 10000,
+                    waitUntil: 'networkidle0', // Wait until there are no more network connections
+                }).then(async () => {
+                    // const filePath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO/3503368108.pdf';
+                    const directoryPath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO';
+                    // Specify the source and destination directories
+                    const sourceDirectory = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO';
+                    const destinationDirectory = 'C:/Users/saipr/Downloads/PDF PO & DIA/Read';
+                    const files = fs.readdirSync(directoryPath)
+                    for (const file of files) {
+                        await page.waitForSelector('input[type="file"]');
+                        const fileInput = await page.$('input[type="file"]');
+                        // Get the full path of the file
+                        const filePath = path.join(directoryPath, file);
+                        // Set the file path to be uploaded
+                        await fileInput.uploadFile(filePath);
+                        // await input.uploadFile(filePath);
+                        await page.waitForTimeout(5000)
+                        // Submit the form if needed
+                        await page.waitForSelector('button.ant-btn-primary')
+                        await page.click('button.ant-btn-primary');
+                        // Check the status after submission
+                        const reset = await page.waitForSelector('button.ant-btn-default')
+                        console.log(reset, 'reset')
+                        if (reset) {
+                            await page.click('button.ant-btn-default')
+                        } else {
+                            const sourceFilePath = path.join(sourceDirectory, file);
+                            const destinationFilePath = path.join(destinationDirectory, file);
+                            fs.rename(sourceFilePath, destinationFilePath, (err) => {
+                                if (err) {
+                                    return new CommonResponseModel(false, 0, '')
+                                }
+                            });
+                        }
+                    }
+                });
+            }, 4000);
+            return new CommonResponseModel(true, 1, 'All PDFs submittedd successfully')
+        } catch (error) {
+            return new CommonResponseModel(false, 0, error)
+        }
+    }
+
+    async diaPdfBot() {
+        try {
+            const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
+            const page = await browser.newPage();
+            // Set screen size
+            await page.setViewport({ width: 1580, height: 1024 });
+            // Navigate the page to a URL
+            await page.goto('http://localhost:4200/#/login', {
+                timeout: 100000,
+                waitUntil: 'networkidle0', // Wait until there are no more network connections
+            });
+            await page.waitForSelector('#login-form_username');
+            await page.type('#login-form_username', 'nike@gmail.com');
+
+            await page.waitForSelector('#login-form_password');
+            await page.type('#login-form_password', 'nike@shahi')
+            await page.click('button.ant-btn-primary');
+            // Wait for a while to see the result (you can adjust the wait time)
+            setTimeout(async () => {
+                await page.goto('http://localhost:4200/#/nike/pdf-upload/', {
+                    timeout: 10000,
+                    waitUntil: 'networkidle0', // Wait until there are no more network connections
+                }).then(async () => {
+                    // const filePath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO/3503368108.pdf';
+                    const directoryPath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-DIA';
+                    // Specify the source and destination directories
+                    const sourceDirectory = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-DIA';
+                    const destinationDirectory = 'C:/Users/saipr/Downloads/PDF PO & DIA/Read';
+                    const files = fs.readdirSync(directoryPath)
+                    for (const file of files) {
+                        await page.waitForSelector('input[type="file"]');
+                        const fileInput = await page.$('input[type="file"]');
+                        // Get the full path of the file
+                        const filePath = path.join(directoryPath, file);
+                        // Set the file path to be uploaded
+                        await fileInput.uploadFile(filePath);
+                        // await input.uploadFile(filePath);
+                        await page.waitForTimeout(5000)
+                        // Submit the form if needed
+                        await page.waitForSelector('button.ant-btn-primary')
+                        await page.click('button.ant-btn-primary');
+                        // Check the status after submission
+                        const reset = await page.waitForSelector('button.ant-btn-default')
+                        console.log(reset, 'reset')
+                        if (reset) {
+                            await page.click('button.ant-btn-default')
+                        } else {
+                            const sourceFilePath = path.join(sourceDirectory, file);
+                            const destinationFilePath = path.join(destinationDirectory, file);
+                            fs.rename(sourceFilePath, destinationFilePath, (err) => {
+                                if (err) {
+                                    return new CommonResponseModel(false, 0, '')
+                                }
+                            });
+                        }
+                    }
+                });
+            }, 4000);
+            return new CommonResponseModel(true, 1, 'All PDFs submittedd successfully')
+        } catch (error) {
+            return new CommonResponseModel(false, 0, error)
+        }
+    }
+
 }
 
 

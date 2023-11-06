@@ -1,5 +1,5 @@
 import { ArrowDownOutlined, ArrowUpOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
-import { DpomApproveRequest, nikeFilterRequest } from "@project-management-system/shared-models";
+import { DpomApproveRequest, FactoryReportModel, nikeFilterRequest } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Table, Tooltip, message } from "antd";
 import moment from "moment";
@@ -161,9 +161,10 @@ export function OrderAcceptance() {
         if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
             req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
         }
-        service.getOrderAcceptanceData1(req).then((res) => {
+        service.getFactoryReportData(req).then((res) => {
             if (res.data) {
-                setData(res.data)
+                const unacceptedData = res.data.filter(item => item.DPOMLineItemStatus === "Unaccepted");
+                setData(unacceptedData)
                 Finish(data)
                 // message.success(res.internalMessage)
             } else (
@@ -174,15 +175,15 @@ export function OrderAcceptance() {
 
     const approveDpomLineItemStatus = (record) => {
         const req = new DpomApproveRequest();
-        req.poLineItemNumber = record.po_line_item_number
-        req.purchaseOrderNumber = record.po_number
-        req.scheduleLineItemNumber = record.schedule_line_item_number
+        req.poLineItemNumber = record.poLineItemNumber
+        req.purchaseOrderNumber = record.purchaseOrderNumber
+        req.scheduleLineItemNumber = ''
         req.itemNo = itemNoValues[record.key]
         req.itemDesc = ''
-        req.orderQty = record.size_qty
-        req.size = record.size_description
-        req.price = record.gross_price_fob
-        req.currency = record.fob_currency_code
+        req.orderQty = 0
+        req.size = ''
+        req.price = ''
+        req.currency = ''
         service.createCOline(req).then((res) => {
             if (res.status) {
                 getOrderAcceptanceData()
@@ -193,285 +194,297 @@ export function OrderAcceptance() {
         })
     }
 
-    const columns: any = [
-        {
-            title: "S.No",
-            key: "sno",width:50,
-            responsive: ["sm"],
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-            fixed: 'left'
-        },
-        {
-            title: 'PO Number',
-            dataIndex: 'po_number',
-            fixed: 'left',
-            width:80,
-            ...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number',width:80,
-            fixed: 'left',align:'center'
-        },
-        {
-            title: 'Schedule Line Item No',
-            dataIndex: 'schedule_line_item_number',width:80,
-            fixed: 'left',
-        },
-        {
-            title: 'Document Date',
-            dataIndex: 'document_date',width:80,
-            render: (text) => moment(text).format('MM/DD/YYYY'),
-        },
-        {
-            title: 'Aging',
-            dataIndex: '',width:80,align:'right',
-            render: (text, record) => {
-                const documentDate = moment(record.document_date);
+    const getSizeWiseHeaders = (data: FactoryReportModel[]) => {
+        const sizeHeaders = new Set<string>();
+        data?.forEach(rec => rec.sizeWiseData?.forEach(version => {
+            sizeHeaders.add('' + version.sizeDescription);
+        }))
+        return Array.from(sizeHeaders);
+    };
 
-                const today = moment();
-                const aging = today.diff(documentDate, 'days');
-                return aging;
-            },
-            sorter: (a, b) => {
-                const aAging = moment(a['document_date']);
-                const bAging = moment(b['document_date']);
-
-                if (!aAging.isValid() && !bAging.isValid()) {
-                    return 0;
-                } else if (!aAging.isValid()) {
-                    return 1;
-                } else if (!bAging.isValid()) {
-                    return -1;
-                }
-
-                return aAging.diff(bAging, 'days');
-            },
-
-            // sortOrder: null
-        }
-        , {
-            title: 'Plant Name',
-            dataIndex: 'plant_name',width:80,
-        },
-        {
-            title: 'Purchase Group Name',
-            dataIndex: 'purchase_group_name',width:80,
-        },
-        {
-            title: 'Product Code',
-            dataIndex: 'product_code',width:80,
-        },
-        {
-            title: 'Category',
-            dataIndex: 'category_desc',width:80,
-        },
-        {
-            title: 'Size',
-            dataIndex: 'size_description',width:80,align:'center',
-            render: (text, record) => {
-                if (typeof text === 'string' && text.trim() === '') {
-                    return '-';
-                } else if (typeof text === 'undefined' || text === null) {
-                    return '-';
-                } else {
-                    return text;
-                }
-            },
-        },
-        {
-            title: 'Order Quantity',
-            dataIndex: 'size_qty',width:80,align:'right',
-            render: (text, record) => {
-                if (typeof text === 'string' && text.trim() === '') {
-                    return '-';
-                } else if (typeof text === 'undefined' || text === null) {
-                    return '-';
-                } else {
-                    return text;
-                }
-            },
-        },
-        // {
-        //     title: 'Total Order Quantity',
-        //     dataIndex: 'total_item_qty',width:80,align:'right',
-        //     render: (text, record) => {
-        //         return (record.totalItemQty_OLD ?
-        //             (
-        //                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${record.totalItemQty_OLD} Revised Date:  ${record.totalItemQty_NEW} Difference :  `}>
-        //                     {record.totalItemQty_OLD < record.totalItemQty_NEW ? <span style={{ color: 'green' }}>{Number(record.totalItemQty_NEW).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span> : ''}
-        //                     {record.totalItemQty_OLD > record.totalItemQty_NEW ? <span style={{ color: 'red' }}>{Number(record.totalItemQty_NEW).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span> : ''}
-        //                     &nbsp;&nbsp;
-        //                     <span>
-        //                         {Number(record.totalItemQty_OLD).toLocaleString('en-IN', { maximumFractionDigits: 0 }) < Number(record.totalItemQty_NEW).toLocaleString('en-IN', { maximumFractionDigits: 0 }) ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
-        //                     </span>
-        //                 </Tooltip>
-        //             ) : record.total_item_qty)
-        //     }
-        // },
-        {
-            title: 'Total Order Quantity',
-            dataIndex: 'total_item_qty',
-            width: 80,
-            align: 'right',
-            render: (text, record) => {
-              return record.totalItemQty_OLD ? (
-                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${record.totalItemQty_OLD} Revised Date:  ${record.totalItemQty_NEW} Difference :  `}>
-                  {record.totalItemQty_OLD < record.totalItemQty_NEW ? (
-                    <span style={{ color: 'green' }}>
-                      {Number(record.totalItemQty_NEW).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-                    </span>
-                  ) : (
-                    ''
-                  )}
-                  {record.totalItemQty_OLD > record.totalItemQty_NEW ? (
-                    <span style={{ color: 'red' }}>
-                      {Number(record.totalItemQty_NEW).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-                    </span>
-                  ) : (
-                    ''
-                  )}
-                  &nbsp;&nbsp;
-                  <span>
-                    {record.totalItemQty_OLD < record.totalItemQty_NEW ? (
-                      <ArrowUpOutlined style={{ color: 'green' }} />
-                    ) : (
-                      <ArrowDownOutlined style={{ color: 'red' }} />
-                    )}
-                  </span>
-                </Tooltip>
-              ) : (
-                Number(record.total_item_qty).toLocaleString('en-IN', { maximumFractionDigits: 0 })
-              );
+    const getMap = (data: FactoryReportModel[]) => {
+        const sizeWiseMap = new Map<string, Map<string, number>>();
+        data?.forEach(rec => {
+            if (!sizeWiseMap.has(rec.purchaseOrderNumber)) {
+                sizeWiseMap.set(rec.purchaseOrderNumber, new Map<string, number>());
             }
-          }
-,          
-        {
-            title: 'MRGAC',
-            dataIndex: 'mrgac',width:80,
-            render: (text, record) => {
-                return (record.MRGAC_OLD ?
-                    (
-                        <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.MRGAC_OLD).format('MM/DD/YYYY')} Revised Date:  ${moment(record.MRGAC_NEW).format('MM/DD/YYYY')} Difference : ${Math.floor((new Date(moment(record.MRGAC_NEW).format('MM/DD/YYYY')).getTime() - new Date(moment(record.MRGAC_NEW).format('MM/DD/YYYY')).getTime()) / (1000 * 60 * 60 * 24)) + 1}  Days  `}>
-                            {moment(record.MRGAC_OLD).format('MM/DD/YYYY') < moment(record.MRGAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'green' }}>{moment(record.MRGAC_NEW).format('MM/DD/YYYY')}</span> : ''}
-                            {moment(record.MRGAC_OLD).format('MM/DD/YYYY') > moment(record.MRGAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'red' }}>{moment(record.MRGAC_NEW).format('MM/DD/YYYY')}</span> : ''}
-                            &nbsp;&nbsp;
-                            <span>
-                                {moment(record.MRGAC_OLD).format('MM/DD/YYYY') < moment(record.MRGAC_NEW).format('MM/DD/YYYY') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
-                            </span>
-                        </Tooltip>
-                    ) : (record.mrgac ? record.mrgac : '-'))
-            }
-        },
-        {
-            title: 'GAC',
-            dataIndex: 'gac',width:80,
-            render: (text, record) => {
-                return (record.GAC_OLD ?
-                    (
-                        <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.GAC_OLD).format('MM/DD/YYYY')} Revised Date:  ${moment(record.GAC_NEW).format('MM/DD/YYYY')}Difference : ${Math.floor((new Date(moment(record.GAC_NEW).format('MM/DD/YYYY')).getTime() - new Date(moment(record.GAC_NEW).format('MM/DD/YYYY')).getTime()) / (1000 * 60 * 60 * 24)) + 1}  Days  `}>
-                            {moment(record.GAC_OLD).format('MM/DD/YYYY') < moment(record.GAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'green' }}>{moment(record.GAC_NEW).format('MM/DD/YYYY')}</span> : ''}
-                            {moment(record.GAC_OLD).format('MM/DD/YYYY') > moment(record.GAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'red' }}>{moment(record.GAC_NEW).format('MM/DD/YYYY')}</span> : ''}
-                            &nbsp;&nbsp;
-                            <span>
-                                {moment(record.GAC_OLD).format('MM/DD/YYYY') < moment(record.GAC_NEW).format('MM/DD/YYYY') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
-                            </span>
-                        </Tooltip>
-                    ) : record.gac)
-            }
-        },
-        {
-            title: 'Gross Price',align:'right',
-            dataIndex: 'gross_price_fob',width:80,
-            render: (text, record) => {
-                return (record.grossPriceFOB_OLD ?
-                    (
-                        <Tooltip overlayStyle={{ font: 'bold', maxWidth: '140px' }} title={`Previous Price:  ${record.grossPriceFOB_OLD} Revised Price:  ${record.grossPriceFOB_NEW} Difference : ${(parseFloat(record.grossPriceFOB_NEW) - parseFloat(record.grossPriceFOB_OLD)).toFixed(2)} `}>
-                            {record.grossPriceFOB_OLD < record.grossPriceFOB_NEW ? <span style={{ color: 'green' }}>{record.grossPriceFOB_NEW}</span> : ''}
-                            {record.grossPriceFOB_OLD > record.grossPriceFOB_NEW ? <span style={{ color: 'red' }}>{record.grossPriceFOB_NEW}</span> : ''}
-                            &nbsp;&nbsp;
-                            <span>
-                                {record.grossPriceFOB_OLD < record.grossPriceFOB_NEW ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
-                            </span>
-                        </Tooltip>
-                    ) : record.gross_price_fob)
-            }
-        },
-        {
-            title: 'Gross Price Currency',
-            dataIndex: 'fob_currency_code',width:80,
-        },
-        {
-            title: 'Shipping Type',
-            dataIndex: 'shipping_type',width:80,render: (text) => {
-                const transformedText = text ? text.replace(/_/g, ' ') : '-';
-                return transformedText;
-            },
-        },
-        {
-            title: 'DPOM Line Item Status',
-            dataIndex: 'dpom_item_line_status',width:80,
-            filters: [
-                { text: 'Accepted', value: 'Accepted' },
-                { text: 'Unaccepted', value: 'Unaccepted' },
-            ],
-            filterMultiple: false,
-            onFilter: (value, record) => { return record.dpom_item_line_status === value }
-        },
-        // {
-        //     title: 'Item No',
-        //     dataIndex: '',
-        // },
-        // {
-        //     title: 'Action',
-        //     dataIndex: 'action',
-        //     render: (value, record) => {
-        //         if (record.dpom_item_line_status === 'Unaccepted') {
-        //             return (
-        //                 <Popconfirm title="Are you sure to approve" onConfirm={() => approveDpomLineItemStatus(record)}>
-        //                     <Button>Accept</Button>
-        //                 </Popconfirm>
-        //             );
-        //         } else {
-        //             return null;
-        //         }
-        //     }
+            rec.sizeWiseData?.forEach(version => {
+                sizeWiseMap.get(rec.purchaseOrderNumber).set(' ' + version.sizeDescription, version.sizeQty);
+            })
+        });
+        return sizeWiseMap;
+    }
 
-        // }
-        {
-            title: "Item No",
-            dataIndex: "itemNo",width:80,
-            render: (text, record) => {
-                return (
-                    <Form>
-                        <Form.Item>
-                            <Input
-                                placeholder="Enter Item No"
-                                onChange={(e) => handleItemNoChange(e.target.value, record)}
-                            />
-                        </Form.Item>
-                    </Form>
-                );
-            },
-        },
-        {
-            title: "Action",
-            dataIndex: "action",width:80,
-            render: (value, record) => {
-                const isEnabled = isActionButtonEnabled(record);
+    const renderReport = (data: FactoryReportModel[]) => {
+        const sizeHeaders = getSizeWiseHeaders(data);
+        const sizeWiseMap = getMap(data);
 
-                return (
-                    <Popconfirm
-                        title="Are you sure to approve"
-                        onConfirm={() => approveDpomLineItemStatus(record)}
-                        disabled={!isEnabled}
-                    >
-                        <Button disabled={!isEnabled}>Accept</Button>
-                    </Popconfirm>
-                );
+        const columns: any = [
+            {
+                title: "S.No",
+                key: "sno", width: 50,
+                responsive: ["sm"],
+                render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+                fixed: 'left'
             },
-        },
-    ]
+            {
+                title: 'PO Number',
+                dataIndex: 'purchaseOrderNumber',
+                fixed: 'left',
+                width: 80,
+                ...getColumnSearchProps('po_number')
+            },
+            {
+                title: 'PO Line Item No',
+                dataIndex: 'poLineItemNumber', width: 80,
+                fixed: 'left', align: 'center'
+            },
+            {
+                title: 'Document Date',
+                dataIndex: 'documentDate', width: 80,
+                render: (text) => moment(text).format('MM/DD/YYYY'),
+            },
+            // {
+            //     title: 'Aging',
+            //     dataIndex: '', width: 80, align: 'right',
+            //     render: (text, record) => {
+            //         const documentDate = moment(record.document_date);
+
+            //         const today = moment();
+            //         const aging = today.diff(documentDate, 'days');
+            //         return aging;
+            //     },
+            //     sorter: (a, b) => {
+            //         const aAging = moment(a['documentDate']);
+            //         const bAging = moment(b['documentDate']);
+
+            //         if (!aAging.isValid() && !bAging.isValid()) {
+            //             return 0;
+            //         } else if (!aAging.isValid()) {
+            //             return 1;
+            //         } else if (!bAging.isValid()) {
+            //             return -1;
+            //         }
+
+            //         return aAging.diff(bAging, 'days');
+            //     },
+
+            //     // sortOrder: null
+            // },
+            {
+                title: 'Product Code',
+                dataIndex: 'productCode', width: 80,
+            },
+            {
+                title: 'Color Description',
+                dataIndex: 'colorDesc', width: 80,
+            },
+            {
+                title: 'Category',
+                dataIndex: 'categoryDesc', width: 80,
+            },
+            // {
+            //     title: 'Total Order Quantity',
+            //     dataIndex: 'totalItemQty',
+            //     width: 80,
+            //     align: 'right',
+            //     render: (text, record) => {
+            //         return record.totalItemQty_OLD ? (
+            //             <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${record.totalItemQty_OLD} Revised Date:  ${record.totalItemQty_NEW} Difference :  `}>
+            //                 {record.totalItemQty_OLD < record.totalItemQty_NEW ? (
+            //                     <span style={{ color: 'green' }}>
+            //                         {Number(record.totalItemQty_NEW).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+            //                     </span>
+            //                 ) : (
+            //                     ''
+            //                 )}
+            //                 {record.totalItemQty_OLD > record.totalItemQty_NEW ? (
+            //                     <span style={{ color: 'red' }}>
+            //                         {Number(record.totalItemQty_NEW).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+            //                     </span>
+            //                 ) : (
+            //                     ''
+            //                 )}
+            //                 &nbsp;&nbsp;
+            //                 <span>
+            //                     {record.totalItemQty_OLD < record.totalItemQty_NEW ? (
+            //                         <ArrowUpOutlined style={{ color: 'green' }} />
+            //                     ) : (
+            //                         <ArrowDownOutlined style={{ color: 'red' }} />
+            //                     )}
+            //                 </span>
+            //             </Tooltip>
+            //         ) : (
+            //             Number(record.total_item_qty).toLocaleString('en-IN', { maximumFractionDigits: 0 })
+            //         );
+            //     }
+            // }
+            // ,
+            // {
+            //     title: 'MRGAC',
+            //     dataIndex: 'mrgac', width: 80,
+            //     render: (text, record) => {
+            //         return (record.MRGAC_OLD ?
+            //             (
+            //                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.MRGAC_OLD).format('MM/DD/YYYY')} Revised Date:  ${moment(record.MRGAC_NEW).format('MM/DD/YYYY')} Difference : ${Math.floor((new Date(moment(record.MRGAC_NEW).format('MM/DD/YYYY')).getTime() - new Date(moment(record.MRGAC_NEW).format('MM/DD/YYYY')).getTime()) / (1000 * 60 * 60 * 24)) + 1}  Days  `}>
+            //                     {moment(record.MRGAC_OLD).format('MM/DD/YYYY') < moment(record.MRGAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'green' }}>{moment(record.MRGAC_NEW).format('MM/DD/YYYY')}</span> : ''}
+            //                     {moment(record.MRGAC_OLD).format('MM/DD/YYYY') > moment(record.MRGAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'red' }}>{moment(record.MRGAC_NEW).format('MM/DD/YYYY')}</span> : ''}
+            //                     &nbsp;&nbsp;
+            //                     <span>
+            //                         {moment(record.MRGAC_OLD).format('MM/DD/YYYY') < moment(record.MRGAC_NEW).format('MM/DD/YYYY') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+            //                     </span>
+            //                 </Tooltip>
+            //             ) : (record.mrgac ? record.mrgac : '-'))
+            //     }
+            // },
+            // {
+            //     title: 'GAC',
+            //     dataIndex: 'gac', width: 80,
+            //     render: (text, record) => {
+            //         return (record.GAC_OLD ?
+            //             (
+            //                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.GAC_OLD).format('MM/DD/YYYY')} Revised Date:  ${moment(record.GAC_NEW).format('MM/DD/YYYY')}Difference : ${Math.floor((new Date(moment(record.GAC_NEW).format('MM/DD/YYYY')).getTime() - new Date(moment(record.GAC_NEW).format('MM/DD/YYYY')).getTime()) / (1000 * 60 * 60 * 24)) + 1}  Days  `}>
+            //                     {moment(record.GAC_OLD).format('MM/DD/YYYY') < moment(record.GAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'green' }}>{moment(record.GAC_NEW).format('MM/DD/YYYY')}</span> : ''}
+            //                     {moment(record.GAC_OLD).format('MM/DD/YYYY') > moment(record.GAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'red' }}>{moment(record.GAC_NEW).format('MM/DD/YYYY')}</span> : ''}
+            //                     &nbsp;&nbsp;
+            //                     <span>
+            //                         {moment(record.GAC_OLD).format('MM/DD/YYYY') < moment(record.GAC_NEW).format('MM/DD/YYYY') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+            //                     </span>
+            //                 </Tooltip>
+            //             ) : record.gac)
+            //     }
+            // },
+            // {
+            //     title: 'Gross Price', align: 'right',
+            //     dataIndex: 'gross_price_fob', width: 80,
+            //     render: (text, record) => {
+            //         return (record.grossPriceFOB_OLD ?
+            //             (
+            //                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '140px' }} title={`Previous Price:  ${record.grossPriceFOB_OLD} Revised Price:  ${record.grossPriceFOB_NEW} Difference : ${(parseFloat(record.grossPriceFOB_NEW) - parseFloat(record.grossPriceFOB_OLD)).toFixed(2)} `}>
+            //                     {record.grossPriceFOB_OLD < record.grossPriceFOB_NEW ? <span style={{ color: 'green' }}>{record.grossPriceFOB_NEW}</span> : ''}
+            //                     {record.grossPriceFOB_OLD > record.grossPriceFOB_NEW ? <span style={{ color: 'red' }}>{record.grossPriceFOB_NEW}</span> : ''}
+            //                     &nbsp;&nbsp;
+            //                     <span>
+            //                         {record.grossPriceFOB_OLD < record.grossPriceFOB_NEW ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+            //                     </span>
+            //                 </Tooltip>
+            //             ) : record.gross_price_fob)
+            //     }
+            // },
+            // {
+            //     title: 'Gross Price Currency',
+            //     dataIndex: 'fob_currency_code', width: 80,
+            // },
+            {
+                title: 'Shipping Type',
+                dataIndex: 'shippingType', width: 80, render: (text) => {
+                    const transformedText = text ? text.replace(/_/g, ' ') : '-';
+                    return transformedText;
+                },
+            },
+        ];
+
+        sizeHeaders?.forEach(version => {
+            columns.push({
+                title: version,
+                dataIndex: version,
+                key: version,
+                width: 70,
+                align: 'center',
+                children: [
+                    {
+                        title: 'Quantity',
+                        dataIndex: '',
+                        key: '',
+                        width: 70,
+                        className: 'centered-column',
+                        render: (text, record) => {
+                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                            if (sizeData) {
+                                if (sizeData.sizeQty !== null) {
+                                    const formattedQty = Number(sizeData.sizeQty).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+                                    return (
+                                        formattedQty
+                                    );
+                                } else {
+                                    return (
+                                        '-'
+                                    );
+                                }
+                            } else {
+                                return '-';
+                            }
+                        }
+                    }
+                ]
+            });
+        });
+
+        columns.push(
+            {
+                title: 'DPOM Line Item Status',
+                dataIndex: 'DPOMLineItemStatus', width: 80,
+            },
+            {
+                title: "Item No",
+                dataIndex: "itemNo", width: 100,
+                render: (text, record) => {
+                    return (
+                        <Form>
+                            <Form.Item>
+                                <Input
+                                    placeholder="Enter Item No"
+                                    onChange={(e) => handleItemNoChange(e.target.value, record)}
+                                />
+                            </Form.Item>
+                        </Form>
+                    );
+                },
+            },
+            {
+                title: "Action",
+                dataIndex: "action", width: 80,
+                render: (value, record) => {
+                    const isEnabled = isActionButtonEnabled(record);
+
+                    return (
+                        <Popconfirm
+                            title="Are you sure to approve"
+                            onConfirm={() => approveDpomLineItemStatus(record)}
+                            disabled={!isEnabled}
+                        >
+                            <Button disabled={!isEnabled}>Accept</Button>
+                        </Popconfirm>
+                    );
+                },
+            },
+        )
+
+        return (
+            <>
+                {data.length > 0 ? (
+                    <Table
+                        columns={columns}
+                        dataSource={filterData.length > 0 ? filterData : data}
+                        size='small'
+                        // pagination={false}
+                        pagination={{
+                            pageSize: 50,
+                            onChange(current, pageSize) {
+                                setPage(current);
+                                setPageSize(pageSize);
+                            }
+                        }}
+                        className="custom-table-wrapper"
+                        scroll={{ x: 'max-content', y: 450 }}
+                        bordered
+                    />
+                ) : (<Table size='large' />
+                )}
+            </>
+        );
+    }
+
 
     return (
         <>
@@ -518,38 +531,15 @@ export function OrderAcceptance() {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 40 }} >
                             <Form.Item>
-                                <Button  type="primary" htmlType="submit" icon={<SearchOutlined/>}>SEARCH</Button>
-                                <Button style={{ marginLeft: 8}} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>RESET</Button>
+                                <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>SEARCH</Button>
+                                <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>RESET</Button>
                             </Form.Item>
                         </Col>
                     </Row>
                 </Form>
-                {/* <Table
-                        columns={columns}
-                        dataSource={data}
-                        bordered
-                    >
-                    </Table> */}
-
-                <Table
-                    rowKey={record => record.id}
-                    columns={columns}
-                    dataSource={filterData.length > 0 ? filterData : data}
-                    bordered
-                    className="custom-table-wrapper"
-                    pagination={{
-                        pageSize:50,
-                        onChange(current, pageSize) {
-                            setPage(current);
-                            setPageSize(pageSize);
-                        },
-                        
-                    }}
-                    scroll={{ x: 'max-content',y:500 }}
-                >
-                </Table>
-
-
+                <Card>
+                    {renderReport(filterData.length > 0 ? filterData : data)}
+                </Card>
 
             </Card>
         </>

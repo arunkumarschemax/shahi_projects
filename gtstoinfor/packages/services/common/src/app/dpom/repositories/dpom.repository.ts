@@ -633,10 +633,10 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
 
-    async getOrderAcceptanceDat(req: nikeFilterRequest): Promise<any[]> {
+    async getOrderAcceptanceData(req: nikeFilterRequest): Promise<any[]> {
         let query = this.createQueryBuilder('d')
             .select(` d.id,d.po_number, d.dpom_item_line_status, d.po_line_item_number, d.schedule_line_item_number, d.size_qty, d.size_description, d.document_date, d.plant_name, d.purchase_group_name, d.product_code, d.category_desc, d.shipping_type,
-            d.gross_price_fob, d.fob_currency_code, d.mrgac, d.gac, d.total_item_qty,
+            d.gross_price_fob, d.fob_currency_code, d.mrgac, d.gac, d.total_item_qty, d.po_and_line, d.destination_country,
             MAX(CASE WHEN df.display_name = 'MRGAC' THEN df.old_val END) AS MRGAC_OLD,
             MAX(CASE WHEN df.display_name = 'MRGAC' THEN df.new_val END) AS MRGAC_NEW,
             MAX(CASE WHEN df.display_name = 'totalItemQty' THEN df.new_val END) AS totalItemQty_NEW,
@@ -804,7 +804,13 @@ export class DpomRepository extends Repository<DpomEntity> {
             query.andWhere(` d.size_description ='${req.sizeDescription}'`)
         }
         return await query.getRawMany();
+    }
 
+    async gatDataForColine(req: any): Promise<any[]> {
+        const query = this.createQueryBuilder('d')
+            .select(` d.po_number, d.po_and_line, d.po_line_item_number, d.style_number,d.size_description, d.size_qty, d.destination_country,d.color_desc`)
+            .where(` d.po_number ='${req.poNumber}' AND d.po_line_item_number ='${req.lineNumber}'`)
+        return await query.getRawMany();
     }
 
 }

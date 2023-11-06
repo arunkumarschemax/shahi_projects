@@ -1,5 +1,5 @@
 export class coLineRequest {
-   
+
     buyerPo?: string;
     itemNo?: string;
     orderNo?: string;
@@ -7,10 +7,10 @@ export class coLineRequest {
 
 
     constructor(
-        buyerPo?: string,itemNo?: string,    orderNo?: string,
+        buyerPo?: string, itemNo?: string, orderNo?: string,
 
     ) {
-     
+
         this.buyerPo = buyerPo;
         this.itemNo = itemNo;
         this.orderNo = orderNo
