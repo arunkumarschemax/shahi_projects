@@ -1602,147 +1602,156 @@ async processEmails():Promise<CommonResponseModel> {
         const files = fs.readdirSync('./upload-files/');
         // console.log(files,'filesssss')
         // const req = [{filePath:'./upload-files/pro_orders_1.xlsx',fileName:'pro_orders_1.xlsx'},{filePath:'./upload-files/projection_orders_1.xlsx',fileName:'projection_orders_1.xlsx'}]
-        for(const filerec of files){
-            const filename = filerec
-            const filepath = './upload-files/'+filerec
-    
-            // // filename = 'pro_order_sep3.xlsx';
-                // console.log(filename.split('.').pop(),'extension')
-                // console.log(filename,'filename')
-                const promiseA = () => new Promise((resolve, reject) => {
-                    xlsxFile(filepath, { getSheets: true }).then((sheets:any[])=>{
-                        resolve(sheets)
-                    });
-                })
-                const sheets:any = await promiseA()
-    
-    
-    
-                const promise = () => new Promise((resolve, reject) => {
-                    if(filename.split('.').pop() == 'csv'){
-                        resolve(null)
-
-                        // const dataArray = []
-                        // fs.createReadStream(filepath)
-                        //     .on('error', () => {
-                        //         // handle error
-                        //     })
-            
-                        //     .pipe(csv())
-                        //     .on('data', (row) => {
-                        //         dataArray.push(Object(row))
-                        //     })
-            
-                        //     .on('end', () => {
-                        //         resolve(dataArray)
-                        //     })
-                    }else if(filename.split('.').pop() == 'xlsx'){ 
-                        // xlsxFile(filepath, { getSheets: true }).then((sheets)=>{
-                        //     resolve(sheets)
-                        // });
-                        // const sheets = await promise()
-                        // console.log('hhhhhoo',sheets)
-                        let finalSheetName = ''
-                         for(const sheetname of sheets){
-                            if(sheetname.name == 'Production Plan Rawdata Export' || sheetname.name =='RawData' || sheetname.name =='Rawdata'){
-                                finalSheetName = sheetname.name
-                                break
-                            } else{
-                                continue
-                            }
-                        }
-                        if(finalSheetName){
-    
-                            xlsxFile(filepath,{sheet:finalSheetName},{transformData(data){
-                                // console.log(data)
-                                // data.slice(0,3)
-                                console.log(data,'-----------data')
-                                return data
-                            }})
-                            
-                              .then((rows) => {
-                                let columnNames
-                                const dataArray = []
-                                while(rows.length){
-                                    columnNames = rows.shift(); // Separate first row with column names
-                                    if(columnNames[0] != null){
-                                        break;
-                                    }
-                                }
-                                // console.log(rows,'---------------')
-                                // rows.shift(); // Separate first row with column names
-                                // rows.shift(); // Separate first row with column names
-                                // rows.shift(); // Separate first row with column name
-                                // rows.shift(); // Separate first row with column name
-                                // rows.shift(); // Separate first row with column name
-                                // rows.shift(); // Separate first row with column name
-                                // const columnNames = rows.shift(); // Separate first row with column names
-                                rows.map((row) => { // Map the rest of the rows into objects
-                                  const obj = {}; // Create object literal for current row
-                                  row.forEach((cell, i) => {
-                                        obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
-                                  });
-                                //   console.log(obj)
-                                  dataArray.push(Object(obj));
-                                  resolve(dataArray)
-                                //   console.log(objs); // Display the array of objects on the console
-                                //   return obj;
-                                });
-                              });
-                        }else{
-                            filesArray.push(new ordersMailFileStatusArrayReq(filename,'Failed',`Sheet name doesn't match`,'-'))
-                           resolve(null)
-                        }
-                    }else{
-                        
-                    }
-                })
-                const dataArray = await promise();
-            
-                if(dataArray){
-                    
-                    const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS,'Email')
-                    // console.log(filepath,'jjjjj')
-                    // console.log(filename,'jjjjj')
-                    if(saveFilePath.status){
-                        // console.log(dataArray,'------------------------------------')
-                        const saveProjOrders = await this.saveOrdersData(dataArray,saveFilePath.data.id,9)
-                        // console.log(saveProjOrders,'saveProjOrders')
-                        let req = new FileStatusReq();
-                        req.fileId = saveFilePath.data.id;
-                        req.userName = 'Bidhun'
-                        if(saveProjOrders.status){
-                            req.status = 'Success';
-                        }else{
-                            req.failedReason = saveProjOrders.internalMessage
-                            if(saveProjOrders?.data){
-                                // console.log(saveProjOrders.data,'hhhhh')
-                                req.columns = saveProjOrders.data
-                                // const resData = saveProjOrders.data
-                            }else{
-                                req.columns = ''
-                            }
-                            req.status = 'Failed';
-                        }
-                        // console.log(req,'valuuuuu')
-                        const updateFileStatus = await this.updateFileStatus(req)
-                        filesArray.push(new ordersMailFileStatusArrayReq(filename,req.status,req.status === 'Failed' ? req.failedReason : '' , req.status === 'Failed' ? req.columns : ''))
-                    }else{
-                        // return false
-                        filesArray.push(new ordersMailFileStatusArrayReq(filename,'Failed',saveFilePath.internalMessage,'-'))
-                    }
-                    // return dataArray
-                }else{
-                    // return dataArray
-                }
-        }
-    
-        const sendMail = this.sendMail('karthikeyan.nallamuthu@shahi.co.in','Uploded Files Status',filesArray)
-        if(sendMail){
-            return new CommonResponseModel(true,1,'',filesArray)
+       const uplodedFiles = await this.getUplodedFilesInfo()
+       const difference = files.filter((element) => !uplodedFiles.data.includes(element))
+       console.log(difference,'****')
+       if(difference.length == 0){
+            // filesArray.push(new ordersMailFileStatusArrayReq(files,'Failed','Files with same name already exists!','-'))
+            return new CommonResponseModel(false,0,'No new files are added')
         } else{
-            return new CommonResponseModel(true,1,'Something went wrong in sending mail',filesArray)
-        }
+                    for(const filerec of difference){
+                        const filename = filerec
+                        const filepath = './upload-files/'+filerec
+                
+                        // // filename = 'pro_order_sep3.xlsx';
+                            // console.log(filename.split('.').pop(),'extension')
+                            // console.log(filename,'filename')
+                            const promiseA = () => new Promise((resolve, reject) => {
+                                xlsxFile(filepath, { getSheets: true }).then((sheets:any[])=>{
+                                    resolve(sheets)
+                                });
+                            })
+                            const sheets:any = await promiseA()
+                
+                
+                
+                            const promise = () => new Promise((resolve, reject) => {
+                                if(filename.split('.').pop() == 'csv'){
+                                    resolve(null)
+            
+                                    // const dataArray = []
+                                    // fs.createReadStream(filepath)
+                                    //     .on('error', () => {
+                                    //         // handle error
+                                    //     })
+                        
+                                    //     .pipe(csv())
+                                    //     .on('data', (row) => {
+                                    //         dataArray.push(Object(row))
+                                    //     })
+                        
+                                    //     .on('end', () => {
+                                    //         resolve(dataArray)
+                                    //     })
+                                }else if(filename.split('.').pop() == 'xlsx'){ 
+                                    // xlsxFile(filepath, { getSheets: true }).then((sheets)=>{
+                                    //     resolve(sheets)
+                                    // });
+                                    // const sheets = await promise()
+                                    // console.log('hhhhhoo',sheets)
+                                    let finalSheetName = ''
+                                     for(const sheetname of sheets){
+                                        if(sheetname.name == 'Production Plan Rawdata Export' || sheetname.name =='RawData' || sheetname.name =='Rawdata'){
+                                            finalSheetName = sheetname.name
+                                            break
+                                        } else{
+                                            continue
+                                        }
+                                    }
+                                    if(finalSheetName){
+                
+                                        xlsxFile(filepath,{sheet:finalSheetName},{transformData(data){
+                                            // console.log(data)
+                                            // data.slice(0,3)
+                                            console.log(data,'-----------data')
+                                            return data
+                                        }})
+                                        
+                                          .then((rows) => {
+                                            let columnNames
+                                            const dataArray = []
+                                            while(rows.length){
+                                                columnNames = rows.shift(); // Separate first row with column names
+                                                if(columnNames[0] != null){
+                                                    break;
+                                                }
+                                            }
+                                            // console.log(rows,'---------------')
+                                            // rows.shift(); // Separate first row with column names
+                                            // rows.shift(); // Separate first row with column names
+                                            // rows.shift(); // Separate first row with column name
+                                            // rows.shift(); // Separate first row with column name
+                                            // rows.shift(); // Separate first row with column name
+                                            // rows.shift(); // Separate first row with column name
+                                            // const columnNames = rows.shift(); // Separate first row with column names
+                                            rows.map((row) => { // Map the rest of the rows into objects
+                                              const obj = {}; // Create object literal for current row
+                                              row.forEach((cell, i) => {
+                                                    obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
+                                              });
+                                            //   console.log(obj)
+                                              dataArray.push(Object(obj));
+                                              resolve(dataArray)
+                                            //   console.log(objs); // Display the array of objects on the console
+                                            //   return obj;
+                                            });
+                                          });
+                                    }else{
+                                        filesArray.push(new ordersMailFileStatusArrayReq(filename,'Failed',`Sheet name doesn't match`,'-'))
+                                       resolve(null)
+                                    }
+                                }else{
+                                    
+                                }
+                            })
+                            const dataArray = await promise();
+                        
+                            if(dataArray){
+                                
+                                const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS,'Email')
+                                // console.log(filepath,'jjjjj')
+                                // console.log(filename,'jjjjj')
+                                if(saveFilePath.status){
+                                    // console.log(dataArray,'------------------------------------')
+                                    const saveProjOrders = await this.saveOrdersData(dataArray,saveFilePath.data.id,9)
+                                    // console.log(saveProjOrders,'saveProjOrders')
+                                    let req = new FileStatusReq();
+                                    req.fileId = saveFilePath.data.id;
+                                    req.userName = 'Bidhun'
+                                    if(saveProjOrders.status){
+                                        req.status = 'Success';
+                                    }else{
+                                        req.failedReason = saveProjOrders.internalMessage
+                                        if(saveProjOrders?.data){
+                                            // console.log(saveProjOrders.data,'hhhhh')
+                                            req.columns = saveProjOrders.data
+                                            // const resData = saveProjOrders.data
+                                        }else{
+                                            req.columns = ''
+                                        }
+                                        req.status = 'Failed';
+                                    }
+                                    // console.log(req,'valuuuuu')
+                                    const updateFileStatus = await this.updateFileStatus(req)
+                                    filesArray.push(new ordersMailFileStatusArrayReq(filename,req.status,req.status === 'Failed' ? req.failedReason : '' , req.status === 'Failed' ? req.columns : ''))
+                                }else{
+                                    // return false
+                                    filesArray.push(new ordersMailFileStatusArrayReq(filename,'Failed',saveFilePath.internalMessage,'-'))
+                                }
+                                // return dataArray
+                            }else{
+                                // return dataArray
+                            }
+                    }
+                
+                    const sendMail = this.sendMail('karthikeyan.nallamuthu@shahi.co.in','Uploded Files Status',filesArray)
+                    if(sendMail){
+                        return new CommonResponseModel(true,1,'',filesArray)
+                    } else{
+                        return new CommonResponseModel(true,1,'Something went wrong in sending mail',filesArray)
+                    }
+                }
+
     } catch(err){
         throw err
     }
@@ -2586,6 +2595,24 @@ async sendMail(to: string, subject: string, message : any[]) {
             return new CommonResponseModel(false, 0, err);
 
         }
+  }
+
+  async getUplodedFilesInfo():Promise<CommonResponseModel>{
+    try{
+        const data = await this.fileUploadRepo.find()
+        let filesArray = []
+        if(data){
+            for(const rec of data){
+                filesArray.push(rec.fileName)
+            }
+            return new CommonResponseModel(true,1,'Data retreived',filesArray)
+        } else{
+            return new CommonResponseModel(false,0,'No data found')
+        }
+
+    } catch(err){
+        throw err
+    }
   }
 
 
