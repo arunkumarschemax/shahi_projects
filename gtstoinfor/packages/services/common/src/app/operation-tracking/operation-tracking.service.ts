@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationInventoryResponseModel, TrackingEnum, OperationTrackingDto } from "@project-management-system/shared-models";
+import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationInventoryResponseModel, TrackingEnum, OperationTrackingDto, MaterialFabricEnum } from "@project-management-system/shared-models";
 import { Item } from "../items/item-entity";
 import { OperationGroups } from "../operation-groups/operation-groups.entity";
 import { Operations } from "../operations/operation.entity";
@@ -14,6 +14,7 @@ import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res
 import { StyleRepository } from "../style/dto/style-repo";
 import { OperationTrackingRepository } from "./repo/operation-tracking-repository";
 import { OperationInvRequest } from "./dto/operation-inventory-req";
+import { MaterialFabricRepository } from "../material-issue/repo/material-fabric-repository";
 
 @Injectable()
 export class OperationTrackingService {
@@ -21,6 +22,7 @@ export class OperationTrackingService {
         private repo: OperationTrackingRepository,
         private inventoryRepo: OperationInventoryRepository,
         private styleRepo : StyleRepository,
+        private materialFabricRepo : MaterialFabricRepository,
         private readonly dataSource: DataSource,
 
     ) { }
@@ -29,8 +31,7 @@ export class OperationTrackingService {
     async createOperationReporting(dto: OperationTrackingDto) : Promise<OperationInventoryResponseModel>{
         const manager = new GenericTransactionManager(this.dataSource)
         try{
-            // const issuingReq = await this.styleRepo.find({ where: { styleId: dto.styleId }})
-            console.log(dto,'------------------------------------------------')
+            console.log(dto,'-------------------------------------------------------------')
             const inventoryEntity = new OperationInventory()
             inventoryEntity.styleId = dto.styleId
             inventoryEntity.operationSequenceId = dto.operationSequenceId
@@ -42,7 +43,6 @@ export class OperationTrackingService {
             inventoryEntity.nextOperation = dto.nextOperation
             await manager.startTransaction();
             const save = await manager.getRepository(OperationInventory).save(inventoryEntity)
-            console.log(save,'___________+++++++++++++++++++++')
 
             let today = new Date();
             let CurrentYear = today.getFullYear();
@@ -80,8 +80,10 @@ export class OperationTrackingService {
             trackingEntity.issuedUomId = dto.issuedUomId
             trackingEntity.status = TrackingEnum.YES
             const createLog = await manager.getRepository(OperationTracking).save(trackingEntity)
-
-            if (save && createLog) {
+            console.log(dto.fabricCode,'*************')
+            const materialFabric = await this.materialFabricRepo.update({fabricCode: dto.fabricCode},{reportedStatus: MaterialFabricEnum.COMPLETED})
+            console.log(materialFabric,'))))))))))))))))))))))')
+            if (save && createLog && materialFabric) {
                 await manager.completeTransaction();
                 return new OperationInventoryResponseModel(true, 1111, 'Quantity reported Successfully');
               } else {
@@ -102,6 +104,15 @@ export class OperationTrackingService {
             return new OperationInventoryResponseModel(true, 1, 'Inventory data Retrived Sucessfully', data)
 
     }
+
+    async getOperationInventoryData(): Promise<CommonResponseModel> {
+        const details = await this.inventoryRepo.getOperationInventoryData();     
+        if (details.length > 0) {
+          return new CommonResponseModel(true, 1, 'data retrieved', details)
+        } else {
+          return new CommonResponseModel(false, 0, 'data not found')
+        }
+      }
 }
 
 

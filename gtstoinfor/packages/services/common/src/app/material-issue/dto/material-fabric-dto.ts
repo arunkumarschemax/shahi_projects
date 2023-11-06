@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { MaterialFabricEnum } from "packages/libs/shared-models/src/enum";
 
 export class MaterialFabricDto{
     @ApiProperty()
@@ -35,6 +36,9 @@ export class MaterialFabricDto{
     remarks:string;
 
     @ApiProperty()
+    status:MaterialFabricEnum;
+
+    @ApiProperty()
     createdAt: Date;
 
     @ApiProperty()
@@ -50,6 +54,7 @@ export class MaterialFabricDto{
         issuedQuantity: number,
         issuedQuantityUom: string,
         remarks:string,
+        status: MaterialFabricEnum,
         createdAt: Date,
         createdUser: string | null,
     ){
@@ -62,6 +67,7 @@ export class MaterialFabricDto{
         this.issuedQuantity = issuedQuantity
         this.issuedQuantityUom = issuedQuantityUom
         this.remarks = remarks
+        this.status = status
         this.createdAt = createdAt
         this.createdUser = createdUser
     }
