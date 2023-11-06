@@ -5,8 +5,11 @@ import { SampleFilterRequest, SourceIssuesRequest } from '@project-management-sy
 
 export class SourceIssuesService extends CommonAxiosService {
 
+    materialIssueController = "/material-issue"
 
-
+    async getAllMaterialIssues() {
+        return this.axiosPostCall(this.materialIssueController + "/getAllMaterialIssues")
+    }
 
     async getAllSourceIssues( req? :SampleFilterRequest ): Promise<any>{
         const dummyData=[
