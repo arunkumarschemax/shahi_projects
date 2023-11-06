@@ -17,17 +17,17 @@ export class OrdersRepository extends Repository<OrdersEntity> {
 
     async getOrdersData(req: orders): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-            .select(`o.production_plan_id, o.planning_ssn_cd, o.department, o.planning_sum_code, o.planning_sum, o.item,o.vendor, o.sewing_factory, o.branchFactory, o.coeff, o.publish_date,o.order_plan_number,o.gwh,o.wh,o.raw_material_supplier,o.yarn_order_status,o.fbrc_order_status,o.color_order_status,o.trim_order_status,o.po_order_status,o.planned_exf,o.biz,o.fr_fabric,o.trnsp_mthd,o.prod_plan_type,o.order_plan_qty`)
-            if (req.plannedFromDate !== undefined) {
-                query.andWhere(`Date(o.planned_exf) BETWEEN '${req.plannedFromDate}' AND '${req.plannedToDate}'`)
-            }
+            .select(`o.production_plan_id, o.planning_sum, o.coeff,o.order_plan_number,o.wh,o.biz,o.prod_plan_type,o.order_plan_qty`)
+            // if (req.plannedFromDate !== undefined) {
+            //     query.andWhere(`Date(o.planned_exf) BETWEEN '${req.plannedFromDate}' AND '${req.plannedToDate}'`)
+            // }
             if(req.OrderPlanNum){
                 query.andWhere(`o.order_plan_number = '${req.OrderPlanNum}'`)
             }
-            if(req?.PoOrderStatus){
-                query.andWhere(`o.po_order_status = '${req.PoOrderStatus}'`)
-            }
-            query.orderBy(` o.planning_ssn_cd`, 'ASC')
+            // if(req?.PoOrderStatus){
+            //     query.andWhere(`o.po_order_status = '${req.PoOrderStatus}'`)
+            // }
+            query.orderBy(` o.production_plan_id`, 'ASC')
         return await query.getRawMany();
     }
 
