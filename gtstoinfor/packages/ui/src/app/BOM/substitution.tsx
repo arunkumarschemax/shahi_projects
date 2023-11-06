@@ -208,7 +208,9 @@ export const Substitution = () => {
                 <Table columns={rmSkuColumns} dataSource={rmSkus} size='small'/>
                 </>) : (<></>)
             }
-            <Row gutter={24}>
+            {
+                rmSkus.length > 0 ? (<>
+                     <Row gutter={24}>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 24 }}>
                 <Card title='RM SKUS'
                 onDragOver={handleDragOver}
@@ -234,7 +236,11 @@ export const Substitution = () => {
                 </Card>
             </Col>
             </Row>
-            <Row>
+                </>):(<></>)
+            }
+            <br></br>
+       
+            <Row gutter={8}>
                 {
                     fgSkus.map(rec => {
                         return(
@@ -255,6 +261,7 @@ export const Substitution = () => {
                                                     <li style={{ color: 'black',textAlign:'center' }}>{rmsku.rm_sku_code}</li>
                                                 </span>
                                             </Card>
+
                                         ))
                                     }
                                 </Card>

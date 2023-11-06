@@ -1,6 +1,6 @@
 import { ItemCreationService, ProductStructureService, RmCreationService } from "@project-management-system/shared-services"
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Card,  Input, Button, Form, Row, Col, Select,} from 'antd';
+import { Table, Card,  Input, Button, Form, Row, Col, Select, Space,} from 'antd';
 import Highlighter from 'react-highlight-words';
 import {  SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -98,9 +98,12 @@ const FgRmItemBomView   = () => {
                 .toLowerCase()
                 .includes(value.toLowerCase())
             : false,
-    onFilterDropdownVisibleChange: visible => {
-        if (visible) { setTimeout(() => searchInput.current.select()); }
-    },
+            onFilterDropdownOpenChange: open => {
+              if (open) {
+                  setTimeout(() => searchInput.current.select());
+              }
+          },
+          
     render: text =>
         text ? (
             searchedColumn === dataIndex ? (
@@ -151,35 +154,42 @@ const RmCodeData = () =>{
 
 
 
-const columnsSkelton: any = [
-    {
-      title: 'S No',
-      key: 'sno',
-      responsive: ['sm'],
-      render: (text, object, index) => (page - 1) * 10 + (index + 1),
-    },
-    {
-      title: 'Fg Item Code',
-      dataIndex: 'fg_item_code',
-      align: 'center',
-      sorter: (a, b) => a.feature_code?.localeCompare(b.feature_code),
-      ...getColumnSearchProps('feature_code'),
-    },
-    {
-      title: 'RM Item Code',
-      dataIndex: 'rm_item_code',
-      align: 'center', 
-    //   render: (text, record) => {
-    //     return <>
-    //       <Button type='link' onClick={() => { showModal1(record) }}>{record.poAndLine}</Button>
-    //     </>
-    //   },
-      sorter: (a, b) => a.feature_name?.localeCompare(b.feature_name),
-      ...getColumnSearchProps('feature_name'),
-    },
+const columns: any = [
+  {
+          title: 'S No',
+          key: 'sno',
+          responsive: ['sm'],
+          render: (text, object, index) => (page - 1) * 10 + (index + 1), align:'center',
+        },
+  {
+    title: "FG Item Code",
+    dataIndex: "fg_item_code",
+    key: "fg_item_code",
+    align:'center',
+  },
+  {
+    title:<div style={{ textAlign: 'center' }}>RM Item Codes</div> ,
+    dataIndex: "rm_items",
+    key: "rm_items",
+    align:'center',
+    render: (rmItems) => {
+      return (
+        <Table
+          dataSource={rmItems}
+          columns={[
+            {
+              // title: "RM Item Code",
+              dataIndex: "rm_item_code",
+              key: "rm_item_code", align:'center',
+            }
+          ]}
+          pagination={false}
+        />
+      );
+    }
+  }
+];
 
-    ];
-  
 
 //   const onChange = (pagination, filters, sorter, extra) => {
 //     console.log('params', pagination, filters, sorter, extra);
@@ -188,7 +198,6 @@ const columnsSkelton: any = [
   return (
       <>
       <Card title={<span >Fg Rm Mapping</span>}
-    // style={{textAlign:'left'}} headStyle={{ border: 0 }} 
     extra={<Link to='/product-structure/fg-rm-mapping' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
@@ -200,7 +209,7 @@ const columnsSkelton: any = [
                         <Form.Item name='rmItcode' label='Rm Item Code' >
                             <Select
                                 showSearch
-                                placeholder="Select Size Rm Item Code"
+                                placeholder="Select Rm Item Code"
                                 optionFilterProp="children"
                                 allowClear
                             >
@@ -240,7 +249,7 @@ const columnsSkelton: any = [
       <Table
             size='middle'
             rowKey={(record) => record.feature_option_id}
-            columns={columnsSkelton}
+            columns={columns}
             className='custom-table-wrapper'
             dataSource={lTData}
             pagination={{

@@ -61,7 +61,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
   const items: TabsProps['items'] = Object.keys(QualitiesEnum).map((quality, index) => ({
     key: `quality${index + 1}`,
     label: (
-      <span style={{ color: index % 2 === 0 ? "green" : "brown" }}>
+      <span style={{ color: "black" }}>
         {quality}
       </span>
     ),

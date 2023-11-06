@@ -1,11 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { FgRMItemsMappingDto } from "./rm-item-dto";
 
 
 
 export class FgRMMappingDto {
 
-    @ApiProperty()
-    FgRmId: number;
   
     @ApiProperty()
     fgitemId: number;
@@ -14,10 +13,7 @@ export class FgRMMappingDto {
     fgitemCode: string;      
 
     @ApiProperty()
-    rmitemId: number;
-    
-    @ApiProperty()
-    rmitemCode: string;
+    itemInfo : FgRMItemsMappingDto[]
 
     @ApiProperty()
     createdUser?: string;
