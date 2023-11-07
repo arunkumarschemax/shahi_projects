@@ -40,7 +40,6 @@ export class CoBom {
         name: "is_active"
       })
       isActive: boolean;
-      
     @CreateDateColumn({
         name: "created_at",
         type:"datetime"

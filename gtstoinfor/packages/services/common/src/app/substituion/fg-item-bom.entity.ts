@@ -1,4 +1,4 @@
-import { ItemGroupEnum, RmItemTypeEnum } from "@project-management-system/shared-models";
+import { ItemGroupEnum, RmItemTypeEnum,StatusEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { RmCreationEntity } from "../rm-items/rm-items.entity";
 
@@ -15,6 +15,18 @@ export class FgItemBom{
         nullable:false
     })
     fgSkuId: number;
+    @Column('varchar',{
+        name:'fg_sku',
+        length:30,
+        nullable:false
+    })
+    fgSku: string;
+
+    @Column('int',{
+        name:'rm_item_id',
+        nullable:false
+    })
+    rmItemId: number;
 
     @Column('varchar',{
         name:'rm_item_code',
@@ -28,6 +40,12 @@ export class FgItemBom{
         nullable:false,
     })
     rmSkuId : number;
+    @Column('varchar',{
+        name:'rm_sku',
+        length:30,
+        nullable:false,
+    })
+    rmSku : string;
 
     @Column('int',{
         name:'consumption',
@@ -47,12 +65,20 @@ export class FgItemBom{
     })
     itemGroupeId : number;
 
+    // @Column('enum',{
+    //     name:'item_type',
+    //     nullable:false,
+    //     enum:RmItemTypeEnum
+    // })
+    // rmItemType : RmItemTypeEnum;
+
     @Column('enum',{
-        name:'item_type',
+        name:'status',
         nullable:false,
-        enum:RmItemTypeEnum
+        enum:StatusEnum,
+        default:StatusEnum.OPEN
     })
-    itemType : RmItemTypeEnum;
+    status : StatusEnum;
 
     @CreateDateColumn({
         name: "created_at",
@@ -88,10 +114,12 @@ export class FgItemBom{
         })
         versionFlag: number;
 
-        @Column('varchar',{
-            name:'is_active'
-        })
-        isActive: string
+        @Column("boolean", {
+            nullable: false,
+            default: true,
+            name: "is_active"
+          })
+          isActive: boolean;
 
         @ManyToOne(type=>RmCreationEntity, rm=>rm.fgItemBomInfo,{  nullable:true, })
         @JoinColumn({ name:"rm_item_id"})

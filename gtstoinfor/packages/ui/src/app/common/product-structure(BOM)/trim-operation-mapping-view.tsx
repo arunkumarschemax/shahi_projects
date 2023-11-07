@@ -81,7 +81,7 @@ const TrimOperationMappingView = () => {
         }
        
         
-        productService.getAllSmvData(req).then(res => {
+        productService.getRmMapped(req).then(res => {
       if (res.status) {
         setLTData(res.data);
       } else
@@ -177,59 +177,67 @@ const RmCodeData = () =>{
     })
 }
 
-
 const columns: any = [
-    {
-      title: 'S No',
-      key: 'sno',
-      responsive: ['sm'],
-      render: (text, object, index) => (page - 1) * 10 + (index + 1),
-    },
-    {
-      title: 'Fabric',
-      dataIndex: 'operation_id',
-      align: 'center',
-      render: (data) => {
-        const opdata = operationsData.find((cat) => cat.operationId  === data);
-        return opdata ? opdata.operationName: "-";
-      },
-    },
-    {
-      title: 'Fg Item Code',
-      dataIndex: 'work_center',
-      align: 'center', 
-   
-      sorter: (a, b) => a.work_center?.localeCompare(b.work_center),
-      ...getColumnSearchProps('work_center')
-    },
-    {
-        title: 'Operation',
-        dataIndex: 'work_center',
-        align: 'center', 
-     
-        sorter: (a, b) => a.work_center?.localeCompare(b.work_center),
-        ...getColumnSearchProps('work_center')
-      },
-    {
-        title: 'Rm Item Code',
-        dataIndex: 'work_center',
-        align: 'center', 
-     
-        sorter: (a, b) => a.work_center?.localeCompare(b.work_center),
-        ...getColumnSearchProps('work_center')
-      },
-      {
-        title: 'Operation',
-        dataIndex: 'work_center',
-        align: 'center', 
-     
-        sorter: (a, b) => a.work_center?.localeCompare(b.work_center),
-        ...getColumnSearchProps('work_center')
-      },
-    
-     
-    ];
+  {
+          title: 'S No',
+          key: 'sno',
+          responsive: ['sm'],
+          render: (text, object, index) => (page - 1) * 10 + (index + 1), align:'center',
+        },
+        {
+          title: "FG Item Code",
+          dataIndex: "fg_item_code",
+          key: "fg_item_code",
+          align:'center',
+        },
+  {
+    title: "RM Item Codes",
+    dataIndex: "fg_item_code",
+    align:'center',
+  },
   
+  {
+    title: 'Operation',
+    dataIndex: 'rm_items',
+    align: 'center', 
+    render: (rmItems) => {
+      return (
+        <Table
+          dataSource={rmItems}
+          columns={[
+            {
+              dataIndex: "rm_item_code",
+              key: "rm_item_code", align:'center',
+            }
+          ]}
+          pagination={false}
+        />
+      );
+    },
+ 
+  },
+  {
+    title: 'Sequence',
+    dataIndex: 'rm_items',
+    align: 'center', 
+    render: (rmItems) => {
+      return (
+        <Table
+          dataSource={rmItems}
+          columns={[
+            {
+              // title: "RM Item Code",
+              dataIndex: "rm_item_code",
+              key: "rm_item_code", align:'center',
+            }
+          ]}
+          pagination={false}
+        />
+      );
+    },
+ 
+  },
+];
 
   const onChange = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);

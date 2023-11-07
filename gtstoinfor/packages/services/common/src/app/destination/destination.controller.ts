@@ -18,7 +18,7 @@ export class DestinationController {
   @Post('/createDestination')
   async createDestination(@Body() Destination: DestinationDTO, isUpdate: boolean = false): Promise<DestinationResponseModel> {
     try {
-      console.log('createDestination', Destination)
+    //  console.log('createDestination', Destination)
       return await this.Service.createDestination(Destination, false);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(DestinationResponseModel, error);
@@ -27,8 +27,8 @@ export class DestinationController {
   @Post('/updateDestination')
   async updateDestination(@Body() Destination: DestinationDTO, @Req() request: Request): Promise<DestinationResponseModel> {
     try {
-      console.log('update Destination');
-      console.log(request);
+    //  console.log('update Destination');
+     // console.log(request);
       return await this.Service.createDestination(Destination, true);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(DestinationResponseModel, error);

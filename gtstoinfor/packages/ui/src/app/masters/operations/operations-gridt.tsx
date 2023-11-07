@@ -299,16 +299,15 @@ export function OperationsGrid(
         <span><Button onClick={() => navigate('/masters/operations/operation-form')}
               type={'primary'}>New</Button></span>
         </Col> */}
-        <Col>
-          <Card title={'Active: ' + operationsData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
-        </Col>
-        <Col>
-          <Card title={'In-Active :' + operationsData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
-        </Col>
-      </Row>
-      <br></br>
-      <Table
-        rowClassName={(record, index) => index % 2 === 0 ? 'table-row-light' : 'table-row-dark'}
+          <Col>
+           <Card title={'Active: ' + operationsData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
+          </Col>
+          <Col>
+           <Card title={'In-Active :' + operationsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
+          </Col>
+          </Row>
+          <br></br>
+          <Table
 
         rowKey={record => record.operationId}
         columns={columnsSkelton}

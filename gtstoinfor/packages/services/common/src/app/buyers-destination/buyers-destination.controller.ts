@@ -16,7 +16,7 @@ export class BuyersDestinationController{
     @Post('/createbuyersDes')
     @ApiBody({type:BuyersDestinationRequest})
     async createbuyersDes(@Body() req:any):Promise<BuyersDestinationResponseModel>{
-        console.log(req,'--------------req')
+       // console.log(req,'--------------req')
         try{
             return await this.buyersDesService.createBuyersDestination(req)
         } catch(err){

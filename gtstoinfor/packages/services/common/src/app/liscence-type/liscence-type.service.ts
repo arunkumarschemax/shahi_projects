@@ -43,16 +43,13 @@ export class LiscenceTypeService {
             throw new LiscenceTypeResponseModel(false,11104, 'Liscence Type already exists');
           }
         } else{
-          console.log('came in');
           const certificatePrevious = await this.liscenceTypeRepository.findOne({where:{liscenceTypeId:liscenceTypeDTO.liscenceTypeId}})
           previousValue = certificatePrevious.liscenceType
-          console.log(certificatePrevious)
           if(!certificatePrevious) {
             throw new ErrorResponse(0, 'Given Liscence does not exist');
           }
         }
         const convertedLiscenceType: LiscenceType = this.liscenceTypeAdapter.convertDtoToEntity(liscenceTypeDTO,isUpdate);
-        console.log(convertedLiscenceType);
         const savedLiscenceTypeEntity: LiscenceType = await this.liscenceTypeRepository.save(convertedLiscenceType);
         const savedLiscenceTypeDto: LiscenceTypeDTO = this.liscenceTypeAdapter.convertEntityToDto(convertedLiscenceType);
           // console.log(savedStateDto);

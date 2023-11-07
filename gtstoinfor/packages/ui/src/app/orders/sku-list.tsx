@@ -33,7 +33,7 @@ import { AppstoreOutlined } from "@ant-design/icons";
 
 import { useEffect, useRef, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FormItem from "antd/es/form/FormItem";
 import { DivisionService, SKUGenerationService, SKUlistService, StyleOrderService, StyleService } from "@project-management-system/shared-services";
 import {
@@ -61,6 +61,7 @@ export const SkuList = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const [style, setStyle] = useState([]);
   const [divsion, setDivsion] = useState([]);
+  const navigate = useNavigate()
 
   const [selectView, setSelectedView] = useState<any>("cards");
   const [options, setOptions] = useState(["Cards", "View"]);
@@ -123,14 +124,14 @@ export const SkuList = () => {
     })
     service1.getAllStyle().then(res=>{
       if(res.status){
-        console.log(res.data,'[[[[[[[[[');
+        // console.log(res.data,'[[[[[[[[[');
         
         setStyle(res.data)
       }
     })
     service2.getAllDivision().then(res=>{
       if(res.status){
-        console.log(res.data,'[[[[[[[[[');
+        // console.log(res.data,'[[[[[[[[[');
         
         setDivsion(res.data)
       }
@@ -321,10 +322,10 @@ export const SkuList = () => {
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("destination"),
       render:(data)=>{
-  console.log(data,'id');
+  // console.log(data,'id');
   
   const syle= style.find((style)=>style.styleId === data);
-  console.log(syle,"ppppp")
+  // console.log(syle,"ppppp")
 
   return syle ? syle.style:"N/A"
 }
@@ -387,7 +388,9 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
   ];
   return (
     <>
-      <Card title="SKU List">
+      <Card title= "SKU List"   
+      extra={<span> <Button onClick={()=> navigate('/materialCreation/sku-mapping')} type={'primary'}>New </Button></span>}>
+      
         <Form form={form} style={{ fontSize: "10px" }} layout="vertical">
           <Row gutter={16}>
             <Col
@@ -520,7 +523,7 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
                   <Button
                     type="default"
                     icon={<UndoOutlined />}
-                    style={{ color: "red", marginLeft: "1" }}
+                    style={{ color: "red", marginLeft: "10px" }}
                     onClick={resetForm}
                   >
                     Reset

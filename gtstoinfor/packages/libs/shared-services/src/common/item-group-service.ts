@@ -5,7 +5,7 @@ export class ItemGroupService extends CommonAxiosService{
     URL ="/itemGroup";
 
     async createItemGroup(depart: ItemGroupDto): Promise<ItemGroupResponseModel> {
-        console.log('testss',depart)
+        //console.log('testss',depart)
         return this.axiosPostCall(this.URL + "/createItemGroup", depart)
     }
     
@@ -18,7 +18,7 @@ export class ItemGroupService extends CommonAxiosService{
           }
 
           async ActivateorDeactivateItemGroup(Dtos: ItemGroupDto): Promise<AllItemGroupResponseModel> {
-            console.log(Dtos);
+          //  console.log(Dtos);
             return this.axiosPostCall(this.URL + '/ActivateorDeactivateItemGroup', Dtos)
              
           }

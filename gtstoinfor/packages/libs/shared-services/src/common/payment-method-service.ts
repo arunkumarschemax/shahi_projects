@@ -5,7 +5,7 @@ export class PaymentMethodService extends CommonAxiosService{
     URL ="/paymentmethods";
 
     async createPaymentMethod(Payment: PaymentMethodDto): Promise<PaymentMethodResponseModel> {
-        console.log('testss',Payment)
+       // console.log('testss',Payment)
         return this.axiosPostCall(this.URL + "/createPaymentMethod", Payment)
     }
 

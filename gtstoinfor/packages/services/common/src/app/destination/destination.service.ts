@@ -90,7 +90,7 @@ export class DestinationService {
           Dtos.push(convertedDto);
         });
         const response = new AllDestinationResponseModel(true, 1, 'Destination retrieved successfully', Dtos);
-        console.log(response,'--------------')
+      //  console.log(response,'--------------')
 
         return response;
       } else {
@@ -109,7 +109,7 @@ export class DestinationService {
       const DestinationEntities: Destination[] = await this.Repository.find({
         order: { 'destination': 'ASC' }, where: { isActive: true }
       });
-      console.log(DestinationEntities)
+     // console.log(DestinationEntities)
       if (DestinationEntities) {
         // converts the data fetched from the database which of type companies array to type StateDto array.
         DestinationEntities.forEach(destinationEntity => {
