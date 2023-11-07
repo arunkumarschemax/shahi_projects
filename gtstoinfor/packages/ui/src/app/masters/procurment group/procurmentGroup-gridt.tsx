@@ -301,7 +301,6 @@ export function ProcurmentGroupGrid(
           </Row>
           <br></br>
           <Table
-                  rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
 
           rowKey={record => record.ProcurmentGroupId}
           columns={columnsSkelton}

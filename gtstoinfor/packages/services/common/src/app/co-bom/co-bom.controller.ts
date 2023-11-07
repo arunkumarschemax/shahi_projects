@@ -4,6 +4,7 @@ import { ApplicationExceptionHandler } from '@project-management-system/backend-
 import { CoBomService } from './co-bom-service';
 import { CommonResponseModel } from '@project-management-system/shared-models';
 import { CoBomDto } from './dto/co-bom.dto';
+import { StyleOrderId } from '../style-order/style-order-id.request';
 
 
 @Controller('co_bom')
@@ -16,7 +17,7 @@ export class CoBomController{
 
 
     @Post ('/getBomAgainstItem')
-    @ApiBody({type:CoBomDto})
+    @ApiBody({type:StyleOrderId})
     async getBomAgainstItem(@Body() req:any):Promise<CommonResponseModel>{
         try {
             return await this.cobom.getBomAgainstItem(req);

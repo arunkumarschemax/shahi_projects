@@ -47,14 +47,14 @@ export class ItemSkuRepository extends Repository<ItemSkus> {
     }
 
     async getSkuList(req:SKUlistFilterRequest):Promise<any>{
-        // console.log(req,"req in quary")
+        console.log(req,"req in quary")
         const query = await this.createQueryBuilder('is')
         .select(`*`)
         // .leftJoin(Colour,`c`,`c.colourId = is.color_id`)
         // .leftJoin(Size,`s`,`s.size_id = is.size_id`)
         // .leftJoin(Destination,`d`,`d.destination_id = is.destination_id`)
-    //    .where(`item_code = '${req.itemsNo}'`)
-    .where('is.item_code = :itemCode', { itemCode: req.itemsCode })
+        //    .where(`item_code = '${req.itemsNo}'`)
+       .where('is.item_code = :itemCode', { itemCode: req.itemsCode })
         .groupBy(`is.color,is.size,is.destination`)
         return query.getRawMany()
 

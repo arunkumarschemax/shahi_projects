@@ -20,15 +20,17 @@ export class CoBomService {
 
     
     async getBomAgainstItem (req?:StyleOrderId):Promise<CommonResponseModel>{
-        try{
-            const getBom = await  this.corepo.getBomAgainstItem(req)
-            if(getBom){
-                return new  CommonResponseModel(true,1,'data retreived', getBom)
-            }else{
 
-                return new CommonResponseModel(false,0,'No data found')
-          
+        try{
+
+            const getBom = await  this.corepo.getBomAgainstItem(req)
+            console.log(getBom,"data..........")
+            if(getBom){
+                 return new  CommonResponseModel(true,1,'data retreived', getBom)
+            }else{
+                return new CommonResponseModel(false,0,'No data found',)
               }
+               
 
         }catch(err){
             throw err

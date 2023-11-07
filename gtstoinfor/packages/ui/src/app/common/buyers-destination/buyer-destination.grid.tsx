@@ -271,7 +271,6 @@ initialValue={userId.length > 0 ? userId[0].buyerName : ""}
 
             </Form>
             <Table columns={columns} 
-                    rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
                     dataSource={data} size="small" bordered />
             <Modal
       visible={sizeModalVisible}

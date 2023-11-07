@@ -123,14 +123,14 @@ export const SkuList = () => {
     })
     service1.getAllStyle().then(res=>{
       if(res.status){
-        console.log(res.data,'[[[[[[[[[');
+        // console.log(res.data,'[[[[[[[[[');
         
         setStyle(res.data)
       }
     })
     service2.getAllDivision().then(res=>{
       if(res.status){
-        console.log(res.data,'[[[[[[[[[');
+        // console.log(res.data,'[[[[[[[[[');
         
         setDivsion(res.data)
       }
@@ -321,10 +321,10 @@ export const SkuList = () => {
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("destination"),
       render:(data)=>{
-  console.log(data,'id');
+  // console.log(data,'id');
   
   const syle= style.find((style)=>style.styleId === data);
-  console.log(syle,"ppppp")
+  // console.log(syle,"ppppp")
 
   return syle ? syle.style:"N/A"
 }

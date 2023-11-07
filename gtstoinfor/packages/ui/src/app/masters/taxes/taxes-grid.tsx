@@ -305,7 +305,6 @@ export const TaxesGrid = (props:  TaxesGridProps) => {
      <Card>
      <Table
             rowKey={record => record.stateId}
-            rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
 
             columns={sampleTypeColumns}
             scroll = {{x:true}}

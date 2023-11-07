@@ -278,7 +278,6 @@ export function SearchGroupGrid(
           </Row> 
           <br></br>
           <Table
-                  rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
 
           columns={columnsSkelton}
           dataSource={groupData}

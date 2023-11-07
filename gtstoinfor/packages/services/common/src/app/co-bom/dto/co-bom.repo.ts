@@ -24,6 +24,8 @@ export class CoBomRepository extends Repository<CoBom>{
         if (req?.styleOrderId !== undefined) {
             query.andWhere(`co_id ='${req.styleOrderId}'`)
         }
+        console.log(query,"yyy")
+
         return query.getRawMany()
     }
  
