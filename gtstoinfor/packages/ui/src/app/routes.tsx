@@ -144,6 +144,7 @@ import IssueScreen from "./operation-tracking/issue"
 import { InventoryView } from "./operation-tracking/inventory"
 import StyleOrderCreation from "./style-orders/style-order-form"
 import MaterialIssueReport from "./sample-development/material-issue-report"
+import StockReport from "./Reports/stock-report"
 
 
 export const AppRoutes = () => {

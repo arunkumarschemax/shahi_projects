@@ -2,11 +2,8 @@ import { MaterialFabricDto } from "./material-fabric-dto";
 import { MaterialTrimDto } from "./material-trim-dto";
 
 export class MaterialIssueDto{
-    materialIssueId:number;
-    consumptionCode:string;
     requestNo: string
-    poNumber: string
-    issueDate: Date
+    issueDate: any
     locationId:number;
     pchId:number;
     buyerId:number;
@@ -28,17 +25,17 @@ export class MaterialIssueDto{
     conversion:string;
     madeIn:string;
     remarks:string;
-    createdAt: Date;
-    createdUser: string | null;
+    createdAt?: Date;
+    createdUser?: string | null;
     fabricInfo: MaterialFabricDto[]
     trimInfo: MaterialTrimDto[]
+    materialIssueId?:number;
+    consumptionCode?:string;
+    poNumber?: string
 
     constructor(
-        materialIssueId:number,
-        consumptionCode:string,
         requestNo: string,
-        poNumber: string,
-        issueDate: Date,
+        issueDate: any,
         locationId:number,
         pchId:number,
         buyerId:number,
@@ -60,10 +57,13 @@ export class MaterialIssueDto{
         conversion:string,
         madeIn:string,
         remarks:string,
-        createdAt: Date,
-        createdUser: string | null,
         fabricInfo: MaterialFabricDto[],
-        trimInfo: MaterialTrimDto[]
+        trimInfo: MaterialTrimDto[],
+        materialIssueId?:number,
+        consumptionCode?:string,
+        poNumber?: string,
+        createdAt?: Date,
+        createdUser?: string | null,
     ){
         this.materialIssueId = materialIssueId
         this.consumptionCode = consumptionCode

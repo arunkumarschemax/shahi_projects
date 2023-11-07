@@ -1,5 +1,5 @@
-import { SettingsIdReq, SettingsModel } from "@project-management-system/shared-models"
-import { SampleDevelopmentService, SettingsService } from "@project-management-system/shared-services"
+import { MaterialFabricDto, MaterialIssueDto, MaterialTrimDto, SettingsIdReq, SettingsModel } from "@project-management-system/shared-models"
+import { MaterialIssueService, SampleDevelopmentService, SettingsService } from "@project-management-system/shared-services"
 import { Button, Card, Col, Descriptions, Input, Row, Table, Tabs, Tooltip } from "antd"
 import DescriptionsItem from "antd/es/descriptions/Item"
 import TabPane from "antd/es/tabs/TabPane"
@@ -10,6 +10,8 @@ import TrimsForm from "./trims"
 import { DeleteOutlined } from "@ant-design/icons"
 import TextArea from "antd/es/input/TextArea"
 import React from "react"
+import AlertMessages from "../common/common-functions/alert-messages"
+import { format } from "path"
 
 export const StoreIssueDetailed = () => {
 
@@ -20,6 +22,10 @@ export const StoreIssueDetailed = () => {
     const [id, setId] = useState<any[]>([])
     const location = useLocation();
     const rowData = location.state.data
+    const materialIssue = new MaterialIssueService()
+    const [createData, setCreateData] = useState<any[]>([])
+    const [fabricData, setFabricData] = useState<any[]>([])
+    const [trimData, setTrimData] = useState<any[]>([])
     
 
 
@@ -35,6 +41,24 @@ export const StoreIssueDetailed = () => {
     //     })
     //   }
 
+    const customIssueDate = new Date('2023-11-07T07:23:49.140Z');
+
+// Format the date as 'YYYY-MM-DD'
+const formattedIssueDate = customIssueDate.toISOString().split('T')[0];
+
+    const saveData = ()=>{
+      console.log(rowData,'-------+++++++++++++++')
+      const req = new MaterialIssueDto(rowData?.[0]?.requestNo,formattedIssueDate,rowData?.[0]?.locationId,rowData?.[0]?.pchId,rowData?.[0]?.buyerId, rowData?.[0]?.sampleTypeId,rowData?.[0]?.sampleSubTypeId,rowData?.[0]?.styleId,rowData?.[0]?.styleNo,rowData?.[0]?.brandId,rowData?.[0]?.dmmId,rowData?.[0]?.techicianId,rowData?.[0]?.description, rowData?.[0]?.costRef, rowData?.[0]?.m3StyleNo, rowData?.[0]?.contact, rowData?.[0]?.Extn,rowData?.[0]?.samValue,rowData?.[0]?.product,rowData?.[0]?.type, rowData?.[0]?.conversion,rowData?.[0]?.madeIn,rowData?.[0]?.remarks,fabricData, trimData,0,'','',undefined,'')
+      console.log(req,'---------------')
+      materialIssue.createMaterialIssue(req).then((res)=>{
+        if(res.status){
+          AlertMessages.getSuccessMessage(res.internalMessage)
+      } else{
+          AlertMessages.getErrorMessage(res.internalMessage)
+      }
+      })
+    }
+
     const getData = ()=>{
         service.getAllSampleData().then((res)=>{
             setData(res.data)
@@ -42,39 +66,45 @@ export const StoreIssueDetailed = () => {
         })
     }
 
-    const handleInputChange = (e, key, field) => {
-        const updatedData = data.map((record) => {
-          if (record.key === key) {
-            return { ...record, [field]: e.target.value };
-          }
-          return record;
-        });
-        setData(updatedData);
-      };
+    const [formData, setFormData] = useState({
+      materialIssueId: 0, // Initialize with appropriate values
+      issuedQuantity: 0, // Initialize with appropriate values
+      // Add other form fields with their initial values
+    });
+
+    // const handleInputChange = (e, key, field) => {
+    //     const updatedData = data.map((record) => {
+    //       if (record.key === key) {
+    //         return { ...record, [field]: e.target.value };
+    //       }
+    //       return record;
+    //     });
+    //     setData(updatedData);
+    //   };
+
+
+    const handleInputChange = (e, index,rowData) => {
+      const req = new MaterialFabricDto(rowData.fabricCode,rowData.description, rowData.colourId, rowData.consumption,rowData.uomId,rowData.issuedQuantity, rowData.issuedUomId, rowData.remarks,undefined,'admin','','',0)
+      setFabricData([...fabricData,req])
+    };
+
+
+    const handleTrimInfo = (e, index,rowData) => {
+      console.log(rowData,'+++++++++++++++')
+      const req = new MaterialTrimDto(rowData.description, rowData.consumption, rowData.uomId,rowData.issuedQuantity, rowData.issuedUomId, rowData.remarks,undefined,'admin','','',0,0)
+      console.log(req,'____________')
+      setTrimData([...trimData,req])
+    };
+
     
 
       const onUpdate = () => {
         navigate('/sample-development/sample-requests',{state:{id:data[0]?.settingsId}})
     }
 
-    const handleFormSubmit = () => {
-      // Capture and log the issuing quality for both trims and fabric
-      const issuingQualityForFabric = data[0]?.fabricInfo.map((record) => ({
-        key: record.key,
-        issuingQuantity: record.issuingQuantity,
-      }));
-    
-      const issuingQualityForTrims = data[0]?.trimInfo.map((record) => ({
-        key: record.key,
-        issuingQuantity: record.issuingQuantity,
-      }));
-    
-      console.log("Issuing Quality for Fabric:", issuingQualityForFabric);
-      console.log("Issuing Quality for Trims:", issuingQualityForTrims);
-    
-      // Log the entire data object with updated issuingQuantity
-      console.log("Updated Data:", data);
-    };
+    const issuedInfo = (e,index,record) => {
+      setCreateData(e.target.value);
+  };
     
 
     const columnsSkelton = [
@@ -103,12 +133,18 @@ export const StoreIssueDetailed = () => {
         {
           title: 'Issued Quantity',
           dataIndex: 'issuingQuantity',
-          render: (_, record) => (
-            <Input
-            value={record.issuingQuantity}
-            onChange={(e) => handleInputChange(e, record.key, 'issuingQuantity')}
-            />
-          ),
+          render: (value, row,index) => {
+              return (
+                <>
+                  <Input
+                  key={index}
+                  placeholder="Issued Quantity"
+                  // value={formData.issuedQuantity}
+                  onChange={(e) => handleInputChange(e,index,row)}
+                  />
+                </>
+              );
+            },
         },
         {
           title: 'Remarks',
@@ -133,12 +169,18 @@ export const StoreIssueDetailed = () => {
         {
           title: 'Issued Quantity',
           dataIndex: 'issuingQuantity',
-          render: (_, record) => (
-            <Input
-            value={record.issuingQuantity}
-            onChange={(e) => handleInputChange(e, record.key, 'issuingQuantity')}
-            />
-          ),
+          render: (value, row, index) => {
+            return (
+              <>
+                <Input
+                key={index}
+                placeholder="Issued Quantity"
+                // value={formData.issuedQuantity}
+                onChange={(e) => handleTrimInfo(e,index,row)}
+                />
+              </>
+            );
+          },
         },
         {
           title: 'Remarks',
@@ -197,7 +239,7 @@ export const StoreIssueDetailed = () => {
         <Row>
         <Col span={24} style={{ textAlign: 'right' }}>
           
-            <Button type="primary" htmlType="submit" onClick={handleFormSubmit}>
+            <Button type="primary" htmlType="submit" onClick={saveData}>
               Submit
             </Button>
             </Col>

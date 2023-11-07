@@ -117,9 +117,9 @@ export const OperationReportingView = () => {
 
     const reportedUomId = (e, index, record) => {
         console.log(e,'===============')
-        // if (e && e.target) {
+        if (e && e.target) {
             setReportedUom(e);
-        // }
+        }
     }
 
     const rejectedUomId = (e, index, record) => {
@@ -133,7 +133,6 @@ export const OperationReportingView = () => {
         const nextSequence = currentSequence + 1;
 
         const nextOperation = operations.find((operation) => operation.sequence === nextSequence);
-console.log(record,'^^^^^^^^^^^^^^^^^^')
         if(nextOperation){
         const req = new OperationTrackingDto(
             record.fabricCode,
@@ -166,7 +165,7 @@ console.log(record,'^^^^^^^^^^^^^^^^^^')
           label: <b>{operation.operationName}</b>,
           value: operation.operationName,
           key: index.toString(),
-          sequence: operation.sequence, // Add the 'sequence' property from your data
+          sequence: operation.sequence,
         }));
       };
       
@@ -181,6 +180,12 @@ console.log(record,'^^^^^^^^^^^^^^^^^^')
             width: '70px',
             responsive: ['sm'],
             render: (text, object, index) => (page-1) * 10 +(index+1)
+        },
+        {
+            title:<div style={{textAlign:"center"}}>Fabric Code</div>,
+            dataIndex:'fabricCode',
+            align: "right",
+            // render: (issuedQuantity, row) => `${issuedQuantity} ${row.issuedUom}`,
           },
         {
             title:<div style={{textAlign:"center"}}>Issued Quantity</div>,
