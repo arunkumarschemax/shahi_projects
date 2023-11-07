@@ -20,6 +20,7 @@ export const StoreIssueDetailed = () => {
     const [id, setId] = useState<any[]>([])
     const location = useLocation();
     const rowData = location.state.data
+    
 
 
     useEffect(() => {
@@ -35,8 +36,8 @@ export const StoreIssueDetailed = () => {
     //   }
 
     const getData = ()=>{
-        service.getSampleDevById().then((res)=>{
-            setData(res)
+        service.getAllSampleData().then((res)=>{
+            setData(res.data)
             console.log(res)
         })
     }
@@ -150,12 +151,12 @@ export const StoreIssueDetailed = () => {
              <Descriptions size='small'>
              <DescriptionsItem label='Location'>{rowData?.[0]?.locationName}</DescriptionsItem>
                 <DescriptionsItem label='PCH'>{rowData?.[0]?.pch}</DescriptionsItem>
-                <DescriptionsItem label='User'>{}</DescriptionsItem>
+                <DescriptionsItem label='User'>{rowData?.[0]?.user}</DescriptionsItem>
                 <DescriptionsItem label='Buyer'>{rowData?.[0]?.buyerName}</DescriptionsItem>
                 <DescriptionsItem label='Sample Type'>{rowData?.[0]?.sampleType}</DescriptionsItem>
                 <DescriptionsItem label='Sample Sub Type'>{rowData?.[0]?.sampleSubType}</DescriptionsItem>
                 <DescriptionsItem label='Style'>{rowData?.[0]?.style}</DescriptionsItem>
-                <DescriptionsItem label='Description'>{}</DescriptionsItem>
+                <DescriptionsItem label='Description'>{rowData?.[0]?.description}</DescriptionsItem>
                 <DescriptionsItem label='Brand'>{rowData?.[0]?.brandName}</DescriptionsItem>
                 <DescriptionsItem label='Cost Ref'>{rowData?.[0]?.costRef}</DescriptionsItem>
                 <DescriptionsItem label='M3 Style No'>{rowData?.[0]?.m3StyleNo}</DescriptionsItem>
@@ -168,7 +169,7 @@ export const StoreIssueDetailed = () => {
                 <DescriptionsItem label='Type'>{rowData?.[0]?.type}</DescriptionsItem>
                 <DescriptionsItem label='Conversion'>{rowData?.[0]?.conversion}</DescriptionsItem>
                 <DescriptionsItem label='Made In'>{rowData?.[0]?.madeIn}</DescriptionsItem>
-                <DescriptionsItem label='Remarks'>{}</DescriptionsItem>
+                <DescriptionsItem label='Remarks'>{rowData?.[0]?.remarks}</DescriptionsItem>
             </Descriptions>
 
             <Tabs type={'card'} tabPosition={'top'}>
@@ -176,7 +177,7 @@ export const StoreIssueDetailed = () => {
                 <Table
                 size="small"
                 columns={columnsSkelton}
-                dataSource={data[0]?.fabricInfo}
+                dataSource={rowData[0]?.sampleReqFabricInfo}
                 scroll={{ x: true }}
                 bordered
                 pagination ={false}
@@ -186,7 +187,7 @@ export const StoreIssueDetailed = () => {
                 <Table
                 size="small"
                 columns={columns}
-                dataSource={data[0]?.trimInfo}
+                dataSource={rowData[0]?.sampleTrimInfo}
                 scroll={{ x: true }}
                 bordered
                 pagination ={false}

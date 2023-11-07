@@ -53,6 +53,21 @@ export class SampleRequestService {
       }
   }
 
+  async getAllSampleData(): Promise<AllSampleDevReqResponseModel> {
+    try{
+        const details = await this.sampleRepo.find({
+          relations: ['sampleReqFabricInfo','sampleTrimInfo']
+        })
+        if(details.length > 0){
+            return new AllSampleDevReqResponseModel(true,0,'All Sample Requests retrieved successfully',details)
+        } else {
+            return new AllSampleDevReqResponseModel(false,1,'No data found',[])
+        }
+    } catch(err) {
+        throw err
+    }
+}
+
 
   async getAllSampleReqNo(): Promise<CommonResponseModel> {
     const details = await this.sampleRepo.getAllSampleReqNo();     

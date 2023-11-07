@@ -30,7 +30,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
 
     async getAllSampleDevData(req?: SampleFilterRequest): Promise<any[]> {
         const query =  this.createQueryBuilder('sr')
-            .select(`sr.sample_request_id,sr.request_no as requestNo,sr.cost_ref as costRef, sr.m3_style_no as m3StyleNo, sr.contact,sr.extension,
+            .select(`sr.sample_request_id,sr.request_no as requestNo,sr.user,sr.description,sr.remarks,sr.cost_ref as costRef, sr.m3_style_no as m3StyleNo, sr.contact,sr.extension,
             sr.sam_value as samValue,sr.product,sr.type,sr.conversion,sr.made_in as madeIn, sr.facility_id,sr.status,sr.location_id,
             l.location_name AS locationName,sr.style_id,s.style,sr.profit_control_head_id,pch.profit_control_head AS pch,sr.buyer_id,
             b.buyer_name AS buyerName, b.buyer_code AS buyerCode,sr.sample_type_id,st.sample_type AS sampleType,sr.sample_sub_type_id,
