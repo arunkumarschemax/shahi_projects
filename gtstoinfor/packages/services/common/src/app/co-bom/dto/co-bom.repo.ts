@@ -6,6 +6,7 @@ import { FgItemBom } from "../../substituion/fg-item-bom.entity";
 import { RmSkus } from "../../rm-skus/rm-sku.entity";
 import { ItemSkus } from "../../sku-generation/sku-generation.entity";
 import { StyleOrderId } from "../../style-order/style-order-id.request";
+import { RmCreationEntity } from "../../rm-items/rm-items.entity";
 
 
 @Injectable()
@@ -30,10 +31,13 @@ export class CoBomRepository extends Repository<CoBom>{
         .select(`cobom.co_number ,cobom.co_line_number,cobom.fg_sku,cobom.co_id,
         fgitbo.fg_sku_id,fgitbo.rm_item_code,fgitbo.rm_sku_id,fgitbo.consumption,fgitbo.item_type_id,fgitbo.item_group_id,fgitbo.item_type,fgitbo.rm_item_id,
         rmsku.rm_item_id,rmsku.item_type,rmsku.rm_sku_code,rmsku.feature_code,rmsku.status,rmsku.feature_option_id,rmsku.option_group,rmsku.option_id,rmsku.option_value,
-        itsku.sku_code,itsku.status,itsku.po_number,itsku.po_line_number,itsku.item_code,itsku.size,itsku.color,itsku.destination`)
+        itsku.sku_code,itsku.status,itsku.po_number,itsku.po_line_number,itsku.item_code,itsku.size,itsku.color,itsku.destination,
+        rmitem.is_imported_item `)
         .leftJoin(FgItemBom,'fgitbo','fgitbo.fgItemBomId= cobom.fgItemBomId')
         .leftJoin(RmSkus,'rmsku','rmsku.rm_sku_id = fgitbo.rm_sku_id')
         .leftJoin(ItemSkus,'itsku','itsku.item_sku_id = fgitbo.fg_sku_id')
+        .leftJoin(RmCreationEntity,'rmitem','rmitem.rm_item_id = fgitbo.rm_item_id') 
+
         
 
         if (req?.styleOrderId !== undefined) {
