@@ -63,12 +63,13 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
   }
 
   const saveFabricWeave = (data: FabricWeaveDto) => {
-    const file:any = data.fabricWeaveImageName
+
+    // const file:any = data.fabricWeaveImageName
     // const abc:string =file.file.name
-    console.log(file.file.name,'data')
-    const req = new FabricWeaveDto(data.fabricWeaveId,data.fabricWeaveName,data.fabricWeaveCode,file.file.name,file.file.type,data.isActive,data.createdAt,data.createdUser,data.updatedAt,data.updatedUser,data.versionFlag)
+     console.log(data,'data')
+    const req = new FabricWeaveDto(data.fabricWeaveId,data.fabricWeaveName,data.fabricWeaveCode,null,null,data.isActive,data.createdAt,data.createdUser,data.updatedAt,data.updatedUser,data.versionFlag)
     Service.createFabricWeave(req).then((res) => {
-      console.log(req,'req');
+      // console.log(req,'req');
       
         if (res.status) {
           AlertMessages.getSuccessMessage('Fabric Weave Created Successfully');
@@ -80,7 +81,7 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
 
             formData.append('fabricWeaveId', `${res.data[0].fabricWeaveId}`)
             Service.fabricWeaveImageUpload(formData).then(fileRes => {
-                res.data[0].fabricWeaveImageName = fileRes.data.file.name
+                res.data[0].fabricWeaveImagePath = fileRes.data
             })
           }
           navigate("/masters/fabric-weave/fabric-weave-view")
@@ -184,7 +185,7 @@ return (
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:12 }}>
               <Form.Item name="fabricWeaveImageName" label='Fabric Weave Image'
-              rules={[{required:true,message:'Upload Fabric Weave'}]}  
+              // rules={[{required:true,message:'Upload Fabric Weave'}]}  
               initialValue={props.isUpdate ? props.data.fabricWeaveImageName:''}
             
               >
