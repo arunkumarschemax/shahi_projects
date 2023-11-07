@@ -248,7 +248,7 @@ export class DpomService {
         try {
             const data = await this.dpomRepository.gatDataForColine({ poNumber: req.purchaseOrderNumber, lineNumber: req.poLineItemNumber })
             const coLine = new CoLineRequest()
-            coLine.buyerPo = data[0].po_number
+            coLine.buyerPo = data[0].po_number + '-' + data[0].po_line_item_number
             coLine.deliveryDate = moment().format("DD/MM/YYYY")
             const destinationsArr: Destinations[] = []
             const destinations = new Destinations()
