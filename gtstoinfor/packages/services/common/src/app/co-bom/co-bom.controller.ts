@@ -3,6 +3,7 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { CoBomService } from './co-bom-service';
 import { CommonResponseModel } from '@project-management-system/shared-models';
+import { StyleOrderId } from '../style-order/style-order-id.request';
 import { CoBomDto } from './dto/co-bom.dto';
 import { StyleOrderId } from '../style-order/style-order-id.request';
 
@@ -14,6 +15,17 @@ export class CoBomController{
         private cobom: CoBomService,
         private readonly applicationExceptionHandler: ApplicationExceptionHandler,
     ){}
+
+
+    @Post('/getDataForMOPById')
+    @ApiBody({type:StyleOrderId})
+    async getDataForMOPById(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return await this.cobom.getDataForMOPById(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
 
 
     @Post ('/getBomAgainstItem')
