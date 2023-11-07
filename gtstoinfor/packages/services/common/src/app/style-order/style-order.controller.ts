@@ -26,7 +26,7 @@ export class StyleOrderController{
         }
     }
     @Post('/getAllStyleOrdersByItem')
-    // @ApiBody({type:styleOrderReq})
+     @ApiBody({type:styleOrderReq})
     async getAllStyleOrders(@Body() req:any):Promise<CommonResponseModel>{
         try{
           

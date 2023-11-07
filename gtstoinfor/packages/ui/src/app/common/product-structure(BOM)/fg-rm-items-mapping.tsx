@@ -120,6 +120,10 @@ const getRmItemsDatabyProductGroupId1 = () => {
 
  const onFinish =(values)=>{
   console.log(values,"vvvvv")
+  if (!rmItems.length && !fabItems.length) {
+    message.error('Please select at least one item in Fabric Items or Trims Items');
+    return;
+  }
  
   const req = new FgRmMappingRequest(values.fgitemId,values.fgitemCode,[...rmItems,...fabItems],"admin")
   productStructureservice.createFgRmMapping(req).then(res=>{

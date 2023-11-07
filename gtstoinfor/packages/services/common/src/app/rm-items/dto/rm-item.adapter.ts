@@ -20,6 +20,7 @@ export class RmCreationAdapter{
             entityObj.currencyId=dtoObj.currencyId;
             entityObj.price=dtoObj.price;
             entityObj.tax=dtoObj.tax;
+            entityObj.isImportedItem=dtoObj.isImportedItem
             entityObj.attachedWareHouse=dtoObj.attachedWareHouse;
             entityObj.planner=dtoObj.planner;
             entityObj.businessArea=dtoObj.businessArea;
@@ -79,6 +80,7 @@ return entityObj;
             rmcreationDto.currencyId=rmcreation.currencyId;
             rmcreationDto.price=rmcreation.price;
             rmcreationDto.tax=rmcreation.tax;
+            rmcreationDto.isImportedItem=rmcreation.isImportedItem;
            rmcreationDto.attachedWareHouse= rmcreation.attachedWareHouse;
             rmcreationDto.planner=rmcreation.planner;
             rmcreationDto.businessArea=rmcreation.businessArea;

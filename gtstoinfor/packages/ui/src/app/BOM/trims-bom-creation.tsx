@@ -188,7 +188,7 @@ const getAllActiveProfitControlHead=() =>{
            </Form.Item>
         </Col>
 
-        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 8 }} xl={{ span: 5}}>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5}}>
         <Form.Item
                 label="PCH"
                 name="pchId"
@@ -207,7 +207,7 @@ const getAllActiveProfitControlHead=() =>{
               </Form.Item>
         </Col>
 
-        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 8 }} xl={{ span: 5}}>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5}}>
             <Form.Item name="facilityId" label = "Facility">
             <Select placeholder="facility" allowClear>
                  <option value={1}> facility1</option>
@@ -224,8 +224,8 @@ const getAllActiveProfitControlHead=() =>{
              <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 6 }}
+              md={{ span: 18 }}
+              lg={{ span: 10 }}
               xl={{ span: 12 }}
             > 
               {/* <Card size="small" bordered={false} style={{width:"100%"}}> */}
@@ -253,8 +253,8 @@ const getAllActiveProfitControlHead=() =>{
                    <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 6 }}
+                    md={{ span: 8 }}
+                    lg={{ span: 10 }}
                     xl={{ span: 8 }}
                   >
                     <Form.Item
@@ -269,8 +269,8 @@ const getAllActiveProfitControlHead=() =>{
                   <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 6 }}
+                    md={{ span: 8 }}
+                    lg={{ span: 10 }}
                     xl={{ span: 8 }}
                   >
                     <Form.Item label="Generic Code" name="genericCode">
@@ -280,8 +280,8 @@ const getAllActiveProfitControlHead=() =>{
                   <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 6 }}
+                    md={{ span: 8 }}
+                    lg={{ span: 10 }}
                     xl={{ span: 8 }}
                   >
                     <Form.Item
@@ -300,8 +300,8 @@ const getAllActiveProfitControlHead=() =>{
                    <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 6 }}
+                    md={{ span: 8}}
+                    lg={{ span: 10 }}
                     xl={{ span: 8 }}
                   >
                     <Form.Item
@@ -318,8 +318,8 @@ const getAllActiveProfitControlHead=() =>{
                   <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 6 }}
+                    md={{ span: 8}}
+                    lg={{ span: 10 }}
                     xl={{ span: 8 }}
                   >
                     <Form.Item
@@ -338,8 +338,8 @@ const getAllActiveProfitControlHead=() =>{
                   <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 6 }}
+                    md={{ span: 8 }}
+                    lg={{ span: 10 }}
                     xl={{ span: 8 }}
                   >
                     <Form.Item label="Description" name="description">
@@ -355,11 +355,11 @@ const getAllActiveProfitControlHead=() =>{
              </Col> 
            
             <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 6 }}
-              xl={{ span: 10 }}
+             xs={{ span: 24 }}
+             sm={{ span: 24 }}
+             md={{ span: 10}}
+             lg={{ span: 10 }}
+             xl={{ span: 10}}
             >
               {/* <Card size="small" bordered={false} style={{width:"100%"}}> */}
                 <h1
@@ -371,8 +371,8 @@ const getAllActiveProfitControlHead=() =>{
                   <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 10 }}
+                    md={{ span: 14}}
+                    lg={{ span: 15 }}
                     xl={{ span: 10 }}
                   >
                     <Form.Item
@@ -389,8 +389,8 @@ const getAllActiveProfitControlHead=() =>{
                   <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 10 }}
+                    md={{ span: 14}}
+                    lg={{ span: 15 }}
                     xl={{ span: 10}}
                   >
                     <Form.Item
@@ -649,9 +649,9 @@ const getAllActiveProfitControlHead=() =>{
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 6 }}
-              xl={{ span: 12 }}
+              md={{ span: 10}}
+              lg={{ span: 10 }}
+              xl={{ span: 10}}
             >
               {/* <Card size="small" bordered={false}> */}
                 <h1
@@ -663,9 +663,9 @@ const getAllActiveProfitControlHead=() =>{
                   <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 8 }}
-                    xl={{ span: 8 }}
+                    md={{ span: 10}}
+                    lg={{ span: 10 }}
+                    xl={{ span: 10}}
                   >
                     <Form.Item name="property" label="Property">
                       <Input placeholder="Property" allowClear />
@@ -674,11 +674,11 @@ const getAllActiveProfitControlHead=() =>{
                 {/* </Row>
                 <Row> */}
                   <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 8 }}
-                    xl={{ span: 8 }}
+                   xs={{ span: 24 }}
+                   sm={{ span: 24 }}
+                   md={{ span: 10}}
+                   lg={{ span: 10 }}
+                   xl={{ span: 10}}
                   >
                     <Form.Item name="isSaleItem" label=" Is sale Item">
                       <Select placeholder ="SaleItem" allowClear>
@@ -693,11 +693,11 @@ const getAllActiveProfitControlHead=() =>{
             </Col>
 
             <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 6 }}
-              xl={{ span: 12 }}
+             xs={{ span: 24 }}
+             sm={{ span: 24 }}
+             md={{ span: 10}}
+             lg={{ span: 10 }}
+             xl={{ span: 10}}
               // style={{marginLeft:}}
             >
               {/* <Card size="small" bordered={false}> */}
@@ -710,9 +710,9 @@ const getAllActiveProfitControlHead=() =>{
                   <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 6 }}
-                    xl={{ span: 8 }}
+                    md={{ span: 10}}
+                    lg={{ span: 10 }}
+                    xl={{ span: 8}}
                   >
                     <Form.Item label="Consumption" name="consumption">
                       <Input placeholder="Consumption" allowClear />
@@ -721,9 +721,9 @@ const getAllActiveProfitControlHead=() =>{
                   <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 6 }}
-                    xl={{ span: 8 }}
+                    md={{ span: 10}}
+                    lg={{ span: 10 }}
+                    xl={{ span: 8}}
                   >
                     <Form.Item label="Wastage %" name="wastagePercentage">
                       <Input placeholder="Wastage %" allowClear />
@@ -732,9 +732,9 @@ const getAllActiveProfitControlHead=() =>{
                   <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 6 }}
-                    xl={{ span: 8 }}
+                    md={{ span: 10}}
+                    lg={{ span: 10 }}
+                    xl={{ span: 8}}
                   >
                     <Form.Item label="Cost Group" name="costGroup">
                       <Input placeholder="Cost Group" allowClear />
@@ -745,9 +745,9 @@ const getAllActiveProfitControlHead=() =>{
                   <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 6 }}
-                    xl={{ span: 8 }}
+                    md={{ span: 10}}
+                    lg={{ span: 10 }}
+                    xl={{ span: 8}}
                   >
                     <Form.Item
                       label="Placement/Usage Remarks"

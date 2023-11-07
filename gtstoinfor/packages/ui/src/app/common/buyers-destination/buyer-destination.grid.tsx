@@ -36,10 +36,8 @@ const [userId, setUserId] = useState([]);
   const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
 let userRef
     useEffect(()=>{
-        getSizes();
-        getDestinations();
+      getBuyers();
         getData();
-        getBuyers();
         Login()
     },[])
     
@@ -51,10 +49,25 @@ const Login = () =>{
   buyerService.getBuyerByRefId(req).then(res=>{
     if(res.status){
       setUserId(res.data)
-setLoginBuyer(res.data.buyerId)
+      setLoginBuyer(res.data.buyerId)
+      if(req.extrnalRefId != undefined){
+        console.log(req.extrnalRefId,'ssssssssss');
+        
+      form.setFieldsValue({'buyer': res.data.buyerId})
+      }
     }
   })
+  buyerService.getAllActiveBuyers().then(res=>{
+    if(res.status){
+      setBuyers(res.data)
+    }
+  })
+  getBuyers();
+  getSizes();
+  getDestinations();
 }
+console.log(loginBuyer,'buyer');
+console.log(userId,'buyer');
 
     const getSizes = ()=>{
         sizeService.getAllActiveSize().then(res=>{
@@ -77,17 +90,20 @@ setLoginBuyer(res.data.buyerId)
         })
     }
     const getBuyers = () => {
-          const loginId = new BuyerIdReq(loginBuyer)
-        buyerService.getAllBuyer(loginId).then((res) => {
-            if (res.status) {
-                setBuyers(res.data);
-            }
-        });
+        //   const loginId = new BuyerIdReq(loginBuyer)
+        // buyerService.getAllActiveBuyers().then((res) => {
+        //   console.log(res.data,'000000000');
+
+        //     if (res.status) {
+        //         setBuyers(res.data);
+        //         console.log(res.data,'000000000');
+
+        //     }
+        // });
     };
     const getData = ()=>{
         const request = new BuyersDestinationRequest(buyerId)
-    
-        if(form.getFieldValue('buyer') != undefined){
+    if(form.getFieldValue('buyer') != undefined){
             request.buyerId = form.getFieldValue('buyer')
         }
         service.getAll(request).then(res=>{
@@ -104,7 +120,6 @@ setLoginBuyer(res.data.buyerId)
         setSizeModalVisible(true);
         setModalData(sizes); // Set the sizes data here
         setSize(val.size)
-        console.log(val,'[[[[[[[[[[')
       };
       
       const openDestinationModal = (val) => {
@@ -221,11 +236,13 @@ const onReset = () => {
                     xl={{ span: 12 }}
                 >
                        <Form.Item
+initialValue={userId.length > 0 ? userId[0].buyerName : ""}
                                 label="Buyers"
                                 name="buyer"
                                 rules={[{ required: true, message: "Buyer is required" }]}
                             >
                                 <Select
+                                defaultValue={userId.length > 0 ? userId[0].buyerName : ""}
                                     showSearch
                                     allowClear
                                     optionFilterProp="children"

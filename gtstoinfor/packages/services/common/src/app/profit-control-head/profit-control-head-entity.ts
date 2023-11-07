@@ -10,7 +10,7 @@ export class ProfitControlHead{
 profitControlHeadId:number;
 @Column("varchar",{
     nullable: true,
-    length:15,
+    length:150,
     name:"profit_control_head"
 })
 profitControlHead:string;

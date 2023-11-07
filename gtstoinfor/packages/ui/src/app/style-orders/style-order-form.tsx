@@ -141,23 +141,27 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
         getCoType()
         getAllUoms()
     },[])
-    const Login = () =>{
-        const req = new BuyerExtrnalRefIdReq()
-        if(role === MenusAndScopesEnum.roles.crmBuyer){
-          req.extrnalRefId = externalRefNo
+    
+      const Login = () => {
+        const req = new BuyerExtrnalRefIdReq();
+        if (role === MenusAndScopesEnum.roles.crmBuyer) {
+          req.extrnalRefId = externalRefNo;
         }
-        buyerService.getBuyerByRefId(userRef).then(res=>{
-          if(res.status){
-            setUserId(res.data)
-      setLoginBuyer(res.data.buyerId)
+        buyerService.getBuyerByRefId(req).then((res) => {
+          if (res.status) {
+            setUserId(res.data);
+            setLoginBuyer(res.data?.buyerId);
+            if(req.extrnalRefId){
+                form.setFieldsValue({'buyer': res.data.buyerId})
+                }
+                      }
+        });
+        buyerService.getAllActiveBuyers().then((res) => {
+          if (res.status) {
+            setBuyers(res.data);
           }
-        })
-        buyerService.getAllActiveBuyers(req).then(res => {
-            if(res.status){
-                setBuyers(res.data)
-            }
-        })
-      }
+        });
+      };
     const getItemCodes = () => {
         fgItemService.getFgItemsDropdown().then(res => {
             if(res.status){
@@ -436,6 +440,7 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
             }
         },
     ]
+console.log(loginBuyer,'---------');
 
     const splitData = (data) => {
         const middleIndex = Math.ceil(data.length / 2);
@@ -495,17 +500,48 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
                 </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
-                    <Form.Item name='buyer' label='Buyer' rules={[{required:true,message:'Buyer is required'}]} >
-                        <Select showSearch allowClear optionFilterProp="children" onChange={onBuyerChange} placeholder='Select Buyer'>
-                            {
-                                buyers.map((e) => {
-                                    return(
-                                        <Option key={e.buyerId} value={e.buyerId}>{e.buyerCode}-{e.buyerName}</Option>
-                                    )
-                                })
-                            }
-                        </Select>
-                    </Form.Item>
+                <Form.Item
+                initialValue={userId.length > 0 ? userId[0].buyerName : ""}
+                                label="Buyer"
+                                name="buyer"
+                                rules={[{ required: true, message: "Buyer is required" }]}
+                            >
+                                <Select
+                                defaultValue={userId.length > 0 ? userId[0].buyerName : ""}
+                                    showSearch
+                                    allowClear
+                                    optionFilterProp="children"
+                                    placeholder="Select Buyer"
+                                    onChange={onBuyerChange}
+                                >
+                                    {buyers.map((option) => (
+                                        <Option value={option.buyerId} key={option.buyerId}>
+                                            {option.buyerCode}-{option.buyerName}
+                                        </Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                    {/* <Form.Item
+                  initialValue={userId.length > 0 ? userId[0].buyerName : ""}
+                  label="Buyer"
+                  name="buyer"
+                  rules={[{ required: true, message: "Buyer is required" }]}
+                >
+                  <Select
+                    defaultValue={userId.length > 0 ? userId[0].buyerName : ""}
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Buyer"
+                    onChange={onBuyerChange}
+                  >
+                    {buyers.map((option) => (
+                      <Option value={option.buyerId} key={option.buyerId}>
+                       {option.buyerCode}-{option.buyerName}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item> */}
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
                     <Form.Item name='season' label='Season' >
