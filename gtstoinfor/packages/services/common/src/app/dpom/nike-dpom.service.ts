@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { DpomRepository } from './repositories/dpom.repository';
-import axios, { Axios } from 'axios';
+import axios from 'axios';
 import { DpomEntity } from './entites/dpom.entity';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { DpomAdapter } from './dto/dpom.adapter';
 import { DpomApproveReq } from './dto/dpom-approve.req';
-import { ChangePoandLineModel, CoLineRequest, Colors, CommonResponseModel, Destinations, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FileTypeEnum, FobPriceDiffRequest, MarketingModel, MarketingReportModel, MarketingReportSizeModel, NewDivertModel, OldDivertModel, OrderChangePoModel, PoChangeSizeModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, Sizes, TotalQuantityChangeModel, coLineRequest, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
+import { ChangePoandLineModel, CoLineRequest, Colors, CommonResponseModel, Destinations, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FileTypeEnum, FobPriceDiffRequest, MarketingReportModel, MarketingReportSizeModel, OrderChangePoModel, PoChangeSizeModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, Sizes, TotalQuantityChangeModel, coLineRequest, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
 import { DpomChildRepository } from './repositories/dpom-child.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -19,18 +19,15 @@ import { FileIdReq } from '../orders/models/file-id.req';
 import { NikeFileUploadEntity } from './entites/upload-file.entity';
 import { Cron } from '@nestjs/schedule';
 import { DiaPDFDto } from './dto/diaPDF.dto';
-const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 import { PoAndQtyReq } from './dto/po-qty.req';
 import { PoQty } from './dto/poqty.req';
 import { FactoryUpdate } from './dto/factory-update.req';
 import { PDFFileInfoEntity } from './entites/pdf-file-info.entity';
-import { ChangeComparision } from './dto/change-comparision.req';
-import { COLineEntity } from './entites/co-line.entity';
 import { COLineRepository } from './repositories/co-line.repository';
 import puppeteer from 'puppeteer';
 const fs = require('fs');
 const path = require('path')
-
+const { Builder, Browser, By, Key, until } = require('selenium-webdriver');
 const moment = require('moment');
 const qs = require('querystring');
 
@@ -273,10 +270,83 @@ export class DpomService {
             destinationsArr.push(destinations)
             coLine.destinations = destinationsArr
 
-            console.log()
+            let driver = await new Builder().forBrowser(Browser.CHROME).build();
+            await driver.get('http://intranetn.shahi.co.in:8080/ShahiExportIntranet/subApp?slNo=2447#');
+
+            await driver.findElement(By.id('username')).sendKeys('60566910');
+            await driver.findElement(By.id('password')).sendKeys('60566910');
+            await driver.findElement(By.css('button.btn-primary')).click();
+
+            await driver.get('http://intranetn.shahi.co.in:8080/ShahiExportIntranet/subApp?slNo=2447')
+            const newPAge = await driver.executeScript(
+                `javascript:openAccessPage('http://intranet.shahi.co.in:8080/IntraNet/CRMPRDNEW.jsp', 'CRM', '2448', 'R', '60566910', 'N', '20634576', 'null');`
+            );
+            const windowHandles = await driver.getAllWindowHandles()
+            await driver.switchTo().window(windowHandles[1]);
+            const frame = await driver.findElement(By.id('mainFrame'));
+            await driver.switchTo().frame(frame)
+            const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
+            const allApps = await apps.findElements(By.tagName('span'));
+            for (const app of allApps) {
+                if ((await app.getAttribute('innerText')).includes('Style Orders')) {
+                    await driver.executeScript('arguments[0].click();', app);
+                    break;
+                }
+            }
+            const delivaryDate = moment().format('DD/MM/YYYY')
+            await driver.findElement(By.id('styleid2H')).sendKeys(req.itemNo);
+            await driver.wait(until.elementLocated(By.id('CreateOrderID')))
+            await driver.sleep(3000)
+            await driver.findElement(By.id('CreateOrderID')).click();
+            await driver.wait(until.elementLocated(By.id('bpo')))
+            await driver.findElement(By.id('bpo')).sendKeys(coLine.buyerPo);
+            await driver.wait(until.elementLocated(By.name('dojo.delydt')));
+            await driver.findElement(By.name('dojo.delydt')).sendKeys(delivaryDate);
+            for (let dest of coLine.destinations) {
+                const colorsContainer = await driver.wait(until.elementLocated(By.xpath('//*[@id="COContainer"]')));
+                const colorsTabs = await colorsContainer.findElements(By.tagName('span'));
+                for (const tab of colorsTabs) {
+                    if ((await tab.getAttribute('innerText')) == dest.name) {
+                        await driver.executeScript('arguments[0].click();', tab);
+                        for (let color of dest.colors) {
+                            for (let size of color.sizes) {
+                                const inputId = `${size.name}:${color.name}:${dest.name}`.replace(/\*/g, '');
+                                await driver.wait(until.elementLocated(By.id(inputId)))
+                                await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
+                            }
+                        }
+                    }
+                }
+            }
+            await driver.sleep(1000)
+            const element = await driver.findElement(By.id('OrderCreateID')).click();
+            // await driver.wait(until.elementIsVisible(element), 10000);
+            await driver.switchTo().alert().accept();
+            if (await this.isAlertPresent(driver)) {
+                // Switch to the alert
+                const alert = await driver.switchTo().alert();
+                // Get the text of the alert
+                const alertText = await alert.getText();
+                console.log('Alert Text:', alertText);
+
+                // Dismiss the alert (click "OK")
+                // await alert.accept();
+                // return "CRM throws a alert : " + alertText
+                // return "Created Sucessfully"
+            }
             return new CommonResponseModel(true, 1, `COline created successfully`)
         } catch (err) {
+            console.log(err);
             throw err
+        }
+    }
+
+    async isAlertPresent(driver) {
+        try {
+            await driver.switchTo().alert();
+            return true;
+        } catch (e) {
+            return false;
         }
     }
 

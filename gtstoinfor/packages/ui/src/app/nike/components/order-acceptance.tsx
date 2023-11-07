@@ -163,7 +163,7 @@ export function OrderAcceptance() {
         }
         service.getFactoryReportData(req).then((res) => {
             if (res.data) {
-                const unacceptedData = res.data.filter(item => item.DPOMLineItemStatus === "Unaccepted");
+                const unacceptedData = res.data.filter(item => item.DPOMLineItemStatus === "Unaccepted" || item.DPOMLineItemStatus === "Accepted" && item.customerOrder == null);
                 setData(unacceptedData)
                 Finish(data)
                 // message.success(res.internalMessage)
@@ -280,8 +280,36 @@ export function OrderAcceptance() {
                 dataIndex: 'colorDesc', width: 80,
             },
             {
+                title: 'Destination Country Code',
+                dataIndex: 'destinationCountryCode', width: 75,
+            },
+            {
+                title: 'Destination country Name',
+                dataIndex: 'destinationCountry', width: 75,
+            },
+            {
+                title: 'CO No', width: 70,
+                dataIndex: 'customerOrder',
+            },
+            {
+                title: 'MRGAC', dataIndex: 'MRGAC', className: "right-column", width: 70, render: (text, record) => {
+                    return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-';
+                },
+            },
+            {
+                title: 'OGAC', dataIndex: 'OGAC', className: "right-column", width: 70, render: (text, record) => {
+                    return record.OGAC ? moment(record.OGAC).format('MM/DD/YYYY') : '-';
+                },
+            },
+            {
+                title: 'GAC', dataIndex: 'GAC', className: "right-column", width: 70, render: (text, record) => {
+                    return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-';
+                },
+            },
+            {
                 title: 'Category',
-                dataIndex: 'categoryDesc', width: 80,
+                dataIndex: 'categoryDesc',
+                width: 80,
             },
             // {
             //     title: 'Total Order Quantity',

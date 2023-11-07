@@ -421,6 +421,13 @@ export class DpomEntity {
     })
     geoCode: string;
 
+    // @Column("varchar", {
+    //     name: "exFactoryExpDate",
+    //     length: 10,
+    //     nullable: true
+    // })
+    // exFactoryExpDate: string;
+
     //PDF Data
     @Column('varchar', {
         name: "ship_to_address_legal_po",
