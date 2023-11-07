@@ -351,16 +351,36 @@ export const extractDhlairduty = async (pdf) => {
     const extractedData = allLines;
 
     const structuredHSNLines = [];
-    const taxPercentageRegex = /(\w+)\s+@+\s+(\d+)%\s+(\d+\.\d+)/;
-
-    let currentHSN = null;
+    let currentDescription = null;
     for (let hsnId = 0; hsnId < extractedData.length; hsnId++) {
         const line = extractedData[hsnId].content;
-
-        if (line.match(/996(\d{3})/)) {
-            if (currentHSN) {
-                structuredHSNLines.push(currentHSN);
+    
+        if (line.match(/^.*?(\(+\w+\s+\w+\s+\w+\)+\s+(\d.+\d+))/)) {
+    
+            const descriptionData = line.match(/^.*?(\(+\w+\s+\w+\s+\w+\)+\s+(\d.+\d+))/) || [];
+            const description = descriptionData[0] ? descriptionData[0].replace(/\([^)]*\)|\d+.+\d+/g, "") : '';
+    
+            const chargeRegex = line.match(/^.*?(\(+\w+\s+\w+\s+\w+\)+\s+(\d.+\d+))/);
+            const charge = chargeRegex ? chargeRegex[2] : '';
+            const unitPrice = chargeRegex ? chargeRegex[2] : '';
+    
+            const taxTypeRegex = line.match(/IGST\s+\(\w+\s+\w+\s+\w+\)/) || [];
+            const taxType = taxTypeRegex ? taxTypeRegex[0]?.replace(/\([^)]*\)/g, "").replace(/,/g, "") : '';
+    
+            currentDescription = {
+                description: description || '',
+                taxType: taxType || '-',
+                charge: charge || '-',
+                unitQuantity:unitPrice || '-',
+            };
+            if (currentDescription) {
+                structuredHSNLines.push(currentDescription);
             }
+        }
+    
+        if (line.match(/996(\d{3})/)) {
+
+            const taxPercentageRegex = /(\w+)\s+@+\s+(\d+)%\s+(\d+\.\d+)/;
 
             const taxPercentageMatch = extractedData[hsnId + 1].content.match(taxPercentageRegex);
             const taxPercentage = taxPercentageMatch ? parseFloat(taxPercentageMatch[2]) : 0;
@@ -391,13 +411,15 @@ export const extractDhlairduty = async (pdf) => {
             const chargeMatch = line.match(/(\d+-\w+)\s+(\w+)\s+(.+)/);
             const chargeValue = chargeMatch ? chargeMatch[3].trim().replace(/,/g, "") : '';
             const charge = parseFloat(chargeValue.match(/[\d.]+/)).toFixed(2) || 0;
+            const unitPrice = parseFloat(chargeValue.match(/[\d.]+/)).toFixed(2) || 0;
 
-            currentHSN = {
+
+            structuredHSNLines.push({
                 description: description,
                 HSN: hsnWithoutDescription[0] || '',
-                unitQuantity: extractedData[hsnId - 1].content,
+                unitQuantity: "1",
+                unitPrice: unitPrice,
                 mainTax: extractedData[hsnId + 1].content,
-                unitPrice: extractedData[hsnId - 2].content,
                 taxType: taxType,
                 charge: charge,
                 taxPercentage: taxPercentage,
@@ -408,12 +430,9 @@ export const extractDhlairduty = async (pdf) => {
                 tax: extractedData[hsnId - 6].content,
                 roe: extractedData[hsnId - 9].content,
                 amount: extractedData[hsnId - 10].content,
-            };
+            });
         }
-    }
 
-    if (currentHSN) {
-        structuredHSNLines.push(currentHSN);
     }
 
     const InvoiceLines = [];
