@@ -265,7 +265,6 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
       <Card >
         <Table
         size='small'
-        rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
         rowKey={record => record}
           columns={columnsSkelton}
           dataSource={lTData}

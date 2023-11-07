@@ -181,7 +181,6 @@ export const FabricDevelopmentView = () =>{
             </Link>
           }>
             <Table dataSource={data}
-                    rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
                     size="small" columns={columnsSkelton} />
         </Card>
     )

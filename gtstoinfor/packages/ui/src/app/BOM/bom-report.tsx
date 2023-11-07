@@ -1,35 +1,35 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {Table, Card, Button, Row, Col, Form, Select, Tabs } from 'antd';
 import {SearchOutlined, UndoOutlined } from '@ant-design/icons';
-import { StyleOrderService } from '@project-management-system/shared-services';
+import { CoBomService, StyleOrderService } from '@project-management-system/shared-services';
 
 
 const BomReport = () => {
   const styleorderService = new StyleOrderService()
-
+  const Bomservice = new CoBomService()
   const [form] = Form.useForm();
   const { TabPane } = Tabs;
   const {Option} = Select;
   const [page, setPage] = React.useState(1);
   const [codata, setCOData] = useState<any[]>([]);
+  const [bom, setBom] = useState<any[]>([]);
+
 
 
 
 
   useEffect(() => {
-    getCoData();
-   
+    getBom();
   }, []);
 
-  const getCoData = () => {
 
-    styleorderService.getCoNumber().then((res) => {
-      if (res.status) {
-        setCOData(res.data);
-       }
-    });
+const getBom =()=>{
+  Bomservice.getBomAgainstItem().then((res)=>{
+    if (res.status){
+      setBom(res.data)
+    }
+  })
 }
-
     
 
 
@@ -141,7 +141,7 @@ const BomReport = () => {
                       <Table
                       size="small"
                       columns={columnsSkelton}
-                      // dataSource={rowData[0]?.sampleTrimInfo}
+                      dataSource={ bom}
                       scroll={{ x: true }}
                       bordered
                       pagination ={false}

@@ -1,11 +1,11 @@
 import {  Column, Entity,PrimaryGeneratedColumn, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 
 
-@Entity('group-tech-class')
+@Entity('group_tech_class')
 export class GroupTechClassEntity  {
 
   @PrimaryGeneratedColumn("increment", { 
-    name: 'group-tech-class_id' })
+    name: 'group_tech_class_id' })
     groupTechClassId: number;
 
   @Column("varchar", {

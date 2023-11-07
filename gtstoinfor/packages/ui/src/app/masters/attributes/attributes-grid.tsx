@@ -403,7 +403,6 @@ export function AttributesGrid(props: AttributesProps) {
       <Table
         size="small"
         rowKey={(record) => record.attributeId}
-        rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
 
         columns={columnsSkelton}
         dataSource={attributesData}

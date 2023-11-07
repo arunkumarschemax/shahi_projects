@@ -313,7 +313,6 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
           <br></br>
           <Table
           size='small'
-          rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
 
           rowKey={record => record.fabricWeaveId}
           columns={columnsSkelton}

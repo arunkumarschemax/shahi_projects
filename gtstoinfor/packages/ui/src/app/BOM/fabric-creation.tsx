@@ -96,14 +96,15 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           setCurrencyData(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
-        }
+        } 
+        // else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        setCurrencyData([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   setCurrencyData([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
   const getAllFabricFinish = () => {
     fabricfinishservice
@@ -111,9 +112,10 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           setFabric(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
-        }
+        } 
+        // else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
       // .catch((err) => {
       //   setFabric(res.data);
@@ -127,14 +129,15 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           sethierarchyLevel(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
         }
+        //  else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        sethierarchyLevel([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   sethierarchyLevel([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
 
   const getAllDeliveryTerms = () => {
@@ -143,14 +146,15 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           setDeliveryTerms(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
         }
+        //  else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        setDeliveryTerms([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   setDeliveryTerms([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
 
   const getAllDeliveryMethod = () => {
@@ -159,14 +163,15 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           setDeliveryMethod(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
-        }
+        } 
+        // else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        setDeliveryMethod([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   setDeliveryMethod([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
   const getAllProducts = () => {
     proDUCTService
@@ -174,14 +179,15 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           setProduct(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
-        }
+        } 
+        // else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        setProduct([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   setProduct([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
   const getAllProcurement = () => {
     procurementservice
@@ -189,14 +195,15 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           setProcurement(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
         }
+        //  else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        setProcurement([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   setProcurement([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
   const getAllItemCategory = () => {
     itemcategoryService
@@ -204,14 +211,15 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           setItemCategory(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
-        }
+        } 
+        // else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        setItemCategory([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   setItemCategory([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
   const getAllEmployes=() =>{
     employeservice.getAllActiveEmploee().then(res =>{
@@ -219,13 +227,15 @@ useEffect(() => {
         // console.log(res,'llllll')
         setEmployeData(res.data);
          
-      } else{
-        AlertMessages.getErrorMessage(res.internalMessage);
-         }
-    }).catch(err => {
-      setEmployeData([]);
-       AlertMessages.getErrorMessage(err.message);
-     })        
+      }
+      //  else{
+      //   AlertMessages.getErrorMessage(res.internalMessage);
+      //    }
+    })
+    // .catch(err => {
+    //   setEmployeData([]);
+    //    AlertMessages.getErrorMessage(err.message);
+    //  })        
   }
   const getAllFacilitys=() =>{
     facilityservice.getFactories().then(res =>{
@@ -233,13 +243,15 @@ useEffect(() => {
         // console.log(res,'llllll')
         setfacilityData(res.data);
          
-      } else{
-        AlertMessages.getErrorMessage(res.internalMessage);
-         }
-    }).catch(err => {
-      setfacilityData([]);
-       AlertMessages.getErrorMessage(err.message);
-     })        
+      } 
+      // else{
+      //   AlertMessages.getErrorMessage(res.internalMessage);
+      //    }
+    })
+    // .catch(err => {
+    //   setfacilityData([]);
+    //    AlertMessages.getErrorMessage(err.message);
+    //  })        
   }
 
   const getAllPch = () => {
@@ -247,14 +259,15 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           setpchData(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
         }
+        //  else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        setpchData([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   setpchData([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
   const getAllItemGroups=() =>{
     itemGroupservice.getAllActiveItemGroup().then(res =>{
@@ -262,13 +275,15 @@ useEffect(() => {
         // console.log(res,'llllll')
         setitemgroup(res.data);
          
-      } else{
-        AlertMessages.getErrorMessage(res.internalMessage);
-         }
-    }).catch(err => {
-      setitemgroup([]);
-       AlertMessages.getErrorMessage(err.message);
-     })        
+      } 
+      // else{
+      //   AlertMessages.getErrorMessage(res.internalMessage);
+      //    }
+    })
+    // .catch(err => {
+    //   setitemgroup([]);
+    //    AlertMessages.getErrorMessage(err.message);
+    //  })        
   }
   const getAllItemType=() =>{
     itemTypeservice.getAllActiveItemType().then(res =>{
@@ -276,13 +291,15 @@ useEffect(() => {
         // console.log(res,'llllll')
         setItemType(res.data);
          
-      } else{
-        AlertMessages.getErrorMessage(res.internalMessage);
-         }
-    }).catch(err => {
-      setItemType([]);
-       AlertMessages.getErrorMessage(err.message);
-     })        
+      }
+      //  else{
+      //   AlertMessages.getErrorMessage(res.internalMessage);
+      //    }
+    })
+    // .catch(err => {
+    //   setItemType([]);
+    //    AlertMessages.getErrorMessage(err.message);
+    //  })        
   }
 
   const getAllActiveLiscenceTypes = () => {
@@ -291,28 +308,30 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           setLicenseTypeData(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
         }
+        //  else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        setLicenseTypeData([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   setLicenseTypeData([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
 
   const getAllUoms = () => {
     uomservice.getAllUoms().then((res) => {
         if (res.status) {
           setUomData(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
-        }
+        } 
+        // else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        setUomData([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   setUomData([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
 
   const getTax = () =>{
@@ -349,7 +368,8 @@ rmservice.createRm(values).then((res)=>{
   else{
     AlertMessages.getWarningMessage(res.internalMessage)
   }
-}).catch(err =>{
+})
+.catch(err =>{
   AlertMessages.getWarningMessage(err.message)
 })
     })
@@ -369,7 +389,7 @@ rmservice.createRm(values).then((res)=>{
     }
     return 0;
   };
-console.log(calculateTotal(),'4444444 ');
+// console.log(calculateTotal(),'4444444 ');
 
   const onReset = () => {
     form.resetFields();

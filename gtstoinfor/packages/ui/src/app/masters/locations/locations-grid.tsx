@@ -284,7 +284,6 @@ export function LocationsGrid(props: LocationsGridProps) {
           <br></br>
           <Table
           rowKey={record => record.Id}
-          rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
 
           columns={columnsSkelton}
           dataSource={locationData}

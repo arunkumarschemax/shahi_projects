@@ -364,7 +364,6 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}
-          rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
 
           pagination={{
             onChange(current) {
