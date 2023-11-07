@@ -1,6 +1,6 @@
  
 
-import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, GroupTechClassService, ItemCategoryService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
+import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, GroupTechClassService, ItemCategoryService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Descriptions, Row, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import moment from "moment";
@@ -37,6 +37,7 @@ export function ItemCreationDetailView  (props: Props)  {
     const [group,setGroup] = useState([]);
     const [currency,setCurrency]= useState([]);
     const [itemgroup,setitemgroup] = useState([]);
+    const [rangedata,setRangeData] = useState([]);
 
 
     const itemGroupservice = new ItemGroupService();
@@ -54,6 +55,8 @@ export function ItemCreationDetailView  (props: Props)  {
     const roslservice = new ROSLGroupsService();
     const uomservice = new UomService();
     const grouptech = new GroupTechClassService();
+    const Rangeservice = new RangeService();
+
 
 
 
@@ -74,6 +77,7 @@ export function ItemCreationDetailView  (props: Props)  {
        getAllGroupTech();
        getAllCurrencies();
        getAllItemGroups();
+       getAllRanges();
       }, [])
 
       const getAllLicense=()=>{
@@ -216,6 +220,16 @@ export function ItemCreationDetailView  (props: Props)  {
                 }
            })        
          }
+         const getAllRanges=()=>{
+          Rangeservice.getActiveRange().then(res=>{
+            if(res.status){
+              setRangeData(res.data);
+            }else{
+              AlertMessages.getErrorMessage(res.internalMessage)
+
+            }
+          })
+         }
       function getLicenseType(DATA) {
         const foundLicense = Object.assign(licence).find(license => (license.liscenceTypeId).toLocaleString() === DATA);
         return foundLicense ? foundLicense.liscenceType : "-";
@@ -320,6 +334,10 @@ export function ItemCreationDetailView  (props: Props)  {
         const foundC = currency.find(dat => (dat.currencyId).toLocaleString() === data);
         return foundC ? foundC.currencyName : "-";
       }
+   function getRange(data) {
+    const foundD = rangedata.find(dat => (dat.currencyId).toLocaleString() === data);
+    return foundD ? foundD.currencyName : "-";
+}
       
     return(
         <Card title={<span style={{ color: 'black' }}>Item Creation Detailed View<span style={{color:'#0A93E1  '}}></span></span>}  headStyle={{ fontWeight: 'bold' }} extra={<Link to='/materialCreation/item-creation-view' ><span style={{color:'white'}} >
@@ -332,7 +350,7 @@ export function ItemCreationDetailView  (props: Props)  {
                     <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>ItemType</span>} >{getItemType(stateData.item_type_id)}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Brand</span>} >{getBrand(stateData.brand_id)}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Category</span>} >{ItemCategory(stateData.category_id)}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Item Group</span>} >{(stateData.item_group)}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Item Group</span>} >{getItemGroups(stateData.item_group)}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Season</span>} >{stateData.season_id}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Shahi Style</span>} >{stateData?.internal_style_id}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Referenced</span>} >{stateData.reference_id}</Descriptions.Item>
@@ -375,7 +393,7 @@ export function ItemCreationDetailView  (props: Props)  {
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>FR TNA</span>} >-</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold', color: '' }}>Total Order Qty</span>}>
                      {Number(stateData.order_qty).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Range</span>} >{stateData.range}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Range</span>} >{getRange(stateData.range)}</Descriptions.Item>
 
                     </Descriptions></Card>
                     

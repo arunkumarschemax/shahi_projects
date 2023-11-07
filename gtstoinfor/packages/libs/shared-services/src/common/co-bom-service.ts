@@ -1,5 +1,5 @@
 import { CommonAxiosService } from "packages/libs/shared-services/src/common-axios-service-prs";
-import { CommonResponseModel,CoBomDto, StyleOrderIdReq, StyleOrderid } from "@project-management-system/shared-models";
+import { CommonResponseModel,CoBomDto, StyleOrderIdReq, StyleOrderid, styleOrderReq } from "@project-management-system/shared-models";
 
 
 export class CoBomService extends CommonAxiosService{
@@ -10,4 +10,7 @@ export class CoBomService extends CommonAxiosService{
       }
 
     
+    async getBomAgainstItem(req?:styleOrderReq):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL + "/getBomAgainstItem")
+    }
 }

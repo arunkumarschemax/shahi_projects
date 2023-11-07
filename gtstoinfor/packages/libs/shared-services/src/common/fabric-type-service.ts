@@ -8,7 +8,7 @@ export class FabricTypeService extends CommonAxiosService{
     URL ='/fabricType';
 
     async createFabricType(dto:FabricTypesDto): Promise<FabricTypeResponse>{
-        console.log(dto,'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
+      //  console.log(dto,'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
         return this.axiosPostCall(this.URL + '/createFabricType', dto)
     } 
     async updateFabricType(dto: FabricTypesDto): Promise<FabricTypeResponse>{

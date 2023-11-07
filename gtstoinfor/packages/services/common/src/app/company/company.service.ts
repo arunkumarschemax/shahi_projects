@@ -235,7 +235,7 @@ export class CompanyService {
           } 
           
           const save = await this.companyRepository.save(entityArr)
-          console.log('-------------------',save)
+       //   console.log('-------------------',save)
           return saveData;
         } else {
           return 'No response Data';

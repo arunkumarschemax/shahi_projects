@@ -6,7 +6,7 @@ export class PaymentTermsService extends CommonAxiosService {
     URL = "/payment-terms";
 
     async createPaymentTerms(dto: PaymentTermsDto): Promise<PaymentTermsResponseModel> {
-       console.log(dto,"777777");
+     //  console.log(dto,"777777");
        return this.axiosPostCall(this.URL + '/createPaymentTerms',dto)
     }
 
@@ -17,14 +17,14 @@ export class PaymentTermsService extends CommonAxiosService {
 
 
     async  activateOrDeactivatePaymentTerms(Dto: PaymentTermsDto): Promise<PaymentTermsResponseModel> {
-        console.log(Dto ,"front activate")
+       // console.log(Dto ,"front activate")
          return this.axiosPostCall(this.URL + '/activateOrDeactivatePaymentTerms', Dto)
                     
      }
 
 
      async getAllPaymentTerms(req?:UserRequestDto): Promise<AllPaymentTermsResponseModel> {
-        console.log('uuuuuuu')
+    //    console.log('uuuuuuu')
         return this.axiosPostCall(this.URL + '/getAllPaymentTerms',req)
                      
         }

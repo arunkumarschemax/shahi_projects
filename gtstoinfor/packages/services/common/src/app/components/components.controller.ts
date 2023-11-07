@@ -18,9 +18,9 @@ export class ComponentsController {
     @Post('/createComponent')
     @ApiBody({type:ComponentsDTO})
     async createComponent(@Body() componentDto:any): Promise<ComponentResponseModel> {
-      console.log('--------------------------------------')
-      console.log(componentDto)
-      console.log('--------------------------------------')
+    //  console.log('--------------------------------------')
+    //  console.log(componentDto)
+     // console.log('--------------------------------------')
 
     try {
         return await this.componentService.createComponent(componentDto, false);

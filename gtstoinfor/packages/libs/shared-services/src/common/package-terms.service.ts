@@ -6,7 +6,7 @@ export class PackageTermsService extends CommonAxiosService {
     URL = "/package-terms";
 
     async createPackageTerms(dto: PackageTermsDto): Promise<PackageTermsResponseModel> {
-       console.log(dto,"777777");
+     //  console.log(dto,"777777");
        return this.axiosPostCall(this.URL + '/createPackageTerms',dto)
     }
 
@@ -17,14 +17,14 @@ export class PackageTermsService extends CommonAxiosService {
 
 
     async  activateOrDeactivatePackageTerms(Dto: PackageTermsDto): Promise<PackageTermsResponseModel> {
-        console.log(Dto ,"front activate")
+       // console.log(Dto ,"front activate")
          return this.axiosPostCall(this.URL + '/activateOrDeactivatePackageTerms', Dto)
                     
      }
 
 
      async getAllPackageTerms(req?:UserRequestDto): Promise<AllPackageTermsResponseModel> {
-        console.log('uuuuuuu')
+      //  console.log('uuuuuuu')
         return this.axiosPostCall(this.URL + '/getAllPackageTerms',req)
                      
         }
