@@ -168,6 +168,7 @@ import SubstitutionView from "./BOM/substitution-view"
 import TrimOperationMappingView from "./common/product-structure(BOM)/trim-operation-mapping-view"
 import MOPReport from "./procurement/mop-report"
 import BomReport from "./BOM/bom-report"
+import RMSkuView from "./rm-skus/rm-sku-view"
 
 
 export const AppRoutes = () => {
@@ -621,6 +622,7 @@ export const AppRoutes = () => {
                 <Route path='rm-creation-view' element={<RMCreationView/>}/>
                 
                 <Route path='rm-skus' element={<RmSkusGeneration/>}/>
+                <Route path='rm-skus-view' element={<RMSkuView/>}/>
                 <Route path='substitution-view' element={<SubstitutionView/>}/>
 
                 </Route>

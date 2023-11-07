@@ -1,4 +1,4 @@
-import { RmItemTypeEnum, RmSkuModel, RmSkuReq, RmSkuResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, RMSkuFilterReq, RmItemTypeEnum, RmSkuModel, RmSkuReq, RmSkuResponseModel } from "@project-management-system/shared-models";
 import { RmSkus } from "./rm-sku.entity";
 
 
@@ -69,18 +69,68 @@ export class RmSkusService {
 
     }
 
-    async getAllRmSKUs(): Promise<RmSkuResponseModel> {
+    async getAllRmSKUs(req: RMSkuFilterReq): Promise<CommonResponseModel> {
         try {
-            const data = await this.repo.find({ order: { rmSkuCode: 'ASC' } });
-    
-            const rmSkuModels = data.map((rmSku) => {
-                return new RmSkuModel(rmSku.rmItemId,rmSku.itemType,[],rmSku.status,rmSku.itemCode);
+            const data = await this.repo.find({
+                where:{rmSkuCode: req.skuCode,featureCode:req.featureCode,itemCode: req.itemCode,optionValue: req.optionValue},
+                order: { rmSkuId: 'ASC' } 
             });
-    
-            if (rmSkuModels.length > 0) {
-                return new RmSkuResponseModel(true, 1, "RM SKU's retrieved successfully", rmSkuModels);
+            if (data.length > 0) {
+                return new CommonResponseModel(true, 1, "RM SKU's retrieved successfully", data);
             } else {
-                return new RmSkuResponseModel(false, 0, "No data found", []);
+                return new CommonResponseModel(false, 0, "No data found", []);
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async getSKUCodeData(): Promise<CommonResponseModel> {
+        try {
+            const data = await this.repo.getSKUCodeData();
+            if (data.length > 0) {
+                return new CommonResponseModel(true, 1, "RM SKU's retrieved successfully", data);
+            } else {
+                return new CommonResponseModel(false, 0, "No data found", []);
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async getFeatureCodeData(): Promise<CommonResponseModel> {
+        try {
+            const data = await this.repo.getFeatureCodeData();
+            if (data.length > 0) {
+                return new CommonResponseModel(true, 1, "RM SKU's retrieved successfully", data);
+            } else {
+                return new CommonResponseModel(false, 0, "No data found", []);
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async getItemCodeData(): Promise<CommonResponseModel> {
+        try {
+            const data = await this.repo.getItemCodeData();
+            if (data.length > 0) {
+                return new CommonResponseModel(true, 1, "RM SKU's retrieved successfully", data);
+            } else {
+                return new CommonResponseModel(false, 0, "No data found", []);
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async getOptionValueData(): Promise<CommonResponseModel> {
+        try {
+            const data = await this.repo.getOptionValueData();
+            if (data.length > 0) {
+                return new CommonResponseModel(true, 1, "RM SKU's retrieved successfully", data);
+            } else {
+                return new CommonResponseModel(false, 0, "No data found", []);
             }
         } catch (err) {
             throw err;
