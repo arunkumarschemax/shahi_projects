@@ -11,7 +11,7 @@ export class ItemCreationService extends CommonAxiosService{
   async getFgItemsDropdown(): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getFgItemsDropdown")
   }
-  async getAllFgItems(req:any): Promise<CommonResponseModel> {
+  async getAllFgItems(req?:any): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getAllFgItems",req)
   }
 }

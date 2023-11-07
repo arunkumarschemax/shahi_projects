@@ -40,11 +40,16 @@ export class StyleOrderRepository extends Repository<StyleOrder> {
     async getAllStyleOrders(req: styleOrderReq):Promise<any>{
         
         const query = await this.createQueryBuilder('co')
-        .select(`item_code,co_number,package_terms_id,agent,discount_amount,discount_per,discount_per,Payment_terms_id,facility_id,warehouse_id,currency_id,order_date,Payment_method_id,instore_date,co.sale_price,buyer_po_number,shipment_type,buyer_style,exfactory_date,buyer_id,delivery_terms_id,delivery_method_id,price_quantity,SUM(c.order_quantity)AS qty,co.co_id, co.status`)
+        .select(`item_code,co_number,agent,discount_amount,discount_per,discount_per,f.name,season,f.name AS factory,wh.warehouse_name,cu.currency_name,order_date,instore_date,co.sale_price,buyer_po_number,shipment_type,buyer_style,exfactory_date,ct.co_type,b.buyer_name,price_quantity,SUM(c.order_quantity)AS qty,co.co_id, co.status`)
         .leftJoin(CoLine,'c','c.co_id = co.co_id ')
-        // .where(`co.item_id =${req.itemId}`)
+        .leftJoin(Buyers,'b','b.buyer_id = co.buyer_id ')
+        .leftJoin(FactoriesEntity,'f','f.id = co.facility_id ')
+        .leftJoin(Warehouse,'wh','wh.warehouse_id = co.warehouse_id ')
+        .leftJoin(Currencies,'cu','cu.currency_id = co.currency_id ')
+        .leftJoin(CoTypes,'ct','ct.co_type_id = co.currency_id ')
+         .where(`co.fg_item_id =${req.itemId}`)
         if (req?.buyerId !== undefined) {
-            query.where(`buyer_id ='${req.buyerId}'`)
+            query.andWhere(`buyer_id ='${req.buyerId}'`)
         }
         query.groupBy(`co.co_number , c.co_id`)
         return query.getRawMany()

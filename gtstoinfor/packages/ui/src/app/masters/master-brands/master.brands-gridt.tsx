@@ -269,6 +269,27 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
           ...getColumnSearchProps("brandName"),
         },
         {
+          title: 'Brand Logo',
+          dataIndex: 'fileName',
+          // responsive: ['lg'],
+          sorter: (a, b) => a.fileName.localeCompare(b.fileName),
+          sortDirections: ['descend', 'ascend'],
+          ...getColumnSearchProps('fileName'),
+          render: (fileName,rowData) => {
+            const updateImage ='http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/'+rowData.fileName
+            return(
+            <div>
+              <img
+              src={updateImage} 
+              // alt={fileName}
+              style={{ maxWidth: '100px', maxHeight: '100px' }} 
+              />
+              <div>{fileName}</div>
+            </div>
+            )
+          }
+        },
+        {
           title: 'Status',
           dataIndex: 'isActive',
           // sorter: (a, b) => a.isActive.localeCompare(b.isActive),
