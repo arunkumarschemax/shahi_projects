@@ -17,11 +17,11 @@ export class CoBomRepository extends Repository<CoBom>{
     }
 
 
-    async getBomagainstitem():Promise<any>{
+    async getBomagainstitem(rmSkuId:number):Promise<any>{
         const query = await this.createQueryBuilder('i')
-        .select('*')
+        .select('i.id,i.quantity,i.coNumber,i.coLineNumber,i.fgSku,i.co_id,Fg.fgItemBomId,Fg.fgSkuId,Fg.rmItemCode,Fg.rmSkuId,Fg.consumption,Fg.itemTypeId.Fg.itemGroupeId,Fg.itemType,Fg.rm_item_id')
         .leftJoin(FgItemBom,'Fg','Fg.fgItemBomId= i.fgItemBomId')
-        // .where(`Fg.rmSkuId ='${rmSkuId}'`)
+        .where(`Fg.rmSkuId ='${rmSkuId}'`)
         return query.getRawMany
     }
  

@@ -19,9 +19,9 @@ export class CoBomService {
 
 
     
-    async getBom ():Promise<CommonResponseModel>{
+    async getBom (rmSkuId:number):Promise<CommonResponseModel>{
         try{
-            const getBom = await  this.corepo.getBomagainstitem()
+            const getBom = await  this.corepo.getBomagainstitem(rmSkuId)
             if(getBom){
                 return new  CommonResponseModel(true,1,'data retreived', getBom)
             }else{
