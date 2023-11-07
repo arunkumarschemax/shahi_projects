@@ -38,7 +38,7 @@ export class CoBomService {
     async getDataForMOPById(req?:StyleOrderId): Promise<CommonResponseModel> {
         try {
         const data = await this.corepo.getDataForMOPByCoNumber(req)
-        console.log(data,"dada")
+       // console.log(data,"dada")
         if(data.length == 0){
             return new CommonResponseModel(false,0,"No data found",[])
         } else {
@@ -56,7 +56,7 @@ export class CoBomService {
               
         //     })
 
-       console.log(data,'-----------')
+      // console.log(data,'-----------')
        return new CommonResponseModel(true, 0, "MOPData retrieved  successfully", data);
     
         //    } 

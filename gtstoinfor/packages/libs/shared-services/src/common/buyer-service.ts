@@ -48,7 +48,7 @@ export class BuyersService extends CommonAxiosService{
     }
 
     async getAllBuyersInfo(req?: BuyerExtrnalRefIdReq): Promise<CommonResponseModel> {
-        console.log(req,'sharedddddddd');
+        // console.log(req,'sharedddddddd');
         return this.axiosPostCall(this.URL + "/getAllBuyersInfo",req)
     }
     

@@ -86,20 +86,20 @@ export class AccountControlObjectService {
  async getAllaccounts(): Promise<AllAccountControlObjectResponse> {
         try {
             const garmentDto: AccountControlObjectDto[] = [];
-            console.log(garmentDto,"aaaaaaaaaa")
+         //   console.log(garmentDto,"aaaaaaaaaa")
             const garmentEntities: AccountControlObject[] = await this.accountControlObjectRepository.find({
                 order: { accountControlObjectsName: "ASC" },
                 relations: ['pch']
                 
             });
-            console.log("dooock")
+         //   console.log("dooock")
 
             if (garmentEntities.length > 0) {
                 garmentEntities.forEach(garmentEntity => {
                     const convertedGarmentDto: AccountControlObjectDto = this.accountControlObjectAdapter.convertEntityToDto(garmentEntity);
                     garmentDto.push(convertedGarmentDto);
                 });
-                console.log(garmentDto);
+           //     console.log(garmentDto);
                 const response = new AllAccountControlObjectResponse(true, 11208, "Garments retrieved successfully", garmentDto);
                 return response;
             } else {

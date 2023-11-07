@@ -35,7 +35,7 @@ async getAllitemsCode(): Promise<any> {
 }
 
 async getAllMapItems(req?: FabricFilterRequest): Promise<any> {
-  console.log(req,"989898")
+//  console.log(req,"989898")
   const dummyMapItemsData = [
       { itemsCode: 'IT001', description: 'Red color ', itemsId: 1 },
       { itemsCode: 'IT002', description: 'combination of green and black color', itemsId: 2 },

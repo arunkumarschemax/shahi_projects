@@ -19,7 +19,7 @@ export class HierachyLevelService extends CommonAxiosService{
 
 
     async  activateOrDeactivatehierachyLevel(Dto: HierarchyLevelRequest): Promise<hierachyLevelModel> {
-        console.log(Dto ,"front activate")
+     //   console.log(Dto ,"front activate")
          return this.axiosPostCall(this.URL + '/ActivateOrDeactivatehierachyLevel', Dto)
                     
      }
