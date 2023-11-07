@@ -174,9 +174,9 @@ const getMOPData= () => {
         <Form  form={form} layout="horizontal" onFinish={getMOPData}>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }}
-                      sm={{ span: 24 }}
-                      md={{ span: 4 }}
-                      lg={{ span: 4 }}
+                      sm={{ span: 8 }}
+                      md={{ span: 8 }}
+                      lg={{ span: 8 }}
                       xl={{ span: 6}} >
                         <Form.Item name='styleOrderId' label='Customer Order' >
                             <Select showSearch placeholder="Select Customer Order" optionFilterProp="children" allowClear >
@@ -197,12 +197,12 @@ const getMOPData= () => {
                             </Select>
                         </Form.Item>
                     </Col> */}
-                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} style={{marginTop:'0%'}}>
+                      <Col xs={{ span: 24 }} sm={{ span: 8 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
                     <Form.Item>
                         <Button  icon={<SearchOutlined />} htmlType="submit" type="primary">Get Report</Button>
                     </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 2 }} style={{marginTop:'0%'}}>
+                    <Col xs={{ span: 24 }} sm={{ span: 8 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 2 }}>
                     <Form.Item>
                         <Button danger icon={<UndoOutlined />} onClick={onReset}>Reset</Button>
                     </Form.Item>
