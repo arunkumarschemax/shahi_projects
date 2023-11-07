@@ -81,7 +81,7 @@ import { ItemTypeModule } from './item-type/item-type.module';
 import { RmSkusModule } from './rm-skus/rm-skus.module';
 import { ProductStructureModule } from './product-structure(BOM)/product-structure-module';
 import { RmCreationModule } from './rm-items/rm-items.module';
-import { SubstituionModule } from './substituion/substituion.model';
+import { SubstituionModule } from './substituion/substituion.module';
 
 @Module({
   imports: [
