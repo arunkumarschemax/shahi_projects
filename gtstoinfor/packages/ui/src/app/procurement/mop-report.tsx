@@ -1,22 +1,74 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select, DatePicker } from 'antd';
-import Highlighter from 'react-highlight-words';
-import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
-import {   BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, FactoryService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, ItemsService, LiscenceTypeService, MasterBrandsService, ProcurmentGroupService, ProductGroupService, ProfitControlHeadService, ROSLGroupsService, RangeService, RmCreationService, SearchGroupService, StyleService, UomService } from '@project-management-system/shared-services';
-import { CompositionDto, ItemCreFilterRequest, LiscenceTypesdDto, RMCreFilterRequest } from '@project-management-system/shared-models';
+import {Table, Card, Button, Row, Col, Form, Select, Tabs } from 'antd';
+import {SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import { CoBomService, StyleOrderService } from '@project-management-system/shared-services';
 import AlertMessages from '../common/common-functions/alert-messages';
-import moment from 'moment';
+import { StyleOrderIdReq, StyleOrderid } from '@project-management-system/shared-models';
 
 
 const MOPReport = () => {
-   const [form] = Form.useForm();
+  const styleorderService = new StyleOrderService()
+
+  const [form] = Form.useForm();
+  const { TabPane } = Tabs;
+  const {Option} = Select;
   const [page, setPage] = React.useState(1);
+  const [codata, setCOData] = useState<any[]>([]);
+  const [mopData, setMOPData] = useState<any[]>([]);
+  const [mopDataYes, setMOPDataYes] = useState([]);
+const [mopDataNo, setMOPDataNo] = useState([]);
+
+  const service = new CoBomService()
+
+
+
+  useEffect(() => {
+    getCoData();
+    getMOPData();
+   
+  }, []);
+
+  const getCoData = () => {
+
+    styleorderService.getCoNumber().then((res) => {
+      if (res.status) {
+        setCOData(res.data);
+       }
+    });
+}
+
+const getMOPData= () => {
+  const req = new StyleOrderid();
+  
+        if (form.getFieldValue('styleOrderId') !== undefined) {
+            req.styleOrderId = form.getFieldValue('styleOrderId');
+        }
+     
+
+        service.getDataForMOPById(req).then(res => {
+      if (res.status) {
+        setMOPData(res.data);
+        const importedYesData = res.data.filter((item) => item.isImpItem === 'YES');
+        const importedNoData = res.data.filter((item) => item.isImpItem === 'NO');
+  
+        setMOPDataYes(importedYesData);
+        setMOPDataNo(importedNoData);
+      } else
+      {
+        setMOPData([])
+        setMOPDataYes([]); 
+        setMOPDataNo([]); 
+          AlertMessages.getErrorMessage(res.internalMessage);
+      }
+      }).catch(err => {
+      AlertMessages.getErrorMessage(err.message);
+      setMOPData([]);
+      })
+      }
+
 
     
-
-    
-
+   console.log(mopData,"mopdata")
 
 
   const columnsSkelton: any = [
@@ -27,130 +79,96 @@ const MOPReport = () => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
-      title: "Item Type",
-      dataIndex: "item_type_id",
+      title: "Co Line",
+      dataIndex: "coLineNumber",
       align:'center',
-    
-      sorter: (a, b) => a.itemTypeId.localeCompare(b.itemTypeId),
+      sorter: (a, b) => a.coLineNumber.localeCompare(b.coLineNumber),
       sortDirections: ['descend', 'ascend'],
     },
     {
-        title: "Item Code",
-        dataIndex: "item_code",
+      title: "FG code",
+      dataIndex: "item_code",
+      align:'center',
+    
+      sorter: (a, b) => a.item_code.localeCompare(b.item_code),
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: "Color",
+      dataIndex: "color_id",
+      align:'center',
+      sorter: (a, b) => a.color_id.localeCompare(b.color_id),
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+        title: "Size",
+        dataIndex: "size",
         align:'center',
-        sorter: (a, b) => a.item_code.localeCompare(b.item_code),
+        sorter: (a, b) => a.size.localeCompare(b.size),
+            sortDirections: ['descend', 'ascend'],
+      },
+      {
+        title: "Destination",
+        dataIndex: "destination",
+        align:'center',
+        sorter: (a, b) => a.destination.localeCompare(b.destination),
             sortDirections: ['descend', 'ascend'],
       },
 
       {
-        title: "Item Group",
-        dataIndex: "item_group_id",
+        title: "Quantity",
+        dataIndex: "quantity",
         align:'center',
-             sortDirections: ['descend', 'ascend'],
+        sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+        sortDirections: ['descend', 'ascend'],
       }, 
       {
-        title: "PCH",
-        dataIndex: "pch_id",align:'center',
-      
-        
+        title: "RM item Code",
+        dataIndex: "rmitemCode",
+        align:'center',
+        sorter: (a, b) => a.rmitemCode.localeCompare(b.rmitemCode),
+        sortDirections: ['descend', 'ascend'],
       },
-      {
-        title: "Placement",
-        dataIndex: "placement",align:'center',
-       
-      },
-      {
-        title: "Facility",
-        dataIndex: "facility_id",align:'center',
-     
-        
-       
-      },
-      {
-        title: "Responsible",
-        dataIndex: "responsible_person_id",align:'center',
-      
 
-      },
       {
-        title: "Product Group",
-        dataIndex: "product_group_id",align:'center',
-      
-        
+        title: "RM Sku Code",
+        dataIndex: "rmSkuCode",
+        align:'center',
+        sorter: (a, b) => a.rmSkuCode.localeCompare(b.rmSkuCode),
+        sortDirections: ['descend', 'ascend'],
       },
-      {
-        title: "Procurement Group",
-        dataIndex: "procurement_gorup_id",align:'center',
-             sortDirections: ['descend', 'ascend'],
-
-      },
-      {
-        title: "Attached WareHouse",
-        dataIndex: "attached_warehouse",
     
-      },
-      {
-        title: "Planner",
-        dataIndex: "planner",        
-        align:'center',
-
-
-      },
-      {
-        title: "Business Area ",
-        dataIndex: "business_area",        
-        align:'center',
-
-
-      },
-      {
-        title: "Basic UOM",
-        dataIndex: "basic_uom_id",
-        align:'center',
-        
-      },
-      {
-        title: "Currency",
-        dataIndex: "currency",align:'center',
-       
-        
-      },
-      {
-        title: "Description",
-        dataIndex: "description",align:'center',
-      },
-      {
-        title: "Sales Price",
-        dataIndex: "sale_price",
-      
-        
-
-      },
-      {
-        title: "Supplier",
-        dataIndex: "sale_price",
-        align:'center',
-     
-
-      },
-      
   ];
 
+  const  onReset =() =>{
+    form.resetFields();
+    getMOPData();
+  }
 
+console.log(mopDataYes,"yes")
+console.log(mopDataNo,"no")
 
   
 
 
   return (
-      <>
-      <Card title={<span >MOP Report</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }}>
-      <Card >
-      <Form  form={form} layout="horizontal">
+       <Card title={<span >Material Order Proposal Report</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }}>
+        <Form  form={form} layout="horizontal" onFinish={getMOPData}>
                 <Row gutter={24}>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='customerOrder' label='Customer Order' >
+                    <Col xs={{ span: 24 }}
+                      sm={{ span: 24 }}
+                      md={{ span: 4 }}
+                      lg={{ span: 4 }}
+                      xl={{ span: 6}} >
+                        <Form.Item name='styleOrderId' label='Customer Order' >
                             <Select showSearch placeholder="Select Customer Order" optionFilterProp="children" allowClear >
-                               
+                            {
+                           codata.map((e) => {
+                                    return(
+                                        <Option key={e.coId} value={e.coId}>{e.coNumber}</Option>
+                                    )
+                                })
+                            } 
                             </Select>
                         </Form.Item>
                     </Col>
@@ -161,30 +179,45 @@ const MOPReport = () => {
                             </Select>
                         </Form.Item>
                     </Col> */}
+                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} style={{marginTop:'0%'}}>
+                    <Form.Item>
+                        <Button  icon={<SearchOutlined />} htmlType="submit" type="primary">Get Report</Button>
+                    </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 2 }} style={{marginTop:'0%'}}>
+                    <Form.Item>
+                        <Button danger icon={<UndoOutlined />} onClick={onReset}>Reset</Button>
+                    </Form.Item>
+                    </Col>
                   
                 </Row>
-            </Form>
-            <>
+                <Tabs type={'card'} tabPosition={'top'}>
+                   <TabPane key="1" tab={<span style={{fontSize:'15px'}}><b>{`MOP`}</b></span>}>
+                      <Table
+                      size="small"
+                      columns={columnsSkelton}
+                      dataSource={mopDataYes}
+                      scroll={{ x: true }}
+                      bordered
+                      pagination ={false}
+                    />
+                  </TabPane>
+                      <TabPane key="2" tab={<span style={{fontSize:'15px'}}><b>{`POP`}</b></span>}>
+                      <Table
+                      size="small"
+                      columns={columnsSkelton}
+                      dataSource={mopDataNo}
+                      scroll={{ x: true }}
+                      bordered
+                      pagination ={false}
+                  />
+                </TabPane>
+            </Tabs>
+        </Form>
 
-        <Table
-         size='small'
-         rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
-
-        rowKey={record => record}
-        className='custom-table-wrapper'
-          columns={columnsSkelton}
-        //   dataSource={ItemData}
-        
-         
-           scroll={{x: 'max-content'}}
-        //   onChange={onChange}
-         />
-         </>
-      </Card>
-   
   
      
-      </Card> </>
+      </Card> 
       
   );
 }
