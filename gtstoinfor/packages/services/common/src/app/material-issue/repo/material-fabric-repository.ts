@@ -21,4 +21,9 @@ export class MaterialFabricRepository extends Repository<MaterialFabricEntity> {
             .where(`mi.style_id = '${req.styleId}'`)
         return await query.getRawMany();
     }
+    async getAllActiveFabrics (){
+        const query = this.createQueryBuilder(`fb`)
+        .select(`fb.material_fabric_id,fb.fabric_code ,fb.description ,fb.color_id ,fb.consumption,fb.consumption_uom,fb.issued_quantity,fb.issued_quantity_uom`)
+        return await query.getRawMany(); 
+       }
 }

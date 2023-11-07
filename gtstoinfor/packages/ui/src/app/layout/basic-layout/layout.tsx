@@ -826,22 +826,22 @@ export const baseRouterList = [
          
         ]
     },
+   
     {
         label: "Reports",
         key: "reports",
         // icon:<FontAwesomeIcon icon={faShirt} />,
-        path: "report",
-        filepath: "report",
-        childern:[
+        path: "/report",
+        filepath: "/report",
+        children:[
             {
                 label: "Material Issues Report",
-                key: "report",
-                path: "material-report",
-                filepath: "material-report",
+                key: "material-issue-report",
+                path: "material-issue-report",
+                filepath: "material-issue-report",
             },
         ]
-
-    },
+    }
     // {
     //     label: "Orders",
     //     key: "excel-import",
