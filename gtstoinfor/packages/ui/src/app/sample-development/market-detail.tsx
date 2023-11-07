@@ -1,5 +1,5 @@
 import { SettingsIdReq, SettingsModel } from "@project-management-system/shared-models"
-import { SampleDevelopmentService, SettingsService } from "@project-management-system/shared-services"
+import { ColourService, LocationsService, SampleDevelopmentService, SettingsService } from "@project-management-system/shared-services"
 import { Button, Card, Col, Descriptions, Input, Row, Table, Tabs, Tooltip } from "antd"
 import DescriptionsItem from "antd/es/descriptions/Item"
 import TabPane from "antd/es/tabs/TabPane"
@@ -20,14 +20,19 @@ export const MarketIssueDetail = () => {
     const [id, setId] = useState<any[]>([])
     const location = useLocation();
     const rowData = location.state.data
+    
+    const colorService = new ColourService()
+    const [colorData, setColorData] = useState<any[]>([])
+        
+    useEffect(() => {
+      getData()
+  },[])
 
-    // useEffect(() => {
-    //   setRowData(location.state.val)
-    // },[])
+
+
 
     
-    console.log(rowData,"roowww")
-    console.log(rowData[0].locationName,"roowww")
+    
     // const getSampleDevById = () => {
     //     service.getSampleDevById(req).then(res => {
     //       if(res){
@@ -36,12 +41,23 @@ export const MarketIssueDetail = () => {
     //     })
     //   }
 
-    // const getData = ()=>{
-    //     service.getSampleDevById().then((res)=>{
-    //         setData(res)
-    //         console.log(res)
-    //     })
-    // }
+    const getData = ()=>{
+        service.getAllSampleData().then((res)=>{
+        
+            setData(res.data)
+        })
+
+       
+        
+
+        colorService.getAllColour().then(res=>{
+          if(res.status){
+
+          setColorData(res.data)
+          }
+        })
+    }
+
 
     const handleInputChange = (e, key, field) => {
         const updatedData = data.map((record) => {
@@ -55,6 +71,7 @@ export const MarketIssueDetail = () => {
     
 
     const onUpdate = () => {
+      
         navigate('/sample-development/sample-requests',{state:{id:data[0]?.settingsId}})
     }
 
@@ -93,13 +110,26 @@ export const MarketIssueDetail = () => {
           title: 'Description',
           dataIndex: 'description',
         },
+        // {
+        //   title: 'Color',
+        //   dataIndex: 'color',
+        // },
+
         {
-          title: 'Color',
-          dataIndex: 'color',
-        },
+          title: 'color',
+          dataIndex: 'colourId',
+          render: (data) => {
+            
+            const colMethod = colorData.find(res => res.colourId === data);
+            
+            return colMethod? colMethod.colour:"-";}
+      },
+
+
+
         {
           title: 'Consumption',
-          dataIndex: 'trim_consumption',
+          dataIndex: 'consumption',
         },
         // {
         //   title: 'Issued Quantity',
@@ -152,12 +182,12 @@ export const MarketIssueDetail = () => {
              <Descriptions size='small'>
                 <DescriptionsItem label='Location'>{rowData?.[0]?.locationName}</DescriptionsItem>
                 <DescriptionsItem label='PCH'>{rowData?.[0]?.pch}</DescriptionsItem>
-                <DescriptionsItem label='User'>{}</DescriptionsItem>
+                <DescriptionsItem label='User'>{rowData?.[0]?.user}</DescriptionsItem>
                 <DescriptionsItem label='Buyer'>{rowData?.[0]?.buyerName}</DescriptionsItem>
                 <DescriptionsItem label='Sample Type'>{rowData?.[0]?.sampleType}</DescriptionsItem>
                 <DescriptionsItem label='Sample Sub Type'>{rowData?.[0]?.sampleSubType}</DescriptionsItem>
                 <DescriptionsItem label='Style'>{rowData?.[0]?.style}</DescriptionsItem>
-                <DescriptionsItem label='Description'>{}</DescriptionsItem>
+                <DescriptionsItem label='Description'>{rowData?.[0]?.description}</DescriptionsItem>
                 <DescriptionsItem label='Brand'>{rowData?.[0]?.brandName}</DescriptionsItem>
                 <DescriptionsItem label='Cost Ref'>{rowData?.[0]?.costRef}</DescriptionsItem>
                 <DescriptionsItem label='M3 Style No'>{rowData?.[0]?.m3StyleNo}</DescriptionsItem>
@@ -170,7 +200,7 @@ export const MarketIssueDetail = () => {
                 <DescriptionsItem label='Type'>{rowData?.[0]?.type}</DescriptionsItem>
                 <DescriptionsItem label='Conversion'>{rowData?.[0]?.conversion}</DescriptionsItem>
                 <DescriptionsItem label='Made In'>{rowData?.[0]?.madeIn}</DescriptionsItem>
-                <DescriptionsItem label='Remarks'>{}</DescriptionsItem>
+                <DescriptionsItem label='Remarks'>{rowData?.[0]?.remarks}</DescriptionsItem>
             </Descriptions>
 
             <Tabs type={'card'} tabPosition={'top'}>
@@ -178,7 +208,7 @@ export const MarketIssueDetail = () => {
                 <Table
                 size="small"
                 columns={columnsSkelton}
-                dataSource={data[0]?.fabricInfo}
+                dataSource={rowData[0]?.sampleReqFabricInfo}
                 scroll={{ x: true }}
                 bordered
                 pagination ={false}
@@ -188,7 +218,7 @@ export const MarketIssueDetail = () => {
                 <Table
                 size="small"
                 columns={columns}
-                dataSource={data[0]?.trimInfo}
+                dataSource={rowData[0]?.sampleTrimInfo}
                 scroll={{ x: true }}
                 bordered
                 pagination ={false}

@@ -13,6 +13,7 @@ import { ProfitControlHead } from "../profit-control-head/profit-control-head-en
 import { MaterialFabricEntity } from "./entity/material-fabric-entity";
 import { MaterialTrimEntity } from "./entity/material-trim-entity";
 import { MaterialIssueDto } from "./dto/material-issue-dto";
+import { Result } from 'antd';
 import { AppDataSource } from "../app-datasource";
 
 
@@ -235,7 +236,53 @@ async getDataByStyleId(req: MaterialIssueRequest):Promise<CommonResponseModel>{
         }
     }
 
-
+    async getMaterialIssue(): Promise<CommonResponseModel> {
+        try {
+          const data = await this.issueRepo.getMaterialIssue(); 
+          if (data.length > 0) {
+            const groupedData = data.reduce((result, item) => {
+              const requestNo = item.requestNo;
+              const consumptionCode = item.consumptioncode;
+              const style_no = item.style_no;
+              const sampletype = item.sampletype;
+              const pchId = item.pchId;
+              const date = item.date;
+              const locationId = item.locationId;
+              const style = item.style;
+              const m3_style_no = item.m3_style_no;
+              const buyer = item.buyer;
+              if (!result[consumptionCode]) {
+                result[consumptionCode] = {
+                  request_no: requestNo,
+                  consumption_code: consumptionCode,
+                  style_no:style_no,
+                  sample_type_id:sampletype,
+                  pch_id:pchId,
+                  issue_date:date,
+                  location_id:locationId,
+                  m_style_no:style,
+                  buyer_id:buyer,
+                  m3_style_no:m3_style_no,
+                  mi_items: [],
+                };
+              }
+              result[consumptionCode].mi_items.push({
+                material_fabric_id: item.material_fabric_id,
+                material_trim_id:item.material_trim_id,
+                fabric_code: item.fabric_code ,
+                description:item.description,
+                color_id:item.color_id,
+                consumption:item.consumption,
+                issued_quantity:item.issued_quantity,
+              });
+              return result;
+            }, {});
     
-    
+            return new CommonResponseModel(true, 1, 'Data retrieved successfully', Object.values(groupedData));
+          }
+          return new CommonResponseModel(false, 0, 'No data found', []);
+        } catch (error) {
+          return new CommonResponseModel(false, 0, 'An error occurred', []);
+        }
+      }
 }
