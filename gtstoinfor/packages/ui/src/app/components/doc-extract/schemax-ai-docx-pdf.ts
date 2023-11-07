@@ -324,7 +324,7 @@ export const extractDhlairfreight = async (pdf) => {
     for (let hsnId = 0; hsnId < extractedData.length; hsnId++) {
         const line = extractedData[hsnId].content;
 
-        if (line.match(/996(\d+)/)) {
+        if (line.match(/996(\d{3})/)) {
             if (currentHSN) {
                 structuredHSNLines.push(currentHSN);
             }
@@ -358,8 +358,6 @@ export const extractDhlairfreight = async (pdf) => {
             const chargeMatch = line.match(/(\d+-\w+)\s+(\w+)\s+(.+)/);
             const chargeValue = chargeMatch ? chargeMatch[3].trim().replace(/,/g,"") : '';
             const charge = parseFloat(chargeValue.match(/[\d.]+/)).toFixed(2)|| 0;
-            
-
 
             currentHSN = {
                 description: description,
