@@ -149,57 +149,95 @@ export const extractDhl = async (pdf) => {
 
 }
 
-export const extractDhlCourier = async (pdf) => {
+
+//CGST\s+(\d+\.\d+)\s*%\s*(\d+\.\d+)//
+//SGST\s+(\d+\.\d+)\s*%\s*(\d+\.\d+)//
+
+// /(\w+)\s+(\d+\.+\d+)+\s+%+\s+(\d+\.+\d+)/ for both CGST and SGST mathces regex
+
+//CGST+\s+(\d+\.+\d+)+\s+%+\s+(\d+\.+\d+)// cgst
+//SGST+\s+(\d+\.+\d+)+\s+%+\s+(\d+\.+\d+)// sgst
+
+// /\s(\d+\/+\d+\/+\d+)\s+(\d+)\s+(\d+)\s+(\d+\.\d+)\s+(\w+)\s+(\d+\.\d+)\s+(\d+\.\d+)/ unitQuantity
+
+// /(\w+)\s+(\w+)\s+(\w+)\s+(\d+)\s+(\d+.\d+)\s+(\d+.\d+)\s+(\d+.\d+)/invoiceAmount
+
+// const unitQuantityRegex =/\s(\d+\/+\d+\/+\d+)\s+(\d+)\s+(\d+)\s+(\d+\.\d+)\s+(\w+)\s+(\d+\.\d+)\s+(\d+\.\d+)/;
+
+
+// const taxPercentage = parseFloat(extractedData[hsnId - 5].content);
+// let taxType = "No Tax";
+// if (taxPercentage === 18) {
+//     taxType = "IGST";
+// } else if (taxPercentage === 9) {
+//     taxType = "CGST & SGST";
+// }
+
+
+export const extractDhlCourierfrieght = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
-
-    //CGST\s+(\d+\.\d+)\s*%\s*(\d+\.\d+)//
-    //SGST\s+(\d+\.\d+)\s*%\s*(\d+\.\d+)//
-
-    //CGST+\s+(\d+\.+\d+)+\s+%+\s+(\d+\.+\d+)// cgst
-    //SGST+\s+(\d+\.+\d+)+\s+%+\s+(\d+\.+\d+)// sgst
-
-    // /\s(\d+\/+\d+\/+\d+)\s+(\d+)\s+(\d+)\s+(\d+\.\d+)\s+(\w+)\s+(\d+\.\d+)\s+(\d+\.\d+)/ unitQuantity
-
-    // /(\w+)\s+(\w+)\s+(\w+)\s+(\d+)\s+(\d+.\d+)\s+(\d+.\d+)\s+(\d+.\d+)/invoiceAmount
-
     const structuredHSNLines = [];
     let currentHSN = null;
     let hsnId = null;
     let linesId = 0;
 
-    const unitQuantityRegex = /\s(\d+\/+\d+\/+\d+)\s+(\d+)\s+(\d+)\s+(\d+\.\d+)\s+(\w+)\s+(\d+\.\d+)\s+(\d+\.\d+)/;
+    const taxRegex = /(\w+)\s+(\d+\.+\d+)+\s+%+\s+(\d+\.+\d+)/;
+    const chargeRegex = /TOTAL FOR SHIPMENT\s+(\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d)/;
+    const unitQuantityRegex = /\s(\d+\/+\d+\/+\d+)\s+(\d+)\s+(\d+)\s+(\d+\.\d+)\s+(\w+)\s+(\d+\.\d+)\s+(\d+\.\d)/;
 
     for (const line of extractedData) {
         if (line.content.match(/996(\d+)/)) {
             hsnId = linesId;
-            if (currentHSN) {
-                structuredHSNLines.push(currentHSN);
-            }
 
-            const taxPercentage = parseFloat(extractedData[hsnId - 5].content);
-            let taxType = "No Tax";
-            if (taxPercentage === 18) {
-                taxType = "IGST";
-            } else if (taxPercentage === 9) {
-                taxType = "CGST & SGST";
-            }
+            const chargeMatch = extractedData.find((cha) => cha.content.match(chargeRegex));
+            const chargeGroups = chargeMatch.content.match(chargeRegex);
+            const charge = chargeGroups[4] ? parseFloat(chargeGroups[4]) : '-';
 
-            const unitQuantityMatch = line.content.match(unitQuantityRegex);
-            const unitQuantity = unitQuantityMatch ? unitQuantityMatch[3] : null;
+            const taxMatch = extractedData.find((tax) => tax.content.match(taxRegex));
+            const taxFind = taxMatch.content.match(taxRegex);
+            const taxPercentage = taxFind[2] ? parseFloat(taxFind[2]) : '-';
+            const taxAmount = taxFind[3] ? parseFloat(taxFind[3]) : '-';
+
+            const unitQuantityMatch = extractedData.find((rec) => rec.content.match(unitQuantityRegex));
+            const unitQuantityFind = unitQuantityMatch.content.match(unitQuantityRegex);
+            const unitQuantity = unitQuantityFind[4] ? parseFloat(unitQuantityFind[4]) : '-';
+            const unitPrice = unitQuantityFind[3] ? parseFloat(unitQuantityFind[3]) : '-';
+
+            let taxType, igst, cgst, sgst;
+            if (taxPercentage === 9) {
+                taxType = 'CGST & SGST';
+                igst = 0;
+                cgst = taxAmount;
+                sgst = taxAmount;
+            } else if (taxPercentage === 18) {
+                taxType = 'IGST';
+                igst = taxAmount;
+                cgst = 0;
+                sgst = 0;
+            } else {
+                taxType = 'No Tax';
+                igst = 0;
+                cgst = 0;
+                sgst = 0;
+            }
 
             currentHSN = {
+                description: '-',
                 HSN: line.content.includes("HSN") ? line.content.match(/\d+/) : line.content.trim(),
                 unitQuantity: unitQuantity,
-                unitPrice: extractedData[hsnId - 2].content,
+                unitPrice: unitPrice,
                 taxType: taxType,
-                charge: extractedData[hsnId - 10].content,
+                charge: charge,
                 taxPercentage: taxPercentage,
-                taxAmount: extractedData[hsnId - 6].content * extractedData[hsnId - 9].content,
+                taxAmount: taxAmount,
+                igst: igst,
+                cgst: cgst,
+                sgst: sgst,
                 tax: extractedData[hsnId - 6].content,
                 roe: extractedData[hsnId - 9].content,
                 amount: extractedData[hsnId - 4].content,
-            };
+            }
         }
         linesId += 1;
     }
@@ -207,8 +245,6 @@ export const extractDhlCourier = async (pdf) => {
     if (currentHSN) {
         structuredHSNLines.push(currentHSN);
     }
-
-
 
 
     const InvoiceLines = [];
@@ -261,27 +297,23 @@ export const extractDhlCourier = async (pdf) => {
                 const invoiceAmountData = extractedData.find((item) => item.content.match(invoiceAmountRegex));
                 invoiceAmount = invoiceAmountData ? invoiceAmountData.content.replace(/TOTAL\s+/i, '').trim() : '';
 
-                // const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
-                //     const unitPrice = parseFloat(hsnLine.unitPrice) || 0;
-                //     const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
-                //     // const igst = parseFloat(hsnLine.igst) || 0;
-                //     // const cgst = parseFloat(hsnLine.cgst) || 0;
-                //     // const sgst = parseFloat(hsnLine.sgst) || 0;
-                //     return add + unitPrice + taxAmount;
-                // }, 0).toFixed(2);
+                let igst = "0.00";
+                let cgst = "0.00";
+                let sgst = "0.00";
 
-                const igst = structuredHSNLines.reduce((acc, hsnLine) => {
-                    const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
-                    return acc + taxAmount
-                }, 0).toFixed(2);
-
-                const cgst = structuredHSNLines.reduce((add, hsnLine) => {
-                    return add + parseFloat(hsnLine.cgst) || 0;
-                }, 0).toFixed(2);
-
-                const sgst = structuredHSNLines.reduce((acc, hsnLine) => {
-                    return acc + parseFloat(hsnLine.sgst) || 0;
-                }, 0).toFixed(2);
+                if (parseFloat(igst) > 0) {
+                    cgst = "0.00";
+                    sgst = "0.00";
+                } else {
+                    for (const hsnLine of structuredHSNLines) {
+                        if (hsnLine.taxPercentage === 18) {
+                            igst = (parseFloat(igst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+                        } else if (hsnLine.taxPercentage === 9) {
+                            cgst = (parseFloat(cgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+                            sgst = (parseFloat(sgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+                        }
+                    }
+                }
 
                 const currentInvoice = {
                     "venName": venName,
@@ -313,7 +345,8 @@ export const extractDhlCourier = async (pdf) => {
     };
 
 }
-export const extractDhlairfreight = async (pdf) => {
+
+export const extractDhlairduty = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
 
@@ -356,8 +389,8 @@ export const extractDhlairfreight = async (pdf) => {
             }
 
             const chargeMatch = line.match(/(\d+-\w+)\s+(\w+)\s+(.+)/);
-            const chargeValue = chargeMatch ? chargeMatch[3].trim().replace(/,/g,"") : '';
-            const charge = parseFloat(chargeValue.match(/[\d.]+/)).toFixed(2)|| 0;
+            const chargeValue = chargeMatch ? chargeMatch[3].trim().replace(/,/g, "") : '';
+            const charge = parseFloat(chargeValue.match(/[\d.]+/)).toFixed(2) || 0;
 
             currentHSN = {
                 description: description,
@@ -382,8 +415,6 @@ export const extractDhlairfreight = async (pdf) => {
     if (currentHSN) {
         structuredHSNLines.push(currentHSN);
     }
-
-
 
     const InvoiceLines = [];
     let gstNumberExtracted = false;
@@ -484,7 +515,6 @@ export const extractDhlairfreight = async (pdf) => {
         extractedHsnData: structuredHSNLines
     };
 }
-
 
 export const extractDart = async (pdf) => {
     const allLines = await extractPDFData(pdf);

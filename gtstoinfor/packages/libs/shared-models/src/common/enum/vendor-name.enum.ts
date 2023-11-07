@@ -1,6 +1,6 @@
 export enum VendorNameEnum {
     extractedDhl = "DHL FREIGHT",
-    extractedDhlCourier = "DHL COURIER",
+    extractedDhlCourierfrieght = "DHL COURIER FRIEGHT",
     extractedDart = "DART",
     extractedExpeditors = "EXPEDITORS",
     extractedEfl = "EFL",
@@ -23,7 +23,7 @@ export enum VendorNameEnum {
     extractedMsn="MSN",
     extractedFredexFrieght="FREDEX FRIEGHT",
     extractedFredexCourier="FREDEX  COURIER",
-    extractedDhlairfreight="DHL AIR FREIGHT",
+    extractedDhlairduty="DHL AIR DUTY",
 
 
 
