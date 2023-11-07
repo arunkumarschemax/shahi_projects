@@ -24,9 +24,9 @@ const ItemCreationView = () => {
   const navigate = useNavigate();
   const [selectedItemCreationData, setSelectedItemCreationData] = useState<any>(undefined);
  
-         const service = new ItemCreationService();
-         const brandservice = new MasterBrandsService();
-         const styleService = new StyleService();
+   const service = new ItemCreationService();
+  const brandservice = new MasterBrandsService();
+   const styleService = new StyleService();
 
 
         
@@ -457,7 +457,7 @@ const ItemCreationView = () => {
                     <RangePicker />
                     </Form.Item>
                      </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
+                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
                         <Form.Item>
                             <Button htmlType="submit"
                                 icon={<SearchOutlined />}

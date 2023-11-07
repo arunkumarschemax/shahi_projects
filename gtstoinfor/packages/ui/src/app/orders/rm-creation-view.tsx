@@ -20,42 +20,22 @@ const RMCreationView = () => {
   const navigate = useNavigate();
   const [selectedItemCreationData, setSelectedItemCreationData] = useState<any>(undefined);
   const currencyServices = new CurrencyService();
-         const styleService = new StyleService();
-         const LicenceService = new LiscenceTypeService();
-         const brandservice = new MasterBrandsService();
          const categoryService = new ItemCategoryService();
          const buyingHouseservice = new BuyingHouseService();
-         const itemCreationService = new ItemCreationService();
-         const searchgroup = new SearchGroupService();
          const itemTypeservice =new ItemTypeService();
-         const employeservice = new EmployeeDetailsService();
-         const compositionservice = new CompositionService();
-         const service = new ItemCreationService();
          const uomservice = new UomService();
          const itemGroupservice = new ItemGroupService();
          const rmservice = new RmCreationService();
-         const pchservice = new ProfitControlHeadService();
-         const facilityservice =new FactoryService();
          const procurementservice = new ProcurmentGroupService();
          const proDUCTService = new ProductGroupService();
 
 
 
-         const [facilitydata,setfacilityData] = useState([]);
          const [Procurement,setProcurement] = useState([]);
          const [Product,setProduct] = useState([]);       
-         const [pchData, setpchData] = useState([]);
-         const [searchdata,setSearchData] = useState([]);
-         const [employedata,setEmployeData] = useState([]);
-         const [customGroup,setCustomGroup]= useState([]);
          const [currency,setCurrency]= useState([]);
          const [itemgroup,setitemgroup] = useState([]);
-         const [licence,setLicence]=useState([])
          const [itemCategory,setItemCategory]= useState([])
-         const [rosl,setRosl] = useState([])
-         const [house,setHouse]= useState([])
-         const [styledata,setStyle]=useState([])
-         const[brand,setBrand]=useState([])
          const [ItemType,setItemType]= useState([]);
          const [form] = Form.useForm();
          const { Option } = Select;
@@ -67,18 +47,11 @@ const RMCreationView = () => {
 
   useEffect(() => {
     getAllRMItemViewData();
-    getAllStyles();
-    getAllCategory();
     getAllCurrency();
-    getAllBuyingHouse();
-    getAllEmployes();
     getAllItemType();
-    getAllCategory();
     getAllItemGroups();
-    getAllUoms();getAllFacilitys();
     getAllProducts();
     getAllProcurement();
-    getAllPch();
   }, [])
 
   const resetHandler = () => {
@@ -123,17 +96,7 @@ rmservice.getAllRMItems(req).then(res => {
     setDrawerVisible(false);
   }
 
-  const getAllFacilitys=() =>{
-    facilityservice.getFactories().then(res =>{
-      if (res.status){
-        // console.log(res,'llllll')
-        setfacilityData(res.data);
-         
-      } else{
-        AlertMessages.getErrorMessage(res.internalMessage);
-         }
-    })       
-  }
+
   const getAllItemType=() =>{
     itemTypeservice.getAllActiveItemType().then(res =>{
       if (res.status){
@@ -144,61 +107,8 @@ rmservice.getAllRMItems(req).then(res => {
          }
     })      
   }
-  const getAllCategory=()=>{
-    categoryService.getActiveItemCategories().then(res=>{
-     if(res.status){
-         setItemCategory(res.data);
-       }else{
-         AlertMessages.getErrorMessage(res.internalMessage)
-     }
- })
-   } 
-  const getAllEmployes=() =>{
-    employeservice.getAllActiveEmploee().then(res =>{
-      if (res.status){
-        // console.log(res,'llllll')
-        setEmployeData(res.data);
-         
-      } else{
-        AlertMessages.getErrorMessage(res.internalMessage);
-         }
-    })       
-  }
-  const getAllPch = () => {
-    pchservice.getAllActiveProfitControlHead()
-      .then((res) => {
-        if (res.status) {
-          setpchData(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
-        }
-      })
-      
-  };
+  
 
-  const getAllSearchgroup=()=>{
-    searchgroup.getActiveSearchGroup().then(res=>{
-      if(res.status){
-        setSearchData(res.data)
-      }else{
-        AlertMessages.getErrorMessage(res.internalMessage);
-      }
-    }).catch(err => {
-      setSearchData([]);
-       AlertMessages.getErrorMessage(err.message);
-     })        
-  }
-
-  const getAllStyles=()=>{
- styleService.getAllActiveStyle().then(res=>{
-   if(res.status){
-   setStyle(res.data);
-
-  }else{
-    AlertMessages.getErrorMessage(res.internalMessage);
-  }
-  })
-  }
 
   const getAllProducts = () => {
     proDUCTService
@@ -247,18 +157,7 @@ rmservice.getAllRMItems(req).then(res => {
         }
     })
  }
- const getAllBuyingHouse=()=>{
-    buyingHouseservice.getAllActiveBuyingHouse().then(res=>{
-        if(res.status){
-            setHouse(res.data);
-        }else{
-            AlertMessages.getErrorMessage(res.internalMessage)
-        }
-    }).catch(err=>{
-        setHouse([]);
-        AlertMessages.getErrorMessage(err.message)
-    })
- }
+
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
         <div style={{ padding: 8 }}>
@@ -358,112 +257,93 @@ const getAllUoms=() =>{
     },
     {
       title: "Item Type",
-      dataIndex: "item_type_id",
+      dataIndex: "item_type",
       align:'center',
       render: (data) => {
-        const type = ItemType.find((loc) => loc.itemTypeId === data);
-        return type ? type.itemType : "-";
+        return data ? data : "-";
       },
-      sorter: (a, b) => a.itemTypeId.localeCompare(b.itemTypeId),
+      sorter: (a, b) => a.item_type.localeCompare(b.item_type),
       sortDirections: ['descend', 'ascend'],
     },
     {
         title: "Item Code",
         dataIndex: "item_code",
         align:'center',
+        render: (data) => {
+          return data ? data : "-";
+        },
         sorter: (a, b) => a.item_code.localeCompare(b.item_code),
             sortDirections: ['descend', 'ascend'],
       },
-      // {
-      //   title: "Item Name",
-      //   dataIndex: "item_name",
-      //   align:'center',
-      //   render: (item_name) => {
-      //     return item_name ? item_name : "-";
-      //   },
-      //   sorter: (a, b) => a.item_name.localeCompare(b.item_name),
-      //   sortDirections: ['descend', 'ascend'],
-      // },
+      
 
       {
         title: "Item Group",
-        dataIndex: "item_group_id",
-        align:'center',
-        render: (data) => {
-          const catdata = itemCategory.find((cat) => cat.itemCategoryId === data);
-          return catdata ? catdata.itemCategory : "-";
+        dataIndex: "item_group",
+        align:'center', render: (data) => {
+          return data ? data : "-";
         },
-        sorter: (a, b) => {
-          const icatA = itemCategory.find((cat) => cat.itemCategoryId === a.itemCategoryId)?.itemCategory || '';
-          const icatB = itemCategory.find((cat) => cat.itemCategoryId === b.itemCategoryId)?.itemCategory || '';
-          return icatA.localeCompare(icatB);
-        },        sortDirections: ['descend', 'ascend'],
-      }, {
+        sorter: (a, b) => a.item_group.localeCompare(b.item_group),
+        
+            sortDirections: ['descend', 'ascend'],
+      },
+       {
         title: "PCH",
-        dataIndex: "pch_id",align:'center',
+        dataIndex: "pch",align:'center',
         render: (data) => {
-          const pchDat = pchData.find((cat) => cat.itemCategoryId === data);
-          return pchDat ? pchDat.itemCategory : "-";
+          return data ? data : "-";
         },
+        sorter: (a, b) => a.pch.localeCompare(b.pch),
         sortDirections: ['descend', 'ascend'],
-        sorter: (a, b) => {
-          const icatA = itemCategory.find((cat) => cat.itemCategoryId === a.itemCategoryId)?.itemCategory || '';
-          const icatB = itemCategory.find((cat) => cat.itemCategoryId === b.itemCategoryId)?.itemCategory || '';
-          return icatA.localeCompare(icatB);
-        },
+       
       },
       {
         title: "Placement",
         dataIndex: "placement",align:'center',
+        render: (data) => {
+          return data ? data : "-";
+        },
+        sorter: (a, b) => a.placement.localeCompare(b.placement),
        
       },
       {
         title: "Facility",
-        dataIndex: "facility_id",align:'center',
+        dataIndex: "facility",align:'center',
         render: (data) => {
-          const pchDat = facilitydata.find((cat) => cat.id === data);
-          return pchDat ? pchDat.name : "-";
+          return data ? data : "-";
         },
+        sorter: (a, b) => a.facility.localeCompare(b.facility),
        
       },
       {
         title: "Responsible",
-        dataIndex: "responsible_person_id",align:'center',
+        dataIndex: "responsible_person",align:'center',
         render: (data) => {
-          const empdata = employedata.find((emp) => emp.employeeId === data);
-          const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
-          return ftname ? ftname : '-';
+          return data ? data : "-";
         },
-        sorter: (a, b) => {
-          const icatA = employedata.find((cat) => cat.employeeId === a.employeeId)?.ftname || '';
-          const icatB = employedata.find((cat) => cat.employeeId === b.employeeId)?.ftname || '';
-          return icatA.localeCompare(icatB);
-        },
+        sorter: (a, b) => a.responsible_person.localeCompare(b.responsible_person),
+      
         sortDirections: ['descend', 'ascend'],
 
       },
       {
         title: "Product Group",
-        dataIndex: "product_group_id",align:'center',
+        dataIndex: "product_group",align:'center',
         render: (data) => {
-
-          const catdata = Product.find((cat) => cat.productGroupId === data);
-          return catdata ? catdata.productGroup : "-";
+          return data ? data : "-";
         },
+        sorter: (a, b) => a.product_group.localeCompare(b.product_group),
+       
        
       },
       {
         title: "Procurement Group",
-        dataIndex: "procurement_gorup_id",align:'center',
-        render: (data) => {
-          const catdata = Procurement.find((cat) => cat.procurmentGroupId === data);          
-          return catdata ? catdata.procurmentGroup : "-";
-        },
-        sorter: (a, b) => {
-          const icatA = itemCategory.find((cat) => cat.itemCategoryId === a.itemCategoryId)?.itemCategory || '';
-          const icatB = itemCategory.find((cat) => cat.itemCategoryId === b.itemCategoryId)?.itemCategory || '';
-          return icatA.localeCompare(icatB);
-        },        sortDirections: ['descend', 'ascend'],
+        dataIndex: "procurment_group",align:'center',
+             sortDirections: ['descend', 'ascend'],
+             render: (data) => {
+              return data ? data : "-";
+            },
+            sorter: (a, b) => a.procurment_group.localeCompare(b.procurment_group),
 
       },
       {
@@ -476,53 +356,65 @@ const getAllUoms=() =>{
       },
       {
         title: "Planner",
-        dataIndex: "planner",        align:'center',
+        dataIndex: "planner", render: (data) => {
+          return data ? data : "-";
+        },
+        sorter: (a, b) => a.item_group.localeCompare(b.item_group),       align:'center',
 
 
       },
       {
         title: "Business Area ",
-        dataIndex: "business_area",        align:'center',
+        dataIndex: "business_area", render: (data) => {
+          return data ? data : "-";
+        },
+        sorter: (a, b) => a.business_area.localeCompare(b.business_area),       align:'center',
 
 
       },
       {
         title: "Basic UOM",
-        dataIndex: "basic_uom_id",
-        align:'center',
-        render: (data) => {
-          const UOM = uomdata.find((bran) => bran.uomId === data);
-          return UOM ? UOM.uom : "-";
+        dataIndex: "uom",
+        align:'center',render: (data) => {
+          return data ? data : "-";
         },
-        sorter: (a, b) => a.uomId.localeCompare(b.uomId),
+        sorter: (a, b) => a.uom.localeCompare(b.uom),
+      
         sortDirections: ['descend', 'ascend'],
       },
       {
         title: "Currency",
-        dataIndex: "currency",align:'center',
-        render: (data) => {
-          const Curdata = currency.find((cat) => cat.currencyId  === data);
-          console.log(typeof(currency), "Curdata")
-          return Curdata ? Curdata.currencyName: "-";
+        dataIndex: "currency",align:'center',render: (data) => {
+          return data ? data : "-";
         },
+        sorter: (a, b) => a.currency.localeCompare(b.currency),
+       
       },
       {
-        title: "Description",
-        dataIndex: "description",align:'center',
+        title: "Price",
+        dataIndex: "price",align:'center',render: (data) => {
+          return data ? data : "-";
+        },
+        sorter: (a, b) => a.price.localeCompare(b.price),
       },
       {
-        title: "Sales Price",
-        dataIndex: "sale_price",
+        title: "Sales Tax",
+        dataIndex: "sale_tax",
         align:'right',
-        sorter: (a, b) => a.sale_price.localeCompare(b.sale_price),
+        render: (data) => {
+          return data ? data : "-";
+        },
+        sorter: (a, b) => a.sale_tax.localeCompare(b.sale_tax),
         sortDirections: ['descend', 'ascend'],
 
       },
       {
-        title: "Supplier",
-        dataIndex: "sale_price",
+        title: "Is Imported",
+        dataIndex: "is_imported_item",render: (data) => {
+          return data ? data : "-";
+        },
         align:'center',
-        sorter: (a, b) => a.sale_price.localeCompare(b.sale_price),
+        sorter: (a, b) => a.is_imported_item.localeCompare(b.is_imported_item),
         sortDirections: ['descend', 'ascend'],
 
       },
@@ -552,12 +444,12 @@ const getAllUoms=() =>{
       <Card >
       <Form onFinish={getAllRMItemViewData} form={form} layout='vertical'>
                 <Row gutter={24}>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
                         <Form.Item name='currency' label='Currency' >
                             <Select showSearch placeholder="Select Currency" optionFilterProp="children" allowClear >
                                 {
                                     currency?.map((inc: any) => {
-                                        return <Option key={inc.currencyId} value={inc.currencyId}>{inc.currencyName}</Option>
+                                        return <Option key={inc.currencyId} value={inc.currencyName}>{inc.currencyName}</Option>
                                     })
                                 }
                             </Select>
@@ -574,7 +466,7 @@ const getAllUoms=() =>{
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
                         <Form.Item name='itemType' label='Item Type' >
                             <Select showSearch placeholder="Select Item Type" optionFilterProp="children" allowClear>
                                 {
@@ -585,7 +477,7 @@ const getAllUoms=() =>{
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
                         <Form.Item name='product' label='Product Group' >
                             <Select
                                 showSearch
@@ -595,13 +487,13 @@ const getAllUoms=() =>{
                             >
                                 {
                                     Product?.map((inc: any) => {
-                                        return <Option key={inc.productGroupId} value={inc.productGroupId}>{inc.productGroup}</Option>
+                                        return <Option key={inc.productGroupId} value={inc.productGroup}>{inc.productGroup}</Option>
                                     })
                                 }
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
                         <Form.Item name='procurement' label='Procurement Group' >
                             <Select
                                 showSearch
@@ -610,24 +502,23 @@ const getAllUoms=() =>{
                                 allowClear>
                                 {
                                     Procurement?.map((inc: any) => {
-                                        return <Option key={inc.procurmentGroupId} value={inc.procurmentGroupId}>{inc.procurmentGroup}</Option>
+                                        return <Option key={inc.procurmentGroupId} value={inc.procurmentGroup}>{inc.procurmentGroup}</Option>
                                     })
                                 }
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ padding: '15px' }}>
-                        <Form.Item>
-                            <Button htmlType="submit"
-                                icon={<SearchOutlined />}
-                                type="primary">GET DETAILS</Button>
-                            <Button
-                                htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
-                            >
-                                RESET
-                            </Button>
-                        </Form.Item>
-                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
+    <Form.Item style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+        <Button htmlType="submit" icon={<SearchOutlined />} type="primary">GET DETAILS</Button>
+        <Button
+            htmlType='button' icon={<UndoOutlined/>} style={{ margin: '10px', backgroundColor: "#162A6D", color: "white" }} onClick={resetHandler}
+        >
+            RESET
+        </Button>
+    </Form.Item>
+</Col>
+
                 </Row>
             </Form>
             <>
