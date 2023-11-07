@@ -23,36 +23,15 @@ const ItemCreationView = () => {
   const [page, setPage] = React.useState(1);
   const navigate = useNavigate();
   const [selectedItemCreationData, setSelectedItemCreationData] = useState<any>(undefined);
-  const currencyServices = new CurrencyService();
-         const styleService = new StyleService();
-         const LicenceService = new LiscenceTypeService();
-         const brandservice = new MasterBrandsService();
-         const categoryService = new ItemCategoryService();
-         const roslservice = new ROSLGroupsService();
-         const buyingHouseservice = new BuyingHouseService();
-         const itemCreationService = new ItemCreationService();
-         const searchgroup = new SearchGroupService();
-         const itemTypeservice =new ItemTypeService();
-         const employeservice = new EmployeeDetailsService();
-         const Rangeservice = new RangeService();
-         const compositionservice = new CompositionService();
+ 
          const service = new ItemCreationService();
-         const uomservice = new UomService();
+         const brandservice = new MasterBrandsService();
+         const styleService = new StyleService();
 
-         const [searchdata,setSearchData] = useState([]);
-         const [employedata,setEmployeData] = useState([]);
-         const [rangedata,setRangeData] = useState([]);
-         const [customGroup,setCustomGroup]= useState([]);
-         const [currency,setCurrency]= useState([]);
 
-         const [licence,setLicence]=useState([])
-         const [itemCategory,setItemCategory]= useState([])
-         const [rosl,setRosl] = useState([])
-         const [house,setHouse]= useState([])
+        
          const [styledata,setStyle]=useState([])
          const[brand,setBrand]=useState([])
-         const [compositiondata,setCompositionData] = useState([]);
-         const [ItemType,setItemType]= useState([]);
          const [form] = Form.useForm();
          const { Option } = Select;
          const { RangePicker } = DatePicker;
@@ -62,18 +41,8 @@ const ItemCreationView = () => {
 
   useEffect(() => {
     getAllfgItemViewData();
-    getAllStyles();
-    getAllLicense();
     getAllBrands();
-    getAllCategory();
-    getAllCurrency();
-    getAllBuyingHouse();
-    getAllSearchgroup();
-    getAllRanges();
-    getAllComposition();
-    getAllEmployes();
-    getAllItemType();
-    getAllCategory();
+    getAllStyles();
   }, [])
 
   const resetHandler = () => {
@@ -116,96 +85,6 @@ const ItemCreationView = () => {
   const closeDrawer = () => {
     setDrawerVisible(false);
   }
-  const getAllItemType=() =>{
-    itemTypeservice.getAllActiveItemType().then(res =>{
-      if (res.status){
-        // console.log(res,'llllll')
-        setItemType(res.data);
-         
-      } else{
-        AlertMessages.getErrorMessage(res.internalMessage);
-         }
-    }).catch(err => {
-      setItemType([]);
-       AlertMessages.getErrorMessage(err.message);
-     })        
-  }
-
-  const getAllEmployes=() =>{
-    employeservice.getAllActiveEmploee().then(res =>{
-      if (res.status){
-        // console.log(res,'llllll')
-        setEmployeData(res.data);
-         
-      } else{
-        AlertMessages.getErrorMessage(res.internalMessage);
-         }
-    }).catch(err => {
-      setEmployeData([]);
-       AlertMessages.getErrorMessage(err.message);
-     })        
-  }
-
-
-
-const getAllComposition=()=>{
-    compositionservice.getActiveComposition().then(res=>{
-   if(res.status){
-     setCompositionData(res.data);
-    }else{
-  AlertMessages.getErrorMessage(res.internalMessage);
-  }})} 
-    const getAllCategory=()=>{
-     categoryService.getActiveItemCategories().then(res=>{
-      if(res.status){
-          setItemCategory(res.data);
-        }else{
-          AlertMessages.getErrorMessage(res.internalMessage)
-      }
-  })
-    } 
-
-  const getAllSearchgroup=()=>{
-    searchgroup.getActiveSearchGroup().then(res=>{
-      if(res.status){
-        setSearchData(res.data)
-      }else{
-        AlertMessages.getErrorMessage(res.internalMessage);
-      }
-    }).catch(err => {
-      setSearchData([]);
-       AlertMessages.getErrorMessage(err.message);
-     })        
-  }
-
-  const getAllStyles=()=>{
- styleService.getAllActiveStyle().then(res=>{
-   if(res.status){
-   setStyle(res.data);
-
-  }else{
-    AlertMessages.getErrorMessage(res.internalMessage);
-  }
-  }).catch(err=>{
-    setStyle([]);
-    AlertMessages.getErrorMessage(err.message)
-  })
-  }
-
-  const getAllLicense=()=>{
-    LicenceService.getAllActiveLiscenceTypes().then(res=>{
-        if(res.status){
-            setLicence(res.data);
-        }else{
-            AlertMessages.getErrorMessage(res.internalMessage);
-
-        }
-    }).catch(err=>{
-        setLicence([]);
-        AlertMessages.getErrorMessage(err.message)
-    })
-  }
-
   const getAllBrands=()=>{
     brandservice.getAllActiveBrands().then(res=>{
         if(res.status){
@@ -213,50 +92,18 @@ const getAllComposition=()=>{
         }else{
             AlertMessages.getErrorMessage(res.internalMessage)
         }
-    }).catch(err=>{
-        setBrand([]);
-        AlertMessages.getErrorMessage(err.message)
     })
   }
-
-   const getAllRanges=()=>{
-    Rangeservice.getActiveRange().then(res=>{
+  const getAllStyles=()=>{
+    styleService.getAllActiveStyle().then(res=>{
       if(res.status){
-        setRangeData(res.data);
-      }else{
-        AlertMessages.getErrorMessage(res.internalMessage)
-
-      }
-    }).catch(err=>{setRangeData([])
-      AlertMessages.getErrorMessage(err.message)
-
-    })
-   }
- 
-
-
-
- const getAllCurrency=()=>{
-    currencyServices.getAllActiveCurrencys().then(res=>{
-        if(res.status){
-          setCurrency(res.data);
-        }else{
-            AlertMessages.getErrorMessage(res.internalMessage)
-        }
-    })
- }
- const getAllBuyingHouse=()=>{
-    buyingHouseservice.getAllActiveBuyingHouse().then(res=>{
-        if(res.status){
-            setHouse(res.data);
-        }else{
-            AlertMessages.getErrorMessage(res.internalMessage)
-        }
-    }).catch(err=>{
-        setHouse([]);
-        AlertMessages.getErrorMessage(err.message)
-    })
- }
+      setStyle(res.data);
+   
+     }else{
+       AlertMessages.getErrorMessage(res.internalMessage);
+     }
+     })
+     }
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
         <div style={{ padding: 8 }}>
@@ -347,10 +194,9 @@ const getAllComposition=()=>{
         title: "Style",
         dataIndex: "style_no",
         align:'center',
-        // render: (data) => {
-        //   const style = styledata.find((sty) => sty.styleNo === data);
-        //   return style ? style.style : "-";
-        // },
+        render: (data) => {
+          return data ? data : "-";
+        },
         sorter: (a, b) => a.style_no.localeCompare(b.style_no),
             sortDirections: ['descend', 'ascend'],
       },
@@ -366,70 +212,52 @@ const getAllComposition=()=>{
       },
       {
         title: "Type",
-        dataIndex: "item_type_id",
+        dataIndex: "item_type",
         align:'center',
         render: (data) => {
-          console.log(ItemType,'===');
-          
-          const style = ItemType.find((loc) => loc.itemTypeId === data);
-          return style ? style.itemType : "-";
+          return data ? data : "-";
         },
-        sorter: (a, b) => a.itemTypeId.localeCompare(b.itemTypeId),
+        sorter: (a, b) => a.item_type.localeCompare(b.item_type),
         sortDirections: ['descend', 'ascend'],
       },
       {
         title: "Brand",
-        dataIndex: "brand_id",
+        dataIndex: "brand_name",
         align:'center',
         render: (data) => {
-          const branddata = brand.find((bran) => bran.brandId === data);
-          return branddata ? branddata.brandName : "-";
+          return data ? data : "-";
         },
-        sorter: (a, b) => a.brand_id.localeCompare(b.brand_id),
+        sorter: (a, b) => a.brand_name.localeCompare(b.brand_name),
         sortDirections: ['descend', 'ascend'],
 
       },
       {
         title: "Category",
-        dataIndex: "category_id",
+        dataIndex: "item_category",
         render: (data) => {
-          const catdata = itemCategory.find((cat) => cat.itemCategoryId === data);
-          return catdata ? catdata.itemCategory : "-";
+          return data ? data : "-";
         },
         sortDirections: ['descend', 'ascend'],
-        sorter: (a, b) => {
-          const icatA = itemCategory.find((cat) => cat.itemCategoryId === a.itemCategoryId)?.itemCategory || '';
-          const icatB = itemCategory.find((cat) => cat.itemCategoryId === b.itemCategoryId)?.itemCategory || '';
-          return icatA.localeCompare(icatB);
-        },
+        sorter: (a, b) => a.item_category.localeCompare(b.item_category),
+
       },
       {
         title: "Item Group",
         dataIndex: "item_group",
         render: (data) => {
-          const catdata = itemCategory.find((cat) => cat.itemCategoryId === data);
-          return catdata ? catdata.itemCategory : "-";
+          return data ? data : "-";
         },
-        sorter: (a, b) => {
-          const icatA = itemCategory.find((cat) => cat.itemCategoryId === a.itemCategoryId)?.itemCategory || '';
-          const icatB = itemCategory.find((cat) => cat.itemCategoryId === b.itemCategoryId)?.itemCategory || '';
-          return icatA.localeCompare(icatB);
-        },        sortDirections: ['descend', 'ascend'],
-
+        sorter: (a, b) => a.item_group.localeCompare(b.item_group),
+        sortDirections: ['descend', 'ascend'],
       },
       {
         title: "Responsible",
-        dataIndex: "responsible_person_id",
+        dataIndex: "responsible_person",
+       
         render: (data) => {
-          const empdata = employedata.find((emp) => emp.employeeId === data);
-          const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
-          return ftname ? ftname : '-';
+          return data ? data : "-";
         },
-        sorter: (a, b) => {
-          const icatA = employedata.find((cat) => cat.employeeId === a.employeeId)?.ftname || '';
-          const icatB = employedata.find((cat) => cat.employeeId === b.employeeId)?.ftname || '';
-          return icatA.localeCompare(icatB);
-        },
+        sorter: (a, b) => a.responsible_person.localeCompare(b.responsible_person),
         sortDirections: ['descend', 'ascend'],
 
       },
@@ -437,31 +265,20 @@ const getAllComposition=()=>{
         title: "Approve",
         dataIndex: "approver",
         render: (data) => {
-          const empdata = employedata.find((emp) => emp.employeeId === data);
-          const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
-          return ftname ? ftname : '-';
+          return data ? data : "-";
         },
-        sorter: (a, b) => {
-          const icatA = employedata.find((cat) => cat.employeeId === a.employeeId)?.ftname || '';
-          const icatB = employedata.find((cat) => cat.employeeId === b.employeeId)?.ftname || '';
-          return icatA.localeCompare(icatB);
-        },
+        sorter: (a, b) => a.approver.localeCompare(b.approver),
         sortDirections: ['descend', 'ascend'],
 
       },
       {
         title: "Production Merchant",
-        dataIndex: "production_merchant",
+        dataIndex: "pd_merchant",
         render: (data) => {
-          const empdata = employedata.find((emp) => emp.employeeId === data);
-          const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
-          return ftname ? ftname : '-';
+          return data ? data : "-";
         },
-        sorter: (a, b) => {
-          const icatA = employedata.find((cat) => cat.employeeId === a.employeeId)?.ftname || '';
-          const icatB = employedata.find((cat) => cat.employeeId === b.employeeId)?.ftname || '';
-          return icatA.localeCompare(icatB);
-        },
+        sorter: (a, b) => a.pd_merchant.localeCompare(b.pd_merchant),
+        
         sortDirections: ['descend', 'ascend'],
 
       },
@@ -469,16 +286,10 @@ const getAllComposition=()=>{
         title: "Sales Person",
         dataIndex: "sale_person_id",
         render: (data) => {
-          const empdata = employedata.find((emp) => emp.employeeId === data);
-          console.log(employedata,"employedata")
-          const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
-          return ftname ? ftname : '-';
+          return data ? data : "-";
         },
-        sorter: (a, b) => {
-          const icatA = employedata.find((cat) => cat.employeeId === a.employeeId)?.ftname || '';
-          const icatB = employedata.find((cat) => cat.employeeId === b.employeeId)?.ftname || '';
-          return icatA.localeCompare(icatB);
-        },
+        sorter: (a, b) => a.sale_person_id.localeCompare(b.sale_person_id),
+        
         sortDirections: ['descend', 'ascend'],
 
       },
@@ -486,6 +297,9 @@ const getAllComposition=()=>{
         title: "Basic UOM",
         dataIndex: "uom",
         align:'center',
+        render: (data) => {
+          return data ? data : "-";
+        },
         sorter: (a, b) => a.uom.localeCompare(b.uom),
         sortDirections: ['descend', 'ascend'],
 
@@ -493,16 +307,20 @@ const getAllComposition=()=>{
    
       {
         title: "Currency",
-        dataIndex: "currency",
+        dataIndex: "currency_name",
         render: (data) => {
-         
-          const abc = currency.find((cat) => (cat.currencyId).toLocaleString() === data);
-          return abc ? abc.currencyName : "-";
+          return data ? data : "-";
         },
+        sorter: (a, b) => a.currency_name.localeCompare(b.currency_name),
+        sortDirections: ['descend', 'ascend'],
+
       },
       {
         title: "Sales Price",
         dataIndex: "sale_price",
+        render: (data) => {
+          return data ? data : "-";
+        },
         align:'right',
         sorter: (a, b) => a.sale_price.localeCompare(b.sale_price),
         sortDirections: ['descend', 'ascend'],
@@ -513,10 +331,9 @@ const getAllComposition=()=>{
         dataIndex: "target_currency",
         align:'center',
         render: (data) => {
-          const Curdata = currency.find((cat) => (cat.currencyId ).toLocaleString() === data);
-          console.log(currency[data], "Curdata")
-          return Curdata ? Curdata.currencyName: "-";
+          return data ? data : "-";
         },
+        sorter: (a, b) => a.target_currency.localeCompare(b.target_currency),
 
       },
       {
@@ -539,25 +356,12 @@ const getAllComposition=()=>{
       },
       {
         title: "Range",
-        dataIndex: "range",
-        sorter: (a, b) => a.range.localeCompare(b.range),
-
-        // render: (data) => {
-        //   const dataAsString = data.toString();
-        //   const randata = rangedata[dataAsString];
-        //   if (randata) {
-        //     return randata.rangeCode;
-        //   } else {
-        //     return "-";
-        //   }
-        // },
-                
-        // sorter: (a, b) => {
-        //   const icatA = rangedata.find((cat) => cat.id === a.id)?.rangeCode || '';
-        //   const icatB = rangedata.find((cat) => cat.id === b.id)?.rangeCode || '';
-        //   return icatA.localeCompare(icatB);
-        // },
+        dataIndex: "rangee",
+        sorter: (a, b) => a.rangee.localeCompare(b.rangee),
         sortDirections: ['descend', 'ascend'],
+        render: (data) => {
+          return data ? data : "-";
+        },
       },
     {
       title: `Action`,
@@ -615,7 +419,7 @@ const getAllComposition=()=>{
                             <Select showSearch placeholder="Select Style" optionFilterProp="children" allowClear >
                                 {
                                     styledata?.map((inc: any) => {
-                                        return <Option key={inc.styleId} value={inc.styleId}>{inc.style}</Option>
+                                        return <Option key={inc.styleId} value={inc.style}>{inc.style}</Option>
                                     })
                                 }
                             </Select>
@@ -642,7 +446,7 @@ const getAllComposition=()=>{
                             >
                                 {
                                     brand?.map((inc: any) => {
-                                        return <Option key={inc.brandId} value={inc.brandId}>{inc.brandName}</Option>
+                                        return <Option key={inc.brandId} value={inc.brandName}>{inc.brandName}</Option>
                                     })
                                 }
                             </Select>
