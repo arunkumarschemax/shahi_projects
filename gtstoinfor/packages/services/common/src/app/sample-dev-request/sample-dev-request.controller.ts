@@ -36,6 +36,15 @@ export class SampleDevReqController {
     }
   }
 
+  @Post('/getAllSampleData')
+  async getAllSampleData(): Promise<AllSampleDevReqResponseModel> {
+    try {
+      return await this.sampleService.getAllSampleData();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+    }
+  }
+
   @Post('/cancelSampleReqById')
   @ApiBody({type: SampleFilterRequest})
   async cancelSampleReqById(@Body() req : any): Promise<AllSampleDevReqResponseModel> {
@@ -116,5 +125,21 @@ export class SampleDevReqController {
         return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
       }
     }
-
+    @Post('/getFabricCodes')
+    async getFabricCodes(): Promise<CommonResponseModel> {
+      try {
+        return await this.sampleService.getFabricCodes();
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+      }
+    }
+    
+    @Post('/getTrimCodes')
+    async getTrimCodes(): Promise<CommonResponseModel> {
+      try {
+        return await this.sampleService.getTrimCodes();
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+      }
+    }
 }

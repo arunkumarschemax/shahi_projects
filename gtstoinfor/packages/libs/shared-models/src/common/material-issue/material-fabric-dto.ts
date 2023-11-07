@@ -1,33 +1,33 @@
 
 export class MaterialFabricDto{
-    materialFabricId:number;
     fabricCode:string;
     description:string;
     colorId: number
     consumption:number;
-    consumptionUom:string;
     uomId: number
     issuedQuantity: number
-    issuedQuantityUom: string
     issuedUomId: number
     remarks:string;
-    createdAt: Date;
-    createdUser: string | null;
+    createdAt?: Date;
+    createdUser?: string | null;
+    issuedQuantityUom?: string
+    consumptionUom?:string;
+    materialFabricId?:number;
 
     constructor(
-        materialFabricId:number,
         fabricCode:string,
         description:string,
         colorId: number,
         consumption:number,
-        consumptionUom:string,
         uomId:number,
         issuedQuantity: number,
-        issuedQuantityUom: string,
         issuedUomId: number,
         remarks:string,
-        createdAt: Date,
-        createdUser: string | null,
+        createdAt?: Date,
+        createdUser?: string | null,
+        issuedQuantityUom?: string,
+        consumptionUom?:string,
+        materialFabricId?:number,
     ){
         this.materialFabricId = materialFabricId
         this.fabricCode = fabricCode

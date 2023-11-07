@@ -34,4 +34,14 @@ export class OperationIssuingController{
         return this.applicationExceptionHandler.returnException(OperationInventoryResponseModel, error);
       }
     }
+
+    @Post('/getOperationInventoryData')
+    // @ApiBody({type: OperationInventoryDto})
+    async getOperationInventoryData(): Promise<OperationInventoryResponseModel> {
+      try {
+        return await this.operationGroupsService.getOperationInventoryData()
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(OperationInventoryResponseModel, error);
+      }
+    }
 }

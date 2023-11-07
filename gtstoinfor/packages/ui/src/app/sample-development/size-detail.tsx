@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip, message } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { Table, Button, Input, Select, Tooltip, message, Form } from 'antd';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { BuyerDestinationService, ColourService } from '@project-management-system/shared-services';
 
 const SizeDetail = ({props,buyerId}) => {
@@ -11,6 +11,8 @@ const SizeDetail = ({props,buyerId}) => {
   const colorService = new ColourService()
   const buyerDestinaytionService=new BuyerDestinationService()
   const { Option } = Select;
+  const [form] = Form.useForm();
+  const [onchangeData, setOnchangeData] = useState([]); 
 
   useEffect(()=>{
     getColors()
@@ -50,26 +52,95 @@ const SizeDetail = ({props,buyerId}) => {
     setCount(count + 1);
   };
 
-  const handleInputChange = (value, key, field) => {
+   const handleInputChange = (colourId, sizeId, quantity,recordKey) => {
+    console.log(recordKey)
+    let newData = [...onchangeData];
+
     const updatedData = data.map((record) => {
-      if (record.key === key) {
-        return { ...record, [field]: value };
+      if (record.key === recordKey) {
+        let existingEntry = newData.find((entry) => entry.colour === colourId);
+        if (!existingEntry) {
+          existingEntry = {
+            colour: colourId,
+            sizeInfo: [],
+          };
+          newData.push(existingEntry);
+        }
+        if (quantity !== 0) {
+          let sizeInfoEntry = existingEntry.sizeInfo.find((info) => info.sizeId === sizeId);
+          if (!sizeInfoEntry) {
+            sizeInfoEntry = {
+              sizeId: sizeId,
+              quantity: quantity,
+            };
+            existingEntry.sizeInfo.push(sizeInfoEntry);
+          } else {
+            sizeInfoEntry.quantity = quantity;
+          }
+        }
       }
-      return record;
+      console.log(newData)
+      setOnchangeData(newData); 
+      props(newData)
     });
-    setData(updatedData);
-    props(updatedData)
-  };
+    };
+
 
   const handleDelete = (key) => {
     const updatedData = data.filter((record) => record.key !== key);
     setData(updatedData);
   };
+  const add =()=>{
+    form.validateFields().then((val) =>{
+      console.log(val)
+    })
+  }
 
   const calculateTotal = (size) => {
     return data.reduce((total, record) => total + parseInt(record[size] || 0), 0);
   };
 
+  const sizeColumns = sizeData.map(size => ({
+    title: size.size,
+    dataIndex: size.size,
+    render:(_, record) =>{
+      console.log(record)
+      return (
+        <><Form.Item name={`sizeId${size.sizeId}+${record.key}`} initialValue={size.sizeId} hidden>
+          <Input
+            name={`size`}
+            defaultValue={size.sizeId}
+            type='number'
+            min={0}
+            placeholder='size'
+            hidden
+          >
+          </Input>
+        </Form.Item>
+          <Form.Item name={`quantity${size.sizeId}+${record.key}`}>
+            <Input
+              name={`quantity${size.sizeId}`}
+              value={record[size.sizeId]}
+              onChange={(e) =>
+                handleInputChange(
+                  form.getFieldValue(`colorId${record.key}`),
+                  size.sizeId,
+                  e.target.value,
+                  record.key
+                )
+              }
+              type='number'
+              min={0}
+              placeholder='quantity'
+            >
+            </Input>
+          </Form.Item>
+          </>
+      )
+    }
+  }));
+
+  
   const columns = [
     {
       title: 'S.No',
@@ -78,122 +149,44 @@ const SizeDetail = ({props,buyerId}) => {
     },
     {
       title: 'Color',
-      // dataIndex: 'colourId',
+      dataIndex: 'colourId',
       width:"25%",
       render: (_, record) => (
+        <Form.Item name={`colorId${record.key}`}>
         <Select
-          value={record.colourId}
-          onChange={(value) => handleInputChange(value, record.key, 'colourId')}
           style={{width:"100%"}}
           allowClear
           showSearch
           optionFilterProp="children"
           placeholder="Select Color"
+          onChange={(value) => handleInputChange(value, 0, 0, record.key)}
         >
           {color.map((e) => {
                   return (
-                    <Option key={e.colourId} value={e.colourId}>
+                    <Option name={`colorId${record.key}`} key={e.colourId} value={e.colourId}>
                       {e.colour}
                     </Option>
                   );
                 })}
           </Select>
+        </Form.Item>
       ),
     },
     {
       title: 'Quantity by Size',
       dataIndex: 'size',
       width:"10%",
-      children :[
-        {
-          title: 'XS',
-          dataIndex: 'quantity',
-          render: (_, record) => (
-            <Input
-              value={record.xs}
-              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
-              type='number'
-              min={0}
-              placeholder='Quantity'
-            />
-          ),
-        },
-        {
-          title: 'S',
-          dataIndex: 'quantity',
-          render: (_, record) => (
-            <Input
-              value={record.s}
-              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
-              type='number'
-              min={0}
-              placeholder='Quantity'
-            />
-          ),
-        },
-        {
-          title: 'M',
-          dataIndex: 'quantity',
-          render: (_, record) => (
-            <Input
-              value={record.m}
-              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
-              type='number'
-              min={0}
-              placeholder='Quantity'
-            />
-          ),
-        },
-        {
-          title: 'L',
-          dataIndex: 'quantity',
-          render: (_, record) => (
-            <Input
-              value={record.l}
-              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
-              type='number'
-              min={0}
-              placeholder='Quantity'
-            />
-          ),
-        },
-        {
-          title: 'XL',
-          dataIndex: 'quantity',
-          render: (_, record) => (
-            <Input
-              value={record.xl}
-              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
-              type='number'
-              min={0}
-              placeholder='Quantity'
-            />
-          ),
-        },
-        {
-          title: 'XXL',
-          dataIndex: 'quantity',
-          render: (_, record) => (
-            <Input
-              value={record.xxl}
-              onChange={(e) => handleInputChange(e.target.value, record.key, 'quantity')}
-              type='number'
-              min={0}
-              placeholder='Quantity'
-            />
-          ),
-        },
-      ],
+      children :sizeColumns,
     },
-    
     {
       title: 'Action',
       dataIndex: 'action',
       render: (_, record) => (
-        <Button onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
+        <Button htmlType='submit' onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
       ),
     },
   ];
+
 
   const shouldShowSummary = data.length > 0;
 
@@ -213,6 +206,7 @@ const SizeDetail = ({props,buyerId}) => {
 
   return (
     <div>
+      <Form  form={form}>
       <Button onClick={handleAddRow} style={{margin:"10px"}}>Add Row</Button>
       <Table 
       dataSource={data} 
@@ -220,6 +214,8 @@ const SizeDetail = ({props,buyerId}) => {
       summary={summary}
       bordered={true}
       />
+      {/* <Button>Confirm</Button> */}
+      </Form>
     </div>
   );
 };

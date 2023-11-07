@@ -3,6 +3,7 @@ import { OperationSequenceModel } from "../operation-sequence";
 import { StyleDto } from "../style-management";
 
 export class OperationTrackingDto{
+    fabricCode: string
     styleId: number
     requestNo: string
     operationSequenceId: number
@@ -29,6 +30,7 @@ export class OperationTrackingDto{
     operationInventoryId?:number;
 
     constructor(
+        fabricCode: string,
         styleId: number,
         requestNo: string,
         operationSequenceId: number,
@@ -55,6 +57,7 @@ export class OperationTrackingDto{
         operationInventoryId?:number,
     
     ){
+        this.fabricCode = fabricCode
         this.operationTrackingId = operationTrackingId
         this.jobNumber = jobNumber
         this.styleId = styleId

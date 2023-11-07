@@ -11,7 +11,7 @@ import { ApplicationExceptionHandler } from '@project-management-system/backend-
         TypeOrmModule.forFeature([Fabrics]),
         ],
         controllers: [FabricsController],
-        providers: [FabricsService,FabricsAdapter,ApplicationExceptionHandler]
+        providers: [FabricsAdapter,FabricsService,ApplicationExceptionHandler]
       })
 export class FabricsModule{
     

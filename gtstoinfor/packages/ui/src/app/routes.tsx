@@ -143,8 +143,7 @@ import MarketIssueDetail from "./sample-development/market-detail"
 import IssueScreen from "./operation-tracking/issue"
 import { InventoryView } from "./operation-tracking/inventory"
 import StyleOrderCreation from "./style-orders/style-order-form"
-import RackPosition from "./rm_locations/rack-positions"
-import PositionGrid from "./rm_locations/rack-positions grid"
+import MaterialIssueReport from "./sample-development/material-issue-report"
 import StockReport from "./Reports/stock-report"
 import SampleRequestReport from "./Reports/sample-request-report"
 
@@ -193,10 +192,8 @@ export const AppRoutes = () => {
                     <Route path='/stack-report' element={<StockReport/>}/>
                     <Route path='/sample-request-report' element={<SampleRequestReport/>}/>
 
+                    {/* <Route path='/stack-report' element={<StockReport/>}/> */}
                     <Route path='/masters'>
-                        
-                    <Route path='rackPosition-form' element={<RackPosition/>}/>
-                    <Route path='rackPosition-view' element={<PositionGrid/>}/>
                     <Route path='m3-itemcodes' element={<M3Masters
                         isUpdate={false}
                         closeForm={() => { } }
@@ -529,7 +526,7 @@ export const AppRoutes = () => {
 
                 <Route path='store-issues'>
                     <Route path="store-issues-view" element={<SourceIssuesView />}/>
-                    {/* <Route path="store-issues-detail-view" element={<SourceIssuesDetailView  />}/> */}
+                    <Route path="store-issues-detail-view" element={<SourceIssuesDetailView MaterialIssueID={0} />}/>
                     <Route path="material-issue-view" element={<MaterialIssueView />}/>
                 </Route>
 
@@ -552,6 +549,10 @@ export const AppRoutes = () => {
 
 
                 </Route>
+                <Route path='/report'>
+                <Route path='material-issue-report' element={<MaterialIssueReport/>}/>
+
+                </Route>
                 <Route path='/stock-view' element={<StockView/>}/>
 
                 <Route path="marketing-requisition-form" element={<MarketingReqForm 
@@ -567,9 +568,6 @@ export const AppRoutes = () => {
                     <Route path='/sourcing-requisition-report' element={<SourcingRequisitionReport/>}/>
                     <Route path='/indent-form' element={<SourcingRequisitionDynamicForm/>}/>
                     <Route path='/requisition-view' element={<SourcingRequisitionDynamicView/>}/>
-
-
-
                  
 
 

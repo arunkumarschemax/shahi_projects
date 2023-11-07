@@ -1,11 +1,32 @@
 export class SizeInfo {
-    sizeId : number
-    colourId : number
-    quantity : number
+    // sizeId : number
+    colour : number
+    sizeInfo:sizeInfo[]
+    // quantity : number
 
-    constructor(sizeId:number, colourId:number, quantity:number){
-        this.sizeId = sizeId
-        this.colourId = colourId
-        this.quantity = quantity
+    constructor(
+        // sizeId:number,
+         colour:number,
+         sizeInfo:sizeInfo[]
+
+        //   quantity:number
+         ){
+
+        // this.sizeId = sizeId
+        this.colour = colour
+        this.sizeInfo=sizeInfo
+        // this.quantity = quantity
     }
 }
+    export class sizeInfo{
+        sizeId : number
+        quantity : number
+    constructor(
+        sizeId : number,
+        quantity : number
+    ){
+        this.sizeId=sizeId
+        this.quantity=quantity
+    }
+
+    }

@@ -33,8 +33,8 @@ export const StoreIssueDetailed = () => {
     //   }
 
     const getData = ()=>{
-        service.getSampleDevById().then((res)=>{
-            setData(res)
+        service.getAllSampleData().then((res)=>{
+            setData(res.data)
             console.log(res)
         })
     }
