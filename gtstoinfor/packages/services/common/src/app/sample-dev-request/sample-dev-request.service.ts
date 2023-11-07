@@ -210,13 +210,13 @@ export class SampleRequestService {
     }
 
   }
-  async UpdateFilePath(filePath: string, filename: string, sampleRequestId: number): Promise<UploadResponse> {
+  async UpdateFilePath(filePath: string, filename: string, SampleRequestId: number): Promise<UploadResponse> {
     console.log('upload service id---------------', filePath)
     console.log('upload service id---------------', filename)
-    console.log('upload service id---------------', sampleRequestId)
+    console.log('upload service id---------------', SampleRequestId)
     try {
         let filePathUpdate;   
-            filePathUpdate = await this.sampleRepo.update({SampleRequestId:sampleRequestId},{fileName:filename,filepath:filePath} )
+            filePathUpdate = await this.sampleRepo.update({SampleRequestId:SampleRequestId},{fileName:filename,filepath:filePath} )
         if (filePathUpdate.affected > 0) {
             return new UploadResponse(true, 11, 'uploaded successfully', filePath);
         }
