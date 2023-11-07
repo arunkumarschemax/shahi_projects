@@ -6,6 +6,7 @@ export class StyleOrderModel{
     itemCode: string;
     orderDate : any;
     buyerPoNumber: string;
+    
     shipmentType: string;
     buyerStyle : string;
     agent : number;
