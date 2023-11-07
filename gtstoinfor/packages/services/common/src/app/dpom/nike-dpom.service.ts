@@ -302,38 +302,34 @@ export class DpomService {
             await driver.findElement(By.id('bpo')).sendKeys(coLine.buyerPo);
             await driver.wait(until.elementLocated(By.name('dojo.delydt')));
             await driver.findElement(By.name('dojo.delydt')).sendKeys(delivaryDate);
-            for (let dest of coLine.destinations) {
-                const colorsContainer = await driver.wait(until.elementLocated(By.xpath('//*[@id="COContainer"]')));
-                const colorsTabs = await colorsContainer.findElements(By.tagName('span'));
-                for (const tab of colorsTabs) {
-                    if ((await tab.getAttribute('innerText')) == dest.name) {
-                        await driver.executeScript('arguments[0].click();', tab);
-                        for (let color of dest.colors) {
-                            for (let size of color.sizes) {
-                                const inputId = `${size.name}:${color.name}:${dest.name}`.replace(/\*/g, '');
-                                await driver.wait(until.elementLocated(By.id(inputId)))
-                                await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
-                            }
-                        }
-                    }
-                }
-            }
+            await driver.findElement(By.id('getNikeData')).click();
+            // for (let dest of coLine.destinations) {
+            //     const colorsContainer = await driver.wait(until.elementLocated(By.xpath('//*[@id="COContainer"]')));
+            //     const colorsTabs = await colorsContainer.findElements(By.tagName('span'));
+            //     for (const tab of colorsTabs) {
+            //         if ((await tab.getAttribute('innerText')) == dest.name) {
+            //             await driver.executeScript('arguments[0].click();', tab);
+            //             for (let color of dest.colors) {
+            //                 for (let size of color.sizes) {
+            //                     const inputId = `${size.name}:${color.name}:${dest.name}`.replace(/\*/g, '');
+            //                     await driver.wait(until.elementLocated(By.id(inputId)))
+            //                     await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
             await driver.sleep(1000)
-            const element = await driver.findElement(By.id('OrderCreateID')).click();
+            // const element = await driver.findElement(By.id('OrderCreateID')).click();
             // await driver.wait(until.elementIsVisible(element), 10000);
-            await driver.switchTo().alert().accept();
-            if (await this.isAlertPresent(driver)) {
-                // Switch to the alert
-                const alert = await driver.switchTo().alert();
-                // Get the text of the alert
-                const alertText = await alert.getText();
-                console.log('Alert Text:', alertText);
+            // await driver.switchTo().alert().accept();
+            // if (await this.isAlertPresent(driver)) {
+            //     const alert = await driver.switchTo().alert();
+            //     const alertText = await alert.getText();
+            //     console.log('Alert Text:', alertText);
 
-                // Dismiss the alert (click "OK")
-                // await alert.accept();
-                // return "CRM throws a alert : " + alertText
-                // return "Created Sucessfully"
-            }
+               
+            // }
             return new CommonResponseModel(true, 1, `COline created successfully`)
         } catch (err) {
             console.log(err);
