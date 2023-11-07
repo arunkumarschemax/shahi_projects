@@ -242,7 +242,7 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }}sm={{ span: 24 }}md={{ span: 8 }}lg={{ span: 8 }}xl={{ span: 4 }}>
+          <Col xs={{ span: 24 }}sm={{ span: 24 }}md={{ span: 8 }}lg={{ span: 8 }}xl={{ span: 4 }} style={{display:'none'}}>
             <Form.Item
               name="requestNo"
               label="Request No"

@@ -25,6 +25,12 @@ export class SampleRequestTriminfoEntity {
         nullable: true
     })
     remarks: string
+    
+    @Column('varchar', {
+        name: 'trim_code',
+        nullable: true
+    })
+    trimCode: string
 
     @ManyToOne(() => SampleRequest, sampleDevReq => sampleDevReq.sampleTrimInfo)
     @JoinColumn({ name: 'sample_request_id' })

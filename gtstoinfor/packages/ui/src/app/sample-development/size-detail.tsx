@@ -199,13 +199,6 @@ const SizeDetail = ({props,buyerId}) => {
       children :sizeColumns,
     },
     {
-      title: 'Confirm',
-      dataIndex: 'action',
-      render: (_, record) => (
-        <Button onClick={() => add()}><Tooltip title="Add"><PlusOutlined /></Tooltip></Button>
-      ),
-    },
-    {
       title: 'Action',
       dataIndex: 'action',
       render: (_, record) => (
