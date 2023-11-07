@@ -70,7 +70,7 @@ const getMOPData= () => {
     
    console.log(mopData,"mopdata")
 
-
+   
   const columnsSkelton: any = [
     {
       title: 'S No',
@@ -79,25 +79,40 @@ const getMOPData= () => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
-      title: "Co Line",
+      title: "CO Number",
+      dataIndex: "coNumber",
+      align:'center',
+      sorter: (a, b) => a.coNumber.localeCompare(b.coNumber),
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: "CO Line",
       dataIndex: "coLineNumber",
       align:'center',
       sorter: (a, b) => a.coLineNumber.localeCompare(b.coLineNumber),
       sortDirections: ['descend', 'ascend'],
     },
     {
-      title: "FG code",
-      dataIndex: "item_code",
+      title: "FG item Code",
+      dataIndex: "fgSkuItemCode",
       align:'center',
     
-      sorter: (a, b) => a.item_code.localeCompare(b.item_code),
+      sorter: (a, b) => a.fgSkuItemCode.localeCompare(b.fgSkuItemCode),
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: "FG Sku Code",
+      dataIndex: "fgSkuCode",
+      align:'center',
+    
+      sorter: (a, b) => a.fgSkuCode.localeCompare(b.fgSkuCode),
       sortDirections: ['descend', 'ascend'],
     },
     {
       title: "Color",
-      dataIndex: "color_id",
+      dataIndex: "color",
       align:'center',
-      sorter: (a, b) => a.color_id.localeCompare(b.color_id),
+      sorter: (a, b) => a.color.localeCompare(b.color),
       sortDirections: ['descend', 'ascend'],
     },
     {
@@ -122,6 +137,14 @@ const getMOPData= () => {
         sorter: (a, b) => a.quantity.localeCompare(b.quantity),
         sortDirections: ['descend', 'ascend'],
       }, 
+
+      {
+        title: "Consumption",
+        dataIndex: "consumption",
+        align:'center',
+        sorter: (a, b) => a.consumption.localeCompare(b.consumption),
+        sortDirections: ['descend', 'ascend'],
+      },
       {
         title: "RM item Code",
         dataIndex: "rmitemCode",
@@ -144,11 +167,6 @@ const getMOPData= () => {
     form.resetFields();
     getMOPData();
   }
-
-console.log(mopDataYes,"yes")
-console.log(mopDataNo,"no")
-
-  
 
 
   return (

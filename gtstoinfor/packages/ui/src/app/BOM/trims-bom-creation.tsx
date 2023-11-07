@@ -1,22 +1,28 @@
 import { Button, Card, Col, Form, FormInstance, Input, Row, Select, message } from "antd";
 import { UndoOutlined } from "@ant-design/icons";
 import Commonscreen from "./common-screen";
-import { CurrencyService, LiscenceTypeService, ProfitControlHeadService, TaxesService, UomService, bomTrimService } from "@project-management-system/shared-services";
+import { CurrencyService, FactoryService, ItemTypeService, LiscenceTypeService, ProfitControlHeadService, TaxesService, UomService, bomTrimService } from "@project-management-system/shared-services";
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { BomRequest } from "@project-management-system/shared-models";
+import { Link } from "react-router-dom";
 
 export interface TrimsBomCreationProps {}
 
 
 export const TrimsBomCreation = (props:TrimsBomCreationProps) => {
   const [form] = Form.useForm();
+  const { Option } = Select;
   const currencyServices = new CurrencyService();
   const licenseservice = new LiscenceTypeService();
   const uomservice = new UomService();
   const taxService = new TaxesService
   const Pchservice =new ProfitControlHeadService();
   const bomservice = new bomTrimService()
+  const facilityservice =new FactoryService();
+  const itemTypeservice =new ItemTypeService();
+
+
 
 
 
@@ -28,8 +34,8 @@ export const TrimsBomCreation = (props:TrimsBomCreationProps) => {
   const [pchData,setPchData] = useState<any>([])
   const [taxvalue,setTaxValues] = useState<any>("")
   const [calData,setCalData] = useState<number>(0);
-
-
+  const [facilitydata,setfacilityData] = useState([]);
+  const [ItemType,setItemType]= useState([])
 
 
 
@@ -41,7 +47,9 @@ export const TrimsBomCreation = (props:TrimsBomCreationProps) => {
     getAllActiveLiscenceTypes();
     getAllUoms();
     getTax();
-  getAllActiveProfitControlHead();
+    getAllActiveProfitControlHead();
+    getAllFacilitys();
+    getAllItemType
 
   },[])
 
@@ -52,6 +60,37 @@ export const TrimsBomCreation = (props:TrimsBomCreationProps) => {
       form.setFieldsValue({totalPrice:cal})
     }
   }, [taxvalue]);
+
+  const getAllItemType=() =>{
+    itemTypeservice.getAllActiveItemType().then(res =>{
+      if (res.status){
+        // console.log(res,'llllll')
+        setItemType(res.data);
+         
+      } else{
+        AlertMessages.getErrorMessage(res.internalMessage);
+         }
+    }).catch(err => {
+      setItemType([]);
+       AlertMessages.getErrorMessage(err.message);
+     })        
+  }
+
+
+  const getAllFacilitys=() =>{
+    facilityservice.getFactories().then(res =>{
+      if (res.status){
+        // console.log(res,'llllll')
+        setfacilityData(res.data);
+         
+      } else{
+        AlertMessages.getErrorMessage(res.internalMessage);
+         }
+    }).catch(err => {
+      setfacilityData([]);
+       AlertMessages.getErrorMessage(err.message);
+     })        
+  }
 
 
   const getAllCurrencies=() =>{
@@ -142,7 +181,7 @@ const getAllActiveProfitControlHead=() =>{
 
   const onFinish = (values: any) => {
     console.log(values.trimCode,"values")
-    const req = new BomRequest (values.itemsId,values.pchId,values.facilityId,"",values.trim,values.genericCode,values.typeId,values.groupId,values.useInOperationId,values.description,values.responsible,values.developmentResponsible,values.basicUomId,values.alternateUomId,values.factor,values.orderMultipleBuom,values.moq,values.orderMultipleAuom,values.currencyId,values.price,values.purchasePriceQuantity,values.salesTax,values.exciseDuty,values.licenceId,values.property,values.isSaleItem,values.consumption,values.wastagePercentage,values.costGroup,values.usageRemarks,values.tax,values.totalPrice)
+    const req = new BomRequest (values.itemTypeId,values.pchId,values.facilityId,"",values.trim,values.genericCode,values.typeId,values.groupId,values.useInOperationId,values.description,values.responsible,values.developmentResponsible,values.basicUomId,values.alternateUomId,values.factor,values.orderMultipleBuom,values.moq,values.orderMultipleAuom,values.currencyId,values.price,values.purchasePriceQuantity,values.salesTax,values.exciseDuty,values.licenceId,values.property,values.isSaleItem,values.consumption,values.wastagePercentage,values.costGroup,values.usageRemarks,values.tax,values.totalPrice)
 
     bomservice.createBomTrim(req).then((res)=>{
        if (res.status){
@@ -162,7 +201,8 @@ const getAllActiveProfitControlHead=() =>{
 
   return (
     <>
-      <Card title="Trim Creation">
+      <Card title="Trim Creation" extra={(<Link to="/materialCreation/rm-creation-view">
+         <span style={{ color: 'white' }}><Button type="primary">View</Button></span></Link> )}>
         <Form
           form={form}
           style={{ fontSize: "10px" }}
@@ -176,16 +216,26 @@ const getAllActiveProfitControlHead=() =>{
             </div> */}
             
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
-           <Form.Item name="itemsId" label = "Item No">
-           <Select placeholder="Items No" allowClear>
-                  
-                <option value={1}> item001</option>
-                 <option value={2}> item002</option> 
-                 <option value={3}> item003</option> 
+            <Form.Item
+                    label="Item Type"
+                    name="itemTypeId"
+                    rules={[{ required: true, message: "Enter Item Type" }]}
+                  >
 
-  
-                  </Select>
-           </Form.Item>
+                    <Select
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                    placeholder="Select Item Type"
+                    >
+                       {ItemType.map((e)=>{
+                      return(<Option key={e.itemTypeId} value={e.itemTypeId}>
+                          {e.itemType}
+                      </Option>)
+                    })}
+                    </Select>
+                    {/* <Input placeholder="Fabric code" allowClear /> */}
+                  </Form.Item>
         </Col>
 
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5}}>
@@ -210,10 +260,14 @@ const getAllActiveProfitControlHead=() =>{
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5}}>
             <Form.Item name="facilityId" label = "Facility">
             <Select placeholder="facility" allowClear>
-                 <option value={1}> facility1</option>
-                 <option value={2}> facility2</option> 
-                 <option value={3}> facility3</option> 
+                 
+            {facilitydata.map((e)=>{
+                    return(
+                    <Option key={e.id} value={e.id}>{e.name}
+                    </Option>)
+                  })
 
+                  }
                 
   
                   </Select>
@@ -414,15 +468,16 @@ const getAllActiveProfitControlHead=() =>{
               {/* </Card> */}
             </Col>
 
-            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 12 }}> */}
-            <Card size="small" bordered={false} style={{ width: "100%" }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+            {/* <Card size="small" bordered={false} style={{ width: "100%" }}> */}
               <h1
-                style={{ color: "grey", fontSize: "15px", textAlign: "left" }}
+                style={{ color: "grey", fontSize: "15px", textAlign: "left", marginTop:20}}
               >
                 Purchase Price Information
               </h1>
+              </Col>
 
-              <Row gutter={8}>
+              <Row gutter={8}  style={{  marginTop:30}}>
                 <Col
                   xs={{ span: 24 }}
                   sm={{ span: 24 }}
@@ -643,7 +698,7 @@ const getAllActiveProfitControlHead=() =>{
                   </Form.Item>
                 </Col>
               </Row>
-            </Card>
+            {/* </Card> */}
             {/* </Col> */}
 
             <Col
@@ -706,7 +761,7 @@ const getAllActiveProfitControlHead=() =>{
                 >
                   Bill Of Material Data
                 </h1>
-                <Row gutter={8}>
+                <Row gutter={8} style={{marginRight:30}}>
                   <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}

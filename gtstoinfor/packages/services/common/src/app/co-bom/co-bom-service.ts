@@ -41,25 +41,9 @@ export class CoBomService {
        // console.log(data,"dada")
         if(data.length == 0){
             return new CommonResponseModel(false,0,"No data found",[])
-        } else {
-
-            for (const rec of data){
-                
-            }
-
-        }
-        // let data1 = []
-        
-        // for(const rec of data){
-        //     data1.push({
-        //         coId:rec.co_id,
-              
-        //     })
-
-      // console.log(data,'-----------')
+        } 
        return new CommonResponseModel(true, 0, "MOPData retrieved  successfully", data);
     
-        //    } 
         }catch (err) {
             throw err;
           }

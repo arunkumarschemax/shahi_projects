@@ -10,9 +10,9 @@ export class BomTrimEntity  {
     id : number;
 
     @Column('varchar',{
-        name:'items_id'
+        name:'item_type_id'
     })
-    itemsId : number;
+    itemTypeId : number;
 
     @Column('varchar',{
         name:'pch_id'
