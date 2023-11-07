@@ -1,5 +1,6 @@
 import { PropertyEnum } from "@project-management-system/shared-models";
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
+import { FgItemBom } from "../substituion/fg-item-bom.entity";
 
 @Entity('rm_items')
 export class RmCreationEntity{
@@ -328,4 +329,7 @@ useInOperation:string;
     name: "version_flag"
   })
   versionFlag: number;
+
+  @OneToMany(type=>FgItemBom, fg=>fg.rmItemInfo,{cascade: true})
+    fgItemBomInfo:FgItemBom[];
 }
