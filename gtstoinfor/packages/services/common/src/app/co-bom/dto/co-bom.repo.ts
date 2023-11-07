@@ -20,7 +20,7 @@ export class CoBomRepository extends Repository<CoBom>{
         const query = await this.createQueryBuilder('i')
         .select('*')
         .leftJoin(FgItemBom,'Fg','Fg.fgItemBomId= i.fgItemBomId')
-
+        // .where(`Fg.rmSkuId ='${rmSkuId}'`)
         return query.getRawMany
     }
  

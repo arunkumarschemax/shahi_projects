@@ -26,13 +26,13 @@ export class FabricWeave {
 
   @Column('varchar', {
         name: 'fabric_weave_image_name',
-        nullable: false
+        nullable: true
     })
     fabricWeaveImageName: string;
   
     @Column('varchar', {
       name: 'fabric_weave_image_path',
-      nullable: false
+      nullable: true
   })
   fabricWeaveImagePath: string;
 

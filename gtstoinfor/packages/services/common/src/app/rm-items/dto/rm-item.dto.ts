@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { PropertyEnum } from "@project-management-system/shared-models";
+import { IsImportedItemEnum, PropertyEnum } from "@project-management-system/shared-models";
 import { IsNotEmpty, IsNumber, IsOptional } from "class-validator";
 
 
@@ -77,6 +77,10 @@ export class RmCreationDto{
 
     @ApiProperty()
     property:PropertyEnum
+
+    @ApiProperty()
+    isImportedItem:IsImportedItemEnum
+
 
     @ApiProperty()
     supplyLeadTime:string

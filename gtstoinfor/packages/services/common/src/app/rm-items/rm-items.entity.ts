@@ -1,4 +1,4 @@
-import { PropertyEnum } from "@project-management-system/shared-models";
+import { IsImportedItemEnum, PropertyEnum } from "@project-management-system/shared-models";
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { FgItemBom } from "../substituion/fg-item-bom.entity";
 
@@ -209,6 +209,13 @@ licenseId:number;
 enum:PropertyEnum
 })
 property:PropertyEnum;
+
+@Column('enum',{
+    name:'is_imported_item',
+enum:IsImportedItemEnum,
+default:IsImportedItemEnum.NO,
+})
+isImportedItem:IsImportedItemEnum;
 
 @Column("varchar",{
     nullable: false,
