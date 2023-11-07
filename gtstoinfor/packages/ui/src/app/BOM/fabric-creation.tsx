@@ -416,10 +416,12 @@ rmservice.createRm(values).then((res)=>{
                 <Form.Item name='createdUser' style={{display:'none'}} initialValue={"Admin"}>
                     <Input hidden/>
                 </Form.Item>
+                <div style={{marginTop:"-10px"}}>
+
           <Row gutter={16}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
             <Card  bordered={false} >
-              <h1 style={{ color: "grey", fontSize: "15px", textAlign: "left" }}>Fabric Details</h1>
+              <h1 style={{ color: "grey", fontSize: "15px", textAlign: "left" ,marginTop:"-10px"}}>Fabric Details</h1>
               <Row gutter={8}>
               {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8}}>
                   <Form.Item
@@ -813,7 +815,7 @@ rmservice.createRm(values).then((res)=>{
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
               <Card bordered={false} >
 
-              <h1 style={{ color: "grey", fontSize: "15px", textAlign: "left" }}>Purchase Price Information
+              <h1 style={{ color: "grey", fontSize: "15px", textAlign: "left" ,marginTop:"-10px"}}>Purchase Price Information
               </h1>
 
               <Row gutter={8}>
@@ -1092,6 +1094,8 @@ rmservice.createRm(values).then((res)=>{
 </Card>
 </Col>
 </Row>
+</div>
+
 <br></br>
           <Row  justify="end">
           <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}>

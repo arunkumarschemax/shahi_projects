@@ -382,7 +382,7 @@ compositionservice.getActiveComposition().then(res=>{
         
          return (
          <>
-        <Card title=" FG Item Creation" size="small" extra={!props.isUpdate && (<Link to="/materialCreation/item-creation-view">
+        <Card title=" FG Item Creation" extra={!props.isUpdate && (<Link to="/materialCreation/item-creation-view">
          <span style={{ color: 'white' }}><Button type="primary">View</Button></span></Link> )}>
 
                <Form  form={form} style={{ fontSize: "10px" }}  layout="vertical" onFinish = {saveItem} initialValues={props.itemCreationData}>
@@ -392,10 +392,12 @@ compositionservice.getActiveComposition().then(res=>{
                 <Form.Item name='createdUser' style={{display:'none'}} initialValue={"Admin"}>
                     <Input hidden/>
                 </Form.Item>
+                <div style={{marginTop:"-10px"}}>
                 <Row gutter={16}>
+               
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                 <Card bordered={false}>
-                  <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Item Details</h1>
+                 <Card bordered={false} >
+                  <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left', marginTop:"-10px"}}>Item Details</h1>
                   <Row gutter={8}>
                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8}}>
                               <Form.Item style={{flexDirection:'row'}} label="Style" name="styleNo" rules={[{ required: true, message: "Enter Style" }]} >
@@ -712,7 +714,7 @@ compositionservice.getActiveComposition().then(res=>{
 
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
                           <Card bordered={false} >
-                          <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Profit Controllers</h1>
+                          <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left',marginTop:"-10px" }}>Profit Controllers</h1>
                           <Row gutter={8}>
                           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                             <Form.Item name="buyingHouseCommision" label="Buying House Commission">
@@ -1039,7 +1041,9 @@ compositionservice.getActiveComposition().then(res=>{
 
                       </Card>
                     </Col>
-                </Row>
+                  
+                    </Row>
+                    </div>
                 <br></br>
                 <Row justify={'end'} style={{marginTop: '-30px'}}>
   <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}>
