@@ -5,9 +5,10 @@ import { ColumnProps } from 'antd/lib/table';
 import { Link, useNavigate } from 'react-router-dom';
 import Highlighter from 'react-highlight-words';
 import PaymentTermsForm, { GroupTechClassForm } from './group-tech-class-form';
-import { GroupTechClassDto, PaymentTermsCategory, PaymentTermsDto } from '@project-management-system/shared-models';
+import { BuyerExtrnalRefIdReq, BuyerIdReq, GroupTechClassDto, MenusAndScopesEnum, PaymentTermsCategory, PaymentTermsDto } from '@project-management-system/shared-models';
 import { BuyersService, DivisionService, GroupTechClassService, PaymentTermsService, UserRequestDto } from '@project-management-system/shared-services';
 import AlertMessages from '../common/common-functions/alert-messages';
+import form from 'antd/es/form';
 
 /* eslint-disable-next-line */
 export interface GroupTechClassGridProps {}
@@ -28,7 +29,11 @@ export function GroupTechClassGrid(
   const [divisionData,setDivisionData] = useState<any>([])
   const [dataFetched, setDataFetched] = useState(false); 
  
-
+  const [userId, setUserId] = useState([]); 
+  const [loginBuyer,setLoginBuyer] = useState<number>(0)
+  const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+  const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
+let userRef 
 
   const openFormWithData=(viewData: GroupTechClassDto)=>{
     setDrawerVisible(true);
@@ -37,19 +42,42 @@ export function GroupTechClassGrid(
   useEffect(() => {
    
     if(!dataFetched){
-      getAll();
-      getAllActiveBuyers();
       getAllActiveDivision()
       setDataFetched(true)
+      Login()
     }
-   
-
-
-
   }, [dataFetched]);
+  const Login = () => {
+    const req = new BuyerExtrnalRefIdReq();
+    if (role === MenusAndScopesEnum.roles.crmBuyer) {
+      req.extrnalRefId = externalRefNo;
+    }
+    buyerService.getBuyerByRefId(req).then((res) => {
+      if (res.status) {
+        setUserId(res.data);
+        setLoginBuyer(res.data?.buyerId);
+        
+        // if(req.extrnalRefId){
+        //     form.setFieldsValue({'buyerId': res.data.buyerId})
+        //     }
+                  }
+    });
+    buyerService.getAllActiveBuyers().then((res) => {
+      if (res.status) {
+        setBuyerData(res.data);
+      }
+      else{
+        AlertMessages.getErrorMessage(res.internalMessage);
+         }
+    });
+    getAll();
 
+  };
   const getAll= () => {
-  service.getAllGroupTechClass().then(res => {
+    const req = new BuyerIdReq(loginBuyer)
+    console.log(req,'request');
+    
+  service.getAllGroupTechClass(req).then(res => {
       if (res.status) {
        setGroupTechClassData(res.data);
       } else {
@@ -71,20 +99,20 @@ export function GroupTechClassGrid(
 
 
 
-  const getAllActiveBuyers=() =>{
-    buyerService.getAllActiveBuyers().then(res =>{
-    if (res.status){
-      setBuyerData(res.data);
+//   const getAllActiveBuyers=() =>{
+//     buyerService.getAllActiveBuyers().then(res =>{
+//     if (res.status){
+//       setBuyerData(res.data);
        
-    } else{
-      AlertMessages.getErrorMessage(res.internalMessage);
-       }
-  }).catch(err => {
-    setBuyerData([]);
-     AlertMessages.getErrorMessage(err.message);
-   })
+//     } else{
+//       AlertMessages.getErrorMessage(res.internalMessage);
+//        }
+//   }).catch(err => {
+//     setBuyerData([]);
+//      AlertMessages.getErrorMessage(err.message);
+//    })
   
-}
+// }
 
 const getAllActiveDivision=() =>{
   divisionService.getAllActiveDivision().then(res =>{

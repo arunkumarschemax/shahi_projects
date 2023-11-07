@@ -167,6 +167,7 @@ import SMKDetailView from "./common/product-structure(BOM)/smk-detail-view"
 import SubstitutionView from "./BOM/substitution-view"
 import TrimOperationMappingView from "./common/product-structure(BOM)/trim-operation-mapping-view"
 import MOPReport from "./procurement/mop-report"
+import BomReport from "./BOM/bom-report"
 
 
 export const AppRoutes = () => {
@@ -597,6 +598,7 @@ export const AppRoutes = () => {
                     <Route path="sample-development-detail" element={<SampleDevDetail />}/>
                 </Route>
                 <Route path='/materialCreation'>
+                <Route path='rm-skus' element={<RmSkusGeneration/>}/>
                     <Route path='sku-list' element={<SkuList/>}/>
                     <Route path='sku-mapping' element={<SKUGeneration/>}/>
                     <Route path='item-creation' element={<ItemCreation itemCreationData={undefined} isUpdate={false} closeForm={function (): void {
@@ -639,7 +641,9 @@ export const AppRoutes = () => {
                             
                 </Route>
                 <Route path='/procurement'>
-                <Route path='procurement/mop-report' element={<MOPReport/>}/>           
+                <Route path='procurement/mop-report' element={<MOPReport/>}/>    
+                <Route path='bom-report' element={<BomReport/>}/>           
+       
                 </Route>
 
 

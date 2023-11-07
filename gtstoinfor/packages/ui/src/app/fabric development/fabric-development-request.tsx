@@ -223,7 +223,7 @@ console.log(filesArray,"######");
       }
     })
         // const loginId = new BuyerIdReq(loginBuyer)
-    buyerService.getAllActiveBuyers(req).then(res =>{
+    buyerService.getAllActiveBuyers().then(res =>{
     if (res.status){
       setBuyerData(res.data);
        

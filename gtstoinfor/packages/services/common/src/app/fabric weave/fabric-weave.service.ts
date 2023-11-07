@@ -30,6 +30,8 @@ export class FabricWeaveService {
       }
 
       async createFabricWeave(dto: FabriCWeaveDto, isUpdate: boolean): Promise<FabricWeaveResponseModel> {
+        console.log(dto,'service');
+        
         try {
           let previousValue;
             const entity = await this.fabricWeaveRepository.findOne({ where: { fabricWeaveName: dto.fabricWeaveName } });

@@ -1,4 +1,4 @@
-import {  AllGroupTechClassResponse, GroupTechClassDto, GroupTechClassRequest, GroupTechClassResponse } from '@project-management-system/shared-models';
+import {  AllGroupTechClassResponse, BuyerIdReq, GroupTechClassDto, GroupTechClassRequest, GroupTechClassResponse } from '@project-management-system/shared-models';
 import axios, { AxiosRequestConfig } from 'axios';
 import { CommonAxiosService } from '../common-axios-service-prs';
 
@@ -17,8 +17,8 @@ export class GroupTechClassService extends CommonAxiosService{
         return this.axiosPostCall(this.URL + '/getAllActiveGroupTechClass')
     }
 
-    async getAllGroupTechClass(): Promise<AllGroupTechClassResponse> {
-        return this.axiosPostCall(this.URL + '/getAllGroupTechClass')
+    async getAllGroupTechClass(req?:BuyerIdReq): Promise<AllGroupTechClassResponse> {
+        return this.axiosPostCall(this.URL + '/getAllGroupTechClass',req)
     }
 
     async getActivegetGroupTechClassById(Req: GroupTechClassRequest): Promise<AllGroupTechClassResponse> {

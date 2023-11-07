@@ -39,7 +39,8 @@ export function BuyersForm(props: BuyersFormProps) {
   const [disable, setDisable] = useState<boolean>(false)
   const [paymentTerms,setPaymentTerms] = useState<PaymentTermsDto[]>([])
   const paymentTermsService = new PaymentTermsService()
-  const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNum
+  const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+
   const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
   // const externalRefNo = 'b001'
   // const role = 'vendor'
@@ -106,9 +107,9 @@ export function BuyersForm(props: BuyersFormProps) {
   const saveBuyer = (buyersData: BuyersDto) => {
     buyersData.paymentMethodId = Number(buyersData.paymentMethodId)
     buyersData.createdUser = 'admin'
-    if(role === 'vendor'){
+    // if(externalRefNo != undefined){
       buyersData.externalRefNumber = externalRefNo
-    }
+    // }
     setDisable(true)
     buyerService.createBuyer(buyersData).then(res => {
       setDisable(false)

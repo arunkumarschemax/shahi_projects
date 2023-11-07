@@ -45,7 +45,7 @@ export const FabricDevelopmentView = () =>{
     setLoginBuyer(res.data.buyerId)
         }
       })
-      buyerService.getAllActiveBuyers(req).then(res=>{
+      buyerService.getAllActiveBuyers().then(res=>{
         if(res.status){
               setBuyerId(res.data)
               console.log(buyerId,'buyer');

@@ -15,6 +15,7 @@ import { Buyers } from "../buyers/buyers.entity";
 import { ItemCreation } from "../fg-item/item_creation.entity";
 import { CoTypes } from "../co-type/co-type.entity";
 import { UomEntity } from "../uom/uom-entity";
+import { CoBom } from "../co-bom/co-bom.entity";
 
 @Entity('customer_order')
 export class StyleOrder{
@@ -255,5 +256,7 @@ export class StyleOrder{
     @OneToMany(type=>CoLine, co=>co.styleOrderInfo,{cascade: true})
     coLineInfo:CoLine[];
 
+    @OneToMany(type=>CoBom, co=>co.orderId,{cascade:true})
+    customerorder:CoBom
     
 }
