@@ -114,10 +114,10 @@ export class ComponentsService {
     }  
 
 async activateOrDeactivateComponent(req: ComponentRequest): Promise<ComponentResponseModel> {
-  console.log(req,'hoioooo')
+ // console.log(req,'hoioooo')
   try {
       const componentsExists = await this.getComponentById(req.componentId);
-      console.log(componentsExists,'sdfghjk')
+   //   console.log(componentsExists,'sdfghjk')
       if (componentsExists) {
           if (!componentsExists) {
               throw new ErrorResponse(10113, 'Someone updated the current Components information. Refresh and try again');

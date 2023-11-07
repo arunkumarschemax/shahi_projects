@@ -122,7 +122,7 @@ export class DivisionService {
             //retrieves all companies
             const divisionEntities: Division[] = await this.divisionRepository.find({ order: { 'divisionName': 'ASC' },where:{isActive:true}
            });
-         console.log(divisionEntities)
+        // console.log(divisionEntities)
             if (divisionEntities) {
                 // converts the data fetched from the database which of type companies array to type StateDto array.
                 divisionEntities.forEach(countriesEntity => {

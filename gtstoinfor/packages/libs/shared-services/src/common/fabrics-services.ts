@@ -6,7 +6,7 @@ export class FabricsService extends CommonAxiosService{
     URL ="/fabrics_Name";
 
     async createFabrics(fab: FabricsDto): Promise<FabricsResponseModel> {
-        console.log('testss',fab)
+      //  console.log('testss',fab)
         return this.axiosPostCall(this.URL + "/createFabrics", fab)
     }
   
