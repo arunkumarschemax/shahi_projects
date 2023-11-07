@@ -23,7 +23,7 @@ export class BomService {
         try {
           
             const entity = new BomTrimEntity()
-            entity.itemsId = req.itemsId
+            entity.itemTypeId = req.itemTypeId
             entity.pchId = req.pchId
             entity.facilityId = req.facilityId
             entity.trimCode = "TRIM"+"00"+(maxId+1)

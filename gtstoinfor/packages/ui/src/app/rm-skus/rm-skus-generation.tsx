@@ -3,6 +3,7 @@ import { FabricStructuresService, FeatureService, ProductGroupService, RmCreatio
 import { Badge, Button, Card, Checkbox, Col, Form ,Row,Select, Space, Tag, Tooltip} from "antd"
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
+import { Link } from "react-router-dom";
 
 const {Option} = Select;
 const CheckboxGroup = Checkbox.Group;
@@ -85,7 +86,7 @@ export const RmSkusGeneration = () => {
     }
 
     return (
-        <Card title='Rm Sku Generation'>
+        <Card title='Rm Sku Generation' extra={<Link to='/materialCreation/rm-skus-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>}>
             <Form layout="vertical" form={form} onFinish={onFinish}>
                 <Row gutter={8}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>

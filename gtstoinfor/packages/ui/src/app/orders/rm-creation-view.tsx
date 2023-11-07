@@ -545,7 +545,7 @@ const getAllUoms=() =>{
 
   return (
       <>
-      <Card title={<span >RM Creation</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+      <Card title={<span >RM View</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }} 
     extra={<Link to='/materialCreation/fabric-bom-creation' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >

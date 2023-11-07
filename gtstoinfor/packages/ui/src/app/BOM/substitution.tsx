@@ -19,12 +19,12 @@ export const Substitution = () => {
     const divisionService = new DivisionService();
     const [rmSkus,setRmSKus] = useState<any[]>([])
     const rmSkuService = new ProductStructureService()
-    const selectedRmSKuObject =[]
+    const selectedRmSKuObject = []
     const [selectedRmSKus, setSelectedRmSKus] = useState<any[]>([]);
-    const selectedFgSkuObject = []
+    const [selectedFgSkuObject,setSelectedFgSkuObject] = useState<any[]>([])
     const [selectedFgSkus,setSelectedFgSkus] = useState<any[]>([])
 
-  
+      
 
 
     useEffect(() => {
@@ -68,14 +68,33 @@ export const Substitution = () => {
 
     const handleRmSkusDragStart = (event: React.DragEvent<HTMLDivElement>, rmsku: any) => {
         selectedRmSKuObject.push(rmsku)
-        setSelectedRmSKus([...selectedRmSKus,selectedRmSKuObject[0]])
-      const index =  rmSkus.findIndex(e => {return e.rm_sku_code === rmsku.rm_sku_code})
+        // selectedFgSkuObject.push(new MappedRmSKU(rmsku.rm_item_code,rmsku.rm_item_id,rmsku.rm_sku_id,rmsku.rm_sku_code,null,rmsku.item_type))
+        setSelectedFgSkuObject(rmsku)
+        // setSelectedRmSKus([...selectedRmSKus,selectedRmSKuObject[0]])
+    //   const index =  rmSkus.findIndex(e => {return e.rm_sku_code === rmsku.rm_sku_code})
     //   rmSkus.splice(index,1)
     };
 
     const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
     };
+
+    const handleFGDragOver = (event: React.DragEvent<HTMLDivElement>,fgsku) => {
+        console.log(selectedRmSKuObject,'-----------------------')
+        console.log(selectedRmSKuObject.length,'-----------------------')
+        console.log(selectedFgSkuObject,'*******')
+        // if(selectedRmSKus.length > 0){
+        //     const index = selectedRmSKus.findIndex(e => e.fgSkuCode === fgsku)
+        //     console.log(index,'**********************')
+        // } else{
+        //     console.log(selectedRmSKuObject,'=======')
+        //     // selectedRmSKuObject.fgSkuCode = fgsku
+        //     // console.log(selectedRmSKuObject,'-----------------')
+        //     setSelectedRmSKus([...selectedRmSKus,selectedRmSKuObject])
+        // }
+        event.preventDefault();
+    };
+    
 
     const handleAvailableDrop = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -223,7 +242,8 @@ export const Substitution = () => {
                     size='small'
                     style={{ background: '#f7c78d', marginBottom: '10px',height:'35px'}}
                     draggable
-                    onDragStart={(event) => handleRmSkusDragStart(event, e)}
+                    // onDragStart={(event) => handleRmSkusDragStart(event, e)}
+                    onDragEnd={(event) => handleRmSkusDragStart(event, e)}
                     >
                         <span style={{ wordWrap: 'break-word' }}>
                             <li style={{ color: 'black',textAlign:'center'}}>{e.rm_sku_code}</li>
@@ -246,7 +266,7 @@ export const Substitution = () => {
                         return(
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 5 }}>
                                 <Card title={rec.sku_code}
-                                onDragOver={handleDragOver}
+                                onDragOver={(event) => handleFGDragOver(event,rec.sku_code)}
                                 onDrop={handleDrop}
                                 >
                                     {
@@ -270,7 +290,7 @@ export const Substitution = () => {
                     })
                 }
             </Row>
-            
+                        
         </Card>
     )
 

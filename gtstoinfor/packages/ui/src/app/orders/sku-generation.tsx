@@ -3,10 +3,17 @@ import { useEffect, useState } from 'react';
 import { ColourService, DestinationService, DivisionService, ItemCreationService, ItemsService, SKUGenerationService, SizeService, StyleService } from '@project-management-system/shared-services';
 import { ItemCodeReq, ItemSKusReq, SKUGenerationReq, SkuStatusEnum } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
+import { Link } from 'react-router-dom';
 
 const { Option } = Select;
 
-export const SKUGeneration = () => {
+export interface FormProps{
+  data:any;
+  isUpdate:boolean;
+  closeForm: () => void;
+
+}
+export function SKUGeneration  (props:FormProps){
     const [form] = Form.useForm()
     const skuService = new SKUGenerationService()
     const colorService = new ColourService()
@@ -225,7 +232,10 @@ export const SKUGeneration = () => {
 
 
   return (
-    <Card size="small" title="SKU mapping" extra={<p style={{color:'red',fontSize:'110%'}}><b>Note: To Map the Components drag and drop from Available to Selected</b></p>}>
+    <Card  title={<><span>FG SKU Mapping</span><span style={{color:'red',fontSize:'110%',marginLeft:'45%'}}><b>Note: To Map the Components drag and drop from Available to Selected</b></span></>} extra={<Link to='/materialCreation/sku-list'><Button type='primary'>View</Button></Link>}>
+      {/* <Row justify={'end'}> */}
+      {/* <p style={{color:'red',fontSize:'110%'}}><b>Note: To Map the Components drag and drop from Available to Selected</b></p> */}
+      {/* </Row> */}
       <Form layout="horizontal" form={form}>
       <Row gutter={24}>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>

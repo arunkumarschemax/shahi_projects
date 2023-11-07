@@ -1,7 +1,7 @@
 
 export class BomRequest {
     
-    itemsId : number;
+    itemTypeId : number;
     pchId : number;
     facilityId : number;
     trimCode :string;
@@ -36,7 +36,7 @@ export class BomRequest {
   
 
     constructor(
-        itemsId : number,
+        itemTypeId : number,
          pchId : number,
         facilityId : number,
         trimCode :string,
@@ -69,7 +69,7 @@ export class BomRequest {
         taxPercentage:number,
         totalPrice : number
        ){  
-           this.itemsId = itemsId
+           this.itemTypeId = itemTypeId
            this.pchId = pchId
            this.facilityId = facilityId
            this.trimCode = trimCode
@@ -102,7 +102,7 @@ export class BomRequest {
            this.taxPercentage  = taxPercentage
            this.totalPrice = totalPrice
         
-          
+    
 
     }
 

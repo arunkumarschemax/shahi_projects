@@ -185,22 +185,22 @@ export function LocationsGrid(props: LocationsGridProps) {
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
         </>
       ),
-      // filters: [
-      //   {
-      //     text: 'Active',
-      //     value: true,
-      //   },
-      //   {
-      //     text: 'InActive',
-      //     value: false,
-      //   },
-      // ],
-      // filterMultiple: false,
-      // onFilter: (value, record) => 
-      // {
-      //   // === is not work
-      //   return record.isActive === value;
-      // },
+      filters: [
+        {
+          text: 'Active',
+          value: true,
+        },
+        {
+          text: 'InActive',
+          value: false,
+        },
+      ],
+      filterMultiple: false,
+      onFilter: (value, record) => 
+      {
+        // === is not work
+        return record.isActive === value;
+      },
       
     },
     {
@@ -213,7 +213,7 @@ export function LocationsGrid(props: LocationsGridProps) {
                 if (rowData.isActive) {
                   openFormWithData(rowData);
                 } else {
-                  AlertMessages.getErrorMessage('You Cannot Edit Deactivated Operation');
+                  AlertMessages.getErrorMessage('You Cannot Edit Deactivated Location');
                 }
               }}
               style={{ color: '#1890ff', fontSize: '14px' }}
@@ -223,8 +223,8 @@ export function LocationsGrid(props: LocationsGridProps) {
             <Popconfirm onConfirm={e =>{deleteUser(rowData);}}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate Operation ?'
-                :  'Are you sure to Activate Operation ?'
+                ? 'Are you sure to Deactivate Location ?'
+                :  'Are you sure to Activate Location ?'
             }
           >
             <Switch  size="default"
@@ -284,7 +284,6 @@ export function LocationsGrid(props: LocationsGridProps) {
           <br></br>
           <Table
           rowKey={record => record.Id}
-          rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
 
           columns={columnsSkelton}
           dataSource={locationData}
