@@ -23,7 +23,7 @@ const MaterialIssueReport = () => {
 
   const columns1: any = [
     {
-      // title: " Code",
+      title: " Code",
       dataIndex: "fabricCode",
       render: (text, record) => {
         return record.fabricCode
@@ -32,23 +32,31 @@ const MaterialIssueReport = () => {
 
     },
     {
-      // title: "Description",
-      dataIndex: "fbdescription",
+      dataIndex:"material_fabric_id",
+   },
+    {
+      title: "Description",
+      dataIndex: "description",
+      render: (text, record) => {
+        return record.description
+          
+      },
+    },
+    
+    {
+      title: "Color",
+      dataIndex: "color_id",
     },
     {
-      // title: "Color",
-      dataIndex: "colour",
-    },
-    {
-      // title: "Consumption",
+      title: "Consumption",
       dataIndex: "consumption",
     },
     {
-      // title: "Issued Quantity",
-      dataIndex: "issuedQuantity",
+      title: "Issued Quantity",
+      dataIndex: "issued_quantity",
     },
     {
-      // title: "Operation Status",
+      title: "Operation Status",
       dataIndex: "remarks",
     },
   ];
@@ -75,7 +83,7 @@ const MaterialIssueReport = () => {
     },
     {
       title: "M3 Style No",
-      dataIndex: "m_style_no",
+      dataIndex: "m3_style_no",
       onCell: (record: any) => ({
         rowSpan: record.rowSpan,
       }),
@@ -155,7 +163,6 @@ const MaterialIssueReport = () => {
       title: "Material Type",
       dataIndex: "mi_items",
       render: (miItems, record) => {
-        console.log(record,'record');
         
         return (
           <Table
@@ -185,7 +192,7 @@ const MaterialIssueReport = () => {
               total: data.length,
               showTotal: (total, range) =>
                 `${range[0]}-${range[1]} of ${total} items`,
-            }}scroll={{x:'1800'}}
+            }}scroll={{x:'2200'}}
           />
         </div>
       </Card>
