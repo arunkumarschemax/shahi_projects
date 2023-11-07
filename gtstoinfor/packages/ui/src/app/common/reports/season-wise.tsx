@@ -73,13 +73,13 @@ const SeasonWiseReport = () => {
             // width:"50px",
             render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1)),
         },
+        // {
+        //   title: <div style={{textAlign: "center"}}>Item Code</div>,
+        //   dataIndex: 'itemCode',
+        //   width:"80px"
+        // },
         {
-          title: <div style={{textAlign: "center"}}>Item Code</div>,
-          dataIndex: 'itemCode',
-          width:"80px"
-        },
-        {
-          title:<div style={{textAlign: "center"}}>Item Name</div>,
+          title:<div style={{textAlign: "center"}}>Planning Sum</div>,
           dataIndex: 'itemName',
             width:"200px",
             // ellipsis: true,
@@ -183,14 +183,14 @@ const SeasonWiseReport = () => {
             align:"right",
             render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1)),
         },
+        // {
+        //     title: <div style={{textAlign: "center"}}>Item Code</div>,
+        //     align:"right",
+        //     dataIndex: 'itemCode',
+        //     width:"80px"
+        // },
         {
-            title: <div style={{textAlign: "center"}}>Item Code</div>,
-            align:"right",
-            dataIndex: 'itemCode',
-            width:"80px"
-        },
-        {
-            title:<div style={{textAlign: "center"}}>Item Name</div>,
+            title:<div style={{textAlign: "center"}}>Planning Sum</div>,
             dataIndex: 'itemName',
         },
         {
@@ -394,8 +394,8 @@ const SeasonWiseReport = () => {
 
     let excelColumnsWH: IExcelColumn[] = []
     excelColumnsWH = [
-        { title: 'Item code', dataIndex: 'itemCode' },
-        { title: 'Item Name', dataIndex: 'itemName' },
+        // { title: 'Item code', dataIndex: 'itemCode' },
+        { title: 'Planning Sum', dataIndex: 'itemName' },
         { title: 'January', dataIndex: "january"},
         { title: 'February', dataIndex: "february"},
         { title: 'March', dataIndex: "march"},
@@ -413,8 +413,8 @@ const SeasonWiseReport = () => {
 
     let excelColumnsEXf: IExcelColumn[] = []
     excelColumnsEXf = [
-        { title: 'Item code', dataIndex: 'itemCode' },
-        { title: 'Item Name', dataIndex: 'itemName' },
+        // { title: 'Item code', dataIndex: 'itemCode' },
+        { title: 'Planning Sum', dataIndex: 'itemName' },
         { title: 'January', dataIndex: "exfJan"},
         { title: 'February', dataIndex: "exfFeb"},
         { title: 'March', dataIndex: "exfMarch"},
@@ -457,7 +457,7 @@ const SeasonWiseReport = () => {
     
       return (
         <Table.Summary.Row className='tableFooter'>
-          <Table.Summary.Cell index={0}></Table.Summary.Cell>
+          {/* <Table.Summary.Cell index={0}></Table.Summary.Cell> */}
           <Table.Summary.Cell index={1}></Table.Summary.Cell>
           <Table.Summary.Cell index={2}><Text type="danger">Grand Total</Text></Table.Summary.Cell>
           {months.map((month, index) => (
@@ -608,22 +608,22 @@ const SeasonWiseReport = () => {
           return (
             <>
               <Table.Summary.Row className='tableFooter'>
-              <Table.Summary.Cell index={0}></Table.Summary.Cell>
-                <Table.Summary.Cell index={1}></Table.Summary.Cell>
-                <Table.Summary.Cell index={2}><Text type="danger">Grand Total</Text></Table.Summary.Cell>
-                <Table.Summary.Cell index={3}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(jan).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={4}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(feb).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={5}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(mar).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={6}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(apr).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={7}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(may1).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={8}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(jun).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={9}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(jul).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={10}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(aug).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={11}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(sep).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={12}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(oct).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={13}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(nov).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={14}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(dec).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={15}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(total).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+              {/* <Table.Summary.Cell index={0}></Table.Summary.Cell> */}
+                <Table.Summary.Cell index={0}></Table.Summary.Cell>
+                <Table.Summary.Cell index={1}><Text type="danger">Grand Total</Text></Table.Summary.Cell>
+                <Table.Summary.Cell index={2}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(jan).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+                <Table.Summary.Cell index={3}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(feb).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+                <Table.Summary.Cell index={4}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(mar).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+                <Table.Summary.Cell index={5}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(apr).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+                <Table.Summary.Cell index={6}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(may1).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+                <Table.Summary.Cell index={7}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(jun).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+                <Table.Summary.Cell index={8}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(jul).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+                <Table.Summary.Cell index={9}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(aug).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+                <Table.Summary.Cell index={10}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(sep).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+                <Table.Summary.Cell index={11}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(oct).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+                <Table.Summary.Cell index={12}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(nov).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+                <Table.Summary.Cell index={13}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(dec).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+                <Table.Summary.Cell index={14}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(total).toLocaleString('en-IN')}</div></Table.Summary.Cell>
               </Table.Summary.Row>
             </>
           );
@@ -825,7 +825,7 @@ const SeasonWiseReport = () => {
         ) : null}>
           <Form layout="horizontal" form={form} onFinish={reportSS}>
             <Row gutter={16}>
-              <Col xs={24} sm={24} md={8} lg={6} xl={4}>
+              {/* <Col xs={24} sm={24} md={8} lg={6} xl={4}>
                 <Form.Item label='Item Code' name='itemCode'>
                 <Select
                 showSearch
@@ -853,7 +853,7 @@ const SeasonWiseReport = () => {
                 })}
               </Select>
                 </Form.Item>
-              </Col>
+              </Col> */}
               <Col xs={24} sm={24} md={8} lg={8} xl={6}>
                 <Form.Item label='Item Name' name='itemName'>
                 <Select

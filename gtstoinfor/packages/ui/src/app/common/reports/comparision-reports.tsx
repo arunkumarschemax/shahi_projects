@@ -14,6 +14,7 @@ import './comparision-report.css';
 
 export const MonthWiseComparisionReport = () => {
   const [form] = Form.useForm();
+  const [form1] = Form.useForm();
   const { Option } = Select;
   const [page, setPage] = useState<number>(1);
 
@@ -41,7 +42,7 @@ export const MonthWiseComparisionReport = () => {
 
  
   useEffect(() => {
-    getData(selected, tab);
+    getData(tab,selected);
     getTabs();
     getPhase()
   }, []);
@@ -55,7 +56,7 @@ export const MonthWiseComparisionReport = () => {
 
   const handleChange = (val) => {
     setSelected(val)
-    getData(val, tab)
+    getData(tab,val)
     getPhase()
 
   }
@@ -100,7 +101,9 @@ export const MonthWiseComparisionReport = () => {
   }
 
   const getData = (val, tabName) => {
-    const req = new YearReq(tabName, val);
+    console.log(val,'*******')
+    console.log(tabName,'------------')
+    const req = new YearReq(val,tabName);
 
     if (form.getFieldValue('ItemName') !== undefined) {
       req.itemName = form.getFieldValue('ItemName')
@@ -1334,7 +1337,7 @@ export const MonthWiseComparisionReport = () => {
   };
   const handleTabChange = (selectedYear: string) => {
     setTab(Number(selectedYear));
-    getData(selected, selectedYear);
+    getData(selectedYear,selected);
   };
   const getFilterdData = () => {
     let ItemName = form.getFieldValue("ItemName");
@@ -1353,7 +1356,7 @@ export const MonthWiseComparisionReport = () => {
   };
   const onReset = () => {
     form.resetFields();
-    getData(selected, tab);
+    getData(tab,selected);
   };
 
   const getTableSummary = (pageData) => {
@@ -1529,7 +1532,7 @@ export const MonthWiseComparisionReport = () => {
   return (
 
     <Card>
-      <Form form={form} layout={"vertical"} onFinish={() => getData(tab, selected)}>
+      <Form form={form1} layout={"vertical"}>
         <Row gutter={24}>
           <Col
             xs={{ span: 24 }}
@@ -1603,7 +1606,7 @@ export const MonthWiseComparisionReport = () => {
         <Tabs type="card" onChange={handleTabChange} aria-disabled>
           {year.map((e) => (
             <Tabs.TabPane tab={`${e.year}`} key={e.year}>
-              <Form form={form} layout={"vertical"}>
+              <Form form={form} layout={"vertical"} onFinish={() => getData(tab, selected)}>
                 <Row gutter={24}>
                   <Col
                     xs={{ span: 24 }}
@@ -1622,8 +1625,8 @@ export const MonthWiseComparisionReport = () => {
                           allowClear
                         >
                           {items.map((e) => (
-                            <Option key={e.i_item} value={e.i_item}>
-                              {e.i_item}
+                            <Option key={e.item} value={e.item}>
+                              {e.item}
                             </Option>
                           ))}
                         </Select>

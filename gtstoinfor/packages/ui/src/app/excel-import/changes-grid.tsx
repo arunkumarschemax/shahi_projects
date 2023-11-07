@@ -204,13 +204,13 @@ const ChangesGrid = () => {
             title: 'Production Plan Type',
             dataIndex: 'prod_plan_type'
         },
+        // {
+        //     title: 'Item code',
+        //     dataIndex: 'item_cd',
+        // },
         {
-            title: 'Item code',
-            dataIndex: 'item_cd',
-        },
-        {
-            title: 'Item Name',
-            dataIndex: 'item'
+            title: 'Planning Sum',
+            dataIndex: 'planning_sum'
         },
         {
             title: 'Year',
@@ -225,9 +225,9 @@ const ChangesGrid = () => {
         },
         {
             title: 'Ex Factory',
-            dataIndex: 'planned_exf',
+            dataIndex: 'exf',
             render: (text, record) => {
-                return record.planned_exf ? moment(record.planned_exf).format('YYYY-MM-DD') : '-'
+                return record.exf ? moment(record.exf).format('MM-DD') : '-'
             }
         },
         {
@@ -271,13 +271,13 @@ const ChangesGrid = () => {
     ]
 
     const data4 = [
+        // {
+        //     title: 'Item code',
+        //     dataIndex: 'item_cd'
+        // },
         {
-            title: 'Item code',
-            dataIndex: 'item_cd'
-        },
-        {
-            title: 'Item Name',
-            dataIndex: 'item'
+            title: 'Planning Sum',
+            dataIndex: 'planning_sum'
         },
         {
             title: 'Year',
@@ -292,9 +292,9 @@ const ChangesGrid = () => {
         },
         {
             title: 'Ex Factory',
-            dataIndex: 'planned_exf',
+            dataIndex: 'exf',
             render: (text, record) => {
-                return record.planned_exf ? moment(record.planned_exf).format('YYYY-MM-DD') : '-'
+                return record.exf ? moment(record.exf).format('MM-DD') : '-'
             }
         },
         {
@@ -416,15 +416,15 @@ const ChangesGrid = () => {
             sorter: (a, b) => a.prod_plan_type?.localeCompare(b.prod_plan_type),
             sortDirections: [ "ascend","descend"],
         },
+        // {
+        //     title: 'Item code',
+        //     dataIndex: 'item_cd',
+        //     // ...getColumnSearchProps('item_cd')
+        // },
         {
-            title: 'Item code',
-            dataIndex: 'item_cd',
-            // ...getColumnSearchProps('item_cd')
-        },
-        {
-            title: 'Item Name',
-            dataIndex: 'item',
-            sorter: (a, b) => a.item?.localeCompare(b.item),
+            title: 'Planning Sum',
+            dataIndex: 'planning_sum',
+            sorter: (a, b) => a.planning_sum?.localeCompare(b.planning_sum),
             sortDirections: [ "ascend","descend"],
         },
         {
@@ -442,9 +442,9 @@ const ChangesGrid = () => {
         },
         {
             title: 'Ex Factory',
-            dataIndex: 'planned_exf',
+            dataIndex: 'exf',
             render: (text, record) => {
-                return record.planned_exf ? moment(record.planned_exf).format('YYYY-MM-DD') : '-'
+                return record.exf ? moment(record.exf).format('MM-DD') : '-'
             }
         },
         {
@@ -524,15 +524,15 @@ const ChangesGrid = () => {
             width: '60px',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
+        // {
+        //     title: <div style={{textAlign:'center'}}>Item code</div>,
+        //     dataIndex: 'item_cd'
+        // },
         {
-            title: <div style={{textAlign:'center'}}>Item code</div>,
-            dataIndex: 'item_cd'
-        },
-        {
-            title: <div style={{textAlign:'center'}}>Item Name</div>,
-            dataIndex: 'item',
+            title: <div style={{textAlign:'center'}}>Planning Sum</div>,
+            dataIndex: 'planning_sum',
             width:'400px',
-            sorter: (a, b) => a.item?.localeCompare(b.item),
+            sorter: (a, b) => a.planning_sum?.localeCompare(b.planning_sum),
             sortDirections: [ "ascend","descend"],
         },
         // {
@@ -654,9 +654,9 @@ const ChangesGrid = () => {
                             <Table.Summary.Cell index={3} ><Text ></Text></Table.Summary.Cell>
                             <Table.Summary.Cell index={4} ><Text ></Text></Table.Summary.Cell>
                             <Table.Summary.Cell index={5} ><Text ></Text></Table.Summary.Cell>
-                            <Table.Summary.Cell index={6} ><Text ></Text></Table.Summary.Cell>
-                            <Table.Summary.Cell index={7}  ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>Total</div></Table.Summary.Cell>
-                            <Table.Summary.Cell index={8} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalLastQty).toLocaleString('en-IN', {
+                            {/* <Table.Summary.Cell index={6} ><Text ></Text></Table.Summary.Cell> */}
+                            <Table.Summary.Cell index={6}  ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>Total</div></Table.Summary.Cell>
+                            <Table.Summary.Cell index={7} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalLastQty).toLocaleString('en-IN', {
                                 maximumFractionDigits: 0
                             })}</div></Table.Summary.Cell>
                             <Table.Summary.Cell index={8}><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalRecQty).toLocaleString('en-IN', {
@@ -681,7 +681,7 @@ const ChangesGrid = () => {
         },
         {
             key: '2',
-            label: <b>Item Wise Quantity Variance: {differenceQtyData?.length}</b>,
+            label: <b>Planning Sum Wise Quantity Variance: {differenceQtyData?.length}</b>,
             children: (
                 differenceQtyData.length > 0 ?(<Table className="custom-table-wrapper" bordered
             dataSource={differenceQtyData} columns={ItemWisecolumns} size='small'
@@ -716,15 +716,15 @@ const ChangesGrid = () => {
                                 {/* <Table.Summary.Cell index={1} ><Text ></Text></Table.Summary.Cell> */}
                                 {/* <Table.Summary.Cell index={2} ><Text ></Text></Table.Summary.Cell> */}
                                 <Table.Summary.Cell index={3} ><Text ></Text></Table.Summary.Cell>
-                                <Table.Summary.Cell index={5} ><Text ></Text></Table.Summary.Cell>
-                                <Table.Summary.Cell index={6}  ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>Total</div></Table.Summary.Cell>
-                                <Table.Summary.Cell index={7} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalLastQty).toLocaleString('en-IN', {
+                                {/* <Table.Summary.Cell index={5} ><Text ></Text></Table.Summary.Cell> */}
+                                <Table.Summary.Cell index={5}  ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>Total</div></Table.Summary.Cell>
+                                <Table.Summary.Cell index={6} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalLastQty).toLocaleString('en-IN', {
                                     maximumFractionDigits: 0
                                 })}</div></Table.Summary.Cell>
-                                <Table.Summary.Cell index={8}><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalRecQty).toLocaleString('en-IN', {
+                                <Table.Summary.Cell index={7}><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalRecQty).toLocaleString('en-IN', {
                                     maximumFractionDigits: 0
                                 })}</div></Table.Summary.Cell>
-                                <Table.Summary.Cell index={9} >{Number(defData) > 0 ? (<div style={{ textAlign: 'right', fontWeight: 'bold', color: 'green' }}>{Number(defData).toLocaleString('en-IN', {
+                                <Table.Summary.Cell index={8} >{Number(defData) > 0 ? (<div style={{ textAlign: 'right', fontWeight: 'bold', color: 'green' }}>{Number(defData).toLocaleString('en-IN', {
                                 maximumFractionDigits: 0
                             })}<ArrowUpOutlined style={{ color: "green" }} /></div>) :(<div style={{ textAlign: 'right', fontWeight: 'bold', color: 'red' }}>{Number(defData).toLocaleString('en-IN', {
                                 maximumFractionDigits: 0
@@ -791,7 +791,7 @@ const ChangesGrid = () => {
                     </Select>
                     </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 3 }}>
+                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 3 }}>
                     <Form.Item name="itemCode" label="Item Code">
               <Select placeholder="Select Item Code" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
                 {itemCode?.map((e) => {
@@ -802,13 +802,13 @@ const ChangesGrid = () => {
                 })}
               </Select>
             </Form.Item>
-                    </Col>
+                    </Col> */}
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
                     <Form.Item name="item" label="Item Name">
               <Select placeholder="Select Item" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
                 {itemCode?.map((e) => {
                   return (
-                    <Option key={e.id} value={e.item}>{e.item}
+                    <Option key={e.id} value={e.planning_sum}>{e.planning_sum}
                     </Option>
                   );
                 })}

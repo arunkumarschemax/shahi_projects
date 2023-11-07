@@ -31,6 +31,7 @@ import "./comparision-report.css";
 
 export const MonthWiseReport = () => {
   const [form] = Form.useForm();
+  const [form1] = Form.useForm();
   const { Option } = Select;
   const [selected, setSelected] = useState("ExFactory");
   const [page, setPage] = useState<number>(1);
@@ -844,8 +845,8 @@ export const MonthWiseReport = () => {
     },
 
     {
-      title: "Item Name",
-      dataIndex: "itemName",
+      title: "Planning Sum",
+      dataIndex: "planning_sum",
       render: (text: any, record: any) => <span>{record.itemName}</span>,
       // ...getColumnSearchProps('itemName')
     },
@@ -1262,7 +1263,7 @@ export const MonthWiseReport = () => {
 
     if (selected == "ExFactory") {
       exportingColumns.push(
-        { title: "Item Name", dataIndex: "item" },
+        { title: "Planning Sum", dataIndex: "planning_sum" },
         { title: "Production Plan Type ", dataIndex: "prod_plan_type" },
         { title: `Jan In PCs`, dataIndex: "janPcsExf" },
         { title: `Jan In Coeff`, dataIndex: "janCoeffExf" },
@@ -1295,7 +1296,7 @@ export const MonthWiseReport = () => {
     }
     if (selected === "WareHouse") {
       exportingColumns.push(
-        { title: "Item Name", dataIndex: "item" },
+        { title: "Planning Sum", dataIndex: "planning_sum" },
         { title: "Production Plan Type ", dataIndex: "prod_plan_type" },
         { title: `Jan In PCs`, dataIndex: "janPcsWh" },
         { title: `Jan In Coeff`, dataIndex: "janCoeffWh" },
@@ -1776,7 +1777,7 @@ export const MonthWiseReport = () => {
   return (
     <>
       <Card>
-        <Form form={form} layout={"vertical"}>
+        <Form form={form1} layout={"vertical"}>
           <Row gutter={24}>
             <Col
               xs={{ span: 24 }}
@@ -1822,11 +1823,11 @@ export const MonthWiseReport = () => {
                       xl={{ span: 6 }}
                     >
                       <div>
-                        <label>Item Name</label>
+                        <label>Planning Sum</label>
                         <Form.Item name="ItemName">
                           <Select
                             showSearch
-                            placeholder="Select Item Name"
+                            placeholder="Select Planning Sum"
                             optionFilterProp="children"
                             allowClear
                           >
