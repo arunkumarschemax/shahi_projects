@@ -8,11 +8,11 @@ const SizeDetail = ({props,buyerId}) => {
   const [count, setCount] = useState(0);
   const [color, setColor] = useState<any[]>([])
   const [sizeData, setSizeData]=useState<any[]>([])
-  const [colorId, setColorId]= useState<number>(null)
   const colorService = new ColourService()
   const buyerDestinaytionService=new BuyerDestinationService()
   const { Option } = Select;
   const [form] = Form.useForm();
+  const [onchangeData, setOnchangeData] = useState([]); 
 
   useEffect(()=>{
     getColors()
@@ -52,15 +52,42 @@ const SizeDetail = ({props,buyerId}) => {
     setCount(count + 1);
   };
 
-    const onchangeData = []; 
-    const handleInputChange = (colourId, sizeId, quantity, recordKey) => {
-      let existingEntry = onchangeData.find((entry) => entry.colour === colourId);
+    // const onchangeData = []; 
+    // const handleInputChange = (colourId, sizeId, quantity, recordKey) => {
+    //   let existingEntry = onchangeData.find((entry) => entry.colour === colourId);
+    //   if (!existingEntry) {
+    //     existingEntry = {
+    //       colour: colourId,
+    //       sizeInfo: [],
+    //     };
+    //     onchangeData.push(existingEntry);
+    //   }
+    //   if (quantity !== 0) {
+    //     let sizeInfoEntry = existingEntry.sizeInfo.find((info) => info.sizeId === sizeId);
+    //     if (!sizeInfoEntry) {
+    //       sizeInfoEntry = {
+    //         sizeId: sizeId,
+    //         quantity: quantity,
+    //       };
+    //       existingEntry.sizeInfo.push(sizeInfoEntry);
+    //     } else {
+    //       sizeInfoEntry.quantity = quantity;
+    //     }
+    //   }
+    //   console.log(onchangeData);
+    //   // props(onchangeData)
+    // };
+    // console.log(inpuData)
+
+   const handleInputChange = (colourId, sizeId, quantity,recordKey) => {
+      const newData = [...onchangeData];
+      let existingEntry = newData.find((entry) => entry.colour === colourId);
       if (!existingEntry) {
         existingEntry = {
           colour: colourId,
           sizeInfo: [],
         };
-        onchangeData.push(existingEntry);
+        newData.push(existingEntry);
       }
       if (quantity !== 0) {
         let sizeInfoEntry = existingEntry.sizeInfo.find((info) => info.sizeId === sizeId);
@@ -74,9 +101,10 @@ const SizeDetail = ({props,buyerId}) => {
           sizeInfoEntry.quantity = quantity;
         }
       }
-      console.log(onchangeData);
-      // props(onchangeData)
+      setOnchangeData(newData); 
+      props(newData)
     };
+
 
   const handleDelete = (key) => {
     const updatedData = data.filter((record) => record.key !== key);
