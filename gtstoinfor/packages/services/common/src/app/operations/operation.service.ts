@@ -72,7 +72,7 @@ export class OperationsService {
            const name=isUpdate?'updated':'created'
            const displayValue = isUpdate? 'Operation Updated Successfully': 'Operation Created Successfully'
            const userName = isUpdate? savedOperationsDto.updatedUser :savedOperationsDto.createdUser;
-          //  const newLogDto = new LogsDto(1,name, 'Currencies', savedBrandsDto.currencyId, true, displayValue,userName,previousValue,presentValue)
+          //  const newLogDto = new LogsDto(1,name, 'Currencies', savedoperationsDto.currencyId, true, displayValue,userName,previousValue,presentValue)
           //  let res = await this.logService.createLog(newLogDto);
           //  console.log(res);
            return response
@@ -131,12 +131,12 @@ export class OperationsService {
                 OperationEntities.forEach((Entity,index) => {
                   // Entity.key = 
                   
-                    const convertedBrandsDtos: OperationDTO = this.operationsAdapter.convertEntityToDto(
+                    const convertedoperationsDtos: OperationDTO = this.operationsAdapter.convertEntityToDto(
                       Entity,index
                     );
-                    OperationDto.push(convertedBrandsDtos);
+                    OperationDto.push(convertedoperationsDtos);
                 });
-                const response = new AllOperationsResponseModel(true, 11108, "Brands retrieved successfully",OperationDto);
+                const response = new AllOperationsResponseModel(true, 11108, "operations retrieved successfully",OperationDto);
                 return response;
             } else {
                 throw new OperationsResponseModel(false,99998, 'Data not found'); 
@@ -168,10 +168,10 @@ export class OperationsService {
                     }
                 } else {
                     if (operationStatus.affected) {
-                        const brandResponse: OperationsResponseModel = new OperationsResponseModel(true, 10114, 'Operation is activated successfully');
-                        return brandResponse;
+                        const operationResponse: OperationsResponseModel = new OperationsResponseModel(true, 10114, 'Operation is activated successfully');
+                        return operationResponse;
                     } else {
-                        throw new OperationsResponseModel(false,10112, 'Brand is already  activated');
+                        throw new OperationsResponseModel(false,10112, 'operation is already  activated');
                     }
                 }
                 // }
@@ -192,7 +192,7 @@ export class OperationsService {
               
               const OperationData: OperationDTO = this.operationsAdapter.convertEntityToDto(OperationsEntities);
               if (OperationData) {
-                  const response = new OperationsResponseModel(true, 11101 , 'Brands retrived Successfully',);
+                  const response = new OperationsResponseModel(true, 11101 , 'operations retrived Successfully',);
                   return response;
               }
               else{
