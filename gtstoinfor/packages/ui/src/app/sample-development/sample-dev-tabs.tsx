@@ -19,6 +19,7 @@ export const SampleDevTabs = (props:SampleDevTabsProps) => {
     const [data, setData] = useState({});
 
     const handleSizeDataUpdate = (updatedData) => {
+        console.log(updatedData)
         setData((prevData) => ({ ...prevData, sizeData: updatedData }));
         setSizeData(updatedData);
     };

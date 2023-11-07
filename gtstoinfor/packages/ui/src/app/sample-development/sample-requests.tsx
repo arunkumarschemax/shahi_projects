@@ -31,17 +31,34 @@ export const SampleRequests = (props: BuyingHouseProps) => {
 
 
   useEffect(() => {
-    getAllSampleDevelopment();
+    getAllSampleData();
     // getReqNo();
   }, []);
 
-  const getAllSampleDevelopment = () => {
+  // const getAllSampleDevelopment = () => {
+  //   const req = new SampleFilterRequest()
+  //   if (form.getFieldValue('reqNo') !== undefined) {
+  //     req.reqNo = form.getFieldValue('reqNo')
+  //   }
+  //   Service.getAllSampleDevData().then((res) => {
+  //     console.log(res.data,'------------------------------')
+  //     if (res.data) {
+  //       console.table(res)
+  //       setFilterData(res.data);
+  //       setBuyingHouseData(res.data);
+  //       setReqNo(res.data)
+  //     }
+  //   });
+  // };
+
+  const getAllSampleData = () => {
     const req = new SampleFilterRequest()
     if (form.getFieldValue('reqNo') !== undefined) {
       req.reqNo = form.getFieldValue('reqNo')
     }
-    Service.getAllSampleDevData().then((res) => {
-      console.log(res.data,'------------------------------')
+    Service.getAllSampleData().then((res) => {
+      console.log(res.data)
+     
       if (res.data) {
         console.table(res)
         setFilterData(res.data);
@@ -52,20 +69,19 @@ export const SampleRequests = (props: BuyingHouseProps) => {
   };
 
   const onFinish = () => {
-    getAllSampleDevelopment();
+    getAllSampleData();
   };
 
   const onReset = () => {
     form.resetFields();
-    getAllSampleDevelopment();
+    getAllSampleData();
   };
 
   
 
   const DetailView = (rowData,cancel?) => {
-    const navigateData = filterData.filter(req => req.SampleRequestId === rowData)
-    console.log("MarketIssueDetailView",rowData)
-    return navigate(`/sample-development/market-issue-detailview`, { state: { data: navigateData,cancelVisible : cancel } });
+    const navigateData = filterData.filter(req => req.SampleRequestId === rowData)   
+    return navigate(`/sample-development/market-issue-detailview`, { state: { data: navigateData, cancelVisible : cancel } });
 
     
   };
@@ -74,7 +90,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
   const MarketIssueDetailView = (rowData,cancel?) => {
     const navigateData = filterData.filter(req => req.SampleRequestId === rowData)
     console.log("MarketIssueDetailView",rowData)
-    return navigate(`/sample-development/store-issue-detail`, { state: { data: navigateData,cancelVisible : cancel } });
+    return navigate(`/sample-development/store-issue-detail`, { state: { data: navigateData, cancelVisible : cancel } });
 
   };
 
@@ -225,6 +241,11 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("locationName"),
     },
+
+  
+
+
+
     {
       title: "PCH",
       dataIndex: "pch",
@@ -284,7 +305,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
           <EyeOutlined onClick={() => DetailView(rowData.SampleRequestId)} style={{fontSize:'15px',marginLeft:'-5px'}}/>
           </Tooltip>
           <Divider type="vertical"/>
-          <Button onClick={() => MarketIssueDetailView(rowData.id)} type='primary' disabled={logInUser == 'marketUser' ? true:false}>Issue Material</Button>
+          <Button onClick={() => MarketIssueDetailView(rowData.SampleRequestId)} type='primary' disabled={logInUser == 'marketUser' ? true:false}>Issue Material</Button>
         </span>
       ),
     },
