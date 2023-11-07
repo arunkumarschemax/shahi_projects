@@ -188,7 +188,7 @@ export const AppRoutes = () => {
                     <Route path='/user-management/users-from' element={<UserCreationForm />} />
                     <Route path='/user-management/users-view' element={<UsersView />} />
 
-                    <Route path='/stack-report' element={<StockReport/>}/>
+                    {/* <Route path='/stack-report' element={<StockReport/>}/> */}
                     <Route path='/masters'>
                     <Route path='m3-itemcodes' element={<M3Masters
                         isUpdate={false}

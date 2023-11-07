@@ -40,6 +40,14 @@ export class SampleDevelopmentService extends CommonAxiosService {
     console.log(file)
     return await this.axiosPostCall(this.URL + '/fileUpload', file);
   }
+
+  async getFabricCodes(): Promise<UploadResponse> {
+    return await this.axiosPostCall(this.URL + '/getFabricCodes');
+  }
+  async getTrimCodes(): Promise<UploadResponse> {
+    return await this.axiosPostCall(this.URL + '/getTrimCodes');
+  }
+  
   // async getSampleDevById(): Promise<any> {
   //     const dummyData = [
   //         {
