@@ -26,4 +26,13 @@ export class MappedInfo{
     rmSKuCode:string
     consumption:number
     rmItemType:RmItemTypeEnum
+
+    constructor(rmItemCode:string,rmItemId:number,rmSkuId:number,rmSKuCode:string,consumption:number,rmItemType:RmItemTypeEnum){
+      this.rmItemCode = rmItemCode
+      this.rmItemId = rmItemId
+      this.rmSkuId = rmSkuId
+      this.rmSKuCode = rmSKuCode
+      this.consumption = consumption
+      this.rmItemType = rmItemType
+    }
   }
