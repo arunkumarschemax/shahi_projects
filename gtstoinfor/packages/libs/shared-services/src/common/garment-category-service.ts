@@ -6,7 +6,7 @@ export class GarmentCategoryService extends CommonAxiosService{
     URL = '/garment-categories';
 
     async createGarmentCategories(dto: GarmentCategoryDto): Promise<GarmentCategoryResponse> {
-        console.log(dto,'00000000')
+    //    console.log(dto,'00000000')
 
         return this.axiosPostCall(this.URL + '/createGarmentCategory',dto)
     }

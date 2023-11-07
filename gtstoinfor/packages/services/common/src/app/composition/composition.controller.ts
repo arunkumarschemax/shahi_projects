@@ -59,7 +59,7 @@ async updateComposition(@Body()request:any): Promise<CompositionResponse> {
     @Post("/activateOrDeactivateComposition")
     @ApiBody({type: CompositionRequestAct})
   async activateOrDeactivateComposition(@Body() activateDeactivateReq:any) : Promise<CompositionResponse>{
-    console.log(activateDeactivateReq,"activateDeactivateReq")
+  //  console.log(activateDeactivateReq,"activateDeactivateReq")
     return await this.Service.activateOrDeactivateComposition(activateDeactivateReq)
     }
 }

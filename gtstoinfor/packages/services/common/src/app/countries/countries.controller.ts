@@ -28,8 +28,8 @@ export class CountriesController {
     @Post('/updateCountry')
   async updateGrade(@Body() countriesDto: CountriesDTO,@Req() request:Request): Promise<CountriesResponseModel> {
     try {
-      console.log('update Country');countriesDto
-      console.log(request);
+    //  console.log('update Country');countriesDto
+    //  console.log(request);
       return await this.countriesService.createCountry(countriesDto, true);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CountriesResponseModel, error);

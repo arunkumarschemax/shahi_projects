@@ -28,7 +28,7 @@ export  class AccountControlObjectController {
        @ApiBody({type:AccountControlObjectDto})
        async createAccountControlObject(@Body() Accountcontrol:any,isUpdate:boolean=false,@Req() request:Request): Promise<AccountControlObjectResponseModel> {
            try {
-            console.log(Accountcontrol,"-----------")
+          //  console.log(Accountcontrol,"-----------")
             return await this.accountControlservice.createAccountControlObject(Accountcontrol,false);
           } catch (error) {
                return this.applicationExceptionHandler.returnException(AccountControlObjectResponseModel, error);
@@ -37,7 +37,7 @@ export  class AccountControlObjectController {
 
         @Post('/getAllAccountControlObject')
         async getAllAccountControlObject(): Promise<AllAccountControlObjectResponse> {
-          console.log("hurrrrr")
+        //  console.log("hurrrrr")
             try {
                 return await this.accountControlservice.getAllaccounts();
             } catch (error) {
