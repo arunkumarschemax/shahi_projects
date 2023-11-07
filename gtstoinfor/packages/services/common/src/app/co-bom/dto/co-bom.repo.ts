@@ -16,12 +16,14 @@ export class CoBomRepository extends Repository<CoBom>{
     }
 
 
-    async getBomagainstitem(rmSkuId:number):Promise<any>{
+    async getBomAgainstItem(req?:StyleOrderId):Promise<any>{
         const query = await this.createQueryBuilder('i')
         .select('i.id,i.quantity,i.coNumber,i.coLineNumber,i.fgSku,i.co_id,Fg.fgItemBomId,Fg.fgSkuId,Fg.rmItemCode,Fg.rmSkuId,Fg.consumption,Fg.itemTypeId.Fg.itemGroupeId,Fg.itemType,Fg.rm_item_id')
         .leftJoin(FgItemBom,'Fg','Fg.fgItemBomId= i.fgItemBomId')
-        .where(`Fg.rmSkuId ='${rmSkuId}'`)
-        return query.getRawMany
+        if (req?.styleOrderId !== undefined) {
+            query.andWhere(`co_id ='${req.styleOrderId}'`)
+        }
+        return query.getRawMany()
     }
  
 
