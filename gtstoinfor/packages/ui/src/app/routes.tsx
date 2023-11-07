@@ -146,6 +146,7 @@ import StyleOrderCreation from "./style-orders/style-order-form"
 import RackPosition from "./rm_locations/rack-positions"
 import PositionGrid from "./rm_locations/rack-positions grid"
 import StockReport from "./Reports/stock-report"
+import SampleRequestReport from "./Reports/sample-request-report"
 
 
 export const AppRoutes = () => {
@@ -190,6 +191,7 @@ export const AppRoutes = () => {
                     <Route path='/user-management/users-view' element={<UsersView />} />
                     
                     <Route path='/stack-report' element={<StockReport/>}/>
+                    <Route path='/sample-request-report' element={<SampleRequestReport/>}/>
 
                     <Route path='/masters'>
                         

@@ -35,6 +35,11 @@ export class SampleDevelopmentService extends CommonAxiosService {
     console.log(file)
     return await this.axiosPostCall(this.URL + '/fileUpload', file);
   }
+
+  async getSampleRequestReport(): Promise<AllSampleDevReqResponseModel> {
+    return this.axiosPostCall(this.URL + "/getSampleRequestReport")
+  }
+
   async getSampleDevById(): Promise<any> {
       const dummyData = [
           {
