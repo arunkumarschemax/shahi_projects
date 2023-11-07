@@ -19,8 +19,8 @@ export class CoBomRepository extends Repository<CoBom>{
 
     async getBomAgainstItem(req?:StyleOrderId):Promise<any>{
         const query = await this.createQueryBuilder('i')
-        .select('i.id,i.quantity,i.coNumber,i.coLineNumber,i.fgSku,i.co_id,Fg.fgItemBomId,Fg.fgSkuId,Fg.rmItemCode,Fg.rmSkuId,Fg.consumption,Fg.itemTypeId.Fg.itemGroupeId,Fg.itemType,Fg.rm_item_id')
-        .leftJoin(FgItemBom,'Fg','Fg.fgItemBomId= i.fgItemBomId')
+        .select('i.id,i.quantity,i.co_number,i.co_line_number,i.fg_sku,i.co_id,Fg.fg_sku_id,Fg.rm_item_code,Fg.rm_sku_id,Fg.consumption,Fg.item_type_id,Fg.item_group_id,Fg.rm_item_id')
+        .leftJoin(FgItemBom,'Fg','Fg.fgItemBomId = i.fgItemBomId')
         if (req?.styleOrderId !== undefined) {
             query.andWhere(`co_id ='${req.styleOrderId}'`)
         }
