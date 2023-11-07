@@ -91,3 +91,4 @@ export * from './rm-items';
 export * from './rm- filtrer.req';
 export * from './rm-mapping-view-filter';
 export * from './smv-filter.req';
+export * from './co-bom'
