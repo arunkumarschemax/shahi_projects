@@ -2,7 +2,7 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { OperationTrackingService } from "./operation-tracking.service";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { CommonResponseModel, OperationInventoryResponseModel, OperationInventoryDto, OperationSequenceResponse, OperationTrackingResponseModel, OperationsRequest } from "@project-management-system/shared-models";
+import { CommonResponseModel, OperationInventoryResponseModel, OperationInventoryDto, OperationSequenceResponse, OperationTrackingResponseModel, OperationsRequest, TabNameReq } from "@project-management-system/shared-models";
 import { OperationTrackingDto } from "./dto/operation-tracking-dto";
 import { OperationInvRequest } from "./dto/operation-inventory-req";
 
@@ -36,10 +36,10 @@ export class OperationIssuingController{
     }
 
     @Post('/getOperationInventoryData')
-    // @ApiBody({type: OperationInventoryDto})
-    async getOperationInventoryData(): Promise<OperationInventoryResponseModel> {
+    @ApiBody({type: TabNameReq})
+    async getOperationInventoryData(@Body() req: any): Promise<OperationInventoryResponseModel> {
       try {
-        return await this.operationGroupsService.getOperationInventoryData()
+        return await this.operationGroupsService.getOperationInventoryData(req)
       } catch (error) {
         return this.applicationExceptionHandler.returnException(OperationInventoryResponseModel, error);
       }
