@@ -143,6 +143,8 @@ import MarketIssueDetail from "./sample-development/market-detail"
 import IssueScreen from "./operation-tracking/issue"
 import { InventoryView } from "./operation-tracking/inventory"
 import StyleOrderCreation from "./style-orders/style-order-form"
+import MaterialIssueReport from "./sample-development/material-issue-report"
+import StockReport from "./Reports/stock-report"
 
 
 export const AppRoutes = () => {
@@ -186,6 +188,7 @@ export const AppRoutes = () => {
                     <Route path='/user-management/users-from' element={<UserCreationForm />} />
                     <Route path='/user-management/users-view' element={<UsersView />} />
 
+                    {/* <Route path='/stack-report' element={<StockReport/>}/> */}
                     <Route path='/masters'>
                     <Route path='m3-itemcodes' element={<M3Masters
                         isUpdate={false}
@@ -540,6 +543,10 @@ export const AppRoutes = () => {
                 <Route path='inventory' element={<InventoryView/>} />
                 
 
+
+                </Route>
+                <Route path='/report'>
+                <Route path='material-issue-report' element={<MaterialIssueReport/>}/>
 
                 </Route>
                 <Route path='/stock-view' element={<StockView/>}/>

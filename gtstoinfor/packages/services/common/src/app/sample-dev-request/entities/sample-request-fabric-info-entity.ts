@@ -35,7 +35,7 @@ export class SampleReqFabricinfoEntity{
       consumption : number;
 
       @Column('text',{
-        name:'reamrks',
+        name:'remarks',
     })
       remarks : string;
 

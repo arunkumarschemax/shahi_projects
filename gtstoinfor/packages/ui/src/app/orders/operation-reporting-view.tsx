@@ -5,6 +5,7 @@ import { ColumnProps } from "antd/es/table"
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import Operation from "antd/es/transfer/operation";
+import { useNavigate } from "react-router-dom";
 
 const {Option}  =Select
 export const OperationReportingView = () => {
@@ -30,6 +31,11 @@ export const OperationReportingView = () => {
     const [saveId, setSaveId] = useState<number>()
     const uomService = new UomService()
     const [uomData, setUomData] = useState<any[]>([])
+    const [currentSegment, setCurrentSegment] = useState(1);
+    const navigate = useNavigate();
+    const trackingService = new OperationReportingService()
+    const [trackData, setTrackData] = useState<any[]>([])
+
 
 
 
@@ -63,12 +69,19 @@ export const OperationReportingView = () => {
     }
 
     const getMaterialIssue = () => {
-        // console.log(sequence,'\\\\\\\\')
         const req = new MaterialIssueRequest(form.getFieldValue('styleId'));
         issueService.getDataByStyleId(req).then((res) => {
-          console.log("Data from getMaterialIssue:", res.data);
-          setData(res.data);
-          setShowTable(true);
+            const filteredData = res.data.filter((record) => record.reportedStatus !== 'COMPLETED');
+            setData(filteredData);
+            setShowTable(true);
+        });
+      };
+
+
+    const getOperationInventoryData = () => {
+        trackingService.getOperationInventoryData().then((res) => {
+            setData(res.data);
+            setShowTable(true);
         });
       };
       
@@ -104,9 +117,9 @@ export const OperationReportingView = () => {
 
     const reportedUomId = (e, index, record) => {
         console.log(e,'===============')
-        // if (e && e.target) {
+        if (e && e.target) {
             setReportedUom(e);
-        // }
+        }
     }
 
     const rejectedUomId = (e, index, record) => {
@@ -120,9 +133,9 @@ export const OperationReportingView = () => {
         const nextSequence = currentSequence + 1;
 
         const nextOperation = operations.find((operation) => operation.sequence === nextSequence);
-
         if(nextOperation){
         const req = new OperationTrackingDto(
+            record.fabricCode,
             saveId,
             record.requestNo,
             selectedOperationSequenceId,
@@ -134,7 +147,7 @@ export const OperationReportingView = () => {
             reportedUom,
             rejectedQuantity,
             record.rejectedUomId,
-            record.status,0,'')
+            record.status,0,'',undefined,'',undefined,'',0,0,'',0)
         console.log(req,'%%%%%%%%%%%%%%%%%%%%%%%%%%%')
         service.createOperationReporting(req).then(res => {
             if(res.status){
@@ -144,6 +157,7 @@ export const OperationReportingView = () => {
             }
         })
     }
+    // navigate(`/next-segment/${JSON.stringify(record)}`);
     }
 
     const generateSegmentedOptions = () => {
@@ -151,7 +165,7 @@ export const OperationReportingView = () => {
           label: <b>{operation.operationName}</b>,
           value: operation.operationName,
           key: index.toString(),
-          sequence: operation.sequence, // Add the 'sequence' property from your data
+          sequence: operation.sequence,
         }));
       };
       
@@ -166,6 +180,12 @@ export const OperationReportingView = () => {
             width: '70px',
             responsive: ['sm'],
             render: (text, object, index) => (page-1) * 10 +(index+1)
+        },
+        {
+            title:<div style={{textAlign:"center"}}>Fabric Code</div>,
+            dataIndex:'fabricCode',
+            align: "right",
+            // render: (issuedQuantity, row) => `${issuedQuantity} ${row.issuedUom}`,
           },
         {
             title:<div style={{textAlign:"center"}}>Issued Quantity</div>,
@@ -254,7 +274,7 @@ export const OperationReportingView = () => {
             render:(text,record) => {
                 return(
                     <>
-                    {<Button onClick={ () => onJobCompleted(record)} type='primary' shape="round">Yes</Button>}
+                    <Button onClick={() => onJobCompleted(record)} type='primary' shape="round">Yes</Button>
                     </>
                 )
             }
@@ -267,16 +287,14 @@ export const OperationReportingView = () => {
           setCurrentSequence(selectedOption.sequence);
           setSelectedOperationSequenceId(selectedOption.sequence);
           setSelectedOperationName(selectedOption.value);
-          if (selectedOption.sequence === 1) {
+          if (selectedOption.sequence === 1 && selectedOption.value !== 'COMPLETED') {
             getMaterialIssue();
           } else {
-            setShowTable(false);
+            getOperationInventoryData()
+            // setShowTable(true);
           }
         }
       };
-      
-      
-      
 
 
     const onStyleChange = (val) => {

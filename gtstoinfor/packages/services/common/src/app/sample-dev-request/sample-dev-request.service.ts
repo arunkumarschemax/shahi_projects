@@ -104,7 +104,7 @@ export class SampleRequestService {
 
   async createSampleDevelopmentRequest(req:SampleDevelopmentRequest):Promise<AllSampleDevReqResponseModel>{
     // console.log(req)
-    // console.log(req.sizeData,'#####')
+    // console.log(req.sizeData[0].sizeInfo,'#####')
     try{
       const sampleId=await this.sampleRepo.getsampleId()
       const maxId= sampleId.id
@@ -112,7 +112,6 @@ export class SampleRequestService {
       const locationEntity = new Location()
       locationEntity.locationId=req.locationId
       sampleReqEntity.location=locationEntity
-      // sampleReqEntity.requestNo=req.requestNo
       sampleReqEntity.requestNo='SAM'+'-'+(Number(maxId) + 1)
       const profitHead = new ProfitControlHead()
       profitHead.profitControlHeadId=req.pchId
@@ -149,7 +148,6 @@ export class SampleRequestService {
       sampleReqEntity.type=req.type
       sampleReqEntity.conversion=req.conversion
       sampleReqEntity.madeIn=req.madeIn
-      // sampleReqEntity.facilityId=req.facilityId
       sampleReqEntity.remarks=req.remarks
       sampleReqEntity.status=req.status
       let sampleSizeInfo =[]
@@ -157,14 +155,15 @@ export class SampleRequestService {
       let sampleTrimInfo =[]
       let sampleProcessInfo =[]
       for(const size of req.sizeData){
-        console.log(size,'sizeeeeeeeeeeeeeeeeeeeeeeeeee')
-        const sizeEntity = new SampleReqSizeEntity()
-        sizeEntity.colourId=size.colourId
-        sizeEntity.sizeId=1
-        sizeEntity.quantity=size.quantity
-        console.log(sizeEntity,'%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-        sampleSizeInfo.push(sizeEntity)
-        console.log(sampleSizeInfo,'sampleSizeInfo')
+        for(const sizedetails of size.sizeInfo){
+          console.log(sizedetails,'######################')
+          const sizeEntity = new SampleReqSizeEntity()
+          sizeEntity.colourId=size.colour
+          sizeEntity.sizeId=sizedetails.sizeId
+          sizeEntity.quantity=sizedetails.quantity
+         sampleSizeInfo.push(sizeEntity)
+        }
+        console.log(sampleSizeInfo,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
       }
       sampleReqEntity.sampleReqSizeInfo=sampleSizeInfo
       for(const fabricObj of req.fabricInfo){
@@ -180,6 +179,7 @@ export class SampleRequestService {
       sampleReqEntity.sampleReqFabricInfo=sampleFabricInfo
       for(const trimObj of req.trimInfo){
         const trimEntity = new SampleRequestTriminfoEntity()
+        trimEntity.trimCode=trimObj.trimCode
         trimEntity.consumption=trimObj.consumption
         trimEntity.description=trimObj.description
         trimEntity.remarks=trimObj.remarks
@@ -209,16 +209,13 @@ export class SampleRequestService {
     }
 
   }
-  
-
-
-  async UpdateFilePath(filePath: string, filename: string, sampleRequestId: number): Promise<UploadResponse> {
+  async UpdateFilePath(filePath: string, filename: string, SampleRequestId: number): Promise<UploadResponse> {
     console.log('upload service id---------------', filePath)
     console.log('upload service id---------------', filename)
-    console.log('upload service id---------------', sampleRequestId)
+    console.log('upload service id---------------', SampleRequestId)
     try {
         let filePathUpdate;   
-            filePathUpdate = await this.sampleRepo.update({SampleRequestId:sampleRequestId},{fileName:filename,filepath:filePath} )
+            filePathUpdate = await this.sampleRepo.update({SampleRequestId:SampleRequestId},{fileName:filename,filepath:filePath} )
         if (filePathUpdate.affected > 0) {
             return new UploadResponse(true, 11, 'uploaded successfully', filePath);
         }
@@ -240,5 +237,23 @@ export class SampleRequestService {
     }
   }
 
+  async getFabricCodes(): Promise<CommonResponseModel> {
+    const details = 'SELECT rm_item_id AS fabricId,item_code AS fabricCode,ri.product_group_id FROM rm_items ri LEFT JOIN product_group pg ON pg.product_group_id=ri.product_group_id WHERE product_group="Fabric"'     
+    const result= await this.sampleRepo.query(details)
+    if (details.length > 0) {
+      return new CommonResponseModel(true, 1, 'data retrieved', result)
+    } else {
+      return new CommonResponseModel(false, 0, 'data not found',[])
+    }
+  }
 
+  async getTrimCodes(): Promise<CommonResponseModel> {
+    const details = 'SELECT rm_item_id AS trimId,item_code AS trimCode,ri.product_group_id FROM rm_items ri LEFT JOIN product_group pg ON pg.product_group_id=ri.product_group_id WHERE product_group="Packing Trims"'     
+    const result= await this.sampleRepo.query(details)
+    if (details.length > 0) {
+      return new CommonResponseModel(true, 1, 'data retrieved', result)
+    } else {
+      return new CommonResponseModel(false, 0, 'data not found',[])
+    }
+  }
 }
