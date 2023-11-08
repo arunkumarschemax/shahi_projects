@@ -147,6 +147,12 @@ export class ProductStructureService {
                 result[fgItemId].rm_items.push({
                   rm_item_id: item.rm_item_id,
                   rm_item_code: item.rm_item_code,
+                  item_type: item.item_type,
+                  item_group:item.item_group,
+                  is_sub_contract:item.is_sub_contract,
+                  facility:item.facility,
+                  season:item.season
+
                 });
                 return result;
               }, {});
