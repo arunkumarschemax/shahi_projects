@@ -169,6 +169,7 @@ export class ProductStructureService {
 
           async getAllSmvData(req?:SMVFilterRequest): Promise<CommonResponseModel> {
             const data = await this.Repo.getSMV(req)
+            console.log(data, "data")
             if (data.length > 0){
     
                 return new CommonResponseModel(true, 1111, 'Data retreived',data )
