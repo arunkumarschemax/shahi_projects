@@ -47,45 +47,11 @@ export function SMKDetailView  (props: Props)  {
 
 
 
-    useEffect(() => {
-        getAllDepartment();
-        getAllOperationsData();
-      }, [])
     
-      const getAllOperationsData = () => {
-        
-        operationsService.getAllActiveOperations().then(res => {
-          if(res.status) {
-            setOperationsData(res.data);
-          } else {
-            AlertMessages.getErrorMessage(res.internalMessage)
-          }
-        })
-      }
-    
-      const getAllDepartment=()=>{
-        service.getAllDepartments().then(res=>{
-            if(res.status){
-                setDepartmentData(res.data)
-            }else{
-                AlertMessages.getErrorMessage(res.internalMessage);
-            }
-        })
-      }
+  
 
       
-      function getOperation(DATA) {
-        const foundopt = operationsData.find(license => license.operationId === DATA);
-        return foundopt ? foundopt.operationName : "-";
-      }
-    
-      
-       
-      
-      function GetDepat(data) {
-        const foundC = departmentData.find(dat => dat.deptId === data);
-        return foundC ? foundC.deptName : "-";
-      }
+   
       
     return(
         <Card title={<span style={{ color: 'black' }}>SMV Detailed View<span style={{color:'#0A93E1  '}}></span></span>}  headStyle={{ fontWeight: 'bold' }} extra={<Link to='/product-structure/smv-efficiency-view' ><span style={{color:'white'}} >
@@ -94,15 +60,15 @@ export function SMKDetailView  (props: Props)  {
             <span>      
                
                 {/* <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}> */}
-                <Descriptions   column={4} style={{ textAlign: 'center' }}>
-                    <Descriptions.Item label={<span style={{ color:'#617C8A',fontWeight: 'bold' }}>Operation</span>} >{getOperation(stateData.operation_id)}</Descriptions.Item>
+                <Descriptions   column={3} style={{ textAlign: 'center' }}>
+                    <Descriptions.Item label={<span style={{ color:'#617C8A',fontWeight: 'bold' }}>Operation</span>} >{(stateData.operation_name)}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{color:'#617C8A',fontWeight: 'bold' }}>Capacity Type</span>} >{(stateData.capacity_type)}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{color:'#617C8A',fontWeight: 'bold' }}>Valid From Date</span>} >{moment(stateData.valid_from_date).format('DD-MM-YYYY')}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{color:'#617C8A',fontWeight: 'bold' }}>Valid To Date</span>} >{moment(stateData.valid_to_date).format('DD-MM-YYYY')}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ color:'#617C8A',fontWeight: 'bold' }}>Revision No</span>} >{stateData.revision_no}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ color:'#617C8A',fontWeight: 'bold' }}>Work Center</span>} >{stateData.work_center}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ color:'#617C8A',fontWeight: 'bold' }}>Operation Description</span>} >{stateData.operation_description}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ color:'#617C8A',fontWeight: 'bold' }}>Department</span>} >{GetDepat(stateData.department_id)}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ color:'#617C8A',fontWeight: 'bold' }}>Department</span>} >{(stateData.dept_name)}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ color:'#617C8A',fontWeight: 'bold' }}>Planing Area</span>} >{stateData.planing_area}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ color:'#617C8A',fontWeight: 'bold' }}>Run Time (Mins)</span>} >{stateData.run_time}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ color:'#617C8A',fontWeight: 'bold' }}>Price/time Qty</span>} >{stateData.price_time_qty}</Descriptions.Item>

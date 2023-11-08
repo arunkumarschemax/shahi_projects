@@ -5,6 +5,7 @@ import {
   Col,
   DatePicker,
   Descriptions,
+  Empty,
   Form,
   Input,
   Modal,
@@ -91,11 +92,11 @@ export const SkuList = () => {
   };
 
   const Sku = (val,data) => {
-    setSelectedItemNo(data.code);
+    setSelectedItemNo(data?.code);
   };
 
   const Size = (val, data) => {  
-    setSelectedSizeId(val);
+    setSelectedSizeId(data?.size);
   };
 
   const colour = (val, data) => {
@@ -459,7 +460,7 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
                 >
                   {size?.map((e) => {
                     return (
-                      <Option key={e.size_id} value={e.size_id} >
+                      <Option key={e.size_id} value={e.size_id} size={e.size} >
                         {e.size}
                       </Option>
                     );
@@ -556,6 +557,8 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
         <Col>
           <div>
             <Space direction="vertical" style={{ fontSize: "16px" }}>
+            {selectedItemNo !== undefined && searchClicked ? (
+
               <Segmented
                 style={{ background: "#cce3de" }}
                 options={[
@@ -589,6 +592,7 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
                 onChange={handleViewChange}
                 defaultValue={"cards"}
               />
+            ):null}
               {/* {selectView === 'grid'?(
         <SKUGrid/>
       ):(<div> */}
@@ -692,7 +696,7 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
                    </Card>
                 </div>
               ) : (
-                <div>
+                <div style={{justifyContent:'center'}}>
                   <Card
                    title={`item code:${selectedItemNo}`} 
                      >
@@ -718,7 +722,7 @@ key={e.item_code}
                    ))} */}
                 </div>
               )
-              ):null}
+              ):<></>}
             </Space>
           </div>
               
