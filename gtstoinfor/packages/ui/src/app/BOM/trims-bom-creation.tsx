@@ -284,8 +284,8 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
-                md={{ span: 5 }}
-                lg={{ span: 6 }}
+                md={{ span: 10 }}
+                lg={{ span: 12 }}
                 xl={{ span: 12 }}
               >
                 <Card bordered={false}>
@@ -303,7 +303,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -333,7 +333,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -357,7 +357,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -388,7 +388,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -403,7 +403,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8}}
                     >
@@ -414,7 +414,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8}}
                     >
@@ -433,7 +433,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -450,7 +450,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -472,7 +472,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -500,7 +500,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -529,7 +529,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -582,7 +582,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -593,7 +593,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -615,8 +615,8 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
-                md={{ span: 5 }}
-                lg={{ span: 6 }}
+                md={{ span: 10 }}
+                lg={{ span: 12 }}
                 xl={{ span: 12 }}
               >
                 <Card bordered={false}>
@@ -634,7 +634,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -655,7 +655,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8}}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -672,7 +672,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -685,8 +685,8 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
-                      lg={{ span: 6 }}
+                      md={{ span: 8 }}
+                      lg={{ span: 8 }}
                       xl={{ span: 8 }}
                     >
                       <Form.Item
@@ -699,7 +699,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -710,7 +710,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -726,7 +726,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -749,7 +749,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -768,7 +768,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -792,7 +792,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -803,7 +803,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -820,7 +820,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -836,7 +836,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -847,7 +847,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -921,7 +921,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -932,7 +932,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -943,7 +943,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -956,7 +956,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
-                      md={{ span: 5 }}
+                      md={{ span: 8 }}
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
@@ -973,6 +973,9 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
             </Row>
           </div>
           <br></br>
+          <br></br>
+          <br></br> 
+
           <Row justify={"end"} style={{ marginTop: "-30px" }}>
             <Col
               xs={{ span: 6 }}
