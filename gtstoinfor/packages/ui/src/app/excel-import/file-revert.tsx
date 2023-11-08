@@ -11,6 +11,10 @@ const {Option} = Select;
 
 export function FileRevert() {
     const [page, setPage] = React.useState(1);
+    // const [tabKey, setTabKey] = React.useState(0);
+    const [totalVal, setTotalVal] = React.useState(0);
+    const [totalSuccess, setTotalSuccess] = React.useState(0);
+    const [totalFails, setTotalFails] = React.useState(0);
     const [pageSize, setPageSize] = useState(100);
     const service = new OrdersService()
     const [data, setData] = useState<any[]>([])
@@ -38,7 +42,11 @@ export function FileRevert() {
                 setData(res.data)
                 setSuccessRecord(res.data.find(e => e.status === 'Success' && e.isActive == 1))
                 setTrimData(res.data.filter(e => e.fileType === 'Trim Order'));
-                setPoData(res.data.filter(e => e.fileType === 'Projection Order'));            
+                setPoData(res.data.filter(e => e.fileType === 'Projection Order')); 
+                setTotalVal(res.data.filter(e => e.fileType === 'Projection Order').length)  
+                const totals = res.data.filter(e => e.fileType === 'Projection Order')   
+                setTotalSuccess(totals.filter(rec => rec.status == 'Success').length) 
+                setTotalFails(totals.filter(rec => rec.status == 'Failed').length) 
             } else {
                 setData([])
                 setTrimData([])
@@ -187,44 +195,52 @@ export function FileRevert() {
             },
         }];
 
-        // const items: TabsProps['items'] = [
+        const items: TabsProps['items'] = [
            
-        //     {
-        //       key: '1',
-        //       label: `Projection Order :${poData.length}`,
-        //       children:   <Table
-        //       size='small'
-        //       columns={columns}
-        //       dataSource={poData}
-        //       className="custom-table-wrapper"
-        //       scroll={{ x: 'max-content',y:500 }}
-        //       pagination={{
-        //           onChange(current, pageSize) {
-        //               setPage(current);
-        //               setPageSize(pageSize);
-        //           },
-        //       }}
-        //       bordered />,
-        //     },
-        //     {
-        //         key: '2',
-        //         label: `Trim Order :${trimData.length}`,
-        //         children:  <Table
-        //         size='small'
-        //         columns={columns}
-        //         dataSource={trimData}
-        //         className="custom-table-wrapper"
-        //         scroll={{ x: 1000,y:500 }}
-        //         pagination={{
-        //             onChange(current, pageSize) {
-        //                 setPage(current);
-        //                 setPageSize(pageSize);
-        //             },
-        //         }}
-        //         bordered />,
-        //       },
+            {
+              key: '1',
+              label: `Projection Order :${poData.length}`,
+              children:  
+             <Table
+              size='small'
+              columns={columns}
+              dataSource={poData}
+              className="custom-table-wrapper"
+              scroll={{x:1700,y:500}}
+            //   pagination={{
+            //       onChange(current, pageSize) {
+            //           setPage(current);
+            //           setPageSize(pageSize);
+            //       },
+            //   }}
+            pagination={{
+                pageSize: 50, 
+                onChange(current, pageSize) {
+                    setPage(current);
+                    setPageSize(pageSize);
+                }
+            }}
+              bordered />
+            },
+            {
+                key: '2',
+                label: `Trim Order :${trimData.length}`,
+                children:  <Table
+                size='small'
+                columns={columns}
+                dataSource={trimData}
+                className="custom-table-wrapper"
+                scroll={{ x: 1000,y:500 }}
+                pagination={{
+                    onChange(current, pageSize) {
+                        setPage(current);
+                        setPageSize(pageSize);
+                    },
+                }}
+                bordered />,
+              },
            
-        //   ];
+          ];
 
     const onReset = () => {
         form.resetFields()
@@ -233,6 +249,21 @@ export function FileRevert() {
 
     const onFinish = () =>{
         getUploadFilesData()
+    }
+
+    const getTab = (val) => {
+        console.log(val)
+        if(val == 1){
+            console.log('tabbbbba')
+            setTotalVal(poData.length)
+            setTotalSuccess(poData.filter(item => item.status == 'Success').length)
+            setTotalFails(poData.filter(item => item.status == 'Failed').length)
+        }else{
+            setTotalVal(trimData.length)
+            setTotalSuccess(trimData.filter(item => item.status == 'Success').length)
+            setTotalFails(trimData.filter(item => item.status == 'Failed').length)
+        }
+        // setTabKey(val)
     }
     return (
         <>
@@ -267,19 +298,19 @@ export function FileRevert() {
                         </Row>
                         <Row gutter={8}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 4 }}>
-                        <Card size='small' title={'Total:' +`${poData ?  poData.length : '-'}` } style={{ textAlign: 'center',  height: 30, backgroundColor: '#CBB1F8' }}></Card>
+                        <Card size='small' title={'Total:' +`${totalVal}` } style={{ textAlign: 'center',  height: 30, backgroundColor: '#CBB1F8' }}></Card>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 4 }}>
-                        <Card size='small' title={'Success:' +`${poData ?  poData.filter(e => e.status === 'Success').length : '-'}` } style={{ textAlign: 'center',  height: 30, backgroundColor: 'lightgreen' }}></Card>
+                        <Card size='small' title={'Success:' +`${totalSuccess}` } style={{ textAlign: 'center',  height: 30, backgroundColor: 'lightgreen' }}></Card>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 4 }}>
-                        <Card size='small' title={'Failed:' +`${poData ?  poData.filter(e => e.status === 'Failed').length : '-'}` } style={{ textAlign: 'center',  height: 30, backgroundColor: 'tomato' }}></Card>
+                        <Card size='small' title={'Failed:' +`${totalFails}` } style={{ textAlign: 'center',  height: 30, backgroundColor: 'tomato' }}></Card>
                         </Col>
                         </Row>
                         <br/>
                     </Form>
-                    {/* <Tabs items={items}/> */}
-                    <Table
+                    <Tabs onChange={(key)=>getTab(key)} items={items}/>
+                    {/* <Table
               size='small'
               columns={columns}
               dataSource={poData}
@@ -298,7 +329,7 @@ export function FileRevert() {
                     setPageSize(pageSize);
                 }
             }}
-              bordered />,
+              bordered />, */}
               
             </Card>
         </>
