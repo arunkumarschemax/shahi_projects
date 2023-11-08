@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, Card, Row, Col } from 'antd';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { PaymentMethodDto } from '@project-management-system/shared-models';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import { PaymentMethodService } from '@project-management-system/shared-services';
@@ -20,6 +20,7 @@ export interface PaymentMethodFormProps{
        
         const service = new PaymentMethodService();
         let history =useLocation();
+        let navigate = useNavigate()
 
         let createdUser="";
         if(!props.isUpdate){
@@ -59,9 +60,10 @@ export interface PaymentMethodFormProps{
           };
 
           return(
-            <Card title={<span >Payment Method </span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} 
-            extra={props.isUpdate==true?"":<Link to='/global/paymentmethod/paymentmethod-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
->
+            <Card title={props.isUpdate ?
+            'Payment Method':'Payment Method'}
+            extra={(props.isUpdate === false) && <span><Button onClick={()=>navigate('/global/paymentmethod/paymentmethod-view')} type={'primary'}>View</Button></span>}>
+            
     <Form 
     layout={'vertical'}
     form={form}
@@ -75,7 +77,7 @@ export interface PaymentMethodFormProps{
 <FormItem name="createdUser"  initialValue={createdUser} style={{display:'none'}}>
     <Input hidden/>
 </FormItem>
-<Row><Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}> <Form.Item
+<Row><Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}}> <Form.Item
           name="paymentMethod"
           label="Payment Method"
           rules={[
@@ -89,7 +91,7 @@ export interface PaymentMethodFormProps{
             }
           ]}
         >
-          <Input />
+          <Input  placeholder='enter PaymentMethod'/>
         </Form.Item>
         </Col>
         </Row>

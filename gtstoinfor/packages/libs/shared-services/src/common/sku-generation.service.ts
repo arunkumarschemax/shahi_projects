@@ -31,4 +31,17 @@ export class SKUGenerationService extends CommonAxiosService{
     async closeSKUById(req :ItemSKusReq): Promise<any>{
         return this.axiosPostCall(this.URL + '/closeSKUById',req)
     }
+
+    async getSize (req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL +"/getSize",req)
+    }
+
+    async getColor(req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL +"/getColor",req)
+    }
+
+    async getDestination (req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL +"/getDestination",req)
+    }
+
 }

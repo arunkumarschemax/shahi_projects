@@ -2,6 +2,7 @@ import { Button, Card, Col, Form, Input, Row, Select } from "antd";
 import { UndoOutlined } from "@ant-design/icons";
 import Commonscreen from "./common-screen";
 import {
+  BusinessAreaService,
   CurrencyService,
   DeliveryMethodService,
   DeliveryTermsService,
@@ -23,7 +24,7 @@ import {
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import TextArea from "antd/es/input/TextArea";
-import { ItemGroupEnum } from "@project-management-system/shared-models";
+import { IsImportedItemEnum, ItemGroupEnum } from "@project-management-system/shared-models";
 import { Link } from "react-router-dom";
 
 export interface FormProps{
@@ -52,7 +53,9 @@ export const FabricBomCreation = (props:FormProps) => {
   const [Deliveryterms,setDeliveryTerms]= useState([])
   const [DeliveryMethod,setDeliveryMethod]= useState([])
   const [fabric,setFabric]= useState([])
+  const [Business,setBusiness]= useState([])
 
+ const business = new BusinessAreaService
   const taxService = new TaxesService
   const currencyServices = new CurrencyService();
   const licenseservice = new LiscenceTypeService();
@@ -88,6 +91,7 @@ useEffect(() => {
     getAllDeliveryTerms();
     getAllDeliveryMethod();
     getAllFabricFinish();
+    getAllBusinessArea();
   }, []);
 
   const getAllCurrencies = () => {
@@ -140,6 +144,22 @@ useEffect(() => {
       // });
   };
 
+  const getAllBusinessArea= () => {
+    business
+      .getAllBusinessAreaInfo()
+      .then((res) => {
+        if (res.status) {
+          setBusiness(res.data);
+        }
+        //  else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
+      })
+      // .catch((err) => {
+      //   sethierarchyLevel([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
+  };
   const getAllDeliveryTerms = () => {
     deliveryTermsService
       .getAllActiveDeliveryTerms()
@@ -611,8 +631,24 @@ rmservice.createRm(values).then((res)=>{
                         </Select>               
                            </Form.Item>
                 </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8}}>
 
-                
+                <Form.Item
+                    label="Is Imported Item"
+                    name="isImportedItem"
+                    // rules={[{ required: true, message: "Enter Is Imported Item" }]}
+                  >
+                    <Select
+                    showSearch
+                  
+                        placeholder="Select Is Imported Item" allowClear>
+                     {Object.values(IsImportedItemEnum).map((key,value)=>{
+            return <Option key={key} value={key}>{key}</Option>
+           })}
+                    </Select>
+                    {/* <Input placeholder="Fabric code" allowClear /> */}
+                  </Form.Item>
+                  </Col>
 </Row>
             
               <h1 style={{ color: "grey", fontSize: "15px", textAlign: "left" }}>Performance Responsible Team</h1>
@@ -739,14 +775,19 @@ rmservice.createRm(values).then((res)=>{
                     name="businessArea"
                     // rules={[{ required: true, message: "Enter Business Area" }]}
                   >
-                    {/* <Select
+                    <Select
                     allowClear
                     showSearch
                     optionFilterProp="children"
                     placeholder="Select Business Area"
                     >
-                    </Select> */}
-                    <Input placeholder="Business Area" allowClear />
+                      {Business.map((rec)=>(
+                        <option key={rec.businessAreaId} value={rec.businessAreaId}>
+                      {rec.businessAreaName}
+                        </option>
+                      ))}
+                    </Select>
+                    {/* <Input placeholder="Business Area" allowClear /> */}
                   </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>

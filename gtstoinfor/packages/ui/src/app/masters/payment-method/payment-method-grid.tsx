@@ -248,9 +248,7 @@ service.createPaymentMethod(variantData).then(res=>{
     ];
 
 return (
-  <Card title={<span>Payment Method</span>}
-  style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/global/paymentmethod/paymentmethod-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
-  <br></br>
+  <Card title= 'Payment Method' extra={<span><Button onClick={()=>navigate('/global/paymentmethod/paymentmethod-form')} type={'primary'}>New</Button></span>}>
     <>
     <Row gutter={40}>
     <Col>
