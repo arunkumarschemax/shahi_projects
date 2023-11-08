@@ -65,7 +65,7 @@ let value = 0
     setSelected(val)
   }
   const getItems= () =>{
-    itemService.getAllFgItems().then(res =>{
+    itemService.getAll().then(res =>{
       if(res.status){
         setItem(res.data)
         
@@ -76,7 +76,7 @@ let value = 0
     })
   }
   const checkAccess = (buttonParam) => {
-    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Material Creation"],MenusAndScopesEnum.SubMenus["Style Order View"],buttonParam)
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Material Creation"],MenusAndScopesEnum.SubMenus["RFQ Register"],buttonParam)
     return !accessValue
 }
  
