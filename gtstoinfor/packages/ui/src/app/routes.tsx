@@ -639,7 +639,7 @@ export const AppRoutes = () => {
                 <Route path ='fg-rm-mapping-view' element={<FgRmItemBomView/>}/>
                 <Route path ='smv-efficiency-view' element={<SMVEffciencyView/>}/>
                 <Route path ='smv-efficiency-detail-view' element={<SMKDetailView data={''}/>}/>
-                <Route path ='trim-operation-mapping-view' element={<TrimOperationMappingView />}/>
+                <Route path ='rm-operation-mapping-view' element={<TrimOperationMappingView />}/>
 
             
                             

@@ -136,6 +136,7 @@ export class ProductStructureService {
           
             if (data.length > 0) {
               const groupedData = data.reduce((result, item) => {
+                console.log(item,"item----------")
                 const fgItemCode = item.fg_item_code;
                 const fgItemId = item.fg_rm_id;
                 
@@ -154,7 +155,9 @@ export class ProductStructureService {
                   item_group:item.item_group,
                   is_sub_contract:item.is_sub_contract,
                   facility:item.facility,
-                  season:item.season
+                  season:item.season,
+                  operation_name:item.operation_name,
+                  sequence:item.sequence
 
                 });
                 return result;
