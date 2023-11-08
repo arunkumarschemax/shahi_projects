@@ -311,6 +311,7 @@ async getColor(req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
 }
 async getDestination(req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
   try{
+    console.log(req,"sku req")
     const getData = await this.itemSkuRepo.getDestination(req)
     // console.log(getData,'dara');
     

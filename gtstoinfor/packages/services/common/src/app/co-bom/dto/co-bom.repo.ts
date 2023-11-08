@@ -19,10 +19,15 @@ export class CoBomRepository extends Repository<CoBom>{
 
     async getBomAgainstItem(req?:StyleOrderId):Promise<any>{
         const query = await this.createQueryBuilder('i')
-        .select('i.id,i.quantity,i.co_number,i.co_line_number,i.fg_sku,i.co_id,Fg.fg_sku_id,Fg.rm_item_code,Fg.rm_sku_id,Fg.consumption,Fg.item_type_id,Fg.item_group_id,Fg.rm_item_id')
+        .select('i.id,i.quantity,i.co_number as CoNumber,i.co_line_number as coLineNumber,i.fg_sku as fgSkuId ,i.co_id as coId,Fg.fg_sku_id as rmSkuId,Fg.rm_item_code as rmitemCode ,Fg.rm_sku_id,Fg.consumption,Fg.item_type_id,Fg.item_group_id,Fg.rm_item_id as rmitemId ')
         .leftJoin(FgItemBom,'Fg','Fg.fgItemBomId = i.fgItemBomId')
+        .leftJoin(RmSkus,'rmsku','rmsku.rm_sku_id = Fg.rm_sku_id')
+        .leftJoin(ItemSkus,'itsku','itsku.item_sku_id = Fg.fg_sku_id')
+        .leftJoin(RmCreationEntity,'rmitem','rmitem.rm_item_id = Fg.rm_item_id') 
+
+
         if (req?.styleOrderId !== undefined) {
-            query.andWhere(`co_id ='${req.styleOrderId}'`)
+            query.andWhere(`i.co_id ='${req.styleOrderId}'`)
         }
         console.log(query,"yyy")
 
@@ -51,4 +56,6 @@ export class CoBomRepository extends Repository<CoBom>{
 
         return query.getRawMany()
     }
+
+
 }
