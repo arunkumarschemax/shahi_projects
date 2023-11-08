@@ -67,16 +67,17 @@ const PriceListUpload = () => {
           {
             const columnArray = [];
             const valueArray = [];
-
+            
             result.data.map((d) => {
-              columnArray.push(Object.keys(d))
-              valueArray.push(Object.values(d))
-            });
-            setData(result.data)
+                                columnArray.push(Object.keys(d))
+                valueArray.push(Object.values(d))
+                          });
+                        setData(result.data)
             setColumns(columnArray[0])
             setValues(valueArray)
           }
-        }
+        },
+        skipEmptyLines: true,
       });
     } else if(file && file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
       setSelectedFile(event.target.files[0]);
