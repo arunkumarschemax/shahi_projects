@@ -96,7 +96,7 @@ import { SubstituionModule } from './substituion/substituion.module';
       database: appConfig.database.dbName,
       autoLoadEntities: true,
       synchronize: false,
-      logging: true,
+      logging: false,
       
       extra: {
         connectionLimit: 20
