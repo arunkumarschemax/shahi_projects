@@ -778,7 +778,9 @@ export default function ExcelImport() {
             <Form form = {form}>
             <Row gutter = {24}>
               <Col>
-                    <Form.Item name="fileType" label="File Type" style={{display:'none'}}>
+                    <Form.Item name="fileType" label="File Type" 
+                    // style={{display:'none'}}
+                    >
                         <Select
                             showSearch
                             placeholder="Select File Type"

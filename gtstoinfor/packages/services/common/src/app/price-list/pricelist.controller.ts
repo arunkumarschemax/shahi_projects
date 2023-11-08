@@ -7,6 +7,7 @@ import { priceListDto } from './dto/pricelist.dto';
 import { PriceListEntity } from './entities/pricelist.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { priceListRequest } from './dto/price-details.req';
 
 @Controller('/priceList')
 export class PriceListController {
@@ -236,6 +237,15 @@ export class PriceListController {
     async getUploadedTime(): Promise<CommonResponseModel> {
         try {
             return await this.priceService.getUploadedTime();
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
+        }
+    }
+
+    @Post('/getPriceForItem')
+    async getPriceForItem(@Body() req:priceListRequest): Promise<CommonResponseModel> {
+        try {
+            return await this.priceService.getPriceForItem(req);
         } catch (error) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
         }

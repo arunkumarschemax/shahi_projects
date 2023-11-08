@@ -18,6 +18,7 @@ import { PriceListExcelAdapter } from './adapters/excel-price-list.adapter';
 import { PriceListChildRepository } from './repository/price-list-child-repo';
 import { PriceListChildEntity } from './entities/price-list-child-entity';
 import { PriceListChildExcelAdapter } from './adapters/excel-price-list-child.adapter';
+import { priceListRequest } from './dto/price-details.req';
 
 @Injectable()
 export class priceListService {
@@ -676,6 +677,18 @@ async getAllActivePriceList(): Promise<PriceListResponseModel> {
             } else {
                 return new CommonResponseModel(false, 0, 'data not found')
             }
+        }
+
+        async getPriceForItem(req:priceListRequest):Promise<CommonResponseModel>{
+            const priceDetails = await this.priceRepository.find({where:{sampleCode:req.sampleCode,business:req.business}});
+            if(priceDetails.length > 0){
+                return new CommonResponseModel(true,1,'data retrieved',priceDetails)
+            }else if(priceDetails.length > 1){
+                return new CommonResponseModel(false,0,'morethan 1 price details identified with an item')
+            }else{
+                return new CommonResponseModel(false,0,'No price data found')
+            }
+            return
         }
 
 }
