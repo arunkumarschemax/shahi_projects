@@ -131,7 +131,7 @@ export class ItemSkuService{
           const updateResult = await this.itemSkuRepo.update({ itemSkuId: req.itemSkuId }, { status: SkuStatusEnum.CLOSED })
           console.log(updateResult,'======================')
           if (updateResult) {
-            return new SKUGenerationResponseModel(true, 1, 'SKU cancelled successfully', undefined)
+            return new SKUGenerationResponseModel(true, 1, 'SKU closed successfully', undefined)
           }
         } else {
           return new SKUGenerationResponseModel(false, 0, 'No SKU Record found', [])
@@ -261,6 +261,7 @@ async getItemCode(req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
 async getSkuList (req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
   try{
     const getdata = await this.itemSkuRepo.getSkuList(req)
+    console.log(getdata,"tttt")
 
     if(getdata.length>0){
 
@@ -273,6 +274,54 @@ async getSkuList (req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
     }
     
   }catch(err){
+    throw err
+  }
+}
+
+async getSize(req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
+  try{
+    const getData = await this.itemSkuRepo.getSize(req)
+    // console.log(getData,'dara');
+    
+    if(getData ){
+      return new CommonResponseModel(true,1,'Data retreived',getData)
+    } else{
+      return new CommonResponseModel(false,0,'No data found')
+    }
+
+  } catch(err){
+    throw err
+  }
+}
+
+async getColor(req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
+  try{
+    const getData = await this.itemSkuRepo.getColor(req)
+    // console.log(getData,'dara');
+    
+    if(getData ){
+      return new CommonResponseModel(true,1,'Data retreived',getData)
+    } else{
+      return new CommonResponseModel(false,0,'No data found')
+    }
+
+  } catch(err){
+    throw err
+  }
+}
+async getDestination(req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
+  try{
+    console.log(req,"sku req")
+    const getData = await this.itemSkuRepo.getDestination(req)
+    // console.log(getData,'dara');
+    
+    if(getData ){
+      return new CommonResponseModel(true,1,'Data retreived',getData)
+    } else{
+      return new CommonResponseModel(false,0,'No data found')
+    }
+
+  } catch(err){
     throw err
   }
 }

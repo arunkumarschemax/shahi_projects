@@ -307,7 +307,6 @@ export function PaymentTermsGrid(
           <Table
           columns={columnsSkelton}
           dataSource={paymentTermsData}
-          rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
 
           scroll={{x:true}}
           pagination={{

@@ -55,7 +55,7 @@ export function FabricStructuresGrid(props: FabricStructuresGridProps) {
     service.activateOrDeactivateFabricStructure(Data).then(res => { console.log(res);
       if (res.status) {
         getAll();
-        AlertMessages.getSuccessMessage('Success'); 
+        AlertMessages.getSuccessMessage(res.internalMessage); 
       } else {
         AlertMessages.getErrorMessage(res.internalMessage);
 
@@ -167,7 +167,7 @@ export function FabricStructuresGrid(props: FabricStructuresGridProps) {
     {
       title: 'Status',
       dataIndex: 'isActive',
-       sortDirections: ['descend', 'ascend'],
+      //  sortDirections: ['descend', 'ascend'],
     //    ...getColumnSearchProps('FabricStructuresName'),
       
        render: (isActive, rowData) => (
@@ -175,60 +175,96 @@ export function FabricStructuresGrid(props: FabricStructuresGridProps) {
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
         </>
       ),
-      // filters: [
-      //   {
-      //     text: 'Active',
-      //     value: true,
-      //   },
-      //   {
-      //     text: 'InActive',
-      //     value: false,
-      //   },
-      // ],
-      // filterMultiple: false,
-      // onFilter: (value, record) => 
-      // {
-      //   // === is not work
-      //   return record.isActive === value;
-      // },
+      filters: [
+        {
+          text: 'Active',
+          value: true,
+        },
+        {
+          text: 'InActive',
+          value: false,
+        },
+      ],
+      filterMultiple: false,
+      onFilter: (value, record) => 
+      {
+        // === is not work
+        return record.isActive === value;
+      },
       
     },
     {
       title:`Action`,
       dataIndex: 'action',
       render: (text, rowData) => (
-        rowData.fabricStructure()=='N/A'?<span></span>:
-        <span>         
-            <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
+        <span>  
+         <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
               onClick={() => {
                 if (rowData.isActive) {
-                   openFormWithData(rowData);
+                  openFormWithData(rowData);
                 } else {
-                   AlertMessages.getErrorMessage('You Cannot Edit Deactivated fabric Structure');
+                  AlertMessages.getErrorMessage('You Cannot Edit Deactivated Fabric Structure');
                 }
               }}
               style={{ color: '#1890ff', fontSize: '14px' }}
-            />
+            />      
+            
           
           <Divider type="vertical" />
-              <Popconfirm onConfirm={e =>{deleteUser(rowData);}}
+            <Popconfirm onConfirm={e =>{deleteUser(rowData);}}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate  ?'
-                :  'Are you sure to Activate  ?'
+                ? 'Are you sure to Deactivate Fabric Structure ?'
+                :  'Are you sure to Activate Fabric Structure ?'
             }
-          >  
-             <Switch  size="default"
+          >
+            <Switch  size="default"
                 className={ rowData.isActive ? 'toggle-activated' : 'toggle-deactivated' }
                 checkedChildren={<RightSquareOutlined type="check" />}
                 unCheckedChildren={<RightSquareOutlined type="close" />}
                 checked={rowData.isActive}
               />
             
-          </Popconfirm>  
+          </Popconfirm>
         </span>
       )
-    }
+    },
+    // {
+    //   title:`Action`,
+    //   dataIndex: 'action',
+    //   render: (text, rowData) => (
+    //     rowData.fabricStructure()=='N/A'?<span></span>:
+    //     <span>         
+    //         <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
+    //           onClick={() => {
+    //             if (rowData.isActive) {
+    //                openFormWithData(rowData);
+    //             } else {
+    //                AlertMessages.getErrorMessage('You Cannot Edit Deactivated fabric Structure');
+    //             }
+    //           }}
+    //           style={{ color: '#1890ff', fontSize: '14px' }}
+    //         />
+          
+    //       <Divider type="vertical" />
+    //           <Popconfirm onConfirm={e =>{deleteUser(rowData);}}
+    //         title={
+    //           rowData.isActive
+    //             ? 'Are you sure to Deactivate  ?'
+    //             :  'Are you sure to Activate  ?'
+    //         }
+    //       >  
+    //          <Switch  size="default"
+    //             className={ rowData.isActive ? 'toggle-activated' : 'toggle-deactivated' }
+    //             checkedChildren={<RightSquareOutlined type="check" />}
+    //             unCheckedChildren={<RightSquareOutlined type="close" />}
+    //             checked={rowData.isActive}
+    //           />
+            
+    //       </Popconfirm>  
+    //     </span>
+    //   )
+    // }
   ];
 
   const updateUser = (Data: FabricStructuresDTO) => {
@@ -274,7 +310,6 @@ export function FabricStructuresGrid(props: FabricStructuresGridProps) {
           </Row> 
           <br></br>
           <Table
-                  rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
 
           rowKey={record => record.Id}
           columns={columnsSkelton}

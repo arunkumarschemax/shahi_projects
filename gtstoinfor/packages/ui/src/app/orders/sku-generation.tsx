@@ -7,7 +7,13 @@ import { Link } from 'react-router-dom';
 
 const { Option } = Select;
 
-export const SKUGeneration = () => {
+export interface FormProps{
+  data:any;
+  isUpdate:boolean;
+  closeForm: () => void;
+
+}
+export function SKUGeneration  (props:FormProps){
     const [form] = Form.useForm()
     const skuService = new SKUGenerationService()
     const colorService = new ColourService()

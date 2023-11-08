@@ -3,7 +3,7 @@ import { HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link } from "react-router-dom";
-import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, FactoryService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, ProductGroupService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
+import { BusinessAreaService, BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, FactoryService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, ProductGroupService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
 import { ItemGroupEnum, SubContractStatus } from "@project-management-system/shared-models";
  
 export interface FormProps {
@@ -34,6 +34,9 @@ export function ItemCreation (props: FormProps){
          const itemTypeservice =new ItemTypeService();
          const facilityservice =new FactoryService();
          const proDUCTService = new ProductGroupService();
+         const [Business,setBusiness]= useState([])
+
+          const business = new BusinessAreaService
          const [Product,setProduct] = useState([]);
          const [currencydata,setCurrencyData] = useState([]);
          const [uomdata,setUomData] = useState([]);
@@ -73,6 +76,7 @@ export function ItemCreation (props: FormProps){
             getAllItemGroups();
             getAllGroupTech();
             getAllFacilitys();
+            getAllBusinessArea();
             getAllProducts();
           },[])
           const getAllProducts = () => {
@@ -81,14 +85,15 @@ export function ItemCreation (props: FormProps){
               .then((res) => {
                 if (res.status) {
                   setProduct(res.data);
-                } else {
-                  AlertMessages.getErrorMessage(res.internalMessage);
-                }
+                } 
+                // else {
+                //   AlertMessages.getErrorMessage(res.internalMessage);
+                // }
               })
-              .catch((err) => {
-                setProduct([]);
-                AlertMessages.getErrorMessage(err.message);
-              });
+              // .catch((err) => {
+              //   setProduct([]);
+              //   AlertMessages.getErrorMessage(err.message);
+              // });
           };
          const getAllCurrencies=() =>{
             currencyServices.getAllActiveCurrencys().then(res =>{
@@ -96,13 +101,15 @@ export function ItemCreation (props: FormProps){
                 // console.log(res,'llllll')
                 setCurrencyData(res.data);
                  
-              } else{
-                AlertMessages.getErrorMessage(res.internalMessage);
-                 }
-            }).catch(err => {
-              setCurrencyData([]);
-               AlertMessages.getErrorMessage(err.message);
-             })        
+              } 
+              // else{
+              //   AlertMessages.getErrorMessage(res.internalMessage);
+              //    }
+            })
+            // .catch(err => {
+            //   setCurrencyData([]);
+            //    AlertMessages.getErrorMessage(err.message);
+            //  })        
           }
 
           const getAllFacilitys=() =>{
@@ -111,13 +118,15 @@ export function ItemCreation (props: FormProps){
                 // console.log(res,'llllll')
                 setfacilityData(res.data);
                  
-              } else{
-                AlertMessages.getErrorMessage(res.internalMessage);
-                 }
-            }).catch(err => {
-              setfacilityData([]);
-               AlertMessages.getErrorMessage(err.message);
-             })        
+              } 
+              // else{
+              //   AlertMessages.getErrorMessage(res.internalMessage);
+              //    }
+            })
+            // .catch(err => {
+            //   setfacilityData([]);
+            //    AlertMessages.getErrorMessage(err.message);
+            //  })        
           }
           const getAllGroupTech=() =>{
            grouptech.getAllActiveGroupTechClass().then(res =>{
@@ -125,13 +134,15 @@ export function ItemCreation (props: FormProps){
                 // console.log(res,'llllll')
                 setGroup(res.data);
                  
-              } else{
-                AlertMessages.getErrorMessage(res.internalMessage);
-                 }
-            }).catch(err => {
-              setGroup([]);
-               AlertMessages.getErrorMessage(err.message);
-             })        
+              }
+              //  else{
+              //   AlertMessages.getErrorMessage(res.internalMessage);
+              //    }
+            })
+            // .catch(err => {
+            //   setGroup([]);
+            //    AlertMessages.getErrorMessage(err.message);
+            //  })        
           }
           const getAllItemType=() =>{
             itemTypeservice.getAllActiveItemType().then(res =>{
@@ -139,27 +150,30 @@ export function ItemCreation (props: FormProps){
                 // console.log(res,'llllll')
                 setItemType(res.data);
                  
-              } else{
-                AlertMessages.getErrorMessage(res.internalMessage);
-                 }
-            }).catch(err => {
-              setItemType([]);
-               AlertMessages.getErrorMessage(err.message);
-             })        
+              }
+              //  else{
+              //   AlertMessages.getErrorMessage(res.internalMessage);
+              //    }
+            })
+            // .catch(err => {
+            //   setItemType([]);
+            //    AlertMessages.getErrorMessage(err.message);
+            //  })        
           }
           const getAllItemGroups=() =>{
             itemGroupservice.getAllActiveItemGroup().then(res =>{
               if (res.status){
                 // console.log(res,'llllll')
                 setitemgroup(res.data);
-                 
-              } else{
-                AlertMessages.getErrorMessage(res.internalMessage);
-                 }
-            }).catch(err => {
-              setitemgroup([]);
-               AlertMessages.getErrorMessage(err.message);
-             })        
+              }
+              // else{
+              //   AlertMessages.getErrorMessage(res.internalMessage);
+              //    }
+            })
+            // .catch(err => {
+            //   setitemgroup([]);
+            //    AlertMessages.getErrorMessage(err.message);
+            //  })        
           }
           const getAllEmployes=() =>{
             employeservice.getAllActiveEmploee().then(res =>{
@@ -167,13 +181,15 @@ export function ItemCreation (props: FormProps){
                 // console.log(res,'llllll')
                 setEmployeData(res.data);
                  
-              } else{
-                AlertMessages.getErrorMessage(res.internalMessage);
-                 }
-            }).catch(err => {
-              setEmployeData([]);
-               AlertMessages.getErrorMessage(err.message);
-             })        
+              }
+              //  else{
+              //   AlertMessages.getErrorMessage(res.internalMessage);
+              //    }
+            })
+            // .catch(err => {
+            //   setEmployeData([]);
+            //    AlertMessages.getErrorMessage(err.message);
+            //  })        
           }
 
           const getAllUoms=() =>{
@@ -182,39 +198,46 @@ export function ItemCreation (props: FormProps){
                 // console.log(res,'llllll')
                 setUomData(res.data);
                  
-              } else{
-                AlertMessages.getErrorMessage(res.internalMessage);
-                 }
-            }).catch(err => {
-              setUomData([]);
-               AlertMessages.getErrorMessage(err.message);
-             })        
+               } 
+             // else{
+              //   AlertMessages.getErrorMessage(res.internalMessage);
+              //    }
+            })
+            // .catch(err => {
+            //   setUomData([]);
+            //    AlertMessages.getErrorMessage(err.message);
+            //  })        
           }
 
 const getAllComposition=()=>{
 compositionservice.getActiveComposition().then(res=>{
   if(res.status){
     setCompositionData(res.data);
-  }else{
-    AlertMessages.getErrorMessage(res.internalMessage);
   }
-}).catch(err => {
-  setCompositionData([]);
-   AlertMessages.getErrorMessage(err.message);
- })
+  // else{
+  //   AlertMessages.getErrorMessage(res.internalMessage);
+  // }
+})
+// .catch(err => {
+//   setCompositionData([]);
+//    AlertMessages.getErrorMessage(err.message);
+//  })
 }
+
 
           const getAllSearchgroup=()=>{
             searchgroup.getActiveSearchGroup().then(res=>{
               if(res.status){
                 setSearchData(res.data)
-              }else{
-                AlertMessages.getErrorMessage(res.internalMessage);
               }
-            }).catch(err => {
-              setSearchData([]);
-               AlertMessages.getErrorMessage(err.message);
-             })        
+              // else{
+              //   AlertMessages.getErrorMessage(res.internalMessage);
+              // }
+            })
+            // .catch(err => {
+            //   setSearchData([]);
+            //    AlertMessages.getErrorMessage(err.message);
+            //  })        
           }
 
           const getAllStyles=()=>{
@@ -222,79 +245,91 @@ compositionservice.getActiveComposition().then(res=>{
            if(res.status){
            setStyle(res.data);
 
-          }else{
-            AlertMessages.getErrorMessage(res.internalMessage);
           }
-          }).catch(err=>{
-            setStyle([]);
-            AlertMessages.getErrorMessage(err.message)
+          // else{
+          //   AlertMessages.getErrorMessage(res.internalMessage);
+          // }
           })
+          // .catch(err=>{
+          //   setStyle([]);
+          //   AlertMessages.getErrorMessage(err.message)
+          // })
           }
 
           const getAllLicense=()=>{
             LicenceService.getAllActiveLiscenceTypes().then(res=>{
                 if(res.status){
                     setLicence(res.data);
-                }else{
-                    AlertMessages.getErrorMessage(res.internalMessage);
-
                 }
-            }).catch(err=>{
-                setLicence([]);
-                AlertMessages.getErrorMessage(err.message)
+                // else{
+                //     AlertMessages.getErrorMessage(res.internalMessage);
+
+                // }
             })
+            // .catch(err=>{
+            //     setLicence([]);
+            //     AlertMessages.getErrorMessage(err.message)
+            // })
           }
 
           const getAllBrands=()=>{
             brandservice.getAllActiveBrands().then(res=>{
                 if(res.status){
                     setBrand(res.data);
-                }else{
-                    AlertMessages.getErrorMessage(res.internalMessage)
                 }
-            }).catch(err=>{
-                setBrand([]);
-                AlertMessages.getErrorMessage(err.message)
+                // else{
+                //     AlertMessages.getErrorMessage(res.internalMessage)
+                // }
             })
+            // .catch(err=>{
+            //     setBrand([]);
+            //     AlertMessages.getErrorMessage(err.message)
+            // })
           }
 
            const getAllRanges=()=>{
             Rangeservice.getActiveRange().then(res=>{
               if(res.status){
                 setRangeData(res.data);
-              }else{
-                AlertMessages.getErrorMessage(res.internalMessage)
-
               }
-            }).catch(err=>{setRangeData([])
-              AlertMessages.getErrorMessage(err.message)
+              // else{
+              //   AlertMessages.getErrorMessage(res.internalMessage)
 
+              // }
             })
+            // .catch(err=>{setRangeData([])
+            //   AlertMessages.getErrorMessage(err.message)
+
+            // })
            }
           const getAllCategory=()=>{
             categoryService.getActiveItemCategories().then(res=>{
                 if(res.status){
                     setItemCategory(res.data);
-                }else{
-                    AlertMessages.getErrorMessage(res.internalMessage)
                 }
-            }).catch(err=>{
-                setItemCategory([]);
-                AlertMessages.getErrorMessage(err.message)
+                // else{
+                //     AlertMessages.getErrorMessage(res.internalMessage)
+                // }
             })
+            // .catch(err=>{
+            //     setItemCategory([]);
+            //     AlertMessages.getErrorMessage(err.message)
+            // })
         }
 
         const getAllROSL=()=>{
             roslservice.getAllActiveROSLGroups().then(res=>{
                 if(res.status){
                     setRosl(res.data);
-                }else{
-                    AlertMessages.getErrorMessage(res.internalMessage)
                 }
-            }).catch(err=>{
-                setRosl([]);
-                AlertMessages.getErrorMessage(err.message)
+                // else{
+                //     AlertMessages.getErrorMessage(res.internalMessage)
+                // }
             })
+            // .catch(err=>{
+            //     setRosl([]);
+            //     AlertMessages.getErrorMessage(err.message)
+            // })
         }
 
          const getAllCustomGrops=()=>{
@@ -302,35 +337,49 @@ compositionservice.getActiveComposition().then(res=>{
                 if(res.status){
                     setCustomGroup(res.data);
                     
-                }else{
-                    AlertMessages.getErrorMessage(res.internalMessage)
                 }
+                // else{
+                //     AlertMessages.getErrorMessage(res.internalMessage)
+                // }
                 
-            }).catch(err=>{
-                setCustomGroup([]);
-                AlertMessages.getErrorMessage(err.message)
             })
-            console.log(customGroup,"customGroupId");
+            // .catch(err=>{
+            //     setCustomGroup([]);
+            //     AlertMessages.getErrorMessage(err.message)
+            // })
+            // console.log(customGroup,"customGroupId");
             
          }
          const getAllBuyingHouse=()=>{
             buyingHouseservice.getAllActiveBuyingHouse().then(res=>{
                 if(res.status){
                     setHouse(res.data);
-                }else{
-                    AlertMessages.getErrorMessage(res.internalMessage)
                 }
-            }).catch(err=>{
-                setHouse([]);
-                AlertMessages.getErrorMessage(err.message)
+                // else{
+                //     AlertMessages.getErrorMessage(res.internalMessage)
+                // }
             })
+            // .catch(err=>{
+            //     setHouse([]);
+            //     AlertMessages.getErrorMessage(err.message)
+            // })
          }
+ const getAllBusinessArea =()=>{
+  business.getAllBusinessAreaInfo().then(res=>{
+    if(res.status){
+      setBusiness(res.data)
+    }
+  })
+ }
+         
+
+
          const onReset = () => {
           form.resetFields()
       }
          const saveItem=()=>{
           form.validateFields().then((values) => {
-            console.log(values,"ooooooooooooooo");
+            // console.log(values,"ooooooooooooooo");
               itemCreationService.createItem(values).then((res) => {
                 if(res.status){
                   AlertMessages.getSuccessMessage(res.internalMessage)
@@ -338,16 +387,17 @@ compositionservice.getActiveComposition().then(res=>{
                 else{
                   AlertMessages.getWarningMessage(res.internalMessage)
                 }
-              }).catch(err => {
-                AlertMessages.getWarningMessage(err.message)
               })
+              // .catch(err => {
+              //   AlertMessages.getWarningMessage(err.message)
+              // })
           })
          }
 
         
          return (
          <>
-        <Card title=" FG Item Creation" size="small" extra={!props.isUpdate && (<Link to="/materialCreation/item-creation-view">
+        <Card title=" FG Item Creation" extra={!props.isUpdate && (<Link to="/materialCreation/item-creation-view">
          <span style={{ color: 'white' }}><Button type="primary">View</Button></span></Link> )}>
 
                <Form  form={form} style={{ fontSize: "10px" }}  layout="vertical" onFinish = {saveItem} initialValues={props.itemCreationData}>
@@ -357,10 +407,12 @@ compositionservice.getActiveComposition().then(res=>{
                 <Form.Item name='createdUser' style={{display:'none'}} initialValue={"Admin"}>
                     <Input hidden/>
                 </Form.Item>
+                <div style={{marginTop:"-10px"}}>
                 <Row gutter={16}>
+               
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                 <Card bordered={false}>
-                  <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Item Details</h1>
+                 <Card bordered={false} >
+                  <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left', marginTop:"-10px"}}>Item Details</h1>
                   <Row gutter={8}>
                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8}}>
                               <Form.Item style={{flexDirection:'row'}} label="Style" name="styleNo" rules={[{ required: true, message: "Enter Style" }]} >
@@ -583,10 +635,25 @@ compositionservice.getActiveComposition().then(res=>{
                        </Col>
 
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                          <Form.Item name="businessArea" label="Business Area">
-                          <Input placeholder="Business Area" allowClear />
-
-                          </Form.Item>
+                       <Form.Item
+                    label="Business Area"
+                    name="businessArea"
+                    // rules={[{ required: true, message: "Enter Business Area" }]}
+                  >
+                    <Select
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                    placeholder="Select Business Area"
+                    >
+                      {Business.map((rec)=>(
+                        <option key={rec.businessAreaId} value={rec.businessAreaId}>
+                      {rec.businessAreaName}
+                        </option>
+                      ))}
+                    </Select>
+                    {/* <Input placeholder="Business Area" allowClear /> */}
+                  </Form.Item>
                        </Col>
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                             <Form.Item
@@ -671,13 +738,14 @@ compositionservice.getActiveComposition().then(res=>{
                       </Select>
                       </Form.Item>
                     </Col>
+                   
                         </Row>
 </Card>
 </Col>
 
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
                           <Card bordered={false} >
-                          <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Profit Controllers</h1>
+                          <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left',marginTop:"-10px" }}>Profit Controllers</h1>
                           <Row gutter={8}>
                           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                             <Form.Item name="buyingHouseCommision" label="Buying House Commission">
@@ -1004,7 +1072,9 @@ compositionservice.getActiveComposition().then(res=>{
 
                       </Card>
                     </Col>
-                </Row>
+                  
+                    </Row>
+                    </div>
                 <br></br>
                 <Row justify={'end'} style={{marginTop: '-30px'}}>
   <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}>

@@ -76,4 +76,31 @@ export class ItemSkuController{
             return this.applicationExceptionHandler.returnException(SKUGenerationResponseModel,err)
         }
     }
+
+    @Post('/getSize')
+    async getSize():Promise<SKUGenerationResponseModel>{
+        try{
+            return await this.itemSkuService.getSize()
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(SKUGenerationResponseModel,err)
+        }
+    }
+
+    @Post('/getColor')
+    async getColor():Promise<SKUGenerationResponseModel>{
+        try{
+            return await this.itemSkuService.getColor()
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(SKUGenerationResponseModel,err)
+        }
+    }
+
+    @Post('/getDestination')
+    async getDestination():Promise<SKUGenerationResponseModel>{
+        try{
+            return await this.itemSkuService.getDestination()
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(SKUGenerationResponseModel,err)
+        }
+    }
 }

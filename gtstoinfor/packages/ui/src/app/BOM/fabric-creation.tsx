@@ -2,6 +2,7 @@ import { Button, Card, Col, Form, Input, Row, Select } from "antd";
 import { UndoOutlined } from "@ant-design/icons";
 import Commonscreen from "./common-screen";
 import {
+  BusinessAreaService,
   CurrencyService,
   DeliveryMethodService,
   DeliveryTermsService,
@@ -23,7 +24,7 @@ import {
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import TextArea from "antd/es/input/TextArea";
-import { ItemGroupEnum } from "@project-management-system/shared-models";
+import { IsImportedItemEnum, ItemGroupEnum } from "@project-management-system/shared-models";
 import { Link } from "react-router-dom";
 
 export interface FormProps{
@@ -52,7 +53,9 @@ export const FabricBomCreation = (props:FormProps) => {
   const [Deliveryterms,setDeliveryTerms]= useState([])
   const [DeliveryMethod,setDeliveryMethod]= useState([])
   const [fabric,setFabric]= useState([])
+  const [Business,setBusiness]= useState([])
 
+ const business = new BusinessAreaService
   const taxService = new TaxesService
   const currencyServices = new CurrencyService();
   const licenseservice = new LiscenceTypeService();
@@ -88,6 +91,7 @@ useEffect(() => {
     getAllDeliveryTerms();
     getAllDeliveryMethod();
     getAllFabricFinish();
+    getAllBusinessArea();
   }, []);
 
   const getAllCurrencies = () => {
@@ -96,14 +100,15 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           setCurrencyData(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
-        }
+        } 
+        // else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        setCurrencyData([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   setCurrencyData([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
   const getAllFabricFinish = () => {
     fabricfinishservice
@@ -111,9 +116,10 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           setFabric(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
-        }
+        } 
+        // else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
       // .catch((err) => {
       //   setFabric(res.data);
@@ -127,30 +133,48 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           sethierarchyLevel(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
         }
+        //  else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        sethierarchyLevel([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   sethierarchyLevel([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
 
+  const getAllBusinessArea= () => {
+    business
+      .getAllBusinessAreaInfo()
+      .then((res) => {
+        if (res.status) {
+          setBusiness(res.data);
+        }
+        //  else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
+      })
+      // .catch((err) => {
+      //   sethierarchyLevel([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
+  };
   const getAllDeliveryTerms = () => {
     deliveryTermsService
       .getAllActiveDeliveryTerms()
       .then((res) => {
         if (res.status) {
           setDeliveryTerms(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
         }
+        //  else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        setDeliveryTerms([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   setDeliveryTerms([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
 
   const getAllDeliveryMethod = () => {
@@ -159,14 +183,15 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           setDeliveryMethod(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
-        }
+        } 
+        // else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        setDeliveryMethod([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   setDeliveryMethod([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
   const getAllProducts = () => {
     proDUCTService
@@ -174,14 +199,15 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           setProduct(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
-        }
+        } 
+        // else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        setProduct([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   setProduct([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
   const getAllProcurement = () => {
     procurementservice
@@ -189,14 +215,15 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           setProcurement(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
         }
+        //  else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        setProcurement([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   setProcurement([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
   const getAllItemCategory = () => {
     itemcategoryService
@@ -204,14 +231,15 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           setItemCategory(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
-        }
+        } 
+        // else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        setItemCategory([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   setItemCategory([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
   const getAllEmployes=() =>{
     employeservice.getAllActiveEmploee().then(res =>{
@@ -219,13 +247,15 @@ useEffect(() => {
         // console.log(res,'llllll')
         setEmployeData(res.data);
          
-      } else{
-        AlertMessages.getErrorMessage(res.internalMessage);
-         }
-    }).catch(err => {
-      setEmployeData([]);
-       AlertMessages.getErrorMessage(err.message);
-     })        
+      }
+      //  else{
+      //   AlertMessages.getErrorMessage(res.internalMessage);
+      //    }
+    })
+    // .catch(err => {
+    //   setEmployeData([]);
+    //    AlertMessages.getErrorMessage(err.message);
+    //  })        
   }
   const getAllFacilitys=() =>{
     facilityservice.getFactories().then(res =>{
@@ -233,13 +263,15 @@ useEffect(() => {
         // console.log(res,'llllll')
         setfacilityData(res.data);
          
-      } else{
-        AlertMessages.getErrorMessage(res.internalMessage);
-         }
-    }).catch(err => {
-      setfacilityData([]);
-       AlertMessages.getErrorMessage(err.message);
-     })        
+      } 
+      // else{
+      //   AlertMessages.getErrorMessage(res.internalMessage);
+      //    }
+    })
+    // .catch(err => {
+    //   setfacilityData([]);
+    //    AlertMessages.getErrorMessage(err.message);
+    //  })        
   }
 
   const getAllPch = () => {
@@ -247,14 +279,15 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           setpchData(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
         }
+        //  else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        setpchData([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   setpchData([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
   const getAllItemGroups=() =>{
     itemGroupservice.getAllActiveItemGroup().then(res =>{
@@ -262,13 +295,15 @@ useEffect(() => {
         // console.log(res,'llllll')
         setitemgroup(res.data);
          
-      } else{
-        AlertMessages.getErrorMessage(res.internalMessage);
-         }
-    }).catch(err => {
-      setitemgroup([]);
-       AlertMessages.getErrorMessage(err.message);
-     })        
+      } 
+      // else{
+      //   AlertMessages.getErrorMessage(res.internalMessage);
+      //    }
+    })
+    // .catch(err => {
+    //   setitemgroup([]);
+    //    AlertMessages.getErrorMessage(err.message);
+    //  })        
   }
   const getAllItemType=() =>{
     itemTypeservice.getAllActiveItemType().then(res =>{
@@ -276,13 +311,15 @@ useEffect(() => {
         // console.log(res,'llllll')
         setItemType(res.data);
          
-      } else{
-        AlertMessages.getErrorMessage(res.internalMessage);
-         }
-    }).catch(err => {
-      setItemType([]);
-       AlertMessages.getErrorMessage(err.message);
-     })        
+      }
+      //  else{
+      //   AlertMessages.getErrorMessage(res.internalMessage);
+      //    }
+    })
+    // .catch(err => {
+    //   setItemType([]);
+    //    AlertMessages.getErrorMessage(err.message);
+    //  })        
   }
 
   const getAllActiveLiscenceTypes = () => {
@@ -291,28 +328,30 @@ useEffect(() => {
       .then((res) => {
         if (res.status) {
           setLicenseTypeData(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
         }
+        //  else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        setLicenseTypeData([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   setLicenseTypeData([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
 
   const getAllUoms = () => {
     uomservice.getAllUoms().then((res) => {
         if (res.status) {
           setUomData(res.data);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
-        }
+        } 
+        // else {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       })
-      .catch((err) => {
-        setUomData([]);
-        AlertMessages.getErrorMessage(err.message);
-      });
+      // .catch((err) => {
+      //   setUomData([]);
+      //   AlertMessages.getErrorMessage(err.message);
+      // });
   };
 
   const getTax = () =>{
@@ -349,7 +388,8 @@ rmservice.createRm(values).then((res)=>{
   else{
     AlertMessages.getWarningMessage(res.internalMessage)
   }
-}).catch(err =>{
+})
+.catch(err =>{
   AlertMessages.getWarningMessage(err.message)
 })
     })
@@ -369,7 +409,7 @@ rmservice.createRm(values).then((res)=>{
     }
     return 0;
   };
-console.log(calculateTotal(),'4444444 ');
+// console.log(calculateTotal(),'4444444 ');
 
   const onReset = () => {
     form.resetFields();
@@ -396,10 +436,12 @@ console.log(calculateTotal(),'4444444 ');
                 <Form.Item name='createdUser' style={{display:'none'}} initialValue={"Admin"}>
                     <Input hidden/>
                 </Form.Item>
+                <div style={{marginTop:"-10px"}}>
+
           <Row gutter={16}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
             <Card  bordered={false} >
-              <h1 style={{ color: "grey", fontSize: "15px", textAlign: "left" }}>Fabric Details</h1>
+              <h1 style={{ color: "grey", fontSize: "15px", textAlign: "left" ,marginTop:"-10px"}}>Fabric Details</h1>
               <Row gutter={8}>
               {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8}}>
                   <Form.Item
@@ -546,6 +588,8 @@ console.log(calculateTotal(),'4444444 ');
                   <Form.Item
                     label="Fabric Code"
                     name="itemCode"
+                    rules={[{ required: true, message: "Enter Fabric Code" }]}
+
                   >
                     <Input placeholder="Enter Fabric Code"/>
                   </Form.Item>
@@ -589,8 +633,24 @@ console.log(calculateTotal(),'4444444 ');
                         </Select>               
                            </Form.Item>
                 </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8}}>
 
-                
+                <Form.Item
+                    label="Is Imported Item"
+                    name="isImportedItem"
+                    // rules={[{ required: true, message: "Enter Is Imported Item" }]}
+                  >
+                    <Select
+                    showSearch
+                  
+                        placeholder="Select Is Imported Item" allowClear>
+                     {Object.values(IsImportedItemEnum).map((key,value)=>{
+            return <Option key={key} value={key}>{key}</Option>
+           })}
+                    </Select>
+                    {/* <Input placeholder="Fabric code" allowClear /> */}
+                  </Form.Item>
+                  </Col>
 </Row>
             
               <h1 style={{ color: "grey", fontSize: "15px", textAlign: "left" }}>Performance Responsible Team</h1>
@@ -717,14 +777,19 @@ console.log(calculateTotal(),'4444444 ');
                     name="businessArea"
                     // rules={[{ required: true, message: "Enter Business Area" }]}
                   >
-                    {/* <Select
+                    <Select
                     allowClear
                     showSearch
                     optionFilterProp="children"
                     placeholder="Select Business Area"
                     >
-                    </Select> */}
-                    <Input placeholder="Business Area" allowClear />
+                      {Business.map((rec)=>(
+                        <option key={rec.businessAreaId} value={rec.businessAreaId}>
+                      {rec.businessAreaName}
+                        </option>
+                      ))}
+                    </Select>
+                    {/* <Input placeholder="Business Area" allowClear /> */}
                   </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -793,7 +858,7 @@ console.log(calculateTotal(),'4444444 ');
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
               <Card bordered={false} >
 
-              <h1 style={{ color: "grey", fontSize: "15px", textAlign: "left" }}>Purchase Price Information
+              <h1 style={{ color: "grey", fontSize: "15px", textAlign: "left" ,marginTop:"-10px"}}>Purchase Price Information
               </h1>
 
               <Row gutter={8}>
@@ -1072,6 +1137,8 @@ console.log(calculateTotal(),'4444444 ');
 </Card>
 </Col>
 </Row>
+</div>
+
 <br></br>
           <Row  justify="end">
           <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}>

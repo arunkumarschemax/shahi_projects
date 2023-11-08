@@ -1,39 +1,55 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {Table, Card, Button, Row, Col, Form, Select, Tabs } from 'antd';
 import {SearchOutlined, UndoOutlined } from '@ant-design/icons';
-import { StyleOrderService } from '@project-management-system/shared-services';
+import { CoBomService, StyleOrderService } from '@project-management-system/shared-services';
+import { StyleOrderid } from '@project-management-system/shared-models';
 
 
 const BomReport = () => {
   const styleorderService = new StyleOrderService()
-
+  const Bomservice = new CoBomService()
   const [form] = Form.useForm();
   const { TabPane } = Tabs;
   const {Option} = Select;
   const [page, setPage] = React.useState(1);
   const [codata, setCOData] = useState<any[]>([]);
+  const [bom, setBom] = useState<any[]>([]);
+
 
 
 
 
   useEffect(() => {
+    getBom();
     getCoData();
-   
+
   }, []);
 
-  const getCoData = () => {
 
-    styleorderService.getCoNumber().then((res) => {
-      if (res.status) {
-        setCOData(res.data);
-       }
-    });
+const getBom =()=>{
+  const req = new StyleOrderid();
+  if (form.getFieldValue('styleOrderId') !== undefined) {
+      req.styleOrderId = form.getFieldValue('styleOrderId');
+  }
+  Bomservice.getBomAgainstItem().then((res)=>{
+    if (res.status){
+      setBom(res.data)
+    }else{
+      setBom([])
+
+    }
+  })
 }
-
     
 
 
-
+const getCoData = () => {
+  styleorderService.getCoNumber().then((res) => {
+    if (res.status) {
+      setCOData(res.data);
+     }
+  });
+}
   const columnsSkelton: any = [
     {
       title: 'S No',
@@ -43,20 +59,35 @@ const BomReport = () => {
     },
     {
       title: "Customer Order",
-      dataIndex: "co_number",
+      dataIndex: "CoNumber",
       align:'center',
     
       // sorter: (a, b) => a.itemTypeId.localeCompare(b.itemTypeId),
       // sortDirections: ['descend', 'ascend'],
+    },
+
+    {
+      title: "Customer OrderLine",
+      dataIndex: "coLineNumber",
+      align:'center',
     },
     {
       title: "Rm Item Sku",
-      dataIndex: "rm_sku_id",
+      dataIndex: "rmitemCode",
       align:'center',
     
       // sorter: (a, b) => a.itemTypeId.localeCompare(b.itemTypeId),
       // sortDirections: ['descend', 'ascend'],
     },
+
+    // {
+    //   title: "Rm Item Sku",
+    //   dataIndex: "rm_item_code",
+    //   align:'center',
+    
+    //   // sorter: (a, b) => a.itemTypeId.localeCompare(b.itemTypeId),
+    //   // sortDirections: ['descend', 'ascend'],
+    // },
     {
         title: "Consumption",
         dataIndex: "consumption",
@@ -72,18 +103,18 @@ const BomReport = () => {
         align:'center',
              sortDirections: ['descend', 'ascend'],
       }, 
-      {
-        title: "Item Type",
-        dataIndex: "item_type_id",
-        align:'center',
-             sortDirections: ['descend', 'ascend'],
-      },
-      {
-        title: "RM item Code",
-        dataIndex: "rm_item_code",
-        align:'center',
-             sortDirections: ['descend', 'ascend'],
-      },
+      // {
+      //   title: "Item Type",
+      //   dataIndex: "item_type",
+      //   align:'center',
+      //        sortDirections: ['descend', 'ascend'],
+      // },
+      // {
+      //   title: "RM item Code",
+      //   dataIndex: "rm_item_code",
+      //   align:'center',
+      //        sortDirections: ['descend', 'ascend'],
+      // },
     
   ];
 
@@ -97,7 +128,8 @@ const BomReport = () => {
 
 
   return (
-       <Card title={<span >Bom Report</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }}>
+    <Card title='Bom Report' >
+       {/* <Card title={<span >Bom Report</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }}> */}
         <Form  form={form} layout="horizontal">
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }}
@@ -105,7 +137,7 @@ const BomReport = () => {
                       md={{ span: 4 }}
                       lg={{ span: 4 }}
                       xl={{ span: 6}} >
-                        <Form.Item name='customerOrder' label='Customer Order' >
+                        <Form.Item name='styleOrderId' label='Customer Order' >
                             <Select showSearch placeholder="Select Customer Order" optionFilterProp="children" allowClear >
                             {
                            codata.map((e) => {
@@ -141,7 +173,7 @@ const BomReport = () => {
                       <Table
                       size="small"
                       columns={columnsSkelton}
-                      // dataSource={rowData[0]?.sampleTrimInfo}
+                      dataSource={ bom}
                       scroll={{ x: true }}
                       bordered
                       pagination ={false}

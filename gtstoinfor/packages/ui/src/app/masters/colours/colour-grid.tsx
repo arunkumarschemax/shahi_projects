@@ -285,7 +285,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
       ];
 
       return (
-        <Card title='Colours' extra={<span><Button onClick={()=>navigate('/masters/colour/colour-form')} type={'primary'}>New</Button></span>}>
+        <Card title='Colour' extra={<span><Button onClick={()=>navigate('/masters/colour/colour-form')} type={'primary'}>New</Button></span>}>
 <br/>
 <>
 <Row gutter={40}>
@@ -303,7 +303,6 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
         <Card>
         <Table
               size='small'
-              rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
 
                 // rowKey={record => record.variantId}
                 columns={columnsSkelton}

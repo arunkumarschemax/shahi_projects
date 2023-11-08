@@ -4,6 +4,25 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { groupBy } from "rxjs";
 import { ItemCreation } from "../item_creation.entity";
 import { ItemCreFilterRequest } from "@project-management-system/shared-models";
+import { join } from "path";
+import { Currencies } from "../../currencies/currencies.entity";
+import { ItemTypeEntity } from "../../item-type/item-type.entity";
+import { Brands } from "../../master-brands/master-brands.entity";
+import { ItemCategory } from "../../item-categories/item-categories.entity";
+import { ItemSubCategory } from "../../item-sub-categories/item-sub-category.entity";
+import { EmplyeeDetails } from "../../employee-details/dto/employee-details-entity";
+import { UomEntity } from "../../uom/uom-entity";
+import { ItemGroup } from "../../item-group/item-group.entity";
+import { ProductGroup } from "../../product group/product-group-entity";
+import { CompositionEnitty } from "../../composition/composition.entity";
+import { GroupTechClassEntity } from "../../group-tech-class/group-tech-class.entity";
+import { RangeEnitty } from "../../range/range-entity";
+import { LiscenceType } from "../../liscence-type/liscence-type.entity";
+import { CustomGroups } from "../../custom groups/custom-groups.entity";
+import { ROSLGroups } from "../../rosl groups/rosl-groups.entity";
+import { FactoriesEntity } from "../../factories/factories.entity";
+import { BuyingHouse } from "../../buying-house/buying-house.entity";
+import { SearchGroupEnitty } from "../../search-group/search-group.entity";
 
 
 
@@ -15,9 +34,43 @@ export class ItemCreationRepository extends Repository<ItemCreation> {
     }
 
     async getAllFgItemCrted(req: ItemCreFilterRequest): Promise<any[]> {
-        const query = this.createQueryBuilder('fg_item')
-        .select(`*`).where('1=1'); 
-      
+        const query = this.createQueryBuilder('fgi')
+        .select(`reference,style_no,item_name, item_type, item_code, brand_name, item_category, item_sub_category,CONCAT(ed.first_name, ' ', ed.last_name) AS responsible_person,CONCAT(epr.first_name, ' ', epr.last_name) AS product_designer,
+        CONCAT(epa.first_name, ' ', epa.last_name) AS approver,CONCAT(eppt.first_name, ' ', eppt.last_name) AS pd_merchant,CONCAT(ept.first_name, ' ', ept.last_name) AS factory_merchant,
+        CONCAT(eps.first_name, ' ', eps.last_name) AS sale_person_id,internal_style_id,uo.uom AS uom,ut.uom AS alt_uom,currencies.currency_name AS currency_name,
+        ig.item_group AS item_group,pgi.product_group,business_area,uo.uom AS basicUom,group_tech_class,co.composition_code AS composition ,gtc.group_tech_class_code AS group_tech_class,
+        tc.currency_name AS target_currency,
+        r.range_code AS rangee ,no_of_lace_panel ,sale_price_qty ,lt.liscence_type,cg.custom_group, national_dbk ,rg.rosl_group ,is_sub_contract ,sale_price,
+        order_confirmed_date,first_ex_factory_date,order_close_date,moq,order_qty,f.name,season,conversion_factor,projection_order, bh.buying_house,sg.search_grp_name`) 
+        .leftJoin(Currencies, 'currencies','currencies.currency_id = fgi.currency')
+        .leftJoin(ItemTypeEntity,'it','it.item_type_id = fgi.item_type_id')
+        .leftJoin(Brands,'b','b.brand_id = fgi.brand_id')
+        .leftJoin(ItemCategory,'ic','ic.item_category_id = fgi.category_id')
+        .leftJoin(ItemSubCategory,'isc','isc.item_sub_category_id = fgi.sub_category_id')
+        .leftJoin(EmplyeeDetails,'ed','ed.employee_id = fgi.responsible_person_id')
+        .leftJoin(EmplyeeDetails,'epr','epr.employee_id = fgi.product_designer_id')
+        .leftJoin(EmplyeeDetails,'epa','epa.employee_id = fgi.approver')
+        .leftJoin(EmplyeeDetails,'epp','epp.employee_id = fgi.production_merchant')
+        .leftJoin(EmplyeeDetails,'eppt','eppt.employee_id = fgi.pd_merchant')
+        .leftJoin(EmplyeeDetails,'ept','eppt.employee_id = fgi.factory_merchant')
+        .leftJoin(EmplyeeDetails,'eps','eps.employee_id = fgi.sale_person_id')
+        .leftJoin(UomEntity,'uo',' uo.id = fgi.uom')
+        .leftJoin(UomEntity,'ut','ut.id = fgi.alt_uom')
+        .leftJoin(Currencies, 'tc','tc.`currency_id` = fgi.target_currency ')
+        .leftJoin(ItemGroup, 'ig','ig.item_group_id = fgi.item_group')
+        .leftJoin(ProductGroup, 'pgi','pgi.product_group_id = fgi.product_group')
+        .leftJoin(CompositionEnitty, 'co','co.id = fgi.composition')
+        .leftJoin(GroupTechClassEntity,'gtc','gtc.group_tech_class_id = fgi.group_tech_class')
+        .leftJoin(RangeEnitty, 'r','r.`id` = fgi.RANGE')
+        .leftJoin(LiscenceType, 'lt','lt.liscence_type_id = fgi.license_id')
+        .leftJoin(CustomGroups, 'cg','cg.custom_group_id = fgi.custom_group_id ')
+        .leftJoin(ROSLGroups, 'rg','rg.rosl_group_id = fgi.rosl_group ')
+        .leftJoin(FactoriesEntity, 'f','f.id = fgi.facility_id ')
+        .leftJoin(BuyingHouse, 'bh','bh.buying_house_id = fgi.buying_house_commision_id  ')
+        .leftJoin(SearchGroupEnitty, 'sg','sg.id = fgi.search_group')
+
+
+        .where('1=1');
         if (req.style !== undefined) {
           query.andWhere(`style_no = :style`, { style: req.style }); 
         }
@@ -25,7 +78,7 @@ export class ItemCreationRepository extends Repository<ItemCreation> {
             query.andWhere(`item_name = :itemName`, { itemName: req.itemName }); 
           }
           if (req.brandId !== undefined) {
-            query.andWhere(`brand_id = :brandId`, { brandId: req.brandId }); 
+            query.andWhere(`brand_name = :brand`, { brand: req.brandId }); 
           }
           if (req.confirmStartDate !== undefined) {
             query.andWhere(`Date(order_confirmed_date) BETWEEN '${req.confirmStartDate}' AND '${req.confirmEndDate}'`)
@@ -35,25 +88,6 @@ export class ItemCreationRepository extends Repository<ItemCreation> {
         return data;
       }
 
-
+  
       
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// .select(`fg_item_id,item_name,item_code,DESCRIPTION,item_type_id,brand_id,category_id,sub_category_id,season_id,responsible_person_id,product_designer_id,approver,production_merchant,pd_merchant,factory_merchant,sale_person_id,style_no,internal_style_id,uom,alt_uom,currency,item_group,item_group,product_group,business_area,basic_uom,group_tech_class,composition,target_currency,no_of_lace_panel,search_group,conversion_factor_id,reference_id,projection_order_id,buying_house_commision,sale_price_qty,license_id,custom_group_id,national_dbk,rosl_group,is_sub_contract,sale_price,order_confirmed_date,first_ex_factory_date,order_close_date,moq,order_qty,facility_id,is_active,created_at,created_user,updated_at,updated_user,version_flag,range AS irange`)

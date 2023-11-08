@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, Card, Row, Col } from 'antd';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ProfitControlHeadDto } from '@project-management-system/shared-models';
 import { ProfitControlHeadService } from '@project-management-system/shared-services';
 import { __values } from 'tslib';
@@ -21,6 +21,7 @@ export const ProfitControlHeadForm=(props:ProfitControlHeadFromProps)=>{
 
     const service = new ProfitControlHeadService();
     let history =useLocation();
+    let navigate = useNavigate();
 
     let createdUser="";
     if(!props.isUpdate){
@@ -61,9 +62,11 @@ export const ProfitControlHeadForm=(props:ProfitControlHeadFromProps)=>{
       
 
       return(
-        <Card title={<span>Profit Control Head</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} 
-        extra={props.isUpdate==true?"":<Link to='/masters/profit-control-head/profit-control-head-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
-       >
+        <Card title= {props.isUpdate ?
+        'Profit Control Head':'Profit Control Head'}
+         extra={(props.isUpdate == false) && <span><Button onClick={()=> navigate('/masters/profit-control-head/profit-control-head-view')} 
+         type={'primary'}>View</Button></span>}>
+          
 <Form
 layout={'vertical'}
 form={form}
@@ -87,12 +90,12 @@ onFinish={saveData}>
               message:' profitControlHead Is Required'
             },
             {
-              pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+              // pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
               message: `profitControlHead Should contain only alphabets.`
             }
           ]}
         >
-          <Input />
+          <Input placeholder='enter profitControlHead' />
         </Form.Item>
         </Col>
 </Row>

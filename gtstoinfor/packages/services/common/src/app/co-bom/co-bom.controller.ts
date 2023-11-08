@@ -28,7 +28,7 @@ export class CoBomController{
 
 
     @Post ('/getBomAgainstItem')
-    @ApiBody({type:CoBomDto})
+    @ApiBody({type:StyleOrderId})
     async getBomAgainstItem(@Body() req:any):Promise<CommonResponseModel>{
         try {
             return await this.cobom.getBomAgainstItem(req);

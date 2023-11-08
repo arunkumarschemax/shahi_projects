@@ -247,8 +247,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
       ];
 
       return (
-        <Card title={<span>Profit Control Head</span>}
-        style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/profit-control-head/profit-control-head-form"  ><span><Button type={'primary'} >New </Button> </span></Link>}>
+        <Card title="Profit Control Head" extra={<span><Button onClick={()=>navigate('/masters/profit-control-head/profit-control-head-form')} type={'primary'}>New</Button></span>}>
 <br></br>
 <>
 <Row gutter={40}>
@@ -266,7 +265,6 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
         <Card>
         <Table
               size='small'
-              rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
                 // rowKey={record => record.variantId}
                 columns={columnsSkelton}
                 dataSource={variantData}

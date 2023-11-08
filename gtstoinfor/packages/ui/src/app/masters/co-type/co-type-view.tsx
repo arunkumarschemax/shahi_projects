@@ -244,7 +244,6 @@ export const CoTypeView = () => {
             <div style={{overflowX :'auto' }}>
 
             <Table columns={columns}
-                    rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
                     dataSource={data} size='small' bordered/>
             </div>
             <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}

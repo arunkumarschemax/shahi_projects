@@ -6,6 +6,8 @@ import { SKUlistFilterRequest, SkuStatusEnum } from "@project-management-system/
 import { Colour } from "../colours/colour.entity";
 import { Size } from "../sizes/sizes-entity";
 import { Destination } from "../destination/destination.entity";
+import { Style } from "../style/dto/style-entity";
+import { Division } from "../division/division.entity";
 
 @Injectable()
 export class ItemSkuRepository extends Repository<ItemSkus> {
@@ -46,19 +48,41 @@ export class ItemSkuRepository extends Repository<ItemSkus> {
         return await query.getRawMany()
     }
 
+
     async getSkuList(req:SKUlistFilterRequest):Promise<any>{
         // console.log(req,"req in quary")
         const query = await this.createQueryBuilder('is')
         .select(`*`)
-        // .leftJoin(Colour,`c`,`c.colourId = is.color_id`)
-        // .leftJoin(Size,`s`,`s.size_id = is.size_id`)
-        // .leftJoin(Destination,`d`,`d.destination_id = is.destination_id`)
-    //    .where(`item_code = '${req.itemsNo}'`)
-    .where('is.item_code = :itemCode', { itemCode: req.itemsCode })
+        .leftJoin(Colour,`c`,`c.colourId = is.color_id`)
+        .leftJoin(Size,`s`,`s.size_id = is.size_id`)
+        .leftJoin(Destination,`d`,`d.destination_id = is.destination_id`)
+        .leftJoin(Style,`st`,`st.style_id = is.style_id`)
+        .leftJoin(Division,`div`,`div.division_id = is.division_id`)
+        //    .where(`item_code = '${req.itemsNo}'`)
+       .where('is.item_code = :itemCode', { itemCode: req.itemsCode })
         .groupBy(`is.color,is.size,is.destination`)
         return query.getRawMany()
 
     }
 
-    
+    async getSize(req:SKUlistFilterRequest):Promise<any>{
+        const query = await this.createQueryBuilder('i')
+     .select(`size,size_id`)
+     .groupBy(`size_id`)
+     return await query.getRawMany()
+    }
+
+    async getColor(req:SKUlistFilterRequest):Promise<any>{
+        const query = await this.createQueryBuilder()
+        .select(`color,color_id`)
+        .groupBy(`color_id`)
+        return await query.getRawMany()
+    }
+
+    async getDestination(req:SKUlistFilterRequest):Promise<any>{
+        const query = await this.createQueryBuilder()
+        .select(`destination,destination_id`)
+        .groupBy(`destination_id`)
+        return await query.getRawMany()
+    }
 }

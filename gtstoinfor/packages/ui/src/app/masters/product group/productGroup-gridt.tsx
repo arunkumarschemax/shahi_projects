@@ -340,7 +340,6 @@ export function ProductGroupGrid(
           </Row>
           <br></br>
           <Table
-                  rowClassName={(record,index)=>index % 2 === 0? 'table-row-light':'table-row-dark'}
 
           rowKey={record => record.ProductGroupId}
           columns={columnsSkelton}

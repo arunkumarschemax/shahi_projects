@@ -4,7 +4,7 @@ import { IsOptional, Matches, MaxLength } from "class-validator";
 export class BomTrimDto {
 
     @ApiProperty()
-    itemsId : number;
+    itemTypeId : number;
 
     @ApiProperty()
     pchId : number;
