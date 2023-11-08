@@ -167,10 +167,6 @@ export const extractDhl = async (pdf) => {
         extractedData: InvoiceLines[0],
         extractedHsnData: structuredHSNLines
     };
-
-
-
-
 }
 
 export const extractDhlCourierfrieght = async (pdf) => {
@@ -1314,20 +1310,6 @@ export const extractOocl = async (pdf) => {
             const taxPercentageContent = extractedData[hsnId + 12].content;
             const taxPercentage = parseFloat(taxPercentageContent.replace('%', ''));
 
-            let igst = 0;
-            let cgst = 0;
-            let sgst = 0;
-            let taxType = "No Tax";
-
-            if (taxPercentage === 18) {
-                igst = parseFloat(extractedData[hsnId + 6].content) || 0;
-                taxType = "IGST";
-            } else if (taxPercentage === 9) {
-                cgst = parseFloat(extractedData[hsnId + 6].content) || 0;
-                sgst = parseFloat(extractedData[hsnId + 6].content) || 0;
-                taxType = "CGST & SGST";
-            }
-
             const taxAmountContent = extractedData[hsnId + 14].content.replace(/,/g, '');
             const taxAmount = parseFloat(taxAmountContent).toFixed(2);
 
@@ -1336,6 +1318,24 @@ export const extractOocl = async (pdf) => {
 
             const charge = parseFloat(extractedData[hsnId + 2].content.replace(/,/g, ''));
             const unitPrice = (charge / unitQuantity).toFixed(2);
+
+            let taxType, igst, cgst, sgst;
+            if (taxPercentage == 9) {
+                taxType = 'CGST & SGST';
+                igst = 0;
+                cgst = taxAmount;
+                sgst = taxAmount;
+            } else if (taxPercentage == 18) {
+                taxType = 'IGST';
+                igst = taxAmount;
+                cgst = 0;
+                sgst = 0;
+            } else {
+                taxType = 'No Tax';
+                igst = 0;
+                cgst = taxAmount;
+                sgst = taxAmount;
+            }
 
             currentHSN = {
                 description: extractedData[hsnId - 2].content,
@@ -1360,59 +1360,56 @@ export const extractOocl = async (pdf) => {
     }
 
     const InvoiceLines = [];
-    let currentInvoice = null;
     let gstNumberExtracted = false;
 
-    const vendorNameId = '1-2';
-    const invoiceDateId = '1-38';
-    const invoiceNumberId = '1-41';
+    const invoiceDateRegex = /\d{1,2}-[A-Z][a-z]{2}-\d{2}/;
+    const invoiceNumberRegex = /724[A-Z0-9]{7}/;
     const invoiceCurrency = 'INR';
-    // const invoiceAmountId='1-36';
     const currentYear = new Date().getFullYear();
     const nextYear = currentYear + 1;
     const financialYear = `${currentYear}-${nextYear}`;
 
     if (extractedData && Array.isArray(extractedData)) {
+        let venName = '';
+        let invoiceDate = '';
+        let invoiceNumber = '';
+
         for (const line of extractedData) {
             const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
             if (gstMatch && !gstNumberExtracted) {
                 const gstNumber = gstMatch[0];
 
-                const vendorNameData = extractedData.find((item) => item.id === vendorNameId);
-                const venName = vendorNameData ? vendorNameData.content : '';
+                venName = 'OOCL Logistics (India) Private Limited';
 
-                const invoiceDateData = extractedData.find((item) => item.id === invoiceDateId);
-                const invoiceDate = invoiceDateData ? invoiceDateData.content.replace(/^INVOICE DATE:\s*/, '') : '';
+                const invoiceDateData = extractedData.find((item) => item.content.match(invoiceDateRegex));
+                invoiceDate = invoiceDateData ? invoiceDateData.content : '';
 
-                const invoiceNumberData = extractedData.find((item) => item.id === invoiceNumberId);
-                const invoiceNumber = invoiceNumberData ? invoiceNumberData.content.replace(/^INVOICE NUMBER:\s*/, '') : '';
-
-                // const invoiceAmountData = extractedData.find((item) => item.id === invoiceAmountId);
-                // const invoiceAmount = invoiceAmountData ? invoiceAmountData.content : '';
+                const invoiceNumberData = extractedData.find((item) => item.content.match(invoiceNumberRegex));
+                invoiceNumber = invoiceNumberData ? invoiceNumberData.content : '';
 
                 const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
-                    const unitPrice = parseFloat(hsnLine.unitPrice) || 0;
+                    const amount = parseFloat(hsnLine.amount) || 0;
                     const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
-                    // const igst = parseFloat(hsnLine.igst) || 0;
-                    // const cgst = parseFloat(hsnLine.cgst) || 0;
-                    // const sgst = parseFloat(hsnLine.sgst) || 0;
-                    return add + unitPrice + taxAmount;
+                    return add + amount+taxAmount;
                 }, 0).toFixed(2);
 
-                const igst = structuredHSNLines.reduce((acc, hsnLine) => {
-                    const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
-                    return acc + taxAmount
+                const igst = structuredHSNLines.reduce((add, hsnLine) => {
+                    const igst = parseFloat(hsnLine.igst) || 0;
+                    return add + igst;
                 }, 0).toFixed(2);
 
                 const cgst = structuredHSNLines.reduce((add, hsnLine) => {
-                    return add + parseFloat(hsnLine.cgst) || 0;
+                    const cgst = parseFloat(hsnLine.cgst) || 0;
+                    return add + cgst;
                 }, 0).toFixed(2);
 
-                const sgst = structuredHSNLines.reduce((acc, hsnLine) => {
-                    return acc + parseFloat(hsnLine.sgst) || 0;
+                const sgst = structuredHSNLines.reduce((add, hsnLine) => {
+                    const sgst = parseFloat(hsnLine.sgst) || 0;
+                    return add + sgst;
                 }, 0).toFixed(2);
 
-                currentInvoice = {
+
+                const currentInvoice = {
                     "venName": venName,
                     "gstNumber": gstNumber,
                     "invoiceDate": invoiceDate,
@@ -1424,18 +1421,21 @@ export const extractOocl = async (pdf) => {
                     "cgst": cgst,
                     "sgst": sgst,
                 };
+
                 InvoiceLines.push(currentInvoice);
                 gstNumberExtracted = true;
             }
         }
     }
 
+    console.log("DART PDF DATA", JSON.stringify(extractedData, null, 2));
     console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
     console.log("PDF INVOICE Data", JSON.stringify(InvoiceLines, null, 2));
+
     return {
         extractedData: InvoiceLines[0],
         extractedHsnData: structuredHSNLines
-    }
+    };
 }
 
 export const extractNagel = async (pdf) => {

@@ -4,7 +4,7 @@ import { Button, Card, Col, Form, FormInstance, Radio, Row, Select, Spin, Upload
 import { useState } from 'react';
 import { pdfjs } from 'react-pdf';
 import loadingSymbol from '../../../assets/images/1_yE-S7HG0Rg-ACAcnjvKf5Q.gif';
-import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractEfl, extractMsn, extractExpeditors, extractMaersk, extractNagel, extractOocl, extractPDFDataToLinesData, extractFredexfrieght, extractFredexCourier, extractDhlCourierfrieght, extractDhlairduty,  } from './schemax-ai-docx-pdf';
+import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractEfl, extractMsn, extractExpeditors, extractMaersk, extractNagel, extractOocl, extractPDFDataToLinesData, extractFredexfrieght, extractFredexCourier, extractDhlCourierfrieght, extractDhlairduty, } from './schemax-ai-docx-pdf';
 import { extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNagelInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractOoclInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 ;
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
@@ -71,10 +71,10 @@ export const DocReader = (props: DocReaderProps) => {
                     processedData = await extractDhlCourierfrieght(pdfData);
                     console.log('PDF DATA DHL COURIER:', processedData);
                     break;
-                    case VendorNameEnum.extractedDhlairduty:
-                        processedData = await extractDhlairduty(pdfData);
-                        console.log('PDF DATA DHL AIR FREIGHT:', processedData);
-                        break;
+                case VendorNameEnum.extractedDhlairduty:
+                    processedData = await extractDhlairduty(pdfData);
+                    console.log('PDF DATA DHL AIR FREIGHT:', processedData);
+                    break;
                 case VendorNameEnum.extractedMsn:
                     processedData = await extractMsn(pdfData);
                     console.log('PDF DATA MSN:', processedData);
@@ -87,10 +87,10 @@ export const DocReader = (props: DocReaderProps) => {
                     processedData = await extractExpeditors(pdfData);
                     console.log('PDF DATA EXPEDITORS:', processedData);
                     break;
-                    case VendorNameEnum.extractedApl:
-                        processedData = await extractApl(pdfData);
-                        console.log('PDF DATA Fredexfrieght:', processedData);
-                        break;
+                case VendorNameEnum.extractedApl:
+                    processedData = await extractApl(pdfData);
+                    console.log('PDF DATA Fredexfrieght:', processedData);
+                    break;
                 case VendorNameEnum.extractedFredexFrieght:
                     processedData = await extractFredexfrieght(pdfData);
                     console.log('PDF DATA Fredexfrieght:', processedData);
@@ -98,6 +98,10 @@ export const DocReader = (props: DocReaderProps) => {
                 case VendorNameEnum.extractedFredexCourier:
                     processedData = await extractFredexCourier(pdfData);
                     console.log('PDF DATA FREDEX FREIGHT COURIER:', processedData);
+                    break;
+                case VendorNameEnum.extractedOocl:
+                    processedData = await extractOocl(pdfData);
+                    console.log('PDF DATA OOCL:', processedData);
                     break;
                 // case VendorNameEnum.extractedEfl:
                 //     {
@@ -369,19 +373,19 @@ export const DocReader = (props: DocReaderProps) => {
                 //     break;
                 // }
 
-                case VendorNameEnum.extractedOocl: {
-                    const ooclPDFData = await extractOocl(pdfData);
-                    const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
-                    const allLines = await extractDataFromScannedImages(pageImages, [0]);
-                    const scannedData = await extractOoclInvoiceDataFromScanned(allLines);
-                    processedData['extractedData'] = scannedData.extractedData || {};
-                    processedData['extractedData']['invoiceAmount'] = ooclPDFData.extractedData.invoiceAmount;
-                    processedData['extractedData']['igst'] = ooclPDFData.extractedData.igst;
-                    processedData['extractedData']['cgst'] = ooclPDFData.extractedData.cgst;
-                    processedData['extractedData']['sgst'] = ooclPDFData.extractedData.sgst;
-                    processedData['extractedHsnData'] = ooclPDFData.extractedHsnData;
-                    break;
-                }
+                // case VendorNameEnum.extractedOocl: {
+                //     const ooclPDFData = await extractOocl(pdfData);
+                //     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                //     const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                //     const scannedData = await extractOoclInvoiceDataFromScanned(allLines);
+                //     processedData['extractedData'] = scannedData.extractedData || {};
+                //     processedData['extractedData']['invoiceAmount'] = ooclPDFData.extractedData.invoiceAmount;
+                //     processedData['extractedData']['igst'] = ooclPDFData.extractedData.igst;
+                //     processedData['extractedData']['cgst'] = ooclPDFData.extractedData.cgst;
+                //     processedData['extractedData']['sgst'] = ooclPDFData.extractedData.sgst;
+                //     processedData['extractedHsnData'] = ooclPDFData.extractedHsnData;
+                //     break;
+                // }
 
                 case VendorNameEnum.extractedNagel: {
                     const nagelPDFData = await extractNagel(pdfData);
