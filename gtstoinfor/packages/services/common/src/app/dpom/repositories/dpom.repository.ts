@@ -711,21 +711,21 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getPoNumberforMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.po_number,dpom.id`)
-            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
+            .where(`dpom.po_number IS NOT Null`)
             .groupBy(`dpom.po_number`)
         return await query.getRawMany();
     }
     async getPpmDocTypeForMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.doc_type_code,dpom.id`)
-            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
+            .where(`dpom.doc_type_code IS NOT Null`)
             .groupBy(`dpom.doc_type_code`)
         return await query.getRawMany();
     }
     async getPpmPoLineItemNumberForMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.po_line_item_number,dpom.id`)
-            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
+            .where(`dpom.po_line_item_number IS NOT Null`)
             .groupBy(`dpom.po_line_item_number`)
         return await query.getRawMany();
     }
@@ -733,7 +733,7 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getPpmStyleNumberForMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.style_number,dpom.id`)
-            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
+            .where(`dpom.style_number IS NOT Null`)
             .groupBy(`dpom.style_number`)
         return await query.getRawMany();
     }
@@ -741,7 +741,7 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getPpmplanningSeasonYearForMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.planning_season_year,dpom.id`)
-            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
+            .where(`dpom.planning_season_year IS NOT Null`)
             .groupBy(`dpom.planning_season_year`)
         return await query.getRawMany();
     }
@@ -749,7 +749,7 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getPpmplanningSeasonCodeForMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.planning_season_code,dpom.id`)
-            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
+            .where(`dpom.planning_season_code IS NOT Null`)
             .groupBy(`dpom.planning_season_code`)
         return await query.getRawMany();
     }
@@ -757,7 +757,7 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getPpmdesCountryNameMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.destination_country,dpom.id`)
-            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
+            .where(`dpom.destination_country IS NOT Null`)
             .groupBy(`dpom.destination_country`)
         return await query.getRawMany();
     }
@@ -808,7 +808,7 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async gatDataForColine(req: any): Promise<any[]> {
         const query = this.createQueryBuilder('d')
-            .select(` d.po_number, d.po_and_line, d.po_line_item_number, d.style_number,d.size_description, d.size_qty, d.destination_country,d.color_desc`)
+            .select(` d.po_number, d.po_and_line, d.po_line_item_number, d.style_number, d.size_description, d.size_qty, d.destination_country,d.color_desc, d.gross_price_fob, d.gac`)
             .where(` d.po_number ='${req.poNumber}' AND d.po_line_item_number ='${req.lineNumber}'`)
         return await query.getRawMany();
     }

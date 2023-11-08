@@ -247,21 +247,31 @@ export class DpomService {
     async createCOline(req: any): Promise<CommonResponseModel> {
         try {
             const data = await this.dpomRepository.gatDataForColine({ poNumber: req.purchaseOrderNumber, lineNumber: req.poLineItemNumber })
+            const firstTenChars = data[0].color_desc.substring(0, 10);
+            const lastFourDigits = data[0].style_number.slice(-4)
+            const gacDate = new Date(data[0].gac); // Parse the GAC date
+            // Calculate the date 7 days before the GAC date
+            const sevenDaysBeforeGAC = new Date(gacDate);
+            sevenDaysBeforeGAC.setDate(gacDate.getDate() - 7);
+            // Format the result as 'DD/MM/YYYY'
+            const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBeforeGAC)
             const coLine = new CoLineRequest()
             coLine.buyerPo = data[0].po_number + '-' + data[0].po_line_item_number
-            coLine.deliveryDate = moment().format("DD/MM/YYYY")
+            coLine.exFactoryDate = exFactoryDate
+            coLine.deliveryDate = moment(data[0].gac).format("DD/MM/YYYY")
             const destinationsArr: Destinations[] = []
             const destinations = new Destinations()
             destinations.name = data[0].destination_country
             const colorsArr: Colors[] = []
             const colors = new Colors()
-            colors.name = data[0].color_desc
+            colors.name = firstTenChars + ' ' + lastFourDigits
             const sizesArr: Sizes[] = []
 
             for (let item of data) {
                 const sizes = new Sizes()
                 sizes.name = item.size_description
                 sizes.qty = item.size_qty
+                sizes.price = item.gross_price_fob
                 sizesArr.push(sizes)
             }
             colors.sizes = sizesArr
@@ -293,33 +303,48 @@ export class DpomService {
                     break;
                 }
             }
-            const delivaryDate = moment().format('DD/MM/YYYY')
             await driver.findElement(By.id('styleid2H')).sendKeys(req.itemNo);
             await driver.wait(until.elementLocated(By.id('CreateOrderID')))
             await driver.sleep(3000)
             await driver.findElement(By.id('CreateOrderID')).click();
             await driver.wait(until.elementLocated(By.id('bpo')))
             await driver.findElement(By.id('bpo')).sendKeys(coLine.buyerPo);
+            // await driver.findElement(By.id('getNikeData')).click();
+            await driver.wait(until.elementLocated(By.name('dojo.EXFACTORYDATE')));
+            await driver.findElement(By.name('dojo.EXFACTORYDATE')).clear();
+            await driver.findElement(By.name('dojo.EXFACTORYDATE')).sendKeys(coLine.exFactoryDate);
             await driver.wait(until.elementLocated(By.name('dojo.delydt')));
-            await driver.findElement(By.name('dojo.delydt')).sendKeys(delivaryDate);
-            await driver.findElement(By.id('getNikeData')).click();
-            // for (let dest of coLine.destinations) {
-            //     const colorsContainer = await driver.wait(until.elementLocated(By.xpath('//*[@id="COContainer"]')));
-            //     const colorsTabs = await colorsContainer.findElements(By.tagName('span'));
-            //     for (const tab of colorsTabs) {
-            //         if ((await tab.getAttribute('innerText')) == dest.name) {
-            //             await driver.executeScript('arguments[0].click();', tab);
-            //             for (let color of dest.colors) {
-            //                 for (let size of color.sizes) {
-            //                     const inputId = `${size.name}:${color.name}:${dest.name}`.replace(/\*/g, '');
-            //                     await driver.wait(until.elementLocated(By.id(inputId)))
-            //                     await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
-            await driver.sleep(1000)
+            await driver.findElement(By.name('dojo.delydt')).sendKeys(coLine.deliveryDate);
+            await driver.sleep(10000)
+            for (let dest of coLine.destinations) {
+                const colorsContainer = await driver.wait(until.elementLocated(By.xpath('//*[@id="COContainer"]')));
+                //*[@id="nameDiv1170OZD001"]/table
+                const colorsTabs = await colorsContainer.findElements(By.tagName('span'));
+                const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="nameDiv1170OZD001"]/table')));
+                const allApps = await apps.findElements(By.tagName('div'));
+                for (const tab of colorsTabs) {
+                    if ((await tab.getAttribute('innerText')) == dest.name) {
+                        await driver.executeScript('arguments[0].click();', tab);
+                        for (let color of dest.colors) {
+                            for (let size of color.sizes) {
+                                const inputId = `${size.name}:${color.name}:${dest.name}`.replace(/\*/g, '');
+                                await driver.wait(until.elementLocated(By.id(inputId)))
+                                await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
+                            }
+                        }
+                    } else if ((await tab.getAttribute('innerText')) == 'ASSORTED') {
+                        await driver.executeScript('arguments[0].click();', tab);
+                        for (let color of dest.colors) {
+                            for (let size of color.sizes) {
+                                const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
+                                await driver.wait(until.elementLocated(By.id(inputId)))
+                                await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
+                            }
+                        }
+                    }
+                }
+            }
+            await driver.sleep(10000)
             // const element = await driver.findElement(By.id('OrderCreateID')).click();
             // await driver.wait(until.elementIsVisible(element), 10000);
             // await driver.switchTo().alert().accept();
@@ -327,8 +352,6 @@ export class DpomService {
             //     const alert = await driver.switchTo().alert();
             //     const alertText = await alert.getText();
             //     console.log('Alert Text:', alertText);
-
-               
             // }
             return new CommonResponseModel(true, 1, `COline created successfully`)
         } catch (err) {

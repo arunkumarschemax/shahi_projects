@@ -288,6 +288,18 @@ export function OrderAcceptance() {
                 dataIndex: 'destinationCountry', width: 75,
             },
             {
+                title: 'Item',
+                dataIndex: 'item', align: 'center', width: 70,
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        const firstFourDigits = text.substring(0, 4);
+                        return firstFourDigits;
+                    }
+                },
+            },
+            {
                 title: 'CO No', width: 70,
                 dataIndex: 'customerOrder',
             },
