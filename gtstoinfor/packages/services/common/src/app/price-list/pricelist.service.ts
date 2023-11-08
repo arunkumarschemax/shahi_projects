@@ -408,13 +408,15 @@ async getAllActivePriceList(): Promise<PriceListResponseModel> {
                     const updatedObj = {};
                     for (const key in obj) {
                         const newKey = key.replace(/\s/g, '_').replace(/[\(\)\.]/g, '').replace(/-/g, '_');
-                        columnArray.push(newKey);
-                        updatedObj[newKey] = obj[key];
+                        if(newKey != ''){
+                            columnArray.push(newKey);
+                            updatedObj[newKey] = obj[key];
+                        }
                     }
                     return updatedObj;
                 });
                 const difference = columnArray.filter((element) => !PriceListColumns.includes(element));
-                if (difference.length > 0) {
+                                if (difference.length > 0) {
                     await transactionManager.releaseTransaction();
                     return new CommonResponseModel(false, 1110, `Excel columns doesn't match. Please attach the correct file.`);
                 }
