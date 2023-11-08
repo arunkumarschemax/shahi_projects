@@ -80,9 +80,9 @@ export const Substitution = () => {
     };
 
     const handleFGDragOver = (event: React.DragEvent<HTMLDivElement>,fgsku) => {
-        console.log(selectedRmSKuObject,'-----------------------')
-        console.log(selectedRmSKuObject.length,'-----------------------')
-        console.log(selectedFgSkuObject,'*******')
+        // console.log(selectedRmSKuObject,'-----------------------')
+        // console.log(selectedRmSKuObject.length,'-----------------------')
+        // console.log(selectedFgSkuObject,'*******')
         // if(selectedRmSKus.length > 0){
         //     const index = selectedRmSKus.findIndex(e => e.fgSkuCode === fgsku)
         //     console.log(index,'**********************')
