@@ -325,9 +325,9 @@ export class DpomService {
                 for (const tab of colorsTabs) {
                     if ((await tab.getAttribute('innerText')) == dest.name) {
                         await driver.executeScript('arguments[0].click();', tab);
-                        for (let color of dest.colors) {
-                            for (let [index, size] of color.sizes.entries()) {
-                                if (index === 0) {
+                        for (let [colorIndex,color] of dest.colors.entries()) {
+                            for (let [sizeIndex, size] of color.sizes.entries()) {
+                                if (colorIndex === 0) {
                                     // Find all the labels in the second row.
                                     await driver.wait(until.elementLocated(By.xpath("//tbody/tr[2]/td/div")))
                                     const labelElements = await driver.findElements(By.xpath("//tbody/tr[2]/td/div"));
