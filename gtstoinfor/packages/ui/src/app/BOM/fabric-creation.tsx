@@ -588,6 +588,8 @@ rmservice.createRm(values).then((res)=>{
                   <Form.Item
                     label="Fabric Code"
                     name="itemCode"
+                    rules={[{ required: true, message: "Enter Fabric Code" }]}
+
                   >
                     <Input placeholder="Enter Fabric Code"/>
                   </Form.Item>
