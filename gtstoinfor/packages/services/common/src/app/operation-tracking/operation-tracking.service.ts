@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationInventoryResponseModel, TrackingEnum, OperationTrackingDto, MaterialFabricEnum } from "@project-management-system/shared-models";
+import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationInventoryResponseModel, TrackingEnum, OperationTrackingDto, MaterialFabricEnum, TabNameReq } from "@project-management-system/shared-models";
 import { Item } from "../items/item-entity";
 import { OperationGroups } from "../operation-groups/operation-groups.entity";
 import { Operations } from "../operations/operation.entity";
@@ -41,6 +41,7 @@ export class OperationTrackingService {
             inventoryEntity.issuedQuantity = dto.issuedQuantity
             inventoryEntity.issuedUomId = dto.issuedUomId
             inventoryEntity.nextOperation = dto.nextOperation
+            // inventoryEntity.materialIssueId = dto.materialIssueId
             await manager.startTransaction();
             const save = await manager.getRepository(OperationInventory).save(inventoryEntity)
 
@@ -105,8 +106,9 @@ export class OperationTrackingService {
 
     }
 
-    async getOperationInventoryData(): Promise<CommonResponseModel> {
-        const details = await this.inventoryRepo.getOperationInventoryData();     
+    async getOperationInventoryData(req: TabNameReq): Promise<CommonResponseModel> {
+        const details = await this.inventoryRepo.getOperationInventoryData(req);
+        console.log(details,'-----------------')
         if (details.length > 0) {
           return new CommonResponseModel(true, 1, 'data retrieved', details)
         } else {

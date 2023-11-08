@@ -1,31 +1,31 @@
 
 export class MaterialTrimDto{
-    materialTrimId:number;
     description:string;
-    colorId: number
     consumption:number;
-    consumptionUom:string;
     uomId:number
     issuedQuantity: number
-    issuedQuantityUom: string
     issuedUomId: number
     remarks:string;
-    createdAt: Date;
-    createdUser: string | null;
+    createdAt?: Date;
+    createdUser?: string | null;
+    consumptionUom?:string;
+    issuedQuantityUom?: string
+    materialTrimId:number;
+    colorId?: number
 
     constructor(
-        materialTrimId:number,
         description:string,
-        colorId: number,
         consumption:number,
-        consumptionUom:string,
         uomId:number,
         issuedQuantity: number,
-        issuedQuantityUom: string,
         issuedUomId: number,
         remarks:string,
-        createdAt: Date,
-        createdUser: string | null,
+        createdAt?: Date,
+        createdUser?: string | null,
+        consumptionUom?:string,
+        issuedQuantityUom?: string,
+        materialTrimId?:number,
+        colorId?: number
     ){
         this.materialTrimId = materialTrimId
         this.description = description

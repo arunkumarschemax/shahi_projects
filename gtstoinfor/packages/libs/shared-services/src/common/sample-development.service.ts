@@ -40,6 +40,78 @@ export class SampleDevelopmentService extends CommonAxiosService {
     console.log(file)
     return await this.axiosPostCall(this.URL + '/fileUpload', file);
   }
+
+  async getSampleRequestReport(): Promise<AllSampleDevReqResponseModel> {
+    return this.axiosPostCall(this.URL + "/getSampleRequestReport")
+  }
+
+  async getSampleDevById(): Promise<any> {
+      const dummyData = [
+          {
+              id:"1",
+            requestNo: "REQ001",
+            date: "2023-08-01",
+            location: "A1F1",
+            pch: "PCH001",
+            user:"Admin",
+            sampleType: "Proto Sample",
+            buyer: "Eswar",
+            styleNo: "STL001",
+            sampleSubType: "T-Shirt",
+            style: "Casual",
+            description: "Plain white cotton t-shirt",
+            brand: "Nike",
+            costRef: "TC001",
+            m3StyleNo: "12345",
+            contactNo: "8885556666",
+            extn: "123",
+            sam: "4.5",
+            dmm: "Rajesh",
+            technician: "Suresh",
+            product:"Kurtha",
+            productType: "Apparel",
+            Conversion: "INR",
+            madeIn: "USA",
+            remarks: "Sample for approval",
+            fabricInfo: [
+              {
+                "fabricCode": "FAB001",
+                "description": "Cotton Fabric",
+                "color": "White",
+                "consumption": "10 meters",
+                "remarks": "High-quality"
+              },
+              {
+                "fabricCode": "FAB002",
+                "description": "Silk Fabric",
+                "color": "Blue",
+                "consumption": "5 meters",
+                "remarks": "Luxurious texture"
+              }
+            ],
+            trimInfo: [
+              {
+                "description": "Buttons",
+                "consumption": "20 pieces",
+                "remarks": "Metallic buttons"
+              },
+              {
+                "description": "Thread",
+                "consumption": "2 spools",
+                "remarks": "Matching color thread"
+              }
+            ]
+          }
+      ]
+      return dummyData
+    }
+  async getFabricCodes(): Promise<UploadResponse> {
+    return await this.axiosPostCall(this.URL + '/getFabricCodes');
+  }
+  async getTrimCodes(): Promise<UploadResponse> {
+    return await this.axiosPostCall(this.URL + '/getTrimCodes');
+  }
+  
   // async getSampleDevById(): Promise<any> {
   //     const dummyData = [
   //         {

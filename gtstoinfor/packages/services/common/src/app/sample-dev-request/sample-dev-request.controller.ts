@@ -117,4 +117,29 @@ export class SampleDevReqController {
       }
     }
 
+    @Post('/getSampleRequestReport')
+    async getSampleRequestReport(): Promise<CommonResponseModel> {
+      try {
+        return await this.sampleService.getSampleRequestReport();
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+      }
+    }
+    @Post('/getFabricCodes')
+    async getFabricCodes(): Promise<CommonResponseModel> {
+      try {
+        return await this.sampleService.getFabricCodes();
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+      }
+    }
+    
+    @Post('/getTrimCodes')
+    async getTrimCodes(): Promise<CommonResponseModel> {
+      try {
+        return await this.sampleService.getTrimCodes();
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+      }
+    }
 }

@@ -8,11 +8,11 @@ const SizeDetail = ({props,buyerId}) => {
   const [count, setCount] = useState(0);
   const [color, setColor] = useState<any[]>([])
   const [sizeData, setSizeData]=useState<any[]>([])
-  const [colorId, setColorId]= useState<number>(null)
   const colorService = new ColourService()
   const buyerDestinaytionService=new BuyerDestinationService()
   const { Option } = Select;
   const [form] = Form.useForm();
+  const [onchangeData, setOnchangeData] = useState([]); 
 
   useEffect(()=>{
     getColors()
@@ -52,31 +52,39 @@ const SizeDetail = ({props,buyerId}) => {
     setCount(count + 1);
   };
 
-    const onchangeData = []; 
-    const handleInputChange = (colourId, sizeId, quantity, recordKey) => {
-      let existingEntry = onchangeData.find((entry) => entry.colour === colourId);
-      if (!existingEntry) {
-        existingEntry = {
-          colour: colourId,
-          sizeInfo: [],
-        };
-        onchangeData.push(existingEntry);
-      }
-      if (quantity !== 0) {
-        let sizeInfoEntry = existingEntry.sizeInfo.find((info) => info.sizeId === sizeId);
-        if (!sizeInfoEntry) {
-          sizeInfoEntry = {
-            sizeId: sizeId,
-            quantity: quantity,
+   const handleInputChange = (colourId, sizeId, quantity,recordKey) => {
+    console.log(recordKey)
+    let newData = [...onchangeData];
+
+    const updatedData = data.map((record) => {
+      if (record.key === recordKey) {
+        let existingEntry = newData.find((entry) => entry.colour === colourId);
+        if (!existingEntry) {
+          existingEntry = {
+            colour: colourId,
+            sizeInfo: [],
           };
-          existingEntry.sizeInfo.push(sizeInfoEntry);
-        } else {
-          sizeInfoEntry.quantity = quantity;
+          newData.push(existingEntry);
+        }
+        if (quantity !== 0) {
+          let sizeInfoEntry = existingEntry.sizeInfo.find((info) => info.sizeId === sizeId);
+          if (!sizeInfoEntry) {
+            sizeInfoEntry = {
+              sizeId: sizeId,
+              quantity: quantity,
+            };
+            existingEntry.sizeInfo.push(sizeInfoEntry);
+          } else {
+            sizeInfoEntry.quantity = quantity;
+          }
         }
       }
-      console.log(onchangeData);
-      // props(onchangeData)
+      console.log(newData)
+      setOnchangeData(newData); 
+      props(newData)
+    });
     };
+
 
   const handleDelete = (key) => {
     const updatedData = data.filter((record) => record.key !== key);
@@ -169,13 +177,6 @@ const SizeDetail = ({props,buyerId}) => {
       dataIndex: 'size',
       width:"10%",
       children :sizeColumns,
-    },
-    {
-      title: 'Confirm',
-      dataIndex: 'action',
-      render: (_, record) => (
-        <Button onClick={() => add()}><Tooltip title="Add"><PlusOutlined /></Tooltip></Button>
-      ),
     },
     {
       title: 'Action',

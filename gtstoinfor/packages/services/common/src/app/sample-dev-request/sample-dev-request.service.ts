@@ -1,11 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
-// import { SampleDevAdapter } from './dto/sample-dev-request.adapter';
-import { AllSampleDevReqResponseModel, CommonResponseModel, SampleDevDto, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleReqResponseModel, UploadResponse } from '@project-management-system/shared-models';
-import { SampleDevReqDto } from './dto/sample-dev-dto';
+import { AllSampleDevReqResponseModel, CommonResponseModel, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, UploadResponse } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -22,8 +17,9 @@ import { SampleReqFabricinfoEntity } from './entities/sample-request-fabric-info
 import { SampleRequestTriminfoEntity } from './entities/sample-request-trim-info-entity';
 import { SampleRequestProcessInfoEntity } from './entities/sample-request-process-info-entity';
 import { SampleRequestRepository } from './repo/sample-dev-req-repo';
-import { SampleRequestDto } from './dto/samle-dev-req';
-import { sample } from 'rxjs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { SamplingbomEntity } from './entities/sampling-bom-entity';
+import { Repository } from 'typeorm';
 
 
 
@@ -35,7 +31,9 @@ export class SampleRequestService {
         // private sampleAdapter: SampleDevAdapter,
         private sizerepo:SampleSizeRepo,
         private fabricRepo:SampleFabricRepo,
-        private sampletrimrepo:SampleTrimRepo
+        private sampletrimrepo:SampleTrimRepo,
+        @InjectRepository(SamplingbomEntity)
+        private bomRepo:Repository<SamplingbomEntity>
 
       ){}
 
@@ -44,15 +42,14 @@ export class SampleRequestService {
       try{
           const details = await this.sampleRepo.getAllSampleDevData(request)
           if(details.length > 0){
-              return new AllSampleDevReqResponseModel(true,0,'All Sample Requests retrieved successfully',details)
+              return new AllSampleDevReqResponseModel(true,32465,'All Sample Requests retrieved successfully',details)
           } else {
-              return new AllSampleDevReqResponseModel(false,1,'No data found',[])
+              return new AllSampleDevReqResponseModel(false,1002,'No data found',[])
           }
       } catch(err) {
           throw err
       }
   }
-
   async getAllSampleData(): Promise<AllSampleDevReqResponseModel> {
     try{
         const details = await this.sampleRepo.find({
@@ -105,7 +102,9 @@ export class SampleRequestService {
 
   async createSampleDevelopmentRequest(req:SampleDevelopmentRequest):Promise<AllSampleDevReqResponseModel>{
     // console.log(req)
-    // console.log(req.sizeData,'#####')
+    // console.log(req.sizeData[0].sizeInfo,'#####')
+    let save
+    let saveBomDetails
     try{
       const sampleId=await this.sampleRepo.getsampleId()
       const maxId= sampleId.id
@@ -113,7 +112,6 @@ export class SampleRequestService {
       const locationEntity = new Location()
       locationEntity.locationId=req.locationId
       sampleReqEntity.location=locationEntity
-      // sampleReqEntity.requestNo=req.requestNo
       sampleReqEntity.requestNo='SAM'+'-'+(Number(maxId) + 1)
       const profitHead = new ProfitControlHead()
       profitHead.profitControlHeadId=req.pchId
@@ -150,7 +148,6 @@ export class SampleRequestService {
       sampleReqEntity.type=req.type
       sampleReqEntity.conversion=req.conversion
       sampleReqEntity.madeIn=req.madeIn
-      // sampleReqEntity.facilityId=req.facilityId
       sampleReqEntity.remarks=req.remarks
       sampleReqEntity.status=req.status
       let sampleSizeInfo =[]
@@ -158,14 +155,13 @@ export class SampleRequestService {
       let sampleTrimInfo =[]
       let sampleProcessInfo =[]
       for(const size of req.sizeData){
-        console.log(size,'sizeeeeeeeeeeeeeeeeeeeeeeeeee')
-        const sizeEntity = new SampleReqSizeEntity()
-        sizeEntity.colourId=size.colourId
-        sizeEntity.sizeId=1
-        sizeEntity.quantity=size.quantity
-        console.log(sizeEntity,'%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-        sampleSizeInfo.push(sizeEntity)
-        console.log(sampleSizeInfo,'sampleSizeInfo')
+        for(const sizedetails of size.sizeInfo){
+          const sizeEntity = new SampleReqSizeEntity()
+          sizeEntity.colourId=size.colour
+          sizeEntity.sizeId=sizedetails.sizeId
+          sizeEntity.quantity=sizedetails.quantity
+         sampleSizeInfo.push(sizeEntity)
+        }
       }
       sampleReqEntity.sampleReqSizeInfo=sampleSizeInfo
       for(const fabricObj of req.fabricInfo){
@@ -174,13 +170,14 @@ export class SampleRequestService {
         fabricEntity.description=fabricObj.description
         fabricEntity.colourId=fabricObj.colourId
         fabricEntity.consumption=fabricObj.consumption
+        fabricEntity.productGroupId=fabricObj.productGroupId
         fabricEntity.remarks=fabricObj.remarks
         sampleFabricInfo.push(fabricEntity)
-        console.log(sampleFabricInfo,'sampleFabricInfo')
       }
       sampleReqEntity.sampleReqFabricInfo=sampleFabricInfo
       for(const trimObj of req.trimInfo){
         const trimEntity = new SampleRequestTriminfoEntity()
+        trimEntity.trimCode=trimObj.trimCode
         trimEntity.consumption=trimObj.consumption
         trimEntity.description=trimObj.description
         trimEntity.remarks=trimObj.remarks
@@ -195,10 +192,20 @@ export class SampleRequestService {
       }
       sampleReqEntity.sampleProcessInfo=sampleProcessInfo
       
-      const save = await this.sampleRepo.save(sampleReqEntity)
-      console.log(sampleReqEntity,'sampleReqEntity')
-      console.log(save,'save')
+       save = await this.sampleRepo.save(sampleReqEntity)
       if(save){
+        for(const fabricData of req.fabricInfo){
+        const quantityWithWastage = Number(fabricData.consumption)+Number((5/100)*fabricData.consumption)
+        const bomEntity = new SamplingbomEntity()
+        bomEntity.sampleRequestId=save.SampleRequestId
+        bomEntity.colourId=fabricData.colourId
+        bomEntity.fabricId=fabricData.fabricCode /// product_gropu_id
+        bomEntity.rmItemId=1 //rm_item_id need to be added
+        bomEntity.requiredQuantity=quantityWithWastage
+         saveBomDetails = await this.bomRepo.save(bomEntity)
+        }
+      }
+      if(save && saveBomDetails){
         return new AllSampleDevReqResponseModel(true,1,'SampleDevelopmentRequest created successfully',[save])
       }
       else{
@@ -210,16 +217,13 @@ export class SampleRequestService {
     }
 
   }
-  
-
-
-  async UpdateFilePath(filePath: string, filename: string, sampleRequestId: number): Promise<UploadResponse> {
+  async UpdateFilePath(filePath: string, filename: string, SampleRequestId: number): Promise<UploadResponse> {
     console.log('upload service id---------------', filePath)
     console.log('upload service id---------------', filename)
-    console.log('upload service id---------------', sampleRequestId)
+    console.log('upload service id---------------', SampleRequestId)
     try {
         let filePathUpdate;   
-            filePathUpdate = await this.sampleRepo.update({SampleRequestId:sampleRequestId},{fileName:filename,filepath:filePath} )
+            filePathUpdate = await this.sampleRepo.update({SampleRequestId:SampleRequestId},{fileName:filename,filepath:filePath} )
         if (filePathUpdate.affected > 0) {
             return new UploadResponse(true, 11, 'uploaded successfully', filePath);
         }
@@ -240,6 +244,59 @@ export class SampleRequestService {
       return new CommonResponseModel(false, 0, 'data not found')
     }
   }
+  
+  async getSampleRequestReport(): Promise<CommonResponseModel> {
+    const data = await this.sampleRepo.getSampleRequestReport();
+  
+    if (data.length > 0) {
+      const groupedData = data.reduce((result, item) => {
+        console.log(item,"sample_request_id")
+        const samplerequestid = item.sample_request_id;
+        const requestno = item.request_no;
+        if (!result[requestno]) {
+          result[requestno] = {
+            request_no: requestno,
+            sample_request_id: samplerequestid,
+            sm: [],
+          };
+        }
+        result[requestno].sm.push(
+          {
+          code: item.fabricCode,
+          consumption: item.fConsumption,
+        },
+        {
+          code: item.trimCode,
+          consumption: item.tConsumption,
+        }
+        );
+        return result;
+      }, {});
+  
+      return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
+    }
+  
+    return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
+  }
 
 
+  async getFabricCodes(): Promise<CommonResponseModel> {
+    const details = 'SELECT ri.product_group_id as productGroupId,rm_item_id AS fabricId,item_code AS fabricCode,ri.product_group_id FROM rm_items ri LEFT JOIN product_group pg ON pg.product_group_id=ri.product_group_id WHERE product_group="Fabric"'     
+    const result= await this.sampleRepo.query(details)
+    if (details.length > 0) {
+      return new CommonResponseModel(true, 1, 'data retrieved', result)
+    } else {
+      return new CommonResponseModel(false, 0, 'data not found',[])
+    }
+  }
+
+  async getTrimCodes(): Promise<CommonResponseModel> {
+    const details = 'SELECT rm_item_id AS trimId,item_code AS trimCode,ri.product_group_id FROM rm_items ri LEFT JOIN product_group pg ON pg.product_group_id=ri.product_group_id WHERE product_group="Packing Trims"'     
+    const result= await this.sampleRepo.query(details)
+    if (details.length > 0) {
+      return new CommonResponseModel(true, 1, 'data retrieved', result)
+    } else {
+      return new CommonResponseModel(false, 0, 'data not found',[])
+    }
+  }
 }

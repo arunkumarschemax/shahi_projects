@@ -145,6 +145,7 @@ import { InventoryView } from "./operation-tracking/inventory"
 import StyleOrderCreation from "./style-orders/style-order-form"
 import MaterialIssueReport from "./sample-development/material-issue-report"
 import StockReport from "./Reports/stock-report"
+import SampleRequestReport from "./Reports/sample-request-report"
 
 
 export const AppRoutes = () => {
@@ -187,8 +188,11 @@ export const AppRoutes = () => {
                 } >
                     <Route path='/user-management/users-from' element={<UserCreationForm />} />
                     <Route path='/user-management/users-view' element={<UsersView />} />
-
+                    
                     <Route path='/stack-report' element={<StockReport/>}/>
+                    <Route path='/sample-request-report' element={<SampleRequestReport/>}/>
+
+                    {/* <Route path='/stack-report' element={<StockReport/>}/> */}
                     <Route path='/masters'>
                     <Route path='m3-itemcodes' element={<M3Masters
                         isUpdate={false}

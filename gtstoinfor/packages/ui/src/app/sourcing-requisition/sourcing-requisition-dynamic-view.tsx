@@ -1,5 +1,5 @@
 import { BarcodeOutlined, CaretDownOutlined, CaretRightOutlined, InfoCircleOutlined, PrinterOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons"
-import { RequisitionService, StyleService } from "@project-management-system/shared-services";
+import { IndentService, RequisitionService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Collapse, Divider, Form, Modal, Row, Segmented, Select, Space, Table, Tag } from "antd"
 import style from "antd/es/alert/style";
 import { ColumnProps } from "antd/es/table";
@@ -19,7 +19,8 @@ export const SourcingRequisitionDynamicView = () => {
     const styleService = new StyleService()
     const [style,setStyle] = useState<any[]>([])
     const navigate = useNavigate()
-    const service = new RequisitionService()
+    // const service = new RequisitionService()
+    const service = new IndentService()
     const logInUser = localStorage.getItem('userName')
     const [barcode, setBarcode] = useState<string>(null);
     const [barcodeModal,setBarcodeModal] = useState<boolean>(false)
@@ -40,7 +41,7 @@ export const SourcingRequisitionDynamicView = () => {
     },[data])
 
     const getAll = () => {
-        service.getAll().then(res => {
+        service.getAllIndentData().then(res => {
             if(res.status){
                 setData(res.data)
             }
@@ -60,10 +61,6 @@ export const SourcingRequisitionDynamicView = () => {
         setBarcodeInfo(info)
         setBarcodeModal(true)
       }
-
-
-
-
 
     const columns : ColumnProps<any>[] = [
         {
@@ -103,14 +100,14 @@ export const SourcingRequisitionDynamicView = () => {
         },
         {
             title:'Weave',
-            dataIndex:'weave',
-            render: (text,record) => {
-                return(
-                    <>
-                    {record.weave ? record.weaveName : '-'}
-                    </>
-                )
-            }
+            dataIndex:'weaveId',
+            // render: (text,record) => {
+            //     return(
+            //         <>
+            //         {record.weave ? record.weaveName : '-'}
+            //         </>
+            //     )
+            // }
         },
         {
             title:'Weight',
@@ -155,25 +152,25 @@ export const SourcingRequisitionDynamicView = () => {
         {
             title:'Color',
             dataIndex:'color',
-            render: (text,record) => {
-                return(
-                    <>
-                    {record.color ? record.colorName : '-'}
-                    </>
-                )
-            }
+            // render: (text,record) => {
+            //     return(
+            //         <>
+            //         {record.color ? record.colorName : '-'}
+            //         </>
+            //     )
+            // }
             
         },
         {
             title:'PCH',
             dataIndex:'pch',
-            render: (text,record) => {
-                return(
-                    <>
-                    {record.pch ? record.pchName : '-'}
-                    </>
-                )
-            }
+            // render: (text,record) => {
+            //     return(
+            //         <>
+            //         {record.pch ? record.pchName : '-'}
+            //         </>
+            //     )
+            // }
             
         },
         {
@@ -335,24 +332,24 @@ export const SourcingRequisitionDynamicView = () => {
         {
           title: 'Size',
           dataIndex: 'size',
-          render: (text,record) => {
-            return(
-                <>
-                {record.size ? record.sizeName : '-'}
-                </>
-            )
-        }
+        //   render: (text,record) => {
+        //     return(
+        //         <>
+        //         {record.size ? record.sizeName : '-'}
+        //         </>
+        //     )
+        // }
         },
         {
           title: 'Color',
           dataIndex: 'color',
-            render: (text,record) => {
-              return(
-                  <>
-                  {record.color ? record.colorName : '-'}
-                  </>
-              )
-          }
+        //     render: (text,record) => {
+        //       return(
+        //           <>
+        //           {record.color ? record.colorName : '-'}
+        //           </>
+        //       )
+        //   }
         },
         {
           title: 'Quantity',
@@ -422,7 +419,7 @@ export const SourcingRequisitionDynamicView = () => {
     }
 
     const HeaderRow = (props: any,) => {
-        const {requestNo,style,styleDescription,expectedDate,indentDate} = props
+        const {requestNo,style,styleDescription,expectedDate,indentDate,status} = props
           
           return (
             <div style={{ display: "flex" }}>
@@ -435,6 +432,8 @@ export const SourcingRequisitionDynamicView = () => {
               <span>Indent Date : {<b>{indentDate}</b>}</span>
               <span style={{width:'10px'}}></span>
               <span>Expected Date : {<b>{expectedDate}</b>}</span>
+              <span style={{width:'10px'}}></span>
+              <span>Status : {<b>{status}</b>}</span>
               {/* <span style={{width:'10px'}}></span>
               <span>{<Tag onClick={() => generateBarcode(requestNo)} style={{cursor:'pointer'}}>
                          <BarcodeOutlined />
@@ -481,11 +480,11 @@ export const SourcingRequisitionDynamicView = () => {
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                     <Form.Item name='requestNo' label='Request Number'>
                     <Select showSearch allowClear optionFilterProp="children" placeholder='Select Request Number'>
-                            <Option key={'REQ001'} value='REQ001'>REQ001</Option>
-                            <Option  key={'REQ002'} value='REQ002'>REQ002</Option>
-                            <Option  key={'REQ003'} value='REQ003'>REQ003</Option>
-                            <Option  key={'REQ004'} value='REQ004'>REQ004</Option>
-                            <Option  key={'REQ005'} value='REQ005'>REQ005</Option>
+                    {data.map(e => {
+                                return(
+                                    <Option key={e.requestNo} value={e.requestNo} name={e.requestNo}> {e.requestNo}</Option>
+                                )
+                            })}
                     </Select>
                     </Form.Item>
                     </Col>
@@ -516,7 +515,7 @@ export const SourcingRequisitionDynamicView = () => {
 
             <Collapse collapsible="icon" expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />} accordion>
                       {tableData.map((item: any, index: any) => (
-                        <Collapse.Panel header={<HeaderRow requestNo={item.requestNo} style={item.style} styleDescription={item.styleDescription} expectedDate={item.expectedDate} indentDate={item.indentDate}/>} key={index} extra={<Tag onClick={() => generateBarcode(item.requestNo,'requestNo')} style={{cursor:'pointer'}}>
+                        <Collapse.Panel header={<HeaderRow requestNo={item.requestNo} style={item.style} styleDescription={item.styleDescription} expectedDate={item.expectedDate} indentDate={item.indentDate}  status={item.status}/>} key={index} extra={<Tag onClick={() => generateBarcode(item.requestNo,'requestNo')} style={{cursor:'pointer'}}>
                         <BarcodeOutlined />
                     </Tag>}>
                         <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}>
@@ -542,12 +541,12 @@ export const SourcingRequisitionDynamicView = () => {
                     />
                     <div>
                         {tabName === 'Fabric' ? (<>
-                        <Table columns={columns} dataSource={item.fabricInfo} pagination={false} scroll={{x:'max-content'}} className="custom-table-wrapper"/>
+                        <Table columns={columns} dataSource={item.iFabricInfo} pagination={false} scroll={{x:'max-content'}} className="custom-table-wrapper"/>
                         </>) : (<></>)}
                     </div>
                     <div>
                         {tabName === 'Trim' ? (<>
-                            <Table columns={columnsSkelton} dataSource={item.trimInfo} pagination={false} scroll={{x:'max-content'}} className="custom-table-wrapper"/>
+                            <Table columns={columnsSkelton} dataSource={item.iTrimsInfo} pagination={false} scroll={{x:'max-content'}} className="custom-table-wrapper"/>
                         </>) : (<></>)}
                     </div>
                     </Space>
