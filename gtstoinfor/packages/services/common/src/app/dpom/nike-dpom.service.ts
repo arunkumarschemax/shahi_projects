@@ -245,6 +245,7 @@ export class DpomService {
     }
 
     async createCOline(req: any): Promise<CommonResponseModel> {
+        let driver = await new Builder().forBrowser(Browser.CHROME).build();
         try {
             const data = await this.dpomRepository.gatDataForColine({ poNumber: req.purchaseOrderNumber, lineNumber: req.poLineItemNumber })
             const firstTenChars = data[0].color_desc.substring(0, 10);
@@ -280,7 +281,6 @@ export class DpomService {
             destinationsArr.push(destinations)
             coLine.destinations = destinationsArr
 
-            let driver = await new Builder().forBrowser(Browser.CHROME).build();
             await driver.get('http://intranetn.shahi.co.in:8080/ShahiExportIntranet/subApp?slNo=2447#');
 
             await driver.findElement(By.id('username')).sendKeys('60566910');
@@ -315,13 +315,11 @@ export class DpomService {
             await driver.findElement(By.name('dojo.EXFACTORYDATE')).sendKeys(coLine.exFactoryDate);
             await driver.wait(until.elementLocated(By.name('dojo.delydt')));
             await driver.findElement(By.name('dojo.delydt')).sendKeys(coLine.deliveryDate);
+
             await driver.sleep(10000)
             for (let dest of coLine.destinations) {
                 const colorsContainer = await driver.wait(until.elementLocated(By.xpath('//*[@id="COContainer"]')));
-                //*[@id="nameDiv1170OZD001"]/table
                 const colorsTabs = await colorsContainer.findElements(By.tagName('span'));
-                const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="nameDiv1170OZD001"]/table')));
-                const allApps = await apps.findElements(By.tagName('div'));
                 for (const tab of colorsTabs) {
                     if ((await tab.getAttribute('innerText')) == dest.name) {
                         await driver.executeScript('arguments[0].click();', tab);
@@ -339,7 +337,8 @@ export class DpomService {
                                     const sizeToInputMap = {};
                                     for (let i = 0; i < labelElements.length; i++) {
                                         const label = (await labelElements[i].getText()).trim().toLowerCase(); // Remove leading/trailing spaces
-                                        sizeToInputMap[label] = inputElements[i];
+                                        if (label.length)
+                                            sizeToInputMap[label] = inputElements[i];
                                     }
                                     const inputField = sizeToInputMap[size.name.trim().toLowerCase()];
 
@@ -348,7 +347,6 @@ export class DpomService {
                                         await inputField.clear();
                                         await inputField.sendKeys(size.price);
                                     }
-
                                 }
                                 const inputId = `${size.name}:${color.name}:${dest.name}`.replace(/\*/g, '');
                                 await driver.wait(until.elementLocated(By.id(inputId)))
@@ -370,19 +368,21 @@ export class DpomService {
                                     // Create a map of size labels to input fields.
                                     const sizeToInputMap = {};
                                     for (let i = 0; i < labelElements.length; i++) {
-                                        const label = (await labelElements[i].getText()).trim().toLowerCase(); // Remove leading/trailing spaces
-                                        sizeToInputMap[label] = inputElements[i];
+                                        const label = (await labelElements[i].getText()).trim().toUpperCase(); // Remove leading/trailing spaces
+                                        console.log(label, 'LLLLLLLLLLL');
+                                        if (label.length)
+                                            sizeToInputMap[label] = inputElements[i];
+                                        console.log(sizeToInputMap, 'SSSSSSSSS')
                                     }
-                                    const inputField = sizeToInputMap[size.name.trim().toLowerCase()];
+                                    const inputField = sizeToInputMap[size.name.trim().toUpperCase()];
 
                                     if (inputField) {
                                         // Clear the existing value (if any) and fill it with the new price.
                                         await inputField.clear();
                                         await inputField.sendKeys(size.price);
                                     }
-
                                 }
-                                const inputId = `${size.name}:${color.name}:${dest.name}`.replace(/\*/g, '');
+                                const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
                                 await driver.wait(until.elementLocated(By.id(inputId)))
                                 await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                             }
