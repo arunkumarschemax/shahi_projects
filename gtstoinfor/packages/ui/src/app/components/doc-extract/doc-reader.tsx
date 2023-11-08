@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { pdfjs } from 'react-pdf';
 import loadingSymbol from '../../../assets/images/1_yE-S7HG0Rg-ACAcnjvKf5Q.gif';
 import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractEfl, extractMsn, extractExpeditors, extractMaersk, extractNagel, extractOocl, extractPDFDataToLinesData, extractFredexfrieght, extractFredexCourier, extractDhlCourierfrieght, extractDhlairduty,  } from './schemax-ai-docx-pdf';
-import { extractAplInvoiceDataFromScanned, extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNagelInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractOoclInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
+import { extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNagelInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractOoclInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 ;
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 export interface DocReaderProps {
@@ -87,6 +87,10 @@ export const DocReader = (props: DocReaderProps) => {
                     processedData = await extractExpeditors(pdfData);
                     console.log('PDF DATA EXPEDITORS:', processedData);
                     break;
+                    case VendorNameEnum.extractedApl:
+                        processedData = await extractApl(pdfData);
+                        console.log('PDF DATA Fredexfrieght:', processedData);
+                        break;
                 case VendorNameEnum.extractedFredexFrieght:
                     processedData = await extractFredexfrieght(pdfData);
                     console.log('PDF DATA Fredexfrieght:', processedData);
@@ -291,21 +295,21 @@ export const DocReader = (props: DocReaderProps) => {
                 //     console.log('PDF DATA Apl:', processedData);
                 //     break;
 
-                case VendorNameEnum.extractedApl: {
-                    const aplPDFData = await extractApl(pdfData);
-                    const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
-                    const allLines = await extractDataFromScannedImages(pageImages, [0, pageImages.length - 1]);
-                    // const allLines = await extractPDFDataToLinesData(pdfData);
-                    const scannedData = await extractAplInvoiceDataFromScanned(allLines);
-                    processedData['extractedData'] = scannedData.extractedData;
-                    // processedData['extractedData']['invoiceAmount']=aplPDFData.extractedData.invoiceAmount;
-                    // processedData['extractedData']['igst']=aplPDFData.extractedData.igst;
-                    // processedData['extractedData']['cgst']=aplPDFData.extractedData.cgst;
-                    // processedData['extractedData']['sgst']=aplPDFData.extractedData.sgst;
+                // case VendorNameEnum.extractedApl: {
+                //     const aplPDFData = await extractApl(pdfData);
+                //     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                //     const allLines = await extractDataFromScannedImages(pageImages, [0, pageImages.length - 1]);
+                //     // const allLines = await extractPDFDataToLinesData(pdfData);
+                //     const scannedData = await extractAplInvoiceDataFromScanned(allLines);
+                //     processedData['extractedData'] = scannedData.extractedData;
+                //     // processedData['extractedData']['invoiceAmount']=aplPDFData.extractedData.invoiceAmount;
+                //     // processedData['extractedData']['igst']=aplPDFData.extractedData.igst;
+                //     // processedData['extractedData']['cgst']=aplPDFData.extractedData.cgst;
+                //     // processedData['extractedData']['sgst']=aplPDFData.extractedData.sgst;
 
-                    processedData['extractedHsnData'] = aplPDFData.extractedHsnData;
-                    break;
-                }
+                //     processedData['extractedHsnData'] = aplPDFData.extractedHsnData;
+                //     break;
+                // }
 
 
                 // case VendorNameEnum.extractedDhl: {
