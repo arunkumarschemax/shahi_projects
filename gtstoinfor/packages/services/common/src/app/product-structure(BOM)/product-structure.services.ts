@@ -136,15 +136,17 @@ export class ProductStructureService {
             if (data.length > 0) {
               const groupedData = data.reduce((result, item) => {
                 const fgItemCode = item.fg_item_code;
-                const fgItemId = item.fg_item_id;
-                if (!result[fgItemId]) {
-                  result[fgItemId] = {
+                const fgItemId = item.fg_rm_id;
+                
+                
+                if (!result[fgItemCode]) {
+                  result[fgItemCode] = {
                     fg_item_id: fgItemId,
                     fg_item_code: fgItemCode,
                     rm_items: [],
                   };
                 }
-                result[fgItemId].rm_items.push({
+                result[fgItemCode].rm_items.push({
                   rm_item_id: item.rm_item_id,
                   rm_item_code: item.rm_item_code,
                   item_type: item.item_type,
