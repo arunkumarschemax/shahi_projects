@@ -182,8 +182,8 @@ export const baseRouterList = [
         children: [
             {
                 label: "Rack Positions",
-                key: "rm-locations-view",
-                path: "rm-locations-view",
+                key: "rackPosition-view",
+                path: "rackPosition-view",
                 filepath: "/rackPosition-view",
             },
             {

@@ -77,14 +77,30 @@ const SampleRequestReport = () => {
                   );
                 }
               },
+              {
+                title:<div style={{ textAlign: 'center' }}>Assigned Qty</div> ,
+                dataIndex: "sm",
+                key: "sm",
+                align:'center',
+                render: (sm) => {
+                  return (
+                    <Table
+                      dataSource={sm}
+                      columns={[
+                        {
+                          dataIndex: "quantity",
+                          key: "quantity", align:'center',
+                        },
+                      ]}
+                      pagination={false}
+                    />
+                  );
+                }
+              },
         // {
-        //     title:"Required Qty",
+        //     title:"Assigned Qty",
         //     dataIndex:""
         // },
-        {
-            title:"Assigned Qty",
-            dataIndex:""
-        },
         {
             title:"PO Qty",
             dataIndex:""

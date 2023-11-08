@@ -146,6 +146,8 @@ import StyleOrderCreation from "./style-orders/style-order-form"
 import MaterialIssueReport from "./sample-development/material-issue-report"
 import StockReport from "./Reports/stock-report"
 import SampleRequestReport from "./Reports/sample-request-report"
+import RackPosition from "./rm_locations/rack-positions"
+import PositionGrid from "./rm_locations/rack-positions grid"
 
 
 export const AppRoutes = () => {
@@ -194,6 +196,8 @@ export const AppRoutes = () => {
 
                     {/* <Route path='/stack-report' element={<StockReport/>}/> */}
                     <Route path='/masters'>
+                    <Route path='rack-position-form' element={<RackPosition />} />
+                    <Route path='rackPosition-view' element={<PositionGrid />} />
                     <Route path='m3-itemcodes' element={<M3Masters
                         isUpdate={false}
                         closeForm={() => { } }
