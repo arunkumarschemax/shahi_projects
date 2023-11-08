@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { ItemCreationAdapter } from './dto/item_creation.adapter';
 import { ItemCreationDto } from './dto/item-creation.dto';
 import { ItemCreation } from './item_creation.entity';
-import { CommonResponseModel, ItemCreFilterRequest } from '@project-management-system/shared-models';
 import { error } from 'console';
 import { ItemCreationRepository } from './item-repo/item-creation.repository';
+import { GenericTransactionManager } from '../../typeorm-transactions';
+import { CoLine } from '../style-order/co-line.entity';
+import { StyleOrder } from '../style-order/style-order.entity';
+import { CommonResponseModel, ItemCreFilterRequest, FgItemCreIdRequest, CustomerOrderStatusEnum, SubContractStatus } from '@project-management-system/shared-models';
 
 
 @Injectable()
@@ -15,6 +18,7 @@ export class ItemCreationService {
         @InjectRepository(ItemCreation) private itemCreationRepository: Repository<ItemCreation>,
         private itemCreationAdapter: ItemCreationAdapter,
         private repository: ItemCreationRepository,
+        private readonly dataSource: DataSource,
 
     ) { }
 
@@ -63,6 +67,26 @@ export class ItemCreationService {
             return err
         }
     }
+    async cancelOrder(req:FgItemCreIdRequest):Promise<CommonResponseModel>{
+        
+        const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
+        try{
+            await transactionalEntityManager.startTransaction();
+            const updateStatus = await transactionalEntityManager.getRepository(ItemCreation).update({fgitemId:req.fgItemId},{isSubContract:SubContractStatus.NO});
+           
+            if(updateStatus.affected > 0){
+                
+                await transactionalEntityManager.completeTransaction();
+                return new CommonResponseModel(true,1,'Item Cancelled Successfully. ',)
+           }
+            else{
+                await transactionalEntityManager.releaseTransaction();
+                return new CommonResponseModel(false,0,'Cancel Item failed. ',)
+            }
+        } catch(err){
+            throw err
+        }
+       }
 }
 
 

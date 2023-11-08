@@ -5,13 +5,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select, DatePicker } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined, CloseSquareOutlined, CloseOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import {   BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, ItemCategoryService, ItemCreationService, ItemTypeService, ItemsService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from '@project-management-system/shared-services';
-import { CompositionDto, ItemCreFilterRequest, LiscenceTypesdDto } from '@project-management-system/shared-models';
+import {   BuyersService, BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, ItemCategoryService, ItemCreationService, ItemTypeService, ItemsService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from '@project-management-system/shared-services';
+import { BuyerExtrnalRefIdReq, CompositionDto, FgItemCreIdRequest, ItemCreFilterRequest, LiscenceTypesdDto, MenusAndScopesEnum, SubContractStatus } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
 import ItemCreation from './item-creation';
 import moment from 'moment';
+import RolePermission from '../roles-permission';
 
 
 const ItemCreationView = () => {
@@ -56,6 +57,13 @@ const ItemCreationView = () => {
          const [form] = Form.useForm();
          const { Option } = Select;
          const { RangePicker } = DatePicker;
+         const [userId, setUserId] = useState([]); 
+    const [loginBuyer,setLoginBuyer] = useState<number>(0)
+    const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+    const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
+  let userRef
+  const buyerService = new BuyersService();
+
 
 
 
@@ -74,12 +82,31 @@ const ItemCreationView = () => {
     getAllEmployes();
     getAllItemType();
     getAllCategory();
+    Login()
   }, [])
 
   const resetHandler = () => {
     form.resetFields();
     getAllfgItemViewData();
 
+}
+const Login = () =>{
+  const req = new BuyerExtrnalRefIdReq
+  if(role === MenusAndScopesEnum.roles.crmBuyer){
+    req.extrnalRefId = externalRefNo
+  }
+  
+  buyerService.getBuyerByRefId(req).then(res=>{
+    if(res.status){
+      setUserId(res.data)
+setLoginBuyer(res.data.buyerId)  
+    }
+  })
+
+}
+const checkAccess = (buttonParam) => {
+  const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Material Creation"],MenusAndScopesEnum.SubMenus["Style Order View"],buttonParam)
+  return !accessValue
 }
     const getAllfgItemViewData= () => {
       const req = new ItemCreFilterRequest();
@@ -335,7 +362,22 @@ const getAllComposition=()=>{
     navigate(`/materialCreation/item-creation-detail-view`,{state:rowData})
     
 }
-
+const cancelOrder =(val:any) =>{
+  
+  const req = new FgItemCreIdRequest(val.fg_item_id)
+  service.cancelItem(req).then(res => {
+    
+    if(res.status){
+      AlertMessages.getSuccessMessage("Item Cancelled successfully. ")
+      // getData(selected);
+    }
+    else{
+      AlertMessages.getWarningMessage("Something went wrong. ")
+    }
+  }).catch(err => {
+    AlertMessages.getErrorMessage("Something went wrong. ")
+  })
+}
   const columnsSkelton: any = [
     {
       title: 'S No',
@@ -369,7 +411,6 @@ const getAllComposition=()=>{
         dataIndex: "item_type_id",
         align:'center',
         render: (data) => {
-          console.log(ItemType,'===');
           
           const style = ItemType.find((loc) => loc.itemTypeId === data);
           return style ? style.itemType : "-";
@@ -470,7 +511,6 @@ const getAllComposition=()=>{
         dataIndex: "sale_person_id",
         render: (data) => {
           const empdata = employedata.find((emp) => emp.employeeId === data);
-          console.log(employedata,"employedata")
           const ftname = `${empdata?.firstName} ${empdata?.lastName}`;
           return ftname ? ftname : '-';
         },
@@ -514,7 +554,6 @@ const getAllComposition=()=>{
         align:'center',
         render: (data) => {
           const Curdata = currency.find((cat) => (cat.currencyId ).toLocaleString() === data);
-          console.log(currency[data], "Curdata")
           return Curdata ? Curdata.currencyName: "-";
         },
 
@@ -581,6 +620,15 @@ const getAllComposition=()=>{
                       <EyeOutlined type="view" />
                     </Button>
                   </Tooltip>
+                  <Divider type="vertical" />
+                  {rowData.status != SubContractStatus.NO  || checkAccess('Cancel') ? 
+      <span>
+          <Button title={"Cancel Order"} onClick={() => cancelOrder(rowData)} >
+            <CloseOutlined />
+          </Button>
+        </span>
+        : ""
+      }
           </span>)
         
     }

@@ -802,7 +802,7 @@ export default function BasicLayout() {
         const menuData = IAMClientAuthContext.menuAccessObject ? IAMClientAuthContext.menuAccessObject : [];
     //   console.log(menuData)
         const processedMenuData = menuData
-        .filter(menuItem => menuItem.menuName !== " Fabric Development" && menuItem.menuName !== " Sample Development")
+        .filter(menuItem => menuItem.menuName !== "Sample Development")
         .map(menuItem => {
             
           const processedSubMenuItems =  menuItem.subMenuData?.map(subMenuItem => (
@@ -849,7 +849,9 @@ export default function BasicLayout() {
                     locale='en-US'
                     siderWidth={240}
                     colorPrimary='#29397d'
-                                        headerContentRender={(props) => props.layout !== 'side' && document.body.clientWidth > 1000 ? <ProBreadcrumb /> : undefined}
+                    breakpoint={false}
+                    selectedKeys={menu}
+                    headerContentRender={(props) => props.layout !== 'side' && document.body.clientWidth > 1000 ? <ProBreadcrumb /> : undefined}
                     logo={<img src={logo} />}
                     layout={'mix'}
                     token={{ header: { colorBgHeader: 'transparent' }, sider: { colorBgMenuItemSelected: colorPrimaryBg } }}
@@ -864,13 +866,9 @@ export default function BasicLayout() {
                         src: 'https://hzdjs.cn/blog/logo.jpg',
                         size: 'small',
                         title: menu.userName,
-                                            }}
-                    // collapsed={collapsed}
-                    onCollapse={toggle}
-                    // onMenuHeaderClick={handleMenuHeaderClick} 
-                    onMenuHeaderClick={(menuId) => {
-                        toggleMenu(menuId);
                     }}
+                    
+                    
                     contentStyle={{ paddingBlock: '10px', paddingInline: '10px' }}
                     actionsRender={(props) => {
                         // if (props.isMobile) return [];
@@ -925,54 +923,55 @@ export default function BasicLayout() {
              </ProLayout> 
         
 
-{/* <div
-                id="main-layout"
-                style={{
-                    height: '100vh',
-                }}
-            >
-                <Layout
+// {/* <div
+//                 id="main-layout"
+//                 style={{
+//                     height: '100vh',
+//                 }}
+//             >
+//                 <Layout
                
-                className="site-layout" style={{ background: ' #f0f2f5' }}>
-                    <Sider
-                        className='layout'
-                        trigger={null}
-                        breakpoint='lg'
-                        collapsedWidth='60'
-                        style={{
-                            overflow: 'auto',
-                            height: '100vh',
-                            position: 'fixed',
-                            left: 0,
-                            background: '#fff',
-                            marginTop: '56px' ,
-                            borderRadius:'5px'
-                        }}
-                    >           
-                    <Menu
-                    theme="light"
-                    mode="inline"
-                    selectedKeys={[key]}
-                >
-                  {getAllSubMenus()}
-                </Menu>         
-                  </Sider>
-                    <CommonHeader key={Date.now()} collapsed={collapsed} toggle={toggle}/>
-                    <Content
-                        className="site-layout-background"
-                        style={{
-                            marginTop: '40px',
-                            padding: 14,
-                            height: '100%',
-                            marginLeft: 198
-                        }}
-                    >
-                        <Outlet />
-                    </Content>
-                    <Footer style={{ textAlign: 'center', background: '#f0f2f5' }}>©2023 Design and Developed by SchemaX</Footer>
-                </Layout>
+//                 className="site-layout" style={{ background: ' #f0f2f5' }}>
+//                     <Sider
+//                         className='layout'
+//                         trigger={null}
+//                         breakpoint='lg'
+//                         collapsedWidth='60'
+//                         style={{
+//                             overflow: 'auto',
+//                             height: '100vh',
+//                             position: 'fixed',
+//                             left: 0,
+//                             background: '#fff',
+//                             marginTop: '56px' ,
+//                             borderRadius:'5px'
+//                         }}
+//                     >           
+//                     <Menu
+//                     theme="light"
+//                     mode="inline"
+//                     selectedKeys={[key]}
+//                 >
+//                   {getAllSubMenus()}
+//                 </Menu>         
+//                   </Sider>
+//                     <CommonHeader key={Date.now()} collapsed={collapsed} toggle={toggle}/>
+//                     <Content
+//                         className="site-layout-background"
+//                         style={{
+//                             marginTop: '40px',
+//                             padding: 14,
+//                             height: '100%',
+//                             marginLeft: 198
+//                         }}
+//                     >
+//                         <Outlet />
+//                     </Content>
+//                     <Footer style={{ textAlign: 'center', background: '#f0f2f5' }}>©2023 Design and Developed by SchemaX</Footer>
+//                 </Layout>
 
-            </div>  */}
-                   </ProConfigProvider>
+//             </div>  */}
+                    </ProConfigProvider>
+
              );
 }
