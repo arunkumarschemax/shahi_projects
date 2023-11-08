@@ -91,6 +91,7 @@ export class ProductStructureService {
               entity.createdUser = req.createdUser  
               entity.rmitemId = data.rmitemId
               entity.rmitemCode = data.rmitemCode
+              entity.operationId = data.operationId
               const save = await this.fgrmRepo.save(entity)
       
 
@@ -164,8 +165,6 @@ export class ProductStructureService {
           
             return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
           }
-          
-          
 
           async getAllSmvData(req?:SMVFilterRequest): Promise<CommonResponseModel> {
             const data = await this.Repo.getSMV(req)
