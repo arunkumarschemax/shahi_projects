@@ -259,12 +259,11 @@ attachedWareHouse:string;
 })
 planner:string;
 
-@Column("varchar",{
+@Column("int",{
     nullable: false,
-    length: 255,
-    name:"business_area"
+    name:"business_area_id"
 })
-businessArea:string;
+businessArea:number;
 
 @Column("int",{
     nullable: false,

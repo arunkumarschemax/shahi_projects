@@ -277,4 +277,51 @@ async getSkuList (req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
     throw err
   }
 }
+
+async getSize(req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
+  try{
+    const getData = await this.itemSkuRepo.getSize(req)
+    // console.log(getData,'dara');
+    
+    if(getData ){
+      return new CommonResponseModel(true,1,'Data retreived',getData)
+    } else{
+      return new CommonResponseModel(false,0,'No data found')
+    }
+
+  } catch(err){
+    throw err
+  }
+}
+
+async getColor(req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
+  try{
+    const getData = await this.itemSkuRepo.getColor(req)
+    // console.log(getData,'dara');
+    
+    if(getData ){
+      return new CommonResponseModel(true,1,'Data retreived',getData)
+    } else{
+      return new CommonResponseModel(false,0,'No data found')
+    }
+
+  } catch(err){
+    throw err
+  }
+}
+async getDestination(req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
+  try{
+    const getData = await this.itemSkuRepo.getDestination(req)
+    // console.log(getData,'dara');
+    
+    if(getData ){
+      return new CommonResponseModel(true,1,'Data retreived',getData)
+    } else{
+      return new CommonResponseModel(false,0,'No data found')
+    }
+
+  } catch(err){
+    throw err
+  }
+}
 }

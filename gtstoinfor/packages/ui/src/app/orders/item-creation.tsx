@@ -3,7 +3,7 @@ import { HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link } from "react-router-dom";
-import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, FactoryService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, ProductGroupService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
+import { BusinessAreaService, BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, FactoryService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, ProductGroupService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
 import { ItemGroupEnum, SubContractStatus } from "@project-management-system/shared-models";
  
 export interface FormProps {
@@ -34,6 +34,9 @@ export function ItemCreation (props: FormProps){
          const itemTypeservice =new ItemTypeService();
          const facilityservice =new FactoryService();
          const proDUCTService = new ProductGroupService();
+         const [Business,setBusiness]= useState([])
+
+          const business = new BusinessAreaService
          const [Product,setProduct] = useState([]);
          const [currencydata,setCurrencyData] = useState([]);
          const [uomdata,setUomData] = useState([]);
@@ -73,6 +76,7 @@ export function ItemCreation (props: FormProps){
             getAllItemGroups();
             getAllGroupTech();
             getAllFacilitys();
+            getAllBusinessArea();
             getAllProducts();
           },[])
           const getAllProducts = () => {
@@ -220,6 +224,7 @@ compositionservice.getActiveComposition().then(res=>{
 //  })
 }
 
+
           const getAllSearchgroup=()=>{
             searchgroup.getActiveSearchGroup().then(res=>{
               if(res.status){
@@ -359,6 +364,16 @@ compositionservice.getActiveComposition().then(res=>{
             //     AlertMessages.getErrorMessage(err.message)
             // })
          }
+ const getAllBusinessArea =()=>{
+  business.getAllBusinessAreaInfo().then(res=>{
+    if(res.status){
+      setBusiness(res.data)
+    }
+  })
+ }
+         
+
+
          const onReset = () => {
           form.resetFields()
       }
@@ -620,10 +635,25 @@ compositionservice.getActiveComposition().then(res=>{
                        </Col>
 
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                          <Form.Item name="businessArea" label="Business Area">
-                          <Input placeholder="Business Area" allowClear />
-
-                          </Form.Item>
+                       <Form.Item
+                    label="Business Area"
+                    name="businessArea"
+                    // rules={[{ required: true, message: "Enter Business Area" }]}
+                  >
+                    <Select
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                    placeholder="Select Business Area"
+                    >
+                      {Business.map((rec)=>(
+                        <option key={rec.businessAreaId} value={rec.businessAreaId}>
+                      {rec.businessAreaName}
+                        </option>
+                      ))}
+                    </Select>
+                    {/* <Input placeholder="Business Area" allowClear /> */}
+                  </Form.Item>
                        </Col>
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                             <Form.Item
@@ -708,6 +738,7 @@ compositionservice.getActiveComposition().then(res=>{
                       </Select>
                       </Form.Item>
                     </Col>
+                   
                         </Row>
 </Card>
 </Col>

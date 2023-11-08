@@ -46,6 +46,9 @@ export const SkuList = () => {
   const [itemData, setItemData] = useState([]);
   const [selectedItemNo, setSelectedItemNo] = useState();
   const [selectedSIze, setSelectedSizeId] = useState(null);
+  const [size, setSize] = useState(null);
+  const [color, setColor] = useState(null);
+  const [destinations, setDestinations] = useState(null);
   const [selectedcolour, setSelectedColourId] = useState(null);
   const [selecteddestination, setSelecteddestinationId] = useState(null);
   const [Value, setValue] = useState("cards");
@@ -69,7 +72,9 @@ export const SkuList = () => {
   useEffect(() => {
     Dropdown();
     getAllData();
-
+    Sizedrop();
+    colordrop();
+    destinationdrop();
   }, []);
 
 
@@ -89,7 +94,7 @@ export const SkuList = () => {
     setSelectedItemNo(data.code);
   };
 
-  const Size = (val, data) => {
+  const Size = (val, data) => {  
     setSelectedSizeId(val);
   };
 
@@ -110,11 +115,44 @@ export const SkuList = () => {
     });
   };
 
+  const colordrop = () => {
+    services.getColor().then((res)=>{
+      if(res){
+        setColor(res.data)
+      }
+    })
+      };
+
+      const destinationdrop = () => {
+        services.getDestination().then((res)=>{
+          if(res){
+            setDestinations(res.data)
+          }
+        })
+          };
+          const Sizedrop = () => {
+            services.getSize().then((res)=>{
+              if(res){
+                setSize(res.data)
+              }
+            })
+              };
+
   const getAllData=()=>{
     const req = new SKUlistFilterRequest()
     if(form.getFieldValue('item_code') !== undefined){
       req.itemsCode=form.getFieldValue('item_code')
     }
+    if(form.getFieldValue('color_id') !== undefined){
+      req.colour=form.getFieldValue('color')
+    }
+    if(form.getFieldValue('size_id') !== undefined){
+      req.size=form.getFieldValue('size')
+    }
+    if(form.getFieldValue('destination_id') !== undefined){
+      req.destinations=form.getFieldValue('destination')
+    }
+
     services.getSkuList(req).then(res=>{
       if(res.status){
 
@@ -122,20 +160,7 @@ export const SkuList = () => {
         
       }
     })
-    service1.getAllStyle().then(res=>{
-      if(res.status){
-        // console.log(res.data,'[[[[[[[[[');
-        
-        setStyle(res.data)
-      }
-    })
-    service2.getAllDivision().then(res=>{
-      if(res.status){
-        // console.log(res.data,'[[[[[[[[[');
-        
-        setDivsion(res.data)
-      }
-    })
+    
   }
 
   const handleSearch = () => {
@@ -315,33 +340,26 @@ export const SkuList = () => {
     },
     {
       title: "Style",
-      dataIndex: "style_id",
-      key: "style_id",
+      dataIndex: "style_file_name",
+      key: "style_file_name",
       width: "300px",
-      sorter: (a, b) => a.style_id.localeCompare(b.style_id),
+      sorter: (a, b) => a.style_file_name.localeCompare(b.style_file_name),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("destination"),
-      render:(data)=>{
   // console.log(data,'id');
   
-  const syle= style.find((style)=>style.styleId === data);
-  // console.log(syle,"ppppp")
-
-  return syle ? syle.style:"N/A"
-}
+ 
+},
       // render: (skus) => skus.map((sku) => sku.destination),
-    },
+   
     {
       title: "Division",
-      dataIndex: "division_id",
+      dataIndex: "division_name",
                 width: "300px",
-      sorter: (a, b) => a.division_id.localeCompare(b.division_id),
+      sorter: (a, b) => a.division_name.localeCompare(b.division_name),
       sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("destination"),
-      render:(data)=>{
-  const syle= divsion.find((div)=>div.divisionId === data);
-  return syle ? syle.divisionName:"N/A"
-}
+      ...getColumnSearchProps("division_name"),
+     
       // render: (skus) => skus.map((sku) => sku.destination),
     },
     {
@@ -439,10 +457,10 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
                   optionFilterProp="children"
                   onChange={(val, text) => Size(val, text)}
                 >
-                  {data?.map((e) => {
+                  {size?.map((e) => {
                     return (
-                      <Option key={e.sizeId} value={e.sizeId} code={e.sizes}>
-                        {e.sizes}
+                      <Option key={e.size_id} value={e.size_id} >
+                        {e.size}
                       </Option>
                     );
                   })}
@@ -459,7 +477,7 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
               <Form.Item
                 style={{ flexDirection: "row" }}
                 label="Colour"
-                name="colour"
+                name="color"
               >
                 <Select
                   placeholder="Select Colour"
@@ -468,10 +486,10 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
                   optionFilterProp="children"
                   onChange={(val, text) => colour(val, text)}
                 >
-                  {data?.map((e) => {
+                  {color?.map((e) => {
                     return (
-                      <Option key={e.colourId} value={e.colourId}>
-                        {e.colour}
+                      <Option key={e.color_id} value={e.color_id}>
+                        {e.color}
                       </Option>
                     );
                   })}
@@ -497,9 +515,9 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
                   optionFilterProp="children"
                   onChange={(val, text) => destination(val, text)}
                 >
-                  {data?.map((e) => {
+                  {destinations?.map((e) => {
                     return (
-                      <Option key={e.destinationsId} value={e.destinationsId}>
+                      <Option key={e.destination_id} value={e.destination_id} >
                         {e.destination}
                       </Option>
                     );
@@ -655,10 +673,10 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
                                     </Descriptions.Item>
                                     
                                     <Descriptions.Item label="Style">
-                             {getStyleName(item.style_id)}
+                             {item.style_file_name}
                                 </Descriptions.Item>
                                 <Descriptions.Item label="Division">
-                                      {getDivisionName(item.division_id)}
+                                     {item.division_name}
                                     </Descriptions.Item>
                                     <Descriptions.Item label="RM Mapping">
                                       {item.rm_mapping_status}
