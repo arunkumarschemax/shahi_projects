@@ -1,7 +1,8 @@
-import { FgItemCodeReq, SKUlistFilterRequest } from "@project-management-system/shared-models";
-import { DivisionService, ItemCreationService, SKUGenerationService, StyleService, ProductStructureService } from "@project-management-system/shared-services";
-import { Card, Col, Form, Row, Select, Table, Tag } from "antd"
+import { FgItemCodeReq, MappedInfo, SKUlistFilterRequest, SubstituionReq, mappedRmSKU } from "@project-management-system/shared-models";
+import { DivisionService, ItemCreationService, SKUGenerationService, StyleService, ProductStructureService, SubstitutionService } from "@project-management-system/shared-services";
+import { Button, Card, Col, Form, Row, Select, Table, Tag } from "antd"
 import { useEffect, useState } from "react";
+import AlertMessages from "../common/common-functions/alert-messages";
 
 const {Option} = Select;
 
@@ -19,13 +20,13 @@ export const Substitution = () => {
     const divisionService = new DivisionService();
     const [rmSkus,setRmSKus] = useState<any[]>([])
     const rmSkuService = new ProductStructureService()
-    const selectedRmSKuObject = []
     const [selectedRmSKus, setSelectedRmSKus] = useState<any[]>([]);
-    const [selectedFgSkuObject,setSelectedFgSkuObject] = useState<any[]>([])
+    // const [selectedFgSkuObject,setSelectedFgSkuObject] = useState<any[]>([])
     const [selectedFgSkus,setSelectedFgSkus] = useState<any[]>([])
-
-      
-
+    let selectedRmSKuObject:any[] = []
+    const [form] = Form.useForm()
+    const service = new SubstitutionService()
+    
 
     useEffect(() => {
         getFgItems()
@@ -66,10 +67,12 @@ export const Substitution = () => {
         
     }
 
+    let selectRmsku;
     const handleRmSkusDragStart = (event: React.DragEvent<HTMLDivElement>, rmsku: any) => {
-        selectedRmSKuObject.push(rmsku)
-        // selectedFgSkuObject.push(new MappedRmSKU(rmsku.rm_item_code,rmsku.rm_item_id,rmsku.rm_sku_id,rmsku.rm_sku_code,null,rmsku.item_type))
-        setSelectedFgSkuObject(rmsku)
+        // selectedRmSKuObject.push(rmsku)
+        selectRmsku = new mappedRmSKU(rmsku.rm_item_code,rmsku.rm_item_id,rmsku.rm_sku_id,rmsku.rm_sku_code,null,rmsku.item_type)
+        selectedRmSKuObject.push(new mappedRmSKU(rmsku.rm_item_code,rmsku.rm_item_id,rmsku.rm_sku_id,rmsku.rm_sku_code,null,rmsku.item_type))
+        // setSelectedFgSkuObject(rmsku)
         // setSelectedRmSKus([...selectedRmSKus,selectedRmSKuObject[0]])
     //   const index =  rmSkus.findIndex(e => {return e.rm_sku_code === rmsku.rm_sku_code})
     //   rmSkus.splice(index,1)
@@ -79,22 +82,34 @@ export const Substitution = () => {
         event.preventDefault();
     };
 
-    const handleFGDragOver = (event: React.DragEvent<HTMLDivElement>,fgsku) => {
-        // console.log(selectedRmSKuObject,'-----------------------')
-        // console.log(selectedRmSKuObject.length,'-----------------------')
-        // console.log(selectedFgSkuObject,'*******')
-        // if(selectedRmSKus.length > 0){
-        //     const index = selectedRmSKus.findIndex(e => e.fgSkuCode === fgsku)
-        //     console.log(index,'**********************')
-        // } else{
-        //     console.log(selectedRmSKuObject,'=======')
-        //     // selectedRmSKuObject.fgSkuCode = fgsku
-        //     // console.log(selectedRmSKuObject,'-----------------')
-        //     setSelectedRmSKus([...selectedRmSKus,selectedRmSKuObject])
-        // }
+    const handleFGDragOver = (event: React.DragEvent<HTMLDivElement>,fgsku,fgskuid) => {
+        if(selectedRmSKus.length > 0){
+            const index = selectedRmSKus.findIndex(e => e.fgSkuCode === fgsku)
+            if(index != -1){
+                const rmskus = []
+                if(selectedRmSKus[index].mappedRmSKuList.length == 1){
+
+                    rmskus.push(selectedRmSKus[index].mappedRmSKuList[0])
+                } else{
+                    rmskus.push(selectedRmSKus[index].mappedRmSKuList)
+                }
+                rmskus.push(selectedRmSKuObject[0])
+                selectedRmSKus[index].mappedRmSKuList = rmskus
+            selectedRmSKuObject =[]
+            } else{
+                const fgskus = new MappedInfo(fgsku,fgskuid,selectedRmSKuObject)
+                setSelectedRmSKus([...selectedRmSKus,fgskus])
+            selectedRmSKuObject =[]
+            }
+        } else{
+            // selectedRmSKuObject[0].fgSkuCode = fgsku
+            const fgskus = new MappedInfo(fgsku,fgskuid,selectedRmSKuObject)
+            console.log(fgskus,'---')
+            setSelectedRmSKus([...selectedRmSKus,fgskus])
+            selectedRmSKuObject =[]
+        }
         event.preventDefault();
     };
-    
 
     const handleAvailableDrop = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -196,12 +211,34 @@ export const Substitution = () => {
         },
     ]
 
+    const onSubmit = () => {
+        const req = new SubstituionReq(fgItemId,form.getFieldValue('fgItemCode'),1,selectedRmSKus)
+        service.createSubstitution(req).then(res => {
+            if(res.status){
+                AlertMessages.getSuccessMessage(res.internalMessage)
+                form.resetFields()
+                setSelectedRmSKus([])
+                setFgSkus([])
+                setRmSKus([])
+            } else{
+                AlertMessages.getErrorMessage(res.internalMessage)
+            }
+        })
+    }
+
+    const onReset = () => {
+        form.resetFields()
+        setSelectedRmSKus([])
+        setFgSkus([])
+        setRmSKus([])
+    }
+
     return(
         <Card title='Substituion' size='small'>
-            <Form>
+            <Form form={form}>
                 <Row gutter={24}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 5 }}>
-                <Form.Item name='fgItemCode' label='FG Item Code'>
+                <Form.Item name='fgItemCode' label='FG Item Code' rules={[{required:true,message:'FG Item Code is required'}]}>
                     <Select placeholder='Select FG Item Code' showSearch allowClear optionFilterProp="children" onChange={onFgItemChange}>
                         {
                             fgItems.map((e) => {
@@ -242,8 +279,9 @@ export const Substitution = () => {
                     size='small'
                     style={{ background: '#f7c78d', marginBottom: '10px',height:'35px'}}
                     draggable
-                    // onDragStart={(event) => handleRmSkusDragStart(event, e)}
-                    onDragEnd={(event) => handleRmSkusDragStart(event, e)}
+                    onDragStart={(event) => handleRmSkusDragStart(event, e)}
+                    // onDragEnd={(event) => handleRmSkusDragStart(event, e)}
+                    // onDrop={(event) => handleRmSkusDragStart(event, e)}
                     >
                         <span style={{ wordWrap: 'break-word' }}>
                             <li style={{ color: 'black',textAlign:'center'}}>{e.rm_sku_code}</li>
@@ -266,22 +304,30 @@ export const Substitution = () => {
                         return(
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 5 }}>
                                 <Card title={rec.sku_code}
-                                onDragOver={(event) => handleFGDragOver(event,rec.sku_code)}
-                                onDrop={handleDrop}
+                                onDragOver={handleDragOver}
+                                onDrop={(event) => handleFGDragOver(event,rec.sku_code,rec.item_sku_id)}
                                 >
                                     {
-                                        selectedRmSKus?.map((rmsku,index) => (
-                                            <Card
-                                            size='small'
-                                            style={{ background: '#f7c78d', marginBottom: '10px',height:'35px' }}
-                                            draggable
-                                            onDragStart={(event) => handleAssignedRmSkusDragStart(event, rmsku,rec.sku_code)}
-                                            >
-                                                <span style={{ wordWrap: 'break-word' }}>
-                                                    <li style={{ color: 'black',textAlign:'center' }}>{rmsku.rm_sku_code}</li>
-                                                </span>
-                                            </Card>
-
+                                        selectedRmSKus?.map((rmskuList,index) => (
+                                            rmskuList.fgSkuCode === rec.sku_code ? (<>
+                                            {
+                                                   rmskuList.mappedRmSKuList.map((rmsku) => (
+                                                    <>
+                                                    <Card
+                                                    size='small'
+                                                    style={{ background: '#f7c78d', marginBottom: '10px',height:'35px' }}
+                                                    draggable
+                                                    onDragStart={(event) => handleAssignedRmSkusDragStart(event, rmsku,rec.sku_code)}
+                                                    >
+                                                        <span style={{ wordWrap: 'break-word' }}>
+                                                            <li style={{ color: 'black',textAlign:'center' }}>{rmsku.rmSKuCode}</li>
+                                                        </span>
+                                                    </Card>
+                                                    </>
+                                                    ))
+                                            }
+                                            </>) : (<></>)
+                                         
                                         ))
                                     }
                                 </Card>
@@ -289,6 +335,14 @@ export const Substitution = () => {
                         )
                     })
                 }
+            </Row>
+            <Row justify={'end'}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 2 }}>
+                <Button onClick={onSubmit} type="primary" disabled={selectedRmSKus.length > 0 ? false: true}>Submit</Button>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 2 }}>
+                <Button onClick={onReset}>Reset</Button>
+                </Col>
             </Row>
                         
         </Card>
