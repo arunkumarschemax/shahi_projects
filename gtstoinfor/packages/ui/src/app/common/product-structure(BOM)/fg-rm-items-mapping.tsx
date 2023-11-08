@@ -5,7 +5,7 @@ import AlertMessages from '../common-functions/alert-messages';
 import Checkbox from 'antd/lib/checkbox';
 import { FgRmMappingRequest, GlobalVariables, OperationsDTO, ProductGroupFilter, RmItemMappingRequest } from '@project-management-system/shared-models';
 import { UndoOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 export const FgRMMappingForm = () => {
@@ -25,6 +25,10 @@ export const FgRMMappingForm = () => {
   const operationsService = new OperationsService();
   const [operationsData, setOperationsData] = useState<OperationsDTO[]>([]);
   const [itemOpMap] = useState(new Map<number,number>())
+  const [selectedCheckbox, setSelectedCheckbox] = useState({});
+  const [selectedCheckbox1, setSelectedCheckbox1] = useState({});
+  let navigate = useNavigate()
+
 
 
  
@@ -60,7 +64,7 @@ export const FgRMMappingForm = () => {
 
 
   const onChange = (checkedValues) => {
-    console.log(checkedValues, "checkedValues");
+    // console.log(checkedValues, "checkedValues");
   
     const selectedComponentDetails = data.filter((option) =>
       checkedValues.includes(option.rmitemId)
@@ -74,6 +78,13 @@ export const FgRMMappingForm = () => {
 
     const rmitemcodes = selectedComponentDetails.map((item) => item.itemCode);
 
+    // added below
+    const updatedSelectedCheckbox = {};
+     data.forEach((option) => {
+    updatedSelectedCheckbox[option.rmitemId] = checkedValues.includes(option.rmitemId);
+  });
+  setSelectedCheckbox(updatedSelectedCheckbox);
+
   };
 
   
@@ -81,7 +92,7 @@ export const FgRMMappingForm = () => {
 
 
   const onChange1 = (checkedValues) => {
-    console.log(checkedValues, "checkedValues")
+    // console.log(checkedValues, "checkedValues")
   
     const selectedComponentDetails = rmData.filter((option) =>
       checkedValues.includes(option.rmitemId)
@@ -95,6 +106,13 @@ export const FgRMMappingForm = () => {
     setFabItems(rmitem)
 
     const rmitemcodes = selectedComponentDetails.map((item) => item.itemCode);
+
+    // added below
+    const updatedSelectedCheckbox = {};
+    rmData.forEach((option) => {
+    updatedSelectedCheckbox[option.rmitemId] = checkedValues.includes(option.rmitemId);
+  });
+  setSelectedCheckbox1(updatedSelectedCheckbox);
   
   };
 
@@ -145,7 +163,7 @@ const getRmItemsDatabyProductGroupId1 = () => {
 
 
  const onFinish =(values)=>{
-  console.log(values,"vvvvv")
+  // console.log(values,"vvvvv")
   if (!rmItems.length && !fabItems.length) {
     message.error('Please select at least one item in Fabric Items or Trims Items');
     return;
@@ -166,6 +184,7 @@ const getRmItemsDatabyProductGroupId1 = () => {
      form.setFieldsValue({ fabricitems: null })
      form.setFieldsValue({ trimitems: null })
       message.success(res.internalMessage);
+      navigate('/product-structure/fg-rm-mapping-view')
      
 
      
@@ -191,8 +210,8 @@ const getRmItemsDatabyProductGroupId1 = () => {
  }
 
 
-  console.log(fgItemsData,"data")
-  console.log(data,"uuu")
+  // console.log(fgItemsData,"data")
+  // console.log(data,"uuu")
 
 
   return (
@@ -201,7 +220,7 @@ const getRmItemsDatabyProductGroupId1 = () => {
     </Link>} >
       <Form layout="horizontal" form={form} onFinish={onFinish}>
       <Row gutter={24}>
-        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5}} lg={{ span:6 }} xl={{ span: 8 }}>
+        <Col xs={{ span: 10 }} sm={{ span: 24 }} md={{ span: 8}} lg={{ span:8 }} xl={{ span: 6 }}>
             <Form.Item label='FG Item Code' name='fgitemId' rules={[{required:true,message:'FG itemCode is required'}]}>
                 <Select showSearch allowClear placeholder='Select Item' onChange={onFgchange} >
                 {fgItemsData.map((rec) => (
@@ -240,7 +259,7 @@ const getRmItemsDatabyProductGroupId1 = () => {
                             </div>
                             <div>
                             <Form.Item name={`fab_operationId_${option.rmitemId}`} >
-                                <Select  placeholder="Select Operation" onChange={(value)=>onOperation(option.rmitemId,value)}>
+                                <Select  placeholder="Select Operation" onChange={(value)=>onOperation(option.rmitemId,value)} disabled={!selectedCheckbox[option.rmitemId]}>
                                 {operationsData.map((e)=>{
                                   return(<Option key={e.operationId} value={e.operationId}>
                                   {e.operationName}
@@ -278,7 +297,7 @@ const getRmItemsDatabyProductGroupId1 = () => {
                             </div>
                             <div>
                             <Form.Item name={`trim_operationId_${option.rmitemId}`} >
-                                <Select  placeholder="Select Operation" onChange={(value)=>onOperation(option.rmitemId,value)} >
+                                <Select  placeholder="Select Operation" onChange={(value)=>onOperation(option.rmitemId,value)} disabled={!selectedCheckbox1[option.rmitemId]} >
                                 {operationsData.map((e)=>{
                                   return(<Option key={e.operationId} value={e.operationId}>
                                   {e.operationName}
