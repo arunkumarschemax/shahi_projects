@@ -325,7 +325,7 @@ export class DpomService {
                 for (const tab of colorsTabs) {
                     if ((await tab.getAttribute('innerText')) == dest.name) {
                         await driver.executeScript('arguments[0].click();', tab);
-                        for (let [colorIndex,color] of dest.colors.entries()) {
+                        for (let [colorIndex, color] of dest.colors.entries()) {
                             for (let [sizeIndex, size] of color.sizes.entries()) {
                                 if (colorIndex === 0) {
                                     // Find all the labels in the second row.
@@ -338,8 +338,8 @@ export class DpomService {
                                     // Create a map of size labels to input fields.
                                     const sizeToInputMap = {};
                                     for (let i = 0; i < labelElements.length; i++) {
-                                      const label = (await labelElements[i].getText()).trim().toLowerCase(); // Remove leading/trailing spaces
-                                      sizeToInputMap[label] = inputElements[i];
+                                        const label = (await labelElements[i].getText()).trim().toLowerCase(); // Remove leading/trailing spaces
+                                        sizeToInputMap[label] = inputElements[i];
                                     }
                                     const inputField = sizeToInputMap[size.name.trim().toLowerCase()];
 
@@ -357,9 +357,32 @@ export class DpomService {
                         }
                     } else if ((await tab.getAttribute('innerText')) == 'ASSORTED') {
                         await driver.executeScript('arguments[0].click();', tab);
-                        for (let color of dest.colors) {
-                            for (let size of color.sizes) {
-                                const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
+                        for (let [colorIndex, color] of dest.colors.entries()) {
+                            for (let [sizeIndex, size] of color.sizes.entries()) {
+                                if (colorIndex === 0) {
+                                    // Find all the labels in the second row.
+                                    await driver.wait(until.elementLocated(By.xpath("//tbody/tr[2]/td/div")))
+                                    const labelElements = await driver.findElements(By.xpath("//tbody/tr[2]/td/div"));
+
+                                    // Find all the input fields in the first row.
+                                    const inputElements = await driver.findElements(By.xpath("//tbody/tr[1]/td/div/input[@name='salespsizes']"));
+
+                                    // Create a map of size labels to input fields.
+                                    const sizeToInputMap = {};
+                                    for (let i = 0; i < labelElements.length; i++) {
+                                        const label = (await labelElements[i].getText()).trim().toLowerCase(); // Remove leading/trailing spaces
+                                        sizeToInputMap[label] = inputElements[i];
+                                    }
+                                    const inputField = sizeToInputMap[size.name.trim().toLowerCase()];
+
+                                    if (inputField) {
+                                        // Clear the existing value (if any) and fill it with the new price.
+                                        await inputField.clear();
+                                        await inputField.sendKeys(size.price);
+                                    }
+
+                                }
+                                const inputId = `${size.name}:${color.name}:${dest.name}`.replace(/\*/g, '');
                                 await driver.wait(until.elementLocated(By.id(inputId)))
                                 await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                             }
