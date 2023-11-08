@@ -118,10 +118,10 @@ export const SampleDevView = () => {
 
 
   const DetailView = (rowData,cancel) => {
-    const navigateData = filterData.filter(req => req.SampleRequestId === rowData)
+    const navigateData = filterData.filter(req => req.sample_request_id === rowData)
     return navigate(`/sample-development/sample-development-detail`, { state: { data: navigateData,cancelVisible : cancel } });
   };
-
+  
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({
       setSelectedKeys,

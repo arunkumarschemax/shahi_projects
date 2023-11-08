@@ -31,34 +31,17 @@ export const SampleRequests = (props: BuyingHouseProps) => {
 
 
   useEffect(() => {
-    getAllSampleData();
+    getAllSampleDevelopment();
     // getReqNo();
   }, []);
 
-  // const getAllSampleDevelopment = () => {
-  //   const req = new SampleFilterRequest()
-  //   if (form.getFieldValue('reqNo') !== undefined) {
-  //     req.reqNo = form.getFieldValue('reqNo')
-  //   }
-  //   Service.getAllSampleDevData().then((res) => {
-  //     console.log(res.data,'------------------------------')
-  //     if (res.data) {
-  //       console.table(res)
-  //       setFilterData(res.data);
-  //       setBuyingHouseData(res.data);
-  //       setReqNo(res.data)
-  //     }
-  //   });
-  // };
-
-  const getAllSampleData = () => {
+  const getAllSampleDevelopment = () => {
     const req = new SampleFilterRequest()
     if (form.getFieldValue('reqNo') !== undefined) {
       req.reqNo = form.getFieldValue('reqNo')
     }
-    Service.getAllSampleData().then((res) => {
-      console.log(res.data)
-     
+    Service.getAllSampleDevData().then((res) => {
+      console.log(res.data,'------------------------------')
       if (res.data) {
         console.table(res)
         setFilterData(res.data);
@@ -68,19 +51,46 @@ export const SampleRequests = (props: BuyingHouseProps) => {
     });
   };
 
+  // const getAllSampleData = () => {
+  //   const req = new SampleFilterRequest()
+  //   if (form.getFieldValue('reqNo') !== undefined) {
+  //     req.reqNo = form.getFieldValue('reqNo')
+  //   }
+  //   Service.getAllSampleData().then((res) => {
+  //     setData(res.data)
+  //     console.log(res.data)
+
+  //     locationService.getAll().then(res=>{
+  //       console.log("*/*/*/*",res.data)
+  //       if(res.status){
+
+
+  //         setLocationData(res.data)
+  //       }
+  //     })
+     
+  //     if (res.data) {
+  //       console.table(res)
+  //       setFilterData(res.data);
+  //       setBuyingHouseData(res.data);
+  //       setReqNo(res.data)
+  //     }
+  //   });
+  // };
+
   const onFinish = () => {
-    getAllSampleData();
+    getAllSampleDevelopment();
   };
 
   const onReset = () => {
     form.resetFields();
-    getAllSampleData();
+    getAllSampleDevelopment();
   };
 
   
 
   const DetailView = (rowData,cancel?) => {
-    const navigateData = filterData.filter(req => req.SampleRequestId === rowData)   
+    const navigateData = filterData.filter(req => req.sample_request_id === rowData)   
     return navigate(`/sample-development/market-issue-detailview`, { state: { data: navigateData, cancelVisible : cancel } });
 
     
@@ -88,9 +98,10 @@ export const SampleRequests = (props: BuyingHouseProps) => {
 
 
   const MarketIssueDetailView = (rowData,cancel?) => {
-    const navigateData = filterData.filter(req => req.SampleRequestId === rowData)
+    const navigateData = filterData.filter(req => req.sample_request_id === rowData)
     console.log("MarketIssueDetailView",rowData)
     return navigate(`/sample-development/store-issue-detail`, { state: { data: navigateData, cancelVisible : cancel } });
+    // return navigate(`/sample-development/store-issue-detail`, { state: { data: [rowData], cancelVisible : cancel } });
 
   };
 
@@ -272,7 +283,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
     },
     {
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "sr_status",
       filters: [
         {
           text: 'Open',
@@ -302,10 +313,10 @@ export const SampleRequests = (props: BuyingHouseProps) => {
             />
           </Tooltip> */}
           <Tooltip title='Detail View'>
-          <EyeOutlined onClick={() => DetailView(rowData.SampleRequestId)} style={{fontSize:'15px',marginLeft:'-5px'}}/>
+          <EyeOutlined onClick={() => DetailView(rowData.sample_request_id)} style={{fontSize:'15px',marginLeft:'-5px'}}/>
           </Tooltip>
           <Divider type="vertical"/>
-          <Button onClick={() => MarketIssueDetailView(rowData.SampleRequestId)} type='primary' disabled={logInUser == 'marketUser' ? true:false}>Issue Material</Button>
+          <Button onClick={() => MarketIssueDetailView(rowData.sample_request_id)} type='primary' disabled={logInUser == 'marketUser' ? true:false}>Issue Material</Button>
         </span>
       ),
     },
