@@ -87,10 +87,7 @@ export function  CompositionForm (props: FormProps) {
                       message:"Composition Description Is Required"
                       
                     },
-                    {
-                      pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                      message: `Should contain only alphabets and numbers.`
-                    }
+                    
                   ]}>
                   <Input placeholder='Enter Composition Description'/>
                 </Form.Item>
