@@ -249,40 +249,7 @@ export class SampleRequestService {
     }
   }
   
-  // async getSampleRequestReport(): Promise<CommonResponseModel> {
-  //   const data = await this.sampleRepo.getSampleRequestReport();
-  
-  //   if (data.length > 0) {
-  //     const groupedData = data.reduce((result, item) => {
-  //       const samplerequestid = item.sample_request_id;
-  //       const requestno = item.request_no;
-  //       if (!result[requestno]) {
-  //         result[requestno] = {
-  //           request_no: requestno,
-  //           sample_request_id: samplerequestid,
-  //           sm: [],
-  //         };
-  //       }
-  //       result[requestno].sm.push(
-  //         {
-  //         code: item.fabricCode,
-  //         consumption: item.fConsumption,
-  //         quantity:item.assigned_quantity,
-  //       },
-  //       {
-  //         code: item.trimCode,
-  //         consumption: item.tConsumption,
-  //         quantity:item.assigned_quantity,
-  //       }
-  //       );
-  //       return result;
-  //     }, {});
-  
-  //     return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
-  //   }
-  
-  //   return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
-  // }
+ 
 
 
   async getFabricCodes(): Promise<CommonResponseModel> {
