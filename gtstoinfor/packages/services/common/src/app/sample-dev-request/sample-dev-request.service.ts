@@ -44,15 +44,14 @@ export class SampleRequestService {
       try{
           const details = await this.sampleRepo.getAllSampleDevData(request)
           if(details.length > 0){
-              return new AllSampleDevReqResponseModel(true,0,'All Sample Requests retrieved successfully',details)
+              return new AllSampleDevReqResponseModel(true,32465,'All Sample Requests retrieved successfully',details)
           } else {
-              return new AllSampleDevReqResponseModel(false,1,'No data found',[])
+              return new AllSampleDevReqResponseModel(false,1002,'No data found',[])
           }
       } catch(err) {
           throw err
       }
   }
-
   async getAllSampleData(): Promise<AllSampleDevReqResponseModel> {
     try{
         const details = await this.sampleRepo.find({
