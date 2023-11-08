@@ -2,6 +2,7 @@ export class SampleFabricReq {
     fabricCode: string
     description: string
     colourId: number
+    productGroupId:number
     consumption?: number
     remarks: string
     fabricInfoId: number;
@@ -9,6 +10,7 @@ export class SampleFabricReq {
         fabricCode: string,
         description: string,
         colourId: number,
+         productGroupId:number,
         consumption: number,
         remarks: string,
         fabricInfoId?: number
@@ -19,6 +21,7 @@ export class SampleFabricReq {
         this.consumption = consumption
         this.remarks = remarks
         this.fabricInfoId = fabricInfoId
+        this.productGroupId=productGroupId
     }
 
 }

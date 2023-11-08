@@ -1,11 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { Any, DataSource, Raw, Repository } from 'typeorm';
+import { DataSource, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
-// import { SampleDevAdapter } from './dto/sample-dev-request.adapter';
-import { AllSampleDevReqResponseModel, CommonResponseModel, SampleDevDto, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleReqResponseModel, UploadResponse } from '@project-management-system/shared-models';
-import { SampleDevReqDto } from './dto/sample-dev-dto';
+import { AllSampleDevReqResponseModel, CommonResponseModel, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, UploadResponse } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -22,6 +19,7 @@ import { SampleReqFabricinfoEntity } from './entities/sample-request-fabric-info
 import { SampleRequestTriminfoEntity } from './entities/sample-request-trim-info-entity';
 import { SampleRequestProcessInfoEntity } from './entities/sample-request-process-info-entity';
 import { SampleRequestRepository } from './repo/sample-dev-req-repo';
+import { SamplingbomEntity } from './entities/sampling-bom-entity';
 import { SampleRequestDto } from './dto/samle-dev-req';
 import { sample } from 'rxjs';
 
@@ -36,7 +34,9 @@ export class SampleRequestService {
         // private sampleAdapter: SampleDevAdapter,
         private sizerepo:SampleSizeRepo,
         private fabricRepo:SampleFabricRepo,
-        private sampletrimrepo:SampleTrimRepo
+        private sampletrimrepo:SampleTrimRepo,
+        @InjectRepository(SamplingbomEntity)
+        private bomRepo:Repository<SamplingbomEntity>
 
       ){}
 
@@ -106,6 +106,8 @@ export class SampleRequestService {
   async createSampleDevelopmentRequest(req:SampleDevelopmentRequest):Promise<AllSampleDevReqResponseModel>{
     // console.log(req)
     // console.log(req.sizeData[0].sizeInfo,'#####')
+    let save
+    let saveBomDetails
     try{
       const sampleId=await this.sampleRepo.getsampleId()
       const maxId= sampleId.id
@@ -157,14 +159,12 @@ export class SampleRequestService {
       let sampleProcessInfo =[]
       for(const size of req.sizeData){
         for(const sizedetails of size.sizeInfo){
-          console.log(sizedetails,'######################')
           const sizeEntity = new SampleReqSizeEntity()
           sizeEntity.colourId=size.colour
           sizeEntity.sizeId=sizedetails.sizeId
           sizeEntity.quantity=sizedetails.quantity
          sampleSizeInfo.push(sizeEntity)
         }
-        console.log(sampleSizeInfo,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
       }
       sampleReqEntity.sampleReqSizeInfo=sampleSizeInfo
       for(const fabricObj of req.fabricInfo){
@@ -173,9 +173,9 @@ export class SampleRequestService {
         fabricEntity.description=fabricObj.description
         fabricEntity.colourId=fabricObj.colourId
         fabricEntity.consumption=fabricObj.consumption
+        fabricEntity.productGroupId=fabricObj.productGroupId
         fabricEntity.remarks=fabricObj.remarks
         sampleFabricInfo.push(fabricEntity)
-        console.log(sampleFabricInfo,'sampleFabricInfo')
       }
       sampleReqEntity.sampleReqFabricInfo=sampleFabricInfo
       for(const trimObj of req.trimInfo){
@@ -195,10 +195,20 @@ export class SampleRequestService {
       }
       sampleReqEntity.sampleProcessInfo=sampleProcessInfo
       
-      const save = await this.sampleRepo.save(sampleReqEntity)
-      console.log(sampleReqEntity,'sampleReqEntity')
-      console.log(save,'save')
+       save = await this.sampleRepo.save(sampleReqEntity)
       if(save){
+        for(const fabricData of req.fabricInfo){
+        const quantityWithWastage = Number(fabricData.consumption)+Number((5/100)*fabricData.consumption)
+        const bomEntity = new SamplingbomEntity()
+        bomEntity.sampleRequestId=save.SampleRequestId
+        bomEntity.colourId=fabricData.colourId
+        bomEntity.fabricId=fabricData.fabricCode /// product_gropu_id
+        bomEntity.rmItemId=1 //rm_item_id need to be added
+        bomEntity.requiredQuantity=quantityWithWastage
+         saveBomDetails = await this.bomRepo.save(bomEntity)
+        }
+      }
+      if(save && saveBomDetails){
         return new AllSampleDevReqResponseModel(true,1,'SampleDevelopmentRequest created successfully',[save])
       }
       else{
@@ -275,7 +285,7 @@ export class SampleRequestService {
 
 
   async getFabricCodes(): Promise<CommonResponseModel> {
-    const details = 'SELECT rm_item_id AS fabricId,item_code AS fabricCode,ri.product_group_id FROM rm_items ri LEFT JOIN product_group pg ON pg.product_group_id=ri.product_group_id WHERE product_group="Fabric"'     
+    const details = 'SELECT ri.product_group_id as productGroupId,rm_item_id AS fabricId,item_code AS fabricCode,ri.product_group_id FROM rm_items ri LEFT JOIN product_group pg ON pg.product_group_id=ri.product_group_id WHERE product_group="Fabric"'     
     const result= await this.sampleRepo.query(details)
     if (details.length > 0) {
       return new CommonResponseModel(true, 1, 'data retrieved', result)
