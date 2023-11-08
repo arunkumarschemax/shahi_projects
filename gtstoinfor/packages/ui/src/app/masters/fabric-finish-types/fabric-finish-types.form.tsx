@@ -82,7 +82,7 @@ export function FabricFinishTypesForm(
 
   return (
 
-    <Card title={props.isUpdate ? 'Update Fabric Finish Type' : 'Add Fabric Finish Type'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/fabric-finish-type/fabric-finish-type-grid')} type={'primary'}>View</Button></span>}>
+    <Card title={props.isUpdate ? ' Fabric Finish Type' : 'Fabric Finish Type'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/fabric-finish-type/fabric-finish-type-grid')} type={'primary'}>View</Button></span>}>
     <Form layout="vertical" form={form} onFinish={saveData} initialValues={props.FabriFinishTypesData} >
     <Form.Item name="fabricFinishTypeId" style={{ display: 'none' }}>
         <Input hidden />
@@ -93,7 +93,7 @@ export function FabricFinishTypesForm(
       </Form.Item>
       <Row>
      
-        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}}>
         <Form.Item
           name="fabricFinishType"
           label="Fabric Finish Type"
@@ -109,7 +109,7 @@ export function FabricFinishTypesForm(
             }
           ]}
         >
-          <Input/>
+          <Input placeholder='Enter Fabric Finish Type'/>
         </Form.Item>
         </Col>
         </Row>

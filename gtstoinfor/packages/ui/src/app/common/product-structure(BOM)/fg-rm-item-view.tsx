@@ -178,9 +178,114 @@ const columns: any = [
           dataSource={rmItems}
           columns={[
             {
-              // title: "RM Item Code",
               dataIndex: "rm_item_code",
               key: "rm_item_code", align:'center',
+            },
+           
+          ]}
+          pagination={false}
+        />
+      );
+    }
+  },
+  {
+    title:<div style={{ textAlign: 'center' }}>Item Type</div> ,
+    dataIndex: "rm_items",
+    key: "rm_items",
+    align:'center',
+    render: (rmItems) => {
+      return (
+        <Table
+          dataSource={rmItems}
+          columns={[
+            
+            {
+              dataIndex: "item_type",
+              key: "item_type", align:'center',
+            },
+          ]}
+          pagination={false}
+        />
+      );
+    }
+  },
+  {
+    title:<div style={{ textAlign: 'center' }}>Item Group</div> ,
+    dataIndex: "rm_items",
+    key: "rm_items",
+    align:'center',
+    render: (rmItems) => {
+      return (
+        <Table
+          dataSource={rmItems}
+          columns={[
+            {
+              dataIndex: "item_group",
+              key: "item_group", align:'center',
+            },
+          ]}
+          pagination={false}
+        />
+      );
+    }
+  },
+  {
+    title:<div style={{ textAlign: 'center' }}>Is Sub Contract</div> ,
+    dataIndex: "rm_items",
+    key: "rm_items",
+    align:'center',
+    render: (rmItems) => {
+      return (
+        <Table
+          dataSource={rmItems}
+          columns={[
+           
+            {
+              dataIndex: "is_sub_contract",
+              key: "rm_item_code", align:'center',
+            },
+           
+          ]}
+          pagination={false}
+        />
+      );
+    }
+  },
+  {
+    title:<div style={{ textAlign: 'center' }}>Facility</div> ,
+    dataIndex: "rm_items",
+    key: "rm_items",
+    align:'center',
+    render: (rmItems) => {
+      return (
+        <Table
+          dataSource={rmItems}
+          columns={[
+           
+           
+            {
+              dataIndex: "facility",
+              key: "facility", align:'center',
+            }, 
+          ]}
+          pagination={false}
+        />
+      );
+    }
+  },
+  {
+    title:<div style={{ textAlign: 'center' }}>Season</div> ,
+    dataIndex: "rm_items",
+    key: "rm_items",
+    align:'center',
+    render: (rmItems) => {
+      return (
+        <Table
+          dataSource={rmItems}
+          columns={[
+            {
+              dataIndex: "season",
+              key: "season", align:'center',
             }
           ]}
           pagination={false}

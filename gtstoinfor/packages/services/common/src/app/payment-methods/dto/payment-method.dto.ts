@@ -9,7 +9,7 @@ export class PaymentMethodDTO{
   paymentMethodId: number;
 
     @ApiProperty()
-    @MaxLength(15,{message:"Payment Method allows maxmum 15 characters"})
+    // @MaxLength(15,{message:"Payment Method allows maxmum 15 characters"})
     @IsNotEmpty()
     paymentMethod:string;
     @ApiProperty()

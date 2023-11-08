@@ -1,10 +1,30 @@
-import { FeatureResponseModel, OptionEnum, RmSkuReq, RmSkuResponseModel } from "@project-management-system/shared-models";
+import { FeatureResponseModel, OptionEnum, RMSkuFilterReq, RmSkuReq, RmSkuResponseModel } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 export class RmSkuService extends CommonAxiosService{
     URL = '/rm-skus';
 
     async createRmSkus(req: RmSkuReq): Promise<RmSkuResponseModel> {
         return this.axiosPostCall(this.URL + "/createRmSku", req)
+    }
+
+    async getAllRmSKUs(req: RMSkuFilterReq): Promise<RmSkuResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllRmSKUs",req)
+    }
+
+    async getSKUCodeData(): Promise<RmSkuResponseModel> {
+        return this.axiosPostCall(this.URL + "/getSKUCodeData")
+    }
+
+    async getFeatureCodeData(): Promise<RmSkuResponseModel> {
+        return this.axiosPostCall(this.URL + "/getFeatureCodeData")
+    }
+
+    async getItemCodeData(): Promise<RmSkuResponseModel> {
+        return this.axiosPostCall(this.URL + "/getItemCodeData")
+    }
+
+    async getOptionValueData(): Promise<RmSkuResponseModel> {
+        return this.axiosPostCall(this.URL + "/getOptionValueData")
     }
 
     async getFeatures(): Promise<FeatureResponseModel> {

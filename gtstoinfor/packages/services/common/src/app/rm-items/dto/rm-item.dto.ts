@@ -124,7 +124,7 @@ export class RmCreationDto{
     useInOperation:string
 
     @ApiProperty()
-    businessArea:string
+    businessArea:number
 
     @ApiProperty()
     attachedWareHouse:string

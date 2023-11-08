@@ -93,7 +93,7 @@ export const ColourForm=(props:ColourFromProps)=>{
 
       return(
         <Card title={props.isUpdate ?
-        'Colours':'Colours'}
+        'Colour':'Colour'}
         //  headStyle={{ border: 0 }} 
         extra={(props.isUpdate ===false) && <span ><Button onClick={()=> navigate('/masters/colour/colour-view')} 
           type={'primary'} >View </Button> </span>}>
@@ -160,8 +160,8 @@ onFinish={saveData}>
                   message: " Option Group Is Required",
                 },
                 {
-                  pattern:
-                    /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+                  // pattern:
+                    // /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
                   message: `Option Group Should contain only alphabets.`,
                 },
               ]}
@@ -205,7 +205,6 @@ onFinish={saveData}>
               message:' Colour Is Required'
             },
             {
-              pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
               message: `Colour Should contain only alphabets.`
             }
           ]}

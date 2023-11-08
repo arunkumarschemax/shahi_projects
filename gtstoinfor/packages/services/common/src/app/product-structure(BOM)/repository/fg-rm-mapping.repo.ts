@@ -6,6 +6,9 @@ import { FgItemCodeReq } from "@project-management-system/shared-models";
 import { RmSkus } from "../../rm-skus/rm-sku.entity";
 import { FeatureEntity } from "../../feature-creation/entities/feature.entity";
 import { RmMappingFilterRequest } from "@project-management-system/shared-models";
+import { ItemCreation } from "../../fg-item/item_creation.entity";
+import { ItemTypeEntity } from "../../item-type/item-type.entity";
+import { FactoriesEntity } from "../../factories/factories.entity";
 
 @Injectable()
 export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
@@ -25,9 +28,13 @@ export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
     }
 
     async getAllFgRmMapped(req: RmMappingFilterRequest ): Promise<any[]> {
-        const query = this.createQueryBuilder('fg')
-        .select(`*`).where('1=1'); 
-      
+        const query = this.createQueryBuilder('fgm')
+        .select(`fgm.rm_item_code AS rm_item_code , item_type,fgi.item_group,fgm.fg_rm_id , fgm.fg_item_code ,fgi.is_sub_contract ,fgi.order_qty ,f.name AS facility ,fgi.season`) 
+      .leftJoin(ItemCreation,'fgi','fgi.fg_item_id = fgm.fg_item_id')
+      .leftJoin(ItemTypeEntity,'it','it.item_type_id = fgi.item_type_id')
+      .leftJoin(FactoriesEntity,'f','f.id = fgi.facility_id')
+
+      .where('1=1');
         if (req.fgItemCode !== undefined) {
           query.andWhere(`fg_item_code = :fgCode`, { fgCode: req.fgItemCode }); 
         }

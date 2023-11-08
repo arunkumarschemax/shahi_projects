@@ -82,7 +82,7 @@ export interface FabricTypeFormProps{
 <FormItem name="createdUser"  initialValue={createdUser} style={{display:'none'}}>
     <Input hidden/>
 </FormItem>
-<Row><Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}> <Form.Item
+<Row><Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}}> <Form.Item
           name="fabricTypeName"
           label="fabric Type "
           rules={[
@@ -96,7 +96,7 @@ export interface FabricTypeFormProps{
             }
           ]}
         >
-          <Input />
+          <Input placeholder=' enter Faabric type'/>
         </Form.Item>
         </Col>
         </Row>

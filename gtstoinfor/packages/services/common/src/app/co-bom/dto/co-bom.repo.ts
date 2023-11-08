@@ -33,9 +33,9 @@ export class CoBomRepository extends Repository<CoBom>{
     async getDataForMOPByCoNumber(req?:StyleOrderId):Promise<any>{
         const query = await this.createQueryBuilder('cobom')
         .select(`cobom.co_number as coNumber ,cobom.quantity as quantity,cobom.co_line_number as coLineNumber,cobom.fg_sku as fgSkuId,cobom.co_id as coId,
-        fgitbo.rm_item_code as rmitemCode,fgitbo.rm_sku_id as rmSkuId,fgitbo.consumption,fgitbo.item_type_id as itemTypeId,fgitbo.item_group_id as itemgroup,fgitbo.item_type as ItemType,fgitbo.rm_item_id as rmitemId,
+        fgitbo.rm_item_code as rmitemCode,fgitbo.rm_sku_id as rmSkuId,fgitbo.consumption,fgitbo.item_type_id as itemTypeId,fgitbo.item_group_id as itemgroup,fgitbo.rm_item_id as rmitemId,
         rmsku.item_type as itemType,rmsku.rm_sku_code as rmSkuCode,rmsku.feature_code as featureCode,rmsku.status as Status,rmsku.feature_option_id,rmsku.option_group,rmsku.option_id,rmsku.option_value,
-        itsku.sku_code,itsku.status,itsku.po_number,itsku.po_line_number,itsku.item_code,itsku.size,itsku.color,itsku.destination,itsku.destination_id,itsku.color_id,
+        itsku.sku_code as fgSkuCode,itsku.status,itsku.po_number,itsku.po_line_number,itsku.item_code as fgSkuItemCode,itsku.size,itsku.color,itsku.destination,itsku.destination_id,itsku.color_id,
         rmitem.is_imported_item as isImpItem `)
         .leftJoin(FgItemBom,'fgitbo','fgitbo.fgItemBomId= cobom.fgItemBomId')
         .leftJoin(RmSkus,'rmsku','rmsku.rm_sku_id = fgitbo.rm_sku_id')

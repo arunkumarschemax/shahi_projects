@@ -11,7 +11,7 @@ export class PaymentMethod{
     paymentMethodId:number;
     @Column("varchar",{
         nullable: true,
-        length:15,
+        // length:15,
         name:"payment_method"
     })
     paymentMethod:string;
