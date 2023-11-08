@@ -59,7 +59,6 @@ return response;
     async getRmItemsData(): Promise<CommonResponseModel> {
         try {
        const data = await this.Rmrepository.find()
-       console.log(data,'-----------')
        return new CommonResponseModel(true, 0, "Rm ItemsData  retrieved  successfully", data);
     
           } catch (err) {
@@ -69,13 +68,11 @@ return response;
 
      async getRmItemsDatabyProductGroupId(req:productGroupDto): Promise<CommonResponseModel> {
             try {
-                console.log(req,"ser")
            const data = await this.Rmrepository.find({
             where:{
                productGroupId:req.productGroupId
             }
            })
-           console.log(data,'-----------')
            return new CommonResponseModel(true, 0, "Data  retrieved  successfully", data);
         
               } catch (err) {

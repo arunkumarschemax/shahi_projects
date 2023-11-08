@@ -15,18 +15,9 @@ export const StyleOrderDetailView = () => {
   const stateData = location.state;
   const [page, setPage] = React.useState(1);
   const navigate = useNavigate();
-  const[paymentTermsId,setPaymentTermsId] = useState();
-  const paymentTermsService = new PaymentTermsService()
-  const[packingTermsId,setPackingTermsId] = useState('');
-  const packingTermsService = new PackageTermsService()
-  const[paymentMethodId,setPaymentMethodId] = useState('');
-  const paymentMethodService = new PaymentMethodService()
-  const[wareHouseId,setWareHouseId] = useState('');
-  const warehouseService = new WarehouseService()
-  const deliveryTermService = new DeliveryTermsService();
-  const[deliveryTerm,setDeliveryTerm] = useState('');
-    const deliveryMethodService = new DeliveryMethodService();
-    const[deliveryMethod,setDeliveryMethod] = useState('');
+  const [detailsData, setDetailsData] = useState<any[]>([]);
+  const [total,setTotalQty] =  useState<number>(0)
+let val =0
   console.log(stateData, "idddddddd");
 
   useEffect(() => {
@@ -37,44 +28,60 @@ export const StyleOrderDetailView = () => {
     return !accessValue
 }
   const getData = () => {
-    const req = new styleOrderReq(undefined, stateData.id);
-    console.log(req, "reqqqqqqqqqqq");
+    // const Idreq = new styleOrderReq(stateData.fg_item_id)
+    console.log(stateData, "reqqqqqqqqqqq");
 
+    const req = new styleOrderReq(stateData.fg_item_id,stateData.co_id);
+    console.log(req,'reqs');
+    
+    service.getAllStyleOrdersByItem(req).then(res => {
+      if(res.status){
+        console.log(res.data[0].buyer_name,'resssssss');
+        
+          setDetailsData(res.data)
+          res.data.map(e =>{ 
+            // const totalQuantity = res.data.reduce((total, item) => total + item.qty, 0);
+            // setTotalQty(totalQuantity);
+            // val = val+Number(e?.qty)
+            // setTotalQty(val?val:0)
+           })
+           
+          }
+ 
+    
+      
+  })
     service.getAllCoLinesById(req).then((res) => {
       if (res.status) {
         setData(res.data);
       }
     });
-    warehouseService.getAllActiveWarehouse().then(res=>{
-        if(res.status){
-              setWareHouseId(res.data[0].warehouseName)
-             }
-      })
-    paymentTermsService.getAllActivePaymentTerms().then(res=>{
-        if(res.status){
-              setPaymentTermsId(res.data[0].paymentTermsName)
-        }
-      })
-      packingTermsService.getAllActivePackageTerms().then(res=>{
-        if(res.status){
-              setPackingTermsId(res.data[0].packageTermsName)
-             }
-      })
-      paymentMethodService.getAllActiveMethod().then(res=>{
-        if(res.status){
-              setPaymentMethodId(res.data[0].paymentMethod)
-             }
-      })
-      deliveryTermService.getAllActiveDeliveryTerms().then(res=>{
-        if(res.status){
-              setDeliveryTerm(res.data[0].deliveryTermsName)
-        }
-      })
-      deliveryMethodService.getAllDeliveryMethods().then(res=>{
-        if(res.status){
-              setDeliveryMethod(res.data[0].deliveryMethod)
-        }
-      })
+   
+    // paymentTermsService.getAllActivePaymentTerms().then(res=>{
+    //     if(res.status){
+    //           setPaymentTermsId(res.data[0].paymentTermsName)
+    //     }
+    //   })
+    //   packingTermsService.getAllActivePackageTerms().then(res=>{
+    //     if(res.status){
+    //           setPackingTermsId(res.data[0].packageTermsName)
+    //          }
+    //   })
+    //   paymentMethodService.getAllActiveMethod().then(res=>{
+    //     if(res.status){
+    //           setPaymentMethodId(res.data[0].paymentMethod)
+    //          }
+    //   })
+    //   deliveryTermService.getAllActiveDeliveryTerms().then(res=>{
+    //     if(res.status){
+    //           setDeliveryTerm(res.data[0].deliveryTermsName)
+    //     }
+    //   })
+    //   deliveryMethodService.getAllDeliveryMethods().then(res=>{
+    //     if(res.status){
+    //           setDeliveryMethod(res.data[0].deliveryMethod)
+    //     }
+    //   })
   };
 
   const cancelOrder =(val:any) =>{
@@ -169,7 +176,7 @@ export const StyleOrderDetailView = () => {
     >
       <Descriptions>
         <Descriptions.Item
-          children={stateData.co_number}
+          children={detailsData?.[0]?.co_number}
           label={"CO Number"}
           labelStyle={{
             color: "black",
@@ -178,7 +185,7 @@ export const StyleOrderDetailView = () => {
           }}
         />
          <Descriptions.Item
-          children={stateData.buyer}
+          children={detailsData?.[0]?.buyer_name}
           label={"Buyer"}
           labelStyle={{
             color: "black",
@@ -187,7 +194,7 @@ export const StyleOrderDetailView = () => {
           }}
         />
          <Descriptions.Item
-          children={stateData.qty}
+          children={detailsData?.[0]?.qty}
           label={"Order Quantity"}
           labelStyle={{
             color: "black",
@@ -195,17 +202,17 @@ export const StyleOrderDetailView = () => {
             fontWeight: "bolder",
           }}
         />
-           <Descriptions.Item
-          children={stateData.shipment_type}
+           {/* <Descriptions.Item
+          children={detailsData?.[0]?.shipment_type}
           label={"Shipment Type"}
           labelStyle={{
             color: "black",
             fontStyle: "italic",
             fontWeight: "bolder",
           }}
-        />  
+        />   */}
          <Descriptions.Item
-        children={stateData.buyer_po_number}
+        children={detailsData?.[0]?.buyer_po_number}
         label={"Buyer PO Number"}
         labelStyle={{
           color: "black",
@@ -214,7 +221,7 @@ export const StyleOrderDetailView = () => {
         }}
       /> 
         <Descriptions.Item
-      children={paymentTermsId}
+      children={detailsData?.[0]?.payment_terms_name}
       label={"Payment Terms"}
       labelStyle={{
         color: "black",
@@ -223,7 +230,7 @@ export const StyleOrderDetailView = () => {
       }}
     />   
     <Descriptions.Item
-    children={paymentMethodId}
+    children={detailsData?.[0]?.payment_method}
     label={"Payment Method"}
     labelStyle={{
       color: "black",
@@ -232,7 +239,7 @@ export const StyleOrderDetailView = () => {
     }}
   />
      <Descriptions.Item
-    children={packingTermsId}
+    children={detailsData?.[0]?.package_terms_name}
     label={"Packing Terms"}
     labelStyle={{
       color: "black",
@@ -241,7 +248,7 @@ export const StyleOrderDetailView = () => {
     }}
   />
       <Descriptions.Item
-    children={wareHouseId}
+    children={detailsData?.[0]?.warehouse_name}
     label={"Ware House"}
     labelStyle={{
       color: "black",
@@ -250,7 +257,7 @@ export const StyleOrderDetailView = () => {
     }}
   />
         <Descriptions.Item
-    children={deliveryMethod}
+    children={detailsData?.[0]?.delivery_method}
     label={"Delivery Method"}
     labelStyle={{
       color: "black",
@@ -259,7 +266,7 @@ export const StyleOrderDetailView = () => {
     }}
   />
         <Descriptions.Item
-    children={deliveryTerm}
+    children={detailsData?.[0]?.delivery_terms_name}
     label={"Delivery Term"}
     labelStyle={{
       color: "black",

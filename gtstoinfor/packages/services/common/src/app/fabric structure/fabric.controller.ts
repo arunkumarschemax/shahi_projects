@@ -7,8 +7,8 @@ import { FabricStructuresService } from './fabric.service';
 import { FabricStructureIdRequest } from './dto/fabric.id-request';
 import { FabricStructureRequest } from './dto/fabric.request';
 
-@ApiTags('fabric-structures')
-@Controller('fabric-structures')
+@ApiTags('fabric-structure')
+@Controller('fabric-structure')
 export class FabricStructuresController {
 
 

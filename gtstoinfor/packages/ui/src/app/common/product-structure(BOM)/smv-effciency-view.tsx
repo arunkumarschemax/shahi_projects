@@ -178,13 +178,12 @@ const columns: any = [
     },
     {
       title: 'Operation',
-      dataIndex: 'operation_id',
+      dataIndex: 'operation_name',
       align: 'center',
-      render: (data) => {
-        const opdata = operationsData.find((cat) => cat.operationId  === data);
-        return opdata ? opdata.operationName: "-";
-      },
-      // sorter: (a, b) => a.feature_code?.localeCompare(b.feature_code),
+     render:(data)=>{
+      return data ? data :'-'
+     },
+       sorter: (a, b) => a.operation_name?.localeCompare(b.operation_name),
     },
     {
       title: 'Work Center',
@@ -196,13 +195,12 @@ const columns: any = [
     },
     {
         title: 'Department',
-        dataIndex: 'department_id',
+        dataIndex: 'dept_name',
         align: 'center',
-        render: (data) => {
-          const Curdata = departmentData.find((cat) => cat.deptId  === data);
-          return Curdata ? Curdata.deptName: "-";
-        },
-        sorter: (a, b) => a.department_id?.localeCompare(b.department_id),
+        render:(data)=>{
+          return data ? data :'-'
+         },
+        sorter: (a, b) => a.dept_name?.localeCompare(b.dept_name),
       },
       {
         title: <div style={{ textAlign: 'center' }}>Options Percent</div>,
@@ -262,7 +260,7 @@ const columns: any = [
                         >
                             {
                                 operationsData?.map((inc: any) => {
-                                    return <Option key={inc.operationId} value={inc.operationId}>{inc.operationName}</Option>
+                                    return <Option key={inc.operationId} value={inc.operationName}>{inc.operationName}</Option>
                                 })
                             }
                         </Select>
@@ -273,7 +271,7 @@ const columns: any = [
                         <Select showSearch placeholder="Select department" optionFilterProp="children" allowClear>
                             {
                                 departmentData?.map((inc: any) => {
-                                    return <Option key={inc.deptId} value={inc.deptId}>{inc.deptName}</Option>
+                                    return <Option key={inc.deptId} value={inc.deptName}>{inc.deptName}</Option>
                                 })
                             }
                         </Select>
