@@ -35,7 +35,7 @@ const { Option } = Select;
 /* eslint-disable-next-line */
 export interface MasterBrandsFormProps {
   masterBrandData: MasterBrandsDto;
-  updateMasterBrand: (masterBrand: MasterBrandsDto) => void;
+  updateMasterBrand: (masterBrand: MasterBrandsDto, filelist: any) => void;
   isUpdate: boolean;
   closeForm: () => void;
 }
@@ -46,13 +46,32 @@ export function MasterBrandsForm(props: MasterBrandsFormProps) {
   const [imageUrl, setImageUrl] = useState("");
   const [disable, setDisable] = useState<boolean>(false);
   const service = new MasterBrandsService();
+  const [isUpdateImg, setIsUpdateImg] = useState("");
+
   let history = useLocation();
 
-  const [filelist, setfilelist] = useState<any>(props.isUpdate?[{
-    name: props.masterBrandData.fileName,
-    status: 'done',
-    // url: appSettings.brand_file_path+props.masterBrandData.filePath,
-  }]:[]);
+  const [filelist, setfilelist] = useState<any>(
+    props.isUpdate
+      ? [
+          {
+            name: props.masterBrandData.fileName,
+            status: "done",
+            url: props.masterBrandData.fileName,
+          },
+        ]
+      : []
+  );
+  useEffect(() => {
+    if (props.masterBrandData) {
+      console.log(props.masterBrandData.fileName);
+      const updateImage =
+        "http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/" +
+        props.masterBrandData.fileName;
+      // const updateImage ='http://165.22.220.143/crm/gtstoinfor/upload-files/'+props.styleData.styleFileName
+      setIsUpdateImg(updateImage);
+    }
+  }, []);
+
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -66,13 +85,12 @@ export function MasterBrandsForm(props: MasterBrandsFormProps) {
     createdUser = "admin";
   }
 
-
   const uploadFieldProps: UploadProps = {
     // alert();
     multiple: false,
-    onRemove: file => {
+    onRemove: (file) => {
       setfilelist([]);
-      setImageUrl('');
+      setImageUrl("");
     },
     beforeUpload: (file: any) => {
       if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG)$/)) {
@@ -81,45 +99,64 @@ export function MasterBrandsForm(props: MasterBrandsFormProps) {
       }
       var reader = new FileReader();
       reader.readAsArrayBuffer(file);
-      reader.onload = data => {
+      reader.onload = (data) => {
         if (filelist.length == 1) {
-          AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+          AlertMessages.getErrorMessage(
+            "You Cannot Upload More Than One File At A Time"
+          );
           return true;
         } else {
           setfilelist([file]);
-          getBase64(file, imageUrl =>
-            setImageUrl(imageUrl)
-          );
+          getBase64(file, (imageUrl) => setImageUrl(imageUrl));
           return false;
         }
-      }
+      };
     },
     progress: {
       strokeColor: {
-        '0%': '#108ee9',
-        '100%': '#87d068',
+        "0%": "#108ee9",
+        "100%": "#87d068",
       },
       strokeWidth: 3,
-      format: percent => `${parseFloat(percent.toFixed(2))}%`,
+      format: (percent) => `${parseFloat(percent.toFixed(2))}%`,
     },
     fileList: filelist,
   };
 
   const getBase64 = (img, callback) => {
     const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
+    reader.addEventListener("load", () => callback(reader.result));
     reader.readAsDataURL(img);
-  }
+  };
   const saveBrand = (brandData: MasterBrandsDto) => {
     setDisable(true);
-    brandData.brandId = 0;
+    const req = new MasterBrandsDto(
+      brandData.brandId,
+      brandData.brandName,
+      brandData.updatedUser,
+      brandData.isActive,
+      null,
+      null,
+      brandData.versionFlag
+    );
     service
-      .createBrand(brandData)
+      .createBrand(req)
       .then((res) => {
         setDisable(false);
         if (res.status) {
           AlertMessages.getSuccessMessage("Brand Created Successfully");
           //   location.push("/Currencies-view");
+          if (filelist.length > 0) {
+            const formData = new FormData();
+            filelist.forEach((file: any) => {
+              formData.append("file", file);
+            });
+
+            formData.append("brandId", `${res.data[0].brandId}`);
+            service.BrandLogoUpload(formData).then((fileRes) => {
+              res.data[0].filePath = fileRes.data;
+            });
+          }
           onReset();
         } else {
           AlertMessages.getErrorMessage(res.internalMessage);
@@ -137,13 +174,13 @@ export function MasterBrandsForm(props: MasterBrandsFormProps) {
    */
   const saveData = (values: MasterBrandsDto) => {
     setDisable(false);
-    console.log(values);
+    console.log(values,'ppppppppppppp');
 
     // if(values.currencyName.startsWith(" "))
     //   AlertMessages.getErrorMessage("Invalid Input");
 
     if (props.isUpdate) {
-      props.updateMasterBrand(values);
+      props.updateMasterBrand(values, filelist);
     } else {
       setDisable(false);
       saveBrand(values);
@@ -155,15 +192,27 @@ export function MasterBrandsForm(props: MasterBrandsFormProps) {
   };
 
   return (
-    <Card title={<span style={{color:'white'}}>Currencies</span>}
-    style={{textAlign:'center'}} 
-     extra={props.isUpdate==true?"":<Link to='/masters/brands/brand-view' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
-      >
+
+    <Card
+      title='Brands'
+      extra={
+        props.isUpdate == true ? (
+          ""
+        ) : (
+          <Link to="/masters/brands/brand-view">
+            <span>
+              <Button className="panel_button" type={"primary"}>
+                View{" "}
+              </Button>{" "}
+            </span>
+          </Link>
+        )
+      }
+    >
       <Form
         layout="vertical"
         form={form}
         initialValues={props.masterBrandData}
-        name="control-hooks"
         onFinish={saveData}
       >
         <Form.Item name="brandId" style={{ display: "none" }}>
@@ -192,17 +241,17 @@ export function MasterBrandsForm(props: MasterBrandsFormProps) {
                   required: true,
                   message: "Brand Name Required",
                 },
-                {
-                    pattern:
-                      /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
-                    message: `Should contain only alphabets.`,
-                  },
+                // {
+                //   pattern:
+                //     /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+                //   message: `Should contain only alphabets.`,
+                // },
               ]}
             >
-              <Input />
+              <Input placeholder = "Enter Brand Name"/>
             </Form.Item>
           </Col>
-       
+
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
@@ -216,37 +265,59 @@ export function MasterBrandsForm(props: MasterBrandsFormProps) {
               //   { required: !props.isUpdate, message: "Please Upload File" },
               // ]}
             >
-              <Upload
-                {...uploadFieldProps}
-                style={{ width: "100%" }}
-                listType="picture-card"
-              >
-                {imageUrl ? (
-                  <img src={imageUrl} style={{ width: "100%" }} />
-                ) : (
-                  uploadButton
-                )}
-              </Upload>
+             
+                    {!imageUrl ? (
+                      <Upload
+                        {...uploadFieldProps}
+                        style={{ width: "100%" }}
+                        listType="picture-card"
+                      >
+                        {uploadButton}
+                      </Upload>
+                    ) : (
+                      ""
+                    )}
             </Form.Item>
           </Col>
         </Row>
-
-
 
         <Col span={24} style={{ textAlign: "right" }}>
           <Button type="primary" disabled={disable} htmlType="submit">
             Submit
           </Button>
           {/* {props.isUpdate === false && ( */}
-            <Button
-              htmlType="button"
-              style={{ margin: "0 14px" }}
-              onClick={onReset}
-            >
-              Reset
-            </Button>
+          <Button
+            htmlType="button"
+            style={{ margin: "0 14px" }}
+            onClick={onReset}
+          >
+            Reset
+          </Button>
           {/* )} */}
         </Col>
+        <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 5 }}
+            lg={{ span: 6 }}
+            xl={{ span: 10 }}
+          >
+            {/* <Card style={{ height: "331px" }}> */}
+              <Form.Item>
+                <img
+                  src={props.isUpdate ? isUpdateImg : imageUrl}
+                  alt="Preview"
+                  height={"300px"}
+                  width={"500px"}
+                  style={{
+                    width: "100%",
+                    objectFit: "contain",
+                    marginRight: "100px",
+                  }}
+                />
+              </Form.Item>
+            {/* </Card> */}
+          </Col>
       </Form>
     </Card>
   );

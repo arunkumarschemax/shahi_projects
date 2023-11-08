@@ -109,7 +109,7 @@ export function LocationsForm(
             }
           ]}
         >
-          <Input/>
+          <Input placeholder='Enter Location Name'/>
         </Form.Item>
         </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}>

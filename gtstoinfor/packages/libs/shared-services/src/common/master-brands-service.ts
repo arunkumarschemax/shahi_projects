@@ -1,4 +1,4 @@
-import { AllBrandsResponseModel, BrandsRequest, MasterBrandsDto, MasterBrandsResponseModel } from "@project-management-system/shared-models";
+import { AllBrandsResponseModel, BrandsRequest, MasterBrandsDto, MasterBrandsResponseModel, UploadResponse } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class MasterBrandsService extends CommonAxiosService{
@@ -31,5 +31,8 @@ export class MasterBrandsService extends CommonAxiosService{
   async ActivateDeActivateBrand(brandReq: MasterBrandsDto): Promise<MasterBrandsResponseModel> {
     // console.log(brandReq,'shared-----------')
     return  this.axiosPostCall(this.URL + '/activateOrDeactivateBrand', brandReq)
+}
+async BrandLogoUpload(file: any): Promise<UploadResponse> {
+  return await this.axiosPostCall(this.URL + '/fileUpload', file);
 }
 }

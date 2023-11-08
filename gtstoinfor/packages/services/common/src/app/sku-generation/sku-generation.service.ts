@@ -131,7 +131,7 @@ export class ItemSkuService{
           const updateResult = await this.itemSkuRepo.update({ itemSkuId: req.itemSkuId }, { status: SkuStatusEnum.CLOSED })
           console.log(updateResult,'======================')
           if (updateResult) {
-            return new SKUGenerationResponseModel(true, 1, 'SKU cancelled successfully', undefined)
+            return new SKUGenerationResponseModel(true, 1, 'SKU closed successfully', undefined)
           }
         } else {
           return new SKUGenerationResponseModel(false, 0, 'No SKU Record found', [])

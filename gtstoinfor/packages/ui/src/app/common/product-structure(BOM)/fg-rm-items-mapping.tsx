@@ -162,7 +162,7 @@ const getRmItemsDatabyProductGroupId1 = () => {
 
 
   return (
-    <Card size="small" title="RM TO FG Mapping"  extra={<Link to='/product-structure/fg-rm-mapping-view' >
+    <Card size="default" title="RM TO FG Mapping"  extra={<Link to='/product-structure/fg-rm-mapping-view' >
     <span style={{color:'white'}} ><Button type={'primary'} >View</Button> </span>
     </Link>} >
       <Form layout="horizontal" form={form} onFinish={onFinish}>
@@ -191,6 +191,9 @@ const getRmItemsDatabyProductGroupId1 = () => {
                   <Card style={{marginLeft:30,height:'100%'}}>
                         <h3>Fabric Items</h3>
                     <CheckboxGroup style={{ width: '100%' }}  onChange={onChange}  >
+                      {data.length === 0 ?(
+                          <p>No data found</p>
+                         ) : (
                     <Row>
                         {data.map((option) => (
                         <Col span={12} key={option.rmitemId} >
@@ -198,17 +201,21 @@ const getRmItemsDatabyProductGroupId1 = () => {
                         </Col>
                         ))}
                     </Row>
+                       )}
                     </CheckboxGroup>
                     </Card>
         </Form.Item>
         </Col>
         <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-        <Form.Item name = "trimitems">
+       <Form.Item name = "trimitems">
          
 
                     <Card style={{ width: '100%',marginLeft:100 }}>
                         <h3>Trims Items</h3>
                     <CheckboxGroup style={{ width: '100%' }} onChange={onChange1}>
+                    {rmData.length === 0 ? (
+                          <p>No data found</p>
+                         ) : (
                     <Row gutter={24}>
                         {rmData.map((option) => (
                         <Col span={12} key={option.rmitemId}>
@@ -216,6 +223,7 @@ const getRmItemsDatabyProductGroupId1 = () => {
                         </Col>
                         ))}
                     </Row>
+                         )}
                     </CheckboxGroup>
                     </Card>
         </Form.Item>
