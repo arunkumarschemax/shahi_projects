@@ -20,30 +20,13 @@ export const StyleOrderGrid = () => {
     const {Option} = Select;
     const service = new StyleOrderService()
     const [data,setData] =  useState<any[]>([])
-    const [items,setItems] =  useState<any[]>([])
     const [selected,setSelected] =  useState()
     const [form] = Form.useForm();
     const [disable, setDisable] = useState<boolean>(false)
     const buyerService = new BuyersService();
     const[buyerId,setBuyerId] = useState([]);
-    const deliveryTermService = new DeliveryTermsService();
-    const[deliveryTerm,setDeliveryTerm] = useState([]);
-    const deliveryMethodService = new DeliveryMethodService();
-    const[deliveryMethod,setDeliveryMethod] = useState([]);
-    const [total,setTotalQty] =  useState<number>(0)
-    const[facilityId,setFacilityId] = useState([]);
-    // const facilityService = new 
-    const[paymentTermsId,setPaymentTermsId] = useState<PaymentTermsDto[]>([]);
-    const paymentTermsService = new PaymentTermsService()
-    const[packingTermsId,setPackingTermsId] = useState<PackageTermsDto[]>([]);
-    const packingTermsService = new PackageTermsService()
-    const[paymentMethodId,setPaymentMethodId] = useState<PaymentMethodDto[]>([]);
-    const paymentMethodService = new PaymentMethodService()
-    const[wareHouseId,setWareHouseId] = useState([]);
-    const warehouseService = new WarehouseService()
-    const[currencyId,setCurrencyId] = useState([]);
-    const currencyService = new CurrencyService()
-    const [drawerVisible, setDrawerVisible] = useState(false);
+     const [total,setTotalQty] =  useState<number>(0)
+   const [drawerVisible, setDrawerVisible] = useState(false);
     const [selectedId, setSelectedId] = useState<number>(0);
     const [userId, setUserId] = useState([]); 
     const [loginBuyer,setLoginBuyer] = useState<number>(0)
@@ -54,7 +37,7 @@ export const StyleOrderGrid = () => {
 const itemService =new ItemCreationService()
 let location = useLocation()
 const stateData = location.state
-let val = 0
+let value = 0
     useEffect(() => {
       // getData()
       getItems()
@@ -85,7 +68,6 @@ let val = 0
     itemService.getAllFgItems().then(res =>{
       if(res.status){
         setItem(res.data)
-        console.log(res.data,'==============');
         
       }
       else{
@@ -103,7 +85,6 @@ let val = 0
     if(role === MenusAndScopesEnum.roles.crmBuyer){
       req.buyerId = loginBuyer
   }
-  console.log(req,'--------');
   
       service.getAllStyleOrdersByItem(req).then(res => {
           if(res.status){
@@ -111,7 +92,7 @@ let val = 0
               res.data.map(e =>{ 
                 // const totalQuantity = res.data.reduce((total, item) => total + item.qty, 0);
                 // setTotalQty(totalQuantity);
-                val = val+Number(e.qty)
+                value = value+Number(e.qty)
                 setTotalQty(val)
                })
                
@@ -362,14 +343,15 @@ let val = 0
     dataIndex: 'action',
     render: (text, rowData) => (
       <><span>
-       <Button title={"Detail View"} onClick={() => details(rowData)}>
+       <Button title={"Detail View"} onClick={() => details(rowData.co_id,rowData.fg_item_id)}>
           <EyeOutlined />
         </Button>
       </span>
       <Divider type="vertical"/>
      
       {
-        rowData.status != CustomerOrderStatusEnum.CLOSED  || checkAccess('Cancel') ? 
+        rowData.status != CustomerOrderStatusEnum.CLOSED ?
+        // ||checkAccess('Cancel') ? 
       <span>
           <Button title={"Cancel Order"} onClick={() => cancelOrder(rowData)} >
             <CloseOutlined />
@@ -378,16 +360,16 @@ let val = 0
         : ""
       }
       <Divider type="vertical"/>
-    {
-    // checkAccess('Update') ?
+    {/* {
+     checkAccess('Update') ? */}
       <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
       onClick={() => {
           openFormWithData(rowData);
       }}
       style={{ color: '#1890ff', fontSize: '14px' }}
     />
-    //  : ""
-    }
+     {/* : ""
+    } */}
       </>
     )
   }
@@ -473,8 +455,8 @@ let val = 0
           AlertMessages.getErrorMessage("Something went wrong. ")
         })
       }
-      const details =(val:any) =>{
-        navigate('/materialCreation/style-order-detail-view',{state :val})
+      const details =(coId:number,itemId:number) =>{
+        navigate('/materialCreation/style-order-detail-view',{state :{co_id:coId,fg_item_id:itemId}})
       }
     
     return (

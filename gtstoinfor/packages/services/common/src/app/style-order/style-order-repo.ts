@@ -38,18 +38,27 @@ export class StyleOrderRepository extends Repository<StyleOrder> {
     }
     
     async getAllStyleOrders(req: styleOrderReq):Promise<any>{
+        console.log(req);
         
         const query = await this.createQueryBuilder('co')
-        .select(`item_code,co_number,agent,discount_amount,discount_per,discount_per,f.name,season,f.name AS factory,wh.warehouse_name,cu.currency_name,order_date,instore_date,co.sale_price,buyer_po_number,shipment_type,buyer_style,exfactory_date,ct.co_type,b.buyer_name,price_quantity,SUM(c.order_quantity)AS qty,co.co_id, co.status`)
+        .select(`item_code,co.co_number,agent,discount_amount,discount_per,discount_per,f.name,season,f.name AS factory,wh.warehouse_name,cu.currency_name,order_date,instore_date,co.sale_price,buyer_po_number,shipment_type,buyer_style,exfactory_date,ct.co_type,b.buyer_name,price_quantity,SUM(c.order_quantity)AS qty,co.co_id,co.fg_item_id,co.status,payter.payment_terms_name,payme.payment_method,delimet.delivery_method,pacter.package_terms_name,delter.delivery_terms_name`)
         .leftJoin(CoLine,'c','c.co_id = co.co_id ')
         .leftJoin(Buyers,'b','b.buyer_id = co.buyer_id ')
         .leftJoin(FactoriesEntity,'f','f.id = co.facility_id ')
         .leftJoin(Warehouse,'wh','wh.warehouse_id = co.warehouse_id ')
         .leftJoin(Currencies,'cu','cu.currency_id = co.currency_id ')
         .leftJoin(CoTypes,'ct','ct.co_type_id = co.currency_id ')
+        .leftJoin(PackageTerms,'pacter',`pacter.package_terms_id = co.package_terms_id`)
+        .leftJoin(DeliveryTerms,'delter','delter.delivery_terms_id = co.delivery_terms_id')
+        .leftJoin(DeliveryMethod,'delimet','delimet.delivery_method_id = co.delivery_method_id')
+        .leftJoin(PaymentMethod,'payme','payme.payment_method_id = co.Payment_method_id')
+        .leftJoin(PaymentTerms,'payter','payter.payment_terms_id = co.Payment_terms_id')
          .where(`co.fg_item_id =${req.itemId}`)
+         if (req?.coId !== undefined) {
+            query.andWhere(`co.co_id ='${req.coId}'`)
+        }
         if (req?.buyerId !== undefined) {
-            query.andWhere(`buyer_id ='${req.buyerId}'`)
+            query.andWhere(`co.buyer_id ='${req.buyerId}'`)
         }
         query.groupBy(`co.co_number , c.co_id`)
         return query.getRawMany()

@@ -82,7 +82,7 @@ export function FabricStructuresForm(
 
   return (
 
-    <Card title={props.isUpdate ? 'Update Fabric Structure' : 'Add Fabric Structure'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/delivery-terms/delivery-terms-view')} type={'primary'}>View</Button></span>}>
+    <Card title={props.isUpdate ? 'Update Fabric Structure' : 'Add Fabric Structure'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/fabric-structure/fabric-structure-grid')} type={'primary'}>View</Button></span>}>
     <Form layout="vertical" form={form} onFinish={saveData} initialValues={props.FabriStructuresData} >
     <Form.Item name="fabricStructureId" style={{ display: 'none' }}>
         <Input hidden />
