@@ -57,7 +57,7 @@ export class OrdersAdapter {
         // entity.officalPlanCoQty = dto.officalPlanCoQty
         // entity.officalPlanStockQty = dto.officalPlanStockQty
         // entity.slsStartDy = dto.slsStartDy
-        // entity.publishFlagForFactory = dto.publishFlagForFactory
+        entity.publishFlagForFactory = dto.publishFlagForFactory
         // entity.publishDate = dto.publishDate
         // entity.allcEndDy = dto.allcEndDy
         // entity.slsEndDy = dto.slsEndDy

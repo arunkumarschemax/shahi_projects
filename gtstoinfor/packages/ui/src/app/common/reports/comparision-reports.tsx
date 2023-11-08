@@ -1,4 +1,4 @@
-import { Alert, Button, Card, Col, Form, Row, Select, Space, Table, Tabs, Typography, message } from "antd"
+import { Alert, Button, Card, Col, Form, Row, Select, Space, Table, Tabs, Tooltip, Typography, message } from "antd"
 import TabPane from "antd/es/tabs/TabPane"
 import ExFactoryReportWithComparision from "./ex-factory-report-with-comparision"
 import WareHouseComparision from "./warehouse-comparision"
@@ -74,16 +74,21 @@ export const MonthWiseComparisionReport = () => {
         setData([]);
       }
     });
-    service.getMonthlyComparisionDate(req).then((res) => {
-      if (res.status) {
-        setDates(res.data);
-        // console.log(res.data[0].Date);
-
-
-      } else {
-        setDates([]);
+    service.getLatestPreviousFilesData().then(res => {
+      if(res.status){
+          setDates(res.data)
       }
-    })
+  })
+    // service.getMonthlyComparisionDate(req).then((res) => {
+    //   if (res.status) {
+    //     setDates(res.data);
+    //     // console.log(res.data[0].Date);
+
+
+    //   } else {
+    //     setDates([]);
+    //   }
+    // })
     // service.getComparisionPhaseData(req).then((res) => {
     //   if (res.status) {
     //     setPhase(res.data)
@@ -1537,9 +1542,9 @@ export const MonthWiseComparisionReport = () => {
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
-            md={{ span: 6 }}
-            lg={{ span: 6 }}
-            xl={{ span: 6 }}
+            md={{ span: 4 }}
+            lg={{ span: 4 }}
+            xl={{ span: 4 }}
           >
             <div>
               <label>
@@ -1560,12 +1565,12 @@ export const MonthWiseComparisionReport = () => {
               </Form.Item>
             </div>
           </Col>
-          <Col
+          {/* <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
             md={{ span: 5 }}
             lg={{ span: 5 }}
-            xl={{ span: 6 }}
+            xl={{ span: 7 }}
             style={{ marginTop: 17 }}
           >
             <Card
@@ -1578,14 +1583,18 @@ export const MonthWiseComparisionReport = () => {
                 backgroundColor: "#EBEBF1",
               }}
               size="small"
-            ><span>Latest File uploaded Date: {dates?.[0]?.Date ? moment(dates?.[0]?.Date).format("DD/MM hh:mm:a") : "-"}</span></Card>
+            >
+              <span>Latest File Name: {dates ?   dates[0]?.fileName : '-'}</span><br/>
+              <span>Latest File uploaded Date: {dates ?   dates[0]?.uploadedDate : '-'}</span>
+            
+            </Card>
           </Col>
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
             md={{ span: 5 }}
             lg={{ span: 5 }}
-            xl={{ span: 6 }}
+            xl={{ span: 7 }}
             style={{ marginTop: 17 }}
           >
             <Card
@@ -1598,8 +1607,37 @@ export const MonthWiseComparisionReport = () => {
                 backgroundColor: "#EBEBF1",
               }}
               size="small"
-            ><span>Previous File uploaded Date: {dates?.[1]?.Date ? moment(dates?.[1]?.Date).format("DD/MM hh:mm:a") : "-"}</span></Card>
-          </Col>
+            >
+               <span>Previous File Name: {dates ?   dates[1]?.fileName : '-'}</span><br/>
+              <span>Previous File uploaded Date: {dates ?   dates[1]?.uploadedDate : '-'}</span></Card>
+          </Col> */}
+           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} style={{ marginTop: 17 }}>
+          <Tooltip title={dates ? dates[1]?.fileName : '-'} arrow={false}>
+            <Card size='small' 
+              // title={'Previous File Name: ' +`${dates ?  dates[1]?.fileName : '-'}`}
+              
+              style={{ textAlign: 'left', backgroundColor: '#B1F8E2' }}
+            >{'Previous File Name: ' +`${dates ?  dates[1]?.fileName : '-'}`}</Card>
+          </Tooltip>
+        </Col>
+
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} style={{ marginTop: 17 }}>
+          <Card size='small' style={{ textAlign: 'left', backgroundColor: '#CBB1F8' }}>
+          {'Previous File Date:' +`${dates ?  dates[1]?.uploadedDate : '-'}` }
+          </Card>
+        </Col>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} style={{ marginTop: 17 }}>
+        <Tooltip title={dates ? dates[0]?.fileName :''} arrow={false}>
+          <Card size='small' style={{ textAlign: 'left', backgroundColor: '#B1F8E2' }}>
+          {'Latest File Name: ' +`${dates ?  dates[0]?.fileName : '-'}` }
+          </Card>
+        </Tooltip>
+        </Col>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} style={{ marginTop: 17 }}>
+          <Card size='small' style={{ textAlign: 'left', backgroundColor: '#CBB1F8' }}>
+          {'Latest File Date: ' +`${dates ?   dates[0]?.uploadedDate : '-'}`}
+          </Card>
+        </Col>
         </Row>
       </Form>
       {selected && data.length > 0 ? (

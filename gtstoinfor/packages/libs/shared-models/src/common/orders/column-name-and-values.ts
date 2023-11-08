@@ -128,7 +128,7 @@ export const orderColumnValues = {
     factoryComment: 'factory_comment',
     plannedEXF: 'planned_exf',
     exfEtd: 'exf_etd',
-    exfWh: 'exf_wh',
+    etdWh: 'etd_wh',
     sweingCountryRegion: 'sweing_country_region',
     rewMaterialOriginal: 'rew_material_original',
     itemDrop: 'item_drop',
