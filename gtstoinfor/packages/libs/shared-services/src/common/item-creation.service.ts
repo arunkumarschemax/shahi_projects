@@ -1,4 +1,4 @@
-import { AllWarehouseResponseModel, CommonResponseModel, ItemCreationDTO, WarehouseDto, WarehouseRequest, WarehouseResponseModel } from '@project-management-system/shared-models';
+import { AllWarehouseResponseModel, CommonResponseModel, FgItemCreIdRequest, ItemCreationDTO, WarehouseDto, WarehouseRequest, WarehouseResponseModel } from '@project-management-system/shared-models';
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class ItemCreationService extends CommonAxiosService{
@@ -14,4 +14,10 @@ export class ItemCreationService extends CommonAxiosService{
   async getAllFgItems(req?:any): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getAllFgItems",req)
   }
+  async cancelItem(req:FgItemCreIdRequest): Promise<CommonResponseModel>{
+    return this.axiosPostCall(this.URL + '/cancelOrder',req)
+}
+async getAll(): Promise<CommonResponseModel> {
+  return this.axiosPostCall(this.URL + "/getAll")
+}
 }

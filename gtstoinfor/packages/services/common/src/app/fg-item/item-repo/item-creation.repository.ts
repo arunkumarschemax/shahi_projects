@@ -39,7 +39,7 @@ export class ItemCreationRepository extends Repository<ItemCreation> {
         CONCAT(epa.first_name, ' ', epa.last_name) AS approver,CONCAT(eppt.first_name, ' ', eppt.last_name) AS pd_merchant,CONCAT(ept.first_name, ' ', ept.last_name) AS factory_merchant,
         CONCAT(eps.first_name, ' ', eps.last_name) AS sale_person_id,internal_style_id,uo.uom AS uom,ut.uom AS alt_uom,currencies.currency_name AS currency_name,
         ig.item_group AS item_group,pgi.product_group,business_area,uo.uom AS basicUom,group_tech_class,co.composition_code AS composition ,gtc.group_tech_class_code AS group_tech_class,
-        tc.currency_name AS target_currency,
+        tc.currency_name AS target_currency,fgi.fg_item_id,
         r.range_code AS rangee ,no_of_lace_panel ,sale_price_qty ,lt.liscence_type,cg.custom_group, national_dbk ,rg.rosl_group ,is_sub_contract ,sale_price,
         order_confirmed_date,first_ex_factory_date,order_close_date,moq,order_qty,f.name,season,conversion_factor,projection_order, bh.buying_house,sg.search_grp_name`) 
         .leftJoin(Currencies, 'currencies','currencies.currency_id = fgi.currency')
@@ -89,5 +89,10 @@ export class ItemCreationRepository extends Repository<ItemCreation> {
       }
 
   
-      
+      async getAll(): Promise<any> {
+        const query = this.createQueryBuilder()
+            .select(`fg_item_id,item_name,item_code`)
+            .groupBy(`item_code`)
+        return await query.getRawMany();
+    }
 }

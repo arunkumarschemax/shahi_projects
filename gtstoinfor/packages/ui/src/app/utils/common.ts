@@ -67,11 +67,12 @@ export interface MenuItem {
          icon: item.icon,
         routes:
           'children' in item
-            ? item.children!.map(({ children, icon, label, path }) => {
+            ? item.children!.map(({ children, icon, label, path,key }) => {
                 return {
+                  key: key,
                   path: path,
                   name: label,
-                  // icon: icon,
+                 // icon: icon,
                   routes: children,
                 };
               })

@@ -180,6 +180,9 @@ const columns: any = [
             {
               dataIndex: "rm_item_code",
               key: "rm_item_code", align:'center',
+              render:(data)=>{
+                return data ? data :'-'
+              }
             },
            
           ]}
@@ -202,6 +205,9 @@ const columns: any = [
             {
               dataIndex: "item_type",
               key: "item_type", align:'center',
+              render:(data)=>{
+                return data ? data :'-'
+              }
             },
           ]}
           pagination={false}
@@ -222,6 +228,9 @@ const columns: any = [
             {
               dataIndex: "item_group",
               key: "item_group", align:'center',
+              render:(data)=>{
+                return data ? data :'-'
+              }
             },
           ]}
           pagination={false}
@@ -243,6 +252,9 @@ const columns: any = [
             {
               dataIndex: "is_sub_contract",
               key: "rm_item_code", align:'center',
+              render:(data)=>{
+                return data ? data :'-'
+              }
             },
            
           ]}
@@ -266,6 +278,9 @@ const columns: any = [
             {
               dataIndex: "facility",
               key: "facility", align:'center',
+              render:(data)=>{
+                return data ? data :'-'
+              }
             }, 
           ]}
           pagination={false}
@@ -286,6 +301,9 @@ const columns: any = [
             {
               dataIndex: "season",
               key: "season", align:'center',
+              render:(data)=>{
+                return data ? data :'-'
+              }
             }
           ]}
           pagination={false}
