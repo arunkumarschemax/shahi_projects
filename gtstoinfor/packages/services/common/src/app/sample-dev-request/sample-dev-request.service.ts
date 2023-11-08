@@ -244,6 +244,41 @@ export class SampleRequestService {
       return new CommonResponseModel(false, 0, 'data not found')
     }
   }
+  
+  async getSampleRequestReport(): Promise<CommonResponseModel> {
+    const data = await this.sampleRepo.getSampleRequestReport();
+  
+    if (data.length > 0) {
+      const groupedData = data.reduce((result, item) => {
+        console.log(item,"sample_request_id")
+        const samplerequestid = item.sample_request_id;
+        const requestno = item.request_no;
+        if (!result[requestno]) {
+          result[requestno] = {
+            request_no: requestno,
+            sample_request_id: samplerequestid,
+            sm: [],
+          };
+        }
+        result[requestno].sm.push(
+          {
+          code: item.fabricCode,
+          consumption: item.fConsumption,
+        },
+        {
+          code: item.trimCode,
+          consumption: item.tConsumption,
+        }
+        );
+        return result;
+      }, {});
+  
+      return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
+    }
+  
+    return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
+  }
+
 
   async getFabricCodes(): Promise<CommonResponseModel> {
     const details = 'SELECT ri.product_group_id as productGroupId,rm_item_id AS fabricId,item_code AS fabricCode,ri.product_group_id FROM rm_items ri LEFT JOIN product_group pg ON pg.product_group_id=ri.product_group_id WHERE product_group="Fabric"'     
