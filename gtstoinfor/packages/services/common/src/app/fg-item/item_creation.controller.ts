@@ -51,4 +51,14 @@ export class ItemCreationController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
         }
     }
+    
+    @Post('/getAll')
+    // @ApiBody({type:ItemCreFilterRequest})
+    async getAll(): Promise<CommonResponseModel> {
+        try {
+            return await this.itemCreationService.getAll();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
 }
