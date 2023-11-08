@@ -585,4 +585,13 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/getTrimOrderDetails')
+    async getTrimOrderDetails(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getTrimOrderDetails();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }

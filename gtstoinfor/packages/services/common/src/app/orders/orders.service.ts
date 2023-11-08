@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders, CoLineStatusReq, TrimOrdersReq, ordersPlanNo, RequiredColumns, ordersMailFileStatusArrayReq } from '@project-management-system/shared-models';
+import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders, CoLineStatusReq, TrimOrdersReq, ordersPlanNo, RequiredColumns, ordersMailFileStatusArrayReq, CoLineFormatModel, Destinations, Colors, Sizes } from '@project-management-system/shared-models';
 import axios, { Axios } from 'axios';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
@@ -2611,6 +2611,33 @@ async sendMail(to: string, subject: string, message : any[]) {
         }
 
     } catch(err){
+        throw err
+    }
+  }
+
+  async getTrimOrderDetails():Promise<CommonResponseModel>{
+    try{
+        const data = await this.trimOrderRepo.find()
+        let destinationMap = new Map<string,Destinations>()
+        if(data){
+            let colorMap = new Map<string,Colors>()
+            for(const rec of data){
+                if(!destinationMap.has(rec.businessUnit)){
+                    destinationMap.set(rec.businessUnit,new Destinations(rec.businessUnit,[])) 
+                }
+                if(!colorMap.has(rec.color)){
+                    colorMap.set(rec.color,new Colors(rec.color,[]))
+                }
+                colorMap.get(rec.color).sizes.push(new Sizes(rec.size,rec.orderQtyPcs,null))
+                colorMap.forEach((e) => 
+                destinationMap.get(rec.businessUnit).colors.push(new Colors(e.name,e.sizes))
+                )
+            }
+            const destinations: Destinations[] = []
+            destinationMap.forEach((e) => destinations.push(e))
+            return new CommonResponseModel(true,1,'',destinations)
+        }
+    }catch(err){
         throw err
     }
   }
