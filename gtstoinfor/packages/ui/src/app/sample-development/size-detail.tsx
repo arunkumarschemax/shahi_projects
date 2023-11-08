@@ -52,57 +52,37 @@ const SizeDetail = ({props,buyerId}) => {
     setCount(count + 1);
   };
 
-    // const onchangeData = []; 
-    // const handleInputChange = (colourId, sizeId, quantity, recordKey) => {
-    //   let existingEntry = onchangeData.find((entry) => entry.colour === colourId);
-    //   if (!existingEntry) {
-    //     existingEntry = {
-    //       colour: colourId,
-    //       sizeInfo: [],
-    //     };
-    //     onchangeData.push(existingEntry);
-    //   }
-    //   if (quantity !== 0) {
-    //     let sizeInfoEntry = existingEntry.sizeInfo.find((info) => info.sizeId === sizeId);
-    //     if (!sizeInfoEntry) {
-    //       sizeInfoEntry = {
-    //         sizeId: sizeId,
-    //         quantity: quantity,
-    //       };
-    //       existingEntry.sizeInfo.push(sizeInfoEntry);
-    //     } else {
-    //       sizeInfoEntry.quantity = quantity;
-    //     }
-    //   }
-    //   console.log(onchangeData);
-    //   // props(onchangeData)
-    // };
-    // console.log(inpuData)
-
    const handleInputChange = (colourId, sizeId, quantity,recordKey) => {
-      const newData = [...onchangeData];
-      let existingEntry = newData.find((entry) => entry.colour === colourId);
-      if (!existingEntry) {
-        existingEntry = {
-          colour: colourId,
-          sizeInfo: [],
-        };
-        newData.push(existingEntry);
-      }
-      if (quantity !== 0) {
-        let sizeInfoEntry = existingEntry.sizeInfo.find((info) => info.sizeId === sizeId);
-        if (!sizeInfoEntry) {
-          sizeInfoEntry = {
-            sizeId: sizeId,
-            quantity: quantity,
+    console.log(recordKey)
+    let newData = [...onchangeData];
+
+    const updatedData = data.map((record) => {
+      if (record.key === recordKey) {
+        let existingEntry = newData.find((entry) => entry.colour === colourId);
+        if (!existingEntry) {
+          existingEntry = {
+            colour: colourId,
+            sizeInfo: [],
           };
-          existingEntry.sizeInfo.push(sizeInfoEntry);
-        } else {
-          sizeInfoEntry.quantity = quantity;
+          newData.push(existingEntry);
+        }
+        if (quantity !== 0) {
+          let sizeInfoEntry = existingEntry.sizeInfo.find((info) => info.sizeId === sizeId);
+          if (!sizeInfoEntry) {
+            sizeInfoEntry = {
+              sizeId: sizeId,
+              quantity: quantity,
+            };
+            existingEntry.sizeInfo.push(sizeInfoEntry);
+          } else {
+            sizeInfoEntry.quantity = quantity;
+          }
         }
       }
+      console.log(newData)
       setOnchangeData(newData); 
       props(newData)
+    });
     };
 
 

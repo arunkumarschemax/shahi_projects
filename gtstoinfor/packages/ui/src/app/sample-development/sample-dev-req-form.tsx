@@ -181,29 +181,54 @@ export const SampleDevForm = () => {
     console.log(val.requestNo)
     console.log(tabsData.sizeData)
     const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,'',val.conversion,val.madeIn,val.remarks,tabsData.sizeData,tabsData.fabricsData,tabsData.trimsData,tabsData.processData)
-      sampleService.createSampleDevelopmentRequest(req).then((res)=>{
-        if(res.status){
-          console.log(res.data)
-          message.success(res.internalMessage,2)
-          if(fileList.length >0){
-            console.log(res.data[0].styleId)
-            const formData = new FormData();
-            fileList.forEach((file: any) => {
-                formData.append('file', file);
-            });
+      // sampleService.createSampleDevelopmentRequest(req).then((res)=>{
+      //   if(res.status){
+      //     console.log(res.data)
+      //     message.success(res.internalMessage,2)
+      //     if(fileList.length >0){
+      //       console.log(res.data[0].styleId)
+      //       const formData = new FormData();
+      //       fileList.forEach((file: any) => {
+      //           formData.append('file', file);
+      //       });
 
-            formData.append('styleId', `${res.data[0].styleId}`)
-            console.log(formData)
-            sampleService.fileUpload(formData).then(fileres => {
-                res.data[0].styleFilePath = fileres.data
-            })
-          }
+      //       formData.append('styleId', `${res.data[0].styleId}`)
+      //       console.log(formData)
+      //       sampleService.fileUpload(formData).then(fileres => {
+      //           res.data[0].styleFilePath = fileres.data
+      //       })
+      //     }
           
-        }else{
-          message.success(res.internalMessage,2)
+      //   }else{
+      //     message.success(res.internalMessage,2)
+      //   }
+      // })
+      // console.log(req)
+
+      sampleService.createSampleDevelopmentRequest(req).then((res) => {
+        if (res.status) {
+          console.log(res.data);
+          message.success(res.internalMessage, 2);
+          if (fileList.length > 0) {    
+            const formData = new FormData();
+            fileList.forEach((file) => {
+              console.log(file.originFileObj)
+              formData.append('file', file.originFileObj);
+            });
+    
+            formData.append('SampleRequestId', `${res.data[0].SampleRequestId}`);
+            // console.log(res.data[0].SampleRequestId)
+            console.log(formData);
+            sampleService.fileUpload(formData).then((file) => {
+              console.log(file.data)
+              res.data[0].filepath = file.data;
+            });
+          }
+        } else {
+          message.success(res.internalMessage, 2);
         }
-      })
-      console.log(req)
+      });
+      console.log(req);
   }
 
   const handleSubmit = (data) => {
