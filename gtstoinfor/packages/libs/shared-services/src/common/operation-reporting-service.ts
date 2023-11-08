@@ -10,8 +10,8 @@ export class OperationReportingService extends CommonAxiosService{
     return this.axiosPostCall(this.URL + "/createOperationReporting", req)
   }
 
-  async getOperationInventoryData(): Promise<CommonResponseModel>{
-    return this.axiosPostCall(this.URL + "/getOperationInventoryData")
+  async getOperationInventoryData(req: TabNameReq): Promise<CommonResponseModel>{
+    return this.axiosPostCall(this.URL + "/getOperationInventoryData",req)
   }
 
   async getOperationReportingData(req:TabNameReq): Promise<OperationReportingResponseModel> {

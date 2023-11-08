@@ -16,7 +16,7 @@ export class MaterialFabricRepository extends Repository<MaterialFabricEntity> {
     async getDataByStyleId(req:MaterialIssueRequest): Promise<any> {
         console.log(req,'=====-----------------=======')
         const query = this.createQueryBuilder('mf')
-            .select(` mf.fabric_code AS fabricCode,mf.issued_quantity AS issuedQuantity,mf.issued_quantity_uom AS issuedUom,mf.issued_uom_id as issuedUomId, mi.consumption_code AS consumptionCode,mi.request_no AS requestNo, mf.reported_status as reportedStatus`)
+            .select(` mf.fabric_code AS fabricCode,mf.issued_quantity AS issuedQuantity,mf.issued_quantity_uom AS issuedUom,mf.issued_uom_id as issuedUomId, mi.consumption_code AS consumptionCode,mi.request_no AS requestNo, mf.reported_status as reportedStatus,mf.material_fabric_id as materialFabricId,  mf.material_issue_id as materialIssueId`)
             .leftJoin(MaterialIssueEntity,'mi','mi.material_issue_id = mf.material_issue_id')
             .where(`mi.style_id = '${req.styleId}'`)
         return await query.getRawMany();
