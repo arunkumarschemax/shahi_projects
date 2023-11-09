@@ -4,9 +4,9 @@ import { ApplicationExceptionHandler } from '@project-management-system/backend-
 import { StyleOrder } from './style-order.entity';
 import { StyleOrderService } from './style-order.service';
 import { StyleOrderController } from './style-order.controller';
-import { CoLine } from './co-line.entity';
+import { CoLine } from './order-line.entity';
 import { StyleOrderRepository } from './style-order-repo';
-import { CoLineRepository } from './co-line.repo';
+import { CoLineRepository } from './order-line.repo';
 import { ItemCreation } from '../fg-item/item_creation.entity';
 import { CoUpdateRepository } from './co-updates.repo';
 import { CoUpdateEntity } from './co-updates.entity';

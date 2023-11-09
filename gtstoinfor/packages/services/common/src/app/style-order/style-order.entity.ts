@@ -10,7 +10,7 @@ import { DeliveryTerms } from "../delivery-terms/delivery-terms.entity";
 import { Currencies } from "../currencies/currencies.entity";
 import { PaymentMethod } from "../payment-methods/payment-method-entity";
 import { PaymentTerms } from "../payment-terms/payment-terms.entity";
-import { CoLine } from "./co-line.entity";
+import { CoLine } from "./order-line.entity";
 import { Buyers } from "../buyers/buyers.entity";
 import { ItemCreation } from "../fg-item/item_creation.entity";
 import { CoTypes } from "../co-type/co-type.entity";

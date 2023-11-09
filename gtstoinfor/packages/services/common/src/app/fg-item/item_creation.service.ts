@@ -7,7 +7,7 @@ import { ItemCreation } from './item_creation.entity';
 import { error } from 'console';
 import { ItemCreationRepository } from './item-repo/item-creation.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
-import { CoLine } from '../style-order/co-line.entity';
+import { CoLine } from '../style-order/order-line.entity';
 import { StyleOrder } from '../style-order/style-order.entity';
 import { CommonResponseModel, ItemCreFilterRequest, FgItemCreIdRequest, CustomerOrderStatusEnum, SubContractStatus } from '@project-management-system/shared-models';
 

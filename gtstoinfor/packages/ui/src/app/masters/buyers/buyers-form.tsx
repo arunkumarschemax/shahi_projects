@@ -286,7 +286,8 @@ export function BuyersForm(props: BuyersFormProps) {
               >
                 <Select
                   placeholder="Select Currency"
-                  // onChange={getSkuCode}
+                  showSearch
+                  optionFilterProp='children'
                   onChange={handleCurrency}
                   allowClear
                 >
@@ -453,6 +454,7 @@ export function BuyersForm(props: BuyersFormProps) {
                                 placeholder="Select Country"
                                 // onChange={getSkuCode}
                                 showSearch
+                                optionFilterProp='children'
                                 allowClear
                               >
                                 {countries.map(dropData => {
@@ -528,6 +530,10 @@ export function BuyersForm(props: BuyersFormProps) {
                               {
                                 required: true, message: 'Missing pincode',
                               },
+                              {
+                                pattern: /^\d{6}$/,
+                                message: 'Contact should contain only 6 digits',
+                            },
                             ]}
                           >
                             <Input placeholder='Enter Pincode'/>
