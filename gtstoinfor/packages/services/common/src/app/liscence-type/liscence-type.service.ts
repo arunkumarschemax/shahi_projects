@@ -33,42 +33,90 @@ export class LiscenceTypeService {
         }
       }
 
-    async createLiscenceType(liscenceTypeDTO: LiscenceTypeDTO, isUpdate: boolean): Promise<LiscenceTypeResponseModel> {
+    // async createLiscenceType(liscenceTypeDTO: LiscenceTypeDTO, isUpdate: boolean): Promise<LiscenceTypeResponseModel> {
       
+    //   try {
+    //     let previousValue
+    //     if (!isUpdate) {
+    //       const deliveryMethodEntity = await this.liscenceTypeRepository.findOne({where:{liscenceType:liscenceTypeDTO.liscenceType}})
+    //       if (deliveryMethodEntity) {
+    //         throw new LiscenceTypeResponseModel(false,11104, 'Liscence Type already exists');
+    //       }
+    //     } else{
+    //       const certificatePrevious = await this.liscenceTypeRepository.findOne({where:{liscenceTypeId:liscenceTypeDTO.liscenceTypeId}})
+    //       previousValue = certificatePrevious.liscenceType
+    //       if(!certificatePrevious) {
+    //         throw new ErrorResponse(0, 'Given Liscence does not exist');
+    //       }
+    //     }
+    //     const convertedLiscenceType: LiscenceType = this.liscenceTypeAdapter.convertDtoToEntity(liscenceTypeDTO,isUpdate);
+    //     const savedLiscenceTypeEntity: LiscenceType = await this.liscenceTypeRepository.save(convertedLiscenceType);
+    //     const savedLiscenceTypeDto: LiscenceTypeDTO = this.liscenceTypeAdapter.convertEntityToDto(convertedLiscenceType);
+    //       // console.log(savedStateDto);
+    //     if (savedLiscenceTypeDto) {
+    //       const presentValue = savedLiscenceTypeDto.liscenceType;
+    //      // generating resposnse
+    //      const response = new LiscenceTypeResponseModel(true,1,isUpdate? 'Liscence Type Updated Successfully': 'Liscence Type Created Successfully');
+    //      const name=isUpdate?'updated':'created'
+    //      const displayValue = isUpdate? 'Liscence Type Updated Successfully': 'Liscence Type Created Successfully'
+    //      const userName = isUpdate? savedLiscenceTypeDto.updatedUser :savedLiscenceTypeDto.createdUser;
+    //      return response
+    //     } else {
+    //       throw new LiscenceTypeResponseModel(false,11106,'Liscence Type saved but issue while transforming into DTO');
+    //     }
+    //   } catch (error) {
+    //     return error;
+    //   }
+    // }
+
+    async createLiscenceType(liscenceTypeDTO: LiscenceTypeDTO, isUpdate: boolean): Promise<LiscenceTypeResponseModel> {
+  
       try {
-        let previousValue
+        let previousValue;
+        
         if (!isUpdate) {
-          const deliveryMethodEntity = await this.liscenceTypeRepository.findOne({where:{liscenceType:liscenceTypeDTO.liscenceType}})
-          if (deliveryMethodEntity) {
-            throw new LiscenceTypeResponseModel(false,11104, 'Liscence Type already exists');
+          const existingLiscenceType = await this.liscenceTypeRepository.findOne({ where: { liscenceType: liscenceTypeDTO.liscenceType } });
+          if (existingLiscenceType) {
+            throw new LiscenceTypeResponseModel(false, 11104, 'License Type already exists');
           }
-        } else{
-          const certificatePrevious = await this.liscenceTypeRepository.findOne({where:{liscenceTypeId:liscenceTypeDTO.liscenceTypeId}})
-          previousValue = certificatePrevious.liscenceType
-          if(!certificatePrevious) {
-            throw new ErrorResponse(0, 'Given Liscence does not exist');
+        } else {
+          const certificatePrevious = await this.liscenceTypeRepository.findOne({ where: { liscenceTypeId: liscenceTypeDTO.liscenceTypeId } });
+          
+          if (!certificatePrevious) {
+            throw new ErrorResponse(0, 'Given License does not exist');
+          }
+    
+          previousValue = certificatePrevious.liscenceType;
+    
+          if (liscenceTypeDTO.liscenceType === previousValue) {
+            throw new LiscenceTypeResponseModel(false, 11105, 'New License Type is the same as the old value');
+          }
+    
+          const existingLiscenceType = await this.liscenceTypeRepository.findOne({ where: { liscenceType: liscenceTypeDTO.liscenceType } });
+          if (existingLiscenceType) {
+            throw new LiscenceTypeResponseModel(false, 11107, 'New License Type already exists');
           }
         }
-        const convertedLiscenceType: LiscenceType = this.liscenceTypeAdapter.convertDtoToEntity(liscenceTypeDTO,isUpdate);
+    
+        const convertedLiscenceType: LiscenceType = this.liscenceTypeAdapter.convertDtoToEntity(liscenceTypeDTO, isUpdate);
         const savedLiscenceTypeEntity: LiscenceType = await this.liscenceTypeRepository.save(convertedLiscenceType);
         const savedLiscenceTypeDto: LiscenceTypeDTO = this.liscenceTypeAdapter.convertEntityToDto(convertedLiscenceType);
-          // console.log(savedStateDto);
+        
         if (savedLiscenceTypeDto) {
-          const presentValue = savedLiscenceTypeDto.liscenceType;
-         // generating resposnse
-         const response = new LiscenceTypeResponseModel(true,1,isUpdate? 'Liscence Type Updated Successfully': 'Liscence Type Created Successfully');
-         const name=isUpdate?'updated':'created'
-         const displayValue = isUpdate? 'Liscence Type Updated Successfully': 'Liscence Type Created Successfully'
-         const userName = isUpdate? savedLiscenceTypeDto.updatedUser :savedLiscenceTypeDto.createdUser;
-         return response
+          const response = new LiscenceTypeResponseModel(true, 1, isUpdate ? 'License Type Updated Successfully' : 'License Type Created Successfully');
+          const displayValue = isUpdate ? 'License Type Updated Successfully' : 'License Type Created Successfully';
+          const userName = isUpdate ? savedLiscenceTypeDto.updatedUser : savedLiscenceTypeDto.createdUser;
+          
+          return response;
         } else {
-          throw new LiscenceTypeResponseModel(false,11106,'Liscence Type saved but issue while transforming into DTO');
+          throw new LiscenceTypeResponseModel(false, 11106, 'License Type saved but issue while transforming into DTO');
         }
       } catch (error) {
         return error;
       }
     }
-
+    
+    
     async getAllLiscenceTypes(): Promise<any> {
      
       try {
