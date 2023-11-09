@@ -77,12 +77,12 @@ construction:number
 })
 yarnCount:number
 
-@Column('string',{
+@Column('varchar',{
     name:'finish'
 })
 finish:string
 
-@Column('string',{
+@Column('varchar',{
     name:'shrinkage'
 })
 shrinkage:string
@@ -92,7 +92,7 @@ shrinkage:string
 })
 pch:number
 
-@Column('string',{
+@Column('varchar',{
     name:'moq'
 })
 moq:string
