@@ -21,11 +21,14 @@ export const COAmendmentView=(Props:COAmendmentViewProps)=>{
     const [form] = Form.useForm();
     const [selectedItemNo, setSelectedItemNo] = useState();
     const [searchClicked, setSearchClicked] = useState(false);
-    const [mopDataYes, setMOPDataYes] = useState([]);
-    const [codata, setCOData] = useState<any[]>([]);
+    const [ChangeQuantity, setChangeQuantity] = useState<any[]>([]);
+    const [co, setco] = useState<any[]>([]);
     const [ChangeDeliveryDate, setChangeDeliveryDate] = useState<any[]>([]);
     const [ChangeOrderLine, setChangeOrderLine] = useState([]);
-  const [ChangeFOB, setChangeFOB] = useState([]);
+   const [ChangeFOB, setChangeFOB] = useState([]);
+   const [ChangeVPONumber, setChangeVPONumber] = useState([]);
+   const [ChangeDestinationAddress, setChangeDestinationAddress] = useState([]);
+
     const searchInput = useRef(null);
     const [page, setPage] = React.useState(1);
     const columns = useState('');
@@ -145,8 +148,28 @@ const search=()=>{
   }
   service.getCoamendment().then((res)=>{
     if(res.status){
-        
-    }
+      setco(res.data)
+        const ChangeOrderLine =res.data.filter((co)=> co.parameter === 'Change Order Line')
+        const ChangeFOB =res.data.filter((co)=> co.parameter === 'Change FOB')
+        const ChangeDeliveryDate =res.data.filter((co)=> co.parameter === 'Change Delivery Date')
+        const ChangeQuantity =res.data.filter((co)=> co.parameter === 'Change Quantity')
+        const ChangeVPONumber =res.data.filter((co)=> co.parameter === 'Change VPO Number')
+        const ChangeDestinationAddress =res.data.filter((co)=> co.parameter === 'Change Destination Address')
+        setChangeOrderLine(ChangeOrderLine)
+        setChangeFOB(ChangeFOB)
+        setChangeDeliveryDate(ChangeDeliveryDate)
+        setChangeQuantity(ChangeQuantity)
+        setChangeVPONumber(ChangeVPONumber)
+        setChangeDestinationAddress(ChangeDestinationAddress)
+    }else{
+        setco([])
+        setChangeOrderLine([])
+        setChangeFOB([])
+        setChangeQuantity([])
+        setChangeVPONumber([])
+        setChangeDeliveryDate([])
+        setChangeDestinationAddress([])
+    } 
     if(res){
         setCono(res.data)
     }
@@ -281,13 +304,11 @@ return (
               </Row>
             </Col>
     </Row>
-    <Card>
     <Tabs type={'card'} tabPosition={'top'}>
-    <TabPane key="1" tab={<span style={{fontSize:'15px'}}><b>{`MOP`}</b></span>}>
-
+     <TabPane key="orderline" tab={<span style={{fontSize:'15px'}}><b>{`Change Order Line`}</b></span>}>
         <Table size='small'
              columns={columnsSkelton}
-             dataSource={variantData}
+             dataSource={ChangeOrderLine}
              pagination={{
                 onChange(current) {
                   setPage(current);
@@ -297,12 +318,72 @@ return (
             //   onChange={onChange}
               bordered 
                        />
-                </TabPane>
+                        </TabPane>
+
+                        <TabPane key="fob" tab={<span style={{fontSize:'15px'}}><b>{`Change FOB`}</b></span>}>
+        <Table size='small'
+             columns={columnsSkelton}
+             dataSource={ChangeFOB}
+             pagination={{
+                onChange(current) {
+                  setPage(current);
+                }
+              }}
+              scroll={{x:true}}
+            //   onChange={onChange}
+              bordered 
+                       />
+                        </TabPane>
+
+                        <TabPane key="deliverydate" tab={<span style={{fontSize:'15px'}}><b>{`Change Delivery Date`}</b></span>}>
+        <Table size='small'
+             columns={columnsSkelton}
+             dataSource={ChangeDeliveryDate}
+             pagination={{
+                onChange(current) {
+                  setPage(current);
+                }
+              }}
+              scroll={{x:true}}
+            //   onChange={onChange}
+              bordered 
+                       />
+                          </TabPane>
+
+                        <TabPane key="quantity" tab={<span style={{fontSize:'15px'}}><b>{`Change Quantity`}</b></span>}>
+        <Table size='small'
+             columns={columnsSkelton}
+             dataSource={ChangeQuantity}
+             pagination={{
+                onChange(current) {
+                  setPage(current);
+                }
+              }}
+              scroll={{x:true}}
+            //   onChange={onChange}
+              bordered 
+                       />
+                          </TabPane>
+
+                <TabPane key="destination" tab={<span style={{fontSize:'15px'}}><b>{`Change Destination Address`}</b></span>}>
+        <Table size='small'
+             columns={columnsSkelton}
+             dataSource={ChangeDestinationAddress}
+             pagination={{
+                onChange(current) {
+                  setPage(current);
+                }
+              }}
+              scroll={{x:true}}
+            //   onChange={onChange}
+              bordered 
+                       />
+                 </TabPane>
+
         </Tabs>
 
     </Card>
 </Card>
-    </Card>
 )
 }
 

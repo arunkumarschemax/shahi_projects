@@ -395,12 +395,18 @@ export const CompanyGrid = (props: CompanyGridProps) => {
               </Form.Item>
             </Col>
             <Col span={4}>
-              <Form.Item label="Division Name" name="divisionName">
+              <Form.Item label="Division Name" name="divisionName"  rules={[ {
+                  required: true,
+                  message: " Division Code Is Required",
+                },]}>
                 <Input />
               </Form.Item>
             </Col>
             <Col span={4}>
-              <Form.Item label="Division Code" name="divisionCode">
+              <Form.Item label="Division Code" name="divisionCode"  rules={[ {
+                  required: true,
+                  message: " Division Code Is Required",
+                },]}>
                 <Input />
               </Form.Item>
             </Col>

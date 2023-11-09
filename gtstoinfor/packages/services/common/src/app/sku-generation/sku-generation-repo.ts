@@ -9,7 +9,7 @@ import { Destination } from "../destination/destination.entity";
 import { Style } from "../style/dto/style-entity";
 import { Division } from "../division/division.entity";
 import { StyleOrder } from "../style-order/style-order.entity";
-import { CoLine } from "../style-order/co-line.entity";
+import { CoLine } from "../style-order/order-line.entity";
 
 @Injectable()
 export class ItemSkuRepository extends Repository<ItemSkus> {
