@@ -18,6 +18,12 @@ export class MappedInfo{
     fgSkuId:number
     mappedRmSKuList:mappedRmSKU[]
 
+    constructor(fgSkuCode:string,fgSkuId:number,mappedRmSKuList:mappedRmSKU[]){
+      this.fgSkuCode = fgSkuCode
+      this.fgSkuId = fgSkuId
+      this.mappedRmSKuList = mappedRmSKuList
+    }
+
   }
   export class mappedRmSKU{
     rmItemCode:string

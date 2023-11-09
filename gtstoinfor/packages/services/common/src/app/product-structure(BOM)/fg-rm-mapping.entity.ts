@@ -12,7 +12,12 @@ export class FgRmMappingEntity {
     })
     fgitemId: number;
 
-    
+    @Column("int", {
+      nullable: false,
+      name: "operation_id"
+    })
+    operationId: number;
+
     @Column("varchar", {
         nullable: false,
         name: "fg_item_code"

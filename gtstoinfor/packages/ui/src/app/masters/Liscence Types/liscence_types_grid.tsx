@@ -43,7 +43,6 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
   }
 
   const deleteLiscenceType = (liscenceTypeData:LiscenceTypesdDto) => {
-    console.log(liscenceTypeData,'hiiiiiiiiii')
     liscenceTypeData.isActive=liscenceTypeData.isActive?false:true;
     service.activateOrDeactivateLiscenceType(liscenceTypeData).then(res => { console.log(res);
       if (res.status) {
@@ -64,6 +63,8 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Successfully');
         setDrawerVisible(false);
+        getAllLiscenceTypes();
+
       } else {
           AlertMessages.getErrorMessage(res.internalMessage);
       }

@@ -9,6 +9,8 @@ import { RmMappingFilterRequest } from "@project-management-system/shared-models
 import { ItemCreation } from "../../fg-item/item_creation.entity";
 import { ItemTypeEntity } from "../../item-type/item-type.entity";
 import { FactoriesEntity } from "../../factories/factories.entity";
+import { Operations } from "../../operations/operation.entity";
+import { OperationSequence } from "../../operation-sequence/operation-sequence.entity";
 
 @Injectable()
 export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
@@ -29,10 +31,14 @@ export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
 
     async getAllFgRmMapped(req: RmMappingFilterRequest ): Promise<any[]> {
         const query = this.createQueryBuilder('fgm')
-        .select(`fgm.rm_item_code AS rm_item_code , item_type,fgi.item_group,fgm.fg_rm_id , fgm.fg_item_code ,fgi.is_sub_contract ,fgi.order_qty ,f.name AS facility ,fgi.season`) 
+        .select(`fgm.rm_item_code AS rm_item_code , item_type,fgi.item_group,fgm.fg_rm_id , fgm.fg_item_code ,fgi.is_sub_contract ,fgi.order_qty ,f.name AS facility ,fgi.season, o.operation_name,os.sequence `) 
       .leftJoin(ItemCreation,'fgi','fgi.fg_item_id = fgm.fg_item_id')
       .leftJoin(ItemTypeEntity,'it','it.item_type_id = fgi.item_type_id')
       .leftJoin(FactoriesEntity,'f','f.id = fgi.facility_id')
+      .leftJoin(Operations,'o','o.operation_id = fgm.operation_id')
+      .leftJoin(OperationSequence,'os','os.operation_id = o.operation_id')
+
+
 
       .where('1=1');
         if (req.fgItemCode !== undefined) {

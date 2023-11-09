@@ -10,6 +10,7 @@ import { GenericTransactionManager } from '../../typeorm-transactions';
 import { CoLine } from '../style-order/co-line.entity';
 import { StyleOrder } from '../style-order/style-order.entity';
 import { CommonResponseModel, ItemCreFilterRequest, FgItemCreIdRequest, CustomerOrderStatusEnum, SubContractStatus } from '@project-management-system/shared-models';
+import { groupBy } from 'rxjs';
 
 
 @Injectable()
@@ -87,6 +88,19 @@ export class ItemCreationService {
             throw err
         }
        }
+       async getAll():Promise<CommonResponseModel>{
+        try{
+            const data = await this.repository.getAll()
+            if(data.length === 0){
+                return new CommonResponseModel(false,0,'No data found')
+            } else{
+                return new CommonResponseModel(true,1,'Data retrieved',data)
+
+            }
+        } catch(err){
+            return err
+        }
+    }
 }
 
 
