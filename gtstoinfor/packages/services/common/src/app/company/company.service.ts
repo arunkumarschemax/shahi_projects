@@ -41,10 +41,9 @@ export class CompanyService {
 
       async createCompany(companyDto: CompanyDTO, isUpdate: boolean): Promise<CompanyResponseModel> {
         try {
-          let previousValue
+          let previousValue          
           if (!isUpdate) {
             const companyEntity = await this.getCompanyDetailsWithoutRelations(companyDto.companyName);
-            // console.log(companyEntity,'-------------------------------------------')
             if (companyEntity) {
               throw new CompanyResponseModel(false,11104, 'Company already exists');
             }
@@ -52,7 +51,10 @@ export class CompanyService {
           else{
             const certificatePrevious = await this.companyRepository.findOne({where:{companyId:companyDto.companyId}})
             previousValue = certificatePrevious.companyName
-            const companyEntity = await this.getCompanyDetailsWithoutRelations(companyDto.companyName);
+
+            const companyEntity = await this.getCompanyDetailsWithoutRelations(companyDto.companyName);   
+                      // console.log(companyEntity,'-------------------companyEntity------------------------')
+
             if (companyEntity) {
               if(companyEntity.companyId!=companyDto.companyId) {
                 throw new CompanyResponseModel(false,11104, 'Company already exists');      
@@ -235,7 +237,6 @@ export class CompanyService {
           } 
           
           const save = await this.companyRepository.save(entityArr)
-       //   console.log('-------------------',save)
           return saveData;
         } else {
           return 'No response Data';

@@ -9,8 +9,8 @@ export class StyleOrderReq{
     buyerStyle : string;
     agent : string;
     buyerAddress : string;
-    exFactoryDate: Date;
-    deliveryDate: Date;
+    // exFactoryDate: Date;
+    // deliveryDate: Date;
     instoreDate: Date;
     salePrice: number;
     priceQuantity: number;
@@ -32,9 +32,9 @@ export class StyleOrderReq{
     buyerId: number;
     createdUser: string;
     coId?: number;
-    coNumber?: string;
-    co_id?: number;
-    season?: string;
+    orderNumber?: string;
+    // co_id?: number;
+    // season?: string;
     merchandiser?: number;
     planner?: number;
     coTypeId?: number;
@@ -42,7 +42,7 @@ export class StyleOrderReq{
     itemSalePriceQty?: number;
 
 
-    constructor(itemCode: string,orderDate : any,buyerPoNumber: string,shipmentType: string,buyerStyle : string,agent : string,buyerAddress : string,exFactoryDate: Date,deliveryDate: Date,instoreDate: Date,salePrice: number,priceQuantity: number,discountPercent: number,discountAmount: number,status: CustomerOrderStatusEnum,remarks: string,itemId: number,warehouseId: number,facilityId: number,styleId: number,packageTermsId: number,deliveryMethodId: number,deliverytermId: number,currencyId: number,paymentMethodId: number,paymentTermId: number,    styleOrderItems: StyleOrderItemsReq[],buyerId:number,createdUser: string,coId?: number,coNumber?: string,co_id?: number,season?: string,merchandiser?: number,planner?: number,coTypeId?: number,uomId?:number,itemSalePriceQty?: number){
+    constructor(itemCode: string,orderDate : any,buyerPoNumber: string,shipmentType: string,buyerStyle : string,agent : string,buyerAddress : string,instoreDate: Date,salePrice: number,priceQuantity: number,discountPercent: number,discountAmount: number,status: CustomerOrderStatusEnum,remarks: string,itemId: number,warehouseId: number,facilityId: number,styleId: number,packageTermsId: number,deliveryMethodId: number,deliverytermId: number,currencyId: number,paymentMethodId: number,paymentTermId: number,    styleOrderItems: StyleOrderItemsReq[],buyerId:number,createdUser: string,coId?: number,orderNumber?: string,merchandiser?: number,planner?: number,coTypeId?: number,uomId?:number,itemSalePriceQty?: number){
     this.itemCode = itemCode
     this.orderDate = orderDate
     this.buyerPoNumber = buyerPoNumber
@@ -50,8 +50,8 @@ export class StyleOrderReq{
     this.buyerStyle  = buyerStyle
     this.agent  = agent
     this.buyerAddress  = buyerAddress
-    this.exFactoryDate = exFactoryDate
-    this.deliveryDate = deliveryDate
+    // this.exFactoryDate = exFactoryDate
+    // this.deliveryDate = deliveryDate
     this.instoreDate = instoreDate
     this.salePrice = salePrice
     this.priceQuantity = priceQuantity
@@ -73,9 +73,9 @@ export class StyleOrderReq{
     this.buyerId = buyerId
     this.createdUser = createdUser
     this.coId = coId
-    this.coNumber = coNumber
-    this.co_id = co_id
-    this.season = season
+    this.orderNumber = orderNumber
+    // this.co_id = co_id
+    // this.season = season
     this.merchandiser = merchandiser
     this.planner = planner
     this.coTypeId = coTypeId

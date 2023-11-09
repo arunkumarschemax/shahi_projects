@@ -26,7 +26,7 @@ export function ItemCreationDetailView  (props: Props)  {
 
       
     return(
-        <Card title={<span style={{ color: 'black' }}>Item Creation Detailed View<span style={{color:'#0A93E1  '}}></span></span>}  headStyle={{ fontWeight: 'bold' }} extra={<Link to='/materialCreation/item-creation-view' ><span style={{color:'white'}} >
+        <Card title={<span style={{ color: 'black' }}>Item Creation<span style={{color:'#0A93E1  '}}></span></span>}  headStyle={{ fontWeight: 'bold' }} extra={<Link to='/materialCreation/item-creation-view' ><span style={{color:'white'}} >
           <Button className='panel_button' >Back </Button>
            </span></Link>}>
             <span>      

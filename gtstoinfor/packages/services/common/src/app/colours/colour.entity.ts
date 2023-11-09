@@ -1,8 +1,9 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 import { BuyersColor } from "../buyers-destination/byers-colors.entity";
 import { ItemSkus } from "../sku-generation/sku-generation.entity";
-import { CoLine } from "../style-order/co-line.entity";
+import { OrderLine } from "../style-order/order-line.entity";
 import { Division } from "../division/division.entity";
+import { CoLine } from "../style-order/co-line.entity";
 
 @Entity('colour')
 export class Colour{
@@ -83,9 +84,12 @@ colorsInfo?:BuyersColor;
 itemSkuInfo?:ItemSkus;
 
 @OneToMany(type=>CoLine, co=>co.colorInfo,{cascade: true})
-coLineInfo?:CoLine;
+orderLineInfo?:CoLine;
 
 @ManyToOne(()=> Division, division=>division.Colour)
 @JoinColumn({name:'division_id'})
 division:Division;
+
+@OneToMany(type=>CoLine, co=>co.colorInfo,{cascade: true})
+CoLineData?:CoLine;
 }

@@ -121,7 +121,7 @@ export function ProcurmentGroupForm(
                           },
                         ]}
                       >
-                      <Input/>
+                      <Input placeholder='`Enter Procurment Group'/>
                     </Form.Item>
         </Col>
 

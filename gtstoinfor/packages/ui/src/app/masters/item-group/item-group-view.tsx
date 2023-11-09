@@ -29,6 +29,11 @@ export const ItemGroupGrid =(Props:ItemGroupProps)=>{
 
 const service = new ItemGroupService
 
+useEffect(() =>
+   {
+    getAllItemGroup();
+  }, [])
+
 const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
         <div style={{ padding: 8 }}>
@@ -101,9 +106,9 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
     setSelectedVariant(viewData);
   }
   const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
+    // console.log('params', pagination, filters, sorter, extra);
   }
-  useEffect(() => {getAllItemGroup();}, [])
+  
 
 const getAllItemGroup=()=>{
     service.getAllitemGroup().then(res=>{
@@ -144,6 +149,8 @@ service.createItemGroup(variantData).then(res=>{
     service.updateItemGroup(Item).then(res=>{
         if(res.status){
             AlertMessages.getSuccessMessage('Updated Successfully');
+           
+            // getAllItemGroup();
             setDrawerVisible(false);
 
         }else{
@@ -272,7 +279,7 @@ service.createItemGroup(variantData).then(res=>{
 
 return (
   <Card title={<span>Item Group</span>}
-  style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/item-group/item-group-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
+  style={{textAlign:'left'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/item-group/item-group-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
   <br></br>
     <>
     <Row gutter={40}>

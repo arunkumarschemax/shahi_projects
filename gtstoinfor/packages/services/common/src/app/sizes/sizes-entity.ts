@@ -2,8 +2,9 @@ import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne
 import { BuyersDestionations } from "../buyers-destination/buyers-destination.entity";
 import { BuyersSize } from "../buyers-destination/buyers-sizes.entity";
 import { ItemSkus } from "../sku-generation/sku-generation.entity";
-import { CoLine } from "../style-order/co-line.entity";
+import { OrderLine } from "../style-order/order-line.entity";
 import { Division } from "../division/division.entity";
+import { CoLine } from "../style-order/co-line.entity";
 
 @Entity('size')
 export class Size{
@@ -82,9 +83,12 @@ sizesInfo:BuyersSize;
 itemSkuInfo:ItemSkus;
 
 @OneToMany(type=>CoLine, co=>co.sizeInfo,{cascade: true})
-coLineInfo:CoLine;
+orderLineInfo:CoLine;
 
 @ManyToOne(()=> Division, division=>division.sizes)
 @JoinColumn({name:'division_id'})
 division:Division;
+
+@OneToMany(type=>CoLine, co=>co.sizeInfo,{cascade: true})
+CoLineData:CoLine;
 }

@@ -9,11 +9,11 @@ export class ItemGroup{
     itemGroupId: number;
 
 
-    @Column('enum', {
+    @Column('varchar', {
         name: 'item_group',
-        enum: ItemGroupEnum
+       length:30,
     })
-    itemGroup: ItemGroupEnum;
+    itemGroup: string;
 
   
     @Column("boolean",{

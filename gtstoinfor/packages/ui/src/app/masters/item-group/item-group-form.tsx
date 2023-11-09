@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Select, Card, Row, Col } from "antd";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {  ItemGroupDto, ItemGroupEnum } from "@project-management-system/shared-models";
 import AlertMessages from "../../common/common-functions/alert-messages";
 import { DivisionService, ItemGroupService, ItemsService, SizeService } from "@project-management-system/shared-services";
@@ -21,6 +21,8 @@ export const ItemGroupForm = (props: ItemGroupProps) => {
   const { Option } = Select;
   const services = new ItemGroupService
   const [group,setGroup] =useState<any[]>([])
+  const navigate = useNavigate();
+
 
   const [division, setdivision] = useState<number>(null);
   let history = useLocation();
@@ -60,6 +62,7 @@ services.getAllitemGroup().then(res=>{
         setDisable(false);
         if (res.status) {
           AlertMessages.getSuccessMessage("ItemGroup Created Successfully");
+          navigate("/masters/item-group/item-group-view");
           //   location.push("/Currencies-view");
           onReset();
         } else {
@@ -73,6 +76,7 @@ services.getAllitemGroup().then(res=>{
   };
 
   const saveData = (values: ItemGroupDto) => {
+    
     setDisable(false);
     if (props.isUpdate) {
       props.updateItem(values);
@@ -90,11 +94,8 @@ services.getAllitemGroup().then(res=>{
   }
   return (
     <Card
-      title={<span>ItemGroup </span>}
-      style={{ textAlign: "center" }}
-      headStyle={{ border: 0 }}
-      extra={
-        props.isUpdate == true ? (
+      title={<span>ItemGroup </span>}style={{ textAlign: "left" }}headStyle={{ border: 0 }}
+      extra={ props.isUpdate == true ? (
           ""
         ) : (
           <Link to="/masters/item-group/item-group-view">
@@ -114,7 +115,7 @@ services.getAllitemGroup().then(res=>{
         name="control-hooks"
         onFinish={saveData}
       >
-        <FormItem name="itemgroupId" style={{ display: "none" }}>
+        <FormItem name="itemGroupId" style={{ display: "none" }}>
           <Input hidden />
         </FormItem>
         <FormItem
@@ -125,61 +126,21 @@ services.getAllitemGroup().then(res=>{
           <Input hidden />
         </FormItem>
         <Row gutter={24}>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 6 }}
-          >
+          <Col xs={{ span: 24 }}sm={{ span: 24 }}md={{ span: 8 }}lg={{ span: 8 }}xl={{ span: 6 }}>
             {" "}
-            <Form.Item name="itemgroupId" label="ItemGroup "
+            <Form.Item name="itemGroup" label="ItemGroup "
            rules={[
             {
               required: true,
               message: 'ItemGroup is required'
             },
           ]} >
-
-            <Select placeholder="select ItemGroup"
-            onSelect={handleItemCategory}
-            showSearch
-            
-            >
-              
-           {Object.values(ItemGroupEnum).map((key,value)=>{
-            return <Option key={key} value={key}>{key}</Option>
-           })}
-            </Select>
+            <Input />
+           
           </Form.Item>
           </Col>
 
-          {/* <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 6 }}
-          >
-            {" "}
-            <Form.Item
-              name="size"
-              label="Size"
-              rules={[
-                {
-                  required: true,
-                  message: " Size Is Required",
-                },
-                {
-                  pattern:
-                    /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
-                  message: `Size Should contain only alphabets.`,
-                },
-              ]}
-            >
-                <Input placeholder='Enter Size'/>
-            </Form.Item>
-          </Col> */}
+          
         </Row>
         <Row>
           <Col span={24} style={{ textAlign: "right" }}>

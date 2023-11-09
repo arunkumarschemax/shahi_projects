@@ -7,7 +7,6 @@ import { ItemCreation } from './item_creation.entity';
 import { error } from 'console';
 import { ItemCreationRepository } from './item-repo/item-creation.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
-import { CoLine } from '../style-order/co-line.entity';
 import { StyleOrder } from '../style-order/style-order.entity';
 import { CommonResponseModel, ItemCreFilterRequest, FgItemCreIdRequest, CustomerOrderStatusEnum, SubContractStatus } from '@project-management-system/shared-models';
 import { groupBy } from 'rxjs';
@@ -91,6 +90,45 @@ export class ItemCreationService {
        async getAll():Promise<CommonResponseModel>{
         try{
             const data = await this.repository.getAll()
+            if(data.length === 0){
+                return new CommonResponseModel(false,0,'No data found')
+            } else{
+                return new CommonResponseModel(true,1,'Data retrieved',data)
+
+            }
+        } catch(err){
+            return err
+        }
+    }
+    async getAllStyleDropDown():Promise<CommonResponseModel>{
+        try{
+            const data = await this.repository.getAllstyle()
+            if(data.length === 0){
+                return new CommonResponseModel(false,0,'No data found')
+            } else{
+                return new CommonResponseModel(true,1,'Data retrieved',data)
+
+            }
+        } catch(err){
+            return err
+        }
+    }
+    async getAllItemDropDown():Promise<CommonResponseModel>{
+        try{
+            const data = await this.repository.getAllitems()
+            if(data.length === 0){
+                return new CommonResponseModel(false,0,'No data found')
+            } else{
+                return new CommonResponseModel(true,1,'Data retrieved',data)
+
+            }
+        } catch(err){
+            return err
+        }
+    }
+    async getAllBrandDropDown():Promise<CommonResponseModel>{
+        try{
+            const data = await this.repository.getBrand()
             if(data.length === 0){
                 return new CommonResponseModel(false,0,'No data found')
             } else{

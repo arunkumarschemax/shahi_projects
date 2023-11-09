@@ -33,59 +33,118 @@ export class ItemGroupService{
           }
         }
 
-        async createItemGroup(itemgroupDTO: ItemGroupDto, isUpdate: boolean): Promise<ItemGroupResponseModel>{
+      //   async createItemGroup(itemgroupDTO: ItemGroupDto, isUpdate: boolean): Promise<ItemGroupResponseModel>{
   
-          // const response = new PaymentMethodResponseModel();
-          try{
-            let previousValue
+      //     // const response = new PaymentMethodResponseModel();
+      //     try{
+            
+      //       let previousValue
+      //       console.log(previousValue,"previousValue");
+
+      //     const ItemGroupDtos: ItemGroupDto[] = [];
+  
+      //       if(!isUpdate){
+      //         const ItemEntity = await this.getItemGroupWithoutRelations(itemgroupDTO.itemGroup);
+      //         if (ItemEntity){
+      //           throw new ItemGroupResponseModel(false,11104, 'itemGroup  already exists'); 
+      //         }
+      //       }
+      //       else{
+      //         const certificatePrevious = await this.ItemGroupRepository.findOne({where:{itemGroupId:itemgroupDTO.itemGroupId}})
+      //         previousValue =(certificatePrevious.itemGroup)
+      //         const ItemEntity = await this.getItemGroupWithoutRelations(itemgroupDTO.itemGroup);
+      //         if (ItemEntity){
+      //           if(ItemEntity.itemGroupId != itemgroupDTO.itemGroupId ){
+      //             throw new ItemGroupResponseModel(false,11104, 'ItemGroup already exists'); 
+      //           }
+      //         }
+      //       }
+      //       const convertedItemEntity: ItemGroup = this.ItemAdapter.convertDtoToEntity(itemgroupDTO,isUpdate);
+  
+      //       console.log(convertedItemEntity);
+      //     const savedItemGroupEntity: ItemGroup = await this.ItemGroupRepository.save(convertedItemEntity);
+      //     const savedItemGroupDto: ItemGroupDto = this.ItemAdapter.convertEntityToDto(savedItemGroupEntity);
+      //     ItemGroupDtos.push(savedItemGroupDto)
+      //       console.log(savedItemGroupDto);
+      //     if (savedItemGroupDto) {
+      //       const presentValue = itemgroupDTO.itemGroup;
+        
+     
+      //       const name=isUpdate?'updated':'created'
+      //       const displayValue = isUpdate? 'ItemGroup Updated Successfully': 'ItemGroup Created Successfully'
+      //       const userName = isUpdate? savedItemGroupDto.updatedUser :savedItemGroupDto.createdUser;
+      //         // const newLogDto = new LogsDto(1,name, 'PaymentMethod', savedPaymentMethodDto.paymentMethodId, true, displayValue,userName,previousValue,presentValue)
+      //         // let res = await this.logService.createLog(newLogDto);
+      //         // /console.log(res);
+      //         const response = new AllItemGroupResponseModel(true,1000,isUpdate? 'ItemGroup Updated Successfully': 'ItemGroup Created Successfully');
+      //       return response;
+      //     } else {
+      //       //return new InformationMessageError(11106, "State saved but issue while transforming into DTO");
+      //       throw new AllItemGroupResponseModel(false,11106,'ItemGroup saved but issue while transforming into DTO');
+      //     }
+      //     // return response;
+      //   } catch (error) {
+      //     // when error occures while saving the data , the execution will come to catch block.
+      //     // tslint:disable-next-line: typedef
+      //     return error;
+      //   }
+      // }
+      async createItemGroup(itemgroupDTO: ItemGroupDto, isUpdate: boolean): Promise<ItemGroupResponseModel> {
+        console.log(itemgroupDTO, "previousValue");
+        try {
+          let previousValue;
+      
+       
+      
           const ItemGroupDtos: ItemGroupDto[] = [];
-  
-            if(!isUpdate){
-              const ItemEntity = await this.getItemGroupWithoutRelations(itemgroupDTO.itemGroup);
-              if (ItemEntity){
-                throw new ItemGroupResponseModel(false,11104, 'itemGroup  already exists'); 
+      
+          if (!isUpdate) {
+            const ItemEntity = await this.getItemGroupWithoutRelations(itemgroupDTO.itemGroup);
+            if (ItemEntity) {
+              throw new ItemGroupResponseModel(false, 11104, 'ItemGroup already exists');
+            }
+          } else {
+            const certificatePrevious = await this.ItemGroupRepository.findOne({ where: { itemGroupId: itemgroupDTO.itemGroupId } });
+            previousValue = certificatePrevious.itemGroup;
+            const ItemEntity = await this.getItemGroupWithoutRelations(itemgroupDTO.itemGroup);
+            if (ItemEntity) {
+              if (ItemEntity.itemGroupId != itemgroupDTO.itemGroupId) {
+                throw new ItemGroupResponseModel(false, 11104, 'ItemGroup already exists');
               }
             }
-            else{
-              const certificatePrevious = await this.ItemGroupRepository.findOne({where:{itemGroupId:itemgroupDTO.itemGroupId}})
-              previousValue =(certificatePrevious.itemGroup)
-              const ItemEntity = await this.getItemGroupWithoutRelations(itemgroupDTO.itemGroup);
-              if (ItemEntity){
-                if(ItemEntity.itemGroupId != itemgroupDTO.itemGroupId ){
-                  throw new ItemGroupResponseModel(false,11104, 'ItemGroup already exists'); 
-                }
-              }
-            }
-            const convertedItemEntity: ItemGroup = this.ItemAdapter.convertDtoToEntity(itemgroupDTO,isUpdate);
-  
-            console.log(convertedItemEntity);
-          const savedItemGroupEntity: ItemGroup = await this.ItemGroupRepository.save(convertedItemEntity);
-          const savedItemGroupDto: ItemGroupDto = this.ItemAdapter.convertEntityToDto(savedItemGroupEntity);
-          ItemGroupDtos.push(savedItemGroupDto)
-            console.log(savedItemGroupDto);
+          }
+      
+          const convertedItemEntity: ItemGroup = this.ItemAdapter.convertDtoToEntity(itemgroupDTO, isUpdate);
+      
+          // console.log(convertedItemEntity);
+      
+          if (isUpdate) {
+            await this.ItemGroupRepository.update({ itemGroupId: itemgroupDTO.itemGroupId }, convertedItemEntity);
+          } else {
+            await this.ItemGroupRepository.save(convertedItemEntity);
+          }
+      
+          const savedItemGroupDto: ItemGroupDto = this.ItemAdapter.convertEntityToDto(convertedItemEntity);
+          ItemGroupDtos.push(savedItemGroupDto);
+          // console.log(savedItemGroupDto );
+      
           if (savedItemGroupDto) {
             const presentValue = itemgroupDTO.itemGroup;
-            //generating resposnse
-     
-            const name=isUpdate?'updated':'created'
-            const displayValue = isUpdate? 'ItemGroup Updated Successfully': 'ItemGroup Created Successfully'
-            const userName = isUpdate? savedItemGroupDto.updatedUser :savedItemGroupDto.createdUser;
-              // const newLogDto = new LogsDto(1,name, 'PaymentMethod', savedPaymentMethodDto.paymentMethodId, true, displayValue,userName,previousValue,presentValue)
-              // let res = await this.logService.createLog(newLogDto);
-              // /console.log(res);
-              const response = new AllItemGroupResponseModel(true,1000,isUpdate? 'ItemGroup Updated Successfully': 'ItemGroup Created Successfully');
+      
+            const name = isUpdate ? 'updated' : 'created';
+            const displayValue = isUpdate ? 'ItemGroup Updated Successfully' : 'ItemGroup Created Successfully';
+            const userName = isUpdate ? savedItemGroupDto.updatedUser : savedItemGroupDto.createdUser;
+      
+            const response = new AllItemGroupResponseModel(true, 1000, displayValue);
             return response;
           } else {
-            //return new InformationMessageError(11106, "State saved but issue while transforming into DTO");
-            throw new AllItemGroupResponseModel(false,11106,'ItemGroup saved but issue while transforming into DTO');
+            throw new AllItemGroupResponseModel(false, 11106, 'ItemGroup saved but issue while transforming into DTO');
           }
-          // return response;
         } catch (error) {
-          // when error occures while saving the data , the execution will come to catch block.
-          // tslint:disable-next-line: typedef
           return error;
         }
       }
+      
 
       async getAllItemGroup(): Promise<AllItemGroupResponseModel> {
        
