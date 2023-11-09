@@ -23,6 +23,8 @@ export class MaterialIssueService {
         private issueRepo: MaterialIssueRepository,
         private fabricRepo: MaterialFabricRepository,
         private trimRepo: MaterialTrimRepository,
+        private readonly dataSource: DataSource,
+
         // private readonly dataSource: AppDataSource,
     ) { }
 
@@ -96,7 +98,7 @@ export class MaterialIssueService {
                 fabricInfo.push(fabricEntity)
             }
             issueData.fabric = fabricInfo
-            for(const trim of req.trimInfo){
+            for(const trim of req?.trimInfo){
                 const trimEntity = new MaterialTrimEntity()
                 trimEntity.description = trim.description
                 trimEntity.colorId = trim.colorId
@@ -237,47 +239,105 @@ async getDataByStyleId(req: MaterialIssueRequest):Promise<CommonResponseModel>{
     }
 
     async getMaterialIssue(): Promise<CommonResponseModel> {
+        
         try {
-          const data = await this.issueRepo.getMaterialIssue(); 
+            const query = `SELECT 
+            mi.material_issue_id AS id,
+            mi.consumption_code AS consumptioncode,
+            mi.request_no AS requestNo,
+            mi.issue_date AS issue_date,
+            mi.location_id AS locationId,
+            l.location_name AS locationname,
+            mi.pch_id AS profitControlId,
+            ph.profit_control_head AS pch,
+            mi.buyer_id AS buyer_id,
+            b.buyer_name AS buyername,
+            mi.sample_type_id AS sample_type_id,
+            smp.sample_type AS sampleType,
+            mi.style_no AS style_no,
+            mi.brand_id,
+            mi.dmm_id,
+            mi.technician_id,
+            mi.description,
+            mi.cost_ref,
+            mi.m3_style_no AS m3_style_no,
+            mi.contact,
+            mi.extn,
+            mi.product,
+            mi.type,
+            mi.conversion,
+            mi.made_in,
+            fb.material_fabric_id AS materialcode,
+            fb.fabric_code AS fabricCode,
+            fb.consumption AS consumption,
+            fb.consumption_uom AS fbconsumption_uom,
+            fb.issued_quantity AS issued_quantity,
+            fb.issued_quantity_uom AS fbissued_quantity_uom,
+            tr.material_trim_id AS materialtrim_id,
+            tr.description AS trimdescription,
+            tr.color_id AS trimcolor_id,
+            tr.consumption AS trimconsumption,
+            tr.consumption_uom AS trimconsumption_uom,
+            tr.issued_quantity AS trimissued_quantity,
+            tr.issued_quantity_uom AS trimissued_quantity_uom,
+            c.colour AS color,
+            rm.item_code AS fabricCode,
+            pg.product_group AS materialtype
+        FROM material_issue mi
+        LEFT JOIN material_fabric fb ON fb.material_issue_id = mi.material_issue_id
+        LEFT JOIN material_trim tr ON tr.material_issue_id = mi.material_issue_id
+        LEFT JOIN colour c ON c.colour_id = fb.color_id
+        LEFT JOIN rm_items rm ON rm.item_code = fb.fabric_code
+        LEFT JOIN product_group pg ON pg.product_group_id = rm.product_group_id
+        LEFT JOIN location l ON l.location_id = mi.location_id
+        LEFT JOIN sample_types smp ON smp.sample_type_id = mi.sample_type_id
+        LEFT JOIN profit_control_head ph ON ph.profit_control_head_id = mi.pch_id
+        LEFT JOIN buyers b ON b.buyer_id = mi.buyer_id;
+        `;
+
+      const data = await this.dataSource.query(query);         
           if (data.length > 0) {
             const groupedData = data.reduce((result, item) => {
               const requestNo = item.requestNo;
               const consumptionCode = item.consumptioncode;
               const style_no = item.style_no;
-              const sampletype = item.sampletype;
-              const pchId = item.pchId;
-              const date = item.date;
-              const locationId = item.locationId;
+              const sampletype = item.sampleType;
+              const pchId = item.pch;
+              const date = item.issue_date;
+              const locationId = item.locationname;
               const style = item.style;
               const m3_style_no = item.m3_style_no;
-              const buyer = item.buyer;
-              if (!result[consumptionCode]) {
-                result[consumptionCode] = {
+              const buyer = item.buyername;
+              if (!result[requestNo]) {
+                result[requestNo] = {
                   request_no: requestNo,
                   consumption_code: consumptionCode,
-                  style_no:style_no,
-                  sample_type_id:sampletype,
-                  pch_id:pchId,
+                  styleNo:style_no,
+                  sampleType:sampletype,
+                  pch:pchId,
                   issue_date:date,
-                  location_id:locationId,
+                  locationname:locationId,
                   m_style_no:style,
-                  buyer_id:buyer,
+                  buyername:buyer,
                   m3_style_no:m3_style_no,
                   mi_items: [],
                 };
               }
-              result[consumptionCode].mi_items.push({
+              console.log(item,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+              result[requestNo].mi_items.push({
                 material_fabric_id: item.material_fabric_id,
                 material_trim_id:item.material_trim_id,
-                fabric_code: item.fabric_code ,
+                materialtype:item.materialtype,
+                fabricCode: item.fabricCode ,
                 description:item.description,
-                color_id:item.color_id,
+                color:item.color,
                 consumption:item.consumption,
-                issued_quantity:item.issued_quantity,
+                issuedQuantity:item.issued_quantity,
+                
               });
               return result;
+              
             }, {});
-    
             return new CommonResponseModel(true, 1, 'Data retrieved successfully', Object.values(groupedData));
           }
           return new CommonResponseModel(false, 0, 'No data found', []);

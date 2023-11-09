@@ -148,6 +148,7 @@ import StockReport from "./Reports/stock-report"
 import SampleRequestReport from "./Reports/sample-request-report"
 import RackPosition from "./rm_locations/rack-positions"
 import PositionGrid from "./rm_locations/rack-positions grid"
+import SampleInventory from "./sample-development/sample-inventory-grid"
 
 
 export const AppRoutes = () => {
@@ -524,6 +525,7 @@ export const AppRoutes = () => {
                     <Route path="sample-requests" element={<SampleRequests/>}/>
                     <Route path="store-issue-detail" element={<StoreIssueDetailed/>}/>
                     <Route path="market-issue-detailview" element={<MarketIssueDetail />}/>
+                    <Route path="sample-inventory-grid" element={<SampleInventory />}/>
 
                 </Route>
 
