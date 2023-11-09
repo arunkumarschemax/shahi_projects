@@ -1,12 +1,14 @@
 export class CoLineFormatModel{
-    orderPlanNumber: string;
+    buyerPo: string;
     itemNumber: string;
+    remarks: string;
     deliveryDate : any;
     destinations: Destinations[]
 
-    constructor(orderPlanNumber: string,itemNumber: string,deliveryDate : any,destinations: Destinations[]){
-        this.orderPlanNumber = orderPlanNumber
+    constructor(buyerPo: string,itemNumber: string,remarks: string,deliveryDate : any,destinations: Destinations[]){
+        this.buyerPo = buyerPo
         this.itemNumber = itemNumber
+        this.remarks = remarks
         this.deliveryDate = deliveryDate
         this.destinations = destinations
     }

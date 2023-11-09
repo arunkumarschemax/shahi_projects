@@ -24,7 +24,7 @@ import { TrimOrdersChildEntity } from './entities/trim-orders-child.entity';
 import { TrimOrdersChildAdapter } from './adapters/trim-orders-child.adapter';
 import { TrimOrdersAdapter } from './adapters/trim-orders.adapter';
 import { TrimOrdersChildRepository } from './repository/trim-order-child.repo';
-import { find } from 'rxjs';
+import { find, groupBy } from 'rxjs';
 import { log } from 'console';
 import { appConfig } from 'packages/services/common/config';
 import * as fs from 'fs';
@@ -43,6 +43,7 @@ import { CoLineRepository } from './repository/co-line-repo';
 let moment = require('moment');
 moment().format();
 import * as nodemailer from 'nodemailer';
+import { PriceListService } from '@project-management-system/shared-services';
 
 @Injectable()
 export class OrdersService {
@@ -63,6 +64,7 @@ export class OrdersService {
         @InjectDataSource()
         private dataSource: DataSource,
         @InjectEntityManager() private readonly entityManager: EntityManager,
+        private priceListService : PriceListService
         
 
     ) { 
@@ -2617,6 +2619,31 @@ async sendMail(to: string, subject: string, message : any[]) {
 
   async getTrimOrderDetails():Promise<CommonResponseModel>{
     try{
+        const priceMap = new Map<string,Map<string,string>>()  //destination,itemcode,price
+        // const destinationsDataQry = `select distinct(business_unit) from trim_orders`;
+        // const destinationsData = await this.dataSource.query(destinationsDataQry)
+        // console.log(destinationsData,'bbbb')
+
+        const priceListQry = `select sample_code as sampleCode,business,fob_local_currency as fobLocalCurrency,currency from price_list where business in(select distinct(business_unit) from trim_orders)`;
+        const priceListData = await this.dataSource.query(priceListQry)
+
+        for(const record of priceListData){
+            if(!(priceMap.has(record.business))){
+                 priceMap.set(record.business,new Map<string,string>)
+                if(!(priceMap.get(record.business).has(record.sampleCode))){
+                    priceMap.get(record.business).set(record.sampleCode,record.fobLocalCurrency)
+                }else{
+                    if(!(priceMap.get(record.business).has(record.sampleCode))){
+                        priceMap.get(record.business).set(record.sampleCode,record.fobLocalCurrency)
+                    }
+                }
+            }else{
+                if(!(priceMap.get(record.business).has(record.sampleCode))){
+                    priceMap.get(record.business).set(record.sampleCode,record.fobLocalCurrency)
+                }
+            }
+        }
+       
         const data = await this.trimOrderRepo.find()
         let destinationMap = new Map<string,Destinations>()
         if(data){
@@ -2628,14 +2655,18 @@ async sendMail(to: string, subject: string, message : any[]) {
                 if(!colorMap.has(rec.color)){
                     colorMap.set(rec.color,new Colors(rec.color,[]))
                 }
-                colorMap.get(rec.color).sizes.push(new Sizes(rec.size,rec.orderQtyPcs,null))
-                colorMap.forEach((e) => 
-                destinationMap.get(rec.businessUnit).colors.push(new Colors(e.name,e.sizes))
-                )
+                colorMap.get(rec.color).sizes.push(new Sizes(rec.size,rec.orderQtyPcs,Number(priceMap.get(rec.businessUnit).get(rec.sampleCode.slice(2))))) 
             }
             const destinations: Destinations[] = []
-            destinationMap.forEach((e) => destinations.push(e))
-            return new CommonResponseModel(true,1,'',destinations)
+            destinationMap.forEach((rec) => {
+            colorMap.forEach((e) => {
+                destinationMap.get(rec.name).colors.push(new Colors(e.name,e.sizes))
+            })
+            destinations.push(rec)  
+        })
+            
+            const info = new CoLineFormatModel(data[0].orderPlanNumber,data[0].trimItemNo,null,data[0].contractedETD,destinations)
+            return new CommonResponseModel(true,1,'Data retrieved successfully',info)
         }
     }catch(err){
         throw err

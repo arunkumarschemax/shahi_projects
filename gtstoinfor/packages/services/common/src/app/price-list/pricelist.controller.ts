@@ -243,7 +243,7 @@ export class PriceListController {
     }
 
     @Post('/getPriceForItem')
-    async getPriceForItem(@Body() req:priceListRequest): Promise<CommonResponseModel> {
+    async getPriceForItem(@Body() req:any): Promise<CommonResponseModel> {
         try {
             return await this.priceService.getPriceForItem(req);
         } catch (error) {

@@ -21,6 +21,7 @@ import { TrimOrdersChildAdapter } from './adapters/trim-orders-child.adapter';
 import { TrimOrdersChildRepository } from './repository/trim-order-child.repo';
 import { CoLine } from './entities/co-line.entity';
 import { CoLineRepository } from './repository/co-line-repo';
+import { PriceListService } from '@project-management-system/shared-services';
 
 @Module({
   imports: [
@@ -34,6 +35,6 @@ import { CoLineRepository } from './repository/co-line-repo';
       CoLine
     ])],
   controllers: [OrdersController],
-  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository, OrderDifferenceRepository, ApplicationExceptionHandler,FileUploadRepository,TrimOrdersRepository,TrimOrdersAdapter,TrimOrdersChildAdapter,TrimOrdersChildRepository,CoLineRepository]
+  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository, OrderDifferenceRepository, ApplicationExceptionHandler,FileUploadRepository,TrimOrdersRepository,TrimOrdersAdapter,TrimOrdersChildAdapter,TrimOrdersChildRepository,CoLineRepository,PriceListService]
 })
 export class OrdersModule { }
