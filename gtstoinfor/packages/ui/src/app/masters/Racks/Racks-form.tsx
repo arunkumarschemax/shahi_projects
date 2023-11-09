@@ -1,11 +1,37 @@
-import { Button, Card, Col, Form, Input, Row } from 'antd'
+import { RacksService } from '@project-management-system/shared-services'
+import { Button, Card, Col, Form, Input, Row, message } from 'antd'
 import React from 'react'
 import {   useNavigate } from 'react-router-dom'
+import AlertMessages from '../../common/common-functions/alert-messages'
+import { RackDTO } from '@project-management-system/shared-models'
 
 const RackForm = () => {
 
 const navigate=useNavigate()
-// const [form] = Form.useForm();
+const service = new RacksService();
+const [form] = Form.useForm();
+const Rules = /^[a-zA-Z0-9]+$/;
+
+const onFinish = (rackDto: RackDTO) => {
+    service.createRacks(rackDto).then(res => {
+      if (res.status) {
+        AlertMessages.getSuccessMessage(res.internalMessage)
+        setTimeout(() => {
+          message.success('Submitted successfully');
+          window.location.reload();
+        }, 500);;
+      }
+    }).catch(err => {
+      AlertMessages.getErrorMessage(err.message);
+    })
+  }
+
+
+  const clearData = () => {
+    form.resetFields()
+  }
+
+
 
   return (
     <div>
@@ -18,30 +44,58 @@ const navigate=useNavigate()
         >View</Button>
         
         }>
-        <Form  layout={'vertical'}>
+        <Form form={form} layout={'vertical'} onFinish={onFinish}>
       <Row gutter={24}>
             <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4}} lg={{ span: 8}} xl={{ span: 5}}>
               <Form.Item label="Rack Name" name="rackName"
+               rules={[
+                { required: true, message: 'Field is required' },
+                {
+                  pattern: Rules,
+                  message: 'Only numbers and characters are allowed',
+                },
+              ]}
               >
-                <Input />
+                <Input placeholder=" Enter Rack Name"/>
               </Form.Item>
             </Col>
             <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4}} lg={{ span: 8}} xl={{ span: 5}}>
               <Form.Item label=" Rack Code" name="rackCode"
+               rules={[
+                { required: true, message: 'Field is required' },
+                {
+                  pattern: Rules,
+                  message: 'Only numbers and characters are allowed',
+                },
+              ]}
               >
-                <Input />
+                <Input placeholder=" Enter Rack Code"/>
               </Form.Item>
             </Col>
             <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4}} lg={{ span: 8}} xl={{ span: 5}}>
               <Form.Item label="Unit" name="unit"
+               rules={[
+                { required: true, message: 'Field is required' },
+                {
+                  pattern: Rules,
+                  message: 'Only numbers and characters are allowed',
+                },
+              ]}
               >
-                <Input />
+                <Input placeholder=" Enter unit"/>
               </Form.Item>
             </Col>
             <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4}} lg={{ span: 8}} xl={{ span: 5}}>
               <Form.Item label=" Rack Type" name="rackType"
+               rules={[
+                { required: true, message: 'Field is required' },
+                {
+                  pattern: Rules,
+                  message: 'Only numbers and characters are allowed',
+                },
+              ]}
               >
-                <Input />
+                <Input placeholder=" Rack Type"/>
               </Form.Item>
             </Col>
           </Row>
@@ -51,7 +105,7 @@ const navigate=useNavigate()
                 Submit
               </Button>
               <Button htmlType="button" style={{ margin: '0 14px' }}
-                // onClick={clearData}
+                onClick={clearData}
               >
                 Reset
               </Button>
