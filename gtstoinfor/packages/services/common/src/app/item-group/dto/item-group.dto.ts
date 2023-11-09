@@ -11,9 +11,8 @@ export class ItemGroupDto{
     itemGroupId: number;
   
     @ApiProperty()
-  @MaxLength(15,{message:"itemGroup allows maxmum 20s characters"})
-  @IsNotEmpty()
-  itemGroup:ItemGroupEnum;
+ 
+  itemGroup:string;
  
   @ApiProperty()
   isActive: boolean;
