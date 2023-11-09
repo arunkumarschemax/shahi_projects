@@ -248,7 +248,7 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
   return (
       <>
       <Card title={<span >License Type</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+    style={{textAlign:'left'}} headStyle={{ border: 0 }} 
     extra={<Link to='/masters/liscence-type/liscence-type-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
