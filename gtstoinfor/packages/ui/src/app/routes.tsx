@@ -148,6 +148,7 @@ import StockReport from "./Reports/stock-report"
 import SampleRequestReport from "./Reports/sample-request-report"
 import RackPosition from "./rm_locations/rack-positions"
 import PositionGrid from "./rm_locations/rack-positions grid"
+import PurchaseOrderForm from "./purchase-order2/purchase-order-form"
 import SampleInventory from "./sample-development/sample-inventory-grid"
 import RackForm from "./masters/Racks/Racks-form"
 import RackView from "./masters/Racks/Racks-view"
@@ -582,8 +583,7 @@ export const AppRoutes = () => {
                     <Route path='/sourcing-requisition-report' element={<SourcingRequisitionReport/>}/>
                     <Route path='/indent-form' element={<SourcingRequisitionDynamicForm/>}/>
                     <Route path='/requisition-view' element={<SourcingRequisitionDynamicView/>}/>
-                 
-
+                    <Route path='/purchase-order' element={<PurchaseOrderForm/>}/>
 
 
                     <Route path='/excel-import'>
