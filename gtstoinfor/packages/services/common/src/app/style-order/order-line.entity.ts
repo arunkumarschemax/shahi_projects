@@ -7,19 +7,19 @@ import { UomEntity } from "../uom/uom-entity";
 import { StyleOrder } from "./style-order.entity";
 
 @Entity('order_lines')
-export class CoLine{
+export class OrderLine{
 
     @PrimaryGeneratedColumn("increment",{
-        name:'co_line_id'
+        name:'order_line_id'
     })
-    coLineId:number;
+    orderLineId:number;
 
-    @Column('varchar',{
-        name:'coline_number',
-        nullable:false,
-        length:50
-    })
-    coLineNumber : string;
+    // @Column('varchar',{
+    //     name:'coline_number',
+    //     nullable:false,
+    //     length:50
+    // })
+    // coLineNumber : string;
 
     @Column('varchar',{
         name:'delivery_address',
@@ -62,12 +62,12 @@ export class CoLine{
     })
     uom : string;
 
-    @Column('enum',{
-        name:'status',
-        enum:CustomerOrderStatusEnum,
-        nullable:false
-    })
-    status : CustomerOrderStatusEnum
+    // @Column('enum',{
+    //     name:'status',
+    //     enum:CustomerOrderStatusEnum,
+    //     nullable:false
+    // })
+    // status : CustomerOrderStatusEnum
 
     @Column('decimal',{
         name:'discount',
@@ -135,23 +135,23 @@ export class CoLine{
     })
     skuCode: string;
 
-    @ManyToOne(type=>StyleOrder, co=>co.coLineInfo,{  nullable:false, })
+    @ManyToOne(type=>StyleOrder, co=>co.orderLineInfo,{  nullable:false, })
     @JoinColumn({ name:"co_id"})
     styleOrderInfo: StyleOrder;
 
-    @ManyToOne(type=>Colour, color=>color.coLineInfo,{  nullable:false, })
+    @ManyToOne(type=>Colour, color=>color.orderLineInfo,{  nullable:false, })
     @JoinColumn({ name:"color_id"})
     colorInfo: Colour;
 
-    @ManyToOne(type=>Size, size=>size.coLineInfo,{  nullable:false, })
+    @ManyToOne(type=>Size, size=>size.orderLineInfo,{  nullable:false, })
     @JoinColumn({ name:"size_id"})
     sizeInfo: Size;
 
-    @ManyToOne(type=>Destination, destination=>destination.coLineInfo,{  nullable:false, })
+    @ManyToOne(type=>Destination, destination=>destination.orderLineInfo,{  nullable:false, })
     @JoinColumn({ name:"destination_id"})
     destinationInfo: Destination;
 
-    @ManyToOne(type=>UomEntity, uom=>uom.coLineInfo,{  nullable:true, })
+    @ManyToOne(type=>UomEntity, uom=>uom.orderLineInfo,{  nullable:true, })
     @JoinColumn({ name:"uom_id"})
     uomInfo: UomEntity;
 }

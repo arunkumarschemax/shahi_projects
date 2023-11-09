@@ -4,21 +4,21 @@ import { ApplicationExceptionHandler } from '@project-management-system/backend-
 import { StyleOrder } from './style-order.entity';
 import { StyleOrderService } from './style-order.service';
 import { StyleOrderController } from './style-order.controller';
-import { CoLine } from './order-line.entity';
+import { OrderLine } from './order-line.entity';
 import { StyleOrderRepository } from './style-order-repo';
-import { CoLineRepository } from './order-line.repo';
+import { OrderLineRepository } from './order-line.repo';
 import { ItemCreation } from '../fg-item/item_creation.entity';
 import { CoUpdateRepository } from './co-updates.repo';
 import { CoUpdateEntity } from './co-updates.entity';
-import { CoLineEntity } from './co-line.entity';
+import { CoLine } from './co-line.entity';
 
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([StyleOrder,CoLine,CoUpdateEntity,CoLineEntity
+        TypeOrmModule.forFeature([StyleOrder,OrderLine,CoUpdateEntity,CoLine
         ]),
       ],
-      providers: [ApplicationExceptionHandler,StyleOrderService,StyleOrderRepository,CoLineRepository,ItemCreation,CoUpdateRepository],
+      providers: [ApplicationExceptionHandler,StyleOrderService,StyleOrderRepository,OrderLineRepository,ItemCreation,CoUpdateRepository],
       controllers: [StyleOrderController],
       exports: []
 })

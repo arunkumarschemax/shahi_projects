@@ -1,9 +1,9 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { BuyersDestionations } from "../buyers-destination/buyers-destination.entity";
 import { ItemSkus } from "../sku-generation/sku-generation.entity";
-import { CoLine } from "../style-order/order-line.entity";
+import { OrderLine } from "../style-order/order-line.entity";
 import { Division } from "../division/division.entity";
-import { CoLineEntity } from "../style-order/co-line.entity";
+import { CoLine } from "../style-order/co-line.entity";
 @Entity('destination')
 export class Destination {
 
@@ -90,14 +90,14 @@ export class Destination {
     @OneToMany(type=>ItemSkus, item=>item.destinationInfo,{cascade: true})
     itemSkuInfo:ItemSkus;
 
-    @OneToMany(type=>CoLine, co=>co.destinationInfo,{cascade: true})
-    coLineInfo:CoLine;
+    @OneToMany(type=>OrderLine, co=>co.destinationInfo,{cascade: true})
+    orderLineInfo:OrderLine;
 
     
 @ManyToOne(()=> Division, division=>division.Destination)
 @JoinColumn({name:'division_id'})
 division:Division;
 
-@OneToMany(type=>CoLineEntity, co=>co.destinationInfo,{cascade: true})
-CoLineData:CoLineEntity;
+@OneToMany(type=>CoLine, co=>co.destinationInfo,{cascade: true})
+CoLineData:CoLine;
 }
