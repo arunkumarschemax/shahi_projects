@@ -3,6 +3,7 @@ import { Button, Card, Col, DatePicker, Form, Row, Segmented, Select, Space, Tab
 import TabPane from "antd/es/tabs/TabPane";
 import { useState, useEffect } from "react";
 import PurchaseOrderfabricForm from "./purchase-order-fabric";
+import PurchaseOrderTrim from "./purchase-order-trim";
 
 export const PurchaseOrderForm =()=>{
     const{Option} =Select
@@ -94,7 +95,8 @@ return(
                     {tabName == 'Fabric' ?
                      <>
                      <PurchaseOrderfabricForm />
-                    </>:<></>}
+                    </>:<PurchaseOrderTrim />}
+                    
             </Space>
             </Row>
 
