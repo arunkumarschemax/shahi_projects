@@ -10,7 +10,7 @@ export class PriceListService extends CommonAxiosService {
         return this.axiosPostCall(this.URL + "/createPriceList", req)
     }
 
-    async getAllPriceList(req:any): Promise<PriceListResponseModel> {
+    async getAllPriceList(req?:any): Promise<PriceListResponseModel> {
         return this.axiosPostCall(this.URL + "/getAllPriceList",req)
     }
 
