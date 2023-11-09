@@ -44,8 +44,11 @@ export class PurchaseOrderTrimEntity{
         nullable: true
     })
     remarks: string
-    
-    @ManyToOne(type =>PurchaseOrderEntity,trimorder =>trimorder.poTrimInfo)
-    @JoinColumn({name:'purchase_order_id'})
-    purchaseOrderEntity:PurchaseOrderEntity
+
+
+
+    // @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poTrimInfo)
+    // @JoinColumn({name:'purchase_order_id'})
+    // purchaseOrderEntity:PurchaseOrderEntity
+
 }
