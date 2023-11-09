@@ -93,8 +93,8 @@ export class PurchaseOrderEntity{
   @OneToMany(type => PurchaseOrderFbricEntity, purchaseReqFabric => purchaseReqFabric.purchaseOrderEntity, { cascade: true })
   poFabricInfo: PurchaseOrderFbricEntity[]
 
-  // @OneToMany(type => PurchaseOrderTrimEntity, poTrimReq => poTrimReq.purchaseOrderEntity, { cascade: true })
-  // poTrimInfo: PurchaseOrderTrimEntity[]
+  @OneToMany(type => PurchaseOrderTrimEntity, poTrimReq => poTrimReq.purchaseOrderEntity, { cascade: true })
+  poTrimInfo: PurchaseOrderTrimEntity[]
 
 
 }
