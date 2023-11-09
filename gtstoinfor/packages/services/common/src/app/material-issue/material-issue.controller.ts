@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { MaterialIssueService } from "./material-issue.service";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { CommonResponseModel, MaterialIssueRequest, MaterialIssueIdreq, MaterialIssueResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, MaterialIssueRequest, MaterialIssueIdreq, MaterialIssueResponseModel, ResponesNoDropDownRes, RequestNoDto } from "@project-management-system/shared-models";
 import { MaterialIssueDto } from "./dto/material-issue-dto";
 
 @ApiTags('material-issue')
@@ -44,41 +44,54 @@ export class MaterialIssueController {
 
     @Post("/getAllFabricDetails")
     @ApiBody({ type: MaterialIssueIdreq })
-    async getAllFabricDetails(@Body() req:any) {
-        try{
+    async getAllFabricDetails(@Body() req: any) {
+        try {
             return this.issueService.getAllFabricDetails(req);
-        } catch(error) {
+        } catch (error) {
             return error;
         }
     }
 
     @Post("/getAllTrimDetails")
     @ApiBody({ type: MaterialIssueIdreq })
-    async getAllTrimDetails(@Body() req:any) {
-        try{
+    async getAllTrimDetails(@Body() req: any) {
+        try {
             return this.issueService.getAllTrimDetails(req);
-        } catch(error) {
+        } catch (error) {
             return error;
         }
     }
 
     @Post('/getDataByStyleId')
-    @ApiBody({type: MaterialIssueRequest})
-    async getDataByStyleId(@Body() req: any):Promise<MaterialIssueResponseModel>{
-        try{
-            console.log(req,'-------')
+    @ApiBody({ type: MaterialIssueRequest })
+    async getDataByStyleId(@Body() req: any): Promise<MaterialIssueResponseModel> {
+        try {
+            console.log(req, '-------')
             return await this.issueService.getDataByStyleId(req)
-        }catch(err){
+        } catch (err) {
             return this.applicationExceptionHandler.returnException(MaterialIssueResponseModel, err);
         }
     }
     @Post('/getAllMaterial')
-    @ApiBody({type: MaterialIssueRequest})
-    async getMaterialIssue(@Body() req: any):Promise<MaterialIssueResponseModel>{
-        try{
-            return await this.issueService.getMaterialIssue()
-        }catch(err){
+    @ApiBody({ type: MaterialIssueRequest })
+    async getMaterialIssue(@Req() req: any): Promise<MaterialIssueResponseModel> {
+        try {
+            return await this.issueService.getMaterialIssue(req.body)
+        } catch (err) {
             return this.applicationExceptionHandler.returnException(MaterialIssueResponseModel, err);
         }
+    };
+
+
+
+    @Post('/getRequestNoDrop')
+    @ApiBody({ type: RequestNoDto })
+    async getMaterialIssues(): Promise<ResponesNoDropDownRes> {
+        try {
+            return await this.issueService.getMaterialIssues()
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(ResponesNoDropDownRes, error);
+        }
     }
+
 }

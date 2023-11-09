@@ -1,26 +1,46 @@
-import { FileExcelFilled } from '@ant-design/icons';
 import { MaterialIssueService } from '@project-management-system/shared-services';
-import { Button, Card, Col, Form, Input, Row, Select, Table } from 'antd';
+import { Button, Card, Col, Form, Row, Select, Table } from 'antd';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import { RequestNoDto } from 'packages/libs/shared-models/src/common/material-issue/requestno.dto';
+import { useEffect, useState } from 'react';
 import './marerial.css';
 
+
+const { Option } = Select;
 const MaterialIssueReport = () => {
   const service = new MaterialIssueService();
   const [data, setData] = useState<any[]>([]);
+  const [req, setReq] = useState<RequestNoDto[]>([]);
+  const [consmption, setConsmption] = useState<RequestNoDto[]>([]);
+  const [formRef] = Form.useForm();
   const page = 1;
 
   useEffect(() => {
     getAllMaterial();
+    getmatirialDropDown();
   }, []);
 
-  const getAllMaterial = () => {
-    service.getAllMaterialIssues().then((res) => {
+  const getAllMaterial = (req?:RequestNoDto) => {
+    service.getAllMaterialIssues(req).then((res) => {
       if (res.status) {
         setData(res.data);
       }
     });
   };
+
+
+  const onRequestChange = (value) => {
+    const consumption = req.filter((rec) => rec.requestNo === value);
+    setConsmption(consumption);
+  }
+
+  const getmatirialDropDown = () => {
+    service.getMaterialIssue().then(res => {
+      if (res.status) {
+        setReq(res.data);
+      }
+    }).catch(err => console.log(err))
+  }
 
   const colWidth = {
     materialtype: 120,
@@ -32,123 +52,7 @@ const MaterialIssueReport = () => {
     remarks: 80,
 
   }
-  // const chcol = (noofth) => {
-  //   const mat = []
-  //   for (let i = 0; i < noofth; i++) {
 
-  //   }
-  // }
-  // function transformData(miItems) {
-  //   // Create an array to hold the transformed data
-  //   const transformedData = miItems.map(item => ({
-  //     MaterialType: item.fabricCode,
-  //     Code: item.materialcode,
-  //     Description: item.description,
-  //     Colour: item.colorId,
-  //     Consumption: item.consumption,
-  //     IssuedQuantity: item.issuedQuantity,
-  //     OperationStatus: item.remarks,
-
-  //   }));
-
-  //   return transformedData;
-  // }
-
-  // const CustomTitle = () => {
-
-  //   return (
-
-  //     // <table style={{borderRadius:0,boxSizing:'border-box', width:'max-content',minWidth:'100%',tableLayout:'auto'}}>
-  //     <table className='custom-tbl'>
-  //       <thead className='ant-table-thead'>
-  //         <tr >
-  //           <td style={{ width: `${colWidth}px` }}></td>
-
-  //           <td style={{ width: `${colWidth.materialId}px` }}>Material Type</td>
-  //           <td style={{ width: `${colWidth.fabricCode}px` }} >Code</td>
-  //           <td style={{ width: `${colWidth.description}px` }} >Description</td>
-  //           <td style={{ width: `${colWidth.colorId}px` }} >Colour</td>
-  //           <td style={{ width: `${colWidth.consumption}px` }} >Consumption</td>
-  //           <td style={{ width: `${colWidth.issuedQuantity}px` }} >Issued Quantity</td>
-  //           <td style={{ width: `${colWidth.remarks}px` }} >Operation Status</td>
-  //         </tr>
-
-  //       </thead>
-  //       <tr>
-  //       </tr>
-  //     </table>
-  //   );
-  // };
-
-  // const columns1: any = [
-  //   {
-  //     dataIndex: "materialId",
-  //     width: colWidth.materialId,
-  //     render: (text, record) => {
-  //       return record.materialId ? record.materialId : '-'
-
-  //     },
-
-  //   },
-  //   {
-  //     // title: " Code",
-  //     dataIndex: "fabricCode",
-
-  //     width: colWidth.fabricCode,
-  //     render: (text, record) => {
-  //       return record.fabricCode ? record.fabricCode : '-'
-
-  //     },
-
-  //   },
-
-  //   {
-  //     // title: "Description",
-  //     dataIndex: "description",
-  //     width: colWidth.description,
-  //     render: (text, record) => {
-  //       return record.description ? record.description : '-'
-
-  //     },
-  //   },
-
-  //   {
-  //     // title: "Color",
-  //     dataIndex: "colorId",
-  //     width: colWidth.colorId,
-  //     render: (text, record) => {
-  //       return record.colorId ? record.colorId : '-'
-
-  //     },
-  //   },
-  //   {
-  //     // title: "Consumption",
-  //     dataIndex: "consumption",
-  //     width: colWidth.consumption,
-  //     render: (text, record) => {
-  //       return record.consumption ? record.consumption : '-'
-
-  //     },
-  //   },
-  //   {
-  //     // title: "Issued Quantity",
-  //     dataIndex: "issuedQuantity",
-  //     width: colWidth.issuedQuantity,
-  //     render: (text, record) => {
-  //       return record.issuedQuantity ? record.issuedQuantity : '-'
-
-  //     },
-  //   },
-  //   {
-  //     // title: "Operation Status",
-  //     dataIndex: "remarks",
-  //     width: colWidth.remarks,
-  //     render: (text, record) => {
-  //       return record.remarks
-
-  //     },
-  //   },
-  // ];
 
   const columns: any = [
     {
@@ -270,15 +174,15 @@ const MaterialIssueReport = () => {
 
     },
 
-    {
-      title: "Description",
-      dataIndex: "description",
-      width: colWidth.description,
-      render: (text, record) => {
-        return record.description ? record.description : '-'
+    // {
+    //   title: "Description",
+    //   dataIndex: "description",
+    //   width: colWidth.description,
+    //   render: (text, record) => {
+    //     return record.description ? record.description : '-'
 
-      },
-    },
+    //   },
+    // },
 
     {
       title: "Color",
@@ -318,9 +222,9 @@ const MaterialIssueReport = () => {
     },
 
   ];
-  const allMaterialsData = (data:any) => {
-    const totalData:any[] = [];
-    data.forEach((main: any, mainIndex: number) => {
+  const allMaterialsData = (data: any) => {
+    const totalData: any[] = [];
+    data?.forEach((main: any, mainIndex: number) => {
       main.mi_items.forEach((child: any, childIndex: number) => {
         let gridObj: any = {};
         gridObj.request_no = main.request_no;
@@ -339,7 +243,7 @@ const MaterialIssueReport = () => {
         }
         gridObj.material_trim_id = child.material_trim_id
         gridObj.fabricCode = child.fabricCode
-        gridObj.materialtype=child.materialtype
+        gridObj.materialtype = child.materialtype
         gridObj.description = child.description
         gridObj.color = child.color
         gridObj.consumption = child.consumption
@@ -350,10 +254,51 @@ const MaterialIssueReport = () => {
     return totalData
   };
 
-  console.log(allMaterialsData(data),":::::::::::::::::::::::::::::::::")
+  console.log(allMaterialsData(data), ":::::::::::::::::::::::::::::::::")
 
   return (
-    <div>
+    <>
+
+      <Form form={formRef}>
+        <Row gutter={16}>
+          <Col span={6}>
+            <Form.Item label='Request No' style={{ marginBottom: '10px' }} name={'requestNo'}>
+              <Select placeholder='Select Request No' onChange={(value) => onRequestChange(value)}>
+                {req.map(rec => {
+                  return <Option value={rec.requestNo}>{rec.requestNo}</Option>;
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item name={'consumption'} label='Consumption Code' style={{ marginBottom: '10px' }}>
+              <Select placeholder='Select Consumption Code' >
+
+                {consmption.map((rec) => {
+                  return <Option value={rec.consumption}>
+                    {rec.consumption}
+                  </Option>
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item style={{ marginBottom: '10px' }}>
+              <Button
+                htmlType='submit'
+                style={{ width: '80px' }}
+                onClick={() => formRef.validateFields().then(value => {
+                  getAllMaterial(value)
+                })}
+
+
+              >Submit</Button>
+              <Button htmlType='reset' style={{ width: '80px' }}>Reset</Button>
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
+
       <Card>
         <div style={{ overflowX: 'auto' }}>
           <Table
@@ -370,7 +315,7 @@ const MaterialIssueReport = () => {
           />
         </div>
       </Card>
-    </div>
+    </>
   );
 };
 
