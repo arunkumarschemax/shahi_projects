@@ -145,6 +145,7 @@ import { InventoryView } from "./operation-tracking/inventory"
 import StyleOrderCreation from "./style-orders/style-order-form"
 import MaterialIssueReport from "./sample-development/material-issue-report"
 import StockReport from "./Reports/stock-report"
+import SampleInventory from "./sample-development/sample-inventory-grid"
 
 
 export const AppRoutes = () => {
@@ -516,6 +517,7 @@ export const AppRoutes = () => {
                     <Route path="sample-requests" element={<SampleRequests/>}/>
                     <Route path="store-issue-detail" element={<StoreIssueDetailed/>}/>
                     <Route path="market-issue-detailview" element={<MarketIssueDetail />}/>
+                    <Route path="sample-inventory-grid" element={<SampleInventory />}/>
 
                 </Route>
 

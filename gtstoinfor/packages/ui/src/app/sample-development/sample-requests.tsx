@@ -283,7 +283,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
     },
     {
       title: "Status",
-      dataIndex: "sr_status",
+      dataIndex: "status",
       filters: [
         {
           text: 'Open',
