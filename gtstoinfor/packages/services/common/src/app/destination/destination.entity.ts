@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { BuyersDestionations } from "../buyers-destination/buyers-destination.entity";
 import { ItemSkus } from "../sku-generation/sku-generation.entity";
-import { CoLine } from "../style-order/co-line.entity";
+import { CoLine } from "../style-order/order-line.entity";
 import { Division } from "../division/division.entity";
 @Entity('destination')
 export class Destination {

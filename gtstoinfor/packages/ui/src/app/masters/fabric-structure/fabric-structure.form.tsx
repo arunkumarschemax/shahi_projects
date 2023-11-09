@@ -109,7 +109,8 @@ export function FabricStructuresForm(
             }
           ]}
         >
-          <Input/>
+  
+          <Input placeholder='Enter the Fabric Structure'/>
         </Form.Item>
         </Col>
         </Row>

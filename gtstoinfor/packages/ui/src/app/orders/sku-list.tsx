@@ -5,7 +5,7 @@ import {
   Col,
   DatePicker,
   Descriptions,
-  Empty,
+  Divider,
   Form,
   Input,
   Modal,
@@ -38,10 +38,16 @@ import { Link, useNavigate } from "react-router-dom";
 import FormItem from "antd/es/form/FormItem";
 import { DivisionService, SKUGenerationService, SKUlistService, StyleOrderService, StyleService } from "@project-management-system/shared-services";
 import {
+  CustomerOrderStatusEnum,
+  FgItemCreIdRequest,
   ItemSKusReq,
+  MenusAndScopesEnum,
   SKUlistFilterRequest,
+  SkuIdReq,
+  SkuStatusEnum,
 } from "@project-management-system/shared-models";
 import Highlighter from "react-highlight-words";
+import RolePermission from "../roles-permission";
 export const SkuList = () => {
   const [form] = Form.useForm();
   const [itemData, setItemData] = useState([]);
@@ -70,12 +76,13 @@ export const SkuList = () => {
   const [selectView, setSelectedView] = useState<any>("cards");
   const [options, setOptions] = useState(["Cards", "View"]);
   const [searchClicked, setSearchClicked] = useState(false);
+  const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+    const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
+  let userRef
   useEffect(() => {
     Dropdown();
     getAllData();
-    Sizedrop();
-    colordrop();
-    destinationdrop();
+ 
   }, []);
 
 
@@ -92,11 +99,11 @@ export const SkuList = () => {
   };
 
   const Sku = (val,data) => {
-    setSelectedItemNo(data?.code);
+    setSelectedItemNo(data.code);
   };
 
   const Size = (val, data) => {  
-    setSelectedSizeId(data?.size);
+    setSelectedSizeId(val);
   };
 
   const colour = (val, data) => {
@@ -183,7 +190,22 @@ export const SkuList = () => {
       });
    
   };
-
+  const cancelOrder =(val:any) =>{
+  
+    const req = new SkuIdReq(val.item_sku_id)
+    services.cancelSku(req).then(res => {
+      
+      if(res.status){
+        AlertMessages.getSuccessMessage("Sku Cancelled successfully. ")
+        // getData(selected);
+      }
+      else{
+        AlertMessages.getWarningMessage("Something went wrong. ")
+      }
+    }).catch(err => {
+      AlertMessages.getErrorMessage("Something went wrong. ")
+    })
+  }
   function handledSearch(selectedKeys, confirm, dataIndex) {
     // console.log("777777777777777777777777")
     confirm();
@@ -205,6 +227,12 @@ export const SkuList = () => {
   const handleViewChange = (view) => {
     setSelectedView(view);
   };
+  const checkAccess = (buttonParam) => {
+    console.log(buttonParam,'000000000');
+    
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Material Creation"],MenusAndScopesEnum.SubMenus["FG SKUs"],buttonParam)
+    return !accessValue
+  }
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -341,10 +369,10 @@ export const SkuList = () => {
     },
     {
       title: "Style",
-      dataIndex: "style_file_name",
-      key: "style_file_name",
+      dataIndex: "style",
+      key: "style",
       width: "300px",
-      sorter: (a, b) => a.style_file_name.localeCompare(b.style_file_name),
+      sorter: (a, b) => a.style.localeCompare(b.style),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("destination"),
   // console.log(data,'id');
@@ -387,10 +415,13 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
       title: "Action",
       dataIndex: "action",
       align: "center",
-      render: (text, rowData, index) => (
+      render: (text, rowData, index) => {
+        console.log(rowData,'rowwwwwwwwww')
+        return(
         <span>
           {rowData.status !== "CANCELLED" ? (
-            <Tooltip placement="top" title="Close SKU">
+            <>
+               <Tooltip placement="top" title="Close SKU">
               <Popconfirm
                 onConfirm={(value) => {
                   closeSKU(rowData.id);
@@ -400,9 +431,21 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
                 <Button type="primary" shape="circle">Close</Button>
               </Popconfirm>
             </Tooltip>
+            </>              
+            
           ) : null}
+
+              {rowData.status === SkuStatusEnum.CANCELLED || rowData.coStatus === CustomerOrderStatusEnum.COMPLETED||rowData.coStatus === CustomerOrderStatusEnum.CLOSED|| checkAccess('Cancel') ? <><CloseOutlined disabled={true}/></> :
+            <Popconfirm onConfirm={vale => { cancelOrder(rowData) }} title={"Are you sure to Cancel ?"}>
+              <Tooltip title={'Cancel Order'}><CloseOutlined style={{color:'red'}} type='danger'/></Tooltip>
+            </Popconfirm>
+          }
+            <Divider type="vertical" />
+
+         
         </span>
-      ),
+        )}
+      
     },
   ];
   return (
@@ -439,7 +482,7 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
                 </Select>
               </Form.Item>
             </Col>
-            <Col
+            {/* <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
               md={{ span: 4 }}
@@ -460,7 +503,7 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
                 >
                   {size?.map((e) => {
                     return (
-                      <Option key={e.size_id} value={e.size_id} size={e.size} >
+                      <Option key={e.size_id} value={e.size_id} >
                         {e.size}
                       </Option>
                     );
@@ -525,7 +568,7 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
                   })}
                 </Select>
               </Form.Item>
-            </Col>
+            </Col> */}
             <Row gutter={6}>
               <Col>
                 <FormItem style={{ flexDirection: "row" }} label=" ">
@@ -557,8 +600,6 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
         <Col>
           <div>
             <Space direction="vertical" style={{ fontSize: "16px" }}>
-            {selectedItemNo !== undefined && searchClicked ? (
-
               <Segmented
                 style={{ background: "#cce3de" }}
                 options={[
@@ -592,7 +633,6 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
                 onChange={handleViewChange}
                 defaultValue={"cards"}
               />
-            ):null}
               {/* {selectView === 'grid'?(
         <SKUGrid/>
       ):(<div> */}
@@ -677,7 +717,7 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
                                     </Descriptions.Item>
                                     
                                     <Descriptions.Item label="Style">
-                             {item.style_file_name}
+                             {item.style}
                                 </Descriptions.Item>
                                 <Descriptions.Item label="Division">
                                      {item.division_name}
@@ -696,7 +736,7 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
                    </Card>
                 </div>
               ) : (
-                <div style={{justifyContent:'center'}}>
+                <div>
                   <Card
                    title={`item code:${selectedItemNo}`} 
                      >
@@ -722,7 +762,7 @@ key={e.item_code}
                    ))} */}
                 </div>
               )
-              ):<></>}
+              ):null}
             </Space>
           </div>
               

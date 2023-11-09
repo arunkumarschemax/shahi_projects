@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CoUpdateEntity } from "./co-updates.entity";
-import { CoLine } from "./co-line.entity";
 import { CoRequest } from "@project-management-system/shared-models";
+import { CoLine } from "./order-line.entity";
 
 @Injectable()
 export class CoUpdateRepository extends Repository<CoUpdateEntity> {

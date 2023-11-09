@@ -2,7 +2,7 @@ import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne
 import { BuyersDestionations } from "../buyers-destination/buyers-destination.entity";
 import { BuyersSize } from "../buyers-destination/buyers-sizes.entity";
 import { ItemSkus } from "../sku-generation/sku-generation.entity";
-import { CoLine } from "../style-order/co-line.entity";
+import { CoLine } from "../style-order/order-line.entity";
 import { Division } from "../division/division.entity";
 
 @Entity('size')

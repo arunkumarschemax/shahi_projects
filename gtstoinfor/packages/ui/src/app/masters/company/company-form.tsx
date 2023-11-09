@@ -128,10 +128,11 @@ export const CompanyForm = (props:CompanyFormProps) => {
           rules={[
             {
               required: true,
-              message:'Oraganization Code Is Required'
+              message:'Oraganization Name Is Required'
             },
           ]}
         >
+          
           <Input />
         </Form.Item>
         </Col></Row>

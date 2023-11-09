@@ -61,7 +61,7 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
     liscenceTypeData.updatedUser = JSON.parse(localStorage.getItem('username'))
     service.updateLiscenceType(liscenceTypeData).then(res => { console.log(res);
       if (res.status) {
-        AlertMessages.getSuccessMessage('Updated Successfully');
+        AlertMessages.getSuccessMessage('License Type Updated Successfully');
         setDrawerVisible(false);
         getAllLiscenceTypes();
 
@@ -162,7 +162,7 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
-        title: "Liscence Type",
+        title: "License Type",
         dataIndex: "liscenceType",
         // width:'60px',
         sorter: (a, b) => a.liscenceType.localeCompare(b.liscenceType),
@@ -247,14 +247,14 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
 
   return (
       <>
-      <Card title={<span >Liscence Type</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+      <Card title={<span >License Type</span>}
+    style={{textAlign:'left'}} headStyle={{ border: 0 }} 
     extra={<Link to='/masters/liscence-type/liscence-type-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
       <Row gutter={40}>
         <Col>
-          <Card title={'Total Liscenc Types: ' + lTData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+          <Card title={'Total License Type: ' + lTData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
         <Col>
           <Card title={'Active: ' + lTData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>

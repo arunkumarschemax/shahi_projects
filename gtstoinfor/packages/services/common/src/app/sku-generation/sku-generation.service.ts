@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ItemSkus } from "./sku-generation.entity";
 import { DataSource, Repository } from "typeorm";
-import { ColorInfoReq, CommonResponseModel, DestinationInfoReq, ItemCodeReq, ItemSKusModel, ItemSKusReq, SKUGenerationResponseModel, SizeInfoReq, SKUlistFilterRequest, SkuStatusEnum, SKUDTO, SKUListDto } from "@project-management-system/shared-models";
+import { ColorInfoReq, CommonResponseModel, DestinationInfoReq, ItemCodeReq, ItemSKusModel, ItemSKusReq, SKUGenerationResponseModel, SizeInfoReq, SKUlistFilterRequest, SkuStatusEnum, SKUDTO, SKUListDto, SkuIdReq } from "@project-management-system/shared-models";
 import { Item } from "../items/item-entity";
 import { Destination } from "../destination/destination.entity";
 import { Size } from "../sizes/sizes-entity";
@@ -325,4 +325,24 @@ async getDestination(req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
     throw err
   }
 }
+async cancelSku(req:SkuIdReq):Promise<CommonResponseModel>{
+        
+  const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
+  try{
+      await transactionalEntityManager.startTransaction();
+      const updateStatus = await transactionalEntityManager.getRepository(ItemSkus).update({itemSkuId:req.itemSkuId},{status:SkuStatusEnum.CANCELLED});
+     
+      if(updateStatus.affected > 0){
+          
+          await transactionalEntityManager.completeTransaction();
+          return new CommonResponseModel(true,1,'SKU Cancelled Successfully. ',)
+     }
+      else{
+          await transactionalEntityManager.releaseTransaction();
+          return new CommonResponseModel(false,0,'Cancel SKU failed. ',)
+      }
+  } catch(err){
+      throw err
+  }
+ }
 }

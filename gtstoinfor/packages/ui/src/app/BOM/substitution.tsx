@@ -67,10 +67,8 @@ export const Substitution = () => {
         
     }
 
-    let selectRmsku;
     const handleRmSkusDragStart = (event: React.DragEvent<HTMLDivElement>, rmsku: any) => {
         // selectedRmSKuObject.push(rmsku)
-        selectRmsku = new mappedRmSKU(rmsku.rm_item_code,rmsku.rm_item_id,rmsku.rm_sku_id,rmsku.rm_sku_code,null,rmsku.item_type)
         selectedRmSKuObject.push(new mappedRmSKU(rmsku.rm_item_code,rmsku.rm_item_id,rmsku.rm_sku_id,rmsku.rm_sku_code,null,rmsku.item_type))
         // setSelectedFgSkuObject(rmsku)
         // setSelectedRmSKus([...selectedRmSKus,selectedRmSKuObject[0]])
@@ -82,7 +80,7 @@ export const Substitution = () => {
         event.preventDefault();
     };
 
-    const handleFGDragOver = (event: React.DragEvent<HTMLDivElement>,fgsku,fgskuid) => {
+    const handleFGDrop = (event: React.DragEvent<HTMLDivElement>,fgsku,fgskuid) => {
         if(selectedRmSKus.length > 0){
             const index = selectedRmSKus.findIndex(e => e.fgSkuCode === fgsku)
             if(index != -1){
@@ -95,6 +93,7 @@ export const Substitution = () => {
                 }
                 rmskus.push(selectedRmSKuObject[0])
                 selectedRmSKus[index].mappedRmSKuList = rmskus
+                setSelectedRmSKus([...selectedRmSKus])
             selectedRmSKuObject =[]
             } else{
                 const fgskus = new MappedInfo(fgsku,fgskuid,selectedRmSKuObject)
@@ -119,12 +118,19 @@ export const Substitution = () => {
         event.preventDefault();
     };
 
-    const handleAssignedRmSkusDragStart = (event: React.DragEvent<HTMLDivElement>, rmsku: any,skucode) => {
-        // event.dataTransfer.setData('color', JSON.stringify(colour));
-        const selectedIndex = selectedRmSKus.findIndex(e => {return e.rm_sku_code === rmsku.rm_sku_code})
-        selectedRmSKus.splice(selectedIndex,1)
+    const handleRmDragEnd = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
+    };
+
     
+
+    const handleAssignedRmSkusDragStart = (event: React.DragEvent<HTMLDivElement>, rmsku: any,skucode) => {
+        console.log('ok')
+        const selectedIndex = selectedRmSKus.findIndex(e => {return e.fgSkuCode === skucode})
+        const rmskuslist = selectedRmSKus[selectedIndex].mappedRmSKuList
+        // const rmskuindex = 
+        // console.log(rmskuindex)
+        // selectedRmSKus.splice(selectedIndex,1)    
     };
 
 
@@ -280,8 +286,8 @@ export const Substitution = () => {
                     style={{ background: '#f7c78d', marginBottom: '10px',height:'35px'}}
                     draggable
                     onDragStart={(event) => handleRmSkusDragStart(event, e)}
-                    // onDragEnd={(event) => handleRmSkusDragStart(event, e)}
-                    // onDrop={(event) => handleRmSkusDragStart(event, e)}
+                    onDragEnd={handleRmDragEnd}
+                    onDrop={handleDrop}
                     >
                         <span style={{ wordWrap: 'break-word' }}>
                             <li style={{ color: 'black',textAlign:'center'}}>{e.rm_sku_code}</li>
@@ -303,9 +309,9 @@ export const Substitution = () => {
                     fgSkus.map(rec => {
                         return(
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 5 }}>
-                                <Card title={rec.sku_code}
+                                <Card title={`FG SKU:${rec.sku_code}`}
                                 onDragOver={handleDragOver}
-                                onDrop={(event) => handleFGDragOver(event,rec.sku_code,rec.item_sku_id)}
+                                onDrop={(event) => handleFGDrop(event,rec.sku_code,rec.item_sku_id)}
                                 >
                                     {
                                         selectedRmSKus?.map((rmskuList,index) => (

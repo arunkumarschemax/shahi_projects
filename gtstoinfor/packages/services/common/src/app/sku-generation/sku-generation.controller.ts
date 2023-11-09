@@ -2,7 +2,7 @@ import { Controller,Post,Body } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { ItemSkuService } from "./sku-generation.service";
-import { CommonResponseModel, ItemCodeReq, ItemSKusReq, SKUGenerationResponseModel, SKUlistFilterRequest } from "@project-management-system/shared-models";
+import { CommonResponseModel, ItemCodeReq, ItemSKusReq, SKUGenerationResponseModel, SKUlistFilterRequest, SkuIdReq } from "@project-management-system/shared-models";
 
 @ApiTags('itemSkus')
 @Controller('itemSkus')
@@ -101,6 +101,16 @@ export class ItemSkuController{
             return await this.itemSkuService.getDestination()
         }catch(err){
             return this.applicationExceptionHandler.returnException(SKUGenerationResponseModel,err)
+        }
+    }
+    @Post('/cancelSku')
+    @ApiBody({type:SkuIdReq})
+    async cancelSku(@Body() req:any):Promise<CommonResponseModel>{
+        
+        try{
+            return await this.itemSkuService.cancelSku(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
         }
     }
 }

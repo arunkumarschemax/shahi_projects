@@ -1,5 +1,5 @@
 import { CheckCircleOutlined, CloseCircleOutlined, CloseOutlined, EditOutlined, EyeOutlined, RightSquareOutlined, SearchOutlined } from "@ant-design/icons";
-import { Alert, Button, Card, Col, Divider, Drawer, Form, Input, Popconfirm, Row, Select, Switch, Table, Tag } from "antd"
+import { Alert, Button, Card, Col, Divider, Drawer, Form, Input, Popconfirm, Row, Select, Switch, Table, Tag, Tooltip } from "antd"
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import Highlighter from "react-highlight-words";
@@ -76,7 +76,9 @@ let value = 0
     })
   }
   const checkAccess = (buttonParam) => {
-    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Material Creation"],MenusAndScopesEnum.SubMenus["RFQ Register"],buttonParam)
+    console.log(buttonParam,'22222');
+    
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.OrderManagement,MenusAndScopesEnum.SubMenus["Customer Orders"],buttonParam)
     return !accessValue
 }
  
@@ -341,37 +343,35 @@ let value = 0
   {
     title: `Action`,
     dataIndex: 'action',
-    render: (text, rowData) => (
+    render: (text, rowData) => {
+      
+      return(
       <><span>
        <Button title={"Detail View"} onClick={() => details(rowData.co_id,rowData.fg_item_id)}>
           <EyeOutlined />
         </Button>
       </span>
       <Divider type="vertical"/>
-     
-      {
-        rowData.status != CustomerOrderStatusEnum.CLOSED ?
-        // ||checkAccess('Cancel') ? 
-      <span>
-          <Button title={"Cancel Order"} onClick={() => cancelOrder(rowData)} >
-            <CloseOutlined />
-          </Button>
-        </span>
-        : ""
-      }
+      {rowData.status === CustomerOrderStatusEnum.CLOSED || checkAccess('Cancel') ? <><CloseOutlined disabled={true}/></> :
+            <Popconfirm onConfirm={vale => { cancelOrder(rowData) }} title={"Are you sure to Cancel ?"}>
+              <Tooltip title={'Cancel Order'}><CloseOutlined style={{color:'red'}} type='danger'/></Tooltip>
+            </Popconfirm>
+          }
+    
       <Divider type="vertical"/>
-    {/* {
-     checkAccess('Update') ? */}
+    {
+     checkAccess('Update') ?
       <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
       onClick={() => {
           openFormWithData(rowData);
       }}
       style={{ color: '#1890ff', fontSize: '14px' }}
     />
-     {/* : ""
-    } */}
+      : ""
+    } 
       </>
-    )
+      )
+    }
   }
      // {
       //   title: "Shipment Type",

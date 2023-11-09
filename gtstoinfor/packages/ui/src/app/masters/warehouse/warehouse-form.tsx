@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, Card, Row, Col } from 'antd';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // import './currencies-form.css';
 import {  WarehouseDto } from '@project-management-system/shared-models';
@@ -39,6 +39,7 @@ export const WarehouseForm = (props:WarehouseFormProps) => {
 
   const service = new WarehouseService();
   let history = useLocation();
+  let navigate = useNavigate();
 
   let createdUser="";
   if(!props.isUpdate){
@@ -47,12 +48,14 @@ export const WarehouseForm = (props:WarehouseFormProps) => {
   }
   
   const save = (Data: WarehouseDto) => {
+    console.log(Data,"dto")
     setDisable(true)
     Data.warehouseId = 0;
     service.createWarehouse(Data).then((res) => {
       setDisable(false)
         if (res.status) {
           AlertMessages.getSuccessMessage('Warehouse Created Successfully');
+          navigate('/global/warehouse/warehouse-grid')
         //   location.push("/Currencies-view");
           onReset();
         } else {
@@ -93,8 +96,8 @@ export const WarehouseForm = (props:WarehouseFormProps) => {
     form.resetFields();
   };
   return (
-<Card title={<span style={{color:'white'}}>Warehouse</span>}
-    style={{textAlign:'center'}} 
+<Card title={<span style={{color:'Black'}}>Warehouse</span>}
+     
      extra={props.isUpdate==true?"":<Link to='/global/warehouse/warehouse-grid' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
       >
 
@@ -113,10 +116,10 @@ export const WarehouseForm = (props:WarehouseFormProps) => {
         <Form.Item style={{ display: 'none' }} name="createdUser" initialValue={createdUser}>
           <Input hidden />
         </Form.Item>
-        <Row>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}> <Form.Item
+        <Row gutter={16}>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:6}}> <Form.Item
           name="warehouseName"
-          label="WareHouse Name"
+          label="Warehouse Name"
           rules={[
             {
               required: true,
@@ -124,12 +127,12 @@ export const WarehouseForm = (props:WarehouseFormProps) => {
             }
           ]}
         >
-          <Input />
+          <Input placeholder='Enter Warehouse Name' />
         </Form.Item>
         </Col>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}> <Form.Item
+        <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:6}}> <Form.Item
           name="warehouseCode"
-          label="WareHouse Code"
+          label="Warehouse Code"
           rules={[
             {
               required: true,
@@ -137,7 +140,7 @@ export const WarehouseForm = (props:WarehouseFormProps) => {
             }
           ]}
         >
-          <Input />
+          <Input  placeholder='Enter Warehouse Code'/>
         </Form.Item>
         </Col>
         </Row>

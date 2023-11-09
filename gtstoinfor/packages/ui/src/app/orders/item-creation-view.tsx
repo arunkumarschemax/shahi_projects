@@ -74,7 +74,8 @@ setLoginBuyer(res.data.buyerId)
 
 }
 const checkAccess = (buttonParam) => {
-  const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Material Creation"],MenusAndScopesEnum.SubMenus["Style Order View"],buttonParam)
+ 
+  const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Material Creation"],MenusAndScopesEnum.SubMenus["FG Items"],buttonParam)
   return !accessValue
 }
     const getAllfgItemViewData= () => {
@@ -409,6 +410,8 @@ const cancelOrder =(val:any) =>{
       title: `Action`,
       dataIndex: 'action',
       render: (text, rowData) => {
+        console.log(rowData,'rowwwwwwww');
+        
         return( <span>
             <EditOutlined className={'editSamplTypeIcon'} type="edit"
               onClick={() => {
@@ -428,15 +431,14 @@ const cancelOrder =(val:any) =>{
                     </Button>
                   </Tooltip>
                   <Divider type="vertical" />
-                  {rowData.status != SubContractStatus.NO  || checkAccess('Cancel') ? 
-      <span>
-          <Button title={"Cancel Order"} onClick={() => cancelOrder(rowData)} >
-            <CloseOutlined />
-          </Button>
-        </span>
-        : ""
-      }
-          </span>)
+                  {rowData.is_sub_contract === SubContractStatus.NO || checkAccess('Cancel') ? <><CloseOutlined disabled={true}/></> :
+            <Popconfirm onConfirm={vale => { cancelOrder(rowData) }} title={"Are you sure to Cancel ?"}>
+              <Tooltip title={'Cancel item'}><CloseOutlined style={{color:'red'}} type='danger'/></Tooltip>
+            </Popconfirm>
+          }
+               
+          </span>
+          )
         
     }
     }
