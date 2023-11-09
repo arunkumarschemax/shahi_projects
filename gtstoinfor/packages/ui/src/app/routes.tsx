@@ -147,6 +147,7 @@ import MaterialIssueReport from "./sample-development/material-issue-report"
 import StockReport from "./Reports/stock-report"
 import SampleRequestReport from "./Reports/sample-request-report"
 import PurchaseOrderForm from "./purchase-order2/purchase-order-form"
+import SampleInventory from "./sample-development/sample-inventory-grid"
 
 
 export const AppRoutes = () => {
@@ -521,6 +522,7 @@ export const AppRoutes = () => {
                     <Route path="sample-requests" element={<SampleRequests/>}/>
                     <Route path="store-issue-detail" element={<StoreIssueDetailed/>}/>
                     <Route path="market-issue-detailview" element={<MarketIssueDetail />}/>
+                    <Route path="sample-inventory-grid" element={<SampleInventory />}/>
 
                 </Route>
 

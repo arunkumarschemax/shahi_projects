@@ -110,7 +110,6 @@ export const OperationReportingView = () => {
     const setReportedInfo = (e,index,record) => {
         // Update the state with the reported quantity
         setReportedQuantity(e.target.value);
-        // console.log(value,'-------------------------')
     };
     
 
@@ -158,7 +157,6 @@ export const OperationReportingView = () => {
             rejectedQuantity,
             record.rejectedUomId,
             record.status,0,'',undefined,'',undefined,'',0,0,'',0)
-            console.log(req,'%%%%%%%%%%%%%%%%%%%%%%%%%%%')
         service.createOperationReporting(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
@@ -222,6 +220,7 @@ export const OperationReportingView = () => {
             title: 'Uom',
             dataIndex: 'reportedUomId',
             render: (text,record,index) => (
+                <Form.Item>
                 <Select
                 value={reportedUom}
                 onChange={(val) => reportedUomId(val, index, record)}
@@ -239,6 +238,7 @@ export const OperationReportingView = () => {
                     );
                 })}
             </Select>
+            </Form.Item>
               ),
           },
           {
@@ -337,7 +337,6 @@ export const OperationReportingView = () => {
         if(val){
             getSegmentLabel(val)
             setSaveId(val)
-
         }
     }
 
