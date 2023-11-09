@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, SubstituionReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, FgDataModel, RmDataModel, SubResponseModel, SubstituionModel, SubstituionReq } from "@project-management-system/shared-models";
 import { SubstitutionRepository } from "./substitution-repo";
 import { Substitution } from "./substituion.entity";
 import { FgItemBom } from "./fg-item-bom.entity";
@@ -77,6 +77,52 @@ export class SubstituionService{
 
             await transactionalEntityManager.releaseTransaction()
             return new CommonResponseModel(false,0,err)
+        }
+    }
+
+    async getSubstitution (req:SubstituionModel):Promise<SubResponseModel>{
+        try{
+          const getdata = await this.substitutionrepo.getSubstitution(req)
+          // console.log(getdata,"tttt")
+          const DataMap = new Map<string, FgDataModel>();
+          for (const res of getdata) {
+            if (!DataMap.has(res.fgItemId)) {
+            //   DataMap.set(res.fgItemId, new RmDataModel(res.rmItemCode, res.fgItemId, []));
+              // console.log( res.fg_item_id,'service item id');
+        
+            }
+            // const Sku = DataMap.get(res.fgItemId)?.sku;
+            //  console.log( Sku,'service item id/ x`out sidex');
+            // if (Sku) {
+            //   const data1 = new SKUListDto(
+            //     res.item_sku_id,
+            //     res.sku_code,
+            //     res.size_id,
+            //     res.size,
+            //     res.color_id,
+            //     res.color,
+            //     res.destination_id,
+            //     res.destination
+            //   );
+            //   Sku.push(data1);
+            // }
+          }
+        
+        //   const ListArray: SKUDTO[] = Array.from(DataMap.values());
+        //   console.log(ListArray,'service');
+        
+          if(getdata.length>0){
+      
+            return new CommonResponseModel(true,1,'data retreived', getdata)
+      
+          }else{
+      
+            return new CommonResponseModel(false,0,'No data found')
+      
+          }
+          
+        }catch(err){
+          throw err
         }
     }
 }

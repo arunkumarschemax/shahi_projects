@@ -1,8 +1,8 @@
 import { Body, Controller, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { SubstituionService } from "./substituion.service";
-import { CommonResponseModel, SubstituionReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, SubstituionModel, SubstituionReq } from "@project-management-system/shared-models";
 import { SubstituionRequest } from "./substitution-req";
 
 @ApiTags('substituion')
@@ -23,4 +23,15 @@ export class SubstituionController{
             return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
         }
     }
+
+    // @Post('/getSubstitution')
+    // @ApiBody({type:SubstituionModel})
+    // async getSubstitution(@Body() req:any):Promise<CommonResponseModel>{
+    //     try{
+    //         // console.log(req,'controller')
+    //         return await this.substituionService.getSubstitution(req)
+    //     }catch(err){
+    //         return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+    //     }
+    // }
 }

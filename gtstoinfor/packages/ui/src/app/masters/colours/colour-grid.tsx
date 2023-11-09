@@ -107,7 +107,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
     service.getAllColour().then(res=>{
         if(res.status){
             setVariantData(res.data)
-            console.log(res,'dataaaaaaaaaaaaa')
+            // console.log(res,'dataaaaaaaaaaaaa')
         }else{
             AlertMessages.getErrorMessage(res.internalMessage);
         }
