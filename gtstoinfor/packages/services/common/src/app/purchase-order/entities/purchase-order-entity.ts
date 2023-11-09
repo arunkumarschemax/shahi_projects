@@ -1,6 +1,7 @@
 import { PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { PurchaseOrderFbricEntity } from "./purchase-order-fabric-entity";
+import { PurchaseOrderTrimEntity } from "./purchase-order-trim-entity";
 
 @Entity('purchase_order')
 export class PurchaseOrderEntity{
@@ -90,6 +91,9 @@ export class PurchaseOrderEntity{
     remarks:string
     
   @OneToMany(type => PurchaseOrderFbricEntity, purchaseReqFabric => purchaseReqFabric.purchaseOrderEntity, { cascade: true })
-  sampleReqFabricInfo: PurchaseOrderFbricEntity[]
+  poFabricInfo: PurchaseOrderFbricEntity[]
+
+  @OneToMany(type => PurchaseOrderTrimEntity, purchaseTrim => purchaseTrim.purchaseOrderEntity, { cascade: true })
+  poTrimInfo: PurchaseOrderTrimEntity[]
 
 }

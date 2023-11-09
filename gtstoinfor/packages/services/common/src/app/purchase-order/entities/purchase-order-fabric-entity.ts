@@ -134,7 +134,7 @@ moq:string
   })
   isActive: boolean;
 
-@ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.sampleReqFabricInfo)
+@ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poFabricInfo)
 @JoinColumn({name:'purchase_order_id'})
 purchaseOrderEntity:PurchaseOrderEntity
 

@@ -1,4 +1,5 @@
-import { Column, PrimaryGeneratedColumn } from "typeorm";
+import { Column, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { PurchaseOrderEntity } from "./purchase-order-entity";
 
 export class PurchaseOrderTrimEntity{
 
@@ -43,4 +44,8 @@ export class PurchaseOrderTrimEntity{
         nullable: true
     })
     remarks: string
+    
+    @ManyToOne(type =>PurchaseOrderEntity,trimorder =>trimorder.poTrimInfo)
+    @JoinColumn({name:'purchase_order_id'})
+    purchaseOrderEntity:PurchaseOrderEntity
 }
