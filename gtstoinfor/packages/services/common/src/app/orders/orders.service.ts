@@ -1114,7 +1114,7 @@ export class OrdersService {
     if (req.itemName) {
         query = query + ` AND planning_sum = "${req.itemName}"`;
     }
-    query = query + ` GROUP BY planning_ssn, planning_sum ORDER BY planning_sum`;
+    query = query + ` GROUP BY planning_ssn, planning_sum HAVING whTotal != 0 AND exfTotal != 0 ORDER BY planning_sum`;
       const reportData = await this.dataSource.query(query);
       
       const season23SS = reportData.filter(data => data.year === "2023" && data.plannedSeason === "SS");

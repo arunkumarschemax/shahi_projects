@@ -163,6 +163,7 @@ export class OrdersRepository extends Repository<OrdersEntity> {
               WHERE 1 = 1 AND YEAR ='${req.year}' AND prod_plan_type != 'STOP' 
              AND VERSION = (SELECT MAX(VERSION) FROM orders)
                GROUP BY prod_plan_type, planning_sum 
+               HAVING ExfPcsTotal != 0 AND WhPcsTotal != 0 AND ExfCoeffTotal!= 0 AND WhCoeffTotal !=0
                ORDER BY planning_sum`;
         const result = await this.query(query);
         return result;
@@ -242,7 +243,8 @@ ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 3 OR MONTH(STR_TO_DATE
          WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
          WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
          ELSE prod_plan_type
-     END`
+     END
+     HAVING totalWhCoeff != 0 AND totalWhPcs != 0 AND totalExfCoeff != 0 AND totalExfPcs != 0 `
   
     const result = await this.query(query);
     return result;
@@ -408,7 +410,8 @@ ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 3 OR MONTH(STR_TO_DATE
                WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
                WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
                ELSE prod_plan_type
-           END`
+           END
+           HAVING totalWhCoeff != 0 AND totalWhPcs != 0 AND totalExfCoeff != 0 AND totalExfPcs != 0`
      
     const result = await this.query(query);
     return result;
