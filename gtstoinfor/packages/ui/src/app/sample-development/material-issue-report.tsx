@@ -8,6 +8,7 @@ import './marerial.css';
 
 const { Option } = Select;
 const MaterialIssueReport = () => {
+  const [form] = Form.useForm();
   const service = new MaterialIssueService();
   const [data, setData] = useState<any[]>([]);
   const [req, setReq] = useState<RequestNoDto[]>([]);
@@ -256,10 +257,19 @@ const MaterialIssueReport = () => {
 
   console.log(allMaterialsData(data), ":::::::::::::::::::::::::::::::::")
 
+  const reset = () =>{
+    form.resetFields()
+    getAllMaterial()
+  }
+
   return (
     <>
 
-      <Form form={formRef}>
+      
+
+      <Card title="Material Issue Report" className='card-header'>
+        <div>
+        <Form form={formRef}>
         <Row gutter={16}>
           <Col span={6}>
             <Form.Item label='Request No' style={{ marginBottom: '10px' }} name={'requestNo'}>
@@ -286,21 +296,17 @@ const MaterialIssueReport = () => {
             <Form.Item style={{ marginBottom: '10px' }}>
               <Button
                 htmlType='submit'
-                style={{ width: '80px' }}
+                type="primary"
+                style={{ width: '80px', marginRight:"10px" }}
                 onClick={() => formRef.validateFields().then(value => {
                   getAllMaterial(value)
                 })}
-
-
               >Submit</Button>
-              <Button htmlType='reset' style={{ width: '80px' }}>Reset</Button>
+              <Button htmlType='reset' danger style={{ width: '80px' }}onReset={reset}>Reset</Button>
             </Form.Item>
           </Col>
         </Row>
       </Form>
-
-      <Card>
-        <div style={{ overflowX: 'auto' }}>
           <Table
             rowKey={(rec) => rec.request_no}
             size="small"

@@ -193,25 +193,25 @@ console.log(rowData?.[0].trimData,"rowData?.trimData")
       <Descriptions size='small'>
         <DescriptionsItem label='Location'>{rowData?.[0]?.locationName}</DescriptionsItem>
         <DescriptionsItem label='PCH'>{rowData?.[0]?.pch}</DescriptionsItem>
-        <DescriptionsItem label='User'>{rowData?.[0]?.sr_user}</DescriptionsItem>
+        <DescriptionsItem label='User'>{rowData?.[0]?.user}</DescriptionsItem>
         <DescriptionsItem label='Buyer'>{rowData?.[0]?.buyerName}</DescriptionsItem>
         <DescriptionsItem label='Sample Type'>{rowData?.[0]?.sampleType}</DescriptionsItem>
         <DescriptionsItem label='Sample Sub Type'>{rowData?.[0]?.sampleSubType}</DescriptionsItem>
-        <DescriptionsItem label='Style'>{rowData?.[0]?.s_style}</DescriptionsItem>
-        <DescriptionsItem label='Description'>{rowData?.[0]?.sr_description}</DescriptionsItem>
+        <DescriptionsItem label='Style'>{rowData?.[0]?.style}</DescriptionsItem>
+        <DescriptionsItem label='Description'>{rowData?.[0]?.description}</DescriptionsItem>
         <DescriptionsItem label='Brand'>{rowData?.[0]?.brandName}</DescriptionsItem>
         <DescriptionsItem label='Cost Ref'>{rowData?.[0]?.costRef}</DescriptionsItem>
         <DescriptionsItem label='M3 Style No'>{rowData?.[0]?.m3StyleNo}</DescriptionsItem>
-        <DescriptionsItem label='Contact No'>{rowData?.[0]?.sr_contact}</DescriptionsItem>
-        <DescriptionsItem label='Extn'>{rowData?.[0]?.sr_extension}</DescriptionsItem>
+        <DescriptionsItem label='Contact No'>{rowData?.[0]?.contact}</DescriptionsItem>
+        <DescriptionsItem label='Extn'>{rowData?.[0]?.extension}</DescriptionsItem>
         <DescriptionsItem label='SAM'>{rowData?.[0]?.samValue}</DescriptionsItem>
         <DescriptionsItem label='DMM'>{rowData?.[0]?.dmmName}</DescriptionsItem>
         <DescriptionsItem label='Technician'>{rowData?.[0]?.techName}</DescriptionsItem>
-        <DescriptionsItem label='Product'>{rowData?.[0]?.sr_product}</DescriptionsItem>
-        <DescriptionsItem label='Type'>{rowData?.[0]?.sr_type}</DescriptionsItem>
-        <DescriptionsItem label='Conversion'>{rowData?.[0]?.sr_conversion}</DescriptionsItem>
+        <DescriptionsItem label='Product'>{rowData?.[0]?.product}</DescriptionsItem>
+        <DescriptionsItem label='Type'>{rowData?.[0]?.type}</DescriptionsItem>
+        <DescriptionsItem label='Conversion'>{rowData?.[0]?.conversion}</DescriptionsItem>
         <DescriptionsItem label='Made In'>{rowData?.[0]?.madeIn}</DescriptionsItem>
-        <DescriptionsItem label='Remarks'>{rowData?.[0]?.sr_remarks}</DescriptionsItem>
+        <DescriptionsItem label='Remarks'>{rowData?.[0]?.remarks}</DescriptionsItem>
       </Descriptions>
 
       <Tabs type={'card'} tabPosition={'top'}>
