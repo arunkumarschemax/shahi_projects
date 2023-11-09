@@ -1074,9 +1074,9 @@ export class OrdersService {
     async seasonWiseReport(req?:SeasonWiseRequest): Promise<CommonResponseModel> {
         let query = `SELECT planning_ssn as plannedSeason,year,planning_sum as itemName,SUM(january) AS january,SUM(february) AS february,SUM(march) AS march,SUM(april) AS april,SUM(may) AS may,SUM(june) AS june,SUM(july) AS july,SUM(august) AS august,SUM(september) AS september,SUM(october) AS october,SUM(november) AS november,SUM(december) AS december,SUM(exfJan) AS exfJan,SUM(exfFeb) AS exfFeb,SUM(exfMarch) AS exfMarch,SUM(exfApril) AS exfApril,SUM(exfMay) AS exfMay,SUM(exfJune) AS exfJune,SUM(exfJuly) AS exfJuly,SUM(exfAug) AS exfAug,SUM(exfSep) AS exfSep,SUM(exfOct) AS exfOct,SUM(exfNov) AS exfNov,SUM(exfDec) AS exfDec,
         SUM(january + february + march + april + may + june + july + august + september + october + november + december) AS whTotal,
-        SUM(exfJan + exfFeb + exfMarch + exfApril + exfMay + exfJune + exfJuly + exfAug + exfSep + exfOct + exfNov + exfDec) AS exfTotal
+        SUM(exfJan + exfFeb + exfMarch + exfApril + exfMay + exfJune + exfJuly + exfAug + exfSep + exfOct + exfNov + exfDec) AS exfTotal,version
       FROM (
-        SELECT planning_ssn, year, planning_sum,
+        SELECT planning_ssn, year, planning_sum,version,
         SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 1 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 1 OR MONTH(wh)= 1 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS january,
         SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 2 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 2 OR MONTH(wh)= 2 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS february,
         SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 3 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 3 OR MONTH(wh)= 3 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS march,
@@ -1102,9 +1102,10 @@ export class OrdersService {
         SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 11 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 11 OR MONTH(exf)= 11 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfNov,
         SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 12 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 12 OR MONTH(exf)= 12 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfDec
         FROM orders
+        WHERE VERSION = (SELECT MAX(VERSION) FROM orders)
         GROUP BY planning_ssn, planning_sum
       ) AS subquery
-      WHERE 1 = 1`
+      WHERE 1 = 1 AND VERSION = (SELECT MAX(VERSION) FROM orders)`
     // if (req.itemCode) {
     //     query = query + ` AND item_cd = "${req.itemCode}"`
     //     }
