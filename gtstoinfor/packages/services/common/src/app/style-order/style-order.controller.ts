@@ -113,5 +113,26 @@ export class StyleOrderController{
         }
     }
   
-    
+    @Post('/getCoamendment')
+    // @ApiBody({type:styleOrderReq})
+    async getCoamendment(@Body() req:any):Promise<CommonResponseModel>{
+        try{            
+            return await this.styleOrderService.getCoamendment()
+            
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+
+    @Post('/getConumber')
+    // @ApiBody({type:styleOrderReq})
+    async getConumber(@Body() req:any):Promise<CommonResponseModel>{
+        try{            
+            return await this.styleOrderService.getCoNumber()
+            
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+
 }

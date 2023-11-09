@@ -72,20 +72,26 @@ export class FeatureService {
                 if (existingOptionGroup) {
                     existingOptionGroup.push({
                         option_id: item.option_id,
+                        optionValue:item.optionValue,
                     });
                 } else {
                     existingFeature[item.optiongroupForFeature] = [{
                         option_id: item.option_id,
+                        optionValue:item.optionValue,
                     }];
                 }
             } else {
                 const newFeature = {
+                 
+                  
                     feature_option_id: item.feature_option_id,
                     feature_code: item.feature_code,
                     option_group: item.optiongroupForFeature,
                     feature_name: item.feature_name,
+                    
                     [item.optiongroupForFeature]: [{
                         option_id: item.option_id,
+                        optionValue:item.optionValue,
                     }],
                 };
                 formattedData.push(newFeature);
