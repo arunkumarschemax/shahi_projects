@@ -1,4 +1,4 @@
-export enum BomStatusEnum{
+export enum PurchaseOrderStatus{
     OPEN='OPEN',
     IN_PROGRESS = 'IN_PROGRESS',
     CANCELLED = 'CANCELLED',

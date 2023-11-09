@@ -13,6 +13,7 @@ import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { SampleFabricRepo } from './repo/sample-dev-fabric-repo';
 import { SampleTrimRepo } from './repo/sample-dev-trim-repo';
 import { SampleProcessRepo } from './repo/sample-dev-process-repo';
+import { SamplingbomEntity } from './entities/sampling-bom-entity';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { SampleProcessRepo } from './repo/sample-dev-process-repo';
     SampleReqSizeEntity,
     SampleReqFabricinfoEntity,
     SampleRequestTriminfoEntity,
-    SampleRequestProcessInfoEntity
+    SampleRequestProcessInfoEntity,
+    SamplingbomEntity
   ]),
   ],
   controllers: [SampleDevReqController],
