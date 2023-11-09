@@ -8,15 +8,13 @@ export class DivisionDTO {
   divisionId: number;
 
   @ApiProperty()
-  @IsNotEmpty({message:"divisionName should not be empty"})
-  @IsAlphanumeric()
-  @IsOptional()
+
   divisionName: string;
+
   @ApiProperty()
-  @IsNotEmpty({message:"divisionCode should not be empty"})
-  @IsAlphanumeric()
-  @IsOptional()
+
   divisionCode: string;
+  
   @ApiProperty()
   @IsOptional()
   companyId:number;
