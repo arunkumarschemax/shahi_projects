@@ -5,7 +5,12 @@ export const MenusAndScopesEnum ={
         'Fabric Development' : 'Fabric Development',
         'Sample Development' : 'Sample Development',
         'Material Creation'  :'Material Creation',
-        'Style Management' : 'Style Management'
+        'Style Management' : 'Style Management',
+        'OrderManagement' : 'OrderManagement',
+        'Product Structure' :'Product Structure',
+        'User Management':'User Management',
+        'Procurment':'Procurment',
+        'Operation Tracking':'Operation Tracking'
         
     },
     SubMenus:{
@@ -66,6 +71,32 @@ export const MenusAndScopesEnum ={
         'Trim Creation' : 'Trim Creation',
         'Components Mapping' : 'Components Mapping',
         'Operation Sequence' : 'Operation Sequence',
+        'CO Amendment':'CO Amendment',
+        'Features':'Features',
+        'Settings':'Settings',
+        'MOP  Generation':'MOP  Generation',
+        'RM SKUs':'RM SKUs',
+        'FG SKUs':'FG SKUs',
+        'Customer Orders':'Customer Orders',
+        'Trim Items(RM)':'Trim Items(RM)',
+        'Fabric Items(RM)':'Fabric Items(RM)',
+        'FG Items':'FG Items',
+        'RM to FG Mapping':'RM to FG Mapping',
+        'Users':'Users',
+        'Group Tech Class':'Group Tech Class',
+        'Search Group':'Search Group',
+        'Hierarchy Level':'Hierarchy Level',
+        'Procurment Group':'Procurment Group',
+        'Product Group':'Product Group',
+        'Item Type':'Item Type',
+        'SMV Efficiency':'SMV Efficiency',
+        'Composition':'Composition',
+        'Range':'Range',
+        'CO Types':'CO Types',
+        'Business Area':'Business Area',
+        'ItemGroup':'ItemGroup',
+       
+
     },
     Scopes:{
         'Create':'Create',

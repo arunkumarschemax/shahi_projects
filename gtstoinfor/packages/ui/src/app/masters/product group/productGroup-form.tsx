@@ -120,7 +120,7 @@ export function ProductGroupForm(
                           },
                         ]}
                       >
-                      <Input/>
+                      <Input placeholder="Enter Product Group"/>
                     </Form.Item>
         </Col>
 

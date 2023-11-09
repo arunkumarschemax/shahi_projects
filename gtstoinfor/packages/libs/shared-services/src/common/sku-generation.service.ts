@@ -1,4 +1,4 @@
-import { CommonResponseModel, ItemCodeReq, ItemSKusReq, SKUGenerationReq, SKUGenerationResponseModel, SKUlistFilterRequest } from "@project-management-system/shared-models";
+import { CommonResponseModel, ItemCodeReq, ItemSKusReq, SKUGenerationReq, SKUGenerationResponseModel, SKUlistFilterRequest, SkuIdReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class SKUGenerationService extends CommonAxiosService{
@@ -43,5 +43,7 @@ export class SKUGenerationService extends CommonAxiosService{
     async getDestination (req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
         return this.axiosPostCall(this.URL +"/getDestination",req)
     }
-
+    async cancelSku(req:SkuIdReq): Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL + '/cancelSku',req)
+    }
 }
