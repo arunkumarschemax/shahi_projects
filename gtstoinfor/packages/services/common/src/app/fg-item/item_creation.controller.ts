@@ -61,4 +61,29 @@ export class ItemCreationController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
+
+    @Post('/getAllStyleDropDown')
+    async getAllStyleDropDown(): Promise<CommonResponseModel> {
+        try {
+            return await this.itemCreationService.getAllStyleDropDown();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+    @Post('/getAllItemDropDown')
+    async getAllItemDropDown(): Promise<CommonResponseModel> {
+        try {
+            return await this.itemCreationService.getAllItemDropDown();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+    @Post('/getAllBrandDropDown')
+    async getAllBrandDropDown(): Promise<CommonResponseModel> {
+        try {
+            return await this.itemCreationService.getAllBrandDropDown();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
 }

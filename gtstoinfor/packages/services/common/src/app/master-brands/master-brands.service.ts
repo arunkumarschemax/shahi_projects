@@ -36,7 +36,7 @@ export class MasterBrandsService {
         }
     }
     async createMasterBrand(dto: BrandsDTO, isUpdate: boolean): Promise<MasterBrandsResponseModel> {
-      console.log(dto,'service');
+      // console.log(dto,'service');
       
       try {
         let previousValue;
@@ -155,7 +155,7 @@ export class MasterBrandsService {
             //retrieves all companies
             const MasterBrandEntities: Brands[] = await this.masterBrandsRepository.find({ order: { 'brandName': 'ASC' },where:{isActive:true}
            });
-         console.log(MasterBrandEntities)
+       //  console.log(MasterBrandEntities)
             if (MasterBrandEntities) {
                 // converts the data fetched from the database which of type companies array to type StateDto array.
                 MasterBrandEntities.forEach(countriesEntity => {
@@ -176,7 +176,7 @@ export class MasterBrandsService {
 
   async activateOrDeactivatebrand(brandReq: MasterBrandRequest): Promise<MasterBrandsResponseModel> {
     try {
-      console.log(brandReq.isActive,'service-----------')
+      // console.log(brandReq.isActive,'service-----------')
         const brandExists = await this.getBrandById(brandReq.brandId);
         if (brandExists) {
             if (!brandExists) {
@@ -245,15 +245,15 @@ export class MasterBrandsService {
         }
         async updatePath(filePath: string, fileName: string, id: number): Promise<UploadResponse>{
           try {
-            console.log("coming ra mawa")
-            console.log(id)
+           // console.log("coming ra mawa")
+            //console.log(id)
             let imagePathUpdate;
             imagePathUpdate = await this.masterBrandsRepository.update(
               { brandId: id },
               { filePath: filePath, fileName: fileName },
             );
             const result = await this.masterBrandsRepository.findOne({ where: { brandId: id } })
-            console.log('*****result*****', result)
+        //    console.log('*****result*****', result)
             if (imagePathUpdate.affected > 0) {
                 return new UploadResponse(true, 11, 'Uploaded successfully', filePath);
             }

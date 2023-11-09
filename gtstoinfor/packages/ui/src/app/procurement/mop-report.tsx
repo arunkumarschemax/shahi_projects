@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {Table, Card, Button, Row, Col, Form, Select, Tabs } from 'antd';
+import {Table, Card, Button, Row, Col, Form, Select, Tabs, Modal } from 'antd';
 import {SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { CoBomService, StyleOrderService } from '@project-management-system/shared-services';
 import AlertMessages from '../common/common-functions/alert-messages';
 import { StyleOrderIdReq, StyleOrderid } from '@project-management-system/shared-models';
+import Mopprint from './mop-print';
 
 
 const MOPReport = () => {
@@ -19,6 +20,19 @@ const MOPReport = () => {
 const [mopDataNo, setMOPDataNo] = useState([]);
 
   const service = new CoBomService()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
 
 
@@ -169,8 +183,11 @@ const getMOPData= () => {
   }
 
 
+
   return (
-       <Card title={<span >Material Order Proposal Report</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }}>
+       <Card title={<span >Material Order Proposal Report</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={
+        <span><Button onClick={showModal}>Print</Button></span>
+       }>
         <Form  form={form} layout="horizontal" onFinish={getMOPData}>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }}
@@ -231,6 +248,23 @@ const getMOPData= () => {
                   />
                 </TabPane>
             </Tabs>
+            {/* <Modal title="Basic Modal" width={'100%'} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+               < Mopprint />
+            </Modal> */}
+             <Modal className='print-docket-modal'
+                 key={'modal'}
+                 width={'60%'}
+                 style={{ top: 30, alignContent: 'right' }}
+                visible={isModalOpen}
+                title={<React.Fragment>
+               </React.Fragment>}
+                onCancel={handleCancel}
+                footer={[
+
+              ]}
+                >
+            < Mopprint  />        
+            </Modal>
         </Form>
 
   
