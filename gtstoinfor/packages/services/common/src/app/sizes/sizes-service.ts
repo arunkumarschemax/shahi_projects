@@ -127,7 +127,6 @@ export class SizeService{
             //retrieves all companies
             const SampleSubTypeEntities: Size[] = await this.SizeRepository.find({ order: { 'size': 'ASC' },where:{isActive:true}
            });
-         console.log(SampleSubTypeEntities)
             if (SampleSubTypeEntities) {
                 // converts the data fetched from the database which of type companies array to type StateDto array.
                 SampleSubTypeEntities.forEach(Entity => {

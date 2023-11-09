@@ -17,4 +17,7 @@ export class ItemCreationService extends CommonAxiosService{
   async cancelItem(req:FgItemCreIdRequest): Promise<CommonResponseModel>{
     return this.axiosPostCall(this.URL + '/cancelOrder',req)
 }
+async getAll(): Promise<CommonResponseModel> {
+  return this.axiosPostCall(this.URL + "/getAll")
+}
 }

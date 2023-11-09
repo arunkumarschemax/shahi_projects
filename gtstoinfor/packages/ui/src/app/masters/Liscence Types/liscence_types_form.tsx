@@ -56,7 +56,7 @@ export function LiscenceTypesForm(props: LiscenceTypesFormProps) {
   };
 
   return (
-    <Card title={<span >Liscence Type</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={props.isUpdate==true?"":<Link to='/masters/liscence-type/liscence-type-grid' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
+    <Card title={<span >License Type</span>} style={{textAlign:'left'}} headStyle={{ border: 0 }} extra={props.isUpdate==true?"":<Link to='/masters/liscence-type/liscence-type-grid' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
       <Form form={form } layout={'vertical'} initialValues={props.liscenceData} name="control-hooks" onFinish={saveData}  >   
       <Form.Item name="liscenceTypeId" style={{display:"none"}} >
         <Input hidden/>
@@ -65,14 +65,14 @@ export function LiscenceTypesForm(props: LiscenceTypesFormProps) {
       <Input hidden/>
     </Form.Item>
     <Row>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}}>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}>
               <Form.Item
                   name="liscenceType"
-                  label="Liscence Type"
+                  label="License Type"
                   rules={[
                     {
                       required: true,
-                      message:"Liscence Type Is Required"
+                      message:"License Type Is Required"
                       
                     },
                     {
