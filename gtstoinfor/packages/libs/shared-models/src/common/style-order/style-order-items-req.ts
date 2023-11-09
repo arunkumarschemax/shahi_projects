@@ -7,7 +7,6 @@ export class StyleOrderItemsReq{
     size : string;
     destination : string;
     uom : string;
-    status : CustomerOrderStatusEnum;
     discount: number;
     salePrice: number;
     coPercentage: number;
@@ -15,21 +14,19 @@ export class StyleOrderItemsReq{
     sizeId: number;
     destinationId: number;
     uomId: number;
-    coLineId?: number;
-    coLineNumber?: string;
+    orderLineId?: number;
     skuCode?: string;
     coId?: number;
     styleOrderInfo?: any;
 
 
-    constructor(deliveryAddress : string,orderQuantity: number,color : string,size : string,destination : string,uom : string,status : CustomerOrderStatusEnum,discount: number,salePrice: number,coPercentage: number,colorId: number,sizeId: number,destinationId: number,uomId: number,coLineId?:number,coLineNumber?: string,skuCode?: string,coId?: number,styleOrderInfo?:any){
+    constructor(deliveryAddress : string,orderQuantity: number,color : string,size : string,destination : string,uom : string,discount: number,salePrice: number,coPercentage: number,colorId: number,sizeId: number,destinationId: number,uomId: number,orderLineId?:number,skuCode?: string,coId?: number,styleOrderInfo?:any){
     this.deliveryAddress = deliveryAddress
     this.orderQuantity = orderQuantity
     this.color = color
     this.size = size
     this.destination = destination
     this.uom = uom
-    this.status = status
     this.discount= discount
     this.salePrice= salePrice
     this.coPercentage= coPercentage
@@ -37,8 +34,7 @@ export class StyleOrderItemsReq{
     this.sizeId= sizeId
     this.destinationId= destinationId
     this.uomId= uomId
-    this.coLineId = coLineId
-    this.coLineNumber = coLineNumber
+    this.orderLineId = orderLineId
     this.skuCode = skuCode
     this.coId = coId
     this.styleOrderInfo = styleOrderInfo

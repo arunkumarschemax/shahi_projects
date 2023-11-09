@@ -4,15 +4,15 @@ import { Colour } from "../colours/colour.entity";
 import { Destination } from "../destination/destination.entity";
 import { Size } from "../sizes/sizes-entity";
 import { UomEntity } from "../uom/uom-entity";
-import { CoLineStatusEnum } from "@project-management-system/shared-models";
+import { CoLineStatusEnum, CustomerOrderStatusEnum } from "@project-management-system/shared-models";
 
-@Entity('order_lines')
-export class CoLineEntity{
+@Entity('co_lines')
+export class CoLine{
 
     @PrimaryGeneratedColumn("increment",{
-        name:'id'
+        name:'co_line_id'
     })
-    Id:number;
+    coLineId:number;
 
     @Column('varchar',{
         name:'buyer_po_number',
@@ -29,10 +29,10 @@ export class CoLineEntity{
     seasonCode : string;
 
     @Column('varchar',{
-        name:'co_number',
+        name:'co_line_number',
         nullable:false
     })
-    coNumber: string;
+    coLineNumber: string;
 
     @Column('varchar',{
         name:'order_number',
@@ -68,10 +68,10 @@ export class CoLineEntity{
 
     @Column('enum',{
         name:'status',
-        enum:CoLineStatusEnum,
+        enum:CustomerOrderStatusEnum,
         nullable:false
     })
-    status : CoLineStatusEnum
+    status : CustomerOrderStatusEnum
 
     @Column('varchar',{
         name:'size',

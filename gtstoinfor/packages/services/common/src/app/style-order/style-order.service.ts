@@ -12,7 +12,7 @@ import { Currencies } from "../currencies/currencies.entity";
 import { PaymentTerms } from "../payment-terms/payment-terms.entity";
 import { PaymentMethod } from "../payment-methods/payment-method-entity";
 import { Buyers } from "../buyers/buyers.entity";
-import { CoLine } from "./order-line.entity";
+import { OrderLine } from "./order-line.entity";
 import { Colour } from "../colours/colour.entity";
 import { Size } from "../sizes/sizes-entity";
 import { Destination } from "../destination/destination.entity";
@@ -21,7 +21,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { StyleOrderRepository } from "./style-order-repo";
-import { CoLineRepository } from "./order-line.repo";
+import { OrderLineRepository } from "./order-line.repo";
 import { ItemCreation } from "../fg-item/item_creation.entity";
 import { StyleOrderId } from "./style-order-id.request";
 import { VariantIdReq } from "./variant-id.req";
@@ -30,7 +30,7 @@ import { CoTypes } from "../co-type/co-type.entity";
 import { CoUpdateDto } from "./dto/co-update.dto";
 import { CoUpdateRepository } from "./co-updates.repo";
 import { CoUpdateEntity } from "./co-updates.entity";
-import { stringify } from "querystring";
+import { CoLine } from "./co-line.entity";
 import { StyleOrderColineIdReq } from "./style-order.colineId.request";
 
 @Injectable()
@@ -40,10 +40,12 @@ export class StyleOrderService{
         private repo:StyleOrderRepository,
         // @InjectRepository(StyleOrder)
       
-         private CoLineRepo : CoLineRepository,
+         private orderLineRepo : OrderLineRepository,
          private styleorderRepo:StyleOrderRepository,
          private Coupdate: CoUpdateRepository,
         private readonly dataSource: DataSource,
+        @InjectRepository(CoLine)
+        private CoLineRepo : Repository<CoLine>
 
     ){}
 
@@ -61,8 +63,8 @@ export class StyleOrderService{
             entity.buyerStyle = req.buyerStyle;
             entity.agent = req.agent;
             entity.buyerAddress = req.buyerAddress;
-            entity.exFactoryDate = req.exFactoryDate;
-            entity.deliveryDate = req.deliveryDate;
+            // entity.exFactoryDate = req.exFactoryDate;
+            // entity.deliveryDate = req.deliveryDate;
             entity.instoreDate = req.instoreDate;
             entity.salePrice = req.salePrice;
             entity.priceQuantity = req.priceQuantity;
@@ -110,28 +112,28 @@ export class StyleOrderService{
             const uom = new UomEntity()
             uom.id = req.uomId
             entity.uomInfo = uom
-            entity.season = req.season
+            // entity.season = req.season
             entity.itemSalePriceQty = req.itemSalePriceQty
-            let coLineItem:CoLine[]  = []
+            let ordreLineItem:OrderLine[]  = []
             let val = 0
             if(req.coId){
                 entity.coId = req.coId
                 entity.updatedUser = req.createdUser
-                entity.coNumber = req.coNumber
+                entity.orderNumber = req.orderNumber
             } else{
-                entity.coNumber = `CO-${Number(maxId)+1}`
+                entity.orderNumber = `CO-${Number(maxId)+1}`
                 entity.createdUser = req.createdUser
             }
             for(const rec of req.styleOrderItems){
                 val = val+1
-                const itemsEntity = new CoLine()
+                const itemsEntity = new OrderLine()
                 itemsEntity.deliveryAddress = rec.deliveryAddress
                 itemsEntity.orderQuantity = rec.orderQuantity
                 itemsEntity.color = rec.color
                 itemsEntity.size = rec.size
                 itemsEntity.destination = rec.destination
                 itemsEntity.uom = rec.uom
-                itemsEntity.status = rec.status
+                // itemsEntity.status = rec.status
                 itemsEntity.salePrice = rec.salePrice
                 itemsEntity.coPercentage = rec.coPercentage
                 const color = new Colour()
@@ -149,22 +151,22 @@ export class StyleOrderService{
                 itemsEntity.skuCode = rec.skuCode
                 itemsEntity.salePrice = rec.salePrice
 
-                if(rec.coLineId){
-                    itemsEntity.coLineId = rec.coLineId
+                if(rec.orderLineId){
+                    itemsEntity.orderLineId = rec.orderLineId
                     const styleOrderEntity = new StyleOrder();
                     styleOrderEntity.coId = rec.coId;
                     itemsEntity.styleOrderInfo = styleOrderEntity;
                     itemsEntity.updatedUser = req.createdUser
-                    itemsEntity.coLineNumber = rec.coLineNumber
+                    // itemsEntity.coLineNumber = rec.coLineNumber
 
                 } else{
-                    itemsEntity.coLineNumber = `Line-${val}`
+                    // itemsEntity.coLineNumber = `Line-${val}`
                     itemsEntity.createdUser = req.createdUser
                 }
-                coLineItem.push(itemsEntity)
+                ordreLineItem.push(itemsEntity)
             }
 
-            entity.coLineInfo = coLineItem
+            entity.orderLineInfo = ordreLineItem
             const save = await transactionalEntityManager.getRepository(StyleOrder).save(entity)
             if(!save){
                 await transactionalEntityManager.releaseTransaction()
@@ -191,7 +193,7 @@ export class StyleOrderService{
    } 
    async getAllCoLinesById(req:styleOrderReq):Promise<CommonResponseModel>{
     try{
-        const data = await this.CoLineRepo.getAllCoLines(req)
+        const data = await this.orderLineRepo.getAllOrderLines(req)
         
         return new CommonResponseModel(true,1,'',data)
 
@@ -281,11 +283,11 @@ export class StyleOrderService{
 
    async getCoLineItemsByDestination(req:StyleOrderIdReq):Promise<CommonResponseModel>{
     try{
-        const info = await this.CoLineRepo.find({where:{styleOrderInfo:{coId:req.styleOrderId},destinationInfo:{destinationId:req.destinationId}},relations:['colorInfo','sizeInfo','destinationInfo','uomInfo','styleOrderInfo']})
+        const info = await this.orderLineRepo.find({where:{styleOrderInfo:{coId:req.styleOrderId},destinationInfo:{destinationId:req.destinationId}},relations:['colorInfo','sizeInfo','destinationInfo','uomInfo','styleOrderInfo']})
         let data = []
         if(info.length > 0){
             for(const rec of info){
-                data.push(new StyleOrderItemsModel(rec.coLineId,rec.deliveryAddress,rec.orderQuantity,rec.color,rec.size,rec.destination,rec.uom,rec.status,rec.discount,rec.salePrice,rec.coPercentage,Number(rec.colorInfo.colourId),Number(rec.sizeInfo.sizeId),Number(rec.destinationInfo.destinationId),Number(rec.uomInfo?.id),null,null,null,rec.skuCode,rec.coLineNumber,req.styleOrderId))
+                data.push(new StyleOrderItemsModel(rec.orderLineId,rec.deliveryAddress,rec.orderQuantity,rec.color,rec.size,rec.destination,rec.uom,null,rec.discount,rec.salePrice,rec.coPercentage,Number(rec.colorInfo.colourId),Number(rec.sizeInfo.sizeId),Number(rec.destinationInfo.destinationId),Number(rec.uomInfo?.id),null,null,null,rec.skuCode,null,req.styleOrderId))
             }
             return new CommonResponseModel(true,1,'Data retrieved',info)
         } else{

@@ -10,13 +10,13 @@ import { DeliveryTerms } from "../delivery-terms/delivery-terms.entity";
 import { Currencies } from "../currencies/currencies.entity";
 import { PaymentMethod } from "../payment-methods/payment-method-entity";
 import { PaymentTerms } from "../payment-terms/payment-terms.entity";
-import { CoLine } from "./order-line.entity";
+import { OrderLine } from "./order-line.entity";
 import { Buyers } from "../buyers/buyers.entity";
 import { ItemCreation } from "../fg-item/item_creation.entity";
 import { CoTypes } from "../co-type/co-type.entity";
 import { UomEntity } from "../uom/uom-entity";
 import { CoBom } from "../co-bom/co-bom.entity";
-import { CoLineEntity } from "./co-line.entity";
+import { CoLine } from "./co-line.entity";
 
 @Entity('customer_order')
 export class StyleOrder{
@@ -27,11 +27,11 @@ export class StyleOrder{
     coId:number;
 
     @Column('varchar',{
-        name:'co_number',
+        name:'order_number',
         nullable:false,
         length:25
     })
-    coNumber : string;
+    orderNumber : string;
 
     @Column('varchar',{
         name:'item_code',
@@ -82,18 +82,6 @@ export class StyleOrder{
     buyerAddress : string;
 
     @Column('datetime',{
-        name:'exfactory_date',
-        nullable: false
-    })
-    exFactoryDate: Date;
-
-    @Column('datetime',{
-        name:'delivery_date',
-        nullable: false
-    })
-    deliveryDate: Date;
-
-    @Column('datetime',{
         name:'instore_date',
         nullable: false
     })
@@ -135,13 +123,6 @@ export class StyleOrder{
         nullable:true
     })
     remarks: string;
-
-    @Column('varchar',{
-        name:'season',
-        nullable:true,
-        length:30
-    })
-    season : string;
 
     @Column('int',{
         name:'merchandiser',
@@ -254,14 +235,14 @@ export class StyleOrder{
     @JoinColumn({ name:"quantity_uom_id"})
     uomInfo: UomEntity;
 
-    @OneToMany(type=>CoLine, co=>co.styleOrderInfo,{cascade: true})
-    coLineInfo:CoLine[];
+    @OneToMany(type=>OrderLine, co=>co.styleOrderInfo,{cascade: true})
+    orderLineInfo:OrderLine[];
 
     @OneToMany(type=>CoBom, co=>co.orderId,{cascade:true})
     customerorder:CoBom
 
 
-    @OneToMany(type=>CoLineEntity, co=>co.styleOrderInfo,{cascade: true})
-    CoLineData:CoLineEntity[];
+    @OneToMany(type=>CoLine, co=>co.styleOrderInfo,{cascade: true})
+    CoLineData:CoLine[];
     
 }

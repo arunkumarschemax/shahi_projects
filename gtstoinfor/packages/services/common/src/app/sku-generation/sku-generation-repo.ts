@@ -9,7 +9,7 @@ import { Destination } from "../destination/destination.entity";
 import { Style } from "../style/dto/style-entity";
 import { Division } from "../division/division.entity";
 import { StyleOrder } from "../style-order/style-order.entity";
-import { CoLine } from "../style-order/order-line.entity";
+import { OrderLine } from "../style-order/order-line.entity";
 
 @Injectable()
 export class ItemSkuRepository extends Repository<ItemSkus> {
@@ -63,7 +63,7 @@ export class ItemSkuRepository extends Repository<ItemSkus> {
         .leftJoin(Destination,`d`,`d.destination_id = is.destination_id`)
         .leftJoin(Style,`st`,`st.style_id = is.style_id`)
         .leftJoin(Division,`div`,`div.division_id = is.division_id`)
-        .leftJoin(CoLine,`co`,`co.sku_code = is.sku_code`)
+        .leftJoin(OrderLine,`co`,`co.sku_code = is.sku_code`)
         .leftJoin(StyleOrder,`so`,`so.co_id = co.co_id`)
         //    .where(`item_code = '${req.itemsNo}'`)
        .where('is.item_code = :itemCode', { itemCode: req.itemsCode })
