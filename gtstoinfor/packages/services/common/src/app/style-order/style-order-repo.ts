@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { StyleOrder } from "./style-order.entity";
 import { StyleOrderIdReq, styleOrderReq } from "@project-management-system/shared-models";
-import { CoLine } from "./co-line.entity";
+import { CoLine } from "./order-line.entity";
 import { Buyers } from "../buyers/buyers.entity";
 import { FactoriesEntity } from "../factories/factories.entity";
 import { Warehouse } from "../warehouse/warehouse.entity";

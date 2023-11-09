@@ -6,7 +6,7 @@ import { Destination } from "../destination/destination.entity";
 import { UomEntity } from "../uom/uom-entity";
 import { StyleOrder } from "./style-order.entity";
 
-@Entity('co_lines')
+@Entity('order_lines')
 export class CoLine{
 
     @PrimaryGeneratedColumn("increment",{
