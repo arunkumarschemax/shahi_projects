@@ -147,6 +147,7 @@ import MaterialIssueReport from "./sample-development/material-issue-report"
 import StockReport from "./Reports/stock-report"
 import SampleRequestReport from "./Reports/sample-request-report"
 import SampleInventory from "./sample-development/sample-inventory-grid"
+import IndentReport from "./sourcing-requisition/indent-report"
 
 
 export const AppRoutes = () => {
@@ -553,6 +554,7 @@ export const AppRoutes = () => {
                 </Route>
                 <Route path='/report'>
                 <Route path='material-issue-report' element={<MaterialIssueReport/>}/>
+                <Route path='indent-report' element={<IndentReport/>}/>
 
                 </Route>
                 <Route path='/stock-view' element={<StockView/>}/>

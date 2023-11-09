@@ -4,13 +4,15 @@ import { IndentService } from "./indent.service";
 import { AllItemsResponseModel, CommonResponseModel } from "@project-management-system/shared-models";
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
 import { IndentDto } from "./dto/indent-dto";
+import { IndentRepository } from "./dto/indent-repository";
 
 @ApiTags('indent')
 @Controller('Indent')
 export class IndentController {
   constructor(
     private readonly indentService: IndentService,
-    private readonly applicationExceptionHandler: ApplicationExceptionHandler
+    private readonly applicationExceptionHandler: ApplicationExceptionHandler,
+    private readonly repo:IndentRepository
 
   ) { }
   @Post('/creteIndent')
@@ -45,6 +47,15 @@ export class IndentController {
   async getAllIndentData(): Promise<CommonResponseModel> {
     try {
       return await this.indentService.getAllIndentData();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+
+  @Post('/getIndentData')
+  async getIndentData(): Promise<CommonResponseModel> {
+    try {
+      return await this.indentService.getIndentData();
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }

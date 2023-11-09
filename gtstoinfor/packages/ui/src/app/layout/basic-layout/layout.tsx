@@ -840,6 +840,12 @@ export const baseRouterList = [
                 path: "material-issue-report",
                 filepath: "material-issue-report",
             },
+            {
+                label: "Indent Report",
+                key: "indent-report",
+                path: "indent-report",
+                filepath: "indent-report",
+            },
         ]
     }
     // {

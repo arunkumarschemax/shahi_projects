@@ -5,13 +5,15 @@ import { Indent } from './indent-entity';
 import { IndentDto } from './dto/indent-dto';
 import { IndentAdapter } from './dto/indent-adapter';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 
 export class IndentService{
     constructor(
         private indentRepo:IndentRepository,
-        private indentAdapter:IndentAdapter
+        private indentAdapter:IndentAdapter,
+        private readonly dataSource: DataSource,
 
     ){}
 
@@ -42,5 +44,44 @@ export class IndentService{
         const data = await this.indentRepo.find({relations: ['iFabricInfo', 'iTrimsInfo']});
         return new CommonResponseModel(true, 1235, 'Data retrieved Successfully',data);
     }
+    
+    async getIndentData( ): Promise<CommonResponseModel> {
+        const data = await this.indentRepo.getIndentData();
+        if (data.length > 0) {
+            const groupedData = data.reduce((result, item) => {
+                const indentId = item.indentId;
+                const style = item.style;
+                const indentDate = item.indentDate;
+                const expectedDate = item.expectedDate;
+               
+                if (!result[indentId]) {
+                    result[indentId] = {
+                        indentId: indentId,
+                        style: style,
+                        indentDate: indentDate,
+                        expectedDate: expectedDate,
+                        i_items: [],
+                    };
+                }
+                result[indentId].i_items.push({
+                    indentId: item.indentId,
+                    itrims_id: item.itrims_id,
+                    trimType: item.trimType,
+                    color:item.color,
+                    trimCode: item.trimCode,
+                    quantity: item.quantity,
+                    m3TrimCode: item.m3TrimCode,
+                  
+
+                });
+                return result;
+
+            }, {});
+            return new CommonResponseModel(true, 1, 'Data retrieved successfully', Object.values(groupedData));
+        }  return new CommonResponseModel(false, 0, 'No data found', []);
+    } catch (error) {
+        return new CommonResponseModel(false, 0, 'An error occurred', []);
+    }
+
     
 }
