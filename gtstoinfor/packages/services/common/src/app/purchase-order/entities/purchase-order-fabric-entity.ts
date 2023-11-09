@@ -138,24 +138,4 @@ moq:string
 @JoinColumn({name:'purchase_order_id'})
 purchaseOrderEntity:PurchaseOrderEntity
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
