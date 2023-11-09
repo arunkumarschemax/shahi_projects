@@ -248,7 +248,9 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
                 query = query + ` AND planning_sum = "${req.itemName}"`
             }
            query = query +` GROUP BY YEAR, planning_sum, prod_plan_type
-        ORDER BY  planning_sum ASC`;
+           HAVING totalExfPre != 0 AND totalExfLat != 0 AND totalWhPre != 0 AND totalWhLat != 0
+        ORDER BY  planning_sum ASC
+        `;
         const result = await this.query(query);
         return result;
     }
@@ -430,7 +432,8 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
                 WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
                 WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
                 ELSE prod_plan_type
-            END`
+            END
+            HAVING totalExfPre != 0 AND totalExfLat != 0 AND totalWhPre != 0 AND totalWhLat != 0 `
         const result = await this.query(query);
         return result;
     }
@@ -452,7 +455,6 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
 
         SELECT
             YEAR,
-            
              CASE
                 WHEN prod_plan_type LIKE '%Ph3%' THEN 'Ph3'
                 WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
@@ -527,7 +529,8 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
                 WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
                 WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
                 ELSE prod_plan_type
-            END`
+            END
+            HAVING totalExfPcs != 0 AND totalExfCoeff != 0 AND totalWhPcs != 0 AND totalWhCoeff != 0`
         
         
         const result = await this.query(query);

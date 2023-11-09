@@ -68,7 +68,7 @@
     "static-server": "2.2.1",
     "tslib": "2.3.0",
     "typeorm": "^0.3.17",
-    "winston": "^3.10.0",
+    "winston": "^3.11.0",
     "xlsx": "^0.18.5",
     "xrange": "2.2.1"
   },
