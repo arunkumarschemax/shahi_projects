@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CoUpdateReq, CoUpdateResponseModel, CommonResponseModel, CustomerOrderStatusEnum, StyleOrderIdReq, StyleOrderItemsModel, StyleOrderModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
+import { CoRequest, CoUpdateReq, CoUpdateResponseModel, CommonResponseModel, CustomerOrderStatusEnum, StyleOrderIdReq, StyleOrderItemsModel, StyleOrderModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
 import { StyleOrder } from "./style-order.entity";
 import { Item } from "../items/item-entity";
 import { Warehouse } from "../warehouse/warehouse.entity";
@@ -404,4 +404,24 @@ export class StyleOrderService{
             }
 
     
+            async getCoamendment():Promise<CommonResponseModel>{
+                try{
+                    const data= await this.Coupdate.getCoamendment()
+                    return new CommonResponseModel(true,1,'',data)
+                }catch(err){
+                    throw err
+                }
+            }
+
+            async getConumber(req:CoRequest):Promise<CommonResponseModel>{
+                try{
+                    const data= await this.Coupdate.getconumber(req)
+                    return new CommonResponseModel(true,1,'',data)
+                }catch(err){
+                    throw err
+                }
+            }
+
+            
+            
 }

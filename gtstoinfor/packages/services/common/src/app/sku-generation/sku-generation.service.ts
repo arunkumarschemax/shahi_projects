@@ -261,7 +261,7 @@ async getItemCode(req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
 async getSkuList (req?:SKUlistFilterRequest):Promise<CommonResponseModel>{
   try{
     const getdata = await this.itemSkuRepo.getSkuList(req)
-    console.log(getdata,"tttt")
+    // console.log(getdata,"tttt")
 
     if(getdata.length>0){
 

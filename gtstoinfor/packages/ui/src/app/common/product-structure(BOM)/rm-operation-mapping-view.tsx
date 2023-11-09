@@ -1,15 +1,14 @@
-import { ItemCreationService, ProductStructureService, RmCreationService } from "@project-management-system/shared-services"
+import { DepartmentService, ItemCreationService, OperationsService, ProductStructureService, RmCreationService } from "@project-management-system/shared-services"
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Card,  Input, Button, Form, Row, Col, Select, Space,} from 'antd';
+import { Table, Card,  Input, Button, Form, Row, Col, Select, Tooltip,} from 'antd';
 import Highlighter from 'react-highlight-words';
-import {  SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import {  EyeOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import {   FeatureService } from '@project-management-system/shared-services';
 import AlertMessages from "../common-functions/alert-messages";
 import { RmMappingFilterRequest } from "@project-management-system/shared-models";
 
+const RMOperationMappingView = () => {
 
-const FgRmItemBomView   = () => {
     const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [lTData, setLTData] = useState<any[]>([]);
@@ -18,32 +17,71 @@ const FgRmItemBomView   = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
-  const fgservice = new ItemCreationService()
-  const Rmservice = new RmCreationService()
-  const productstructureservice = new ProductStructureService()
+  const operationsService = new OperationsService();
+  const service =new DepartmentService();
+  const productService = new ProductStructureService()
 
   const { Option } = Select;
+  const [operationsData, setOperationsData] = useState<any[]>([]);
+  const [departmentData, setDepartmentData] = useState<any[]>([]);
+  const fgservice = new ItemCreationService()
+  const Rmservice = new RmCreationService()
   const [fgCode, setFgCode] = useState<any[]>([])
   const [RmCode, setRMCode] = useState<any[]>([])
 
-  useEffect(() => {
-    getAllRmSkuData();
-    RmCodeData();
-    getFgItemsDropdown();
-  }, [])
-  
 
-    const getAllRmSkuData= () => {
+  useEffect(() => {
+    getAllRmSMVData();
+    getAllOperationsData();
+    getFgItemsDropdown();
+    RmCodeData();
+  }, [])
+
+  const getAllOperationsData = () => {
+    
+    operationsService.getAllActiveOperations().then(res => {
+      if(res.status) {
+        setOperationsData(res.data);
+      } else {
+        AlertMessages.getErrorMessage(res.internalMessage)
+      }
+    })
+  }
+
+
+  const getAllDepartment=()=>{
+    service.getAllDepartments().then(res=>{
+        if(res.status){
+            setDepartmentData(res.data)
+        }else{
+            AlertMessages.getErrorMessage(res.internalMessage);
+        }
+    })
+  }
+
+  const getFgItemsDropdown = () =>{
+    fgservice.getFgItemsDropdown().then(res=>{
+      if(res.status){
+        setFgCode(res.data)
+      } else {
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    })
+
+  }
+
+    const getAllRmSMVData= () => {
         const req = new RmMappingFilterRequest();
         
-        if (form.getFieldValue('rmItcode') !== undefined) {
-            req.rmItemCode = form.getFieldValue('rmItcode');
+        if (form.getFieldValue('operation') !== undefined) {
+            req.fgItemCode = form.getFieldValue('operation');
         }
-        if (form.getFieldValue('fgItemCode') !== undefined) {
-            req.fgItemCode = form.getFieldValue('fgItemCode');
+        if (form.getFieldValue('dept') !== undefined) {
+            req.rmItemCode = form.getFieldValue('dept');
         }
-      
-        productstructureservice.getRmMapped(req).then(res => {
+       
+        
+        productService.getRmMapped(req).then(res => {
       if (res.status) {
         setLTData(res.data);
       } else
@@ -99,11 +137,8 @@ const FgRmItemBomView   = () => {
                 .includes(value.toLowerCase())
             : false,
             onFilterDropdownOpenChange: open => {
-              if (open) {
-                  setTimeout(() => searchInput.current.select());
-              }
+              if (open) { setTimeout(() => searchInput.current.select()); }
           },
-          
     render: text =>
         text ? (
             searchedColumn === dataIndex ? (
@@ -130,20 +165,10 @@ const FgRmItemBomView   = () => {
   };
   const resetHandler = () => {
     form.resetFields();
-    getAllRmSkuData();
+    getAllRmSMVData();
 
 }
 
-const getFgItemsDropdown = () =>{
-    fgservice.getFgItemsDropdown().then(res=>{
-      if(res.status){
-        setFgCode(res.data)
-      } else {
-        AlertMessages.getErrorMessage(res.internalMessage);
-      }
-    })
-
-  }
 const RmCodeData = () =>{
     Rmservice.getRmItemsData().then((res)=>{
         if(res.status){
@@ -151,8 +176,6 @@ const RmCodeData = () =>{
         }
     })
 }
-
-
 
 const columns: any = [
   {
@@ -180,9 +203,6 @@ const columns: any = [
             {
               dataIndex: "rm_item_code",
               key: "rm_item_code", align:'center',
-              render:(data)=>{
-                return data ? data :'-'
-              }
             },
            
           ]}
@@ -192,7 +212,7 @@ const columns: any = [
     }
   },
   {
-    title:<div style={{ textAlign: 'center' }}>Item Type</div> ,
+    title:<div style={{ textAlign: 'center' }}>Operations</div> ,
     dataIndex: "rm_items",
     key: "rm_items",
     align:'center',
@@ -203,9 +223,8 @@ const columns: any = [
           columns={[
             
             {
-              dataIndex: "item_type",
-              key: "item_type", align:'center',
-              render:(data)=>{
+              dataIndex: "operation_name",
+              key: "operation_name", align:'center',render:(data)=>{
                 return data ? data :'-'
               }
             },
@@ -216,7 +235,7 @@ const columns: any = [
     }
   },
   {
-    title:<div style={{ textAlign: 'center' }}>Item Group</div> ,
+    title:<div style={{ textAlign: 'center' }}>Sequencies</div> ,
     dataIndex: "rm_items",
     key: "rm_items",
     align:'center',
@@ -226,8 +245,8 @@ const columns: any = [
           dataSource={rmItems}
           columns={[
             {
-              dataIndex: "item_group",
-              key: "item_group", align:'center',
+              dataIndex: "sequence",
+              key: "sequence", align:'center',
               render:(data)=>{
                 return data ? data :'-'
               }
@@ -238,94 +257,22 @@ const columns: any = [
       );
     }
   },
-  {
-    title:<div style={{ textAlign: 'center' }}>Is Sub Contract</div> ,
-    dataIndex: "rm_items",
-    key: "rm_items",
-    align:'center',
-    render: (rmItems) => {
-      return (
-        <Table
-          dataSource={rmItems}
-          columns={[
-           
-            {
-              dataIndex: "is_sub_contract",
-              key: "rm_item_code", align:'center',
-              render:(data)=>{
-                return data ? data :'-'
-              }
-            },
-           
-          ]}
-          pagination={false}
-        />
-      );
-    }
-  },
-  {
-    title:<div style={{ textAlign: 'center' }}>Facility</div> ,
-    dataIndex: "rm_items",
-    key: "rm_items",
-    align:'center',
-    render: (rmItems) => {
-      return (
-        <Table
-          dataSource={rmItems}
-          columns={[
-           
-           
-            {
-              dataIndex: "facility",
-              key: "facility", align:'center',
-              render:(data)=>{
-                return data ? data :'-'
-              }
-            }, 
-          ]}
-          pagination={false}
-        />
-      );
-    }
-  },
-  {
-    title:<div style={{ textAlign: 'center' }}>Season</div> ,
-    dataIndex: "rm_items",
-    key: "rm_items",
-    align:'center',
-    render: (rmItems) => {
-      return (
-        <Table
-          dataSource={rmItems}
-          columns={[
-            {
-              dataIndex: "season",
-              key: "season", align:'center',
-              render:(data)=>{
-                return data ? data :'-'
-              }
-            }
-          ]}
-          pagination={false}
-        />
-      );
-    }
-  }
+ 
+ 
 ];
 
-
-//   const onChange = (pagination, filters, sorter, extra) => {
-//     console.log('params', pagination, filters, sorter, extra);
-//   }
+  const onChange = (pagination, filters, sorter, extra) => {
+    console.log('params', pagination, filters, sorter, extra);
+  }
 
   return (
       <>
-      <Card title={<span >Fg Rm Mapping</span>}
-    extra={<Link to='/product-structure/fg-rm-mapping' >
+      <Card title={<span >RM Opration Mapping </span>}
+    extra={<Link to='/product-structure/productstructure/smv-efficiency' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
       <Card >
-      <Form onFinish={getAllRmSkuData} form={form} layout='vertical'>
+      <Form onFinish={getAllRmSMVData} form={form} layout='vertical'>
                 <Row gutter={24}>
                 
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
@@ -355,6 +302,22 @@ const columns: any = [
                             </Select>
                         </Form.Item>
                     </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                    <Form.Item name='operation' label='Operation' >
+                        <Select
+                            showSearch
+                            placeholder="Select Operation"
+                            optionFilterProp="children"
+                            allowClear
+                        >
+                            {
+                                operationsData?.map((inc: any) => {
+                                    return <Option key={inc.operationId} value={inc.operationId}>{inc.operationName}</Option>
+                                })
+                            }
+                        </Select>
+                    </Form.Item>
+                </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
                         <Form.Item>
                             <Button htmlType="submit"
@@ -371,7 +334,7 @@ const columns: any = [
             </Form>
       <Table
             size='middle'
-            rowKey={(record) => record.feature_option_id}
+           // rowKey={(record) => record.smv_efficiency_id}
             columns={columns}
             className='custom-table-wrapper'
             dataSource={lTData}
@@ -380,7 +343,6 @@ const columns: any = [
                 setPage(current);
               },
             }}
-            scroll={{ x: 'max-content',y:1000}}
             // onChange={onChange}
             bordered
           />
@@ -389,6 +351,6 @@ const columns: any = [
       
   );
 }
-export default FgRmItemBomView
 
+export default RMOperationMappingView
 

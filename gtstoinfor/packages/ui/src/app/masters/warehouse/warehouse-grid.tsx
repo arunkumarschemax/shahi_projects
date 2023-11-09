@@ -294,8 +294,9 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
     service.ActivatedeActivateWarehouse(ViewData).then(res => {
       console.log(res);
       if (res.status) {
-        // getAllCurrencys();
-        AlertMessages.getSuccessMessage('Success');
+        getAllwarehouse()
+        // AlertMessages.getSuccessMessage('Success');
+        AlertMessages.getSuccessMessage(res.internalMessage);
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
@@ -326,6 +327,7 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
   return (
 
       <>
+      <Card title="Warehouse" extra={<span><Button onClick={()=>navigate('/global/warehouse/warehouse-form')} type={'primary'}>New</Button></span>} >
       <Row gutter={40}>
         <Col>
           <Card title={'Total Warehouse: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
@@ -337,11 +339,12 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
         <Col>
-        <span><Button onClick={() => navigate('/global/warehouse/warehouse-form')}
-              type={'primary'}>New</Button></span>
+    
         </Col>
-      </Row><br></br>
-      <Card >
+      </Row>
+      <br></br>
+      
+      
         {/* <GetCumulatives cumulativeColumns={cumulativeSkelton} data={variantData}/> */}
         {/* <ProTable
           request={getAllCurrencys}

@@ -18,12 +18,6 @@ const FeatureCreationView = () => {
   const [page, setPage] = React.useState(1);
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const [color, setColor] = useState<any[]>([])
-  const [des, setDes] = useState<any[]>([])
-  const [size, setSize] = useState<any[]>([])
-  const colorService = new ColourService()
-  const sizeService = new SizeService()
-  const desService = new DestinationService()
   const service = new FeatureService()
   const { Option } = Select;
   const [featureCode, setFeatureCode] = useState<any[]>([])
@@ -33,9 +27,6 @@ const FeatureCreationView = () => {
 
   useEffect(() => {
     getAllFeatureData();
-    colorData();
-    sizeData();
-    desData();
     featureNameData();
     featureCodeData();
     optionGroupData();
@@ -142,30 +133,7 @@ const FeatureCreationView = () => {
 
 }
 
-const sizeData = () =>{
-    sizeService.getAllActiveSize().then((res)=>{
-        if(res.status){
-            setSize(res.data)
-        }
-    })
-}
 
-
-  const colorData = () => {
-    colorService.getAllActiveColour().then((res)=>{
-        if(res.status){
-            setColor(res.data)
-        }
-    })
-  }
-  
-  const desData = () => {
-    desService.getAllActiveDestination().then((res)=>{
-        if(res.status){
-            setDes(res.data)
-        }
-    })
-  }
   const featureNameData = () =>{
     service.getFeatureName().then((res)=>{
         if(res.status){
@@ -221,64 +189,58 @@ const columnsSkelton: any = [
         title: 'Option Values',
         dataIndex: 'option_group',
         align:'center',
+    
         render: (optionGroup, record) => {
           const options = record[optionGroup];
-          return (
-            <div>
-              {optionGroup === 'SIZE' && options
-                ? options.map((option, index) => {
-                    const sizeData = size.find((bran) => bran.sizeId === option.option_id);
-                    const sizeText = sizeData ? sizeData.size : "-";
-                    const element = (
-                      <span key={option.option_id}>
-                        {sizeText}
-                        {index < options.length - 1 ? ', ' : ''}
-                      </span>
-                    );
-      
-                    index++;
-                    return element;
-                  })
-                : null
-              }
-              {optionGroup === 'DESTINATION' && options
-                ? options.map((option, index) => {
-                    const DestinationData = des.find((bran) => bran.destinationId === option.option_id);
-                    const destText = DestinationData ? DestinationData.destination : "-";
-                    return (
-                      <span key={option.option_id}>
-                        {destText}
-                        {index < options.length - 1 ? ', ' : ''}
-                      </span>
-                    );
-                  })
-                : null
-              }
-              {optionGroup === 'COLOR' && options? (
-               <div style={{ display: 'flex', flexWrap: 'wrap',  justifyContent: 'center'}}>
+          
+          if (optionGroup === 'SIZE' && options) {
+            return options.map((option, index) => (
+              <span key={option.option_id}>
+                {option.optionValue}
+                {index < options.length - 1 ? ', ' : ''}
+              </span>
+            ));
+          }
+        
+          if (optionGroup === 'DESTINATION' && options) {
+            return options.map((option, index) => (
+              <span key={option.option_id}>
+                {option.optionValue}
+                {index < options.length - 1 ? ', ' : ''}
+              </span>
+            ));
+          }
+        
+          if (optionGroup === 'COLOR' && options) {
+            return (
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
                 {options.map((option, index) => {
-                 const colorData = color.find((bran) => bran.colourId === option.option_id);
-                const colorText = colorData ? colorData.colour : "-";
-                const isWhite = colorText.toLowerCase() === 'white';
-                 const colorStyle = {
-                 display: 'inline-block',
-                 padding: '4px',
-                 backgroundColor: isWhite ? 'white' : colorText,
-                 color: isWhite ? 'black' : 'white',
-                 borderRadius: '4px',
-                 minWidth: '30px',
-                 height: '30px', 
-                 margin: '4px',
-                 border: `1px solid ${isWhite ? 'black' : 'transparent'}`,
-                 };
-                 return (
-                <span key={option.option_id} style={{ ...colorStyle, textAlign: 'center' }}>{colorText}</span> );
-                    })}</div>): null
-                    }
-
-            </div>
-          );
+                  const colorText = option.optionValue;
+                  const isWhite = colorText.toLowerCase() === 'white';
+                  const colorStyle = {
+                    display: 'inline-block',
+                    padding: '4px',
+                    backgroundColor: isWhite ? 'white' : colorText,
+                    color: isWhite ? 'black' : 'white',
+                    borderRadius: '4px',
+                    minWidth: '30px',
+                    height: '30px',
+                    margin: '4px',
+                    border: `1px solid ${isWhite ? 'black' : 'transparent'}`,
+                  };
+                  return (
+                    <span key={option.option_id} style={{ ...colorStyle, textAlign: 'center' }}>
+                      {colorText}
+                    </span>
+                  );
+                })}
+              </div>
+            );
+          }
+        
+          return null;
         },
+        
       }
 
     ];

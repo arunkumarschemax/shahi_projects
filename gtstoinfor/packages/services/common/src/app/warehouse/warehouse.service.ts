@@ -29,7 +29,7 @@ export class WarehouseService {
           return null;
         }
       }
-
+   
       async createWarehouse(Dto:WarehouseDTO, isUpdate: boolean): Promise<WarehouseResponseModel> {
         console.log(Dto,'nnnnnh');
         
@@ -40,7 +40,7 @@ export class WarehouseService {
             const Entity = await this.getWarehouseDetailsWithoutRelations(Dto.warehouseName);
             if (Entity) {
               //return new InformationMessageError(11104, "State already exists");
-              throw new WarehouseResponseModel(false,11104, 'WareHouse already exists');
+              throw new WarehouseResponseModel(false,11104, 'Warehouse already exists');
             }
           }
           else{
@@ -150,14 +150,14 @@ export class WarehouseService {
                        
                         if (Exists.isActive) {
                             if (WarehouseStatus.affected) {
-                                const WarehouseResponse: WarehouseResponseModel = new WarehouseResponseModel(true, 10115, 'Warehouse is de-activated successfully');
+                                const WarehouseResponse: WarehouseResponseModel = new WarehouseResponseModel(true, 10115, 'Warehouse is Deactivated successfully');
                                 return WarehouseResponse;
                             } else {
                                 throw new WarehouseResponseModel(false,10111, 'Warehouse is already deactivated');
                             }
                         } else {
                             if (WarehouseStatus.affected) {
-                                const WarehouseResponse: WarehouseResponseModel = new WarehouseResponseModel(true, 10114, 'Warehouse is activated successfully');
+                                const WarehouseResponse: WarehouseResponseModel = new WarehouseResponseModel(true, 10114, 'Warehouse is Activated successfully');
                                 return WarehouseResponse;
                             } else {
                                 throw new WarehouseResponseModel(false,10112, 'Warehouse is already  activated');

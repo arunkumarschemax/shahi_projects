@@ -8,5 +8,8 @@ import { ApiProperty } from "@nestjs/swagger";
     @ApiProperty()
     rmitemCode: string;
 
+    @ApiProperty()
+    operationId: number;
+
 
  }

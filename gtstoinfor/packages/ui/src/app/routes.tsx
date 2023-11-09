@@ -165,10 +165,12 @@ import FgRmItemBomView from "./common/product-structure(BOM)/fg-rm-item-view"
 import SMVEffciencyView from "./common/product-structure(BOM)/smv-effciency-view"
 import SMKDetailView from "./common/product-structure(BOM)/smk-detail-view"
 import SubstitutionView from "./BOM/substitution-view"
-import TrimOperationMappingView from "./common/product-structure(BOM)/trim-operation-mapping-view"
+import TrimOperationMappingView from "./common/product-structure(BOM)/rm-operation-mapping-view"
 import MOPReport from "./procurement/mop-report"
 import BomReport from "./BOM/bom-report"
 import RMSkuView from "./rm-skus/rm-sku-view"
+import RMOperationMappingView from "./common/product-structure(BOM)/rm-operation-mapping-view"
+import COAmendmentView from "./common/co-amendment/co-amendment-view"
 
 
 export const AppRoutes = () => {
@@ -619,6 +621,8 @@ export const AppRoutes = () => {
                 <Route path='item-creation-view' element={<ItemCreationView/>}/>    
                 <Route path='item-creation-detail-view' element={<ItemCreationDetailView data={''}/>}/>
                 <Route path="co-amendment" element ={<COAmendmentTabs key={""} />} />
+                <Route path="co-amendment-view" element ={<COAmendmentView/>} />
+
                 <Route path='rm-creation-view' element={<RMCreationView/>}/>
                 
                 <Route path='rm-skus' element={<RmSkusGeneration/>}/>
@@ -639,7 +643,7 @@ export const AppRoutes = () => {
                 <Route path ='fg-rm-mapping-view' element={<FgRmItemBomView/>}/>
                 <Route path ='smv-efficiency-view' element={<SMVEffciencyView/>}/>
                 <Route path ='smv-efficiency-detail-view' element={<SMKDetailView data={''}/>}/>
-                <Route path ='trim-operation-mapping-view' element={<TrimOperationMappingView />}/>
+                <Route path ='rm-operation-mapping-view' element={<RMOperationMappingView />}/>
 
             
                             

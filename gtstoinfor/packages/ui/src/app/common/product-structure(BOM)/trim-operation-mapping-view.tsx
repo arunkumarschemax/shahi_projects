@@ -184,22 +184,17 @@ const columns: any = [
           responsive: ['sm'],
           render: (text, object, index) => (page - 1) * 10 + (index + 1), align:'center',
         },
-        {
-          title: "FG Item Code",
-          dataIndex: "fg_item_code",
-          key: "fg_item_code",
-          align:'center',
-        },
   {
-    title: "RM Item Codes",
+    title: "FG Item Code",
     dataIndex: "fg_item_code",
+    key: "fg_item_code",
     align:'center',
   },
-  
   {
-    title: 'Operation',
-    dataIndex: 'rm_items',
-    align: 'center', 
+    title:<div style={{ textAlign: 'center' }}>RM Item Codes</div> ,
+    dataIndex: "rm_items",
+    key: "rm_items",
+    align:'center',
     render: (rmItems) => {
       return (
         <Table
@@ -208,35 +203,62 @@ const columns: any = [
             {
               dataIndex: "rm_item_code",
               key: "rm_item_code", align:'center',
-            }
+            },
+           
           ]}
           pagination={false}
         />
       );
-    },
- 
+    }
   },
   {
-    title: 'Sequence',
-    dataIndex: 'rm_items',
-    align: 'center', 
+    title:<div style={{ textAlign: 'center' }}>Operations</div> ,
+    dataIndex: "rm_items",
+    key: "rm_items",
+    align:'center',
+    render: (rmItems) => {
+      return (
+        <Table
+          dataSource={rmItems}
+          columns={[
+            
+            {
+              dataIndex: "operation_name",
+              key: "operation_name", align:'center',render:(data)=>{
+                return data ? data :'-'
+              }
+            },
+          ]}
+          pagination={false}
+        />
+      );
+    }
+  },
+  {
+    title:<div style={{ textAlign: 'center' }}>Sequencies</div> ,
+    dataIndex: "rm_items",
+    key: "rm_items",
+    align:'center',
     render: (rmItems) => {
       return (
         <Table
           dataSource={rmItems}
           columns={[
             {
-              // title: "RM Item Code",
-              dataIndex: "rm_item_code",
-              key: "rm_item_code", align:'center',
-            }
+              dataIndex: "sequence",
+              key: "sequence", align:'center',
+              render:(data)=>{
+                return data ? data :'-'
+              }
+            },
           ]}
           pagination={false}
         />
       );
-    },
- 
+    }
   },
+ 
+ 
 ];
 
   const onChange = (pagination, filters, sorter, extra) => {
@@ -245,7 +267,7 @@ const columns: any = [
 
   return (
       <>
-      <Card title={<span >Trim Opration Mapping </span>}
+      <Card title={<span >RM Opration Mapping </span>}
     extra={<Link to='/product-structure/productstructure/smv-efficiency' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
