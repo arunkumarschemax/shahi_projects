@@ -90,4 +90,7 @@ export class UomEntity {
 
     @OneToMany(type=>StyleOrder, co=>co.uomInfo,{cascade: true})
     styleOrderInfo:StyleOrder;
+
+    @OneToMany(type=>CoLine, co=>co.uomInfo,{cascade: true})
+    CoLineData:CoLine;
 }

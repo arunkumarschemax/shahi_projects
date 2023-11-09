@@ -10,11 +10,12 @@ import { CoLineRepository } from './order-line.repo';
 import { ItemCreation } from '../fg-item/item_creation.entity';
 import { CoUpdateRepository } from './co-updates.repo';
 import { CoUpdateEntity } from './co-updates.entity';
+import { CoLineEntity } from './co-line.entity';
 
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([StyleOrder,CoLine,CoUpdateEntity
+        TypeOrmModule.forFeature([StyleOrder,CoLine,CoUpdateEntity,CoLineEntity
         ]),
       ],
       providers: [ApplicationExceptionHandler,StyleOrderService,StyleOrderRepository,CoLineRepository,ItemCreation,CoUpdateRepository],
