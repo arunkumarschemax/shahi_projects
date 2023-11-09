@@ -92,7 +92,28 @@ export class ItemCreationRepository extends Repository<ItemCreation> {
       async getAll(): Promise<any> {
         const query = this.createQueryBuilder()
             .select(`fg_item_id,item_name,item_code`)
-            .groupBy(`item_code`)
+            .groupBy(`item_code,item_name`)
         return await query.getRawMany();
     }
+    async getAllstyle(): Promise<any> {
+      const query = this.createQueryBuilder()
+          .select(`fg_item_id,style_no`)
+          .groupBy(`style_no`)
+      return await query.getRawMany();
+  }
+  async getAllitems(): Promise<any> {
+    const query = this.createQueryBuilder()
+        .select(`fg_item_id,item_name`)
+        .groupBy(`item_name`)
+    return await query.getRawMany();
+}
+
+async getBrand(): Promise<any> {
+  const query = this.createQueryBuilder(`fgi`)
+      .select(`fg_item_id,brand_name`)
+      .leftJoin(Brands,'b','b.brand_id = fgi.brand_id')
+      .where('1=1')
+      .groupBy(`brand_name`)
+  return await query.getRawMany();
+}
 }

@@ -20,4 +20,13 @@ export class ItemCreationService extends CommonAxiosService{
 async getAll(): Promise<CommonResponseModel> {
   return this.axiosPostCall(this.URL + "/getAll")
 }
+async getAllStyleDropDown(): Promise<CommonResponseModel> {
+  return this.axiosPostCall(this.URL + "/getAllStyleDropDown")
+}
+async getAllItemDropDown(): Promise<CommonResponseModel> {
+  return this.axiosPostCall(this.URL + "/getAllItemDropDown")
+}
+async getAllBrandDropDown(): Promise<CommonResponseModel> {
+  return this.axiosPostCall(this.URL + "/getAllBrandDropDown")
+}
 }
