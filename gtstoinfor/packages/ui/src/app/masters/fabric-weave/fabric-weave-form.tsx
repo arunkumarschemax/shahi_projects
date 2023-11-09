@@ -180,7 +180,7 @@ return (
                 required: true,
                 message:'Fabric Weave Code Is Required'
               }]}>
-                <Input/>
+                <Input placeholder="Enter Fabric Weave Code"/>
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:12 }}>

@@ -94,6 +94,7 @@ export class ItemTypeService{
        
         try {
           const itemTypedto: ItemTypeDtos[] = [];
+          console.log(itemTypedto,")))))))")
           const itemEntity: ItemTypeEntity[] = await this.ItemTypeRepository.find({order :{itemType:'ASC'}, relations:['division','productGroup']});
           // console.log(itemEntity,"itemEntity")
           if (itemEntity.length > 0) {

@@ -1,5 +1,7 @@
+import { CANCELLED } from "dns";
+
 export enum SkuStatusEnum {
     OPEN = 'OPEN',
-    CLOSED = 'CLOSED'
-
+    CLOSED = 'CLOSED',
+    CANCELLED ='CANCELLED'
   }
