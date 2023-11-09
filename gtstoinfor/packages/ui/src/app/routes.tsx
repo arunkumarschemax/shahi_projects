@@ -169,6 +169,7 @@ import TrimOperationMappingView from "./common/product-structure(BOM)/trim-opera
 import MOPReport from "./procurement/mop-report"
 import BomReport from "./BOM/bom-report"
 import RMSkuView from "./rm-skus/rm-sku-view"
+import COAmendmentView from "./common/co-amendment/co-amendment-view"
 
 
 export const AppRoutes = () => {
@@ -619,6 +620,8 @@ export const AppRoutes = () => {
                 <Route path='item-creation-view' element={<ItemCreationView/>}/>    
                 <Route path='item-creation-detail-view' element={<ItemCreationDetailView data={''}/>}/>
                 <Route path="co-amendment" element ={<COAmendmentTabs key={""} />} />
+                <Route path="co-amendment-view" element ={<COAmendmentView/>} />
+
                 <Route path='rm-creation-view' element={<RMCreationView/>}/>
                 
                 <Route path='rm-skus' element={<RmSkusGeneration/>}/>

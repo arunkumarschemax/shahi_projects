@@ -173,7 +173,7 @@ export const SkuList = () => {
       // console.log(req,'777777');
     }
       services.getSkuList(req).then((res) => {
-        console.log(req,'okkkkk');
+        // console.log(req,'okkkkk');
 
         if (res) {
           setItemData(res.data);
@@ -331,7 +331,7 @@ export const SkuList = () => {
         <Tag
           color={color}
           style={{
-            color: rowData.colour === "White" ? "black" : rowData.colour === "Black" ? "white" : "inherit"
+            color: rowData.color === "White" ? "black" : rowData.color === "Black" ? "white" : "inherit"
           }}
         >
           {color}
@@ -407,7 +407,7 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
   ];
   return (
     <>
-      <Card title= "SKU List"   
+      <Card title= "FG SKUs"   
       extra={<span> <Button onClick={()=> navigate('/materialCreation/sku-mapping')} type={'primary'}>New </Button></span>}>
       
         <Form form={form} style={{ fontSize: "10px" }} layout="vertical">
