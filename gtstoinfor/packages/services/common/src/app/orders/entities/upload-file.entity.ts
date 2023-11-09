@@ -84,7 +84,7 @@ export class FileUploadEntity {
     @Column('varchar', {
         name: 'failed_reason',
         nullable: false,
-        length:20
+        length:100
     })
     failedReason: string;
 }
