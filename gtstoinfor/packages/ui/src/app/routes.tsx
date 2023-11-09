@@ -146,6 +146,7 @@ import StyleOrderCreation from "./style-orders/style-order-form"
 import MaterialIssueReport from "./sample-development/material-issue-report"
 import StockReport from "./Reports/stock-report"
 import SampleRequestReport from "./Reports/sample-request-report"
+import PurchaseOrderForm from "./purchase-order2/purchase-order-form"
 import SampleInventory from "./sample-development/sample-inventory-grid"
 import IndentReport from "./sourcing-requisition/indent-report"
 
@@ -572,8 +573,7 @@ export const AppRoutes = () => {
                     <Route path='/sourcing-requisition-report' element={<SourcingRequisitionReport/>}/>
                     <Route path='/indent-form' element={<SourcingRequisitionDynamicForm/>}/>
                     <Route path='/requisition-view' element={<SourcingRequisitionDynamicView/>}/>
-                 
-
+                    <Route path='/purchase-order' element={<PurchaseOrderForm/>}/>
 
 
                     <Route path='/excel-import'>

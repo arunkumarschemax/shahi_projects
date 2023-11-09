@@ -130,6 +130,13 @@ export const baseMRouterList = [
         filepath: "/indent-form",
     },
     {
+        label: "Purchase Order",
+        key: "po",
+        path: "purchase-order",
+        // icon: <DashboardOutlined />,
+        filepath: "/purchase-order",
+    },
+    {
         label: "Stock",
         key: "stockView",
         path: "stock-view",
