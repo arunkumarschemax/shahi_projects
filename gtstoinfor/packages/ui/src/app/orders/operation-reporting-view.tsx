@@ -1,6 +1,6 @@
 import { StyleRequest, OperationReportingRequest, TabNameReq, MaterialIssueRequest, OperationTrackingDto } from "@project-management-system/shared-models";
 import { ItemsService, MaterialIssueService, OperationReportingService, OperationSequenceService, OperationsService, StyleService, UomService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Row, Segmented, Select, Space, Table } from "antd"
+import { Button, Card, Col, Form, Input, Row, Segmented, Select, Space, Table, message } from "antd"
 import { ColumnProps } from "antd/es/table"
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
@@ -35,6 +35,7 @@ export const OperationReportingView = () => {
     const navigate = useNavigate();
     const trackingService = new OperationReportingService()
     const [trackData, setTrackData] = useState<any[]>([])
+    const [selectedUomValues, setSelectedUomValues] = useState([]);
 
 
 
@@ -78,8 +79,9 @@ export const OperationReportingView = () => {
       };
 
 
-    const getOperationInventoryData = () => {
-        trackingService.getOperationInventoryData().then((res) => {
+    const getOperationInventoryData = (val) => {
+        const req = new TabNameReq(val,saveId,'')
+        trackingService.getOperationInventoryData(req).then((res) => {
             setData(res.data);
             setShowTable(true);
         });
@@ -92,6 +94,7 @@ export const OperationReportingView = () => {
         operationSequenceService.getOperationSequenceInfoByStyleCode(req).then(res => {
             if(res.status){
                 setOperations(res.data[0].operatrionsInfo)
+                setSelectedOperationSequenceId(res.data[0].operationSequenceId)
             }
         })
     }
@@ -107,7 +110,6 @@ export const OperationReportingView = () => {
     const setReportedInfo = (e,index,record) => {
         // Update the state with the reported quantity
         setReportedQuantity(e.target.value);
-        // console.log(value,'-------------------------')
     };
     
 
@@ -115,32 +117,39 @@ export const OperationReportingView = () => {
         SetRejectedQuantity(e.target.value)
     }
 
-    const reportedUomId = (e, index, record) => {
-        console.log(e,'===============')
-        if (e && e.target) {
-            setReportedUom(e);
-        }
-    }
+    const reportedUomId = (value, index, record) => {
+        setReportedUom(value)
+      };
+      
+      
 
     const rejectedUomId = (e, index, record) => {
         if (e && e.target) {
-            setRejectedUom(e);
+            setRejectedUom(e.target);
         }
     }
+
+    const getNextOperationName = () => {
+        if (currentSegment < segmentedOptions.length - 1) {
+            const nextSegment = segmentedOptions[currentSegment + 1];
+            return nextSegment.value;
+        } else {
+            // Handle the case where there are no more segments (end of the sequence)
+            return null;
+        }
+    };
+    
     
 
     const onJobCompleted = (record) => {
-        const nextSequence = currentSequence + 1;
-
-        const nextOperation = operations.find((operation) => operation.sequence === nextSequence);
-        if(nextOperation){
+        const nextOperationName = getNextOperationName();
         const req = new OperationTrackingDto(
             record.fabricCode,
             saveId,
             record.requestNo,
             selectedOperationSequenceId,
             selectedOperationName,
-            nextOperation.operationName,
+            nextOperationName,
             record.issuedQuantity,
             record.issuedUomId,
             reportedQuantity,
@@ -148,16 +157,14 @@ export const OperationReportingView = () => {
             rejectedQuantity,
             record.rejectedUomId,
             record.status,0,'',undefined,'',undefined,'',0,0,'',0)
-        console.log(req,'%%%%%%%%%%%%%%%%%%%%%%%%%%%')
         service.createOperationReporting(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
+                getMaterialIssue()
             } else{
                 AlertMessages.getErrorMessage(res.internalMessage)
             }
         })
-    }
-    // navigate(`/next-segment/${JSON.stringify(record)}`);
     }
 
     const generateSegmentedOptions = () => {
@@ -170,8 +177,7 @@ export const OperationReportingView = () => {
       };
       
 
-      const segmentedOptions = generateSegmentedOptions();
-
+    const segmentedOptions = generateSegmentedOptions();
 
     const columns : ColumnProps<any>[] = [
         {
@@ -194,8 +200,9 @@ export const OperationReportingView = () => {
             render: (issuedQuantity, row) => `${issuedQuantity} ${row.issuedUom}`,
           },
           {
-            title: 'Reported Quantity',
+            title:<div style={{textAlign:"center"}}>Reported Quantity</div>,
             dataIndex: 'reportedQuantity',
+            align:"right",
             render: (text, record, index) => {
               return (
                 <>
@@ -213,9 +220,10 @@ export const OperationReportingView = () => {
             title: 'Uom',
             dataIndex: 'reportedUomId',
             render: (text,record,index) => (
+                <Form.Item>
                 <Select
                 value={reportedUom}
-                onChange={(e) => reportedUomId(e, index, record)}
+                onChange={(val) => reportedUomId(val, index, record)}
                 allowClear
                 style={{ width: "100%" }}
                 showSearch
@@ -230,6 +238,7 @@ export const OperationReportingView = () => {
                     );
                 })}
             </Select>
+            </Form.Item>
               ),
           },
           {
@@ -239,7 +248,8 @@ export const OperationReportingView = () => {
                 return(
                     <>
                     {<Input 
-                    // defaultValue={0} 
+                    // defaultValue={0}
+                    placeholder="Enter Quantity"
                     onChange={e=> setRejectedInfo(e,index,record)}/>}
                     </>
                 )
@@ -249,23 +259,34 @@ export const OperationReportingView = () => {
             title: 'Uom',
             dataIndex: 'rejectedUomId',
             render: (text,record,index) => (
+                // <Form.Item
+                // name="rejectedUomId"
+                // label="UOM"
+                // rules={[
+                //     {
+                //     required: true,
+                //     message: 'Please select a UOM',
+                //     },
+                // ]}
+                // >
                 <Select
-                value={rejectedUom}
-                onChange={(e) => rejectedUomId(e, index, record)}
-                allowClear
-                style={{ width: "100%" }}
-                showSearch
-                optionFilterProp="children"
-                placeholder="Select UOM"
-            >
-                {uomData?.map((e) => {
+                    value={rejectedUom}
+                    onChange={(e) => rejectedUomId(e, index, record)}
+                    allowClear
+                    style={{ width: '100%' }}
+                    showSearch
+                    optionFilterProp="children"
+                    placeholder="Select UOM"
+                >
+                    {uomData?.map((e) => {
                     return (
-                        <Option key={e.uomId} value={e.uomId}>
-                            {e.uom}
+                        <Option name={`${rejectedUomId}`} key={e.uomId} value={e.uomId}>
+                        {e.uom}
                         </Option>
                     );
-                })}
-            </Select>
+                    })}
+                </Select>
+                // </Form.Item>
             ),
           },
           {
@@ -281,29 +302,41 @@ export const OperationReportingView = () => {
           },
     ]
 
-    const onSegmentChange = (selectedValue) => {
+    // const onSegmentChange = (selectedValue) => {
+    //     const selectedOption = segmentedOptions.find((option) => option.value === selectedValue);
+    //     setSelectedOperationName(selectedOption.value);
+    //     console.log(selectedOption.value,'!!!!!!!!!')
+    //     console.log(selectedOption,'<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+    //       if (selectedOption.sequence === 1 && selectedOption.value !== 'COMPLETED') {
+    //         getMaterialIssue();
+    //       } else {
+    //         getOperationInventoryData(selectedValue)
+    //         setData([])
+    //       }
+    //   };
+
+      const onSegmentChange = (selectedValue) => {
         const selectedOption = segmentedOptions.find((option) => option.value === selectedValue);
-        if (selectedOption) {
-          setCurrentSequence(selectedOption.sequence);
-          setSelectedOperationSequenceId(selectedOption.sequence);
-          setSelectedOperationName(selectedOption.value);
-          if (selectedOption.sequence === 1 && selectedOption.value !== 'COMPLETED') {
+        setSelectedOperationName(selectedOption.value);
+    
+        // Find the current segment index
+        const segmentIndex = segmentedOptions.findIndex((option) => option.value === selectedValue);
+        setCurrentSegment(segmentIndex);
+    
+        if (selectedOption.sequence === 1 && selectedOption.value !== 'COMPLETED') {
             getMaterialIssue();
-          } else {
-            getOperationInventoryData()
-            // setShowTable(true);
-          }
+        } else {
+            getOperationInventoryData(selectedValue);
+            // setData([]);
         }
-      };
+    };
+    
 
 
     const onStyleChange = (val) => {
-        console.log(val,'<<<<<<<<<<<<<')
         if(val){
             getSegmentLabel(val)
             setSaveId(val)
-            // setShowTable(true)
-
         }
     }
 

@@ -344,4 +344,16 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
         return query.getRawMany()
     }
 
+
+    async getSampleRequestReport (){
+        const query = this.createQueryBuilder(`sr`)
+        .select (`sr.sample_request_id,sr.request_no,sr.m3_style_no,srf.fabric_code AS fabricCode,srf.consumption AS fConsumption,srt.trim_code AS trimCode,srt.consumption AS tConsumption`)
+        .leftJoin(SampleReqFabricinfoEntity,'srf','srf.sample_request_id= sr.sample_request_id')
+        .leftJoin(SampleRequestTriminfoEntity,'srt','srt.sample_request_id = sr.sample_request_id')
+        // .leftJoin`rm_items`rm ON rm.rm_item_id=srf.fabric_code
+        // .leftJoin(SampleRequestTriminfoEntity,'srt','srt.material_issue_id = sr.material_issue_id')
+        const data = await query.getRawMany()
+        return data 
+    }
+    
 } 

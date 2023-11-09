@@ -28,7 +28,7 @@ export class SamplingbomEntity {
         name:'fabric_id',
         nullable:false
     })
-    fabricId:number
+    fabricId:string
 
     @Column('int',{
         name:'colour_id',

@@ -27,6 +27,12 @@ export class SampleReqFabricinfoEntity{
       })
       colourId:number
 
+      @Column('int',{
+        name:'product_group_id',
+        nullable:false,
+      })
+      productGroupId:number
+
       @Column('decimal',{
         name:'consumption',
         precision: 4, 

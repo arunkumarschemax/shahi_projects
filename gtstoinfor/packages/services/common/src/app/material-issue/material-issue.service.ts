@@ -96,7 +96,7 @@ export class MaterialIssueService {
                 fabricInfo.push(fabricEntity)
             }
             issueData.fabric = fabricInfo
-            for(const trim of req.trimInfo){
+            for(const trim of req?.trimInfo){
                 const trimEntity = new MaterialTrimEntity()
                 trimEntity.description = trim.description
                 trimEntity.colorId = trim.colorId
