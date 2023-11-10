@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Card,  Input, Button, Form, Row, Col, Select,} from 'antd';
+import { Table, Card,  Input, Button, Form, Row, Col, Select, message,} from 'antd';
 import Highlighter from 'react-highlight-words';
 import {  SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -48,8 +48,12 @@ const FeatureCreationView = () => {
     service.getAllFeatures(req).then(res => {
       if (res.status) {
         setLTData(res.data);
+        message.success(res.internalMessage)
+
       } else
        {
+        message.error(res.internalMessage)
+
         setLTData([])
           AlertMessages.getErrorMessage(res.internalMessage);
       }

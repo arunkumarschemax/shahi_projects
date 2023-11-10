@@ -1,6 +1,6 @@
 import { ItemCreationService, ProductStructureService, RmCreationService } from "@project-management-system/shared-services"
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Card,  Input, Button, Form, Row, Col, Select, Space,} from 'antd';
+import { Table, Card,  Input, Button, Form, Row, Col, Select, Space, message,} from 'antd';
 import Highlighter from 'react-highlight-words';
 import {  SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -46,8 +46,12 @@ const FgRmItemBomView   = () => {
         productstructureservice.getRmMapped(req).then(res => {
       if (res.status) {
         setLTData(res.data);
+        message.success(res.internalMessage)
+
       } else
        {
+        message.error(res.internalMessage)
+
         setLTData([])
           AlertMessages.getErrorMessage(res.internalMessage);
       }

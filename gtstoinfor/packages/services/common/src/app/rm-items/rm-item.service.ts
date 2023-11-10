@@ -46,7 +46,7 @@ return response;
             if(data.length === 0){
                 return new CommonResponseModel(false,0,'No data found')
             } else{
-                return new CommonResponseModel(true,1,'Data retrieved',data)
+                return new CommonResponseModel(true,1,'RM Creation Data retrieved',data)
 
             }
         } catch(err){
