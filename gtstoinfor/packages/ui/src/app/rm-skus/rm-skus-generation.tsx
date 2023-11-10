@@ -86,7 +86,7 @@ export const RmSkusGeneration = () => {
     }
 
     return (
-        <Card title='Rm Sku Generation' extra={<Link to='/materialCreation/rm-skus-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>}>
+        <Card title='Rm Feature Mapping & Rm Sku Generation' extra={<Link to='/materialCreation/rm-skus-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>}>
             <Form layout="vertical" form={form} onFinish={onFinish}>
                 <Row gutter={8}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>

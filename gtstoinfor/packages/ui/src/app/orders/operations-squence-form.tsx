@@ -51,7 +51,7 @@ export const OperationSequence = () => {
 
   useEffect(() => {
       getOperations()
-      getAllItemCodes()
+      // getAllItemCodes()
       getAllStyles()
   },[])
 
@@ -76,13 +76,13 @@ export const OperationSequence = () => {
 
   }
 
-  const getAllItemCodes = () => {
-    itemService.getAllItems().then(res => {
-      if(res.status){
-        setItemCodes(res.data)
-      }
-    })
-  }
+  // const getAllItemCodes = () => {
+  //   itemService.getAllItems().then(res => {
+  //     if(res.status){
+  //       setItemCodes(res.data)
+  //     }
+  //   })
+  // }
 
   const getAllStyles = () => {
     styleService.getAllActiveStyle().then(res => {
