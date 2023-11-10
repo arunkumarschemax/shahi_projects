@@ -212,7 +212,6 @@ export const AppRoutes = () => {
                         </>
                     </ChildProtectionWrapper>
                 } >
-                    <Route path="/substituion" element={<Substitution/>}></Route>
                     <Route path='/user-management/users-from' element={<UserCreationForm />} />
                     <Route path='/user-management/users-view' element={<UsersView />} />
 
@@ -644,6 +643,8 @@ export const AppRoutes = () => {
                 <Route path ='smv-efficiency-view' element={<SMVEffciencyView/>}/>
                 <Route path ='smv-efficiency-detail-view' element={<SMKDetailView data={''}/>}/>
                 <Route path ='rm-operation-mapping-view' element={<RMOperationMappingView />}/>
+                <Route path='substitution' element={<Substitution/>}></Route>
+
 
             
                             
