@@ -28,6 +28,8 @@ export const MonthWiseComparisionReport = () => {
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [excelsData, setExcelData] = useState<any[]>([]);
   const [dates, setDates] = useState<any[]>([]);
+  const [file1, setfile1] = useState();
+  const [file2, setfile2] = useState();
   const { Text } = Typography;
   const [pageSize, setPageSize] = useState(10);
   const startIndex = (page - 1) * pageSize;
@@ -42,7 +44,7 @@ export const MonthWiseComparisionReport = () => {
 
  
   useEffect(() => {
-    getData(tab,selected);
+    //  getData(tab,selected,file1,file2);
     getTabs();
     getPhase()
   }, []);
@@ -56,12 +58,13 @@ export const MonthWiseComparisionReport = () => {
 
   const handleChange = (val) => {
     setSelected(val)
-    getData(tab,val)
+    getData(tab,val,file1,file2)
     getPhase()
 
   }
   const getPhase = () => {
     const req = new YearReq(tab, selected);
+    
     service.getPhaseItems().then(res => {
       if (res.status) {
         setItems(res.data)
@@ -77,9 +80,14 @@ export const MonthWiseComparisionReport = () => {
     service.getLatestPreviousFilesData().then(res => {
       if(res.status){
           setDates(res.data)
+          setfile1(res?.data?.[0]?.fileId)
+          setfile2(res?.data?.[1]?.fileId)
+
       }
+      getData(tab,selected,res?.data?.[0]?.fileId,res?.data?.[1]?.fileId);
+
   })
-    // service.getMonthlyComparisionDate(req).then((res) => {
+  // service.getMonthlyComparisionDate(req).then((res) => {
     //   if (res.status) {
     //     setDates(res.data);
     //     // console.log(res.data[0].Date);
@@ -96,19 +104,15 @@ export const MonthWiseComparisionReport = () => {
     //     setPhase([]);
     //   }
     // })
-    service.getComparisionPhaseExcelData(req).then((res) => {
-      if (res.status) {
-        setPhaseExcel(res.data)
-      } else {
-        setPhaseExcel([]);
-      }
-    })
+   
   }
 
-  const getData = (val, tabName) => {
-    console.log(val,'*******')
+  const getData = (val, tabName,file1,file2) => {
+    
+    console.log(dates,'*******')
     console.log(tabName,'------------')
-    const req = new YearReq(val,tabName);
+    const req = new YearReq(val,tabName,file1,file2);
+  
 
     if (form.getFieldValue('ItemName') !== undefined) {
       req.itemName = form.getFieldValue('ItemName')
@@ -119,10 +123,17 @@ export const MonthWiseComparisionReport = () => {
         setFilteredData(res.data);
       } else {
         setData([]);
+        setFilteredData([]);
+
       }
     });
-
-
+    service.getComparisionPhaseExcelData(req).then((res) => {
+      if (res.status) {
+        setPhaseExcel(res.data)
+      } else {
+        setPhaseExcel([]);
+      }
+    })
   };
 
   const colWidth = {
@@ -182,6 +193,30 @@ export const MonthWiseComparisionReport = () => {
       dataIndex: "phasetype",
       width: colWidth.proPlanType,
     },
+    
+    {
+
+      // title: `In Coeff`,
+      dataIndex: "janCoeff",
+      width: colWidth.latest,
+      align: "right",
+      render: (text: any, record: any) => {
+        return record.coeffData.map((item: any) => {
+          const janCoeff = parseFloat(item.janCoeff);
+          if (!isNaN(janCoeff)) {
+            return (
+              <span>
+                {janCoeff.toLocaleString('en-IN', {
+                  maximumFractionDigits: 0
+                })}
+              </span>
+            );
+          } else {
+            return "-";
+          }
+        });
+      },
+    },
     {
       // title: `In PCs`,
       dataIndex: "janPcs",
@@ -204,20 +239,18 @@ export const MonthWiseComparisionReport = () => {
         });
       },
     },
-
     {
-
       // title: `In Coeff`,
-      dataIndex: "janCoeff",
+      dataIndex: "febCoeff",
       width: colWidth.latest,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map((item: any) => {
-          const janCoeff = parseFloat(item.janCoeff);
-          if (!isNaN(janCoeff)) {
+          const febCoeff = parseFloat(item.febCoeff);
+          if (!isNaN(febCoeff)) {
             return (
               <span>
-                {janCoeff.toLocaleString('en-IN', {
+                {febCoeff.toLocaleString('en-IN', {
                   maximumFractionDigits: 0
                 })}
               </span>
@@ -263,16 +296,16 @@ export const MonthWiseComparisionReport = () => {
 
     {
       // title: `In Coeff`,
-      dataIndex: "febCoeff",
+      dataIndex: "marCoeff",
       width: colWidth.latest,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map((item: any) => {
-          const febCoeff = parseFloat(item.febCoeff);
-          if (!isNaN(febCoeff)) {
+          const marCoeff = parseFloat(item.marCoeff);
+          if (!isNaN(marCoeff)) {
             return (
               <span>
-                {febCoeff.toLocaleString('en-IN', {
+                {marCoeff.toLocaleString('en-IN', {
                   maximumFractionDigits: 0
                 })}
               </span>
@@ -282,7 +315,7 @@ export const MonthWiseComparisionReport = () => {
           }
         });
       },
-    },
+    }, 
 
     {
       // title: `In PCs`,
@@ -307,18 +340,19 @@ export const MonthWiseComparisionReport = () => {
         });
       },
     },
+    
     {
       // title: `In Coeff`,
-      dataIndex: "marCoeff",
+      dataIndex: "aprCoeff",
       width: colWidth.latest,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map((item: any) => {
-          const marCoeff = parseFloat(item.marCoeff);
-          if (!isNaN(marCoeff)) {
+          const aprCoeff = parseFloat(item.aprCoeff);
+          if (!isNaN(aprCoeff)) {
             return (
               <span>
-                {marCoeff.toLocaleString('en-IN', {
+                {aprCoeff.toLocaleString('en-IN', {
                   maximumFractionDigits: 0
                 })}
               </span>
@@ -329,7 +363,6 @@ export const MonthWiseComparisionReport = () => {
         });
       },
     },
-
     {
       // title: `In PCs`,
       dataIndex: "aprPcs",
@@ -354,16 +387,16 @@ export const MonthWiseComparisionReport = () => {
     },
     {
       // title: `In Coeff`,
-      dataIndex: "aprCoeff",
+      dataIndex: "mayCoeff",
       width: colWidth.latest,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map((item: any) => {
-          const aprCoeff = parseFloat(item.aprCoeff);
-          if (!isNaN(aprCoeff)) {
+          const mayCoeff = parseFloat(item.mayCoeff);
+          if (!isNaN(mayCoeff)) {
             return (
               <span>
-                {aprCoeff.toLocaleString('en-IN', {
+                {mayCoeff.toLocaleString('en-IN', {
                   maximumFractionDigits: 0
                 })}
               </span>
@@ -403,28 +436,7 @@ export const MonthWiseComparisionReport = () => {
         });
       },
     },
-    {
-      // title: `In Coeff`,
-      dataIndex: "mayCoeff",
-      width: colWidth.latest,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map((item: any) => {
-          const mayCoeff = parseFloat(item.mayCoeff);
-          if (!isNaN(mayCoeff)) {
-            return (
-              <span>
-                {mayCoeff.toLocaleString('en-IN', {
-                  maximumFractionDigits: 0
-                })}
-              </span>
-            );
-          } else {
-            return "-";
-          }
-        });
-      },
-    },
+  
     //   ],
     // },
     // {
@@ -432,6 +444,28 @@ export const MonthWiseComparisionReport = () => {
     //   dataIndex: "oldOrderQtyPcs6",
     //   key: "oldOrderQtyPcs6",
     //   children: [
+      {
+        // title: `In Coeff`,
+        dataIndex: "junCoeff",
+        width: colWidth.latest,
+        align: "right",
+        render: (text: any, record: any) => {
+          return record.coeffData.map((item: any) => {
+            const junCoeff = parseFloat(item.junCoeff);
+            if (!isNaN(junCoeff)) {
+              return (
+                <span>
+                  {junCoeff.toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                  })}
+                </span>
+              );
+            } else {
+              return "-";
+            }
+          });
+        },
+      },
     {
       // title: `In PCs`,
       dataIndex: "junPcs",
@@ -454,28 +488,7 @@ export const MonthWiseComparisionReport = () => {
         });
       },
     },
-    {
-      // title: `In Coeff`,
-      dataIndex: "junCoeff",
-      width: colWidth.latest,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map((item: any) => {
-          const junCoeff = parseFloat(item.junCoeff);
-          if (!isNaN(junCoeff)) {
-            return (
-              <span>
-                {junCoeff.toLocaleString('en-IN', {
-                  maximumFractionDigits: 0
-                })}
-              </span>
-            );
-          } else {
-            return "-";
-          }
-        });
-      },
-    },
+   
     //   ],
     // },
     // {
@@ -483,6 +496,28 @@ export const MonthWiseComparisionReport = () => {
     //   dataIndex: "oldOrderQtyPcs7",
     //   key: "oldOrderQtyPcs7",
     //   children: [
+      {
+        // title: `In Coeff`,
+        dataIndex: "julCoeff",
+        width: colWidth.latest,
+        align: "right",
+        render: (text: any, record: any) => {
+          return record.coeffData.map((item: any) => {
+            const julCoeff = parseFloat(item.julCoeff);
+            if (!isNaN(julCoeff)) {
+              return (
+                <span>
+                  {julCoeff.toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                  })}
+                </span>
+              );
+            } else {
+              return "-";
+            }
+          });
+        },
+      },
     {
       // title: `In PCs`,
       dataIndex: "julPcs",
@@ -506,28 +541,7 @@ export const MonthWiseComparisionReport = () => {
         });
       },
     },
-    {
-      // title: `In Coeff`,
-      dataIndex: "julCoeff",
-      width: colWidth.latest,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map((item: any) => {
-          const julCoeff = parseFloat(item.julCoeff);
-          if (!isNaN(julCoeff)) {
-            return (
-              <span>
-                {julCoeff.toLocaleString('en-IN', {
-                  maximumFractionDigits: 0
-                })}
-              </span>
-            );
-          } else {
-            return "-";
-          }
-        });
-      },
-    },
+    
     //   ],
     // },
     // {
@@ -535,6 +549,28 @@ export const MonthWiseComparisionReport = () => {
     //   dataIndex: "oldOrderQtyPcs8",
     //   key: "oldOrderQtyPcs8",
     //   children: [
+      {
+        // title: `In Coeff`,
+        dataIndex: "augCoeff",
+        width: colWidth.latest,
+        align: "right",
+        render: (text: any, record: any) => {
+          return record.coeffData.map((item: any) => {
+            const augCoeff = parseFloat(item.augCoeff);
+            if (!isNaN(augCoeff)) {
+              return (
+                <span>
+                  {augCoeff.toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                  })}
+                </span>
+              );
+            } else {
+              return "-";
+            }
+          });
+        },
+      },
     {
       // title: `In PCs`,
       dataIndex: "augPcs",
@@ -557,28 +593,7 @@ export const MonthWiseComparisionReport = () => {
         });
       },
     },
-    {
-      // title: `In Coeff`,
-      dataIndex: "augCoeff",
-      width: colWidth.latest,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map((item: any) => {
-          const augCoeff = parseFloat(item.augCoeff);
-          if (!isNaN(augCoeff)) {
-            return (
-              <span>
-                {augCoeff.toLocaleString('en-IN', {
-                  maximumFractionDigits: 0
-                })}
-              </span>
-            );
-          } else {
-            return "-";
-          }
-        });
-      },
-    },
+   
     //   ],
     // },
     // {
@@ -586,6 +601,28 @@ export const MonthWiseComparisionReport = () => {
     //   dataIndex: "oldOrderQtyPcs9",
     //   key: "oldOrderQtyPcs9",
     //   children: [
+      {
+        // title: `In Coeff`,
+        dataIndex: "sepCoeff",
+        width: colWidth.latest,
+        align: "right",
+        render: (text: any, record: any) => {
+          return record.coeffData.map((item: any) => {
+            const sepCoeff = parseFloat(item.sepCoeff);
+            if (!isNaN(sepCoeff)) {
+              return (
+                <span>
+                  {sepCoeff.toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                  })}
+                </span>
+              );
+            } else {
+              return "-";
+            }
+          });
+        },
+      },
     {
       // title: `In PCs`,
       dataIndex: "sepPcs",
@@ -608,28 +645,7 @@ export const MonthWiseComparisionReport = () => {
         });
       },
     },
-    {
-      // title: `In Coeff`,
-      dataIndex: "sepCoeff",
-      width: colWidth.latest,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map((item: any) => {
-          const sepCoeff = parseFloat(item.sepCoeff);
-          if (!isNaN(sepCoeff)) {
-            return (
-              <span>
-                {sepCoeff.toLocaleString('en-IN', {
-                  maximumFractionDigits: 0
-                })}
-              </span>
-            );
-          } else {
-            return "-";
-          }
-        });
-      },
-    },
+ 
     //   ],
     // },
     // {
@@ -637,6 +653,28 @@ export const MonthWiseComparisionReport = () => {
     //   dataIndex: "oldOrderQtyPcs10",
     //   key: "oldOrderQtyPcs10",
     //   children: [
+      {
+        // title: `In Coeff`,
+        dataIndex: "octCoeff",
+        width: colWidth.latest,
+        align: "right",
+        render: (text: any, record: any) => {
+          return record.coeffData.map((item: any) => {
+            const octCoeff = parseFloat(item.octCoeff);
+            if (!isNaN(octCoeff)) {
+              return (
+                <span>
+                  {octCoeff.toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                  })}
+                </span>
+              );
+            } else {
+              return "-";
+            }
+          });
+        },
+      },
     {
       // title: `In PCs`,
       dataIndex: "octPcs",
@@ -659,28 +697,7 @@ export const MonthWiseComparisionReport = () => {
         });
       },
     },
-    {
-      // title: `In Coeff`,
-      dataIndex: "octCoeff",
-      width: colWidth.latest,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map((item: any) => {
-          const octCoeff = parseFloat(item.octCoeff);
-          if (!isNaN(octCoeff)) {
-            return (
-              <span>
-                {octCoeff.toLocaleString('en-IN', {
-                  maximumFractionDigits: 0
-                })}
-              </span>
-            );
-          } else {
-            return "-";
-          }
-        });
-      },
-    },
+   
     //   ],
     // },
     // {
@@ -688,6 +705,29 @@ export const MonthWiseComparisionReport = () => {
     //   dataIndex: "oldOrderQtyPcs11",
     //   key: "oldOrderQtyPcs11",
     //   children: [
+      {
+        // title: `In Coeff`,
+        dataIndex: "novCoeff",
+        width: colWidth.latest,
+  
+        align: "right",
+        render: (text: any, record: any) => {
+          return record.coeffData.map((item: any) => {
+            const novCoeff = parseFloat(item.novCoeff);
+            if (!isNaN(novCoeff)) {
+              return (
+                <span>
+                  {novCoeff.toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                  })}
+                </span>
+              );
+            } else {
+              return "-";
+            }
+          });
+        },
+      },
     {
       // title: `In PCs`,
       dataIndex: "novPcs",
@@ -710,29 +750,7 @@ export const MonthWiseComparisionReport = () => {
         });
       },
     },
-    {
-      // title: `In Coeff`,
-      dataIndex: "novCoeff",
-      width: colWidth.latest,
-
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map((item: any) => {
-          const novCoeff = parseFloat(item.novCoeff);
-          if (!isNaN(novCoeff)) {
-            return (
-              <span>
-                {novCoeff.toLocaleString('en-IN', {
-                  maximumFractionDigits: 0
-                })}
-              </span>
-            );
-          } else {
-            return "-";
-          }
-        });
-      },
-    },
+ 
     //   ],
     // },
     // {
@@ -740,6 +758,29 @@ export const MonthWiseComparisionReport = () => {
     //   dataIndex: "oldOrderQtyPcs12",
     //   key: "oldOrderQtyPcs12",
     //   children: [
+      {
+        // title: `In Coeff`,
+        dataIndex: "decCoeff",
+        width: colWidth.latest,
+  
+        align: "right",
+        render: (text: any, record: any) => {
+          return record.coeffData.map((item: any) => {
+            const decCoeff = parseFloat(item.decCoeff);
+            if (!isNaN(decCoeff)) {
+              return (
+                <span>
+                  {decCoeff.toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                  })}
+                </span>
+              );
+            } else {
+              return "-";
+            }
+          });
+        },
+      },
     {
       // title: `In PCs`,
       dataIndex: "decPcs",
@@ -763,29 +804,7 @@ export const MonthWiseComparisionReport = () => {
         });
       },
     },
-    {
-      // title: `In Coeff`,
-      dataIndex: "decCoeff",
-      width: colWidth.latest,
-
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map((item: any) => {
-          const decCoeff = parseFloat(item.decCoeff);
-          if (!isNaN(decCoeff)) {
-            return (
-              <span>
-                {decCoeff.toLocaleString('en-IN', {
-                  maximumFractionDigits: 0
-                })}
-              </span>
-            );
-          } else {
-            return "-";
-          }
-        });
-      },
-    },
+   
     //   ],
     // },
     {
@@ -1348,26 +1367,12 @@ export const MonthWiseComparisionReport = () => {
   };
   const handleTabChange = (selectedYear: string) => {
     setTab(Number(selectedYear));
-    getData(selectedYear,selected);
+    getData(selectedYear,selected,file1,file2);
   };
-  const getFilterdData = () => {
-    let ItemName = form.getFieldValue("ItemName");
-
-    let filteredData = data;
-
-    if (ItemName) {
-      filteredData = filteredData.filter(
-        (record) => record.itemName === ItemName
-      );
-      if (filteredData.length === 0) {
-        message.error("No Data Found");
-      }
-      setFilteredData(filteredData);
-    }
-  };
+ 
   const onReset = () => {
     form.resetFields();
-    getData(tab,selected);
+    getData(tab,selected,file1,file2);
   };
 
   const getTableSummary = (pageData) => {
@@ -1650,7 +1655,7 @@ export const MonthWiseComparisionReport = () => {
         <Tabs type="card" onChange={handleTabChange} aria-disabled>
           {year.map((e) => (
             <Tabs.TabPane tab={`${e.year}`} key={e.year}>
-              <Form form={form} layout={"vertical"} onFinish={() => getData(tab, selected)}>
+              <Form form={form} layout={"vertical"} onFinish={() => getData(tab, selected,file1,file2)}>
                 <Row gutter={24}>
                   <Col
                     xs={{ span: 24 }}

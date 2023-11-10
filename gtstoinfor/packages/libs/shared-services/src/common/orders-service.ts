@@ -135,6 +135,8 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.ordersController + "/getProdPlanCount")
     }
     async getMonthlyComparisionData(req:YearReq): Promise<CommonResponseModel> {
+        console.log(req,"ppjjjjjj");
+        
         return this.axiosPostCall(this.ordersController + "/getMonthlyComparisionData",req)
     }
     async getWareHouseComparisionData(req:YearReq): Promise<CommonResponseModel> {
