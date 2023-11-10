@@ -51,7 +51,7 @@
   /* background-color: aquamarine; */
 /* } */
 
-:where(.css-dev-only-do-not-override-1a5jvwx).ant-card .ant-card-head {
+.ant-card .ant-card-head {
   background-color: cadetblue;
   color:white
 }

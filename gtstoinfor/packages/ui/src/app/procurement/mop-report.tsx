@@ -18,6 +18,8 @@ const MOPReport = () => {
   const [mopData, setMOPData] = useState<any[]>([]);
   const [mopDataYes, setMOPDataYes] = useState([]);
 const [mopDataNo, setMOPDataNo] = useState([]);
+const [key, setKey] = useState();
+
 
   const service = new CoBomService()
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -182,12 +184,16 @@ const getMOPData= () => {
     getMOPData();
   }
 
+  const onChange =(key)=>{
+    // console.log(key,"key")
+    setKey(key)
+    
+  }
+ console.log(key,"key")
 
 
   return (
-       <Card title={<span >Material Order Proposal Report</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={
-        <span><Button onClick={showModal}>Print</Button></span>
-       }>
+       <Card title={<span >Material Order Proposal Report</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }} >
         <Form  form={form} layout="horizontal" onFinish={getMOPData}>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }}
@@ -200,7 +206,7 @@ const getMOPData= () => {
                             {
                            codata.map((e) => {
                                     return(
-                                        <Option key={e.coId} value={e.coId}>{e.coNumber}</Option>
+                                        <Option key={e.coId} value={e.coId}>{e.orderNumber}</Option>
                                     )
                                 })
                             } 
@@ -224,10 +230,15 @@ const getMOPData= () => {
                         <Button danger icon={<UndoOutlined />} onClick={onReset}>Reset</Button>
                     </Form.Item>
                     </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 8 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 2 }}>
+                    <Form.Item>
+                        <Button  onClick={showModal}>print</Button>
+                    </Form.Item>
+                    </Col>
                   
                 </Row>
-                <Tabs type={'card'} tabPosition={'top'}>
-                   <TabPane key="1" tab={<span style={{fontSize:'15px'}}><b>{`MOP`}</b></span>}>
+                <Tabs type={'card'} tabPosition={'top'} onChange={(key)=>{onChange(key)}}>
+                   <TabPane key="mop" tab={<span style={{fontSize:'15px'}}><b>{`MOP`}</b></span>} >
                       <Table
                       size="small"
                       columns={columnsSkelton}
@@ -237,7 +248,7 @@ const getMOPData= () => {
                       pagination ={false}
                     />
                   </TabPane>
-                      <TabPane key="2" tab={<span style={{fontSize:'15px'}}><b>{`POP`}</b></span>}>
+                      <TabPane key="pop" tab={<span style={{fontSize:'15px'}}><b>{`POP`}</b></span>}>
                       <Table
                       size="small"
                       columns={columnsSkelton}
@@ -248,9 +259,7 @@ const getMOPData= () => {
                   />
                 </TabPane>
             </Tabs>
-            {/* <Modal title="Basic Modal" width={'100%'} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-               < Mopprint />
-            </Modal> */}
+          
              <Modal className='print-docket-modal'
                  key={'modal'}
                  width={'60%'}
@@ -263,7 +272,7 @@ const getMOPData= () => {
 
               ]}
                 >
-            < Mopprint  />        
+            < Mopprint mop={mopDataYes} pop={mopDataNo} key={key}/>        
             </Modal>
         </Form>
 

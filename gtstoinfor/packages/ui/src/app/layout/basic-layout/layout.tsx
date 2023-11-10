@@ -5,6 +5,7 @@ import Icon, { UserOutlined, DashboardOutlined, LogoutOutlined } from '@ant-desi
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
 import { ProBreadcrumb, ProConfigProvider } from '@ant-design/pro-components';
 import logo from './logo.png'
+import xpperal from './xapp.png'
 import ProLayout from '@ant-design/pro-layout';
 import { treeRouter } from '../../utils/common';
 import { DarkModeIcon } from '../../icons/darkmode.icon';
@@ -853,7 +854,9 @@ export default function BasicLayout() {
                     breakpoint={false}
                     selectedKeys={menu}
                     headerContentRender={(props) => props.layout !== 'side' && document.body.clientWidth > 1000 ? <ProBreadcrumb /> : undefined}
-                    logo={<img src={logo} />}
+                    logo={
+                    <img src={xpperal} style={{marginLeft:'20px',float:'left',height:'55px'}} 
+                    />}
                     layout={'mix'}
                     token={{ header: { colorBgHeader: 'transparent' }, sider: { colorBgMenuItemSelected: colorPrimaryBg,colorMenuBackground:'azure' } }}
                     route={{
@@ -866,7 +869,7 @@ export default function BasicLayout() {
                     avatarProps={{
                         src: 'https://hzdjs.cn/blog/logo.jpg',
                         size: 'small',
-                        title: menu.userName,
+                        title: <div style={{color:'brown'}}><h3><b>{menu.userName}</b></h3></div>,
                     }}
                     
                     
