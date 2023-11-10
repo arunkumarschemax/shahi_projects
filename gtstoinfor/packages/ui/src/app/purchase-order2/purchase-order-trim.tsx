@@ -211,11 +211,10 @@ export const PurchaseOrderTrim = ({props}) =>{
     return(
         <Card title='trim Details'>
             <Form form={trimForm} layout="vertical" onFinish={OnTrimAdd}>
-                <Row gutter={8}>
+                <Row gutter={24}>
                 <Form.Item name={'trimType'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'trimCodeName'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'colourName'} hidden><Input></Input></Form.Item>
-
 
                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name={'productGroupId'} label={'Trim type'}
