@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, CommonResponseModel, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, UploadResponse } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, UploadResponse } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -117,9 +117,9 @@ export class SampleRequestService {
       const sampleId=await this.sampleRepo.getsampleId()
       const maxId= sampleId.id
       const sampleReqEntity = new SampleRequest();
-      const locationEntity = new Location()
-      locationEntity.locationId = req.locationId
-      sampleReqEntity.location = locationEntity
+      // const locationEntity = new Location()
+      // locationEntity.locationId = req.locationId
+      sampleReqEntity.locationId = req.locationId
       sampleReqEntity.requestNo = 'SAM' + '-' + (Number(maxId) + 1)
       const profitHead = new ProfitControlHead()
       profitHead.profitControlHeadId = req.pchId
@@ -186,6 +186,7 @@ export class SampleRequestService {
       for (const trimObj of req.trimInfo) {
         const trimEntity = new SampleRequestTriminfoEntity()
         trimEntity.trimCode = trimObj.trimCode
+        trimEntity.productGroupId=trimObj.productGroupId
         trimEntity.consumption = trimObj.consumption
         trimEntity.description = trimObj.description
         trimEntity.remarks = trimObj.remarks
@@ -203,13 +204,14 @@ export class SampleRequestService {
        save = await this.sampleRepo.save(sampleReqEntity)
       if(save){
         for(const fabricData of req.fabricInfo){
-        const quantityWithWastage = Number(fabricData.consumption)+Number((5/100)*fabricData.consumption)
+        const quantityWithWastage = Number(fabricData.consumption)+Number((2/100)*fabricData.consumption)
         const bomEntity = new SamplingbomEntity()
         bomEntity.sampleRequestId=save.SampleRequestId
         bomEntity.colourId=fabricData.colourId
         bomEntity.fabricId=fabricData.fabricCode /// product_gropu_id
         bomEntity.rmItemId=1 //rm_item_id need to be added
         bomEntity.requiredQuantity=quantityWithWastage
+        bomEntity.wastage='2'
          saveBomDetails = await this.bomRepo.save(bomEntity)
         }
       }
@@ -273,6 +275,33 @@ export class SampleRequestService {
       return new CommonResponseModel(true, 1, 'data retrieved', result)
     } else {
       return new CommonResponseModel(false, 0, 'data not found', [])
+    }
+  }
+
+  async getTrimType():Promise<CommonResponseModel>{
+    try{
+      const query='SELECT product_group_id AS productGroupId,product_group AS productGroup FROM product_group      WHERE product_group NOT IN("Fabric") AND is_active=1'
+      const result = await this.sampleRepo.query(query)
+      if(result){
+        return new CommonResponseModel(true,1,'data retivedsucessfully',result)
+      }else{
+        return new CommonResponseModel(false,0,'No Data Found',[])
+      }
+    }catch(err){
+      throw err
+    }
+  }
+  async getTrimCodeAgainstTrimType(req:ProductGroupReq):Promise<CommonResponseModel>{
+    try{
+      const query=  'SELECT product_group AS productGroup,rm_item_id AS trimId,item_code AS trimCode,ri.product_group_id FROM rm_items ri LEFT JOIN product_group pg ON pg.product_group_id=ri.product_group_id     WHERE product_group NOT IN("fabric") AND ri.product_group_id='+req.productGroupId+''
+      const result = await this.sampleRepo.query(query)
+      if(result){
+        return new CommonResponseModel(true,1,'data retivedsucessfully',result)
+      }else{
+        return new CommonResponseModel(false,0,'No Data Found',[])
+      }
+    }catch(err){
+      throw err
     }
   }
 

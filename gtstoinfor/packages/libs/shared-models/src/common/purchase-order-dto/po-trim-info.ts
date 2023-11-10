@@ -4,8 +4,10 @@ export class PurchaseOrderTrimDto{
     poTrimId:number
     productGroupId:number
     trimId:number
-    trimCode:number
+    colourId:number
+    m3TrimCode:string
     description: string
     consumption: number
     remarks: string
+
 }

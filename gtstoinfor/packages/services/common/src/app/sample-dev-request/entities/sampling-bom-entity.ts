@@ -90,4 +90,10 @@ export class SamplingbomEntity {
         default:1
       })
       isActive: boolean;
+
+      @Column('varchar',{
+        name:'wastage',
+        nullable:false
+      })
+      wastage:string
 }

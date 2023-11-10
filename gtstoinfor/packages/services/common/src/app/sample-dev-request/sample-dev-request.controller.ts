@@ -2,7 +2,7 @@ import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Any } from 'typeorm';
 import { SampleRequestService } from './sample-dev-request.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, CommonResponseModel, ROSLGroupsResponseModel, SampleDevDto, SampleFilterRequest, SampleReqResponseModel, UploadResponse } from '@project-management-system/shared-models';
+import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, ROSLGroupsResponseModel, SampleDevDto, SampleFilterRequest, SampleReqResponseModel, UploadResponse } from '@project-management-system/shared-models';
 import { SampleRequestDto } from './dto/samle-dev-req';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Body, Controller, Post, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
@@ -138,6 +138,23 @@ export class SampleDevReqController {
     async getTrimCodes(): Promise<CommonResponseModel> {
       try {
         return await this.sampleService.getTrimCodes();
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+      }
+    }
+
+    @Post('/getTrimType')
+    async getTrimType(): Promise<CommonResponseModel> {
+      try {
+        return await this.sampleService.getTrimType();
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+      }
+    }
+    @Post('/getTrimCodeAgainstTrimType')
+    async getTrimCodeAgainstTrimType(@Body() req:any): Promise<CommonResponseModel> {
+      try {
+        return await this.sampleService.getTrimCodeAgainstTrimType(req);
       } catch (error) {
         return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
       }

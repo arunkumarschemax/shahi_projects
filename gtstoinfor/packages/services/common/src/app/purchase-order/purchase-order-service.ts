@@ -50,7 +50,7 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
             const trimEntity= new PurchaseOrderTrimEntity()
             trimEntity.productGroupId=trimInfo.productGroupId
             trimEntity.trimId=trimInfo.trimId
-            trimEntity.trimCode=trimInfo.trimCode
+            trimEntity.m3TrimCode=trimInfo.m3TrimCode
             trimEntity.description=trimInfo.description
             trimEntity.consumption=trimInfo.consumption
             trimEntity.remarks=trimInfo.remarks
