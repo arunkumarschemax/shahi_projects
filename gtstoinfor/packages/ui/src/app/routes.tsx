@@ -626,7 +626,7 @@ export const AppRoutes = () => {
                 
                 <Route path='rm-skus' element={<RmSkusGeneration/>}/>
                 <Route path='rm-skus-view' element={<RMSkuView/>}/>
-                <Route path='substitution-view' element={<SubstitutionView/>}/>
+                <Route path='substitution-view' element={<SubstitutionView />}/>
 
                 </Route>
                 <Route path='/operation-tracking'>
