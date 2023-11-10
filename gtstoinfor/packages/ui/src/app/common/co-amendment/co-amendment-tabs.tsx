@@ -319,11 +319,11 @@ const buyerService = new BuyersService();
          <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                     <Form.Item name='coNumber' label='CO Number' >
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select CO Line' onChange={onchange} >
+                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select CO Number' onChange={onchange} >
                         {
                            codata.map((e) => {
                                     return(
-                                        <Option key={e.coId} value={e.coId}>{e.coNumber}</Option>
+                                        <Option key={e.coId} value={e.coId}>{e.orderNumber}</Option>
                                     )
                                 })
                             }
