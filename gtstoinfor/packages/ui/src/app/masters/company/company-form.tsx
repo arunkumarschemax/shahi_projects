@@ -92,7 +92,7 @@ export const CompanyForm = (props:CompanyFormProps) => {
         <Form.Item style={{ display: 'none' }} name="createdUser" initialValue={createdUser}>
           <Input hidden />
         </Form.Item>
-        <Row gutter={24}><Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}> <Form.Item
+        <Row gutter={24}><Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:7}}> <Form.Item
           name="companyName"
           label="Company Name"
           rules={[
@@ -109,7 +109,7 @@ export const CompanyForm = (props:CompanyFormProps) => {
           <Input />
         </Form.Item>
         </Col>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:5}}> <Form.Item
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:7}}> <Form.Item
           name="companyCode"
           label="Company Code"
           rules={[
@@ -122,7 +122,7 @@ export const CompanyForm = (props:CompanyFormProps) => {
           <Input />
         </Form.Item>
         </Col>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:5}}> <Form.Item
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:7}}> <Form.Item
           name="organizationCode"
           label="Organization Name"
           rules={[

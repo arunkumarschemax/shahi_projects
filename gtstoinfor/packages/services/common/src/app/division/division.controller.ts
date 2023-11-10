@@ -1,4 +1,4 @@
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Controller, Post, Body, Logger, Get, UseGuards,Req} from '@nestjs/common';
 import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
 import { DivisionDTO } from './dto/division.dto';
@@ -15,7 +15,8 @@ export class DivisionController {
         private readonly applicationExceptionHandler: ApplicationExceptionHandler
     ){}
     @Post('/createDivision')
-    async createDivision(@Body() divisionDto:DivisionDTO,isUpdate:boolean=false): Promise<DivisionResponseModel> {
+    @ApiBody({type:DivisionDTO})
+    async createDivision(@Body() divisionDto:any,isUpdate:boolean=false): Promise<DivisionResponseModel> {
     try {
       console.log('createDivision',divisionDto)
         return await this.divisionService.createDivision(divisionDto, false);
