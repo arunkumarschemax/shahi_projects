@@ -95,7 +95,7 @@ return(
                     {tabName == 'Fabric' ?
                      <>
                      <PurchaseOrderfabricForm />
-                    </>:<PurchaseOrderTrim />}
+                    </>:tabName == 'Trim'? <PurchaseOrderTrim />:<></>}
                     
             </Space>
             </Row>
