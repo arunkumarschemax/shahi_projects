@@ -257,13 +257,14 @@ export const SampleDevForm = () => {
                 optionFilterProp="children"
                 placeholder="Select Location"
               >
-                {locations.map((e) => {
+                <Option key={300} value={300}>{'300'}</Option>
+                {/* {locations.map((e) => {
                   return (
                     <Option key={e.locationId} value={e.locationId}>
                       {e.locationCode}
                     </Option>
                   );
-                })}
+                })} */}
               </Select>
             </Form.Item>
           </Col>
