@@ -32,8 +32,7 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
             pofabricEntity.colourId=poFabric.colourId
             pofabricEntity.productGroupId=poFabric.productGroupId
             pofabricEntity.remarks=poFabric.remarks
-            pofabricEntity.fabricType=poFabric.fabricType
-            pofabricEntity.fabricCode=poFabric.fabricCode
+            pofabricEntity.fabricTypeId=poFabric.fabricTypeId
             pofabricEntity.shahiFabricCode=poFabric.shahiFabricCode
             pofabricEntity.weaveId=poFabric.weaveId
             pofabricEntity.weight=poFabric.weight

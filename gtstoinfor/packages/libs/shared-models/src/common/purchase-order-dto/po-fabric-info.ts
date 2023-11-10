@@ -3,8 +3,7 @@
     colourId:number
     productGroupId:number
     remarks : string;
-    fabricType:string
-    fabricCode:string
+    fabricTypeId:number
     m3FabricCode:string
     shahiFabricCode:string
     content:string
@@ -23,5 +22,5 @@
     updatedUser: string | null;
     versionFlag: number;
     isActive: boolean;
-
+    yarnUom:number
     }
