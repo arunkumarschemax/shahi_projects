@@ -10,6 +10,8 @@ export const PurchaseOrderForm =()=>{
     const [poForm] = Form.useForm()
     const [style,setStyle] = useState<any[]>([])
     const [tabName,setTabName] = useState<string>('Fabric')
+    const [fabricData, setFabricData]=useState<any[]>([])
+    const [trimData, setTrimData]=useState<any[]>([])
 
     const styleService = new StyleService()
 
@@ -28,6 +30,15 @@ export const PurchaseOrderForm =()=>{
                 setStyle(res.data)
             }
         })
+    }
+
+    const handleFabricOnchange = (fabricdata) =>{
+        console.log(fabricdata)
+        setFabricData(fabricdata)
+    }
+    const handleTrim = (trimData) =>{
+        console.log(trimData)
+        setTrimData(trimData)
     }
     
 return(
@@ -94,8 +105,8 @@ return(
                     />
                     {tabName == 'Fabric' ?
                      <>
-                     <PurchaseOrderfabricForm />
-                    </>:tabName == 'Trim'? <PurchaseOrderTrim />:<></>}
+                     <PurchaseOrderfabricForm props={handleFabricOnchange}/>
+                    </>:tabName == 'Trim'? <PurchaseOrderTrim props={handleTrim}/>:<></>}
                     
             </Space>
             </Row>

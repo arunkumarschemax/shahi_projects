@@ -117,9 +117,9 @@ export class SampleRequestService {
       const sampleId=await this.sampleRepo.getsampleId()
       const maxId= sampleId.id
       const sampleReqEntity = new SampleRequest();
-      const locationEntity = new Location()
-      locationEntity.locationId = req.locationId
-      sampleReqEntity.location = locationEntity
+      // const locationEntity = new Location()
+      // locationEntity.locationId = req.locationId
+      sampleReqEntity.locationId = req.locationId
       sampleReqEntity.requestNo = 'SAM' + '-' + (Number(maxId) + 1)
       const profitHead = new ProfitControlHead()
       profitHead.profitControlHeadId = req.pchId
@@ -186,6 +186,7 @@ export class SampleRequestService {
       for (const trimObj of req.trimInfo) {
         const trimEntity = new SampleRequestTriminfoEntity()
         trimEntity.trimCode = trimObj.trimCode
+        trimEntity.productGroupId=trimObj.productGroupId
         trimEntity.consumption = trimObj.consumption
         trimEntity.description = trimObj.description
         trimEntity.remarks = trimObj.remarks
@@ -203,13 +204,14 @@ export class SampleRequestService {
        save = await this.sampleRepo.save(sampleReqEntity)
       if(save){
         for(const fabricData of req.fabricInfo){
-        const quantityWithWastage = Number(fabricData.consumption)+Number((5/100)*fabricData.consumption)
+        const quantityWithWastage = Number(fabricData.consumption)+Number((2/100)*fabricData.consumption)
         const bomEntity = new SamplingbomEntity()
         bomEntity.sampleRequestId=save.SampleRequestId
         bomEntity.colourId=fabricData.colourId
         bomEntity.fabricId=fabricData.fabricCode /// product_gropu_id
         bomEntity.rmItemId=1 //rm_item_id need to be added
         bomEntity.requiredQuantity=quantityWithWastage
+        bomEntity.wastage='2'
          saveBomDetails = await this.bomRepo.save(bomEntity)
         }
       }

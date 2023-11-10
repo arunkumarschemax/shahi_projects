@@ -85,6 +85,7 @@ export const SourcingRequisitionDynamicForm = () => {
         getM3TrimCodes()
         getUom()
         getCurrencies()
+        getFabricType()
     },[])
 
     const getUom = () => {
@@ -713,6 +714,17 @@ export const SourcingRequisitionDynamicForm = () => {
       };
 
 
+    const validateExpectedDate = (e) => {
+        let selectedDate = e.format("YYYY-MM-DD");
+        let indentDate = sourcingForm.getFieldValue("indentDate").format("YYYY-MM-DD");
+        if(selectedDate < indentDate){
+            AlertMessages.getErrorMessage("Expected Date must be less than Indent Date")
+            sourcingForm.setFieldsValue({"expectedDate" : ''})
+        }
+        else{
+            console.log("iii");
+        }
+    }
     return(
         <Card title='Indent' className="card-header" extra={<span><Button onClick={() => navigate('/requisition-view')}>View</Button></span>}>
             <Form form={sourcingForm}>
@@ -735,7 +747,7 @@ export const SourcingRequisitionDynamicForm = () => {
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                     <Form.Item name='expectedDate' label='Expected Date' rules={[{required:true,message:'Expected Date is required'}]}>
-                        <DatePicker style={{width:'100%'}}/>
+                        <DatePicker style={{width:'100%'}} onChange={validateExpectedDate}/>
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
@@ -803,9 +815,9 @@ export const SourcingRequisitionDynamicForm = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='fabricType' label='Type of Fabric' rules={[{required:true,message:'Type of Fabric is required'}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Fabric Type'>
-                            {weave.map(e => {
+                            {fabricType.map(e => {
                                     return(
-                                        <Option key={e.fabricWeaveId} value={e.fabricWeaveId} name={e.fabricWeaveName}> {e.fabricWeaveName}</Option>
+                                        <Option key={e.fabricTypeId} value={e.fabricTypeId} name={e.fabricTypeId}> {e.fabricTypeName}</Option>
                                     )
                                 })}
                             </Select>
