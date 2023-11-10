@@ -118,6 +118,11 @@ export class SampleDevelopmentService extends CommonAxiosService {
     return await this.axiosPostCall(this.URL + '/getTrimCodeAgainstTrimType',req);
   }
 
+  async getSampleInventory(req?: SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
+    console.log(req, 'shared service')
+    return this.axiosPostCall(this.URL + "/getSampleInventory", req)
+  }
+
   
 
 }
