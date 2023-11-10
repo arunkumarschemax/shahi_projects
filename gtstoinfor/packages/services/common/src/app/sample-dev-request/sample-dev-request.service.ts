@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
 import { AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, UploadResponse } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
@@ -17,9 +19,10 @@ import { SampleReqFabricinfoEntity } from './entities/sample-request-fabric-info
 import { SampleRequestTriminfoEntity } from './entities/sample-request-trim-info-entity';
 import { SampleRequestProcessInfoEntity } from './entities/sample-request-process-info-entity';
 import { SampleRequestRepository } from './repo/sample-dev-req-repo';
-import { InjectRepository } from '@nestjs/typeorm';
 import { SamplingbomEntity } from './entities/sampling-bom-entity';
-import { Repository } from 'typeorm';
+import { SampleRequestDto } from './dto/samle-dev-req';
+import { sample } from 'rxjs';
+
 
 
 
@@ -28,6 +31,7 @@ export class SampleRequestService {
   
     constructor(
         private sampleRepo: SampleRequestRepository,
+        private readonly dataSource: DataSource,
         // private sampleAdapter: SampleDevAdapter,
         private sizerepo:SampleSizeRepo,
         private fabricRepo:SampleFabricRepo,
@@ -249,39 +253,7 @@ export class SampleRequestService {
     }
   }
   
-  async getSampleRequestReport(): Promise<CommonResponseModel> {
-    const data = await this.sampleRepo.getSampleRequestReport();
-  
-    if (data.length > 0) {
-      const groupedData = data.reduce((result, item) => {
-        console.log(item,"sample_request_id")
-        const samplerequestid = item.sample_request_id;
-        const requestno = item.request_no;
-        if (!result[requestno]) {
-          result[requestno] = {
-            request_no: requestno,
-            sample_request_id: samplerequestid,
-            sm: [],
-          };
-        }
-        result[requestno].sm.push(
-          {
-          code: item.fabricCode,
-          consumption: item.fConsumption,
-        },
-        {
-          code: item.trimCode,
-          consumption: item.tConsumption,
-        }
-        );
-        return result;
-      }, {});
-  
-      return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
-    }
-  
-    return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
-  }
+ 
 
 
   async getFabricCodes(): Promise<CommonResponseModel> {
@@ -331,4 +303,43 @@ export class SampleRequestService {
     }
   }
 
+
+  async getSampleRequestReport(): Promise<CommonResponseModel> {
+    const manager = this.dataSource;
+    let rawData
+     rawData = 'SELECT sr.sample_request_id, sr.request_no AS requestNo, sr.m3_style_no, sb.rm_item_id, ri.item_code, sb.required_quantity, sb.assigned_quantity,sb.colour_id,co.colour  FROM sample_request sr LEFT JOIN sampling_bom sb ON sb.sample_request_id = sr.sample_request_id LEFT JOIN rm_items ri ON ri.rm_item_id LEFT JOIN `colour` co ON co.colour_id = sb.colour_id = sb.rm_item_id';
+     const rmData = await manager.query(rawData);
+    if (rmData.length > 0) {
+      const groupedData = rmData.reduce((result, item) => {
+        console.log(item,"item")
+        const samplerequestid = item.sample_request_id;
+        const requestNo = item.requestNo;
+        
+        if (!result[requestNo]) {
+          result[requestNo] = {
+            request_no: requestNo,
+            sample_request_id: samplerequestid,
+            sm: [],
+          };
+        }
+  
+        result[requestNo].sm.push(
+          {
+            code: item.item_code,
+            consumption: item.required_quantity,
+            quantity: item.assigned_quantity,
+            color: item.colour ,
+          }
+          
+        );
+  
+        return result;
+      }, {});
+  
+      return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
+    }
+  
+    return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
+  }
+  
 }
