@@ -18,6 +18,7 @@ import Sider from 'antd/es/layout/Sider';
 import { CommonHeader } from '../header/header';
 import { icons } from 'antd/es/image/PreviewGroup';
 import { color } from 'highcharts';
+import { title } from 'process';
 
 const { useToken } = theme
 
@@ -845,7 +846,7 @@ export default function BasicLayout() {
         <ProConfigProvider dark={dark} >
        
         <ProLayout
-                    title='SHAHI'
+                    title={'CRM'}
                     locale='en-US'
                     siderWidth={240}
                     colorPrimary='#29397d'
@@ -854,7 +855,7 @@ export default function BasicLayout() {
                     headerContentRender={(props) => props.layout !== 'side' && document.body.clientWidth > 1000 ? <ProBreadcrumb /> : undefined}
                     logo={<img src={logo} />}
                     layout={'mix'}
-                    token={{ header: { colorBgHeader: 'transparent' }, sider: { colorBgMenuItemSelected: colorPrimaryBg } }}
+                    token={{ header: { colorBgHeader: 'transparent' }, sider: { colorBgMenuItemSelected: colorPrimaryBg,colorMenuBackground:'azure' } }}
                     route={{
                         path: '/',
                         routes:treeRouter(getAllSubMenus()),
@@ -880,7 +881,7 @@ export default function BasicLayout() {
                                
                                 <Button
                                     size="middle"
-                                    style={{ borderRadius: "5px" }}
+                                    style={{ borderRadius: "5px",backgroundColor:"blanchedalmond" }}
                                     onClick={() => {
                                         setDark(!dark);
                                     }}
@@ -890,7 +891,7 @@ export default function BasicLayout() {
                             <Tooltip placement="bottom" title={"Sign Out"}>
                                 <Button
                                     size="middle"
-                                    style={{ borderRadius: "5px" }}
+                                    style={{ borderRadius: "5px",backgroundColor:"blanchedalmond"  }}
                                     icon={
                                         <LogoutOutlined
                                             onClick={logOut}
