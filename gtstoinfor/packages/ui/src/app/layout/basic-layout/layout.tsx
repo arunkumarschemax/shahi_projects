@@ -171,6 +171,12 @@ export const baseMRouterList = [
                 key: "sample-requests",
                 path: "sample-requests",
                 filepath: "sample-requests"
+            },
+            {
+                label: "Sample Inventory",
+                key: "sample-inventory",
+                path: "sample-inventory-grid",
+                filepath: "sample-inventory-grid"
             }
         ]
     },

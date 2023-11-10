@@ -1,38 +1,17 @@
-import { RackEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
-@Entity('racks')
-export class RacksEntity {
-  @PrimaryGeneratedColumn("increment", { name: 'rack_Id' })
-  rackId: number;
+@Entity('quality')
+export class QualityEntity {
+  @PrimaryGeneratedColumn("increment", { name: 'quality_Id' })
+  qualityId: number;
 
   @Column('varchar', {
     nullable: false,
     length: 30,
-    name: 'rack_name',
+    name: 'quality',
   })
-  rackName: string;
+  quality: string;
 
-  @Column('varchar', {
-    nullable: false,
-    length: 20,
-    name: 'rack_code',
-  })
-  rackCode: number;
-
-  @Column('varchar', {
-    nullable: false,
-    length: 30,
-    name: 'unit',
-  })
-  unit: string;
-
-  @Column('varchar', {
-    nullable: false,
-    length: 30,
-    name: 'rack_type',
-  })
-  rackType: RackEnum;
 
   @Column("boolean", {
     nullable: false,
