@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Badge, Space, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -288,17 +288,24 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
         <Card title='Colour' extra={<span><Button onClick={()=>navigate('/masters/colour/colour-form')} type={'primary'}>New</Button></span>}>
 <br/>
 <>
-<Row gutter={40}>
-    <Col>
-<Card title={'Total Colours: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+<Row gutter={24}>
+    <Col span={5}>
+     
+    {/* <Tag color="#108ee9">#108ee9</Tag> */}
+    {/* <Badge count={'active:11'} style = {{width:'50px',height:'20px'}} color='#faad14' /> */}
+{/* <Card title={'Total Colours: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card> */}
+<Alert message={'Total Colours: ' + variantData.length} style={{backgroundColor:'#f50',color:'white',fontSize:'15px'}} />
         </Col>
-        <Col>
-          <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+        <Col span={5}>
+          {/* <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card> */}
+          <Alert message={'Active: ' + variantData.filter(el => el.isActive).length} style={{backgroundColor:'#2db7f5',color:'white',fontSize:'15px'}} />
         </Col>
-        <Col>
-          <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+        <Col span={5}>
+          {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
+          <Alert message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{backgroundColor:'#87d068',color:'white',fontSize:'15px'}} />
         </Col>
 </Row>
+<br/>
        
         <Card>
         <Table
