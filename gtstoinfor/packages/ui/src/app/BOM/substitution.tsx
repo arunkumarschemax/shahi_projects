@@ -48,16 +48,6 @@ export const Substitution = () => {
                 setFgSkus(res.data)
             }
         })
-        styleService.getAllStyle().then(res=>{
-            if(res.status){
-              setStyle(res.data)
-            }
-          })
-          divisionService.getAllDivision().then(res=>{
-            if(res.status){
-              setDivsion(res.data)
-            }
-          })
           const rmskureq = new FgItemCodeReq(val)
           rmSkuService.getAllInfoByItemCode(rmskureq).then(res => {
             if(res.status){
@@ -86,10 +76,12 @@ export const Substitution = () => {
             if(index != -1){
                 const rmskus = []
                 if(selectedRmSKus[index].mappedRmSKuList.length == 1){
-
                     rmskus.push(selectedRmSKus[index].mappedRmSKuList[0])
                 } else{
-                    rmskus.push(selectedRmSKus[index].mappedRmSKuList)
+                    for (let i = 0; i < selectedRmSKus[index].mappedRmSKuList.length; i++) { 
+                        rmskus.push(selectedRmSKus[index].mappedRmSKuList[i]); 
+                    }
+                    // rmskus.push(selectedRmSKus[index].mappedRmSKuList)
                 }
                 rmskus.push(selectedRmSKuObject[0])
                 selectedRmSKus[index].mappedRmSKuList = rmskus
@@ -101,9 +93,7 @@ export const Substitution = () => {
             selectedRmSKuObject =[]
             }
         } else{
-            // selectedRmSKuObject[0].fgSkuCode = fgsku
             const fgskus = new MappedInfo(fgsku,fgskuid,selectedRmSKuObject)
-            console.log(fgskus,'---')
             setSelectedRmSKus([...selectedRmSKus,fgskus])
             selectedRmSKuObject =[]
         }
@@ -125,12 +115,17 @@ export const Substitution = () => {
     
 
     const handleAssignedRmSkusDragStart = (event: React.DragEvent<HTMLDivElement>, rmsku: any,skucode) => {
-        console.log('ok')
         const selectedIndex = selectedRmSKus.findIndex(e => {return e.fgSkuCode === skucode})
         const rmskuslist = selectedRmSKus[selectedIndex].mappedRmSKuList
-        // const rmskuindex = 
-        // console.log(rmskuindex)
-        // selectedRmSKus.splice(selectedIndex,1)    
+        const selectedRmSkuIndex = rmskuslist.findIndex(e => {return e.rmSKuCode === rmsku.rmSKuCode})
+        rmskuslist.splice(selectedRmSkuIndex,1)
+        if(rmskuslist.length == 0){
+            selectedRmSKus.splice(selectedIndex,1)
+            setSelectedRmSKus([...selectedRmSKus])
+        } else{
+            selectedRmSKus[selectedIndex].mappedRmSKuList = rmskuslist
+            setSelectedRmSKus([...selectedRmSKus])
+        }
     };
 
 
@@ -162,22 +157,15 @@ export const Substitution = () => {
         },
         {
           title: "Style",
-          dataIndex: "style_id",
-          key: "style_id",
+          dataIndex: "style",
+          key: "style",
           width: "300px",
-          render:(data)=>{      
-      const syle= style.find((style)=>style.styleId === data);    
-      return syle ? syle.style:"N/A"
-    }
+          
         },
         {
           title: "Division",
-          dataIndex: "division_id",
+          dataIndex: "division_name",
           width: "300px",
-          render:(data)=>{
-            const syle= divsion.find((div)=>div.divisionId === data);
-            return syle ? syle.divisionName:"N/A"
-          }
         },
       
     ];

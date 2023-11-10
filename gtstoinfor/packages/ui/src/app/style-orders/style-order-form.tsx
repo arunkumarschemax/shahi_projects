@@ -357,16 +357,16 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
                 }
     }
 
-    const setSalePriceValue = (e,index,rowData) => {
-        const iniIndex = orderQuantityData.findIndex(e => e.skuCode === rowData.skuCode)
-        if(iniIndex != -1){
-            orderQuantityData[index].salePrice = e.target.value
-        } else{
-            const req = new StyleOrderItemsReq(form.getFieldValue('deliveryAddress'),state != null ? rowData.orderQuantity : null,rowData.color,rowData.size,rowData.destination,null,null,e.target.value,null,rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId,null,rowData.coLineId,rowData.skuCode,state !== null ? state?.id : null,rowData.styleOrderInfo)
-            setOrderQuantityData([...orderQuantityData,req])
-        }
+    // const setSalePriceValue = (e,index,rowData) => {
+    //     const iniIndex = orderQuantityData.findIndex(e => e.skuCode === rowData.skuCode)
+    //     if(iniIndex != -1){
+    //         orderQuantityData[index].salePrice = e.target.value
+    //     } else{
+    //         const req = new StyleOrderItemsReq(form.getFieldValue('deliveryAddress'),state != null ? rowData.orderQuantity : null,rowData.color,rowData.size,rowData.destination,null,null,e.target.value,null,rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId,null,rowData.coLineId,rowData.skuCode,state !== null ? state?.id : null,rowData.styleOrderInfo)
+    //         setOrderQuantityData([...orderQuantityData,req])
+    //     }
 
-    }
+    // }
 
     const columns: ColumnProps<any>[] = [
         // {
@@ -406,24 +406,24 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
                 )
             }
         },
-        {
-            title:`Price per ${state != null ? initialData[0]?.itemSalePriceQty : salePriceQty} PCS`,
-            dataIndex:'salePrice',
-            render:(text,row,index) => {
-                return(
-                    <span>
-                    {salePrice || state != null? (<>
-                        <Input key={row.itemSkuId} placeholder="Enter value"
-                        onBlur={e=> setSalePriceValue(e,index,row)} defaultValue={state!= null ? row.salePrice : salePrice}/>
-                    </>) : (<>
-                        <Input key={row.itemSkuId} placeholder="Enter value"
-                        onBlur={e=> setSalePriceValue(e,index,row)}/></>)}
+        // {
+        //     title:`Price per ${state != null ? initialData[0]?.itemSalePriceQty : salePriceQty} PCS`,
+        //     dataIndex:'salePrice',
+        //     render:(text,row,index) => {
+        //         return(
+        //             <span>
+        //             {salePrice || state != null? (<>
+        //                 <Input key={row.itemSkuId} placeholder="Enter value"
+        //                 onBlur={e=> setSalePriceValue(e,index,row)} defaultValue={state!= null ? row.salePrice : salePrice}/>
+        //             </>) : (<>
+        //                 <Input key={row.itemSkuId} placeholder="Enter value"
+        //                 onBlur={e=> setSalePriceValue(e,index,row)}/></>)}
 
-                    </span>
+        //             </span>
                     
-                )
-            }
-        },
+        //         )
+        //     }
+        // },
     ]
 
     const splitData = (data) => {
