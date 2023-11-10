@@ -105,13 +105,13 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         SUM(janWhPcs + febWhPcs + aprWhPcs + marWhPcs + mayWhPcs + junWhPcs + julWhPcs + augWhPcs + sepWhPcs + octWhPcs + novWhPcs + decWhCoeff) AS WhPcsTotal,
         SUM(janExfCoeff + febExfCoeff + aprExfCoeff + marExfCoeff + mayExfCoeff + junExfCoeff + julExfCoeff + augExfCoeff + sepExfCoeff + octExfCoeff + novExfCoeff + decExfCoeff) AS ExfCoeffTotal,
         SUM(janWhCoeff + febWhCoeff + aprWhCoeff + marWhCoeff + mayWhCoeff + junWhCoeff + julWhCoeff + augWhCoeff + sepWhCoeff + octWhCoeff + novWhCoeff + decWhCoeff) AS WhCoeffTotal
-        ,VERSION FROM (        
-               SELECT YEAR, planning_sum,prod_plan_type,VERSION,
+        ,file_id FROM (        
+               SELECT YEAR, planning_sum,prod_plan_type,file_id,
                ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 1 OR MONTH(STR_TO_DATE(exf, '%m/%d')) = 1 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 1 THEN REPLACE(order_plan_qty,',','') ELSE 0 END)) AS janExfPcs,
                 ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 2 OR MONTH(STR_TO_DATE(exf, '%m/%d')) = 2 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 2 THEN REPLACE(order_plan_qty,',','') ELSE 0 END)) AS febExfPcs,
                 ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 3 OR MONTH(STR_TO_DATE(exf, '%m/%d')) = 3 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 3 THEN REPLACE(order_plan_qty,',','') ELSE 0 END)) AS marExfPcs,
                 ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 4 OR MONTH(STR_TO_DATE(exf, '%m/%d')) = 4 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 4 THEN REPLACE(order_plan_qty,',','') ELSE 0 END)) AS aprExfPcs,
-                ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 5 OR MONTH(STR_TO_DATE(exf, '%m/%d')) = 5 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 5 THEN REPLACE(order_plan_qty,',','') ELSE 0 END)) AS mayExfPcs,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 5 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 5 OR MONTH(exf)= 5 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS mayExfPcs,
                 ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 6 OR MONTH(STR_TO_DATE(exf, '%m/%d')) = 6 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 6 THEN REPLACE(order_plan_qty,',','') ELSE 0 END)) AS junExfPcs,
                 ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 7 OR MONTH(STR_TO_DATE(exf, '%m/%d')) = 7 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 7 THEN REPLACE(order_plan_qty,',','') ELSE 0 END)) AS julExfPcs,
                 ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 8 OR MONTH(STR_TO_DATE(exf, '%m/%d')) = 8 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 8 THEN REPLACE(order_plan_qty,',','') ELSE 0 END)) AS augExfPcs,
@@ -135,7 +135,7 @@ export class OrdersRepository extends Repository<OrdersEntity> {
                 ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 2 OR MONTH(STR_TO_DATE(exf, '%m/%d')) = 2 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 2 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END)) AS febExfCoeff,
                 ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 3 OR MONTH(STR_TO_DATE(exf, '%m/%d')) = 3 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 3 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END)) AS marExfCoeff,
                 ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 4 OR MONTH(STR_TO_DATE(exf, '%m/%d')) = 4 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 4 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END)) AS aprExfCoeff,
-                ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 5 OR MONTH(STR_TO_DATE(exf, '%m/%d')) = 5 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 5 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END)) AS mayExfCoeff,
+                 SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 5 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 5 OR MONTH(exf)= 5 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS mayExfCoeff,
                 ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 6 OR MONTH(STR_TO_DATE(exf, '%m/%d')) = 6 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 6 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END)) AS junExfCoeff,
                 ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 7 OR MONTH(STR_TO_DATE(exf, '%m/%d')) = 7 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 7 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END)) AS julExfCoeff,
                 ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 8 OR MONTH(STR_TO_DATE(exf, '%m/%d')) = 8 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 8 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END)) AS augExfCoeff,
@@ -157,11 +157,11 @@ export class OrdersRepository extends Repository<OrdersEntity> {
                 ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 12 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 12 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 12 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END)) AS decWhCoeff
                 FROM orders
                 WHERE exf IS NOT NULL 
-                AND VERSION = (SELECT MAX(VERSION) FROM orders)
+                AND file_id = (SELECT MAX(file_id) FROM orders)
                 GROUP BY prod_plan_type, planning_sum
               ) AS subquery
               WHERE 1 = 1 AND YEAR ='${req.year}' AND prod_plan_type != 'STOP' 
-             AND VERSION = (SELECT MAX(VERSION) FROM orders)
+             AND file_id = (SELECT MAX(file_id) FROM orders)
                GROUP BY prod_plan_type, planning_sum 
                HAVING ExfPcsTotal != 0 AND WhPcsTotal != 0 AND ExfCoeffTotal!= 0 AND WhCoeffTotal !=0
                ORDER BY planning_sum`;
@@ -173,7 +173,7 @@ export class OrdersRepository extends Repository<OrdersEntity> {
 
 async getdata(req: YearReq): Promise<any[]> {
     const query = 
-    `  SELECT  YEAR,
+    `  SELECT  YEAR,file_id,
     CASE
          WHEN prod_plan_type LIKE '%Ph3%' THEN 'Ph3'
          WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
@@ -236,8 +236,8 @@ ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 3 OR MONTH(STR_TO_DATE
  ROUND( SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 12 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 12 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 12 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END)) AS decWhCoeff
    FROM orders
    WHERE exf IS NOT NULL AND YEAR = '${req.year}'
-   AND VERSION = (SELECT MAX(VERSION) FROM orders)
- AND prod_plan_type !='STOP'
+   AND file_id = (SELECT MAX(file_id) FROM orders)
+    AND prod_plan_type !='STOP'
     GROUP BY  CASE
          WHEN prod_plan_type LIKE '%Ph3%' THEN 'Ph3'
          WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
@@ -342,7 +342,7 @@ ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 3 OR MONTH(STR_TO_DATE
 
     async getdata1(req: YearReq): Promise<any[]> {
         const query =`       
-        SELECT  YEAR,version,
+        SELECT  YEAR,file_id,
           CASE
                WHEN prod_plan_type LIKE '%Ph3%' THEN 'Ph3'
                WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
@@ -403,8 +403,8 @@ ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 3 OR MONTH(STR_TO_DATE
          CONCAT(ROUND( (SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 12 OR MONTH(STR_TO_DATE(wh, '%m/%d')) = 12 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 12 THEN   order_plan_qty_coeff ELSE 0 END)/SUM(CASE WHEN MONTH(wh) OR MONTH(STR_TO_DATE(wh, '%m/%d'))  OR MONTH(STR_TO_DATE(wh, '%m-%d'))  BETWEEN 1 AND 12  THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END)) *100,0),'%') AS decWhCoeff
          FROM orders
          WHERE exf IS NOT NULL AND YEAR = '${req.year}'
-         AND VERSION = (SELECT MAX(VERSION) FROM orders)
-       AND prod_plan_type !='STOP'
+         AND file_id = (SELECT MAX(file_id) FROM orders)
+         AND prod_plan_type !='STOP'
           GROUP BY  CASE
                WHEN prod_plan_type LIKE '%Ph3%' THEN 'Ph3'
                WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
