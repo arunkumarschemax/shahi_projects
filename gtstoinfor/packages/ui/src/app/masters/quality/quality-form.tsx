@@ -18,6 +18,7 @@ const QualityForm = () => {
                 setTimeout(() => {
                     message.success('Submitted successfully');
                     window.location.reload();
+                    navigate("/masters/quality-view")
                 }, 500);;
             }
         }).catch(err => {
@@ -42,7 +43,7 @@ const QualityForm = () => {
                 <Form form={form} onFinish={onFinish}>
                     <Row>
                         <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4 }} lg={{ span: 8 }} xl={{ span: 5 }}>
-                            <Form.Item label="Quality" name="quality">
+                            <Form.Item label="Fabric Quality" name="quality">
                                 <Input placeholder=" Enter Quality " />
                             </Form.Item>
                         </Col>

@@ -40,6 +40,7 @@ const RackPosition = () => {
         setTimeout(() => {
           message.success('Submitted successfully');
           window.location.reload();
+          navigate("/masters/rackPosition-view")
         }, 500);
       }
     }).catch(err => {
