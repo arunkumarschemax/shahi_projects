@@ -869,7 +869,7 @@ export default function BasicLayout() {
                     avatarProps={{
                         src: 'https://hzdjs.cn/blog/logo.jpg',
                         size: 'small',
-                        title: menu.userName,
+                        title: <div style={{color:'brown'}}><h3><b>{menu.userName}</b></h3></div>,
                     }}
                     
                     
