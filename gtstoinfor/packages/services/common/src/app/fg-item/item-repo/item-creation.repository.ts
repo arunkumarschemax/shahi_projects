@@ -23,6 +23,8 @@ import { ROSLGroups } from "../../rosl groups/rosl-groups.entity";
 import { FactoriesEntity } from "../../factories/factories.entity";
 import { BuyingHouse } from "../../buying-house/buying-house.entity";
 import { SearchGroupEnitty } from "../../search-group/search-group.entity";
+import { Style } from "../../style/dto/style-entity";
+import { BusinessArea } from "../../business-area/business-area.entity";
 
 
 
@@ -39,9 +41,9 @@ export class ItemCreationRepository extends Repository<ItemCreation> {
         CONCAT(epa.first_name, ' ', epa.last_name) AS approver,CONCAT(eppt.first_name, ' ', eppt.last_name) AS pd_merchant,CONCAT(ept.first_name, ' ', ept.last_name) AS factory_merchant,
         CONCAT(eps.first_name, ' ', eps.last_name) AS sale_person_id,internal_style_id,uo.uom AS uom,ut.uom AS alt_uom,currencies.currency_name AS currency_name,
         ig.item_group AS item_group,pgi.product_group,business_area,uo.uom AS basicUom,group_tech_class,co.composition_code AS composition ,gtc.group_tech_class_code AS group_tech_class,
-        tc.currency_name AS target_currency,fgi.fg_item_id,
+        tc.currency_name AS target_currency,fgi.fg_item_id,st.style,
         r.range_code AS rangee ,no_of_lace_panel ,sale_price_qty ,lt.liscence_type,cg.custom_group, national_dbk ,rg.rosl_group ,is_sub_contract ,sale_price,
-        order_confirmed_date,first_ex_factory_date,order_close_date,moq,order_qty,f.name,season,conversion_factor,projection_order, bh.buying_house,sg.search_grp_name`) 
+        order_confirmed_date,first_ex_factory_date,order_close_date,moq,order_qty,f.name,season,conversion_factor,projection_order, bh.buying_house,sg.search_grp_name, CONCAT(ba.business_area_code,'-',ba.business_area_name) AS business_area`) 
         .leftJoin(Currencies, 'currencies','currencies.currency_id = fgi.currency')
         .leftJoin(ItemTypeEntity,'it','it.item_type_id = fgi.item_type_id')
         .leftJoin(Brands,'b','b.brand_id = fgi.brand_id')
@@ -68,7 +70,8 @@ export class ItemCreationRepository extends Repository<ItemCreation> {
         .leftJoin(FactoriesEntity, 'f','f.id = fgi.facility_id ')
         .leftJoin(BuyingHouse, 'bh','bh.buying_house_id = fgi.buying_house_commision_id  ')
         .leftJoin(SearchGroupEnitty, 'sg','sg.id = fgi.search_group')
-
+        .leftJoin(Style,'st','st.style_id = fgi.internal_style_id')
+        .leftJoin(BusinessArea,'ba','ba.business_area_id = fgi.business_area ')
 
         .where('1=1');
         if (req.style !== undefined) {

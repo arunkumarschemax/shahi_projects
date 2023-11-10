@@ -32,8 +32,11 @@ const CompositionGrid = () => {
     service.getCompositionData().then(res => {
       if (res.status) {
         setLTData(res.data);
+        message.success(res.internalMessage)
+
       } else
        {
+        message.error(res.internalMessage)
         setLTData([])
           AlertMessages.getErrorMessage(res.internalMessage);
       }
@@ -157,7 +160,7 @@ const CompositionGrid = () => {
       title: 'S No',
       key: 'sno',
       // width: '70px',
-      
+      align:'center',
       responsive: ['sm'],
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
@@ -166,18 +169,21 @@ const CompositionGrid = () => {
         dataIndex: "compositionCode",
         // width:'60px',
         sorter: (a, b) => a.compositionCode?.localeCompare(b.compositionCode),
-      ...getColumnSearchProps("compositionCode"),
+      ...getColumnSearchProps("compositionCode"),      align:'center',
+
       },
       {
         title: "Composition Description",
         dataIndex: "compositionDescription",
         // width:'60px',
         sorter: (a, b) => a.compositionDescription?.localeCompare(b.compositionDescription),
-      ...getColumnSearchProps("compositionDescription"),
+      ...getColumnSearchProps("compositionDescription"),      align:'center',
+
       },
     {
       title: 'Status',
-      dataIndex: 'isActive',
+      dataIndex: 'isActive',      align:'center',
+
        // width:'80px',
       render: (isActive, rowData) => (
         < >
@@ -202,7 +208,7 @@ const CompositionGrid = () => {
     },
     {
       title: `Action`,
-      dataIndex: 'action',
+      dataIndex: 'action',      align:'center',
       render: (text, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"
@@ -254,7 +260,7 @@ const CompositionGrid = () => {
   return (
       <>
       <Card title={<span >Composition</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+    style={{textAlign:'left'}} headStyle={{ border: 0 }} 
     extra={<Link to='/masters/composition/composition-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >

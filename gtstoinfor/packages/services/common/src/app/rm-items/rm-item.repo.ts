@@ -38,7 +38,7 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
         .leftJoin(ItemTypeEntity,'it','it.item_type_id = rmi.item_type_id')
         .leftJoin(ProductGroup,'pg','pg.product_group_id = rmi.product_group_id')
         .leftJoin(ProcurmentGroup,'pcg',' pcg.procurment_group_id = rmi.procurement_gorup_id ')
-        .leftJoin(BusinessArea,'ba','ba.business_area_id = rmi.business_area ')
+        .leftJoin(BusinessArea,'ba','ba.business_area_id = rmi.business_area_id ')
         .leftJoin(UomEntity,'uo','uo.id = rmi.basic_uom_id ')
         .leftJoin(Currencies, 'c','c.currency_id = rmi.currency_id')
 

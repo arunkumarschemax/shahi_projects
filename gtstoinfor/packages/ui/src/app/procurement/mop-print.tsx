@@ -20,11 +20,17 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
   });
 };
 
-export interface SProps {}
+export interface MopprintProps {
+    mop:any
+    pop:any
+    key:any
+}
 
-export function Mopprint(props: SProps) {
+export function Mopprint(props: MopprintProps) {
   const [currentDateTime, setCurrentDateTime] = useState("");
   const [transferInfo, setTransferInfo] = useState<any>([]);
+
+  
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -82,15 +88,13 @@ export function Mopprint(props: SProps) {
   const formatIndianNumber = (amount) => {
     return  Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(amount);
 }
+console.log(props.mop,"mop")
 
   return (
     <>
-   
+     
       <div className="invoice" id="print">
         <div >
-          {/* <div style={{fontSize:25,color: 'var(--secondary-clr)'}}>
-              <p>SHAHI</p>
-            </div> */}
           <div style={{marginLeft:250,color: 'var(--secondary-clr)',marginTop:20}}>
             <h2>Material Order Proposal</h2>
           </div>
@@ -100,76 +104,64 @@ export function Mopprint(props: SProps) {
               {/* <p className="p-title">INVOICE NO: </p> */}
               <p className="p-title" style={{marginRight:10}}>Date: {currentDateTime}</p>
             </div>
-            <hr/>
-            <div style={{display:"flex",justifyContent:'space-between', marginTop:"5px",marginBottom:"25px"}}>
-            <div>
-              <p style={{marginLeft:10}}>From</p>
-              <p className="p-title" style={{marginLeft:10}}>Bidhun,<br /><span>Unit1,</span><br /><span>Shahi Imports & Exports,</span><br /><span>Banglore</span>
-              </p>
-            </div>
-            <div >
-              {/* <p>To</p>
-              <p className="p-title">Ramesh,<br /><span>Unit1,</span><br /><span>Nike,</span><br /><span></span><br /><span></span>
-              </p> */}
-            </div>
-            </div>
+          
           </div>
-            {/* ))} */}
+         
         </div>
-        {/* <div>
-          <p className="p-title">Indent Code : </p>
-        </div> */}
-        <hr/>
         <div className="body">
           <div className="i-table" style={{fontSize:"13px"}}>
             <div className="i-table-head">
               <div className="i-row">
-                <div className="i-col w-20">
-                  <p className="p-title">CO number</p>
+                <div className="i-col" style={{width:"25%"}}>
+                  <p className="p-title" >CO number</p>
                 </div>
                 <div className="i-col" style={{width:"25%"}}>
-                  <p className="p-title">Item Code</p>
+                  <p className="p-title">CO Line No </p>
                 </div>
                 <div className="i-col" style={{width:"25%"}}>
-                  <p className="p-title">Item Name</p>
+                  <p className="p-title"> RM Item Code</p>
+                </div> 
+                <div className="i-col" style={{width:"25%"}}>
+                  <p className="p-title"> RM tem Name</p>
+                </div>
+                <div className="i-col" style={{width:"25%"}}>
+                  <p className="p-title"> FG Item Code</p>
+                </div>
+                <div className="i-col" style={{width:"25%"}}>
+                  <p className="p-title"> FG item Name</p>
                 </div>
                 <div className="i-col" style={{width:"15%"}}>
                   <p className="p-title">Description</p>
                 </div>
-                <div className="i-col w-15">
+                <div className="i-col" style={{width:"15%"}}>
                   <p className="p-title">Quantity</p>
                 </div>
-                <div className="i-col">
-                  <p className="p-title"></p>
-                </div>
-                <div className="i-col" style={{width:"15%"}}>
-                  <p className="p-title"></p>
-                </div>
+               
                 {/* <div className="i-col w-15">
                   <p className="p-title">Invoice Amount</p>
                 </div> */}
               </div>
             </div>
             <div className="i-table-body">
-              {transferInfo.map((item, index) => (
+              {props?.mop?.map((item, index) => (
                 <div className="i-row" key={index}>
                   <div className="i-col w-20">
-                    <p></p>
+                    <p>{item.coNumber}</p>
                   </div>
-                  <div className="i-col" style={{width:"25%"}}>
-                    <p></p>
+                  <div className="i-col">
+                    <p>{item.coLineNumber}</p>
                   </div>
-                  <div className="i-col" style={{width:"10%"}}>
-                  {/* <p style={{ textAlign:"right"}}>{item.noOfVehilces}</p> */}
+                  <div className="i-col">
+                  <p>{item.rmitemCode}</p>
                 </div>
                   <div className="i-col w-15">
                     <p style={{ textAlign:"right"}}></p>
                   </div>
                   <div className="i-col">
-                    <p>₹ </p>
+                    <p> </p>
                   </div>
                   <div className="i-col w-15">
-                    <p style={{textAlign:"right"}}>₹ </p>
+                    <p style={{textAlign:"right"}}> </p>
                   </div>
                   {/* <div className="i-col w-15">
                     <p>₹ {item.invAmount}</p>
@@ -185,16 +177,10 @@ export function Mopprint(props: SProps) {
                 <div className="i-col w-55">
                   <p></p>
                 </div>
-                {transferInfo.map((item, index) => (
+               
                 <div>
-                {/* <div className="i-col" style={{textAlign: "right"}}>
-                    <p >Sub Total</p>
-                </div> */}
-                <div style={{textAlign: "right",margin:"10px", paddingRight:"10px"}}>
-                <p className="p-title">Tax 18%:<span>  </span></p>
                 </div>
-                </div>
-                ))}
+              
               </div>
               <div style={{ textAlign: "right", margin: "10px" }}>
                 {/* <div style={{ backgroundColor: "#5265a7",color:"white", padding: "10px", display: "inline-block" }}>
