@@ -87,7 +87,7 @@ export class SubstituionService{
           const DataMap = new Map<string, FgDataModel>();
           for (const res of getdata) {
             if (!DataMap.has(res.fgItemId)) {
-              console.log(res,'000000000000');
+              // console.log(res,'000000000000');
               
               DataMap.set (res.fgItemId,new FgDataModel(res.substituionId,res.fgItemCode,res.fgItemId,res.rmItemCode,res.rmItemId,res.fgSku,res.fgSkuId,res.rmSku,res.rmSkuId,res.consumption,res.itemTypeId,res.itemGroupId,res.itemType,res.isActive,[]))
               //  DataMap.set(res.fgItemId, new RmDataModel(res.rmItemId,res.itemType,res.rmSku,res.featureCode,res.status,res.itemCode,res.featureOptionId,res.optionGroup,res.optionId,re));
@@ -110,7 +110,7 @@ export class SubstituionService{
               );
               RmSku.push(data1);
             }
-            console.log(RmSku,'uuuuuuuuuuuu');
+            // console.log(RmSku,'uuuuuuuuuuuu');
             
           }
         

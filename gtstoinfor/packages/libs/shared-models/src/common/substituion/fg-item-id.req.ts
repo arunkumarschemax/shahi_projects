@@ -1,7 +1,7 @@
 export class fgItemIdReq{
-    fgItemCode:string
+    fgItemCode?:string
 
-    constructor(fgItemCode:string){
+    constructor(fgItemCode?:string){
       this.fgItemCode = fgItemCode
     
     }

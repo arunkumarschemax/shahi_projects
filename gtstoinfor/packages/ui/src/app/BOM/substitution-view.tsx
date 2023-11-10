@@ -5,6 +5,8 @@ import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutli
 import { Link, useNavigate } from 'react-router-dom';
 import AlertMessages from '../common/common-functions/alert-messages';
 import moment from 'moment';
+import { SubstitutionService } from '@project-management-system/shared-services';
+import { fgItemIdReq } from '@project-management-system/shared-models';
 
 
 const SubstituionView=() =>{
@@ -14,16 +16,40 @@ const SubstituionView=() =>{
     const [page, setPage] = React.useState(1);
     const navigate = useNavigate();
     const [form] = Form.useForm();
-
+    const service = new SubstitutionService
+    const [style, setStyle] = useState([]);
+    const [selectedRow, setSelectedRow] = useState(null);
+    const [Value, setValue] = useState([]);
 
     useEffect(()=>{
-
+      Substituion();
     },[])
 
     const resetHandler = () => {
         form.resetFields();
     
     
+    }
+    const handleRowClick = (record) => {
+      // Set the selected row when clicking on a row
+      setSelectedRow(record);
+    };
+
+    const closeModal = () => {
+      // Close the modal by resetting the selected row
+      setSelectedRow(null);
+    };
+  
+    const Substituion=()=>{
+      const req = new fgItemIdReq()
+      if(form.getFieldValue('fgItemCode') !== undefined){
+        req.fgItemCode=form.getFieldValue('fgItemCode')
+      }
+   service.getSubstitution(req).then(res=>{
+    if(res.status){
+    setValue(res.data)
+    }
+   })
     }
     const columnsSkelton:any=[
     
@@ -35,13 +61,19 @@ const SubstituionView=() =>{
           },
 
           {
+            title:'Fg SkuCode',
+            dataIndex:'fgSku',
+
+          },
+          {
             title:'Fg ItemCode',
             dataIndex:'fgItemCode',
 
           },
           {
-            title:'Fg Sku',
-            dataIndex:'fgSku',
+
+            title:'Rm SkuCode',
+            dataIndex:'rmSku',
 
           },
           {
@@ -50,9 +82,10 @@ const SubstituionView=() =>{
             dataIndex:'rmItemCode',
 
           },
+          
           {
-            title:'Rm Sku',
-            dataIndex:'rmSku',
+            title:'Consumption',
+            dataIndex:'consumption',
           }
 
         ]
@@ -68,8 +101,8 @@ const SubstituionView=() =>{
                 <Form form={form} layout='vertical'>
              <Row gutter={24}>
              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                <Form.Item name='' label='Fg ItemCode'>
-               <Select showSearch placeholder="Select Fg ItemCode" optionFilterProp="children" allowClear>
+                <Form.Item name='fgItemCode' label='Fg SkuCode'>
+               <Select showSearch placeholder="Select Fg SkuCode" optionFilterProp="children" allowClear>
           {
 
             }
@@ -77,8 +110,8 @@ const SubstituionView=() =>{
                 </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                <Form.Item name='' label='Rm ItemCode'>
-               <Select showSearch placeholder="Select Rm ItemCode" optionFilterProp="children" allowClear>
+                <Form.Item name='rmSku' label='Rm SkuCode'>
+               <Select showSearch placeholder="Select Rm SkuCode" optionFilterProp="children" allowClear>
           {
 
             }
@@ -120,10 +153,12 @@ const SubstituionView=() =>{
             
                 </Form>
                 <>
+       
                 <Table size='small'
                 rowKey={record => record}
                 className='custom-table-wrapper'
                   columns={columnsSkelton}
+                  dataSource={Value}
                   pagination={{
                     onChange(current) {
                       setPage(current);
@@ -140,3 +175,6 @@ const SubstituionView=() =>{
         )
 }
 export default SubstituionView
+
+
+
