@@ -286,7 +286,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
 
       return (
         <Card title='Colour' extra={<span><Button onClick={()=>navigate('/masters/colour/colour-form')} type={'primary'}>New</Button></span>}>
-<br/>
+{/* <br/> */}
 <>
 <Row gutter={24}>
     <Col span={5}>
