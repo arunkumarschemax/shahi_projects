@@ -136,44 +136,55 @@ export const PurchaseOrderfabricForm =() =>{
         },
         {
             title:'Content',
-            dataIndex:'content'
+            dataIndex:'content',
+            width:'100px'
         },
         {
             title:'Fabric Type',
             dataIndex:'fabricTypeName',
+            width:'130px'
             
         },
         {
             title:'Weave',
             dataIndex:'weaveName',
+            width:'130px'
         },
         {
             title:'Weight',
             dataIndex:'weight',
+            width:'100px'
+
         },
         {
             title:'Width',
-            dataIndex:'width'
+            dataIndex:'width',
+            width:'100px'
         },
         {
             title:'Construction',
-            dataIndex:'construction'
+            dataIndex:'construction',
+            width:'100px'
         },
         {
             title:'Yarn Count',
-            dataIndex:'yarnCount'
+            dataIndex:'yarnCount',
+            width:'100px'
         },
         {
             title:'Finish',
             dataIndex:'finish',
+            width:'100px'
         },
         {
             title:'Shrinkage',
             dataIndex:'shrinkage',
+            width:'100px'
         },
         {
             title:'M3 Fabric Code',
             dataIndex:'m3FabricCode',
+            width:'170px'
         },
         {
             title:'Color',
@@ -182,10 +193,12 @@ export const PurchaseOrderfabricForm =() =>{
         {
             title:'PCH',
             dataIndex:'pchName',
+            width:'100px'
         },
         {
             title:'MOQ',
-            dataIndex:'moq'
+            dataIndex:'moq',
+            width:'100px'
         },
         {
             title: "Action",
@@ -235,8 +248,7 @@ export const PurchaseOrderfabricForm =() =>{
             console.log(fabricIndexVal)
             if(fabricIndexVal !== undefined){
                 fabricTableData[fabricIndexVal] = values;
-                fabricTableData[fabricIndexVal] = values;
-
+                // fabricTableData[fabricIndexVal] = values;
                 tableData = [...fabricTableData]
                 setFabricIndexVal(undefined)
             } else{

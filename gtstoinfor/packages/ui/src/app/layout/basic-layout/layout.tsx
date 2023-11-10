@@ -25,10 +25,22 @@ export const baseMRouterList = [
         filepath: "masters",
         children: [
             {
+                label: "Racks",
+                key: "rack-view",
+                path: "rack-view",
+                filepath: "/rack-view",
+            },
+            {
                 label: "Rack Positions",
                 key: "rackPosition-view",
                 path: "rackPosition-view",
                 filepath: "/rackPosition-view",
+            },
+            {
+                label: "Quality",
+                key: "quality-view",
+                path: "quality-view",
+                filepath: "/quality-view",
             },
             {
                 label: "M3 Items",
@@ -168,6 +180,8 @@ export const baseMRouterList = [
             }
         ]
     },
+
+    
     
     // {
     //     label: "Marketing Requisition",
@@ -194,10 +208,22 @@ export const baseRouterList = [
         filepath: "masters",
         children: [
             {
+                label: "Racks",
+                key: "rack-view",
+                path: "rack-view",
+                filepath: "/rack-view",
+            },
+            {
                 label: "Rack Positions",
-                key: "rm-locations-view",
-                path: "rm-locations-view",
+                key: "rackPosition-view",
+                path: "rackPosition-view",
                 filepath: "/rackPosition-view",
+            },
+            {
+                label: "Quality",
+                key: "quality-view",
+                path: "quality-view",
+                filepath: "/quality-view",
             },
             {
                 label: "M3 Items",
