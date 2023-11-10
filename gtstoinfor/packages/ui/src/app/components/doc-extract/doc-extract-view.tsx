@@ -30,7 +30,7 @@ import { Link, useNavigate } from "react-router-dom";
 interface Item {
   gstNumber: string;
   venName: string;
-  venCod:string;
+  venCod: string;
   invoiceDate: string;
   cgst: string;
   igst: string;
@@ -38,7 +38,7 @@ interface Item {
   invoiceNumber: string;
   invoiceAmount: string;
   invoiceCurrency: string;
-  financialYear:string;
+  financialYear: string;
 }
 
 // export interface DocViewProps { }
@@ -228,7 +228,7 @@ export const DocView = () => {
       dataIndex: "venName",
       key: "venName",
       // ...getColumnSearchProps("Vendor"),
-      align: "center",
+      align: "left",
       sorter: (a, b) => a.venName.localeCompare(b.venName),
       render: (text: any, record: { venName: any }) => {
         return <> {record.venName ? record.venName : "-"} </>;
@@ -270,7 +270,7 @@ export const DocView = () => {
         return <>{formattedAmount}</>;
       },
     },
-    
+
     {
       title: "Invoice Currency",
       dataIndex: "invoiceCurrency",
@@ -367,13 +367,14 @@ export const DocView = () => {
                 optionFilterProp="children"
                 allowClear
               >
-                {VendorData.map((option) => (
-                  <option value={option.businessName}>
+                {VendorData.sort((a, b) => a.businessName.localeCompare(b.businessName)).map((option) => (
+                  <Select.Option key={option.businessName} value={option.businessName}>
                     {option.businessName}
-                  </option>
+                  </Select.Option>
                 ))}
               </Select>
             </Form.Item>
+
           </Col>
           <Row justify="end">
             <Form.Item>
