@@ -72,7 +72,7 @@ export class FabricWeaveService {
     }
 
     async getAllActiveFabricWeave():Promise<AllFabricWeaveResponseModel>{
-      const fabricWeave = await this.fabricWeaveRepository.find({where:{isActive:true},order:{createdAt:'ASC'}})
+      const fabricWeave = await this.fabricWeaveRepository.find({where:{isActive:true},order:{fabricWeaveCode:'ASC'}})
       if(fabricWeave.length >0){
           return new AllFabricWeaveResponseModel(true,1,'Active fabricWeaves Retrieved Successfully',fabricWeave)
       }else{
