@@ -8,7 +8,7 @@ import React from "react"
 import { useEffect, useState } from "react"
 
 
-export const PurchaseOrderfabricForm =() =>{
+export const PurchaseOrderfabricForm =({props}) =>{
     const [fabricForm]=Form.useForm()
     const [weave,setWeave] = useState<any[]>([])
     const [uom,setUom] = useState<any[]>([])
@@ -243,11 +243,11 @@ export const PurchaseOrderfabricForm =() =>{
             )
         }
     ]
-
     
     const deleteData = (index:any) => {
         tableData = [...fabricTableData]
         tableData.splice(index,1)
+        props(tableData)
         setFabricTableData(tableData)
         if (tableData.length == 0) {
             setFabricTableVisible(false)
@@ -260,15 +260,13 @@ export const PurchaseOrderfabricForm =() =>{
             console.log(fabricIndexVal)
             if(fabricIndexVal !== undefined){
                 fabricTableData[fabricIndexVal] = values;
-                // fabricTableData[fabricIndexVal] = values;
                 tableData = [...fabricTableData]
                 setFabricIndexVal(undefined)
             } else{
                 tableData = [...fabricTableData,values]
             }
-            console.log(tableData)
-
             setFabricTableData(tableData)
+            props(tableData)
             fabricForm.resetFields()
             setUpdate(false)
             setFabricTableVisible(true)
