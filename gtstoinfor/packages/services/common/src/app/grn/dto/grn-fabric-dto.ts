@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { CustomerOrderStatusEnum } from "@project-management-system/shared-models";
 
-export class IndentFabricDto{
+export class GrnFabricDto{
     @ApiProperty()
     ifabricId: number;
     @ApiProperty()
