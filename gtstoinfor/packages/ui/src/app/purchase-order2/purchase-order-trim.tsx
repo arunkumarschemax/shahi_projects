@@ -6,7 +6,7 @@ import { ColumnProps } from "antd/lib/table";
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-export const PurchaseOrderTrim = () =>{
+export const PurchaseOrderTrim = ({props}) =>{
     let tableData: any[] = []
     const [trimForm] = Form.useForm()
     const {Option} = Select
@@ -32,8 +32,6 @@ export const PurchaseOrderTrim = () =>{
         getTrimType()
     },[])
 
-   
-
     const getColor = () => {
         colorService.getAllActiveColour().then(res =>{
             if(res.status) {
@@ -41,6 +39,7 @@ export const PurchaseOrderTrim = () =>{
             }
         })
     }
+
     const getTrimType = () => {
         sampleService.getTrimType().then(res =>{
             if(res.status) {
@@ -81,6 +80,7 @@ export const PurchaseOrderTrim = () =>{
     const deleteData = (index:any) => {
         tableData = [...trimTableData]
         tableData.splice(index,1)
+        props(tableData)
         setTrimTableData(tableData)
         if (tableData.length == 0) {
             setTrimtableVisible(false)
@@ -171,19 +171,15 @@ export const PurchaseOrderTrim = () =>{
         console.log(values)
         trimForm.validateFields().then(() =>{
           if(trimIndexVal !== undefined){
-            console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
             trimTableData[trimIndexVal] = values;
             tableData=[...trimTableData]
             setTrimIndexVal(undefined)
           }else{
-            console.log(trimIndexVal)
-            console.log(trimTableData)
-            console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&')
             tableData=[...trimTableData,values]
             console.log(tableData)
           }
-          console.log(tableData)
           setTrimTableData(tableData)
+          props(tableData)
           trimForm.resetFields()
           setUpdate(false)
           setTrimtableVisible(true)
@@ -215,11 +211,10 @@ export const PurchaseOrderTrim = () =>{
     return(
         <Card title='trim Details'>
             <Form form={trimForm} layout="vertical" onFinish={OnTrimAdd}>
-                <Row gutter={8}>
+                <Row gutter={24}>
                 <Form.Item name={'trimType'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'trimCodeName'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'colourName'} hidden><Input></Input></Form.Item>
-
 
                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name={'productGroupId'} label={'Trim type'}

@@ -1,12 +1,12 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
-import { PurchaseOrderEntity } from "./purchase-order-entity";
+import { GrnEntity } from "./grn-entity";
 
-@Entity('purchase_order_fabric')
-export class PurchaseOrderFbricEntity{
+@Entity('grn_fabric')
+export class GrnFabricEntity{
 @PrimaryGeneratedColumn('increment',{
-    name:'po_fabric_id'
+    name:'grn_fabric_id'
 })
-poFabricId:number
+grnFabricId:number
 
 @Column('int',{
     name:'colour_id',
@@ -20,15 +20,21 @@ poFabricId:number
   })
   productGroupId:number
 
+  
   @Column('text',{
     name:'remarks',
 })
   remarks : string;
 
-@Column('int',{
-    name:'fabric_type_id'
+@Column('varchar',{
+    name:'fabric_type'
 })
-fabricTypeId:number
+fabricType:string
+
+@Column('varchar',{
+    name:'fabric_code'
+})
+fabricCode:string
 
 
 @Column('varchar',{
@@ -70,6 +76,13 @@ construction:number
     name:'yarn_count'
 })
 yarnCount:number
+
+@Column('decimal', {
+  name: 'received_qty',
+  precision: 4,
+  scale: 2,
+})
+receivedQty: number
 
 @Column('varchar',{
     name:'finish'
@@ -128,15 +141,8 @@ moq:string
   })
   isActive: boolean;
 
-  @Column('int',{
-    name:'yarn_uom',
-    nullable:false
-  })
-  yarnUom:number
-
-
-@ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poFabricInfo)
-@JoinColumn({name:'purchase_order_id'})
-purchaseOrderEntity:PurchaseOrderEntity
+@ManyToOne(type =>GrnEntity,grn =>grn.grnFabricInfo)
+@JoinColumn({name:'grn_id'})
+grnEntity:GrnEntity
 
 }

@@ -9,7 +9,8 @@ export class RackPositionAdapter {
     convertDtoToEntity(dto: RackPositionDTO): RackPositionEntity {
         const entity = new RackPositionEntity();
         entity.rackPositionName = dto.rackPositionName;
-        entity.positionCode = dto.positionCode
+        entity.positionCode = dto.positionCode;
+        entity.rackName = dto.rackName;
         entity.createdUser = dto.createdUser
         if (dto.positionId) {
             entity.positionId = dto.positionId;
@@ -23,6 +24,7 @@ export class RackPositionAdapter {
         entity.positionId = dto.positionId;
         dto.rackPositionName = entity.rackPositionName
         dto.positionCode = entity.positionCode
+        dto.rackName = entity.rackName
 
         return dto;
     }

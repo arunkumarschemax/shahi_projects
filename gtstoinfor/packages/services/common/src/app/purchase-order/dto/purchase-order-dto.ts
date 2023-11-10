@@ -47,6 +47,9 @@ export class PurchaseOrderDto{
   remarks:string
 
   @ApiProperty()
+  yarnUom:number
+
+  @ApiProperty()
   poFabricInfo: PurchaseOrderFbricDto[]
 
   @ApiProperty()
