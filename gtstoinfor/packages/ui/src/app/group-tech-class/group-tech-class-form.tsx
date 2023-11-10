@@ -175,12 +175,7 @@ const getAllActiveDivision=() =>{
           {
             required: true,
             message: 'GroupTech Code Is Required'
-          },
-          
-            {
-              pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-              message: `Should contain only alphabets and numbers.`
-            }
+          }
         ]}
         >
         <Input  placeholder='Enter GroupTech Code'/>
@@ -201,11 +196,7 @@ const getAllActiveDivision=() =>{
               required: true,
               message: 'GroupTech DescriptionIs Required'
             }
-            ,
-            {
-              pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-              message: `Should contain only alphabets and numbers.`
-            }
+            
           ]}
         >
         <Input placeholder='Enter GroupTech Description '/>
@@ -229,6 +220,7 @@ const getAllActiveDivision=() =>{
               message: 'Buyer Is Required'
             },
           ]}
+          
         >
          <Select defaultValue={userId.length>0 ?userId[0].buyerId:''} placeholder="Select Buyer">
          {buyerData.map((rec) => (
