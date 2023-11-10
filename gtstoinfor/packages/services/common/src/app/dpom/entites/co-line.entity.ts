@@ -17,36 +17,16 @@ export class COLineEntity {
 
     @Column('int', {
         nullable: true,
-        name: "division",
+        name: "line_item_no",
     })
-    division: number;
+    lineItemNo: number;
 
     @Column('varchar', {
         nullable: true,
-        name: "PCH",
-        length: 5
-    })
-    PCH: string;
-
-    @Column('int', {
-        nullable: true,
-        name: "facility",
-    })
-    facility: number;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "order_no",
+        name: "buyer_style",
         length: 15
     })
-    orderNo: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "customer_code",
-        length: 15
-    })
-    customerCode: string;
+    buyerStyle: string;
 
     @Column('varchar', {
         nullable: true,
@@ -57,93 +37,31 @@ export class COLineEntity {
 
     @Column('varchar', {
         nullable: true,
-        name: "item_desc",
-        length: 50
+        name: "co_number",
+        length: 15
     })
-    itemDesc: string;
-
-    @Column('int', {
-        nullable: true,
-        name: "order_qty",
-    })
-    orderQty: number;
+    coNumber: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "UOM",
-        length: 5
-    })
-    UOM: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "size",
-        length: 5
-    })
-    size: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "price",
+        name: "co_date",
         length: 10
     })
-    price: string;
+    coDate: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "currency",
-        length: 5
+        name: "status",
+        length: 15
     })
-    currency: string;
+    status: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "co_final_app_date",
+        name: "error_msg",
         length: 50
     })
-    coFinalAppDate: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "PCD",
-        length: 50
-    })
-    PCD: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "commision",
-        length: 50
-    })
-    commision: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "plan_no",
-        length: 50
-    })
-    planNo: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "plan_unit",
-        length: 50
-    })
-    planUnit: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "pay_terms",
-        length: 50
-    })
-    payTerms: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "pay_terms_desc",
-        length: 225
-    })
-    payTermsDesc: string;
+    errorMsg: string;
 
     @CreateDateColumn({
         name: 'created_at'

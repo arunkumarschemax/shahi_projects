@@ -48,6 +48,15 @@ export class DpomController {
         }
     }
 
+    @Post('/coLineCreationReq')
+    async coLineCreationReq(@Body() req: any) {
+        try {
+            return await this.dpomService.coLineCreationReq(req)
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
+
     @Post('/createCOline')
     async createCOline(@Body() req: any) {
         try {

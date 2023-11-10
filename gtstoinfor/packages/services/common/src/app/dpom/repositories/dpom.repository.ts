@@ -806,7 +806,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
 
-    async gatDataForColine(req: any): Promise<any[]> {
+    async getDataForColine(req: any): Promise<any[]> {
         const query = this.createQueryBuilder('d')
             .select(` d.po_number, d.po_and_line, d.po_line_item_number, d.style_number, d.size_description, d.size_qty, d.destination_country,d.color_desc, d.gross_price_fob, d.gac`)
             .where(` d.po_number ='${req.poNumber}' AND d.po_line_item_number ='${req.lineNumber}'`)

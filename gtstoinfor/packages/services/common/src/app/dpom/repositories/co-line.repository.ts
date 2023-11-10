@@ -16,7 +16,7 @@ export class COLineRepository extends Repository<COLineEntity> {
 
     async getCoLineData(req: coLineRequest): Promise<any[]> {
         const query = this.createQueryBuilder('co')
-            .select(`co.id,co.buyer_po,co.division,co.PCH,co.facility,co.order_no,co.customer_code,co.item_no,co.item_desc,co.order_qty,co.UOM,co.size,co.price,co.currency,co.co_final_app_date,co.PCD,co.commision,co.plan_no,co.plan_unit,co.pay_terms,co.pay_terms_desc,co.created_at,co.version_flag,co.is_active`)
+            .select(`co.id,co.buyer_po,co.line_item_no,co.co_number,co.item_no,co.created_at,co.version_flag,co.is_active`)
         if (req.buyerPo !== undefined) {
             query.andWhere(`co.buyer_po ='${req.buyerPo}'`)
         }
@@ -24,7 +24,7 @@ export class COLineRepository extends Repository<COLineEntity> {
             query.andWhere(`co.item_no ='${req.itemNo}'`)
         }
         if (req.orderNo !== undefined) {
-            query.andWhere(`co.order_no ='${req.orderNo}'`)
+            query.andWhere(`co.co_number ='${req.orderNo}'`)
         }
         return await query.getRawMany();
     }
@@ -45,9 +45,17 @@ export class COLineRepository extends Repository<COLineEntity> {
     }
     async getOrderNumber(): Promise<any[]> {
         const query = this.createQueryBuilder('co')
-            .select(`co.id,co.order_no`)
+            .select(`co.id,co.co_number`)
             .groupBy(`co.order_no`)
         //  .where(`order_no <> NULL`)
+        return await query.getRawMany();
+    }
+
+    async getDataforCOLineCreation(): Promise<any[]> {
+        const query = this.createQueryBuilder('co')
+            .select(`co.id, co.buyer_po, co.line_item_no, co.item_no`)
+            .where(` status != 'Success' `)
+            .orderBy(` created_at`, 'DESC')
         return await query.getRawMany();
     }
 }

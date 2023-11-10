@@ -163,7 +163,7 @@ export function OrderAcceptance() {
         }
         service.getFactoryReportData(req).then((res) => {
             if (res.data) {
-                const unacceptedData = res.data.filter(item => item.DPOMLineItemStatus === "Unaccepted" || item.DPOMLineItemStatus === "Accepted" && item.customerOrder == null);
+                const unacceptedData = res.data.filter(item => item.DPOMLineItemStatus === "Unaccepted" || item.DPOMLineItemStatus === "Accepted" && item.customerOrder == null && item.docType == 'ZP26');
                 setData(unacceptedData)
                 Finish(data)
                 // message.success(res.internalMessage)
@@ -184,9 +184,9 @@ export function OrderAcceptance() {
         req.size = ''
         req.price = ''
         req.currency = ''
-        service.createCOline(req).then((res) => {
+        service.coLineCreationReq(req).then((res) => {
             if (res.status) {
-                getOrderAcceptanceData()
+                // getOrderAcceptanceData()
                 message.success(res.internalMessage)
             } else (
                 message.error(res.internalMessage)

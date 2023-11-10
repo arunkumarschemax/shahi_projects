@@ -25,6 +25,7 @@ import { FactoryUpdate } from './dto/factory-update.req';
 import { PDFFileInfoEntity } from './entites/pdf-file-info.entity';
 import { COLineRepository } from './repositories/co-line.repository';
 import puppeteer from 'puppeteer';
+import { COLineEntity } from './entites/co-line.entity';
 const fs = require('fs');
 const path = require('path')
 const { Builder, Browser, By, Key, until } = require('selenium-webdriver');
@@ -244,43 +245,29 @@ export class DpomService {
         }
     }
 
+    async coLineCreationReq(req: any): Promise<CommonResponseModel> {
+        const entity = new COLineEntity()
+        entity.buyerPo = req.purchaseOrderNumber;
+        entity.lineItemNo = req.poLineItemNumber;
+        entity.itemNo = req.itemNo
+        entity.status = 'Open';
+        entity.createdUser = 'Admin';
+        const save = await this.coLineRepository.save(entity);
+        if (save) {
+            return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
+        } else {
+            return new CommonResponseModel(false, 1, 'CO-Line request failed')
+        }
+    }
+
+    // @Cron('*/5 * * * *')
     async createCOline(req: any): Promise<CommonResponseModel> {
         let driver = await new Builder().forBrowser(Browser.CHROME).build();
         try {
-            const data = await this.dpomRepository.gatDataForColine({ poNumber: req.purchaseOrderNumber, lineNumber: req.poLineItemNumber })
-            const firstTenChars = data[0].color_desc.substring(0, 10);
-            const lastFourDigits = data[0].style_number.slice(-4)
-            const gacDate = new Date(data[0].gac); // Parse the GAC date
-            // Calculate the date 7 days before the GAC date
-            const sevenDaysBeforeGAC = new Date(gacDate);
-            sevenDaysBeforeGAC.setDate(gacDate.getDate() - 7);
-            // Format the result as 'DD/MM/YYYY'
-            const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBeforeGAC)
-            const coLine = new CoLineRequest()
-            coLine.buyerPo = data[0].po_number + '-' + data[0].po_line_item_number
-            coLine.exFactoryDate = exFactoryDate
-            coLine.deliveryDate = moment(data[0].gac).format("DD/MM/YYYY")
-            const destinationsArr: Destinations[] = []
-            const destinations = new Destinations()
-            destinations.name = data[0].destination_country
-            const colorsArr: Colors[] = []
-            const colors = new Colors()
-            colors.name = firstTenChars + ' ' + lastFourDigits
-            const sizesArr: Sizes[] = []
-
-            for (let item of data) {
-                const sizes = new Sizes()
-                sizes.name = item.size_description
-                sizes.qty = item.size_qty
-                sizes.price = item.gross_price_fob
-                sizesArr.push(sizes)
+            const poDetails = await this.coLineRepository.getDataforCOLineCreation();
+            if (!poDetails.length) {
+                return new CommonResponseModel(false, 0, 'No CO-Line creation requests')
             }
-            colors.sizes = sizesArr
-            colorsArr.push(colors)
-            destinations.colors = colorsArr
-            destinationsArr.push(destinations)
-            coLine.destinations = destinationsArr
-
             await driver.get('http://intranetn.shahi.co.in:8080/ShahiExportIntranet/subApp?slNo=2447#');
 
             await driver.findElement(By.id('username')).sendKeys('60566910');
@@ -295,115 +282,178 @@ export class DpomService {
             await driver.switchTo().window(windowHandles[1]);
             const frame = await driver.findElement(By.id('mainFrame'));
             await driver.switchTo().frame(frame)
-            const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
-            const allApps = await apps.findElements(By.tagName('span'));
-            for (const app of allApps) {
-                if ((await app.getAttribute('innerText')).includes('Style Orders')) {
-                    await driver.executeScript('arguments[0].click();', app);
-                    break;
+            for (const po of poDetails) {
+                const data = await this.dpomRepository.getDataForColine({ poNumber: po.buyer_po, lineNumber: po.line_item_no })
+                const result = data[0].color_desc.split('/')[0]
+                const firstTenChars = result.substring(0, 10);
+                const lastFourDigits = data[0].style_number.slice(-4)
+                const gacDate = new Date(data[0].gac); // Parse the GAC date
+                // Calculate the date 7 days before the GAC date
+                const sevenDaysBeforeGAC = new Date(gacDate);
+                sevenDaysBeforeGAC.setDate(gacDate.getDate() - 7);
+                // Format the result as 'DD/MM/YYYY'
+                const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBeforeGAC)
+                const coLine = new CoLineRequest()
+                coLine.buyerPo = data[0].po_number + '-' + data[0].po_line_item_number
+                coLine.exFactoryDate = exFactoryDate
+                coLine.deliveryDate = moment(data[0].gac).format("DD/MM/YYYY")
+                const destinationsArr: Destinations[] = []
+                const destinations = new Destinations()
+                destinations.name = data[0].destination_country
+                const colorsArr: Colors[] = []
+                const colors = new Colors()
+                colors.name = firstTenChars + ' ' + lastFourDigits
+                const sizesArr: Sizes[] = []
+
+                for (let item of data) {
+                    const sizes = new Sizes()
+                    sizes.name = item.size_description
+                    sizes.qty = item.size_qty
+                    sizes.price = item.gross_price_fob
+                    sizesArr.push(sizes)
                 }
-            }
-            await driver.findElement(By.id('styleid2H')).sendKeys(req.itemNo);
-            await driver.wait(until.elementLocated(By.id('CreateOrderID')))
-            await driver.sleep(3000)
-            await driver.findElement(By.id('CreateOrderID')).click();
-            await driver.wait(until.elementLocated(By.id('bpo')))
-            await driver.findElement(By.id('bpo')).sendKeys(coLine.buyerPo);
-            // await driver.findElement(By.id('getNikeData')).click();
-            await driver.wait(until.elementLocated(By.name('dojo.EXFACTORYDATE')));
-            await driver.findElement(By.name('dojo.EXFACTORYDATE')).clear();
-            await driver.findElement(By.name('dojo.EXFACTORYDATE')).sendKeys(coLine.exFactoryDate);
-            await driver.wait(until.elementLocated(By.name('dojo.delydt')));
-            await driver.findElement(By.name('dojo.delydt')).sendKeys(coLine.deliveryDate);
+                colors.sizes = sizesArr
+                colorsArr.push(colors)
+                destinations.colors = colorsArr
+                destinationsArr.push(destinations)
+                coLine.destinations = destinationsArr
 
-            await driver.sleep(10000)
-            for (let dest of coLine.destinations) {
-                const colorsContainer = await driver.wait(until.elementLocated(By.xpath('//*[@id="COContainer"]')));
-                const colorsTabs = await colorsContainer.findElements(By.tagName('span'));
-                for (const tab of colorsTabs) {
-                    if ((await tab.getAttribute('innerText')) == dest.name) {
-                        await driver.executeScript('arguments[0].click();', tab);
-                        for (let [colorIndex, color] of dest.colors.entries()) {
-                            for (let [sizeIndex, size] of color.sizes.entries()) {
-                                if (colorIndex === 0) {
-                                    // Find all the labels in the second row.
-                                    await driver.wait(until.elementLocated(By.xpath("//tbody/tr[2]/td/div")))
-                                    const labelElements = await driver.findElements(By.xpath("//tbody/tr[2]/td/div"));
+                const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
+                const allApps = await apps.findElements(By.tagName('span'));
+                for (const app of allApps) {
+                    if ((await app.getAttribute('innerText')).includes('Style Orders')) {
+                        await driver.executeScript('arguments[0].click();', app);
+                        break;
+                    }
+                }
+                await driver.wait(until.elementLocated(By.id('styleid2H')))
+                await driver.findElement(By.id('styleid2H')).sendKeys(po.item_no);
+                await driver.wait(until.elementLocated(By.id('CreateOrderID')))
+                await driver.sleep(3000)
+                await driver.findElement(By.id('CreateOrderID')).click();
+                await driver.wait(until.elementLocated(By.id('bpo')))
+                await driver.findElement(By.id('bpo')).sendKeys(coLine.buyerPo);
+                // await driver.findElement(By.id('getNikeData')).click();
+                await driver.wait(until.elementLocated(By.name('dojo.EXFACTORYDATE')));
+                await driver.findElement(By.name('dojo.EXFACTORYDATE')).clear();
+                await driver.findElement(By.name('dojo.EXFACTORYDATE')).sendKeys(coLine.exFactoryDate);
+                await driver.wait(until.elementLocated(By.name('dojo.delydt')));
+                await driver.findElement(By.name('dojo.delydt')).sendKeys(coLine.deliveryDate);
 
-                                    // Find all the input fields in the first row.
-                                    const inputElements = await driver.findElements(By.xpath("//tbody/tr[1]/td/div/input[@name='salespsizes']"));
+                await driver.sleep(10000)
+                for (let dest of coLine.destinations) {
+                    const colorsContainer = await driver.wait(until.elementLocated(By.xpath('//*[@id="COContainer"]')));
+                    const colorsTabs = await colorsContainer.findElements(By.tagName('span'));
+                    for (const tab of colorsTabs) {
+                        if ((await tab.getAttribute('innerText')) == dest.name) {
+                            await driver.executeScript('arguments[0].click();', tab);
+                            for (let [colorIndex, color] of dest.colors.entries()) {
+                                for (let [sizeIndex, size] of color.sizes.entries()) {
+                                    if (colorIndex === 0) {
+                                        // Find all the labels in the second row.
+                                        await driver.wait(until.elementLocated(By.xpath("//tbody/tr[2]/td/div")))
+                                        let labelElements: any[] = await driver.findElements(By.xpath("//tbody/tr[2]/td/div"));
+                                        const fileteredElements: any[] = [];
+                                        for (const labelElement of labelElements) {
+                                            const ele = (await labelElement.getText())?.trim();
+                                            ele.length > 0 ? fileteredElements.push(labelElement) : '';
+                                        }
 
-                                    // Create a map of size labels to input fields.
-                                    const sizeToInputMap = {};
-                                    for (let i = 0; i < labelElements.length; i++) {
-                                        const label = (await labelElements[i].getText()).trim().toLowerCase(); // Remove leading/trailing spaces
-                                        if (label.length)
-                                            sizeToInputMap[label] = inputElements[i];
+                                        // Find all the input fields in the first row.
+                                        const inputElements = await driver.findElements(By.xpath("//tbody/tr[1]/td/div/input[@name='salespsizes']"));
+                                        // console.log(inputElements, '**********')
+                                        // Create a map of size labels to input fields.
+                                        const sizeToInputMap = {};
+                                        for (let i = 0; i < fileteredElements.length; i++) {
+                                            const label = (await fileteredElements[i].getText()).trim().toUpperCase(); // Remove leading/trailing spaces
+                                            if (label.length)
+                                                sizeToInputMap[label] = inputElements[i];
+                                        }
+                                        const inputField = sizeToInputMap[size.name.trim().toUpperCase()];
+
+                                        if (inputField) {
+                                            // Clear the existing value (if any) and fill it with the new price.
+                                            await inputField.clear();
+                                            await inputField.sendKeys(size.price);
+                                        }
                                     }
-                                    const inputField = sizeToInputMap[size.name.trim().toLowerCase()];
-
-                                    if (inputField) {
-                                        // Clear the existing value (if any) and fill it with the new price.
-                                        await inputField.clear();
-                                        await inputField.sendKeys(size.price);
-                                    }
+                                    const inputId = `${size.name}:${color.name}:${dest.name}`.replace(/\*/g, '');
+                                    await driver.wait(until.elementLocated(By.id(inputId)))
+                                    await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                                 }
-                                const inputId = `${size.name}:${color.name}:${dest.name}`.replace(/\*/g, '');
-                                await driver.wait(until.elementLocated(By.id(inputId)))
-                                await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                             }
-                        }
-                    } else if ((await tab.getAttribute('innerText')) == 'ASSORTED') {
-                        await driver.executeScript('arguments[0].click();', tab);
-                        for (let [colorIndex, color] of dest.colors.entries()) {
-                            for (let [sizeIndex, size] of color.sizes.entries()) {
-                                if (colorIndex === 0) {
-                                    // Find all the labels in the second row.
-                                    await driver.wait(until.elementLocated(By.xpath("//tbody/tr[2]/td/div")))
-                                    const labelElements = await driver.findElements(By.xpath("//tbody/tr[2]/td/div"));
+                        } else if ((await tab.getAttribute('innerText')) == 'ASSORTED') {
+                            await driver.executeScript('arguments[0].click();', tab);
+                            for (let [colorIndex, color] of dest.colors.entries()) {
+                                for (let [sizeIndex, size] of color.sizes.entries()) {
+                                    if (colorIndex === 0) {
+                                        // Find all the labels in the second row.
+                                        await driver.wait(until.elementLocated(By.xpath("//tbody/tr[2]/td/div")))
+                                        let labelElements: any[] = await driver.findElements(By.xpath("//tbody/tr[2]/td/div"));
+                                        const fileteredElements: any[] = [];
+                                        for (const labelElement of labelElements) {
+                                            const ele = (await labelElement.getText())?.trim();
+                                            ele.length > 0 ? fileteredElements.push(labelElement) : '';
+                                        }
 
-                                    // Find all the input fields in the first row.
-                                    const inputElements = await driver.findElements(By.xpath("//tbody/tr[1]/td/div/input[@name='salespsizes']"));
+                                        // Find all the input fields in the first row.
+                                        const inputElements = await driver.findElements(By.xpath("//tbody/tr[1]/td/div/input[@name='salespsizes']"));
 
-                                    // Create a map of size labels to input fields.
-                                    const sizeToInputMap = {};
-                                    for (let i = 0; i < labelElements.length; i++) {
-                                        const label = (await labelElements[i].getText()).trim().toUpperCase(); // Remove leading/trailing spaces
-                                        console.log(label, 'LLLLLLLLLLL');
-                                        if (label.length)
-                                            sizeToInputMap[label] = inputElements[i];
-                                        console.log(sizeToInputMap, 'SSSSSSSSS')
+                                        // Create a map of size labels to input fields.
+                                        const sizeToInputMap = {};
+                                        for (let i = 0; i < fileteredElements.length; i++) {
+                                            const label = (await fileteredElements[i].getText()).trim().toUpperCase(); // Remove leading/trailing spaces
+                                            if (label.length)
+                                                sizeToInputMap[label] = inputElements[i];
+                                        }
+                                        const inputField = sizeToInputMap[size.name.trim().toUpperCase()];
+
+                                        if (inputField) {
+                                            // Clear the existing value (if any) and fill it with the new price.
+                                            await inputField.clear();
+                                            await inputField.sendKeys(size.price);
+                                        }
                                     }
-                                    const inputField = sizeToInputMap[size.name.trim().toUpperCase()];
-
-                                    if (inputField) {
-                                        // Clear the existing value (if any) and fill it with the new price.
-                                        await inputField.clear();
-                                        await inputField.sendKeys(size.price);
-                                    }
+                                    const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
+                                    await driver.wait(until.elementLocated(By.id(inputId)))
+                                    await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                                 }
-                                const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
-                                await driver.wait(until.elementLocated(By.id(inputId)))
-                                await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                             }
                         }
                     }
                 }
-
+                await driver.sleep(10000)
+                const element = await driver.findElement(By.id('OrderCreateID')).click();
+                await driver.wait(until.alertIsPresent(), 10000);
+                // Switch to the alert and accept it (click "OK")
+                const alert = await driver.switchTo().alert();
+                await alert.accept();
+                if (await this.isAlertPresent(driver)) {
+                    const alert = await driver.switchTo().alert();
+                    const alertText = await alert.getText();
+                    console.log('Alert Text:', alertText);
+                    const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'failed', errorMsg: alertText });
+                    await alert.accept();
+                    await driver.refresh();
+                } else {
+                    await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[7]')), 10000);
+                    const coDateElement = await driver.findElements(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr/td[6]'));
+                    const coDate = await coDateElement.getAttribute('innerText');
+                    const coNoElement = await driver.findElements(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr/td[7]'));
+                    const coNo = await coNoElement.getAttribute('innerText');
+                    if (coNo) {
+                        const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { coNumber: coNo, status: 'Success', coDate: coDate });
+                        await driver.refresh();
+                    } else {
+                        const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed' });
+                        await driver.refresh();
+                    }
+                }
             }
-            await driver.sleep(10000)
-            // const element = await driver.findElement(By.id('OrderCreateID')).click();
-            // await driver.wait(until.elementIsVisible(element), 10000);
-            // await driver.switchTo().alert().accept();
-            // if (await this.isAlertPresent(driver)) {
-            //     const alert = await driver.switchTo().alert();
-            //     const alertText = await alert.getText();
-            //     console.log('Alert Text:', alertText);
-            // }
             return new CommonResponseModel(true, 1, `COline created successfully`)
         } catch (err) {
             console.log(err);
-            throw err
+            return new CommonResponseModel(false, 0, err)
         }
     }
 
