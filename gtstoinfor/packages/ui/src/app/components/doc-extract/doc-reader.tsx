@@ -4,7 +4,7 @@ import { Button, Card, Col, Form, FormInstance, Radio, Row, Select, Spin, Upload
 import { useState } from 'react';
 import { pdfjs } from 'react-pdf';
 import loadingSymbol from '../../../assets/images/1_yE-S7HG0Rg-ACAcnjvKf5Q.gif';
-import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractEfl, extractMsn, extractExpeditors, extractMaersk, extractNagel, extractOocl, extractPDFDataToLinesData, extractFredexfrieght, extractFredexCourier, extractDhlCourierfrieght, extractDhlairduty, extractTotalTransport, extractSanjayForwarder, extractOneTime, extractTiger, extractOia, extractTextiles, } from './schemax-ai-docx-pdf';
+import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractEfl, extractMsn, extractExpeditors, extractMaersk, extractNagel, extractOocl, extractPDFDataToLinesData, extractFredexfrieght, extractFredexCourier, extractDhlCourierfrieght, extractDhlairduty, extractTotalTransport, extractSanjayForwarder, extractOneTime, extractTiger, extractOia, extractTextiles,extractedUnicorn, extractedUnique, extractedTvs, extractedVelogicIndia, extracteWiderlogistics } from './schemax-ai-docx-pdf';
 import { extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNagelInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractOoclInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 ;
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
@@ -127,6 +127,30 @@ export const DocReader = (props: DocReaderProps) => {
                         processedData = await extractTextiles(pdfData);
                         console.log('PDF DATA TEXTILES:', processedData);
                         break;
+                case VendorNameEnum.extractedUnicorn:
+                        processedData = await extractedUnicorn(pdfData);
+                        console.log('UNICORN:', processedData);
+                        break;
+                case VendorNameEnum.extractedUnique:
+                            processedData = await extractedUnique(pdfData);
+                            console.log('UNIQUE:', processedData);
+                            break;
+                case VendorNameEnum.extractedTvs:
+                                processedData = await extractedTvs(pdfData);
+                                console.log('TVS:', processedData);
+                                break;
+                // case VendorNameEnum.extractedUnitedLiner:
+                //                 processedData = await extractedUnitedLiner(pdfData);
+                //                 console.log('UNITED LINER:', processedData);
+                //                 break;
+                  case VendorNameEnum.extractedVelogicIndia:
+                                processedData = await extractedVelogicIndia(pdfData);
+                                console.log('UNITED LINER:', processedData);
+                                break;
+                   case VendorNameEnum.extracteWiderlogistics:
+                                processedData = await extracteWiderlogistics(pdfData);
+                                console.log('UNITED LINER:', processedData);
+                                break;
                 // case VendorNameEnum.extractedEfl:
                 //     {
                 //         const isScannedPdf = await checkIsScannedPdf(pdfData)

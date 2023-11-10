@@ -8,7 +8,7 @@ import { ColumnType } from "antd/es/table";
 import { ServiceFilterDto, StatusEnumDisplay } from "@xpparel/shared-models";
 import { PricesService } from "@xpparel/shared-services";
 
-function ScanDetailView() {
+export const ScanDetailView=()=> {
 
   const navigate = useNavigate();
   const rowData = useLocation();

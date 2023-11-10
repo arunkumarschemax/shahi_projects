@@ -9,7 +9,7 @@ import * as XLSX from 'xlsx';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-const InvoiceReport = () => {
+export const InvoiceReport = () => {
     const [formData, setFormData] = useState<any>([]);
     const [selectedVendors, setSelectedVendors] = useState<string[]>([]);
     const [filteredData, setFilteredData] = useState<any>([]);

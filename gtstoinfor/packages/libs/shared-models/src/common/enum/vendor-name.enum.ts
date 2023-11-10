@@ -34,6 +34,13 @@ export enum VendorNameEnum {
 
 
 
+    extractedUnicorn="UNICORN",
+    extractedUnique="UNIQUE",
+    extractedTvs="TVS",
+    // extarctedUnitedLiner='UNITED LINER'
+    extractedVelogicIndia="VELOGIC INDIA",
+    extracteWiderlogistics="WIDER LOGISTICS"
+    
 
     
 
