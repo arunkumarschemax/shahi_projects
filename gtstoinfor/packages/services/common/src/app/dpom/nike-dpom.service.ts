@@ -434,19 +434,19 @@ export class DpomService {
                     console.log('Alert Text:', alertText);
                     const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'failed', errorMsg: alertText });
                     await alert.accept();
-                    await driver.refresh();
+                    await driver.navigate().refresh();
                 } else {
                     await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[7]')), 10000);
-                    const coDateElement = await driver.findElements(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr/td[6]'));
+                    const coDateElement = await driver.findElement(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr/td[6]'));
                     const coDate = await coDateElement.getAttribute('innerText');
-                    const coNoElement = await driver.findElements(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr/td[7]'));
+                    const coNoElement = await driver.findElement(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr/td[7]'));
                     const coNo = await coNoElement.getAttribute('innerText');
                     if (coNo) {
                         const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { coNumber: coNo, status: 'Success', coDate: coDate });
-                        await driver.refresh();
+                        await driver.navigate().refresh();
                     } else {
                         const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed' });
-                        await driver.refresh();
+                        await driver.navigate().refresh();
                     }
                 }
             }

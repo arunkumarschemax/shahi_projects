@@ -55,7 +55,7 @@ export class COLineRepository extends Repository<COLineEntity> {
         const query = this.createQueryBuilder('co')
             .select(`co.id, co.buyer_po, co.line_item_no, co.item_no`)
             .where(` status != 'Success' `)
-            .orderBy(` created_at`, 'DESC')
+            .orderBy(` created_at`, 'ASC')
         return await query.getRawMany();
     }
 }
