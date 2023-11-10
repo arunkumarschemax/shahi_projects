@@ -235,8 +235,7 @@ export const PurchaseOrderfabricForm =() =>{
             console.log(fabricIndexVal)
             if(fabricIndexVal !== undefined){
                 fabricTableData[fabricIndexVal] = values;
-                fabricTableData[fabricIndexVal] = values;
-
+                // fabricTableData[fabricIndexVal] = values;
                 tableData = [...fabricTableData]
                 setFabricIndexVal(undefined)
             } else{
