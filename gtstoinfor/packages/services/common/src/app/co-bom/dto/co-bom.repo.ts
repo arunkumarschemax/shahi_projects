@@ -42,7 +42,7 @@ export class CoBomRepository extends Repository<CoBom>{
         fgitbo.rm_sku as rmSkuCode,fgitbo.fg_sku as fgSkuCode,
         rmsku.rm_sku_id as rmSkuId,rmsku.rm_item_id as rmitemId,
         rmsku.item_type as itemType,rmsku.rm_sku_code as rmSkuCode,rmsku.feature_code as featureCode,rmsku.status as Status,rmSku.item_code as rmitemCode,rmsku.feature_option_id,rmsku.option_group,rmsku.option_id,rmsku.option_value,
-        itsku.sku_code as fgSkuCode,itsku.status,itsku.po_number,itsku.po_line_number,itsku.item_code as fgSkuItemCode,itsku.size,itsku.color,itsku.destination,itsku.destination_id,itsku.color_id,
+        itsku.sku_code as fgSkuCode,itsku.status,itsku.po_number,itsku.po_line_number,itsku.item_code as fgItemCode,itsku.size,itsku.color,itsku.destination,itsku.destination_id,itsku.color_id,
         rmitem.is_imported_item as isImpItem `)
         .leftJoin(FgItemBom,'fgitbo','fgitbo.fgItemBomId= cobom.fgItemBomId')
         .leftJoin(RmSkus,'rmsku','rmsku.rm_sku_id = fgitbo.rm_sku_id')

@@ -44,32 +44,13 @@ export function Mopprint(props: MopprintProps) {
   }, []);
 
   useEffect(() => {
-    // if (props.invoiceId > 0) {
-    //   getPrint(props.invoiceId);
-    // }
   }, []);
 
   const getPrint = (invoiceId: number) => {
-    // const req = new InvoiceIdReq(invoiceId);
-    // invoiceService.getInvoiceItemByInvoiceId(req).then((res) => {
-    //   if (res.status) {
-    //     setTransferInfo([res.data[0]]);
-    //   } else {
-    //     message.error(res.internalMessage);
-    //   }
-    // });
+
   };
 
-  // const invoiceAmountSum = invoiceData.reduce((sum, item) => {
-  //   const amount = parseFloat(item.invoiceAmount.replace("₹", ""));
-  //   return sum + amount;
-  // }, 0);
 
-  // const taxAndSubtotalSum = taxAndSubtotalData.reduce((sum, item) => {
-  //   return sum + item.value;
-  // }, 0);
-
-  // const grandTotal = invoiceAmountSum + taxAndSubtotalSum;
 
   const handlePrint = () => {
     const invoiceContent = document.getElementById("print");
@@ -89,6 +70,9 @@ export function Mopprint(props: MopprintProps) {
     return  Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(amount);
 }
 console.log(props.mop,"mop")
+console.log(props.key,"key")
+
+
 
   return (
     <>
@@ -122,53 +106,82 @@ console.log(props.mop,"mop")
                   <p className="p-title"> RM Item Code</p>
                 </div> 
                 <div className="i-col" style={{width:"25%"}}>
-                  <p className="p-title"> RM tem Name</p>
+                  <p className="p-title"> RM Sku Code </p>
                 </div>
                 <div className="i-col" style={{width:"25%"}}>
                   <p className="p-title"> FG Item Code</p>
                 </div>
                 <div className="i-col" style={{width:"25%"}}>
-                  <p className="p-title"> FG item Name</p>
-                </div>
-                <div className="i-col" style={{width:"15%"}}>
-                  <p className="p-title">Description</p>
+                  <p className="p-title"> FG Sku Code</p>
                 </div>
                 <div className="i-col" style={{width:"15%"}}>
                   <p className="p-title">Quantity</p>
                 </div>
-               
-                {/* <div className="i-col w-15">
-                  <p className="p-title">Invoice Amount</p>
-                </div> */}
+        
               </div>
             </div>
+            
             <div className="i-table-body">
-              {props?.mop?.map((item, index) => (
+            
+              {props.key === "pop"
+                ? props?.pop?.map((item, index) => (
                 <div className="i-row" key={index}>
                   <div className="i-col w-20">
-                    <p>{item.coNumber}</p>
+                    <p style={{textAlign:"center"}}>{item.coNumber}</p>
                   </div>
                   <div className="i-col">
-                    <p>{item.coLineNumber}</p>
+                    <p style={{textAlign:"left",marginRight:60}}>{item.coLineNumber}</p>
                   </div>
                   <div className="i-col">
-                  <p>{item.rmitemCode}</p>
-                </div>
+                  <p style={{marginRight:20,textAlign:'center'}}>{item.rmitemCode}</p>
+                 </div>
+                  <div className="i-col">
+                    <p style={{textAlign:"right"}}>{item.rmSkuCode}</p>
+                  </div>
+                  <div className="i-col">
+                    <p style={{textAlign:"right",marginLeft:60}}>{item.fgItemCode}</p>
+                  </div>
+                  <div className="i-col w-15" >
+                    <p style={{textAlign:"right"}}>{item.fgSkuCode}</p>
+                  </div>
                   <div className="i-col w-15">
-                    <p style={{ textAlign:"right"}}></p>
-                  </div>
-                  <div className="i-col">
-                    <p> </p>
-                  </div>
-                  <div className="i-col w-15">
-                    <p style={{textAlign:"right"}}> </p>
+                    <p>{item.quantity}</p>
                   </div>
                   {/* <div className="i-col w-15">
                     <p>₹ {item.invAmount}</p>
                   </div> */}
                 </div>
+              ))
+              : props?.mop?.map((item, index) => (
+                <div className="i-row" key={index}>
+                <div className="i-col w-20">
+                  <p style={{textAlign:"center"}}>{item.coNumber}</p>
+                </div>
+                <div className="i-col">
+                  <p style={{textAlign:"left",marginRight:60}}>{item.coLineNumber}</p>
+                </div>
+                <div className="i-col">
+                <p style={{marginRight:20,textAlign:'center'}}>{item.rmitemCode}</p>
+               </div>
+                <div className="i-col">
+                  <p style={{textAlign:"right"}}>{item.rmSkuCode}</p>
+                </div>
+                <div className="i-col">
+                  <p style={{textAlign:"right",marginLeft:60}}>{item.fgItemCode}</p>
+                </div>
+                <div className="i-col w-15" >
+                  <p style={{textAlign:"right"}}>{item.fgSkuCode}</p>
+                </div>
+                <div className="i-col w-15">
+                  <p>{item.quantity}</p>
+                </div>
+                {/* <div className="i-col w-15">
+                  <p>₹ {item.invAmount}</p>
+                </div> */}
+              </div>
               ))}
             </div>
+            
             <div className="i-table-foot">
               <div className="i-row">
                 <div className="i-col w-75">

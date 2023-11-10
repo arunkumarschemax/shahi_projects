@@ -110,7 +110,7 @@ const getMOPData= () => {
     },
     {
       title: "FG item Code",
-      dataIndex: "fgSkuItemCode",
+      dataIndex: "fgItemCode",
       align:'center',
     
       sorter: (a, b) => a.fgSkuItemCode.localeCompare(b.fgSkuItemCode),
@@ -231,9 +231,9 @@ const getMOPData= () => {
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 8 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 2 }}>
-                    <Form.Item>
-                        <Button  onClick={showModal}>print</Button>
-                    </Form.Item>
+                    {/* <Form.Item>
+                        <Button  onClick={showModal}>Print</Button>
+                    </Form.Item> */}
                     </Col>
                   
                 </Row>
@@ -246,6 +246,7 @@ const getMOPData= () => {
                       scroll={{ x: true }}
                       bordered
                       pagination ={false}
+                      
                     />
                   </TabPane>
                       <TabPane key="pop" tab={<span style={{fontSize:'15px'}}><b>{`POP`}</b></span>}>
@@ -261,16 +262,14 @@ const getMOPData= () => {
             </Tabs>
           
              <Modal className='print-docket-modal'
-                 key={'modal'}
+                //  key={'modal'}
                  width={'60%'}
                  style={{ top: 30, alignContent: 'right' }}
                 visible={isModalOpen}
                 title={<React.Fragment>
                </React.Fragment>}
                 onCancel={handleCancel}
-                footer={[
-
-              ]}
+                
                 >
             < Mopprint mop={mopDataYes} pop={mopDataNo} key={key}/>        
             </Modal>

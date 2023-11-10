@@ -144,7 +144,7 @@ export const BuyersGeneralAttributeForm = () => {
     const [firstHalfData, secondHalfData] = splitData(attributes);
 
     return(
-        <Card title='Buyer General Settings' size='small' extra={<span><Button onClick={() => navigate('/global/buyers/buyers-view')} type={'primary'}>View</Button></span>}>
+        <Card title='Buyer General Settings' extra={<span><Button onClick={() => navigate('/global/buyers/buyers-view')} type={'primary'}>View</Button></span>}>
             {
                 attributes.length <= 10 ? (<>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 18 }}>
