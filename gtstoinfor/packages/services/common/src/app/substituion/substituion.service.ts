@@ -80,10 +80,10 @@ export class SubstituionService{
         }
     }
 
-    async getSubstitution (req:fgItemIdReq):Promise<SubResponseModel>{
+    async getSubstitution (req?:fgItemIdReq):Promise<SubResponseModel>{
         try{
           const getdata = await this.substitutionrepo.getSubstitution(req)
-          console.log(getdata,"tttt")
+          // console.log(getdata,"getdata")
           const DataMap = new Map<string, FgDataModel>();
           for (const res of getdata) {
             if (!DataMap.has(res.fgItemId)) {
@@ -91,11 +91,11 @@ export class SubstituionService{
               
               DataMap.set (res.fgItemId,new FgDataModel(res.substituionId,res.fgItemCode,res.fgItemId,res.rmItemCode,res.rmItemId,res.fgSku,res.fgSkuId,res.rmSku,res.rmSkuId,res.consumption,res.itemTypeId,res.itemGroupId,res.itemType,res.isActive,[]))
               //  DataMap.set(res.fgItemId, new RmDataModel(res.rmItemId,res.itemType,res.rmSku,res.featureCode,res.status,res.itemCode,res.featureOptionId,res.optionGroup,res.optionId,re));
-              console.log( res.fgItemId,'service item id');
+              // console.log( res.fgItemId,'service item id');
         
             }
              const RmSku = DataMap.get(res.fgItemId)?.rmData;
-             console.log( RmSku,'service item id/ x`out sidex');
+            //  console.log( RmSku,'service item id/ x`out sidex');
             if (RmSku) {
               // const data1 = new RmDataModel(featureCode,res.status,res.itemCode,res.featureOptionId,res.optionGroup,res.optionId,re
               const data1 = new RmDataModel(
@@ -115,7 +115,7 @@ export class SubstituionService{
           }
         
           let ListArray: FgDataModel[] = Array.from(DataMap.values());
-          console.log(ListArray,'service');
+          // console.log(ListArray,'service');
         
           if(getdata.length>0){
       
@@ -131,4 +131,20 @@ export class SubstituionService{
           throw err
         }
     }
+
+    async getFgSku(req?:fgItemIdReq):Promise<CommonResponseModel>{
+      try{
+        const getData = await this.substitutionrepo.getFgSku(req)
+        // console.log(getData,'dara');
+        
+        if(getData ){
+          return new CommonResponseModel(true,1,'Data retreived',getData)
+        } else{
+          return new CommonResponseModel(false,0,'No data found')
+        }
+    
+      } catch(err){
+        throw err
+      }
+    }  
 }

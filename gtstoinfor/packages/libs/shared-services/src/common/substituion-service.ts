@@ -12,7 +12,12 @@ export class SubstitutionService extends CommonAxiosService{
     }
 
     async getSubstitution(req?:fgItemIdReq):Promise<SubResponseModel>{
-        console.log(req,"88888888888888")
+        // console.log(req,"88888888888888")
         return this.axiosPostCall(this.URL + '/getSubstitution',req)
+    }
+
+    async getFgSku(req?:fgItemIdReq):Promise<SubResponseModel>{
+        // console.log(req,"88888888888888")
+        return this.axiosPostCall(this.URL + '/getFgSku',req)
     }
 }
