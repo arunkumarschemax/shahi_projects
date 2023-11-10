@@ -48,7 +48,7 @@ export class RacksService {
     try {
       const record = await this.repository.findOne({ where: { rackId: req.rackId } });
       await this.repository.update({ rackId: req.rackId }, { isActive: !record.isActive });
-      const internalMessage: string = !record.isActive ? "Deactivated Successfully" : "Activated Sucessfully"
+      const internalMessage: string = !record.isActive ? "Activated Sucessfully" : "DeActivated Sucessfully"
       return new CommonResponseModel(true, 6876, internalMessage)
     } catch (error) {
       return new CommonResponseModel(false, 0, error)

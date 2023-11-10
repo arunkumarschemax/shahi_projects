@@ -4,6 +4,6 @@ import { RacksEntity } from "./rack.entity";
 
 
 @Injectable()
-export class StyleRepo extends Repository<RacksEntity> {
+export class RacksRepo extends Repository<RacksEntity> {
     
 }
