@@ -156,7 +156,7 @@ const RangeGrid = () => {
       title: 'S No',
       key: 'sno',
       // width: '70px',
-      
+      align:'center',
       responsive: ['sm'],
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
@@ -166,10 +166,12 @@ const RangeGrid = () => {
         // width:'60px',
         sorter: (a, b) => a.rangeCode?.localeCompare(b.rangeCode),
       ...getColumnSearchProps("rangeCode"),
+      align:'center'
       },
       {
         title: "Range Description",
         dataIndex: "rangeDescription",
+        align:'center',
         // width:'60px',
         sorter: (a, b) => a.rangeDescription?.localeCompare(b.rangeDescription),
       ...getColumnSearchProps("rangeDescription"),
@@ -177,6 +179,7 @@ const RangeGrid = () => {
     {
       title: 'Status',
       dataIndex: 'isActive',
+      align:'center',
        // width:'80px',
       render: (isActive, rowData) => (
         <>
@@ -254,7 +257,7 @@ const RangeGrid = () => {
   return (
       <>
       <Card title={<span >Range</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+    style={{textAlign:'left'}} headStyle={{ border: 0 }} 
     extra={<Link to='/masters/range/range-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >

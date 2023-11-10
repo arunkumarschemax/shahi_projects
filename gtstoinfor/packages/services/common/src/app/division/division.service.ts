@@ -35,7 +35,6 @@ export class DivisionService {
       }
 
       async createDivision(divisionDto: DivisionDTO, isUpdate: boolean): Promise<DivisionResponseModel> {
-        console.log(divisionDto,'nnnnnh');
         
         try {
           let previousValue
@@ -72,10 +71,8 @@ export class DivisionService {
            const userName = isUpdate? saveddivisionDto.updatedUser :saveddivisionDto.createdUser;
           //  const newLogDto = new LogsDto(1,name, 'division', savedCurrencyDto.currencyId, true, displayValue,userName,previousValue,presentValue)
           //  let res = await this.logService.createLog(newLogDto);
-          //  console.log(res);
            return response
           } else {
-            //return new InformationMessageError(11106, "State saved but issue while transforming into DTO");
             throw new DivisionResponseModel(false,11106,'division saved but issue while transforming into DTO');
           }
         } catch (error) {

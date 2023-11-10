@@ -48,7 +48,7 @@ export function  RangeForm (props: FormProps) {
   };
 
   return (
-    <Card title={<span >Range Master</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={props.isUpdate==true?"":<Link to='/masters/range/range-grid' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
+    <Card title={<span >Range Master</span>} style={{textAlign:'left'}} headStyle={{ border: 0 }} extra={props.isUpdate==true?"":<Link to='/masters/range/range-grid' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
       <Form form={form } layout={'vertical'} initialValues={props.RangeData} name="control-hooks" onFinish={saveData}  >   
       <Form.Item name="id" style={{display:"none"}} >
         <Input hidden/>
