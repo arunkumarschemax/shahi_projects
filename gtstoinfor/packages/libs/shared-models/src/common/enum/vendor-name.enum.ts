@@ -24,8 +24,13 @@ export enum VendorNameEnum {
     extractedFredexFrieght="FREDEX FRIEGHT",
     extractedFredexCourier="FREDEX  COURIER",
     extractedDhlairduty="DHL AIR DUTY",
-
-
+    extractedUnicorn="UNICORN",
+    extractedUnique="UNIQUE",
+    extractedTvs="TVS",
+    // extarctedUnitedLiner='UNITED LINER'
+    extractedVelogicIndia="VELOGIC INDIA",
+    extracteWiderlogistics="WIDER LOGISTICS"
+    
 
     
 
