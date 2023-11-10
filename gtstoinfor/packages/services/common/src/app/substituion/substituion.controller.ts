@@ -24,14 +24,14 @@ export class SubstituionController{
         }
     }
 
-    // @Post('/getSubstitution')
-    // @ApiBody({type:SubstituionModel})
-    // async getSubstitution(@Body() req:any):Promise<CommonResponseModel>{
-    //     try{
-    //         // console.log(req,'controller')
-    //         return await this.substituionService.getSubstitution(req)
-    //     }catch(err){
-    //         return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
-    //     }
-    // }
+    @Post('/getSubstitution')
+    @ApiBody({type:SubstituionModel})
+    async getSubstitution(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            console.log(req,'controller')
+            return await this.substituionService.getSubstitution(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
 }
