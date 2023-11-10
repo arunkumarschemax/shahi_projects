@@ -12,6 +12,10 @@ export class RackPositionDTO {
     positionCode: number;
 
     @ApiProperty()
+    rackName: string;
+
+
+    @ApiProperty()
     isActive: boolean;
 
     @ApiProperty()

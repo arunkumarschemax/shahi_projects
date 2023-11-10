@@ -57,14 +57,6 @@ const RackView = () => {
 
     const Columns: any = [
         {
-            title: "Rack Name",
-            dataIndex: "rackName"
-        },
-        {
-            title: "Rack Code",
-            dataIndex: "rackCode"
-        },
-        {
             title: "Unit",
             dataIndex: "unit"
         },
@@ -121,6 +113,16 @@ const RackView = () => {
                 return record.isActive.toString() === value;
             },
         },
+        {
+            title: "Rack Code",
+            dataIndex: "rackCode"
+        },
+       
+        {
+            title: "Rack Name",
+            dataIndex: "rackName"
+        },
+        
         {
             title: "Status",
             dataIndex: "isActive",

@@ -1,3 +1,4 @@
+import { RackEnum } from "../../enum";
 
 
 export class RackDTO {
@@ -5,7 +6,7 @@ export class RackDTO {
     rackName: string;
     rackCode: number;
     unit: string;
-    rackType: string;
+    rackType: RackEnum;
     isActive?:boolean;
     versionFlag?:number;
     
@@ -13,7 +14,7 @@ export class RackDTO {
     constructor(rackId:number,rackName: string,
         rackCode: number,
         unit: string,
-        rackType: string,
+        rackType: RackEnum,
         isActive?:boolean,
         versionFlag?:number,
        
