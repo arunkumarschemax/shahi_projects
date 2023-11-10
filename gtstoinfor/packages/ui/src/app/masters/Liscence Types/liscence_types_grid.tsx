@@ -31,10 +31,14 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
     service.getAllLiscenceTypes().then(res => {
       if (res.status) {
         setLTData(res.data);
+        message.success(res.internalMessage)
+
       } else
        {
         setLTData([])
           AlertMessages.getErrorMessage(res.internalMessage);
+          message.error(res.internalMessage)
+
       }
     }).catch(err => {
       AlertMessages.getErrorMessage(err.message);
