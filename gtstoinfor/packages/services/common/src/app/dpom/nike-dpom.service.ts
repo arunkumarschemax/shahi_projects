@@ -260,14 +260,14 @@ export class DpomService {
         }
     }
 
-    // @Cron('*/5 * * * *')
+    @Cron('*/10 * * * *')
     async createCOline(req: any): Promise<CommonResponseModel> {
+        const poDetails = await this.coLineRepository.getDataforCOLineCreation();
+        if (!poDetails.length) {
+            return new CommonResponseModel(false, 0, 'No CO-Line creation requests')
+        }
         let driver = await new Builder().forBrowser(Browser.CHROME).build();
         try {
-            const poDetails = await this.coLineRepository.getDataforCOLineCreation();
-            if (!poDetails.length) {
-                return new CommonResponseModel(false, 0, 'No CO-Line creation requests')
-            }
             await driver.get('http://intranetn.shahi.co.in:8080/ShahiExportIntranet/subApp?slNo=2447#');
 
             await driver.findElement(By.id('username')).sendKeys('60566910');
@@ -339,7 +339,6 @@ export class DpomService {
                 await driver.findElement(By.name('dojo.EXFACTORYDATE')).sendKeys(coLine.exFactoryDate);
                 await driver.wait(until.elementLocated(By.name('dojo.delydt')));
                 await driver.findElement(By.name('dojo.delydt')).sendKeys(coLine.deliveryDate);
-
                 await driver.sleep(10000)
                 for (let dest of coLine.destinations) {
                     const colorsContainer = await driver.wait(until.elementLocated(By.xpath('//*[@id="COContainer"]')));
@@ -358,10 +357,8 @@ export class DpomService {
                                             const ele = (await labelElement.getText())?.trim();
                                             ele.length > 0 ? fileteredElements.push(labelElement) : '';
                                         }
-
                                         // Find all the input fields in the first row.
                                         const inputElements = await driver.findElements(By.xpath("//tbody/tr[1]/td/div/input[@name='salespsizes']"));
-                                        // console.log(inputElements, '**********')
                                         // Create a map of size labels to input fields.
                                         const sizeToInputMap = {};
                                         for (let i = 0; i < fileteredElements.length; i++) {
@@ -370,7 +367,6 @@ export class DpomService {
                                                 sizeToInputMap[label] = inputElements[i];
                                         }
                                         const inputField = sizeToInputMap[size.name.trim().toUpperCase()];
-
                                         if (inputField) {
                                             // Clear the existing value (if any) and fill it with the new price.
                                             await inputField.clear();
@@ -395,10 +391,8 @@ export class DpomService {
                                             const ele = (await labelElement.getText())?.trim();
                                             ele.length > 0 ? fileteredElements.push(labelElement) : '';
                                         }
-
                                         // Find all the input fields in the first row.
                                         const inputElements = await driver.findElements(By.xpath("//tbody/tr[1]/td/div/input[@name='salespsizes']"));
-
                                         // Create a map of size labels to input fields.
                                         const sizeToInputMap = {};
                                         for (let i = 0; i < fileteredElements.length; i++) {
@@ -407,7 +401,6 @@ export class DpomService {
                                                 sizeToInputMap[label] = inputElements[i];
                                         }
                                         const inputField = sizeToInputMap[size.name.trim().toUpperCase()];
-
                                         if (inputField) {
                                             // Clear the existing value (if any) and fill it with the new price.
                                             await inputField.clear();
@@ -435,6 +428,7 @@ export class DpomService {
                     const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'failed', errorMsg: alertText });
                     await alert.accept();
                     await driver.navigate().refresh();
+                    await driver.sleep(10000)
                 } else {
                     await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[7]')), 10000);
                     const coDateElement = await driver.findElement(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr/td[6]'));
@@ -444,9 +438,11 @@ export class DpomService {
                     if (coNo) {
                         const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { coNumber: coNo, status: 'Success', coDate: coDate });
                         await driver.navigate().refresh();
+                        await driver.sleep(10000)
                     } else {
                         const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed' });
                         await driver.navigate().refresh();
+                        await driver.sleep(10000)
                     }
                 }
             }
