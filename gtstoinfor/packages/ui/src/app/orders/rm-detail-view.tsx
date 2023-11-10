@@ -13,7 +13,7 @@ import { LiscenceTypeIdRequest } from "@project-management-system/shared-models"
 export interface Props {
   data: any
 }
-export function ItemCreationDetailView  (props: Props)  {
+export function RMDetailView  (props: Props)  {
 
     // const [page,setPage] = useState<number>(1);
     // const [sizeData, setSizeData] = useState<any[]>([])
@@ -26,7 +26,7 @@ export function ItemCreationDetailView  (props: Props)  {
 
       
     return(
-        <Card title={<span style={{ color: 'white' }}>Item Creation<span style={{color:'#0A93E1  '}}></span></span>}  headStyle={{ fontWeight: 'bold' }} extra={<Link to='/materialCreation/item-creation-view' ><span style={{color:'white'}} >
+        <Card title={<span style={{ color: 'white' }}>RM Creation<span style={{color:'#0A93E1 '}}></span></span>}  headStyle={{ fontWeight: 'bold' }} extra={<Link to='/materialCreation/rm-creation-view' ><span style={{color:'white'}} >
           <Button className='panel_button' >Back </Button>
            </span></Link>}>
             <span>      
@@ -112,4 +112,4 @@ export function ItemCreationDetailView  (props: Props)  {
   
     )
 }
-export default ItemCreationDetailView
+export default RMDetailView

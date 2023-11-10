@@ -99,9 +99,10 @@ const checkAccess = (buttonParam) => {
     service.getAllFgItems(req).then(res => {
       if (res.status) {
         setItemData(res.data);
-        
+        message.success(res.internalMessage)
       } else
        {
+        message.error(res.internalMessage)
         setItemData([])
           AlertMessages.getErrorMessage(res.internalMessage);
       }
@@ -118,6 +119,7 @@ const checkAccess = (buttonParam) => {
     service.getAllBrandDropDown().then(res=>{
         if(res.status){
             setBrand(res.data);
+            
         }else{
             AlertMessages.getErrorMessage(res.internalMessage)
         }
@@ -347,50 +349,50 @@ const cancelOrder =(val:any) =>{
         },        sortDirections: ['descend', 'ascend'],
 
       },
-      {
-        title: "Approve",
-        dataIndex: "approver",
-        render: (data) => {
-          return data ? data : "-";
-        },
-        sorter: (a, b) => {
-          const itemA = a.approver || ""; 
-          const itemB = b.approver || "";
+      // {
+      //   title: "Approve",
+      //   dataIndex: "approver",
+      //   render: (data) => {
+      //     return data ? data : "-";
+      //   },
+      //   sorter: (a, b) => {
+      //     const itemA = a.approver || ""; 
+      //     const itemB = b.approver || "";
       
-          return itemA.localeCompare(itemB);
-        },        sortDirections: ['descend', 'ascend'],
+      //     return itemA.localeCompare(itemB);
+      //   },        sortDirections: ['descend', 'ascend'],
 
-      },
-      {
-        title: "Production Merchant",
-        dataIndex: "pd_merchant",
-        render: (data) => {
-          return data ? data : "-";
-        },
-        sorter: (a, b) => {
-          const itemA = a.pd_merchant || ""; 
-          const itemB = b.pd_merchant || "";
+      // },
+      // {
+      //   title: "Production Merchant",
+      //   dataIndex: "pd_merchant",
+      //   render: (data) => {
+      //     return data ? data : "-";
+      //   },
+      //   sorter: (a, b) => {
+      //     const itemA = a.pd_merchant || ""; 
+      //     const itemB = b.pd_merchant || "";
       
-          return itemA.localeCompare(itemB);
-        },        
-        sortDirections: ['descend', 'ascend'],
+      //     return itemA.localeCompare(itemB);
+      //   },        
+      //   sortDirections: ['descend', 'ascend'],
 
-      },
-      {
-        title: "Sales Person",
-        dataIndex: "sale_person_id",
-        render: (data) => {
-          return data ? data : "-";
-        },
-        sorter: (a, b) => {
-          const itemA = a.sale_person_id || ""; 
-          const itemB = b.sale_person_id || "";
+      // },
+      // {
+      //   title: "Sales Person",
+      //   dataIndex: "sale_person_id",
+      //   render: (data) => {
+      //     return data ? data : "-";
+      //   },
+      //   sorter: (a, b) => {
+      //     const itemA = a.sale_person_id || ""; 
+      //     const itemB = b.sale_person_id || "";
       
-          return itemA.localeCompare(itemB);
-        } ,       
-        sortDirections: ['descend', 'ascend'],
+      //     return itemA.localeCompare(itemB);
+      //   } ,       
+      //   sortDirections: ['descend', 'ascend'],
 
-      },
+      // },
       {
         title: "Basic UOM",
         dataIndex: "uom",
@@ -612,8 +614,8 @@ const cancelOrder =(val:any) =>{
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
-                    <Form.Item label="Last Modified Date" name="orderConfirmedDate">
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }}  >
+                    <Form.Item label="Order Confirmation Date" name="orderConfirmedDate">
                     <RangePicker />
                     </Form.Item>
                      </Col>

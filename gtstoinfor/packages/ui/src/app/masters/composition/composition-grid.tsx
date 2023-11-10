@@ -32,8 +32,11 @@ const CompositionGrid = () => {
     service.getCompositionData().then(res => {
       if (res.status) {
         setLTData(res.data);
+        message.success(res.internalMessage)
+
       } else
        {
+        message.error(res.internalMessage)
         setLTData([])
           AlertMessages.getErrorMessage(res.internalMessage);
       }
