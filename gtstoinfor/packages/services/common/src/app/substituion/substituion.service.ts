@@ -146,5 +146,26 @@ export class SubstituionService{
       } catch(err){
         throw err
       }
+
+      
+    }  
+
+
+    async getRmSku(req?:fgItemIdReq):Promise<CommonResponseModel>{
+      try{
+        const getData = await this.substitutionrepo.getRmSku(req)
+        // console.log(getData,'dara');
+        
+        if(getData ){
+          return new CommonResponseModel(true,1,'Data retreived',getData)
+        } else{
+          return new CommonResponseModel(false,0,'No data found')
+        }
+    
+      } catch(err){
+        throw err
+      }
+
+      
     }  
 }
