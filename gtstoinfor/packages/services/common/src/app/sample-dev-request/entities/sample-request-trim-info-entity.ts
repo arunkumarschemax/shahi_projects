@@ -32,6 +32,12 @@ export class SampleRequestTriminfoEntity {
     })
     trimCode: string
 
+    @Column('int',{
+        name:'product_group_id',
+        nullable:false
+    })
+    productGroupId:number
+
     @ManyToOne(() => SampleRequest, sampleDevReq => sampleDevReq.sampleTrimInfo)
     @JoinColumn({ name: 'sample_request_id' })
     sampleDevReqInfo: SampleRequest

@@ -1,7 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger"
 
 export class PurchaseOrderTrimDto{
-
     @ApiProperty()
     poTrimId:number
 
@@ -12,15 +11,17 @@ export class PurchaseOrderTrimDto{
     trimId:number
 
     @ApiProperty()
-    trimCode:number
-
+    colourId:number
 
     @ApiProperty()
     description: string
 
     @ApiProperty()
-    consumption: number
+    consumption: number 
 
     @ApiProperty()
     remarks: string
+    
+    @ApiProperty()
+    m3TrimCode: string
 }

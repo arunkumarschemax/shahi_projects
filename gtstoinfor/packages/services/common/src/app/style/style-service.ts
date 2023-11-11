@@ -69,7 +69,7 @@ export class StyleService{
     async getAllActiveStyle():Promise<AllStyleResponseModel>{
         const style = await this.styleRepo.find({
             where:{isActive:true},
-            order:{createdAt:'ASC'}
+            order:{style:'ASC'}
         })
         if(style.length >0){
             return new AllStyleResponseModel(true,1,'Active Styles Retrived Sucessfully',style)

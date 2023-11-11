@@ -6,7 +6,7 @@ import { SizeInfo } from "./size-info"
 
 export class SampleDevelopmentRequest {
     sampleRequestId: number;
-    locationId: number;
+    locationId: string;
     requestNo: string;
     pchId: number;
     user: string;
@@ -39,7 +39,7 @@ export class SampleDevelopmentRequest {
 
     constructor(
         sampleRequestId: number,
-        locationId: number,
+        locationId: string,
         requestNo: string,
         pchId: number,
         user: string,

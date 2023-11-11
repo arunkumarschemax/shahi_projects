@@ -20,6 +20,10 @@ const SampleRequestReport = () => {
         getData();
       }, []);
 
+      const  renderCellData=(data)=>{
+        return  data?data:"-";
+      }
+
     const Columns:any=[
         {
             title:"Request No",
@@ -41,7 +45,8 @@ const SampleRequestReport = () => {
                 dataIndex: "sm",
                 key: "sm",
                 align:'center',
-                render: (sm) => {
+                render: (sm,text) => {
+                  renderCellData(text)
                   return (
                     <Table
                       dataSource={sm}
@@ -51,6 +56,26 @@ const SampleRequestReport = () => {
                           key: "code", align:'center',
                         },
                        
+                      ]}
+                      pagination={false}
+                    />
+                  );
+                }
+              },
+              {
+                title:<div style={{ textAlign: 'center' }}>Color</div> ,
+                dataIndex: "sm",
+                key: "sm",
+                align:'center',
+                render: (sm) => {
+                  return (
+                    <Table
+                      dataSource={sm}
+                      columns={[
+                        {
+                          dataIndex: "color",
+                          key: "color", align:'center',
+                        },
                       ]}
                       pagination={false}
                     />
@@ -77,17 +102,30 @@ const SampleRequestReport = () => {
                   );
                 }
               },
-        // {
-        //     title:"Required Qty",
-        //     dataIndex:""
-        // },
-        {
-            title:"Assigned Qty",
-            dataIndex:""
-        },
+              {
+                title:<div style={{ textAlign: 'center' }}>Assigned Qty</div> ,
+                dataIndex: "sm",
+                key: "sm",
+                align:'center',
+                render: (sm) => {
+                  return (
+                    <Table
+                      dataSource={sm}
+                      columns={[
+                        {
+                          dataIndex: "quantity",
+                          key: "quantity", align:'center',
+                        },
+                      ]}
+                      pagination={false}
+                    />
+                  );
+                }
+              },
+         
         {
             title:"PO Qty",
-            dataIndex:""
+            dataIndex:"poQty"
         },
         {
             title:"GRN Qty",
@@ -95,7 +133,7 @@ const SampleRequestReport = () => {
         },
         {
             title:"To be Procure",
-            dataIndex:""
+            dataIndex:"procure"
         },
 
        
@@ -103,9 +141,11 @@ const SampleRequestReport = () => {
 
   return (
     <div>
-        <Card title={<span>SAMPLE REQUEST REPORT</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }}>
+        <Card title={<span>SAMPLE REQUEST REPORT</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }}
+        className="card-header">
         <Table columns={Columns}  
         dataSource={data}
+        className="custom-table-wrapper"
             /> 
         </Card>
     </div>

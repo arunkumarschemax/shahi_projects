@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, CommonResponseModel, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, UploadResponse } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, UploadResponse } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -17,9 +19,10 @@ import { SampleReqFabricinfoEntity } from './entities/sample-request-fabric-info
 import { SampleRequestTriminfoEntity } from './entities/sample-request-trim-info-entity';
 import { SampleRequestProcessInfoEntity } from './entities/sample-request-process-info-entity';
 import { SampleRequestRepository } from './repo/sample-dev-req-repo';
-import { InjectRepository } from '@nestjs/typeorm';
 import { SamplingbomEntity } from './entities/sampling-bom-entity';
-import { Repository } from 'typeorm';
+import { SampleRequestDto } from './dto/samle-dev-req';
+import { sample } from 'rxjs';
+
 
 
 
@@ -28,6 +31,7 @@ export class SampleRequestService {
   
     constructor(
         private sampleRepo: SampleRequestRepository,
+        private readonly dataSource: DataSource,
         // private sampleAdapter: SampleDevAdapter,
         private sizerepo:SampleSizeRepo,
         private fabricRepo:SampleFabricRepo,
@@ -113,9 +117,9 @@ export class SampleRequestService {
       const sampleId=await this.sampleRepo.getsampleId()
       const maxId= sampleId.id
       const sampleReqEntity = new SampleRequest();
-      const locationEntity = new Location()
-      locationEntity.locationId = req.locationId
-      sampleReqEntity.location = locationEntity
+      // const locationEntity = new Location()
+      // locationEntity.locationId = req.locationId
+      sampleReqEntity.locationId = req.locationId
       sampleReqEntity.requestNo = 'SAM' + '-' + (Number(maxId) + 1)
       const profitHead = new ProfitControlHead()
       profitHead.profitControlHeadId = req.pchId
@@ -182,6 +186,7 @@ export class SampleRequestService {
       for (const trimObj of req.trimInfo) {
         const trimEntity = new SampleRequestTriminfoEntity()
         trimEntity.trimCode = trimObj.trimCode
+        trimEntity.productGroupId=trimObj.productGroupId
         trimEntity.consumption = trimObj.consumption
         trimEntity.description = trimObj.description
         trimEntity.remarks = trimObj.remarks
@@ -199,13 +204,14 @@ export class SampleRequestService {
        save = await this.sampleRepo.save(sampleReqEntity)
       if(save){
         for(const fabricData of req.fabricInfo){
-        const quantityWithWastage = Number(fabricData.consumption)+Number((5/100)*fabricData.consumption)
+        const quantityWithWastage = Number(fabricData.consumption)+Number((2/100)*fabricData.consumption)
         const bomEntity = new SamplingbomEntity()
         bomEntity.sampleRequestId=save.SampleRequestId
         bomEntity.colourId=fabricData.colourId
         bomEntity.fabricId=fabricData.fabricCode /// product_gropu_id
         bomEntity.rmItemId=1 //rm_item_id need to be added
         bomEntity.requiredQuantity=quantityWithWastage
+        bomEntity.wastage='2'
          saveBomDetails = await this.bomRepo.save(bomEntity)
         }
       }
@@ -249,39 +255,7 @@ export class SampleRequestService {
     }
   }
   
-  async getSampleRequestReport(): Promise<CommonResponseModel> {
-    const data = await this.sampleRepo.getSampleRequestReport();
-  
-    if (data.length > 0) {
-      const groupedData = data.reduce((result, item) => {
-        console.log(item,"sample_request_id")
-        const samplerequestid = item.sample_request_id;
-        const requestno = item.request_no;
-        if (!result[requestno]) {
-          result[requestno] = {
-            request_no: requestno,
-            sample_request_id: samplerequestid,
-            sm: [],
-          };
-        }
-        result[requestno].sm.push(
-          {
-          code: item.fabricCode,
-          consumption: item.fConsumption,
-        },
-        {
-          code: item.trimCode,
-          consumption: item.tConsumption,
-        }
-        );
-        return result;
-      }, {});
-  
-      return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
-    }
-  
-    return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
-  }
+ 
 
 
   async getFabricCodes(): Promise<CommonResponseModel> {
@@ -303,4 +277,71 @@ export class SampleRequestService {
       return new CommonResponseModel(false, 0, 'data not found', [])
     }
   }
+
+  async getTrimType():Promise<CommonResponseModel>{
+    try{
+      const query='SELECT product_group_id AS productGroupId,product_group AS productGroup FROM product_group      WHERE product_group NOT IN("Fabric") AND is_active=1'
+      const result = await this.sampleRepo.query(query)
+      if(result){
+        return new CommonResponseModel(true,1,'data retivedsucessfully',result)
+      }else{
+        return new CommonResponseModel(false,0,'No Data Found',[])
+      }
+    }catch(err){
+      throw err
+    }
+  }
+  async getTrimCodeAgainstTrimType(req:ProductGroupReq):Promise<CommonResponseModel>{
+    try{
+      const query=  'SELECT product_group AS productGroup,rm_item_id AS trimId,item_code AS trimCode,ri.product_group_id FROM rm_items ri LEFT JOIN product_group pg ON pg.product_group_id=ri.product_group_id     WHERE product_group NOT IN("fabric") AND ri.product_group_id='+req.productGroupId+''
+      const result = await this.sampleRepo.query(query)
+      if(result){
+        return new CommonResponseModel(true,1,'data retivedsucessfully',result)
+      }else{
+        return new CommonResponseModel(false,0,'No Data Found',[])
+      }
+    }catch(err){
+      throw err
+    }
+  }
+
+
+  async getSampleRequestReport(): Promise<CommonResponseModel> {
+    const manager = this.dataSource;
+    let rawData
+     rawData = 'SELECT sr.sample_request_id, sr.request_no AS requestNo, sr.m3_style_no, sb.rm_item_id, ri.item_code, sb.required_quantity, sb.assigned_quantity,sb.colour_id,co.colour  FROM sample_request sr LEFT JOIN sampling_bom sb ON sb.sample_request_id = sr.sample_request_id LEFT JOIN rm_items ri ON ri.rm_item_id LEFT JOIN `colour` co ON co.colour_id = sb.colour_id = sb.rm_item_id';
+     const rmData = await manager.query(rawData);
+    if (rmData.length > 0) {
+      const groupedData = rmData.reduce((result, item) => {
+        console.log(item,"item")
+        const samplerequestid = item.sample_request_id;
+        const requestNo = item.requestNo;
+        
+        if (!result[requestNo]) {
+          result[requestNo] = {
+            request_no: requestNo,
+            sample_request_id: samplerequestid,
+            sm: [],
+          };
+        }
+  
+        result[requestNo].sm.push(
+          {
+            code: item.item_code,
+            consumption: item.required_quantity,
+            quantity: item.assigned_quantity,
+            color: item.colour ,
+          }
+          
+        );
+  
+        return result;
+      }, {});
+  
+      return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
+    }
+  
+    return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
+  }
+  
 }
