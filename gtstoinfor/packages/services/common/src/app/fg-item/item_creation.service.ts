@@ -33,7 +33,7 @@ export class ItemCreationService {
                 const response = new CommonResponseModel(true, isUpdate ? 11101 : 11100, isUpdate ? 'Item Updated Successfully' : 'Item Created Successfully', savedItemCreationDto);
                 return response;
             } else {
-                const response = new CommonResponseModel(false, 10101, 'Something went wrong');
+                const response = new CommonResponseModel(false, 0, 'Something went wrong');
                 return response;
             }
         } catch (error) {
