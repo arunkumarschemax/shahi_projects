@@ -63,7 +63,7 @@ export const DivisionForm = (props:DivisionFormProps) => {
   };
   return (
 <Card title={<span style={{color:'white'}}>Division</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }}
+    style={{textAlign:'left'}} headStyle={{ border: 0 }}
     extra={props.isUpdate==true? (
       ""):(
     <Link to='/masters/division/division-view' ><span ><Button className='panel_button' type={'primary'} >View {""}</Button> {""}</span></Link>)}
@@ -91,7 +91,7 @@ export const DivisionForm = (props:DivisionFormProps) => {
               <Form.Item label="Division Name" name="divisionName"  rules={[
                 {
                   required: true,
-                  message: " Division Is Required",
+                  message: " Division Name Is Required",
                 },
                 {
                   pattern:

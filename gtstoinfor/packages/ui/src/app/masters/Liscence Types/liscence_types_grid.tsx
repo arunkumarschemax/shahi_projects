@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Alert, Checkbox } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -70,6 +70,8 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
         getAllLiscenceTypes();
 
       } else {
+        message.error(res.internalMessage)
+
           AlertMessages.getErrorMessage(res.internalMessage);
       }
     }).catch(err => {
@@ -160,22 +162,22 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
     {
       title: 'S No',
       key: 'sno',
-      // width: '70px',
-      
+       width: '70px',
+      align:'center',
       responsive: ['sm'],
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
-        title: "License Type",
-        dataIndex: "liscenceType",
+        title:<div style={{ textAlign: 'center' }}>License Type</div>, 
+        dataIndex: "liscenceType",      width:150,
         // width:'60px',
         sorter: (a, b) => a.liscenceType.localeCompare(b.liscenceType),
       ...getColumnSearchProps("liscenceType"),
       },
     {
       title: 'Status',
-      dataIndex: 'isActive',
-       // width:'80px',
+      dataIndex: 'isActive',align:'center',
+        width:'80px',
       render: (isActive, rowData) => (
         <>
           {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -192,15 +194,43 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
         },
       ],
       filterMultiple: false,
-      onFilter: (value, record) => {
-        // === is not work
-        return record.isActive === value;
-      },
+      // onFilter: (value, record) => {
+      //   // === is not work
+      //   return record.isActive === value;
+      // },
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{color:'green'}}>Active</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{color:'red'}}>Inactive</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns" >
+          <Button  onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          
+          </div>
+        </div>
+      ),
 
     },
     {
       title: `Action`,
       dataIndex: 'action',
+      align:'center',
+      width:120,
       render: (text, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"
@@ -256,20 +286,27 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
     extra={<Link to='/masters/liscence-type/liscence-type-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
-      <Row gutter={40}>
-        <Col>
-          <Card title={'Total License Types: ' + lTData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+      <Row gutter={24}>
+      <Col span={4}></Col>
+        <Col span={5}>
+          {/* <Card title={'Total License Types: ' + lTData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card> */}
+          <Alert type='success' message={'Total License Types: ' + lTData.length} style={{fontSize:'15px'}} />
+
         </Col>
-        <Col>
-          <Card title={'Active: ' + lTData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+        <Col span={5}>
+          {/* <Card title={'Active: ' + lTData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card> */}
+          <Alert type='warning' message={'Active: ' + lTData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+
         </Col>
-        <Col>
-          <Card title={'In-Active: ' + lTData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+        <Col span={5}>
+          {/* <Card title={'In-Active: ' + lTData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
+          <Alert type='info' message={'In-Active: ' + lTData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+
         </Col>
       </Row><br></br>
       <Card >
         <Table
-        size='small'
+       // size='small'
         rowKey={record => record}
           columns={columnsSkelton}
           dataSource={lTData}
@@ -278,7 +315,7 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
               setPage(current);
             }
           }}
-          scroll={{x:true}}
+          scroll={{y:550}}
           onChange={onChange}
           bordered />
       </Card>
