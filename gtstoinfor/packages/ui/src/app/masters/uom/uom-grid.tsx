@@ -115,11 +115,11 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
       title: "S.No",
       key: "sno",
       responsive: ["sm"],
-      // width:100,
+      align:"center",
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
-      title: "UOM Category",
+      title: <div style={{textAlign:"center"}}>UOM Category</div>,
       dataIndex: "uomCategory",
       sorter: (a, b) => a.uom.localeCompare(b.model),
       sortDirections: ["ascend", "descend"],
@@ -146,7 +146,7 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
       onFilter: (value,record) =>{ return record.uomCategory === value}
     },
     {
-      title: "UOM",
+      title: <div style={{textAlign:"center"}}>UOM</div>,
       dataIndex: "uom",
       sorter: (a, b) => a.uom.localeCompare(b.model),
       sortDirections: ["ascend", "descend"],
@@ -154,7 +154,7 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
       // width:130,
     },
     {
-      title: "Description",
+      title: <div style={{textAlign:"center"}}>Description</div>,
       dataIndex: "description",
       // width:130,
     },
