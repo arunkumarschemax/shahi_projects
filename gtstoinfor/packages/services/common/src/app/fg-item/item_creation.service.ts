@@ -41,9 +41,9 @@ export class ItemCreationService {
         }
     }
 
-    async getFgItemsDropdown():Promise<CommonResponseModel>{
+    async getFgItemsDropdown(req?:FgItemCreIdRequest):Promise<CommonResponseModel>{
         try{
-            const data = await this.itemCreationRepository.find({select:['fgitemId','itemName','itemCode','salePrice','salePriceQty','currency']})
+            const data = await this.itemCreationRepository.find({select:['fgitemId','itemName','itemCode','salePrice','salePriceQty','currency'],where:{fgitemId:req.fgItemId}})
             if(data.length >0){
                 return new CommonResponseModel(true,1,'Data retrieved',data)
             } else{

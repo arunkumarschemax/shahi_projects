@@ -369,10 +369,13 @@ let value = 0
     />
       : ""
     } 
+      <Divider type='vertical'/>
+      <Button onClick={() => {navigate('/co-line-creation',{state:{id:rowData.co_id}})}}>Create CO Line</Button>
       </>
       )
     }
-  }
+  },
+
      // {
       //   title: "Shipment Type",
       //   dataIndex: "shipment_type",
