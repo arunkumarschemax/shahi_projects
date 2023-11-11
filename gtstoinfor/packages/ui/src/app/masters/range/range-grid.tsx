@@ -1,7 +1,7 @@
 
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -165,17 +165,17 @@ const RangeGrid = () => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
-        title: "Range Code",
+        title: <div style={{ textAlign: 'center' }}>Range Code</div>,
         dataIndex: "rangeCode",
         // width:'60px',
         sorter: (a, b) => a.rangeCode?.localeCompare(b.rangeCode),
       ...getColumnSearchProps("rangeCode"),
-      align:'center'
+      align:'left'
       },
       {
-        title: "Range Description",
+        title:<div style={{ textAlign: 'center' }}>Range Description</div>,
         dataIndex: "rangeDescription",
-        align:'center',
+        align:'left',
         // width:'60px',
         sorter: (a, b) => a.rangeDescription?.localeCompare(b.rangeDescription),
       ...getColumnSearchProps("rangeDescription"),
@@ -265,15 +265,22 @@ const RangeGrid = () => {
     extra={<Link to='/masters/range/range-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
-      <Row gutter={40}>
-        <Col>
-          <Card title={'Total Ranges: ' + lTData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+      <Row gutter={24}>
+      <Col span={4}></Col>
+        <Col span={5}>
+          {/* <Card title={'Total Ranges: ' + lTData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card> */}
+          <Alert type='success' message={'Total Ranges: ' + lTData.length} style={{fontSize:'15px'}} />
+
         </Col>
-        <Col>
-          <Card title={'Active: ' + lTData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+        <Col span={5}>
+          {/* <Card title={'Active: ' + lTData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card> */}
+          <Alert type='warning' message={'Active: ' + lTData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+
         </Col>
-        <Col>
-          <Card title={'In-Active: ' + lTData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+        <Col span={5}>
+          {/* <Card title={'In-Active: ' + lTData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
+          <Alert type='info' message={'In-Active: ' + lTData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+
         </Col>
       </Row><br></br>
       <Card >

@@ -1,4 +1,4 @@
-import { Button, Card, Checkbox, Col, DatePicker, Form, Input, Row, Select, Space } from "antd";
+import { Button, Card, Checkbox, Col, DatePicker, Form, Input, Row, Select, Space, message } from "antd";
 import { HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
@@ -382,10 +382,10 @@ compositionservice.getActiveComposition().then(res=>{
             // console.log(values,"ooooooooooooooo");
               itemCreationService.createItem(values).then((res) => {
                 if(res.status){
-                  AlertMessages.getSuccessMessage(res.internalMessage)
+                  message.success(res.internalMessage,2)
                 }
                 else{
-                  AlertMessages.getWarningMessage(res.internalMessage)
+                  message.error(res.internalMessage,2)
                 }
               })
               // .catch(err => {
@@ -415,7 +415,8 @@ compositionservice.getActiveComposition().then(res=>{
                   <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left', marginTop:"-10px"}}>Item Details</h1>
                   <Row gutter={8}>
                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8}}>
-                              <Form.Item style={{flexDirection:'row'}} label="Style" name="styleNo" rules={[{ required: true, message: "Enter Style" }]} >
+                              <Form.Item style={{flexDirection:'row'}} label="Style" name="styleNo" 
+                              rules={[{ required: true, message: "Enter Style" }]} >
                                    <Input placeholder="Style" allowClear/>
                               </Form.Item>
                    </Col>
@@ -450,14 +451,17 @@ compositionservice.getActiveComposition().then(res=>{
                    <Row gutter={8}>
                  
                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                    <Form.Item label="Item Code" name="itemCode" >
+                    <Form.Item label="Item Code" name="itemCode"
+                       rules={[{ required: true, message: "Enter Item code" }]}>
+
                     <Input placeholder="Item Code" allowClear/>
 
                     </Form.Item>
                    </Col>
                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                    <Form.Item label="Item Group" name="itemGroup" >
-                    <Select
+                    <Form.Item label="Item Group" name="itemGroup" 
+                       rules={[{ required: true, message: "Enter Item Group" }]}>
+                       <Select
                      placeholder="Select Item Group" allowClear>
                      {Object.values(ItemGroupEnum).map((key,value)=>{
             return <Option key={key} value={key}>{key}</Option>
@@ -590,14 +594,17 @@ compositionservice.getActiveComposition().then(res=>{
                        </Col> */}
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                         <Form.Item name="conversionFactor"
-                      label="Conversion Factor">
+                      label="Conversion Factor"
+                      rules={[{ required: true, message: "slecet Currency" }]}>
+                      
                       <Input placeholder="Conversion Factor" allowClear />
                         </Form.Item>
                       </Col>
                      </Row>
                      <Row gutter={8}>
                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                      <Form.Item  name="currency" label="Currency" rules={[{ required: true, message: "Enter Currency" }]}>
+                      <Form.Item  name="currency" label="Currency" 
+                      rules={[{ required: true, message: "Enter Currency" }]}>
                       <Select placeholder="Select Currency" allowClear>{currencydata.map((e) => {
                   return (
                     <Option key={e.currencyId} value={e.currencyId}>
@@ -609,7 +616,8 @@ compositionservice.getActiveComposition().then(res=>{
                       </Form.Item>
                       </Col>
                       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item  name="salePrice" label="Sales Price" rules={[{ required: true, message: "Enter Sales Price" }]}>
+                        <Form.Item  name="salePrice" label="Sales Price"
+                         rules={[{ required: true, message: "Enter Sales Price" }]}>
                         <Input placeholder="Sales  Price" allowClear />
                         </Form.Item>
                         </Col>
@@ -628,8 +636,9 @@ compositionservice.getActiveComposition().then(res=>{
                         </Row>
                         <Row gutter={8}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                          <Form.Item name="projectionOrder" label="Projection Order">
-                          <Input placeholder="Projection Order" allowClear />
+                          <Form.Item name="projectionOrder" label="Projection Order"
+                    rules={[{ required: true, message: "enter projectionOrder" }]}>
+                    <Input placeholder="Projection Order" allowClear />
 
                           </Form.Item>
                        </Col>
@@ -638,7 +647,7 @@ compositionservice.getActiveComposition().then(res=>{
                        <Form.Item
                     label="Business Area"
                     name="businessArea"
-                    // rules={[{ required: true, message: "Enter Business Area" }]}
+                    rules={[{ required: true, message: "select Business Area" }]}
                   >
                     <Select
                     allowClear
@@ -659,6 +668,8 @@ compositionservice.getActiveComposition().then(res=>{
                             <Form.Item
                       name="salePriceQty"
                       label="Sales Price Qty"
+                      rules={[{ required: true, message: "Enter Sales Price Qty" }]}
+
                     >
                       <Input placeholder="Sales Price Qty" allowClear />
                     </Form.Item>
@@ -678,7 +689,10 @@ compositionservice.getActiveComposition().then(res=>{
                     </Form.Item>
                                   </Col>
                                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                     <Form.Item  label="Facility"name="facilityId">
+                     <Form.Item  label="Facility"name="facilityId"
+                                           rules={[{ required: true, message: "Select Facility" }]}
+
+                     >
                      <Select
                     allowClear
                     showSearch
@@ -764,7 +778,10 @@ compositionservice.getActiveComposition().then(res=>{
                             </Form.Item>
                           </Col>
                           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                            <Form.Item  name="licenseId" label="Licence">
+                            <Form.Item  name="licenseId" label="Licence"
+                                                  rules={[{ required: true, message: "Enter Licence" }]}>
+
+                          
                             <Select
                         placeholder="Select Licence"
                         allowClear
@@ -783,7 +800,9 @@ compositionservice.getActiveComposition().then(res=>{
                            <Form.Item
                       name="customGroupId"
                       label="Custom Group"
-                    >
+                      rules={[{ required: true, message: "select CustomGroup" }]}>
+
+                    
                        <Select
                         placeholder="Select Custom Group"
                         allowClear
@@ -858,7 +877,8 @@ compositionservice.getActiveComposition().then(res=>{
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item name="salePersonId" label="Sales Person" rules={[{ required: true, message: "Enter Sales Person" }]}>
+                        <Form.Item name="salePersonId" label="Sales Person" 
+                        rules={[{ required: true, message: "Enter Sales Person" }]}>
                         <Select placeholder="Select Approve" allowClear> 
                           {employedata.map((e)=>{
                             return(
@@ -871,7 +891,8 @@ compositionservice.getActiveComposition().then(res=>{
                         </Form.Item>
                          </Col>
                          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                      <Form.Item   name="noOfLacePanel" label="No Of Lace Panel" rules={[{ required: true, message: "Enter No Of Lace Panel" }]}>
+                      <Form.Item   name="noOfLacePanel" label="No Of Lace Panel" 
+                      rules={[{ required: true, message: "Enter No Of Lace Panel" }]}>
                       <Input placeholder="No Of Lace Panel" allowClear />
 
                       {/* <Select
@@ -883,7 +904,8 @@ compositionservice.getActiveComposition().then(res=>{
                     </Row>
                     <Row gutter={8} >
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                      <Form.Item  name="productGroup" label="Product Group" >
+                      <Form.Item  name="productGroup" label="Product Group" 
+                      rules={[{ required: true, message: "Enter Product Group" }]}>
                       <Select placeholder="Select Product Group" allowClear> 
                           {Product.map((e)=>{
                             return(
@@ -978,7 +1000,8 @@ compositionservice.getActiveComposition().then(res=>{
                     </Row>
                     <Row gutter={8}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                      <Form.Item   name="productionMerchant" label="Production Merchant" rules={[{ required: true, message: "Enter Production Merchant" }]}>
+                      <Form.Item   name="productionMerchant" label="Production Merchant"
+                       rules={[{ required: true, message: "Enter Production Merchant" }]}>
                       <Select
                         placeholder="Select Production Merchant"
                         allowClear>
@@ -1028,7 +1051,9 @@ compositionservice.getActiveComposition().then(res=>{
                            <Form.Item
                 label="Order Confirmation Date"
                 name="orderConfirmedDate"
-              >
+                rules={[{ required: true, message: "Enter Order ConfirmedDate" }]}>
+
+              
                 <DatePicker style={{ width: "100%" }} />
               </Form.Item>
 </Col>
@@ -1036,7 +1061,7 @@ compositionservice.getActiveComposition().then(res=>{
 <Form.Item
                 label="Order Close Date"
                 name="orderCloseDate"
-              >
+                rules={[{ required: true, message: "Enter order CloseDate" }]}>
                 <DatePicker style={{ width: "100%" }} />
               </Form.Item>
 </Col>
@@ -1044,7 +1069,7 @@ compositionservice.getActiveComposition().then(res=>{
 <Form.Item
                 label="1stEx-Factory Date"
                 name="firstExFactoryDate"
-              >
+                rules={[{ required: true, message: "Enter  1stEx-Factory Date" }]}>
                 <DatePicker style={{ width: "100%" }} />
               </Form.Item>
 </Col>
@@ -1062,7 +1087,7 @@ compositionservice.getActiveComposition().then(res=>{
 <Form.Item
                       name="orderQty"
                       label="Order Qty"
-                    >
+                      rules={[{ required: true, message: "Enter  Order Qty" }]}>
                       <Input placeholder="Total Order Qty" allowClear />
                     </Form.Item>
                      </Col>

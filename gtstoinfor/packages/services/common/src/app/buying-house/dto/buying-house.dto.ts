@@ -23,7 +23,10 @@ export class BuyingHouseDTO {
   city: string;
 
   @ApiProperty()
-  country: string;
+  countryId: number;
+
+  @ApiProperty()
+  countryName: string;
 
   @ApiProperty()
   isActive: boolean;

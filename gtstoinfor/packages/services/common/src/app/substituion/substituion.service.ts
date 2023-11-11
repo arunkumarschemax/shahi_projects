@@ -115,7 +115,7 @@ export class SubstituionService{
           }
         
           let ListArray: FgDataModel[] = Array.from(DataMap.values());
-          // console.log(ListArray,'service');
+          console.log(ListArray,'service............');
         
           if(getdata.length>0){
       

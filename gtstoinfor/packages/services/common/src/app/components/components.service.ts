@@ -129,14 +129,14 @@ async activateOrDeactivateComponent(req: ComponentRequest): Promise<ComponentRes
                  
                   if (componentsExists.isActive) {
                       if (componentStatus.affected) {
-                          const componentResponse: ComponentResponseModel = new ComponentResponseModel(true, 10115, 'Component is de-activated successfully');
+                          const componentResponse: ComponentResponseModel = new ComponentResponseModel(true, 10115, 'Component is De-activated successfully');
                           return componentResponse;
                       } else {
                           throw new ComponentResponseModel(false,10111, 'Component is already deactivated');
                       }
                   } else {
                       if (componentStatus.affected) {
-                          const componentResponse: ComponentResponseModel = new ComponentResponseModel(true, 10114, 'Component is activated successfully');
+                          const componentResponse: ComponentResponseModel = new ComponentResponseModel(true, 10114, 'Component is Activated successfully');
                           return componentResponse;
                       } else {
                           throw new ComponentResponseModel(false,10112, 'Component is already  activated');

@@ -2,7 +2,7 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { SubstituionService } from "./substituion.service";
-import { CommonResponseModel, SubstituionModel, SubstituionReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, SubResponseModel, SubstituionModel, SubstituionReq } from "@project-management-system/shared-models";
 import { SubstituionRequest } from "./substitution-req";
 
 @ApiTags('substituion')
@@ -26,21 +26,21 @@ export class SubstituionController{
 
     @Post('/getSubstitution')
     @ApiBody({type:SubstituionModel})
-    async getSubstitution(@Body() req:any):Promise<CommonResponseModel>{
+    async getSubstitution(@Body() req:any):Promise<SubResponseModel>{
         try{
             console.log(req,'controller')
             return await this.substituionService.getSubstitution(req)
         }catch(err){
-            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+            return this.applicationExceptionHandler.returnException(SubResponseModel,err)
         }
     }
 
     @Post('/getFgSku')
-    async getFgSku():Promise<CommonResponseModel>{
+    async getFgSku():Promise<SubResponseModel>{
         try{
             return await this.substituionService.getFgSku()
         }catch(err){
-            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+            return this.applicationExceptionHandler.returnException(SubResponseModel,err)
         }
     }
 }

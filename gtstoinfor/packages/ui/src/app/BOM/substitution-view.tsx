@@ -59,20 +59,21 @@ const SubstituionView=() =>{
   
     const Substituion=()=>{
       const req = new fgItemIdReq()
+      console.log(req,"=========")
       if(form.getFieldValue('fg_sku') !== undefined){
-        // console.log(req,"pppppppppppppppppppp")
+        console.log(req,"pppppppppppppppppppp")
         req.fgItemCode=form.getFieldValue('fg_sku')
       }
    service.getSubstitution(req).then(res=>{
     if(res.status){
-    setValue(res.data)
+      setItemData(res.data)
     }
    })
     }
 
     const handledSearch=()=>{
       const req = new fgItemIdReq()
-      if(form.getFieldValue('fg_sku') !=undefined){
+      if(form.getFieldValue('fg_sku') != undefined){
         req.fgItemCode=selectedItemNo
         setSearchClicked(true);
 
@@ -95,30 +96,34 @@ const SubstituionView=() =>{
 
           {
             title:'Fg SkuCode',
-            dataIndex:'fgSku',
-
+            dataIndex:'fg_sku',
+              key:'fg_sku',
           },
           {
             title:'Fg ItemCode',
             dataIndex:'fgItemCode',
-
+            key:'fgItemCode',
           },
           {
 
             title:'Rm SkuCode',
             dataIndex:'rmSku',
+            key:'rmSku',
 
           },
           {
 
             title:'Rm ItemCode',
             dataIndex:'rmItemCode',
+            key:'rmItemCode',
 
           },
           
           {
             title:'Consumption',
             dataIndex:'consumption',
+            key:'consumption',
+
           }
 
         ]

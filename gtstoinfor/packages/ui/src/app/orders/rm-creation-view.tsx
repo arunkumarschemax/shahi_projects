@@ -300,16 +300,7 @@ const getAllUoms=() =>{
         
             sortDirections: ['descend', 'ascend'],
       },
-       {
-        title: "PCH",
-        dataIndex: "pch",align:'center',        width:80,
-        render: (data) => {
-          return data ? data : "-";
-        },
-        sorter: (a, b) => a.pch.localeCompare(b.pch),
-        sortDirections: ['descend', 'ascend'],
-       
-      },
+      
       {
         title: "Placement",
         dataIndex: "placement",align:'center',
@@ -319,26 +310,7 @@ const getAllUoms=() =>{
         sorter: (a, b) => a.placement.localeCompare(b.placement),
         width:80,
       },
-      {
-        title: "Facility",
-        dataIndex: "facility",align:'center',
-        render: (data) => {
-          return data ? data : "-";
-        },
-        sorter: (a, b) => a.facility.localeCompare(b.facility),
-        width:80,
-      },
-      {
-        title: "Responsible",
-        dataIndex: "responsible_person",align:'center',
-        render: (data) => {
-          return data ? data : "-";
-        },
-        sorter: (a, b) => a.responsible_person.localeCompare(b.responsible_person),
       
-        sortDirections: ['descend', 'ascend'],
-        width:80,
-      },
       {
         title: "Product Group",
         dataIndex: "product_group",align:'center',
@@ -368,15 +340,7 @@ const getAllUoms=() =>{
         width:80,
 
       },
-      {
-        title: "Planner",
-        dataIndex: "planner", render: (data) => {
-          return data ? data : "-";
-        },
-        sorter: (a, b) => a.item_group.localeCompare(b.item_group),       align:'center',
-
-        width:80,
-      },
+      
       {
         title: "Business Area ",
         dataIndex: "business_area", render: (data) => {
@@ -416,31 +380,10 @@ const getAllUoms=() =>{
         width:80,
       },
       {
-        title: "Sales Tax",
-        dataIndex: "sale_tax",
-        align:'right',
-        render: (data) => {
-          return data ? data : "-";
-        },
-        sorter: (a, b) => a.sale_tax.localeCompare(b.sale_tax),
-        sortDirections: ['descend', 'ascend'],
-        width:80,
-
-      },
-      {
-        title: "Is Imported",
-        dataIndex: "is_imported_item",render: (data) => {
-          return data ? data : "-";
-        },
-        align:'center',
-        sorter: (a, b) => a.is_imported_item.localeCompare(b.is_imported_item),
-        sortDirections: ['descend', 'ascend'],
-        width:80,
-      },
-      {
         title: `Action`,
         dataIndex: 'action',
         fixed:'right',
+        width:100,
         render: (text, rowData) => {
           
           return( <span>
