@@ -125,7 +125,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
-      title: "Company Name",
+      title:<div style={{ textAlign: 'center' }}>Company Name</div> ,
       dataIndex: "companyName",
       sorter: (a, b) => a.source.localeCompare(b.source),
       sortDirections: ["ascend", "descend"],
@@ -133,14 +133,14 @@ export const CompanyGrid = (props: CompanyGridProps) => {
     },
     ,
     {
-      title: "Company Code",
+      title: <div style={{ textAlign: 'center' }}>Company Code</div>,
       dataIndex: "companyCode",
       sorter: (a, b) => a.source.localeCompare(b.source),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("companyCode"),
     }, ,
     {
-      title: "Organisation Name",
+      title: <div style={{ textAlign: 'center' }}>Organisation Name</div>,
       dataIndex: "organizationCode",
       sorter: (a, b) => a.source.localeCompare(b.source),
       sortDirections: ["ascend", "descend"],
