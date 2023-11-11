@@ -1,5 +1,6 @@
 
 export class MaterialTrimDto{
+    trimCode: string;
     description:string;
     consumption:number;
     uomId:number
@@ -14,6 +15,7 @@ export class MaterialTrimDto{
     colorId?: number
 
     constructor(
+        trimCode: string,
         description:string,
         consumption:number,
         uomId:number,
@@ -27,6 +29,7 @@ export class MaterialTrimDto{
         materialTrimId?:number,
         colorId?: number
     ){
+        this.trimCode = trimCode
         this.materialTrimId = materialTrimId
         this.description = description
         this.colorId = colorId

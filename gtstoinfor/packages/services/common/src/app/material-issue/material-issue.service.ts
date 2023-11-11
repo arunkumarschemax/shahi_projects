@@ -100,6 +100,7 @@ export class MaterialIssueService {
             issueData.fabric = fabricInfo
             for(const trim of req?.trimInfo){
                 const trimEntity = new MaterialTrimEntity()
+                trimEntity.trimCode = trim.trimCode
                 trimEntity.description = trim.description
                 trimEntity.colorId = trim.colorId
                 trimEntity.consumption = trim.consumption
