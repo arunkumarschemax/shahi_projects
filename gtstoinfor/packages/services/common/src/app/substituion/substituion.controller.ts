@@ -43,4 +43,12 @@ export class SubstituionController{
             return this.applicationExceptionHandler.returnException(SubResponseModel,err)
         }
     }
+    @Post('/getRmSku')
+    async getRmSku():Promise<SubResponseModel>{
+        try{
+            return await this.substituionService.getRmSku()
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(SubResponseModel,err)
+        }
+    }
 }

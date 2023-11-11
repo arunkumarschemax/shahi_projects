@@ -54,7 +54,7 @@ export const CoTypeForm = (props:CoTypeProps) => {
     
     return(
         <>
-        <Card title={props.isUpdate ? 'Update Co Type' : 'Add Co Type'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/co-type/co-type-view')} type={'primary'}>View</Button></span>} size='small'>
+        <Card title={props.isUpdate ? 'Update Co Type' : 'Add Co Type'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/co-type/co-type-view')} type={'primary'}>View</Button></span>}>
             <Form form={form} layout="vertical" onFinish={onFinish} initialValues={props.coTypeData}>
             <Form.Item name='coTypeId' style={{display:'none'}}>
                         <Input disabled/>

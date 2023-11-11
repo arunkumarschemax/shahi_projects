@@ -324,7 +324,7 @@ export const SettingsForm = () => {
     }
 
     return(
-        <Card title='Settings' size='small'>
+        <Card title='Settings'>
             <Form layout="vertical" form={form} onFinish={onFinish} initialValues={initialData} key={updateKey}>
                 <Form.Item name='settingId' style={{display:'none'}}>
                     <Input hidden/>

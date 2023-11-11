@@ -52,6 +52,7 @@ export function SKUGeneration  (props:FormProps){
       if(itemData.length > 0){
         console.log(itemData)
         form.setFieldsValue({'style':itemData[0].style})
+        form.setFieldsValue({'divisionId':itemData[0].divisionId})
         setSelectedColors(itemData[0]?.colorInfo)
         setSelectedSizes(itemData[0].sizeInfo)
         setSelectedDestinations(itemData[0].destinationInfo)
@@ -75,7 +76,7 @@ export function SKUGeneration  (props:FormProps){
 
     const generateSKU = () => {
       // const req = new SKUGenerationReq(form.getFieldValue('itemCode'),selectedColors,selectedSizes,selectedDestinations,'admin','')
-      const req = new ItemSKusReq(itemId,form.getFieldValue('itemCode'),SkuStatusEnum.OPEN,selectedColors,selectedSizes,selectedDestinations,'admin',form.getFieldValue('style'),null,null,form.getFieldValue('divisionName'))
+      const req = new ItemSKusReq(itemId,form.getFieldValue('itemCode'),SkuStatusEnum.OPEN,selectedColors,selectedSizes,selectedDestinations,'admin',form.getFieldValue('style'),null,null,form.getFieldValue('divisionId'))
       skuService.skuGeneration(req).then(res => {
         if(res.status){
           resetHandler()
@@ -267,7 +268,7 @@ export function SKUGeneration  (props:FormProps){
             </Form.Item>
         </Col>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>
-            <Form.Item label='Division' name='divisionName' rules={[{required:true,message:'Divison is required'}]}>
+            <Form.Item label='Division' name='divisionId' rules={[{required:true,message:'Divison is required'}]}>
                 <Select showSearch allowClear placeholder='Select Division'>
                     {/* <Option key='itemcode' value='itemcode' itemId='itemId'>Item Codes </Option> */}
                     {
@@ -283,7 +284,7 @@ export function SKUGeneration  (props:FormProps){
       </Row>
         <Row gutter={24}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
-            <Card title='Available Colors'
+            <Card title='Available Colors' size='small'
                 onDragOver={handleDragOver}
                 onDrop={handleAvailableDrop}>
                 {color?.map((comment, index) => (
@@ -302,7 +303,7 @@ export function SKUGeneration  (props:FormProps){
             </Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
-          <Card title='Selected Colors'
+          <Card title='Selected Colors' size='small'
             onDragOver={handleDragOver}
             onDrop={handleDrop}>
             {selectedColors?.map((comment, index) => (
@@ -321,7 +322,7 @@ export function SKUGeneration  (props:FormProps){
         </Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
-            <Card title='Available Sizes' 
+            <Card title='Available Sizes'  size='small'
                 onDragOver={handleDragOver}
                 onDrop={handleAvailableDrop}>
                 {size?.map((comment, index) => (
@@ -340,7 +341,7 @@ export function SKUGeneration  (props:FormProps){
             </Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
-          <Card title='Selected Sizes' 
+          <Card title='Selected Sizes' size='small'
             onDragOver={handleDragOver}
             onDrop={handleDrop}>
             {selectedSizes?.map((comment, index) => (
@@ -359,7 +360,7 @@ export function SKUGeneration  (props:FormProps){
         </Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
-            <Card title='Available Destinations' 
+            <Card title='Available Destinations' size='small'
                 onDragOver={handleDragOver}
                 onDrop={handleAvailableDrop}>
                 {destination?.map((comment, index) => (
@@ -379,6 +380,7 @@ export function SKUGeneration  (props:FormProps){
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
           <Card title='Selected Destinations'
+            size='small'
             onDragOver={handleDragOver}
             onDrop={handleDrop}>
             {selectedDestinations?.map((comment, index) => (
@@ -399,7 +401,7 @@ export function SKUGeneration  (props:FormProps){
         </Row>
         <Row justify={'end'}>
           <Form.Item>
-            <Button type='primary' onClick={onSubmit} disabled={form.getFieldValue('itemCode') !== undefined && selectedColors.length > 0 && selectedSizes.length > 0 && selectedDestinations.length > 0 ? false : true}>Submit</Button>
+            <Button type='primary' onClick={onSubmit} disabled={form.getFieldValue('itemCode') !== undefined && form.getFieldValue('divisionId') !== undefined && selectedColors.length > 0 && selectedSizes.length > 0 && selectedDestinations.length > 0 ? false : true}>Submit</Button>
           </Form.Item>
         </Row>
       </Form>

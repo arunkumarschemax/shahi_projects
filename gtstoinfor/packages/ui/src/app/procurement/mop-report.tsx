@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {Table, Card, Button, Row, Col, Form, Select, Tabs, Modal } from 'antd';
-import {SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import {DownloadOutlined, FilePdfOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { CoBomService, StyleOrderService } from '@project-management-system/shared-services';
 import AlertMessages from '../common/common-functions/alert-messages';
 import { StyleOrderIdReq, StyleOrderid } from '@project-management-system/shared-models';
 import Mopprint from './mop-print';
+import { Excel } from 'antd-table-saveas-excel';
+import moment from 'moment';
+import jsPDF from "jspdf";
+import html2canvas from 'html2canvas';
 
 
 const MOPReport = () => {
@@ -17,8 +21,11 @@ const MOPReport = () => {
   const [codata, setCOData] = useState<any[]>([]);
   const [mopData, setMOPData] = useState<any[]>([]);
   const [mopDataYes, setMOPDataYes] = useState([]);
-const [mopDataNo, setMOPDataNo] = useState([]);
-const [key, setKey] = useState();
+  const [mopDataNo, setMOPDataNo] = useState([]);
+  const [key, setKey] = useState();
+
+
+
 
 
   const service = new CoBomService()
@@ -179,21 +186,234 @@ const getMOPData= () => {
     
   ];
 
+  // const columnsSkelton1: any = [
+  //   {
+  //     title: 'S No',
+  //     key: 'sno',
+  //     render: (text, object, index) => (page - 1) * 10 + (index + 1)
+   
+  //   },
+  //   {
+  //     title: "CO Number",
+  //     dataIndex: "coNumber",
+     
+  //   },
+  //   {
+  //     title: "CO Line",
+  //     dataIndex: "coLineNumber",
+  
+  //   },
+  //   {
+  //     title: "FG item Code",
+  //     dataIndex: "fgItemCode",
+     
+  //   },
+  //   {
+  //     title: "FG Sku Code",
+  //     dataIndex: "fgSkuCode",
+   
+  //   },
+  //   {
+  //     title: "Color",
+  //     dataIndex: "color",
+   
+  //   },
+  //   {
+  //       title: "Size",
+  //       dataIndex: "size",
+      
+  //     },
+  //     {
+  //       title: "Destination",
+  //       dataIndex: "destination",
+     
+  //     },
+
+  //     {
+  //       title: "Quantity",
+  //       dataIndex: "quantity",
+      
+        
+  //     }, 
+
+  //     {
+  //       title: "Consumption",
+  //       dataIndex: "consumption",
+    
+        
+  //     },
+  //     {
+  //       title: "RM item Code",
+  //       dataIndex: "rmitemCode",
+   
+        
+  //     },
+
+  //     {
+  //       title: "RM Sku Code",
+  //       dataIndex: "rmSkuCode",
+    
+        
+  //     },
+    
+  // ];
+
+
   const  onReset =() =>{
     form.resetFields();
     getMOPData();
   }
 
   const onChange =(key)=>{
-    // console.log(key,"key")
     setKey(key)
     
   }
  console.log(key,"key")
 
+ const excelData :any= [
+  { title: "S.No", dataIndex: "sno", render: (text, object, index) => (page - 1) + (index + 1) },
+  {
+    title: "CO Number",
+    dataIndex: "coNumber",
+   
+  },
+  {
+    title: "CO Line",
+    dataIndex: "coLineNumber",
+   
+  },
+  {
+    title: "FG item Code",
+    dataIndex: "fgItemCode",
+    align:'center',
+  
+  },
+  {
+    title: "FG Sku Code",
+    dataIndex: "fgSkuCode",
+  
+  },
+  {
+    title: "Color",
+    dataIndex: "color",
+
+  },
+  {
+      title: "Size",
+      dataIndex: "size",
+
+    },
+    {
+      title: "Destination",
+      dataIndex: "destination",
+      
+    },
+
+    {
+      title: "Quantity",
+      dataIndex: "quantity",
+     
+    }, 
+
+    {
+      title: "Consumption",
+      dataIndex: "consumption",
+   
+    },
+    {
+      title: "RM item Code",
+      dataIndex: "rmitemCode",
+ 
+    },
+
+    {
+      title: "RM Sku Code",
+      dataIndex: "rmSkuCode",
+   
+    }
+  
+]
+
+
+ const exportExcel = () => {
+      const currentDate = new Date()
+      .toISOString()
+      .slice(0, 10)
+      .split("-")
+      .join("/");
+
+  if (key === 'pop'){
+    const excel = new Excel();
+  excel
+    .addSheet('Stock-report')
+    .addColumns(excelData)
+    .addDataSource(mopDataNo, { str2num: true })
+    .saveAs(`Mop-report-${currentDate}.xlsx`);
+  } else {
+    const excel = new Excel();
+    excel
+      .addSheet('Stock-report')
+      .addColumns(excelData)
+      .addDataSource(mopDataYes, { str2num: true })
+      .saveAs(`Mop-report-${currentDate}.xlsx`);
+  }
+  
+}
+
+const handleExportPDF = async () => {
+  const currentDate = new Date()
+  .toISOString()
+  .slice(0, 10)
+  .split("-")
+  .join("/");
+
+  const tableId = (key === 'pop' ? 'popTable' : 'mopTable');
+ console.log(key,"key")
+  const element = document.getElementById(tableId);
+  const canvas = await html2canvas(element, { scale: 2 });
+  const data = canvas.toDataURL('image/png');
+  const imgWidth = 210;
+  const pageHeight = 297;
+  const pdf = new jsPDF('p', 'mm', 'a4');const addHeading = () => {
+    pdf.setFontSize(14);
+    pdf.text("Material Order Proposal", imgWidth / 2, 15, { align: "center" });
+  };
+
+  addHeading(); 
+  let position = 25;
+
+  const imgProperties = pdf.getImageProperties(data);
+  const pdfHeight = (imgProperties.height * imgWidth) / imgProperties.width;
+  let heightLeft = pdfHeight;
+  
+
+  pdf.addImage(data, 'PNG', 0, position, imgWidth, pdfHeight);
+  heightLeft -= pageHeight;
+
+  while (heightLeft >= 0) {
+      position = heightLeft - pdfHeight;
+      pdf.addPage();
+      pdf.addImage(data, 'PNG', 0, position, imgWidth, pdfHeight);
+      heightLeft -= pageHeight;
+  }
+
+  pdf.save(`Mop-report-${currentDate}.pdf`);
+};
+
+
+
 
   return (
-       <Card title={<span >Material Order Proposal Report</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }} >
+       <Card title={<span >Material Order Proposal Report</span>} headStyle={{ border: 0 }}   extra={
+        <div>
+          <Button icon={<DownloadOutlined />} onClick={() => { exportExcel(); }} style={{marginRight:30}}>
+            GET EXCEL
+          </Button>
+          <Button icon={<FilePdfOutlined  />} onClick={() => { handleExportPDF(); }}>
+            Download PDF
+          </Button>
+        </div>
+      } >
         <Form  form={form} layout="horizontal" onFinish={getMOPData}>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }}
@@ -240,6 +460,7 @@ const getMOPData= () => {
                 <Tabs type={'card'} tabPosition={'top'} onChange={(key)=>{onChange(key)}}>
                    <TabPane key="mop" tab={<span style={{fontSize:'15px'}}><b>{`MOP`}</b></span>} >
                       <Table
+                      id="mopTable" 
                       size="small"
                       columns={columnsSkelton}
                       dataSource={mopDataYes}
@@ -251,6 +472,7 @@ const getMOPData= () => {
                   </TabPane>
                       <TabPane key="pop" tab={<span style={{fontSize:'15px'}}><b>{`POP`}</b></span>}>
                       <Table
+                      id="popTable"
                       size="small"
                       columns={columnsSkelton}
                       dataSource={mopDataNo}
@@ -274,8 +496,6 @@ const getMOPData= () => {
             < Mopprint mop={mopDataYes} pop={mopDataNo} key={key}/>        
             </Modal>
         </Form>
-
-  
      
       </Card> 
       

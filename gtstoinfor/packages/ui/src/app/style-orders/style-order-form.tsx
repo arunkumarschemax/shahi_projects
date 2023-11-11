@@ -346,16 +346,15 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
 
     const setQuantityValue = (e,index,rowData) => {
         if(e.target.value != ''){
-                data[index].quantity = e.target.value
-                data[index].deliveryAddress = form.getFieldValue('deliveryAddress')
-              
-                const iniIndex = orderQuantityData.findIndex(e => e.skuCode === rowData.skuCode)
-                if(iniIndex != -1){
-                    orderQuantityData[index].orderQuantity = e.target.value
-                } else{
-                    const req = new StyleOrderItemsReq(form.getFieldValue('deliveryAddress'),e.target.value,rowData.color,rowData.size,rowData.destination,null,null,state != null ? rowData.salePrice : salePrice,null,rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId,null,rowData.coLineId,rowData.skuCode,state !== null ? state?.id : null,rowData.styleOrderInfo)
-                    setOrderQuantityData([...orderQuantityData,req])
-                }
+            data[index].quantity = e.target.value
+            data[index].deliveryAddress = form.getFieldValue('deliveryAddress')
+            const iniIndex = orderQuantityData.findIndex(e => e.skuCode === rowData.skuCode)
+            if(iniIndex != -1){
+                orderQuantityData[index].orderQuantity = e.target.value
+            } else{
+                const req = new StyleOrderItemsReq(form.getFieldValue('deliveryAddress'),e.target.value,rowData.color,rowData.size,rowData.destination,null,null,state != null ? rowData.salePrice : salePrice,null,rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId,null,rowData.coLineId,rowData.skuCode,state !== null ? state?.id : null,rowData.styleOrderInfo)
+                setOrderQuantityData([...orderQuantityData,req])
+            }
         }
     }
 
@@ -449,7 +448,7 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
         }) 
     }
     return(
-        <Card title='Style Order Creation' size='small'  extra={
+        <Card title='Style Order Creation' extra={
             <span>
               <Button
                 onClick={() => navigate("/materialCreation/style-order-view")}

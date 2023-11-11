@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Form, Select, Space } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Form, Select, Space, Alert } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined, CheckOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
@@ -247,7 +247,7 @@ export function VendorsView(
         },
         {
           dataIndex:"vendorCode",
-          title:"Vendor Code",
+          title:<div style={{textAlign:'center'}}>Vendor Code</div>,
           // responsive: ['lg'],
           sorter: (a, b) => a.vendorCode?.localeCompare(b.vendorCode),
           sortDirections: ['descend', 'ascend'],
@@ -255,7 +255,7 @@ export function VendorsView(
         },
         {
           dataIndex:"vendorName",
-          title:"Vendor Name",
+          title:<div style={{textAlign:'center'}}>Vendor Name</div>,
           // responsive: ['lg'],
           sorter: (a, b) => a.vendorName.localeCompare(b.vendorName),
           sortDirections: ['descend', 'ascend'],
@@ -263,7 +263,7 @@ export function VendorsView(
         },
         // {
         //   dataIndex:"priceNeeded",
-        //   title:"Price Needed",
+        //   title:<div style={{textAlign:'center'}}>Price Needed</div>,
         //   // responsive: ['lg'],
         //   filters: [
         //     {
@@ -286,7 +286,7 @@ export function VendorsView(
         
         // {
         //   dataIndex:"website",
-        //   title:"Website",
+        //   title:<div style={{textAlign:'center'}}>Website</div>,
         //   // responsive: ['lg'],
         //   sorter: (a, b) => a.deptName.length - b.deptName.length,
         //   sortDirections: ['descend', 'ascend'],
@@ -294,7 +294,7 @@ export function VendorsView(
         // },
         {
           dataIndex:"contactPerson",
-          title:"Contact Person",
+          title:<div style={{textAlign:'center'}}>Contact Person</div>,
           // responsive: ['lg'],
           sorter: (a, b) => a.contactPerson.localeCompare(b.contactPerson),
           sortDirections: ['descend', 'ascend'],
@@ -302,7 +302,7 @@ export function VendorsView(
         },
         {
           dataIndex:"contactNumber",
-          title:"Contact Number",
+          title:<div style={{textAlign:'center'}}>Contact Number</div>,
           // responsive: ['lg'],
           sorter: (a, b) => a.contactNumber.localeCompare(b.contactNumber),
           sortDirections: ['descend', 'ascend'],
@@ -310,7 +310,7 @@ export function VendorsView(
         },
         {
           dataIndex:"gstNumber",
-          title:"GST Number",
+          title:<div style={{textAlign:'center'}}>GST Number</div>,
           // responsive: ['lg'],
           sorter: (a, b) => a.gstNumber.localeCompare(b.gstNumber),
           sortDirections: ['descend', 'ascend'],
@@ -318,7 +318,7 @@ export function VendorsView(
         },
         // {
         //   dataIndex:"apartment",
-        //   title:"Apartment",
+        //   title:<div style={{textAlign:'center'}}>Apartment</div>,
         //   // responsive: ['lg'],
         //   sorter: (a, b) => a.deptName.length - b.deptName.length,
         //   sortDirections: ['descend', 'ascend'],
@@ -326,15 +326,15 @@ export function VendorsView(
         // },
         {
           dataIndex:"city",
-          title:"City",
+          title:<div style={{textAlign:'center'}}>City</div>,
           // responsive: ['lg'],
           sorter: (a, b) => a.city?.localeCompare(b.city),
           sortDirections: ['descend', 'ascend'],
-          // ...getColumnSearchProps('city')
+          ...getColumnSearchProps('city')
         },
         // {
         //   dataIndex:"postalCode",
-        //   title:"PostalCode",
+        //   title:<div style={{textAlign:'center'}}>PostalCode</div>,
         //   // responsive: ['lg'],
         //   sorter: (a, b) => a.deptName.length - b.deptName.length,
         //   sortDirections: ['descend', 'ascend'],
@@ -342,7 +342,7 @@ export function VendorsView(
         // },
         // {
         //   dataIndex:"countryName",
-        //   title:"Country",
+        //   title:<div style={{textAlign:'center'}}>Country</div>,
         //   // responsive: ['lg'],
         //   sorter: (a, b) => a.countryName.localeCompare(b.countryName),
         //   sortDirections: ['descend', 'ascend'],
@@ -350,7 +350,7 @@ export function VendorsView(
         // },
         // {
         //   dataIndex:"currencyName",
-        //   title:"Currency",
+        //   title:<div style={{textAlign:'center'}}>Currency</div>,
         //   // responsive: ['lg'],
         //   sorter: (a, b) => a.currencyName.localeCompare(b.currencyName),
         //   sortDirections: ['descend', 'ascend'],
@@ -358,7 +358,7 @@ export function VendorsView(
         // },
         // {
         //   dataIndex:"privateNote",
-        //   title:"Private Note",
+        //   title:<div style={{textAlign:'center'}}>Private Note</div>,
         //   // responsive: ['lg'],
         //   sorter: (a, b) => a.deptName.length - b.deptName.length,
         //   sortDirections: ['descend', 'ascend'],
@@ -366,7 +366,7 @@ export function VendorsView(
         // },
         // {
         //   dataIndex:"publicNote",
-        //   title:"PublicNote",
+        //   title:<div style={{textAlign:'center'}}>PublicNote</div>,
         //   // responsive: ['lg'],
         //   sorter: (a, b) => a.deptName.length - b.deptName.length,
         //   sortDirections: ['descend', 'ascend'],
@@ -374,7 +374,7 @@ export function VendorsView(
         // },
         // {
         //   dataIndex:"bankAccNo",
-        //   title:"BankAccNo",
+        //   title:<div style={{textAlign:'center'}}>BankAccNo</div>,
         //   // responsive: ['lg'],
         //   sorter: (a, b) => a.deptName.length - b.deptName.length,
         //   sortDirections: ['descend', 'ascend'],
@@ -382,7 +382,7 @@ export function VendorsView(
         // },
         // {
         //   dataIndex:"bankIfsc",
-        //   title:"BankIfsc",
+        //   title:<div style={{textAlign:'center'}}>BankIfsc</div>,
         //   // responsive: ['lg'],
         //   sorter: (a, b) => a.deptName.length - b.deptName.length,
         //   sortDirections: ['descend', 'ascend'],
@@ -390,7 +390,7 @@ export function VendorsView(
         // },
         // {
         //   dataIndex:"bankName",
-        //   title:"BankName",
+        //   title:<div style={{textAlign:'center'}}>BankName</div>,
         //   // responsive: ['lg'],
         //   sorter: (a, b) => a.deptName.length - b.deptName.length,
         //   sortDirections: ['descend', 'ascend'],
@@ -398,7 +398,7 @@ export function VendorsView(
         // },
         // {
         //   dataIndex:"bankBranch",
-        //   title:"BankBranch",
+        //   title:<div style={{textAlign:'center'}}>BankBranch</div>,
         //   // responsive: ['lg'],
         //   sorter: (a, b) => a.deptName.length - b.deptName.length,
         //   sortDirections: ['descend', 'ascend'],
@@ -407,7 +407,7 @@ export function VendorsView(
 
         // {
         //   dataIndex:"emailId",
-        //   title:"EmailId",
+        //   title:<div style={{textAlign:'center'}}>EmailId</div>,
         //   // responsive: ['lg'],
         //   sorter: (a, b) => a.deptName.length - b.deptName.length,
         //   sortDirections: ['descend', 'ascend'],
@@ -417,8 +417,9 @@ export function VendorsView(
   
        
         {
-          title: 'Status',
+          title:<div style={{textAlign:'center'}}>'Status</div>,
           dataIndex: 'isActive',
+          align:'center',
           render: (isActive, rowData) => (
             <>
               {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -444,8 +445,9 @@ export function VendorsView(
           
         },
         {
-          title:`Action`,
+          title:<div style={{textAlign:'center'}}>Action</div>,
           dataIndex: 'action',
+          align:'center',
           render: (text, rowData) => (
             <span>   
                  
@@ -500,9 +502,9 @@ export function VendorsView(
     style={{textAlign:'center'}} headStyle={{backgroundColor: '#69c0ff', border: 0 }} extra={<Link to='/vendors-form' ><Button className='panel_button' >Create </Button></Link>}
     
     > */}
-    <Card size='small' title='Vendors' extra={<span><Button onClick={() => navigate('/masters/vendors/vendors-form')} type={'primary'}>New</Button></span>}>
-     <Row gutter={40}>
-      <Col>
+    <Card title='Vendors' extra={<span><Button onClick={() => navigate('/masters/vendors/vendors-form')} type={'primary'}>New</Button></span>}>
+     <Row gutter={24}>
+      {/* <Col>
           <Card title={'Total Vendors : ' + vendorsData.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
@@ -510,7 +512,17 @@ export function VendorsView(
           </Col>
           <Col>
            <Card title={'In-Active :' + vendorsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
-          </Col>
+          </Col> */}
+           <Col span={4}></Col>
+       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
+        <Alert type='success' message={'Total Vendors: ' + vendorsData.length} style={{fontSize:'15px'}} />
+        </Col>
+           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
+          <Alert type='warning' message={'Active: ' + vendorsData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
+          <Alert type='info' message={'In-Active: ' + vendorsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        </Col>
           </Row>
           <br></br>
           {/* <Form form={form} layout='vertical' onFinish={getAllVendors}>

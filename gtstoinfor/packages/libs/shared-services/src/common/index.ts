@@ -90,4 +90,5 @@ export * from './rm-sku-service'
 export * from './product-structure-services';
 export * from './rm-item.service';
 export * from './co-bom-service';
-export * from './substituion-service'
+export * from './substituion-service';
+export * from './co-line-service'

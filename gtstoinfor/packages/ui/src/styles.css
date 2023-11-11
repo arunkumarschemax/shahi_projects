@@ -56,4 +56,11 @@
   color:white
 }
 
+/* Custom styles for the filter dropdown container */
+.custom-filter-dropdown {
+  width: 150px; 
+  height: 70px; 
+  /* padding: 20px;  */
+border-radius: 8;
+}
 
