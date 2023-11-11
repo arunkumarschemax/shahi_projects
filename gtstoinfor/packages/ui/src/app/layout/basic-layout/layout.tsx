@@ -193,10 +193,10 @@ export const baseMRouterList = [
         filepath: "/stack-report",
     },
     {
-        label: "sample request Report",
-        key: "sample-request-report",
-        path: "sample-request-report",
-        filepath: "/sample-request-report",
+        label: "Material Requision",
+        key: "material-requisition",
+        path: "material-requisition",
+        filepath: "/material-requisition",
     },
 
     
@@ -896,10 +896,10 @@ export const baseRouterList = [
         filepath: "/stack-report",
     },
     {
-        label: "sample request Report",
-        key: "sample-request-report",
-        path: "sample-request-report",
-        filepath: "/sample-request-report",
+        label: "Material Requision",
+        key: "material-requisition",
+        path: "material-requisition",
+        filepath: "/material-requisition",
     },
    
     {

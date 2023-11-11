@@ -200,7 +200,7 @@ export const AppRoutes = () => {
                     <Route path='/user-management/users-view' element={<UsersView />} />
                     
                     <Route path='/stack-report' element={<StockReport/>}/>
-                    <Route path='/sample-request-report' element={<SampleRequestReport/>}/>
+                    <Route path='/material-requisition' element={<SampleRequestReport/>}/>
 
                     {/* <Route path='/stack-report' element={<StockReport/>}/> */}
                     <Route path='/masters'>

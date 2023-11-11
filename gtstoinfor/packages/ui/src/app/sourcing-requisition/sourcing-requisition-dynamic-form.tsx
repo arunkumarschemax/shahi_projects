@@ -2,7 +2,7 @@ import { Button, Card, Col, DatePicker, Divider, Form, Input, Popconfirm, Row, S
 import { ColumnProps } from "antd/es/table";
 import React, { useEffect } from "react";
 import { useState } from "react"
-import { BuyersService, ColourService, CurrencyService, FabricTypeService, FabricWeaveService, IndentService, M3MastersService, ProfitControlHeadService, SizeService, StyleService, UomService, VendorsService } from "@project-management-system/shared-services";
+import { BuyersService, ColourService, CurrencyService, FabricTypeService, FabricWeaveService, IndentService, M3MastersService, ProfitControlHeadService, SampleDevelopmentService, SizeService, StyleService, UomService, VendorsService } from "@project-management-system/shared-services";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { EditOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
@@ -24,6 +24,7 @@ export const SourcingRequisitionDynamicForm = () => {
     const colorService = new ColourService();
     const [color,setColor] = useState<any[]>([])
     const [uom,setUom] = useState<any[]>([])
+    const [trimCodes,setTrimCodes] = useState<any[]>([])
     const [currency,setCurrency] = useState<any[]>([])
     const [fabricColor,setFabricColor] = useState<string>('')
     const pchService = new ProfitControlHeadService()
@@ -34,6 +35,7 @@ export const SourcingRequisitionDynamicForm = () => {
     const [fabricSupplier,setFabricSupplier] = useState<string>('')
     const buyerService = new BuyersService()
     const [buyer,setBuyer] = useState<any[]>([])
+    const [trimTypes,setTrimTypes] = useState<any[]>([])
     const [fabricBuyer,setFabricBuyer] = useState<string>('')
     const navigate = useNavigate()
     const weaveService = new FabricWeaveService()
@@ -67,6 +69,7 @@ export const SourcingRequisitionDynamicForm = () => {
     const indentService = new IndentService()
     const uomService =  new UomService()
     const currencyService = new CurrencyService()
+    const sampleDevelopmentService =  new SampleDevelopmentService()
 
 
     let tableData: any[] = []
@@ -86,12 +89,30 @@ export const SourcingRequisitionDynamicForm = () => {
         getUom()
         getCurrencies()
         getFabricType()
+        getFabricTypes()
+
     },[])
+
+    const getFabricTypes = () => {
+        fabricTypeService.getTrimTypes().then(res => {
+            if(res.status) {
+                setTrimTypes(res.data)
+            }
+        })
+    }
 
     const getUom = () => {
         uomService.getAllUoms().then(res => {
             if(res.status) {
                 setUom(res.data)
+            }
+        })
+    }
+
+    const getTrimCodes = () => {
+        sampleDevelopmentService.getFabricCodes().then(res => {
+            if(res.status) {
+                setTrimCodes(res.data)
             }
         })
     }
@@ -953,8 +974,8 @@ export const SourcingRequisitionDynamicForm = () => {
                     <Form.Item name='season' label='Season'>
                         {/* <Input placeholder="Enter Season"/> */}
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Enter Season'>
-                            <Option key='spring' value='spring'>Spring</Option>
                             <Option key='autumn' value='autumn'>Autumn</Option>
+                            <Option key='spring' value='spring'>Spring</Option>
                             <Option key='summer' value='summer'>Summer</Option>
                             <Option key='winter' value='winter'>Winter</Option>
                         </Select>
@@ -1081,7 +1102,21 @@ export const SourcingRequisitionDynamicForm = () => {
                                 message: `Should contain only alphabets.`,
                             },
                         ]}>
-                            <Input placeholder="Enter Trim Type" />
+                            <Select
+                            allowClear
+                            showSearch
+                            optionFilterProp="children"
+                            placeholder="Select Trim Type"
+                            onChange={getTrimCodes}
+                            >
+                                {trimTypes?.map((e) => {
+                                  return (
+                                    <Option key={e.productGroupId} value={e.productGroupId} name={e.productGroup}>
+                                  {e.productGroup}
+                                </Option>
+                              );
+                            })}
+                            </Select>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
@@ -1098,7 +1133,20 @@ export const SourcingRequisitionDynamicForm = () => {
                                 message: `Should contain only alphabets.`,
                             },
                         ]}>
-                            <Input placeholder="Enter Trim Code" />
+                            <Select
+                            allowClear
+                            showSearch
+                            optionFilterProp="children"
+                            placeholder="Select Trim Code"
+                            >
+                                {trimCodes.map((e) => {
+                                  return (
+                                    <Option key={e.fabricId} value={e.fabricId} name={e.fabricCode}>
+                                  {e.fabricCode}
+                                </Option>
+                              );
+                            })}
+                            </Select>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
