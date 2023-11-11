@@ -1,14 +1,7 @@
- 
-
-import { BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, GroupTechClassService, ItemCategoryService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Descriptions, Row, Table } from "antd";
-import { ColumnsType } from "antd/es/table";
+ import { Button, Card, Col, Descriptions, Row, Table } from "antd";
 import moment from "moment";
 import React, { useRef } from "react";
-import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import AlertMessages from "../common/common-functions/alert-messages";
-import { LiscenceTypeIdRequest } from "@project-management-system/shared-models";
 
 export interface Props {
   data: any
@@ -18,9 +11,9 @@ export function RMDetailView  (props: Props)  {
     // const [page,setPage] = useState<number>(1);
     // const [sizeData, setSizeData] = useState<any[]>([])
     let location = useLocation();
-    const stateData = location.state;
+    const stateDatas = location.state;
 
-     console.log(stateData,"data through state")
+    //  console.log(stateDatas,"data through state")
     
    
 
@@ -29,71 +22,72 @@ export function RMDetailView  (props: Props)  {
         <Card title={<span style={{ color: 'white' }}>RM Creation<span style={{color:'#0A93E1 '}}></span></span>}  headStyle={{ fontWeight: 'bold' }} extra={<Link to='/materialCreation/rm-creation-view' ><span style={{color:'white'}} >
           <Button className='panel_button' >Back </Button>
            </span></Link>}>
-            <span>      
-              <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:24}}><Card bordered={false} title='Fabric Details'>
-                <Descriptions  style={{ alignItems: 'right' }} >
-                    <Descriptions.Item label={<span style={{ color:'',fontWeight: 'bold' }}>Item Type</span>} >{stateData.style_no}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Item Group</span>} >{stateData.item_type}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>PCH</span>} >{(stateData.brand_name)}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Structure</span>} >{stateData.item_category}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Item Group</span>} >{stateData.item_group}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Quality</span>} >{stateData.season}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Description</span>} >{stateData?.style}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Placement</span>} >{stateData.reference}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Fabric Code</span>} >{stateData.reference}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Facility</span>} >{stateData.reference}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Item Category</span>} >{stateData.reference}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'',fontWeight: 'bold' }}>Is Imported Item</span>} >{stateData.reference}</Descriptions.Item>
+            <span>    
+              <Row gutter={16} >  
+              <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:12}}><Card bordered={false} title='Fabric Details'>
+                <Descriptions column={2}  style={{ alignItems: 'right' }} >
+                    <Descriptions.Item label={<span style={{ color:'#687170',fontWeight: 'bold' }}>Item Type</span>} >{stateDatas.item_type}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>PCH</span>} >{(stateDatas.pch)}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Structure</span>} >{stateDatas?.item_category}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Item Group</span>} >{stateDatas?.item_group}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Quality</span>} >{stateDatas?.quality}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Description</span>} >{stateDatas?.descr}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Placement</span>} >{stateDatas?.placement}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Fabric Code</span>} >{stateDatas?.item_code}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Facility</span>} >{stateDatas?.facility}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Item Category</span>} >{stateDatas?.item_category}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Is Imported Item</span>} >{stateDatas.is_imported_item}</Descriptions.Item>
 
                     </Descriptions>
 </Card></Col>
-                <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:24}}><Card bordered={false} title='Performance Responsible Team'> <Descriptions  style={{ alignItems: 'right' }} >
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Responsible</span>} >{stateData.buying_house}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Development Responsible</span>} >{stateData.liscence_type}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Sourcing Merchant</span>} >{stateData.custom_group}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Product Group</span>} >{stateData.national_dbk}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Procurement Group</span>} >{stateData.rosl_group}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Attached WareHouse</span>} >{stateData.group_tech_class}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Planner</span>} >{stateData.search_grp_name}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Business Area</span>} >{stateData.sale_person_id}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Supplier</span>} >{stateData.no_of_lace_panel}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Generic Code</span>} >{stateData.no_of_lace_panel}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Fabric Finish</span>} >{stateData.no_of_lace_panel}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Use In Operation</span>} >{stateData.no_of_lace_panel}</Descriptions.Item>
+                <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:12}}><Card  bordered={false} title='Performance Responsible Team'> <Descriptions column={2} style={{ alignItems: 'right' }} >
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Responsible</span>} >{stateDatas.responsible_person}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Development Responsible</span>} >{stateDatas.dev_responsible}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Sourcing Merchant</span>} >-</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Product Group</span>} >{stateDatas.product_group}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Procurement Group</span>} >{stateDatas.procurment_group}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Attached WareHouse</span>} >{stateDatas.attached_warehouse}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Planner</span>} >{stateDatas.planner}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Business Area</span>} >{stateDatas.business_area}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Supplier</span>} >{stateDatas.supplier}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Generic Code</span>} >{stateDatas.generic_code}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Fabric Finish</span>} >{stateDatas.fabricFinish}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Use In Operation</span>} >{stateDatas.use_in_operation}</Descriptions.Item>
 
-                    </Descriptions></Card></Col>
+                    </Descriptions></Card></Col></Row>
                 <br></br>
                 <Row gutter={16}>
-                <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:24}}>
+                <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:12}}>
                 <Card title='Purchase Price Information' bordered={false}>
-                <Descriptions  style={{ alignItems: 'right' }} >
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Basic UOM</span>} >{stateData.responsible_person}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Alt UOM</span>} >{stateData.approver}</Descriptions.Item>            
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Multiplication Factor</span>} >{stateData.product_designer}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Currency</span>} >{stateData.pd_merchant}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Purchase Price Quantity</span>} >{stateData.factory_merchant}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Sales Tax</span>} >{stateData.factory_merchant}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Excise Duty</span>} >{stateData.factory_merchant}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>License</span>} >{stateData.factory_merchant}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Property</span>} >{stateData.factory_merchant}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Sales Item</span>} >{stateData.factory_merchant}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Supply Lead Time</span>} >{stateData.factory_merchant}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Hierarchy Level</span>} >{stateData.factory_merchant}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Total Price with tax</span>} >{stateData.factory_merchant}</Descriptions.Item>
+                <Descriptions column={2} style={{ alignItems: 'right' }} >
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Basic UOM</span>} >{stateDatas.uom}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Alt UOM</span>} >{stateDatas.altuom}</Descriptions.Item>            
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Multiplication Factor</span>} >{stateDatas.multiplication_factor}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Currency</span>} >{stateDatas.currency}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Purchase Price Quantity</span>} >{stateDatas.purchase_price_qty}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Sales Tax</span>} >{stateDatas.sale_tax}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Excise Duty</span>} >{stateDatas.excise_duty}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>License</span>} >{stateDatas.liscence_type}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Property</span>} >{stateDatas.property}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Is Sales Item</span>} >{stateDatas.is_sale_item}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Supply Lead Time</span>} >{stateDatas.supply_lead_time}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Hierarchy Level</span>} >{stateDatas.hierarchy_level}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}> Price</span>} >{stateDatas.price}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}> Tax</span>} >{stateDatas.tax}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}> Total</span>} >{stateDatas.total}</Descriptions.Item>
 
                     </Descriptions>
                 </Card></Col>
-                <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:24}}>
-                <Card title='Bill Of Material Data' bordered={false}> <Descriptions  style={{ alignItems: 'right' }} >
+                <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:12}}>
+                <Card title='Bill Of Material Data' bordered={false}> <Descriptions column={2} style={{ alignItems: 'right' }} >
                 <Descriptions.Item label={<span style={{ fontWeight: 'bold', color: '',whiteSpace: 'nowrap' }}>Consumption</span>}>
                  <span style={{ whiteSpace: 'nowrap' }}>
-                 {stateData.order_confirmed_date}</span></Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'',whiteSpace: 'nowrap' }}>Wastage %</span>} >{moment(stateData.order_close_date).format('DD-MM-YYYY')}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Cost Group</span>} >{moment(stateData.first_ex_factory_date).format('DD-MM-YYYY')}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Usage Remarks</span>} >-</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold', color: '' }}>Delivery Terms</span>}>
-                     {Number(stateData.order_qty).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'' }}>Delivery Method</span>} >{stateData.rangee}</Descriptions.Item>
+                 {stateDatas.consumption}</span></Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170',whiteSpace: 'nowrap' }}>Wastage %</span>} >{stateDatas.wastage}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Cost Group</span>} >{stateDatas.cost_Group}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Usage Remarks</span>} >{stateDatas.remarks}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold', color: '' }}>Delivery Terms</span>}>{stateDatas.delivery_terms_name}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Delivery Method</span>} >{stateDatas.delivery_method}</Descriptions.Item>
 
                     </Descriptions></Card>
                     
