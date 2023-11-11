@@ -16,7 +16,7 @@ poFabricId:number
   remarks : string;
 
   @ApiProperty()
-fabricType:string
+fabricTypeId:number
 
 @ApiProperty()
 fabricCode:string

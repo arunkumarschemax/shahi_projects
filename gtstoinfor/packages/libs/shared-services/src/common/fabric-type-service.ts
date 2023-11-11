@@ -26,5 +26,11 @@ export class FabricTypeService extends CommonAxiosService{
         return this.axiosPostCall(this.URL + '/getAllActiveFabricType')
 
     }
+
+    async getTrimTypes(): Promise<AllFabricTypesResponse> {
+        return this.axiosPostCall(this.URL + '/getTrimTypes')
+
+    }
+    
     
 }

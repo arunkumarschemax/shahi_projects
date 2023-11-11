@@ -20,21 +20,15 @@ poFabricId:number
   })
   productGroupId:number
 
-  
   @Column('text',{
     name:'remarks',
 })
   remarks : string;
 
-@Column('varchar',{
-    name:'fabric_type'
+@Column('int',{
+    name:'fabric_type_id'
 })
-fabricType:string
-
-@Column('varchar',{
-    name:'fabric_code'
-})
-fabricCode:string
+fabricTypeId:number
 
 
 @Column('varchar',{
@@ -133,6 +127,13 @@ moq:string
     default:1
   })
   isActive: boolean;
+
+  @Column('int',{
+    name:'yarn_uom',
+    nullable:false
+  })
+  yarnUom:number
+
 
 @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poFabricInfo)
 @JoinColumn({name:'purchase_order_id'})

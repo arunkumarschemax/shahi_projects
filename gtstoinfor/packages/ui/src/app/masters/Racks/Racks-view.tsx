@@ -57,14 +57,6 @@ const RackView = () => {
 
     const Columns: any = [
         {
-            title: "Rack Name",
-            dataIndex: "rackName"
-        },
-        {
-            title: "Rack Code",
-            dataIndex: "rackCode"
-        },
-        {
             title: "Unit",
             dataIndex: "unit"
         },
@@ -121,6 +113,16 @@ const RackView = () => {
                 return record.isActive.toString() === value;
             },
         },
+        {
+            title: "Rack Code",
+            dataIndex: "rackCode"
+        },
+       
+        {
+            title: "Rack Name",
+            dataIndex: "rackName"
+        },
+        
         {
             title: "Status",
             dataIndex: "isActive",
@@ -224,7 +226,7 @@ const RackView = () => {
 
     return (
         <div>
-            <Card title={<span>RACKS  VIEW</span>} style={{ textAlign: 'center' }} headStyle={{ border: 0 }}
+            <Card title={<span>RACKS</span>} style={{ textAlign: 'center' }} headStyle={{ border: 0 }}
                 className="card-header"
                 extra={<Button
                     onClick={() => navigate('/masters/rack-form')}

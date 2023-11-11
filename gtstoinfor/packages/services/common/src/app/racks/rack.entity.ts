@@ -1,3 +1,4 @@
+import { RackEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
 @Entity('racks')
@@ -31,7 +32,7 @@ export class RacksEntity {
     length: 30,
     name: 'rack_type',
   })
-  rackType: string;
+  rackType: RackEnum;
 
   @Column("boolean", {
     nullable: false,

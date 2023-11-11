@@ -3,7 +3,7 @@ import { OrdersService } from './orders.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { CommonResponseModel, FileStatusReq } from '@project-management-system/shared-models';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { MulterFile } from 'multer';
+// import { MulterFile } from 'multer';
 import { ApiConsumes } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
 import { extname } from 'path'; import { FileIdReq } from './models/file-id.req';

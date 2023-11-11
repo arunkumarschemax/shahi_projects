@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, CommonResponseModel, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, UploadResponse } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, UploadResponse } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -117,9 +117,9 @@ export class SampleRequestService {
       const sampleId=await this.sampleRepo.getsampleId()
       const maxId= sampleId.id
       const sampleReqEntity = new SampleRequest();
-      const locationEntity = new Location()
-      locationEntity.locationId = req.locationId
-      sampleReqEntity.location = locationEntity
+      // const locationEntity = new Location()
+      // locationEntity.locationId = req.locationId
+      sampleReqEntity.locationId = req.locationId
       sampleReqEntity.requestNo = 'SAM' + '-' + (Number(maxId) + 1)
       const profitHead = new ProfitControlHead()
       profitHead.profitControlHeadId = req.pchId
@@ -186,6 +186,7 @@ export class SampleRequestService {
       for (const trimObj of req.trimInfo) {
         const trimEntity = new SampleRequestTriminfoEntity()
         trimEntity.trimCode = trimObj.trimCode
+        trimEntity.productGroupId=trimObj.productGroupId
         trimEntity.consumption = trimObj.consumption
         trimEntity.description = trimObj.description
         trimEntity.remarks = trimObj.remarks
@@ -203,13 +204,14 @@ export class SampleRequestService {
        save = await this.sampleRepo.save(sampleReqEntity)
       if(save){
         for(const fabricData of req.fabricInfo){
-        const quantityWithWastage = Number(fabricData.consumption)+Number((5/100)*fabricData.consumption)
+        const quantityWithWastage = Number(fabricData.consumption)+Number((2/100)*fabricData.consumption)
         const bomEntity = new SamplingbomEntity()
         bomEntity.sampleRequestId=save.SampleRequestId
         bomEntity.colourId=fabricData.colourId
         bomEntity.fabricId=fabricData.fabricCode /// product_gropu_id
         bomEntity.rmItemId=1 //rm_item_id need to be added
         bomEntity.requiredQuantity=quantityWithWastage
+        bomEntity.wastage='2'
          saveBomDetails = await this.bomRepo.save(bomEntity)
         }
       }
@@ -276,6 +278,33 @@ export class SampleRequestService {
     }
   }
 
+  async getTrimType():Promise<CommonResponseModel>{
+    try{
+      const query='SELECT product_group_id AS productGroupId,product_group AS productGroup FROM product_group      WHERE product_group NOT IN("Fabric") AND is_active=1'
+      const result = await this.sampleRepo.query(query)
+      if(result){
+        return new CommonResponseModel(true,1,'data retivedsucessfully',result)
+      }else{
+        return new CommonResponseModel(false,0,'No Data Found',[])
+      }
+    }catch(err){
+      throw err
+    }
+  }
+  async getTrimCodeAgainstTrimType(req:ProductGroupReq):Promise<CommonResponseModel>{
+    try{
+      const query=  'SELECT product_group AS productGroup,rm_item_id AS trimId,item_code AS trimCode,ri.product_group_id FROM rm_items ri LEFT JOIN product_group pg ON pg.product_group_id=ri.product_group_id     WHERE product_group NOT IN("fabric") AND ri.product_group_id='+req.productGroupId+''
+      const result = await this.sampleRepo.query(query)
+      if(result){
+        return new CommonResponseModel(true,1,'data retivedsucessfully',result)
+      }else{
+        return new CommonResponseModel(false,0,'No Data Found',[])
+      }
+    }catch(err){
+      throw err
+    }
+  }
+
 
   async getSampleRequestReport(): Promise<CommonResponseModel> {
     const manager = this.dataSource;
@@ -313,6 +342,77 @@ export class SampleRequestService {
     }
   
     return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
+  }
+
+
+  async getM3StyleCode(): Promise<CommonResponseModel> {
+    const manager = this.dataSource;
+    let rawData
+     rawData = ' SELECT m3_style_code AS m3StyleCode ,m3_style_id AS m3StyleId FROM `m3_style` WHERE is_active=1';
+     const rmData = await manager.query(rawData);
+     if(rmData){
+      return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(rmData));
+      
+     }else{
+      return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
+
+     }
+  
+  }
+  async getSampleInventory(): Promise<CommonResponseModel> {
+    const inventoryData=this.dataSource
+    let rawDatas
+    rawDatas=`SELECT  b.buyer_name,
+    s.style as style,
+    c.colour AS color,
+    sb.colour_id,
+    sr.request_no as requestNumber,
+    sr.location_id as location,
+    pg.product_group as productGroup,
+    sb.required_quantity AS orderQuantity,
+    sb.received_quantity AS preparedQuantity,
+    i.item_name AS item,
+    CONCAT(
+        a.state, 
+        '-',
+        IF(a.district IS NULL, '', a.district),
+        IF(a.district IS NULL OR a.city IS NULL, '', '-'),
+        IF(a.city IS NULL, '', a.city),
+        IF(a.landmark IS NULL OR a.city IS NULL, '', '-'),
+        IF(a.landmark IS NULL, '', a.landmark),
+        IF(a.lane1 IS NULL OR a.landmark IS NULL, '', '-'),
+        IF(a.lane1 IS NULL, '', a.lane1),
+        IF(a.lane2 IS NULL OR a.lane1 IS NULL, '', '-'),
+        IF(a.lane2 IS NULL, '', a.lane2),
+        IF(a.pincode IS NULL OR a.lane2 IS NULL, '', '-'),
+        IF(a.pincode IS NULL, '', a.pincode)
+    ) AS billingAddress
+FROM 
+    sampling_bom sb
+LEFT JOIN 
+    sample_request sre ON sb.sample_request_id = sre.sample_request_id
+LEFT JOIN 
+    colour c ON c.colour_id = sb.colour_id
+LEFT JOIN 
+    sample_request sr ON sr.sample_request_id = sb.sample_request_id
+LEFT JOIN 
+    product_group pg ON pg.product_group_id = sb.product_group_id
+LEFT JOIN 
+    items i ON i.item_id = sb.rm_item_id
+LEFT JOIN 
+    style s ON s.style_id = sre.style_id
+LEFT JOIN 
+    address a ON a.buyer_id = sre.buyer_id
+LEFT JOIN 
+    buyers b ON b.buyer_id = sre.buyer_id`;
+
+
+    const result = await inventoryData.query(rawDatas)
+  if(result){
+    return new CommonResponseModel(true,1,'data retrived sucessfully',result)
+}else{
+    return new CommonResponseModel(false,0,'no data found',[])
+}
   }
   
 }

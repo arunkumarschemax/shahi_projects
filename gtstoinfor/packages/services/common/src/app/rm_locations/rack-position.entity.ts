@@ -19,6 +19,13 @@ export class RackPositionEntity {
   })
   positionCode: number;
 
+  @Column('varchar', {
+    nullable: false,
+    length: 30,
+    name: 'rack_name',
+  })
+  rackName: string;
+
   @Column("boolean", {
     nullable: false,
     default: true,

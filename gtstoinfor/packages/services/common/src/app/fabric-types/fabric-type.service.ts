@@ -1,18 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { FabricTypeAdapter } from './dto/fabric-type.adapter';
 import { FabricTypeDto } from './dto/fabric-type.dto';
 import { FabricType } from './fabric-type.entity';
 import { FabricTypeRequest } from './dto/fabric-type.request';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
-import { AllFabricTypesResponse,FabricTypeDropDownDto,FabricTypeResponse} from '@project-management-system/shared-models';
+import { AllFabricTypesResponse,CommonResponseModel,FabricTypeDropDownDto,FabricTypeResponse} from '@project-management-system/shared-models';
 import { FabricTypeItemNameRequest } from './dto/fabric-type-name.request';
 @Injectable()
 export  class FabricTypeService {
     constructor (
         @InjectRepository(FabricType) private fabricRepository: Repository<FabricType>,
         private fabricTypeAdapter: FabricTypeAdapter,
+        private readonly dataSource: DataSource,
     ){}
 
     async createFabricType(fabricTypeDto: FabricTypeDto, isUpdate: boolean): Promise<FabricTypeResponse> {
@@ -178,6 +179,22 @@ export  class FabricTypeService {
                  }else{
                      throw new ErrorResponse(11106,'Something went wrong');
                  }
+       }
+       async getTrimTypes():Promise<CommonResponseModel>{
+            const manager = this.dataSource;
+            try{
+                let productGroup = 'SELECT product_group_id AS productGroupId, product_group AS productGroup from product_group where product_group != "Fabric" order by product_group ASC';
+                const productGroupData = await manager.query(productGroup);
+                if (productGroupData.length > 0) {
+                    return new CommonResponseModel(true,1111,"data retrived successfully",productGroupData);
+                }
+                else{
+                    return new CommonResponseModel(false,1101,"No data found");
+                }
+            }
+            catch(err) {
+                 return new CommonResponseModel(false,1110,"something went wrong. ");
+            }
        }
    
 }

@@ -1,5 +1,6 @@
 import { IsInt, IsEmail, IsString, IsDateString, IsNumber, IsDate, IsAlphanumeric, MaxLength, Matches, IsOptional, IsNotEmpty, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { RackEnum } from '@project-management-system/shared-models';
 export class RacksDTO {
 
     @ApiProperty()
@@ -15,7 +16,7 @@ export class RacksDTO {
     unit: string;
 
     @ApiProperty()
-    rackType: string;
+    rackType: RackEnum;
 
     @ApiProperty()
     isActive: boolean;

@@ -26,7 +26,7 @@ export class RacksController {
     }
   }
 
-  @Post('getRacks')
+  @Post('/getRacks')
   async getRacks(): Promise<CommonResponseModel> {
     const data=await this.Service.getRacks()
     return  data

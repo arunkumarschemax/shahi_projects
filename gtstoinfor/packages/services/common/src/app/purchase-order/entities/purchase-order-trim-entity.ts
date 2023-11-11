@@ -22,11 +22,10 @@ export class PurchaseOrderTrimEntity{
     trimId:number
 
     @Column('int',{
-        name:'trim_code',
+        name:'colour_id',
         nullable:false
     })
-    trimCode:number
-
+    colourId:number
 
     @Column('text', {
         name: 'description',
@@ -45,6 +44,13 @@ export class PurchaseOrderTrimEntity{
         nullable: true
     })
     remarks: string
+    
+    @Column('text', {
+        name: 'm3_trim_code',
+        nullable: true
+    })
+    m3TrimCode: string
+    
 
     @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poTrimInfo)
     @JoinColumn({name:'purchase_order_id'})

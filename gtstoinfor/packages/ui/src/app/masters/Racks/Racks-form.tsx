@@ -1,9 +1,9 @@
 import { RacksService } from '@project-management-system/shared-services'
-import { Button, Card, Col, Form, Input, Row, message } from 'antd'
+import { Button, Card, Col, Form, Input, Row, Select, message } from 'antd'
 import React from 'react'
 import {   useNavigate } from 'react-router-dom'
 import AlertMessages from '../../common/common-functions/alert-messages'
-import { RackDTO } from '@project-management-system/shared-models'
+import { RackDTO, RackEnum } from '@project-management-system/shared-models'
 
 const RackForm = () => {
 
@@ -19,6 +19,7 @@ const onFinish = (rackDto: RackDTO) => {
         setTimeout(() => {
           message.success('Submitted successfully');
           window.location.reload();
+          navigate("/masters/rack-view")
         }, 500);;
       }
     }).catch(err => {
@@ -46,8 +47,8 @@ const onFinish = (rackDto: RackDTO) => {
         }>
         <Form form={form} layout={'vertical'} onFinish={onFinish}>
       <Row gutter={24}>
-            <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4}} lg={{ span: 8}} xl={{ span: 5}}>
-              <Form.Item label="Rack Name" name="rackName"
+      <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4}} lg={{ span: 8}} xl={{ span: 5}}>
+              <Form.Item label="Unit" name="unit"
                rules={[
                 { required: true, message: 'Field is required' },
                 {
@@ -56,7 +57,7 @@ const onFinish = (rackDto: RackDTO) => {
                 },
               ]}
               >
-                <Input placeholder=" Enter Rack Name"/>
+                <Input placeholder=" Enter unit"/>
               </Form.Item>
             </Col>
             <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4}} lg={{ span: 8}} xl={{ span: 5}}>
@@ -73,31 +74,41 @@ const onFinish = (rackDto: RackDTO) => {
               </Form.Item>
             </Col>
             <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4}} lg={{ span: 8}} xl={{ span: 5}}>
-              <Form.Item label="Unit" name="unit"
-               rules={[
-                { required: true, message: 'Field is required' },
-                {
-                  pattern: Rules,
-                  message: 'Only numbers and characters are allowed',
-                },
-              ]}
-              >
-                <Input placeholder=" Enter unit"/>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4}} lg={{ span: 8}} xl={{ span: 5}}>
               <Form.Item label=" Rack Type" name="rackType"
                rules={[
                 { required: true, message: 'Field is required' },
+              ]}
+              >
+                 <Select
+                                            // showSearch
+                                            // placeholder="Vendors"
+                                            optionFilterProp="children"
+                                        >
+                                            {Object.keys(RackEnum)
+                                                .sort()
+                                                .map(rackType => (
+                                                    <Select.Option key={RackEnum[rackType]} value={RackEnum[rackType]}>
+                                                        {RackEnum[rackType]}
+                                                    </Select.Option>
+                                                ))}
+                                        </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4}} lg={{ span: 8}} xl={{ span: 5}}>
+              <Form.Item label="Rack Name" name="rackName"
+               rules={[
+                { required: true, message: 'Field is required' },
                 {
                   pattern: Rules,
                   message: 'Only numbers and characters are allowed',
                 },
               ]}
               >
-                <Input placeholder=" Rack Type"/>
+                <Input placeholder=" Enter Rack Name"/>
               </Form.Item>
             </Col>
+            
+            
           </Row>
           <Row>
             <Col span={24} style={{ textAlign: 'right' }}>
