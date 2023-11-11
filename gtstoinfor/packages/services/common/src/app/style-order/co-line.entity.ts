@@ -29,6 +29,12 @@ export class CoLine{
     seasonCode : string;
 
     @Column('varchar',{
+        name:'co_number',
+        nullable:false
+    })
+    coNumber: string;
+
+    @Column('varchar',{
         name:'co_line_number',
         nullable:false
     })
@@ -60,11 +66,11 @@ export class CoLine{
     orderQuantity : number;
 
     @Column('varchar',{
-        name:'color',
+        name:'colour',
         nullable:false,
         length:30
     })
-    color : string;
+    colour : string;
 
     @Column('enum',{
         name:'status',
@@ -79,7 +85,7 @@ export class CoLine{
         length:10
 
     })
-    size: number
+    size: string
 
     @Column('varchar',{
         name:'destination',
@@ -87,7 +93,7 @@ export class CoLine{
         length:50
 
     })
-    destination: number
+    destination: string
 
    
     @Column('decimal',{
@@ -165,8 +171,8 @@ export class CoLine{
     @JoinColumn({ name:"co_id"})
     styleOrderInfo: StyleOrder;
 
-    @ManyToOne(type=>Colour, color=>color.CoLineData,{  nullable:false, })
-    @JoinColumn({ name:"color_id"})
+    @ManyToOne(type=>Colour, colour=>colour.CoLineData,{  nullable:false, })
+    @JoinColumn({ name:"colour_id"})
     colorInfo: Colour;
 
     @ManyToOne(type=>Size, size=>size.CoLineData,{  nullable:false, })
