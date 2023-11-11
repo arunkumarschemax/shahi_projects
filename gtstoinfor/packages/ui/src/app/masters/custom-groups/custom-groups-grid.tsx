@@ -181,7 +181,7 @@ export function CustomGroupsGrid(props: CustomGroupProps) {
       render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-      title: 'Custom Group',
+      title: <div style={{textAlign:"center"}}>Custom Group</div> ,
       dataIndex: 'customGroup',
       // responsive: ['lg'],
       sorter: (a, b) => a.customGroup.localeCompare(b.customGroup),
@@ -189,8 +189,9 @@ export function CustomGroupsGrid(props: CustomGroupProps) {
       ...getColumnSearchProps('customGroup')
     },
     {
-      title: 'Status',
+      title: <div style={{textAlign:"center"}}>Status</div> ,
       dataIndex: 'isActive',
+      align:"center",
       render: (isActive, rowData) => (
         <>
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -215,8 +216,9 @@ export function CustomGroupsGrid(props: CustomGroupProps) {
 
     },
     {
-      title:`Action`,
+      title: <div style={{textAlign:"center"}}>Action</div> ,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         <span>         
             <EditOutlined  className={'editSampleTypeIcon'}  type="edit" 
@@ -262,7 +264,7 @@ export function CustomGroupsGrid(props: CustomGroupProps) {
     console.log('params', pagination, filters, sorter, extra);
   }
   return (
-    <Card title="Custom Group" extra={<span><Button onClick={()=> navigate('/masters/custom-groups/custom-groups-form')} type={'primary'}>New</Button></span>}>
+    <Card title="Custom Groups" extra={<span><Button onClick={()=> navigate('/masters/custom-groups/custom-groups-form')} type={'primary'}>New</Button></span>}>
    
      <br></br>
      <Row gutter={40}>

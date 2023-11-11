@@ -1,4 +1,5 @@
-import {Column, Entity, PrimaryGeneratedColumn, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
+import {Column, Entity, PrimaryGeneratedColumn, VersionColumn, UpdateDateColumn, CreateDateColumn, ManyToOne, JoinColumn} from "typeorm";
+import { Countries } from "../countries/countries.entity";
 
 @Entity('buying_house')
 export class BuyingHouse {
@@ -50,12 +51,11 @@ export class BuyingHouse {
   })
   city:string;
 
-  @Column("varchar",{
-    nullable: true,
-    length:50,
-    name:"country"
-  })
-  country:string;
+  // @Column("int",{
+  //   nullable: false,
+  //   name:"country_id"
+  // })
+  // countryId:number;
 
   @Column("boolean",{
     nullable:false,
@@ -93,5 +93,9 @@ export class BuyingHouse {
       name: "version_flag"
   })
   versionFlag: number;
+
+  @ManyToOne(() =>Countries,country =>country.buyingHouse)
+  @JoinColumn({name:'country_id'})
+  country:Countries
 
 }

@@ -1,6 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import { BuyingHouseDTO } from './buying-house.dto';
 import { BuyingHouse } from '../buying-house.entity';
+import { Countries } from '../../countries/countries.entity';
 
 @Injectable()
 export class BuyingHouseAdapter {
@@ -19,7 +20,9 @@ export class BuyingHouseAdapter {
         buyingHouse.contact = buyingHouseDto.contact
         buyingHouse.address = buyingHouseDto.address
         buyingHouse.city = buyingHouseDto.city
-        buyingHouse.country = buyingHouseDto.country
+        buyingHouse.country = new Countries()
+        buyingHouse.country.countryId = buyingHouseDto.countryId
+        buyingHouse.country.countryName = buyingHouseDto.countryName
         buyingHouse.isActive = buyingHouseDto.isActive == undefined?true:buyingHouseDto.isActive;
         if (isUpdate) {
             buyingHouse.buyingHouseId=buyingHouseDto.buyingHouseId;
@@ -40,7 +43,8 @@ export class BuyingHouseAdapter {
         buyingHouseDto.contact = data.contact
         buyingHouseDto.address = data.address
         buyingHouseDto.city = data.city
-        buyingHouseDto.country = data.country
+        buyingHouseDto.countryId = (data.country)?.countryId
+        buyingHouseDto.countryName = (data.country)?.countryName
         buyingHouseDto.isActive = data.isActive;
         buyingHouseDto.createdAt = data.createdAt;
         buyingHouseDto.updatedAt = data.updatedAt;

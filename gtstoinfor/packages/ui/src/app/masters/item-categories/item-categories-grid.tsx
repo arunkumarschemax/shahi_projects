@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Modal } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps } from 'antd/lib/table';
 import { ItemCategoryService } from '@project-management-system/shared-services';
@@ -19,6 +19,9 @@ export function ItemCategoriesGrid(
   const searchInput = useRef(null);
   const [page, setPage] = React.useState(1);
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [remarks,setRemarks] = useState<string>('')
+  const [remarkModal,setRemarkModal] = useState<boolean>(false)
+
 
   const itemcategoryService = new ItemCategoryService();
   const [selectedItemcategoryata, setSelectedItemcategoryData] = useState<any>(undefined);
@@ -138,6 +141,15 @@ export function ItemCategoriesGrid(
     })
   }
 
+  const handleTextClick = (remarks) => {
+    setRemarks(remarks)
+    setRemarkModal(true)
+}
+
+const onRemarksModalOk = () => {
+  setRemarkModal(false)
+}
+
   const columnsSkelton: any = [
     {
       title: 'S No',
@@ -166,78 +178,17 @@ export function ItemCategoriesGrid(
     {
       title: 'Remarks',
       dataIndex: 'remarks',
-      responsive: ['sm'],
-      sorter: (a, b) => String(a.remarks).localeCompare(String(b.remarks)),
-      sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('remarks')
-    },
-   
-    // {
-    //   title: 'Status',
-    //   dataIndex: 'isActive',
-    //    render: (isActive, rowData) => (
-    //     <>
-    //       {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
-    //     </>
-    //   ),
-    //   filters: [
-    //     {
-    //       text: 'Active',
-    //       value: true,
-    //     },
-    //     {
-    //       text: 'InActive',
-    //       value: false,
-    //     },
-    //   ],
-    //   filterMultiple: false,
-    //   onFilter: (value, record) => 
-    //   {
-    //     // === is not work
-    //     return record.isActive === value;
-    //   },
-      
-    // },
-    // {
-    //   title:`Action`,
-    //   dataIndex: 'action',
-    //   render: (text, rowData) => (
-    //     rowData.itemCategory.trim()=='Packing Material' || rowData.itemCategory.trim()=='Raw Material' ? <span> </span>:
-    //     <span>         
-    //         <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
-    //           onClick={() => {
-    //             if (rowData.isActive) {
-    //               openFormWithData(rowData);
-    //             } else {
-    //               AlertMessages.getErrorMessage('You Cannot Edit Deactivated Product');
-    //             }
-    //           }}
-    //           style={{ color: '#1890ff', fontSize: '14px' }}
-    //         />
-          
-    //       <Divider type="vertical" />
-    //           <Popconfirm onConfirm={e =>{deleteItem(rowData);}}
-    //         title={
-    //           rowData.isActive
-    //             ? 'Are you sure to Deactivate  ?'
-    //             :  'Are you sure to Activate  ?'
-    //         }
-    //       >  
-            
-            
-    //            <Switch  size="default"                
-    //             className={ rowData.isActive ? 'toggle-activated' : 'toggle-deactivated' }
-    //             checkedChildren={<RightSquareOutlined type="check" />}
-    //             unCheckedChildren={<RightSquareOutlined type="close" />}
-    //             checked={rowData.isActive}
-    //           />
-              
-            
-            
-    //       </Popconfirm>  
-        // </span>
-      // )
-    // }
+      render:(text,record) => {
+          return(
+              <>
+              {record.remarks?.length > 30 ? (<><Tooltip title='Cilck to open full remarks'><p><span onClick={() => handleTextClick(record.remarks)} style={{ cursor: 'pointer' }}>
+                          {record.remarks.length > 30 ? `${record.remarks?.substring(0, 30)}....` : record.remarks}
+                      </span></p></Tooltip></>) : (<>{record.remarks}</>)}
+              </>
+          )
+      }
+
+  },
   ];
 
 
@@ -314,6 +265,11 @@ export function ItemCategoriesGrid(
                 closeForm={closeDrawer} /> */}
             </Card> 
           </Drawer>
+          <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
+                <Card>
+                    <p>{remarks}</p>
+                </Card>
+            </Modal>
      </Card>
   );
 }

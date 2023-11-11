@@ -229,7 +229,7 @@ export function AttributesGrid(props: AttributesProps) {
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
-      title: "Attribute Against",
+      title: <div style={{textAlign:"center"}}>Attribute Against</div> ,
       dataIndex: "attributeAgainst",
       width :'250px',
       // responsive: ['lg'],
@@ -248,7 +248,7 @@ export function AttributesGrid(props: AttributesProps) {
       onFilter: (value,record) =>{ return record.attributeAgainst === value}
     },
     {
-      title: "Attribute",
+      title: <div style={{textAlign:"center"}}>Attribute</div> ,
       dataIndex: "attributeName",
       // responsive: ['lg'],
       sorter: (a, b) => a.attributeName.localeCompare(b.attributeName),
@@ -256,8 +256,9 @@ export function AttributesGrid(props: AttributesProps) {
       ...getColumnSearchProps("attributeName"),
     },
     {
-      title: "Status",
+      title: <div style={{textAlign:"center"}}>Status</div> ,
       dataIndex: "isActive",
+      align:"center",
       render: (isActive, rowData) => (
         <>
           {isActive ? (
@@ -288,8 +289,9 @@ export function AttributesGrid(props: AttributesProps) {
       },
     },
     {
-      title: `Action`,
+      title: <div style={{textAlign:"center"}}>Action</div> ,
       dataIndex: "action",
+      align:"center",
       render: (text, rowData) => (
         <span>
           <EditOutlined
@@ -346,8 +348,8 @@ export function AttributesGrid(props: AttributesProps) {
   return (
     <Card
       title={<span>Attributes</span>}
-      style={{ textAlign: "center"}}
-      headStyle={{ border: 0 }}
+      // style={{ textAlign: "center"}}
+      // headStyle={{ border: 0 }}
       extra={
         <Link to="/global/attributes/attributes-form">
           <span style={{ color: "white" }}>

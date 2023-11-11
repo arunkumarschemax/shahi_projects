@@ -80,7 +80,7 @@ export function CommissionGrid(props: CommissionProps) {
     Service.activateOrDeactivateCommission(data)
       .then((res) => {
         if (res.status) {
-          message.success("Success", 2);
+          message.success(res.internalMessage, 2);
         } else {
           message.error(res.internalMessage, 2);
         }
@@ -224,7 +224,7 @@ export function CommissionGrid(props: CommissionProps) {
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
-      title: "Commission",
+      title: <div style={{textAlign:"center"}}>Commission</div> ,
       dataIndex: "commission",
       // responsive: ['lg'],
       sorter: (a, b) => a.commission.localeCompare(b.commission),
@@ -232,8 +232,9 @@ export function CommissionGrid(props: CommissionProps) {
       ...getColumnSearchProps("commission"),
     },
     {
-      title: "Status",
+      title: <div style={{textAlign:"center"}}>Status</div> ,
       dataIndex: "isActive",
+      align:"center",
       render: (isActive, rowData) => (
         <>
           {isActive ? (
@@ -264,8 +265,9 @@ export function CommissionGrid(props: CommissionProps) {
       ],
     },
     {
-      title: `Action`,
+      title: <div style={{textAlign:"center"}}>Action</div> ,
       dataIndex: "action",
+      align:"center",
       render: (text, rowData) => (
         <span>
           <EditOutlined
@@ -319,7 +321,7 @@ export function CommissionGrid(props: CommissionProps) {
   };
   return (
     <Card
-      title='Commision' extra={<span><Button onClick={()=>('/masters/commission/commission-form')} type={'primary'}>New </Button></span>}>
+      title='Commission' extra={<span><Button onClick={()=> navigate('/masters/commission/commission-form')} type={'primary'}>New </Button></span>}>
       
       <br></br>
       <Row gutter={40}>
