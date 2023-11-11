@@ -106,7 +106,7 @@ export const CompanyForm = (props:CompanyFormProps) => {
             }
           ]}
         >
-          <Input />
+          <Input placeholder='Company Name' />
         </Form.Item>
         </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:7}}> <Form.Item
@@ -119,7 +119,7 @@ export const CompanyForm = (props:CompanyFormProps) => {
             },
           ]}
         >
-          <Input />
+          <Input placeholder='Company Code' />
         </Form.Item>
         </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:7}}> <Form.Item
@@ -133,7 +133,7 @@ export const CompanyForm = (props:CompanyFormProps) => {
           ]}
         >
           
-          <Input />
+          <Input placeholder='Organization Name' />
         </Form.Item>
         </Col></Row>
         <Row>
