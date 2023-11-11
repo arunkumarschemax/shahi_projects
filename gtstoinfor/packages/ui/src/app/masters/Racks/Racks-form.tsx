@@ -19,6 +19,7 @@ const onFinish = (rackDto: RackDTO) => {
         setTimeout(() => {
           message.success('Submitted successfully');
           window.location.reload();
+          navigate("/masters/rack-view")
         }, 500);;
       }
     }).catch(err => {

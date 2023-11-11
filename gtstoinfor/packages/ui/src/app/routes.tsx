@@ -154,6 +154,8 @@ import RackForm from "./masters/Racks/Racks-form"
 import RackView from "./masters/Racks/Racks-view"
 import QualityView from "./masters/quality/quality-view"
 import QualityForm from "./masters/quality/quality-form"
+import M3StyleCode from "./masters/m3-style-codes/m3-styleCode-form"
+import M3StyleCodeView from "./masters/m3-style-codes/m3-styleCode-view"
 
 
 export const AppRoutes = () => {
@@ -198,7 +200,7 @@ export const AppRoutes = () => {
                     <Route path='/user-management/users-view' element={<UsersView />} />
                     
                     <Route path='/stack-report' element={<StockReport/>}/>
-                    <Route path='/sample-request-report' element={<SampleRequestReport/>}/>
+                    <Route path='/material-requisition' element={<SampleRequestReport/>}/>
 
                     {/* <Route path='/stack-report' element={<StockReport/>}/> */}
                     <Route path='/masters'>
@@ -208,6 +210,9 @@ export const AppRoutes = () => {
                     <Route path='rack-view' element={<RackView />} />
                     <Route path='rack-position-form' element={<RackPosition />} />
                     <Route path='rackPosition-view' element={<PositionGrid />} />
+                    <Route path='m3-styleCodes-form' element={<M3StyleCode />} />
+                    <Route path='m3-styleCodes-view' element={<M3StyleCodeView />} />
+
                     <Route path='m3-itemcodes' element={<M3Masters
                         isUpdate={false}
                         closeForm={() => { } }

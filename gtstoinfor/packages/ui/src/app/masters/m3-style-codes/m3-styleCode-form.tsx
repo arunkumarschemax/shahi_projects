@@ -1,24 +1,24 @@
-import { QualityDTO } from '@project-management-system/shared-models'
-import { QualityService } from '@project-management-system/shared-services'
-import { Button, Card, Col, Form, Input, Row, message } from 'antd'
 import React from 'react'
+import { Button, Card, Col, Form, Input, Row, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
+import { M3StyleService } from '@project-management-system/shared-services'
+import { M3StyleDTO } from '@project-management-system/shared-models'
 import AlertMessages from '../../common/common-functions/alert-messages'
 
-const QualityForm = () => {
+const M3StyleCode = () => {
 
     const navigate = useNavigate()
-    const service = new QualityService();
+    const service = new M3StyleService();
     const [form] = Form.useForm();
 
-    const onFinish = (qualityDto: QualityDTO) => {
-        service.createQuality(qualityDto).then(res => {
+    const onFinish = (m3StyleDto: M3StyleDTO) => {
+        service.createM3Style(m3StyleDto).then(res => {
             if (res.status) {
                 AlertMessages.getSuccessMessage(res.internalMessage)
                 setTimeout(() => {
                     message.success('Submitted successfully');
                     window.location.reload();
-                    navigate("/masters/quality-view")
+                    navigate("/masters/m3-styleCodes-view")
                 }, 500);;
             }
         }).catch(err => {
@@ -30,21 +30,24 @@ const QualityForm = () => {
         form.resetFields()
       }
 
-    return (
-        <div>
-            <Card title={<span>QUALITY</span>} style={{ textAlign: 'center' }} headStyle={{ border: 0 }}
+
+  return (
+    <div>
+            <Card title={<span>M3 STYLE CODES</span>} style={{ textAlign: 'center' }} headStyle={{ border: 0 }}
                 className="card-header"
                 extra={<Button
-                    onClick={() => navigate('/masters/quality-view')}
+                    onClick={() => navigate('/masters/m3-styleCodes-view')}
                     type="primary"
                     style={{ background: "white", color: "#3C085C" }}
                 >View</Button>
                 }>
-                <Form form={form} onFinish={onFinish}>
+                <Form
+                 form={form} onFinish={onFinish}
+                 >
                     <Row>
                         <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4 }} lg={{ span: 8 }} xl={{ span: 5 }}>
-                            <Form.Item label="Fabric Quality" name="quality">
-                                <Input placeholder=" Enter Quality " />
+                            <Form.Item label="M3 Style Code" name="m3StyleCode">
+                                <Input placeholder=" Enter Style Code " />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -63,7 +66,7 @@ const QualityForm = () => {
                 </Form>
             </Card>
         </div>
-    )
+  )
 }
 
-export default QualityForm
+export default M3StyleCode

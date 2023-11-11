@@ -43,6 +43,12 @@ export const baseMRouterList = [
                 filepath: "/quality-view",
             },
             {
+                label: "M3 Style",
+                key: "m3-styleCodes-view",
+                path: "m3-styleCodes-view",
+                filepath: "/m3-styleCodes-view",
+            },
+            {
                 label: "M3 Items",
                 key: "m3-itemcodes-view",
                 path: "m3-itemcodes-view",
@@ -180,6 +186,18 @@ export const baseMRouterList = [
             }
         ]
     },
+    {
+        label: "Stock Report",
+        key: "stack-report",
+        path: "stack-report",
+        filepath: "/stack-report",
+    },
+    {
+        label: "Material Requision",
+        key: "material-requisition",
+        path: "material-requisition",
+        filepath: "/material-requisition",
+    },
 
     
     
@@ -224,6 +242,12 @@ export const baseRouterList = [
                 key: "quality-view",
                 path: "quality-view",
                 filepath: "/quality-view",
+            },
+            {
+                label: "M3 Style",
+                key: "m3-styleCodes-view",
+                path: "m3-styleCodes-view",
+                filepath: "/m3-styleCodes-view",
             },
             {
                 label: "M3 Items",
@@ -864,6 +888,18 @@ export const baseRouterList = [
             
          
         ]
+    },
+    {
+        label: "Stock Report",
+        key: "stack-report",
+        path: "stack-report",
+        filepath: "/stack-report",
+    },
+    {
+        label: "Material Requision",
+        key: "material-requisition",
+        path: "material-requisition",
+        filepath: "/material-requisition",
     },
    
     {

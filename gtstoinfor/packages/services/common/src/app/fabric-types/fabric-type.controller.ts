@@ -2,7 +2,7 @@ import { Body, Controller, Post, Req } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { FabricTypeDto } from './dto/fabric-type.dto';
 import { FabricTypeService } from './fabric-type.service';
-import { AllFabricTypesResponse,FabricTypeDropDownDto,FabricTypeResponse } from '@project-management-system/shared-models';
+import { AllFabricTypesResponse,CommonResponseModel,FabricTypeDropDownDto,FabricTypeResponse } from '@project-management-system/shared-models';
 import { FabricTypeRequest } from '@project-management-system/shared-models';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { FabricTypeItemNameRequest } from './dto/fabric-type-name.request';
@@ -83,4 +83,16 @@ export  class FabricTypeController {
                 throw err;
             }
         }
+
+        
+        @Post('/getTrimTypes')
+        async getTrimTypes(): Promise<CommonResponseModel> {
+            try {
+                return await this.fabricService.getTrimTypes();
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        
 }
