@@ -176,7 +176,7 @@ export function GarmentsGrid(
        render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-      title: 'Garment Category',
+      title: <div style={{textAlign:"center"}}>Garment Category</div> ,
       dataIndex: 'garmentCategory',
       //  responsive: ['lg'],
       sorter: (a, b) => a.garmentCategory.localeCompare(b.garmentCategory),
@@ -185,7 +185,7 @@ export function GarmentsGrid(
     },
    
     {
-      title: 'Garment',
+      title: <div style={{textAlign:"center"}}>Garment</div> ,
       dataIndex: 'garmentName',
       //  responsive: ['lg'],
       sorter: (a, b) => a.garmentName.localeCompare(b.garmentName),
@@ -193,7 +193,7 @@ export function GarmentsGrid(
         ...getColumnSearchProps('garment')
     },
     {
-      title: 'Remarks',
+      title: <div style={{textAlign:"center"}}>Remarks</div> ,
       dataIndex: 'remarks',
       responsive: ['sm'],
       sorter: (a, b) => String(a.remarks).localeCompare(String(b.remarks)),
@@ -201,8 +201,9 @@ export function GarmentsGrid(
       ...getColumnSearchProps('remarks')
     },
     {
-      title: 'Status',
+      title: <div style={{textAlign:"center"}}>Status</div> ,
       dataIndex: 'isActive',
+      align:"center",
        render: (isActive, rowData) => (
         <>
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -227,8 +228,9 @@ export function GarmentsGrid(
       
     },
     {
-      title:`Action`,
+      title: <div style={{textAlign:"center"}}>Action</div> ,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         rowData.garmentName.trim()=='Packing Material' || rowData.garmentName.trim()=='Raw Material' ? <span> </span>:
         <span>         
@@ -287,7 +289,7 @@ export function GarmentsGrid(
           <br></br>
           <Table
           // rowKey={record => record.productId}
-
+          size='small'
           columns={columnsSkelton}
           dataSource={garmentData}
           pagination={{

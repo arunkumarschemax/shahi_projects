@@ -152,7 +152,9 @@ const updateGarmentCategory =(garment:GarmentCategoryDto)=>{
     garment.updatedUser=JSON.parse(localStorage.getItem('username'))
     service.updateGarmentCaregories(garment).then(res=>{
         if(res.status){
-            AlertMessages.getSuccessMessage('Success'); 
+          getAllGarmentCategory()
+          setDrawerVisible(false)
+            AlertMessages.getSuccessMessage('Updated Successfully'); 
 
         }else{
             AlertMessages.getErrorMessage(res.internalMessage);
@@ -178,7 +180,7 @@ const columnsSkelton:any=[
       },
 
       {
-        title: 'Garment Category',
+        title: <div style={{textAlign:"center"}}>Garment Category</div> ,
         dataIndex: 'garmentCategory',
         sorter: (a, b) => a.garmentCategory.localeCompare(b.garmentCategory),
         sortDirections: ['descend', 'ascend'],
@@ -186,7 +188,7 @@ const columnsSkelton:any=[
       },
     
     {
-      title: 'Remarks',
+      title: <div style={{textAlign:"center"}}>Remarks</div> ,
       dataIndex: 'remarks',
       responsive: ['sm'],
       sorter: (a, b) => String(a.remarks).localeCompare(String(b.remarks)),
@@ -194,8 +196,9 @@ const columnsSkelton:any=[
       ...getColumnSearchProps('remarks')
     },
     {
-        title: 'Status',
+      title: <div style={{textAlign:"center"}}>Status</div> ,
         dataIndex: 'isActive',
+        align:"center",
         render: (isActive, rowData) => (
           <>
             {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -221,8 +224,9 @@ const columnsSkelton:any=[
       },
 
       {
-        title:`Action`,
+        title: <div style={{textAlign:"center"}}>Action</div> ,
         dataIndex: 'action',
+        align:"center",
         render: (text, rowData) => (
           <span>  
            <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 

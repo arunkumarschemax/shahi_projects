@@ -6,7 +6,7 @@ export class BuyingHouseDto {
     contact: string;
     address: string;
     city: string;
-    country: string;
+    countryId: number;
     isActive: boolean;
     createdAt : Date | any;
     createdUser : string;
@@ -23,7 +23,7 @@ export const BuyingHouseDtoDefault : BuyingHouseDto = {
     contact: "",
     address: "",
     city: "",
-    country: "",
+    countryId: 0,
     isActive: true,
     createdAt : new Date() ,
     createdUser : '0',

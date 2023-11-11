@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Alert } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps } from 'antd/lib/table';
 import { Link, useNavigate } from 'react-router-dom';
@@ -245,11 +245,14 @@ export function PackageTermsGrid() {
 
   return (
     <Card title = "Package Terms"
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/global/package-terms/package-terms-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} 
+    headStyle={{ border: 0 }} extra={<Link to = "/global/package-terms/package-terms-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} 
     >
      <br></br>
-      <Row gutter={40}>
-         <Col>
+      <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+     
+         {/* <Col>
          <Card title={'Total Package Terms: ' + packageTermsData.length} style={{textAlign: 'left', width: 230, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
@@ -257,12 +260,21 @@ export function PackageTermsGrid() {
            </Col>
            <Col>
            <Card title={'In-Active: ' + packageTermsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
-           </Col>
-           <Col>
+           </Col> */}
+           <Alert type='success' message={'Total Package Terms : ' + packageTermsData.length} style={{fontSize:'15px'}} />
         </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + packageTermsData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'In-Active: ' + packageTermsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        </Col>
+          
           </Row> 
           <br></br>
+          <Card>
           <Table
+          size="small"
           columns={columnsSkelton}
 
           dataSource={packageTermsData}
@@ -274,6 +286,7 @@ export function PackageTermsGrid() {
           }}
           onChange={onChange}
           bordered />
+          </Card>
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>
              <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>

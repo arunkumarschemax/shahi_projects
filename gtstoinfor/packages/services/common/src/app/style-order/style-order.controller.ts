@@ -135,4 +135,14 @@ export class StyleOrderController{
         }
     }
 
+    @Post('/getDestinationInOrderLines')
+    async getDestinationInOrderLines():Promise<CommonResponseModel>{
+        try{            
+            return await this.styleOrderService.getDestinationInOrderLines()
+            
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+
 }

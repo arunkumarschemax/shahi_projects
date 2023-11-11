@@ -63,8 +63,8 @@ export function AttributesForm(props: AttributesFormProps) {
     <>
       <Card
         title={<span>Attributes</span>}
-        style={{ textAlign: "center" }}
-        headStyle={{ border: 0 }}
+        // style={{ textAlign: "center" }}
+        // headStyle={{ border: 0 }}
         extra={
           props.isUpdate == true ? (
             ""
@@ -120,7 +120,7 @@ export function AttributesForm(props: AttributesFormProps) {
                 style={{ width: "95%", marginLeft: 5 }}
                 name="attributeAgainst"
                 label="Attribute Against"
-                rules={[{ required: true, message: "Please select Severity" }]}
+                rules={[{ required: true, message: "Please select Attribute" }]}
               >
                 <Select
                   showSearch

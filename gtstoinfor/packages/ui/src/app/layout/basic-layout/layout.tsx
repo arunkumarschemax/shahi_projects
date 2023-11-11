@@ -798,6 +798,15 @@ export default function BasicLayout() {
                 };
             });
         };
+
+        const handleMenuClick = (e) => {
+            if (e.domEvent) {
+                e.domEvent.stopPropagation();
+            }
+        };
+        // const handleMenuClick = (e) => {
+        //     e.domEvent.stopPropagation();
+        // }
    
     const getAllSubMenus = () => {
         menu =IAMClientAuthContext.user ? IAMClientAuthContext.user : '';
@@ -811,8 +820,7 @@ export default function BasicLayout() {
             {
                 path: subMenuItem.path,
                 label: subMenuItem.subMenuName,
- 
-            key: subMenuItem.subMenuId, 
+                key: subMenuItem.subMenuId, 
             //  icon:renderIcon(subMenuItem.subMenuIconType,subMenuItem.subMenuIconName),
           }))
           return {
@@ -853,6 +861,7 @@ export default function BasicLayout() {
                     colorPrimary='#29397d'
                     breakpoint={false}
                     selectedKeys={menu}
+                    // collapsed={collapsed}
                     headerContentRender={(props) => props.layout !== 'side' && document.body.clientWidth > 1000 ? <ProBreadcrumb /> : undefined}
                     logo={
                     <img src={xpperal} style={{marginLeft:'20px',float:'left',height:'55px'}} 
@@ -904,16 +913,47 @@ export default function BasicLayout() {
                             </Tooltip>,
                         ];
                     }}
+                    
+                    // menuItemRender={(item, dom) => {
+                    //                             return (
+                    //         <Link
+                    //             to={item?.path || "/"}
+                    //             onClick={(e) => {
+                    //                 // e.preventDefault();
+                    //                 // handleMenuClick(e)
+                    //                 // e.stopPropagation();
+                    //                 setPathname(item.path || "/");
+                                    
+                    //                                                 }}
+                    //         >
+                    //             {dom}
+                    //         </Link>
+                    //     );
+                    // }}
                     menuItemRender={(item, dom) => {
-                                                return (
-                            <Link
-                                to={item?.path || "/"}
+                        // const navigate = useNavigate();
+                    
+                        return (
+                            <div
                                 onClick={() => {
-                                    setPathname(item.path || "/");
-                                                                    }}
+                                    navigate(item?.path || "/");
+                                }}
+                                // style={{
+                                //     backgroundColor: menu.includes(item.key) ? '#1890ff' : '',
+                                //     color: menu.includes(item.key) ? '#fff' : '', // Adjust the text color
+                                // }}
                             >
                                 {dom}
-                            </Link>
+                            </div>
+                        //     <Link
+                        //     to={item?.path || "/"}
+                        //     onClick={(e) => {
+                        //         setPathname(item.path || "/");
+                                
+                        //                                         }}
+                        // >
+                        //     {dom}
+                        // </Link>
                         );
                     }}
                     

@@ -54,7 +54,7 @@ export function CustomGroupForm(props: CustomGroupFormProps) {
   };
 
   return (
-    <Card title={props.isUpdate ? 'Custom Group':'Custom Group'}   extra={(props.isUpdate==false) && <span><Button onClick={()=>navigate('/masters/custom-groups/custom-groups-view')} type={'primary'}>View</Button></span>}>
+    <Card title={props.isUpdate ? 'Custom Groups':'Custom Groups'}   extra={(props.isUpdate==false) && <span><Button onClick={()=>navigate('/masters/custom-groups/custom-groups-view')} type={'primary'}>View</Button></span>}>
       <Form form={form } layout={'vertical'} initialValues={props.data} name="control-hooks" onFinish={saveData}  >   
       <Form.Item name="customGroupId" style={{display:"none"}} >
         <Input hidden/>

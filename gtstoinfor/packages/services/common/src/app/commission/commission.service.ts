@@ -115,17 +115,17 @@ async activateOrDeactivateCommission(req: CommissionRequest): Promise<Commission
                  
                   if (commissionExists.isActive) {
                       if (commissionStatus.affected) {
-                          const commissionResponse: CommissionResponseModel = new CommissionResponseModel(true, 10115, 'Commission is de-activated successfully');
+                          const commissionResponse: CommissionResponseModel = new CommissionResponseModel(true, 10115, 'Commission is Deactivated successfully');
                           return commissionResponse;
                       } else {
-                          throw new CommissionResponseModel(false,10111, 'Commission is already deactivated');
+                          throw new CommissionResponseModel(false,10111, 'Commission is already Deactivated');
                       }
                   } else {
                       if (commissionStatus.affected) {
-                          const commissionResponse: CommissionResponseModel = new CommissionResponseModel(true, 10114, 'Commission is activated successfully');
+                          const commissionResponse: CommissionResponseModel = new CommissionResponseModel(true, 10114, 'Commission is Activated successfully');
                           return commissionResponse;
                       } else {
-                          throw new CommissionResponseModel(false,10112, 'Commission is already  activated');
+                          throw new CommissionResponseModel(false,10112, 'Commission is already  Activated');
                       }
                   }
           }

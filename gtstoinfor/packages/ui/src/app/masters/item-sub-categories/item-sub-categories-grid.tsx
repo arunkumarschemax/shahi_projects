@@ -177,7 +177,7 @@ export function ItemSubCategoriesGrid(
        render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-      title: 'Item Category',
+      title: <div style={{textAlign:"center"}}>Item Category</div> ,
       dataIndex: 'itemCategoryName',
       //  responsive: ['lg'],
       sorter: (a, b) => a.itemCategoryName.localeCompare(b.itemCategoryName),
@@ -186,7 +186,7 @@ export function ItemSubCategoriesGrid(
     },
    
     {
-      title: 'Item Sub Category',
+      title: <div style={{textAlign:"center"}}>Item Sub Category</div> ,
       dataIndex: 'itemSubCategory',
       //  responsive: ['lg'],
       sorter: (a, b) => a.itemSubCategory.localeCompare(b.itemSubCategory),
@@ -194,7 +194,7 @@ export function ItemSubCategoriesGrid(
         ...getColumnSearchProps('itemSubCategory')
     },
     {
-    title: 'Item Sub Category Code',
+      title: <div style={{textAlign:"center"}}>Item Sub Category Code</div> ,
       dataIndex: 'itemSubCategoryCode',
       responsive: ['sm'],
       sorter: (a, b) => a.itemSubCategoryCode.localeCompare(b.itemSubCategoryCode),
@@ -202,7 +202,7 @@ export function ItemSubCategoriesGrid(
         ...getColumnSearchProps('itemSubCategoryCode')
     },
     {
-      title: 'Remarks',
+      title: <div style={{textAlign:"center"}}>Remarks</div> ,
       dataIndex: 'remarks',
       responsive: ['sm'],
       sorter: (a, b) => String(a.remarks).localeCompare(String(b.remarks)),
@@ -210,7 +210,8 @@ export function ItemSubCategoriesGrid(
       ...getColumnSearchProps('remarks')
     },
     {
-      title: 'Status',
+      title: <div style={{textAlign:"center"}}>Status</div> ,
+      align:"center",
       dataIndex: 'isActive',
        render: (isActive, rowData) => (
         <>
@@ -236,8 +237,9 @@ export function ItemSubCategoriesGrid(
       
     },
     {
-      title:`Action`,
+      title: <div style={{textAlign:"center"}}>Action</div> ,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         rowData.itemSubCategory.trim()=='Packing Material' || rowData.itemSubCategory.trim()=='Raw Material' ? <span> </span>:
         <span>         
@@ -279,7 +281,8 @@ export function ItemSubCategoriesGrid(
 
   return (
     <Card title={<span >Item Sub Categories</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/item-sub-categories/item-sub-categories-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
+    // style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+    extra={<Link to = "/masters/item-sub-categories/item-sub-categories-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
      <br></br>
       <Row gutter={40}>
       <Col>

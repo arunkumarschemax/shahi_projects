@@ -211,7 +211,7 @@ const getAllActiveDivision=() =>{
             >
       {/* <Col xs={{span:24}} sm={{span:24}} md={{span:5,offset:1}} lg={{span:5,offset:1}} xl={{span:5,offset:1}} style={{margin:'1%'}}> */}
         <Form.Item
-        initialValue={userId.length>0 ?userId[0].buyerId:''}
+        initialValue={userId.length>0 ?userId[0].buyerId:'Select Buyer'}
           name="buyerId"
           label="Buyer"
           rules={[
@@ -222,7 +222,7 @@ const getAllActiveDivision=() =>{
           ]}
           
         >
-         <Select defaultValue={userId.length>0 ?userId[0].buyerId:''} placeholder="Select Buyer">
+         <Select defaultValue={userId.length>0 ?userId[0].buyerId:'Select Buyer'} placeholder="Select Buyer">
          {buyerData.map((rec) => (
                   <option key={rec.buyerId} value={rec.buyerId}>
                     {rec.buyerName}

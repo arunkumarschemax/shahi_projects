@@ -345,6 +345,7 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
     }
 
     const setQuantityValue = (e,index,rowData) => {
+        if(e.target.value != ''){
                 data[index].quantity = e.target.value
                 data[index].deliveryAddress = form.getFieldValue('deliveryAddress')
               
@@ -355,6 +356,7 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
                     const req = new StyleOrderItemsReq(form.getFieldValue('deliveryAddress'),e.target.value,rowData.color,rowData.size,rowData.destination,null,null,state != null ? rowData.salePrice : salePrice,null,rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId,null,rowData.coLineId,rowData.skuCode,state !== null ? state?.id : null,rowData.styleOrderInfo)
                     setOrderQuantityData([...orderQuantityData,req])
                 }
+        }
     }
 
     // const setSalePriceValue = (e,index,rowData) => {

@@ -171,6 +171,7 @@ import BomReport from "./BOM/bom-report"
 import RMSkuView from "./rm-skus/rm-sku-view"
 import RMOperationMappingView from "./common/product-structure(BOM)/rm-operation-mapping-view"
 import COAmendmentView from "./common/co-amendment/co-amendment-view"
+import CoLineForm from "./style-orders/co-line-form"
 import RMDetailView from "./orders/rm-detail-view"
 
 
@@ -215,7 +216,7 @@ export const AppRoutes = () => {
                 } >
                     <Route path='/user-management/users-from' element={<UserCreationForm />} />
                     <Route path='/user-management/users-view' element={<UsersView />} />
-
+                    <Route path='/co-line-creation' element={<CoLineForm/>}/>
                     <Route path='/masters'>
                     <Route path='business-area/business-area-form' element={<BusinessAreaForm businessAreaData={undefined}
                     isUpdate={false}
