@@ -172,6 +172,7 @@ import RMSkuView from "./rm-skus/rm-sku-view"
 import RMOperationMappingView from "./common/product-structure(BOM)/rm-operation-mapping-view"
 import COAmendmentView from "./common/co-amendment/co-amendment-view"
 import CoLineForm from "./style-orders/co-line-form"
+import RMDetailView from "./orders/rm-detail-view"
 
 
 export const AppRoutes = () => {
@@ -620,6 +621,9 @@ export const AppRoutes = () => {
                 <Route path='feature-creation-view' element={<FeatureCreationView />} />
                 <Route path='item-creation-view' element={<ItemCreationView/>}/>    
                 <Route path='item-creation-detail-view' element={<ItemCreationDetailView data={''}/>}/>
+                
+                <Route path='rm-detail-view' element={<RMDetailView data={''}/>}/>
+
                 <Route path="co-amendment" element ={<COAmendmentTabs key={""} />} />
                 <Route path="co-amendment-view" element ={<COAmendmentView/>} />
 

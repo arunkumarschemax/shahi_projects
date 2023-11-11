@@ -126,10 +126,10 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
 
       // width:200,    
       filters: [
-        // {
-        //   text: 'Area',
-        //   value: 'Area',
-        // },
+        {
+          text: 'Area',
+          value: 'Area',
+        },
         {
           text: 'Length',
           value: 'Length',
@@ -164,7 +164,7 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
     <Card 
       title={<span style={{ color: "Black" }}>Unit of Measurements</span>}
       // style={{ textAlign: "center" }}
-      size="small"
+   
      className="card-header"
     //   extra={
     //     <Link to="/vehicle-model-form">

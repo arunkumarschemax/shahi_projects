@@ -47,7 +47,6 @@ import {
   SkuStatusEnum,
 } from "@project-management-system/shared-models";
 import Highlighter from "react-highlight-words";
-import RolePermission from "../roles-permission";
 export const SkuList = () => {
   const [form] = Form.useForm();
   const [itemData, setItemData] = useState([]);
@@ -230,8 +229,8 @@ export const SkuList = () => {
   const checkAccess = (buttonParam) => {
     console.log(buttonParam,'000000000');
     
-    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Material Creation"],MenusAndScopesEnum.SubMenus["FG SKUs"],buttonParam)
-    return !accessValue
+    // const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Material Creation"],MenusAndScopesEnum.SubMenus["FG SKUs"],buttonParam)
+    // return !accessValue
   }
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({
