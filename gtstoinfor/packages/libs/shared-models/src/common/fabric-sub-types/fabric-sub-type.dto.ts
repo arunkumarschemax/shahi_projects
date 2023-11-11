@@ -26,3 +26,7 @@ export const FabricSubTypeDtoDefault : FabricSubTypeDto = {
     versionFlag : 1
 
 };
+
+export class fabricTypeIdreq{
+    fabricTypeId:number
+}

@@ -127,7 +127,8 @@ const StockReport = () => {
 
   return (
     <div>
-        <Card>
+        <Card  title={<span>STACK REPORT</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }}
+        className="card-header">
         <Form form={form} 
         onFinish={onFinish}
         >
@@ -235,10 +236,10 @@ const StockReport = () => {
               title={"Plant:"+data.filter(el => el.plant_id).length}>
               </Card> </Col>
           </Row><br></br>
-        <Card title={<span>STACK REPORT</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }}
-        className="card-header">
+        <Card >
         <Table columns={Columns}  
         dataSource={filterData}
+        className="custom-table-wrapper"
             /> 
         </Card>
         </Card>

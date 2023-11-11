@@ -17,6 +17,7 @@ export class PurchaseOrderService{
 
 async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
     try{
+        console.log(req)
         let pofabricInfo=[]
         let poTrimInfo =[]
         const poEntity = new PurchaseOrderEntity()
@@ -32,8 +33,7 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
             pofabricEntity.colourId=poFabric.colourId
             pofabricEntity.productGroupId=poFabric.productGroupId
             pofabricEntity.remarks=poFabric.remarks
-            pofabricEntity.fabricType=poFabric.fabricType
-            pofabricEntity.fabricCode=poFabric.fabricCode
+            pofabricEntity.fabricTypeId=poFabric.fabricTypeId
             pofabricEntity.shahiFabricCode=poFabric.shahiFabricCode
             pofabricEntity.weaveId=poFabric.weaveId
             pofabricEntity.weight=poFabric.weight
@@ -44,18 +44,23 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
             pofabricEntity.shrinkage=poFabric.shrinkage
             pofabricEntity.pch=poFabric.pch
             pofabricEntity.moq=poFabric.moq
+            pofabricEntity.m3FabricCode=poFabric.m3FabricCode
+            pofabricEntity.content=poFabric.content
             pofabricInfo.push(pofabricEntity)
         }
+        poEntity.poFabricInfo=pofabricInfo
         for(const trimInfo of req.poTrimInfo){
             const trimEntity= new PurchaseOrderTrimEntity()
+            trimEntity.colourId=trimInfo.colourId
             trimEntity.productGroupId=trimInfo.productGroupId
             trimEntity.trimId=trimInfo.trimId
-            trimEntity.trimCode=trimInfo.trimCode
+            trimEntity.m3TrimCode=trimInfo.m3TrimCode
             trimEntity.description=trimInfo.description
             trimEntity.consumption=trimInfo.consumption
             trimEntity.remarks=trimInfo.remarks
             poTrimInfo.push(trimEntity)
         }
+        poEntity.poTrimInfo=poTrimInfo
         const save = await this.poRepo.save(poEntity)
         if(save){
             return new CommonResponseModel(true,1,'purchased Order Created Sucessfully')

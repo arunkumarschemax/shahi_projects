@@ -19,5 +19,24 @@ export class PurchaseOrderDto{
   remarks:string
   poFabricInfo: PurchaseOrderFbricDto[]
   poTrimInfo:PurchaseOrderTrimDto[]
+  constructor(
+    poNumber:string,
+    vendorId:number,
+    styleId:number,
+    expectedDeliveryDate:any,
+    purchaseOrderDate:any,
+    remarks:string,
+    poFabricInfo: PurchaseOrderFbricDto[],
+  poTrimInfo:PurchaseOrderTrimDto[]
+  ){
+    this.poNumber=poNumber
+    this.vendorId=vendorId
+    this.styleId=styleId
+    this.expectedDeliveryDate=expectedDeliveryDate
+    this.purchaseOrderDate=purchaseOrderDate
+    this.remarks=remarks
+    this.poFabricInfo=poFabricInfo
+    this.poTrimInfo=poTrimInfo
+  }
 
 }

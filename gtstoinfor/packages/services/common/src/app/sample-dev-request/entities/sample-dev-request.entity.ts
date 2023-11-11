@@ -24,9 +24,15 @@ export class SampleRequest {
   })
   SampleRequestId: number;
 
-  @ManyToOne(() => Location, location => location.sampleReq, { nullable: false })
-  @JoinColumn({ name: 'location_id' })
-  location: Location;
+  // @ManyToOne(() => Location, location => location.sampleReq, { nullable: false })
+  // @JoinColumn({ name: 'location_id' })
+  // location: Location;
+
+  @Column('varchar',{
+    name:'location_id',
+    nullable:true
+  })
+  locationId:string
 
   @Column('varchar', {
     name: 'request_no',

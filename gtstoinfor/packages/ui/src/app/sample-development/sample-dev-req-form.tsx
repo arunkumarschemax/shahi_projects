@@ -1,7 +1,7 @@
 import { PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
 import { DepartmentReq,SampleDevelopmentRequest } from "@project-management-system/shared-models";
-import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,LiscenceTypeService,LocationsService,MasterBrandsService,ProfitControlHeadService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
+import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,MasterBrandsService,ProfitControlHeadService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Modal, Row, Select, message } from "antd";
 import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
@@ -14,6 +14,7 @@ const { Option } = Select;
 export const SampleDevForm = () => {
   const [form] = Form.useForm();
   const [pch, setPch] = useState<any[]>([]);
+  const [fabricType, setFabricType] = useState<any[]>([]);
   const [locations, setLocations] = useState<any[]>([]);
   const [dmm,setDMM] = useState<any[]>([])
   const [technicians, setTechnicians] = useState<any[]>([]);
@@ -31,6 +32,8 @@ export const SampleDevForm = () => {
   const [fileList, setFileList] = useState([]);
   const [tabsData,setTabsData] = useState<any>()
   const [selectedBuyerId, setSelectedBuyerId] = useState(null)
+  const [m3StleCode, setM3StleCode] = useState<any[]>([])
+  const [fabSubType, setFabSubType]=useState<any[]>([])
   const pchService = new ProfitControlHeadService();
   const styleService = new StyleService();
   const brandService = new MasterBrandsService();
@@ -43,7 +46,8 @@ export const SampleDevForm = () => {
   const sampleService = new SampleDevelopmentService()
   const sampleTypeService = new SampleTypesService()
   const subTypeService = new SampleSubTypesService()
-
+  const fabricTypeService = new FabricTypeService()
+  const fabSubTypeService = new FabricSubtypeservice()
 
   useEffect(() => {
     getLocations();
@@ -57,6 +61,8 @@ export const SampleDevForm = () => {
     getSampleTypes();
     getSampleSubTypes();
     getDMM()
+    getM3StyleCode()
+    getfabricType()
   }, []);
 
   const getBase64 = (file) =>
@@ -77,15 +83,43 @@ export const SampleDevForm = () => {
     setPreviewTitle(file.name || "Image");
   };
 
+  const fabricTypeOnchange =(value) =>{
+    getFabricSubType(value)
+  }
+
   // Function to handle image change
   const handleChange = ({ fileList }) => {
     setFileList(fileList);
   };
 
+  const getM3StyleCode = () =>{
+    sampleService.getM3StyleCode().then(res =>{
+      if(res.status){
+        setM3StleCode(res.data)
+      }
+    })
+  }
+
+  const getFabricSubType = (value) =>{
+    fabSubTypeService.getFabricSubTypeAginstType({fabricTypeId:value}).then(res =>{
+      if(res.status){
+        setFabSubType(res.data)
+      }
+    })
+  }
+
   const getLocations = () => {
     locationService.getAll().then((res) => {
       if (res.status) {
         setLocations(res.data);
+      }
+    });
+  };
+
+  const getfabricType = () => {
+    fabricTypeService.getAllActiveFabricType().then((res) => {
+      if (res.status) {
+        setFabricType(res.data);
       }
     });
   };
@@ -257,13 +291,14 @@ export const SampleDevForm = () => {
                 optionFilterProp="children"
                 placeholder="Select Location"
               >
-                {locations.map((e) => {
+                <Option key={300} value={300}>{'300'}</Option>
+                {/* {locations.map((e) => {
                   return (
                     <Option key={e.locationId} value={e.locationId}>
                       {e.locationCode}
                     </Option>
                   );
-                })}
+                })} */}
               </Select>
             </Form.Item>
           </Col>
@@ -342,7 +377,7 @@ export const SampleDevForm = () => {
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="sampleTypeId"
-              label="Type"
+              label="fabric Type"
               rules={[{ required: true, message: "Type is required" }]}
             >
               <Select
@@ -350,11 +385,12 @@ export const SampleDevForm = () => {
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select Type"
+                onChange={fabricTypeOnchange}
               >
-                {sampleTypes.map((e) => {
+                {fabricType.map((e) => {
                   return (
-                    <Option key={e.sampleTypeId} value={e.sampleTypeId}>
-                      {e.sampleType}
+                    <Option key={e.fabricTypeId} value={e.fabricTypeId}>
+                      {e.fabricTypeName}
                     </Option>
                   );
                 })}
@@ -364,7 +400,7 @@ export const SampleDevForm = () => {
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} style={{ margin: 0 }} >
             <Form.Item
               name="sampleSubTypeId"
-              label="Sub Type"
+              label="Fabric Sub Type"
               rules={[
                 {
                   required: true,
@@ -378,10 +414,10 @@ export const SampleDevForm = () => {
                 optionFilterProp="children"
                 placeholder="Select Sub Type"
               >
-                {subTypes.map((e) => {
+                {fabSubType.map((e) => {
                   return (
-                    <Option key={e.sampleSubTypeId} value={e.sampleSubTypeId}>
-                      {e.sampleSubType}
+                    <Option key={e.fabricSubTypeId} value={e.fabricSubTypeId}>
+                      {e.fabricSubTypeName}
                     </Option>
                   );
                 })}
@@ -496,21 +532,21 @@ export const SampleDevForm = () => {
               label="M3 Style No"
               rules={[{ required: true, message: "" }]}
             >
-              <Input placeholder="M3 Style No" />
-              {/* <Select
+              {/* <Input placeholder="M3 Style No" /> */}
+              <Select
                   allowClear
                   showSearch
                   optionFilterProp="children"
                   placeholder="Select Licence Type"
                 >
-                  {licenceType.map((e) => {
+                  {m3StleCode.map((e) => {
                     return (
-                      <Option key={e.licencetypeId} value={e.licencetypeId}>
-                        {e.licenceType}
+                      <Option key={e.m3StyleId} value={e.m3StyleId}>
+                        {e.m3StyleCode}
                       </Option>
                     );
                   })}
-                </Select> */}
+                </Select>
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
@@ -519,12 +555,16 @@ export const SampleDevForm = () => {
               label="Contact No"
               rules={[
                 {
-                  pattern: /^[0-9]*$/,
-                  message: `Only numbers are accepted`,
+                  required: true,
+                  message:'MobileNumber Is Required'
+                },
+                {
+                  pattern: /^[0-9]{10}$/, 
+                  message:'Invalid phone number'
                 },
               ]}
             >
-              <Input placeholder="Enter discount" type="number"/>
+              <Input placeholder="Enter discount"/>
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>

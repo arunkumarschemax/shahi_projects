@@ -25,10 +25,28 @@ export const baseMRouterList = [
         filepath: "masters",
         children: [
             {
+                label: "Racks",
+                key: "rack-view",
+                path: "rack-view",
+                filepath: "/rack-view",
+            },
+            {
                 label: "Rack Positions",
                 key: "rackPosition-view",
                 path: "rackPosition-view",
                 filepath: "/rackPosition-view",
+            },
+            {
+                label: "Quality",
+                key: "quality-view",
+                path: "quality-view",
+                filepath: "/quality-view",
+            },
+            {
+                label: "M3 Style",
+                key: "m3-styleCodes-view",
+                path: "m3-styleCodes-view",
+                filepath: "/m3-styleCodes-view",
             },
             {
                 label: "M3 Items",
@@ -159,9 +177,29 @@ export const baseMRouterList = [
                 key: "sample-requests",
                 path: "sample-requests",
                 filepath: "sample-requests"
+            },
+            {
+                label: "Sample Inventory",
+                key: "sample-inventory",
+                path: "sample-inventory-grid",
+                filepath: "sample-inventory-grid"
             }
         ]
     },
+    {
+        label: "Stock Report",
+        key: "stack-report",
+        path: "stack-report",
+        filepath: "/stack-report",
+    },
+    {
+        label: "Material Requision",
+        key: "material-requisition",
+        path: "material-requisition",
+        filepath: "/material-requisition",
+    },
+
+    
     
     // {
     //     label: "Marketing Requisition",
@@ -188,10 +226,28 @@ export const baseRouterList = [
         filepath: "masters",
         children: [
             {
+                label: "Racks",
+                key: "rack-view",
+                path: "rack-view",
+                filepath: "/rack-view",
+            },
+            {
                 label: "Rack Positions",
-                key: "rm-locations-view",
-                path: "rm-locations-view",
+                key: "rackPosition-view",
+                path: "rackPosition-view",
                 filepath: "/rackPosition-view",
+            },
+            {
+                label: "Quality",
+                key: "quality-view",
+                path: "quality-view",
+                filepath: "/quality-view",
+            },
+            {
+                label: "M3 Style",
+                key: "m3-styleCodes-view",
+                path: "m3-styleCodes-view",
+                filepath: "/m3-styleCodes-view",
             },
             {
                 label: "M3 Items",
@@ -832,6 +888,18 @@ export const baseRouterList = [
             
          
         ]
+    },
+    {
+        label: "Stock Report",
+        key: "stack-report",
+        path: "stack-report",
+        filepath: "/stack-report",
+    },
+    {
+        label: "Material Requision",
+        key: "material-requisition",
+        path: "material-requisition",
+        filepath: "/material-requisition",
     },
    
     {

@@ -1,6 +1,6 @@
 import { EditOutlined, EnvironmentOutlined, MinusCircleOutlined, PlusOutlined, UndoOutlined } from "@ant-design/icons"
 import { M3MastersCategoryReq } from "@project-management-system/shared-models"
-import { ColourService, FabricWeaveService, M3MastersService, ProfitControlHeadService, UomService } from "@project-management-system/shared-services"
+import { ColourService, FabricTypeService, FabricWeaveService, M3MastersService, ProfitControlHeadService, UomService } from "@project-management-system/shared-services"
 import { Button, Card, Col, Divider, Form, Input, Popconfirm, Row, Select, Space, Tag, Tooltip, message } from "antd"
 import Table, { ColumnProps } from "antd/es/table"
 import moment from "moment"
@@ -8,7 +8,7 @@ import React from "react"
 import { useEffect, useState } from "react"
 
 
-export const PurchaseOrderfabricForm =() =>{
+export const PurchaseOrderfabricForm =({props}) =>{
     const [fabricForm]=Form.useForm()
     const [weave,setWeave] = useState<any[]>([])
     const [uom,setUom] = useState<any[]>([])
@@ -20,6 +20,7 @@ export const PurchaseOrderfabricForm =() =>{
     const [fabricIndexVal, setFabricIndexVal] = useState(undefined);
     const [defaultFabricFormData, setDefaultFabricFormData] = useState<any>(undefined);
     const [update, setUpdate]=useState<boolean>(false)
+    const [fabricType, setFabricType]= useState<any[]>([])
 
     const [page, setPage] = React.useState(1);
     const {Option}=Select
@@ -28,6 +29,7 @@ export const PurchaseOrderfabricForm =() =>{
     const m3MasterService = new M3MastersService()
     const colorService = new ColourService();
     const pchService = new ProfitControlHeadService()
+    const fabricTypeService = new FabricTypeService()
     let tableData: any[] = []
 
 
@@ -37,12 +39,20 @@ export const PurchaseOrderfabricForm =() =>{
         getM3FabricCodes()
         getColor()
         getPCH()
+        getFabricType()
     },[])
 
     const getweave = () => {
         weaveService.getAllActiveFabricWeave().then(res =>{
             if(res.status) {
                 setWeave(res.data)
+            }
+        })
+    }
+    const getFabricType = () => {
+        fabricTypeService.getAllActiveFabricType().then(res =>{
+            if(res.status) {
+                setFabricType(res.data)
             }
         })
     }
@@ -103,7 +113,7 @@ export const PurchaseOrderfabricForm =() =>{
         if(defaultFabricFormData){
             fabricForm.setFieldsValue({
                 content: defaultFabricFormData.content,
-                fabricType: defaultFabricFormData.fabricType,
+                fabricTypeId: defaultFabricFormData.fabricTypeId,
                 weaveId: defaultFabricFormData.weaveId,
                 weight : defaultFabricFormData.weight,
                 weightUnit : defaultFabricFormData.weightUnit,
@@ -121,6 +131,7 @@ export const PurchaseOrderfabricForm =() =>{
                 weaveName:defaultFabricFormData.weaveName,
                 fabricTypeName:defaultFabricFormData.fabricTypeName,
                 pchName:defaultFabricFormData.pchName,
+                shahiFabricCode:defaultFabricFormData.shahiFabricCode
 
             })
         }
@@ -136,44 +147,55 @@ export const PurchaseOrderfabricForm =() =>{
         },
         {
             title:'Content',
-            dataIndex:'content'
+            dataIndex:'content',
+            width:'100px'
         },
         {
             title:'Fabric Type',
             dataIndex:'fabricTypeName',
+            width:'130px'
             
         },
         {
             title:'Weave',
             dataIndex:'weaveName',
+            width:'130px'
         },
         {
             title:'Weight',
             dataIndex:'weight',
+            width:'100px'
+
         },
         {
             title:'Width',
-            dataIndex:'width'
+            dataIndex:'width',
+            width:'100px'
         },
         {
             title:'Construction',
-            dataIndex:'construction'
+            dataIndex:'construction',
+            width:'100px'
         },
         {
             title:'Yarn Count',
-            dataIndex:'yarnCount'
+            dataIndex:'yarnCount',
+            width:'100px'
         },
         {
             title:'Finish',
             dataIndex:'finish',
+            width:'100px'
         },
         {
             title:'Shrinkage',
             dataIndex:'shrinkage',
+            width:'100px'
         },
         {
             title:'M3 Fabric Code',
             dataIndex:'m3FabricCode',
+            width:'170px'
         },
         {
             title:'Color',
@@ -182,10 +204,12 @@ export const PurchaseOrderfabricForm =() =>{
         {
             title:'PCH',
             dataIndex:'pchName',
+            width:'100px'
         },
         {
             title:'MOQ',
-            dataIndex:'moq'
+            dataIndex:'moq',
+            width:'100px'
         },
         {
             title: "Action",
@@ -219,11 +243,11 @@ export const PurchaseOrderfabricForm =() =>{
             )
         }
     ]
-
     
     const deleteData = (index:any) => {
         tableData = [...fabricTableData]
         tableData.splice(index,1)
+        props(tableData)
         setFabricTableData(tableData)
         if (tableData.length == 0) {
             setFabricTableVisible(false)
@@ -231,20 +255,18 @@ export const PurchaseOrderfabricForm =() =>{
         }
     
     const onFabricAdd=(values) =>{
+        console.log(values)
         fabricForm.validateFields().then(() =>{
             console.log(fabricIndexVal)
             if(fabricIndexVal !== undefined){
                 fabricTableData[fabricIndexVal] = values;
-                fabricTableData[fabricIndexVal] = values;
-
                 tableData = [...fabricTableData]
                 setFabricIndexVal(undefined)
             } else{
                 tableData = [...fabricTableData,values]
             }
-            console.log(tableData)
-
             setFabricTableData(tableData)
+            props(tableData)
             fabricForm.resetFields()
             setUpdate(false)
             setFabricTableVisible(true)
@@ -273,13 +295,13 @@ export const PurchaseOrderfabricForm =() =>{
                     </Form.Item>
          </Col>
          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='fabricType' label='Type of Fabric' rules={[{required:true,message:'Type of Fabric is required'}]}>
+                    <Form.Item name='fabricTypeId' label='Type of Fabric' rules={[{required:true,message:'Type of Fabric is required'}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Fabric Type'
                         onChange={fabrictyprOnchange}
                         >
-                            {weave.map(e => {
+                            {fabricType.map(e => {
                                     return(
-                                        <Option type={e.fabricWeaveName} key={e.fabricWeaveId} value={e.fabricWeaveId} name={e.fabricWeaveName}> {e.fabricWeaveName}</Option>
+                                        <Option type={e.fabricTypeName} key={e.fabricTypeId} value={e.fabricTypeId} name={e.fabricTypeName}> {e.fabricTypeName}</Option>
                                     )
                                 })}
                             </Select>
@@ -337,13 +359,18 @@ export const PurchaseOrderfabricForm =() =>{
            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
            <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{required:true,message:'M3 Code is required'}]}>
            <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'>
-                   {fabricM3Code.map(e => {
-                       return(
+              {fabricM3Code.map(e => {
+                return(
                  <Option key={e.m3Code} value={e.m3Code}> {e.m3Code}-{e.category}</Option>
                        )
-                            })}
-                        </Select>
-                    </Form.Item>
+                      })}
+                  </Select>
+                 </Form.Item>
+                </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                       <Form.Item name='shahiFabricCode' label='Shahi Fabric Code' rules={[{required:true,message:'M3 Code is required'}]}>
+                        <Input/>
+                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='colourId' label='Color'>
@@ -380,6 +407,12 @@ export const PurchaseOrderfabricForm =() =>{
                     <Form.Item name='moq' label='MOQ'
                     >
                         <Input placeholder="Enter MOQ"/>
+                    </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                    <Form.Item name='remarks' label='Remarks'
+                    >
+                        <Input placeholder="Enter Remarks"/>
                     </Form.Item>
                     </Col>
                     </Row>

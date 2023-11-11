@@ -1,11 +1,13 @@
+import { EditOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import { M3MastersCategoryReq } from "@project-management-system/shared-models";
-import { ColourService, M3MastersService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Row, Select, Table } from "antd";
+import { ColourService, M3MastersService, SampleDevelopmentService } from "@project-management-system/shared-services";
+import { Button, Card, Col, Divider, Form, Input, Popconfirm, Row, Select, Table, Tag, Tooltip } from "antd";
 import { ColumnProps } from "antd/lib/table";
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-export const PurchaseOrderTrim = () =>{
+export const PurchaseOrderTrim = ({props}) =>{
+    let tableData: any[] = []
     const [trimForm] = Form.useForm()
     const {Option} = Select
     const [update, setUpdate] = useState<boolean>(false)
@@ -13,15 +15,21 @@ export const PurchaseOrderTrim = () =>{
     const [trimtableVisible,setTrimtableVisible] = useState<boolean>(false)
     const [trimTableData,setTrimTableData] = useState<any[]>([])
     const [trimM3Code,setTrimM3Code] = useState<any[]>([])
+    const [trimIndexVal, setTrimIndexVal] = useState(undefined);
+    const [defaultTrimFormData, setDefaultTrimFormData] = useState<any>(undefined);
+    const [trimCode, setTrimCode]=useState<any[]>([])
+    const [trimType, setTrimType]=useState<any[]>([])
 
     const [color,setColor] = useState<any[]>([])
     const colorService = new ColourService();
     const m3MasterService = new M3MastersService()
+    const sampleService = new SampleDevelopmentService()
 
 
     useEffect(() =>{
         getColor()
         getM3TrimCodes()
+        getTrimType()
     },[])
 
     const getColor = () => {
@@ -31,6 +39,29 @@ export const PurchaseOrderTrim = () =>{
             }
         })
     }
+
+    const getTrimType = () => {
+        sampleService.getTrimType().then(res =>{
+            if(res.status) {
+                setTrimType(res.data)
+            }
+        })
+    }
+
+    const TrimTypeOnchange = (value,option) =>{
+        console.log(value)
+        trimForm.setFieldsValue({trimType:option.name})
+        getTrimCodeAgainstTrimType(value)
+    }
+
+    const getTrimCodeAgainstTrimType = (value) => {
+        sampleService.getTrimCodeAgainstTrimType({productGroupId:value}).then(res =>{
+            if(res.status) {
+                setTrimCode(res.data)
+            }
+        })
+    }
+
     const getM3TrimCodes = () => {
         const req = new M3MastersCategoryReq('Trim')
         m3MasterService.getByCategory(req).then(res => {
@@ -39,6 +70,23 @@ export const PurchaseOrderTrim = () =>{
             }
         })
     }
+
+    const setEditForm = (rowData: any, index: any) => {
+        setUpdate(true)
+        setDefaultTrimFormData(rowData)
+        setTrimIndexVal(index)
+    }
+
+    const deleteData = (index:any) => {
+        tableData = [...trimTableData]
+        tableData.splice(index,1)
+        props(tableData)
+        setTrimTableData(tableData)
+        if (tableData.length == 0) {
+            setTrimtableVisible(false)
+        }
+        }
+
     const columns : ColumnProps<any>[] =[
         {
             title: 'S No',
@@ -47,68 +95,129 @@ export const PurchaseOrderTrim = () =>{
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
         {
-            title:'Content',
-            dataIndex:'content'
+            title:'Trim Type',
+            dataIndex:'trimType',
+            width:'100px'
         },
         {
-            title:'Fabric Type',
-            dataIndex:'fabricTypeName',
+            title:'Trim Code',
+            dataIndex:'trimCodeName',
+            width:'100px'
             
         },
         {
-            title:'Weave',
-            dataIndex:'weaveName',
-        },
-        {
-            title:'Weight',
-            dataIndex:'weight',
-        },
-        {
-            title:'Width',
-            dataIndex:'width'
-        },
-        {
-            title:'Construction',
-            dataIndex:'construction'
-        },
-        {
-            title:'Yarn Count',
-            dataIndex:'yarnCount'
-        },
-        {
-            title:'Finish',
-            dataIndex:'finish',
-        },
-        {
-            title:'Shrinkage',
-            dataIndex:'shrinkage',
-        },
-        {
-            title:'M3 Fabric Code',
-            dataIndex:'m3FabricCode',
-        },
-        {
             title:'Color',
-            dataIndex:'colorName',
+            dataIndex:'colourName',
+            width:'100px'
         },
+        {
+            title:'Consumption',
+            dataIndex:'consumption',
+        },
+        {
+            title:'M3 Trim Code',
+            dataIndex:'m3TrimCode',
+            width:'180px'
+        },
+        {
+            title:'Description',
+            dataIndex:'description',
+            width:'180px'
+        },
+        {
+            title:'Remarks',
+            dataIndex:'remarks',
+            width:'200px'
+
+        },
+        {
+            title: "Action",
+            dataIndex: 'action',
+            render: (text: any, rowData: any, index: any) => (
+                <span>
+                    <Tooltip placement="top" title='Edit'>
+                        <Tag >
+                            <EditOutlined className={'editSamplTypeIcon'} type="edit"
+                                onClick={() => {
+                                    setEditForm(rowData,index)
+                                }}
+                                style={{ color: '#1890ff', fontSize: '14px' }}
+                            />
+                        </Tag>
+                    </Tooltip>
+                    <Divider type="vertical" />
+                    
+                    <Tooltip placement="top" title='delete'>
+                    <Tag >
+                        <Popconfirm title='Sure to delete?' 
+                        onConfirm={e =>{deleteData(index);}}
+                        >
+                        <MinusCircleOutlined 
+
+                        style={{ color: '#1890ff', fontSize: '14px' }} />
+                        </Popconfirm>
+                    </Tag>
+                    </Tooltip>
+                </span>
+            )
+        }
     ]
 
     const onColorChange= (value,option) =>{
-        trimForm.setFieldsValue({colorname:option.name?option.name:''})
+        trimForm.setFieldsValue({colourName:option.name?option.name:''})
     }
+    
+    const OnTrimAdd = (values) =>{
+        console.log(values)
+        trimForm.validateFields().then(() =>{
+          if(trimIndexVal !== undefined){
+            trimTableData[trimIndexVal] = values;
+            tableData=[...trimTableData]
+            setTrimIndexVal(undefined)
+          }else{
+            tableData=[...trimTableData,values]
+            console.log(tableData)
+          }
+          setTrimTableData(tableData)
+          props(tableData)
+          trimForm.resetFields()
+          setUpdate(false)
+          setTrimtableVisible(true)
+        })
+    }
+
+    const trimCodeOnchange = (value,option) =>{
+        trimForm.setFieldsValue({trimCodeName:option.type})
+    }
+
+    useEffect(() =>{
+        if(defaultTrimFormData){
+            trimForm.setFieldsValue({
+                colourName: defaultTrimFormData.colourName,
+                trimType: defaultTrimFormData.trimType,
+                trimId: defaultTrimFormData.trimId,
+                colourId : defaultTrimFormData.colourId,
+                consumption : defaultTrimFormData.consumption,
+                m3TrimCode: defaultTrimFormData.m3TrimCode,
+                description: defaultTrimFormData.description,
+                remarks: defaultTrimFormData.remarks,
+                trimCodeName: defaultTrimFormData.trimCodeName,
+                productGroupId: defaultTrimFormData.productGroupId,
+            })
+        }
+
+    },[defaultTrimFormData])
 
     return(
         <Card title='trim Details'>
-            <Form form={trimForm}>
-                <Row gutter={8}>
-                    <Form.Item name={'poTrimId'} hidden><Input></Input></Form.Item>
-                    <Form.Item name={'poTrimId'} hidden><Input></Input></Form.Item>
-                    <Form.Item name={'trimCode'} hidden><Input></Input></Form.Item>
-                    <Form.Item name={'colorname'} hidden><Input></Input></Form.Item>
-
+            <Form form={trimForm} layout="vertical" onFinish={OnTrimAdd}>
+                <Row gutter={24}>
+                <Form.Item name={'trimType'} hidden><Input></Input></Form.Item>
+                    <Form.Item name={'trimCodeName'} hidden><Input></Input></Form.Item>
+                    <Form.Item name={'colourName'} hidden><Input></Input></Form.Item>
 
                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name={'trimType'} label={'Trim type'}
+                        <Form.Item name={'productGroupId'} label={'Trim type'}
                          rules={[
                             {
                               required: true,
@@ -120,29 +229,52 @@ export const PurchaseOrderTrim = () =>{
                             },
                         ]}
                         >
-                            <Input></Input>
+                            <Select
+                             allowClear
+                             showSearch
+                             optionFilterProp="children"
+                             placeholder="Select TrimType"
+                             onChange={TrimTypeOnchange}
+                            >
+                            {trimType.map((item) =>{
+                                return (<Option name={item.productGroup} key={item.productGroupId} value
+                                ={item.productGroupId}>{item.productGroup}</Option>)
+                            }) }
+                            </Select>
+                            {/* <Input></Input> */}
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
                         <Form.Item
-                        name="trimCode"
-                        label="Trim Code"
+                        name="trimId"
+                        label="Trim"
                         rules={[
                             {
                                 required: true,
-                                message: "Trim Code Is Required",
+                                message: "Trim Is Required",
                             },
                             {
                                 pattern:/^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
                                 message: `Should contain only alphabets.`,
                             },
                         ]}>
-                            <Input placeholder="Enter Trim Code" />
+                            <Select
+                             allowClear
+                             showSearch
+                             optionFilterProp="children"
+                             placeholder="Select Trim"
+                             onChange={trimCodeOnchange}
+                            >
+                            {trimCode.map((item) =>{
+                                return (<Option type={item.trimCode} name={item.trimCode} key={item.trimId} value
+                                ={item.trimId}>{item.trimCode}</Option>)
+                            }) }
+                            </Select>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
                             <Form.Item
-                            name="color"
+                            name="colourId"
                             label="Color"
                         >
                             <Select
@@ -163,7 +295,7 @@ export const PurchaseOrderTrim = () =>{
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name={'quantity'} label={'Quantity'}>
+                        <Form.Item name={'consumption'} label={'Consumption'}>
                             <Input></Input>
                         </Form.Item>
                     </Col>
@@ -199,6 +331,11 @@ export const PurchaseOrderTrim = () =>{
                 </Row>
                 <Row>
                 {trimtableVisible ? <Table columns={columns} dataSource={trimTableData}
+                 pagination={{
+                    onChange(current) {
+                      setPage(current);
+                    }
+                  }}
                      />
                 :<></>}
                 </Row>

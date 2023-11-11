@@ -63,6 +63,6 @@ export class Location {
   })
   versionFlag: number;
  
-  @OneToMany(()=>SampleRequest, (SampleRequest) => SampleRequest.location, {cascade: true})
-  sampleReq : SampleRequest[]
+  // @OneToMany(()=>SampleRequest, (SampleRequest) => SampleRequest.location, {cascade: true})
+  // sampleReq : SampleRequest[]
 }

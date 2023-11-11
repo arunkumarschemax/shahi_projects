@@ -8,6 +8,7 @@ const TrimsForm = ({props}) => {
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
   const [trimCode, setTrimCode]=useState<any[]>([])
+  const [trimType, setTrimtype]= useState<any[]>([])
   const service = new SampleDevelopmentService()
  const {Option}=Select
 
@@ -20,11 +21,22 @@ const TrimsForm = ({props}) => {
   };
 
   useEffect(() =>{
-    getTrimCodes()
+    getTrimTypes()
   },[])
 
-  const getTrimCodes = () =>{
-    service.getTrimCodes().then(res =>{
+  const getTrimTypes = () =>{
+    service.getTrimType().then(res =>{
+      if(res.status){
+        setTrimtype(res.data)
+      }else{
+        setTrimtype([])
+        message.info(res.internalMessage)
+      }
+    })
+  }
+
+  const getTrimCodes = (value) =>{
+    service.getTrimCodeAgainstTrimType({productGroupId:value}).then(res =>{
       if(res.status){
         setTrimCode(res.data)
       }else{
@@ -51,6 +63,10 @@ const TrimsForm = ({props}) => {
     setData(updatedData);
   };
 
+  const trimTypeOnchange = (value) =>{
+    console.log(value)
+    getTrimCodes(value)
+  }
   const columns = [
     {
       title: 'S.No',
@@ -58,12 +74,33 @@ const TrimsForm = ({props}) => {
       render: (_, record, index) => index + 1,
     },
     {
-      title: 'Trim',
-      dataIndex: 'trimCode',
+      title: 'Trim Type',
+      dataIndex: 'productGroupId',
       width:"20%",
       render: (_, record) => (
         <Select
-          value={record.trimCode}
+          value={record.productGroupId}
+          onChange={(e) => handleInputChange(e, record.key, 'productGroupId')}
+          style={{width:"100%"}}
+          allowClear
+          showSearch
+          optionFilterProp="children"
+          placeholder="Select Trim"
+          onSelect={trimTypeOnchange}
+         >
+          {trimType.map(item =>{
+            return <Option key={item.productGroupId} valu={item.productGroupId}>{item.productGroup}</Option>
+          })}
+          </Select>
+      ),
+    },
+    {
+      title: 'Trim',
+      dataIndex: 'trimId',
+      width:"20%",
+      render: (_, record) => (
+        <Select
+          value={record.trimId}
           onChange={(e) => handleInputChange(e, record.key, 'trimCode')}
           style={{width:"100%"}}
           allowClear
@@ -77,16 +114,7 @@ const TrimsForm = ({props}) => {
           </Select>
       ),
     },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      render: (_, record) => (
-        <Input
-        value={record.description}
-        onChange={(e) => handleInputChange(e.target.value, record.key, 'description')}
-        />
-      ),
-    },
+   
     {
       title: 'Consumption',
       dataIndex: 'consumption',
@@ -94,6 +122,16 @@ const TrimsForm = ({props}) => {
         <Input
         value={record.consumption}
         onChange={(e) => handleInputChange(e.target.value, record.key, 'consumption')}
+        />
+      ),
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      render: (_, record) => (
+        <Input
+        value={record.description}
+        onChange={(e) => handleInputChange(e.target.value, record.key, 'description')}
         />
       ),
     },

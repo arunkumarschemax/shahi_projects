@@ -1,7 +1,7 @@
 import axios from "axios";
 import { from } from "rxjs";
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { FabricSubTypeDto, FabricSubTypeResponse,AllFabricSubTypeResponse,FabricSubTypeRequest,FabricSubTypeDropDownResponseModel,FabricTypeRequest,FabricSubTypeDropDownDto,FabricSubTypeReqId} from "@project-management-system/shared-models";
+import { FabricSubTypeDto, FabricSubTypeResponse,AllFabricSubTypeResponse,FabricSubTypeRequest,FabricSubTypeDropDownResponseModel,FabricTypeRequest,FabricSubTypeDropDownDto,FabricSubTypeReqId, fabricTypeIdreq} from "@project-management-system/shared-models";
 
 export class FabricSubtypeservice extends CommonAxiosService{
 URL ='/fabric-sub-type';
@@ -37,6 +37,12 @@ async getFabricSubTypeByFabricTypeId(itemCatId :FabricSubTypeReqId): Promise<All
     return this.axiosPostCall(this.URL + '/getFabricSubTypeByFabricTypeId', itemCatId)
   
 }
+async getFabricSubTypeAginstType(req :fabricTypeIdreq): Promise<AllFabricSubTypeResponse> {
+    
+    return this.axiosPostCall(this.URL + '/getFabricSubTypeAginstType', req)
+  
+}
+
 
 // async activateOrDeactivateFabricSubtype(Dto: FabricSubTypeDto): Promise<FabricSubTypeResponse> {
         
