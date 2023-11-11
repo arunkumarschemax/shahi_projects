@@ -363,7 +363,7 @@ export function VendorsForm(
               },
             ]}
             >
-              <Input placeholder='Enter Branch'/>
+              <Input placeholder='Enter Bank Branch'/>
             </Form.Item>
           </Col>
               </Row>

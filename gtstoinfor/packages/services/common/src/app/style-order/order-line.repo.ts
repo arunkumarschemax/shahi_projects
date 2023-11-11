@@ -13,9 +13,7 @@ export class OrderLineRepository extends Repository<OrderLine> {
         super(OrderLineRepo.target, OrderLineRepo.manager, OrderLineRepo.queryRunner);
     }
     
-    async getAllOrderLines(req: styleOrderReq):Promise<any>{
-       console.log(req,'cooo');
-       
+    async getAllOrderLines(req: styleOrderReq):Promise<any>{       
         const query = await this.createQueryBuilder('co')
         .select(` co.size,co.color,co.destination,co.order_quantity,co.sale_price,co.uom`)
         .leftJoin(StyleOrder,'c','c.co_id = co.co_id ')
@@ -23,6 +21,13 @@ export class OrderLineRepository extends Repository<OrderLine> {
         if (req?.itemId !== undefined) {
             query.andWhere(`c.fg_item_id ='${req.itemId}'`)
         }
+        return query.getRawMany()
+    }
+
+    async getDestinationsInOrderLine():Promise<any>{
+        const query = await this.createQueryBuilder('ol')
+        .select(`ol.destination,ol.destination_id`)
+        .groupBy(`ol.destination`)
         return query.getRawMany()
     }
 

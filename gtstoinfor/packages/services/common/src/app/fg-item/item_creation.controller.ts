@@ -24,9 +24,9 @@ export class ItemCreationController {
     }
 
     @Post('/getFgItemsDropdown')
-    async getFgItemsDropdown(): Promise<CommonResponseModel> {
+    async getFgItemsDropdown(@Body() req?:any): Promise<CommonResponseModel> {
         try {
-            return await this.itemCreationService.getFgItemsDropdown();
+            return await this.itemCreationService.getFgItemsDropdown(req);
         } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }

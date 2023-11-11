@@ -45,4 +45,7 @@ export class StyleOrderService extends CommonAxiosService{
     async  getConumber ():Promise<CommonResponseModel>{
         return this.axiosPostCall(this.URL +'/getConumber')
     }
+    async  getDestinationInOrderLines ():Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL +'/getDestinationInOrderLines')
+    }
 }

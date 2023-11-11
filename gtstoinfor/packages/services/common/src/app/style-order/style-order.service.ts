@@ -268,7 +268,7 @@ export class StyleOrderService{
         } else{
             for(const rec of data){
                 if(!COMap.has(rec.co_id)){
-                    COMap.set(rec.co_id,new StyleOrderModel(rec.co_id,rec.item_code,rec.order_date,rec.buyer_po_number,rec.shipment_type,rec.buyer_style,rec.agent,rec.buyer_address,rec.exfactory_date,rec.delivery_date,rec.instore_date,rec.sale_price,rec.price_quantity,rec.discount_per,rec.discount_amount,rec.status,rec.remarks,rec.fg_item_id,rec.warehouse_id,rec.facility_id,rec.style_id,rec.package_terms_id,rec.delivery_method_id,rec.delivery_terms_id,rec.currency_id,rec.Payment_method_id,rec.Payment_terms_id,[],rec.buyer_id,rec.item_name,rec.buyer_code,rec.buyer_name,rec.factoryName,rec.warehouse_name,rec.agentName,rec.agentCode,rec.buyerLandmark,rec.buyerCity,rec.buyerState,rec.package_terms_name,rec.delivery_method,rec.delivery_terms_name,rec.currency_name,rec.payment_method,rec.payment_terms_name,rec.co_id,rec.co_number,rec.season,rec.merchandiser,rec.merchandiserName,rec.merchandiserCode,rec.planner,rec.plannerName,rec.plannerCode,rec.uomId,rec.uom,rec.coTypeId,rec.coType,rec.item_sale_price_qty))
+                    COMap.set(rec.co_id,new StyleOrderModel(rec.co_id,rec.item_code,rec.order_date,rec.buyer_po_number,rec.shipment_type,rec.buyer_style,rec.agent,rec.buyer_address,rec.exfactory_date,rec.delivery_date,rec.instore_date,rec.sale_price,rec.price_quantity,rec.discount_per,rec.discount_amount,rec.status,rec.remarks,rec.fg_item_id,rec.warehouse_id,rec.facility_id,rec.style_id,rec.package_terms_id,rec.delivery_method_id,rec.delivery_terms_id,rec.currency_id,rec.Payment_method_id,rec.Payment_terms_id,[],rec.buyer_id,rec.item_name,rec.buyer_code,rec.buyer_name,rec.factoryName,rec.warehouse_name,rec.agentName,rec.agentCode,rec.buyerLandmark,rec.buyerCity,rec.buyerState,rec.package_terms_name,rec.delivery_method,rec.delivery_terms_name,rec.currency_name,rec.payment_method,rec.payment_terms_name,rec.co_id,rec.order_number,rec.season,rec.merchandiser,rec.merchandiserName,rec.merchandiserCode,rec.planner,rec.plannerName,rec.plannerCode,rec.uomId,rec.uom,rec.coTypeId,rec.coType,rec.item_sale_price_qty))
                 }
                 COMap.get(rec.co_id).styleOrderItems.push(new StyleOrderItemsModel(rec.coLineId,rec.delivery_address,rec.order_quantity,rec.color,rec.size,rec.destination,rec.uom,rec.status,rec.discount,rec.SalePrice,rec.coPercentage,rec.color_id,rec.size_id,rec.destination_id,rec.uom_id,rec.delLandmark,rec.delCity,rec.delState,rec.sku_code,rec.coline_number,rec.co_id,"",rec.co_number))
             }
@@ -431,6 +431,20 @@ export class StyleOrderService{
                     throw err
                 }
             }
+    
+    async getDestinationInOrderLines():Promise<CommonResponseModel>{
+        try{
+            const data = await this.orderLineRepo.getDestinationsInOrderLine()
+            if(data.length > 0){
+                return new CommonResponseModel(true,1,'Data retrieved',data)
+            } else{
+                return new CommonResponseModel(false,1,'No data found')
+            }
+
+        }catch(err){
+            throw err
+        }
+    }
 
             
             
