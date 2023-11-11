@@ -309,7 +309,7 @@ export class SampleRequestService {
   async getSampleRequestReport(): Promise<CommonResponseModel> {
     const manager = this.dataSource;
     let rawData
-     rawData = 'SELECT sr.sample_request_id, sr.request_no AS requestNo, sr.m3_style_no, sb.rm_item_id, ri.item_code, sb.required_quantity, sb.assigned_quantity,sb.colour_id,co.colour  FROM sample_request sr LEFT JOIN sampling_bom sb ON sb.sample_request_id = sr.sample_request_id LEFT JOIN rm_items ri ON ri.rm_item_id LEFT JOIN `colour` co ON co.colour_id = sb.colour_id = sb.rm_item_id';
+     rawData = 'SELECT sr.sample_request_id, sr.request_no AS requestNo, sr.m3_style_no, sb.rm_item_id, ri.item_code, sb.required_quantity,sb.created_at, sb.assigned_quantity,sb.colour_id,co.colour,st.style  FROM sample_request sr LEFT JOIN sampling_bom sb ON sb.sample_request_id = sr.sample_request_id LEFT JOIN rm_items ri ON ri.rm_item_id LEFT JOIN `colour` co ON co.colour_id = sb.colour_id = sb.rm_item_id LEFT JOIN `style` st ON st.style_id = sr.style_id';
      const rmData = await manager.query(rawData);
     if (rmData.length > 0) {
       const groupedData = rmData.reduce((result, item) => {
@@ -331,6 +331,8 @@ export class SampleRequestService {
             consumption: item.required_quantity,
             quantity: item.assigned_quantity,
             color: item.colour ,
+            style:item.style,
+            date:item.created_at,
           }
           
         );

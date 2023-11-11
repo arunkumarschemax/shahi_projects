@@ -40,6 +40,7 @@ export class IndentService{
 
     async getAllIndentData(): Promise<CommonResponseModel> {
         const data = await this.indentRepo.find({relations: ['iFabricInfo', 'iTrimsInfo']});
+        // const data = await this.indentRepo.getAllData();
         return new CommonResponseModel(true, 1235, 'Data retrieved Successfully',data);
     }
 
