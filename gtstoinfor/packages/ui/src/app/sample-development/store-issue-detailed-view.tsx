@@ -67,7 +67,8 @@ export const StoreIssueDetailed = () => {
   const formattedIssueDate = customIssueDate.toISOString().split("T")[0];
 
   const saveData = () => {
-    const req = new MaterialIssueDto(rowData?.[0]?.requestNo,formattedIssueDate,rowData?.[0]?.location_id,rowData?.[0]?.profit_control_head_id,rowData?.[0]?.buyer_id,rowData?.[0]?.sample_type_id,rowData?.[0]?.sample_sub_type_id,rowData?.[0]?.style_id,rowData?.[0]?.s_style,rowData?.[0]?.brand_id,rowData?.[0]?.dmm_id,rowData?.[0]?.technician_id,rowData?.[0]?.description,rowData?.[0]?.costRef,rowData?.[0]?.m3StyleNo,rowData?.[0]?.contact,rowData?.[0]?.extension,rowData?.[0]?.samValue,rowData?.[0]?.product,rowData?.[0]?.type,rowData?.[0]?.conversion,rowData?.[0]?.madeIn,rowData?.[0]?.remarks,fabricData,trimData,0,"","",undefined,"");
+    const req = new MaterialIssueDto(rowData?.[0]?.requestNo,formattedIssueDate,rowData?.[0]?.location_id,rowData?.[0]?.profit_control_head_id,rowData?.[0]?.buyer_id,rowData?.[0]?.sample_type_id,rowData?.[0]?.sample_sub_type_id,rowData?.[0]?.style_id,rowData?.[0]?.style,rowData?.[0]?.brand_id,rowData?.[0]?.dmm_id,rowData?.[0]?.technician_id,rowData?.[0]?.description,rowData?.[0]?.costRef,rowData?.[0]?.m3StyleNo,rowData?.[0]?.contact,rowData?.[0]?.extension,rowData?.[0]?.samValue,rowData?.[0]?.product,rowData?.[0]?.type,rowData?.[0]?.conversion,rowData?.[0]?.madeIn,rowData?.[0]?.remarks,fabricData,trimData,0,"","",undefined,"");
+    console.log(req,'====')
     if (fabricData.length > 0) {
     materialIssue.createMaterialIssue(req).then((res) => {
       if (res.status) {
@@ -124,14 +125,33 @@ export const StoreIssueDetailed = () => {
     navigate("/sample-development/sample-requests");
   };
 
-  const issuedInfo = (e, index, record) => {
-    setCreateData(e.target.value);
-  };
+  // const issuedInfo = (e, index, record) => {
+  //   setCreateData(e.target.value);
+  // };
 
-  const handleUomChange = (value, index, record) => {
-    console.log(value,'+)+)_')
-    setSelectedUom(value)
+  // const handleUomChange = (value, index, recordKey) => {
+  //   console.log(`UOM changed for record ${recordKey} to ${value}`);
+  //   // Set the state with the updated UOM value
+  //     setSelectedUom((prevState) => {
+  //     const updatedUoms = [...prevState.uoms];
+  //     updatedUoms[index] = { ...updatedUoms[index], issuedUomId: value };
+  //     return { ...prevState, uoms: updatedUoms };
+  //   });
+  // };
+
+  const handleUomChange = (value, index, key) => {
+    // Update the state with the selected UOM value
+    setSelectedUom((prevSelectedUomId) => ({
+      ...prevSelectedUomId,
+      [key]: value,
+    }));
+
+    // Your other logic goes here, if needed
+
+    // Logging the selected UOM value to the console
+    console.log(`Selected UOM for key ${key}: ${value}`);
   };
+  
   
 
   const columnsSkelton = [
@@ -183,10 +203,10 @@ export const StoreIssueDetailed = () => {
     {
       title: 'Uom',
       dataIndex: 'issuedUomId',
-      render: (text,record,index) => (
-        <Form.Item name={`issuedUomId_${index}`}>
+      render: (_,record,index) => (
+        <Form.Item name={`issuedUomId${record.key}`}>
         <Select
-          onChange={(val) => handleUomChange(val, index, record)}
+          onChange={(value) => handleUomChange(value,index,record.key)}
           allowClear
           style={{ width: "100%" }}
           showSearch

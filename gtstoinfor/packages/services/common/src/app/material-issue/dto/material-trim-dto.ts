@@ -20,7 +20,7 @@ export class MaterialTrimDto{
     consumptionUom:string;
 
     @ApiProperty()
-    uomId:number;
+    consumptionUomId:number;
 
     @ApiProperty()
     issuedQuantity: number

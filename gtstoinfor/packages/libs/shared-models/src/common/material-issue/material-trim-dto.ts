@@ -3,7 +3,7 @@ export class MaterialTrimDto{
     trimCode: string;
     description:string;
     consumption:number;
-    uomId:number
+    consumptionUomId:number
     issuedQuantity: number
     issuedUomId: number
     remarks:string;
@@ -18,7 +18,7 @@ export class MaterialTrimDto{
         trimCode: string,
         description:string,
         consumption:number,
-        uomId:number,
+        consumptionUomId:number,
         issuedQuantity: number,
         issuedUomId: number,
         remarks:string,
@@ -35,7 +35,7 @@ export class MaterialTrimDto{
         this.colorId = colorId
         this.consumption = consumption
         this.consumptionUom = consumptionUom
-        this.uomId = uomId
+        this.consumptionUomId = consumptionUomId
         this.issuedQuantity = issuedQuantity
         this.issuedQuantityUom = issuedQuantityUom
         this.issuedUomId = issuedUomId

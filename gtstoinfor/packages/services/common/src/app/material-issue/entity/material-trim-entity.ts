@@ -45,7 +45,7 @@ export class MaterialTrimEntity {
       nullable:false,
       name:'uom_id'
       })
-      uomId:number;
+      consumptionUomId:number;
 
     @Column('int',{
       nullable:false,
