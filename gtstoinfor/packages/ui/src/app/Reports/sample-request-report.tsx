@@ -186,7 +186,7 @@ const SampleRequestReport = () => {
 
   return (
     <div>
-        <Card title={<span>SAMPLE REQUEST REPORT</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }}
+        <Card title={<span>Material Requisition</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }}
         className="card-header">
         <Table columns={Columns}  
         dataSource={data}

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { FabricSubTypeRequest } from './dto/fabric-sub-type.request';
 import { FabricSubTypeAdapter } from './dto/fabric-sub-type.adapter';
 import { FabricSubTypeDto } from './dto/fabric-sub-type.dto';
-import { FabricTypeRequest } from '@project-management-system/shared-models';
+import { CommonResponseModel, FabricTypeRequest, fabricTypeIdreq } from '@project-management-system/shared-models';
 import {FabricSubTypeResponse,AllFabricSubTypeResponse,FabricSubTypeDropDownDto,FabricSubTypeDropDownResponseModel} from '@project-management-system/shared-models'
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { FabricSubType } from './fabric-sub-type.entity';
@@ -15,6 +15,8 @@ export class FabricSubTypeService {
     constructor(
         @InjectRepository(FabricSubType) private fabricSubTypeRepository: Repository<FabricSubType>,
         private fabricSubTypeAdapter: FabricSubTypeAdapter,
+        private readonly dataSource: DataSource,
+
     ) { }
 
     
@@ -200,4 +202,18 @@ export class FabricSubTypeService {
             }
         }
 
+        async getFabricSubTypeAginstType(fabricTyepId:fabricTypeIdreq): Promise<CommonResponseModel> {
+            try {
+                const manager=this.dataSource
+                const query='select fabric_sub_type_id as fabricSubTypeId,fabric_sub_type_name as fabricSubTypeName,fabric_type_id as fabricTyepId from fabric_sub_type where fabric_type_id='+fabricTyepId.fabricTypeId+''
+                const result =await manager.query(query)
+                if(result){
+                    return new CommonResponseModel(true,1,'data retrived sucessfully',result)
+                }else{
+                    return new CommonResponseModel(false,0,'no data found',[])
+                }
+            } catch (err) {
+                return err;
+            }
+        }
 }
