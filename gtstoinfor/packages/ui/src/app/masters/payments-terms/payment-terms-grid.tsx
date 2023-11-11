@@ -140,11 +140,12 @@ export function PaymentTermsGrid(
       title: 'S No',
       key: 'sno',
       width: '70px',
+      align:"center",
       responsive: ['sm'],
        render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-      title: 'Category',
+      title: <div style={{textAlign:"center"}}>Category</div>,
       dataIndex:'paymentTermsCategory',
       responsive: ['sm'],
       filters: [
@@ -183,7 +184,7 @@ export function PaymentTermsGrid(
     //   },
     //       },
     {
-      title: 'Payment Term Name',
+      title: <div style={{textAlign:"center"}}>Payment Terms Name</div>,
       dataIndex: 'paymentTermsName',
       //  responsive: ['lg'],
        sorter: (a, b) => a.paymentTermsName.length - b.paymentTermsName.length,
@@ -193,6 +194,7 @@ export function PaymentTermsGrid(
        {
       title: 'Status',
       dataIndex: 'isActive',
+      align:"center",
        render: (isActive, rowData) => (
         <>
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -219,6 +221,7 @@ export function PaymentTermsGrid(
     {
       title:`Action`,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         rowData.paymentTermsName.trim()=="N/A"?<span></span>:
         <span>

@@ -139,28 +139,36 @@ export function SearchGroupGrid(
 
   const columnsSkelton: any[] = [
     {
-      title: 'S No',
+      title: <div style={{textAlign:"center"}}>S.No</div>,
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
-       render: (text, object, index) => (page-1) * 10 +(index+1)
+       render: (text, object, index) => (page-1) * 10 +(index+1),
+      align:"center"
+
+      
     },
     {
-      title: 'Search Group Code',
+      title: <div style={{textAlign:"center"}}>Search Group Code</div>,
       dataIndex:'searchGrpCode',
+
      
     },
    
     {
-      title: 'Search Group Name',
+      title: <div style={{textAlign:"center"}}>Search Group Name</div>,
       dataIndex: 'searchGrpName',
        sorter: (a, b) => a.searchGrpName.length - b.searchGrpName.length,
        sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('searchGrpName')
+        ...getColumnSearchProps('searchGrpName'),
+       align:"center"
+
     },
        {
       title: 'Status',
       dataIndex: 'isActive',
+      align:"center",
+
        render: (isActive, rowData) => (
         <>
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -187,6 +195,7 @@ export function SearchGroupGrid(
     {
       title:`Action`,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         // rowData.paymentTermsName.trim()=="N/A"?<span></span>:
         <span>
@@ -253,7 +262,7 @@ export function SearchGroupGrid(
   }
 
   return (
-    <Card title ="Search Group"
+    <Card title ="Search Groups"
     headStyle={{ border: 0 }} 
     extra={
     <Link to = "/masters/searchGroup/searchGroup-form"  >
