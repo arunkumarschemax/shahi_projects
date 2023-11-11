@@ -115,8 +115,8 @@ export const SampleTypesGrid = (props: SampleTypesGridProps) => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
-        title: "Sample Type",
-        dataIndex: "sampleType",
+      title:<div style={{textAlign:'center'}}>Sample Type</div>,
+      dataIndex: "sampleType",
         // sorter: (a, b) => a.sampleType.localeCompare(b.sampleType),
         // sortDirections: ["ascend", "descend"],
         ...getColumnSearchProps("sampleType"),
@@ -124,6 +124,8 @@ export const SampleTypesGrid = (props: SampleTypesGridProps) => {
     {
       title: 'Status',
       dataIndex: 'isActive',
+      align:'center',
+
       // ...getColumnSearchProps("isActive"),
       render: (isActive, rowData) => (
         <>
@@ -152,6 +154,8 @@ export const SampleTypesGrid = (props: SampleTypesGridProps) => {
     {
       title: `Action`,
       dataIndex: 'action',
+      align:'center',
+
       render: (text, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"

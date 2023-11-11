@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space, message } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
 import Highlighter from 'react-highlight-words';
@@ -56,9 +56,9 @@ export function LocationsGrid(props: LocationsGridProps) {
     service.activatedeActivate(Data).then(res => { console.log(res);
       if (res.status) {
         getAll();
-        AlertMessages.getSuccessMessage('Success'); 
+        message.success(res.internalMessage, 2);
       } else {
-        AlertMessages.getErrorMessage(res.internalMessage);
+        message.error(res.internalMessage, 2);
 
       }
     }).catch(err => {
@@ -158,7 +158,7 @@ export function LocationsGrid(props: LocationsGridProps) {
     //   dataIndex:'deliverytermId',
     // },
     {
-      title: 'Location Name',
+      title: <div style={{textAlign:'center'}}>Location Name</div>,
       dataIndex: 'locationName',
       //  responsive: ['lg'],
        sorter: (a, b) => a.locationName.localeCompare(b.locationName),
@@ -166,7 +166,7 @@ export function LocationsGrid(props: LocationsGridProps) {
       ...getColumnSearchProps('locationName')
     },
     {
-      title: 'Location Code',
+      title: <div style={{textAlign:'center'}}>Location Code</div>,
       dataIndex: 'locationCode',
       //  responsive: ['lg'],
        sorter: (a, b) => a.locationCode.localeCompare(b.locationCode),
@@ -176,6 +176,7 @@ export function LocationsGrid(props: LocationsGridProps) {
     {
       title: 'Status',
       dataIndex: 'isActive',
+      align:'center',
       // sorter: (a, b) => a.locationName.localeCompare(b.locationName),
       //  sortDirections: ['descend', 'ascend'],
       //  ...getColumnSearchProps('locationName'),
@@ -206,6 +207,7 @@ export function LocationsGrid(props: LocationsGridProps) {
     {
       title:`Action`,
       dataIndex: 'action',
+      align:'center',
       render: (text, rowData) => (
         <span>         
             <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 

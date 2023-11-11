@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space, message } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
@@ -75,12 +75,12 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
     masterBrandService.ActivateDeActivateBrand(BrandsViewData).then(res => {
       console.log(res);
       if (res.status) {
-        AlertMessages.getSuccessMessage('Success');
+        message.success(res.internalMessage, 2);
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
         // } else {
-        AlertMessages.getErrorMessage(res.internalMessage);
+          message.error(res.internalMessage, 2);
         // }
       }
     }).catch(err => {
@@ -262,7 +262,7 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
           render: (text, object, index) => (page - 1) * 10 + (index + 1)
         },
         {
-          title: "Brands Name",
+          title:<div style={{textAlign:'center'}}>Brand Name</div>,
           dataIndex: "brandName",
           sorter: (a, b) => a.brandName.localeCompare(b.brandName),
           sortDirections: ["ascend", "descend"],
@@ -270,6 +270,7 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
         },
         {
           title: 'Brand Logo',
+          align:'center',
           dataIndex: 'fileName',
           // responsive: ['lg'],
           sorter: (a, b) => a.fileName.localeCompare(b.fileName),
@@ -291,6 +292,7 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
         },
         {
           title: 'Status',
+          align:'center',
           dataIndex: 'isActive',
           // sorter: (a, b) => a.isActive.localeCompare(b.isActive),
           // sortDirections: ["ascend", "descend"],
@@ -319,6 +321,7 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
         },
         {
           title: `Action`,
+          align:'center',
           dataIndex: 'action',
           render: (text, rowData) => (
             <span>

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Alert, Space } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Alert, Space, Checkbox } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
@@ -48,9 +48,7 @@ export function SampleSubTypesGrid(
   }
 
   const updateSampleSubType = (Data:SampleSubTypesDTO) => {
-    console.log(Data,"rrrrrrrrrrr")
     Service.updateSampleSubType(Data).then(res => {
-      console.log(res,"================");
       if(res.status){
         getAllSampleSubTypeData();
         setDrawerVisible(false);
@@ -182,14 +180,14 @@ export function SampleSubTypesGrid(
       render: (text, object, index) => (page-1) * 10 +(index+1)
       },
       {
-        title: "Sample Type",
+        title:<div style={{textAlign:'center'}}>Sample Types</div>,
         dataIndex: "sampleType",
         // sorter: (a, b) => a.sampleType.localeCompare(b.sampleType),
         // sortDirections: ["ascend", "descend"],
         ...getColumnSearchProps("sampleType"),
       },
       {
-        title: "Sample Sub Type",
+        title:<div style={{textAlign:'center'}}>Sample SubType</div>,
         dataIndex: "sampleSubType",
         // sorter: (a, b) => a.sampleSubType.localeCompare(b.sampleSubType),
         // sortDirections: ["ascend", "descend"],
@@ -198,6 +196,7 @@ export function SampleSubTypesGrid(
    
       {
         title: 'Status',
+        align:'center',
         dataIndex: 'isActive',
         ...getColumnSearchProps('isActive'),
         // sorter: (a, b) => a.isActive.localeCompare(b.isActive),
@@ -208,27 +207,13 @@ export function SampleSubTypesGrid(
             
           </>
         ),
-        // filters: [
-        //   {
-        //     text: 'Active',
-        //     value: true,
-        //   },
-        //   {
-        //     text: 'InActive',
-        //     value: false,
-        //   },
-        // ],
-        // filterMultiple: false,
-        // onFilter: (value, record) => 
-        // {
-        //   // === is not work
-        //   return record.isActive === value;
-        // },
+   
         
       },
       
       {
         title:`Action`,
+        align:'center',
         dataIndex: 'action',
         render: (text, rowData) => (
           <span>         

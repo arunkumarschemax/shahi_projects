@@ -107,21 +107,21 @@ export function ProcurmentGroupForm(
         <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:6}}>
           <Form.Item
                       name="procurmentGroup"
-                      label="Procurment Group "
+                      label="Procurement Group "
                     
                   
                       rules={[
                         {
                           required: true,
-                          message:'ProcurmentGroup  is required',
+                          message:'Procurement Group  is required',
                         },
                         {
                           pattern: /^[^-\s][a-zA-Z0-9_\s-]*$/,
-                          message: `Enter valid ProcurmentGroup `,
+                          message: `Enter valid Procurement Group `,
                           },
                         ]}
                       >
-                      <Input placeholder='`Enter Procurment Group'/>
+                      <Input placeholder='`Enter Procurement Group'/>
                     </Form.Item>
         </Col>
 

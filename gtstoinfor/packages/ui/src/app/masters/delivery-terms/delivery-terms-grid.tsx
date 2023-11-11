@@ -157,7 +157,7 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
     //   dataIndex:'deliverytermId',
     // },
     {
-      title: 'Delivery Term Name',
+      title: <div style={{textAlign:'center'}}>Delivery Term Name</div>,
       dataIndex: 'deliveryTermsName',
       //  responsive: ['lg'],
        sorter: (a, b) => a.deliveryTermsName.localeCompare(b.deliveryTermsName),
@@ -166,6 +166,7 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
     },
     {
       title: 'Status',
+      align:'center',
       dataIndex: 'isActive',
       sorter: (a, b) => a.deliveryTermsName.localeCompare(b.deliveryTermsName),
        sortDirections: ['descend', 'ascend'],
@@ -176,26 +177,27 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
         </>
       ),
-      // filters: [
-      //   {
-      //     text: 'Active',
-      //     value: true,
-      //   },
-      //   {
-      //     text: 'InActive',
-      //     value: false,
-      //   },
-      // ],
-      // filterMultiple: false,
-      // onFilter: (value, record) => 
-      // {
-      //   // === is not work
-      //   return record.isActive === value;
-      // },
+      filters: [
+        {
+          text: 'Active',
+          value: true,
+        },
+        {
+          text: 'InActive',
+          value: false,
+        },
+      ],
+      filterMultiple: false,
+      onFilter: (value, record) => 
+      {
+        // === is not work
+        return record.isActive === value;
+      },
       
     },
     {
       title:`Action`,
+      align:'center',
       dataIndex: 'action',
       render: (text, rowData) => (
         rowData.deliveryTermsName.trim()=='N/A'?<span></span>:

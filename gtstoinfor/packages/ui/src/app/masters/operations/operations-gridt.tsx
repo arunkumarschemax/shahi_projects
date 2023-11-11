@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert, Space } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert, Space, message } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
@@ -69,9 +69,9 @@ export function OperationsGrid(
 
       if (res.status) {
         getAllOperationsData();
-        AlertMessages.getSuccessMessage(res.internalMessage);
+        message.success(res.internalMessage, 2);
       } else {
-        AlertMessages.getErrorMessage(res.internalMessage);
+        message.error(res.internalMessage, 2);
 
       }
     }).catch(err => {
@@ -184,21 +184,21 @@ export function OperationsGrid(
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
-      title: "Group Name",
+      title: <div style={{textAlign:'center'}}>Group Name</div>,
       dataIndex: "operationGroupName",
       sorter: (a, b) => a.operationCode.localeCompare(b.operationCode),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("operationCode"),
     },
     {
-      title: "Operation Name",
+      title: <div style={{textAlign:'center'}}>Operation Name</div>,
       dataIndex: "operationName",
       sorter: (a, b) => a.operationName.localeCompare(b.operationName),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("operationName"),
     },
     {
-      title: "Operation Code",
+      title: <div style={{textAlign:'center'}}>Operation Code</div>,
       dataIndex: "operationCode",
       sorter: (a, b) => a.operationCode.localeCompare(b.operationCode),
       sortDirections: ["ascend", "descend"],
@@ -216,22 +216,22 @@ export function OperationsGrid(
 
         </>
       ),
-      // filters: [
-      //   {
-      //     text: 'Active',
-      //     value: true,
-      //   },
-      //   {
-      //     text: 'InActive',
-      //     value: false,
-      //   },
-      // ],
-      // filterMultiple: false,
-      // onFilter: (value, record) => 
-      // {
-      //   // === is not work
-      //   return record.isActive === value;
-      // },
+      filters: [
+        {
+          text: 'Active',
+          value: true,
+        },
+        {
+          text: 'InActive',
+          value: false,
+        },
+      ],
+      filterMultiple: false,
+      onFilter: (value, record) => 
+      {
+        // === is not work
+        return record.isActive === value;
+      },
 
     },
 
