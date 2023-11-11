@@ -1,5 +1,5 @@
-import { CoLineItemsReq, CoLineReq, FgItemCreIdRequest, StyleOrderIdReq } from "@project-management-system/shared-models";
-import { CoLineService, ItemCreationService, StyleOrderService } from "@project-management-system/shared-services";
+import { CoLineItemsReq, CoLineReq, CoLineStatusEnum, FgItemCreIdRequest, StyleOrderIdReq } from "@project-management-system/shared-models";
+import { ItemCreationService, StyleOrderService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Descriptions, Form, Input, Row, Segmented, Select, Space, Table } from "antd"
 import DescriptionsItem from "antd/es/descriptions/Item"
 import { ColumnProps } from "antd/es/table";
@@ -22,7 +22,6 @@ export const CoLineForm = () => {
     const [salePriceQty,setSalePriceQty] = useState<number>()
     const [coLineItems,setCoLineItems] = useState<any[]>([])
     const [form] = Form.useForm()
-    const coLineService = new CoLineService()
 
 
     useEffect(() => {
@@ -82,7 +81,7 @@ export const CoLineForm = () => {
             if(iniIndex != -1){
                 coLineItems[index].quantity = e.target.value
             } else{
-                const req = new CoLineItemsReq(rowData.skuCode,rowData.color,rowData.size,rowData.destination,e.target.value,salePrice,Number(initialData[0]?.styleOrderItems[0].deliveryAddress),rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId)
+                const req = new CoLineItemsReq(rowData.skuCode,rowData.color,rowData.size,rowData.destination,e.target.value,salePrice,Number(initialData[0]?.styleOrderItems[0].deliveryAddress),rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId,null,CoLineStatusEnum.OPEN,null,null)
                 setCoLineItems([...coLineItems,req])
             }
         }
@@ -93,7 +92,7 @@ export const CoLineForm = () => {
         if(iniIndex != -1){
             coLineItems[index].salePrice = e.target.value
         } else{
-            const req = new CoLineItemsReq(rowData.skuCode,rowData.color,rowData.size,rowData.destination,null,e.target.value,Number(initialData[0]?.styleOrderItems[0].deliveryAddress),rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId)
+            const req = new CoLineItemsReq(rowData.skuCode,rowData.color,rowData.size,rowData.destination,null,e.target.value,Number(initialData[0]?.styleOrderItems[0].deliveryAddress),rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId,null,CoLineStatusEnum.OPEN,null,null)
             setCoLineItems([...coLineItems,req])
         }
 
@@ -166,13 +165,16 @@ export const CoLineForm = () => {
     const [firstHalfData, secondHalfData] = splitData(data);
 
     const onSubmit = () => {
-        const req = new CoLineReq(initialData[0].orderNumber,form.getFieldValue('exfactoryDate'),form.getFieldValue('deliveryDate'),form.getFieldValue('season'),initialData[0].buyerPoNumber,coLineItems,form.getFieldValue('coNumber'))
+        const req = new CoLineReq(state?.id,initialData[0].orderNumber,form.getFieldValue('exfactoryDate'),form.getFieldValue('deliveryDate'),form.getFieldValue('season'),initialData[0].buyerPoNumber,coLineItems,form.getFieldValue('coNumber'))
         console.log(req)
-        // coLineService.createCoLine(req).then(res => {
-        //     if(res.status){
-        //         AlertMessages.getSuccessMessage('CoLine created successfully')
-        //     }
-        // })
+        styleOrderService.createCoLine(req).then(res => {
+            if(res.status){
+                AlertMessages.getSuccessMessage('CoLine created successfully')
+                onReset()
+            } else{
+                AlertMessages.getErrorMessage(res.internalMessage)
+            }
+        })
     }
 
     const onReset = () => {

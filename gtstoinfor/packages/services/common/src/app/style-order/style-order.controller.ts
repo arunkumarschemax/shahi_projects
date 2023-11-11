@@ -2,10 +2,12 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { StyleOrderService } from "./style-order.service";
-import { CoUpdateResponseModel, CommonResponseModel, StyleOrderIdReq, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
+import { CoLineResponseModel, CoUpdateResponseModel, CommonResponseModel, StyleOrderIdReq, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
 import { StyleOrderId } from "./style-order-id.request";
 import { CoUpdateDto } from "./dto/co-update.dto";
 import { StyleOrderColineIdReq } from "./style-order.colineId.request";
+import { CoLineService } from "./co-line.service";
+import { CoLineReq } from "./dto/co-line.req";
 
 
 @ApiTags('styleOrder')
@@ -13,7 +15,8 @@ import { StyleOrderColineIdReq } from "./style-order.colineId.request";
 export class StyleOrderController{
     constructor(
         private readonly styleOrderService :StyleOrderService,
-     private readonly applicationExceptionHandler: ApplicationExceptionHandler
+     private readonly applicationExceptionHandler: ApplicationExceptionHandler,
+     private readonly coLineService :CoLineService,
 
     ){}
 
@@ -142,6 +145,16 @@ export class StyleOrderController{
             
         }catch(err){
             return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+
+    @Post('/createCoLine')
+    // @ApiBody({type:CoLineReq})
+    async createCoLine(@Body() req:any):Promise<CoLineResponseModel>{
+        try{
+            return await this.coLineService.createCoLine(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CoLineResponseModel,err)
         }
     }
 

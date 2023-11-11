@@ -27,8 +27,7 @@ export class CoLineInfo {
     uomId : number;
     @ApiProperty()
     uom : string;
-    @ApiProperty()
-    coId : number;
+    
     @ApiProperty()
     coLineNumber : string;
     constructor(
@@ -45,7 +44,6 @@ export class CoLineInfo {
         coPercentage : number,
         uomId : number,
         uom : string,
-        coId: number,
         coLineNumber : string
     ){
         this.skuCode = skuCode
@@ -61,7 +59,6 @@ export class CoLineInfo {
         this.coPercentage = coPercentage
         this.uom = uom
         this.uomId = uomId
-        this.coId = coId
         this.coLineNumber = coLineNumber
     }
 }
