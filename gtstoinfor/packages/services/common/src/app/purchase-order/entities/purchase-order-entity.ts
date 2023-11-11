@@ -90,6 +90,18 @@ export class PurchaseOrderEntity{
     })
     remarks:string
     
+    @Column('varchar',{
+      name:'grn_quantity',
+      nullable:true
+    })
+    grnQuantity:string
+
+    @Column('int',{
+      name:'indent_id',
+      nullable:true
+    })
+    indentId:number
+    
   @OneToMany(type => PurchaseOrderFbricEntity, purchaseReqFabric => purchaseReqFabric.purchaseOrderEntity, { cascade: true })
   poFabricInfo: PurchaseOrderFbricEntity[]
 
