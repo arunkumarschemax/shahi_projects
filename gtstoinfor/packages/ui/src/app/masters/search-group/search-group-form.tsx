@@ -110,10 +110,7 @@ export function SearchGroupForm(props:SearchGroupFormProps) {
               required: true,
               message: 'Search Group Code Is Required'
             },
-            {
-              pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-              message: `Should contain only alphabets and numbers.`
-            }
+            
           ]}
         >
          <Input placeholder='Enter Search Group Code' />
@@ -129,11 +126,8 @@ export function SearchGroupForm(props:SearchGroupFormProps) {
             {
               required: true,
               message:"Search Group Name Is Required."
-            },
-            {
-              pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-              message: `Should contain only alphabets and numbers.`
             }
+           
             
           ]}
         >
@@ -148,11 +142,11 @@ export function SearchGroupForm(props:SearchGroupFormProps) {
             <Button type="primary" disabled={disable} htmlType="submit" >
             Submit
           </Button>
-          {(props.isUpdate === false) &&
+          {/* {(props.isUpdate === false) && */}
           <Button htmlType="button" style={{ margin: '0 8px' }} onClick={onReset}>
             Reset
           </Button>
-           } 
+           {/* }  */}
          
           </Col>
           

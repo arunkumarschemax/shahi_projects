@@ -121,11 +121,11 @@ export function PackagesTermsForm(props:PackagesTermsFormProps) {
             <Button type="primary" disabled={disable} htmlType="submit" >
             Submit
           </Button>
-          {(props.isUpdate === false) &&
+          {/* {(props.isUpdate === false) && */}
               <Button htmlType="button" style={{ margin: '0 8px' }} onClick={onReset}>
             Reset
           </Button>
-           }   
+           {/* }    */}
          
           </Col>
           
