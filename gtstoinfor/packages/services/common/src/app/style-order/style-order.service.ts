@@ -312,20 +312,28 @@ export class StyleOrderService{
 
     async getCoLineDataById(req:StyleOrderIdReq): Promise<CommonResponseModel> {
         try {
-        const data = await this.repo.getCoLineInfoById(req)
-        let data1 = []
+    //     const data = await this.repo.getCoLineInfoById(req)
+    //     let data1 = []
         
-        for(const rec of data){
-            data1.push(new StyleOrderItemsModel(rec.coLineId,rec.delivery_address,rec.order_quantity,rec.color,rec.size,rec.destination,rec.uom,rec.status,rec.discount,rec.SalePrice,rec.coPercentage,rec.color_id,rec.size_id,rec.destination_id,rec.uom_id,rec.delLandmark,rec.delCity,rec.delState,rec.sku_code,rec.coline_number,rec.co_id,"",rec.co_number))
-        }
+    //     for(const rec of data){
+    //         data1.push(new StyleOrderItemsModel(rec.coLineId,rec.delivery_address,rec.order_quantity,rec.color,rec.size,rec.destination,rec.uom,rec.status,rec.discount,rec.SalePrice,rec.coPercentage,rec.color_id,rec.size_id,rec.destination_id,rec.uom_id,rec.delLandmark,rec.delCity,rec.delState,rec.sku_code,rec.coline_number,rec.co_id,"",rec.co_number))
+    //     }
 
-       console.log(data1,'-----------')
-       return new CommonResponseModel(true, 0, "CO LineData retrieved  successfully", data1);
+    //    console.log(data1,'-----------')
+    const data = await this.repo.find({
+        relations:['CoLineData','fgitemInfo','warehouseInfo','factoryInfo','styleInfo','packageTermsInfo','deliveryMethodInfo','deliveryTermsInfo','currenciesInfo','paymentMethodInfo','paymentTermsInfo','buyerInfo','uomInfo'],
+        where:{
+            coId:req.styleOrderId 
+        }
+    })
+       return new CommonResponseModel(true, 0, "CO LineData retrieved  successfully", data);
     
           } catch (err) {
             throw err;
           }
         }
+
+        
   
 
         async updateCoData(req:CoUpdateDto):Promise<CoUpdateResponseModel>{
