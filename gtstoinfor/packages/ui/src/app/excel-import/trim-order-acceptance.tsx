@@ -85,16 +85,16 @@ const {Text}=Typography
         }).catch(err => {
             console.log(err.message)
         })
-        // service.getTrimOrdersNo().then(res => {
-        //     if (res.status) {
-        //         setItem(res.data)
-        //     }else{
-        //         setFilteredData([])
-        //         setItem([])
-        //     }
-        // }).catch(err => {
-        //     console.log(err.message)
-        // })
+        service.getTrimOrdersNo().then(res => {
+            if (res.status) {
+                setItem(res.data)
+            }else{
+                setFilteredData([])
+                setItem([])
+            }
+        }).catch(err => {
+            console.log(err.message)
+        })
         
     }
 
@@ -678,7 +678,7 @@ const {Text}=Typography
     return (
         <div>
             <Card
-                title="Trim Orders"
+                title="Trim Order Acceptance"
                 extra={filteredData.length > 0 ? (<Button
                     type="default"
                     style={{ color: 'green' }}

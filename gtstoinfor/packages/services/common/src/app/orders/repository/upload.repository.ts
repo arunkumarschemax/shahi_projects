@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FileUploadEntity } from "../entities/upload-file.entity";
 import { FileIdReq } from "../models/file-id.req";
-import { FileTypeDto } from "@project-management-system/shared-models";
+import { FileTypeDto, FileTypesEnum } from "@project-management-system/shared-models";
 import { OrdersChildEntity } from "../entities/orders-child.entity";
 import { TrimOrdersChildEntity } from "../entities/trim-orders-child.entity";
 
@@ -66,7 +66,7 @@ export class FileUploadRepository extends Repository<FileUploadEntity> {
         const query = this.createQueryBuilder('fup')
             .select(`fup.id as fileId , fup.file_name as fileName , fup.file_path as filePath,DATE_FORMAT(fup.created_at, '%Y-%m-%d %h:%i %p') as uploadedDate, fup.created_user as createdUser, fup.status as status,fup.file_type as fileType,COUNT(oc.order_plan_number) AS projectionRecords,SUM(oc.order_plan_qty) AS proorderqty,fup.upload_type AS uploadType`)
             .leftJoin(OrdersChildEntity,`oc`,`oc.file_id = fup.id`)
-            .where(`fup.is_active = 1 AND fup.status = 'Success'`)
+            .where(`fup.is_active = 1 AND fup.status = 'Success' and file_type = '${FileTypesEnum.PROJECTION_ORDERS}'`)
             .groupBy(`fup.id`)
             .orderBy(`fup.created_at`, 'DESC')
             .limit(2)

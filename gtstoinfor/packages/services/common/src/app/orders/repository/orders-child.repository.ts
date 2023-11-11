@@ -230,9 +230,8 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
 
 
     FROM orders_child
-    WHERE YEAR = '${req.year}'
-    AND prod_plan_type != 'STOP' AND exf IS NOT NULL AND wh IS NOT NULL
-  `
+    WHERE file_id in ('${req.fildId1}','${req.fildId2}') AND YEAR = '${req.year}'
+    AND prod_plan_type != 'STOP' AND exf IS NOT NULL AND wh IS NOT NULL`
             if(req.itemName){
                 query = query + ` AND planning_sum = "${req.itemName}"`
             }
