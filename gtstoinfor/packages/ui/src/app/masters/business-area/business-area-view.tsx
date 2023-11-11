@@ -1,5 +1,5 @@
 import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined, SearchOutlined } from "@ant-design/icons"
-import { Button, Card, Col, Divider, Drawer, Input, Popconfirm, Row, Space, Switch, Table, Tag } from "antd"
+import { Alert, Button, Card, Col, Divider, Drawer, Input, Popconfirm, Row, Space, Switch, Table, Tag } from "antd"
 import { ColumnProps, ColumnType } from "antd/es/table"
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -154,21 +154,22 @@ export const BusinessAreaView = () => {
         },
         {
             dataIndex:'businessAreaCode',
-            title:'Business Area Code',
+            title:<div style={{textAlign:'center'}}>Business Area Code</div>,
             sorter: (a, b) => a.businessAreaCode?.localeCompare(b.businessAreaCode),
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('businessAreaCode')
         },
         {
             dataIndex:'businessAreaName',
-            title:'Business Area Name',
+            title:<div style={{textAlign:'center'}}>Business Area Name</div>,
             sorter: (a, b) => a.businessAreaName?.localeCompare(b.businessAreaName),
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('businessAreaName')
         },
         {
-            title: 'Status',
+            title:<div style={{textAlign:'center'}}>Status</div>,
             dataIndex: 'isActive',
+            align:'center',
             render: (isActive, rowData) => (
               <>
                 {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -194,8 +195,9 @@ export const BusinessAreaView = () => {
             
           },
           {
-            title:`Action`,
+            title:<div style={{textAlign:'center'}}>Action</div>,
             dataIndex: 'action',
+            align:'center',
             render: (text, rowData) => (
               <span>   
                   <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
@@ -235,9 +237,9 @@ export const BusinessAreaView = () => {
     }
 
     return (
-        <Card size='small' title='Business Area' extra={<span><Button onClick={() => navigate('/masters/business-area/business-area-form')} type={'primary'}>New</Button></span>}>
-            <Row gutter={40} >
-        <Col>
+        <Card title='Business Area' extra={<span><Button onClick={() => navigate('/masters/business-area/business-area-form')} type={'primary'}>New</Button></span>}>
+            <Row gutter={24} >
+        {/* <Col>
             <Card title={'Total : ' + data.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
             </Col>
             <Col>
@@ -245,7 +247,17 @@ export const BusinessAreaView = () => {
             </Col>
             <Col>
             <Card title={'In-Active :' + data.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
-            </Col>
+            </Col> */}
+        <Col span={4}></Col>
+       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
+        <Alert type='success' message={'Total Business Areas: ' + data.length} style={{fontSize:'15px'}} />
+        </Col>
+           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
+          <Alert type='warning' message={'Active: ' + data.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
+          <Alert type='info' message={'In-Active: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        </Col>
             </Row>
             <br></br>
             <div style={{overflowX :'auto' }}>

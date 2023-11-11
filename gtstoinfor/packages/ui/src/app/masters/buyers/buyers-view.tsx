@@ -189,7 +189,7 @@ let userRef
 
     const columnsSkelton: ColumnProps<any>[] = [
       {
-        title: 'S No',
+        title:'S No',
         key: 'sno',
         width: '70px',
         responsive: ['sm'],
@@ -197,7 +197,7 @@ let userRef
       },
       {
         dataIndex:"buyerCode",
-        title:"Buyer Code",
+        title:<div style={{textAlign:'center'}}>Buyer Code</div>,
         // responsive: ['lg'],
         sorter: (a, b) => a.buyerCode.localeCompare(b.buyerCode),
         sortDirections: ['descend', 'ascend'],
@@ -205,7 +205,7 @@ let userRef
       },
       {
         dataIndex:"buyerName",
-        title:"Buyer Name",
+        title:<div style={{textAlign:'center'}}>Buyer Name</div>,
         // responsive: ['lg'],
         sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
         sortDirections: ['descend', 'ascend'],
@@ -213,7 +213,7 @@ let userRef
       },
       {
         dataIndex:"contactPerson",
-        title:"Contact Person",
+        title:<div style={{textAlign:'center'}}>Contact Person</div>,
         // responsive: ['lg'],
         sorter: (a, b) => a.contactPerson.localeCompare(b.contactPerson),
         sortDirections: ['descend', 'ascend'],
@@ -221,7 +221,7 @@ let userRef
       },
       {
         dataIndex:"phoneNo",
-        title:"Contact Number",
+        title:<div style={{textAlign:'center'}}>Contact Number</div>,
         // responsive: ['lg'],
         sorter: (a, b) => a.phoneNo.localeCompare(b.phoneNo),
         sortDirections: ['descend', 'ascend'],
@@ -229,7 +229,7 @@ let userRef
       },
       // {
       //   dataIndex:"address",
-      //   title:"Address",
+      //   title:<div style={{textAlign:'center'}}>Buyer Code</div>"Address",
       //   render:(text,record) => {
       //     return(
       //       <>
@@ -240,8 +240,9 @@ let userRef
       //   // ...getColumnSearchProps('city')
       // },
       {
-        title: 'Status',
+        title:<div style={{textAlign:'center'}}>Status</div>,
         dataIndex: 'isActive',
+        align:'center',
         render: (isActive, rowData) => (
           <>
             {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -267,8 +268,9 @@ let userRef
         
       },
       {
-        title:`Action`,
+        title:<div style={{textAlign:'center'}}>Action</div>,
         dataIndex: 'action',
+        align:'center',
         render: (text, rowData) => (
           <span>   
                 <Tooltip title='Address Info'>
@@ -306,8 +308,9 @@ let userRef
         )
       },
       {
-        title:'Attributes',
+        title:<div style={{textAlign:'center'}}>Attributes</div>,
         dataIndex:'attributes',
+        align:'center',
         render:(text,rowData) => (
           <span>
             <Button onClick={() => navigate('/global/buyers/buyers-general-attributes-form',{state:{id:rowData.buyerId}})}>General</Button>
@@ -319,13 +322,13 @@ let userRef
     ];
   
 
-
+    const onChange=(pagination, filters, sorter, extra)=> {
+      console.log('params', pagination, filters, sorter, extra);
+    }
 
   return (
     <Card title='Buyers' extra={<span><Button onClick={() => navigate('/global/buyers/buyers-form')} type={'primary'}>New</Button></span>} >
      <Row gutter={24} >
-     <Col span={4}></Col>
-    <Col span={5}>
       {/* <Col>
           <Card title={'Total Buyers : ' + c.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
@@ -335,13 +338,14 @@ let userRef
           <Col>
            <Card title={'In-Active :' + buyersData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
           </Col> */}
-
+     <Col span={4}></Col>
+       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
         <Alert type='success' message={'Total Buyers: ' + buyersData.length} style={{fontSize:'15px'}} />
         </Col>
-        <Col span={5}>
+           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
           <Alert type='warning' message={'Active: ' + buyersData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
-        <Col span={5}>
+           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
           <Alert type='info' message={'In-Active: ' + buyersData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
 
@@ -353,7 +357,15 @@ let userRef
     <Card>
     <Table
      columns={columnsSkelton} 
-     dataSource={buyersData} size='small' bordered/>
+     dataSource={buyersData} size='small' bordered
+     scroll={{ x:500 }}
+          pagination={{
+            onChange(current) {
+              setPage(current);
+            }
+          }}
+          onChange={onChange}
+     />
       </Card>
 
           

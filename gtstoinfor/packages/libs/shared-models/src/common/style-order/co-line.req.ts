@@ -5,17 +5,17 @@ export class CoLineReq{
     season: string;
     buyerPoNumber: string;
     CoLineItems: CoLineItemsReq[];
+    coLineNumber: string;
     coLineId?: number;
-    coLineNumber?: string;
-    constructor(orderNumber: string,exfactoryDate: any,deliveryDate: any,season: string,buyerPoNumber: string,CoLineItems: CoLineItemsReq[],coLineId?: number,coLineNumber?: string){
+    constructor(orderNumber: string,exfactoryDate: any,deliveryDate: any,season: string,buyerPoNumber: string,CoLineItems: CoLineItemsReq[],coLineNumber: string,coLineId?: number){
         this.orderNumber = orderNumber
         this.exfactoryDate = exfactoryDate
         this.deliveryDate = deliveryDate
         this.season = season
         this.buyerPoNumber = buyerPoNumber
         this.CoLineItems = CoLineItems
-        this.coLineId = coLineId
         this.coLineNumber = coLineNumber
+        this.coLineId = coLineId
 
     }
 }

@@ -137,6 +137,10 @@ export const ComponentMappingView = () => {
         getMappedComponents()
     }
 
+    const onChange=(pagination, filters, sorter, extra)=> {
+        console.log('params', pagination, filters, sorter, extra);
+    }
+
     return(
         <Card size='small' title='Mapped Components' extra={<span><Button onClick={() => navigate('/style-management/component-mapping/component-mapping-form')} type="primary">New</Button></span>}>
             <Form form={form} onFinish={onSearch}>
@@ -211,7 +215,15 @@ export const ComponentMappingView = () => {
                 </Row>
 
             </Form>
-            <Table columns={columns} dataSource={data} size="small" bordered/>
+            <Table columns={columns} dataSource={data} size="small" bordered
+            scroll={{ x: 'max-content' }}
+            pagination={{
+              onChange(current) {
+                setPage(current);
+              }
+            }}
+            onChange={onChange}
+            />
         </Card>
     )
 

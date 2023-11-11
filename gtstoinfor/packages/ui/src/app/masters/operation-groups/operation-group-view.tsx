@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
@@ -281,8 +281,8 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
 
     <Card title='Operation Groups' extra={<span><Button onClick={() => navigate('/masters/operationgroups/operationgroups-form')} type={'primary'}>New</Button></span>}>
         <br/>
-      <Row gutter={40}>
-        <Col>
+      <Row gutter={24}>
+        {/* <Col>
           <Card title={'Total Operation Groups: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
         <Col>
@@ -290,6 +290,16 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
         </Col>
         <Col>
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+        </Col> */}
+         <Col span={4}></Col>
+       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
+        <Alert type='success' message={'Total Operation Groups: ' + variantData.length} style={{fontSize:'15px'}} />
+        </Col>
+           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
+          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
       </Row><br></br>
         <Table
