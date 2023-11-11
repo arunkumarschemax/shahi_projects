@@ -161,7 +161,7 @@ export function SearchGroupGrid(
        sorter: (a, b) => a.searchGrpName.length - b.searchGrpName.length,
        sortDirections: ['descend', 'ascend'],
         ...getColumnSearchProps('searchGrpName'),
-       align:"center"
+       
 
     },
        {

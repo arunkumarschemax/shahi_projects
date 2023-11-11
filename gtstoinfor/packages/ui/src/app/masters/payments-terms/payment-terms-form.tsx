@@ -124,10 +124,7 @@ export function PaymentTermsForm(props:PaymentTermsFormProps) {
               required: true,
               message:"Enter valid payment term name."
             },
-            {
-              pattern: /^[a-zA-Z0-9]+[a-zA-Z0-9_\-\s()]*$/,
-              message: `Should contain only alphabets and numbers.`
-            }
+           
           ]}
         >
           <Input placeholder='Enter Payment Term Name' />

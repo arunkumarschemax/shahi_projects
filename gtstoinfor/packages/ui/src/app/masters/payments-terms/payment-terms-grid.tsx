@@ -184,7 +184,7 @@ export function PaymentTermsGrid(
     //   },
     //       },
     {
-      title: <div style={{textAlign:"center"}}>Payment Terms Name</div>,
+      title: <div style={{textAlign:"center"}}>Payment Term Name</div>,
       dataIndex: 'paymentTermsName',
       //  responsive: ['lg'],
        sorter: (a, b) => a.paymentTermsName.length - b.paymentTermsName.length,
