@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Select, Card, Row, Col, message } from "antd";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BuyingHouseDto } from "@project-management-system/shared-models";
-import { BuyingHouseService } from "@project-management-system/shared-services";
+import { BuyingHouseService, CountryService } from "@project-management-system/shared-services";
 import AlertMessages from "../../common/common-functions/alert-messages";
 
 const { TextArea } = Input;
+const { Option } = Select;
 
 export interface BuyingHouseFormProps {
   data: BuyingHouseDto;
@@ -17,8 +18,14 @@ export interface BuyingHouseFormProps {
 export function BuyingHouseForm(props: BuyingHouseFormProps) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const [country,setCountry] = useState<any[]>([])
 
   const Service = new BuyingHouseService();
+  const countryService = new CountryService()
+
+  useEffect(()=>{
+    getCountries()
+  },[])
 
   const createBuyingHouse = (dto: BuyingHouseDto) => {
     dto.createdUser = "admin";
@@ -41,6 +48,14 @@ export function BuyingHouseForm(props: BuyingHouseFormProps) {
       });
   };
 
+  const getCountries = () =>{
+    countryService.getAllActiveCountries().then((res)=>{
+      if(res.status){
+        setCountry(res.data)
+      }
+    })
+  }
+
   const onReset = () => {
     form.resetFields();
   };
@@ -57,7 +72,7 @@ export function BuyingHouseForm(props: BuyingHouseFormProps) {
     <Card
       title={props.isUpdate ?
       'Buying House':'Buying House'}
-      extra={(props.isUpdate === false) && <span><Button onClick={()=> navigate('//masters/buying-house/buying-house-view')} type={"primary"}>View</Button></span>}
+      extra={(props.isUpdate === false) && <span><Button onClick={()=> navigate('/masters/buying-house/buying-house-view')} type={"primary"}>View</Button></span>}
       
     >
       <Form
@@ -155,7 +170,7 @@ export function BuyingHouseForm(props: BuyingHouseFormProps) {
           >
             <Form.Item
               name="contact"
-              label="Contact"
+              label="Contact Number"
               rules={[
                 {
                   required: true,
@@ -179,7 +194,7 @@ export function BuyingHouseForm(props: BuyingHouseFormProps) {
                 },
               ]}
             >
-              <Input placeholder="Enter Contact" />
+              <Input placeholder="Enter Contact Number" />
             </Form.Item>
           </Col>
           <Col
@@ -240,21 +255,29 @@ export function BuyingHouseForm(props: BuyingHouseFormProps) {
             xl={{ span: 8 }}
           >
             <Form.Item
-              name="country"
+              name="countryId"
               label="Country"
               rules={[
                 {
                   required: true,
                   message: "Country Is Required",
-                },
-                {
-                  pattern: /^[a-zA-Z\s-]*$/,
-                  message:
-                    "Should contain only alphabets, spaces, and hyphens.",
-                },
+                }
               ]}
             >
-              <Input placeholder="Enter Country" />
+              <Select
+                allowClear
+                showSearch
+                optionFilterProp="children"
+                placeholder="Select Country"
+              >
+                {country.map((e) => {
+                  return (
+                    <Option key={e.countryId} value={e.countryId}>
+                      {e.countryName}
+                    </Option>
+                  );
+                })}
+              </Select>
             </Form.Item>
           </Col>
         </Row>

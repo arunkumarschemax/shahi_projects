@@ -266,7 +266,7 @@ const cancelOrder =(val:any) =>{
       {
         title: "Item Name",
         dataIndex: "item_name",
-        width:70,
+        width:100,
         align:'center',
         render: (data) => {
           return data ? data : "-";
@@ -277,7 +277,7 @@ const cancelOrder =(val:any) =>{
       {
         title: "Type",
         dataIndex: "item_type",
-        width:90,
+        width:100,
         align:'center',
         render: (data) => {
           return data ? data : "-";
@@ -293,7 +293,7 @@ const cancelOrder =(val:any) =>{
       {
         title: "Brand",
         dataIndex: "brand_name",
-        width:70,
+        width:100,
         align:'center',
         render: (data) => {
           return data ? data : "-";
@@ -307,20 +307,20 @@ const cancelOrder =(val:any) =>{
         sortDirections: ['descend', 'ascend'],
 
       },
-      {
-        title: "Category",
-        dataIndex: "item_category",        width:70,align:'center',
-        render: (data) => {
-          return data ? data : "-";
-        },
-        sortDirections: ['descend', 'ascend'],
-        sorter: (a, b) => {
-          const itemA = a.item_category || ""; 
-          const itemB = b.item_category || "";
+      // {
+      //   title: "Category",
+      //   dataIndex: "item_category",        width:70,align:'center',
+      //   render: (data) => {
+      //     return data ? data : "-";
+      //   },
+      //   sortDirections: ['descend', 'ascend'],
+      //   sorter: (a, b) => {
+      //     const itemA = a.item_category || ""; 
+      //     const itemB = b.item_category || "";
       
-          return itemA.localeCompare(itemB);
-        },
-      },
+      //     return itemA.localeCompare(itemB);
+      //   },
+      // },
       {
         title: "Item Group",
         dataIndex: "item_group",width:70,align:'center',
@@ -334,21 +334,7 @@ const cancelOrder =(val:any) =>{
           return itemA.localeCompare(itemB);
         },        sortDirections: ['descend', 'ascend'],
       },
-      {
-        title: "Responsible",
-        dataIndex: "responsible_person",
-       
-        render: (data) => {
-          return data ? data : "-";
-        },
-        sorter: (a, b) => {
-          const itemA = a.responsible_person || ""; 
-          const itemB = b.responsible_person || "";
-      
-          return itemA.localeCompare(itemB);
-        },        sortDirections: ['descend', 'ascend'],
-
-      },
+     
       // {
       //   title: "Approve",
       //   dataIndex: "approver",
@@ -396,6 +382,7 @@ const cancelOrder =(val:any) =>{
       {
         title: "Basic UOM",
         dataIndex: "uom",
+        width:90,
         align:'center',
         render: (data) => {
           return data ? data : "-";
@@ -408,26 +395,10 @@ const cancelOrder =(val:any) =>{
         } ,          sortDirections: ['descend', 'ascend'],
 
       },
-   
-      {
-        title: "Currency",
-        dataIndex: "currency_name",
-        width:80,align:'center',
-        render: (data) => {
-          return data ? data : "-";
-        },
-        sorter: (a, b) => {
-          const itemA = a.currency_name || ""; 
-          const itemB = b.currency_name || "";
-      
-          return itemA.localeCompare(itemB);
-        } ,          sortDirections: ['descend', 'ascend'],
-
-      },
       {
         title: "Sales Price",
         dataIndex: "sale_price",
-        width:80,
+        width:90,
         render: (data) => {
           return data ? data : "-";
         },
@@ -439,21 +410,6 @@ const cancelOrder =(val:any) =>{
           return itemA - itemB; 
         } ,        sortDirections: ['descend', 'ascend'],
 
-      },
-      {
-        title: "Target Currency",
-        dataIndex: "target_currency",
-        align:'center',
-        width:80,
-        render: (data) => {
-          return data ? data : "-";
-        },
-        sorter: (a, b) => {
-          const itemA = a.target_currency || ""; 
-          const itemB = b.target_currency || "";
-      
-          return itemA.localeCompare(itemB);
-        } , sortDirections: ['descend', 'ascend'], 
       },
       // {
       //   title: "Total Order Qty",
@@ -475,7 +431,7 @@ const cancelOrder =(val:any) =>{
       {
         title: "Total Order Qty",
         dataIndex: "order_qty",
-        width:80,
+        width:90,
         align: 'right',
         render: (text, record) => (
           <>
@@ -493,31 +449,16 @@ const cancelOrder =(val:any) =>{
       ,
       {
         title: "Order Confirmation Date",
-        width:85,
+        width:95,
 
         dataIndex: "orderConfirmedDate",align:'center',
         render: (text) => moment(text).format('DD/MM/YYYY'),
-      },
-      {
-        title: "Range",
-        dataIndex: "rangee",
-        align:'center',
-        width:80,
-        sortDirections: ['descend', 'ascend'],
-        render: (data) => {
-          return data ? data : "-";
-        },
-        sorter: (a, b) => {
-          const itemA = a.rangee || ""; 
-          const itemB = b.rangee || "";
-      
-          return itemA.localeCompare(itemB);
-        } ,
       },
     {
       title: `Action`,
       dataIndex: 'action',
       fixed:'right',
+      width:120,
       render: (text, rowData) => {
         // console.log(rowData,'rowwwwwwww');
         

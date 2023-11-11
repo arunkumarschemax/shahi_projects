@@ -224,7 +224,7 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
-      title: "Buying House",
+      title: <div style={{textAlign:"center"}}>Buying House</div> ,
       dataIndex: "buyingHouse",
       // responsive: ['lg'],
       sorter: (a, b) => a.buyingHouse.localeCompare(b.buyingHouse),
@@ -232,7 +232,7 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
       ...getColumnSearchProps("buyingHouse"),
     },
     {
-      title: "Contact Person",
+      title: <div style={{textAlign:"center"}}>Contact Person</div> ,
       dataIndex: "contactPerson",
       // responsive: ['lg'],
       sorter: (a, b) => a.contactPerson.localeCompare(b.contactPerson),
@@ -240,7 +240,7 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
       ...getColumnSearchProps("contactPerson"),
     },
     {
-      title: "Email",
+      title: <div style={{textAlign:"center"}}>Email</div> ,
       dataIndex: "email",
       // responsive: ['lg'],
       sorter: (a, b) => a.email.localeCompare(b.email),
@@ -253,7 +253,7 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
       ),
     },
     {
-      title: "Contact",
+      title: <div style={{textAlign:"center"}}>Contact</div> ,
       dataIndex: "contact",
       // responsive: ['lg'],
       sorter: (a, b) => a.contact.localeCompare(b.contact),
@@ -266,7 +266,7 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
       ),
     },
     {
-      title: "Address",
+      title: <div style={{textAlign:"center"}}>Address</div> ,
       dataIndex: "address",
       // responsive: ['lg'],
       sorter: (a, b) => a.address.localeCompare(b.address),
@@ -274,7 +274,7 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
       ...getColumnSearchProps("address"),
     },
     {
-      title: "City",
+      title: <div style={{textAlign:"center"}}>City</div> ,
       dataIndex: "city",
       // responsive: ['lg'],
       sorter: (a, b) => a.city.localeCompare(b.city),
@@ -282,16 +282,17 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
       ...getColumnSearchProps("city"),
     },
     {
-      title: "Country",
-      dataIndex: "country",
+      title: <div style={{textAlign:"center"}}>Country</div> ,
+      dataIndex: "countryName",
       // responsive: ['lg'],
-      sorter: (a, b) => a.country.localeCompare(b.country),
+      sorter: (a, b) => a.countryName.localeCompare(b.countryName),
       sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("country"),
+      ...getColumnSearchProps("countryName"),
     },
     {
-      title: "Status",
+      title: <div style={{textAlign:"center"}}>Status</div> ,
       dataIndex: "isActive",
+      align:"center",
       render: (isActive, rowData) => (
         <>
           {isActive ? (
@@ -322,8 +323,9 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
       ],
     },
     {
-      title: `Action`,
+      title: <div style={{textAlign:"center"}}>Action</div> ,
       dataIndex: "action",
+      align:"center",
       render: (text, rowData) => (
         <span>
           <EditOutlined
@@ -430,7 +432,7 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
         rowKey={(record) => record.buyingHouseId}
         columns={columnsSkelton}
         dataSource={buyingHouseData}
-        scroll={{ x: true }}
+        scroll={{ x: 'max-content' }}
         pagination={{
           onChange(current) {
             setPage(current);
@@ -442,7 +444,7 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
       <Drawer
         bodyStyle={{ paddingBottom: 80 }}
         title="Update"
-        width={window.innerWidth > 768 ? "50%" : "85%"}
+        width={window.innerWidth > 768 ? "40%" : "75%"}
         onClose={closeDrawer}
         visible={drawerVisible}
         closable={true}

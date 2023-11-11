@@ -10,14 +10,14 @@ export class ItemCreation {
   fgitemId: number;
 
   @Column("varchar", {
-    nullable: true,
+    nullable: false,
     length: 255,
     name: "item_name"
   })
   itemName: string;
 
   @Column("varchar", {
-    nullable: true,
+    nullable: false,
     length: 40,
     name: "item_code"
   })
@@ -37,13 +37,13 @@ export class ItemCreation {
   itemTypeId: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "brand_id" /// foregn key
   })
   brandId: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "category_id" /// foregn key
   })
   categoryId: number;
@@ -61,7 +61,7 @@ export class ItemCreation {
   season: string;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "responsible_person_id" /// foregn key
   })
   responsiblePersonId: number;
@@ -73,13 +73,13 @@ export class ItemCreation {
   productDesignerId: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "approver" /// foregn key
   })
   approver: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "production_merchant" /// foregn key
   })
   productionMerchant: number;
@@ -103,7 +103,7 @@ export class ItemCreation {
   salePersonId: number;
 
   @Column("varchar", {
-    nullable: true,
+    nullable: false,
     length: 40,
     name: "style_no"
   })
@@ -130,35 +130,35 @@ export class ItemCreation {
   altUoms: string;
 
   @Column("varchar", {
-    nullable: true,
+    nullable: false,
     length: 40,
     name: "currency"
   })
   currency: string;
 
   @Column("varchar", {
-    nullable: true,
+    nullable: false,
     length: 40,
     name: "item_group"
   })
   itemGroup: string;
 
   @Column("varchar", {
-    nullable: true,
+    nullable: false,
     length: 40,
     name: "product_group"
   })
   productGroup: string;
 
   @Column("varchar", {
-    nullable: true,
+    nullable: false,
     length: 40,
     name: "business_area"
   })
   businessArea: string;
 
   @Column("varchar", {
-    nullable: true,
+    nullable: false,
     length: 40,
     name: "basic_uom"
   })
@@ -225,7 +225,7 @@ export class ItemCreation {
   projectionOrder: string;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "buying_house_commision_id" /// foregn key
   })
   buyingHouseCommision: number;
@@ -250,13 +250,13 @@ export class ItemCreation {
   customGroupId: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "national_dbk" /// foregn key
   })
   nationalDbk: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "rosl_group" /// foregn key
   })
   roslGroup: number;
@@ -264,7 +264,7 @@ export class ItemCreation {
   @Column({
     type: 'enum',
     enum : SubContractStatus,
-    nullable: true,
+    nullable: false,
     name: 'is_sub_contract',
     default:SubContractStatus.YES
   })
@@ -272,7 +272,7 @@ export class ItemCreation {
 
   @Column({
     type: "decimal", precision: 10, scale: 3,
-    nullable: true,
+    nullable: false,
     name: "sale_price"
   })
   salePrice: number;
@@ -296,7 +296,7 @@ export class ItemCreation {
   orderCloseDate: Date;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     default:'0',
     name: "moq" /// foregn key
   })

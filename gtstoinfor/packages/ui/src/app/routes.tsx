@@ -656,7 +656,7 @@ export const AppRoutes = () => {
                 </Route>
                 <Route path='/procurement'>
                 <Route path='procurement/mop-report' element={<MOPReport/>}/>    
-                <Route path='bom-report' element={<BomReport/>}/>           
+                <Route path='procurement/bom-report' element={<BomReport/>}/>           
        
                 </Route>
 

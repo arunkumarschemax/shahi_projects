@@ -57,7 +57,7 @@ export function ComponentsGrid(props: ComponentsProps) {
     componentsData.isActive= componentsData.isActive?false:true;
     componentsService.activateOrDeactivateComponent(componentsData).then(res => {
       if (res.status) {
-        AlertMessages.getSuccessMessage('Success'); 
+        AlertMessages.getSuccessMessage(res.internalMessage); 
       } else {
           AlertMessages.getErrorMessage(res.internalMessage);
       }
@@ -183,7 +183,7 @@ export function ComponentsGrid(props: ComponentsProps) {
       render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-      title: 'Component',
+      title: <div style={{textAlign:"center"}}>Component</div> ,
       dataIndex: 'componentName',
       // responsive: ['lg'],
       sorter: (a, b) => a.componentName.localeCompare(b.componentName),
@@ -191,8 +191,9 @@ export function ComponentsGrid(props: ComponentsProps) {
       ...getColumnSearchProps('componentName')
     },
     {
-      title: 'Status',
+      title: <div style={{textAlign:"center"}}>Status</div> ,
       dataIndex: 'isActive',
+      align:"center",
       render: (isActive, rowData) => (
         <>
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -217,8 +218,9 @@ export function ComponentsGrid(props: ComponentsProps) {
       
     },
     {
-      title:`Action`,
+      title: <div style={{textAlign:"center"}}>Action</div> ,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         <span>         
             <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 

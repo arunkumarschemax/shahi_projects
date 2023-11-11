@@ -181,7 +181,7 @@ export function ROSLGroupsGrid(props: ROSLGroupProps) {
       render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-      title: 'ROSL Group',
+      title: <div style={{textAlign:"center"}}>ROSL Group</div> ,
       dataIndex: 'roslGroup',
       // responsive: ['lg'],
       sorter: (a, b) => a.roslGroup.localeCompare(b.roslGroup),
@@ -189,8 +189,9 @@ export function ROSLGroupsGrid(props: ROSLGroupProps) {
       ...getColumnSearchProps('roslGroup')
     },
     {
-      title: 'Status',
+      title: <div style={{textAlign:"center"}}>Status</div> ,
       dataIndex: 'isActive',
+      align:"center",
       render: (isActive, rowData) => (
         <>
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -215,8 +216,9 @@ export function ROSLGroupsGrid(props: ROSLGroupProps) {
 
     },
     {
-      title:`Action`,
+      title: <div style={{textAlign:"center"}}>Action</div> ,
       dataIndex: 'action',
+      align:'center',
       render: (text, rowData) => (
         <span>         
             <EditOutlined  className={'editSampleTypeIcon'}  type="edit" 
@@ -262,8 +264,8 @@ export function ROSLGroupsGrid(props: ROSLGroupProps) {
     console.log('params', pagination, filters, sorter, extra);
   }
   return (
-    <Card title={<span >ROSL Group</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+    <Card title={<span >ROSL Groups</span>}
+    // style={{textAlign:'center'}} headStyle={{ border: 0 }} 
     extra={<Link to='/masters/ROSL-groups/ROSL-groups-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
       </Link>} >

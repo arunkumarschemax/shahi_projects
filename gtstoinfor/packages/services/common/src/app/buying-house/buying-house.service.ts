@@ -65,7 +65,7 @@ export class BuyingHouseService {
       try {
         const buyingHouse: BuyingHouseDto[] = [];
         const buyingHouseEntity: BuyingHouse[] = await this.buyingHouseRepository.find({ 
-          order :{buyingHouse:'ASC'}});
+          order :{buyingHouse:'ASC'},relations:['country']});
           if (buyingHouseEntity) {
             buyingHouseEntity.forEach(buyingHouseEntity => {
               const convertedBuyingHouse: BuyingHouseDTO = this.buyingHouseAdapter.convertEntityToDto(

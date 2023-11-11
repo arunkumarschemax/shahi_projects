@@ -25,7 +25,8 @@ export class DivisionController {
       }
     }
     @Post('/updateDivision')
-  async updateDivision(@Body() divisionDto: DivisionDTO,@Req() request:Request): Promise<DivisionResponseModel> {
+    @ApiBody({type:DivisionDTO})
+  async updateDivision(@Body() divisionDto: any,@Req() request:Request): Promise<DivisionResponseModel> {
     try {
       console.log('update Division');
       console.log(request);

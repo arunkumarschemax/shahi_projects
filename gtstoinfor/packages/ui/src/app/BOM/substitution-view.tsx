@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select, DatePicker } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select, DatePicker, Modal } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -27,13 +27,13 @@ const SubstituionView=() =>{
     const [itemData, setItemData] = useState([]);
 
     useEffect(()=>{
-      Substituion();
+      // Substituion();
       Dropdown();
     },[])
 
     const resetHandler = () => {
         form.resetFields();
-    
+    setItemData([])
     
     }
     const handleRowClick = (record) => {
@@ -54,36 +54,41 @@ const SubstituionView=() =>{
     }
 
     const FgCode = (val,data) => {
+      // console.log(data.code,'fgItemmmmmmmmmmmmmmmmmmm');
+      
       setSelectedItemNo(data.code);
+      // Substituion(data.code)
     };
   
     const Substituion=()=>{
-      const req = new fgItemIdReq()
-      if(form.getFieldValue('fg_sku') !== undefined){
-        // console.log(req,"pppppppppppppppppppp")
-        req.fgItemCode=form.getFieldValue('fg_sku')
+      const req = new fgItemIdReq(selectedItemNo)
+      // console.log(req,"=========")
+      if(form.getFieldValue('rm_sku') !== undefined){
+        req.rmSku=form.getFieldValue('rm_sku')
       }
    service.getSubstitution(req).then(res=>{
     if(res.status){
-    setValue(res.data)
+      setItemData(res.data)    
     }
    })
     }
 
-    const handledSearch=()=>{
-      const req = new fgItemIdReq()
-      if(form.getFieldValue('fg_sku') !=undefined){
-        req.fgItemCode=selectedItemNo
-        setSearchClicked(true);
+    // const handledSearch=()=>{
+    //   const req = new fgItemIdReq()
+    //   if(form.getFieldValue('fg_sku') != undefined){
+    //     req.fgItemCode=selectedItemNo
+    //     setSearchClicked(true);
 
-      }
-      service.getFgSku(req).then((res)=>{
-        if(res){
-          setItemData(res.data)
-        }
-      })
-    }
-    
+    //   }
+    //   service.getFgSku(req).then((res)=>{
+    //     if(res){
+    //       setItemData(res.data)
+    //     }
+    //   })
+    // }
+    // const DetailView=(record:any)=>{
+    //   const version=itemData.filter(rmSku=>rmSku.rmSku ==record)
+    // }
     const columnsSkelton:any=[
     
         {
@@ -96,29 +101,61 @@ const SubstituionView=() =>{
           {
             title:'Fg SkuCode',
             dataIndex:'fgSku',
-
+              key:'fgSku',
           },
           {
             title:'Fg ItemCode',
             dataIndex:'fgItemCode',
-
+            key:'fgItemCode',
           },
           {
+            title: 'Rm SkuCode',
+            dataIndex: 'rmSku',
+            key: 'rmSku',
+            render: (text, record) => {
+              console.log(record,"0000000000");
+              
+              const showModal = () => {
+                
+                Modal.info({
+                  title: 'RM Details',
+                  content: (
+                    <div>
+                      {/* Your modal content goes here */}
+                      <p>{record.rmSku}</p>
+                      <p>{record.featureCode}</p>
+                      <p>{record.optionGroup}</p>
+                      <p>{record.optionValue}</p>
+                      <p>{record.itemType}</p>
 
-            title:'Rm SkuCode',
-            dataIndex:'rmSku',
-
+                    </div>
+                  ),
+                });
+              };
+          
+              return (
+                <Tooltip title="Click to view">
+                  <Button type="link" onClick={showModal}>
+                    {record.rmSku}
+                  </Button>
+                </Tooltip>
+              );
+            },
           },
+          
           {
 
             title:'Rm ItemCode',
             dataIndex:'rmItemCode',
+            key:'rmItemCode',
 
           },
           
           {
             title:'Consumption',
             dataIndex:'consumption',
+            key:'consumption',
+
           }
 
         ]
@@ -131,7 +168,7 @@ const SubstituionView=() =>{
 
       </Link>}>
             <Card>
-                <Form form={form} layout='vertical'>
+                <Form form={form} layout='vertical' onFinish={Substituion}>
              <Row gutter={24}>
              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
                 <Form.Item name='fg_sku' label='Fg SkuCode'>
@@ -151,7 +188,7 @@ const SubstituionView=() =>{
                </Select>
                 </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
                 <Form.Item name='rmSku' label='Rm SkuCode'>
                <Select showSearch placeholder="Select Rm SkuCode" optionFilterProp="children" allowClear>
           {
@@ -159,7 +196,7 @@ const SubstituionView=() =>{
             }
                </Select>
                 </Form.Item>
-            </Col>
+            </Col> */}
 
             <Col >
                        <Form.Item>
@@ -168,7 +205,7 @@ const SubstituionView=() =>{
   icon={<SearchOutlined />}
   type="primary"
   style={{ marginBottom: '20px' }}
-  onClick={handledSearch}
+
 >
  Search
 </Button>
