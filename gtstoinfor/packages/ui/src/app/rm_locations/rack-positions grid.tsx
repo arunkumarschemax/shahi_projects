@@ -198,6 +198,7 @@ const PositionGrid = () => {
   return (
     <div>
       <Card title={<span>RM-LOCATIONS</span>} style={{ textAlign: 'center' }} headStyle={{ border: 0 }}
+      className="card-header"
         extra={<Button
           onClick={() => navigate('/masters/rack-position-form')}
           type="primary"
