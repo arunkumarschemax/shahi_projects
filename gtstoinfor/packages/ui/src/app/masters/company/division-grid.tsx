@@ -113,7 +113,7 @@ export const DivisionGrid = (props: DivisionGridProps) => {
       align:'center',
     },
     {
-      title: "Division Name",
+      title:<div style={{textAlign:'center'}}>Division Name </div>,
       dataIndex: "divisionName",
       sorter: (a, b) => a.source.localeCompare(b.source),
       sortDirections: ["ascend", "descend"],
@@ -121,7 +121,7 @@ export const DivisionGrid = (props: DivisionGridProps) => {
     },
     ,
     {
-      title: "Division Code",
+      title: <div style={{textAlign:'center'}}>Division Code</div>,
       dataIndex: "divisionCode",
       sorter: (a, b) => a.source.localeCompare(b.source),
       sortDirections: ["ascend", "descend"],

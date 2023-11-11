@@ -21,10 +21,13 @@ export class CoLineReq {
     coNumber : string;
     @ApiProperty({type: [CoLineInfo]})
     coLineInfo : CoLineInfo[];
+    @ApiProperty()
+    coId : number;
 
     
 
-    constructor (orderNumber : string,exFactoryDate : Date,deliveryDate : Date,season : string,status:CustomerOrderStatusEnum,deliveryAddress: string,buyerPoNumber: string,coNumber : string,coLineInfo : CoLineInfo[]){
+    constructor (orderNumber : string,exFactoryDate : Date,deliveryDate : Date,season : string,status:CustomerOrderStatusEnum,deliveryAddress: string,buyerPoNumber: string,coNumber : string,coLineInfo : CoLineInfo[],
+        coId: number,){
         this.orderNumber = orderNumber
         this.exFactoryDate= exFactoryDate
         this.deliveryDate = deliveryDate
@@ -34,6 +37,8 @@ export class CoLineReq {
         this.status = status
         this.deliveryAddress = deliveryAddress
         this.coNumber = coNumber
+        this.coId = coId
+
         
     }
 }

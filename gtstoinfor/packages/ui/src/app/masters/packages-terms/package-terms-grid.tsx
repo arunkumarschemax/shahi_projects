@@ -137,12 +137,13 @@ export function PackageTermsGrid() {
       title: 'S No',
       key: 'sno',
       width: '70px',
+      align:"center",
       responsive: ['sm'],
        render: (text, object, index) => (page-1) * 10 +(index+1)
     },
    
     {
-      title: 'Package Term Name',
+      title:<div style={{textAlign:"center"}}>Package Term Name</div>,
       dataIndex: 'packageTermsName',
       // width: '400px',
        sorter: (a, b) => a.packageTermsName.length - b.packageTermsName.length,
@@ -152,6 +153,7 @@ export function PackageTermsGrid() {
        {
       title: 'Status',
       dataIndex: 'isActive',
+      align:"center",
        render: (isActive, rowData) => (
         <>
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -178,6 +180,7 @@ export function PackageTermsGrid() {
     {
       title:`Action`,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         rowData.packageTermsName.trim()=="N/A"?<span></span>:
         <span> 

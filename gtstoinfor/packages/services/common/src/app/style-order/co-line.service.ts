@@ -2,14 +2,13 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CoLine } from "./co-line.entity";
 import { DataSource, Repository } from "typeorm";
-import { CoLineResponseModel } from "@project-management-system/shared-models";
+import { CoLineReq, CoLineResponseModel } from "@project-management-system/shared-models";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { Size } from "../sizes/sizes-entity";
 import { Destination } from "../destination/destination.entity";
 import { Colour } from "../colours/colour.entity";
 import { UomEntity } from "../uom/uom-entity";
 import { UomRequest } from "../uom/dto/uom.request";
-import { CoLineReq } from "./dto/co-line.req";
 import { StyleOrder } from "./style-order.entity";
 
 @Injectable()
@@ -28,23 +27,24 @@ export class CoLineService{
                 await transactionalEntityManager.startTransaction();
                 let flag = []
                 let len = 0;
-                const entity = new CoLine()
+                
+                for(const res of req.coLineInfo){
+                    len =len +1
+                    const entity = new CoLine()
                 entity.orderNumber = req.orderNumber;
                 entity.buyerPoNumber = req.buyerPoNumber;
                 entity.seasonCode = req.season;
-                entity.exfDate = req.exFactoryDate;
+                entity.exfDate = req.exfactoryDate;
                 entity.deliveryDate = req.deliveryDate;
                 entity.coNumber = req.coNumber
-                entity.deliveryAddress = req.deliveryAddress
-                for(const res of req.coLineInfo){
-                    len =len +1
+                entity.deliveryAddress = String(res.deliveryAddress)
                     entity.skuCode = res.skuCode
                     entity.size = res.size
                     entity.colour = res.color
                     entity.destination = res.destination
                     entity.salePrice = res.price
                     entity.discount = res.discount
-                    entity.orderQuantity = res.qty
+                    entity.orderQuantity = res.quantity
                     const size = new Size()
                     size.sizeId = res.sizeId
                     entity.sizeInfo = size
@@ -58,7 +58,7 @@ export class CoLineService{
                     uom.id = res.uomId
                     entity.uomInfo = uom
                     const styleOrder = new StyleOrder()
-                    styleOrder.coId = res.coId
+                    styleOrder.coId = req.coId
                     entity.styleOrderInfo = styleOrder
                     entity.coLineNumber = `coLine-00${len}`
 
