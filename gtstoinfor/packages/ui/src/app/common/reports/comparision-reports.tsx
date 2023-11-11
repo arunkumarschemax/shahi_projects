@@ -57,9 +57,10 @@ export const MonthWiseComparisionReport = () => {
   };
 
   const handleChange = (val) => {
+    console.log('okkkkkkkkk')
     setSelected(val)
     getData(tab,val,file1,file2)
-    getPhase()
+    // getPhase()
 
   }
   const getPhase = () => {
@@ -807,25 +808,26 @@ export const MonthWiseComparisionReport = () => {
    
     //   ],
     // },
-    {
-      dataIndex: "totalPcs",
-      align: "right",
-      width: colWidth.totalLatest,
-      render: (text: any, record: any) => {
-        const totalPcs = parseFloat(record.totalPcs);
-        return !isNaN(totalPcs) ? totalPcs.toLocaleString() : '0';
-      },
-    },
+    
 
     {
       // title: "Total In Coeff",
       dataIndex: "totalCoeff",
       align: "right",
-      width: colWidth.totalPre,
+      width: colWidth.totalLatest ,
 
       render: (text: any, record: any) => {
         const totalCoeff = parseFloat(record.totalCoeff);
         return !isNaN(totalCoeff) ? totalCoeff.toLocaleString() : '0';
+      },
+    },
+    {
+      dataIndex: "totalPcs",
+      align: "right",
+      width: colWidth.totalPre,
+      render: (text: any, record: any) => {
+        const totalPcs = parseFloat(record.totalPcs);
+        return !isNaN(totalPcs) ? totalPcs.toLocaleString() : '0';
       },
     },
   ];
@@ -979,7 +981,7 @@ export const MonthWiseComparisionReport = () => {
       },
            { title: ``, dataIndex: "", },
       { title: <span className="ant-table-cell even-color">Jan In Lat </span>, dataIndex: "janWhLat",align:"right" },
-      { title: <span className="ant-table-cell even-color">Jan In Lat </span>, dataIndex: "janWPre", align:"right" },
+      { title: <span className="ant-table-cell even-color">Jan In Pre </span>, dataIndex: "janWhPre", align:"right" },
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
       { title: <span className="ant-table-cell odd-color">Feb In Lat </span>, dataIndex: "febWhLat",align:"right"  },
@@ -1461,7 +1463,7 @@ export const MonthWiseComparisionReport = () => {
           const jan = [rec.coeffData[0].janCoeff];
           janLat += Number(jan);
         }
-        console.log(rec.coeffData[0].janCoeff,'jannnnnnn');
+        // console.log(rec.coeffData[0].janCoeff,'jannnnnnn');
         
         if (rec.coeffData[0].febCoeff) {
           const feb = [rec.coeffData[0].febCoeff];
@@ -1517,7 +1519,7 @@ export const MonthWiseComparisionReport = () => {
         }
       });
     });
-    const totalValues = [janPre, janLat, febPre, febLat, marPre, marLat, aprPre, aprLat, mayPre, mayLat, junPre, junLat, julPre, julLat, augPre, augLat, sepPre, sepLat, octPre, octLat, novPre, novLat, decPre, decLat];
+    const totalValues = [janLat, janPre, febLat, febPre, marLat, marPre, aprLat, aprPre, mayLat, mayPre, junLat, junPre, julLat, julPre, augLat, augPre, sepLat, sepPre, octLat, octPre, novLat, novPre, decLat, decPre];
     // const totalValuesWithCommas = totalValues.map((val) => val.toLocaleString());
 
     return (
@@ -1536,6 +1538,7 @@ export const MonthWiseComparisionReport = () => {
                   })}
                   <th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalLatest}px`, textAlign:'right' }}>{totalPre}</th>
                   <th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalPre}px`, textAlign:'right' }}>{totalLat}</th>
+
                   </tr>
                 </thead>
               </table>
@@ -1567,7 +1570,7 @@ export const MonthWiseComparisionReport = () => {
                   placeholder="Select "
                   optionFilterProp="children"
                   allowClear
-                  onChange={handleChange}
+                  onChange={(val) => handleChange(val)}
                   defaultValue={'ExFactory'}
                 >
                   <Option key={'ExFactory'} value={'ExFactory'}>Ex-Factory</Option>
