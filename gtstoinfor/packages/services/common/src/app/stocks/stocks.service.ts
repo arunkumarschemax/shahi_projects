@@ -40,10 +40,12 @@ export class StocksService {
             it.item_type,
             loc.location_name,
             st.quantity,
-            f.name
+            f.name,
+            rac.rack_position_name
             
             FROM stocks AS st
             LEFT JOIN location AS loc ON loc.location_id = st.location_id
+            LEFT JOIN rack_position AS rac ON rac.position_Id = st.location_id
             LEFT JOIN item_type AS it ON it.item_type_id = st.item_type_id
             LEFT JOIN factory AS f ON f.id = st.plant_id`
 
@@ -91,38 +93,38 @@ export class StocksService {
         }
     }
 
-    async getAllLocation(): Promise<CommonResponseModel>{
-const details = await this.stocksRepository.getAllLocation();
-if(details.length>0){
-    return new CommonResponseModel(true,1,"data retreivedd",details)
-} else {
-            return new CommonResponseModel(false, 0, 'data not found')
-    }
-}
-
-async getAllPlant():Promise<CommonResponseModel>{
-    const details=await this.stocksRepository.getAllPlant();
-    if(details.length>0){
-        return new CommonResponseModel(true,1,"data retreivedd",details)
-    }else{
-        return new CommonResponseModel(false, 0, 'data not found')
-    }
-}
-
-
-
-async getAllStockReportData(request? : StockFilterRequest): Promise<CommonResponseModel> {
-    try{
-        const details = await this.stocksRepository.getAllStockReportData(request)
-        if(details.length > 0){
-            return new CommonResponseModel(true,0,'All stocks Requests retrieved successfully',details)
+    async getAllLocation(): Promise<CommonResponseModel> {
+        const details = await this.stocksRepository.getAllLocation();
+        if (details.length > 0) {
+            return new CommonResponseModel(true, 1, "data retreivedd", details)
         } else {
-            return new CommonResponseModel(false,1,'No data found',[])
+            return new CommonResponseModel(false, 0, 'data not found')
         }
-    } catch(err) {
-        throw err
     }
-}
+
+    async getAllPlant(): Promise<CommonResponseModel> {
+        const details = await this.stocksRepository.getAllPlant();
+        if (details.length > 0) {
+            return new CommonResponseModel(true, 1, "data retreivedd", details)
+        } else {
+            return new CommonResponseModel(false, 0, 'data not found')
+        }
+    }
+
+
+
+    async getAllStockReportData(request?: StockFilterRequest): Promise<CommonResponseModel> {
+        try {
+            const details = await this.stocksRepository.getAllStockReportData(request)
+            if (details.length > 0) {
+                return new CommonResponseModel(true, 0, 'All stocks Requests retrieved successfully', details)
+            } else {
+                return new CommonResponseModel(false, 1, 'No data found', [])
+            }
+        } catch (err) {
+            throw err
+        }
+    }
 
 
 
