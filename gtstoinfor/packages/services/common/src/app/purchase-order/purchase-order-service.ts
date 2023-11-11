@@ -17,6 +17,7 @@ export class PurchaseOrderService{
 
 async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
     try{
+        console.log(req)
         let pofabricInfo=[]
         let poTrimInfo =[]
         const poEntity = new PurchaseOrderEntity()
@@ -43,10 +44,14 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
             pofabricEntity.shrinkage=poFabric.shrinkage
             pofabricEntity.pch=poFabric.pch
             pofabricEntity.moq=poFabric.moq
+            pofabricEntity.m3FabricCode=poFabric.m3FabricCode
+            pofabricEntity.content=poFabric.content
             pofabricInfo.push(pofabricEntity)
         }
+        poEntity.poFabricInfo=pofabricInfo
         for(const trimInfo of req.poTrimInfo){
             const trimEntity= new PurchaseOrderTrimEntity()
+            trimEntity.colourId=trimInfo.colourId
             trimEntity.productGroupId=trimInfo.productGroupId
             trimEntity.trimId=trimInfo.trimId
             trimEntity.m3TrimCode=trimInfo.m3TrimCode
@@ -55,6 +60,7 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
             trimEntity.remarks=trimInfo.remarks
             poTrimInfo.push(trimEntity)
         }
+        poEntity.poTrimInfo=poTrimInfo
         const save = await this.poRepo.save(poEntity)
         if(save){
             return new CommonResponseModel(true,1,'purchased Order Created Sucessfully')

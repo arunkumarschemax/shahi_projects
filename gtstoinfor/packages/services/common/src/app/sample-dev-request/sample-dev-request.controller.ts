@@ -159,4 +159,12 @@ export class SampleDevReqController {
         return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
       }
     }
+    @Post('/getSampleInventory')
+    async getSampleInventory(): Promise<CommonResponseModel> {
+      try {
+        return await this.sampleService.getSampleInventory();
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+      }
+    }
 }
