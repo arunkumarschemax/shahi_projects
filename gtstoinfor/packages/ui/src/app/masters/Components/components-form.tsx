@@ -78,9 +78,9 @@ export function ComponentsForm(props: ComponentsFormProps) {
                       
                     },
                     {
-                      pattern: /^[a-zA-Z ]+$/,
+                      pattern: /^[a-zA-Z]+$/,
                       message: `Should contain only alphabets.`
-                    }
+                    }                    
                   ]}>
                   <Input placeholder='Enter Component'/>
                 </Form.Item>

@@ -2,6 +2,8 @@ import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne
 import { Vendors } from "../vendors/vendors.entity";
 import { Buyers } from "../buyers/buyers.entity";
 import { Address } from "../buyers/address.entity";
+import { type } from "os";
+import { BuyingHouse } from "../buying-house/buying-house.entity";
 
 @Entity('countries')
 export class Countries {
@@ -62,5 +64,8 @@ export class Countries {
   
   @OneToMany(type=>Vendors, vendor=>vendor.countryInfo,{cascade: true})
   vendorInfo:Vendors[];
+
+  @OneToMany(type => BuyingHouse, buyingHouse => buyingHouse.country,{cascade : true})
+  buyingHouse : BuyingHouse[]
 
 }

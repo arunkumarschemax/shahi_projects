@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, FgDataModel, RmDataModel, SubResponseModel, SubstituionModel, SubstituionReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, FgDataModel, RmDataModel, SubResponseModel, SubstituionModel, SubstituionReq, fgItemIdReq } from "@project-management-system/shared-models";
 import { SubstitutionRepository } from "./substitution-repo";
 import { Substitution } from "./substituion.entity";
 import { FgItemBom } from "./fg-item-bom.entity";
@@ -80,40 +80,46 @@ export class SubstituionService{
         }
     }
 
-    async getSubstitution (req:SubstituionModel):Promise<SubResponseModel>{
+    async getSubstitution (req?:fgItemIdReq):Promise<SubResponseModel>{
         try{
           const getdata = await this.substitutionrepo.getSubstitution(req)
-          // console.log(getdata,"tttt")
+          // console.log(getdata,"getdata")
           const DataMap = new Map<string, FgDataModel>();
           for (const res of getdata) {
             if (!DataMap.has(res.fgItemId)) {
-            //   DataMap.set(res.fgItemId, new RmDataModel(res.rmItemCode, res.fgItemId, []));
-              // console.log( res.fg_item_id,'service item id');
+              // console.log(res,'000000000000');
+              
+              DataMap.set (res.fgItemId,new FgDataModel(res.substituionId,res.fgItemCode,res.fgItemId,res.rmItemCode,res.rmItemId,res.fgSku,res.fgSkuId,res.rmSku,res.rmSkuId,res.consumption,res.itemTypeId,res.itemGroupId,res.itemType,res.isActive,[]))
+              //  DataMap.set(res.fgItemId, new RmDataModel(res.rmItemId,res.itemType,res.rmSku,res.featureCode,res.status,res.itemCode,res.featureOptionId,res.optionGroup,res.optionId,re));
+              // console.log( res.fgItemId,'service item id');
         
             }
-            // const Sku = DataMap.get(res.fgItemId)?.sku;
-            //  console.log( Sku,'service item id/ x`out sidex');
-            // if (Sku) {
-            //   const data1 = new SKUListDto(
-            //     res.item_sku_id,
-            //     res.sku_code,
-            //     res.size_id,
-            //     res.size,
-            //     res.color_id,
-            //     res.color,
-            //     res.destination_id,
-            //     res.destination
-            //   );
-            //   Sku.push(data1);
-            // }
+             const RmSku = DataMap.get(res.fgItemId)?.rmData;
+            //  console.log( RmSku,'service item id/ x`out sidex');
+            if (RmSku) {
+              // const data1 = new RmDataModel(featureCode,res.status,res.itemCode,res.featureOptionId,res.optionGroup,res.optionId,re
+              const data1 = new RmDataModel(
+              res.rmItemId,
+                res.itemType,
+                res.rmSKuCode,
+                res.featureCode,
+                res.status,
+                res.itemCode,
+                res.featureOptionId,
+                res.optionGroup,res.optionId,res.optionValue
+              );
+              RmSku.push(data1);
+            }
+            // console.log(RmSku,'uuuuuuuuuuuu');
+            
           }
         
-        //   const ListArray: SKUDTO[] = Array.from(DataMap.values());
-        //   console.log(ListArray,'service');
+          let ListArray: FgDataModel[] = Array.from(DataMap.values());
+          console.log(ListArray,'service............');
         
           if(getdata.length>0){
       
-            return new CommonResponseModel(true,1,'data retreived', getdata)
+            return new SubResponseModel(true,1,'data retreived',ListArray)
       
           }else{
       
@@ -125,4 +131,20 @@ export class SubstituionService{
           throw err
         }
     }
+
+    async getFgSku(req?:fgItemIdReq):Promise<CommonResponseModel>{
+      try{
+        const getData = await this.substitutionrepo.getFgSku(req)
+        // console.log(getData,'dara');
+        
+        if(getData ){
+          return new CommonResponseModel(true,1,'Data retreived',getData)
+        } else{
+          return new CommonResponseModel(false,0,'No data found')
+        }
+    
+      } catch(err){
+        throw err
+      }
+    }  
 }

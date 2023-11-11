@@ -175,12 +175,7 @@ const getAllActiveDivision=() =>{
           {
             required: true,
             message: 'GroupTech Code Is Required'
-          },
-          
-            {
-              pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-              message: `Should contain only alphabets and numbers.`
-            }
+          }
         ]}
         >
         <Input  placeholder='Enter GroupTech Code'/>
@@ -201,11 +196,7 @@ const getAllActiveDivision=() =>{
               required: true,
               message: 'GroupTech DescriptionIs Required'
             }
-            ,
-            {
-              pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-              message: `Should contain only alphabets and numbers.`
-            }
+            
           ]}
         >
         <Input placeholder='Enter GroupTech Description '/>
@@ -220,7 +211,7 @@ const getAllActiveDivision=() =>{
             >
       {/* <Col xs={{span:24}} sm={{span:24}} md={{span:5,offset:1}} lg={{span:5,offset:1}} xl={{span:5,offset:1}} style={{margin:'1%'}}> */}
         <Form.Item
-        initialValue={userId.length>0 ?userId[0].buyerId:''}
+        initialValue={userId.length>0 ?userId[0].buyerId:'Select Buyer'}
           name="buyerId"
           label="Buyer"
           rules={[
@@ -229,8 +220,9 @@ const getAllActiveDivision=() =>{
               message: 'Buyer Is Required'
             },
           ]}
+          
         >
-         <Select defaultValue={userId.length>0 ?userId[0].buyerId:''} placeholder="Select Buyer">
+         <Select defaultValue={userId.length>0 ?userId[0].buyerId:'Select Buyer'} placeholder="Select Buyer">
          {buyerData.map((rec) => (
                   <option key={rec.buyerId} value={rec.buyerId}>
                     {rec.buyerName}

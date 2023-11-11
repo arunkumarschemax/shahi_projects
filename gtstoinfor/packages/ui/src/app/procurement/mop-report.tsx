@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {Table, Card, Button, Row, Col, Form, Select, Tabs } from 'antd';
+import {Table, Card, Button, Row, Col, Form, Select, Tabs, Modal } from 'antd';
 import {SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { CoBomService, StyleOrderService } from '@project-management-system/shared-services';
 import AlertMessages from '../common/common-functions/alert-messages';
 import { StyleOrderIdReq, StyleOrderid } from '@project-management-system/shared-models';
+import Mopprint from './mop-print';
 
 
 const MOPReport = () => {
@@ -17,8 +18,23 @@ const MOPReport = () => {
   const [mopData, setMOPData] = useState<any[]>([]);
   const [mopDataYes, setMOPDataYes] = useState([]);
 const [mopDataNo, setMOPDataNo] = useState([]);
+const [key, setKey] = useState();
+
 
   const service = new CoBomService()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
 
 
@@ -94,7 +110,7 @@ const getMOPData= () => {
     },
     {
       title: "FG item Code",
-      dataIndex: "fgSkuItemCode",
+      dataIndex: "fgItemCode",
       align:'center',
     
       sorter: (a, b) => a.fgSkuItemCode.localeCompare(b.fgSkuItemCode),
@@ -168,9 +184,16 @@ const getMOPData= () => {
     getMOPData();
   }
 
+  const onChange =(key)=>{
+    // console.log(key,"key")
+    setKey(key)
+    
+  }
+ console.log(key,"key")
+
 
   return (
-       <Card title={<span >Material Order Proposal Report</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }}>
+       <Card title={<span >Material Order Proposal Report</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }} >
         <Form  form={form} layout="horizontal" onFinish={getMOPData}>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }}
@@ -183,7 +206,7 @@ const getMOPData= () => {
                             {
                            codata.map((e) => {
                                     return(
-                                        <Option key={e.coId} value={e.coId}>{e.coNumber}</Option>
+                                        <Option key={e.coId} value={e.coId}>{e.orderNumber}</Option>
                                     )
                                 })
                             } 
@@ -207,10 +230,15 @@ const getMOPData= () => {
                         <Button danger icon={<UndoOutlined />} onClick={onReset}>Reset</Button>
                     </Form.Item>
                     </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 8 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 2 }}>
+                    {/* <Form.Item>
+                        <Button  onClick={showModal}>Print</Button>
+                    </Form.Item> */}
+                    </Col>
                   
                 </Row>
-                <Tabs type={'card'} tabPosition={'top'}>
-                   <TabPane key="1" tab={<span style={{fontSize:'15px'}}><b>{`MOP`}</b></span>}>
+                <Tabs type={'card'} tabPosition={'top'} onChange={(key)=>{onChange(key)}}>
+                   <TabPane key="mop" tab={<span style={{fontSize:'15px'}}><b>{`MOP`}</b></span>} >
                       <Table
                       size="small"
                       columns={columnsSkelton}
@@ -218,9 +246,10 @@ const getMOPData= () => {
                       scroll={{ x: true }}
                       bordered
                       pagination ={false}
+                      
                     />
                   </TabPane>
-                      <TabPane key="2" tab={<span style={{fontSize:'15px'}}><b>{`POP`}</b></span>}>
+                      <TabPane key="pop" tab={<span style={{fontSize:'15px'}}><b>{`POP`}</b></span>}>
                       <Table
                       size="small"
                       columns={columnsSkelton}
@@ -231,6 +260,19 @@ const getMOPData= () => {
                   />
                 </TabPane>
             </Tabs>
+          
+             <Modal className='print-docket-modal'
+                //  key={'modal'}
+                 width={'60%'}
+                 style={{ top: 30, alignContent: 'right' }}
+                visible={isModalOpen}
+                title={<React.Fragment>
+               </React.Fragment>}
+                onCancel={handleCancel}
+                
+                >
+            < Mopprint mop={mopDataYes} pop={mopDataNo} key={key}/>        
+            </Modal>
         </Form>
 
   

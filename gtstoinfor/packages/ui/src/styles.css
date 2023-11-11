@@ -42,6 +42,7 @@
 
 .custom-card .ant-card-head {
   background: rgb(152, 186, 248);
+ 
 }
 /* .card-header > .ant-card-head { */
   /* background: linear-gradient(to bottom right, #d8f3dc 25%,#95d5b2 75%); */
@@ -49,4 +50,10 @@
   /* color: white; */
   /* background-color: aquamarine; */
 /* } */
+
+.ant-card .ant-card-head {
+  background-color: cadetblue;
+  color:white
+}
+
 

@@ -5,9 +5,9 @@ import { SubstituionModel } from "./substituion.model";
 
 
 export class SubResponseModel extends GlobalResponseObject {
-    data?: FgDataModel;
+    data?: FgDataModel[];
 
-    constructor(status: boolean, intlCode: number, internalMessage: string, data?: FgDataModel){
+    constructor(status: boolean, intlCode: number, internalMessage: string, data?: FgDataModel[]){
         super(status,intlCode,internalMessage);
         this.data = data;
     }

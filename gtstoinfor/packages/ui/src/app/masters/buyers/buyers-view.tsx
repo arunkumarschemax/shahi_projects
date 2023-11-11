@@ -1,7 +1,7 @@
 import { ProColumns, ProTable } from '@ant-design/pro-components'
 import { BuyerExtrnalRefIdReq, BuyerIdReq, BuyerRequest, BuyersDto, FactoryActivateDeactivateDto, FactoryDto, MenusAndScopesEnum, OperationGroupsDto } from '@project-management-system/shared-models'
 import { BuyersService, FactoryService } from '@project-management-system/shared-services'
-import { Button, Card, Col, Divider, Drawer, Form, Input, Modal, Popconfirm, Radio, Row, Space, Switch, Table, Tag, Tooltip, message } from 'antd'
+import { Alert, Button, Card, Col, Divider, Drawer, Form, Input, Modal, Popconfirm, Radio, Row, Space, Switch, Table, Tag, Tooltip, message } from 'antd'
 import { forEachObject } from 'for-each'
 import { useNavigate } from 'react-router-dom'
 import TableActions from '../../common/table-actions/table-actions'
@@ -322,24 +322,41 @@ let userRef
 
 
   return (
-    <Card title='Buyers' extra={<span><Button onClick={() => navigate('/global/buyers/buyers-form')} type={'primary'}>New</Button></span>} size='small'>
-     <Row gutter={40} >
-      <Col>
-          <Card title={'Total Buyers : ' + buyersData.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+    <Card title='Buyers' extra={<span><Button onClick={() => navigate('/global/buyers/buyers-form')} type={'primary'}>New</Button></span>} >
+     <Row gutter={24} >
+     <Col span={4}></Col>
+    <Col span={5}>
+      {/* <Col>
+          <Card title={'Total Buyers : ' + c.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
            <Card title={'Active: ' + buyersData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
           </Col>
           <Col>
            <Card title={'In-Active :' + buyersData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
-          </Col>
+          </Col> */}
+
+        <Alert type='success' message={'Total Buyers: ' + buyersData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + buyersData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'In-Active: ' + buyersData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        </Col>
+
+
           </Row>
           <br></br>
-          <div style={{overflowX :'auto' }}>
+         
 
-    <Table columns={columnsSkelton} 
-            dataSource={buyersData} size='small' bordered/>
-          </div>
+    <Card>
+    <Table
+     columns={columnsSkelton} 
+     dataSource={buyersData} size='small' bordered/>
+      </Card>
+
+          
     <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
         <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>

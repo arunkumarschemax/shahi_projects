@@ -31,10 +31,14 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
     service.getAllLiscenceTypes().then(res => {
       if (res.status) {
         setLTData(res.data);
+        message.success(res.internalMessage)
+
       } else
        {
         setLTData([])
           AlertMessages.getErrorMessage(res.internalMessage);
+          message.error(res.internalMessage)
+
       }
     }).catch(err => {
       AlertMessages.getErrorMessage(err.message);
@@ -254,7 +258,7 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
       </Link>} >
       <Row gutter={40}>
         <Col>
-          <Card title={'Total License Type: ' + lTData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+          <Card title={'Total License Types: ' + lTData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
         <Col>
           <Card title={'Active: ' + lTData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>

@@ -8,8 +8,8 @@ export class ItemCreationService extends CommonAxiosService{
     return this.axiosPostCall(this.URL + "/createItem", req)
 }
 
-  async getFgItemsDropdown(): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getFgItemsDropdown")
+  async getFgItemsDropdown(req?:FgItemCreIdRequest): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getFgItemsDropdown",req)
   }
   async getAllFgItems(req?:any): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getAllFgItems",req)
@@ -19,5 +19,14 @@ export class ItemCreationService extends CommonAxiosService{
 }
 async getAll(): Promise<CommonResponseModel> {
   return this.axiosPostCall(this.URL + "/getAll")
+}
+async getAllStyleDropDown(): Promise<CommonResponseModel> {
+  return this.axiosPostCall(this.URL + "/getAllStyleDropDown")
+}
+async getAllItemDropDown(): Promise<CommonResponseModel> {
+  return this.axiosPostCall(this.URL + "/getAllItemDropDown")
+}
+async getAllBrandDropDown(): Promise<CommonResponseModel> {
+  return this.axiosPostCall(this.URL + "/getAllBrandDropDown")
 }
 }

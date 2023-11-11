@@ -24,9 +24,9 @@ export class ItemCreationController {
     }
 
     @Post('/getFgItemsDropdown')
-    async getFgItemsDropdown(): Promise<CommonResponseModel> {
+    async getFgItemsDropdown(@Body() req?:any): Promise<CommonResponseModel> {
         try {
-            return await this.itemCreationService.getFgItemsDropdown();
+            return await this.itemCreationService.getFgItemsDropdown(req);
         } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
@@ -57,6 +57,31 @@ export class ItemCreationController {
     async getAll(): Promise<CommonResponseModel> {
         try {
             return await this.itemCreationService.getAll();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+
+    @Post('/getAllStyleDropDown')
+    async getAllStyleDropDown(): Promise<CommonResponseModel> {
+        try {
+            return await this.itemCreationService.getAllStyleDropDown();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+    @Post('/getAllItemDropDown')
+    async getAllItemDropDown(): Promise<CommonResponseModel> {
+        try {
+            return await this.itemCreationService.getAllItemDropDown();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+    @Post('/getAllBrandDropDown')
+    async getAllBrandDropDown(): Promise<CommonResponseModel> {
+        try {
+            return await this.itemCreationService.getAllBrandDropDown();
         } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }

@@ -80,11 +80,15 @@ const RMCreationView = () => {
 rmservice.getAllRMItems(req).then(res => {
       if (res.status) {
         setItemData(res.data);
-        
+        message.success(res.internalMessage)
+
       } else
        {
         setItemData([])
-          AlertMessages.getErrorMessage(res.internalMessage);
+        message.error(res.internalMessage)
+
+          // AlertMessages.getErrorMessage(res.internalMessage);
+
       }
     }).catch(err => {
       AlertMessages.getErrorMessage(err.message);
@@ -128,12 +132,15 @@ rmservice.getAllRMItems(req).then(res => {
         if (res.status) {
           setProcurement(res.data);
         } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
+          // AlertMessages.getErrorMessage(res.internalMessage);
+
+
         }
       })
       .catch((err) => {
         setProcurement([]);
         AlertMessages.getErrorMessage(err.message);
+
       });
   };
  
@@ -233,7 +240,7 @@ rmservice.getAllRMItems(req).then(res => {
 
   const DetailView = (rowData) => {
 
-    navigate(`/materialCreation/fabric-bom-creation`,{state:rowData})
+    navigate(`/materialCreation/rm-detail-view`,{state:rowData})
     
 }
 
@@ -248,11 +255,13 @@ const getAllUoms=() =>{
   })        
 }
 
+
   const columnsSkelton: any = [
     {
       title: 'S No',
       key: 'sno',
       responsive: ['sm'],
+      width:50,
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
@@ -264,6 +273,8 @@ const getAllUoms=() =>{
       },
       sorter: (a, b) => a.item_type.localeCompare(b.item_type),
       sortDirections: ['descend', 'ascend'],
+      width:80,
+
     },
     {
         title: "Item Code",
@@ -274,12 +285,14 @@ const getAllUoms=() =>{
         },
         sorter: (a, b) => a.item_code.localeCompare(b.item_code),
             sortDirections: ['descend', 'ascend'],
+            width:80,
       },
       
 
       {
         title: "Item Group",
         dataIndex: "item_group",
+        width:80,
         align:'center', render: (data) => {
           return data ? data : "-";
         },
@@ -287,16 +300,7 @@ const getAllUoms=() =>{
         
             sortDirections: ['descend', 'ascend'],
       },
-       {
-        title: "PCH",
-        dataIndex: "pch",align:'center',
-        render: (data) => {
-          return data ? data : "-";
-        },
-        sorter: (a, b) => a.pch.localeCompare(b.pch),
-        sortDirections: ['descend', 'ascend'],
-       
-      },
+      
       {
         title: "Placement",
         dataIndex: "placement",align:'center',
@@ -304,28 +308,9 @@ const getAllUoms=() =>{
           return data ? data : "-";
         },
         sorter: (a, b) => a.placement.localeCompare(b.placement),
-       
+        width:80,
       },
-      {
-        title: "Facility",
-        dataIndex: "facility",align:'center',
-        render: (data) => {
-          return data ? data : "-";
-        },
-        sorter: (a, b) => a.facility.localeCompare(b.facility),
-       
-      },
-      {
-        title: "Responsible",
-        dataIndex: "responsible_person",align:'center',
-        render: (data) => {
-          return data ? data : "-";
-        },
-        sorter: (a, b) => a.responsible_person.localeCompare(b.responsible_person),
       
-        sortDirections: ['descend', 'ascend'],
-
-      },
       {
         title: "Product Group",
         dataIndex: "product_group",align:'center',
@@ -333,19 +318,18 @@ const getAllUoms=() =>{
           return data ? data : "-";
         },
         sorter: (a, b) => a.product_group.localeCompare(b.product_group),
-       
-       
+        width:80,
       },
-      {
-        title: "Procurement Group",
-        dataIndex: "procurment_group",align:'center',
-             sortDirections: ['descend', 'ascend'],
-             render: (data) => {
-              return data ? data : "-";
-            },
-            sorter: (a, b) => a.procurment_group.localeCompare(b.procurment_group),
-
-      },
+      // {
+      //   title: "Procurement Group",
+      //   dataIndex: "procurment_group",align:'center',
+      //        sortDirections: ['descend', 'ascend'],
+      //        render: (data) => {
+      //         return data ? data : "-";
+      //       },
+      //       sorter: (a, b) => a.procurment_group.localeCompare(b.procurment_group),
+      //       width:80,
+      // },
       {
         title: "Attached WareHouse",
         dataIndex: "attached_warehouse",
@@ -353,22 +337,17 @@ const getAllUoms=() =>{
         render: (catdata) => {
           return catdata ? catdata : "-";
         },
-      },
-      {
-        title: "Planner",
-        dataIndex: "planner", render: (data) => {
-          return data ? data : "-";
-        },
-        sorter: (a, b) => a.item_group.localeCompare(b.item_group),       align:'center',
-
+        width:80,
 
       },
+      
       {
         title: "Business Area ",
         dataIndex: "business_area", render: (data) => {
           return data ? data : "-";
         },
         sorter: (a, b) => a.business_area.localeCompare(b.business_area),       align:'center',
+        width:80,
 
 
       },
@@ -381,6 +360,8 @@ const getAllUoms=() =>{
         sorter: (a, b) => a.uom.localeCompare(b.uom),
       
         sortDirections: ['descend', 'ascend'],
+        width:80,
+
       },
       {
         title: "Currency",
@@ -388,7 +369,7 @@ const getAllUoms=() =>{
           return data ? data : "-";
         },
         sorter: (a, b) => a.currency.localeCompare(b.currency),
-       
+        width:80,
       },
       {
         title: "Price",
@@ -396,28 +377,40 @@ const getAllUoms=() =>{
           return data ? data : "-";
         },
         sorter: (a, b) => a.price.localeCompare(b.price),
+        width:80,
       },
       {
-        title: "Sales Tax",
-        dataIndex: "sale_tax",
-        align:'right',
-        render: (data) => {
-          return data ? data : "-";
-        },
-        sorter: (a, b) => a.sale_tax.localeCompare(b.sale_tax),
-        sortDirections: ['descend', 'ascend'],
-
-      },
-      {
-        title: "Is Imported",
-        dataIndex: "is_imported_item",render: (data) => {
-          return data ? data : "-";
-        },
-        align:'center',
-        sorter: (a, b) => a.is_imported_item.localeCompare(b.is_imported_item),
-        sortDirections: ['descend', 'ascend'],
-
-      },
+        title: `Action`,
+        dataIndex: 'action',
+        fixed:'right',
+        width:100,
+        render: (text, rowData) => {
+          
+          return( <span>
+              {/* <EditOutlined className={'editSamplTypeIcon'} type="edit"
+                onClick={() => {
+                  if (rowData.isActive) {
+                    openFormWithData(rowData);
+                  } else {
+                    AlertMessages.getErrorMessage('You Cannot Edit Item Creation');
+                  }
+                }}
+                style={{ color: '#1890ff', fontSize: '14px' }}
+              /> */}
+    
+              <Divider type="vertical" />
+              <Tooltip placement="top" title="Detail View">
+                      <Button type="link" onClick={() => DetailView(rowData)}>
+                        <EyeOutlined type="view" />
+                      </Button>
+                    </Tooltip>
+                 
+                 
+            </span>
+            )
+          
+      }
+      }
       
   ];
 
@@ -508,16 +501,18 @@ const getAllUoms=() =>{
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
-    <Form.Item style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-        <Button htmlType="submit" icon={<SearchOutlined />} type="primary">GET DETAILS</Button>
-        <Button
-            htmlType='button' icon={<UndoOutlined/>} style={{ margin: '10px', backgroundColor: "#162A6D", color: "white" }} onClick={resetHandler}
-        >
-            RESET
-        </Button>
-    </Form.Item>
-</Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
+                        <Form.Item>
+                            <Button htmlType="submit"
+                                icon={<SearchOutlined />}
+                                type="primary">GET DETAILS</Button>
+                            <Button
+                                htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
+                            >
+                                RESET
+                            </Button>
+                        </Form.Item>
+                    </Col>
 
                 </Row>
             </Form>
@@ -529,13 +524,13 @@ const getAllUoms=() =>{
         className='custom-table-wrapper'
           columns={columnsSkelton}
           dataSource={ItemData}
-        
           pagination={{
+            pageSize: 50,
             onChange(current) {
               setPage(current);
             }
           }}
-           scroll={{x: 'max-content'}}
+           scroll={{x: 'max-content',y:600}}
           onChange={onChange}
           bordered /></>
       </Card>

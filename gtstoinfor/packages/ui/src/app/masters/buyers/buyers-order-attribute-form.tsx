@@ -460,7 +460,7 @@ export const BuyersOrderAttributeForm = () => {
                 attributes.length <= 10 ? (<>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 18 }}>
                 <Card >
-                <Table columns={columns} dataSource={attributes} pagination={false}/>
+                <Table columns={columns} dataSource={attributes} pagination={false} size="small"/>
                 </Card>
                 </Col>
                 </>): (<></>)

@@ -183,7 +183,7 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
       render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-      title: 'Delivery Method',
+        title: <div style={{textAlign:"center"}}>Delivery Method</div> ,
       dataIndex: 'deliveryMethod',
       // responsive: ['lg'],
       sorter: (a, b) => a.deliveryMethod.localeCompare(b.deliveryMethod),
@@ -191,8 +191,9 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
       ...getColumnSearchProps('deliveryMethod')
     },
     {
-      title: 'Status',
+      title: <div style={{textAlign:"center"}}>Status</div> ,
       dataIndex: 'isActive',
+      align:"center",
       render: (isActive, rowData) => (
         <>
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -217,8 +218,9 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
 
     },
     {
-      title:`Action`,
+      title: <div style={{textAlign:"center"}}>Action</div> ,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         <span>         
             <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
@@ -265,7 +267,7 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
   }
   return (
     <Card title={<span >Delivery Method</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+    // style={{textAlign:'center'}} headStyle={{ border: 0 }} 
     extra={<Link to='/global/delivery-methods/delivery-method-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
       </Link>} >

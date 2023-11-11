@@ -29,22 +29,24 @@ export interface COAmendmentGridProps {
   const services = new StyleOrderService()
 
 
-  useEffect(()=>{
-    if(props?.poData[0]?.styleOrderId){
-    getCoLineData();
+  // useEffect(()=>{
+  //   if(props?.poData[0]?.styleOrderId){
+  //   getCoLineData();
      
-    }
-  },[])
+  //   }
+  // },[])
+  
+  console.log(props?.poData[0]?.CoLineData,"propss")
 
-  const getCoLineData = () =>{
-    const req = new StyleOrderIdReq(props?.poData[0]?.styleOrderId)
-    services.getCoLineDataById(req).then((res) => {
-      if (res.status) {
-        setCoData(res.data);
-       }
-    });
+  // const getCoLineData = () =>{
+  //   const req = new StyleOrderIdReq(props?.poData[0]?.styleOrderId)
+  //   services.getCoLineDataById(req).then((res) => {
+  //     if (res.status) {
+  //       setCoData(res.data);
+  //      }
+  //   });
 
-  }
+  // }
   
    console.log(JSON.parse(localStorage.getItem('currentUser')).user.userName)
 
@@ -61,7 +63,7 @@ export interface COAmendmentGridProps {
     const req = new CoUpdateReq(rowData.styleOrderId,rowData.styleOrderItemsId,rowData.coNumber,rowData.coLineNumber,coLineData,"orderline",JSON.parse(localStorage.getItem('currentUser')).user.userName)
     services.updateCoData(req).then((res)=>{
       if (res.status){
-        getCoLineData();
+        // getCoLineData();
        message.success(res.internalMessage);
        setCoLineData(null);
        
@@ -89,7 +91,7 @@ export interface COAmendmentGridProps {
     services.updateCoData(req).then((res)=>{
       if (res.status){
        message.success(res.internalMessage);
-       getCoLineData();
+      //  getCoLineData();
        setFobData(null)
         
    } else{
@@ -114,7 +116,7 @@ export interface COAmendmentGridProps {
         services.updateCoData(req).then((res)=>{
           if (res.status){
            message.success(res.internalMessage);
-          getCoLineData();
+          // getCoLineData();
           setVpoData(null)
 
           
@@ -167,7 +169,7 @@ export interface COAmendmentGridProps {
             services.updateCoData(req).then((res)=>{
               if (res.status){
                message.success(res.internalMessage);
-              getCoLineData();
+              // getCoLineData();
               setDestinationData(null)
 
               
@@ -192,7 +194,7 @@ export interface COAmendmentGridProps {
             services.updateCoData(req).then((res)=>{
               if (res.status){ 
                message.success(res.internalMessage);
-               getCoLineData();
+              //  getCoLineData();
                setQuantityData(null)
 
               
@@ -782,7 +784,7 @@ export interface COAmendmentGridProps {
     <Table
         size="small"
         // dataSource={props?.poData[0]?.styleOrderItems}
-        dataSource={codata}
+        dataSource={props?.poData[0]?.CoLineData}
         // rowClassName={(record, index) =>
         //   index % 2 === 0 ? "table-row-light" : "table-row-dark"
         // }

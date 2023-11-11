@@ -75,14 +75,12 @@ export class FabricFinishTypesService {
     //   }  
   
     async createFabricFinishType(operationsDto: FabricFinishTypesDTO, isUpdate: boolean): Promise<AllFabricFinishTypesResponseModel> {
-        console.log(operationsDto,'nnnnnh');
         
         try {
           let previousValue
           // to check whether State exists with the passed  State code or not. if isUpdate is false, a check will be done whether a record with the passed Statecode is existing or not. if a record exists then a return message wil be send with out saving the data.  if record is not existing with the passed State code then a new record will be created. if isUpdate is true, then no check will be performed and  record will be updated(if record exists with the passed cluster code) or created.
           if (!isUpdate) {
             const operationsEntity = await this.getFabricFinishTypesWithoutRelations(operationsDto.fabricFinishType);
-            console.log(operationsDto,"hiiiiiiiiiiiiiiii")
             if (operationsEntity) {
               //return new InformationMessageError(11104, "State already exists");
               throw new AllFabricFinishTypesResponseModel(false,11104, 'operation already exists');
@@ -163,7 +161,6 @@ export class FabricFinishTypesService {
             //retrieves all companies
             const MasterFabricFinishTypeEntities: FabricFinishTypes[] = await this.fabricFinishTypesRepository.find({ order: { 'fabricFinishType': 'ASC' },where:{isActive:true}
            });
-         console.log(MasterFabricFinishTypeEntities)
             if (MasterFabricFinishTypeEntities) {
                 // converts the data fetched from the database which of type companies array to type StateDto array.
                 MasterFabricFinishTypeEntities.forEach(countriesEntity => {

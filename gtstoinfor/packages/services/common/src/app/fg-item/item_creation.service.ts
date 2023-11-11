@@ -41,9 +41,9 @@ export class ItemCreationService {
         }
     }
 
-    async getFgItemsDropdown():Promise<CommonResponseModel>{
+    async getFgItemsDropdown(req?:FgItemCreIdRequest):Promise<CommonResponseModel>{
         try{
-            const data = await this.itemCreationRepository.find({select:['fgitemId','itemName','itemCode','salePrice','salePriceQty','currency']})
+            const data = await this.itemCreationRepository.find({select:['fgitemId','itemName','itemCode','salePrice','salePriceQty','currency'],where:{fgitemId:req.fgItemId}})
             if(data.length >0){
                 return new CommonResponseModel(true,1,'Data retrieved',data)
             } else{
@@ -90,6 +90,45 @@ export class ItemCreationService {
        async getAll():Promise<CommonResponseModel>{
         try{
             const data = await this.repository.getAll()
+            if(data.length === 0){
+                return new CommonResponseModel(false,0,'No data found')
+            } else{
+                return new CommonResponseModel(true,1,'Data retrieved',data)
+
+            }
+        } catch(err){
+            return err
+        }
+    }
+    async getAllStyleDropDown():Promise<CommonResponseModel>{
+        try{
+            const data = await this.repository.getAllstyle()
+            if(data.length === 0){
+                return new CommonResponseModel(false,0,'No data found')
+            } else{
+                return new CommonResponseModel(true,1,'Data retrieved',data)
+
+            }
+        } catch(err){
+            return err
+        }
+    }
+    async getAllItemDropDown():Promise<CommonResponseModel>{
+        try{
+            const data = await this.repository.getAllitems()
+            if(data.length === 0){
+                return new CommonResponseModel(false,0,'No data found')
+            } else{
+                return new CommonResponseModel(true,1,'Data retrieved',data)
+
+            }
+        } catch(err){
+            return err
+        }
+    }
+    async getAllBrandDropDown():Promise<CommonResponseModel>{
+        try{
+            const data = await this.repository.getBrand()
             if(data.length === 0){
                 return new CommonResponseModel(false,0,'No data found')
             } else{
