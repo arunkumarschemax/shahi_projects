@@ -32,12 +32,12 @@ export class MaterialIssueRepository extends Repository<MaterialIssueEntity> {
     }
     async getMaterialIssues() {
         const query: any[] = await this.createQueryBuilder('mi')
-            .select(`mi.consumption_code,mi.request_no`)
-            .groupBy(`mi.request_no`)
+            .select(`mi.consumption_code`)
+            .groupBy(`mi.consumption_code`)
             .getRawMany()
             console.log(query,"query")
         return query.map((rec) => {
-            return new RequestNoDto(rec.request_no, rec.consumption_code)
+            return new RequestNoDto(rec.consumption_code)
         });
     }
 

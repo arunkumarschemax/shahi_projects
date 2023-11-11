@@ -241,7 +241,7 @@ export class MaterialIssueService {
     async getMaterialIssue(req: RequestNoDto): Promise<CommonResponseModel> {
 
         try {
-            let query = `SELECT mi.material_issue_id AS id,mi.consumption_code AS consumptioncode,mi.request_no AS requestNo,mi.issue_date AS issue_date,mi.location_id AS locationId,l.location_name AS locationname,mi.pch_id AS profitControlId,ph.profit_control_head AS pch,mi.buyer_id AS buyer_id,b.buyer_name AS buyername,mi.sample_type_id AS sample_type_id,smp.sample_type AS sampleType,mi.style_no AS style_no,mi.brand_id,mi.dmm_id,mi.technician_id,mi.description,mi.cost_ref,mi.m3_style_no AS m3_style_no,mi.contact,mi.extn,mi.product,mi.type,mi.conversion,mi.made_in,fb.material_fabric_id AS materialcode,fb.fabric_code AS fabricCode,fb.consumption AS consumption,fb.consumption_uom AS fbconsumption_uom,fb.issued_quantity AS issued_quantity,fb.issued_quantity_uom AS fbissued_quantity_uom,tr.material_trim_id AS materialtrim_id,tr.description AS trimdescription,tr.color_id AS trimcolor_id,tr.consumption AS trimconsumption,tr.consumption_uom AS trimconsumption_uom,tr.issued_quantity AS trimissued_quantity,tr.issued_quantity_uom AS trimissued_quantity_uom,c.colour AS color,rm.item_code AS fabricCode,pg.product_group AS materialtype
+            let query = `SELECT mi.material_issue_id AS id,mi.consumption_code AS consumptioncode,mi.request_no AS requestNo,mi.issue_date AS issue_date,mi.location_id AS locationId,l.location_name AS locationname,mi.pch_id AS profitControlId,ph.profit_control_head AS pch,mi.buyer_id AS buyer_id,b.buyer_name AS buyername,mi.sample_type_id AS sample_type_id,smp.sample_type AS sampleType,mi.style_no AS style_no,mi.description,mi.m3_style_no AS m3_style_no,mi.contact,mi.extn,mi.product,mi.type,mi.conversion,mi.made_in,fb.material_fabric_id AS materialcode,fb.fabric_code AS fabricCode,fb.consumption AS consumption,fb.issued_quantity AS issued_quantity,fb.issued_quantity_uom AS fbissued_quantity_uom,tr.material_trim_id AS materialtrim_id,tr.description AS trimdescription,tr.color_id AS trimcolor_id,tr.consumption AS trimconsumption,tr.consumption_uom AS trimconsumption_uom,tr.issued_quantity AS trimissued_quantity,tr.issued_quantity_uom AS trimissued_quantity_uom,c.colour AS color,rm.item_code AS fabricCode,pg.product_group AS materialtype
         FROM material_issue mi
         LEFT JOIN material_fabric fb ON fb.material_issue_id = mi.material_issue_id
         LEFT JOIN material_trim tr ON tr.material_issue_id = mi.material_issue_id
@@ -294,7 +294,7 @@ export class MaterialIssueService {
                         color: item.color,
                         consumption: item.consumption,
                         issuedQuantity: item.issued_quantity,
-
+                     
                     });
                     return result;
 

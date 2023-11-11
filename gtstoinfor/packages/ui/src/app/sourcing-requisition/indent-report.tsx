@@ -1,15 +1,23 @@
 import { IndentService } from '@project-management-system/shared-services';
-import { Card, Table } from 'antd';
+import { Button, Card, Col, Form, Row, Select, Table } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { DataSource } from 'typeorm';
+import { useForm } from 'antd/lib/form/Form';
+const { Option } = Select;
 
 export const IndentReport = () => {
     const service = new IndentService();
     const [data, setData] = useState<any[]>([]);
+    const [drop, dropDown] = useState<any[]>([]);
+    const [table, setTable] = useState<any[]>([]);
+
+    const [form] = Form.useForm();
+
     const page = 1;
     useEffect(() => {
         getIndentData();
+        getAll();
     }, []);
 
     const getIndentData = () => {
@@ -18,6 +26,24 @@ export const IndentReport = () => {
                 setData(res.data);
             }
         });
+    }
+    const getAll = () => {
+        service.getIndentDropDown().then(res => {
+            if (res.status) {
+                dropDown(res.data)
+            }
+        })
+    }
+    const onSearch = () => {
+        let filterData = []
+        if (form.getFieldValue('requestNo') !== undefined) {
+            const requestNo = form.getFieldValue('requestNo')
+            filterData = data.filter((e) => e.styleId === requestNo)
+        } else if (form.getFieldValue('indentDate') !== undefined) {
+            const indentDate = form.getFieldValue('indentDate')
+            filterData = data.filter((e) => e.requestNo === indentDate)
+        }
+        dropDown(filterData)
     }
 
     const colWidth = {
@@ -43,7 +69,7 @@ export const IndentReport = () => {
         },
         {
             title: "Indent Code",
-            dataIndex: "indentId",
+            dataIndex: "requestNo",
             width: "110px",
             onCell: (record: any) => ({
                 rowSpan: record.rowSpan,
@@ -85,7 +111,7 @@ export const IndentReport = () => {
             },
         },
         {
-            title: "Trim Type",
+            title: "Material Type",
             dataIndex: "trimType",
             width: colWidth.trimType,
             render: (text, record) => {
@@ -94,8 +120,8 @@ export const IndentReport = () => {
             },
         },
         {
-            title: "Trim Code",
-            dataIndex: "trimCode",
+            title: "Material Code",
+            dataIndex: "trimCode/m3FabricCode",
             width: colWidth.trimCode,
             render: (text, record) => {
                 return record.trimCode ? record.trimCode : '-'
@@ -121,7 +147,7 @@ export const IndentReport = () => {
             },
         },
         {
-            title: "M3 Trim Code",
+            title: "M3 Code",
             dataIndex: "m3TrimCode",
             width: colWidth.m3TrimCode,
             render: (text, record) => {
@@ -133,6 +159,9 @@ export const IndentReport = () => {
             title: "Status",
             dataIndex: "status",
             width: colWidth.m3TrimCode,
+            onCell: (record: any) => ({
+                rowSpan: record.rowSpan,
+            }),
             render: (text, record) => {
                 return record.status ? record.status : '-'
 
@@ -144,11 +173,12 @@ export const IndentReport = () => {
         data?.forEach((main: any, mainIndex: number) => {
             main.i_items.forEach((child: any, childIndex: number) => {
                 let gridObj: any = {};
-                gridObj.indentId = main.indentId;
+                gridObj.requestNo = main.requestNo;
                 gridObj.style = main.style;
                 gridObj.indentDate = main.indentDate;
                 gridObj.expectedDate = main.expectedDate;
-               
+                gridObj.status = main.status;
+
                 gridObj.rowSpan = 0;
                 if (childIndex === 0) {
                     gridObj.rowSpan = main.i_items.length
@@ -160,17 +190,51 @@ export const IndentReport = () => {
                 gridObj.color = child.color
                 gridObj.m3TrimCode = child.m3TrimCode
                 gridObj.status = main.status
+                gridObj.m3FabricCode = main.m3FabricCode
                 totalData.push(gridObj)
             })
         });
         return totalData
     };
 
-    
+
     return (
         <div>
-            <Card>
+            <Card title="Indent Report" className='card-header'>
+                <Form form={form}>
+                    <Row gutter={16}>
+                        <Col span={6}>
+                            <Form.Item label='Indent Code' style={{ marginBottom: '10px' }} name={'requestNo'}>
+                                <Select showSearch allowClear optionFilterProp="children" placeholder='Select Indent Code' >
 
+                                    {data.map(e => {
+                                        return (
+                                            <Option key={e.requestNo} value={e.requestNo} name={e.requestNo}> {e.requestNo}</Option>
+                                        )
+                                    })}   </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={6}>
+                            <Form.Item name={'indentDate'} label='Indent Date' style={{ marginBottom: '10px' }}>
+                                <Select showSearch allowClear optionFilterProp="children" placeholder='Select Indent Date' >
+
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                            <Form.Item style={{ marginBottom: '10px' }}>
+                                <Button
+                                    htmlType='submit'
+                                    type="primary"
+                                    style={{ width: '80px', marginRight: "10px" }}
+
+                                    onClick={onSearch}
+                                >Submit</Button>
+                                <Button htmlType='reset' danger style={{ width: '80px' }}>Reset</Button>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                </Form>
                 <Table columns={columns} dataSource={allIndentData(data)} bordered />
             </Card>
         </div>

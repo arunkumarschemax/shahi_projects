@@ -66,7 +66,6 @@ export class MaterialIssueController {
     @ApiBody({ type: MaterialIssueRequest })
     async getDataByStyleId(@Body() req: any): Promise<MaterialIssueResponseModel> {
         try {
-            console.log(req, '-------')
             return await this.issueService.getDataByStyleId(req)
         } catch (err) {
             return this.applicationExceptionHandler.returnException(MaterialIssueResponseModel, err);
@@ -76,7 +75,7 @@ export class MaterialIssueController {
     @ApiBody({ type: MaterialIssueRequest })
     async getMaterialIssue(@Req() req: any): Promise<MaterialIssueResponseModel> {
         try {
-            return await this.issueService.getMaterialIssue(req.body)
+            return await this.issueService.getMaterialIssue(req)
         } catch (err) {
             return this.applicationExceptionHandler.returnException(MaterialIssueResponseModel, err);
         }

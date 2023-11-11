@@ -22,6 +22,13 @@ const MaterialIssueReport = () => {
   }, []);
 
   const getAllMaterial = (req?:RequestNoDto) => {
+    console.log(req,'fe')
+    if(form.getFieldValue('requestNo') !== undefined){
+      req.requestNo = form.getFieldValue('requestNo')
+    }
+    if(form.getFieldValue('consumption') !== undefined){
+      req.consumption = form.getFieldValue('consumption')
+    }
     service.getAllMaterialIssues(req).then((res) => {
       if (res.status) {
         setData(res.data);
@@ -49,8 +56,8 @@ const MaterialIssueReport = () => {
     description: 100,
     color: 50,
     consumption: 80,
-    issuedQuantity: 80,
-    remarks: 80,
+    issuedQuantity: 130,
+    remarks: 130,
 
   }
 
@@ -68,11 +75,12 @@ const MaterialIssueReport = () => {
       fixed: 'left',
     },
     {
-      title: "Request No",
-      dataIndex: "request_no",
+      title: "Consumption Code",
+      dataIndex: "consumption_code",
       onCell: (record: any) => ({
         rowSpan: record.rowSpan,
       }),
+      width: '150px',
       fixed: 'left',
     },
     {
@@ -81,15 +89,6 @@ const MaterialIssueReport = () => {
       onCell: (record: any) => ({
         rowSpan: record.rowSpan,
       }),
-      fixed: 'left',
-    },
-    {
-      title: "Consumption Code",
-      dataIndex: "consumption_code",
-      onCell: (record: any) => ({
-        rowSpan: record.rowSpan,
-      }),
-      width: '150px',
       fixed: 'left',
     },
     {
@@ -108,18 +107,18 @@ const MaterialIssueReport = () => {
       }),
       fixed: 'left',
     },
-    {
-      title: "Sample Indent Date",
-      dataIndex: "issue_date",
-      onCell: (record: any) => ({
-        rowSpan: record.rowSpan,
-      }),
-      render: (text, record) => {
-        return record.issue_date
-          ? moment(record.issue_date).format('YYYY-MM-DD')
-          : "";
-      },
-    },
+    // {
+    //   title: "Sample Indent Date",
+    //   dataIndex: "issue_date",
+    //   onCell: (record: any) => ({
+    //     rowSpan: record.rowSpan,
+    //   }),
+    //   render: (text, record) => {
+    //     return record.issue_date
+    //       ? moment(record.issue_date).format('YYYY-MM-DD')
+    //       : "";
+    //   },
+    // },
     {
       title: "Location",
       dataIndex: "locationname",
@@ -164,7 +163,7 @@ const MaterialIssueReport = () => {
 
     },
     {
-      title: " Code",
+      title: "Material Code",
       dataIndex: "fabricCode",
 
       width: colWidth.fabricCode,
@@ -214,8 +213,11 @@ const MaterialIssueReport = () => {
     },
     {
       title: "Operation Status",
-      dataIndex: "remarks",
+      dataIndex: "status",
       width: colWidth.remarks,
+      onCell: (record: any) => ({
+        rowSpan: record.rowSpan,
+      }),
       render: (text, record) => {
         return record.remarks
 
@@ -238,6 +240,7 @@ const MaterialIssueReport = () => {
         gridObj.buyername = main.buyername;
         gridObj.m3_style_no = main.m3_style_no;
         gridObj.mi_items = main.mi_items;
+        gridObj.status = main.status;
         gridObj.rowSpan = 0;
         if (childIndex === 0) {
           gridObj.rowSpan = main.mi_items.length
@@ -272,16 +275,8 @@ const MaterialIssueReport = () => {
         <Form form={formRef}>
         <Row gutter={16}>
           <Col span={6}>
-            <Form.Item label='Request No' style={{ marginBottom: '10px' }} name={'requestNo'}>
-              <Select placeholder='Select Request No' onChange={(value) => onRequestChange(value)}>
-                {req.map(rec => {
-                  return <Option value={rec.requestNo}>{rec.requestNo}</Option>;
-                })}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col span={6}>
-            <Form.Item name={'consumption'} label='Consumption Code' style={{ marginBottom: '10px' }}>
+            <Form.Item name={'consumption'} label='Consumption Code' 
+            style={{ marginBottom: '10px' }}>
               <Select placeholder='Select Consumption Code' >
 
                 {consmption.map((rec) => {

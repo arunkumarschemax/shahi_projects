@@ -60,5 +60,12 @@ export class IndentController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
-
+  @Post('/getIndentDropDown')
+  async getIndentDropDown(@Body() req:any): Promise<CommonResponseModel> {
+  try {
+      return await this.indentService.getIndentDropDown(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
 }
