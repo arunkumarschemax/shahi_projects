@@ -1,6 +1,9 @@
-import { COLineRequest, CoLineStatusReq, CommonResponseModel, CompareOrdersFilterReq, FileIdReq, FileTypeDto, SaveOrderDto, SeasonWiseRequest, TrimOrdersReq, YearReq, orders, ordersPlanNo } from "@project-management-system/shared-models"
+import { COLineRequest, CoLineStatusReq, CommonResponseModel, CompareOrdersFilterReq, FileIdReq, FileTypeDto, OrderAcceptanceRequest, SaveOrderDto, SeasonWiseRequest, TrimOrdersReq, YearReq, orders, ordersPlanNo } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
 import axios from "axios";
+import { AxiosInstance } from "../axios-instance";
+// import { AxiosInstance } from './axios-instance';
+
 
 export class OrdersService extends CommonAxiosService {
     private ordersController = "/orders"
@@ -94,6 +97,9 @@ export class OrdersService extends CommonAxiosService {
     }
      async getTrimOrdersData(req:TrimOrdersReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getTrimOrdersData",req)
+    }
+    async getUnacceptedTrimOrders(req:TrimOrdersReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getUnacceptedTrimOrders",req)
     }
     async createCOline(req: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/createCOline", req)
@@ -235,4 +241,11 @@ export class OrdersService extends CommonAxiosService {
     async readCell():Promise<CommonResponseModel>{
         return this.axiosPostCall(this.ordersController + "/readCell")
     }
+    async saveItemDetailsOfTrimOrder(req:OrderAcceptanceRequest):Promise<CommonResponseModel>{
+        return await AxiosInstance.post('https://nike-backend.shahiapps.in/api/nike-dpom/coLineCreationReq',req)
+        // console.log()
+
+        // return this.axiosPostCall(this.ordersController + "/saveItemDetailsOfTrimOrder")
+    }
+    
 }

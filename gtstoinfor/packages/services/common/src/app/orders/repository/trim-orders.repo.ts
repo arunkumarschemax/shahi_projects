@@ -21,6 +21,20 @@ export class TrimOrdersRepository extends Repository<TrimOrdersEntity> {
             query.orderBy(`to.order_no`, 'ASC')
         return await query.getRawMany();
     }
+    async getUnacceptedTrimOrders(req:TrimOrdersReq): Promise<any[]> {
+        const query = this.createQueryBuilder('to')
+            .select('*,group_concat(size) as sizes,group_concat(color) as colors,group_concat(order_qty_pcs) as qty')
+            if(req.OrderNumber){
+                query.andWhere(`to.order_no = '${req.OrderNumber}'`)
+            }
+            if (req.approvalFromDate !== undefined) {
+                query.andWhere(`Date(to.approval_date) BETWEEN '${req.approvalFromDate}' AND '${req.approvalToDate}'`)
+            }
+            query.groupBy(`to.order_no`)
+            query.orderBy(`to.order_no`, 'ASC')
+            console.log(await query.getRawMany())
+        return await query.getRawMany();
+    }
 
     async deleteTrimOrderData( req: FileIdReq) : Promise<void>{
         const queryBuilder = this.createQueryBuilder('orders');

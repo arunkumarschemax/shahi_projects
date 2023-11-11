@@ -856,6 +856,15 @@ export class OrdersService {
             return new CommonResponseModel(false, 0, 'No data found', data);
         }
     }
+    async getUnacceptedTrimOrders(req:TrimOrdersReq): Promise<CommonResponseModel> {
+        const data = await this.trimOrderRepo.getUnacceptedTrimOrders(req)
+        if (data.length > 0) {
+            return new CommonResponseModel(true, 1, 'uploaded files data retrived successfully', data);
+        }
+        else {
+            return new CommonResponseModel(false, 0, 'No data found', data);
+        }
+    }
     async getTrimOrdersNo(): Promise<CommonResponseModel> {
         const data = await this.trimOrderRepo.getTrimOdersNo()
         if (data.length > 0) {

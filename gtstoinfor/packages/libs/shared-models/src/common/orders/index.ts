@@ -25,3 +25,4 @@ export * from './trim-order-req';
 export * from './order-planno-request';
 export * from './orders-mail-file-status-array.req'
 export * from './co-line-format.model'
+export * from './order-acceptance-req'

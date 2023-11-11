@@ -29,6 +29,7 @@ import CombinedReport, { MonthWiseReport } from "./common/reports/month-wise-rep
 import MonthWiseComparisionReport from "./common/reports/comparision-reports"
 import TrimOrderDetailView from "./excel-import/trim-orders-detail-view"
 import PriceListHistory from "./masters/pricelist/price-list-history"
+import TrimOrderAcceptance from "./excel-import/trim-order-acceptance"
 // import ExcelImport from "./excel-import/excel-import"
 
 
@@ -62,6 +63,7 @@ export const AppRoutesNew = () => {
                   <Route path='changes-view' key='/changes-view' element={<ChangesGrid />} />
                   <Route path='grid-view' key='/grid-view' element={<AllOrdersGridView />} />
                   <Route path='revert-orders' key='/revert-orders' element={<FileRevert />} />
+                  <Route path='order-acceptance' key='/order-acceptance' element={<TrimOrderAcceptance />} />
                   <Route path='version-grid' key='/version-grid' element={<VersionChanges />} />
                   {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
               </Route>

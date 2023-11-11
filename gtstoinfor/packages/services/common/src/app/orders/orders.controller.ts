@@ -250,6 +250,16 @@ export class OrdersController {
         }
     }
 
+    @Post('/getUnacceptedTrimOrders')
+    @ApiBody({type:TrimOrdersReq})
+    async getUnacceptedTrimOrders(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getUnacceptedTrimOrders(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
     @Post('/getTrimOrdersNo')
     async getTrimOrdersItems(): Promise<CommonResponseModel> {
         try {

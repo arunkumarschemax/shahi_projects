@@ -1,25 +1,25 @@
-import { Button, Card, Col, DatePicker, Form, Input, InputRef, Popconfirm, Row, Select, Space, Table, Tag, Tooltip, Typography, message } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, InputRef, Modal, Popconfirm, Row, Select, Space, Table, Tag, Tooltip, Typography, message } from 'antd';
 import { useEffect, useRef, useState, } from 'react';
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
 import { OrdersService } from '@project-management-system/shared-services';
 import moment from 'moment';
-import { COLineRequest, CoLineStatusReq, TrimOrdersReq } from '@project-management-system/shared-models';
+import { COLineRequest, CoLineStatusReq, OrderAcceptanceRequest, TrimOrdersReq } from '@project-management-system/shared-models';
 import Highlighter from 'react-highlight-words';
 import { ColumnType } from 'antd/es/table';
 import { FilterConfirmProps } from 'antd/es/table/interface';
 import { useNavigate } from 'react-router-dom';
 
 
-const TrimOrder= () => {
+const TrimOrderAcceptance= () => {
     const [page, setPage] = useState<number>(1)
     const [pageSize, setPageSize] = useState<number>(10)
     const [gridData, setGridData] = useState<any[]>([]);
     const [filteredData, setFilteredData] = useState<any[]>([])
     const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
     const [selectedEstimatedStartDate, setSelectedEstimatedDate] = useState(undefined);
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const service = new OrdersService();
     const [form] = Form.useForm();
     const { Option } = Select;
@@ -29,6 +29,7 @@ const TrimOrder= () => {
     const searchInput = useRef<InputRef>(null);
     const [searchedColumn, setSearchedColumn] = useState("");
     const [item, setItem] = useState<any[]>([]);
+    const [orderNumberDetails, setOrderNumberDetails] = useState<any[]>([]);
     let navigate = useNavigate()
 
 const {Text}=Typography
@@ -36,6 +37,28 @@ const {Text}=Typography
     useEffect(() => {
         getData();
     }, [])
+
+    useEffect(()=> {
+        if(orderNumberDetails.length > 0){
+            showModal()
+        }
+    },[orderNumberDetails])
+
+    const getTrimOrderNumberData = (orderNumber) => {
+        const req = new TrimOrdersReq()
+        req.OrderNumber = orderNumber
+        service.getTrimOrdersData(req).then(res => {
+            if (res.status) {
+                setOrderNumberDetails(res.data)
+                // showModal()
+            }else{
+                // setFilteredData([])
+                setOrderNumberDetails([])
+            }
+        }).catch(err => {
+            console.log(err.message)
+        })
+    }
 
     const getData = () => {
         const req = new TrimOrdersReq()
@@ -48,7 +71,7 @@ const {Text}=Typography
         if (form.getFieldValue('orderNo') !== undefined) {
             req.OrderNumber = (form.getFieldValue('orderNo'))
             }
-        service.getTrimOrdersData(req).then(res => {
+        service.getUnacceptedTrimOrders(req).then(res => {
             console.log(req,'req');
             
             if (res.status) {
@@ -62,53 +85,78 @@ const {Text}=Typography
         }).catch(err => {
             console.log(err.message)
         })
-        service.getTrimOrdersNo().then(res => {
+        // service.getTrimOrdersNo().then(res => {
+        //     if (res.status) {
+        //         setItem(res.data)
+        //     }else{
+        //         setFilteredData([])
+        //         setItem([])
+        //     }
+        // }).catch(err => {
+        //     console.log(err.message)
+        // })
+        
+    }
+
+    const DetailedView = (orderNumber) => {
+        getTrimOrderNumberData(orderNumber)
+        // showModal();
+        // const poFilterData = filteredData.filter(order_no => order_no.trim_order_id == record)
+        // navigate('/excel-import/order-details', { state: { data: poFilterData } })
+      }
+
+      const saveItemNuberDetails = (record) => {
+        console.log(record)
+        const req = new OrderAcceptanceRequest()
+        req.itemNo = record.itemNumber
+        req.purchaseOrderNumber = record.order_no
+        req.poLineItemNumber = null
+        req.buyer = 'uniqlo-unit12'
+        service.saveItemDetailsOfTrimOrder(req).then(res => {
+            console.log(res)
             if (res.status) {
-                setItem(res.data)
+            console.log(res)
+
+                // setItem(res.data)
             }else{
-                setFilteredData([])
-                setItem([])
+                // setFilteredData([])
+                // setItem([])
             }
         }).catch(err => {
             console.log(err.message)
         })
-        
-    }
 
-    const DetailedView = (record: any) => {
-        const poFilterData = filteredData.filter(order_no => order_no.trim_order_id == record)
-        navigate('/excel-import/trim-order-detail-view', { state: { data: poFilterData } })
       }
 
 
-    const approveOrderStatus = (record) => {
-        console.log(record)
-    const req = new COLineRequest(record.itemNumber,record.order_no,record.color_code,record.color,record.size_code,record.size,record.item_code,record.item,null,null,record.order_no,record.itemNumber,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,record.trim_order_id);
-    // req.itemNumber = record.itemNumber
-    // req.orderNumber = record.order_no
-    service.createCOLineInternal(req).then(coLineRes => {
-        if(coLineRes.status){
-            service.createCOline(req).then((res) => {
-                if (res.status) {
-                    const statusReq = new CoLineStatusReq()
-                    statusReq.coLineId = coLineRes?.data?.coLineId
-                    statusReq.status = 'Success'
-                    service.updateStatusAfterCoLineCreationInM3(statusReq)
-                    getData()
-                    message.success(res.internalMessage)
-                } else {
-                    const statusReq = new CoLineStatusReq()
-                    statusReq.coLineId = coLineRes?.data?.coLineId
-                    statusReq.status = 'Failed'
-                    service.updateStatusAfterCoLineCreationInM3(statusReq)
-                    message.error(res.internalMessage)
-                }
-            })
-        } else{
-            message.error(coLineRes.internalMessage)
-        }
-    })
-    }
+    // const approveOrderStatus = (record) => {
+    //     console.log(record)
+    // const req = new COLineRequest(record.itemNumber,record.order_no,record.color_code,record.color,record.size_code,record.size,record.item_code,record.item,null,null,record.order_no,record.itemNumber,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,record.trim_order_id);
+    // // req.itemNumber = record.itemNumber
+    // // req.orderNumber = record.order_no
+    // service.createCOLineInternal(req).then(coLineRes => {
+    //     if(coLineRes.status){
+    //         service.createCOline(req).then((res) => {
+    //             if (res.status) {
+    //                 const statusReq = new CoLineStatusReq()
+    //                 statusReq.coLineId = coLineRes?.data?.coLineId
+    //                 statusReq.status = 'Success'
+    //                 service.updateStatusAfterCoLineCreationInM3(statusReq)
+    //                 getData()
+    //                 message.success(res.internalMessage)
+    //             } else {
+    //                 const statusReq = new CoLineStatusReq()
+    //                 statusReq.coLineId = coLineRes?.data?.coLineId
+    //                 statusReq.status = 'Failed'
+    //                 service.updateStatusAfterCoLineCreationInM3(statusReq)
+    //                 message.error(res.internalMessage)
+    //             }
+    //         })
+    //     } else{
+    //         message.error(coLineRes.internalMessage)
+    //     }
+    // })
+    // }
    
     // const getFilterdData = () => {
     //     let orderNo = form.getFieldValue('orderNo');
@@ -154,6 +202,17 @@ const {Text}=Typography
         //     [record.key]: value,
         // }));
     };
+    const showModal = () => {
+        setIsModalOpen(true);
+      };
+    
+      const handleOk = () => {
+        setIsModalOpen(false);
+      };
+    
+      const handleCancel = () => {
+        setIsModalOpen(false);
+      };
     const handleReset = (clearFilters: () => void) => {
         clearFilters();
         setSearchText("");
@@ -230,6 +289,49 @@ const {Text}=Typography
           ),
       });
 
+      const modalcolumns: any = [
+        {
+            title: '#',
+            // fixed:'left',
+            key: 'sno',
+            fixed:'left',
+            width:50,
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1)),
+        },
+        // {
+        //     title: 'Order No',
+        //     // fixed:'left',
+        //     dataIndex: 'order_no',
+        // },
+        {
+            title: 'Color Code',
+            // fixed:'left',
+            dataIndex: 'color_code',
+        },
+        {
+            title: 'Color',
+            // fixed:'left',
+            dataIndex: 'color',
+        },
+        {
+            title: 'Size Code',
+            // fixed:'left',
+            dataIndex: 'size_code',
+        },
+        {
+            title: 'Size',
+            // fixed:'left',
+            dataIndex: 'size',
+            fixed:'left',
+        },
+        {
+            title: 'Quantity',
+            // fixed:'left',
+            dataIndex: 'order_qty_pcs',
+            fixed:'left',
+        }
+      ]
+
     const columns: any = [
         {
             title: '#',
@@ -255,9 +357,18 @@ const {Text}=Typography
           render: (text, record) => {
             return (
               <Tooltip title="Click for Detail View">
-                <Button type='link' onClick={() => DetailedView(record.trim_order_id)}>
-                  {record.order_no}
+                <Button type="link" onClick={() => DetailedView(record.order_no)}>
+                {record.order_no}
                 </Button>
+                <Modal title={`Order No : ${record.order_no}`} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                <Table columns={modalcolumns} dataSource={orderNumberDetails}   className="custom-table-wrapper"
+                bordered
+                pagination={false}
+                size='small'/>
+                </Modal>
+                {/* <Button type='link' onClick={() => DetailedView(record.trim_order_id)}>
+                  {record.order_no}
+                </Button> */}
               </Tooltip>
             );
           }
@@ -303,45 +414,45 @@ const {Text}=Typography
             sorter: (a, b) => a.item_code.localeCompare(b.order_plan_number),
             sortDirections: ["descend", "ascend"],
         },
-        {
-            title: 'Color Code',
-            dataIndex: 'color_code',
-            align:'right',
-            width:50,
+        // {
+        //     title: 'Color Code',
+        //     dataIndex: 'color_code',
+        //     align:'right',
+        //     width:50,
 
-            // ...getColumnSearchProps("color_code"),
-            sorter: (a, b) => a.color_code.localeCompare(b.color_code),
-            sortDirections: ["descend", "ascend"],
-        },
-        {
-            title: 'Color',
-            dataIndex: 'color',
-            width:50,
+        //     // ...getColumnSearchProps("color_code"),
+        //     sorter: (a, b) => a.color_code.localeCompare(b.color_code),
+        //     sortDirections: ["descend", "ascend"],
+        // },
+        // {
+        //     title: 'Color',
+        //     dataIndex: 'colors',
+        //     width:50,
 
-            align:'left',
-            ...getColumnSearchProps("color"),
-            // sorter: (a, b) => a.color.localeCompare(b.color),
-            // sortDirections: ["descend", "ascend"],
-        },
-        {
-            title: 'Size Code',
-            dataIndex: 'size_code',
-            width:50,
+        //     align:'left',
+        //     ...getColumnSearchProps("color"),
+        //     // sorter: (a, b) => a.color.localeCompare(b.color),
+        //     // sortDirections: ["descend", "ascend"],
+        // },
+        // {
+        //     title: 'Size Code',
+        //     dataIndex: 'size_code',
+        //     width:50,
 
-            align:'right',
-            // ...getColumnSearchProps("size_code"),
-            sorter: (a, b) => a.size_code.localeCompare(b.size_code),
-            sortDirections: ["descend", "ascend"],
-        },
-        {
-            title: 'Size',
-            dataIndex: 'size',
-       width:50,
-            align:'left',
-            ...getColumnSearchProps("size"),
-            // sorter: (a, b) => a.size.localeCompare(b.size),
-            // sortDirections: ["descend", "ascend"],
-        },
+        //     align:'right',
+        //     // ...getColumnSearchProps("size_code"),
+        //     sorter: (a, b) => a.size_code.localeCompare(b.size_code),
+        //     sortDirections: ["descend", "ascend"],
+        // },
+    //     {
+    //         title: 'Size',
+    //         dataIndex: 'sizes',
+    //    width:50,
+    //         align:'left',
+    //         ...getColumnSearchProps("size"),
+    //         // sorter: (a, b) => a.size.localeCompare(b.size),
+    //         // sortDirections: ["descend", "ascend"],
+    //     },
         {
             title: 'Trim Item No',
             dataIndex: 'trim_item_no',
@@ -355,30 +466,30 @@ const {Text}=Typography
             }
         },
            
-        {
-            title: 'Order Quantity Pcs',
-            dataIndex: 'order_qty_pcs',
-            align:'right',
-            // ...getColumnSearchProps("order_qty_pcs"),
-            // sorter: (a, b) => a.order_qty_pcs.localeCompare(b.order_qty_pcs),
-            // sortDirections: ["descend", "ascend"],
-            render: (text, record) => {
-                return record.order_qty_pcs;
-            },
-            summary: (pageData) => {
-                let total = 0;
-                pageData.forEach((record) => {
-                    total += parseFloat(record.order_qty_pcs);
-                });
-                return (
-                    <Table.Summary.Row>
-                        <Table.Summary.Cell colSpan={7} index={0}>  </Table.Summary.Cell>
-                        <Table.Summary.Cell colSpan={8} index={0}>Grand Total</Table.Summary.Cell>
-                        <Table.Summary.Cell index={9}>{total}</Table.Summary.Cell>
-                    </Table.Summary.Row>
-                );
-            },
-        },
+        // {
+        //     title: 'Order Quantity Pcs',
+        //     dataIndex: 'order_qty_pcs',
+        //     align:'right',
+        //     // ...getColumnSearchProps("order_qty_pcs"),
+        //     // sorter: (a, b) => a.order_qty_pcs.localeCompare(b.order_qty_pcs),
+        //     // sortDirections: ["descend", "ascend"],
+        //     render: (text, record) => {
+        //         return record.order_qty_pcs;
+        //     },
+        //     summary: (pageData) => {
+        //         let total = 0;
+        //         pageData.forEach((record) => {
+        //             total += parseFloat(record.order_qty_pcs);
+        //         });
+        //         return (
+        //             <Table.Summary.Row>
+        //                 <Table.Summary.Cell colSpan={7} index={0}>  </Table.Summary.Cell>
+        //                 <Table.Summary.Cell colSpan={8} index={0}>Grand Total</Table.Summary.Cell>
+        //                 <Table.Summary.Cell index={9}>{total}</Table.Summary.Cell>
+        //             </Table.Summary.Row>
+        //         );
+        //     },
+        // },
         {
             title: 'Approval Date',
             dataIndex: 'approval_date',
@@ -427,59 +538,59 @@ const {Text}=Typography
             sorter: (a, b) => a.answered_status.localeCompare(b.answered_status),
             sortDirections: ["descend", "ascend"],
         },
-        // {
-        //     title: "Item No",
-        //     dataIndex: "itemNo",
-        //     width:150,
-        //     render: (text, record) => {
-        //         // if(record.answered_status != 'Accepted'){
+        {
+            title: "Item No",
+            dataIndex: "itemNo",
+            width:150,
+            render: (text, record) => {
+                // if(record.answered_status != 'Accepted'){
 
-        //         return (
-        //             <Form>
-        //                 <Form.Item>
-        //                     <Input
-        //                         placeholder="Enter Item No"
-        //                         onChange={(e) => handleItemNoChange(e.target.value, record)}
-        //                     />
-        //                 </Form.Item>
-        //             </Form>
-        //         );
-        //         // }else{
-        //         //     return <>{record.buyer_item_number?record.buyer_item_number:'-'}</>
-        //         // }
-        //     },
-        // },
+                return (
+                    <Form>
+                        <Form.Item>
+                            <Input
+                                placeholder="Enter Item No"
+                                onChange={(e) => handleItemNoChange(e.target.value, record)}
+                            />
+                        </Form.Item>
+                    </Form>
+                );
+                // }else{
+                //     return <>{record.buyer_item_number?record.buyer_item_number:'-'}</>
+                // }
+            },
+        },
         
-        // {
-        //     title: "Action",
-        //     dataIndex: "action",
-        //     width:100,
-        //     fixed:'right',
-        //     render: (value, record) => {
-        //         // const isEnabled = isActionButtonEnabled(record);
-        //         // if(record.answered_status != 'Accepted'){
+        {
+            title: "Action",
+            dataIndex: "action",
+            width:100,
+            fixed:'right',
+            render: (value, record) => {
+                // const isEnabled = isActionButtonEnabled(record);
+                // if(record.answered_status != 'Accepted'){
 
-        //             return (
-        //                 <Popconfirm
-        //                     title="Are you sure to approve"
-        //                     onConfirm={() => approveOrderStatus(record)}
-        //                     // disabled={record.answered_status == 'Accepted'}
-        //                     // disabled= {record.answered_status !== 'Accepted' ? false : true}
+                    return (
+                        <Popconfirm
+                            title="Are you sure to Accept"
+                            onConfirm={() => saveItemNuberDetails(record)}
+                            // disabled={record.answered_status == 'Accepted'}
+                            // disabled= {record.answered_status !== 'Accepted' ? false : true}
 
-        //                 >
-        //                     <Button 
-        //                     // disabled={!isEnabled}
-        //                     // disabled= {record.answered_status !== 'Accepted' ? false : true}
-        //                     >Accept</Button>
-        //                 </Popconfirm>
-        //             );
-        //         // }else{
-        //         //     return <></>
-        //         // }
-        //     },
+                        >
+                            <Button 
+                            // disabled={!isEnabled}
+                            // disabled= {record.answered_status !== 'Accepted' ? false : true}
+                            >Accept</Button>
+                        </Popconfirm>
+                    );
+                // }else{
+                //     return <></>
+                // }
+            },
             
             
-        // },
+        },
         
        
     ];
@@ -624,36 +735,37 @@ const {Text}=Typography
                     </Row>
                 </Form>
                 <Table columns={columns} dataSource={filteredData} scroll={{ x: 1500,y:500 }}   className="custom-table-wrapper"
- bordered
+                bordered
                 size='small'
-                summary={(pageData) => {
-                    let total = 0;
-                    pageData.forEach((record) => {
-                        total += parseFloat(record.order_qty_pcs);
-                    });
-                    setGrandTotal(total); 
+                // summary={(pageData) => {
+                //     let total = 0;
+                //     pageData.forEach((record) => {
+                //         total += parseFloat(record.order_qty_pcs);
+                //     });
+                //     setGrandTotal(total); 
             
-                    return (
-                        <Table.Summary.Row>
-                        {/* Empty cells for columns 1 through 9 */}
-                        {Array.from({ length: 9 }, (_, index) => (
-                          <Table.Summary.Cell key={index} index={index}></Table.Summary.Cell>
-                        ))}
+                    // return (
+                    //     <Table.Summary.Row>
+                    //     {/* Empty cells for columns 1 through 9 */}
+                    //     {Array.from({ length: 9 }, (_, index) => (
+                    //       <Table.Summary.Cell key={index} index={index}></Table.Summary.Cell>
+                    //     ))}
                       
-                        {/* Cell for the "Grand Total" text in the desired column */}
-                        <Table.Summary.Cell index={0} colSpan={1} className="grand-total-cell">
-                        <span style={{ color: 'red' }}>Grand Total:</span>
-                        </Table.Summary.Cell>
+                    //     {/* Cell for the "Grand Total" text in the desired column */}
+                    //     <Table.Summary.Cell index={0} colSpan={1} className="grand-total-cell">
+                    //     <span style={{ color: 'red' }}>Grand Total:</span>
+                    //     </Table.Summary.Cell>
                       
-                        {/* Cell for the grandTotal value in the desired column */}
-                        <Table.Summary.Cell index={0}  colSpan={1} className="grand-total-cell">
-                        <span style={{textAlign:'right' }}>{grandTotal}</span>
-                        </Table.Summary.Cell>
-                      </Table.Summary.Row>
+                    //     {/* Cell for the grandTotal value in the desired column */}
+                    //     <Table.Summary.Cell index={0}  colSpan={1} className="grand-total-cell">
+                    //     <span style={{textAlign:'right' }}>{grandTotal}</span>
+                    //     </Table.Summary.Cell>
+                    //   </Table.Summary.Row>
                       
 
-                    );
-                }}
+                    // );
+                // }
+            // }
                 />
             </Card>
         </div>
@@ -661,4 +773,4 @@ const {Text}=Typography
 }
 
 
-export default TrimOrder;
+export default TrimOrderAcceptance;
