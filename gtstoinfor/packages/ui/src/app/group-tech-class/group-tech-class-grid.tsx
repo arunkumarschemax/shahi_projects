@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Alert } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps } from 'antd/lib/table';
 import { Link, useNavigate } from 'react-router-dom';
@@ -77,7 +77,7 @@ let userRef
     const req = new BuyerIdReq(loginBuyer)
     console.log(req,'request');
     
-  service.getAllGroupTechClass(req).then(res => {
+  service.getAllGroupTechClass().then(res => {
       if (res.status) {
        setGroupTechClassData(res.data);
       } else {
@@ -368,7 +368,6 @@ const getAllActiveDivision=() =>{
 
   return (
     <Card title ="Group Tech Class"
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
     extra={
     <Link to = "/masters/groupTechClass/groupTechClass-form"  >
       <span><Button type={'primary'} >New </Button> </span>
@@ -377,8 +376,10 @@ const getAllActiveDivision=() =>{
 
     >
      <br></br>
-      <Row gutter={40}>
-         <Col>
+      <Row gutter={24}>
+      <Col span={4}></Col>
+    <Col span={5}>
+         {/* <Col>
          <Card title={'Total Group Tech Class: ' + groupTechClassData.length} style={{textAlign: 'left', width: 230, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
@@ -386,12 +387,21 @@ const getAllActiveDivision=() =>{
            </Col>
            <Col>
            <Card title={'In-Active: ' + groupTechClassData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
-           </Col>
-           <Col>
+           </Col> */}
+           <Alert type='success' message={'Total Group Tech Class: ' + groupTechClassData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + groupTechClassData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'In-Active: ' + groupTechClassData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
           </Row> 
           <br></br>
+
+          <Card>
           <Table
+          size='small'
           columns={columnsSkelton}
 
           dataSource={groupTechClassData}
@@ -403,6 +413,7 @@ const getAllActiveDivision=() =>{
           }}
           onChange={onChange}
           bordered />
+          </Card>
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>
              <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>

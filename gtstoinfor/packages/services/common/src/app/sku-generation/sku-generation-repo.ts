@@ -57,7 +57,7 @@ export class ItemSkuRepository extends Repository<ItemSkus> {
         .select(`is.item_sku_id , is.sku_code , is.status , is.po_number , is.po_line_number , is.item_code , is.size  ,  is.color ,  is.destination ,
         is.fg_item_id, is.size_id , is.destination_id , is.rm_mapping_status , is.division_id  colour_id , colour,style,div.division_name,
         warehouse_id , facility_id , is.style_id , package_terms_id , delivery_method_id , delivery_terms_id , currency_id,  Payment_method_id ,
-         Payment_terms_id , buyer_id , season , merchandiser , planner , co_type_id , quantity_uom_id , item_sale_price_qty,so.status AS coStatus`)
+         Payment_terms_id , buyer_id  , merchandiser , planner , co_type_id , quantity_uom_id , item_sale_price_qty,so.status AS coStatus`)
         .leftJoin(Colour,`c`,`c.colourId = is.color_id`)
         .leftJoin(Size,`s`,`s.size_id = is.size_id`)
         .leftJoin(Destination,`d`,`d.destination_id = is.destination_id`)

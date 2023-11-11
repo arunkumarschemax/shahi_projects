@@ -282,7 +282,7 @@ const buyerService = new BuyersService();
       req.buyerId = loginBuyer
   }
   
-    styleorderService.getCOInfoById(req).then((res) => {
+    styleorderService.getCoLineDataById(req).then((res) => {
       if (res.status) {
         setData(res.data);
        }
@@ -319,11 +319,11 @@ const buyerService = new BuyersService();
          <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                     <Form.Item name='coNumber' label='CO Number' >
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select CO Line' onChange={onchange} >
+                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select CO Number' onChange={onchange} >
                         {
                            codata.map((e) => {
                                     return(
-                                        <Option key={e.coId} value={e.coId}>{e.coNumber}</Option>
+                                        <Option key={e.coId} value={e.coId}>{e.orderNumber}</Option>
                                     )
                                 })
                             }
@@ -345,7 +345,7 @@ const buyerService = new BuyersService();
         </Form>
        { data.length > 0 ? 
          <Descriptions >
-              <Descriptions.Item label='CO Number'labelStyle={{ color: 'black', fontWeight: 'bold' }}>{data[0]?.coNumber}</Descriptions.Item>
+              <Descriptions.Item label='CO Number'labelStyle={{ color: 'black', fontWeight: 'bold' }}>{data[0]?.orderNumber}</Descriptions.Item>
               <Descriptions.Item label='Item Code'labelStyle={{ color: 'black', fontWeight: 'bold' }}>{data[0]?.itemCode}</Descriptions.Item>
                <Descriptions.Item label='Order Date'labelStyle={{ color: 'black', fontWeight: 'bold' }}>{data[0]?.orderDate ? moment(data[0].orderDate).format('DD-MM-YYYY') : ''}</Descriptions.Item>
                 <Descriptions.Item label='Buyer Style'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.buyerStyle}</Descriptions.Item>
@@ -355,8 +355,6 @@ const buyerService = new BuyersService();
                 <Descriptions.Item label='Price Quantity'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.priceQuantity}</Descriptions.Item> 
                 <Descriptions.Item label='Agent'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.agentName}</Descriptions.Item>
                 <Descriptions.Item label='BuyerAddress'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.landmark}-{data[0]?.city}-{data[0]?.state}</Descriptions.Item> 
-                <Descriptions.Item label='ExFactoryDate'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.exFactoryDate ? moment(data[0].exFactoryDate).format('DD-MM-YYYY') : ''}</Descriptions.Item> 
-                <Descriptions.Item label='Delivery Date'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.deliveryDate ? moment(data[0].deliveryDate).format('DD-MM-YYYY') : ''}</Descriptions.Item> 
                 <Descriptions.Item label='Instore Date'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.instoreDate ? moment(data[0].instoreDate).format('DD-MM-YYYY') : ''}</Descriptions.Item> 
                 <Descriptions.Item label='Price Quantity'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.priceQuantity}</Descriptions.Item>
                 <Descriptions.Item label='Discount Percent'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.discountPercent}</Descriptions.Item>

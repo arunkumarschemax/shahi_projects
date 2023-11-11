@@ -75,10 +75,10 @@ export function LiscenceTypesForm(props: LiscenceTypesFormProps) {
                       message:"License Type Is Required"
                       
                     },
-                    {
-                      pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                      message: `Should contain only alphabets and numbers.`
-                    }
+                    // {
+                    //   pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                    //   message: `Should contain only alphabets and numbers.`
+                    // }
                   ]}>
                   <Input placeholder='Enter Liscence Type'/>
                 </Form.Item>

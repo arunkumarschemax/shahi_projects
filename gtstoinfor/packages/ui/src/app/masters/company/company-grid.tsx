@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Form, Switch, Input, Button, Tag, Row, Col, Drawer, Modal } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Form, Switch, Input, Button, Tag, Row, Col, Drawer, Modal, message } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
@@ -290,7 +290,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
     service.updateCompany(Data).then(res => {
       console.log(res);
       if (res.status) {
-        AlertMessages.getSuccessMessage('Updated Successfully');
+        AlertMessages.getSuccessMessage('Company Details are Updated Successfully');
         getAllCompany();
         setDrawerVisible(false);
       } else {
@@ -313,8 +313,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
     service.ActivatedeActivateCompany(ViewData).then(res => {
       console.log(res);
       if (res.status) {
-        // getAllCompany();
-        AlertMessages.getSuccessMessage('  Company Activated Successfully');
+        message.success(res.internalMessage)
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
@@ -397,7 +396,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
             <Col span={4}>
               <Form.Item label="Division Name" name="divisionName"  rules={[ {
                   required: true,
-                  message: " Division Code Is Required",
+                  message: " Division Name Is Required",
                 },]}>
                 <Input />
               </Form.Item>

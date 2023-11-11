@@ -171,6 +171,8 @@ import BomReport from "./BOM/bom-report"
 import RMSkuView from "./rm-skus/rm-sku-view"
 import RMOperationMappingView from "./common/product-structure(BOM)/rm-operation-mapping-view"
 import COAmendmentView from "./common/co-amendment/co-amendment-view"
+import CoLineForm from "./style-orders/co-line-form"
+import RMDetailView from "./orders/rm-detail-view"
 
 
 export const AppRoutes = () => {
@@ -212,10 +214,9 @@ export const AppRoutes = () => {
                         </>
                     </ChildProtectionWrapper>
                 } >
-                    <Route path="/substituion" element={<Substitution/>}></Route>
                     <Route path='/user-management/users-from' element={<UserCreationForm />} />
                     <Route path='/user-management/users-view' element={<UsersView />} />
-
+                    <Route path='/co-line-creation' element={<CoLineForm/>}/>
                     <Route path='/masters'>
                     <Route path='business-area/business-area-form' element={<BusinessAreaForm businessAreaData={undefined}
                     isUpdate={false}
@@ -620,6 +621,9 @@ export const AppRoutes = () => {
                 <Route path='feature-creation-view' element={<FeatureCreationView />} />
                 <Route path='item-creation-view' element={<ItemCreationView/>}/>    
                 <Route path='item-creation-detail-view' element={<ItemCreationDetailView data={''}/>}/>
+                
+                <Route path='rm-detail-view' element={<RMDetailView data={''}/>}/>
+
                 <Route path="co-amendment" element ={<COAmendmentTabs key={""} />} />
                 <Route path="co-amendment-view" element ={<COAmendmentView/>} />
 
@@ -644,6 +648,8 @@ export const AppRoutes = () => {
                 <Route path ='smv-efficiency-view' element={<SMVEffciencyView/>}/>
                 <Route path ='smv-efficiency-detail-view' element={<SMKDetailView data={''}/>}/>
                 <Route path ='rm-operation-mapping-view' element={<RMOperationMappingView />}/>
+                <Route path='substitution' element={<Substitution/>}></Route>
+
 
             
                             

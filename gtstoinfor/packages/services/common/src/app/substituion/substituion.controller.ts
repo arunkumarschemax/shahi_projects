@@ -34,4 +34,13 @@ export class SubstituionController{
             return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
         }
     }
+
+    @Post('/getFgSku')
+    async getFgSku():Promise<CommonResponseModel>{
+        try{
+            return await this.substituionService.getFgSku()
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
 }

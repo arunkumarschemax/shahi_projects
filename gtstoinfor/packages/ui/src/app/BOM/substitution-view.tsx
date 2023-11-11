@@ -18,11 +18,17 @@ const SubstituionView=() =>{
     const [form] = Form.useForm();
     const service = new SubstitutionService
     const [style, setStyle] = useState([]);
+    const [data, setdata] = useState([]);
+    const [selectedItemNo, setSelectedItemNo] = useState();
+    const { Option } = Select;
+    const [searchClicked, setSearchClicked] = useState(false);
     const [selectedRow, setSelectedRow] = useState(null);
     const [Value, setValue] = useState([]);
+    const [itemData, setItemData] = useState([]);
 
     useEffect(()=>{
       Substituion();
+      Dropdown();
     },[])
 
     const resetHandler = () => {
@@ -39,11 +45,23 @@ const SubstituionView=() =>{
       // Close the modal by resetting the selected row
       setSelectedRow(null);
     };
+    const Dropdown=()=>{
+      service.getFgSku().then((res)=>{
+        if(res){
+          setdata(res.data);
+        }
+      })
+    }
+
+    const FgCode = (val,data) => {
+      setSelectedItemNo(data.code);
+    };
   
     const Substituion=()=>{
       const req = new fgItemIdReq()
-      if(form.getFieldValue('fgItemCode') !== undefined){
-        req.fgItemCode=form.getFieldValue('fgItemCode')
+      if(form.getFieldValue('fg_sku') !== undefined){
+        // console.log(req,"pppppppppppppppppppp")
+        req.fgItemCode=form.getFieldValue('fg_sku')
       }
    service.getSubstitution(req).then(res=>{
     if(res.status){
@@ -51,6 +69,21 @@ const SubstituionView=() =>{
     }
    })
     }
+
+    const handledSearch=()=>{
+      const req = new fgItemIdReq()
+      if(form.getFieldValue('fg_sku') !=undefined){
+        req.fgItemCode=selectedItemNo
+        setSearchClicked(true);
+
+      }
+      service.getFgSku(req).then((res)=>{
+        if(res){
+          setItemData(res.data)
+        }
+      })
+    }
+    
     const columnsSkelton:any=[
     
         {
@@ -101,9 +134,18 @@ const SubstituionView=() =>{
                 <Form form={form} layout='vertical'>
              <Row gutter={24}>
              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                <Form.Item name='fgItemCode' label='Fg SkuCode'>
-               <Select showSearch placeholder="Select Fg SkuCode" optionFilterProp="children" allowClear>
+                <Form.Item name='fg_sku' label='Fg SkuCode'>
+               <Select showSearch 
+               placeholder="Select Fg SkuCode"
+                optionFilterProp="children"
+                allowClear
+                onChange={(val,data)=>FgCode(val,data)}>
           {
+            data?.map((e)=>(
+              <Option key={e.fg_sku_id} val={e.fg_sku_id} code={e.fg_sku}>
+                  {e.fg_sku}
+              </Option>
+            ))
 
             }
                </Select>
@@ -126,8 +168,9 @@ const SubstituionView=() =>{
   icon={<SearchOutlined />}
   type="primary"
   style={{ marginBottom: '20px' }}
+  onClick={handledSearch}
 >
-  GET DETAILS
+ Search
 </Button>
 <Button
   htmlType="button"
@@ -158,7 +201,7 @@ const SubstituionView=() =>{
                 rowKey={record => record}
                 className='custom-table-wrapper'
                   columns={columnsSkelton}
-                  dataSource={Value}
+                  dataSource={itemData}
                   pagination={{
                     onChange(current) {
                       setPage(current);
