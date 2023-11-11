@@ -159,4 +159,13 @@ export class SampleDevReqController {
         return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
       }
     }
+
+    @Post('/getM3StyleCode')
+    async getM3StyleCode(): Promise<CommonResponseModel> {
+      try {
+        return await this.sampleService.getM3StyleCode();
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+      }
+    }
 }

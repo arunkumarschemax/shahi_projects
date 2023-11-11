@@ -88,4 +88,12 @@ export  class FabricsubTypeController {
               return error;
          }
        }
+       @Post('/getFabricSubTypeAginstType')
+       async getFabricSubTypeAginstType(@Body()fabricTyepId: any): Promise<FabricSubTypeResponse> {
+           try {
+            return await this.fabricsubtypeservice.getFabricSubTypeAginstType(fabricTyepId);
+          } catch (error) {
+               return error;
+          }
+        }
 }

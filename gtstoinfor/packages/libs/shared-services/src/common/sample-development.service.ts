@@ -117,7 +117,9 @@ export class SampleDevelopmentService extends CommonAxiosService {
   async getTrimCodeAgainstTrimType(req:ProductGroupReq): Promise<UploadResponse> {
     return await this.axiosPostCall(this.URL + '/getTrimCodeAgainstTrimType',req);
   }
-
+  async getM3StyleCode(): Promise<UploadResponse> {
+    return await this.axiosPostCall(this.URL + '/getM3StyleCode');
+  }
   
 
 }

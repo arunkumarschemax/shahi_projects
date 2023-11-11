@@ -343,5 +343,20 @@ export class SampleRequestService {
   
     return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
   }
+
+
+  async getM3StyleCode(): Promise<CommonResponseModel> {
+    const manager = this.dataSource;
+    let rawData
+     rawData = ' SELECT m3_style_code AS m3StyleCode ,m3_style_id AS m3StyleId FROM `m3_style` WHERE is_active=1';
+     const rmData = await manager.query(rawData);
+     if(rmData){
+      return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(rmData));
+      
+     }else{
+      return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
+
+     }
   
+  }
 }

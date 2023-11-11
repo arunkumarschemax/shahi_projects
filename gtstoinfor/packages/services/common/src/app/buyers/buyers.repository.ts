@@ -29,7 +29,7 @@ export class BuyerRepository extends Repository<Buyers> {
        .leftJoin(PaymentMethod,'paym','paym.payment_method_id = b.payment_method_id')
        .leftJoin(Address,'add','add.buyer_id = b.buyer_id')
        .leftJoin(Countries,'cou','cou.country_id = add.country_id')
-       .orderBy(`b.buyer_name`)
+       .orderBy(`b.buyer_name `,'ASC')
        return data.getRawMany()
     }
 
