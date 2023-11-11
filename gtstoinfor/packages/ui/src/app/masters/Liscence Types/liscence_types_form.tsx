@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import { Form, Input, Button, Select,Card, Row, Col } from 'antd';
+import { Form, Input, Button, Select,Card, Row, Col, message } from 'antd';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { DeliveryMethodDto, LiscenceTypesdDto } from '@project-management-system/shared-models';
 import { DeliveryMethodService, LiscenceTypeService } from '@project-management-system/shared-services';
@@ -32,9 +32,13 @@ export function LiscenceTypesForm(props: LiscenceTypesFormProps) {
         onReset();
       } else {
         if (res.status) {
-          AlertMessages.getErrorMessage(res.internalMessage);
+          // AlertMessages.getErrorMessage(res.internalMessage);
+          message.success(res.internalMessage)
+
         } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
+          // AlertMessages.getErrorMessage(res.internalMessage);
+          message.error(res.internalMessage)
+
         }
       }
     }).catch(err => {
@@ -75,10 +79,11 @@ export function LiscenceTypesForm(props: LiscenceTypesFormProps) {
                       message:"License Type Is Required"
                       
                     },
-                    // {
-                    //   pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                    //   message: `Should contain only alphabets and numbers.`
-                    // }
+                    {
+                      pattern: /^[a-zA-Z\d\s!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/,
+                      message: 'Should contain only alphabets and allowed special characters.'
+                    }                    
+                    
                   ]}>
                   <Input placeholder='Enter Liscence Type'/>
                 </Form.Item>

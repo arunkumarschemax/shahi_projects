@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Form, Switch, Input, Button, Tag, Row, Col, Drawer, Modal } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Form, Switch, Input, Button, Tag, Row, Col, Drawer, Modal, Alert, message } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
@@ -109,14 +109,15 @@ export const DivisionGrid = (props: DivisionGridProps) => {
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
-      render: (text, object, index) => (page - 1) * 10 + (index + 1)
+      render: (text, object, index) => (page - 1) * 10 + (index + 1),
+      align:'center',
     },
     {
       title: "Division Name",
       dataIndex: "divisionName",
       sorter: (a, b) => a.source.localeCompare(b.source),
       sortDirections: ["ascend", "descend"],
-      ...getColumnSearchProps("divisionName"),
+      ...getColumnSearchProps("divisionName"),align:'center',
     },
     ,
     {
@@ -124,11 +125,11 @@ export const DivisionGrid = (props: DivisionGridProps) => {
       dataIndex: "divisionCode",
       sorter: (a, b) => a.source.localeCompare(b.source),
       sortDirections: ["ascend", "descend"],
-      ...getColumnSearchProps("divisionCode"),
+      ...getColumnSearchProps("divisionCode"),align:'center',
     },
     {
       title: 'Status',
-      dataIndex: 'isActive',
+      dataIndex: 'isActive',align:'center',
       render: (isActive, rowData) => (
         <>
           {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -153,7 +154,7 @@ export const DivisionGrid = (props: DivisionGridProps) => {
     },
     {
       title: `Action`,
-      dataIndex: 'action',
+      dataIndex: 'action',align:'center',
       render: (record, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"
@@ -257,7 +258,7 @@ export const DivisionGrid = (props: DivisionGridProps) => {
       console.log(res);
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Successfully');
-        //  getAllDivision();
+         getAllDivision();
         setDrawerVisible(false);
       } else {
         
@@ -278,9 +279,12 @@ export const DivisionGrid = (props: DivisionGridProps) => {
       console.log(res);
       if (res.status) {
         //  getAllDivision();
-        AlertMessages.getSuccessMessage('Success');
+        // AlertMessages.getSuccessMessage('Success');
+        message.success(res.internalMessage)
+
       } else {
-        
+        message.error(res.internalMessage)
+
         AlertMessages.getErrorMessage(res.internalMessage);
         // }
       }
@@ -290,18 +294,22 @@ export const DivisionGrid = (props: DivisionGridProps) => {
   }
 
   return (
-<Card title={<span>Division</span>} style={{textAlign:'center'}} headStyle={{border:0}}  extra={<Link to="/masters/division/division-form"><span><Button type={'primary'}>New</Button></span></Link>}>
+<Card title={<span>Division</span>} style={{textAlign:'left'}} headStyle={{border:0}}  extra={<Link to="/masters/division/division-form"><span><Button type={'primary'}>New</Button></span></Link>}>
   <br></br>
     <>
-      <Row gutter={40}>
-        <Col>
-          <Card title={'Total Division: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+      <Row gutter={24}>
+        <Col span={5}></Col>
+        <Col span={4}>
+          {/* <Card title={'Total Division: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card> */}
+          <Alert type='success' message={'Total Division: ' + variantData.length} style={{fontSize:'15px'}} />
         </Col>
-        <Col>
-          <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+        <Col span={4}>
+          {/* <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card> */}
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
-        <Col>
-          <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+        <Col span={4}>
+          {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
+          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
         
       </Row>

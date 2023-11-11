@@ -1,7 +1,7 @@
 
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -165,19 +165,19 @@ const CompositionGrid = () => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
-        title: "Composition Code",
+        title: <div style={{ textAlign: 'center' }}>Composition Code</div>,
         dataIndex: "compositionCode",
         // width:'60px',
         sorter: (a, b) => a.compositionCode?.localeCompare(b.compositionCode),
-      ...getColumnSearchProps("compositionCode"),      align:'center',
+      ...getColumnSearchProps("compositionCode"),      align:'left',
 
       },
       {
-        title: "Composition Description",
+        title: <div style={{ textAlign: 'center' }}>Composition Description</div>,
         dataIndex: "compositionDescription",
         // width:'60px',
         sorter: (a, b) => a.compositionDescription?.localeCompare(b.compositionDescription),
-      ...getColumnSearchProps("compositionDescription"),      align:'center',
+      ...getColumnSearchProps("compositionDescription"),      align:'left',
 
       },
     {
@@ -264,15 +264,19 @@ const CompositionGrid = () => {
     extra={<Link to='/masters/composition/composition-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
-      <Row gutter={40}>
-        <Col>
-          <Card title={'Total Compositions: ' + lTData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+      <Row gutter={24}>
+        <Col span={4}></Col>
+        <Col span={5}>
+          {/* <Card title={'Total Compositions: ' + lTData.length} style={{ textAlign: 'left', width: 200, height: 51, backgroundColor: '#bfbfbf' }}></Card> */}
+          <Alert type='success' message={'Total Compositions: ' + lTData.length} style={{fontSize:'15px'}} />
         </Col>
-        <Col>
-          <Card title={'Active: ' + lTData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+        <Col span={5}>
+          {/* <Card title={'Active: ' + lTData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 51, backgroundColor: '#52c51a' }}></Card> */}
+          <Alert type='warning' message={'Active: ' + lTData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
-        <Col>
-          <Card title={'In-Active: ' + lTData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+        <Col span={5}>
+          {/* <Card title={'In-Active: ' + lTData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
+          <Alert type='info' message={'In-Active: ' + lTData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
       </Row><br></br>
       <Card >
