@@ -17,7 +17,7 @@ export class PurchaseOrderDto{
    isActive: boolean
    status:PurchaseOrderStatus
   remarks:string
-  indentId:number
+  indentId:number[]
   poFabricInfo: PurchaseOrderFbricDto[]
   poTrimInfo:PurchaseOrderTrimDto[]
   constructor(
@@ -27,7 +27,7 @@ export class PurchaseOrderDto{
     expectedDeliveryDate:any,
     purchaseOrderDate:any,
     remarks:string,
-    indentId:number,
+    indentId:number[],
     poFabricInfo: PurchaseOrderFbricDto[],
   poTrimInfo:PurchaseOrderTrimDto[]
   ){

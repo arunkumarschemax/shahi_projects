@@ -82,7 +82,7 @@ export const PurchaseOrderForm =()=>{
             const triminfo = new PurchaseOrderTrimDto(trim.productGroupId,trim.trimId,trim.colourId,trim.m3TrimCode,trim.description,trim.consumption,trim.remarks)
             trimInfo.push(triminfo)
         }
-        const poDto = new PurchaseOrderDto('po11',1,poForm.getFieldValue('styleId'),poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"),poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'),poForm.getFieldValue('remarks'),1,fabricInfo,trimInfo)
+        const poDto = new PurchaseOrderDto('po11',1,poForm.getFieldValue('styleId'),poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"),poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'),poForm.getFieldValue('remarks'),poForm.getFieldValue('indentId'),fabricInfo,trimInfo)
         purchaseOrderService.cretePurchaseOrder(poDto).then(res =>{
             console.log(poDto)
             if(res.status){
@@ -100,7 +100,7 @@ return(
             <Row gutter={8}>
              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
                     <Form.Item name='indentId' label='Indent Code' rules={[{required:true,message:'IndentCode is required'}]}>
-                       <Select showSearch allowClear optionFilterProp="children" placeholder='Select Indent'>
+                       <Select showSearch allowClear optionFilterProp="children" placeholder='Select Indent' mode="multiple">
                             {indenData.map(e => {
                                 return(
                                     <Option key={e.indentId} value={e.indentId} name={e.indentCode}> {e.indentCode}</Option>
