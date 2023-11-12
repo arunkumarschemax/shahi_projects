@@ -98,7 +98,7 @@ import { CoLineModule } from './style-order/co-line.module';
      
       autoLoadEntities: true,
       synchronize: false,
-      logging: true,
+      logging: false,
       
       extra: {
         connectionLimit: 20
