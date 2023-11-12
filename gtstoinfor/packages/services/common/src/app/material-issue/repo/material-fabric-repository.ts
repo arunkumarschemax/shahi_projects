@@ -2,8 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { MaterialFabricEntity } from "../entity/material-fabric-entity";
-import { MaterialIssueRequest } from "@project-management-system/shared-models";
+import { FabricDataDto, MaterialIssueRequest } from "@project-management-system/shared-models";
 import { MaterialIssueEntity } from "../entity/material-issue-entity";
+import { Colour } from "../../colours/colour.entity";
 
 @Injectable()
 export class MaterialFabricRepository extends Repository<MaterialFabricEntity> {
@@ -28,15 +29,16 @@ export class MaterialFabricRepository extends Repository<MaterialFabricEntity> {
     };
 
 
-    // async findfbDataThroughMiId(id: string) {
-    //     console.log(id,"iddddddddddd")
-    //     const query = await this.createQueryBuilder('fb')
-    //         .select('fb.material_fabric_id AS materialcode,fb.fabric_code AS fabricCode,fb.consumption AS consumption,fb.consumption_uom AS fbconsumption_uom,fb.issued_quantity AS issued_quantity,fb.issued_quantity_uom AS fbissued_quantity_uom,fb.color_id as colorId')
-    //         .leftJoin(MaterialIssueEntity, 'mi', 'fb.material_issue_id = mi.material_issue_id')
-    //         .where(`fb.material_issue_id = "${id}"`)
-    //         .getRawMany()
-    //         console.log(query,"fabric")
-    //     return query;
-    // }
+    async findfbDataThroughMiId(id: number) {
+        const query = await this.createQueryBuilder('fb')
+            .select('fb.material_fabric_id AS materialcode,fb.fabric_code AS fabricCode,fb.consumption AS consumption,fb.issued_quantity AS issued_quantity,cr.colour AS color')
+            .leftJoin(Colour,'cr','cr.colour_id = fb.color_id')
+            .where(`fb.material_issue_id = "${id}"`)
+            .getRawMany()
+            console.log(query,"PPPPPPPPPPPPPPPPPP")
+        return query.map((rec)=>{
+            return new FabricDataDto(null,rec.fabricCode,rec.color,rec.consumption,rec.issued_quantity,null)
+        });
+    }
 
 }

@@ -149,6 +149,13 @@ export const baseMRouterList = [
         filepath: "/purchase-order",
     },
     {
+        label: "Purchase View",
+        key: "po",
+        path: "/purchase-view",
+        // icon: <DashboardOutlined />,
+        filepath: "//purchase-view",
+    },
+    {
         label: "Stock",
         key: "stockView",
         path: "stock-view",

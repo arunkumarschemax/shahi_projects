@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Req } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { MaterialIssueService } from "./material-issue.service";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { CommonResponseModel, MaterialIssueRequest, MaterialIssueIdreq, MaterialIssueResponseModel, ResponesNoDropDownRes, RequestNoDto } from "@project-management-system/shared-models";
+import { CommonResponseModel, MaterialIssueRequest, MaterialIssueIdreq, MaterialIssueResponseModel, ResponesNoDropDownRes, RequestNoDto, MaterialReportsResponse } from "@project-management-system/shared-models";
 import { MaterialIssueDto } from "./dto/material-issue-dto";
 
 @ApiTags('material-issue')
@@ -73,11 +73,11 @@ export class MaterialIssueController {
     }
     @Post('/getAllMaterial')
     @ApiBody({ type: MaterialIssueRequest })
-    async getMaterialIssue(@Req() req: any): Promise<MaterialIssueResponseModel> {
+    async getMaterialIssue(@Req() req: any): Promise<MaterialReportsResponse> {
         try {
             return await this.issueService.getMaterialIssue(req)
         } catch (err) {
-            return this.applicationExceptionHandler.returnException(MaterialIssueResponseModel, err);
+            return this.applicationExceptionHandler.returnException(MaterialReportsResponse, err);
         }
     };
 

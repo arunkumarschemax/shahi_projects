@@ -228,7 +228,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { groupBy } from "rxjs";
 import { SampleRequest } from "../entities/sample-dev-request.entity";
 import { SampleFilterRequest } from "@project-management-system/shared-models";
-import { Location } from "../../locations/location.entity";
+import { LocationEntity } from "../../locations/location.entity";
 import { Style } from "../../style/dto/style-entity";
 import { ProfitControlHead } from '../../profit-control-head/profit-control-head-entity';
 import { Buyers } from "../../buyers/buyers.entity";
@@ -292,7 +292,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
         const query = this.createQueryBuilder('sr')
             .select(`sr.sample_request_id,sr.description,sr.remarks,sr.user,sr.request_no AS requestNo,sr.cost_ref AS costRef,sr.m3_style_no AS m3StyleNo,sr.contact,sr.extension,sr.sam_value AS samValue,sr.product,sr.type,sr.conversion,sr.made_in AS madeIn,sr.facility_id,sr.status,sr.location_id,sr.style_id,sr.profit_control_head_id,sr.buyer_id,sr.sample_type_id,sr.sample_sub_type_id,sr.brand_id,sr.dmm_id,sr.technician_id`)
             .addSelect(`l.location_name AS locationName,s.style,pch.profit_control_head AS pch,b.buyer_name AS buyerName,b.buyer_code AS buyerCode,st.sample_type AS sampleType,sst.sample_sub_type AS sampleSubType,br.brand_name AS brandName,ed1.first_name AS dmmName,ed2.first_name AS techName`)
-            .leftJoin(Location, 'l', 'l.location_id = sr.location_id')
+            .leftJoin(LocationEntity, 'l', 'l.location_id = sr.location_id')
             .leftJoin(Style, 's', 's.style_id = sr.style_id')
             .leftJoin(ProfitControlHead, 'pch', 'pch.profit_control_head_id = sr.profit_control_head_id')
             .leftJoin(Buyers, 'b', 'b.buyer_id = sr.buyer_id')

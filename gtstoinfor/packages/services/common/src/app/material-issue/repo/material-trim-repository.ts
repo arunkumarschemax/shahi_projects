@@ -3,6 +3,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { MaterialTrimEntity } from "../entity/material-trim-entity";
 import { MaterialIssueEntity } from "../entity/material-issue-entity";
+import { TrimDataDto } from "@project-management-system/shared-models";
+import { Colour } from "../../colours/colour.entity";
 
 @Injectable()
 export class MaterialTrimRepository extends Repository<MaterialTrimEntity> {
@@ -21,13 +23,15 @@ export class MaterialTrimRepository extends Repository<MaterialTrimEntity> {
 
 
 
-    // async findTrimDataThroughMiId(id: string) {
-    //     const query = await this.createQueryBuilder('tr')
-    //         .select(`tr.description AS trimdescription,tr.color_id AS trimcolor_id,tr.consumption AS trimconsumption,tr.consumption_uom AS trimconsumption_uom,tr.issued_quantity AS trimissued_quantity,tr.issued_quantity_uom AS trimissued_quantity_uom,tr.color_id as colorId`)
-    //         .leftJoin(MaterialIssueEntity, 'mi', 'tr.material_issue_id = mi.material_issue_id')
-    //         .where(`tr.material_issue_id = "${id}"`)
-    //         .getRawMany()
-    //         console.log(query ,"trimDta")
-    //     return query;
-    // }
-}
+    async findTrimDataThroughMiId(id: number) {
+        const query = await this.createQueryBuilder('tr')
+            .select(`tr.color_id AS trimcolor_id,tr.consumption AS trimconsumption,tr.issued_quantity AS trimissued_quantity,cr.colour AS color`)
+            .leftJoin(Colour, 'cr', 'cr.colour_id = tr.color_id')
+            .where(`tr.material_issue_id =  ${id} `)
+            .getRawMany()
+        console.log(query, id)
+        return query.map((rec) => {
+            return new TrimDataDto(null, rec.trimCode, rec.color, rec.trimconsumption, rec.trimissued_quantity, null)
+        })
+    }
+} 

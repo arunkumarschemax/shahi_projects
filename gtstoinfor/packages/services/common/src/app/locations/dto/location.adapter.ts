@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { LocationDTO } from './location.dto';
-import { Location } from '../location.entity';
+import { LocationEntity } from '../location.entity';
 
 @Injectable()
 export class LocationAdapter {
@@ -9,8 +9,8 @@ export class LocationAdapter {
    * @param DeliveryTermsDto
    * @returns DeliveryTerms entity
    */
-  public convertDtoToEntity(  locationDTO: LocationDTO,  isUpdate: boolean = false ): Location {
-    const location = new Location();
+  public convertDtoToEntity(  locationDTO: LocationDTO,  isUpdate: boolean = false ): LocationEntity {
+    const location = new LocationEntity();
     location.locationId=locationDTO.locationId;
     location.locationName=locationDTO.locationName;
     location.locationCode=locationDTO.locationCode;
@@ -24,7 +24,7 @@ export class LocationAdapter {
     }
    return location;
   }
-  public convertEntityToDto(locationObject: Location): LocationDTO {
+  public convertEntityToDto(locationObject: LocationEntity): LocationDTO {
     const locationDTO= new LocationDTO;
     locationDTO.locationId = locationObject.locationId;
     locationDTO.locationName = locationObject.locationName;

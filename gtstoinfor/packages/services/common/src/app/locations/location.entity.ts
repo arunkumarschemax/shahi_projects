@@ -2,7 +2,7 @@ import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne
 import { SampleRequest } from "../sample-dev-request/entities/sample-dev-request.entity";
 
 @Entity('location')
-export class Location {
+export class LocationEntity {
 
   @PrimaryGeneratedColumn("increment",{name:'location_id'})
   locationId:number;

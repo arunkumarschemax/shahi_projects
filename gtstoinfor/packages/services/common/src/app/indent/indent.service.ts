@@ -72,10 +72,10 @@ export class IndentService{
                     trimType: item.trimType,
                     fabricType:item.fabricType,
                     fbquantity:item.fbquantity,
+                    quantity: item.quantity,
                     color:item.color,
                     trimCode: item.trimCode,
                     status:item.status,
-                    quantity: item.quantity,
                     m3TrimCode: item.m3TrimCode,
                     m3FabricCode:item.m3FabricCode,
                   

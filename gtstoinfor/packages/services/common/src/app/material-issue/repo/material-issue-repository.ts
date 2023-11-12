@@ -1,11 +1,15 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RequestNoDto } from "@project-management-system/shared-models";
+import { MaterialIssueReportsDto, RequestNoDto } from "@project-management-system/shared-models";
 import { Repository } from "typeorm";
 import { Colour } from "../../colours/colour.entity";
 import { MaterialFabricEntity } from "../entity/material-fabric-entity";
 import { MaterialIssueEntity } from "../entity/material-issue-entity";
 import { MaterialTrimEntity } from "../entity/material-trim-entity";
+import { SampleTypes } from "../../sample Types/sample-types.entity";
+import { Buyers } from "../../buyers/buyers.entity";
+import { ProfitControlHead } from "../../profit-control-head/profit-control-head-entity";
+import { LocationEntity } from "../../locations/location.entity";
 
 @Injectable()
 export class MaterialIssueRepository extends Repository<MaterialIssueEntity> {
@@ -35,13 +39,10 @@ export class MaterialIssueRepository extends Repository<MaterialIssueEntity> {
             .select(`mi.consumption_code`)
             .groupBy(`mi.consumption_code`)
             .getRawMany()
-            console.log(query,"query")
         return query.map((rec) => {
             return new RequestNoDto(rec.consumption_code)
         });
     }
-
-
 
     // async getDataByStyleId(req:MaterialIssueRequest): Promise<any> {
     //     console.log(req,'=====-----------------=======')
@@ -53,4 +54,24 @@ export class MaterialIssueRepository extends Repository<MaterialIssueEntity> {
     //         .groupBy(`mi.consumption_code`)
     //     return await query.getRawMany();
     // }
+
+
+
+    async getMaterialData() {
+        const query = await this.createQueryBuilder('mi')
+            .select(`mi.material_issue_id AS id,mi.consumption_code AS consumptioncode,mi.issue_date AS issue_date, mi.pch_id AS profitControlId,mi.buyer_id AS buyer_id,mi.sample_type_id AS sample_type_id,mi.style_no AS style_no,mi.m3_style_no AS m3_style_no,l.location_name,smp.sample_type,b.buyer_name,ph.profit_control_head`)
+            .leftJoin(LocationEntity, 'l', 'l.location_id = mi.location_id')
+            .leftJoin(SampleTypes, 'smp', 'smp.sample_type_id = mi.sample_type_id')
+            .leftJoin(Buyers, 'b', 'b.buyer_id = mi.buyer_id')
+            .leftJoin(ProfitControlHead, 'ph', 'ph.profit_control_head_id = mi.pch_id')
+            .getRawMany()
+        return query.map(rec => {
+            return (new MaterialIssueReportsDto(rec.id, rec.consumptioncode, rec.m3_style_no, rec.sample_type, rec.profit_control_head, rec.location_name, rec.style_no, rec.buyer_name, rec.issue_date, [], []));
+        });
+    };
+
+                // if (req && req.requestNo && req.consumption) {
+            //     query += ` WHERE mi.request_no = "${req.requestNo}" AND mi.consumption_code = "${req.consumption}"`;
+            // };  
+
 }

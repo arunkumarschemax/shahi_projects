@@ -5,4 +5,6 @@ export * from './material-issue-response-model'
 export * from './material-issue-id.req'
 export * from './material-issue-req'
 export * from './request-no-dropdown-resp'
-export * from './requestno.dto'
+export * from './requestno.dto';
+export * from './get-matireal-reports.dto';
+export * from './material-reports-res';

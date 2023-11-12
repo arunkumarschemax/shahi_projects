@@ -155,6 +155,8 @@ import RackForm from "./masters/Racks/Racks-form"
 import RackView from "./masters/Racks/Racks-view"
 import QualityView from "./masters/quality/quality-view"
 import QualityForm from "./masters/quality/quality-form"
+import PurchaseOrderView from "./purchase-order2/purchase-order-view"
+import PurchaseOrderDetailsView from "./purchase-order2/purchase-order-details-view"
 
 
 export const AppRoutes = () => {
@@ -586,6 +588,8 @@ export const AppRoutes = () => {
                     <Route path='/indent-form' element={<SourcingRequisitionDynamicForm/>}/>
                     <Route path='/requisition-view' element={<SourcingRequisitionDynamicView/>}/>
                     <Route path='/purchase-order' element={<PurchaseOrderForm/>}/>
+                    <Route path='/purchase-view' element={<PurchaseOrderView/>}/>
+                    <Route path='/purchase-detali-view' element={<PurchaseOrderDetailsView/>}/>
 
 
                     <Route path='/excel-import'>
