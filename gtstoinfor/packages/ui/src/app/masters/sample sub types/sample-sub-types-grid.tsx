@@ -196,19 +196,55 @@ export function SampleSubTypesGrid(
    
       {
         title: 'Status',
-        align:'center',
-        dataIndex: 'isActive',
-        ...getColumnSearchProps('isActive'),
-        // sorter: (a, b) => a.isActive.localeCompare(b.isActive),
-        // sortDirections: ["ascend", "descend"],
+        dataIndex: 'isActive',align:'center',
+          width:'80px',
         render: (isActive, rowData) => (
           <>
-            {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
-            
+            {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
           </>
         ),
-   
-        
+        filters: [
+          {
+            text: 'Active',
+            value: true,
+          },
+          {
+            text: 'InActive',
+            value: false,
+          },
+        ],
+        filterMultiple: false,
+        // onFilter: (value, record) => {
+        //   // === is not work
+        //   return record.isActive === value;
+        // },
+        onFilter: (value, record) => record.isActive === value,
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+          <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+            <Checkbox
+              checked={selectedKeys.includes(true)}
+              onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+            >
+              <span style={{color:'green'}}>Active</span>
+            </Checkbox>
+            <Checkbox
+              checked={selectedKeys.includes(false)}
+              onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+            >
+              <span style={{color:'red'}}>Inactive</span>
+            </Checkbox>
+            <div className="custom-filter-dropdown-btns" >
+            <Button  onClick={() => clearFilters()} className="custom-reset-button">
+                Reset
+              </Button>
+              <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+                OK
+              </Button>
+            
+            </div>
+          </div>
+        ),
+  
       },
       
       {

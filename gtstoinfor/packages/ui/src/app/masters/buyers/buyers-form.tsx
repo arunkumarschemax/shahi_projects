@@ -469,6 +469,10 @@ export function BuyersForm(props: BuyersFormProps) {
                               {
                                 required: true, message: 'Missing state',
                               },
+                              {
+                                pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                message: `Should contain only alphabets.`
+                              }
                             ]}
                           >
                             <Input placeholder='Enter State'/>
@@ -476,11 +480,15 @@ export function BuyersForm(props: BuyersFormProps) {
                         </Col>
                         <Col>
                         <Form.Item {...field} label='District' name={[field.name, 'district']} fieldKey={[field.key, 'district']}
-                          // rules={[
-                          //   {
-                          //     required: true, message: 'Missing district',
-                          //   },
-                          // ]}
+                          rules={[
+                            // {
+                            //   required: true, message: 'Missing district',
+                            // },
+                            {
+                              pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                              message: `Should contain only alphabets.`
+                            }
+                          ]}
                         >
                           <Input placeholder='Enter District'/>
                         </Form.Item>
@@ -491,6 +499,10 @@ export function BuyersForm(props: BuyersFormProps) {
                             {
                               required: true, message: 'Missing city',
                             },
+                            {
+                              pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                              message: `Should contain only alphabets.`
+                            }
                           ]}
                         >
                           <Input placeholder='Enter City'/>
