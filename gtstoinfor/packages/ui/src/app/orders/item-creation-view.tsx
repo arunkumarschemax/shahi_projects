@@ -28,8 +28,6 @@ const ItemCreationView = () => {
    const service = new ItemCreationService();
   const brandservice = new MasterBrandsService();
 
-console.log(itemName,"itemName");
-
   const [pageSize, setPageSize] = useState<number>(1);
          const [styledata,setStyle]=useState([])
          const[brand,setBrand]=useState([])
@@ -460,12 +458,10 @@ const cancelOrder =(val:any) =>{
       fixed:'right',
       width:120,
       render: (text, rowData) => {
-        // console.log(rowData,'rowwwwwwww');
-        
         return( <span>
             <EditOutlined className={'editSamplTypeIcon'} type="edit"
               onClick={() => {
-                if (rowData.isActive) {
+                if (rowData.is_active) {                  
                   openFormWithData(rowData);
                 } else {
                   AlertMessages.getErrorMessage('You Cannot Edit Item Creation');

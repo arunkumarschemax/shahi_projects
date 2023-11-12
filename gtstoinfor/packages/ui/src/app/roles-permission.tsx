@@ -11,7 +11,7 @@ export function RolePermission(role:string,menu:string,subMenu:string,scope:stri
     // checkAccessScope(role:string,menus:string[],subMenus:string[],scopes:string[]) {
         const accessFlag = logInUserData.menuAccessObject.find(item => item.menuName == menu).subMenuData.find(submenuItem => submenuItem.subMenuName == subMenu).scopes
         const scopeCheck = accessFlag.includes(scope)
-         console.log(accessFlag,'==================')
+      //   console.log(accessFlag,'==================')
         return  scopeCheck
     // }
 
