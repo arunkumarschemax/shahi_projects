@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Alert } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Alert, Checkbox } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps } from 'antd/lib/table';
 import { Link, useNavigate } from 'react-router-dom';
@@ -145,8 +145,8 @@ export function PaymentTermsGrid(
        render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-      title: <div style={{textAlign:"center"}}>Category</div>,
-      dataIndex:'paymentTermsCategory',
+      title: <div style={{ textAlign: "center" }}>Category</div>,
+      dataIndex: 'paymentTermsCategory',
       responsive: ['sm'],
       filters: [
         {
@@ -159,30 +159,33 @@ export function PaymentTermsGrid(
         },
       ],
       filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-        return record.paymentTermsCategory == value;
-      },
+      onFilter: (value, record) => record.paymentTermsCategory === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+          <Checkbox
+            checked={selectedKeys.includes(PaymentTermsCategory.Vendor)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(PaymentTermsCategory.Vendor) ? [] : [PaymentTermsCategory.Vendor])}
+          >
+            <span>Vendor</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(PaymentTermsCategory.Customer)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(PaymentTermsCategory.Customer) ? [] : [PaymentTermsCategory.Customer])}
+          >
+            <span >Customer</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns">
+            <Button onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          </div>
+        </div>
+      ),
     },
-    // {
-    //   title: 'Category',
-    //   dataIndex: 'paymentTermsCategory',
-    //   responsive: ['sm'],
-    //   filters: [
-    //     {
-    //       text: 'Customer',
-    //       value: PaymentTermsCategory.Customer, // Assuming PaymentTermsCategory.Customer is a string
-    //     },
-    //     {
-    //       text: 'Vendor',
-    //       value: PaymentTermsCategory.Vendor , // Assuming PaymentTermsCategory.Vendor is a string
-    //     },
-    //   ],
-    //   filterMultiple: false,
-    //   onFilter: (value, record) => {
-    //     return record['paymentTermsCategory'] === value; // Use === for strict equality
-    //   },
-    //       },
+    
     {
       title: <div style={{textAlign:"center"}}>Payment Term Name</div>,
       dataIndex: 'paymentTermsName',
@@ -210,12 +213,40 @@ export function PaymentTermsGrid(
           value: false,
         },
       ],
+      // filterMultiple: false,
+      // onFilter: (value, record) => 
+      // {
+      //   // === is not work
+      //   return record.isActive === value;
+      // },
       filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-        // === is not work
-        return record.isActive === value;
-      },
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{color:'green'}}>Active</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{color:'red'}}>Inactive</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns" >
+          <Button  onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          
+          </div>
+        </div>
+      ),
+
       
     },
     {
