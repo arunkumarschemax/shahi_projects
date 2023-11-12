@@ -470,7 +470,7 @@ const cancelOrder =(val:any) =>{
                       className={'editSamplTypeIcon'}
                       type="edit"
                       onClick={() => {
-                        console.log(rowData, '---------rowdaatta')
+                        // console.log(rowData, '---------rowdaatta')
                         openFormWithData(rowData.fg_item_id)
                       }}
                       style={{ color: '#1890ff', fontSize: '14px' }}
