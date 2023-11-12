@@ -1,5 +1,5 @@
 import { PurchaseOrderservice, StyleService } from "@project-management-system/shared-services";
-import { Button, Card, Col, DatePicker, Form, Row, Segmented, Select, Space, Tabs, message } from "antd"
+import { Button, Card, Col, DatePicker, Form, Input, Row, Segmented, Select, Space, Tabs, message } from "antd"
 import TabPane from "antd/es/tabs/TabPane";
 import { useState, useEffect } from "react";
 import PurchaseOrderfabricForm from "./purchase-order-fabric";
@@ -82,10 +82,11 @@ export const PurchaseOrderForm =()=>{
     
 return(
     <>
-    <Card title='Purchase Order' className="card-header">
+    <Card title='Purchase Order' className="card-header" extra={<span>{'IndntCode'}</span>}>
         <Form form={poForm} layout="vertical">
             <Row gutter={8}>
              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
+                <Form.Item name={'indentId'} hidden><Input></Input></Form.Item>
                     <Form.Item name='styleId' label='Style' rules={[{required:true,message:'Style is required'}]}>
                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Style'>
                             {style.map(e => {

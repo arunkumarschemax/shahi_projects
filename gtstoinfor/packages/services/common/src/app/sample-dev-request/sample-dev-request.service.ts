@@ -309,7 +309,7 @@ export class SampleRequestService {
   async getSampleRequestReport(): Promise<CommonResponseModel> {
     const manager = this.dataSource;
     let rawData
-     rawData = 'SELECT sr.sample_request_id, sr.request_no AS requestNo, sr.m3_style_no, sb.rm_item_id, ri.item_code, sb.required_quantity, sb.assigned_quantity,sb.colour_id,co.colour  FROM sample_request sr LEFT JOIN sampling_bom sb ON sb.sample_request_id = sr.sample_request_id LEFT JOIN rm_items ri ON ri.rm_item_id LEFT JOIN `colour` co ON co.colour_id = sb.colour_id = sb.rm_item_id';
+     rawData = 'SELECT sr.sample_request_id, sr.request_no AS requestNo, sr.m3_style_no, sb.rm_item_id, ri.item_code, sb.required_quantity,sb.created_at, sb.assigned_quantity,sb.colour_id,co.colour,st.style  FROM sample_request sr LEFT JOIN sampling_bom sb ON sb.sample_request_id = sr.sample_request_id LEFT JOIN rm_items ri ON ri.rm_item_id LEFT JOIN `colour` co ON co.colour_id = sb.colour_id = sb.rm_item_id LEFT JOIN `style` st ON st.style_id = sr.style_id';
      const rmData = await manager.query(rawData);
     if (rmData.length > 0) {
       const groupedData = rmData.reduce((result, item) => {
@@ -331,6 +331,8 @@ export class SampleRequestService {
             consumption: item.required_quantity,
             quantity: item.assigned_quantity,
             color: item.colour ,
+            style:item.style,
+            date:item.created_at,
           }
           
         );
@@ -342,6 +344,77 @@ export class SampleRequestService {
     }
   
     return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
+  }
+
+
+  async getM3StyleCode(): Promise<CommonResponseModel> {
+    const manager = this.dataSource;
+    let rawData
+     rawData = ' SELECT m3_style_code AS m3StyleCode ,m3_style_id AS m3StyleId FROM `m3_style` WHERE is_active=1';
+     const rmData = await manager.query(rawData);
+     if(rmData){
+      return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(rmData));
+      
+     }else{
+      return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
+
+     }
+  
+  }
+  async getSampleInventory(): Promise<CommonResponseModel> {
+    const inventoryData=this.dataSource
+    let rawDatas
+    rawDatas=`SELECT  b.buyer_name,
+    s.style as style,
+    c.colour AS color,
+    sb.colour_id,
+    sr.request_no as requestNumber,
+    sr.location_id as location,
+    pg.product_group as productGroup,
+    sb.required_quantity AS orderQuantity,
+    sb.received_quantity AS preparedQuantity,
+    i.item_name AS item,
+    CONCAT(
+        a.state, 
+        '-',
+        IF(a.district IS NULL, '', a.district),
+        IF(a.district IS NULL OR a.city IS NULL, '', '-'),
+        IF(a.city IS NULL, '', a.city),
+        IF(a.landmark IS NULL OR a.city IS NULL, '', '-'),
+        IF(a.landmark IS NULL, '', a.landmark),
+        IF(a.lane1 IS NULL OR a.landmark IS NULL, '', '-'),
+        IF(a.lane1 IS NULL, '', a.lane1),
+        IF(a.lane2 IS NULL OR a.lane1 IS NULL, '', '-'),
+        IF(a.lane2 IS NULL, '', a.lane2),
+        IF(a.pincode IS NULL OR a.lane2 IS NULL, '', '-'),
+        IF(a.pincode IS NULL, '', a.pincode)
+    ) AS billingAddress
+FROM 
+    sampling_bom sb
+LEFT JOIN 
+    sample_request sre ON sb.sample_request_id = sre.sample_request_id
+LEFT JOIN 
+    colour c ON c.colour_id = sb.colour_id
+LEFT JOIN 
+    sample_request sr ON sr.sample_request_id = sb.sample_request_id
+LEFT JOIN 
+    product_group pg ON pg.product_group_id = sb.product_group_id
+LEFT JOIN 
+    items i ON i.item_id = sb.rm_item_id
+LEFT JOIN 
+    style s ON s.style_id = sre.style_id
+LEFT JOIN 
+    address a ON a.buyer_id = sre.buyer_id
+LEFT JOIN 
+    buyers b ON b.buyer_id = sre.buyer_id`;
+
+
+    const result = await inventoryData.query(rawDatas)
+  if(result){
+    return new CommonResponseModel(true,1,'data retrived sucessfully',result)
+}else{
+    return new CommonResponseModel(false,0,'no data found',[])
+}
   }
   
 }

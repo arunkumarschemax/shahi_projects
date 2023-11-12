@@ -9,6 +9,13 @@ export class MaterialTrimEntity {
   })
   materialTrimId:number;
 
+  @Column("varchar",{
+    nullable: true,
+    length:30,
+    name:"trim_code"
+    })
+  trimCode:string;
+
   @Column('varchar',{
     nullable:false,
     name:'description',
@@ -38,7 +45,7 @@ export class MaterialTrimEntity {
       nullable:false,
       name:'uom_id'
       })
-      uomId:number;
+      consumptionUomId:number;
 
     @Column('int',{
       nullable:false,

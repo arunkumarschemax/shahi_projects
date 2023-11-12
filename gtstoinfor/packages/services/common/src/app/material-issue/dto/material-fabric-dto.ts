@@ -21,7 +21,7 @@ export class MaterialFabricDto{
     consumptionUom:string;
 
     @ApiProperty()
-    uomId:number;
+    consumptionUomId:number;
 
     @ApiProperty()
     issuedQuantity: number
@@ -43,32 +43,4 @@ export class MaterialFabricDto{
 
     @ApiProperty()
     createdUser: string | null;
-
-    constructor(
-        materialFabricId:number,
-        fabricCode:string,
-        description:string,
-        colorId: number,
-        consumption:number,
-        consumptionUom:string,
-        issuedQuantity: number,
-        issuedQuantityUom: string,
-        remarks:string,
-        status: MaterialFabricEnum,
-        createdAt: Date,
-        createdUser: string | null,
-    ){
-        this.materialFabricId = materialFabricId
-        this.fabricCode = fabricCode
-        this.description = description
-        this.colorId = colorId
-        this.consumption = consumption
-        this.consumptionUom = consumptionUom
-        this.issuedQuantity = issuedQuantity
-        this.issuedQuantityUom = issuedQuantityUom
-        this.remarks = remarks
-        this.status = status
-        this.createdAt = createdAt
-        this.createdUser = createdUser
-    }
 }

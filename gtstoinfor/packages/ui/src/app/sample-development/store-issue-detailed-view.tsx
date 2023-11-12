@@ -45,20 +45,16 @@ export const StoreIssueDetailed = () => {
   const [uomData, setUomData] = useState<any[]>([])
   const uomService = new UomService()
   const {Option}  =Select
+  const [form] = Form.useForm()
+  const [selectedUom, setSelectedUom] = useState(null);
+
 
 
 
   useEffect(() => {
     getData();
     getUom()
-  }, []);
-
-  // const getSampleDevById = () => {
-  //     service.getSampleDevById(req).then(res => {
-  //       if(res){
-  //         setId(res)
-  //       }
-  //     
+  }, []); 
   
   const getUom = () => {
     uomService.getAllActiveUoms().then(res => {
@@ -68,45 +64,12 @@ export const StoreIssueDetailed = () => {
 
   const customIssueDate = new Date("2023-11-07T07:23:49.140Z");
 
-  // Format the date as 'YYYY-MM-DD'
   const formattedIssueDate = customIssueDate.toISOString().split("T")[0];
 
   const saveData = () => {
-    formRef.validateFields().then(values=>{
-      console.log(values,"values")
-    })
-    const req = new MaterialIssueDto(
-      rowData?.[0]?.requestNo,
-      formattedIssueDate,
-      rowData?.[0]?.location_id,
-      rowData?.[0]?.profit_control_head_id,
-      rowData?.[0]?.buyer_id,
-      rowData?.[0]?.sample_type_id,
-      rowData?.[0]?.sample_sub_type_id,
-      rowData?.[0]?.styleId,
-      rowData?.[0]?.s_style,
-      rowData?.[0]?.brand_id,
-      rowData?.[0]?.dmm_id,
-      rowData?.[0]?.technician_id,
-      rowData?.[0]?.sr_description,
-      rowData?.[0]?.costRef,
-      rowData?.[0]?.m3StyleNo,
-      rowData?.[0]?.sr_contact,
-      rowData?.[0]?.sr_extension,
-      rowData?.[0]?.samValue,
-      rowData?.[0]?.sr_product,
-      rowData?.[0]?.sr_type,
-      rowData?.[0]?.sr_conversion,
-      rowData?.[0]?.madeIn,
-      rowData?.[0]?.sr_remarks,
-      fabricData,
-      trimData,
-      0,
-      "",
-      "",
-      undefined,
-      ""
-    );
+    const req = new MaterialIssueDto(rowData?.[0]?.requestNo,formattedIssueDate,rowData?.[0]?.location_id,rowData?.[0]?.profit_control_head_id,rowData?.[0]?.buyer_id,rowData?.[0]?.sample_type_id,rowData?.[0]?.sample_sub_type_id,rowData?.[0]?.style_id,rowData?.[0]?.style,rowData?.[0]?.brand_id,rowData?.[0]?.dmm_id,rowData?.[0]?.technician_id,rowData?.[0]?.description,rowData?.[0]?.costRef,rowData?.[0]?.m3StyleNo,rowData?.[0]?.contact,rowData?.[0]?.extension,rowData?.[0]?.samValue,rowData?.[0]?.product,rowData?.[0]?.type,rowData?.[0]?.conversion,rowData?.[0]?.madeIn,rowData?.[0]?.remarks,fabricData,trimData,0,"","",undefined,"");
+    console.log(req,'====')
+    if (fabricData.length > 0) {
     materialIssue.createMaterialIssue(req).then((res) => {
       if (res.status) {
         AlertMessages.getSuccessMessage(res.internalMessage);
@@ -114,6 +77,9 @@ export const StoreIssueDetailed = () => {
         AlertMessages.getErrorMessage(res.internalMessage);
       }
     });
+  }else{
+    AlertMessages.getErrorMessage('Please Issue the Quantity')
+  }
   };
 
   const getData = () => {
@@ -128,20 +94,65 @@ export const StoreIssueDetailed = () => {
     });
   };
 
-  const [formData, setFormData] = useState({
-    materialIssueId: 0, // Initialize with appropriate values
-    issuedQuantity: 0, // Initialize with appropriate values
-    // Add other form fields with their initial values
-  });
+  const trimDataInfo = (e,index,rowData) =>{
+    if(e.target.value != ''){
+      const iniIndex = trimData.findIndex(e => e.fabricCode === rowData.fabric_code)
+      if(iniIndex != -1){
+        trimData[index].issuedQuantity = e.target.value
+      }else{
+        const req = new MaterialTrimDto(rowData.trimCode,rowData.trim_description,rowData.trim_consumption,rowData.uomId,e.target.value,form.getFieldValue('issuedUomId'),rowData.tri_remarks,undefined,'','','',0,0)
+        setTrimData([...trimData,req])
+      }
+
+  }
+}
+  const fabricDataInfo = (e,index,rowData) =>{
+    console.log(selectedUom,'====')
+    if(e.target.value != ''){
+      const iniIndex = fabricData.findIndex(e => e.fabricCode === rowData.fabric_code)
+      if(iniIndex != -1){
+        fabricData[index].issuedQuantity = e.target.value
+      } else{
+        const req = new MaterialFabricDto(rowData.fabric_code,rowData.fabric_description,rowData.colour_id,rowData.fabric_consumption,rowData.uomId,e.target.value,selectedUom,rowData.fab_remarks,undefined,'','','',0)
+        setFabricData([...fabricData,req])
+        console.log(req,'_______________________')
+      }
+    }
+  }
 
   const onUpdate = () => {
     //  navigate('/sample-development/sample-requests', { state: { id: data[0]?.settingsId } })
     navigate("/sample-development/sample-requests");
   };
 
-  const issuedInfo = (e, index, record) => {
-    setCreateData(e.target.value);
+  // const issuedInfo = (e, index, record) => {
+  //   setCreateData(e.target.value);
+  // };
+
+  // const handleUomChange = (value, index, recordKey) => {
+  //   console.log(`UOM changed for record ${recordKey} to ${value}`);
+  //   // Set the state with the updated UOM value
+  //     setSelectedUom((prevState) => {
+  //     const updatedUoms = [...prevState.uoms];
+  //     updatedUoms[index] = { ...updatedUoms[index], issuedUomId: value };
+  //     return { ...prevState, uoms: updatedUoms };
+  //   });
+  // };
+
+  const handleUomChange = (value, index, key) => {
+    // Update the state with the selected UOM value
+    setSelectedUom((prevSelectedUomId) => ({
+      ...prevSelectedUomId,
+      [key]: value,
+    }));
+
+    // Your other logic goes here, if needed
+
+    // Logging the selected UOM value to the console
+    console.log(`Selected UOM for key ${key}: ${value}`);
   };
+  
+  
 
   const columnsSkelton = [
     {
@@ -174,16 +185,17 @@ export const StoreIssueDetailed = () => {
     {
       title: "Issued Quantity",
       dataIndex: "issuingQuantity",
-      render: (value, row, index) => {
+      render: (text, row, index) => {
         return (
           <>
-            <Form.Item name={"issuingQuantity" + index}>
-              <Input
-                key={row.id}
-                placeholder="Issued Quantity"
-                value={value}
-              />
-            </Form.Item>
+          {/* <Form.Item name={"issuingQuantity" + index}> */}
+            <Input
+              key={row.materialFabricId}
+              placeholder="Issued Quantity"
+              onChange={e=> fabricDataInfo(e,index,row)}
+              // value={formData.issuedQuantity}
+            />
+            {/* </Form.Item> */}
           </>
         );
       },
@@ -191,26 +203,24 @@ export const StoreIssueDetailed = () => {
     {
       title: 'Uom',
       dataIndex: 'issuedUomId',
-      render: (text,record,index) => (
-          <Form.Item name={"issuedUomId" + index}>
-          <Select
-          // value={reportedUom}
-          // onChange={(val) => reportedUomId(val, index, record)}
+      render: (_,record,index) => (
+        <Form.Item name={`issuedUomId${record.key}`}>
+        <Select
+          onChange={(value) => handleUomChange(value,index,record.key)}
           allowClear
           style={{ width: "100%" }}
           showSearch
           optionFilterProp="children"
           placeholder="Select UOM"
-      >
-          {uomData?.map((e) => {
-              return (
-                  <Option key={e.uomId} value={e.uomId}>
-                      {e.uom}
-                  </Option>
-              );
-          })}
-      </Select>
+        >
+          {uomData?.map((e) => (
+            <Option key={e.uomId} value={e.uomId}>
+              {e.uom}
+            </Option>
+          ))}
+        </Select>
       </Form.Item>
+      
         ),
     },
     {
@@ -236,16 +246,17 @@ export const StoreIssueDetailed = () => {
     {
       title: "Issued Quantity",
       dataIndex: "issuingQuantity",
-      render: (value, row, index) => {
+      render: (text, row, index) => {
         return (
           <>
-          <Form.Item name={"issuingQuantity" + index}>
+          {/* <Form.Item name={"issuingQuantity" + index}> */}
             <Input
-              key={index}
+              key={row.materialTrimId}
               placeholder="Issued Quantity"
+              onChange={e=> trimDataInfo(e,index,row)}
               // value={formData.issuedQuantity}
             />
-            </Form.Item>
+            {/* </Form.Item> */}
           </>
         );
       },
@@ -273,7 +284,7 @@ export const StoreIssueDetailed = () => {
           })}
       </Select>
       </Form.Item>
-        ),
+      ),
     },
     {
       title: "Remarks",
@@ -292,65 +303,27 @@ export const StoreIssueDetailed = () => {
       }
     >
       <Descriptions size="small">
-        <DescriptionsItem label="Location">
-          {rowData?.[0]?.locationName}
-        </DescriptionsItem>
+        <DescriptionsItem label="Location">{rowData?.[0]?.locationName}</DescriptionsItem>
         <DescriptionsItem label="PCH">{rowData?.[0]?.pch}</DescriptionsItem>
-        <DescriptionsItem label="User">
-          {rowData?.[0]?.user}
-        </DescriptionsItem>
-        <DescriptionsItem label="Buyer">
-          {rowData?.[0]?.buyerName}
-        </DescriptionsItem>
-        <DescriptionsItem label="Sample Type">
-          {rowData?.[0]?.sampleType}
-        </DescriptionsItem>
-        <DescriptionsItem label="Sample Sub Type">
-          {rowData?.[0]?.sampleSubType}
-        </DescriptionsItem>
-        <DescriptionsItem label="Style">
-          {rowData?.[0]?.style}
-        </DescriptionsItem>
-        <DescriptionsItem label="Description">
-          {rowData?.[0]?.description}
-        </DescriptionsItem>
-        <DescriptionsItem label="Brand">
-          {rowData?.[0]?.brandName}
-        </DescriptionsItem>
-        <DescriptionsItem label="Cost Ref">
-          {rowData?.[0]?.costRef}
-        </DescriptionsItem>
-        <DescriptionsItem label="M3 Style No">
-          {rowData?.[0]?.m3StyleNo}
-        </DescriptionsItem>
-        <DescriptionsItem label="Contact No">
-          {rowData?.[0]?.contact}
-        </DescriptionsItem>
-        <DescriptionsItem label="Extn">
-          {rowData?.[0]?.extension}
-        </DescriptionsItem>
-        <DescriptionsItem label="SAM">
-          {rowData?.[0]?.samValue}
-        </DescriptionsItem>
+        <DescriptionsItem label="User">{rowData?.[0]?.user}</DescriptionsItem>
+        <DescriptionsItem label="Buyer">{rowData?.[0]?.buyerName}</DescriptionsItem>
+        <DescriptionsItem label="Sample Type">{rowData?.[0]?.sampleType}</DescriptionsItem>
+        <DescriptionsItem label="Sample Sub Type">{rowData?.[0]?.sampleSubType}</DescriptionsItem>
+        <DescriptionsItem label="Style">{rowData?.[0]?.style}</DescriptionsItem>
+        <DescriptionsItem label="Description">{rowData?.[0]?.description}</DescriptionsItem>
+        <DescriptionsItem label="Brand">{rowData?.[0]?.brandName}</DescriptionsItem>
+        <DescriptionsItem label="Cost Ref">{rowData?.[0]?.costRef}</DescriptionsItem>
+        <DescriptionsItem label="M3 Style No">{rowData?.[0]?.m3StyleNo}</DescriptionsItem>
+        <DescriptionsItem label="Contact No">{rowData?.[0]?.contact}</DescriptionsItem>
+        <DescriptionsItem label="Extn">{rowData?.[0]?.extension}</DescriptionsItem>
+        <DescriptionsItem label="SAM">{rowData?.[0]?.samValue}</DescriptionsItem>
         <DescriptionsItem label="DMM">{rowData?.[0]?.dmmName}</DescriptionsItem>
-        <DescriptionsItem label="Technician">
-          {rowData?.[0]?.techName}
-        </DescriptionsItem>
-        <DescriptionsItem label="Product">
-          {rowData?.[0]?.product}
-        </DescriptionsItem>
-        <DescriptionsItem label="Type">
-          {rowData?.[0]?.type}
-        </DescriptionsItem>
-        <DescriptionsItem label="Conversion">
-          {rowData?.[0]?.conversion}
-        </DescriptionsItem>
-        <DescriptionsItem label="Made In">
-          {rowData?.[0]?.madeIn}
-        </DescriptionsItem>
-        <DescriptionsItem label="Remarks">
-          {rowData?.[0]?.remarks}
-        </DescriptionsItem>
+        <DescriptionsItem label="Technician">{rowData?.[0]?.techName}</DescriptionsItem>
+        <DescriptionsItem label="Product">{rowData?.[0]?.product}</DescriptionsItem>
+        <DescriptionsItem label="Type">{rowData?.[0]?.type}</DescriptionsItem>
+        <DescriptionsItem label="Conversion">{rowData?.[0]?.conversion}</DescriptionsItem>
+        <DescriptionsItem label="Made In">{rowData?.[0]?.madeIn}</DescriptionsItem>
+        <DescriptionsItem label="Remarks">{rowData?.[0]?.remarks}</DescriptionsItem>
       </Descriptions>
 
       <Tabs type={"card"} tabPosition={"top"}>

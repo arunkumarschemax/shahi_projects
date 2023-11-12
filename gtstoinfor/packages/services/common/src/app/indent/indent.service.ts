@@ -42,7 +42,18 @@ export class IndentService{
 
     async getAllIndentData(): Promise<CommonResponseModel> {
         const data = await this.indentRepo.find({relations: ['iFabricInfo', 'iTrimsInfo']});
+        // const data = await this.indentRepo.getAllData();
         return new CommonResponseModel(true, 1235, 'Data retrieved Successfully',data);
+    }
+
+    async getIndentnumbers():Promise<CommonResponseModel>{
+        const data = 'select indent_id as indenyId ,request_no as indentCode from indent'
+        const result= await this.indentRepo.query(data)
+        if(result){
+            return new CommonResponseModel(true,1,'data retived sucessfully',result)
+        }else{
+            return new CommonResponseModel(false,0,'no data found',[])
+        }
     }
     
     async getIndentData( ): Promise<CommonResponseModel> {

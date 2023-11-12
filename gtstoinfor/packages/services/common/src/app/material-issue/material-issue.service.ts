@@ -92,7 +92,7 @@ export class MaterialIssueService {
                 fabricEntity.colorId = fabric.colorId
                 fabricEntity.consumption = fabric.consumption
                 fabricEntity.consumptionUom = fabric.consumptionUom
-                fabricEntity.uomId = fabric.uomId
+                fabricEntity.consumptionUomId = fabric.consumptionUomId
                 fabricEntity.issuedQuantity = fabric.issuedQuantity
                 fabricEntity.issuedQuantityUom = fabric.issuedQuantityUom
                 fabricEntity.issuedUomId = fabric.issuedUomId
@@ -104,10 +104,11 @@ export class MaterialIssueService {
             issueData.fabric = fabricInfo
             for (const trim of req?.trimInfo) {
                 const trimEntity = new MaterialTrimEntity()
+                trimEntity.trimCode = trim.trimCode
                 trimEntity.description = trim.description
                 trimEntity.colorId = trim.colorId
                 trimEntity.consumption = trim.consumption
-                trimEntity.uomId = trim.uomId
+                trimEntity.consumptionUomId = trim.consumptionUomId
                 trimEntity.consumptionUom = trim.consumptionUom
                 trimEntity.issuedQuantity = trim.issuedQuantity
                 trimEntity.issuedQuantityUom = trim.issuedQuantityUom

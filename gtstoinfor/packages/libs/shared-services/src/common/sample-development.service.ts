@@ -117,6 +117,14 @@ export class SampleDevelopmentService extends CommonAxiosService {
   async getTrimCodeAgainstTrimType(req:ProductGroupReq): Promise<UploadResponse> {
     return await this.axiosPostCall(this.URL + '/getTrimCodeAgainstTrimType',req);
   }
+  async getM3StyleCode(): Promise<UploadResponse> {
+    return await this.axiosPostCall(this.URL + '/getM3StyleCode');
+  }
+
+  async getSampleInventory(req?: SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
+    console.log(req, 'shared service')
+    return this.axiosPostCall(this.URL + "/getSampleInventory", req)
+  }
 
   
 

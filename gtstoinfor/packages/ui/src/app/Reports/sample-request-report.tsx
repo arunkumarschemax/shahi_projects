@@ -1,5 +1,6 @@
 import { SampleDevelopmentService } from '@project-management-system/shared-services';
 import { Card, Table } from 'antd'
+import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 
 const SampleRequestReport = () => {
@@ -31,15 +32,59 @@ const SampleRequestReport = () => {
             
         },
         {
-            title:"Style",
-            dataIndex:"m3_style_no"
-            
+          title:<div style={{ textAlign: 'center' }}>Style</div> ,
+          dataIndex: "sm",
+          key: "sm",
+          align:'center',
+          render: (sm,text) => {
+            renderCellData(text)
+            return (
+              <Table
+                dataSource={sm}
+                columns={[
+                  {
+                    dataIndex: "style",
+                    key: "style", align:'center',
+                  },
+                 
+                ]}
+                pagination={false}
+              />
+            );
+          }
         },
+ 
+        // {
+        //     title:"Date",
+        //     dataIndex:""
+            
+        // },
         {
-            title:"Date",
-            dataIndex:""
-            
+          title: <div style={{ textAlign: 'center' }}>Date</div>,
+          dataIndex: "sm",
+          key: "sm",
+          align: 'center',
+          render: (sm, record) => {
+            return (
+              <>
+                {record.date ? moment(record.date).format("YYYY-MM-DD") : null}
+                <Table
+                  dataSource={sm}
+                  columns={[
+                    {
+                      dataIndex: "date",
+                      key: "date",
+                      align: 'center',
+                    }
+                  ]}
+                  pagination={false}
+                />
+              </>
+            );
+          }
         },
+        
+
         {
                 title:<div style={{ textAlign: 'center' }}>Item</div> ,
                 dataIndex: "sm",
@@ -141,7 +186,7 @@ const SampleRequestReport = () => {
 
   return (
     <div>
-        <Card title={<span>SAMPLE REQUEST REPORT</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }}
+        <Card title={<span>Material Requisition</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }}
         className="card-header">
         <Table columns={Columns}  
         dataSource={data}
