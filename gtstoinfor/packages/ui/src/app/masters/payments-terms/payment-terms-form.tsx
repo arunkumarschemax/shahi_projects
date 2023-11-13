@@ -124,10 +124,7 @@ export function PaymentTermsForm(props:PaymentTermsFormProps) {
               required: true,
               message:"Enter valid payment term name."
             },
-            {
-              pattern: /^[a-zA-Z0-9]+[a-zA-Z0-9_\-\s()]*$/,
-              message: `Should contain only alphabets and numbers.`
-            }
+           
           ]}
         >
           <Input placeholder='Enter Payment Term Name' />
@@ -141,11 +138,11 @@ export function PaymentTermsForm(props:PaymentTermsFormProps) {
             <Button type="primary" disabled={disable} htmlType="submit" >
             Submit
           </Button>
-          {(props.isUpdate === false) &&
+          {/* {(props.isUpdate === false) && */}
      <Button htmlType="button" style={{ margin: '0 8px' }} onClick={onReset}>
             Reset
           </Button>
-           } 
+           {/* }  */}
          
           </Col>
           

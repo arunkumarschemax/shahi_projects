@@ -469,6 +469,10 @@ export function BuyersForm(props: BuyersFormProps) {
                               {
                                 required: true, message: 'Missing state',
                               },
+                              {
+                                pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                message: `Should contain only alphabets.`
+                              }
                             ]}
                           >
                             <Input placeholder='Enter State'/>
@@ -476,11 +480,15 @@ export function BuyersForm(props: BuyersFormProps) {
                         </Col>
                         <Col>
                         <Form.Item {...field} label='District' name={[field.name, 'district']} fieldKey={[field.key, 'district']}
-                          // rules={[
-                          //   {
-                          //     required: true, message: 'Missing district',
-                          //   },
-                          // ]}
+                          rules={[
+                            // {
+                            //   required: true, message: 'Missing district',
+                            // },
+                            {
+                              pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                              message: `Should contain only alphabets.`
+                            }
+                          ]}
                         >
                           <Input placeholder='Enter District'/>
                         </Form.Item>
@@ -491,6 +499,10 @@ export function BuyersForm(props: BuyersFormProps) {
                             {
                               required: true, message: 'Missing city',
                             },
+                            {
+                              pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                              message: `Should contain only alphabets.`
+                            }
                           ]}
                         >
                           <Input placeholder='Enter City'/>
@@ -551,11 +563,11 @@ export function BuyersForm(props: BuyersFormProps) {
               </Col>
             </Row>
             <Row  gutter={24} justify={'end'}>
-            { props.isUpdate === false && 
-            
-              <Col xs={{ span: 6 }} sm={{ span: 6}} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button onClick={onReset}>Reset</Button></Col>
-            }
               <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span:2  }}><Button type='primary' htmlType='submit'>Submit</Button></Col>
+              { props.isUpdate === false && 
+            
+            <Col xs={{ span: 6 }} sm={{ span: 6}} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button onClick={onReset}>Reset</Button></Col>
+          }
             </Row>
         </Form>
       </Card>

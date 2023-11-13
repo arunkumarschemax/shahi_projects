@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Alert, Space } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Alert, Space, message, Checkbox } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
@@ -68,9 +68,9 @@ export function ProcurmentGroupGrid(
     procurmentGroupService.activateOrDeactivateProcurmentGroup(ProcurmentGroupData).then(res => {console.log(res);
     if(res.status){
       getAllProcurmentGroupData();
-      AlertMessages.getSuccessMessage('Success');
+      message.success(res.internalMessage, 2);
     }else {
-      AlertMessages.getErrorMessage(res.internalMessage);
+      message.error(res.internalMessage, 2);
 
     }
     }).catch(err => {
@@ -184,46 +184,56 @@ export function ProcurmentGroupGrid(
       },
       
       {
-        title: "Procurment Group Name",
+        title: <div style={{textAlign:'center'}}>Procurement Group Name</div>,
         dataIndex: "procurmentGroup",
         sorter: (a, b) => a.procurmentGroup.localeCompare(b.procurmentGroup),
         sortDirections: ["ascend", "descend"],
         ...getColumnSearchProps("procurmentGroup"),
       },
-     
       {
         title: 'Status',
         dataIndex: 'isActive',
+        align:'center',
         ...getColumnSearchProps('isActive'),
         sorter: (a, b) => a.ProcurmentGroupCode.localeCompare(b.ProcurmentGroupCode),
         sortDirections: ["ascend", "descend"],
         render: (isActive, rowData) => (
           <>
             {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
-            
           </>
         ),
-        // filters: [
-        //   {
-        //     text: 'Active',
-        //     value: true,
-        //   },
-        //   {
-        //     text: 'InActive',
-        //     value: false,
-        //   },
-        // ],
-        // filterMultiple: false,
-        // onFilter: (value, record) => 
-        // {
-        //   // === is not work
-        //   return record.isActive === value;
-        // },
+        onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+            <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+              <Checkbox
+                checked={selectedKeys.includes(true)}
+                onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+              >
+                <span style={{color:'green'}}>Active</span>
+              </Checkbox>
+              <Checkbox
+                checked={selectedKeys.includes(false)}
+                onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+              >
+                <span style={{color:'red'}}>Inactive</span>
+              </Checkbox>
+              <div className="custom-filter-dropdown-btns" >
+              <Button  onClick={() => clearFilters()} className="custom-reset-button">
+                  Reset
+                </Button>
+                <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+                  OK
+                </Button>
+              
+              </div>
+            </div>
+          )
         
       },
       {
         title: `Action`,
         dataIndex: "action",
+        align:'center',
         render: (text, rowData) => (
           <span>
             {rowData.isActive ? (
@@ -245,8 +255,8 @@ export function ProcurmentGroupGrid(
               }}
               title={
                 rowData.isActive
-                  ? "Are you sure to Deactivate Location ?"
-                  : "Are you sure to Activate Location ?"
+                  ? "Are you sure to Deactivate Procurement Group ?"
+                  : "Are you sure to Activate Procurement Group ?"
               }
             >
               <Switch
@@ -277,7 +287,7 @@ export function ProcurmentGroupGrid(
   } 
 
   return (
-    <Card title='ProcurmentGroup' 
+    <Card title='Procurement Groups' 
     extra={<span><Button onClick={() => navigate('/masters/pocurmentGroup/pocurmentGroup-form')} type={'primary'}>New</Button></span>}
     >
 
@@ -285,7 +295,7 @@ export function ProcurmentGroupGrid(
      <Row gutter={24} >
       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
 
-          <Card title={'Total ProcurmentGroup: ' + ProcurmentGroupData.length} style={{textAlign: 'left', height: 41,backgroundColor:'#bfbfbf'}}></Card>
+          <Card title={'Total Procurement Groups: ' + ProcurmentGroupData.length} style={{textAlign: 'left', height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           
           {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>

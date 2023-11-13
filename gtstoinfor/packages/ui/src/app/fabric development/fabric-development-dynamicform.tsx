@@ -570,8 +570,6 @@ export const FabricDevelopmentDynamicForm = (
             </Button> */}
               <Button
                 type="default"
-                danger
-                icon={<UndoOutlined />}
                 onClick={onReset}
                 style={{ marginTop: 100, marginLeft: 40 }}
               >

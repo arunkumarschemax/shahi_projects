@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Alert, Space } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Alert, Space, Checkbox } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
@@ -48,9 +48,7 @@ export function SampleSubTypesGrid(
   }
 
   const updateSampleSubType = (Data:SampleSubTypesDTO) => {
-    console.log(Data,"rrrrrrrrrrr")
     Service.updateSampleSubType(Data).then(res => {
-      console.log(res,"================");
       if(res.status){
         getAllSampleSubTypeData();
         setDrawerVisible(false);
@@ -182,14 +180,14 @@ export function SampleSubTypesGrid(
       render: (text, object, index) => (page-1) * 10 +(index+1)
       },
       {
-        title: "Sample Type",
+        title:<div style={{textAlign:'center'}}>Sample Types</div>,
         dataIndex: "sampleType",
         // sorter: (a, b) => a.sampleType.localeCompare(b.sampleType),
         // sortDirections: ["ascend", "descend"],
         ...getColumnSearchProps("sampleType"),
       },
       {
-        title: "Sample Sub Type",
+        title:<div style={{textAlign:'center'}}>Sample SubType</div>,
         dataIndex: "sampleSubType",
         // sorter: (a, b) => a.sampleSubType.localeCompare(b.sampleSubType),
         // sortDirections: ["ascend", "descend"],
@@ -198,37 +196,60 @@ export function SampleSubTypesGrid(
    
       {
         title: 'Status',
-        dataIndex: 'isActive',
-        ...getColumnSearchProps('isActive'),
-        // sorter: (a, b) => a.isActive.localeCompare(b.isActive),
-        // sortDirections: ["ascend", "descend"],
+        dataIndex: 'isActive',align:'center',
+          width:'80px',
         render: (isActive, rowData) => (
           <>
-            {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
-            
+            {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
           </>
         ),
-        // filters: [
-        //   {
-        //     text: 'Active',
-        //     value: true,
-        //   },
-        //   {
-        //     text: 'InActive',
-        //     value: false,
-        //   },
-        // ],
-        // filterMultiple: false,
-        // onFilter: (value, record) => 
-        // {
+        filters: [
+          {
+            text: 'Active',
+            value: true,
+          },
+          {
+            text: 'InActive',
+            value: false,
+          },
+        ],
+        filterMultiple: false,
+        // onFilter: (value, record) => {
         //   // === is not work
         //   return record.isActive === value;
         // },
-        
+        onFilter: (value, record) => record.isActive === value,
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+          <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+            <Checkbox
+              checked={selectedKeys.includes(true)}
+              onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+            >
+              <span style={{color:'green'}}>Active</span>
+            </Checkbox>
+            <Checkbox
+              checked={selectedKeys.includes(false)}
+              onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+            >
+              <span style={{color:'red'}}>Inactive</span>
+            </Checkbox>
+            <div className="custom-filter-dropdown-btns" >
+            <Button  onClick={() => clearFilters()} className="custom-reset-button">
+                Reset
+              </Button>
+              <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+                OK
+              </Button>
+            
+            </div>
+          </div>
+        ),
+  
       },
       
       {
         title:`Action`,
+        align:'center',
         dataIndex: 'action',
         render: (text, rowData) => (
           <span>         

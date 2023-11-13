@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space, Checkbox } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
 import Highlighter from 'react-highlight-words';
@@ -157,7 +157,7 @@ export function FabricStructuresGrid(props: FabricStructuresGridProps) {
     //   dataIndex:'FabricStructureId',
     // },
     {
-      title: 'Fabric Structure',
+      title: <div style={{textAlign:'center'}}>Fabric Structure</div>,
       dataIndex: 'fabricStructure',
       //  responsive: ['lg'],
        sorter: (a, b) => a.fabricStructure.localeCompare(b.fabricStructure),
@@ -167,6 +167,7 @@ export function FabricStructuresGrid(props: FabricStructuresGridProps) {
     {
       title: 'Status',
       dataIndex: 'isActive',
+      align:'center',
       //  sortDirections: ['descend', 'ascend'],
     //    ...getColumnSearchProps('FabricStructuresName'),
       
@@ -186,15 +187,37 @@ export function FabricStructuresGrid(props: FabricStructuresGridProps) {
         },
       ],
       filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-        // === is not work
-        return record.isActive === value;
-      },
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+            <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+              <Checkbox
+                checked={selectedKeys.includes(true)}
+                onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+              >
+                <span style={{color:'green'}}>Active</span>
+              </Checkbox>
+              <Checkbox
+                checked={selectedKeys.includes(false)}
+                onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+              >
+                <span style={{color:'red'}}>Inactive</span>
+              </Checkbox>
+              <div className="custom-filter-dropdown-btns" >
+              <Button  onClick={() => clearFilters()} className="custom-reset-button">
+                  Reset
+                </Button>
+                <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+                  OK
+                </Button>
+              
+              </div>
+            </div>
+          )
       
     },
     {
       title:`Action`,
+      align:'center',
       dataIndex: 'action',
       render: (text, rowData) => (
         <span>  

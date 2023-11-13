@@ -54,7 +54,7 @@ export const BusinessAreaForm = (props:BusinessAreaFormProps) => {
     
     return(
         <>
-        <Card title={props.isUpdate ? 'Update Business Area' : 'Add Business Area'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/business-area/business-area-view')} type={'primary'}>View</Button></span>} size='small'>
+        <Card title={props.isUpdate ? 'Update Business Area' : 'Add Business Area'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/business-area/business-area-view')} type={'primary'}>View</Button></span>}>
             <Form form={form} layout="vertical" onFinish={onFinish} initialValues={props.businessAreaData}>
             <Form.Item name='businessAreaId' style={{display:'none'}}>
                         <Input disabled/>
@@ -72,11 +72,12 @@ export const BusinessAreaForm = (props:BusinessAreaFormProps) => {
                 </Col>
                 </Row>
                 <Row  gutter={24} justify={'end'}>
-            { props.isUpdate === false && 
             
-              <Col xs={{ span: 6 }} sm={{ span: 6}} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button onClick={onReset}>Reset</Button></Col>
-            }
               <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span:2  }}><Button type='primary' htmlType='submit'>Submit</Button></Col>
+              { props.isUpdate === false && 
+            
+            <Col xs={{ span: 6 }} sm={{ span: 6}} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button onClick={onReset}>Reset</Button></Col>
+          }
             </Row>
             </Form>
         </Card>

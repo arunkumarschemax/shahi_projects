@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space, Checkbox } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
 import Highlighter from 'react-highlight-words';
@@ -157,7 +157,7 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
     //   dataIndex:'deliverytermId',
     // },
     {
-      title: 'Delivery Term Name',
+      title: <div style={{textAlign:'center'}}>Delivery Term Name</div>,
       dataIndex: 'deliveryTermsName',
       //  responsive: ['lg'],
        sorter: (a, b) => a.deliveryTermsName.localeCompare(b.deliveryTermsName),
@@ -166,6 +166,7 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
     },
     {
       title: 'Status',
+      align:'center',
       dataIndex: 'isActive',
       sorter: (a, b) => a.deliveryTermsName.localeCompare(b.deliveryTermsName),
        sortDirections: ['descend', 'ascend'],
@@ -176,26 +177,48 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
         </>
       ),
-      // filters: [
-      //   {
-      //     text: 'Active',
-      //     value: true,
-      //   },
-      //   {
-      //     text: 'InActive',
-      //     value: false,
-      //   },
-      // ],
-      // filterMultiple: false,
-      // onFilter: (value, record) => 
-      // {
-      //   // === is not work
-      //   return record.isActive === value;
-      // },
+      filters: [
+        {
+          text: 'Active',
+          value: true,
+        },
+        {
+          text: 'InActive',
+          value: false,
+        },
+      ],
+      filterMultiple: false,
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+            <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+              <Checkbox
+                checked={selectedKeys.includes(true)}
+                onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+              >
+                <span style={{color:'green'}}>Active</span>
+              </Checkbox>
+              <Checkbox
+                checked={selectedKeys.includes(false)}
+                onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+              >
+                <span style={{color:'red'}}>Inactive</span>
+              </Checkbox>
+              <div className="custom-filter-dropdown-btns" >
+              <Button  onClick={() => clearFilters()} className="custom-reset-button">
+                  Reset
+                </Button>
+                <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+                  OK
+                </Button>
+              
+              </div>
+            </div>
+          )
       
     },
     {
       title:`Action`,
+      align:'center',
       dataIndex: 'action',
       render: (text, rowData) => (
         rowData.deliveryTermsName.trim()=='N/A'?<span></span>:

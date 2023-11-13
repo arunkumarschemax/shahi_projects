@@ -83,7 +83,6 @@ import { ProductStructureModule } from './product-structure(BOM)/product-structu
 import { RmCreationModule } from './rm-items/rm-items.module';
 import { CoBomModule } from './co-bom/co-module';
 import { SubstituionModule } from './substituion/substituion.module';
-import { CoLineModule } from './style-order/co-line.module';
 
 @Module({
   imports: [
@@ -98,7 +97,7 @@ import { CoLineModule } from './style-order/co-line.module';
      
       autoLoadEntities: true,
       synchronize: false,
-      logging: true,
+      logging: false,
       
       extra: {
         connectionLimit: 20
@@ -144,7 +143,6 @@ import { CoLineModule } from './style-order/co-line.module';
     ProductGroupModule,
     ProcrumentGroupModule,
     HierachyLevelModule,
-    CoLineModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,ItemCreationModule,GroupTechClassModule,BusinessAreaModule,CoTypeModule,CompositionModule,RangeModule,SearchGrpModule,FeatureModule,RmSkusModule,ItemTypeModule,ProductStructureModule,RmCreationModule,CoBomModule,SubstituionModule],
   controllers: [AppController],
   providers: [AppService],

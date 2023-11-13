@@ -1,21 +1,25 @@
+import { CoLineStatusEnum } from "../../enum";
+
 export class CoLineReq{
+    coId: number;
     orderNumber: string;
     exfactoryDate: any;
     deliveryDate: any;
     season: string;
     buyerPoNumber: string;
-    CoLineItems: CoLineItemsReq[];
+    coLineInfo: CoLineItemsReq[];
+    coNumber: string;
     coLineId?: number;
-    coLineNumber?: string;
-    constructor(orderNumber: string,exfactoryDate: any,deliveryDate: any,season: string,buyerPoNumber: string,CoLineItems: CoLineItemsReq[],coLineId?: number,coLineNumber?: string){
+    constructor(coId: number,orderNumber: string,exfactoryDate: any,deliveryDate: any,season: string,buyerPoNumber: string,coLineInfo: CoLineItemsReq[],coNumber: string,coLineId?: number){
+        this.coId = coId
         this.orderNumber = orderNumber
         this.exfactoryDate = exfactoryDate
         this.deliveryDate = deliveryDate
         this.season = season
         this.buyerPoNumber = buyerPoNumber
-        this.CoLineItems = CoLineItems
+        this.coLineInfo = coLineInfo
+        this.coNumber = coNumber
         this.coLineId = coLineId
-        this.coLineNumber = coLineNumber
 
     }
 }
@@ -31,8 +35,12 @@ export class CoLineItemsReq{
     colorId: number;
     sizeId: number;
     destinationId: number;
+    discount: number;
+    status : CoLineStatusEnum;
+    uomId:number;
+    uom : string;
 
-    constructor(skuCode: string,color: string,size: string,destination: string,quantity: number,price: number,deliveryAddress : number,colorId: number,sizeId: number,destinationId: number){
+    constructor(skuCode: string,color: string,size: string,destination: string,quantity: number,price: number,deliveryAddress : number,colorId: number,sizeId: number,destinationId: number,discount: number,status : CoLineStatusEnum,uomId:number,uom : string){
         this.skuCode = skuCode
         this.color = color
         this.size = size
@@ -43,5 +51,9 @@ export class CoLineItemsReq{
         this.colorId = colorId
         this.sizeId = sizeId
         this.destinationId = destinationId
+        this.discount = discount
+        this.status = status
+        this.uomId = uomId
+        this.uom = uom
     }
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Alert } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Alert, Checkbox } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps } from 'antd/lib/table';
 import { Link, useNavigate } from 'react-router-dom';
@@ -220,10 +220,12 @@ const getAllActiveDivision=() =>{
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
-       render: (text, object, index) => (page-1) * 10 +(index+1)
+       render: (text, object, index) => (page-1) * 10 +(index+1),
+      align:"center",
+
     },
     {
-      title: 'GroupTech Code',
+      title: <div style={{textAlign:"center"}}>GroupTech Code</div>,
       dataIndex: 'groupTechClassCode',
       width:"20",
       //  responsive: ['lg'],
@@ -231,8 +233,9 @@ const getAllActiveDivision=() =>{
        sortDirections: ['descend', 'ascend'],
         ...getColumnSearchProps('groupClassTechCode')
     },
-    {
-      title: 'GroupTech Description',
+    { 
+    title: <div style={{textAlign:"center"}}>GroupTech Description</div>,
+      
       dataIndex: 'groupTechClassDescription',
       width:"20",
       //  responsive: ['lg'],
@@ -241,7 +244,7 @@ const getAllActiveDivision=() =>{
         ...getColumnSearchProps('groupClassTechDescription')
     },
     {
-    title: 'Buyer',
+    title: <div style={{textAlign:"center"}}>Buyer</div>,
     dataIndex: 'buyerId',
     render: (rec, index) => {
       const data = buyerData.find((item) => item.buyerId === rec);
@@ -256,7 +259,7 @@ const getAllActiveDivision=() =>{
     // responsive: ['lg'],
   },
     {
-      title: 'Division',
+      title: <div style={{textAlign:"center"}}>Division</div>,
       dataIndex: 'divisionId',
       render: (rec) => {
         const data = divisionData.find((item) => item.divisionId === rec);
@@ -274,6 +277,7 @@ const getAllActiveDivision=() =>{
        {
       title: 'Status',
       dataIndex: 'isActive',
+      align:"center",
        render: (isActive, rowData) => (
         <>
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -290,16 +294,38 @@ const getAllActiveDivision=() =>{
         },
       ],
       filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-        // === is not work
-        return record.isActive === value;
-      },
-      
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{color:'green'}}>Active</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{color:'red'}}>Inactive</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns" >
+          <Button  onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          
+          </div>
+        </div>
+      ),
+
     },
     {
       title:`Action`,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         // rowData.groupClassTechCode.trim()=="N/A"?<span></span>:
         <span>

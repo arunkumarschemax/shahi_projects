@@ -3,6 +3,7 @@ import { DivisionService, ItemCreationService, SKUGenerationService, StyleServic
 import { Button, Card, Col, Form, Row, Select, Table, Tag } from "antd"
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
+import { useNavigate } from "react-router-dom";
 
 const {Option} = Select;
 
@@ -26,6 +27,7 @@ export const Substitution = () => {
     let selectedRmSKuObject:any[] = []
     const [form] = Form.useForm()
     const service = new SubstitutionService()
+    const navigate = useNavigate()
     
 
     useEffect(() => {
@@ -228,7 +230,7 @@ export const Substitution = () => {
     }
 
     return(
-        <Card title='Substituion' size='small'>
+        <Card title='Substituion' size='small' extra={<span><Button type='primary' onClick={() => {navigate('/product-structure/substitution-view')}}>View</Button></span>}>
             <Form form={form}>
                 <Row gutter={24}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 5 }}>

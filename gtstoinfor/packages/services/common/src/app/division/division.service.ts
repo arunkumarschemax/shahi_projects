@@ -139,9 +139,13 @@ export class DivisionService {
     }
       async activateOrDeactivatedivision(divisionReq: DivisionRequest): Promise<DivisionResponseModel> {
         try {
+          // console.log(divisionReq,"divisionReq");
+          
             const divisionExists = await this.getdivisionById(divisionReq.divisionId);
+            console.log(divisionExists,"divisionExists");
+            
             if (divisionExists) {
-                if (divisionReq.versionFlag !== divisionExists.versionFlag) {
+                if (!divisionExists) {
                     throw new DivisionResponseModel(false,10113, 'Someone updated the current  information.Refresh and try again');
                 } else {
                     
@@ -173,6 +177,8 @@ export class DivisionService {
             return err;
         }
     }
+
+  
       async getActivedivisionById(divisionReq: DivisionRequest): Promise<DivisionResponseModel> {
         try {
             //retrieves all companies

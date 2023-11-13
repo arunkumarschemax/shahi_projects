@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Checkbox, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
@@ -117,14 +117,14 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
-      title: "Warehouse Name",
+      title: <div style={{textAlign:'center'}}>Warehouse Name</div>,
       dataIndex: "warehouseName",
       sorter: (a, b) => a.source.localeCompare(b.source),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("warehouseName"),
     }, {
-        title: "Warehouse Code",
-        dataIndex: "warehouseCode",
+        title: <div style={{textAlign:'center'}}>Warehouse code</div>,
+        dataIndex: "warehouseCode", align:'left',
         sorter: (a, b) => a.source.localeCompare(b.source),
         sortDirections: ["ascend", "descend"],
         ...getColumnSearchProps("warehouseCode"),
@@ -132,6 +132,7 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
     {
       title: 'Status',
       dataIndex: 'isActive',
+      align:'center',
       render: (isActive, rowData) => (
         <>
           {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -148,10 +149,32 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
         },
       ],
       filterMultiple: false,
-      onFilter: (value, record) => {
-        // === is not work
-        return record.isActive === value;
-      },
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{color:'green'}}>Active</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{color:'red'}}>Inactive</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns" >
+          <Button  onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          
+          </div>
+        </div>
+      ),
 
     },
     {
@@ -272,7 +295,7 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
       console.log(res);
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Successfully');
-        // getAllCurrencys();
+         getAllwarehouse();
         setDrawerVisible(false);
       } else {
         // if (res.intlCode) {
@@ -329,14 +352,21 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
       <>
       <Card title="Warehouse" extra={<span><Button onClick={()=>navigate('/global/warehouse/warehouse-form')} type={'primary'}>New</Button></span>} >
       <Row gutter={40}>
-        <Col>
-          <Card title={'Total Warehouse: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+        <Col span={4} ></Col>
+        <Col span={5}>
+          {/* <Card title={'Total Warehouse: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card> */}
+          <Alert type='success' message={'Total Warehouse: ' + variantData.length} style={{fontSize:'15px'}} />
+
         </Col>
-        <Col>
-          <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+        <Col span={5}>
+          {/* <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card> */}
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+
         </Col>
-        <Col>
-          <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+        <Col span={5}>
+          {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
+          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+
         </Col>
         <Col>
     

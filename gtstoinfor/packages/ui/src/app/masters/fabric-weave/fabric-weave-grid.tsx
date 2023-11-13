@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Checkbox } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/lib/table';
@@ -182,7 +182,7 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
       render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-      title: 'Fabric Weave',
+      title: <div style={{textAlign:'center'}}>Fabric Weave</div>,
       dataIndex: 'fabricWeaveName',
       // responsive: ['lg'],
       sorter: (a, b) => a.fabricWeaveName.localeCompare(b.fabricWeaveName),
@@ -190,7 +190,7 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
       ...getColumnSearchProps('fabricWeaveName')
     },
     {
-      title: 'Fabric Weave Code',
+      title: <div style={{textAlign:'center'}}>Fabric Weave Code</div>,
       dataIndex: 'fabricWeaveCode',
       // responsive: ['lg'],
       sorter: (a, b) => a.fabricWeaveCode.localeCompare(b.fabricWeaveCode),
@@ -198,7 +198,7 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
       ...getColumnSearchProps('fabricWeaveCode')
     },
     {
-      title: 'Fabric Weave Image',
+      title: <div style={{textAlign:'center'}}>Fabric Weave Image</div>,
       dataIndex: 'fabricWeaveImageName',
       // responsive: ['lg'],
       sorter: (a, b) => a.fabricWeaveImageName.localeCompare(b.fabricWeaveImageName),
@@ -220,6 +220,7 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
     },
     {
       title: 'Status',
+      align:'center',
       dataIndex: 'isActive',
       render: (isActive, rowData) => (
         <>
@@ -227,25 +228,36 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
         </>
       ),
       filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-        // === is not work
-        return record.isActive === value;
-      },
-      filters: [
-        {
-          text: 'Active',
-          value: true,
-        },
-        {
-          text: 'InActive',
-          value: false,
-        },
-      ],
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{color:'green'}}>Active</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{color:'red'}}>Inactive</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns" >
+          <Button  onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          
+          </div>
+        </div>
+      )
 
     },
     {
       title:`Action`,
+      align:'center',
       dataIndex: 'action',
       render: (text, rowData) => (
         <span>         

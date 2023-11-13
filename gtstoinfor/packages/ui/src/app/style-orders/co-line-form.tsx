@@ -1,4 +1,4 @@
-import { CoLineItemsReq, CoLineReq, FgItemCreIdRequest, StyleOrderIdReq } from "@project-management-system/shared-models";
+import { CoLineItemsReq, CoLineReq, CoLineStatusEnum, FgItemCreIdRequest, StyleOrderIdReq } from "@project-management-system/shared-models";
 import { ItemCreationService, StyleOrderService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Descriptions, Form, Input, Row, Segmented, Select, Space, Table } from "antd"
 import DescriptionsItem from "antd/es/descriptions/Item"
@@ -6,6 +6,7 @@ import { ColumnProps } from "antd/es/table";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import AlertMessages from "../common/common-functions/alert-messages";
 
 const {Option} = Select;
 
@@ -49,10 +50,6 @@ export const CoLineForm = () => {
 
     },[state?.id])
 
-    useEffect(() => {
-        console.log(salePrice)
-    },[salePrice])
-
     const generateSegmentedOptions = () => {
         return destinations.map((rec, index) => (
             {
@@ -84,7 +81,7 @@ export const CoLineForm = () => {
             if(iniIndex != -1){
                 coLineItems[index].quantity = e.target.value
             } else{
-                const req = new CoLineItemsReq(rowData.skuCode,rowData.color,rowData.size,rowData.destination,e.target.value,salePrice,Number(initialData[0]?.styleOrderItems[0].deliveryAddress),rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId)
+                const req = new CoLineItemsReq(rowData.skuCode,rowData.color,rowData.size,rowData.destination,e.target.value,salePrice,Number(initialData[0]?.styleOrderItems[0].deliveryAddress),rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId,null,CoLineStatusEnum.OPEN,null,null)
                 setCoLineItems([...coLineItems,req])
             }
         }
@@ -95,7 +92,7 @@ export const CoLineForm = () => {
         if(iniIndex != -1){
             coLineItems[index].salePrice = e.target.value
         } else{
-            const req = new CoLineItemsReq(rowData.skuCode,rowData.color,rowData.size,rowData.destination,null,e.target.value,Number(initialData[0]?.styleOrderItems[0].deliveryAddress),rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId)
+            const req = new CoLineItemsReq(rowData.skuCode,rowData.color,rowData.size,rowData.destination,null,e.target.value,Number(initialData[0]?.styleOrderItems[0].deliveryAddress),rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId,null,CoLineStatusEnum.OPEN,null,null)
             setCoLineItems([...coLineItems,req])
         }
 
@@ -167,10 +164,21 @@ export const CoLineForm = () => {
 
     const [firstHalfData, secondHalfData] = splitData(data);
 
-    const onSubmit = (val) => {
-        const req = new CoLineReq(initialData[0].orderNumber,val.exfactoryDate,val.deliveryDate,val.season,initialData[0].buyerPoNumber,coLineItems)
+    const onSubmit = () => {
+        const req = new CoLineReq(state?.id,initialData[0].orderNumber,form.getFieldValue('exfactoryDate'),form.getFieldValue('deliveryDate'),form.getFieldValue('season'),initialData[0].buyerPoNumber,coLineItems,form.getFieldValue('coNumber'))
         console.log(req)
+        styleOrderService.createCoLine(req).then(res => {
+            if(res.status){
+                AlertMessages.getSuccessMessage('CoLine created successfully')
+                onReset()
+            } else{
+                AlertMessages.getErrorMessage(res.internalMessage)
+            }
+        })
+    }
 
+    const onReset = () => {
+        form.resetFields()
     }
 
     return(
@@ -222,24 +230,12 @@ export const CoLineForm = () => {
             </Descriptions>
                 </Col>
             </Row>
-            <Row>
-                <Form layout="vertical" onFinish={onSubmit} form={form}>
-                {
-                    state?.id ? (<>
-                        <Card style={{width:'100%'}}>
-                <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}>
-                <Segmented 
-                style={{backgroundColor:'#dde5b6'}}
-                options={segmentedOptions} 
-                onChange={onSegmentChange}
-                default={true}
-                defaultValue={segmentedOptions[0]?.label?.props?.children}
-                />
-                <Row gutter={8}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 6 }}>
-                    <Descriptions layout="vertical">
-                   <DescriptionsItem label='Delivery Address'>{initialData[0]?.styleOrderItems[0].state}-{initialData[0]?.styleOrderItems[0].city}-{initialData[0]?.styleOrderItems[0].landmark}</DescriptionsItem>
-                    </Descriptions>
+            <Form layout="vertical"  form={form}> 
+            <Row gutter={24}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 6 }}>
+                <Form.Item name='coNumber' label='Co Number' rules={[{required:true,message:'CO Number is required'}]}>
+                        <Input placeholder="Enter Co Number"/>
+                    </Form.Item>
                 </Col>
                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 6 }}>
                 <Form.Item name='exfactoryDate' label='Ex-factory Date' rules={[{required:true,message:'Ex-factory Date is required'}]}>
@@ -259,9 +255,31 @@ export const CoLineForm = () => {
                         </Select>
                     </Form.Item>
                 </Col>
+            </Row>
+            </Form>
+            <Row>
+                {/* <Form layout="vertical" onFinish={onSubmit} form={form}> */}
+                {
+                    state?.id ? (<>
+                        <Card style={{width:'100%'}}>
+                <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}>
+                <Segmented 
+                style={{backgroundColor:'#dde5b6'}}
+                options={segmentedOptions} 
+                onChange={onSegmentChange}
+                default={true}
+                defaultValue={segmentedOptions[0]?.label?.props?.children}
+                />
+                <Row gutter={24}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
+                    <Descriptions>
+                   <DescriptionsItem label='Delivery Address'>{initialData[0]?.styleOrderItems[0].state}-{initialData[0]?.styleOrderItems[0].city}-{initialData[0]?.styleOrderItems[0].landmark}</DescriptionsItem>
+                    </Descriptions>
+                </Col>
+               
                 </Row>
                 {
-                    tableVisible || state?.id ? (<>
+                    tableVisible ? (<>
                     
                     {
                     data.length <= 10 ? (<>
@@ -287,14 +305,19 @@ export const CoLineForm = () => {
                 <Row justify={'end'} style={{marginLeft:'85%',marginTop:'5px'}}>
                <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
                 <Form.Item>
-                    <Button htmlType="submit" type='primary'>Submit</Button>
+                    <Button type='primary' onClick={onSubmit}>Submit</Button>
+                </Form.Item>
+               </Col>
+               <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                <Form.Item>
+                    <Button danger onClick={onReset}>Reset</Button>
                 </Form.Item>
                </Col>
                </Row>
                 </Card>
                     </>) : (<></>)
                 }
-            </Form>
+            {/* </Form> */}
                </Row>
          
 

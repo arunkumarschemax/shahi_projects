@@ -634,8 +634,6 @@ const getAllstyle=() =>{
                 </Button>
                 <Button
                   type="default"
-                  danger
-                  icon={<UndoOutlined />}
                   onClick={onReset}
                   style={{ marginLeft: 20 }}
                 >

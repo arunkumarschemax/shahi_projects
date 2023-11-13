@@ -67,9 +67,10 @@ export const AddressInfo = (props:AddressInfoProps) => {
             title:'Lane',
             dataIndex:'lane',
             render:(text,record)=>{
+                console.log(record.lane2)
                 return(
                     <>
-                    {record.lane2 !== null ? (<>{record.lane1-record.lane2}</>) : (<>{record.lane1}</>)}
+                    {record.lane2 !== null ? `${record.lane1}-${record.lane2}` : (<>{record.lane1}</>)}
                     </>
                 )
             }

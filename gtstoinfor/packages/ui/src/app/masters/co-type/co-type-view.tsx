@@ -1,5 +1,5 @@
 import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined, SearchOutlined } from "@ant-design/icons"
-import { Button, Card, Col, Divider, Drawer, Input, Popconfirm, Row, Space, Switch, Table, Tag } from "antd"
+import { Alert, Button, Card, Checkbox, Col, Divider, Drawer, Input, Popconfirm, Row, Space, Switch, Table, Tag } from "antd"
 import { ColumnProps, ColumnType } from "antd/es/table"
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -154,13 +154,13 @@ export const CoTypeView = () => {
         },
         {
             dataIndex:'coType',
-            title:'Co Type',
+            title:<div style={{textAlign:'center'}}>Co Type</div>,
             sorter: (a, b) => a.coType?.localeCompare(b.coType),
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('coType')
         },
         {
-            title: 'Status',
+            title:<div style={{textAlign:'center'}}>Status</div>,
             dataIndex: 'isActive',
             render: (isActive, rowData) => (
               <>
@@ -179,15 +179,37 @@ export const CoTypeView = () => {
               },
             ],
             filterMultiple: false,
-            onFilter: (value, record) => 
-            {
-              // === is not work
-              return record.isActive === value;
-          },
+            onFilter: (value, record) => record.isActive === value,
+            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{color:'green'}}>Active</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{color:'red'}}>Inactive</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns" >
+          <Button  onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          
+          </div>
+        </div>
+             ),
+          
             
           },
           {
-            title:`Action`,
+            title:<div style={{textAlign:'center'}}>Action</div>,
             dataIndex: 'action',
             render: (text, rowData) => (
               <span>   
@@ -228,9 +250,9 @@ export const CoTypeView = () => {
     }
 
     return (
-        <Card size='small' title='Co Type' extra={<span><Button onClick={() => navigate('/masters/co-type/co-type-form')} type={'primary'}>New</Button></span>}>
-            <Row gutter={40} >
-        <Col>
+        <Card title='Co Type' extra={<span><Button onClick={() => navigate('/masters/co-type/co-type-form')} type={'primary'}>New</Button></span>}>
+            <Row gutter={24} >
+        {/* <Col>
             <Card title={'Total : ' + data.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
             </Col>
             <Col>
@@ -238,7 +260,17 @@ export const CoTypeView = () => {
             </Col>
             <Col>
             <Card title={'In-Active :' + data.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
-            </Col>
+            </Col> */}
+               <Col span={4}></Col>
+       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
+        <Alert type='success' message={'Total Co Types: ' + data.length} style={{fontSize:'15px'}} />
+        </Col>
+           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
+          <Alert type='warning' message={'Active: ' + data.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
+          <Alert type='info' message={'In-Active: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        </Col>
             </Row>
             <br></br>
             <div style={{overflowX :'auto' }}>

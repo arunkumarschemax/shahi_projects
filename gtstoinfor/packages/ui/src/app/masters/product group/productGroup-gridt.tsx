@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Alert, Space } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Alert, Space, Checkbox } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
@@ -186,7 +186,7 @@ export function ProductGroupGrid(
       },
   
       {
-        title: "Product Group Name",
+        title: <div style={{textAlign:'center'}}>Product Group Name</div>,
         dataIndex: "productGroup",
         sorter: (a, b) => a.productGroup.localeCompare(b.productGroup),
         sortDirections: ["ascend", "descend"],
@@ -195,6 +195,7 @@ export function ProductGroupGrid(
       
       {
         title: 'Status',
+        align:'center',
         dataIndex: 'isActive',
         ...getColumnSearchProps('isActive'),
         sorter: (a, b) => a.productGroup.localeCompare(b.ProductGroup),
@@ -205,22 +206,32 @@ export function ProductGroupGrid(
             
           </>
         ),
-        // filters: [
-        //   {
-        //     text: 'Active',
-        //     value: true,
-        //   },
-        //   {
-        //     text: 'InActive',
-        //     value: false,
-        //   },
-        // ],
-        // filterMultiple: false,
-        // onFilter: (value, record) => 
-        // {
-        //   // === is not work
-        //   return record.isActive === value;
-        // },
+        onFilter: (value, record) => record.isActive === value,
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+              <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+                <Checkbox
+                  checked={selectedKeys.includes(true)}
+                  onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+                >
+                  <span style={{color:'green'}}>Active</span>
+                </Checkbox>
+                <Checkbox
+                  checked={selectedKeys.includes(false)}
+                  onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+                >
+                  <span style={{color:'red'}}>Inactive</span>
+                </Checkbox>
+                <div className="custom-filter-dropdown-btns" >
+                <Button  onClick={() => clearFilters()} className="custom-reset-button">
+                    Reset
+                  </Button>
+                  <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+                    OK
+                  </Button>
+                
+                </div>
+              </div>
+            ),
         
       },
       {
