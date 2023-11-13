@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { DeliveryMethodDto, DeliveryMethodRequest } from 'packages/libs/shared-models/src/common/delivery-method';
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { AllSampleDevReqResponseModel, ProductGroupReq, SampleDevelopmentRequest, SampleFilterRequest, UploadResponse } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, ProductGroupReq, SampleDevelopmentRequest, SampleFilterRequest, SampleRequestFilter, UploadResponse } from '@project-management-system/shared-models';
 
 
 export class SampleDevelopmentService extends CommonAxiosService {
@@ -124,6 +124,19 @@ export class SampleDevelopmentService extends CommonAxiosService {
   async getSampleInventory(req?: SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
     console.log(req, 'shared service')
     return this.axiosPostCall(this.URL + "/getSampleInventory", req)
+  }
+
+  async getAllRequestNo():Promise<UploadResponse>{
+    return this.axiosPostCall(this.URL + "/getAllRequestNo")
+  }
+  
+  async getAllBuyers():Promise<UploadResponse>{
+    return this.axiosPostCall(this.URL + "/getAllBuyers")
+  }
+
+  async getAllSampleReportData(req? : SampleRequestFilter): Promise<UploadResponse> {
+    console.log(req,'shared service')
+    return this.axiosPostCall(this.URL + "/getAllSampleReportData",req)
   }
 
   

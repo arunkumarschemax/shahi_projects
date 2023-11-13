@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, UploadResponse } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, UploadResponse } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -309,7 +309,7 @@ export class SampleRequestService {
   async getSampleRequestReport(): Promise<CommonResponseModel> {
     const manager = this.dataSource;
     let rawData
-     rawData = 'SELECT sr.sample_request_id, sr.request_no AS requestNo, sr.m3_style_no, sb.rm_item_id, ri.item_code, sb.required_quantity,sb.created_at, sb.assigned_quantity,sb.colour_id,co.colour,st.style  FROM sample_request sr LEFT JOIN sampling_bom sb ON sb.sample_request_id = sr.sample_request_id LEFT JOIN rm_items ri ON ri.rm_item_id LEFT JOIN `colour` co ON co.colour_id = sb.colour_id = sb.rm_item_id LEFT JOIN `style` st ON st.style_id = sr.style_id';
+     rawData = 'SELECT sr.sample_request_id, sr.request_no AS requestNo, sr.m3_style_no, sb.rm_item_id, ri.item_code, sb.required_quantity,sb.created_at, sb.received_quantity,sb.colour_id,co.colour,st.style,bu.buyer_name,pg.product_group,ss.quantity  FROM sample_request sr LEFT JOIN sampling_bom sb ON sb.sample_request_id = sr.sample_request_id LEFT JOIN rm_items ri ON ri.rm_item_id LEFT JOIN `colour` co ON co.colour_id = sb.colour_id = sb.rm_item_id LEFT JOIN `style` st ON st.style_id = sr.style_id LEFT JOIN `buyers` bu ON bu.buyer_id = sr.buyer_id LEFT JOIN `product_group` pg ON pg.product_group_id = sb.product_group_id LEFT JOIN `stocks` ss ON ss.item_type_id = sb.rm_item_id';
      const rmData = await manager.query(rawData);
     if (rmData.length > 0) {
       const groupedData = rmData.reduce((result, item) => {
@@ -328,8 +328,10 @@ export class SampleRequestService {
         result[requestNo].sm.push(
           {
             code: item.item_code,
+            buyers: item.buyer_name,
+            fabricName: item.product_group,
             consumption: item.required_quantity,
-            quantity: item.assigned_quantity,
+            quantity: item.quantity,
             color: item.colour ,
             style:item.style,
             date:item.created_at,
@@ -416,5 +418,34 @@ LEFT JOIN
     return new CommonResponseModel(false,0,'no data found',[])
 }
   }
+
+  async getAllRequestNo(): Promise<CommonResponseModel> {
+    const records = await this.sampleRepo.find();
+    if (records.length)
+        return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
+    else
+        return new CommonResponseModel(false, 0, 'No data found')
+}
+
+async getAllBuyers(): Promise<CommonResponseModel> {
+  const records = await this.sampleRepo.find();
+  if (records.length)
+      return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
+  else
+      return new CommonResponseModel(false, 0, 'No data found')
+}
+
+// async getAllSampleReportData(request? : SampleRequestFilter): Promise<CommonResponseModel> {
+//   try{
+//       const details = await this.sampleRepo.getAllSampleReportData(request)
+//       if(details.length > 0){
+//           return new CommonResponseModel(true,0,'All stocks Requests retrieved successfully',details)
+//       } else {
+//           return new CommonResponseModel(false,1,'No data found',[])
+//       }
+//   } catch(err) {
+//       throw err
+//   }
+// }
   
 }

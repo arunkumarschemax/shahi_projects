@@ -7,18 +7,12 @@ export class IndentTrimsModel{
     size: number;
     color: string;
     quantity: number;
-    uomId: number;
     m3TrimCode: string;
     description: string;
     remarks: string;
-    filePath: string;
-    isUploaded: boolean;
-    isActive?: boolean;
-    createdAt?: Date;
-    createdUser?: string | null;
-    updatedAt?: Date;
-    updatedUser?: string | null;
-    versionFlag?: number;
+    status:string;
+
+
   constructor(
     itrimsId: number,
     trimType: string,
@@ -26,18 +20,12 @@ export class IndentTrimsModel{
     size: number,
     color: string,
     quantity: number,
-    uomId: number,
     m3TrimCode: string,
     description: string,
     remarks: string,
-    filePath: string,
-    isUploaded: boolean,
-    isActive?: boolean,
-    createdAt?: Date,
-    createdUser?: string | null,
-    updatedAt?: Date,
-    updatedUser?: string | null,
-    versionFlag?: number,
+    status:string,
+  
+  
   ){
     this.itrimsId = itrimsId;
     this.trimType = trimType;
@@ -45,18 +33,12 @@ export class IndentTrimsModel{
     this.size = size;
     this.color = color;
     this.quantity = quantity;
-    this.uomId = uomId;
     this.m3TrimCode = m3TrimCode;
     this.description = description;
     this.remarks = remarks;
-    this.filePath = filePath;
-    this.isUploaded = isUploaded;
-    this.isActive = isActive;
-    this.createdAt = createdAt;
-    this.createdUser = createdUser;
-    this.updatedAt = updatedAt;
-    this.updatedUser = updatedUser;
-    this.versionFlag = versionFlag;
+    this.status=status;
+
+
   }
 
 
