@@ -16,6 +16,7 @@ export const PurchaseOrderForm =()=>{
     const [activeForm, setActiveForm] = useState(1);
     const [indexVal, setIndexVal] = useState(1)
     const [indenData, setIndentData] = useState<any[]>([])
+    const [vendordata, setVendorData]=useState<any[]>([])
     let fabricInfo:PurchaseOrderFbricDto[]=[];
     let trimInfo:PurchaseOrderTrimDto[]=[];
 
@@ -36,6 +37,7 @@ export const PurchaseOrderForm =()=>{
     useEffect(() =>{
         getStyle()
         getIndnetNo()
+        getAllvendors()
     },[])
 
     const getStyle = () => {
@@ -56,6 +58,16 @@ export const PurchaseOrderForm =()=>{
     }
     const onReset = () =>{
         poForm.resetFields()
+    }
+
+    const getAllvendors =() =>{
+        purchaseOrderService.getAllVendors().then(res =>{
+            if(res.status){
+                setVendorData(res.data)
+            }else{
+                setVendorData([])
+            }
+        })
     }
 
     const getIndnetNo = () =>{
@@ -82,7 +94,7 @@ export const PurchaseOrderForm =()=>{
             const triminfo = new PurchaseOrderTrimDto(trim.productGroupId,trim.trimId,trim.colourId,trim.m3TrimCode,trim.description,trim.consumption,trim.remarks)
             trimInfo.push(triminfo)
         }
-        const poDto = new PurchaseOrderDto('po11',1,poForm.getFieldValue('styleId'),poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"),poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'),poForm.getFieldValue('remarks'),poForm.getFieldValue('indentId'),fabricInfo,trimInfo)
+        const poDto = new PurchaseOrderDto('po11',poForm.getFieldValue('vendorId'),poForm.getFieldValue('styleId'),poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"),poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'),poForm.getFieldValue('remarks'),poForm.getFieldValue('indentId'),fabricInfo,trimInfo)
         purchaseOrderService.cretePurchaseOrder(poDto).then(res =>{
             console.log(poDto)
             if(res.status){
@@ -123,9 +135,9 @@ return(
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
                     <Form.Item name='vendorId' label='Vendor' rules={[{required:true,message:'vendor is required'}]}>
                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor'>
-                            {style.map(e => {
+                            {vendordata.map(e => {
                                 return(
-                                    <Option key={e.styleId} value={e.styleId} name={e.style}> {e.style}-{e.description}</Option>
+                                    <Option key={e.id} value={e.id} name={e.id}>{e.name}</Option>
                                 )
                             })}
                         </Select>
