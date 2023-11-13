@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space, Checkbox } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space, Checkbox, Alert } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
 import Highlighter from 'react-highlight-words';
@@ -55,7 +55,7 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
     service.activatedeActivate(Data).then(res => { console.log(res);
       if (res.status) {
         getAll();
-        AlertMessages.getSuccessMessage('Success'); 
+        AlertMessages.getSuccessMessage(res.internalMessage); 
       } else {
         AlertMessages.getErrorMessage(res.internalMessage);
 
@@ -287,13 +287,19 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
  <br></br>
       <Row gutter={40}>
       <Col>
-          <Card title={'Total Delivery Terms: ' + deliveryTermsData.length} style={{textAlign: 'left', width: 250, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+      <Alert type='success' message={'Total Delivery Terms: ' + deliveryTermsData.length} style={{fontSize:'15px'}} />
+
+          {/* <Card title={'Total Delivery Terms: ' + deliveryTermsData.length} style={{textAlign: 'left', width: 250, height: 41,backgroundColor:'#bfbfbf'}}></Card> */}
           </Col>
           <Col>
-           <Card title={'Active: ' + deliveryTermsData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
+          <Alert type='warning' message={'Active: ' + deliveryTermsData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+
+           {/* <Card title={'Active: ' + deliveryTermsData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card> */}
           </Col>
           <Col>
-           <Card title={'In-Active: ' + deliveryTermsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
+          <Alert type='info' message={'In-Active: ' + deliveryTermsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+
+           {/* <Card title={'In-Active: ' + deliveryTermsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card> */}
           </Col>
           </Row> 
           <br></br>

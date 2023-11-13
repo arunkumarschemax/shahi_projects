@@ -67,7 +67,7 @@ export function SampleSubTypesGrid(
     Service.activateOrDeactivateSampleSubType(Data).then(res => {console.log(res);
     if(res.status){
       getAllSampleSubTypeData();
-      AlertMessages.getSuccessMessage('Success');
+      AlertMessages.getSuccessMessage(res.internalMessage);
     }else {
       AlertMessages.getErrorMessage(res.internalMessage);
 
