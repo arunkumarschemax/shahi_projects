@@ -49,5 +49,13 @@ export class IndentController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
+  @Post('/getIndentnumbers')
+  async getIndentnumbers(): Promise<CommonResponseModel> {
+    try {
+      return await this.indentService.getIndentnumbers();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
 
 }

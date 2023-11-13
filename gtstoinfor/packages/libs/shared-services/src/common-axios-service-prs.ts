@@ -42,4 +42,26 @@ export class CommonAxiosService {
             throw new Error(err.message);
         })
     }
+
+    async getvendorpostcall(urlEndPoint: string | { urlEndPoint: string, serviceUrl: string }, data?: any, config?: AxiosRequestConfig) {
+
+        let queryString = '';
+        console.log(typeof urlEndPoint,'tttttt')
+        if (typeof urlEndPoint == 'string') {
+            queryString = urlEndPoint;
+            
+        } else {
+
+            queryString = urlEndPoint.urlEndPoint;
+        }
+        console.log(queryString,'qur')
+        console.log(data,'data')
+        console.log(config,'config')
+        return await AxiosInstance.post(queryString, data, config)
+            .then(res => {
+                return res.data;
+            }).catch(err => {
+                throw new Error(err.message);
+            })
+    }
 }

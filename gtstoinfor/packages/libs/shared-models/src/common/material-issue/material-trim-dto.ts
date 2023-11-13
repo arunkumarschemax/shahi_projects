@@ -1,8 +1,9 @@
 
 export class MaterialTrimDto{
+    trimCode: string;
     description:string;
     consumption:number;
-    uomId:number
+    consumptionUomId:number
     issuedQuantity: number
     issuedUomId: number
     remarks:string;
@@ -14,9 +15,10 @@ export class MaterialTrimDto{
     colorId?: number
 
     constructor(
+        trimCode: string,
         description:string,
         consumption:number,
-        uomId:number,
+        consumptionUomId:number,
         issuedQuantity: number,
         issuedUomId: number,
         remarks:string,
@@ -27,12 +29,13 @@ export class MaterialTrimDto{
         materialTrimId?:number,
         colorId?: number
     ){
+        this.trimCode = trimCode
         this.materialTrimId = materialTrimId
         this.description = description
         this.colorId = colorId
         this.consumption = consumption
         this.consumptionUom = consumptionUom
-        this.uomId = uomId
+        this.consumptionUomId = consumptionUomId
         this.issuedQuantity = issuedQuantity
         this.issuedQuantityUom = issuedQuantityUom
         this.issuedUomId = issuedUomId

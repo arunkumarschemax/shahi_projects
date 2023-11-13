@@ -73,5 +73,15 @@ export class IndentService{
         }
         return new CommonResponseModel(true, 1235, 'Data retrieved Successfully',indentModel);
     }
+
+    async getIndentnumbers():Promise<CommonResponseModel>{
+        const data = 'select indent_id as indentId ,request_no as indentCode from indent'
+        const result= await this.indentRepo.query(data)
+        if(result){
+            return new CommonResponseModel(true,1,'data retived sucessfully',result)
+        }else{
+            return new CommonResponseModel(false,0,'no data found',[])
+        }
+    }
     
 }

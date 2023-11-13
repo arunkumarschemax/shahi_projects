@@ -21,4 +21,23 @@ export class PurchaseOrderController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
+
+  @Post('/getAllPoData')
+  async getAllPoData(): Promise<CommonResponseModel> {
+    try {
+      return await this.purchasseOrdrSerivice.getAllPoData();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
+  }
+
+  @Post('/getAllPONumbers')
+  async getAllPONumbers(@Body() vendorId:number): Promise<CommonResponseModel> {
+    try {
+      return await this.purchasseOrdrSerivice.getAllPONumbers(vendorId);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+
+}

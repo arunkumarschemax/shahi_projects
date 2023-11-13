@@ -156,6 +156,7 @@ import QualityView from "./masters/quality/quality-view"
 import QualityForm from "./masters/quality/quality-form"
 import M3StyleCode from "./masters/m3-style-codes/m3-styleCode-form"
 import M3StyleCodeView from "./masters/m3-style-codes/m3-styleCode-view"
+import GRNForm from "./grn/grn-form"
 
 
 export const AppRoutes = () => {
@@ -589,6 +590,7 @@ export const AppRoutes = () => {
                     <Route path='/indent-form' element={<SourcingRequisitionDynamicForm/>}/>
                     <Route path='/requisition-view' element={<SourcingRequisitionDynamicView/>}/>
                     <Route path='/purchase-order' element={<PurchaseOrderForm/>}/>
+                    <Route path='/grn-form' element={<GRNForm/>}/>
 
 
                     <Route path='/excel-import'>

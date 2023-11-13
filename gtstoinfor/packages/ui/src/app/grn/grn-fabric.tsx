@@ -326,24 +326,12 @@ export const PurchaseOrderfabricForm =({props}) =>{
          </Col>
         
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-            <Form.Item name='yarnCount' label='Yarn Count'
-             rules={[
-                {
-                  required: true,
-                  message: "YarnCount Is Required",
-                }
-               ]}
-               >
+            <Form.Item name='yarnCount' label='Yarn Count'>
                 <Input placeholder="Enter Yarn Count"/>
             </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
-            <Form.Item name='yarnUnit'  rules={[
-                            {
-                              required: true,
-                              message: "Uom Type Is Required",
-                            }
-                        ]}>
+            <Form.Item name='yarnUnit'>
                 <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
                     {uom.map(e => {
                             return(
