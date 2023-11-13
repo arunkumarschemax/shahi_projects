@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -143,32 +143,32 @@ service.createsize(variantData).then(res=>{
     size.updatedUser=JSON.parse(localStorage.getItem('username'))
     service.updateSize(size).then(res=>{
         if(res.status){
-            AlertMessages.getSuccessMessage('Updated Successfully');
+          message.success('Updated Successfully');
             setDrawerVisible(false);
 
         }else{
-            AlertMessages.getErrorMessage(res.internalMessage);
+          message.error(res.internalMessage, 2);
 
         }
     }).catch(err => {
-        AlertMessages.getErrorMessage(err.message);
-      })
+      message.error(err.message, 2);
+    })
   }
   const deleteSize = (size:SizeDto) => {
     size.isActive=size.isActive?false:true;
     service.activeteOrDeactivateSize(size).then(res => { console.log(res);
       if (res.status) {
         // getAllPaymentmethod();
-        AlertMessages.getSuccessMessage('Success'); 
+        message.success(res.internalMessage, 2);
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
         // } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
+          message.error(res.internalMessage, 2);
         }
       
     }).catch(err => {
-      AlertMessages.getErrorMessage(err.message);
+      message.error(err.message, 2);
     })
   }
    const columnsSkelton: any =[

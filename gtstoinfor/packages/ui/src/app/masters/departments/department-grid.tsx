@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -149,19 +149,20 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
 
       const deleteDepartment = (depart:DepartmentsDtos) => {
         depart.isActive=depart.isActive?false:true;
-        service.ActivateorDeactivateDepartment(depart).then(res => { console.log(res);
+        service.ActivateorDeactivateDepartment(depart)
+        .then((res) => { 
           if (res.status) {
             // getAllPaymentmethod();
-            AlertMessages.getSuccessMessage('Success'); 
+            message.success(res.internalMessage, 2);
           } else {
             // if (res.intlCode) {
             //   AlertMessages.getErrorMessage(res.internalMessage);
             // } else {
-              AlertMessages.getErrorMessage(res.internalMessage);
+              message.error(res.internalMessage, 2);
             }
           
         }).catch(err => {
-          AlertMessages.getErrorMessage(err.message);
+          message.error(err.message, 2);
         })
       }
 

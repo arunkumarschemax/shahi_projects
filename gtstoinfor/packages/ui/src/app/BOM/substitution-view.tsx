@@ -112,35 +112,35 @@ const SubstituionView=() =>{
             title: 'Rm SkuCode',
             dataIndex: 'rmSku',
             key: 'rmSku',
-            render: (text, record) => {
-              console.log(record,"0000000000");
+            // render: (text, record) => {
+            //   console.log(record,"0000000000");
               
-              const showModal = () => {
+            //   const showModal = () => {
                 
-                Modal.info({
-                  title: 'RM Details',
-                  content: (
-                    <div>
-                      {/* Your modal content goes here */}
-                      <p>{record.rmSku}</p>
-                      <p>{record.featureCode}</p>
-                      <p>{record.optionGroup}</p>
-                      <p>{record.optionValue}</p>
-                      <p>{record.itemType}</p>
+            //     Modal.info({
+            //       title: 'RM Details',
+            //       content: (
+            //         <div>
+            //           {/* Your modal content goes here */}
+            //           <p>{record.rmSku}</p>
+            //           <p>{record.featureCode}</p>
+            //           <p>{record.optionGroup}</p>
+            //           <p>{record.optionValue}</p>
+            //           <p>{record.itemType}</p>
 
-                    </div>
-                  ),
-                });
-              };
+            //         </div>
+            //       ),
+            //     });
+            //   };
           
-              return (
-                <Tooltip title="Click to view">
-                  <Button type="link" onClick={showModal}>
-                    {record.rmSku}
-                  </Button>
-                </Tooltip>
-              );
-            },
+            //   return (
+            //     <Tooltip title="Click to view">
+            //       <Button type="link" onClick={showModal}>
+            //         {record.rmSku}
+            //       </Button>
+            //     </Tooltip>
+            //   );
+            // },
           },
           
           {
@@ -150,20 +150,58 @@ const SubstituionView=() =>{
             key:'rmItemCode',
 
           },
-          
+          {
+            title:'Item Type',
+            dataIndex:'itemType',
+            key:'itemType',
+
+          },
           {
             title:'Consumption',
             dataIndex:'consumption',
             key:'consumption',
+            render: (consumptionArray) => {
+              if (Array.isArray(consumptionArray)) {
+                return (
+                  <ul>
+                    {consumptionArray.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ul>
+                );
+              } else {
+                // Render a fallback if consumptionArray is not an array
+                return <span>{consumptionArray}</span>;
+              }
+            },
+            
+          },
+          {
+            title: 'Feature Code',
+            dataIndex: 'featureCode',
+            key: 'featureCode',
+            render: (featureCodeArray) => {
+              console.log(featureCodeArray); // Log data to console
+              if (Array.isArray(featureCodeArray)) {
+                // Rendering logic
+              } else {
+                // Fallback rendering logic
+              }
+            },
+          },
+          
+          {
+            title:'Option Group',
+            dataIndex:'optionGroup',
 
-          }
+          },
 
         ]
 
         return(
             <>
             <Card title={<span>Substitution</span>} style={{textAlign:'center'}} headStyle={{border:0}}
-            extra={<Link to='/'>
+            extra={<Link to='/substitution'>
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
 
       </Link>}>

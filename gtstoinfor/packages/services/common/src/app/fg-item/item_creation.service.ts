@@ -8,8 +8,9 @@ import { error } from 'console';
 import { ItemCreationRepository } from './item-repo/item-creation.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { StyleOrder } from '../style-order/style-order.entity';
-import { CommonResponseModel, ItemCreFilterRequest, FgItemCreIdRequest, CustomerOrderStatusEnum, SubContractStatus } from '@project-management-system/shared-models';
+import { CommonResponseModel, ItemCreFilterRequest, FgItemCreIdRequest, CustomerOrderStatusEnum, SubContractStatus, ItemCreationDTO, ItemcreationResponseModel } from '@project-management-system/shared-models';
 import { groupBy } from 'rxjs';
+import e = require('express');
 
 
 @Injectable()
@@ -22,24 +23,87 @@ export class ItemCreationService {
 
     ) { }
 
-    async createItem(itemCreationDto: ItemCreationDto, isUpdate: boolean): Promise<CommonResponseModel> {
+    async createItem(itemCreationDto: ItemCreationDto, isUpdate: boolean): Promise<ItemcreationResponseModel> {
         try {
-            console.log(itemCreationDto);
+            // console.log(itemCreationDto);
             const convertedItemCreationEntity: ItemCreation = this.itemCreationAdapter.convertDtoToEntity(itemCreationDto, isUpdate);
             const savedItemCreationEntity: ItemCreation = await this.itemCreationRepository.save(convertedItemCreationEntity);
             const savedItemCreationDto: ItemCreationDto = this.itemCreationAdapter.convertEntityToDto(savedItemCreationEntity);
-            if (savedItemCreationDto) {
-                // generating resposnse
-                const response = new CommonResponseModel(true, isUpdate ? 11101 : 11100, isUpdate ? 'Item Updated Successfully' : 'Item Created Successfully', savedItemCreationDto);
-                return response;
-            } else {
-                const response = new CommonResponseModel(false, 0, 'Something went wrong');
-                return response;
-            }
-        } catch (error) {
-            return error;
+            const entities = new ItemCreation();
+            entities.altUoms=  itemCreationDto.altUoms;
+            entities.approver=itemCreationDto.approver;
+            entities.basicUom=itemCreationDto.basicUom;
+            entities.brandId=itemCreationDto.brandId;
+            entities.businessArea=itemCreationDto.businessArea;
+            entities.buyingHouseCommision=itemCreationDto.buyingHouseCommision;
+            entities.categoryId=itemCreationDto.categoryId;
+            entities.composition=itemCreationDto.composition;
+            entities.conversionFactor=itemCreationDto.composition;
+            entities.currency=itemCreationDto.currency;
+            entities.customGroupId=itemCreationDto.customGroupId;
+            entities.description=itemCreationDto.description;
+            entities.facilityId=itemCreationDto.facilityId;
+            entities.factoryMerchant=itemCreationDto.factoryMerchant;
+            entities.firstExFactoryDate=itemCreationDto.firstExFactoryDate;
+            entities.groupTechClass=itemCreationDto.groupTechClass;
+            entities.internalStyleId=itemCreationDto.internalStyleId;
+            entities.isSubContract=itemCreationDto.isSubContract;
+            entities.itemCode=itemCreationDto.itemCode;
+            entities.itemGroup=itemCreationDto.itemGroup;
+            entities.itemName=itemCreationDto.itemName;
+            entities.itemTypeId=itemCreationDto.itemTypeId;
+            entities.licenseId=itemCreationDto.licenseId;
+            entities.moq=itemCreationDto.moq;
+            entities.nationalDbk=itemCreationDto.nationalDbk;
+            entities.noOfLacePanel=itemCreationDto.noOfLacePanel;
+            entities.orderCloseDate=itemCreationDto.orderCloseDate;
+            entities.orderConfirmedDate=itemCreationDto.orderConfirmedDate;
+            entities.orderQty=itemCreationDto.orderQty;
+            entities.pdMerchant=itemCreationDto.pdMerchant;
+            entities.productDesignerId=itemCreationDto.productDesignerId;
+            entities.productGroup=itemCreationDto.productGroup;
+            entities.productionMerchant=itemCreationDto.productionMerchant;
+            entities.projectionOrder=itemCreationDto.projectionOrder;
+            entities.range=itemCreationDto.range;
+            entities.reference=itemCreationDto.reference;
+            entities.responsiblePersonId=itemCreationDto.responsiblePersonId;
+            entities.roslGroup=itemCreationDto.roslGroup;
+            entities.salePersonId=itemCreationDto.salePersonId;
+            entities.salePrice=itemCreationDto.salePrice;
+            entities.salePriceQty=itemCreationDto.salePriceQty;
+            entities.searchGroup=itemCreationDto.searchGroup;
+            entities.season=itemCreationDto.season;
+            entities.styleNo=itemCreationDto.styleNo;
+            entities.subCategoryId=itemCreationDto.subCategoryId;
+            entities.targetCurrency=itemCreationDto.targetCurrency;
+            entities.uom=itemCreationDto.uom;
+         if(isUpdate){
+    entities.fgitemId=itemCreationDto.fgitemId;
+    entities.updatedUser=itemCreationDto.updatedUser;
+}else{
+    entities.createdUser=itemCreationDto.updatedUser;
+}
+const savedResult = await this.itemCreationRepository.save(entities)
+// const itemInfo = new ItemCreationDTO(savedResult.altUoms,savedResult.approver,savedResult.basicUom,savedResult.brandId,savedResult.businessArea,savedResult.businessArea,savedResult.buyingHouseCommision,savedResult.categoryId,savedResult.composition,savedResult.conversionFactor,savedResult.currency,savedResult.customGroupId,savedResult.description,savedResult.facilityId,savedResult.factoryMerchant,savedResult.fgitemId,savedResult.fgitemId,savedResult.firstExFactoryDate,savedResult.groupTechClass,savedResult.internalStyleId,savedResult.internalStyleId,savedResult.isSubContract,savedResult.isSubContract,savedResult.itemCode,savedResult.itemGroup,savedResult.itemName,savedResult.itemTypeId,savedResult.licenseId,savedResult.moq,savedResult.nationalDbk,savedResult.noOfLacePanel,savedResult.orderCloseDate,savedResult.orderConfirmedDate,savedResult.orderQty,savedResult.pdMerchant,savedResult.productDesignerId,savedResult.productDesignerId,savedResult.productGroup,savedResult.productionMerchant,savedResult.projectionOrder,savedResult.projectionOrder,savedResult.range,savedResult.reference,savedResult.responsiblePersonId,savedResult.roslGroup,savedResult.salePersonId,savedResult.salePersonId,savedResult.salePrice,savedResult.salePriceQty,savedResult.searchGroup,savedResult.season,savedResult.styleNo,savedResult.styleOrderInfo,savedResult.subCategoryId,savedResult.targetCurrency,savedResult.uom)
+
+return new CommonResponseModel (true,0,isUpdate? 'Item Updated Successfully':'Item Updated Successfully',[])
+        } catch (err){
         }
     }
+
+    //     })
+    //         if (savedItemCreationDto) {
+    //             // generating resposnse
+    //             const response = new CommonResponseModel(true, isUpdate ? 11101 : 11100, isUpdate ? 'Item Updated Successfully' : 'Item Created Successfully', savedItemCreationDto);
+    //             return response;
+    //         } else {
+    //             const response = new CommonResponseModel(false, 0, 'Something went wrong');
+    //             return response;
+    //         }
+    //     } catch (error) {
+    //         return error;
+    //     }
+    // }
 
     async getFgItemsDropdown(req?:FgItemCreIdRequest):Promise<CommonResponseModel>{
         try{
