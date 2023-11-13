@@ -247,6 +247,7 @@ export class DpomService {
 
     async coLineCreationReq(req: any): Promise<CommonResponseModel> {
         const entity = new COLineEntity()
+        entity.buyer = 'Nike-U12'
         entity.buyerPo = req.purchaseOrderNumber;
         entity.lineItemNo = req.poLineItemNumber;
         entity.itemNo = req.itemNo

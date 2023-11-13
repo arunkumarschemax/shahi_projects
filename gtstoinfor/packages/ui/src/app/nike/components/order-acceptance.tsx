@@ -177,13 +177,7 @@ export function OrderAcceptance() {
         const req = new DpomApproveRequest();
         req.poLineItemNumber = record.poLineItemNumber
         req.purchaseOrderNumber = record.purchaseOrderNumber
-        req.scheduleLineItemNumber = ''
         req.itemNo = itemNoValues[record.key]
-        req.itemDesc = ''
-        req.orderQty = 0
-        req.size = ''
-        req.price = ''
-        req.currency = ''
         service.coLineCreationReq(req).then((res) => {
             if (res.status) {
                 // getOrderAcceptanceData()

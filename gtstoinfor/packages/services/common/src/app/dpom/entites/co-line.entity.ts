@@ -10,6 +10,13 @@ export class COLineEntity {
 
     @Column('varchar', {
         nullable: false,
+        name: "buyer",
+        length: 50
+    })
+    buyer: string;
+
+    @Column('varchar', {
+        nullable: false,
         name: "buyer_po",
         length: 15
     })
