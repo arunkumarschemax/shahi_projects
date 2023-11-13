@@ -80,58 +80,95 @@ export class SubstituionService{
         }
     }
 
-    async getSubstitution (req?:fgItemIdReq):Promise<SubResponseModel>{
-        try{
-          const getdata = await this.substitutionrepo.getSubstitution(req)
-          // console.log(getdata,"getdata")
-          const DataMap = new Map<string, FgDataModel>();
-          for (const res of getdata) {
-            if (!DataMap.has(res.fgItemId)) {
-              // console.log(res,'000000000000');
+    // async getSubstitution (req?:fgItemIdReq):Promise<SubResponseModel>{
+    //     try{
+    //       const getdata = await this.substitutionrepo.getSubstitution(req)
+    //       // console.log(getdata,"getdata")
+    //       const DataMap = new Map<string, FgDataModel>();
+    //       for (const res of getdata) {
+    //         if (!DataMap.has(res.fgItemId)) {
+    //           // console.log(res,'000000000000');
               
-              DataMap.set (res.fgItemId,new FgDataModel(res.substituionId,res.fgItemCode,res.fgItemId,res.rmItemCode,res.rmItemId,res.fgSku,res.fgSkuId,res.rmSku,res.rmSkuId,res.consumption,res.itemTypeId,res.itemGroupId,res.itemType,res.isActive,[]))
-              //  DataMap.set(res.fgItemId, new RmDataModel(res.rmItemId,res.itemType,res.rmSku,res.featureCode,res.status,res.itemCode,res.featureOptionId,res.optionGroup,res.optionId,re));
-              // console.log( res.fgItemId,'service item id');
+    //           DataMap.set (res.fgItemId,new FgDataModel(res.substituionId,res.fgItemCode,res.fgItemId,res.rmItemCode,res.rmItemId,res.fgSku,res.fgSkuId,res.rmSku,res.rmSkuId,res.consumption,res.itemTypeId,res.itemGroupId,res.itemType,res.isActive,[]))
+    //           //  DataMap.set(res.fgItemId, new RmDataModel(res.rmItemId,res.itemType,res.rmSku,res.featureCode,res.status,res.itemCode,res.featureOptionId,res.optionGroup,res.optionId,re));
+    //           // console.log( res.fgItemId,'service item id');
         
-            }
-             const RmSku = DataMap.get(res.fgItemId)?.rmData;
-            //  console.log( RmSku,'service item id/ x`out sidex');
-            if (RmSku) {
-              // const data1 = new RmDataModel(featureCode,res.status,res.itemCode,res.featureOptionId,res.optionGroup,res.optionId,re
-              const data1 = new RmDataModel(
-              res.rmItemId,
-                res.itemType,
-                res.rmSKuCode,
-                res.featureCode,
-                res.status,
-                res.itemCode,
-                res.featureOptionId,
-                res.optionGroup,res.optionId,res.optionValue
-              );
-              RmSku.push(data1);
-            }
-            // console.log(RmSku,'uuuuuuuuuuuu');
+    //         }
+    //          const RmSku = DataMap.get(res.fgItemId)?.rmData;
+    //         //  console.log( RmSku,'service item id/ x`out sidex');
+    //         if (RmSku) {
+    //           // const data1 = new RmDataModel(featureCode,res.status,res.itemCode,res.featureOptionId,res.optionGroup,res.optionId,re
+    //           const data1 = new RmDataModel(
+    //           res.rmItemId,
+    //             res.itemType,
+    //             res.rmSKuCode,
+    //             res.featureCode,
+    //             res.status,
+    //             res.itemCode,
+    //             res.featureOptionId,
+    //             res.optionGroup,res.optionId,res.optionValue
+    //           );
+    //           RmSku.push(data1);
+    //         }
+    //         // console.log(RmSku,'uuuuuuuuuuuu');
             
-          }
+    //       }
         
-          let ListArray: FgDataModel[] = Array.from(DataMap.values());
-          console.log(ListArray,'service............');
+    //       let ListArray: FgDataModel[] = Array.from(DataMap.values());
+    //       console.log(ListArray,'service............');
         
-          if(getdata.length>0){
+    //       if(getdata.length>0){
       
-            return new SubResponseModel(true,1,'data retreived',ListArray)
+    //         return new SubResponseModel(true,1,'data retreived',ListArray)
       
-          }else{
+    //       }else{
       
-            return new CommonResponseModel(false,0,'No data found')
+    //         return new CommonResponseModel(false,0,'No data found')
       
-          }
+    //       }
           
-        }catch(err){
-          throw err
-        }
-    }
+    //     }catch(err){
+    //       throw err
+    //     }
+    // }
 
+    // async getSubstitution(req?:fgItemIdReq):Promise<CommonResponseModel>{
+    //   const data =await this.substitutionrepo.getSubstitution(req);
+    //   if(data.length > 0){
+    //   const subdata=data.reduce((result,item)=>{
+    //     console.log(item,"/////////");
+        
+    //     const fgItemCode = item.fg_item_code;
+    //     const fgItemId = item.fg_rm_id;
+    //     const fgSkuCode= item.fg_sku;
+    //     if(!result[fgItemCode]){
+    //       result[fgItemCode]={
+    //         fg_item_id:fgItemId,
+    //         fg_item_code:fgItemCode,
+    //         fg_sku:fgSkuCode,
+    //         rm_items:[],
+    //       };
+    //     }
+    //     result[fgItemCode].rm_items.push({
+    //       rm_sku:item.rm_sku,
+    //       rm_item_code:item.rm_item_code,
+    //       item_type:item.item_type,
+    //       consumption:item.consumption,
+    //       feature_code:item.feature_code,
+    //       option_group:item.option_group,
+    //       option_value:item.option_value,
+    //     });
+    //     return result;
+
+    //   },{});
+    //   return new  CommonResponseModel(true,111,'Data retrieved',Object.values(subdata));
+    //   }
+    //   return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
+
+    // }
+
+    
+    
     async getFgSku(req?:fgItemIdReq):Promise<CommonResponseModel>{
       try{
         const getData = await this.substitutionrepo.getFgSku(req)
@@ -150,7 +187,18 @@ export class SubstituionService{
       
     }  
 
-
+async getSubstitution(req?:fgItemIdReq):Promise<CommonResponseModel>{
+  try{
+    const getdata= await this.substitutionrepo.getSubstitution(req)
+    if(getdata){
+      return new CommonResponseModel(true,1,'Data retreived',getdata)
+    }else{
+      return new CommonResponseModel(false,0,'No data found')
+    }
+  }catch (err){
+    throw err
+  }
+}
     async getRmSku(req?:fgItemIdReq):Promise<CommonResponseModel>{
       try{
         const getData = await this.substitutionrepo.getRmSku(req)

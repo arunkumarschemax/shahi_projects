@@ -1,14 +1,10 @@
- 
-
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select, DatePicker } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined, CloseSquareOutlined, CloseOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import {   BuyersService, BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, ItemCategoryService, ItemCreationService, ItemTypeService, ItemsService, LiscenceTypeService, MasterBrandsService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from '@project-management-system/shared-services';
-import { BuyerExtrnalRefIdReq, CompositionDto, FgItemCreIdRequest, ItemCreFilterRequest, LiscenceTypesdDto, MenusAndScopesEnum, SubContractStatus } from '@project-management-system/shared-models';
+import { BuyerExtrnalRefIdReq, CompositionDto, FgItemCreIdRequest, ItemCreFilterRequest, ItemCreationDTO, LiscenceTypesdDto, MenusAndScopesEnum, SubContractStatus } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
 import ItemCreation from './item-creation';
 import moment from 'moment';
@@ -27,8 +23,6 @@ const ItemCreationView = () => {
   const [selectedItemCreationData, setSelectedItemCreationData] = useState<any>(undefined);
    const service = new ItemCreationService();
   const brandservice = new MasterBrandsService();
-
-console.log(itemName,"itemName");
 
   const [pageSize, setPageSize] = useState<number>(1);
          const [styledata,setStyle]=useState([])
@@ -215,7 +209,7 @@ const checkAccess = (buttonParam) => {
     setSearchText('');
   };
 
-  const openFormWithData=(viewData: LiscenceTypesdDto)=>{
+  const openFormWithData=(viewData: ItemCreationDTO)=>{
     setDrawerVisible(true);
     setSelectedItemCreationData(viewData);
   }
@@ -457,23 +451,31 @@ const cancelOrder =(val:any) =>{
     {
       title: `Action`,
       dataIndex: 'action',
-      fixed:'right',
+      fixed:'right',align:'center',
       width:120,
       render: (text, rowData) => {
-        // console.log(rowData,'rowwwwwwww');
-        
         return( <span>
-            <EditOutlined className={'editSamplTypeIcon'} type="edit"
+            {/* <EditOutlined className={'editSamplTypeIcon'} type="edit"
               onClick={() => {
-                if (rowData.isActive) {
+                if (rowData.is_active) {                  
                   openFormWithData(rowData);
                 } else {
                   AlertMessages.getErrorMessage('You Cannot Edit Item Creation');
                 }
               }}
               style={{ color: '#1890ff', fontSize: '14px' }}
-            />
-  
+            /> */}
+                 <Tooltip placement="top" title='Edit'>
+                    <EditOutlined
+                      className={'editSamplTypeIcon'}
+                      type="edit"
+                      onClick={() => {
+                        // console.log(rowData, '---------rowdaatta')
+                        openFormWithData(rowData.fg_item_id)
+                      }}
+                      style={{ color: '#1890ff', fontSize: '14px' }}
+                    />
+                </Tooltip>
             <Divider type="vertical" />
             <Tooltip placement="top" title="Detail View">
                     <Button type="link" onClick={() => DetailView(rowData)}>

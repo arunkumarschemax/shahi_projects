@@ -91,12 +91,12 @@ export interface FabricTypeFormProps{
               message:' Fabric Type  Is Required'
             },
             {
-              pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+              // pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
               message: `Fabric Type Should contain only alphabets.`
             }
           ]}
         >
-          <Input placeholder=' enter Faabric type'/>
+          <Input placeholder=' Enter Fabric type'/>
         </Form.Item>
         </Col>
         </Row>

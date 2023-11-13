@@ -148,6 +148,17 @@ export class StyleOrderController{
         }
     }
 
+    @Post('/getCoLineInfoById')
+    @ApiBody({type:StyleOrderId})
+
+    async getCoLineInfoById(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return await this.styleOrderService.getCoLineInfoById(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+
     @Post('/createCoLine')
     // @ApiBody({type:CoLineReq})
     async createCoLine(@Body() req:any):Promise<CoLineResponseModel>{

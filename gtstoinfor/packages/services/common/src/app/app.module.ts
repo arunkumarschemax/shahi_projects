@@ -97,7 +97,7 @@ import { SubstituionModule } from './substituion/substituion.module';
      
       autoLoadEntities: true,
       synchronize: false,
-      logging: true,
+      logging: false,
       
       extra: {
         connectionLimit: 20

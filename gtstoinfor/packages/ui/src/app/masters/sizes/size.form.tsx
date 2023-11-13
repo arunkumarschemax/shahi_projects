@@ -96,7 +96,7 @@ services.getAllActiveDivision().then(res=>{
     <Card
       title={props.isUpdate?
       'Size':'Size'}
-      extra={( props.isUpdate == true) && <span> <Button onClick={()=>navigate('/masters/size/size-view')} type={'primary'}>View</Button></span>}>
+      extra={( props.isUpdate == false) && <span> <Button onClick={()=>navigate('/masters/size/size-view')} type={'primary'}>View</Button></span>}>
         
        
       <Form
