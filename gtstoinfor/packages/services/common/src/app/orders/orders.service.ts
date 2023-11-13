@@ -44,6 +44,7 @@ let moment = require('moment');
 moment().format();
 import * as nodemailer from 'nodemailer';
 import { PriceListService } from '@project-management-system/shared-services';
+import { TrimDetailsRequest } from './models/trim-details.req';
 
 @Injectable()
 export class OrdersService {
@@ -2627,7 +2628,7 @@ async sendMail(to: string, subject: string, message : any[]) {
     }
   }
 
-  async getTrimOrderDetails():Promise<CommonResponseModel>{
+  async getTrimOrderDetails(req:TrimDetailsRequest):Promise<CommonResponseModel>{
     try{
         const priceMap = new Map<string,Map<string,string>>()  //destination,itemcode,price
         // const destinationsDataQry = `select distinct(business_unit) from trim_orders`;
@@ -2653,8 +2654,7 @@ async sendMail(to: string, subject: string, message : any[]) {
                 }
             }
         }
-       
-        const data = await this.trimOrderRepo.find()
+        const data = await this.trimOrderRepo.find({where:{orderNo:req.orderNumber}})
         let destinationMap = new Map<string,Destinations>()
         if(data){
             let colorMap = new Map<string,Colors>()

@@ -10,6 +10,7 @@ import { Cron } from '@nestjs/schedule';
 import { extname } from 'path'; 
 import { FileIdReq } from './models/file-id.req';
 import { type } from 'os';
+import { TrimDetailsRequest } from './models/trim-details.req';
 ''
 
 @Controller('orders')
@@ -597,9 +598,10 @@ export class OrdersController {
     }
 
     @Post('/getTrimOrderDetails')
-    async getTrimOrderDetails(): Promise<CommonResponseModel> {
+    @ApiBody({type:TrimDetailsRequest})
+    async getTrimOrderDetails(@Body() req:any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.getTrimOrderDetails();
+            return this.ordersService.getTrimOrderDetails(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
