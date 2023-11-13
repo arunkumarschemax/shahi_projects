@@ -166,4 +166,22 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
         }
     }
 
+    async getAllPONumbers(vendorId: number): Promise<CommonResponseModel>{
+        try{
+            let query =`SELECT purchase_order_id as purchaseOrderId,po_number AS poNumber FROM purchase_order WHERE 1=1`
+            if (vendorId) {
+                query = query + ` AND po_number = "${vendorId}"`;
+            }
+            const data = await this.dataSource.query(query)
+
+            if(data.length > 0){
+                return new CommonResponseModel(true,0, "PO Numbers retrieved successfully", data)
+            }else{
+                return new CommonResponseModel(false,1,"No data found",[])
+            }
+        }catch(err){
+            throw(err)
+        }
+    }
+
 }
