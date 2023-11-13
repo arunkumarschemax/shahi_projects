@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Checkbox } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -223,22 +223,33 @@ service.createsize(variantData).then(res=>{
                 {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
               </>
             ),
-            filters: [
-              {
-                text: 'Active',
-                value: true,
-              },
-              {
-                text: 'InActive',
-                value: false,
-              },
-            ],
+            onFilter: (value, record) => record.isActive === value,
+            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+              <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+                <Checkbox
+                  checked={selectedKeys.includes(true)}
+                  onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+                >
+                  <span style={{color:'green'}}>Active</span>
+                </Checkbox>
+                <Checkbox
+                  checked={selectedKeys.includes(false)}
+                  onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+                >
+                  <span style={{color:'red'}}>Inactive</span>
+                </Checkbox>
+                <div className="custom-filter-dropdown-btns" >
+                <Button  onClick={() => clearFilters()} className="custom-reset-button">
+                    Reset
+                  </Button>
+                  <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+                    OK
+                  </Button>
+                
+                </div>
+              </div>
+            ),
             filterMultiple: false,
-            onFilter: (value, record) => 
-            {
-              // === is not work
-              return record.isActive === value;
-            },
             
           },
     {
