@@ -50,6 +50,10 @@ export class PurchaseOrderDto{
   yarnUom:number
 
   @ApiProperty()
+  indentId:number[]
+
+
+  @ApiProperty()
   poFabricInfo: PurchaseOrderFbricDto[]
 
   @ApiProperty()

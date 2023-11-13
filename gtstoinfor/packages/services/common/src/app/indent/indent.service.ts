@@ -45,7 +45,7 @@ export class IndentService{
     }
 
     async getIndentnumbers():Promise<CommonResponseModel>{
-        const data = 'select indent_id as indenyId ,request_no as indentCode from indent'
+        const data = 'select indent_id as indentId ,request_no as indentCode from indent'
         const result= await this.indentRepo.query(data)
         if(result){
             return new CommonResponseModel(true,1,'data retived sucessfully',result)

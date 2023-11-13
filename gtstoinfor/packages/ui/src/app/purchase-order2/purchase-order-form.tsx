@@ -1,4 +1,4 @@
-import { PurchaseOrderservice, StyleService } from "@project-management-system/shared-services";
+import { IndentService, PurchaseOrderservice, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, Row, Segmented, Select, Space, Tabs, message } from "antd"
 import TabPane from "antd/es/tabs/TabPane";
 import { useState, useEffect } from "react";
@@ -15,11 +15,13 @@ export const PurchaseOrderForm =()=>{
     const [trimData, setTrimData]=useState<any[]>([])
     const [activeForm, setActiveForm] = useState(1);
     const [indexVal, setIndexVal] = useState(1)
+    const [indenData, setIndentData] = useState<any[]>([])
     let fabricInfo:PurchaseOrderFbricDto[]=[];
     let trimInfo:PurchaseOrderTrimDto[]=[];
 
     const styleService = new StyleService()
     const purchaseOrderService = new PurchaseOrderservice()
+    const indentService = new IndentService()
 
     const onSegmentChange = (val) => {
         console.log(val)
@@ -33,6 +35,7 @@ export const PurchaseOrderForm =()=>{
 
     useEffect(() =>{
         getStyle()
+        getIndnetNo()
     },[])
 
     const getStyle = () => {
@@ -54,6 +57,16 @@ export const PurchaseOrderForm =()=>{
     const onReset = () =>{
         poForm.resetFields()
     }
+
+    const getIndnetNo = () =>{
+        indentService.getIndentnumbers().then(res =>{
+            if(res.status){
+                setIndentData(res.data)
+            }else{
+                setIndentData([])
+            }
+        })
+    }
     const onFinish = () =>{
         // console.log(fabricData)
         // console.log(trimData)
@@ -69,7 +82,7 @@ export const PurchaseOrderForm =()=>{
             const triminfo = new PurchaseOrderTrimDto(trim.productGroupId,trim.trimId,trim.colourId,trim.m3TrimCode,trim.description,trim.consumption,trim.remarks)
             trimInfo.push(triminfo)
         }
-        const poDto = new PurchaseOrderDto('po11',1,poForm.getFieldValue('styleId'),poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"),poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'),poForm.getFieldValue('remarks'),fabricInfo,trimInfo)
+        const poDto = new PurchaseOrderDto('po11',1,poForm.getFieldValue('styleId'),poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"),poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'),poForm.getFieldValue('remarks'),poForm.getFieldValue('indentId'),fabricInfo,trimInfo)
         purchaseOrderService.cretePurchaseOrder(poDto).then(res =>{
             console.log(poDto)
             if(res.status){
@@ -82,11 +95,21 @@ export const PurchaseOrderForm =()=>{
     
 return(
     <>
-    <Card title='Purchase Order' className="card-header" extra={<span>{'IndntCode'}</span>}>
+    <Card title='Purchase Order' className="card-header">
         <Form form={poForm} layout="vertical">
             <Row gutter={8}>
-             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
-                <Form.Item name={'indentId'} hidden><Input></Input></Form.Item>
+             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+                    <Form.Item name='indentId' label='Indent Code' rules={[{required:true,message:'IndentCode is required'}]}>
+                       <Select showSearch allowClear optionFilterProp="children" placeholder='Select Indent' mode="multiple">
+                            {indenData.map(e => {
+                                return(
+                                    <Option key={e.indentId} value={e.indentId} name={e.indentCode}> {e.indentCode}</Option>
+                                )
+                            })}
+                        </Select>
+                    </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
                     <Form.Item name='styleId' label='Style' rules={[{required:true,message:'Style is required'}]}>
                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Style'>
                             {style.map(e => {
@@ -97,8 +120,8 @@ return(
                         </Select>
                     </Form.Item>
               </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
-                    <Form.Item name='vendorId' label='Vendor' rules={[{required:true,message:'Style is required'}]}>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+                    <Form.Item name='vendorId' label='Vendor' rules={[{required:true,message:'vendor is required'}]}>
                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor'>
                             {style.map(e => {
                                 return(
@@ -108,12 +131,12 @@ return(
                         </Select>
                     </Form.Item>
               </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='purchaseOrderDate' label='Purchase Order Date' rules={[{required:true,message:'Style is required'}]}>
                     <DatePicker style={{ width: '93%', marginLeft: 5 }} />
                     </Form.Item>
               </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='expectedDeliveryDate' label='Expected Delivery Data' rules={[{required:true,message:'Style is required'}]}>
                     <DatePicker style={{ width: '93%', marginLeft: 5 }} />
                     </Form.Item>
