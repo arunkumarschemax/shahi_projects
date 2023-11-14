@@ -17,9 +17,10 @@ export class PurchaseOrderDto{
    isActive: boolean
    status:PurchaseOrderStatus
   remarks:string
+  poMaterialType:string
   indentId:number[]
   poFabricInfo: PurchaseOrderFbricDto[]
-  poTrimInfo:PurchaseOrderTrimDto[]
+  poTrimInfo?:PurchaseOrderTrimDto[]
   constructor(
     poNumber:string,
     vendorId:number,
@@ -27,9 +28,10 @@ export class PurchaseOrderDto{
     expectedDeliveryDate:any,
     purchaseOrderDate:any,
     remarks:string,
+    poMaterialType:string,
     indentId:number[],
     poFabricInfo: PurchaseOrderFbricDto[],
-  poTrimInfo:PurchaseOrderTrimDto[]
+  poTrimInfo?:PurchaseOrderTrimDto[]
   ){
     this.poNumber=poNumber
     this.vendorId=vendorId
@@ -40,6 +42,7 @@ export class PurchaseOrderDto{
     this.poFabricInfo=poFabricInfo
     this.poTrimInfo=poTrimInfo
     this.indentId=indentId
+    this.poMaterialType=poMaterialType
   }
 
 }

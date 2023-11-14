@@ -101,6 +101,13 @@ export class PurchaseOrderEntity{
       nullable:true
     })
     indentId:number
+
+    @Column('varchar',{
+      name:'po_material_type',
+      nullable:true
+    })
+    poMaterialType:string
+    
     
   @OneToMany(type => PurchaseOrderFbricEntity, purchaseReqFabric => purchaseReqFabric.purchaseOrderEntity, { cascade: true })
   poFabricInfo: PurchaseOrderFbricEntity[]
