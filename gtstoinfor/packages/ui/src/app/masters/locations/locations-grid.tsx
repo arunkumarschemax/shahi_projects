@@ -294,15 +294,16 @@ export function LocationsGrid(props: LocationsGridProps) {
 <Card title='Locations' extra={<span><Button onClick={() => navigate('/global/locations/locations-form')} type={'primary'}>New</Button></span>}>
  <br></br>
       <Row gutter={40}>
-      <Col>
+      <Col span={4}></Col>
+      <Col span={5}>
       <Alert type='success' message={'Total Locations: ' + locationData.length} style={{fontSize:'15px'}} />
           {/* <Card title={'Total Locations: ' + locationData.length} style={{textAlign: 'left', width: 250, height: 41,backgroundColor:'#bfbfbf'}}></Card> */}
           </Col>
-          <Col>
+          <Col span={5}>
           <Alert type='warning' message={'Active: ' + locationData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
            {/* <Card title={'Active: ' + locationData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card> */}
           </Col>
-          <Col>
+          <Col span={5}>
           <Alert type='info' message={'In-Active: ' + locationData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
            {/* <Card title={'In-Active: ' + locationData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card> */}
           </Col>

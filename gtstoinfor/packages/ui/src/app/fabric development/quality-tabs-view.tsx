@@ -32,28 +32,28 @@ export const QualityTabsView = () =>{
     
 useEffect(()=>{getData()},[])
 const getData = () => {
- styleService.getAllActiveStyle().then(res=>{
-  if(res.data){
-    setStyle(res.data)
-  }else{
-    setStyle([])
-  }
-})
-colorService.getAllActiveColour().then(res=>{
-  if(res.data){
-    setColor(res.data)
-  }else{
-    setColor([])
-  }
-})
+//  styleService.getAllActiveStyle().then(res=>{
+//   if(res.data){
+//     setStyle(res.data)
+//   }else{
+//     setStyle([])
+//   }
+// })
+// colorService.getAllActiveColour().then(res=>{
+//   if(res.data){
+//     setColor(res.data)
+//   }else{
+//     setColor([])
+//   }
+// })
 
-uomServices.getAllActiveUoms().then(res=>{
-  if(res.data){
-    setUom(res.data)
-  }else{
-    setUom([])
-  }
-})
+// uomServices.getAllActiveUoms().then(res=>{
+//   if(res.data){
+//     setUom(res.data)
+//   }else{
+//     setUom([])
+//   }
+// })
 }
 
 
