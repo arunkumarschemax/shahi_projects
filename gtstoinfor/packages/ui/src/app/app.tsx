@@ -7,6 +7,7 @@ import { Route, Link } from 'react-router-dom';
 import axios from 'axios';
 import { AppRoutes } from './routes';
 import { LoginComponent, useIAMClientState } from './common/iam-client-react';
+import Login from './layout/login/login';
 
 
 export function App() {
@@ -29,11 +30,9 @@ export function App() {
 
   return (IAMClientAuthContext.isAuthenticated ? <>
     <CustomSpinner loading={load} />
-    <Route />
+    <AppRoutes />
   </> :
-    <div style={{ backgroundImage: `url(${bkimage})`, display: 'flex', backgroundSize: 'cover', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <LoginComponent />
-    </div>
+   <Login />
   );
 
 }
