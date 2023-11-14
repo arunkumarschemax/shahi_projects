@@ -1,4 +1,4 @@
-import { BuyersDestinationDto, BuyersDestinationResponseModel, BuyersDestinationRequest } from "@project-management-system/shared-models";
+import { BuyersDestinationDto, BuyersDestinationResponseModel, BuyersDestinationRequest, CommonResponseModel, BuyerIdReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class BuyerDestinationService  extends CommonAxiosService{
@@ -22,6 +22,18 @@ export class BuyerDestinationService  extends CommonAxiosService{
 
     async getDestinationDropDown():Promise<BuyersDestinationResponseModel>{
         return this.axiosPostCall(this.URL + '/getDestinationDropDown')
+    }
+
+    async getDestinationsByBuyerId(req:BuyerIdReq):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL + '/getDestinationsByBuyerId',req)
+    }
+
+    async getColorsByBuyerId(req:BuyerIdReq):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL + '/getColorsByBuyerId',req)
+    }
+
+    async getSizesByBuyerId(req:BuyerIdReq):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL + '/getSizesByBuyerId',req)
     }
 
 }

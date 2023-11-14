@@ -67,7 +67,7 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
             query.andWhere(`item_type = :itemtype`, { itemtype: req.itemType }); 
           }
           if (req.productGroup !== undefined) {
-            query.andWhere(`product_group = :productGroup`, { productGroup: req.productGroup }); 
+            query.andWhere(`rmi.product_group_id = :productGroup`, { productGroup: req.productGroup }); 
           }
           if (req.procurementGroup !== undefined) {
             query.andWhere(`procurment_group = :procurmentGroup`, { procurmentGroup: req.procurementGroup }); 
