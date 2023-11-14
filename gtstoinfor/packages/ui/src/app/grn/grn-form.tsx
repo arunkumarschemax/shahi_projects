@@ -104,19 +104,6 @@ const GRNForm = () => {
                 </Row>
            
             </Form>
-            <Row gutter={24}>
-                
-                {/* <Card>
-                  <Tabs type={'card'} tabPosition={'top'}>
-                    <TabPane key="1" tab={<span><b>{`Fabric`}</b></span>}>
-                    <GRNFabricForm key='fabric' props={handleFabricOnchange} />
-                    </TabPane>
-                    <TabPane key="2" tab={<span><b>{`Trim`}</b></span>}>
-                    <GRNTrimForm key='trim' props={handleTrim} />
-                    </TabPane>
-                </Tabs>
-                </Card> */}
-                </Row>
                 <Row justify={'end'}>
                 <Col span={24} style={{ textAlign: "right", marginTop:'10px'}} >
                   <Button type="primary">Submit</Button>
