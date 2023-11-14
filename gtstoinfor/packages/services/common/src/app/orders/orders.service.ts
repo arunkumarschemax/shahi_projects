@@ -2655,6 +2655,7 @@ async sendMail(to: string, subject: string, message : any[]) {
             }
         }
         const data = await this.trimOrderRepo.find({where:{orderNo:req.orderNumber}})
+        console.log(data,'-------')
         let destinationMap = new Map<string,Destinations>()
         if(data){
             let colorMap = new Map<string,Colors>()
@@ -2663,7 +2664,7 @@ async sendMail(to: string, subject: string, message : any[]) {
                     destinationMap.set(rec.businessUnit,new Destinations(rec.businessUnit,[])) 
                 }
                 if(!colorMap.has(rec.color)){
-                    colorMap.set(rec.color,new Colors(rec.color,[]))
+                    colorMap.set(rec.color,new Colors(`${rec.colorCode} ${rec.color}`,[]))
                 }
                 colorMap.get(rec.color).sizes.push(new Sizes(rec.size,rec.orderQtyPcs,Number(priceMap.get(rec.businessUnit).get(rec.sampleCode.slice(2))))) 
             }
@@ -2675,8 +2676,10 @@ async sendMail(to: string, subject: string, message : any[]) {
             destinations.push(rec)  
         })
             
-            const info = new CoLineFormatModel(data[0].orderPlanNumber,data[0].trimItemNo,null,data[0].contractedETD,destinations)
+            const info = new CoLineFormatModel(data[0].orderNo,data[0].trimItemNo,null,data[0].contractedETD,destinations)
             return new CommonResponseModel(true,1,'Data retrieved successfully',info)
+        } else{
+            return new CommonResponseModel(false,0,'No data found') 
         }
     }catch(err){
         throw err
