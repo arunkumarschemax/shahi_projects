@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { BusinessAreaRepository } from "./business-area.repo";
 import { BusinessAreaActivateReq, BusinessAreaModel, BusinessAreaReq, BusinessAreaResponseModel } from "@project-management-system/shared-models";
 import { BusinessArea } from "./business-area.entity";
+import { Not } from "typeorm";
 
 @Injectable()
 export class BusinessAreaService {
@@ -18,6 +19,11 @@ export class BusinessAreaService {
                 if(buyerNameCheck.length >0){
                     return new BusinessAreaResponseModel(false,0,'Business Area Code already exists')
                 }
+            }else{
+                const buyerNameCheck = await this.repo.find({where:{businessAreaCode:req.businessAreaCode,businessAreaId: Not(req.businessAreaId)}})
+                if(buyerNameCheck.length > 0){
+                    return new BusinessAreaResponseModel(false,0,'Business Area Code already exists')
+                }
             }
             entity.businessAreaCode = req.businessAreaCode;
             entity.businessAreaName = req.businessAreaName;
@@ -29,7 +35,7 @@ export class BusinessAreaService {
             }
             const save = await this.repo.save(entity)
             const convertedData = new BusinessAreaModel(save.businessAreaId,save.businessAreaCode,save.businessAreaName,save.isActive,save.versionFlag)
-            return new BusinessAreaResponseModel(true,1,isUpdate ? 'Updated successfully' : 'Saved successfully',[convertedData])
+            return new BusinessAreaResponseModel(true,1,isUpdate ? 'Business Area Updated successfully' : 'Business Area Saved successfully',[convertedData])
 
         } catch(err){
             throw err
