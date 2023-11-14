@@ -7,7 +7,6 @@ export class IndentFabricModel{
     fabricType: string;
     weave: string;
     weight: number;
-    uomId: number;
     width: number;
     yarnCount: number;
     unit: number;
@@ -18,34 +17,26 @@ export class IndentFabricModel{
     color: string;
     pch: number;
     moq: number;
-    moqUnit: number;
+    moqUnit: string;
     moqPrice: number;
-    moqPriceUnit: number;
+    moqPriceUnit: string;
     season: string;
     supplierId: number;
     buyer: string;
     grnDate: Date;
     xlNo: string;
     quantity: number;
-    quantityUomId: string;
-    file_path: string;
-    isUploaded: boolean;
-    expectedDate: Date;
-    indentCloseDate: Date;
-    remarks: string;
-    isActive?: boolean;
-    createdAt?: Date;
-    createdUser?: string | null;
-    updatedAt?: Date;
-    updatedUser?: string | null;
-    versionFlag?: number;
+    quantityUnit: string;
+    status:string;
+  
+
+
   constructor(
     ifabricId: number,
     content: string,
     fabricType: string,
     weave: string,
     weight: number,
-    uomId: number,
     width: number,
     yarnCount: number,
     unit: number,
@@ -56,34 +47,25 @@ export class IndentFabricModel{
     color: string,
     pch: number,
     moq: number,
-    moqUnit: number,
+    moqUnit: string,
     moqPrice: number,
-    moqPriceUnit: number,
+    moqPriceUnit: string,
     season: string,
     supplierId: number,
     buyer: string,
     grnDate: Date,
     xlNo: string,
     quantity: number,
-    quantityUomId: string,
-    file_path: string,
-    isUploaded: boolean,
-    expectedDate: Date,
-    indentCloseDate: Date,
-    remarks: string,
-    isActive?: boolean,
-    createdAt?: Date,
-    createdUser?: string | null,
-    updatedAt?: Date,
-    updatedUser?: string | null,
-    versionFlag?: number,
+    quantityUnit: string,
+    status:string,
+
+ 
   ){
     this.ifabricId=ifabricId;
     this.content=content;
     this.fabricType=fabricType;
     this.weave=weave;
     this.weight=weight;
-    this.uomId=uomId;
     this.width=width;
     this.yarnCount=yarnCount;
     this.unit=unit;
@@ -103,18 +85,10 @@ export class IndentFabricModel{
     this.grnDate=grnDate;
     this.xlNo=xlNo;
     this.quantity=quantity;
-    this.quantityUomId=quantityUomId;
-    this.file_path=file_path;
-    this.isUploaded=isUploaded;
-    this.expectedDate=expectedDate;
-    this.indentCloseDate=indentCloseDate;
-    this.remarks=remarks;
-    this.isActive=isActive;
-    this.createdAt=createdAt;
-    this.createdUser=createdUser;
-    this.updatedAt=updatedAt;
-    this.updatedUser=updatedUser;
-    this.versionFlag=versionFlag;
+    this.quantityUnit=quantityUnit;
+    this.status=status;
+
+
   }
 
 

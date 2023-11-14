@@ -100,7 +100,7 @@ export const SourcingRequisitionDynamicView = () => {
         },
         {
             title:'Weave',
-            dataIndex:'weaveId',
+            dataIndex:'weave',
             // render: (text,record) => {
             //     return(
             //         <>
@@ -134,7 +134,7 @@ export const SourcingRequisitionDynamicView = () => {
             render: (text,record) => {
                 return(
                     <>
-                    {record.yarnCount ? `${record.yarnCount} ${record.yarnUnit}` : '-'}
+                    {record.yarnCount ? `${record.yarnCount} ${record.unit}` : '-'}
                     </>
                 )
             }
@@ -230,7 +230,7 @@ export const SourcingRequisitionDynamicView = () => {
             render: (text,record) => {
                 return(
                     <>
-                    {record.buyer ? record.buyerName : '-'}
+                    {record.buyer ? record.buyer : '-'}
                     </>
                 )
             }
@@ -253,14 +253,14 @@ export const SourcingRequisitionDynamicView = () => {
         },
         {
             title:'Available Quantity',
-            dataIndex:'availableQuantity',
-            render: (text,record) => {
-                return(
-                    <>
-                    {record.availableQuantity ? `${record.availableQuantity} ${record.quantityUnit}` : '-'}
-                    </>
-                )
-            }
+            dataIndex:'quantity',
+            // render: (text,record) => {
+            //     return(
+            //         <>
+            //         {record.quantity ? `${record.availableQuantity} ${record.quantityUnit}` : '-'}
+            //         </>
+            //     )
+            // }
         },
         {
             title:'Status',
@@ -419,7 +419,7 @@ export const SourcingRequisitionDynamicView = () => {
     }
 
     const HeaderRow = (props: any,) => {
-        const {requestNo,style,styleDescription,expectedDate,indentDate,status} = props
+        const {requestNo,style,description,expectedDate,indentDate,status} = props
           
           return (
             <div style={{ display: "flex" }}>
@@ -427,7 +427,7 @@ export const SourcingRequisitionDynamicView = () => {
               <span style={{width:'10px'}}></span>
               <span>Style : {<b>{style}</b>}</span>
               <span style={{width:'10px'}}></span>
-              <span>Description : {<b>{styleDescription}</b>}</span>
+              <span>Description : {<b>{description}</b>}</span>
               <span style={{width:'10px'}}></span>
               <span>Indent Date : {<b>{indentDate}</b>}</span>
               <span style={{width:'10px'}}></span>
@@ -515,7 +515,7 @@ export const SourcingRequisitionDynamicView = () => {
 
             <Collapse collapsible="icon" expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />} accordion>
                       {tableData.map((item: any, index: any) => (
-                        <Collapse.Panel header={<HeaderRow requestNo={item.requestNo} style={item.style} styleDescription={item.styleDescription} expectedDate={item.expectedDate} indentDate={item.indentDate}  status={item.status}/>} key={index} extra={<Tag onClick={() => generateBarcode(item.requestNo,'requestNo')} style={{cursor:'pointer'}}>
+                        <Collapse.Panel header={<HeaderRow requestNo={item.requestNo} style={item.style} description={item.description} expectedDate={item.expectedDate} indentDate={item.indentDate}  status={item.status}/>} key={index} extra={<Tag onClick={() => generateBarcode(item.requestNo,'requestNo')} style={{cursor:'pointer'}}>
                         <BarcodeOutlined />
                     </Tag>}>
                         <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}>
@@ -541,12 +541,12 @@ export const SourcingRequisitionDynamicView = () => {
                     />
                     <div>
                         {tabName === 'Fabric' ? (<>
-                        <Table columns={columns} dataSource={item.iFabricInfo} pagination={false} scroll={{x:'max-content'}} className="custom-table-wrapper"/>
+                        <Table columns={columns} dataSource={item.indentFabricDetails} pagination={false} scroll={{x:'max-content'}} className="custom-table-wrapper"/>
                         </>) : (<></>)}
                     </div>
                     <div>
                         {tabName === 'Trim' ? (<>
-                            <Table columns={columnsSkelton} dataSource={item.iTrimsInfo} pagination={false} scroll={{x:'max-content'}} className="custom-table-wrapper"/>
+                            <Table columns={columnsSkelton} dataSource={item.indentTrimDetails} pagination={false} scroll={{x:'max-content'}} className="custom-table-wrapper"/>
                         </>) : (<></>)}
                     </div>
                     </Space>

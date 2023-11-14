@@ -20,7 +20,7 @@ export const StockView = () => {
 
   const getData = async () => {
     service.getAllStocks().then(res => {
-      console.log(res, "???????????????????????????????????");
+      // console.log(res, "???????????????????????????????????");
       if (res) {
         setData(res);
         AlertMessages.getSuccessMessage("Stock retrived successfully. ")
@@ -131,6 +131,13 @@ export const StockView = () => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
+      title: "Plant",
+      dataIndex: "name",
+      ...getColumnSearchProps("name"),
+      // sorter: (a, b) => a.plant - b.plant,
+      // sortDirections: ['descend', 'ascend'],
+    },
+    {
       title: "M3 Item Code",
       dataIndex: "m3_item_code",
       ...getColumnSearchProps("m3_item_code"),
@@ -156,20 +163,29 @@ export const StockView = () => {
       // filterSearch: true,
       // onFilter: (value, record) => record.itemType.startsWith(value),
     },
+    {
+      title: "Product Group",
+      dataIndex: "item_type",
+      // filters: [
+      //   {
+      //     text: "Fabric",
+      //     value: "Fabric",
+      //   },
+      //   {
+      //     text: "Trim",
+      //     value: "Trim",
+      //   },
+      // ],
+      // filterSearch: true,
+      // onFilter: (value, record) => record.itemType.startsWith(value),
+    },
 
 
     {
       title: "Location",
-      dataIndex: "location_name",
-      ...getColumnSearchProps("location_name"),
+      dataIndex: "rack_position_name",
+      ...getColumnSearchProps("rack_position_name"),
 
-    },
-    {
-      title: "Plant",
-      dataIndex: "name",
-      ...getColumnSearchProps("name"),
-      // sorter: (a, b) => a.plant - b.plant,
-      // sortDirections: ['descend', 'ascend'],
     },
 
     {

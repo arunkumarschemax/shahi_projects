@@ -10,7 +10,7 @@ import { treeRouter } from '../../utils/common';
 import { DarkModeIcon } from '../../icons/darkmode.icon';
 import { LightModeIcon } from '../../icons/lightmode.icon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGears, faGlobe, faHatCowboy, faLayerGroup, faPeopleRoof, faShirt, faShoppingCart} from '@fortawesome/free-solid-svg-icons';
+import { faGears, faGlobe, faHatCowboy, faLayerGroup, faPeopleRoof, faShirt, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 
 const { useToken } = theme
 
@@ -114,7 +114,7 @@ export const baseMRouterList = [
                 path: "buyers/buyers-view",
                 filepath: "buyers/buyers-view",
             },
-          
+
         ],
     },
     {
@@ -136,7 +136,7 @@ export const baseMRouterList = [
             //     path: 'component-mapping/component-mapping-form',
             //     filepath: 'component-mapping/component-mapping-form',
             // },
-            
+
         ]
 
     },
@@ -172,7 +172,7 @@ export const baseMRouterList = [
         key: "sample-development",
         path: "sample-development",
         filepath: "sample-development",
-        children:[
+        children: [
             {
                 label: "Sample Development",
                 key: "sample-development",
@@ -200,14 +200,14 @@ export const baseMRouterList = [
         filepath: "/stack-report",
     },
     {
-        label: "Material Requision",
+        label: "Sample Material Status",
         key: "material-requisition",
         path: "material-requisition",
         filepath: "/material-requisition",
     },
 
-    
-    
+
+
     // {
     //     label: "Marketing Requisition",
     //     key: "marketing-requisition",
@@ -224,7 +224,7 @@ export const baseMRouterList = [
 ]
 
 export const baseRouterList = [
-    
+
     {
         label: "Masters",
         key: "masters",
@@ -286,7 +286,7 @@ export const baseRouterList = [
                 path: "operationgroups/operationgroups-view",
                 filepath: "operationgroups/operationgroups-view",
             },
-          
+
             {
                 label: "Operations",
                 key: "operations",
@@ -311,7 +311,7 @@ export const baseRouterList = [
                 path: "buyers/buyers-view",
                 filepath: "buyers/buyers-view",
             },
-          
+
         ],
     },
     {
@@ -333,7 +333,7 @@ export const baseRouterList = [
             //     path: 'component-mapping/component-mapping-form',
             //     filepath: 'component-mapping/component-mapping-form',
             // },
-            
+
         ]
 
     },
@@ -584,14 +584,14 @@ export const baseRouterList = [
     //             path: "/masters/garmentcategory/garmentcategory-view",
     //             filepath: "/masters/garmentcategory/garmentcategory-view",
     //         },
-            
+
     //         {
     //             label: "Locations",
     //             key: "locations",
     //             path: "locations/locations-view",
     //             filepath: "locations/locations-view",
     //         },
-            
+
     //         {
     //             label: "Profit Control Head",
     //             key: "profit-control-head",
@@ -670,7 +670,7 @@ export const baseRouterList = [
     //             path: "fabric-finish-type/fabric-finish-type-grid",
     //             filepath: "fabric-finish-type/fabric-finish-type-grid",
     //         },
-         
+
     //         {
     //             label: "Colours",
     //             key: "colours",
@@ -701,7 +701,7 @@ export const baseRouterList = [
     //     path: "fabric-weave/fabric-weave-view",
     //     filepath: "fabric-weave/fabric-weave-view",
     // }
-          
+
     //     ],
     // }, 
     // {
@@ -760,11 +760,11 @@ export const baseRouterList = [
     //             path: "sample-development-view",
     //             filepath: "sample-development-view"
     //         },
-           
+
     //     ]
     // },
 
-   
+
 
     // {
     //     label: "Sample Development",
@@ -793,6 +793,12 @@ export const baseRouterList = [
         filepath: "sample-development/sample-requests"
     },
     {
+        label: "Location Pending Details",
+        key: "locationmapping",
+        path: "grn-pending-info-grid",
+        filepath: "sample-development/grn-pending-info-grid"
+    },
+    {
         label: "Material Issues",
         key: "store-issues",
         path: "store-issues/material-issue-view",
@@ -805,8 +811,8 @@ export const baseRouterList = [
         //         filepath: "source-issues-view"
         //     }
         // ]
-    },  
-    
+    },
+
     // {
     //     label: "Material Creation",
     //     key: "materialCreation",
@@ -814,7 +820,7 @@ export const baseRouterList = [
     //     path: "materialCreation",
     //     filepath: "materialCreation",
     //     children:[
-            
+
     //         {
     //             label: "Item Creation",
     //             key: "item-creation",
@@ -866,14 +872,14 @@ export const baseRouterList = [
         // icon:<FontAwesomeIcon icon={faShirt} />,
         path: "operation-tracking",
         filepath: "operation-tracking",
-        children:[
+        children: [
             {
                 label: "Operation Sequence",
                 key: "operation-sequence",
                 path: "operation-sequence",
                 filepath: "operation-sequence",
             },
-            
+
             {
                 label: "Issuing",
                 key: "issuing",
@@ -892,10 +898,11 @@ export const baseRouterList = [
                 path: "inventory",
                 filepath: "inventory",
             },
-            
-         
+
+
         ]
     },
+
     {
         label: "Stock Report",
         key: "stack-report",
@@ -915,7 +922,7 @@ export const baseRouterList = [
         // icon:<FontAwesomeIcon icon={faShirt} />,
         path: "/report",
         filepath: "/report",
-        children:[
+        children: [
             {
                 label: "Material Issues Report",
                 key: "material-issue-report",
@@ -988,7 +995,7 @@ export const baseRouterList = [
     //     ],
     // },
 
-   
+
 ];
 
 export default function BasicLayout() {
@@ -998,7 +1005,7 @@ export default function BasicLayout() {
     const [settings, setSettings] = useState<any>({ colorPrimary: '1890ff', fixedHeader: true })
     const { token: { colorPrimary, colorPrimaryActive, colorPrimaryBg } } = useToken()
     // useEffect(()=> {
-        console.log(localStorage.getItem('userName'))
+    console.log(localStorage.getItem('userName'))
     // },[])
 
 
@@ -1023,7 +1030,8 @@ export default function BasicLayout() {
                     token={{ header: { colorBgHeader: 'transparent' }, sider: { colorBgMenuItemSelected: colorPrimaryBg } }}
                     route={{
                         path: '/',
-                        routes: treeRouter(localStorage.getItem('userName') == 'sourceUser'? baseRouterList:baseMRouterList),                    }}
+                        routes: treeRouter(localStorage.getItem('userName') == 'sourceUser' ? baseRouterList : baseMRouterList),
+                    }}
                     location={{
                         pathname,
                     }}

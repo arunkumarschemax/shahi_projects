@@ -55,7 +55,6 @@ const SizeDetail = ({props,buyerId}) => {
    const handleInputChange = (colourId, sizeId, quantity,recordKey) => {
     console.log(recordKey)
     let newData = [...onchangeData];
-
     const updatedData = data.map((record) => {
       if (record.key === recordKey) {
         let existingEntry = newData.find((entry) => entry.colour === colourId);
@@ -79,7 +78,6 @@ const SizeDetail = ({props,buyerId}) => {
           }
         }
       }
-      console.log(newData)
       setOnchangeData(newData); 
       props(newData)
     });
@@ -89,6 +87,7 @@ const SizeDetail = ({props,buyerId}) => {
   const handleDelete = (key) => {
     const updatedData = data.filter((record) => record.key !== key);
     setData(updatedData);
+    props(updatedData)
   };
   const add =()=>{
     form.validateFields().then((val) =>{
@@ -140,7 +139,7 @@ const SizeDetail = ({props,buyerId}) => {
     }
   }));
 
-  
+
   const columns = [
     {
       title: 'S.No',
@@ -190,19 +189,19 @@ const SizeDetail = ({props,buyerId}) => {
 
   const shouldShowSummary = data.length > 0;
 
-  const summary = () => shouldShowSummary ? (
-    <Table.Summary.Row>
-      <Table.Summary.Cell index={0}></Table.Summary.Cell>
-      <Table.Summary.Cell index={1}>Total</Table.Summary.Cell>
-      <Table.Summary.Cell index={2}>{calculateTotal('xs')}</Table.Summary.Cell>
-      <Table.Summary.Cell index={3}>{calculateTotal('s')}</Table.Summary.Cell>
-      <Table.Summary.Cell index={4}>{calculateTotal('m')}</Table.Summary.Cell>
-      <Table.Summary.Cell index={5}>{calculateTotal('l')}</Table.Summary.Cell>
-      <Table.Summary.Cell index={6}>{calculateTotal('xl')}</Table.Summary.Cell>
-      <Table.Summary.Cell index={7}>{calculateTotal('xxl')}</Table.Summary.Cell>
-      <Table.Summary.Cell index={8}></Table.Summary.Cell>
-    </Table.Summary.Row>
-  ) : null;
+  // const summary = () => shouldShowSummary ? (
+  //   <Table.Summary.Row>
+  //     <Table.Summary.Cell index={0}></Table.Summary.Cell>
+  //     <Table.Summary.Cell index={1}>Total</Table.Summary.Cell>
+  //     <Table.Summary.Cell index={2}>{calculateTotal('xs')}</Table.Summary.Cell>
+  //     <Table.Summary.Cell index={3}>{calculateTotal('s')}</Table.Summary.Cell>
+  //     <Table.Summary.Cell index={4}>{calculateTotal('m')}</Table.Summary.Cell>
+  //     <Table.Summary.Cell index={5}>{calculateTotal('l')}</Table.Summary.Cell>
+  //     <Table.Summary.Cell index={6}>{calculateTotal('xl')}</Table.Summary.Cell>
+  //     <Table.Summary.Cell index={7}>{calculateTotal('xxl')}</Table.Summary.Cell>
+  //     <Table.Summary.Cell index={8}></Table.Summary.Cell>
+  //   </Table.Summary.Row>
+  // ) : null;
 
   return (
     <div>
@@ -211,7 +210,7 @@ const SizeDetail = ({props,buyerId}) => {
       <Table 
       dataSource={data} 
       columns={columns} 
-      summary={summary}
+      // summary={summary}
       bordered={true}
       />
       {/* <Button>Confirm</Button> */}
