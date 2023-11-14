@@ -65,7 +65,7 @@ export class IndentService{
             for(const trim of trimIndentData){
                 trimModel.push(new IndentTrimsModel(trim.itrims_id,trim.trim_type,trim.trim_code,trim.sizes,trim.colour,
                     trim.quantity,trim.m3_trim_code,trim.description,
-                    trim.remarks,trim.status))
+                    trim.remarks,trim.quantity,trim.status))
             }
             indentModel.push(new IndentModel(data.indent_id,data.request_no,data.indent_date,data.expected_date,data.status,fabricModel,trimModel,data.style,data.description,data.created_at))
         }

@@ -31,7 +31,7 @@ export const baseMRouterList = [
                 filepath: "/rack-view",
             },
             {
-                label: "Rack Positions",
+                label: "Ware house locations",
                 key: "rackPosition-view",
                 path: "rackPosition-view",
                 filepath: "/rackPosition-view",
@@ -239,7 +239,7 @@ export const baseRouterList = [
                 filepath: "/rack-view",
             },
             {
-                label: "Rack Positions",
+                label: "Ware house locations",
                 key: "rackPosition-view",
                 path: "rackPosition-view",
                 filepath: "/rackPosition-view",
