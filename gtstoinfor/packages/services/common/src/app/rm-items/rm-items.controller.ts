@@ -79,4 +79,28 @@ export class RmCreationController{
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
+    @Post('/ProductGroupDropdown')
+    async ProductGroupDropdown(): Promise<CommonResponseModel> {
+        try {
+            return await this.rmCreationService.ProductGroupDropdown();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+    @Post('/itemTypeDropdown')
+    async itemTypeDropdown(): Promise<CommonResponseModel> {
+        try {
+            return await this.rmCreationService.itemTypeDropdown();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+    @Post('/ProcurementGroupDropdown')
+    async ProcurementGroupDropdown(): Promise<CommonResponseModel> {
+        try {
+            return await this.rmCreationService.ProcurementGroupDropdown();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
 }

@@ -233,10 +233,10 @@ rmservice.getAllRMItems(req).then(res => {
     setSearchText('');
   };
 
-  const openFormWithData=(viewData: LiscenceTypesdDto)=>{
-    setDrawerVisible(true);
-    setSelectedItemCreationData(viewData);
-  }
+  // const openFormWithData=(viewData: LiscenceTypesdDto)=>{
+  //   setDrawerVisible(true);
+  //   setSelectedItemCreationData(viewData);
+  // }
 
   const DetailView = (rowData) => {
 
@@ -373,7 +373,7 @@ const getAllUoms=() =>{
       },
       {
         title: "Price",
-        dataIndex: "price",align:'center',render: (data) => {
+        dataIndex: "price",align:'right',render: (data) => {
           return data ? data : "-";
         },
         sorter: (a, b) => a.price.localeCompare(b.price),
@@ -430,7 +430,7 @@ const getAllUoms=() =>{
 
   return (
       <>
-      <Card title={<span >RM View</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+      <Card title={<span >RM Fabric View </span>}style={{textAlign:'left'}} headStyle={{ border: 0 }} 
     extra={<Link to='/materialCreation/fabric-bom-creation' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >

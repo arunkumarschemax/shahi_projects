@@ -96,6 +96,28 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
         let data:RmCreationEntity[] = await query.getRawMany();
         return data;
       }
-
-      
+      async getItemTypedrop(): Promise<any[]> {
+        const query = this.createQueryBuilder('rmi')
+        .select(`rm_item_id,item_type`)
+        .leftJoin(ItemTypeEntity,'it','it.item_type_id = rmi.item_type_id')
+        .groupBy('it.item_type')
+        let data:RmCreationEntity[] = await query.getRawMany();
+        return data;
+      }
+      async getProductGroupdrop(): Promise<any[]> {
+        const query = this.createQueryBuilder('rmi')
+        .select(`rm_item_id,product_group`)
+        .leftJoin(ProductGroup,'pg','pg.product_group_id = rmi.product_group_id')
+        .groupBy('pg.product_group')
+        let data:RmCreationEntity[] = await query.getRawMany();
+        return data;
+      }
+      async getProcurementGroupdrop(): Promise<any[]> {
+        const query = this.createQueryBuilder('rmi')
+        .select(`rm_item_id,procurment_group`)
+        .leftJoin(ProcurmentGroup,'pcg',' pcg.procurment_group_id = rmi.procurement_gorup_id ')
+        .groupBy('pcg.procurment_group')
+        let data:RmCreationEntity[] = await query.getRawMany();
+        return data;
+      }
 }
