@@ -2,7 +2,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { BomRequest, BomTrimResponseModel, CommonResponseModel, FgRmMappingResponseModel, ProductStructureResponseModel, RmMappingFilterRequest, SMVFilterRequest } from "@project-management-system/shared-models";
+import { BomTrimResponseModel, CommonResponseModel, FgRmMappingResponseModel, ProductStructureResponseModel, RmMappingFilterRequest, SMVFilterRequest } from "@project-management-system/shared-models";
 import { ProductStructureService } from "./product-structure.services";
 import { SMVEfficiencyDto } from "./dto/smv-efficency.dto";
 import { FgRMMappingDto } from "./dto/fg-rm-mapping.dto";

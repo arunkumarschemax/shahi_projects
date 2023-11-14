@@ -321,16 +321,17 @@ export function FabricStructuresGrid(props: FabricStructuresGridProps) {
 <Card title='Fabric Structure' extra={<span><Button onClick={() => navigate('/masters/fabric-structure/fabric-structure-form')} type={'primary'}>New</Button></span>}>
  <br></br>
       <Row gutter={40}>
-      <Col>
-      <Alert type='success' message={'Total Colours: ' + FabricStructuresData.length} style={{fontSize:'15px'}} />
+      <Col span={4}></Col>
+<Col span={5}>
+        <Alert type='success' message={'Total Fabric Structures: ' + FabricStructuresData.length} style={{fontSize:'15px'}} />
           {/* <Card title={'Total Fabric Structures: ' + FabricStructuresData.length} style={{textAlign: 'left', width: 250, height: 41,backgroundColor:'#bfbfbf'}}></Card> */}
           </Col>
-          <Col>
-          <Alert type='warning' message={'Active: ' + FabricStructuresData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+    <Col span={5}>
+                <Alert type='warning' message={'Active: ' + FabricStructuresData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
            {/* <Card title={'Active: ' + FabricStructuresData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card> */}
           </Col>
-          <Col>
-          <Alert type='info' message={'In-Active: ' + FabricStructuresData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+    <Col span={5}>
+                <Alert type='info' message={'In-Active: ' + FabricStructuresData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
 
            {/* <Card title={'In-Active: ' + FabricStructuresData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card> */}
           </Col>

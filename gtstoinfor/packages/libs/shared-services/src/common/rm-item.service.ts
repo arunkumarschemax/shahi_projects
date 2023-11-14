@@ -18,8 +18,25 @@ async getRmItemsDatabyProductGroupId(req:ProductGroupFilter): Promise<CommonResp
   return this.axiosPostCall(this.URL + "/getRmItemsDatabyProductGroupId",req)
 }
 
+async CurrencyDropdown(): Promise<CommonResponseModel> {
+  return this.axiosPostCall(this.URL + "/CurrencyDropdown")
+}
+ 
+async itemGroupDropdown(): Promise<CommonResponseModel> {
+  return this.axiosPostCall(this.URL + "/itemGroupDropdown")
+}
+
+async itemTypeDropdown(): Promise<CommonResponseModel> {
+  return this.axiosPostCall(this.URL + "/itemTypeDropdown")
+}
+async ProductGroupDropdown(): Promise<CommonResponseModel> {
+  return this.axiosPostCall(this.URL + "/ProductGroupDropdown")
+}
+async ProcurementGroupDropdown(): Promise<CommonResponseModel> {
+  return this.axiosPostCall(this.URL + "/ProcurementGroupDropdown")
+}
+
 async getRmItemsDatabyProductGroupId1(req:ProductGroupFilter): Promise<CommonResponseModel> {
   return this.axiosPostCall(this.URL + "/getRmItemsDatabyProductGroupId1",req)
 }
- 
 }

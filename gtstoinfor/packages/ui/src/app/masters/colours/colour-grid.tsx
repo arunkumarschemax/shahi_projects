@@ -303,10 +303,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
   <Col span={4}></Col>
     <Col span={5}>
      
-    {/* <Tag color="#108ee9">#108ee9</Tag> */}
-    {/* <Badge count={'active:11'} style = {{width:'50px',height:'20px'}} color='#faad14' /> */}
-{/* <Card title={'Total Colours: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card> */}
-<Alert type='success' message={'Total Colours: ' + variantData.length} style={{fontSize:'15px'}} />
+<Alert type='success' message={'Total Colour: ' + variantData.length} style={{fontSize:'15px'}} />
         </Col>
         <Col span={5}>
           {/* <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card> */}

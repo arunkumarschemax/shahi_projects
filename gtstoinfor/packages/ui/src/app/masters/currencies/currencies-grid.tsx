@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
@@ -338,6 +338,7 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
       console.log(res);
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Successfully');
+        window.location.reload();
         // getAllCurrencys();
         setDrawerVisible(false);
       } else {
@@ -390,22 +391,26 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
 
   // ]
   return (
-
+<Card title='Currencies' extra={<span><Button onClick={()=>navigate('/global/currencies/currency-form')} type={'primary'}>New</Button></span>}>
       <>
-      <Row gutter={40}>
-        <Col>
-          <Card title={'Total Currencies: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+      <Row gutter={24}>
+         <Col span={4}></Col>
+        <Col span={5}>
+        <Alert type='success' message={'Total Currencies: ' + variantData.length} style={{fontSize:'15px'}} />
+          {/* <Card title={'Total Currencies: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card> */}
         </Col>
-        <Col>
-          <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+        <Col span={5}>
+          {/* <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card> */}
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
-        <Col>
-          <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+        <Col span={5}>
+          {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
+          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
-        <Col>
+        {/* <Col>
         <span><Button onClick={() => navigate('/global/currencies/currency-form')}
               type={'primary'}>New</Button></span>
-        </Col>
+        </Col> */}
       </Row><br></br>
       <Card >
         {/* <GetCumulatives cumulativeColumns={cumulativeSkelton} data={variantData}/> */}
@@ -452,6 +457,7 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
         </Card>
       </Drawer>
       </>
+      </Card>
   );
 }
 

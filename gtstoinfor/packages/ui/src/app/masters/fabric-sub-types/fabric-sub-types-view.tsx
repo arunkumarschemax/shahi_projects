@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Alert } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps } from 'antd/lib/table';
 import Highlighter from 'react-highlight-words';
@@ -265,17 +265,21 @@ let navigate = useNavigate()
   return (
     <Card title="Fabric Sub-Type" extra={<span><Button onClick={()=> navigate('/masters/fabric-sub-type-form/fabric-sub-type-form')} type={'primary'}>New</Button></span>}> 
      <br></br>
-      <Row gutter={40}>
-      <Col>
-          <Card title={'Total Fabric Sub Type : ' + FabricSubTypeData.length} style={{textAlign: 'left', width: 290, height: 41,backgroundColor:'#bfbfbf'}}></Card>
-          </Col>
-          <Col>
-           <Card title={'Active: ' + FabricSubTypeData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 150, height: 41,backgroundColor:'#52c41a'}}></Card>
-          </Col>
-          <Col>
-           <Card title={'In-Active :' + FabricSubTypeData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 150, height: 41,backgroundColor:'#f5222d'}}></Card>
-          </Col>
-          </Row> 
+     <Row gutter={24}>
+  <Col span={4}></Col>
+    <Col span={5}>
+     
+<Alert type='success' message={'Total Fabric SubTypes: ' + FabricSubTypeData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          {/* <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card> */}
+          <Alert type='warning' message={'Active: ' + FabricSubTypeData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
+          <Alert type='info' message={'In-Active: ' + FabricSubTypeData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        </Col>
+</Row>
           <br></br>
           <Table
           // rowKey={record => record.productId}

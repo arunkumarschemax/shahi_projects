@@ -3,7 +3,7 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { BomService } from "./bom.service";
-import { BomRequest, BomTrimResponseModel } from "@project-management-system/shared-models";
+import {  BomTrimResponseModel } from "@project-management-system/shared-models";
 import { BomTrimDto } from "./dto/bom-trim.dto";
  
 

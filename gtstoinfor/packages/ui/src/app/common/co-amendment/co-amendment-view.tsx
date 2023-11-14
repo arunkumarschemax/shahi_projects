@@ -9,11 +9,15 @@ import AlertMessages from '../../common/common-functions/alert-messages';
 import { StyleOrderService } from '@project-management-system/shared-services';
 import FormItem from 'antd/es/form/FormItem';
 import form from 'antd/es/form';
-import { CoRequest } from '@project-management-system/shared-models';
+import { CoRequest, CoUpdateReq, StyleOrderIdReq } from '@project-management-system/shared-models';
 import TabPane from 'antd/es/tabs/TabPane';
-export interface COAmendmentViewProps{}
+export interface COAmendmentViewProps{
+  // poData:any
+  // activeTab:any
 
-export const COAmendmentView=(Props:COAmendmentViewProps)=>{
+}
+
+export const COAmendmentView=(props:COAmendmentViewProps)=>{
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const [variantData, setVariantData] = useState<[]>([]);
@@ -24,11 +28,11 @@ export const COAmendmentView=(Props:COAmendmentViewProps)=>{
     const [ChangeQuantity, setChangeQuantity] = useState<any[]>([]);
     const [co, setco] = useState<any[]>([]);
     const [ChangeDeliveryDate, setChangeDeliveryDate] = useState<any[]>([]);
-    const [ChangeOrderLine, setChangeOrderLine] = useState([]);
+    const [hangeOrderLine, setChangeOrderLine] = useState([]);
    const [ChangeFOB, setChangeFOB] = useState([]);
-   const [ChangeVPONumber, setChangeVPONumber] = useState([]);
+   const [Number, setNumber] = useState<any[]>([]);
    const [ChangeDestinationAddress, setChangeDestinationAddress] = useState([]);
-
+   const [coLineInfodata, setCoLineInfoData] = useState<any[]>([]);
     const searchInput = useRef(null);
     const [page, setPage] = React.useState(1);
     const columns = useState('');
@@ -37,8 +41,9 @@ export const COAmendmentView=(Props:COAmendmentViewProps)=>{
 
     useEffect(()=>{
         getCoamendment();
-        coNo();
-    },[])
+        getCoNum();
+        getParameter();
+          },[])
 
 
 const service = new StyleOrderService();
@@ -103,6 +108,7 @@ const getColumnSearchProps = (dataIndex: string) => ({
 function handleReset(clearFilters) {
     clearFilters();
     setSearchText('');
+
   };
 
   function handleSearch(selectedKeys, confirm, dataIndex) {
@@ -110,14 +116,66 @@ function handleReset(clearFilters) {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
+  // const getCoLineData = () =>{
+  //   const req = new StyleOrderIdReq(props?.poData[0]?.coId)
+  //   service.getCoamendment(req).then((res) => {
+  //     if (res.status) {
+  //       setCoLineInfoData(res.data);
+  //      }
+  //   });
 
+  // }
+
+  // const getData=(rowData)=>{
+  //   if(!changeOrderLine ){
+  //     AlertMessages.getErrorMessage("Please Enter the CO Line");
+  //       return
+ 
+  //    }
+  //    const req = new CoUpdateReq(rowData.coId,rowData.coLineId,rowData.orderNumber,rowData.coLineNumber,coLineData,"orderline",JSON.parse(localStorage.getItem('currentUser')).user.userName)
+
+  // }
+
+  const getCoNum=()=>{
+    service.getconumbered().then(res=>{
+      console.log(res,"::::::::::::::");
+      if(res){
+        setCono(res.data)
+      }
+     
+    })
+  }
+
+  const getParameter=()=>{
+    service.getcoparameter().then(res=>{    
+      console.log(res,"[[[[[[[[[[");
+        
+    if(res){
+      setNumber(res.data)
+    }
+    })
+  }
+  // const getParameter=()=>{
+  //   service.getcoparameter().then(res=>{
+  //     console.log(res,"::::::::::::::");
+  //     if(res){
+  //       setNumber(res.data)
+  //     }
+     
+  //   })
+  // }
   const getCoamendment=()=>{
 
     const req= new CoRequest()
-    if(form.getFieldValue('coNumber') !== undefined){
-        req.coNumber=form.getFieldValue('coNumber')
+    if(form.getFieldValue('co_number') !== undefined){
+        req.coNumber=form.getFieldValue('co_number')
+      }
+      if(form.getFieldValue('parameter') !== undefined){
+        req.parameter=form.getFieldValue('parameter')
       }
     service.getCoamendment().then(res=>{
+      // console.log(res,"&&&&&");
+      
         if(res.status){
             setVariantData(res.data)
         }else{
@@ -130,51 +188,49 @@ function handleReset(clearFilters) {
       })
   }
 
-  const coNo=()=>{
-    service.getConumber().then((res)=>{
-        if(res){
-            setCono(res.data)
-        }
-    })
-  }
-  const resetForm = () => {
-    setCono([]);
-};
-const search=()=>{
-  const req = new CoRequest()
-  if(form.getFieldValue('coNumber') != undefined) {
-    req.coNumber=selectedItemNo
-    setSearchClicked(true);
-  }
-  service.getCoamendment().then((res)=>{
-    if(res.status){
-      setco(res.data)
-        const ChangeOrderLine =res.data.filter((co)=> co.parameter === 'Change Order Line')
-        const ChangeFOB =res.data.filter((co)=> co.parameter === 'Change FOB')
-        const ChangeDeliveryDate =res.data.filter((co)=> co.parameter === 'Change Delivery Date')
-        const ChangeQuantity =res.data.filter((co)=> co.parameter === 'Change Quantity')
-        const ChangeVPONumber =res.data.filter((co)=> co.parameter === 'Change VPO Number')
-        const ChangeDestinationAddress =res.data.filter((co)=> co.parameter === 'Change Destination Address')
-        setChangeOrderLine(ChangeOrderLine)
-        setChangeFOB(ChangeFOB)
-        setChangeDeliveryDate(ChangeDeliveryDate)
-        setChangeQuantity(ChangeQuantity)
-        setChangeVPONumber(ChangeVPONumber)
-        setChangeDestinationAddress(ChangeDestinationAddress)
-    }else{
-        setco([])
-        setChangeOrderLine([])
-        setChangeFOB([])
-        setChangeQuantity([])
-        setChangeVPONumber([])
-        setChangeDeliveryDate([])
-        setChangeDestinationAddress([])
-    } 
-    if(res){
-        setCono(res.data)
-    }
-  })
+ 
+  const resetHandler = () => {
+    form.resetFields();
+    getCoamendment();
+
 }
+// const search=()=>{
+//   const req = new CoRequest()
+//   if(form.getFieldValue('coNumber') != undefined) {
+//     req.coNumber=selectedItemNo
+//     setSearchClicked(true);
+//   }
+//   service.getCoamendment().then((res)=>{
+//     console.log(res,"..........");
+    
+//     if(res.status){
+//       setco(res.data)
+//         const ChangeOrderLine =res.data.filter((co)=> co.parameter === 'Change Order Line')
+//         const ChangeFOB =res.data.filter((co)=> co.parameter === 'Change FOB')
+//         const ChangeDeliveryDate =res.data.filter((co)=> co.parameter === 'Change Delivery Date')
+//         const ChangeQuantity =res.data.filter((co)=> co.parameter === 'Change Quantity')
+//         const ChangeVPONumber =res.data.filter((co)=> co.parameter === 'Change VPO Number')
+//         const ChangeDestinationAddress =res.data.filter((co)=> co.parameter === 'Change Destination Address')
+//         setChangeOrderLine(ChangeOrderLine)
+//         setChangeFOB(ChangeFOB)
+//         setChangeDeliveryDate(ChangeDeliveryDate)
+//         setChangeQuantity(ChangeQuantity)
+//         setChangeVPONumber(ChangeVPONumber)
+//         setChangeDestinationAddress(ChangeDestinationAddress)
+//     }else{
+//         setco([])
+//         setChangeOrderLine([])
+//         setChangeFOB([])
+//         setChangeQuantity([])
+//         setChangeVPONumber([])
+//         setChangeDeliveryDate([])
+//         setChangeDestinationAddress([])
+//     } 
+//     if(res){
+//         setCono(res.data)
+//     }
+//   })
+// }
 const columnsSkelton:any=[
     {
         title: 'S No',
@@ -198,20 +254,20 @@ const columnsSkelton:any=[
         title:'Old Value',
         dataIndex: 'oldValue',
         ...getColumnSearchProps('oldValue'),
-        sortDirections: ['descend', 'ascend'],
-    },
+        sorter: (a, b) => a.oldValue.localeCompare(b.oldValue),
+        sortDirections: ['descend', 'ascend'],     },
     {
         title:'Updated Value',
         dataIndex: 'updatedValue',
         ...getColumnSearchProps('updatedValue'),
-        sortDirections: ['descend', 'ascend'],
-    },
+        sorter: (a, b) => a.updatedValue.localeCompare(b.updatedValue),
+        sortDirections: ['descend', 'ascend'],     },
     {
         title:'Co Parameter',
         dataIndex: 'parameter',
         // ...getColumnSearchProps('parameter'),
-        sortDirections: ['descend', 'ascend'],
-    },
+        sorter: (a, b) => a.parameter.localeCompare(b.parameter),
+        sortDirections: ['descend', 'ascend'],    },
     {
         title:'Status',
         dataIndex: 'status',
@@ -246,10 +302,12 @@ const columnsSkelton:any=[
 
 
 return (
-    <Card title='CoAmendment' extra={<span><Button onClick={()=>('/co-amendment')} type={'primary'}>New</Button></span>}>
+    <Card title='CoAmendment' extra={<span><Button onClick={()=>('/materialCreation/co-amendment')} type={'primary'}>New</Button></span>}>
 <br/>
 <Card>
-    <Row>
+<Form onFinish={getCoamendment} form={form} layout='vertical'>
+
+    <Row gutter={16}>
     <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
@@ -260,7 +318,7 @@ return (
               <Form.Item
                 style={{ flexDirection: "row" }}
                 label="Co Number"
-                name="coNumber"
+                name="co_number"
               >
                 <Select
                   placeholder="Select Co Number"
@@ -271,20 +329,53 @@ return (
                 >
                   {cono?.map((e) => {
                     return (
-                      <Option key={e.coId} value={e.coId} >
+                      <Option key={e.co_number} value={e.co_number} >
                         {e.coNumber}
                       </Option>
                     );
                   })}
                 </Select>
               </Form.Item>
+              </Col>
+              <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 4 }}
+              lg={{ span: 5 }}
+              xl={{ span: 6 }}
+            >
+              <Form.Item
+                style={{ flexDirection: "row" }}
+                label="Co Parameter"
+                name="parameter"
+              >
+                <Select
+                  placeholder="Select Co Number"
+                  allowClear
+                  showSearch
+                  optionFilterProp="children"
+                //   onChange={(val, text) => (val, text)}
+                >
+                  {Number?.map((e) => {
+                    return (
+                      <Option key={e.parameter
+                      } value={e.parameter
+                      } >
+                        {e.parameter
+}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+              </Col>
               <Row>
               <Col>
                 <FormItem style={{ flexDirection: "row" }} label=" ">
                   <Button
                     type="primary"
                     icon={<SearchOutlined />}
-                    onClick={search}
+                    // onClick={search}
                   >
                     Search
                   </Button>
@@ -295,20 +386,20 @@ return (
                     type="default"
                     icon={<UndoOutlined />}
                     style={{ color: "red", marginLeft: "10px" }}
-                    onClick={resetForm}
+                    onClick={resetHandler}
                   >
                     Reset
                   </Button>
                 </FormItem>
               </Col>
               </Row>
-            </Col>
     </Row>
-    <Tabs type={'card'} tabPosition={'top'}>
-     <TabPane key="orderline" tab={<span style={{fontSize:'15px'}}><b>{`Change Order Line`}</b></span>}>
+    {/* <Tabs type={'card'} tabPosition={'top'}> */}
+     {/* <TabPane key="orderline" tab={<span style={{fontSize:'15px'}}><b>{`Change Order Line`}</b></span>}> */}
+     </Form>
         <Table size='small'
              columns={columnsSkelton}
-             dataSource={ChangeOrderLine}
+             dataSource={variantData}
              pagination={{
                 onChange(current) {
                   setPage(current);
@@ -318,9 +409,9 @@ return (
             //   onChange={onChange}
               bordered 
                        />
-                        </TabPane>
+                        {/* </TabPane> */}
 
-                        <TabPane key="fob" tab={<span style={{fontSize:'15px'}}><b>{`Change FOB`}</b></span>}>
+                        {/* <TabPane key="fob" tab={<span style={{fontSize:'15px'}}><b>{`Change FOB`}</b></span>}>
         <Table size='small'
              columns={columnsSkelton}
              dataSource={ChangeFOB}
@@ -333,9 +424,9 @@ return (
             //   onChange={onChange}
               bordered 
                        />
-                        </TabPane>
+                        </TabPane> */}
 
-                        <TabPane key="deliverydate" tab={<span style={{fontSize:'15px'}}><b>{`Change Delivery Date`}</b></span>}>
+                        {/* <TabPane key="deliverydate" tab={<span style={{fontSize:'15px'}}><b>{`Change Delivery Date`}</b></span>}>
         <Table size='small'
              columns={columnsSkelton}
              dataSource={ChangeDeliveryDate}
@@ -348,9 +439,9 @@ return (
             //   onChange={onChange}
               bordered 
                        />
-                          </TabPane>
+                          </TabPane> */}
 
-                        <TabPane key="quantity" tab={<span style={{fontSize:'15px'}}><b>{`Change Quantity`}</b></span>}>
+                        {/* <TabPane key="quantity" tab={<span style={{fontSize:'15px'}}><b>{`Change Quantity`}</b></span>}>
         <Table size='small'
              columns={columnsSkelton}
              dataSource={ChangeQuantity}
@@ -363,8 +454,8 @@ return (
             //   onChange={onChange}
               bordered 
                        />
-                          </TabPane>
-
+                          </TabPane> */}
+{/* 
                 <TabPane key="destination" tab={<span style={{fontSize:'15px'}}><b>{`Change Destination Address`}</b></span>}>
         <Table size='small'
              columns={columnsSkelton}
@@ -378,9 +469,9 @@ return (
             //   onChange={onChange}
               bordered 
                        />
-                 </TabPane>
+                 </TabPane> */}
 
-        </Tabs>
+        {/* </Tabs> */}
 
     </Card>
 </Card>

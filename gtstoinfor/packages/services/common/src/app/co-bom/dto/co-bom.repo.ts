@@ -60,4 +60,12 @@ export class CoBomRepository extends Repository<CoBom>{
     }
 
 
+    async getcoOrderr():Promise<any>{
+        const query = this.createQueryBuilder()
+        .select(`co_number,co_number`)
+        .groupBy(`co_number`)
+        return await query.getRawMany();
+    
+    }
+
 }

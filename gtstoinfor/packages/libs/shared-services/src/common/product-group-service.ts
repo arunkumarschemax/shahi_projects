@@ -25,4 +25,8 @@ export class ProductGroupService extends CommonAxiosService{
         return this.axiosPostCall(this.URL + '/getAllActiveProductGroup');
     }
 
+    async getProductGroupById(req:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getProductGroupById",req)
+      }
+
 }

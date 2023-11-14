@@ -1,9 +1,10 @@
 import { GlobalResponseObject } from "../global-response-object";
-import { BomRequest } from "./bom-request";
+import { bomRequest } from "./bom-request";
+// import { BomRequest } from "./bom-request";
 
 
 export class BomTrimResponseModel extends GlobalResponseObject{
-    data?: BomRequest;
+    data?: bomRequest;
     /**
      * 
      * @param status 
@@ -11,7 +12,7 @@ export class BomTrimResponseModel extends GlobalResponseObject{
      * @param internalMessage 
      * @param data 
      */
-     constructor(status: boolean, intlCode: number, internalMessage: string, data?: BomRequest) {
+     constructor(status: boolean, intlCode: number, internalMessage: string, data?: bomRequest) {
         super(status, intlCode, internalMessage);
         this.data = data;
     }    
