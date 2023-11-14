@@ -315,6 +315,13 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             title: "Unit Price",
             dataIndex: "unitPrice",
             key: "unitPrice",
+            render: (unitPrice) => (
+                <div style={{ textAlign: "right" }}>
+                    {typeof unitPrice === 'undefined' || unitPrice === null || unitPrice === ''
+                        ? "-"
+                        : unitPrice}
+                </div>
+            ),
         },
         {
             title: "Tax Type",
