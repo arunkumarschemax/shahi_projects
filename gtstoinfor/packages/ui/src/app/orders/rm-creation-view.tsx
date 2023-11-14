@@ -51,7 +51,7 @@ const RMCreationView = () => {
 }
     const getAllRMItemViewData= () => {
       const req = new RMCreFilterRequest();
-  
+  console.log(req,"req")
       if (form.getFieldValue('currency') !== undefined) {
           req.Currency = form.getFieldValue('currency');
       }
@@ -64,8 +64,8 @@ const RMCreationView = () => {
     if (form.getFieldValue('procurement') !== undefined) {
       req.procurementGroup = form.getFieldValue('procurement');
   }
-  if (form.getFieldValue('brandId') !== undefined) {
-    req.productGroup = form.getFieldValue('brandId');
+  if (form.getFieldValue('product') !== undefined) {
+    req.productGroup = form.getFieldValue('product');
 }
 rmservice.getAllRMItems(req).then(res => {
       if (res.status) {
@@ -480,7 +480,7 @@ rmservice.getAllRMItems(req).then(res => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
+                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
                         <Form.Item name='procurement' label='Procurement Group' >
                             <Select
                                 showSearch
@@ -494,7 +494,7 @@ rmservice.getAllRMItems(req).then(res => {
                                 }
                             </Select>
                         </Form.Item>
-                    </Col>
+                    </Col> */}
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
                         <Form.Item>
                             <Button htmlType="submit"
