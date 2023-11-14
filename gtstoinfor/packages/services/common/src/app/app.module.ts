@@ -49,7 +49,7 @@ import { DepartmentsModule } from './departments/departments.module';
 import { AccountControlObjectModule } from './account-control-objects/account-control-object-module';
 import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
 import { FabricsModule } from './fabrics/fabrics-module';
-import { FabricStructuresModule } from './fabric structure/fabric.module';
+import { FabricStructuresModule } from './fabric structure/fabric-structure.module';
 import { FabricFinishTypesModule } from './fabric-finish-types/fabric-finish-types.module';
 import { UomModule } from './uom/uom.module';
 import { BuyersDestinationModule } from './buyers-destination/buyers-destination.module';
@@ -97,7 +97,7 @@ import { SubstituionModule } from './substituion/substituion.module';
      
       autoLoadEntities: true,
       synchronize: false,
-      logging: true,
+      logging: false,
       
       extra: {
         connectionLimit: 20

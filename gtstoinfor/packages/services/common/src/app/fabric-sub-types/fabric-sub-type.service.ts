@@ -26,14 +26,14 @@ export class FabricSubTypeService {
           if (!isUpdate) {
             const fabricSubTypeEntity = await this.getFabricSubType(fabricSubTypeDto.fabricSubTypeName);
                 if (fabricSubTypeEntity) {
-                    throw new ErrorResponse(11104, 'Item category already exists');
+                    throw new FabricSubTypeResponse(false,11104, 'Item category already exists');
                 }
             }
             else {
                 const FabricSubTypeEntity = await this.getFabricSubType(fabricSubTypeDto.fabricSubTypeName);
                 if (FabricSubTypeEntity) {
                     if (!fabricSubTypeDto) {
-                        throw new ErrorResponse(11104, 'Fabric Sub Type already exists');
+                        throw new ErrorResponse(0, 'Fabric Sub Type already exists');
                     }
                 }
             }

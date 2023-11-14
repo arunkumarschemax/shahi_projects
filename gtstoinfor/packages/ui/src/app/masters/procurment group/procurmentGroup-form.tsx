@@ -43,7 +43,7 @@ export function ProcurmentGroupForm(
       setDisable(false)
       if(res.status){
         AlertMessages.getSuccessMessage('Procurment Group Created Successfully');
-        // location.push("/ProcurmentGroup-view");
+        navigate('/masters/procurmentGroup/procurmentGroup-view')
         onReset();
       } else {
         AlertMessages.getErrorMessage(res.internalMessage);

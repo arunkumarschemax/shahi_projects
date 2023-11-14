@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space, message } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space, Checkbox, message, Alert } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
@@ -41,7 +41,6 @@ export function MasterBrandsGrid(
   const getAllMasterBrands= () => {
     masterBrandService.getAllBrands().then(res => {
       if (res.status) {
-        console.groupCollapsed(res.data,'All----')
         setMasterBrandData(res.data);
       } else {
           AlertMessages.getErrorMessage(res.internalMessage);
@@ -272,22 +271,39 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
           title: 'Brand Logo',
           align:'center',
           dataIndex: 'fileName',
-          // responsive: ['lg'],
-          sorter: (a, b) => a.fileName.localeCompare(b.fileName),
-          sortDirections: ['descend', 'ascend'],
-          ...getColumnSearchProps('fileName'),
+          responsive: ['lg'],
+          // sorter: (a, b) => a.fileName.localeCompare(b.fileName),
+          // sortDirections: ['descend', 'ascend'],
+          // ...getColumnSearchProps('fileName'),
           render: (fileName,rowData) => {
-            const updateImage ='http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/'+rowData.fileName
-            return(
-            <div>
-              <img
-              src={updateImage} 
-              // alt={fileName}
-              style={{ maxWidth: '100px', maxHeight: '100px' }} 
-              />
-              <div>{fileName}</div>
-            </div>
-            )
+            // const encodedFileName = encodeURIComponent(rowData.filePath);
+// const updateImage = `http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/${encodedFileName}`;
+
+            const updateImage = 'http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/' + rowData.filePath;
+console.log('Update Image URL:', updateImage);
+
+return (
+  <div>
+    <img
+      src={updateImage} 
+      alt={fileName}
+      style={{ maxWidth: '100px', maxHeight: '100px' }} 
+    />
+    <div>{fileName}</div>
+  </div>
+);
+
+            // const updateImage ='http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/'+rowData.fileName
+            // return(
+            // <div>
+            //   <img
+            //   src={updateImage} 
+            //   // alt={fileName}
+            //   style={{ maxWidth: '100px', maxHeight: '100px' }} 
+            //   />
+            //   <div>{fileName}</div>
+            // </div>
+            // )
           }
         },
         {
@@ -302,21 +318,34 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
               {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
             </>
           ),
-          filters: [
-            {
-              text: 'Active',
-              value: true,
-            },
-            {
-              text: 'InActive',
-              value: false,
-            },
-          ],
+          onFilter: (value, record) => record.isActive === value,
+          filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+            <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+              <Checkbox
+                checked={selectedKeys.includes(true)}
+                onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+              >
+                <span style={{color:'green'}}>Active</span>
+              </Checkbox>
+              <Checkbox
+                checked={selectedKeys.includes(false)}
+                onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+              >
+                <span style={{color:'red'}}>Inactive</span>
+              </Checkbox>
+              <div className="custom-filter-dropdown-btns" >
+              <Button  onClick={() => clearFilters()} className="custom-reset-button">
+                  Reset
+                </Button>
+                <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+                  OK
+                </Button>
+              
+              </div>
+            </div>
+          ),
           filterMultiple: false,
-          onFilter: (value, record) => {
-            // === is not work
-            return record.isActive === value;
-          },
+         
     
         },
         {
@@ -379,13 +408,19 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
 <Card title='Brands' extra={<span><Button onClick={() => navigate('/masters/brands/brand-form')} type={'primary'}>New</Button></span>}>
      <Row gutter={40} >
       <Col>
-          <Card title={'Total Brands: ' + masterBrandData.length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+      <Alert type='success' message={'Total Brands: ' + masterBrandData.length} style={{fontSize:'15px'}} />
+
+          {/* <Card title={'Total Brands: ' + masterBrandData.length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#bfbfbf'}}></Card> */}
           </Col>
           <Col>
-           <Card title={'Active: ' + masterBrandData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
+          <Alert type='warning' message={'Active: ' + masterBrandData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+
+           {/* <Card title={'Active: ' + masterBrandData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card> */}
           </Col>
           <Col>
-           <Card title={'In-Active: ' + masterBrandData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
+          <Alert type='info' message={'In-Active: ' + masterBrandData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+
+           {/* <Card title={'In-Active: ' + masterBrandData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card> */}
           </Col>
           {/* <Col>
         <span><Button onClick={() => navigate('/masters/brands/brand-form')}

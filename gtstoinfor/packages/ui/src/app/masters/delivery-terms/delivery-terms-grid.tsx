@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space, Checkbox, Alert } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
 import Highlighter from 'react-highlight-words';
@@ -55,7 +55,7 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
     service.activatedeActivate(Data).then(res => { console.log(res);
       if (res.status) {
         getAll();
-        AlertMessages.getSuccessMessage('Success'); 
+        AlertMessages.getSuccessMessage(res.internalMessage); 
       } else {
         AlertMessages.getErrorMessage(res.internalMessage);
 
@@ -188,11 +188,32 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
         },
       ],
       filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-        // === is not work
-        return record.isActive === value;
-      },
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+            <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+              <Checkbox
+                checked={selectedKeys.includes(true)}
+                onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+              >
+                <span style={{color:'green'}}>Active</span>
+              </Checkbox>
+              <Checkbox
+                checked={selectedKeys.includes(false)}
+                onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+              >
+                <span style={{color:'red'}}>Inactive</span>
+              </Checkbox>
+              <div className="custom-filter-dropdown-btns" >
+              <Button  onClick={() => clearFilters()} className="custom-reset-button">
+                  Reset
+                </Button>
+                <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+                  OK
+                </Button>
+              
+              </div>
+            </div>
+          )
       
     },
     {
@@ -266,13 +287,19 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
  <br></br>
       <Row gutter={40}>
       <Col>
-          <Card title={'Total Delivery Terms: ' + deliveryTermsData.length} style={{textAlign: 'left', width: 250, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+      <Alert type='success' message={'Total Delivery Terms: ' + deliveryTermsData.length} style={{fontSize:'15px'}} />
+
+          {/* <Card title={'Total Delivery Terms: ' + deliveryTermsData.length} style={{textAlign: 'left', width: 250, height: 41,backgroundColor:'#bfbfbf'}}></Card> */}
           </Col>
           <Col>
-           <Card title={'Active: ' + deliveryTermsData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
+          <Alert type='warning' message={'Active: ' + deliveryTermsData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+
+           {/* <Card title={'Active: ' + deliveryTermsData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card> */}
           </Col>
           <Col>
-           <Card title={'In-Active: ' + deliveryTermsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
+          <Alert type='info' message={'In-Active: ' + deliveryTermsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+
+           {/* <Card title={'In-Active: ' + deliveryTermsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card> */}
           </Col>
           </Row> 
           <br></br>

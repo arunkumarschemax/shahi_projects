@@ -92,7 +92,7 @@ export const CoLineForm = () => {
         if(iniIndex != -1){
             coLineItems[index].salePrice = e.target.value
         } else{
-            const req = new CoLineItemsReq(rowData.skuCode,rowData.color,rowData.size,rowData.destination,null,e.target.value,Number(initialData[0]?.styleOrderItems[0].deliveryAddress),rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId,null,CoLineStatusEnum.OPEN,null,null)
+            const req = new CoLineItemsReq(rowData.skuCode,rowData.color,rowData.size,rowData.destination,e.target.value,null,Number(initialData[0]?.styleOrderItems[0].deliveryAddress),rowData.colorInfo.colourId,rowData.sizeInfo.sizeId,rowData.destinationInfo.destinationId,null,CoLineStatusEnum.OPEN,null,null)
             setCoLineItems([...coLineItems,req])
         }
 

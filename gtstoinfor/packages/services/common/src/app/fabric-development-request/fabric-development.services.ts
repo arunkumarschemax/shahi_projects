@@ -147,10 +147,11 @@ export class FabricDevelopmentService {
 
    async getFabricDevReqData(req?:BuyerIdReq): Promise<CommonResponseModel> {
       try {
-     const data = await this.FabricRepo.find({
-      relations:["fabricQuantityEntity","fabricQuantityEntity.fabricEntity","fabricQuantityEntity.fabricEntity.fabricItemsEntity"],
-      where:{buyerId:req.buyerId}
-     })
+        const data = await this.FabricRepo.getAllFabricRequests()
+    //  const data = await this.FabricRepo.find({
+    //   relations:["fabricQuantityEntity","fabricQuantityEntity.fabricEntity","fabricQuantityEntity.fabricEntity.fabricItemsEntity"],
+    //   where:{buyerId:req.buyerId}
+    //  })
      console.log(data,'-----------')
      return new CommonResponseModel(true, 0, "Fabric Development Request successfully", data);
 

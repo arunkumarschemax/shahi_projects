@@ -3,7 +3,7 @@ import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { AllBrandsResponseModel, AllFabricStructuresResponseModel, MasterBrandsResponseModel } from '@project-management-system/shared-models';
 import { UserRequestDto } from '../currencies/dto/user-logs-dto';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { FabricStructuresService } from './fabric.service';
+import { FabricStructuresService } from './fabric-structure.service';
 import { FabricStructureIdRequest } from './dto/fabric.id-request';
 import { FabricStructureRequest } from './dto/fabric.request';
 

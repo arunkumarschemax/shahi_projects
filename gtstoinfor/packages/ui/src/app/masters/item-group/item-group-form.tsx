@@ -135,7 +135,7 @@ services.getAllitemGroup().then(res=>{
               message: 'ItemGroup is required'
             },
           ]} >
-            <Input />
+            <Input  placeholder="Enter ItemGroup"/>
            
           </Form.Item>
           </Col>

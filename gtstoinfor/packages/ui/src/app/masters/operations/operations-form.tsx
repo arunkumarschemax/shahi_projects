@@ -122,7 +122,7 @@ export function OperationsForm(
                           },
                         ]}
                       >
-                      <Input/>
+                      <Input placeholder='Enter Operation Code'/>
                     </Form.Item>
         </Col>
 
@@ -143,7 +143,7 @@ export function OperationsForm(
 
               
             ]}>
-            <Input />
+            <Input placeholder='Enter Operation Name'/>
           </Form.Item>
         </Col>
 

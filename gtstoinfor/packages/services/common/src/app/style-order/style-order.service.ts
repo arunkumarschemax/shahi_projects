@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CoRequest, CoUpdateReq, CoUpdateResponseModel, CommonResponseModel, CustomerOrderStatusEnum, StyleOrderIdReq, StyleOrderItemsModel, StyleOrderModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
+import { CoRequest, CoUpdateReq, CoUpdateResponseModel, CommonResponseModel, CustomerOrderStatusEnum, StyleOrderCoLineModel, StyleOrderIdReq, StyleOrderItemsModel, StyleOrderModel, StyleOrderReq, StyleOrderResponseModel, styleOrderReq } from "@project-management-system/shared-models";
 import { StyleOrder } from "./style-order.entity";
 import { Item } from "../items/item-entity";
 import { Warehouse } from "../warehouse/warehouse.entity";
@@ -333,7 +333,31 @@ export class StyleOrderService{
           }
         }
 
+        async getCoLineInfoById(req:StyleOrderIdReq): Promise<CommonResponseModel> {
+            try {
+            const data = await this.repo.getCoLineInfoById(req)
+            let data1 = []
+            
+            // for(const rec of data){
+            //     data1.push(new StyleOrderItemsModel(rec.coLineId,rec.delivery_address,rec.order_quantity,rec.color,rec.size,rec.destination,rec.uom,rec.status,rec.discount,rec.SalePrice,rec.coPercentage,rec.color_id,rec.size_id,rec.destination_id,rec.uom_id,rec.delLandmark,rec.delCity,rec.delState,rec.sku_code,rec.coline_number,rec.co_id,"",rec.co_number))
+            // }
+            
+             for(const rec of data){
+                data1.push(new StyleOrderCoLineModel(rec.coLineId,rec.buyerPoNumber,rec.seasonCode,rec.coLineNumber,rec.orderNumber,rec.skuCode,rec.deliveryAddress,rec.orderQuantity,rec.colour,rec.size,rec.destination,rec.uom,rec.status,rec.discount,rec.salePrice,rec.coPercentage,rec.deliveryDate,rec.exfDate,rec.colour_id,rec.size_id,rec.destination_id,rec.uom_id,rec.coId))
+            }
+    
+           console.log(data1,'-----------')
+    
+           return new CommonResponseModel(true, 0, "CO LineData retrieved  successfully", data1);
         
+              } catch (err) {
+                throw err;
+              }
+            }  
+
+        
+
+
   
 
         async updateCoData(req:CoUpdateDto):Promise<CoUpdateResponseModel>{
@@ -372,7 +396,7 @@ export class StyleOrderService{
 
                     const Update = await this.CoLineRepo.update(
                         { coLineId: req.coLineId, styleOrderInfo: { coId: req.coId  } },
-                        { coLineNumber: req.updateValue }
+                        { deliveryDate: req.updateValue }
                       );
                 } else if (req.parameter === "quantity"){
                     const orderQuantity = parseInt(req.updateValue, 10);

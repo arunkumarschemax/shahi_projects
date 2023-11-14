@@ -84,11 +84,9 @@ export function SampleSubTypesForm(
     setDisable(false)
     if(props.isUpdate){
       // form.setFieldValue({'operationGroup'})
-      console.log(values,'===========[[[[[[[[[[[')
       props.updateSampleSubTypes(values);
     }else{
       setDisable(false)
-      console.log(values,'=======----')
       createSampleSubType(values);
     }
   
@@ -124,7 +122,7 @@ export function SampleSubTypesForm(
 
               
             ]}>
-            <Input />
+            <Input placeholder='Enter Sample Sub Type'/>
           </Form.Item>
         </Col>
 

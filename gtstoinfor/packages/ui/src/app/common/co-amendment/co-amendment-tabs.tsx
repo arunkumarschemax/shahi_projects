@@ -348,22 +348,25 @@ const buyerService = new BuyersService();
               <Descriptions.Item label='CO Number'labelStyle={{ color: 'black', fontWeight: 'bold' }}>{data[0]?.orderNumber}</Descriptions.Item>
               <Descriptions.Item label='Item Code'labelStyle={{ color: 'black', fontWeight: 'bold' }}>{data[0]?.itemCode}</Descriptions.Item>
                <Descriptions.Item label='Order Date'labelStyle={{ color: 'black', fontWeight: 'bold' }}>{data[0]?.orderDate ? moment(data[0].orderDate).format('DD-MM-YYYY') : ''}</Descriptions.Item>
+               <Descriptions.Item label='Buyer Name'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.buyerInfo?.buyerName}</Descriptions.Item>     
                 <Descriptions.Item label='Buyer Style'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.buyerStyle}</Descriptions.Item>
+                <Descriptions.Item label='Buyer PO Number'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.buyerPoNumber}</Descriptions.Item>
                 <Descriptions.Item label='Sale Price'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.salePrice}</Descriptions.Item>
                 <Descriptions.Item label='Shipment Type'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.shipmentType}</Descriptions.Item>
-                <Descriptions.Item label='Buyer PO Number'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.buyerPoNumber}</Descriptions.Item>
                 <Descriptions.Item label='Price Quantity'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.priceQuantity}</Descriptions.Item> 
-                <Descriptions.Item label='Agent'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.agentName}</Descriptions.Item>
-                <Descriptions.Item label='BuyerAddress'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.landmark}-{data[0]?.city}-{data[0]?.state}</Descriptions.Item> 
+
+                {/* <Descriptions.Item label='Agent'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.agentName}</Descriptions.Item> */}
+                {/* <Descriptions.Item label='BuyerAddress'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.landmark}-{data[0]?.city}-{data[0]?.state}</Descriptions.Item>  */}
                 <Descriptions.Item label='Instore Date'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.instoreDate ? moment(data[0].instoreDate).format('DD-MM-YYYY') : ''}</Descriptions.Item> 
                 <Descriptions.Item label='Price Quantity'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.priceQuantity}</Descriptions.Item>
                 <Descriptions.Item label='Discount Percent'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.discountPercent}</Descriptions.Item>
                 <Descriptions.Item label='Discount Amount 'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.discountAmount}</Descriptions.Item>
-                <Descriptions.Item label='Payment Method'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.paymentMethod}</Descriptions.Item>
-                <Descriptions.Item label='Packing Terms'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.packageTermsName}</Descriptions.Item>
-                <Descriptions.Item label='Ware House'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.warehouseName}</Descriptions.Item>
-                <Descriptions.Item label='Delivery Method'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.deliveryMethod}</Descriptions.Item>
-                <Descriptions.Item label='Delivery Term'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.deliveryTermsName}</Descriptions.Item>
+                {/* <Descriptions.Item label='Payment Method'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.paymentMethod}</Descriptions.Item> */}
+                {/* <Descriptions.Item label='Packing Terms'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.packageTermsName}</Descriptions.Item> */}
+                {/* <Descriptions.Item label='Ware House'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.warehouseName}</Descriptions.Item> */}
+                {/* <Descriptions.Item label='Delivery Method'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.deliveryMethod}</Descriptions.Item> */}
+                {/* <Descriptions.Item label='Delivery Term'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.deliveryTermsName}</Descriptions.Item> */}
+                <Descriptions.Item label='Item SalePrice Quantity'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.itemSalePriceQty}</Descriptions.Item>
                 <Descriptions.Item label='Remarks'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.remarks}</Descriptions.Item>
                 <Descriptions.Item label='Status'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{data[0]?.status}</Descriptions.Item>
     

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Alert, Space } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Alert, Space, Checkbox } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
@@ -64,13 +64,12 @@ export function ProductGroupGrid(
   }
   
   const deleteProductGroup = (ProductGroupData: ProductGroupRequest) => {
-    console.log(ProductGroupData,'iiiiiiiiiiiii');
     
     ProductGroupData.isActive = ProductGroupData.isActive? false : true;
     productGroupService.activateOrDeactivateProductGroup(ProductGroupData).then(res => {console.log(res);
     if(res.status){
       getAllProductGroupData();
-      AlertMessages.getSuccessMessage('Success');
+      AlertMessages.getSuccessMessage(res.internalMessage);
     }else {
       AlertMessages.getErrorMessage(res.internalMessage);
 
@@ -186,7 +185,7 @@ export function ProductGroupGrid(
       },
   
       {
-        title: "Product Group Name",
+        title: <div style={{textAlign:'center'}}>Product Group Name</div>,
         dataIndex: "productGroup",
         sorter: (a, b) => a.productGroup.localeCompare(b.productGroup),
         sortDirections: ["ascend", "descend"],
@@ -195,6 +194,7 @@ export function ProductGroupGrid(
       
       {
         title: 'Status',
+        align:'center',
         dataIndex: 'isActive',
         ...getColumnSearchProps('isActive'),
         sorter: (a, b) => a.productGroup.localeCompare(b.ProductGroup),
@@ -205,27 +205,38 @@ export function ProductGroupGrid(
             
           </>
         ),
-        // filters: [
-        //   {
-        //     text: 'Active',
-        //     value: true,
-        //   },
-        //   {
-        //     text: 'InActive',
-        //     value: false,
-        //   },
-        // ],
-        // filterMultiple: false,
-        // onFilter: (value, record) => 
-        // {
-        //   // === is not work
-        //   return record.isActive === value;
-        // },
+        onFilter: (value, record) => record.isActive === value,
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+              <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+                <Checkbox
+                  checked={selectedKeys.includes(true)}
+                  onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+                >
+                  <span style={{color:'green'}}>Active</span>
+                </Checkbox>
+                <Checkbox
+                  checked={selectedKeys.includes(false)}
+                  onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+                >
+                  <span style={{color:'red'}}>Inactive</span>
+                </Checkbox>
+                <div className="custom-filter-dropdown-btns" >
+                <Button  onClick={() => clearFilters()} className="custom-reset-button">
+                    Reset
+                  </Button>
+                  <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+                    OK
+                  </Button>
+                
+                </div>
+              </div>
+            ),
         
       },
       {
         title: `Action`,
         dataIndex: "action",
+        align:'center',
         render: (text, rowData) => (
           <span>
             {rowData.isActive ? (
@@ -323,8 +334,8 @@ export function ProductGroupGrid(
      <br></br>
      <Row gutter={24} >
       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
-
-          <Card title={'Total ProductGroup: ' + ProductGroupData.length} style={{textAlign: 'left', height: 41,backgroundColor:'#bfbfbf'}}></Card>
+      <Alert type='success' message={'Total ProductGroup: ' + ProductGroupData.length} style={{fontSize:'15px'}} />
+          {/* <Card title={'Total ProductGroup: ' + ProductGroupData.length} style={{textAlign: 'left', height: 41,backgroundColor:'#bfbfbf'}}></Card> */}
           </Col>
           
           {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
@@ -332,10 +343,12 @@ export function ProductGroupGrid(
               type={'primary'}>New</Button></span>
         </Col> */}
           <Col>
-           <Card title={'Active: ' + ProductGroupData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
+          <Alert type='warning' message={'Active: ' + ProductGroupData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+           {/* <Card title={'Active: ' + ProductGroupData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card> */}
           </Col>
           <Col>
-           <Card title={'In-Active :' + ProductGroupData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
+          <Alert type='info' message={'In-Active: ' + ProductGroupData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+           {/* <Card title={'In-Active :' + ProductGroupData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card> */}
           </Col>
           </Row>
           <br></br>

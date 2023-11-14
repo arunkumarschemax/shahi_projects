@@ -53,7 +53,8 @@ export class DivisionController {
       }
   }
   @Post('/activateOrDeactivateDivision')
-  async activateOrDeactivateDivision(@Body() divisionreq: DivisionRequest): Promise<DivisionResponseModel> {
+  @ApiBody({type:DivisionRequest})
+  async activateOrDeactivateDivision(@Body() divisionreq: any): Promise<DivisionResponseModel> {
       try {
           return await this.divisionService.activateOrDeactivatedivision(divisionreq);
       } catch (err) {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Checkbox, message} from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -154,16 +154,16 @@ service.createPaymentMethod(variantData).then(res=>{
     service.activateDeActivatePaymentMethod(paymentmethodData).then(res => { console.log(res);
       if (res.status) {
         // getAllPaymentmethod();
-        AlertMessages.getSuccessMessage('Success'); 
+        message.success(res.internalMessage, 2);
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
         // } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
+          message.error(res.internalMessage, 2);
         }
       
     }).catch(err => {
-      AlertMessages.getErrorMessage(err.message);
+      message.error(err.message, 2);
     })
   }
    const columnsSkelton: any =[
@@ -202,11 +202,32 @@ service.createPaymentMethod(variantData).then(res=>{
               },
             ],
             filterMultiple: false,
-            onFilter: (value, record) => 
-            {
-              // === is not work
-              return record.isActive === value;
-            },
+            onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+            <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+              <Checkbox
+                checked={selectedKeys.includes(true)}
+                onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+              >
+                <span style={{color:'green'}}>Active</span>
+              </Checkbox>
+              <Checkbox
+                checked={selectedKeys.includes(false)}
+                onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+              >
+                <span style={{color:'red'}}>Inactive</span>
+              </Checkbox>
+              <div className="custom-filter-dropdown-btns" >
+              <Button  onClick={() => clearFilters()} className="custom-reset-button">
+                  Reset
+                </Button>
+                <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+                  OK
+                </Button>
+              
+              </div>
+            </div>
+          )
             
           },
     {
