@@ -55,8 +55,6 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
         .leftJoin(DeliveryTerms,'dt','dt.delivery_terms_id = rmi.delivery_terms')
         .leftJoin(DeliveryMethod,'dm','dm.delivery_method_id = rmi.delivery_method')
 
-
-
         .where('1=1'); 
       
         if (req.itemGroup !== undefined) {
@@ -80,6 +78,24 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
         return data;
       }
 
+      async getCurrencydrop(): Promise<any[]> {
+        const query = this.createQueryBuilder('rmi')
+        .select(`rm_item_id, currency_name AS currency`)
+        .leftJoin(Currencies, 'c','c.currency_id = rmi.currency_id')
+       // .where('1=1'); 
+       .groupBy('c.currency_name')
+
+        let data:RmCreationEntity[] = await query.getRawMany();
+        return data;
+      }
+      async getItemGroupdrop(): Promise<any[]> {
+        const query = this.createQueryBuilder('rmi')
+        .select(`rm_item_id,item_group`)
+        .leftJoin(ItemGroup, 'ig','ig.item_group_id = rmi.item_group_id')
+        .groupBy('ig.item_group')
+        let data:RmCreationEntity[] = await query.getRawMany();
+        return data;
+      }
 
       
 }
