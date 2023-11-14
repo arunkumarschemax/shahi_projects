@@ -338,6 +338,7 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
       console.log(res);
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Successfully');
+        window.location.reload();
         // getAllCurrencys();
         setDrawerVisible(false);
       } else {

@@ -441,15 +441,29 @@ export class StyleOrderService{
             async getCoamendment():Promise<CommonResponseModel>{
                 try{
                     const data= await this.Coupdate.getCoamendment()
+                    
                     return new CommonResponseModel(true,1,'',data)
                 }catch(err){
                     throw err
                 }
             }
 
-            async getConumber(req:CoRequest):Promise<CommonResponseModel>{
+            async getconumbered():Promise<CommonResponseModel>{
                 try{
-                    const data= await this.Coupdate.getconumber(req)
+                    const data= await this.Coupdate.getconumbered()
+                    console.log(data,"kkkkkkkkk");
+
+                    return new CommonResponseModel(true,1,'',data)
+                }catch(err){
+                    throw err
+                }
+            }
+
+            async getcoparameter():Promise<CommonResponseModel>{
+                try{
+                    const data= await this.Coupdate.getcoparameter()
+                    console.log(data,"kkkkkkkkk");
+
                     return new CommonResponseModel(true,1,'',data)
                 }catch(err){
                     throw err
