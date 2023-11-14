@@ -76,7 +76,7 @@ export const RmSkusGeneration = () => {
 
     const onItemTypeChange = (val,option) => {
        const req = new RMCreFilterRequest()
-       req.productGroup = option?.key
+       req.productGroupId = option?.key
        rmItemService.getAllRMItems(req).then(res => {
         if(res.status){
             setItemCodes(res.data)
