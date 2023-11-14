@@ -6,10 +6,12 @@ import CustomSpinner from './common/custom-spinner/custom-spinner';
 import { Route, Link } from 'react-router-dom';
 import axios from 'axios';
 import { AppRoutes } from './routes';
+import { LoginComponent, useIAMClientState } from './common/iam-client-react';
 
 
 export function App() {
   const [load, setLoad] = useState<any>();
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
 
   axios.interceptors.request.use(request => {
@@ -25,11 +27,14 @@ export function App() {
       throw error;
   });
 
-  return (
-    <>
-      <CustomSpinner loading={load} />
-      <AppRoutes />
-    </>);
+  return (IAMClientAuthContext.isAuthenticated ? <>
+    <CustomSpinner loading={load} />
+    <Route />
+  </> :
+    <div style={{ backgroundImage: `url(${bkimage})`, display: 'flex', backgroundSize: 'cover', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <LoginComponent />
+    </div>
+  );
 
 }
 

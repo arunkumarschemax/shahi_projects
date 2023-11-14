@@ -48,21 +48,18 @@ export class IndentService{
     async getAllIndentData(): Promise<CommonResponseModel> {
         const indentData = await this.indentRepo.getAllIndentData();
         const indentModel = []
-        const uomInfo = await this.uomService.getAllActiveUoms();
-      const uomNameMap = new Map<number, string>();
-      uomInfo.data.forEach(uom => uomNameMap.set(uom.uomId, uom.uom));
+        // const uomInfo = await this.uomService.getAllActiveUoms();
+    //   const uomNameMap = new Map<number, string>();
+    //   uomInfo.data.forEach(uom => uomNameMap.set(uom.uomId, uom.uom));
         for(const data of indentData){
             const fabricModel = [];
             const trimModel = [];
             const fabricIndentData = await this.indentFabricRepo.getFabricIndentData(data.indent_id);
             for(const fabric of fabricIndentData){
                 fabricModel.push(new IndentFabricModel(fabric.ifabric_id,fabric.content, 
-                    fabric.fabric_type_name,fabric.fabric_weave_name,fabric.weight,fabric.width,fabric.yarn_count,
-                    fabric.name,fabric.construction,fabric.finish,fabric.shrinkage,fabric.m3_fabric_code,fabric.colour,
-                    fabric.profit_control_head,fabric.moq,uomNameMap.get(fabric.moq_unit),fabric.moq_price,uomNameMap.get(fabric.moq_price_unit),fabric.season,fabric.supplier_id,
-                    fabric.buyer_name,fabric.grn_date,fabric.xl_no,fabric.quantity,uomNameMap.get(Number(fabric.quantity_unit))
-                    ,fabric.status))
-                    console.log(Number(fabric.quantity_unit),'QQQQQQQQ')
+                    fabric.fabric_type_name,fabric.fabric_weave_name,fabric.weight,fabric.width,fabric.yarn_count,fabric.unit,fabric.construction,fabric.finish,fabric.shrinkage,fabric.m3_fabric_code,fabric.colour,
+                    fabric.pch,fabric.moq,fabric.moqUnit,fabric.moq_price,fabric.moqPriceUnit,fabric.season,fabric.supplier_id,
+                    fabric.buyer_name,fabric.grn_date,fabric.xl_no,fabric.quantity,fabric.quantityUnit,fabric.status))
                 }
             const trimIndentData = await this.indentTrimRepo.getTrimIndentData(data.indent_id); 
             for(const trim of trimIndentData){

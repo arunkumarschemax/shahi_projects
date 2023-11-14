@@ -1,4 +1,4 @@
-import { CommonResponseModel, PurchaseOrderDto } from "@project-management-system/shared-models";
+import { CommonResponseModel, VendorIdReq, PurchaseOrderDto } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class PurchaseOrderservice extends CommonAxiosService{
@@ -10,8 +10,8 @@ export class PurchaseOrderservice extends CommonAxiosService{
         return this.axiosPostCall(this.URL + '/cretePurchaseOrder', req)
       }
 
-    async getAllPONumbers(vendorId:number): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.URL + '/getAllPONumbers', vendorId)
+    async getAllPONumbers(req: VendorIdReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + '/getAllPONumbers', req)
       }
 
       async getAllVendors():Promise<any>{

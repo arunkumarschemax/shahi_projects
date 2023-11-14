@@ -10,7 +10,6 @@ const FabricsForm = ({props}) => {
   const [fabricCodeData, setFabricCodeData] = useState<any[]>([])
   const [color, setColor] = useState<any[]>([])
   const {Option}=Select
-  const [productGroupId, setProductGroupId]=useState<any>(null)
   const service = new SampleDevelopmentService()
   const colorService = new ColourService()
 
@@ -24,14 +23,37 @@ const FabricsForm = ({props}) => {
     setCount(count + 1);
   };
 
-  const handleInputChange = (e, key, field,productGroupId) => {
-    const updatedData = data.map((record) => {
-      if (record.key === key) {
-        return { ...record, [field]: e,productGroupId:productGroupId };
-      }
-      return record;
-    });
-    console.log(updatedData)
+  // const handleInputChange = (e, key, field,productGroupId) => {
+  //   const updatedData = data.map((record) => {
+  //     if (record.key === key) {
+  //       return { ...record, [field]: e,productGroupId:productGroupId };
+  //     }
+  //     return record;
+  //   });
+  //   console.log(updatedData)
+  //   setData(updatedData);
+  //   props(updatedData);
+  // };
+
+  const handleInputChange = (e, key, field, additionalValue) => {
+    let updatedData;
+  
+    if (field === 'fabricCode') {
+      const productGroupId = getSelectedProductGroupId(e);
+      updatedData = data.map((record) => {
+        if (record.key === key) {
+          return { ...record, [field]: e, productGroupId: productGroupId };
+        }
+        return record;
+      });
+    } else {
+      updatedData = data.map((record) => {
+        if (record.key === key) {
+          return { ...record, [field]: e };
+        }
+        return record;
+      });
+    }
     setData(updatedData);
     props(updatedData);
   };
@@ -63,12 +85,14 @@ const FabricsForm = ({props}) => {
   const handleDelete = (key) => {
     const updatedData = data.filter((record) => record.key !== key);
     setData(updatedData);
+    props(updatedData)
   };
 
   const getSelectedProductGroupId = (selectedFabricId) => {
     const selectedFabric = fabricCodeData.find(item =>item.fabricId == selectedFabricId)
     return selectedFabric ? selectedFabric.productGroupId : null;
   };
+
   const columns = [
     {
       title: 'S.No',

@@ -2,7 +2,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { PurchaseOrderService } from './purchase-order-service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { CommonResponseModel, PurchaseOrderDto } from '@project-management-system/shared-models';
+import { CommonResponseModel, PurchaseOrderDto, VendorIdReq } from '@project-management-system/shared-models';
 
 @ApiTags('po')
 @Controller('po')
@@ -32,9 +32,10 @@ export class PurchaseOrderController {
   }
 
   @Post('/getAllPONumbers')
-  async getAllPONumbers(@Body() vendorId:number): Promise<CommonResponseModel> {
+  @ApiBody({type: VendorIdReq})
+  async getAllPONumbers(@Body() req:any): Promise<CommonResponseModel> {
     try {
-      return await this.purchasseOrdrSerivice.getAllPONumbers(vendorId);
+      return await this.purchasseOrdrSerivice.getAllPONumbers(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }

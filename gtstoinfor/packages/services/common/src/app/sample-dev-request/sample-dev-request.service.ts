@@ -173,6 +173,7 @@ export class SampleRequestService {
       }
       sampleReqEntity.sampleReqSizeInfo = sampleSizeInfo
       for (const fabricObj of req.fabricInfo) {
+        console.log(fabricObj,'##############################################')
         const fabricEntity = new SampleReqFabricinfoEntity()
         fabricEntity.fabricCode=fabricObj.fabricCode
         fabricEntity.description=fabricObj.description
@@ -208,10 +209,10 @@ export class SampleRequestService {
         const bomEntity = new SamplingbomEntity()
         bomEntity.sampleRequestId=save.SampleRequestId
         bomEntity.colourId=fabricData.colourId
-        bomEntity.fabricId=fabricData.fabricCode /// product_gropu_id
-        bomEntity.rmItemId=1 //rm_item_id need to be added
-        bomEntity.requiredQuantity=quantityWithWastage
+        bomEntity.rmItemId=fabricData.fabricCode //rm_item_id need to be added
+        bomEntity.requiredQuantity=quantityWithWastage?quantityWithWastage:0
         bomEntity.wastage='2'
+        bomEntity.productGroupId=fabricData.productGroupId
          saveBomDetails = await this.bomRepo.save(bomEntity)
         }
       }
