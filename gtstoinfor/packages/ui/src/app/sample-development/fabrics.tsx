@@ -10,7 +10,6 @@ const FabricsForm = ({props}) => {
   const [fabricCodeData, setFabricCodeData] = useState<any[]>([])
   const [color, setColor] = useState<any[]>([])
   const {Option}=Select
-  const [productGroupId, setProductGroupId]=useState<any>(null)
   const service = new SampleDevelopmentService()
   const colorService = new ColourService()
 
@@ -86,6 +85,7 @@ const FabricsForm = ({props}) => {
   const handleDelete = (key) => {
     const updatedData = data.filter((record) => record.key !== key);
     setData(updatedData);
+    props(updatedData)
   };
 
   const getSelectedProductGroupId = (selectedFabricId) => {
