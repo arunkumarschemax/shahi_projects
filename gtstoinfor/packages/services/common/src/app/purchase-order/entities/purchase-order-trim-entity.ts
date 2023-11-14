@@ -51,7 +51,12 @@ export class PurchaseOrderTrimEntity{
     })
     m3TrimCode: string
     
-
+    @Column('int',{
+        name:'indent_trim_id',
+        nullable:true
+      })
+      indentTrimId:number
+      
     @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poTrimInfo)
     @JoinColumn({name:'purchase_order_id'})
     purchaseOrderEntity:PurchaseOrderEntity

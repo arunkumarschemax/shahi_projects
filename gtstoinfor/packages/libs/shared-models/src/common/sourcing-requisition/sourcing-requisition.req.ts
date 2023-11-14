@@ -18,3 +18,7 @@ export class SourcingRequisitionReq{
         this.indentTrimDetails = indentTrimDetails
     }
 }
+
+export class indentIdReq{
+    indentId:number[]
+}

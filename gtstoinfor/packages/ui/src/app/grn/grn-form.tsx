@@ -107,7 +107,7 @@ const GRNForm = () => {
                 <Card>
                   <Tabs type={'card'} tabPosition={'top'}>
                     <TabPane key="1" tab={<span><b>{`Fabric`}</b></span>}>
-                    <PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} />
+                    <PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={undefined}/>
                     </TabPane>
                     <TabPane key="2" tab={<span><b>{`Trim`}</b></span>}>
                     <PurchaseOrderTrim key='trim' props={handleTrim} />
