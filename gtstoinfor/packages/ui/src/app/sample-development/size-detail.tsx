@@ -55,7 +55,6 @@ const SizeDetail = ({props,buyerId}) => {
    const handleInputChange = (colourId, sizeId, quantity,recordKey) => {
     console.log(recordKey)
     let newData = [...onchangeData];
-
     const updatedData = data.map((record) => {
       if (record.key === recordKey) {
         let existingEntry = newData.find((entry) => entry.colour === colourId);
@@ -79,7 +78,6 @@ const SizeDetail = ({props,buyerId}) => {
           }
         }
       }
-      console.log(newData)
       setOnchangeData(newData); 
       props(newData)
     });
@@ -89,6 +87,7 @@ const SizeDetail = ({props,buyerId}) => {
   const handleDelete = (key) => {
     const updatedData = data.filter((record) => record.key !== key);
     setData(updatedData);
+    props(updatedData)
   };
   const add =()=>{
     form.validateFields().then((val) =>{
@@ -140,7 +139,7 @@ const SizeDetail = ({props,buyerId}) => {
     }
   }));
 
-  
+
   const columns = [
     {
       title: 'S.No',

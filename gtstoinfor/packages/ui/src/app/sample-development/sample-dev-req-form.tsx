@@ -44,7 +44,7 @@ export const SampleDevForm = () => {
   const [processData, setProcessData] = useState([]);
   const [fabricsData, setFabricsData] = useState([]);
   const [trimsData, setTrimsData] = useState([]);
-  const [data, setData] = useState<any>([]);
+  const [data, setData] = useState<any>();
   const pchService = new ProfitControlHeadService();
   const styleService = new StyleService();
   const brandService = new MasterBrandsService();
@@ -223,35 +223,48 @@ export const SampleDevForm = () => {
 
 
   const onFinish = (val) =>{
-    console.log(data.fabricsData)
+    if(data != undefined){
+      console.log('hoii')
+      if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
+        console.log('TTTTT')
+        const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,'',val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData)
+        console.log(req.sizeData)
+       
+          sampleService.createSampleDevelopmentRequest(req).then((res) => {
+            if (res.status) {
+              console.log(res.data);
+              message.success(res.internalMessage, 2);
+              if (fileList.length > 0) {    
+                const formData = new FormData();
+                fileList.forEach((file) => {
+                  console.log(file.originFileObj)
+                  formData.append('file', file.originFileObj);
+                });
+        
+                formData.append('SampleRequestId', `${res.data[0].SampleRequestId}`);
+                // console.log(res.data[0].SampleRequestId)
+                console.log(formData);
+                sampleService.fileUpload(formData).then((file) => {
+                  console.log(file.data)
+                  res.data[0].filepath = file.data;
+                });
+              }
+              navigate("/sample-development/sample-requests")
+            } else {
+              message.success(res.internalMessage, 2);
+            }
+          });
+          console.log(req.sizeData);
+      }else{
+        console.log('ddddddd')
+        message.error('Please Fill The Size,Fabric, Trim And process Details')
+      }
+      
+    }else{
+      console.log('********')
+      message.error('Please Fill The Below Details')
+    }
    
-    const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,'',val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData)
-
-      sampleService.createSampleDevelopmentRequest(req).then((res) => {
-        if (res.status) {
-          console.log(res.data);
-          message.success(res.internalMessage, 2);
-          if (fileList.length > 0) {    
-            const formData = new FormData();
-            fileList.forEach((file) => {
-              console.log(file.originFileObj)
-              formData.append('file', file.originFileObj);
-            });
-    
-            formData.append('SampleRequestId', `${res.data[0].SampleRequestId}`);
-            // console.log(res.data[0].SampleRequestId)
-            console.log(formData);
-            sampleService.fileUpload(formData).then((file) => {
-              console.log(file.data)
-              res.data[0].filepath = file.data;
-            });
-          }
-          navigate("/sample-development/sample-requests")
-        } else {
-          message.success(res.internalMessage, 2);
-        }
-      });
-      console.log(req);
   }
 
   const handleSubmit = (data) => {
@@ -262,7 +275,7 @@ export const SampleDevForm = () => {
   }
 
     const handleSizeDataUpdate = (updatedData) => {
-      // console.log(updatedData)
+      console.log(updatedData)
       setData((prevData) => ({ ...prevData, sizeData: updatedData }));
       setSizeData(updatedData);
   };
@@ -273,6 +286,7 @@ export const SampleDevForm = () => {
   };
 
   const handleFabricsDataUpdate = (updatedData) => {
+    console.log(updatedData)
       setData((prevData) => ({ ...prevData, fabricsData: updatedData }));
       setFabricsData(updatedData);
   };
