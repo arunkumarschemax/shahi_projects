@@ -108,6 +108,7 @@ const getColumnSearchProps = (dataIndex: string) => ({
 function handleReset(clearFilters) {
     clearFilters();
     setSearchText('');
+
   };
 
   function handleSearch(selectedKeys, confirm, dataIndex) {
@@ -167,7 +168,7 @@ function handleReset(clearFilters) {
 
     const req= new CoRequest()
     if(form.getFieldValue('co_number') !== undefined){
-        req.coNumber=form.getFieldValue('coNumber')
+        req.coNumber=form.getFieldValue('co_number')
       }
       if(form.getFieldValue('parameter') !== undefined){
         req.parameter=form.getFieldValue('parameter')
@@ -188,9 +189,11 @@ function handleReset(clearFilters) {
   }
 
  
-  const resetForm = () => {
-    setCono([]);
-};
+  const resetHandler = () => {
+    form.resetFields();
+    getCoamendment();
+
+}
 // const search=()=>{
 //   const req = new CoRequest()
 //   if(form.getFieldValue('coNumber') != undefined) {
@@ -251,20 +254,20 @@ const columnsSkelton:any=[
         title:'Old Value',
         dataIndex: 'oldValue',
         ...getColumnSearchProps('oldValue'),
-        sortDirections: ['descend', 'ascend'],
-    },
+        sorter: (a, b) => a.oldValue.localeCompare(b.oldValue),
+        sortDirections: ['descend', 'ascend'],     },
     {
         title:'Updated Value',
         dataIndex: 'updatedValue',
         ...getColumnSearchProps('updatedValue'),
-        sortDirections: ['descend', 'ascend'],
-    },
+        sorter: (a, b) => a.updatedValue.localeCompare(b.updatedValue),
+        sortDirections: ['descend', 'ascend'],     },
     {
         title:'Co Parameter',
         dataIndex: 'parameter',
         // ...getColumnSearchProps('parameter'),
-        sortDirections: ['descend', 'ascend'],
-    },
+        sorter: (a, b) => a.parameter.localeCompare(b.parameter),
+        sortDirections: ['descend', 'ascend'],    },
     {
         title:'Status',
         dataIndex: 'status',
@@ -302,6 +305,8 @@ return (
     <Card title='CoAmendment' extra={<span><Button onClick={()=>('/materialCreation/co-amendment')} type={'primary'}>New</Button></span>}>
 <br/>
 <Card>
+<Form onFinish={getCoamendment} form={form} layout='vertical'>
+
     <Row gutter={16}>
     <Col
               xs={{ span: 24 }}
@@ -381,7 +386,7 @@ return (
                     type="default"
                     icon={<UndoOutlined />}
                     style={{ color: "red", marginLeft: "10px" }}
-                    onClick={resetForm}
+                    onClick={resetHandler}
                   >
                     Reset
                   </Button>
@@ -391,6 +396,7 @@ return (
     </Row>
     {/* <Tabs type={'card'} tabPosition={'top'}> */}
      {/* <TabPane key="orderline" tab={<span style={{fontSize:'15px'}}><b>{`Change Order Line`}</b></span>}> */}
+     </Form>
         <Table size='small'
              columns={columnsSkelton}
              dataSource={variantData}

@@ -451,7 +451,7 @@ export class StyleOrderService{
             async getconumbered():Promise<CommonResponseModel>{
                 try{
                     const data= await this.Coupdate.getconumbered()
-                    console.log(data,"kkkkkkkkk");
+                    // console.log(data,"kkkkkkkkk");
 
                     return new CommonResponseModel(true,1,'',data)
                 }catch(err){
@@ -462,7 +462,7 @@ export class StyleOrderService{
             async getcoparameter():Promise<CommonResponseModel>{
                 try{
                     const data= await this.Coupdate.getcoparameter()
-                    console.log(data,"kkkkkkkkk");
+                    // console.log(data,"kkkkkkkkk");
 
                     return new CommonResponseModel(true,1,'',data)
                 }catch(err){

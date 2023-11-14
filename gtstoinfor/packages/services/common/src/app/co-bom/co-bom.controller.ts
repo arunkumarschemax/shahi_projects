@@ -38,4 +38,15 @@ export class CoBomController{
         }
     }
 
+
+    @Post('/getcoOrderNumber')
+    // @ApiBody({type:styleOrderReq})
+    async getcoOrderNumber(@Body() req:any):Promise<CommonResponseModel>{
+        try{            
+            return await this.cobom.getcoOrderNumber()
+            
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
 }
