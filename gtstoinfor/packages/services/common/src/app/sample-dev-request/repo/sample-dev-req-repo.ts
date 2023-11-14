@@ -285,7 +285,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
 
     };
 
- 
+
 
 
     async getAllSampleDevData(req?: SampleFilterRequest): Promise<any[]> {
@@ -316,7 +316,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
         // query.groupBy(`sr.sample_request_id`)
         query.orderBy(`sr.sample_request_id`)
         return await query.getRawMany();
-        
+
     }
 
     async getAllSampleReqNo(): Promise<any> {
@@ -365,37 +365,18 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .select(`sb.request_no`)
             .where(`sb.request_no is not null`)
             .orderBy(`sb.request_no`)
-            const data=await query.getRawMany()
+        const data = await query.getRawMany()
         return data;
     }
 
-    // async getAllBuyers(): Promise<any> {
-    //     const query = await this.createQueryBuilder('bu')
-    //         .select(`bu.buyer_name `)
-    //         .where(`bu.buyer_name is not null`)
-    //         .orderBy(`bu.buyer_name`)
-    //         const data=await query.getRawMany()
-    //     return data;
-    // }
+    async getAllBuyers(): Promise<any> {
+        const query = await this.createQueryBuilder('bu')
+            .select(`bu.buyer_name `)
+            .where(`bu.buyer_name is not null`)
+            .orderBy(`bu.buyer_name`)
+        const data = await query.getRawMany()
+        return data;
+    }
 
-    // async getAllSampleReportData(req: SampleRequestFilter) {
-    //     let query = this.createQueryBuilder('sb')
-    //         .select(`
-    //         request_no AS requestNo,
-    //         item_type_id AS itemType,
-    //         `)
 
-    //     if (req.requestNo !== undefined) {
-    //         query.andWhere(`m3_item_code ='${req.requestNo}'`)
-    //     }
-    //     // if (req.itemType !== undefined) {
-    //     //     query.andWhere(`item_type_id ='${req.itemType}'`)
-    //     // }
- 
-      
-
-    //     return await query.getRawMany();
-
-    // }
-    
 } 

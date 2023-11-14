@@ -23,7 +23,9 @@
     versionFlag: number;
     isActive: boolean;
     yarnUom:number
-
+    indentFabricId:number
+    poQuantity:string
+   quantityUomId:number
     constructor(
     colourId:number,
        remarks : string,
@@ -40,7 +42,11 @@
        shrinkage:string,
        pch:number,
        moq:string,
-       yarnUom:number
+       yarnUom:number,
+       indentFabricId:number,
+       poQuantity:string,
+     quantityUomId:number
+
      ){
         this.colourId=colourId
         this.remarks=remarks
@@ -58,5 +64,8 @@
         this.pch=pch
         this.moq=moq
         this.yarnUom=yarnUom
+        this.indentFabricId=indentFabricId
+        this.poQuantity=poQuantity
+        this,quantityUomId=quantityUomId
      }
     }

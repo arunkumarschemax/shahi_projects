@@ -1,6 +1,6 @@
 import { EditOutlined, EnvironmentOutlined, MinusCircleOutlined, PlusOutlined, UndoOutlined } from "@ant-design/icons"
 import { M3MastersCategoryReq } from "@project-management-system/shared-models"
-import { ColourService, FabricTypeService, FabricWeaveService, M3MastersService, ProfitControlHeadService, UomService } from "@project-management-system/shared-services"
+import { ColourService, FabricTypeService, FabricWeaveService, IndentService, M3MastersService, ProfitControlHeadService, UomService } from "@project-management-system/shared-services"
 import { Button, Card, Col, Divider, Form, Input, Popconfirm, Row, Select, Space, Tag, Tooltip, message } from "antd"
 import Table, { ColumnProps } from "antd/es/table"
 import moment from "moment"
@@ -8,7 +8,7 @@ import React from "react"
 import { useEffect, useState } from "react"
 
 
-export const PurchaseOrderfabricForm =({props}) =>{
+export const PurchaseOrderfabricForm =({props,indentId}) =>{
     const [fabricForm]=Form.useForm()
     const [weave,setWeave] = useState<any[]>([])
     const [uom,setUom] = useState<any[]>([])
@@ -30,8 +30,11 @@ export const PurchaseOrderfabricForm =({props}) =>{
     const colorService = new ColourService();
     const pchService = new ProfitControlHeadService()
     const fabricTypeService = new FabricTypeService()
+    const indentService = new IndentService()
+    const [indentData, setIndentData]=useState<any[]>([])
     let tableData: any[] = []
 
+    console.log(indentId)
 
     useEffect(() =>{
         getweave()
@@ -42,6 +45,23 @@ export const PurchaseOrderfabricForm =({props}) =>{
         getFabricType()
     },[])
 
+    useEffect(() =>{
+        if(indentId != undefined){
+            setFabricTableVisible(true)
+            AllIndnetDetails(indentId)
+        }
+    },[indentId])
+
+    const AllIndnetDetails = (value) =>{
+        indentService.getAllIndentItemDetailsAgainstIndent({indentId:value}).then(res =>{
+            if(res.status){
+                setFabricTableData(res.data)
+            }else{
+                setFabricTableData([])
+            }
+        })
+    }
+
     const getweave = () => {
         weaveService.getAllActiveFabricWeave().then(res =>{
             if(res.status) {
@@ -49,6 +69,7 @@ export const PurchaseOrderfabricForm =({props}) =>{
             }
         })
     }
+
     const getFabricType = () => {
         fabricTypeService.getAllActiveFabricType().then(res =>{
             if(res.status) {
@@ -98,10 +119,6 @@ export const PurchaseOrderfabricForm =({props}) =>{
         console.log(option.type)
         fabricForm.setFieldsValue({weaveName:option?.type?option.type:''})
     }
-    const pchOnchange = (value,option) =>{
-        console.log(option.type)
-        fabricForm.setFieldsValue({pchName:option?.type?option.type:''})
-    }
 
     const setEditForm = (rowData: any, index: any) => {
         setUpdate(true)
@@ -115,8 +132,6 @@ export const PurchaseOrderfabricForm =({props}) =>{
                 content: defaultFabricFormData.content,
                 fabricTypeId: defaultFabricFormData.fabricTypeId,
                 weaveId: defaultFabricFormData.weaveId,
-                weight : defaultFabricFormData.weight,
-                weightUnit : defaultFabricFormData.weightUnit,
                 width: defaultFabricFormData.width,
                 construction: defaultFabricFormData.construction,
                 yarnCount: defaultFabricFormData.yarnCount,
@@ -131,8 +146,9 @@ export const PurchaseOrderfabricForm =({props}) =>{
                 weaveName:defaultFabricFormData.weaveName,
                 fabricTypeName:defaultFabricFormData.fabricTypeName,
                 pchName:defaultFabricFormData.pchName,
-                shahiFabricCode:defaultFabricFormData.shahiFabricCode
-
+                shahiFabricCode:defaultFabricFormData.shahiFabricCode,
+                poQuantity:defaultFabricFormData.poQuantity,
+                quantityUomId:defaultFabricFormData.quantityUomId
             })
         }
 
@@ -162,34 +178,13 @@ export const PurchaseOrderfabricForm =({props}) =>{
             width:'130px'
         },
         {
-            title:'Weight',
-            dataIndex:'weight',
-            width:'100px'
-
-        },
-        {
             title:'Width',
             dataIndex:'width',
             width:'100px'
         },
         {
-            title:'Construction',
-            dataIndex:'construction',
-            width:'100px'
-        },
-        {
             title:'Yarn Count',
             dataIndex:'yarnCount',
-            width:'100px'
-        },
-        {
-            title:'Finish',
-            dataIndex:'finish',
-            width:'100px'
-        },
-        {
-            title:'Shrinkage',
-            dataIndex:'shrinkage',
             width:'100px'
         },
         {
@@ -202,14 +197,12 @@ export const PurchaseOrderfabricForm =({props}) =>{
             dataIndex:'colorName',
         },
         {
-            title:'PCH',
-            dataIndex:'pchName',
-            width:'100px'
+            title:'Indent Quantity',
+            dataIndex:'indentQuantity',
         },
         {
-            title:'MOQ',
-            dataIndex:'moq',
-            width:'100px'
+            title:'PO Quantity',
+            dataIndex:'poQuantity',
         },
         {
             title: "Action",
@@ -267,6 +260,7 @@ export const PurchaseOrderfabricForm =({props}) =>{
             }
             setFabricTableData(tableData)
             props(tableData)
+            console.log(tableData)
             fabricForm.resetFields()
             setUpdate(false)
             setFabricTableVisible(true)
@@ -284,7 +278,7 @@ export const PurchaseOrderfabricForm =({props}) =>{
             <Form.Item name='weaveName' hidden><Input ></Input></Form.Item>
             <Form.Item name='fabricTypeName' hidden><Input ></Input></Form.Item>
             <Form.Item name='pchName' hidden><Input ></Input></Form.Item>
-
+            <Form.Item name='indentId' hidden><Input></Input></Form.Item>
 
          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='content' label='Content' >
@@ -319,12 +313,6 @@ export const PurchaseOrderfabricForm =({props}) =>{
                         </Select>
                     </Form.Item>
          </Col>
-         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='weight' label='Weight'>
-                        <Input placeholder="Enter Weight"/>
-                    </Form.Item>
-         </Col>
-        
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
             <Form.Item name='yarnCount' label='Yarn Count'
              rules={[
@@ -359,16 +347,6 @@ export const PurchaseOrderfabricForm =({props}) =>{
             </Form.Item>
           </Col>
            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-           <Form.Item name='finish' label='Finish'>
-               <Input placeholder="Enter Finish"/>
-           </Form.Item>
-           </Col>
-           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-           <Form.Item name='shrinkage' label='Shrinkage'>
-               <Input placeholder="Enter Shrinkage"/>
-           </Form.Item>
-           </Col>
-           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
            <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{required:true,message:'M3 Code is required'}]}>
            <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'>
               {fabricM3Code.map(e => {
@@ -398,33 +376,21 @@ export const PurchaseOrderfabricForm =({props}) =>{
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='construction' label='Construction(EPI XPPI)'>
-                        <Input placeholder="Enter Construction"/>
+                    <Form.Item name='poQuantity' label='Po Quantity'
+                   rules={[{required:true,message:'Quantity of Fabric is required'}]}
+                    >
+                        <Input placeholder="Enter Quantity"/>
                     </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='pch' label='PCH'>
-                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select PCH' 
-                         onChange={pchOnchange}
-                         >
-                         {pch.map(e => {
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
+                    <Form.Item name='quantityUomId'  rules={[{required:true,message:'Quantity unit is required'}]}>
+                        <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
+                            {uom.map(e => {
                                 return(
-                                    <Option type={e.profitControlHead} key={e.profitControlHeadId} value={e.profitControlHeadId} name={e.profitControlHead}> {e.profitControlHead}</Option>
+                                    <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
                                 )
                             })}
                         </Select>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='moq' label='MOQ'
-                    >
-                        <Input placeholder="Enter MOQ"/>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='remarks' label='Remarks'
-                    >
-                        <Input placeholder="Enter Remarks"/>
                     </Form.Item>
                     </Col>
                     </Row>
@@ -433,7 +399,6 @@ export const PurchaseOrderfabricForm =({props}) =>{
                 </Row>
                 <Row>
                     {fabricTableVisible ? <Table columns={columns} dataSource={fabricTableData}
-                    //  scroll={{x:'max-content'}}
                      />
                 :<></>}
 

@@ -24,4 +24,8 @@ export class PurchaseOrderTrimDto{
     
     @ApiProperty()
     m3TrimCode: string
+
+    @ApiProperty()
+    indentTrimId:number
+
 }

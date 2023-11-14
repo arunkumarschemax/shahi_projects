@@ -59,6 +59,14 @@ pch:number
 moq:string
 
 @ApiProperty()
+indentFabricId:number
+@ApiProperty()
+quantityUomId:number
+@ApiProperty()
+
+poQuantity:string
+
+@ApiProperty()
   createdAt: string;
 
   @ApiProperty()
