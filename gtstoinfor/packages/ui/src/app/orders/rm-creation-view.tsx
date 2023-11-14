@@ -19,18 +19,8 @@ const RMCreationView = () => {
   const [page, setPage] = React.useState(1);
   const navigate = useNavigate();
   const [selectedItemCreationData, setSelectedItemCreationData] = useState<any>(undefined);
-  const currencyServices = new CurrencyService();
-         const categoryService = new ItemCategoryService();
-         const buyingHouseservice = new BuyingHouseService();
-         const itemTypeservice =new ItemTypeService();
-         const uomservice = new UomService();
-         const itemGroupservice = new ItemGroupService();
+
          const rmservice = new RmCreationService();
-         const procurementservice = new ProcurmentGroupService();
-         const proDUCTService = new ProductGroupService();
-
-
-
          const [Procurement,setProcurement] = useState([]);
          const [Product,setProduct] = useState([]);       
          const [currency,setCurrency]= useState([]);
@@ -102,7 +92,7 @@ rmservice.getAllRMItems(req).then(res => {
 
 
   const getAllItemType=() =>{
-    itemTypeservice.getAllActiveItemType().then(res =>{
+    rmservice.itemTypeDropdown().then(res =>{
       if (res.status){
         setItemType(res.data);
          
@@ -115,8 +105,7 @@ rmservice.getAllRMItems(req).then(res => {
 
 
   const getAllProducts = () => {
-    proDUCTService
-      .getAllActiveProductGroup()
+    rmservice.ProductGroupDropdown()
       .then((res) => {
         if (res.status) {
           setProduct(res.data);
@@ -126,8 +115,7 @@ rmservice.getAllRMItems(req).then(res => {
       })
   };
   const getAllProcurement = () => {
-    procurementservice
-      .getAllActiveProcurmentGroup()
+    rmservice.ProcurementGroupDropdown()
       .then((res) => {
         if (res.status) {
           setProcurement(res.data);
@@ -146,7 +134,7 @@ rmservice.getAllRMItems(req).then(res => {
  
 
    const getAllItemGroups=() =>{
-    itemGroupservice.getAllActiveItemGroup().then(res =>{
+    rmservice.itemGroupDropdown().then(res =>{
       if (res.status){
         setitemgroup(res.data);  
       } else{
@@ -156,7 +144,7 @@ rmservice.getAllRMItems(req).then(res => {
   }
 
  const getAllCurrency=()=>{
-    currencyServices.getAllActiveCurrencys().then(res=>{
+  rmservice.CurrencyDropdown().then(res=>{
         if(res.status){
           setCurrency(res.data);
         }else{
@@ -243,18 +231,6 @@ rmservice.getAllRMItems(req).then(res => {
     navigate(`/materialCreation/rm-detail-view`,{state:rowData})
     
 }
-
-const getAllUoms=() =>{
-  uomservice.getAllActiveUoms().then(res =>{
-    if (res.status){
-      setUomData(res.data);
-       
-    } else{
-      AlertMessages.getErrorMessage(res.internalMessage);
-       }
-  })        
-}
-
 
   const columnsSkelton: any = [
     {
@@ -442,7 +418,7 @@ const getAllUoms=() =>{
                             <Select showSearch placeholder="Select Currency" optionFilterProp="children" allowClear >
                                 {
                                     currency?.map((inc: any) => {
-                                        return <Option key={inc.currencyId} value={inc.currencyName}>{inc.currencyName}</Option>
+                                        return <Option key={inc.rm_item_id} value={inc.currency}>{inc.currency}</Option>
                                     })
                                 }
                             </Select>
@@ -453,7 +429,7 @@ const getAllUoms=() =>{
                             <Select showSearch placeholder="Select Item Group" optionFilterProp="children" allowClear>
                                 {
                                     itemgroup?.map((inc: any) => {
-                                        return <Option key={inc.itemGroupId} value={inc.itemGroup}>{inc.itemGroup}</Option>
+                                        return <Option key={inc.rm_item_id} value={inc.item_group}>{inc.item_group}</Option>
                                     })
                                 }
                             </Select>
@@ -464,7 +440,7 @@ const getAllUoms=() =>{
                             <Select showSearch placeholder="Select Item Type" optionFilterProp="children" allowClear>
                                 {
                                     ItemType?.map((inc: any) => {
-                                        return <Option key={inc.itemTypeId} value={inc.itemType}>{inc.itemType}</Option>
+                                        return <Option key={inc.rm_item_id} value={inc.item_type}>{inc.item_type}</Option>
                                     })
                                 }
                             </Select>
@@ -480,7 +456,7 @@ const getAllUoms=() =>{
                             >
                                 {
                                     Product?.map((inc: any) => {
-                                        return <Option key={inc.productGroupId} value={inc.productGroup}>{inc.productGroup}</Option>
+                                        return <Option key={inc.rm_item_id} value={inc.product_group}>{inc.product_group}</Option>
                                     })
                                 }
                             </Select>
@@ -495,7 +471,7 @@ const getAllUoms=() =>{
                                 allowClear>
                                 {
                                     Procurement?.map((inc: any) => {
-                                        return <Option key={inc.procurmentGroupId} value={inc.procurmentGroup}>{inc.procurmentGroup}</Option>
+                                        return <Option key={inc.rm_item_id} value={inc.procurment_group}>{inc.procurment_group}</Option>
                                     })
                                 }
                             </Select>

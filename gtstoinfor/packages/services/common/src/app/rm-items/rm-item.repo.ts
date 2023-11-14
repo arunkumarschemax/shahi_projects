@@ -93,6 +93,7 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
         .select(`rm_item_id,item_group`)
         .leftJoin(ItemGroup, 'ig','ig.item_group_id = rmi.item_group_id')
         .groupBy('ig.item_group')
+        .where('item_group != NULL')
         let data:RmCreationEntity[] = await query.getRawMany();
         return data;
       }
@@ -109,6 +110,7 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
         .select(`rm_item_id,product_group`)
         .leftJoin(ProductGroup,'pg','pg.product_group_id = rmi.product_group_id')
         .groupBy('pg.product_group')
+
         let data:RmCreationEntity[] = await query.getRawMany();
         return data;
       }

@@ -112,7 +112,7 @@ return response;
     }
     async itemGroupDropdown():Promise<CommonResponseModel>{
         try{
-            const data = await this.repository.getCurrencydrop()
+            const data = await this.repository.getItemGroupdrop()
             if(data.length === 0){
                 return new CommonResponseModel(false,0,'No data found')
             } else{
