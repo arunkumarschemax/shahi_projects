@@ -209,4 +209,26 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
         }
     }
 
+    async getAllFabricsByPO(req: VendorIdReq): Promise<CommonResponseModel>{
+        try{
+            let query =`SELECT pof.po_fabric_id AS poFabricId,pof.fabric_code AS fabricCode,pof.m3_fabric_code AS m3fabricCode,pof.po_quantity as poQuantity,pof.quantity_uom_id AS quantityUomId,pof.fabric_type_id AS fabricTypeId,ft.fabric_type_name AS fabricTypeName,
+            pof.purchase_order_id as purchaseOrderId,po.po_number AS poNumber 
+            from purchase_order_fabric pof
+            LEFT JOIN fabric_type ft ON ft.fabric_type_id = pof.fabric_type_id  
+            LEFT JOIN purchase_order po ON po.purchase_order_id = pof.purchase_order_id 
+            where 1=1`
+            if (req.poId) {
+                query = query + ` AND pof.purchase_order_id = '${req.vendorId}'`;
+            }
+            const data = await this.dataSource.query(query)
+            if(data.length > 0){
+                return new CommonResponseModel(true,0, "PO Numbers retrieved successfully", data)
+            }else{
+                return new CommonResponseModel(false,1,"No data found",[])
+            }
+        }catch(err){
+            throw(err)
+        }
+    }
+
 }
