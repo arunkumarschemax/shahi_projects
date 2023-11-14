@@ -284,7 +284,7 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
           </Col>
     <Col span={5}>
           <Alert type='info' message={'In-Active: ' + FabricStructuresData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
-           <Card title={'In-Active: ' + FabricStructuresData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
+           {/* <Card title={'In-Active: ' + FabricStructuresData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card> */}
           </Col>
           </Row> 
           <br></br>
