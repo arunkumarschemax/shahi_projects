@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
@@ -278,19 +278,24 @@ const deleteVariant = (Data:AccountControlObjectDto) => {
 
   return (
 
-    <Card title='AccountControlObjects' extra={<span><Button onClick={() => navigate('/masters/accountcontrolobjects/accountcontrolobjects-form')} type={'primary'}>New</Button></span>}>
+    <Card title='Account Control Objects' extra={<span><Button onClick={() => navigate('/masters/accountcontrolobjects/accountcontrolobjects-form')} type={'primary'}>New</Button></span>}>
         <br/>
-      <Row gutter={40}>
-        <Col>
-          <Card title={'Total AccountControlObjects: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+        <Row gutter={24}>
+  <Col span={4}></Col>
+    <Col span={5}>
+     
+<Alert type='success' message={'Total AccountControl Objects: ' + variantData.length} style={{fontSize:'15px'}} />
         </Col>
-        <Col>
-          <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+        <Col span={5}>
+          {/* <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card> */}
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
-        <Col>
-          <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+        <Col span={5}>
+          {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
+          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
-      </Row><br></br>
+</Row>
+<br></br>
         <Table
         size='small'
 
