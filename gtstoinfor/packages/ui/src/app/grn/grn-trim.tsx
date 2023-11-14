@@ -6,7 +6,7 @@ import { ColumnProps } from "antd/lib/table";
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-export const PurchaseOrderTrim = ({props}) =>{
+export const GRNTrimForm = ({props}) =>{
     let tableData: any[] = []
     const [trimForm] = Form.useForm()
     const {Option} = Select
@@ -345,4 +345,4 @@ export const PurchaseOrderTrim = ({props}) =>{
     )
 
 }
-export default PurchaseOrderTrim;
+export default GRNTrimForm;

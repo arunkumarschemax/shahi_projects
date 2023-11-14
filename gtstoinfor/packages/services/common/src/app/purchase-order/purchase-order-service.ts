@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { PurchaseOrderEntity } from "./entities/purchase-order-entity";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, VendorIdReq } from "@project-management-system/shared-models";
 import { PurchaseOrderDto } from "./dto/purchase-order-dto";
 import { PurchaseOrderFbricEntity } from "./entities/purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "./entities/purchase-order-trim-entity";
@@ -52,6 +52,8 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
                 pofabricEntity.moq=poFabric.moq
                 pofabricEntity.m3FabricCode=poFabric.m3FabricCode
                 pofabricEntity.content=poFabric.content
+                pofabricEntity.quantity = poFabric.quantity
+                pofabricEntity.quantityUomId = poFabric.quantityUomId
                 pofabricInfo.push(pofabricEntity)
             }
             poEntity.poFabricInfo=pofabricInfo
@@ -173,14 +175,30 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
         }
     }
 
-    async getAllPONumbers(vendorId: number): Promise<CommonResponseModel>{
+    async getAllPONumbers(req: VendorIdReq): Promise<CommonResponseModel>{
         try{
-            let query =`SELECT purchase_order_id as purchaseOrderId,po_number AS poNumber FROM purchase_order WHERE 1=1`
-            if (vendorId) {
-                query = query + ` AND po_number = "${vendorId}"`;
+            let query =`SELECT purchase_order_id as purchaseOrderId,po_number AS poNumber,vendor_id as vendorId FROM purchase_order WHERE 1=1`
+            if (req.vendorId) {
+                query = query + ` AND vendor_id = '${req.vendorId}'`;
             }
             const data = await this.dataSource.query(query)
+            if(data.length > 0){
+                return new CommonResponseModel(true,0, "PO Numbers retrieved successfully", data)
+            }else{
+                return new CommonResponseModel(false,1,"No data found",[])
+            }
+        }catch(err){
+            throw(err)
+        }
+    }
 
+    async getPODataById(req: VendorIdReq): Promise<CommonResponseModel>{
+        try{
+            let query =`SELECT purchase_order_id as purchaseOrderId,po_number AS poNumber,vendor_id as vendorId FROM purchase_order WHERE 1=1`
+            if (req.vendorId) {
+                query = query + ` AND vendor_id = '${req.vendorId}'`;
+            }
+            const data = await this.dataSource.query(query)
             if(data.length > 0){
                 return new CommonResponseModel(true,0, "PO Numbers retrieved successfully", data)
             }else{
