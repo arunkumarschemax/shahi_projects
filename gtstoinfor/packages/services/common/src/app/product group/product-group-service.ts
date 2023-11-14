@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Raw, Repository } from 'typeorm';
+import { DataSource, Not, Raw, Repository } from 'typeorm';
 import { UserRequestDto } from '../currencies/dto/user-logs-dto';
 import { ProductGroup } from './product-group-entity';
-import { CommonResponseModel, ProductGroupDto, ProductGroupModel, ProductGroupRequest } from '@project-management-system/shared-models';
+import { CommonResponseModel, GlobalVariables, ProductGroupDto, ProductGroupModel, ProductGroupRequest } from '@project-management-system/shared-models';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
+import { productGroupDto } from '../rm-items/dto/product-group-filter';
 
 @Injectable()
 export class ProductGroupService{
@@ -138,4 +139,20 @@ async updateProductGroup(req:ProductGroupRequest): Promise<ProductGroupModel> {
             return err;
         }
     }
+
+    async getProductGroupById(req: productGroupDto): Promise<CommonResponseModel> {
+        try {
+      
+          // Add a condition to filter out records with productGroupId = 1
+          const data = await this.ProductGroupRepository.find({
+            where: {
+                productGroupId: Not(GlobalVariables.productGroupId),
+              },
+          });
+      
+          return new CommonResponseModel(true, 0, "Data retrieved successfully", data);
+        } catch (err) {
+          throw err;
+        }
+      }
       }
