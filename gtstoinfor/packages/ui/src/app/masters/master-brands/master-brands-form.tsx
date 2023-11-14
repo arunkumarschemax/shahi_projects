@@ -26,6 +26,7 @@ import {
   Route,
   Link,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import { MasterBrandsDto } from "@project-management-system/shared-models";
 import { MasterBrandsService } from "@project-management-system/shared-services";
@@ -47,7 +48,7 @@ export function MasterBrandsForm(props: MasterBrandsFormProps) {
   const [disable, setDisable] = useState<boolean>(false);
   const service = new MasterBrandsService();
   const [isUpdateImg, setIsUpdateImg] = useState("");
-
+  let navigate = useNavigate()
   let history = useLocation();
 
   const [filelist, setfilelist] = useState<any>(
@@ -56,7 +57,7 @@ export function MasterBrandsForm(props: MasterBrandsFormProps) {
           {
             name: props.masterBrandData.fileName,
             status: "done",
-            url: props.masterBrandData.fileName,
+            url: props.masterBrandData.filePath,
           },
         ]
       : []
@@ -145,7 +146,7 @@ export function MasterBrandsForm(props: MasterBrandsFormProps) {
         setDisable(false);
         if (res.status) {
           AlertMessages.getSuccessMessage("Brand Created Successfully");
-          //   location.push("/Currencies-view");
+          navigate('/masters/brands/brand-view')
           if (filelist.length > 0) {
             const formData = new FormData();
             filelist.forEach((file: any) => {
@@ -174,7 +175,6 @@ export function MasterBrandsForm(props: MasterBrandsFormProps) {
    */
   const saveData = (values: MasterBrandsDto) => {
     setDisable(false);
-    console.log(values,'ppppppppppppp');
 
     // if(values.currencyName.startsWith(" "))
     //   AlertMessages.getErrorMessage("Invalid Input");
@@ -189,12 +189,14 @@ export function MasterBrandsForm(props: MasterBrandsFormProps) {
 
   const onReset = () => {
     form.resetFields();
+    setfilelist([]); 
+  setImageUrl("");
   };
 
   return (
 
     <Card
-      title='Brands'
+      title='Brand'
       extra={
         props.isUpdate == true ? (
           ""
@@ -282,9 +284,9 @@ export function MasterBrandsForm(props: MasterBrandsFormProps) {
         </Row>
 
         <Col span={24} style={{ textAlign: "right" }}>
-          <Button type="primary" disabled={disable} htmlType="submit">
-            Submit
-          </Button>
+        <Button type="primary" disabled={disable} htmlType="submit">
+              Submit
+            </Button>
           {/* {props.isUpdate === false && ( */}
           <Button
             htmlType="button"

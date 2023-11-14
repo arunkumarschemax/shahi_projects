@@ -64,13 +64,12 @@ export function ProductGroupGrid(
   }
   
   const deleteProductGroup = (ProductGroupData: ProductGroupRequest) => {
-    console.log(ProductGroupData,'iiiiiiiiiiiii');
     
     ProductGroupData.isActive = ProductGroupData.isActive? false : true;
     productGroupService.activateOrDeactivateProductGroup(ProductGroupData).then(res => {console.log(res);
     if(res.status){
       getAllProductGroupData();
-      AlertMessages.getSuccessMessage('Success');
+      AlertMessages.getSuccessMessage(res.internalMessage);
     }else {
       AlertMessages.getErrorMessage(res.internalMessage);
 
@@ -237,6 +236,7 @@ export function ProductGroupGrid(
       {
         title: `Action`,
         dataIndex: "action",
+        align:'center',
         render: (text, rowData) => (
           <span>
             {rowData.isActive ? (
@@ -333,20 +333,24 @@ export function ProductGroupGrid(
 
      <br></br>
      <Row gutter={24} >
-      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
+     <Col span={4}></Col>
 
-          <Card title={'Total ProductGroup: ' + ProductGroupData.length} style={{textAlign: 'left', height: 41,backgroundColor:'#bfbfbf'}}></Card>
+     <Col span={5}>
+      <Alert type='success' message={'Total ProductGroup: ' + ProductGroupData.length} style={{fontSize:'15px'}} />
+          {/* <Card title={'Total ProductGroup: ' + ProductGroupData.length} style={{textAlign: 'left', height: 41,backgroundColor:'#bfbfbf'}}></Card> */}
           </Col>
           
           {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
         <span><Button onClick={() => navigate('/masters/ProductGroup/ProductGroup-form')}
               type={'primary'}>New</Button></span>
         </Col> */}
-          <Col>
-           <Card title={'Active: ' + ProductGroupData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
+          <Col span={5}>
+          <Alert type='warning' message={'Active: ' + ProductGroupData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+           {/* <Card title={'Active: ' + ProductGroupData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card> */}
           </Col>
-          <Col>
-           <Card title={'In-Active :' + ProductGroupData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
+          <Col span={5}>
+          <Alert type='info' message={'In-Active: ' + ProductGroupData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+           {/* <Card title={'In-Active :' + ProductGroupData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card> */}
           </Col>
           </Row>
           <br></br>

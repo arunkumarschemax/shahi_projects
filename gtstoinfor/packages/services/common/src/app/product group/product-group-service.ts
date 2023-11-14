@@ -76,7 +76,7 @@ async updateProductGroup(req:ProductGroupRequest): Promise<ProductGroupModel> {
     async getAllProductGroup(): Promise<ProductGroupModel> {
         try {
          const data = await this.ProductGroupRepository.find()
-let response=[]
+       let response=[]
          for(const res of data){
             response.push(new ProductGroupDto(res.productGroupId,res.productGroup,res.isActive,res.createdUser,res.updatedUser))
          }
@@ -108,7 +108,7 @@ let response=[]
             const Exists = await this.ProductGroupRepository.findOne({where:{productGroupId:req.productGroupId}});
             if (Exists) {
                 if (!Exists) {
-                    throw new ErrorResponse(10113, 'Someone updated the current brand information.Refresh and try again');
+                    throw new ErrorResponse(10113, 'Someone updated the current Product Group information.Refresh and try again');
                 } else {
     
                     const update = await this.ProductGroupRepository.update(
@@ -116,17 +116,17 @@ let response=[]
                         { isActive: req.isActive, updatedUser: req.updatedUser });
                     if (Exists.isActive) {
                         if (update.affected) {
-                            const brandResponse: ProductGroupModel = new ProductGroupModel(true, 10115, 'Brand is de-activated successfully');
-                            return brandResponse;
+                            const ProductGroupResponse: ProductGroupModel = new ProductGroupModel(true, 10115, 'Product Group is de-activated successfully');
+                            return ProductGroupResponse;
                         } else {
-                            throw new ProductGroupModel(false,10111, 'Brand is already deactivated');
+                            throw new ProductGroupModel(false,10111, 'Product Group is already deactivated');
                         }
                     } else {
                         if (update.affected) {
-                            const brandResponse: ProductGroupModel = new ProductGroupModel(true, 10114, 'Brand is activated successfully');
-                            return brandResponse;
+                            const ProductGroupResponse: ProductGroupModel = new ProductGroupModel(true, 10114, 'Product Group is activated successfully');
+                            return ProductGroupResponse;
                         } else {
-                            throw new ProductGroupModel(false,10112, 'Brand is already  activated');
+                            throw new ProductGroupModel(false,10112, 'Product Group is already  activated');
                         }
                     }
                     // }

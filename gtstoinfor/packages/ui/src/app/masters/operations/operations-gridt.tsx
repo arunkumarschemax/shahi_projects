@@ -311,20 +311,23 @@ export function OperationsGrid(
 
       <br></br>
       <Row gutter={24} >
-        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
-
-          <Card title={'Total Operations: ' + operationsData.length} style={{ textAlign: 'left', height: 41, backgroundColor: '#bfbfbf' }}></Card>
+      <Col span={4}></Col>
+      <Col span={5}>
+                <Alert type='success' message={'Total Operations: ' + operationsData.length} style={{fontSize:'15px'}} />
+          {/* <Card title={'Total Operations: ' + operationsData.length} style={{ textAlign: 'left', height: 41, backgroundColor: '#bfbfbf' }}></Card> */}
         </Col>
 
         {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
         <span><Button onClick={() => navigate('/masters/operations/operation-form')}
               type={'primary'}>New</Button></span>
         </Col> */}
-          <Col>
-           <Card title={'Active: ' + operationsData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
+<Col span={5}>
+            <Alert type='warning' message={'Active: ' + operationsData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+           {/* <Card title={'Active: ' + operationsData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card> */}
           </Col>
-          <Col>
-           <Card title={'In-Active :' + operationsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
+          <Col span={5}>
+                      <Alert type='info' message={'In-Active: ' + operationsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+           {/* <Card title={'In-Active :' + operationsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card> */}
           </Col>
           </Row>
           <br></br>

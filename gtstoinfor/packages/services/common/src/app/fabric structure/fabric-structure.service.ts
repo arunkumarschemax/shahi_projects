@@ -5,7 +5,7 @@ import axios from 'axios';
 import { truncate } from 'fs';
 import { UserRequestDto } from '../currencies/dto/user-logs-dto';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
-import { FabricStructures } from './fabric.entity';
+import { FabricStructures } from './fabric-structure.entity';
 import { FabricStructuresAdapter } from './dto/fabric.adapter';
 import { AllFabricStructuresResponseModel, FabricStructuresDTO } from '@project-management-system/shared-models';
 import { FabricStructureDTO } from './dto/fabric.dto';
@@ -35,23 +35,26 @@ export class FabricStructuresService {
     }
 
     async createFabricStructure(fabricStructureDto: FabricStructureDTO, isUpdate: boolean): Promise<AllFabricStructuresResponseModel> {
-        console.log(fabricStructureDto,'nnnnnh');
         
         try {
           let previousValue
           if (!isUpdate) {
+
             const fabricStructuresEntity = await this.getFabricStructuresWithoutRelations(fabricStructureDto.fabricStructure);
+            
             if (fabricStructuresEntity) {
-              throw new AllFabricStructuresResponseModel(false,11104, 'Fabric Structures already exists');
+
+              return new AllFabricStructuresResponseModel(false,11104, 'Fabric Structures already exists');
             }
           }
           else{
+            
             const certificatePrevious = await this.fabricStructuresRepository.findOne({where:{fabricStructureId:fabricStructureDto.fabricStructureId}})
             previousValue = certificatePrevious.fabricStructure
             const fabricStructuresEntity = await this.getFabricStructuresWithoutRelations(fabricStructureDto.fabricStructure);
             if (fabricStructuresEntity) {
               if(fabricStructuresEntity.fabricStructureId!=fabricStructureDto.fabricStructureId) {
-                throw new AllFabricStructuresResponseModel(false,11104, 'Fabric Structure already exists');      
+                return new AllFabricStructuresResponseModel(false,11104, 'Fabric Structure already exists');      
               }
             }
           }
@@ -68,7 +71,7 @@ export class FabricStructuresService {
            const userName = isUpdate? savedFabricStructuresDto.updatedUser :savedFabricStructuresDto.createdUser;
            return response
           } else {
-            throw new AllFabricStructuresResponseModel(false,11106,'FabricStructure saved but issue while transforming into DTO');
+            return new AllFabricStructuresResponseModel(false,11106,'FabricStructure saved but issue while transforming into DTO');
           }
         } catch (error) {
           return  new AllFabricStructuresResponseModel(false,11108,'FabricStructure is not created due to invalid file');

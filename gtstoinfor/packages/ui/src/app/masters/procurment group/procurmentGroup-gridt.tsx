@@ -65,7 +65,7 @@ export function ProcurmentGroupGrid(
   
   const deleteProcurmentGroup = (ProcurmentGroupData: ProcurmentGroupRequest) => {
     ProcurmentGroupData.isActive = ProcurmentGroupData.isActive? false : true;
-    procurmentGroupService.activateOrDeactivateProcurmentGroup(ProcurmentGroupData).then(res => {console.log(res);
+    procurmentGroupService.activateOrDeactivateProcurmentGroup(ProcurmentGroupData).then(res => {
     if(res.status){
       getAllProcurmentGroupData();
       message.success(res.internalMessage, 2);

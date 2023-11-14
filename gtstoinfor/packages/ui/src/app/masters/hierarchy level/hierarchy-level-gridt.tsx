@@ -70,7 +70,7 @@ export function HierarchyLevelGrid(
     hierarchyLevelService.activateOrDeactivatehierachyLevel(HierarchyLevelData).then(res => {console.log(res);
     if(res.status){
       getAllHierarchyLevelData();
-      AlertMessages.getSuccessMessage('Success');
+      AlertMessages.getSuccessMessage(res.internalMessage);
     }else {
       AlertMessages.getErrorMessage(res.internalMessage);
 
@@ -289,17 +289,20 @@ export function HierarchyLevelGrid(
 
      <br></br>
      <Row gutter={24} >
-      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
+     <Col span={4}></Col>
 
-          <Card title={'Total HierarchyLevel: ' + HierarchyLevelData.length} style={{textAlign: 'left', height: 41,backgroundColor:'#bfbfbf'}}></Card>
+     <Col span={6}>
+      <Alert type='success' message={'Total Hierarchy Level: ' + HierarchyLevelData.length} style={{fontSize:'15px'}} />
+        
+          {/* <Card title={'Total HierarchyLevel: ' + HierarchyLevelData.length} style={{textAlign: 'left', height: 41,backgroundColor:'#bfbfbf'}}></Card> */}
           </Col>
-    
-    
-          <Col>
-           <Card title={'Active: ' + HierarchyLevelData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
+          <Col span={5}>
+          <Alert type='warning' message={'Active: ' + HierarchyLevelData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+           {/* <Card title={'Active: ' + HierarchyLevelData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card> */}
           </Col>
-          <Col>
-           <Card title={'In-Active :' + HierarchyLevelData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
+          <Col span={5}>
+          <Alert type='warning' message={'Active: ' + HierarchyLevelData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+           {/* <Card title={'In-Active :' + HierarchyLevelData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card> */}
           </Col>
           </Row>
           <br></br>
