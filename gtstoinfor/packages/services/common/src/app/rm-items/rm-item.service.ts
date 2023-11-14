@@ -95,7 +95,32 @@ return response;
           throw err;
         }
       }
-    
+      
 
+      async CurrencyDropdown():Promise<CommonResponseModel>{
+        try{
+            const data = await this.repository.getCurrencydrop()
+            if(data.length === 0){
+                return new CommonResponseModel(false,0,'No data found')
+            } else{
+                return new CommonResponseModel(true,1,'RM Creation Data retrieved',data)
 
+            }
+        } catch(err){
+            return err
+        }
+    }
+    async itemGroupDropdown():Promise<CommonResponseModel>{
+        try{
+            const data = await this.repository.getCurrencydrop()
+            if(data.length === 0){
+                return new CommonResponseModel(false,0,'No data found')
+            } else{
+                return new CommonResponseModel(true,1,'RM Creation Data retrieved',data)
+
+            }
+        } catch(err){
+            return err
+        }
+    }
 }

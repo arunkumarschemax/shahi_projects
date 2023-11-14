@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Checkbox } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Checkbox, Alert } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/lib/table';
@@ -304,22 +304,26 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
     console.log('params', pagination, filters, sorter, extra);
   }
   return (
-    <Card title={<span >Fabric Weave</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+    <Card title="Fabric Weave"
+    headStyle={{ border: 0 }} 
     extra={<Link to='/masters/fabric-weave/fabric-weave-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
       </Link>} >
      <br></br>
      <Row gutter={40}>
-      
-        <Col>
-          <Card title={'Total Fabric Weaves: ' + data.length} style={{ textAlign: 'left', width: 220, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+     <Col span={4}></Col>
+
+        <Col span={6}>
+        <Alert type='success' message={'Total Fabric Weaves: ' + data.length} style={{fontSize:'15px'}} />
+          {/* <Card title={'Total Fabric Weaves: ' + data.length} style={{ textAlign: 'left', width: 220, height: 41, backgroundColor: '#bfbfbf' }}></Card> */}
         </Col>
-        <Col>
-          <Card title={'Active: ' + data.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+        <Col span={5}>
+        <Alert type='warning' message={'Active: ' + data.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+          {/* <Card title={'Active: ' + data.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card> */}
         </Col>
-        <Col>
-          <Card title={'In-Active: ' + data.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+        <Col span={5}>
+        <Alert type='info' message={'In-Active: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          {/* <Card title={'In-Active: ' + data.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
         </Col>
           </Row>
           <br></br>

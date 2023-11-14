@@ -61,12 +61,18 @@ export const BusinessAreaForm = (props:BusinessAreaFormProps) => {
                     </Form.Item>
                 <Row gutter={24}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
-                    <Form.Item label='Business Area Code' name='businessAreaCode' rules={[{required:true}]}>
+                    <Form.Item label='Business Area Code' name='businessAreaCode' rules={[{required:true,message:'Business Area Code is required'},
+                {
+                    validator: (_, value) =>
+                      !value[0].includes(" ")
+                        ? Promise.resolve()
+                        : Promise.reject(new Error("No spaces allowed at starting position"))
+                  }]}>
                         <Input placeholder="Enter Business Area Code"/>
                     </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
-                    <Form.Item label='Business Area Name' name='businessAreaName' rules={[{required:true}]}>
+                    <Form.Item label='Business Area Name' name='businessAreaName' rules={[{required:true,message:'Business Area Name is required'}]}>
                         <Input placeholder="Enter Business Area Name"/>
                     </Form.Item>
                 </Col>

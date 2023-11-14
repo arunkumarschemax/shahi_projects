@@ -45,7 +45,6 @@ export class RmCreationController{
     @Post('/getRmItemsDatabyProductGroupId')
     @ApiBody({type:productGroupDto})
     async getRmItemsDatabyProductGroupId(@Body() req:any): Promise<CommonResponseModel> {
-        console.log(req,"con")
         try {
             return await this.rmCreationService.getRmItemsDatabyProductGroupId(req);
         } catch (error) {
@@ -56,7 +55,6 @@ export class RmCreationController{
     @Post('/getRmItemsDatabyProductGroupId1')
     @ApiBody({type:productGroupDto})
     async getRmItemsDatabyProductGroupId1(@Body() req:any): Promise<CommonResponseModel> {
-        console.log(req,"con")
         try {
             return await this.rmCreationService.getRmItemsDatabyProductGroupId1(req);
         } catch (error) {
@@ -64,5 +62,21 @@ export class RmCreationController{
         }
     }
 
+    @Post('/CurrencyDropdown')
+    async CurrencyDropdown(): Promise<CommonResponseModel> {
+        try {
+            return await this.rmCreationService.CurrencyDropdown();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
 
+    @Post('/itemGroupDropdown')
+    async itemGroupDropdown(): Promise<CommonResponseModel> {
+        try {
+            return await this.rmCreationService.itemGroupDropdown();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
 }

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Checkbox } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Checkbox, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
@@ -304,14 +304,18 @@ export const SampleTypesGrid = (props: SampleTypesGridProps) => {
     <Card title='Sample Types' extra={<span><Button onClick={() => navigate('/masters/sampleTypes/sampleTypes-form')} type={'primary'}>New</Button></span>}>
         <br/>
       <Row gutter={40}>
-        <Col>
-          <Card title={'Total Sample Types: ' + Data.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+      <Col span={4}></Col>
+        <Col span={6}>
+        <Alert type='success' message={'Total Sample Types: ' + Data.length} style={{fontSize:'15px'}} />
+          {/* <Card title={'Total Sample Types: ' + Data.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card> */}
         </Col>
-        <Col>
-          <Card title={'Active: ' + Data.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+        <Col span={5}>
+        <Alert type='warning' message={'Active: ' + Data.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+          {/* <Card title={'Active: ' + Data.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card> */}
         </Col>
-        <Col>
-          <Card title={'In-Active: ' + Data.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+        <Col span={5}>
+        <Alert type='info' message={'In-Active: ' + Data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          {/* <Card title={'In-Active: ' + Data.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
         </Col>
       </Row><br></br>
         <Table
