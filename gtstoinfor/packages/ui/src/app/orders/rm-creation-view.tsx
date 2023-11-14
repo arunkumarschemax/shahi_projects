@@ -81,7 +81,7 @@ rmservice.getAllRMItems(req).then(res => {
 
       }
     }).catch(err => {
-      AlertMessages.getErrorMessage(err.message);
+      // AlertMessages.getErrorMessage(err.message);
       setItemData([]);
     })
   }
@@ -95,9 +95,12 @@ rmservice.getAllRMItems(req).then(res => {
     rmservice.itemTypeDropdown().then(res =>{
       if (res.status){
         setItemType(res.data);
-         
+        message.success(res.internalMessage)
+ 
       } else{
-        AlertMessages.getErrorMessage(res.internalMessage);
+        message.error(res.internalMessage)
+
+        // AlertMessages.getErrorMessage(res.internalMessage);
          }
     })      
   }
@@ -109,8 +112,12 @@ rmservice.getAllRMItems(req).then(res => {
       .then((res) => {
         if (res.status) {
           setProduct(res.data);
+          message.success(res.internalMessage)
+
         } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
+          message.error(res.internalMessage)
+
+          // AlertMessages.getErrorMessage(res.internalMessage);
         }
       })
   };
@@ -119,7 +126,10 @@ rmservice.getAllRMItems(req).then(res => {
       .then((res) => {
         if (res.status) {
           setProcurement(res.data);
+          message.success(res.internalMessage)
         } else {
+          message.error(res.internalMessage)
+
           // AlertMessages.getErrorMessage(res.internalMessage);
 
 
@@ -136,9 +146,13 @@ rmservice.getAllRMItems(req).then(res => {
    const getAllItemGroups=() =>{
     rmservice.itemGroupDropdown().then(res =>{
       if (res.status){
-        setitemgroup(res.data);  
+        setitemgroup(res.data);
+        message.success(res.internalMessage)
+  
       } else{
-        AlertMessages.getErrorMessage(res.internalMessage);
+        message.error(res.internalMessage)
+
+        // AlertMessages.getErrorMessage(res.internalMessage);
          }
     })        
   }
@@ -147,8 +161,12 @@ rmservice.getAllRMItems(req).then(res => {
   rmservice.CurrencyDropdown().then(res=>{
         if(res.status){
           setCurrency(res.data);
+          message.success(res.internalMessage)
+
         }else{
-            AlertMessages.getErrorMessage(res.internalMessage)
+          message.error(res.internalMessage)
+
+            // AlertMessages.getErrorMessage(res.internalMessage)
         }
     })
  }
