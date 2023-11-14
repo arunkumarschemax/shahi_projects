@@ -29,16 +29,5 @@ export class MaterialFabricRepository extends Repository<MaterialFabricEntity> {
     };
 
 
-    async findfbDataThroughMiId(id: number) {
-        const query = await this.createQueryBuilder('fb')
-            .select('fb.material_fabric_id AS materialcode,fb.fabric_code AS fabricCode,fb.consumption AS consumption,fb.issued_quantity AS issued_quantity,cr.colour AS color')
-            .leftJoin(Colour,'cr','cr.colour_id = fb.color_id')
-            .where(`fb.material_issue_id = "${id}"`)
-            .getRawMany()
-            console.log(query,"PPPPPPPPPPPPPPPPPP")
-        return query.map((rec)=>{
-            return new FabricDataDto(null,rec.fabricCode,rec.color,rec.consumption,rec.issued_quantity,null)
-        });
-    }
-
+   
 }

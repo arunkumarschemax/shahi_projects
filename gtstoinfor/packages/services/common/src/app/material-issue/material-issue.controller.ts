@@ -73,7 +73,7 @@ export class MaterialIssueController {
     }
     @Post('/getAllMaterial')
     @ApiBody({ type: MaterialIssueRequest })
-    async getMaterialIssue(@Req() req: any): Promise<MaterialReportsResponse> {
+    async getMaterialIssue(@Body() req: any): Promise<MaterialReportsResponse> {
         try {
             return await this.issueService.getMaterialIssue(req)
         } catch (err) {
@@ -85,9 +85,9 @@ export class MaterialIssueController {
 
     @Post('/getRequestNoDrop')
     @ApiBody({ type: RequestNoDto })
-    async getMaterialIssues(): Promise<ResponesNoDropDownRes> {
+    async getMaterialIssues(@Body() req:RequestNoDto): Promise<ResponesNoDropDownRes> {
         try {
-            return await this.issueService.getMaterialIssues()
+            return await this.issueService.getMaterialIssues(req)
         } catch (error) {
             return this.applicationExceptionHandler.returnException(ResponesNoDropDownRes, error);
         }

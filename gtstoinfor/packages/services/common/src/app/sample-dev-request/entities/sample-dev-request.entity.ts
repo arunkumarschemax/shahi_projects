@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsOptional, ValidateIf } from 'class-validator';
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { Style } from '../../style/dto/style-entity';
-import { LocationEntity } from '../../locations/location.entity';
+import { Location } from '../../locations/location.entity';
 import { ProfitControlHead } from '../../profit-control-head/profit-control-head-entity';
 import { Buyers } from '../../buyers/buyers.entity';
 import { SampleTypes } from '../../sample Types/sample-types.entity';

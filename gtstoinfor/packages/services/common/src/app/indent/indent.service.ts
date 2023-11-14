@@ -78,30 +78,27 @@ export class IndentService{
                 }
                 result[requestNo].i_items.push({
                     requestNo: item.requestNo,
-                    itrims_id: item.itrims_id,
                     fabricId: item.fabricId,
-                    trimType: item.trimType,
-                    fabricType:item.fabricType,
-                    fbquantity:item.fbquantity,
-                    quantity: item.quantity,
+                    materialtype:item.fabricType,
+                    quantity:item.fbquantity,
                     color:item.color,
-                    trimCode: item.trimCode,
                     status:item.status,
-                    m3TrimCode: item.m3TrimCode,
-                    m3FabricCode:item.m3FabricCode,
+                    m3Code:item.m3FabricCode,
                   
 
                 });
-                result[requestNo].i_items.push(
-                    {
-                    code: item.fabricCode,
-                    consumption: item.fConsumption,
-                  },
-                  {
-                    code: item.trimCode,
-                    consumption: item.tConsumption,
-                  }
-                  );
+                result[requestNo].i_items.push({
+                    requestNo: item.requestNo,
+                    itrims_id: item.itrims_id,
+                    materialtype: item.trimType,
+                    trimCode: item.trimCode,
+                    quantity: item.quantity,
+                    color:item.color,
+                    m3Code: item.m3TrimCode,
+                    status:item.status,
+                  })
+
+               
                   return result;
                 }, {});
 
@@ -111,7 +108,7 @@ export class IndentService{
         return new CommonResponseModel(false, 0, 'An error occurred', []);
     }
 
-    async getIndentDropDown(req:IndentReq): Promise<CommonResponseModel> {
+    async getIndentDropDown(): Promise<CommonResponseModel> {
         const data = await this.indentRepo.getIndentDropDown()
         if (data.length) {
             return new CommonResponseModel(true, 1, 'Inventory data Retrived Sucessfully', data)

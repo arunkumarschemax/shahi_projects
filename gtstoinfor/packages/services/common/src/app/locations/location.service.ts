@@ -5,15 +5,15 @@ import { UserRequestDto } from './dto/user-logs-dto';
 import { LocationAdapter } from './dto/location.adapter';
 import { LocationDTO } from './dto/location.dto';
 import { AllLocationResponseModel,  LocationDropDownDto, LocationDropDownResponseModel, LocationDto, LocationResponseModel } from '@project-management-system/shared-models';
-import { LocationEntity } from './location.entity';
+import { Location } from './location.entity';
 import { LocationRequest } from './dto/location.request';
 // import { UserRequestDto } from '../currencies/dto/user-logs-dto';
 @Injectable()
 export class LocationService {
     constructor(
     //   private logService:LogsService,
-        @InjectRepository(LocationEntity)
-        private locationRepository: Repository<LocationEntity>,
+        @InjectRepository(Location)
+        private locationRepository: Repository<Location>,
         private locationAdapter: LocationAdapter,
     ) { }
     /**
@@ -47,8 +47,8 @@ export class LocationService {
             // else{
             // var notificationStatus='Updated';
             // }
-            const convertedLocationEntity: LocationEntity = this.locationAdapter.convertDtoToEntity(locationDTO, isUpdate);
-            const savedLocationEntity: LocationEntity = await this.locationRepository.save(
+            const convertedLocationEntity: Location = this.locationAdapter.convertDtoToEntity(locationDTO, isUpdate);
+            const savedLocationEntity: Location = await this.locationRepository.save(
                 convertedLocationEntity
             );
             const savedlocationDTO: LocationDTO = this.locationAdapter.convertEntityToDto(savedLocationEntity);
@@ -77,7 +77,7 @@ export class LocationService {
      * @param LocationName 
      */
     // @LogActions({isAsync: true})
-    async getLocationWithoutRelations(locationName: string): Promise<LocationEntity> {
+    async getLocationWithoutRelations(locationName: string): Promise<Location> {
         // tslint:disable-next-line: typedef
         const LocationResponse = await this.locationRepository.findOne({
             where: { locationName: Raw(alias => `location_name = '${locationName}'`) },
@@ -98,7 +98,7 @@ export class LocationService {
         try {
             const locationDTO: LocationDTO[] = [];
             //retrieves all companies
-            const locationsEntities: LocationEntity[] = await this.locationRepository.find({ order: { 'locationName': 'ASC' } });
+            const locationsEntities: Location[] = await this.locationRepository.find({ order: { 'locationName': 'ASC' } });
             //console.log(locationsEntities);
             if (locationsEntities) {
                 // converts the data fetched from the database which of type companies array to type StateDto array.
@@ -169,7 +169,7 @@ export class LocationService {
     async getActiveLocationById(Req: LocationRequest): Promise<LocationResponseModel> {
         try {
             //retrieves all companies
-            const LocationEntities: LocationEntity = await this.locationRepository.findOne({
+            const LocationEntities: Location = await this.locationRepository.findOne({
                 where:{locationId:Req.locationId}
                 });
                 
@@ -191,7 +191,7 @@ export class LocationService {
         try {
             const locationDTO: LocationDto[] = [];
             //retrieves all companies
-            const LocationEntities: LocationEntity[] = await this.locationRepository.find({ order: { 'locationName': 'ASC' },where:{isActive:true},
+            const LocationEntities: Location[] = await this.locationRepository.find({ order: { 'locationName': 'ASC' },where:{isActive:true},
            });
          console.log(LocationEntities)
             if (LocationEntities) {
@@ -220,7 +220,7 @@ export class LocationService {
      * get Location while passing id
      * @param LocationId 
      */
-    async getLocationById(locationId: number): Promise<LocationEntity> {
+    async getLocationById(locationId: number): Promise<Location> {
         const Response = await this.locationRepository.findOne({
             where: { locationId: locationId },
         });
@@ -238,7 +238,7 @@ export class LocationService {
     async getAllLocationsDropDown(): Promise<LocationDropDownResponseModel> {
         try {
             const locationDTO: LocationDropDownDto[] = [];
-            const LocationEntities: LocationEntity[] = await this.locationRepository.find({ select: ['locationId', 'locationName'], where: { isActive: true }, order: { 'locationName': 'ASC' } });
+            const LocationEntities: Location[] = await this.locationRepository.find({ select: ['locationId', 'locationName'], where: { isActive: true }, order: { 'locationName': 'ASC' } });
             if (LocationEntities && LocationEntities.length > 0) {
                 LocationEntities.forEach(LocationEntity => {
                     locationDTO.push(new LocationDropDownDto(LocationEntity.locationId, LocationEntity.locationName));

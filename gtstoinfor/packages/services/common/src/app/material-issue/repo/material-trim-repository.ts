@@ -23,15 +23,15 @@ export class MaterialTrimRepository extends Repository<MaterialTrimEntity> {
 
 
 
-    async findTrimDataThroughMiId(id: number) {
-        const query = await this.createQueryBuilder('tr')
-            .select(`tr.color_id AS trimcolor_id,tr.consumption AS trimconsumption,tr.issued_quantity AS trimissued_quantity,cr.colour AS color`)
-            .leftJoin(Colour, 'cr', 'cr.colour_id = tr.color_id')
-            .where(`tr.material_issue_id =  ${id} `)
-            .getRawMany()
-        console.log(query, id)
-        return query.map((rec) => {
-            return new TrimDataDto(null, rec.trimCode, rec.color, rec.trimconsumption, rec.trimissued_quantity, null)
-        })
-    }
+    // async findTrimDataThroughMiId(id: number) {
+    //     const query = await this.createQueryBuilder('tr')
+    //         .select(`tr.color_id AS trimcolor_id,tr.consumption AS trimconsumption,tr.issued_quantity AS trimissued_quantity,cr.colour AS color`)
+    //         .leftJoin(Colour, 'cr', 'cr.colour_id = tr.color_id')
+    //         .where(`tr.material_issue_id =  ${id} `)
+    //         .getRawMany()
+    //     console.log(query, id)
+    //     return query.map((rec) => {
+    //         return new TrimDataDto(null, rec.trimCode, rec.color, rec.trimconsumption, rec.trimissued_quantity, null)
+    //     })
+    // }
 } 

@@ -150,7 +150,6 @@ import RackPosition from "./rm_locations/rack-positions"
 import PositionGrid from "./rm_locations/rack-positions grid"
 import PurchaseOrderForm from "./purchase-order2/purchase-order-form"
 import SampleInventory from "./sample-development/sample-inventory-grid"
-import IndentReport from "./sourcing-requisition/indent-report"
 import RackForm from "./masters/Racks/Racks-form"
 import RackView from "./masters/Racks/Racks-view"
 import QualityView from "./masters/quality/quality-view"
@@ -159,6 +158,7 @@ import PurchaseOrderView from "./purchase-order2/purchase-order-view"
 import PurchaseOrderDetailsView from "./purchase-order2/purchase-order-details-view"
 import M3StyleCode from "./masters/m3-style-codes/m3-styleCode-form"
 import M3StyleCodeView from "./masters/m3-style-codes/m3-styleCode-view"
+import IndentReport from "./sourcing-requisition/indent-report"
 
 
 export const AppRoutes = () => {

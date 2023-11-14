@@ -4,7 +4,7 @@ import { DataSource, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
 import { AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, UploadResponse } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
-import { LocationEntity } from '../locations/location.entity';
+import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
 import { ProfitControlHead } from '../profit-control-head/profit-control-head-entity';
 import { Buyers } from '../buyers/buyers.entity';

@@ -7,4 +7,9 @@ export class PurchaseOrderservice extends CommonAxiosService{
         console.log(req)
         return this.axiosPostCall(this.URL + '/cretePurchaseOrder', req)
       }
+      async getPurchaseOrder(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + '/getAllPoData')
+      }
 }
+
+

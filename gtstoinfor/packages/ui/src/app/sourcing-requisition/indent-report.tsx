@@ -27,6 +27,7 @@ export const IndentReport = () => {
             }
         });
     }
+    
     const getAll = () => {
         service.getIndentDropDown().then(res => {
             if (res.status) {
@@ -34,25 +35,20 @@ export const IndentReport = () => {
             }
         })
     }
+    const renderCellData = (data) => {
+        return data ? data : "-";
+      }
+      
     const onSearch = () => {
         let filterData = []
         if (form.getFieldValue('requestNo') !== undefined) {
             const requestNo = form.getFieldValue('requestNo')
-            filterData = data.filter((e) => e.styleId === requestNo)
+            filterData = data.filter((e) => e.indentDate === requestNo)
         } else if (form.getFieldValue('indentDate') !== undefined) {
             const indentDate = form.getFieldValue('indentDate')
             filterData = data.filter((e) => e.requestNo === indentDate)
         }
         dropDown(filterData)
-    }
-
-    const colWidth = {
-        trimType: 120,
-        trimCode: 100,
-        quantity: 100,
-        m3TrimCode: 100,
-        color: 80,
-
     }
 
     const columns: any = [
@@ -67,138 +63,160 @@ export const IndentReport = () => {
             }),
             fixed: 'left',
         },
+        // {
+        //     title: "Indent Code",
+        //     dataIndex: "requestNo",
+        //     width: "110px",
+        //     onCell: (record: any) => ({
+        //         rowSpan: record.rowSpan,
+        //     }),
+        //     fixed: 'left',
+        // },
         {
             title: "Indent Code",
             dataIndex: "requestNo",
-            width: "110px",
-            onCell: (record: any) => ({
-                rowSpan: record.rowSpan,
-            }),
-            fixed: 'left',
-        },
+            width:'150px'
+      
+          },
+       
         {
             title: "Style",
             dataIndex: "style",
-            onCell: (record: any) => ({
-                rowSpan: record.rowSpan,
-            }),
-        },
-        {
+            width:'150px'
+      
+          },
+          {
             title: "Indent Date",
             dataIndex: "indentDate",
-            onCell: (record: any) => ({
-                rowSpan: record.rowSpan,
-            }),
-            width: '150px',
-            fixed: 'left',
-            render: (text, record) => {
-                return record.indentDate
-                    ? moment(record.indentDate).format('YYYY-MM-DD')
-                    : "";
-            },
-        },
-        {
+            width:'150px', render: (text, record) => { return record.deliveryDate !== null ? moment(record.deliveryDate).format('YYYY-MM-DD') : "" },
+      
+          },
+          {
             title: "Expected Date",
             dataIndex: "expectedDate",
-            onCell: (record: any) => ({
-                rowSpan: record.rowSpan,
-            }),
-            fixed: 'left',
-            render: (text, record) => {
-                return record.expectedDate
-                    ? moment(record.expectedDate).format('YYYY-MM-DD')
-                    : "";
-            },
-        },
-        {
-            title: "Material Type",
-            dataIndex: "trimType",
-            width: colWidth.trimType,
-            render: (text, record) => {
-                return record.trimType ? record.trimType : '-'
-
-            },
-        },
-        {
-            title: "Material Code",
-            dataIndex: "trimCode/m3FabricCode",
-            width: colWidth.trimCode,
-            render: (text, record) => {
-                return record.trimCode ? record.trimCode : '-'
-
-            },
-        },
-        {
-            title: "Colour",
-            dataIndex: "color",
-            width: colWidth.color,
-            render: (text, record) => {
-                return record.color ? record.color : '-'
-
-            },
-        },
-        {
-            title: " Quantity",
-            dataIndex: "quantity",
-            width: colWidth.quantity,
-            render: (text, record) => {
-                return record.quantity ? record.quantity : '-'
-
-            },
-        },
-        {
-            title: "M3 Code",
-            dataIndex: "m3TrimCode",
-            width: colWidth.m3TrimCode,
-            render: (text, record) => {
-                return record.m3TrimCode ? record.m3TrimCode : '-'
-
-            },
-        },
-        {
+            width:'150px',
+            render: (text, record) => { return record.deliveryDate !== null ? moment(record.deliveryDate).format('YYYY-MM-DD') : "" },
+      
+          }, 
+          {
+            title: <div style={{ textAlign: 'center' }}>Material Type</div>,
+            dataIndex: "i_items",
+            key: "i_items",
+            align: 'center',
+            render: (i_items, text) => {
+              renderCellData(text)
+              return (
+                <Table
+                  dataSource={i_items}
+                  columns={[
+                    {
+                      dataIndex: "materialtype",
+                      key: "materialtype", align: 'center',
+                    },
+      
+                  ]}
+                  pagination={false}
+                />
+              );
+            }
+          },
+          {
+            title: <div style={{ textAlign: 'center' }}>Material Code</div>,
+            dataIndex: "mi_items",
+            key: "mi_items",
+            align: 'center',
+            render: (mi_items, text) => {
+              renderCellData(text)
+              return (
+                <Table
+                  dataSource={mi_items}
+                  columns={[
+                    {
+                      dataIndex: "trimCode/m3FabricCode",
+                      key: "trimCode/m3FabricCode", align: 'center',
+                    },
+      
+                  ]}
+                  pagination={false}
+                />
+              );
+            }
+          },
+          {
+            title: <div style={{ textAlign: 'center' }}>Colour</div>,
+            dataIndex: "i_items",
+            key: "i_items",
+            align: 'center',
+            render: (i_items, text) => {
+              renderCellData(text)
+              return (
+                <Table
+                  dataSource={i_items}
+                  columns={[
+                    {
+                      dataIndex: "color",
+                      key: "color", align: 'center',
+                    },
+      
+                  ]}
+                  pagination={false}
+                />
+              );
+            }
+          },
+          {
+            title: <div style={{ textAlign: 'center' }}>Quantity</div>,
+            dataIndex: "i_items",
+            key: "i_items",
+            align: 'center',
+            render: (i_items, text) => {
+              renderCellData(text)
+              return (
+                <Table
+                  dataSource={i_items}
+                  columns={[
+                    {
+                      dataIndex: "quantity",
+                      key: "quantity", align: 'center',
+                    },
+      
+                  ]}
+                  pagination={false}
+                />
+              );
+            }
+          },
+          {
+            title: <div style={{ textAlign: 'center' }}>M3 Code</div>,
+            dataIndex: "i_items",
+            key: "i_items",
+            align: 'center',
+            render: (i_items, text) => {
+              renderCellData(text)
+              return (
+                <Table
+                  dataSource={i_items}
+                  columns={[
+                    {
+                      dataIndex: "m3Code",
+                      key: "m3Code", align: 'center',
+                    },
+      
+                  ]}
+                  pagination={false}
+                />
+              );
+            }
+          },
+          {
             title: "Status",
             dataIndex: "status",
-            width: colWidth.m3TrimCode,
-            onCell: (record: any) => ({
-                rowSpan: record.rowSpan,
-            }),
-            render: (text, record) => {
-                return record.status ? record.status : '-'
-
-            },
-        },
+            width:'150px'
+      
+          },
+        
     ]
-    const allIndentData = (data: any) => {
-        const totalData: any[] = [];
-        data?.forEach((main: any, mainIndex: number) => {
-            main.i_items.forEach((child: any, childIndex: number) => {
-                let gridObj: any = {};
-                gridObj.requestNo = main.requestNo;
-                gridObj.style = main.style;
-                gridObj.indentDate = main.indentDate;
-                gridObj.expectedDate = main.expectedDate;
-                gridObj.status = main.status;
-
-                gridObj.rowSpan = 0;
-                if (childIndex === 0) {
-                    gridObj.rowSpan = main.i_items.length
-                }
-                gridObj.trimType = child.trimType
-                gridObj.trimType = child.trimType
-                gridObj.trimCode = child.trimCode
-                gridObj.quantity = child.quantity
-                gridObj.color = child.color
-                gridObj.m3TrimCode = child.m3TrimCode
-                gridObj.status = main.status
-                gridObj.m3FabricCode = main.m3FabricCode
-                totalData.push(gridObj)
-            })
-        });
-        return totalData
-    };
-
-
-    return (
+  return (
         <div>
             <Card title="Indent Report" className='card-header'>
                 <Form form={form}>
@@ -207,7 +225,7 @@ export const IndentReport = () => {
                             <Form.Item label='Indent Code' style={{ marginBottom: '10px' }} name={'requestNo'}>
                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select Indent Code' >
 
-                                    {data.map(e => {
+                                    {drop.map(e => {
                                         return (
                                             <Option key={e.requestNo} value={e.requestNo} name={e.requestNo}> {e.requestNo}</Option>
                                         )
@@ -235,7 +253,7 @@ export const IndentReport = () => {
                         </Col>
                     </Row>
                 </Form>
-                <Table columns={columns} dataSource={allIndentData(data)} bordered />
+                <Table columns={columns} dataSource={data} bordered />
             </Card>
         </div>
 
