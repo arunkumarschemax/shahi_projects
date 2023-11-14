@@ -8,12 +8,16 @@ import { IndentRepository } from './dto/indent-repository';
 import { IndentFabricEntity } from './indent-fabric-entity';
 import { IndentTrimsEntity } from './indent-trims-entity';
 import { IndentAdapter } from './dto/indent-adapter';
+import { FabricIndentRepository } from './dto/fabric-indent-repository';
+import { TrimIndentRepository } from './dto/trim-indent-repository';
+import { UomService } from '@project-management-system/shared-services';
+
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([Indent,IndentFabricEntity,IndentTrimsEntity]),
       ],
-      providers: [ApplicationExceptionHandler,IndentRepository,IndentService,IndentAdapter],
+providers: [ApplicationExceptionHandler,IndentRepository,FabricIndentRepository,TrimIndentRepository,IndentService,UomService,IndentAdapter],
       controllers: [IndentController],
       exports: []
 })

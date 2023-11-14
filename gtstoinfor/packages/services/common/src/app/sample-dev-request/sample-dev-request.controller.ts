@@ -2,7 +2,7 @@ import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Any } from 'typeorm';
 import { SampleRequestService } from './sample-dev-request.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, ROSLGroupsResponseModel, SampleDevDto, SampleFilterRequest, SampleReqResponseModel, UploadResponse } from '@project-management-system/shared-models';
+import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, ROSLGroupsResponseModel, SampleDevDto, SampleFilterRequest, SampleReqResponseModel, SampleRequestFilter, UploadResponse } from '@project-management-system/shared-models';
 import { SampleRequestDto } from './dto/samle-dev-req';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Body, Controller, Post, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
@@ -12,14 +12,14 @@ import { extname } from 'path';
 @ApiTags('sample-request')
 @Controller('sample-request')
 export class SampleDevReqController {
-    constructor(private sampleService: SampleRequestService,
-      private readonly applicationExceptionHandler: ApplicationExceptionHandler
-      ) {}
+  constructor(private sampleService: SampleRequestService,
+    private readonly applicationExceptionHandler: ApplicationExceptionHandler
+  ) { }
 
 
   @Post('/getAllSampleDevData')
-  @ApiBody({type: SampleFilterRequest})
-  async getAllSampleDevData(@Body() req?:any): Promise<AllSampleDevReqResponseModel> {
+  @ApiBody({ type: SampleFilterRequest })
+  async getAllSampleDevData(@Body() req?: any): Promise<AllSampleDevReqResponseModel> {
     try {
       return await this.sampleService.getAllSampleDevData(req);
     } catch (error) {
@@ -46,10 +46,10 @@ export class SampleDevReqController {
   }
 
   @Post('/cancelSampleReqById')
-  @ApiBody({type: SampleFilterRequest})
-  async cancelSampleReqById(@Body() req : any): Promise<AllSampleDevReqResponseModel> {
+  @ApiBody({ type: SampleFilterRequest })
+  async cancelSampleReqById(@Body() req: any): Promise<AllSampleDevReqResponseModel> {
     try {
-      console.log(req,'controller')
+      console.log(req, 'controller')
       return await this.sampleService.cancelSampleReqById(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
@@ -57,12 +57,12 @@ export class SampleDevReqController {
   }
 
   @Post('/createSampleDevelopmentRequest')
-  @ApiBody({type: SampleRequestDto})
-  async createSampleDevelopmentRequest(@Body() req:any):Promise<AllSampleDevReqResponseModel>{
-    try{
-    return await this.sampleService.createSampleDevelopmentRequest(req)
+  @ApiBody({ type: SampleRequestDto })
+  async createSampleDevelopmentRequest(@Body() req: any): Promise<AllSampleDevReqResponseModel> {
+    try {
+      return await this.sampleService.createSampleDevelopmentRequest(req)
     }
-    catch(err){
+    catch (err) {
       return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, err);
     }
   }
@@ -108,72 +108,94 @@ export class SampleDevReqController {
       callback(null, true);
     },
   }))
-  async updateStylePath(@UploadedFile() file:any, @Body() uploadData: any): Promise<UploadResponse> {
-      console.log(file,'-------file')
-      try {
-        return await this.sampleService.UpdateFilePath(file.path,file.filename, uploadData.SampleRequestId)
-      } catch (error) {
-        return this.applicationExceptionHandler.returnException(UploadResponse, error);
-      }
+  async updateStylePath(@UploadedFile() file: any, @Body() uploadData: any): Promise<UploadResponse> {
+    console.log(file, '-------file')
+    try {
+      return await this.sampleService.UpdateFilePath(file.path, file.filename, uploadData.SampleRequestId)
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(UploadResponse, error);
     }
+  }
 
-    @Post('/getSampleRequestReport')
-    async getSampleRequestReport(): Promise<CommonResponseModel> {
-      try {
-        return await this.sampleService.getSampleRequestReport();
-      } catch (error) {
-        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
-      }
+  @Post('/getSampleRequestReport')
+  async getSampleRequestReport(): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getSampleRequestReport();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
-    @Post('/getFabricCodes')
-    async getFabricCodes(): Promise<CommonResponseModel> {
-      try {
-        return await this.sampleService.getFabricCodes();
-      } catch (error) {
-        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
-      }
+  }
+  @Post('/getFabricCodes')
+  async getFabricCodes(): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getFabricCodes();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
-    
-    @Post('/getTrimCodes')
-    async getTrimCodes(): Promise<CommonResponseModel> {
-      try {
-        return await this.sampleService.getTrimCodes();
-      } catch (error) {
-        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
-      }
-    }
+  }
 
-    @Post('/getTrimType')
-    async getTrimType(): Promise<CommonResponseModel> {
-      try {
-        return await this.sampleService.getTrimType();
-      } catch (error) {
-        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
-      }
+  @Post('/getTrimCodes')
+  async getTrimCodes(): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getTrimCodes();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
-    @Post('/getTrimCodeAgainstTrimType')
-    async getTrimCodeAgainstTrimType(@Body() req:any): Promise<CommonResponseModel> {
-      try {
-        return await this.sampleService.getTrimCodeAgainstTrimType(req);
-      } catch (error) {
-        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
-      }
-    }
+  }
 
-    @Post('/getM3StyleCode')
-    async getM3StyleCode(): Promise<CommonResponseModel> {
-      try {
-        return await this.sampleService.getM3StyleCode();
-      } catch (error) {
-        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
-      }
+  @Post('/getTrimType')
+  async getTrimType(): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getTrimType();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
-    @Post('/getSampleInventory')
-    async getSampleInventory(): Promise<CommonResponseModel> {
-      try {
-        return await this.sampleService.getSampleInventory();
-      } catch (error) {
-        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
-      }
+  }
+  @Post('/getTrimCodeAgainstTrimType')
+  async getTrimCodeAgainstTrimType(@Body() req: any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getTrimCodeAgainstTrimType(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
+  }
+
+  @Post('/getM3StyleCode')
+  async getM3StyleCode(): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getM3StyleCode();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+  @Post('/getSampleInventory')
+  async getSampleInventory(): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getSampleInventory();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+
+  @Post('getAllRequestNo')
+  async getAllRequestNo(): Promise<CommonResponseModel> {
+    const data = await this.sampleService.getAllRequestNo()
+    return data
+  }
+
+  @Post('getAllBuyers')
+  async getAllBuyers(): Promise<CommonResponseModel> {
+    const data = await this.sampleService.getAllBuyers()
+    return data
+  }
+
+//   @Post('/getAllSampleReportData')
+// @ApiBody({type: SampleRequestFilter})
+// async getAllSampleReportData(@Body() req?:any): Promise<CommonResponseModel> {
+//   try {
+//     return await this.sampleService.getAllSampleReportData(req);
+//   } catch (error) {
+//     return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+//   }
+// }
 }

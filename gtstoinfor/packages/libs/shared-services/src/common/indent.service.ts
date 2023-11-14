@@ -11,6 +11,9 @@ export class IndentService extends CommonAxiosService {
   async getAllIndentData(): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getAllIndentData")
   }
-
+  async getIndentnumbers(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getIndentnumbers")
+  }
+  
 
 }

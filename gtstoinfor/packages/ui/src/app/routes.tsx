@@ -158,6 +158,7 @@ import { GrnPendingInfoGrid } from "./sample-development/grn-pending-info-grid"
 import { LocationMapping } from "./sample-development/location-mapping"
 import M3StyleCode from "./masters/m3-style-codes/m3-styleCode-form"
 import M3StyleCodeView from "./masters/m3-style-codes/m3-styleCode-view"
+import GRNForm from "./grn/grn-form"
 
 
 export const AppRoutes = () => {
@@ -610,6 +611,21 @@ export const AppRoutes = () => {
                     <Route path='/indent-form' element={<SourcingRequisitionDynamicForm />} />
                     <Route path='/requisition-view' element={<SourcingRequisitionDynamicView />} />
                     <Route path='/purchase-order' element={<PurchaseOrderForm />} />
+                <Route path="marketing-requisition-form" element={<MarketingReqForm 
+                data={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                update={(undefined) => { }}
+                />}/>
+                <Route path='marketing-requisition-view' element={<MarketingReqGrid/>} />
+                <Route path='marketing-requisition-report' element={<MarketingReqReport/>} />
+                    <Route path='/sourcing-requisition' element={<SourcingRequisitionForm/>}/>
+                    <Route path='/sourcing-requisition-view' element={<SourcingRequisitionView/>}/>
+                    <Route path='/sourcing-requisition-report' element={<SourcingRequisitionReport/>}/>
+                    <Route path='/indent-form' element={<SourcingRequisitionDynamicForm/>}/>
+                    <Route path='/requisition-view' element={<SourcingRequisitionDynamicView/>}/>
+                    <Route path='/purchase-order' element={<PurchaseOrderForm/>}/>
+                    <Route path='/grn-form' element={<GRNForm/>}/>
 
 
                     <Route path='/excel-import'>

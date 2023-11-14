@@ -155,6 +155,13 @@ export const baseMRouterList = [
         filepath: "/purchase-order",
     },
     {
+        label: "GRN",
+        key: "grn",
+        path: "grn-form",
+        // icon: <DashboardOutlined />,
+        filepath: "/grn-form",
+    },
+    {
         label: "Stock",
         key: "stockView",
         path: "stock-view",
@@ -193,7 +200,7 @@ export const baseMRouterList = [
         filepath: "/stack-report",
     },
     {
-        label: "Material Requision",
+        label: "Sample Material Status",
         key: "material-requisition",
         path: "material-requisition",
         filepath: "/material-requisition",
