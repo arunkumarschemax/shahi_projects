@@ -10,6 +10,7 @@ import { FactoriesEntity } from "../../factories/factories.entity";
 import { StocksEntity } from "../../stocks/stocks.entity";
 import { Indent } from "../indent-entity";
 import { UomEntity } from "../../uom/uom-entity";
+import { ProfitControlHead } from "../../profit-control-head/profit-control-head-entity";
 
 
 @Injectable()
@@ -26,7 +27,7 @@ export class FabricIndentRepository extends Repository<IndentFabricEntity> {
         itf.finish,itf.shrinkage,itf.m3_fabric_code,itf.color,itf.pch,itf.moq,itf.moq_unit,itf.moq_price,
         itf.moq_price_unit,itf.season,itf.supplier_id,itf.buyer_id,itf.grn_date,itf.xl_no,itf.quantity,itf.quantity_unit,
         itf.created_at,itf.updated_at,itf.indent_id,itf.weight_unit,fti.fabric_type_name,fw.fabric_weave_name,
-        co.colour,bu.buyer_name,fa.name,ss.quantity,it.status `)
+        co.colour,bu.buyer_name,fa.name,ss.quantity,it.status,pch.profit_control_head `)
         .leftJoin(FabricType,'fti','fti.fabric_type_id=itf.fabric_type')
         .leftJoin(FabricWeave,'fw','fw.fabric_weave_id=itf.weave_id')
         .leftJoin(Colour,'co','co.colour_id=itf.color')
@@ -34,6 +35,7 @@ export class FabricIndentRepository extends Repository<IndentFabricEntity> {
         .leftJoin(FactoriesEntity,'fa','fa.id=itf.yarn_unit')
         .leftJoin(StocksEntity,'ss','ss.item_type_id=itf.fabric_type')
         .leftJoin(Indent,'it','it.indent_id=itf.indent_id')
+        .leftJoin(ProfitControlHead,'pch','pch.profit_control_head_id=itf.pch')
         .where(`itf.indent_id=${indentId}`)
         const data = await query.getRawMany()
         return data 

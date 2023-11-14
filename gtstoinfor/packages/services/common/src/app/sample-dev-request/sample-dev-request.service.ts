@@ -306,21 +306,41 @@ export class SampleRequestService {
   }
 
 
-  async getSampleRequestReport(): Promise<CommonResponseModel> {
+  async getSampleRequestReport(req?:any): Promise<CommonResponseModel> {
     const manager = this.dataSource;
-    let rawData
-     rawData = 'SELECT sr.sample_request_id, sr.request_no AS requestNo, sr.m3_style_no, sb.rm_item_id, ri.item_code, sb.required_quantity,sb.created_at, sb.received_quantity,sb.colour_id,co.colour,st.style,bu.buyer_name,pg.product_group,ss.quantity  FROM sample_request sr LEFT JOIN sampling_bom sb ON sb.sample_request_id = sr.sample_request_id LEFT JOIN rm_items ri ON ri.rm_item_id LEFT JOIN `colour` co ON co.colour_id = sb.colour_id = sb.rm_item_id LEFT JOIN `style` st ON st.style_id = sr.style_id LEFT JOIN `buyers` bu ON bu.buyer_id = sr.buyer_id LEFT JOIN `product_group` pg ON pg.product_group_id = sb.product_group_id LEFT JOIN `stocks` ss ON ss.item_type_id = sb.rm_item_id';
+    let rawData = `SELECT sb.sampling_bom_id,sr.sample_request_id, sr.request_no AS requestNo, sr.m3_style_no, sb.rm_item_id, ri.item_code, sb.required_quantity,sb.created_at, sb.assigned_quantity,sb.colour_id,co.colour,st.style,bu.buyer_name,pg.product_group,ss.quantity,fa.name   FROM sampling_bom sb LEFT JOIN sample_request sr ON sb.sample_request_id = sr.sample_request_id LEFT JOIN rm_items ri ON ri.rm_item_id LEFT JOIN colour co ON co.colour_id = sb.colour_id = sb.rm_item_id LEFT JOIN style st ON st.style_id = sr.style_id LEFT JOIN buyers bu ON bu.buyer_id = sr.buyer_id LEFT JOIN product_group pg ON pg.product_group_id = sb.product_group_id LEFT JOIN stocks ss ON ss.item_type_id = sb.rm_item_id LEFT JOIN factory fa ON fa.id=sr.facility_id WHERE sr.sample_request_id IS NOT NULL `;
+    if(req.buyerName) {
+      rawData = rawData + ' and bu.buyer_name = "'+req.buyerName+'"'
+    }
+    if(req.requestNo){
+      rawData = rawData + ' and sr.request_no = "'+req.requestNo+'"'
+    }
+    if(req.style){
+      rawData = rawData + ' and sr.style = "'+req.style+'"'
+    }
+    rawData = rawData + ' group by sb.sampling_bom_id '
+
      const rmData = await manager.query(rawData);
+     console.log(rmData,"4444444444")
+     console.log("**********************************************************************")
+
     if (rmData.length > 0) {
       const groupedData = rmData.reduce((result, item) => {
-        console.log(item,"item")
+        console.log(item,"ittttteemmmm")
         const samplerequestid = item.sample_request_id;
         const requestNo = item.requestNo;
-        
+        const buyers=item.buyer_name;
+        const date=item.created_at;
+        const style=item.style;
+        const unit=item.name
         if (!result[requestNo]) {
           result[requestNo] = {
             request_no: requestNo,
             sample_request_id: samplerequestid,
+            buyer_name:buyers,
+            created_at:date,
+            style:style,
+            name:unit,
             sm: [],
           };
         }
@@ -328,13 +348,13 @@ export class SampleRequestService {
         result[requestNo].sm.push(
           {
             code: item.item_code,
-            buyers: item.buyer_name,
+            // buyers: item.buyer_name,
             fabricName: item.product_group,
             consumption: item.required_quantity,
             quantity: item.quantity,
             color: item.colour ,
-            style:item.style,
-            date:item.created_at,
+            // style:item.style,
+            // date:item.created_at,
           }
           
         );
@@ -435,17 +455,6 @@ async getAllBuyers(): Promise<CommonResponseModel> {
       return new CommonResponseModel(false, 0, 'No data found')
 }
 
-// async getAllSampleReportData(request? : SampleRequestFilter): Promise<CommonResponseModel> {
-//   try{
-//       const details = await this.sampleRepo.getAllSampleReportData(request)
-//       if(details.length > 0){
-//           return new CommonResponseModel(true,0,'All stocks Requests retrieved successfully',details)
-//       } else {
-//           return new CommonResponseModel(false,1,'No data found',[])
-//       }
-//   } catch(err) {
-//       throw err
-//   }
-// }
+
   
 }

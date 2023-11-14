@@ -59,15 +59,16 @@ export class IndentService{
                 fabricModel.push(new IndentFabricModel(fabric.ifabric_id,fabric.content, 
                     fabric.fabric_type_name,fabric.fabric_weave_name,fabric.weight,fabric.width,fabric.yarn_count,
                     fabric.name,fabric.construction,fabric.finish,fabric.shrinkage,fabric.m3_fabric_code,fabric.colour,
-                    fabric.pch,fabric.moq,uomNameMap.get(fabric.moq_unit),fabric.moq_price,uomNameMap.get(fabric.moq_price_unit),fabric.season,fabric.supplier_id,
-                    fabric.buyer_name,fabric.grn_date,fabric.xl_no,fabric.quantity,uomNameMap.get(Number(fabric.quantity_unit)),fabric.status))
+                    fabric.profit_control_head,fabric.moq,uomNameMap.get(fabric.moq_unit),fabric.moq_price,uomNameMap.get(fabric.moq_price_unit),fabric.season,fabric.supplier_id,
+                    fabric.buyer_name,fabric.grn_date,fabric.xl_no,fabric.quantity,uomNameMap.get(Number(fabric.quantity_unit))
+                    ,fabric.status))
                     console.log(Number(fabric.quantity_unit),'QQQQQQQQ')
                 }
             const trimIndentData = await this.indentTrimRepo.getTrimIndentData(data.indent_id); 
             for(const trim of trimIndentData){
                 trimModel.push(new IndentTrimsModel(trim.itrims_id,trim.trim_type,trim.trim_code,trim.sizes,trim.colour,
                     trim.quantity,trim.m3_trim_code,trim.description,
-                    trim.remarks,trim.status))
+                    trim.remarks,trim.quantity,trim.status))
             }
             indentModel.push(new IndentModel(data.indent_id,data.request_no,data.indent_date,data.expected_date,data.status,fabricModel,trimModel,data.style,data.description,data.created_at))
         }

@@ -41,8 +41,8 @@ export class SampleDevelopmentService extends CommonAxiosService {
     return await this.axiosPostCall(this.URL + '/fileUpload', file);
   }
 
-  async getSampleRequestReport(): Promise<AllSampleDevReqResponseModel> {
-    return this.axiosPostCall(this.URL + "/getSampleRequestReport")
+  async getSampleRequestReport(req:any): Promise<AllSampleDevReqResponseModel> {
+    return this.axiosPostCall(this.URL + "/getSampleRequestReport", req)
   }
 
   async getSampleDevById(): Promise<any> {

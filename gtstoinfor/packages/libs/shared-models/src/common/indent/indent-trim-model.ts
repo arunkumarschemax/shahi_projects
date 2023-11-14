@@ -10,6 +10,7 @@ export class IndentTrimsModel{
     m3TrimCode: string;
     description: string;
     remarks: string;
+    availableQuantity:number;
     status:string;
 
 
@@ -23,6 +24,7 @@ export class IndentTrimsModel{
     m3TrimCode: string,
     description: string,
     remarks: string,
+    availableQuantity:number,
     status:string,
   
   
@@ -36,6 +38,7 @@ export class IndentTrimsModel{
     this.m3TrimCode = m3TrimCode;
     this.description = description;
     this.remarks = remarks;
+    this.availableQuantity = availableQuantity;
     this.status=status;
 
 
