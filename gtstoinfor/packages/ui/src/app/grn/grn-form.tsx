@@ -6,6 +6,9 @@ import PurchaseOrderfabricForm from '../purchase-order2/purchase-order-fabric'
 import PurchaseOrderTrim from '../purchase-order2/purchase-order-trim'
 import { BuyersService, PurchaseOrderservice } from '@project-management-system/shared-services'
 import TextArea from 'antd/es/input/TextArea'
+import GRNFabricForm from './grn-fabric'
+import GRNTrimForm from './grn-trim'
+import { VendorIdReq } from '@project-management-system/shared-models'
 
 const GRNForm = () => {
 
@@ -24,16 +27,16 @@ const GRNForm = () => {
     },[])
 
     const getVendorsData = () =>{
-        vendorService.getAllActiveBuyers().then((res)=>{
+        poService.getAllVendors().then((res)=>{
             if(res.status){
                 setVendor(res.data)
             }
         })
     }
 
-    const getPoData =(val)=>{
-        console.log(val,'++++_)_')
-        poService.getAllPONumbers(val).then((res)=>{
+    const getPoData =(value)=>{
+        const req = new VendorIdReq(value)
+        poService.getAllPONumbers(req).then((res)=>{
             if(res.status){
                 setPoData(res.data)
             }
@@ -66,7 +69,7 @@ const GRNForm = () => {
                            <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor' onSelect={getPoData}>
                                 {vendor.map(e => {
                                     return(
-                                        <Option key={e.buyerId} value={e.buyerId}> {e.buyerCode}-{e.buyerName}</Option>
+                                        <Option key={e.id} value={e.id}> {e.vendorCode}-{e.name}</Option>
                                     )
                                 })}
                             </Select>
@@ -88,12 +91,11 @@ const GRNForm = () => {
                         <DatePicker style={{ width: '93%', marginLeft: 5 }} />
                         </Form.Item>
                   </Col>
-                  {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
-                        <Form.Item name='expectedDeliveryDate' label='Expected Delivery Data' rules={[{required:true,message:'Style is required'}]}>
-                        <DatePicker style={{ width: '93%', marginLeft: 5 }} />
+                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
+                        <Form.Item name='contactPerson' label='Contact Person' rules={[{required:true,message:'Date is required'}]}>
+                        <Input style={{ width: '93%', marginLeft: 5 }} placeholder='Enter Contact Person'/>
                         </Form.Item>
                   </Col>
-                   */}
                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                         <Form.Item name='remarks' label='Remarks' rules={[{required:true,message:'PO Number is required'}]}>
                             <TextArea rows={1} placeholder='Enter Remarks'/>
@@ -104,16 +106,16 @@ const GRNForm = () => {
             </Form>
             <Row gutter={24}>
                 
-                <Card>
+                {/* <Card>
                   <Tabs type={'card'} tabPosition={'top'}>
                     <TabPane key="1" tab={<span><b>{`Fabric`}</b></span>}>
-                    <PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={undefined}/>
+                    <GRNFabricForm key='fabric' props={handleFabricOnchange} />
                     </TabPane>
                     <TabPane key="2" tab={<span><b>{`Trim`}</b></span>}>
-                    <PurchaseOrderTrim key='trim' props={handleTrim} />
+                    <GRNTrimForm key='trim' props={handleTrim} />
                     </TabPane>
                 </Tabs>
-                </Card>
+                </Card> */}
                 </Row>
                 <Row justify={'end'}>
                 <Col span={24} style={{ textAlign: "right", marginTop:'10px'}} >

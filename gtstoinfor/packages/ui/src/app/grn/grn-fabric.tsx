@@ -1,6 +1,6 @@
 import { EditOutlined, EnvironmentOutlined, MinusCircleOutlined, PlusOutlined, UndoOutlined } from "@ant-design/icons"
 import { M3MastersCategoryReq } from "@project-management-system/shared-models"
-import { ColourService, FabricTypeService, FabricWeaveService, M3MastersService, ProfitControlHeadService, UomService } from "@project-management-system/shared-services"
+import { ColourService, FabricTypeService, FabricWeaveService, M3MastersService, ProfitControlHeadService, SampleDevelopmentService, UomService } from "@project-management-system/shared-services"
 import { Button, Card, Col, Divider, Form, Input, Popconfirm, Row, Select, Space, Tag, Tooltip, message } from "antd"
 import Table, { ColumnProps } from "antd/es/table"
 import moment from "moment"
@@ -8,7 +8,7 @@ import React from "react"
 import { useEffect, useState } from "react"
 
 
-export const PurchaseOrderfabricForm =({props}) =>{
+export const GRNFabricForm =({props}) =>{
     const [fabricForm]=Form.useForm()
     const [weave,setWeave] = useState<any[]>([])
     const [uom,setUom] = useState<any[]>([])
@@ -21,70 +21,27 @@ export const PurchaseOrderfabricForm =({props}) =>{
     const [defaultFabricFormData, setDefaultFabricFormData] = useState<any>(undefined);
     const [update, setUpdate]=useState<boolean>(false)
     const [fabricType, setFabricType]= useState<any[]>([])
+    const [typeData, setTypeData]= useState<any[]>([])
 
     const [page, setPage] = React.useState(1);
     const {Option}=Select
-    const weaveService = new FabricWeaveService()
-    const uomService =  new UomService()
-    const m3MasterService = new M3MastersService()
-    const colorService = new ColourService();
-    const pchService = new ProfitControlHeadService()
-    const fabricTypeService = new FabricTypeService()
+    const sampleService = new SampleDevelopmentService()
     let tableData: any[] = []
 
 
     useEffect(() =>{
-        getweave()
-        getUom()
-        getM3FabricCodes()
-        getColor()
-        getPCH()
-        getFabricType()
+        getType()
     },[])
 
-    const getweave = () => {
-        weaveService.getAllActiveFabricWeave().then(res =>{
-            if(res.status) {
-                setWeave(res.data)
-            }
-        })
-    }
-    const getFabricType = () => {
-        fabricTypeService.getAllActiveFabricType().then(res =>{
-            if(res.status) {
-                setFabricType(res.data)
-            }
-        })
-    }
-    const getUom = () => {
-        uomService.getAllUoms().then(res => {
-            if(res.status) {
-                setUom(res.data)
-            }
-        })
-    }
-    const getM3FabricCodes = () => {
-        const req = new M3MastersCategoryReq('Fabric')
-        m3MasterService.getByCategory(req).then(res => {
+    const getType = () =>{
+        sampleService.getTrimType().then((res)=>{
             if(res.status){
-                setFabricM3Code(res.data)
+                setTypeData(res.data)
             }
         })
     }
-    const getColor = () => {
-        colorService.getAllActiveColour().then(res =>{
-            if(res.status) {
-                setColor(res.data)
-            }
-        })
-    }
-    const getPCH = () => {
-        pchService.getAllActiveProfitControlHead().then(res =>{
-            if(res.status) {
-                setPch(res.data)
-            }
-        })
-    }
+    
+
 
     const fabrictyprOnchange = (value,option) =>{
         console.log(option.type)
@@ -138,111 +95,199 @@ export const PurchaseOrderfabricForm =({props}) =>{
 
     },[defaultFabricFormData])
 
-    const columns : ColumnProps<any>[] = [
+    const columns = [
+        // {
+        //   title: 'Brand',
+        //   dataIndex: 'brand',
+        //   render: (text, data, index) => {
+        //     console.log(text, data, index)
+        //     return <span>{data.brand.children}</span>
+        //   }
+        // },
         {
-            title: 'S No',
-            key: 'sno',
-            responsive: ['sm'],
-            render: (text, object, index) => (page-1) * 10 +(index+1)
+          title: 'Item Category',
+          dataIndex: 'itemCategory',
+          key: 'itemCategory',
+          render: (text, data, index) => {
+            console.log(data);
+            return <span>{data.itemCategory?.itemCategory}</span>
+          }
         },
         {
-            title:'Content',
-            dataIndex:'content',
-            width:'100px'
+          title: 'Item Sub Category',
+          dataIndex: 'itemSubCategory',
+          key: 'itemSubCategory',
+          render: (text, data, index) => {
+            console.log(data);
+            return <span>{data.itemSubCategory?.itemSubCategory}</span>
+          }
         },
         {
-            title:'Fabric Type',
-            dataIndex:'fabricTypeName',
-            width:'130px'
-            
+          title: 'Item',
+          dataIndex: 'itemName',
+          render: (text, data, index) => {
+            return <span>{data.itemName?.itemName}</span>
+          }
         },
         {
-            title:'Weave',
-            dataIndex:'weaveName',
-            width:'130px'
+          title: 'Size',
+          dataIndex: 'size',
+          render: (text, data, index) => {
+            return <span>{data.size?.sizeName}</span>
+          }
+        },
+        // {
+        //   title: 'SO Number',
+        //   dataIndex: 'soNumber',
+        //   render: (text, data, index) => {
+        //     return <span style={{color:(data.soStatus === SaleOrderStatusEnum.CANCELLED ? 'Red': 'Black')}}>{data.soStatus === SaleOrderStatusEnum.CANCELLED ? (data.soNumber+' - CANCELLED') : (data.isTransferred == true?  data.soNumber+ '-TRANSFERRED' : data.soNumber) }</span>
+        //   }
+        // },
+        {
+          title: 'PO number',
+          dataIndex: 'poNumber',
+        //   render: (text, data, index) => {
+        //     return <span style={{color:(data.soStatus === SaleOrderStatusEnum.CANCELLED ? 'Red': 'Black')}}>{data.soStatus === SaleOrderStatusEnum.CANCELLED ? (data.poNumber+' - CANCELLED') : (data.isTransferred == true?  data.poNumber+ '-TRANSFERRED' : data.poNumber) }</span>
+        //   }
         },
         {
-            title:'Weight',
-            dataIndex:'weight',
-            width:'100px'
-
+          title: 'PO Qty',
+          dataIndex: 'itemQuantity',
+          render: (text, data, index) => {
+            return <span>{Number((data.itemQuantity))}</span>
+          }
         },
+        // {
+        //   title: 'PO Amount',
+        //   dataIndex: 'soNumber',
+        //   render: (text, data, index) => {
+        //     console.log(text, data, index)
+        //     return <span>{data.subAmount}</span>
+        //   }
+        // },
+    
         {
-            title:'Width',
-            dataIndex:'width',
-            width:'100px'
+          title: 'Previous Qty',
+          dataIndex: 'prevAcceptedQty',
+          render: (text, data, index) => {
+            return <span>{Number(data.prevAcceptedQty?data.prevAcceptedQty:0)}</span>
+          }
         },
+    
         {
-            title:'Construction',
-            dataIndex:'construction',
-            width:'100px'
+          title: 'Received Qty',
+          dataIndex: 'receivedQuantity',
+          render: (text, data, index) => {
+            console.log(text, data, index)
+            return <span>{Number(data.receivedQuantity?data.receivedQuantity:0)}</span>
+          }
         },
+    
         {
-            title:'Yarn Count',
-            dataIndex:'yarnCount',
-            width:'100px'
+          title: 'Accepted Qty',
+          dataIndex: 'acceptedQuantity',
+          render: (text, data, index) => {
+            console.log(text, data, index)
+            return <span>{Number(data.acceptedQuantity?data.acceptedQuantity:0)}</span>
+          }
         },
+    
         {
-            title:'Finish',
-            dataIndex:'finish',
-            width:'100px'
+          title: 'Rejected Qty',
+          dataIndex: 'rejectedQuantity',
+          render: (text, data, index) => {
+            console.log(text, data, index)
+            return <span>{Number(data.rejectedQuantity?data.rejectedQuantity:0)}</span>
+          }
         },
+    
         {
-            title:'Shrinkage',
-            dataIndex:'shrinkage',
-            width:'100px'
+          title: 'Unit Price',
+          dataIndex: 'itemCost',
+          render: (text, data, index) => {
+            console.log(text, data, index)
+            return <span>{Number((data.itemCost))}</span>
+          }
         },
+    
         {
-            title:'M3 Fabric Code',
-            dataIndex:'m3FabricCode',
-            width:'170px'
+          title: 'Discount',
+          dataIndex: 'discount',
+          render: (text, data, index) => {
+            console.log(text, data, index)
+            return <span>{`${Number((data.discount))} ( ${Number((data.discountPer))}% )`}</span>
+          }
         },
+    
         {
-            title:'Color',
-            dataIndex:'colorName',
+          title: 'Tax',
+          dataIndex: 'tax',
+          render: (text, data, index) => {
+            console.log(text, data, index)
+            return <span>{`${Number((data.tax))} ( ${Number((data?.taxPer?.taxPercentage))}% )`}</span>
+          }
         },
+    
         {
-            title:'PCH',
-            dataIndex:'pchName',
-            width:'100px'
+          title: 'Transportation',
+          dataIndex: 'transportation',
+          key:'transportation',
+          render: (text, data, index) => {
+            console.log(text, data, index)
+            return <span>{`${Number(text)}`}</span>
+          }
         },
+    
         {
-            title:'MOQ',
-            dataIndex:'moq',
-            width:'100px'
+          title: 'GRN Amount',
+          dataIndex: 'subAmount',
+          render: (text, data, index) => {
+            console.log(text, data, index)
+            // let setAcceptedQty = 0
+            // if((data.acceptedQuantity>0)){
+            //   setAcceptedQty = Number(data.itemQuantity-data.prevAcceptedQty);
+            // }
+            // console.log(setAcceptedQty)
+            // const setDiscAmnt = setAcceptedQty*Number(data.itemCost)*Number(data.discountPer/100)
+            // console.log(setDiscAmnt)
+    
+            // const setTaxAmnt = (setAcceptedQty-setDiscAmnt)*Number(data.taxPer.taxPercentage/100)
+    
+            // const setTotalAmnt = (setAcceptedQty-setDiscAmnt)+setTaxAmnt;
+            // console.log(setTotalAmnt)
+            // data.subAmount = 0;
+            return <span>{Number((data.acceptedQuantity?data.subAmount : 0).toFixed(2))}</span>
+          }
         },
+       
         {
-            title: "Action",
-            dataIndex: 'action',
-            render: (text: any, rowData: any, index: any) => (
-                <span>
-                    <Tooltip placement="top" title='Edit'>
-                        <Tag >
-                            <EditOutlined className={'editSamplTypeIcon'} type="edit"
-                                onClick={() => {
-                                    setEditForm(rowData,index)
-                                }}
-                                style={{ color: '#1890ff', fontSize: '14px' }}
-                            />
-                        </Tag>
-                    </Tooltip>
-                    <Divider type="vertical" />
-                    
-                    <Tooltip placement="top" title='delete'>
-                    <Tag >
-                        <Popconfirm title='Sure to delete?' 
-                        onConfirm={e =>{deleteData(index);}}
-                        >
-                        <MinusCircleOutlined 
-
-                        style={{ color: '#1890ff', fontSize: '14px' }} />
-                        </Popconfirm>
-                    </Tag>
-                    </Tooltip>
-                </span>
-            )
+          title: 'Action',
+          dataIndex: 'action',
+          // width: '20%',
+          render: (text, rowData: any, index) => (
+            <span>
+              <Tooltip placement="top" title='edit'>
+                <EditOutlined className={'editSamplTypeIcon'} type="edit"
+                  onClick={() => {
+                    // if (rowData) {
+                      console.log(rowData)
+                      setEditForm(rowData, index);
+                    // }
+                  }}
+                  style={{ color: '#1890ff', fontSize: '14px' }}
+                />
+              </Tooltip>
+              <Divider type="vertical" />
+              <Tooltip placement="top" title='dlete'>
+                <Popconfirm title='Are you sure to delete this?' onConfirm={e =>{deleteData(index);}}>
+                  <MinusCircleOutlined 
+                    style={{ color: '#1890ff', fontSize: '14px' }} />
+                </Popconfirm>
+              </Tooltip>
+            </span>)
         }
-    ]
+    
+      ]
     
     const deleteData = (index:any) => {
         tableData = [...fabricTableData]
@@ -431,4 +476,4 @@ export const PurchaseOrderfabricForm =({props}) =>{
     )
 
 }
-export default PurchaseOrderfabricForm
+export default GRNFabricForm

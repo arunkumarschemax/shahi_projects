@@ -73,8 +73,10 @@ import { IndentService } from './indent/indent.service';
 import { IndentModule } from './indent/indent.module';
 import { PurchaseOrderModule } from './purchase-order/purchase-order-module';
 import { RacksModule } from './racks/rack.module';
+import { LocationMappingModule } from './location-mapping/location-mapping.module';
 import { QualityModule } from './quality/quality.module';
 import { M3StyleModule } from './m3-style-codes/m3-style.module';
+import { GrnModule } from './grn/grn.module';
 
 
 @Module({
@@ -135,7 +137,7 @@ import { M3StyleModule } from './m3-style-codes/m3-style.module';
     RacksModule,
     QualityModule,
     M3StyleModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,M3MastersModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,OperationTrackingModule,MaterialIssueModule,IndentModule,RackPositionModule,StocksModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,M3MastersModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,OperationTrackingModule,MaterialIssueModule,IndentModule,RackPositionModule,StocksModule,GrnModule,LocationMappingModule],
   controllers: [AppController],
   providers: [AppService],
 })
