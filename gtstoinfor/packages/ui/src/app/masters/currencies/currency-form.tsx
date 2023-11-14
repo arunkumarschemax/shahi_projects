@@ -93,7 +93,7 @@ export const CurrenciesForm = (props:CurrenciesFormProps) => {
     form.resetFields();
   };
   return (
-<Card title={<span style={{color:'white'}}>Currencies</span>}
+<Card title={<span style={{color:'white'}}>Currency</span>}
     style={{textAlign:'center'}} 
      extra={props.isUpdate==true?"":<Link to='/global/currencies/currency-view' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
       >
@@ -127,7 +127,7 @@ export const CurrenciesForm = (props:CurrenciesFormProps) => {
             }
           ]}
         >
-          <Input />
+          <Input placeholder='Enter Currency'/>
         </Form.Item>
         </Col></Row>
         <Row>
