@@ -407,17 +407,19 @@ return (
     //  <br></br>
 <Card title='Brands' extra={<span><Button onClick={() => navigate('/masters/brands/brand-form')} type={'primary'}>New</Button></span>}>
      <Row gutter={40} >
-      <Col>
+     <Col span={4}></Col>
+
+      <Col span={5}>
       <Alert type='success' message={'Total Brands: ' + masterBrandData.length} style={{fontSize:'15px'}} />
 
           {/* <Card title={'Total Brands: ' + masterBrandData.length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#bfbfbf'}}></Card> */}
           </Col>
-          <Col>
+          <Col span={5}>
           <Alert type='warning' message={'Active: ' + masterBrandData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
 
            {/* <Card title={'Active: ' + masterBrandData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card> */}
           </Col>
-          <Col>
+          <Col span={5}>
           <Alert type='info' message={'In-Active: ' + masterBrandData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
 
            {/* <Card title={'In-Active: ' + masterBrandData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card> */}

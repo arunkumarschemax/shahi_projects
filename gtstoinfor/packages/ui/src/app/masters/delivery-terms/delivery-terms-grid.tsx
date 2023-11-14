@@ -286,17 +286,18 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
 <Card title='Delivery Terms' extra={<span><Button onClick={() => navigate('/global/delivery-terms/delivery-terms-form')} type={'primary'}>New</Button></span>}>
  <br></br>
       <Row gutter={40}>
-      <Col>
+      <Col span={4}></Col>
+      <Col span={6}>
       <Alert type='success' message={'Total Delivery Terms: ' + deliveryTermsData.length} style={{fontSize:'15px'}} />
 
           {/* <Card title={'Total Delivery Terms: ' + deliveryTermsData.length} style={{textAlign: 'left', width: 250, height: 41,backgroundColor:'#bfbfbf'}}></Card> */}
           </Col>
-          <Col>
+          <Col span={5}>
           <Alert type='warning' message={'Active: ' + deliveryTermsData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
 
            {/* <Card title={'Active: ' + deliveryTermsData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card> */}
           </Col>
-          <Col>
+          <Col span={5}>
           <Alert type='info' message={'In-Active: ' + deliveryTermsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
 
            {/* <Card title={'In-Active: ' + deliveryTermsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card> */}
