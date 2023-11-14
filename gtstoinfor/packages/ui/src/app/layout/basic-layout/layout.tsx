@@ -200,7 +200,7 @@ export const baseMRouterList = [
         filepath: "/stack-report",
     },
     {
-        label: "Material Requision",
+        label: "Sample Material Status",
         key: "material-requisition",
         path: "material-requisition",
         filepath: "/material-requisition",
