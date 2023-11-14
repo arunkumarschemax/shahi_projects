@@ -24,14 +24,37 @@ const FabricsForm = ({props}) => {
     setCount(count + 1);
   };
 
-  const handleInputChange = (e, key, field,productGroupId) => {
-    const updatedData = data.map((record) => {
-      if (record.key === key) {
-        return { ...record, [field]: e,productGroupId:productGroupId };
-      }
-      return record;
-    });
-    console.log(updatedData)
+  // const handleInputChange = (e, key, field,productGroupId) => {
+  //   const updatedData = data.map((record) => {
+  //     if (record.key === key) {
+  //       return { ...record, [field]: e,productGroupId:productGroupId };
+  //     }
+  //     return record;
+  //   });
+  //   console.log(updatedData)
+  //   setData(updatedData);
+  //   props(updatedData);
+  // };
+
+  const handleInputChange = (e, key, field, additionalValue) => {
+    let updatedData;
+  
+    if (field === 'fabricCode') {
+      const productGroupId = getSelectedProductGroupId(e);
+      updatedData = data.map((record) => {
+        if (record.key === key) {
+          return { ...record, [field]: e, productGroupId: productGroupId };
+        }
+        return record;
+      });
+    } else {
+      updatedData = data.map((record) => {
+        if (record.key === key) {
+          return { ...record, [field]: e };
+        }
+        return record;
+      });
+    }
     setData(updatedData);
     props(updatedData);
   };
@@ -69,6 +92,7 @@ const FabricsForm = ({props}) => {
     const selectedFabric = fabricCodeData.find(item =>item.fabricId == selectedFabricId)
     return selectedFabric ? selectedFabric.productGroupId : null;
   };
+
   const columns = [
     {
       title: 'S.No',

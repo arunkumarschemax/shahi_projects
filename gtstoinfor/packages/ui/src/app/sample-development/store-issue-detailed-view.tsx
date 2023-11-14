@@ -46,7 +46,7 @@ export const StoreIssueDetailed = () => {
   const uomService = new UomService()
   const {Option}  =Select
   const [form] = Form.useForm()
-  const [selectedUom, setSelectedUom] = useState(null);
+  const [selectedUom, setSelectedUom] = useState<number>();
 
 
 
@@ -140,11 +140,11 @@ export const StoreIssueDetailed = () => {
   // };
 
   const handleUomChange = (value, index, key) => {
-    // Update the state with the selected UOM value
-    setSelectedUom((prevSelectedUomId) => ({
-      ...prevSelectedUomId,
-      [key]: value,
-    }));
+    // // Update the state with the selected UOM value
+    // setSelectedUom((prevSelectedUomId) => ({
+    //   ...prevSelectedUomId,
+    //   [key]: value,
+    // }));
 
     // Your other logic goes here, if needed
 

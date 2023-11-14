@@ -159,6 +159,7 @@ import PurchaseOrderDetailsView from "./purchase-order2/purchase-order-details-v
 import M3StyleCode from "./masters/m3-style-codes/m3-styleCode-form"
 import M3StyleCodeView from "./masters/m3-style-codes/m3-styleCode-view"
 import IndentReport from "./sourcing-requisition/indent-report"
+import GRNForm from "./grn/grn-form"
 
 
 export const AppRoutes = () => {
@@ -595,6 +596,7 @@ export const AppRoutes = () => {
                     <Route path='/purchase-order' element={<PurchaseOrderForm/>}/>
                     <Route path='/purchase-view' element={<PurchaseOrderView/>}/>
                     <Route path='/purchase-detali-view' element={<PurchaseOrderDetailsView/>}/>
+                    <Route path='/grn-form' element={<GRNForm/>}/>
 
 
                     <Route path='/excel-import'>

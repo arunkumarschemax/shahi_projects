@@ -34,7 +34,8 @@ export class SampleDevelopmentRequest {
     processInfo: SampleProcessInfoReq[];
     status?: SampleDevelopmentStatusEnum
     fileName?:string;
-    filePath?:string
+    filePath?:string;
+    createdAt:string
 
 
     constructor(

@@ -2,12 +2,18 @@ import { PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
 import { DepartmentReq,SampleDevelopmentRequest } from "@project-management-system/shared-models";
 import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,MasterBrandsService,ProfitControlHeadService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Modal, Row, Select, message } from "antd";
+import { Button, Card, Col, Form, Input, Modal, Row, Select, Tabs, message } from "antd";
 import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import Upload, { RcFile } from "antd/es/upload";
 import SampleDevTabs from "./sample-dev-tabs";
 import { Console } from "console";
+import TabPane from "rc-tabs/lib/TabPanelList/TabPane";
+import SizeDetail from "./size-detail";
+import FabricsForm from "./fabrics";
+import TrimsForm from "./trims";
+import ProcessForm from "./process";
+import { useNavigate } from 'react-router-dom';
 
 const { Option } = Select;
 
@@ -34,6 +40,11 @@ export const SampleDevForm = () => {
   const [selectedBuyerId, setSelectedBuyerId] = useState(null)
   const [m3StleCode, setM3StleCode] = useState<any[]>([])
   const [fabSubType, setFabSubType]=useState<any[]>([])
+  const [sizeData, setSizeData] = useState([]);
+  const [processData, setProcessData] = useState([]);
+  const [fabricsData, setFabricsData] = useState([]);
+  const [trimsData, setTrimsData] = useState([]);
+  const [data, setData] = useState<any>([]);
   const pchService = new ProfitControlHeadService();
   const styleService = new StyleService();
   const brandService = new MasterBrandsService();
@@ -48,6 +59,7 @@ export const SampleDevForm = () => {
   const subTypeService = new SampleSubTypesService()
   const fabricTypeService = new FabricTypeService()
   const fabSubTypeService = new FabricSubtypeservice()
+  const navigate = useNavigate();
 
   useEffect(() => {
     getLocations();
@@ -211,33 +223,9 @@ export const SampleDevForm = () => {
 
 
   const onFinish = (val) =>{
-   console.log(val)
-    console.log(val.requestNo)
-    console.log(tabsData.sizeData)
-    const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,'',val.conversion,val.madeIn,val.remarks,tabsData.sizeData,tabsData.fabricsData,tabsData.trimsData,tabsData.processData)
-      // sampleService.createSampleDevelopmentRequest(req).then((res)=>{
-      //   if(res.status){
-      //     console.log(res.data)
-      //     message.success(res.internalMessage,2)
-      //     if(fileList.length >0){
-      //       console.log(res.data[0].styleId)
-      //       const formData = new FormData();
-      //       fileList.forEach((file: any) => {
-      //           formData.append('file', file);
-      //       });
-
-      //       formData.append('styleId', `${res.data[0].styleId}`)
-      //       console.log(formData)
-      //       sampleService.fileUpload(formData).then(fileres => {
-      //           res.data[0].styleFilePath = fileres.data
-      //       })
-      //     }
-          
-      //   }else{
-      //     message.success(res.internalMessage,2)
-      //   }
-      // })
-      // console.log(req)
+    console.log(data.fabricsData)
+   
+    const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,'',val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData)
 
       sampleService.createSampleDevelopmentRequest(req).then((res) => {
         if (res.status) {
@@ -258,6 +246,7 @@ export const SampleDevForm = () => {
               res.data[0].filepath = file.data;
             });
           }
+          navigate("/sample-development/sample-requests")
         } else {
           message.success(res.internalMessage, 2);
         }
@@ -271,6 +260,27 @@ export const SampleDevForm = () => {
   const buyerOnchange =(value) =>{
     setSelectedBuyerId(value)
   }
+
+    const handleSizeDataUpdate = (updatedData) => {
+      // console.log(updatedData)
+      setData((prevData) => ({ ...prevData, sizeData: updatedData }));
+      setSizeData(updatedData);
+  };
+
+  const handleProcessDataUpdate = (updatedData) => {
+      setData((prevData) => ({ ...prevData, processData: updatedData }));
+      setProcessData(updatedData);
+  };
+
+  const handleFabricsDataUpdate = (updatedData) => {
+      setData((prevData) => ({ ...prevData, fabricsData: updatedData }));
+      setFabricsData(updatedData);
+  };
+
+  const handleTrimsDataUpdate = (updatedData) => {
+      setData((prevData) => ({ ...prevData, trimsData: updatedData }));
+      setTrimsData(updatedData);
+  };
 
   return (
     <Card title='Sample Development Request' className="card-header">
@@ -724,7 +734,27 @@ export const SampleDevForm = () => {
           </Col>
         </Row>
         {selectedBuyerId != null ?
-        <SampleDevTabs handleSubmit={handleSubmit} buyerId={selectedBuyerId}/>:''
+         <Card size='small'>
+         <Tabs type={'card'} tabPosition={'top'}>
+             <TabPane key="1" tab={<span><b>{`Size Detail`}</b></span>}>
+             <SizeDetail props = {handleSizeDataUpdate} buyerId={selectedBuyerId}/>
+             </TabPane>
+             <TabPane key="2" tab={<span><b>{`Fabric`}</b></span>}>
+             <FabricsForm props = {handleFabricsDataUpdate}/>
+             </TabPane>
+             <TabPane key="3" tab={<span><b>{`Trims`}</b></span>}>
+             <TrimsForm props = {handleTrimsDataUpdate}/>
+             </TabPane>
+             <TabPane key="4" tab={<span><b>{`Process`}</b></span>}>
+             <ProcessForm props={handleProcessDataUpdate}/>
+             </TabPane>
+             {/* <TabPane key="5" tab={<span><b>{`Remarks`}</b></span>}>
+                 
+             </TabPane> */}
+         </Tabs>
+     </Card>:''
+
+        // <SampleDevTabs handleSubmit={handleSubmit} buyerId={selectedBuyerId}/>:''
         }
         <Row>
           <Col span={24} style={{ textAlign: "right" }}>

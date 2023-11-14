@@ -295,13 +295,7 @@ export const PurchaseOrderTrim = ({props}) =>{
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name={'consumption'} label={'Consumption'}
-                         rules={[
-                            {
-                              required: true,
-                              message: "Consumption Type Is Required",
-                            }
-                        ]}>
+                        <Form.Item name={'consumption'} label={'Consumption'}>
                             <Input></Input>
                         </Form.Item>
                     </Col>
@@ -321,6 +315,11 @@ export const PurchaseOrderTrim = ({props}) =>{
                             <Input></Input>
                         </Form.Item>
                     </Col>
+                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Form.Item name={'consumption'} label={'Consumption'}>
+                            <Input></Input>
+                        </Form.Item>
+                    </Col> */}
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name={'remarks'} label={'Remarks'}>
                             <Input></Input>
