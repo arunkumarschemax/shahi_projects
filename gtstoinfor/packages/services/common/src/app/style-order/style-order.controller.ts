@@ -119,6 +119,7 @@ export class StyleOrderController{
     @Post('/getCoamendment')
     // @ApiBody({type:styleOrderReq})
     async getCoamendment(@Body() req:any):Promise<CommonResponseModel>{
+        
         try{            
             return await this.styleOrderService.getCoamendment()
             
@@ -127,11 +128,22 @@ export class StyleOrderController{
         }
     }
 
-    @Post('/getConumber')
+    @Post('/getconumbered')
     // @ApiBody({type:styleOrderReq})
-    async getConumber(@Body() req:any):Promise<CommonResponseModel>{
+    async getconumbered(@Body() req:any):Promise<CommonResponseModel>{
         try{            
-            return await this.styleOrderService.getCoNumber()
+            return await this.styleOrderService.getconumbered()
+            
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+
+    @Post('/getcoparameter')
+    // @ApiBody({type:styleOrderReq})
+    async getcoparameter(@Body() req:any):Promise<CommonResponseModel>{
+        try{            
+            return await this.styleOrderService.getcoparameter()
             
         }catch(err){
             return this.applicationExceptionHandler.returnException(CommonResponseModel,err)

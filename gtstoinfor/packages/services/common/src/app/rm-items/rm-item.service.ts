@@ -123,4 +123,43 @@ return response;
             return err
         }
     }
+    async itemTypeDropdown():Promise<CommonResponseModel>{
+        try{
+            const data = await this.repository.getItemTypedrop()
+            if(data.length === 0){
+                return new CommonResponseModel(false,0,'No data found')
+            } else{
+                return new CommonResponseModel(true,1,'RM Creation Data retrieved',data)
+
+            }
+        } catch(err){
+            return err
+        }
+    }
+    async ProductGroupDropdown():Promise<CommonResponseModel>{
+        try{
+            const data = await this.repository.getProductGroupdrop()
+            if(data.length === 0){
+                return new CommonResponseModel(false,0,'No data found')
+            } else{
+                return new CommonResponseModel(true,1,'RM Creation Data retrieved',data)
+
+            }
+        } catch(err){
+            return err
+        }
+    }
+    async ProcurementGroupDropdown():Promise<CommonResponseModel>{
+        try{
+            const data = await this.repository.getProcurementGroupdrop()
+            if(data.length === 0){
+                return new CommonResponseModel(false,0,'No data found')
+            } else{
+                return new CommonResponseModel(true,1,'RM Creation Data retrieved',data)
+
+            }
+        } catch(err){
+            return err
+        }
+    }
 }

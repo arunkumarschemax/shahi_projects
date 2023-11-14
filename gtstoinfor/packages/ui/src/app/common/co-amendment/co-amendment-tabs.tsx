@@ -215,12 +215,14 @@ import { BuyersService, StyleOrderService } from '@project-management-system/sha
 import { BuyerExtrnalRefIdReq, MenusAndScopesEnum, StyleOrderIdReq } from '@project-management-system/shared-models';
 import moment from 'moment';
 import COAmendmentGrid from './co-amendment-grid';
+import { useNavigate } from 'react-router';
 
 export interface COAmendmentTabsProps {}
 const COAmendmentTabs = (props: COAmendmentTabsProps) => {
     const [activeTab, setActiveTab] = useState<any>();
   const [form] = Form.useForm();
   const {Option} = Select;
+  const navigate = useNavigate()
 
   const styleorderService = new StyleOrderService()
 
@@ -314,7 +316,7 @@ const buyerService = new BuyersService();
   ];
 
   return (
-    <Card title="CO Amendment">
+    <Card title="CO Amendment" size='small' extra={<span><Button type='primary' onClick={()=>{navigate ('/materialCreation/co-amendment-view')}}>View</Button></span>}>
        <Form  form={form} >
          <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
