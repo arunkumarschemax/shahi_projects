@@ -4,7 +4,7 @@ import { Button, Card, Col, Form, FormInstance, Radio, Row, Select, Spin, Upload
 import { useState } from 'react';
 import { pdfjs } from 'react-pdf';
 import loadingSymbol from '../../../assets/images/1_yE-S7HG0Rg-ACAcnjvKf5Q.gif';
-import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractEfl, extractMsn, extractExpeditors, extractMaersk, extractNagel, extractOocl, extractPDFDataToLinesData, extractFredexfrieght, extractFredexCourier, extractDhlCourierfrieght, extractDhlairduty, extractTotalTransport, extractSanjayForwarder, extractOneTime, extractTiger, extractOia, extractTextiles,extractedUnicorn, extractedUnique, extractedTvs, extractedVelogicIndia, extracteWiderlogistics } from './schemax-ai-docx-pdf';
+import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractEfl, extractMsn, extractExpeditors, extractMaersk, extractNagel, extractOocl, extractPDFDataToLinesData, extractFredexfrieght, extractFredexCourier, extractDhlCourierfrieght, extractDhlairduty, extractTotalTransport, extractSanjayForwarder, extractOneTime, extractTiger, extractOia, extractTextiles,extractedUnicorn, extractedUnique, extractedTvs, extractedVelogicIndia, extracteWiderlogistics, extractedWorldLine, extractedKwe, extractedUps, extractedCube, extractedAps, extractChRowbin } from './schemax-ai-docx-pdf';
 import { extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNagelInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractOoclInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 ;
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
@@ -145,12 +145,37 @@ export const DocReader = (props: DocReaderProps) => {
                 //                 break;
                   case VendorNameEnum.extractedVelogicIndia:
                                 processedData = await extractedVelogicIndia(pdfData);
-                                console.log('UNITED LINER:', processedData);
+                                console.log('VELOGIC INDIA:', processedData);
                                 break;
                    case VendorNameEnum.extracteWiderlogistics:
                                 processedData = await extracteWiderlogistics(pdfData);
-                                console.log('UNITED LINER:', processedData);
+                                console.log('WIDER LOGISTICS:', processedData);
                                 break;
+                                // extracteWorldLine
+                    case VendorNameEnum.extractedWorldLine:
+                                processedData = await extractedWorldLine(pdfData);
+                                console.log('WORLD LINE:', processedData);
+                                break;
+                    case VendorNameEnum.extractedKwe:
+                                processedData = await extractedKwe(pdfData);
+                                console.log('KWE:', processedData);
+                                 break;
+                    case VendorNameEnum.extractedUps:
+                                processedData = await extractedUps(pdfData);
+                                console.log('UPS:', processedData);
+                                 break;
+                    case VendorNameEnum.extractedCube:
+                                processedData = await extractedCube(pdfData);
+                                console.log('20 CUBE:', processedData);
+                                 break;
+                    case VendorNameEnum.extractedAps:
+                                processedData = await extractedAps(pdfData);
+                                console.log('20 CUBE:', processedData);
+                                 break;
+                    case VendorNameEnum.extractChRowbin:
+                                processedData = await extractChRowbin(pdfData);
+                                console.log('20 CUBE:', processedData);
+                                 break;         
                 // case VendorNameEnum.extractedEfl:
                 //     {
                 //         const isScannedPdf = await checkIsScannedPdf(pdfData)
