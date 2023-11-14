@@ -47,7 +47,7 @@ export const LoginComponent = () => {
             {/* <div style={{marginLeft:'20%'}}>
                     <img src={''} width={150} height={'50%'}></img>
                 </div> */}
-            <div style={{ marginLeft: '20%' }}><b>ORDER MANAGEMENT</b></div>
+            <div style={{ marginLeft: '20%' }}><b>Sampling MANAGEMENT</b></div>
             <br />
             <Form
                 name="login-form"
