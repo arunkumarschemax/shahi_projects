@@ -206,7 +206,11 @@ export const AppRoutes = () => {
                     <Route path='/sample-request-report' element={<SampleRequestReport />} />
 
                     {/* <Route path='/stack-report' element={<StockReport/>}/> */}
-                    <Route path='/masters'>
+                    <Route path='/stack-report' element={<StockReport/>}/>
+                    <Route path='/material-requisition' element={<SampleRequestReport/>}/>
+
+
+                    {/* <Route path='/masters'> */}
                         <Route path='quality-form' element={<QualityForm />} />
                         <Route path='quality-view' element={<QualityView />} />
                         <Route path='rack-form' element={<RackForm />} />
@@ -219,8 +223,6 @@ export const AppRoutes = () => {
                             updateDetails={(undefined) => { }} m3MasterData={undefined} />} />
                         <Route path='m3-itemcodes-view' element={<M3MastersView />} />
                     
-                    <Route path='/stack-report' element={<StockReport/>}/>
-                    <Route path='/material-requisition' element={<SampleRequestReport/>}/>
 
                     {/* <Route path='/stack-report' element={<StockReport/>}/> */}
                     <Route path='/masters'>
@@ -641,7 +643,7 @@ export const AppRoutes = () => {
                     </Route>
                     <Route path='/dashboard' element={<Dashboard />} />
                     <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
-                </Route>
+                {/* </Route> */}
                 <Route path="/login" element={<Login />} />
             </Routes>
         </Router>
