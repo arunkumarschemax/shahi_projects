@@ -28,12 +28,18 @@ export function App() {
       throw error;
   });
 
-  return (IAMClientAuthContext.isAuthenticated ? <>
-    <CustomSpinner loading={load} />
-    <AppRoutes />
-  </> :
-   <Login />
-  );
+  // return (IAMClientAuthContext.isAuthenticated ? <>
+  //   <CustomSpinner loading={load} />
+  //   <AppRoutes />
+  // </> :
+  //  <Login />
+  // );
+  return (
+    <>
+      <CustomSpinner loading={load} />
+      <AppRoutes />
+    </>);
+
 
 }
 
