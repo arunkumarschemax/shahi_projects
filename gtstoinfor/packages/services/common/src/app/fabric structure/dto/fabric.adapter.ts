@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { FabricStructures } from "../fabric.entity";
+import { FabricStructures } from "../fabric-structure.entity";
 import { FabricStructureDTO } from "./fabric.dto";
 
 @Injectable()

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Checkbox } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -236,6 +236,48 @@ service.createItemGroup(variantData).then(res=>{
         const EnumObj = ItemGroupDisplayvalue.find((item) => item.name === text);
         return EnumObj ? text : text;
     },
+},
+{
+  title: 'Status',
+  align:'center',
+  dataIndex: 'isActive',
+  // sorter: (a, b) => a.isActive.localeCompare(b.isActive),
+  // sortDirections: ["ascend", "descend"],
+  // ...getColumnSearchProps("isActive"),
+  render: (isActive, rowData) => (
+    <>
+      {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+    </>
+  ),
+  onFilter: (value, record) => record.isActive === value,
+  filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+    <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+      <Checkbox
+        checked={selectedKeys.includes(true)}
+        onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+      >
+        <span style={{color:'green'}}>Active</span>
+      </Checkbox>
+      <Checkbox
+        checked={selectedKeys.includes(false)}
+        onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+      >
+        <span style={{color:'red'}}>Inactive</span>
+      </Checkbox>
+      <div className="custom-filter-dropdown-btns" >
+      <Button  onClick={() => clearFilters()} className="custom-reset-button">
+          Reset
+        </Button>
+        <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+          OK
+        </Button>
+      
+      </div>
+    </div>
+  ),
+  filterMultiple: false,
+ 
+
 },
 {
     title:`Action`,

@@ -52,7 +52,7 @@ export function FabricStructuresForm(
       if (res.status) {
 
         AlertMessages.getSuccessMessage('Created Successfully');
-        // history.push("/delivery-terms-view")
+        navigate('/masters/fabric-structure/fabric-structure-grid')
         onReset();
       } else {
         AlertMessages.getErrorMessage(res.internalMessage);

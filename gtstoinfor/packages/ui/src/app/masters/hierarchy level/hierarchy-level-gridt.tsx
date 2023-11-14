@@ -70,7 +70,7 @@ export function HierarchyLevelGrid(
     hierarchyLevelService.activateOrDeactivatehierachyLevel(HierarchyLevelData).then(res => {console.log(res);
     if(res.status){
       getAllHierarchyLevelData();
-      AlertMessages.getSuccessMessage('Success');
+      AlertMessages.getSuccessMessage(res.internalMessage);
     }else {
       AlertMessages.getErrorMessage(res.internalMessage);
 

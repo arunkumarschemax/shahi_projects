@@ -56,7 +56,7 @@ export const FabricDevelopmentView = () =>{
       const loginId = new BuyerIdReq(loginBuyer)
       console.log(loginId,'/////////');
       
-      service.getFabricDevReqData(loginId).then(res=>{
+      service.getFabricDevReqData().then(res=>{
         if(res.status){
               setData(res.data)
               console.log(res,'data');
@@ -120,35 +120,23 @@ export const FabricDevelopmentView = () =>{
         },
         {
           title: "Location",
-          dataIndex: "locationId",
-          render: (data) => {
-            const location = locId.find((loc) => loc.locationId === data);
-            return location ? location.locationName : "N/A";
-          },
+          dataIndex: "location_name",
+        
         },
         {
           title: "Style",
-          dataIndex: "styleId",
-          render: (data) => {
-            const style = styId.find((loc) => loc.styleId === data);
-            return style ? style.style : "N/A";
-          },
+          dataIndex: "style",
+          
         },
         {
           title: "PCH",
-          dataIndex: "pchId",
-          render: (data) => {
-            const pch = pchId.find((pch) => pch.profitControlHeadId === data);
-            return pch ? pch.profitControlHead : "N/A";
-          },
+          dataIndex: "profit_control_head",
+         
         },
         {
           title: "Buyer",
-          dataIndex: "buyerId",
-          render: (data) => {
-            const buyer = buyerId.find((res) => res.buyerId === data);
-            return buyer? buyer.buyerName : "N/A";
-          }
+          dataIndex: "buyer_name",
+          
         },
         {
           title: `Fabric Type`,
@@ -156,10 +144,9 @@ export const FabricDevelopmentView = () =>{
         },
         {
             title: `Fabric Responsible`,
-            dataIndex: "fabricResponsible",
-            render: (data) => {
-              const emp = empId.find((res) => res.employeeId === data);
-              const ftname = `${emp?.firstName} ${emp?.lastName}`;
+            dataIndex: "firstName",
+            render: (VAL,data) => {
+              const ftname = `${data?.first_name} ${data?.last_name}`;
               return ftname;
             }
           },

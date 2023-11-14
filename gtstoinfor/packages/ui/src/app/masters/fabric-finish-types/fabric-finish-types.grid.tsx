@@ -269,11 +269,11 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
 
   return (
 <>
-<Card title='Fabric Structure' extra={<span><Button onClick={() => navigate('/masters/fabric-finish-type/fabric-finish-type-form')} type={'primary'}>New</Button></span>}>
+<Card title='Fabric Finish Type' extra={<span><Button onClick={() => navigate('/masters/fabric-finish-type/fabric-finish-type-form')} type={'primary'}>New</Button></span>}>
  <br></br>
       <Row gutter={40}>
       <Col>
-          <Card title={'Total Delivery Terms: ' + FabricStructuresData.length} style={{textAlign: 'left', width: 250, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+          <Card title={'Total Fabric Finish Types: ' + FabricStructuresData.length} style={{textAlign: 'left', width: 250, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
            <Card title={'Active: ' + FabricStructuresData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
