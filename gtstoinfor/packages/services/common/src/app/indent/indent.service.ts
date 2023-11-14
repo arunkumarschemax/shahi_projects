@@ -1,16 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { IndentRepository } from './dto/indent-repository';
-import { CommonResponseModel } from '@project-management-system/shared-models';
+import { CommonResponseModel, IndentFabricModel, IndentModel, IndentTrimsModel } from '@project-management-system/shared-models';
 import { Indent } from './indent-entity';
 import { IndentDto } from './dto/indent-dto';
 import { IndentAdapter } from './dto/indent-adapter';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
+import { FabricIndentRepository } from './dto/fabric-indent-repository';
+import { TrimIndentRepository } from './dto/trim-indent-repository';
+import { UomService } from '@project-management-system/shared-services';
+
 
 @Injectable()
 
 export class IndentService{
     constructor(
         private indentRepo:IndentRepository,
+        private indentFabricRepo:FabricIndentRepository,
+        private indentTrimRepo:TrimIndentRepository,
+        private uomService:UomService,
         private indentAdapter:IndentAdapter
 
     ){}
@@ -39,9 +46,32 @@ export class IndentService{
     }
 
     async getAllIndentData(): Promise<CommonResponseModel> {
-        const data = await this.indentRepo.find({relations: ['iFabricInfo', 'iTrimsInfo']});
-        // const data = await this.indentRepo.getAllData();
-        return new CommonResponseModel(true, 1235, 'Data retrieved Successfully',data);
+        const indentData = await this.indentRepo.getAllIndentData();
+        const indentModel = []
+        const uomInfo = await this.uomService.getAllActiveUoms();
+      const uomNameMap = new Map<number, string>();
+      uomInfo.data.forEach(uom => uomNameMap.set(uom.uomId, uom.uom));
+        for(const data of indentData){
+            const fabricModel = [];
+            const trimModel = [];
+            const fabricIndentData = await this.indentFabricRepo.getFabricIndentData(data.indent_id);
+            for(const fabric of fabricIndentData){
+                fabricModel.push(new IndentFabricModel(fabric.ifabric_id,fabric.content, 
+                    fabric.fabric_type_name,fabric.fabric_weave_name,fabric.weight,fabric.width,fabric.yarn_count,
+                    fabric.name,fabric.construction,fabric.finish,fabric.shrinkage,fabric.m3_fabric_code,fabric.colour,
+                    fabric.pch,fabric.moq,uomNameMap.get(fabric.moq_unit),fabric.moq_price,uomNameMap.get(fabric.moq_price_unit),fabric.season,fabric.supplier_id,
+                    fabric.buyer_name,fabric.grn_date,fabric.xl_no,fabric.quantity,uomNameMap.get(Number(fabric.quantity_unit)),fabric.status))
+                    console.log(Number(fabric.quantity_unit),'QQQQQQQQ')
+                }
+            const trimIndentData = await this.indentTrimRepo.getTrimIndentData(data.indent_id); 
+            for(const trim of trimIndentData){
+                trimModel.push(new IndentTrimsModel(trim.itrims_id,trim.trim_type,trim.trim_code,trim.sizes,trim.colour,
+                    trim.quantity,trim.m3_trim_code,trim.description,
+                    trim.remarks,trim.status))
+            }
+            indentModel.push(new IndentModel(data.indent_id,data.request_no,data.indent_date,data.expected_date,data.status,fabricModel,trimModel,data.style,data.description,data.created_at))
+        }
+        return new CommonResponseModel(true, 1235, 'Data retrieved Successfully',indentModel);
     }
 
     async getIndentnumbers():Promise<CommonResponseModel>{

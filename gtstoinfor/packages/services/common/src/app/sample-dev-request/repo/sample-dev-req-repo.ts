@@ -227,7 +227,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { groupBy } from "rxjs";
 import { SampleRequest } from "../entities/sample-dev-request.entity";
-import { SampleFilterRequest } from "@project-management-system/shared-models";
+import { SampleFilterRequest, SampleRequestFilter } from "@project-management-system/shared-models";
 import { Location } from "../../locations/location.entity";
 import { Style } from "../../style/dto/style-entity";
 import { ProfitControlHead } from '../../profit-control-head/profit-control-head-entity';
@@ -346,18 +346,56 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
     }
 
 
-    async getSampleRequestReport (){
-        const query = this.createQueryBuilder(`sr`)
-        .select (`sr.sample_request_id,sr.request_no,sr.m3_style_no,srf.fabric_code AS fabricCode,srf.consumption AS fConsumption,
-        srt.trim_code AS trimCode,srt.consumption AS tConsumption,assigned_quantity,required_quantity`)
-        .leftJoin(SampleReqFabricinfoEntity,'srf','srf.sample_request_id= sr.sample_request_id')
-        .leftJoin(SampleRequestTriminfoEntity,'srt','srt.sample_request_id = sr.sample_request_id')
-        .leftJoin(SamplingbomEntity,'sb','sb.sample_request_id = sr.sample_request_id')
-        // LEFT JOIN `sampling_bom`sb ON sb.sample_request_id=sr.sample_request_id
-        // .leftJoin`rm_items`rm ON rm.rm_item_id=srf.fabric_code
-        // .leftJoin(SampleRequestTriminfoEntity,'srt','srt.material_issue_id = sr.material_issue_id')
-        const data = await query.getRawMany()
-        return data 
+    // async getSampleRequestReport (){
+    //     const query = this.createQueryBuilder(`sr`)
+    //     .select (`sr.sample_request_id,sr.request_no,sr.m3_style_no,srf.fabric_code AS fabricCode,srf.consumption AS fConsumption,
+    //     srt.trim_code AS trimCode,srt.consumption AS tConsumption,assigned_quantity,sr.required_quantity`)
+    //     .leftJoin(SampleReqFabricinfoEntity,'srf','srf.sample_request_id= sr.sample_request_id')
+    //     .leftJoin(SampleRequestTriminfoEntity,'srt','srt.sample_request_id = sr.sample_request_id')
+    //     .leftJoin(SamplingbomEntity,'sb','sb.sample_request_id = sr.sample_request_id')
+    //     // LEFT JOIN `sampling_bom`sb ON sb.sample_request_id=sr.sample_request_id
+    //     // .leftJoin`rm_items`rm ON rm.rm_item_id=srf.fabric_code
+    //     // .leftJoin(SampleRequestTriminfoEntity,'srt','srt.material_issue_id = sr.material_issue_id')
+    //     const data = await query.getRawMany()
+    //     return data 
+    // }
+
+    async getAllRequestNo(): Promise<any> {
+        const query = await this.createQueryBuilder('sb')
+            .select(`sb.request_no`)
+            .where(`sb.request_no is not null`)
+            .orderBy(`sb.request_no`)
+            const data=await query.getRawMany()
+        return data;
     }
+
+    // async getAllBuyers(): Promise<any> {
+    //     const query = await this.createQueryBuilder('bu')
+    //         .select(`bu.buyer_name `)
+    //         .where(`bu.buyer_name is not null`)
+    //         .orderBy(`bu.buyer_name`)
+    //         const data=await query.getRawMany()
+    //     return data;
+    // }
+
+    // async getAllSampleReportData(req: SampleRequestFilter) {
+    //     let query = this.createQueryBuilder('sb')
+    //         .select(`
+    //         request_no AS requestNo,
+    //         item_type_id AS itemType,
+    //         `)
+
+    //     if (req.requestNo !== undefined) {
+    //         query.andWhere(`m3_item_code ='${req.requestNo}'`)
+    //     }
+    //     // if (req.itemType !== undefined) {
+    //     //     query.andWhere(`item_type_id ='${req.itemType}'`)
+    //     // }
+ 
+      
+
+    //     return await query.getRawMany();
+
+    // }
     
 } 

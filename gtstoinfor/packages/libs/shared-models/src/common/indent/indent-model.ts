@@ -9,49 +9,42 @@ export class IndentModel{
   requestNo: string;
   indentDate: Date;
   expectedDate: Date;
-  indentCloseDate: Date;
+
   status: CustomerOrderStatusEnum;
   indentFabricDetails:IndentFabricModel[];
   indentTrimDetails:IndentTrimsModel[];
-  remarks?: string;
-  isActive?: boolean;
+  style?: string;
+  description?:string;
+
   createdAt?: Date;
-  createdUser?: string | null;
-  updatedAt?: Date;
-  updatedUser?: string | null;
-  versionFlag?: number;
+
   constructor(
     indentId: number,
     requestNo: string,
     indentDate: Date,
     expectedDate: Date,
-    indentCloseDate: Date,
+
     status: CustomerOrderStatusEnum,
     indentFabricDetails:IndentFabricModel[],
     indentTrimDetails:IndentTrimsModel[],
-    remarks?: string,
-    isActive?: boolean,
+    style?: string,
+    description?:string,
+
     createdAt?: Date,
-    createdUser?: string | null,
-    updatedAt?: Date,
-    updatedUser?: string | null,
-    versionFlag?: number,
+
   ){
     this.indentId = indentId;
     this.requestNo = requestNo;
     this.indentDate = indentDate;
     this.expectedDate = expectedDate;
-    this.indentCloseDate = indentCloseDate;
+   
     this.status = status;
     this.indentFabricDetails=indentFabricDetails;
     this.indentTrimDetails=indentTrimDetails;
-    this.remarks = remarks;
-    this.isActive = isActive;
+    this.style = style;
+    this.description = description;
     this.createdAt = createdAt;
-    this.createdUser = createdUser;
-    this.updatedAt = updatedAt;
-    this.updatedUser = updatedUser;
-    this.versionFlag = versionFlag;
+
   }
 
 
