@@ -377,7 +377,7 @@ compositionservice.getActiveComposition().then(res=>{
 
 
          const onReset = () => {
-          form.resetFields()
+          // form.resetFields()
       }
          const saveItem=()=>{
           form.validateFields().then((values) => {
