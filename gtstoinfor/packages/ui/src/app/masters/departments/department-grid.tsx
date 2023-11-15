@@ -137,7 +137,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
             if(res.status){
                 AlertMessages.getSuccessMessage('Updated Successfully');
                 setDrawerVisible(false);
-    
+                getAllDepartment();
             }else{
                 AlertMessages.getErrorMessage(res.internalMessage);
     

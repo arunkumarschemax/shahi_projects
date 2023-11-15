@@ -112,24 +112,26 @@ export const OperationSequence = () => {
 
   const columns : ColumnProps<any>[] = [
     {
-        title: 'S No',
+        title:<div style={{textAlign:'center'}}>S No</div>,
       key: 'sno',
       width: '70px',
-      responsive: ['sm'],
+      responsive:['sm'],
+      align:'center',
       render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-        title:'Operation Group',
+        title:<div style={{textAlign:'center'}}>Operation Group</div>,
         dataIndex:'operationGroupName'
     },
     {
-        title:'Opeartion',
+        title:<div style={{textAlign:'center'}}>Opeartion</div>,
         dataIndex:'operationName'
     },
     {
-        title: 'Sequence',
+        title:<div style={{textAlign:'center'}}>Sequence</div>,
         key: 'sequence',
         dataIndex:'sequence',
+        align:'right',
         render: (text, object, index) =>{
           object.sequence = index+1
           return index+1

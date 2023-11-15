@@ -5,7 +5,7 @@ export class DestinationService extends CommonAxiosService{
   URL = "/destination";
 
   async createDestination(destination: DestinationDto): Promise<DestinationResponseModel> {
-    console.log('testss',destination)
+    // console.log('testss',destination)
     return this.axiosPostCall(this.URL + "/createDestination", destination)
 }
 

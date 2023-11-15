@@ -139,7 +139,7 @@ service.createFabricType(variantData).then(res=>{
         if(res.status){
             AlertMessages.getSuccessMessage('Updated Successfully');
             setDrawerVisible(false);
-
+            getAllFabricType();
         }else{
             AlertMessages.getErrorMessage(res.internalMessage);
 

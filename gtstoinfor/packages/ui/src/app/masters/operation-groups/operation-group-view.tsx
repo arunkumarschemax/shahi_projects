@@ -108,29 +108,31 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
 
   const columnsSkelton: any = [
     {
-      title: 'S No',
+      title:<div style={{textAlign:'center'}}>S No</div>,
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
+      align:'center',
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
-      title: "Operation Group Code",
+      title: <div style={{textAlign:'center'}}>Operation Group Code</div>,
       dataIndex: "operationGroupCode",
       sorter: (a, b) => a.operationGroupCode.localeCompare(b.operationGroupCode),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("operationGroupCode"),
     },
     {
-        title: "Operation Group Name",
+        title: <div style={{textAlign:'center'}}>Operation Group Name</div>,
         dataIndex: "operationGroupName",
         sorter: (a, b) => a.operationGroupName.localeCompare(b.operationGroupName),
         sortDirections: ["ascend", "descend"],
         ...getColumnSearchProps("operationGroupName"),
       },
     {
-      title: 'Status',
+      title: <div style={{textAlign:'center'}}>Status</div>,
       dataIndex: 'isActive',
+      align:'center',
       // ...getColumnSearchProps("isActive"),
       render: (isActive, rowData) => (
         <>
@@ -179,8 +181,9 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
 
     },
     {
-      title: `Action`,
+      title: <div style={{textAlign:'center'}}>Action</div>,
       dataIndex: 'action',
+      align:'center',
       render: (text, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"

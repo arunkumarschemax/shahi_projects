@@ -1,7 +1,10 @@
 export class SettingsIdReq{
-    settingsId?:number
+    settingsId?:number;
+    externalRefNumber?: string;
 
-    constructor(settingsId?: number){
+    constructor(settingsId?: number,externalRefNumber?: string){
         this.settingsId = settingsId
+        this.externalRefNumber = externalRefNumber
+
     }
 }

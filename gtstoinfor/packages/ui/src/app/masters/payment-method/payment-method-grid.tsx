@@ -140,7 +140,7 @@ service.createPaymentMethod(variantData).then(res=>{
         if(res.status){
             AlertMessages.getSuccessMessage('Updated Successfully');
             setDrawerVisible(false);
-
+            getAllPaymentMethods();
         }else{
             AlertMessages.getErrorMessage(res.internalMessage);
 

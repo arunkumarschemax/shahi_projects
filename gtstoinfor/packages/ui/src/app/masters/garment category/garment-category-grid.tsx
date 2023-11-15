@@ -108,7 +108,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
 
   const getAllGarmentCategory=()=>{
     service.getAllGarmentCategories().then(res=>{
-      console.log(res,'11000000000000')
+      // console.log(res,'11000000000000')
         if(res.status){
           setVariantData(res.data)
         }else{

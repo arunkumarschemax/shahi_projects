@@ -1,4 +1,4 @@
-import { SubContractStatus } from "../../enum";
+import { PropertyEnum, SubContractStatus } from "../../enum";
 
 export class ItemCreationDTO{
     itemName: string;
@@ -18,6 +18,7 @@ export class ItemCreationDTO{
     salePersonId: number;
     styleNo: string;
     internalStyleId: number;
+    property:PropertyEnum;
     uom: string;
     altUoms: string;
     currency: string;
@@ -53,7 +54,7 @@ export class ItemCreationDTO{
     updatedUser: string;
     versionFlag: number;
     fgitemId?:number;
-    constructor(itemName: string,itemCode: string,description: string,itemTypeId: number,brandId: number,categoryId: number,subCategoryId: number,season: string,responsiblePersonId: number,productDesignerId: number,approver: number,productionMerchant: number,pdMerchant: number,factoryMerchant: number,salePersonId: number,styleNo: string,internalStyleId: number,uom: string,altUoms: string,currency: string,targetCurrency: string,conversionFactor: string,projectionOrder: string,buyingHouseCommision: number,salePriceQty: number,licenseId: number,customGroupId: number,nationalDbk: number,roslGroup: number,isSubContract: SubContractStatus,salePrice: number,orderConfirmedDate: Date,firstExFactoryDate: Date,orderCloseDate: Date,moq: number,orderQty: number,facilityId: number,itemGroup: string,productGroup: string,businessArea: string,basicUom: string,groupTechClass: string,composition: string,range: string,noOfLacePanel: string,searchGroup: number,reference: string,isActive: boolean,createdUser: string,updatedUser: string,versionFlag: number,fgitemId?:number){
+    constructor(itemName: string,itemCode: string,description: string,itemTypeId: number,brandId: number,categoryId: number,subCategoryId: number,season: string,responsiblePersonId: number,property:PropertyEnum,productDesignerId: number,approver: number,productionMerchant: number,pdMerchant: number,factoryMerchant: number,salePersonId: number,styleNo: string,internalStyleId: number,uom: string,altUoms: string,currency: string,targetCurrency: string,conversionFactor: string,projectionOrder: string,buyingHouseCommision: number,salePriceQty: number,licenseId: number,customGroupId: number,nationalDbk: number,roslGroup: number,isSubContract: SubContractStatus,salePrice: number,orderConfirmedDate: Date,firstExFactoryDate: Date,orderCloseDate: Date,moq: number,orderQty: number,facilityId: number,itemGroup: string,productGroup: string,businessArea: string,basicUom: string,groupTechClass: string,composition: string,range: string,noOfLacePanel: string,searchGroup: number,reference: string,isActive: boolean,createdUser: string,updatedUser: string,versionFlag: number,fgitemId?:number){
         this.itemName=itemName;
         this.itemCode=itemCode;
         this.description=description;
@@ -71,6 +72,7 @@ export class ItemCreationDTO{
         this.salePersonId=salePersonId;
         this.styleNo=styleNo;
         this.internalStyleId=internalStyleId;
+        this.property=property;
         this.uom=uom;
         this.altUoms=altUoms;
         this.currency=currency;

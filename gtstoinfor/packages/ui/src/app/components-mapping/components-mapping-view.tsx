@@ -73,32 +73,33 @@ export const ComponentMappingView = () => {
 
     const columns: ColumnProps<any>[]  = [
         {
-            title: 'S No',
+            title: <div style={{textAlign:'center'}}>S No</div>,
             key: 'sno',
             width: '70px',
             responsive: ['sm'],
+            align:'center',
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
         {
-            title:'Style',
+            title:<div style={{textAlign:'center'}}>Style</div>,
             dataIndex:'style',
             sorter: (a, b) => a.style.localeCompare(b.style),
             sortDirections: ['descend', 'ascend'],
         },
         {
-            title:'Garment Category',
+            title:<div style={{textAlign:'center'}}>Garment Category</div>,
             dataIndex:'garmentCategory',
             sorter: (a, b) => a.garmentCategory.localeCompare(b.garmentCategory),
             sortDirections: ['descend', 'ascend'],
         },
         {
-            title:'Garment',
+            title:<div style={{textAlign:'center'}}>Garment</div>,
             dataIndex:'garment',
             sorter: (a, b) => a.garment.localeCompare(b.garment),
             sortDirections: ['descend', 'ascend'],
         },
         {
-            title:'Components',
+            title:<div style={{textAlign:'center'}}>Components</div>,
             dataIndex:'component',
             
             render: (text, record) => {
@@ -142,7 +143,7 @@ export const ComponentMappingView = () => {
     }
 
     return(
-        <Card size='small' title='Mapped Components' extra={<span><Button onClick={() => navigate('/style-management/component-mapping/component-mapping-form')} type="primary">New</Button></span>}>
+        <Card title='Mapped Components' extra={<span><Button onClick={() => navigate('/style-management/component-mapping/component-mapping-form')} type="primary">New</Button></span>}>
             <Form form={form} onFinish={onSearch}>
                 <Row gutter={24}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 5 }}>
