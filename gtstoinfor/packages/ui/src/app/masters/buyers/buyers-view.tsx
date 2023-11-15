@@ -189,10 +189,11 @@ let userRef
 
     const columnsSkelton: ColumnProps<any>[] = [
       {
-        title:'S No',
+        title:<div style={{textAlign:'center'}}>S No</div>,
         key: 'sno',
         width: '70px',
         responsive: ['sm'],
+        align:'center',
         render: (text, object, index) => (page-1) * 10 +(index+1)
       },
       {

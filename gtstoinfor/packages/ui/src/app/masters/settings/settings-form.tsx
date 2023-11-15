@@ -50,6 +50,8 @@ export const SettingsForm = () => {
     const [initialData,setInitialData] = useState<any>()
     const [updateKey,setUpdateKey] = useState<number>(0)
     const { state } = useLocation();
+    const externalRefNo = JSON.parse(localStorage.getItem("currentUser")).user.externalRefNo;
+    const role = JSON.parse(localStorage.getItem("currentUser")).user.roles;
 
 
     useEffect(() => {
@@ -285,7 +287,7 @@ export const SettingsForm = () => {
     }
 
     const updateValues = (val) => {
-        const req = new SettingsRequest(val.accountControlId,val.pchId,val.companyId,val.facilityId,val.divisionId,val.warehouseId,val.coTypeId,val.currencyId,val.licencetypeId,val.discount,val.salesPersonId,val.fabricResponsibleId,val.itemResponsibleId,val.trimResponsibleId,val.buyerAddress,val.buyerGroup,val.agent,val.packageTerms,val.paymentMethodId,val.paymentTerms,val.deliveryMethodId,val.deliveryTerms,'','admin',state?.id)
+        const req = new SettingsRequest(val.accountControlId,val.pchId,val.companyId,val.facilityId,val.divisionId,val.warehouseId,val.coTypeId,val.currencyId,val.licencetypeId,val.discount,val.salesPersonId,val.fabricResponsibleId,val.itemResponsibleId,val.trimResponsibleId,val.buyerAddress,val.buyerGroup,val.agent,val.packageTerms,val.paymentMethodId,val.paymentTerms,val.deliveryMethodId,val.deliveryTerms,'','admin',externalRefNo,state?.id)
         console.log(req)
         service.updateSettings(req).then(res => {
             if(res.status){
@@ -299,7 +301,7 @@ export const SettingsForm = () => {
     }
 
     const onSave = (val) => {
-        const req = new SettingsRequest(val.accountControlId,val.pchId,val.companyId,val.facilityId,val.divisionId,val.warehouseId,val.coTypeId,val.currencyId,val.licencetypeId,val.discount,val.salesPersonId,val.fabricResponsibleId,val.itemResponsibleId,val.trimResponsibleId,val.buyerAddress,val.buyerGroup,val.agent,val.packageTerms,val.paymentMethodId,val.paymentTerms,val.deliveryMethodId,val.deliveryTerms,'admin','')
+        const req = new SettingsRequest(val.accountControlId,val.pchId,val.companyId,val.facilityId,val.divisionId,val.warehouseId,val.coTypeId,val.currencyId,val.licencetypeId,val.discount,val.salesPersonId,val.fabricResponsibleId,val.itemResponsibleId,val.trimResponsibleId,val.buyerAddress,val.buyerGroup,val.agent,val.packageTerms,val.paymentMethodId,val.paymentTerms,val.deliveryMethodId,val.deliveryTerms,'admin','',externalRefNo)
         service.createSettings(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)

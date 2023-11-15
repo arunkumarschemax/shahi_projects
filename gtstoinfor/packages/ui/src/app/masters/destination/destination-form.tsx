@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { DestinationDto, DivisionDto } from '@project-management-system/shared-models';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import { DestinationService, DivisionService } from '@project-management-system/shared-services';
+import TextArea from 'antd/es/input/TextArea';
 export interface DestinationFormProps {
   Data: DestinationDto;
   updateItem: (Data: DestinationDto) => void;
@@ -209,32 +210,21 @@ export const DestinationForm = (props: DestinationFormProps) => {
           </Col>
         </Row>
         <Row>
-        <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 6 }}
-          >
-            {" "}
-            <Form.Item
-              name="description"
-              label="Description"
-              rules={[
-                {
-                  required: true,
-                  message: " Description Is Required",
-                },
-                // {
-                //   pattern:
-                //     /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
-                //   message: `Description Should contain only alphabets.`,
-                // },
-              ]}
-            >
-                <Input placeholder='Enter Description'/>
-            </Form.Item>
-          </Col>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:4}} lg={{span:4}} xl={{span:6}}> 
+        <Form.Item
+          name="description"
+          label="Description"
+          rules={[
+            // {
+            //   required: true,
+            //   message:' Description Is Required'
+            // },
+         
+          ]}
+        >
+                    <TextArea rows={2} placeholder="Enter Description"/>
+        </Form.Item>
+        </Col>
         </Row>
         <Row>
           <Col span={24} style={{ textAlign: 'right' }}>

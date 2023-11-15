@@ -25,10 +25,11 @@ export class SettingsRequest{
     deliveryTerms:number;
     createdUser: string;
     updatedUser: string;
+    externalRefNo: string;
     settingsId?: number;
 
 
-    constructor(accountControlId: number,pchId:number,companyId:number,facilityId:number,divisionId:number,warehouseId:number,coTypeId:number,currencyId:number,licencetypeId:number,discount:number,salesPersonId:number,fabricResponsibleId:number,itemResponsibleId:number,trimResponsibleId:number,buyerAddress:number,buyerGroup:string,agent : number,packageTerms: number,paymentMethod:number,paymentTerms:number,deliveryMethod:number,deliveryTerms:number,createdUser: string,updatedUser: string,settingsId?: number){
+    constructor(accountControlId: number,pchId:number,companyId:number,facilityId:number,divisionId:number,warehouseId:number,coTypeId:number,currencyId:number,licencetypeId:number,discount:number,salesPersonId:number,fabricResponsibleId:number,itemResponsibleId:number,trimResponsibleId:number,buyerAddress:number,buyerGroup:string,agent : number,packageTerms: number,paymentMethod:number,paymentTerms:number,deliveryMethod:number,deliveryTerms:number,createdUser: string,updatedUser: string,externalRefNo: string,settingsId?: number){
         this.accountControlId = accountControlId;
         this.pchId = pchId;
         this.companyId = companyId;
@@ -53,6 +54,7 @@ export class SettingsRequest{
         this.deliveryTerms = deliveryTerms;
         this.createdUser = createdUser;
         this.updatedUser = updatedUser;
+        this.externalRefNo = externalRefNo;
         this.settingsId = settingsId;
     }
 

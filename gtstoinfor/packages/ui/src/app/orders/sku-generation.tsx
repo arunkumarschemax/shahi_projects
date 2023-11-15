@@ -1,7 +1,7 @@
-import { Button, Card, Col, Descriptions, Form, Row, Select } from 'antd';
+import { Alert, Button, Card, Col, Descriptions, Form, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
-import { ColourService, DestinationService, DivisionService, ItemCreationService, ItemsService, SKUGenerationService, SizeService, StyleService } from '@project-management-system/shared-services';
-import { ItemCodeReq, ItemSKusReq, SKUGenerationReq, SkuStatusEnum } from '@project-management-system/shared-models';
+import { BuyerDestinationService, BuyersService, ColourService, DestinationService, DivisionService, ItemCreationService, ItemsService, SKUGenerationService, SizeService, StyleService } from '@project-management-system/shared-services';
+import { BuyerExtrnalRefIdReq, BuyerIdReq, ItemCodeReq, ItemSKusReq, MenusAndScopesEnum, SKUGenerationReq, SkuStatusEnum } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
 import { Link } from 'react-router-dom';
 
@@ -37,15 +37,19 @@ export function SKUGeneration  (props:FormProps){
     const fgItemService = new ItemCreationService()
     const [division,setDivision] = useState<any[]>([])
     const divisionService = new DivisionService()
-
+    const buyerMappingService = new BuyerDestinationService()
+    const externalRefNo = JSON.parse(localStorage.getItem("currentUser")).user.externalRefNo;
+    const role = JSON.parse(localStorage.getItem("currentUser")).user.roles;
+    const buyerService = new BuyersService()
 
     useEffect(() => {
-        getAllColors()
-        getAllSizes()
-        getAllDestinations()
+        // getAllColors()
+        // getAllSizes()
+        // getAllDestinations()
         getAllItemCodes()
         getAllStyles()
         getDivisions()
+        mappingInfo()
     },[])
 
     useEffect(() => {
@@ -73,6 +77,34 @@ export function SKUGeneration  (props:FormProps){
         setDestination(destinations)
       }
     },[itemData])
+
+    const mappingInfo = () => {
+      const req = new BuyerExtrnalRefIdReq(externalRefNo);
+      // if (role === MenusAndScopesEnum.roles.crmBuyer) {
+      //   req.extrnalRefId = externalRefNo;
+      // }
+      buyerService.getBuyerByRefId(req).then((res) => {
+        if(res.status) {
+          const req = new BuyerIdReq(res.data.buyerId)
+          buyerMappingService.getColorsByBuyerId(req).then(res => {
+            if(res.status){
+              setColor(res.data)
+            }
+          })
+          buyerMappingService.getDestinationsByBuyerId(req).then(res => {
+            if(res.status){
+              setDestination(res.data)
+            }
+          })
+          buyerMappingService.getSizesByBuyerId(req).then(res=> {
+            if(res.status){
+              setSize(res.data)
+            }
+          })
+                
+        }
+      });
+    }
 
     const generateSKU = () => {
       // const req = new SKUGenerationReq(form.getFieldValue('itemCode'),selectedColors,selectedSizes,selectedDestinations,'admin','')
@@ -104,13 +136,13 @@ export function SKUGeneration  (props:FormProps){
         })
     }
 
-    const getAllDestinations = () => {
-        destinationService.getAllActiveDestination().then(res => {
-            if(res.status){
-                setDestination(res.data)
-            }
-        })
-    }
+    // const getAllDestinations = () => {
+    //     destinationService.getAllActiveDestination().then(res => {
+    //         if(res.status){
+    //             setDestination(res.data)
+    //         }
+    //     })
+    // }
 
     const getAllItemCodes = () => {
       fgItemService.getFgItemsDropdown().then(res => {
@@ -233,14 +265,20 @@ export function SKUGeneration  (props:FormProps){
 
 
   return (
-    <Card  title={<><span>FG SKU Mapping</span><span style={{color:'red',fontSize:'110%',marginLeft:'45%'}}><b>Note: To Map the Components drag and drop from Available to Selected</b></span></>} extra={<Link to='/materialCreation/sku-list'><Button type='primary'>View</Button></Link>}>
-      {/* <Row justify={'end'}> */}
-      {/* <p style={{color:'red',fontSize:'110%'}}><b>Note: To Map the Components drag and drop from Available to Selected</b></p> */}
-      {/* </Row> */}
+    <Card  title={<><span>FG SKU Mapping</span></>} extra={<Link to='/materialCreation/sku-list'><Button type='primary'>View</Button></Link>}>
+      {/* <span style={{color:'red',fontSize:'110%',marginLeft:'45%'}}><b>Note: To Map the Components drag and drop from Available to Selected</b></span> */}
+      <Row gutter={24}>
+      <Col span={5}></Col>
+      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 14}}>
+      <Alert type='success' message={'Note: To Map the Components drag and drop from Available to Selected'} style={{fontSize:'15px',textAlign:'center',color:'red'}} />
+      </Col>
+      <Col span={5}></Col>
+      </Row>
+      <br/>
       <Form layout="horizontal" form={form}>
       <Row gutter={24}>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>
-            <Form.Item label='Item' name='itemCode' rules={[{required:true,message:'Item is required'}]}>
+            <Form.Item label='FG Item' name='itemCode' rules={[{required:true,message:'Item is required'}]}>
                 <Select showSearch allowClear placeholder='Select Item' onChange={onItemCodeChange}>
                     {/* <Option key='itemcode' value='itemcode' itemId='itemId'>Item Codes </Option> */}
                     {

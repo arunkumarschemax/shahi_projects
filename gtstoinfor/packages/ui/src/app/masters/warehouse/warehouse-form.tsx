@@ -3,7 +3,7 @@ import { Form, Input, Button, Select, Card, Row, Col } from 'antd';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // import './currencies-form.css';
-import {  WarehouseDto } from '@project-management-system/shared-models';
+import {  ItemGroupEnum, WarehouseDto } from '@project-management-system/shared-models';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import { WarehouseService } from '@project-management-system/shared-services';
 
@@ -40,6 +40,7 @@ export const WarehouseForm = (props:WarehouseFormProps) => {
   const service = new WarehouseService();
   let history = useLocation();
   let navigate = useNavigate();
+  const {Option}=Select
 
   let createdUser="";
   if(!props.isUpdate){
@@ -143,6 +144,23 @@ export const WarehouseForm = (props:WarehouseFormProps) => {
           <Input  placeholder='Enter Warehouse Code'/>
         </Form.Item>
         </Col>
+        <Col>
+        <Form.Item
+                    label="Category"
+                    name="category"
+                    rules={[{ required: true, message: "Enter Category" }]}
+                  >
+                    <Select
+                    showSearch
+                  
+                        placeholder="Select Category" allowClear>
+                     {Object.values(ItemGroupEnum).map((key,value)=>{
+            return <Option key={key} value={key}>{key}</Option>
+           })}
+                    </Select>
+                    {/* <Input placeholder="Fabric code" allowClear /> */}
+                  </Form.Item>
+                  </Col>
         </Row>
         <Row>
           <Col span={24} style={{ textAlign: 'right' }}>

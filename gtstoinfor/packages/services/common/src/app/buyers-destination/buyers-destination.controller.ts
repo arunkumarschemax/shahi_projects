@@ -2,7 +2,7 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { BuyersDestinationService } from "./buyers-destination.service";
-import { BuyersDestinationResponseModel } from "@project-management-system/shared-models";
+import { BuyersDestinationResponseModel, CommonResponseModel } from "@project-management-system/shared-models";
 import { BuyersDestinationRequest } from "./dto/byers-destination.request";
 
 @ApiTags('buyers-destination')
@@ -61,6 +61,33 @@ export class BuyersDestinationController{
     //         return this.applicationExceptionHandler.returnException(BuyersDestinationResponseModel, err);
     //     }
     // }
+
+    @Post('/getDestinationsByBuyerId')
+    async getDestinationsByBuyerId(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return await this.buyersDesService.getDestinationsByBuyerId(req)
+        } catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getColorsByBuyerId')
+    async getColorsByBuyerId(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return await this.buyersDesService.getColorsByBuyerId(req)
+        } catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getSizesByBuyerId')
+    async getSizesByBuyerId(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return await this.buyersDesService.getSizesByBuyerId(req)
+        } catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
     
 
 }

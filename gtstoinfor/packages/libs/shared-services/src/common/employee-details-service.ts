@@ -5,7 +5,7 @@ export class EmployeeDetailsService extends CommonAxiosService{
   URL = "/employee-details";
 
   async createEmployee(dto: EmployeeDetailsResponse): Promise<AllEmployeeDetailsResponseModel> {
-    console.log(dto,'drooo')
+    // console.log(dto,'drooo')
     return this.axiosPostCall(this.URL + "/createEmployee", dto)
 }
 async updateEmployee(dto: EmployeeDetailsResponse): Promise<AllEmployeeDetailsResponseModel> {

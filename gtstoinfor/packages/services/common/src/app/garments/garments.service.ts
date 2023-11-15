@@ -162,7 +162,6 @@ export class GarmentsService {
           }
 
           async getByGarmentCategory(req: GarmentsCategoryRequest): Promise<AllGarmentsResponse> {
-            console.log(req,'???????????????????????');
             const Response = await this.garmentsRepository.find({
                 where: {
                     garmentCategory: { garmentCategoryId: req.garmentCategoryId },

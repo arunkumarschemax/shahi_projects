@@ -444,8 +444,7 @@ const cancelOrder =(val:any) =>{
       {
         title: "Order Confirmation Date",
         width:95,
-
-        dataIndex: "orderConfirmedDate",align:'center',
+        dataIndex: "order_confirmed_date",align:'center',
         render: (text) => moment(text).format('DD/MM/YYYY'),
       },
     {

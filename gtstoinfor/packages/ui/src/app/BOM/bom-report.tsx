@@ -202,12 +202,12 @@ const exceldata:any=[
 ]
 
   return (
-    <Card title='Bom Report' >
-      <div>
-      <Button icon={<DownloadOutlined />} onClick={() => { exportExcel(); }} style={{marginRight:30}}>
-            GET EXCEL
-          </Button>
-      </div>
+    <Card title='Bom Report' extra={<div>
+    <Button icon={<DownloadOutlined />} onClick={() => { exportExcel(); }} style={{marginRight:30}}>
+          GET EXCEL
+        </Button>
+    </div> }>
+      
        {/* <Card title={<span >Bom Report</span>}style={{textAlign:'center'}} headStyle={{ border: 0 }}> */}
         <Form  form={form} layout="horizontal" onFinish={getBom}>
                 <Row gutter={24}>

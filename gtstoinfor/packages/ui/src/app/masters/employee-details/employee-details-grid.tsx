@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Alert, Checkbox, Space } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -86,6 +86,38 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
             : null
 })
 
+const getColumnSearchPropsss = (dataIndices) => ({
+  filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+    <div style={{ padding: 8 }}>
+      <Input
+        placeholder={`Search ${dataIndices.join(' or ')}`}
+        value={selectedKeys[0]}
+        onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+        onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndices)}
+        style={{ width: 188, marginBottom: 8, display: 'block' }}
+      />
+      <Space>
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndices)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Search
+        </Button>
+        <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          Reset
+        </Button>
+      </Space>
+    </div>
+  ),
+  filterIcon: (filtered) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+  onFilter: (value, record) => {
+    return dataIndices.some((field) => record[field]?.toString().toLowerCase().includes(value.toLowerCase()));
+  },
+});
+
   function handleSearch(selectedKeys, confirm, dataIndex) {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -100,73 +132,74 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
     {
       title: 'S No',
       key: 'sno',
-      width: '70px',
+      width: '70px',align:'center',
       responsive: ['sm'],
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
-        title: "Employee Code",
+        title: <div style={{ textAlign: 'center' }}>Employee Code</div>,
         dataIndex: "employeeCode",
-        width:'60px',
+        width:'80px',align:'left',
         sorter: (a, b) => a.employeeCode.localeCompare(b.employeeCode),
       ...getColumnSearchProps("employeeCode"),
       },
     {
-      title: "Name",
-      width:'120px',
+      title: <div style={{ textAlign: 'center' }}>Name</div>,
+      width:'120px',align:'left',
       render:(text,record) =>{
         return (
             <span>
                 {(record?.firstName ? record.firstName:'') +' '+ (record?.lastName ? record.lastName:'')}
             </span>
         )
-      }
-    },
+      },
+      ...getColumnSearchPropsss(["firstName", "lastName"])  
+      },
     {
-        title: "Mobile Number",
+        title: <div style={{ textAlign: 'center' }}>Mobile Number</div>,
         dataIndex: "mobileNumber",
-      width:'60px',
-        sorter: (a, b) => a.mobileNumber.localeCompare(b.mobileNumber),
-      ...getColumnSearchProps("mobileNumber"),
+      width:'90px',align:'left',
+        // sorter: (a, b) => a.mobileNumber.localeCompare(b.mobileNumber),
       },
+    //   {
+    //     title:<div style={{ textAlign: 'center' }}>Alternate Number</div> ,
+    //     dataIndex: "alterNativeMobileNumber",
+    //    width:'90px',align:'left',
+    //     sorter: (a, b) => a.alterNativeMobileNumber.length-(b.alterNativeMobileNumber.length),
+    //   ...getColumnSearchProps("alterNativeMobileNumber"),
+    //   },
+    // {
+    //     title: "Date of Birth",
+    //     dataIndex: "dateOfBirth",
+    //     sorter: (a, b) => a.dateOfBirth.localeCompare(b.dateOfBirth),
+    //     render: (text, record) => {
+    //         return (<span>{record.dateOfBirth? moment(record.dateOfBirth).format("YYYY-MM-DD"): "-"}</span>)
+    //       },
+    //   },
+    //   {
+    //     title: "Pin Code",
+    //     dataIndex: "pinCode",
+    //     sorter: (a, b) => a.pinCode-(b.pinCode),
+    //   ...getColumnSearchProps("pinCode"),
+    //   },
       {
-        title: "Alternate Number",
-        dataIndex: "alterNativeMobileNumber",
-       width:'60px',
-        sorter: (a, b) => a.alterNativeMobileNumber.length-(b.alterNativeMobileNumber.length),
-      ...getColumnSearchProps("alterNativeMobileNumber"),
-      },
-    {
-        title: "Date of Birth",
-        dataIndex: "dateOfBirth",
-        sorter: (a, b) => a.dateOfBirth.localeCompare(b.dateOfBirth),
-        render: (text, record) => {
-            return (<span>{record.dateOfBirth? moment(record.dateOfBirth).format("YYYY-MM-DD"): "-"}</span>)
-          },
-      },
-      {
-        title: "Pin Code",
-        dataIndex: "pinCode",
-        sorter: (a, b) => a.pinCode-(b.pinCode),
-      ...getColumnSearchProps("pinCode"),
-      },
-      {
-        title: "Address",
-        dataIndex: "address",
-        sorter: (a, b) => a.address.localeCompare(b.address),
+        title:  <div style={{ textAlign: 'center' }}>Email</div>,
+        dataIndex: "emial",align:"left",width:120,
+        // sorter: (a, b) => a.address.localeCompare(b.address),
     
       },
       {
-        title: "Departments",
-        dataIndex: "deptName",
+        title: <div style={{ textAlign: 'center' }}>Department</div>,
+        dataIndex: "deptName",align:'left',
+        width:90,
         sorter: (a, b) => a.deptName.localeCompare(b.deptName),
-    
+    ...getColumnSearchProps("deptName")
       },
     
     {
       title: 'Status',
-      dataIndex: 'isActive',
-      width:'80px',
+      dataIndex: 'isActive',align:'center',
+      width:100,
       render: (isActive, rowData) => (
         <>
           {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -183,15 +216,38 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
         },
       ],
       filterMultiple: false,
-      onFilter: (value, record) => {
-        // === is not work
-        return record.isActive === value;
-      },
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{color:'green'}}>Active</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{color:'red'}}>Inactive</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns" >
+          <Button  onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          
+          </div>
+        </div>
+      ),
 
     },
     {
       title: `Action`,
-      dataIndex: 'action',
+      dataIndex: 'action',align:'center',
+      width:100,
       render: (text, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"
@@ -261,10 +317,10 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
   }
 
   const openFormWithData = (viewdata: EmployeeDetailsResponse) => {
-    console.log(viewdata)
+    // console.log(viewdata)
      const date = viewdata.dateOfBirth?dayjs(moment(viewdata.dateOfBirth).format("YYYY-MM-DD")):null
      viewdata.dateOfBirth = dayjs(date)
-    console.log(viewdata.dateOfBirth)
+    // console.log(viewdata.dateOfBirth)
     setDrawerVisible(true);
     setSelectedVariant(viewdata);
   }
@@ -272,7 +328,7 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
 
   const updateEmployee = (data: EmployeeDetailsResponse) => {
     service.updateEmployee(data).then(res => {
-      console.log(res);
+      // console.log(res);
       if (res.status) {
           AlertMessages.getSuccessMessage('Updated Successfully');
         getAllEmployees();
@@ -288,7 +344,7 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
   const deleteEmployee = (data:employeeIdReq ) => {
     data.isActive = data.isActive ? false : true;
     service.ActivateOrDeactivateEmployee(data).then(res => {
-      console.log(res);
+      // console.log(res);
       if (res.status) {
         getAllEmployees();
         setTimeout(function() {
@@ -308,29 +364,36 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
       <Card title='Employees' extra={<span><Button onClick={() => navigate('/global/employee-details/employee-details-form')}
               type={'primary'}>New</Button></span>}>
       <Row gutter={40}>
-        <Col>
-          <Card title={'Total Employees: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+        <Col span={4}></Col>
+        <Col span={5}>
+          {/* <Card title={'Total Employees: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card> */}
+          <Alert type='success' message={'Total Employees: ' + variantData.length} style={{fontSize:'15px'}} />
+
         </Col>
-        <Col>
-          <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+        <Col  span={5}>
+          {/* <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card> */}
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
-        <Col>
-          <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+        <Col  span={5}>
+          {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
+          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+
         </Col>
       </Row><br></br>
       <Card >
         <Table
         size='small'
-
+        className='custom-table-wrapper'
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }
           }}
-          scroll={{x:true}}
+          scroll={{x: 'max-content',y:500}}
           onChange={onChange}
           bordered />
       </Card>

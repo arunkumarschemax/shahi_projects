@@ -14,6 +14,7 @@ import {
   ItemGroupService,
   ItemTypeService,
   LiscenceTypeService,
+  OperationsService,
   ProcurmentGroupService,
   ProductGroupService,
   ProfitControlHeadService,
@@ -24,8 +25,9 @@ import {
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import TextArea from "antd/es/input/TextArea";
-import { IsImportedItemEnum, ItemGroupEnum } from "@project-management-system/shared-models";
+import { IsImportedItemEnum, ItemGroupEnum, PropertyEnum, SaleItemEnum } from "@project-management-system/shared-models";
 import { Link } from "react-router-dom";
+import { object } from "prop-types";
 
 export interface FormProps{
   rmCreationData:any;
@@ -54,6 +56,7 @@ export const FabricBomCreation = (props:FormProps) => {
   const [DeliveryMethod,setDeliveryMethod]= useState([])
   const [fabric,setFabric]= useState([])
   const [Business,setBusiness]= useState([])
+  const [operation,setoperation] = useState([]);
 
  const business = new BusinessAreaService
   const taxService = new TaxesService
@@ -73,6 +76,7 @@ const proDUCTService = new ProductGroupService();
 const DeliveryServive = new DeliveryMethodService();
 const deliveryTermsService= new DeliveryTermsService()
 const fabricfinishservice = new  FabricFinishTypeService
+const operationservice = new OperationsService();
 
 useEffect(() => {
     getAllCurrencies();
@@ -92,6 +96,7 @@ useEffect(() => {
     getAllDeliveryMethod();
     getAllFabricFinish();
     getAllBusinessArea();
+    getAllOperations();
   }, []);
 
   const getAllCurrencies = () => {
@@ -110,6 +115,23 @@ useEffect(() => {
       //   AlertMessages.getErrorMessage(err.message);
       // });
   };
+
+  const getAllOperations=() =>{
+    operationservice.getAllActiveOperations().then(res =>{
+      if (res.status){
+        // console.log(res,'llllll')
+        setoperation(res.data);
+         
+      } 
+      // else{
+      //   AlertMessages.getErrorMessage(res.internalMessage);
+      //    }
+    })
+    // .catch(err => {
+    //   setCurrencyData([]);
+    //    AlertMessages.getErrorMessage(err.message);
+    //  })        
+  }
   const getAllFabricFinish = () => {
     fabricfinishservice
       .getAllActiveFabricFinishType()
@@ -566,11 +588,13 @@ rmservice.createRm(values).then((res)=>{
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8}}>
                   <Form.Item
-                    label="Description"
-                    name="description"
-                    rules={[{ required: true, message: "Enter Description" }]}
+                    label="Item Name"
+                    name="itemName"
+                    rules={[{ required: true, message: "Enter Item Name" }]}
                   >
-                    <TextArea rows={1} placeholder="Enter Description"/>
+                                        <Input placeholder="Item Name" allowClear />
+
+                    {/* <TextArea rows={1} placeholder="Enter Description"/> */}
                   </Form.Item>
                 </Col>
                   </Row>
@@ -645,8 +669,8 @@ rmservice.createRm(values).then((res)=>{
                   
                         placeholder="Select Is Imported Item" allowClear>
                      {Object.values(IsImportedItemEnum).map((key,value)=>{
-            return <Option key={key} value={key}>{key}</Option>
-           })}
+                       return <Option key={key} value={key}>{key}</Option>
+                        })}
                     </Select>
                     {/* <Input placeholder="Fabric code" allowClear /> */}
                   </Form.Item>
@@ -841,14 +865,14 @@ rmservice.createRm(values).then((res)=>{
                     name="useInOperation"
                     // rules={[{ required: true, message: "Enter Fabric Finish" }]}
                   >
-                    {/* <Select placeholder="Select Fabric Finish" allowClear>
-                      {fabric.map((rec) => (
-                        <option key={rec.fabricFinishTypeId} value={rec.fabricFinishTypeId}>
-                          {rec.fabricFinishType}
+                    <Select placeholder="Select useInOperation" allowClear>
+                      {operation.map((rec) => (
+                        <option key={rec.operationId} value={rec.operationId}>
+                          {rec.operationName}
                         </option>
                       ))}
-                    </Select> */}
-                         <Input placeholder="Use In Operation" allowClear />
+                    </Select>
+                         {/* <Input placeholder="Use In Operation" allowClear /> */}
 
                   </Form.Item>
                 </Col>
@@ -967,19 +991,30 @@ rmservice.createRm(values).then((res)=>{
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                   <Form.Item name="property" label="Property">
-                    <Input placeholder="Property" allowClear />
-                  </Form.Item>
+                  <Select
+                    showSearch
+                  
+                        placeholder="Select Is Imported Item" allowClear>
+                     {Object.values(PropertyEnum).map((key,value)=>{
+                       return <Option key={key} value={key}>{key}</Option>
+                        })}
+                    </Select>                  </Form.Item>
                 </Col>
                 </Row>
                 {/* </Row>
                 <Row> */}
                 <Row gutter={8}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                  <Form.Item name="saleItem" label="Sales Item">
+                  <Form.Item name="saleItem" label="Sales Item" >
                     {/* <Select placeholder="SaleItem" allowClear>
                     </Select> */}
-                                        <Input placeholder="Sales Item" allowClear />
-
+<Select
+showSearch
+placeholder='select saleItem' allowClear>
+  {Object.values(SaleItemEnum).map((key,value)=>{
+               return <Option key={key} value={key}>{key}</Option>
+           })}
+</Select>
                   </Form.Item>
                 </Col>
               

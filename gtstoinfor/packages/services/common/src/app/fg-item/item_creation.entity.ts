@@ -1,4 +1,4 @@
-import { SubContractStatus } from "@project-management-system/shared-models";
+import { PropertyEnum, SubContractStatus } from "@project-management-system/shared-models";
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { StyleOrder } from "../style-order/style-order.entity";
 import { ItemSkus } from "../sku-generation/sku-generation.entity";
@@ -264,7 +264,7 @@ export class ItemCreation {
   @Column({
     type: 'enum',
     enum : SubContractStatus,
-    nullable: false,
+    nullable: true,
     name: 'is_sub_contract',
     default:SubContractStatus.YES
   })
@@ -276,6 +276,12 @@ export class ItemCreation {
     name: "sale_price"
   })
   salePrice: number;
+
+  @Column('enum',{
+    name:'property',
+enum:PropertyEnum
+})
+property:PropertyEnum;
 
   @Column({
     nullable: false,
