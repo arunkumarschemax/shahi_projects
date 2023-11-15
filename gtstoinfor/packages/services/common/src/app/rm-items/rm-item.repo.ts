@@ -100,7 +100,7 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
       }
       async getItemTypedrop(): Promise<any[]> {
         const query = this.createQueryBuilder('rmi')
-        .select(`rm_item_id,item_type`)
+        .select(`DISTINCT rm_item_id,item_type`)
         .leftJoin(ItemTypeEntity,'it','it.item_type_id = rmi.item_type_id')
         .groupBy('it.item_type')
         let data:RmCreationEntity[] = await query.getRawMany();
@@ -118,8 +118,9 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
       async getProcurementGroupdrop(): Promise<any[]> {
         const query = this.createQueryBuilder('rmi')
         .select(`rm_item_id,procurment_group`)
-        .leftJoin(ProcurmentGroup,'pcg',' pcg.procurment_group_id = rmi.procurement_gorup_id ')
+        .leftJoin(ProcurmentGroup,'pcg',' pcg.procurment_group_id = rmi.procurement_gorup_id')
         .groupBy('pcg.procurment_group')
+
         let data:RmCreationEntity[] = await query.getRawMany();
         return data;
       }

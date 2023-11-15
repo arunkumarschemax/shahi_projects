@@ -242,31 +242,31 @@ const columns: any = [
       );
     }
   },
-  {
-    title:<div style={{ textAlign: 'center' }}>Is Sub Contract</div> ,
-    dataIndex: "rm_items",
-    key: "rm_items",
-    align:'center',
-    render: (rmItems) => {
-      return (
-        <Table
-          dataSource={rmItems}
-          columns={[
+  // {
+  //   title:<div style={{ textAlign: 'center' }}>Is Sub Contract</div> ,
+  //   dataIndex: "rm_items",
+  //   key: "rm_items",
+  //   align:'center',
+  //   render: (rmItems) => {
+  //     return (
+  //       <Table
+  //         dataSource={rmItems}
+  //         columns={[
            
-            {
-              dataIndex: "is_sub_contract",
-              key: "rm_item_code", align:'center',
-              render:(data)=>{
-                return data ? data :'-'
-              }
-            },
+  //           {
+  //             dataIndex: "is_sub_contract",
+  //             key: "rm_item_code", align:'center',
+  //             render:(data)=>{
+  //               return data ? data :'-'
+  //             }
+  //           },
            
-          ]}
-          pagination={false}
-        />
-      );
-    }
-  },
+  //         ]}
+  //         pagination={false}
+  //       />
+  //     );
+  //   }
+  // },
   {
     title:<div style={{ textAlign: 'center' }}>Facility</div> ,
     dataIndex: "rm_items",
@@ -292,29 +292,29 @@ const columns: any = [
       );
     }
   },
-  {
-    title:<div style={{ textAlign: 'center' }}>Season</div> ,
-    dataIndex: "rm_items",
-    key: "rm_items",
-    align:'center',
-    render: (rmItems) => {
-      return (
-        <Table
-          dataSource={rmItems}
-          columns={[
-            {
-              dataIndex: "season",
-              key: "season", align:'center',
-              render:(data)=>{
-                return data ? data :'-'
-              }
-            }
-          ]}
-          pagination={false}
-        />
-      );
-    }
-  }
+  // {
+  //   title:<div style={{ textAlign: 'center' }}>Season</div> ,
+  //   dataIndex: "rm_items",
+  //   key: "rm_items",
+  //   align:'center',
+  //   render: (rmItems) => {
+  //     return (
+  //       <Table
+  //         dataSource={rmItems}
+  //         columns={[
+  //           {
+  //             dataIndex: "season",
+  //             key: "season", align:'center',
+  //             render:(data)=>{
+  //               return data ? data :'-'
+  //             }
+  //           }
+  //         ]}
+  //         pagination={false}
+  //       />
+  //     );
+  //   }
+  // }
 ];
 
 
@@ -338,7 +338,7 @@ const columns: any = [
                                 showSearch
                                 placeholder="Select Rm Item Code"
                                 optionFilterProp="children"
-                                allowClear
+                                allowClear dropdownMatchSelectWidth={false}
                             >
                                 {
                                     RmCode?.map((inc: any) => {
@@ -350,7 +350,7 @@ const columns: any = [
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
                         <Form.Item name='fgItemCode' label='Fg Item Code' >
-                            <Select showSearch placeholder="Select Fg Item Code" optionFilterProp="children" allowClear>
+                            <Select dropdownMatchSelectWidth={false} showSearch placeholder="Select Fg Item Code" optionFilterProp="children" allowClear>
                                 {
                                     fgCode?.map((inc: any) => {
                                         return <Option key={inc.fgitemId} value={inc.itemCode}>{inc.itemCode}</Option>
