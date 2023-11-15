@@ -84,10 +84,4 @@ poQuantity:string
   @ApiProperty()
   isActive: boolean;
 
-  @ApiProperty()
-  quantity: string;
-
-  @ApiProperty()
-  quantityUomId: number;
-
 }

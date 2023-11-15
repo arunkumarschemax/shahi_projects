@@ -41,4 +41,14 @@ export class PurchaseOrderController {
     }
   }
 
+  @Post('/getAllFabricsByPO')
+  @ApiBody({type: VendorIdReq})
+  async getAllFabricsByPO(@Body() req: any): Promise<CommonResponseModel> {
+    try {
+      return await this.purchasseOrdrSerivice.getAllFabricsByPO(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+
 }

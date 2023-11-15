@@ -46,16 +46,6 @@ shahiFabricCode:string
 })
 content:string
 
-@Column('varchar',{
-    name:'quantity'
-})
-quantity:string
-
-@Column('int',{
-    name:'quantity_uom_id'
-})
-quantityUomId:number
-
 @Column('int',{
     name:'weave_id'
 })
