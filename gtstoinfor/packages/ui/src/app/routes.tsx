@@ -164,32 +164,32 @@ import M3Items from "./masters/m3-items/m3-items-form"
 
 
 export const AppRoutes = () => {
-    const router = createBrowserRouter(createRoutesFromElements(
-        <Route  >
-            <Route path='/' key='/' element={
-                <ChildProtectionWrapper>
-                    <>
-                        <BasicLayout />
-                    </>
-                </ChildProtectionWrapper>
-            } >
-                <Route path='/user-management/users-from' key='/user-management/users-from' element={<UserCreationForm />} />
-                <Route path='/user-management/users-view' key='/user-management/users-view' element={<UsersView />} />
+    // const router = createBrowserRouter(createRoutesFromElements(
+    //     <Route  >
+    //         <Route path='/' key='/' element={
+    //             <ChildProtectionWrapper>
+    //                 <>
+    //                     <BasicLayout />
+    //                 </>
+    //             </ChildProtectionWrapper>
+    //         } >
+    //             <Route path='/user-management/users-from' key='/user-management/users-from' element={<UserCreationForm />} />
+    //             <Route path='/user-management/users-view' key='/user-management/users-view' element={<UsersView />} />
 
-                <Route path='/excel-import' key='/excel-import'>
-                    <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
-                    <Route path='changes-view' key='/changes-view' element={<ChangesGrid />} />
-                    <Route path='grid-view' key='/grid-view' element={<AllOrdersGridView />} />
-                    <Route path='revert-orders' key='/revert-orders' element={<FileRevert />} />
-                    <Route path='version-grid' key='/version-grid' element={<VersionChanges />} />
-                    {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
-                </Route>
-                <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
-                <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
-            </Route>
-            <Route path="/login" key='/login' element={<Login />} />
-        </Route>
-    ))
+    //             <Route path='/excel-import' key='/excel-import'>
+    //                 <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
+    //                 <Route path='changes-view' key='/changes-view' element={<ChangesGrid />} />
+    //                 <Route path='grid-view' key='/grid-view' element={<AllOrdersGridView />} />
+    //                 <Route path='revert-orders' key='/revert-orders' element={<FileRevert />} />
+    //                 <Route path='version-grid' key='/version-grid' element={<VersionChanges />} />
+    //                 {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
+    //             </Route>
+    //             <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
+    //             <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
+    //         </Route>
+    //         <Route path="/login" key='/login' element={<Login />} />
+    //     </Route>
+    // ))
 
     return (
         <Router>

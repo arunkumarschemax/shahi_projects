@@ -209,7 +209,7 @@ export const PurchaseOrderTrim = ({props}) =>{
     },[defaultTrimFormData])
 
     return(
-        <Card title='trim Details'>
+        <Card>
             <Form form={trimForm} layout="vertical" onFinish={OnTrimAdd}>
                 <Row gutter={24}>
                 <Form.Item name={'trimType'} hidden><Input></Input></Form.Item>

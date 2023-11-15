@@ -59,6 +59,14 @@ pch:number
 moq:string
 
 @ApiProperty()
+indentFabricId:number
+@ApiProperty()
+quantityUomId:number
+@ApiProperty()
+
+poQuantity:string
+
+@ApiProperty()
   createdAt: string;
 
   @ApiProperty()
@@ -75,11 +83,5 @@ moq:string
 
   @ApiProperty()
   isActive: boolean;
-
-  @ApiProperty()
-  quantity: string;
-
-  @ApiProperty()
-  quantityUomId: number;
 
 }

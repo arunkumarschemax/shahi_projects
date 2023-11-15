@@ -17,6 +17,8 @@ export const PurchaseOrderForm =()=>{
     const [indexVal, setIndexVal] = useState(1)
     const [indenData, setIndentData] = useState<any[]>([])
     const [vendordata, setVendorData]=useState<any[]>([])
+    const [indentId,setIndentId]=useState<any>([])
+    const [poType, setPoType]=useState<any>('')
     let fabricInfo:PurchaseOrderFbricDto[]=[];
     let trimInfo:PurchaseOrderTrimDto[]=[];
 
@@ -80,21 +82,22 @@ export const PurchaseOrderForm =()=>{
         })
     }
     const onFinish = () =>{
-        // console.log(fabricData)
+        console.log(fabricData)
         // console.log(trimData)
         // const req = new PurchaseOrderDto()
         for(const fabData of fabricData){
             console.log(fabData)
-            const fabInfo = new PurchaseOrderFbricDto(fabData.colourId,fabData.remarks,fabData.fabricTypeId,fabData.m3FabricCode,fabData.shahiFabricCode,fabData.content,fabData.weaveId,fabData.weight,fabData.width,fabData.construction,fabData.yarnCount,fabData.finish,fabData.shrinkage,fabData.pch,fabData.moq,fabData.yarnUnit)
+            const fabInfo = new PurchaseOrderFbricDto(fabData.colourId,fabData.remarks,fabData.fabricTypeId,fabData.m3FabricCode,fabData.shahiFabricCode,fabData.content,fabData.weaveId,fabData.weight,fabData.width,fabData.construction,fabData.yarnCount,fabData.finish,fabData.shrinkage,fabData.pch,fabData.moq,fabData.yarnUnit,fabData.indentFabricId,fabData.poQuantity,fabData.quantityUomId)
             fabricInfo.push(fabInfo)
         }
-        console.log(fabricInfo)
         for(const trim of trimData){
             console.log(trim)
-            const triminfo = new PurchaseOrderTrimDto(trim.productGroupId,trim.trimId,trim.colourId,trim.m3TrimCode,trim.description,trim.consumption,trim.remarks)
+            const triminfo = new PurchaseOrderTrimDto(trim.productGroupId,trim.trimId,trim.colourId,trim.m3TrimCode,trim.description,trim.consumption,trim.remarks,1)
             trimInfo.push(triminfo)
         }
-        const poDto = new PurchaseOrderDto('po11',poForm.getFieldValue('vendorId'),poForm.getFieldValue('styleId'),poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"),poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'),poForm.getFieldValue('remarks'),poForm.getFieldValue('indentId'),fabricInfo,trimInfo)
+        const poDto = new PurchaseOrderDto('po11',poForm.getFieldValue('vendorId'),poForm.getFieldValue('styleId'),poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"),poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'),poForm.getFieldValue('remarks'),poForm.getFieldValue('poMaterialType'),poForm.getFieldValue('indentId'),fabricInfo,trimInfo)
+        console.log(poDto)
+        
         purchaseOrderService.cretePurchaseOrder(poDto).then(res =>{
             console.log(poDto)
             if(res.status){
@@ -104,29 +107,38 @@ export const PurchaseOrderForm =()=>{
             }
         })
     }
-    
+    const indentOnchange = (value) =>{
+        console.log(value)
+        setIndentId(value)
+    }
+    console.log(indentId)
+    const poTypeOnchange = (value) =>{
+        console.log(value)
+        setPoType(value)
+    }
 return(
     <>
     <Card title='Purchase Order' className="card-header">
         <Form form={poForm} layout="vertical">
             <Row gutter={8}>
-             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
-                    <Form.Item name='indentId' label='Indent Code' rules={[{required:true,message:'IndentCode is required'}]}>
-                       <Select showSearch allowClear optionFilterProp="children" placeholder='Select Indent' mode="multiple">
-                            {indenData.map(e => {
-                                return(
-                                    <Option key={e.indentId} value={e.indentId} name={e.indentCode}> {e.indentCode}</Option>
-                                )
-                            })}
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+                    <Form.Item name='poMaterialType' label='PO Type' rules={[{required:true,message:'PO Type is required'}]}>
+                       <Select showSearch allowClear optionFilterProp="children" placeholder='Select PoType' 
+                       onChange={poTypeOnchange}
+                       >
+                        <Option name={'Fabric'} value='Fabric'>{'Fabric'}</Option>
+                        <Option value={'Trim'}>{'Trim'}</Option>
                         </Select>
                     </Form.Item>
               </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
-                    <Form.Item name='styleId' label='Style' rules={[{required:true,message:'Style is required'}]}>
-                       <Select showSearch allowClear optionFilterProp="children" placeholder='Select Style'>
-                            {style.map(e => {
+             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+                    <Form.Item name='indentId' label='Indent Code' rules={[{required:true,message:'IndentCode is required'}]}>
+                       <Select showSearch allowClear optionFilterProp="children" placeholder='Select Indent' mode="multiple"
+                       onChange={indentOnchange}
+                       >
+                            {indenData.map(e => {
                                 return(
-                                    <Option key={e.styleId} value={e.styleId} name={e.style}> {e.style}-{e.description}</Option>
+                                    <Option key={e.indentId} value={e.indentId} name={e.indentCode}> {e.indentCode}</Option>
                                 )
                             })}
                         </Select>
@@ -157,40 +169,10 @@ return(
        
         </Form>
         <Row gutter={24}>
-            {/* <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}>
-            <Segmented onChange={onSegmentChange} style={{backgroundColor:'#68cc6b'}}
-                      options={[
-                        {
-                          label: (
-                            <>
-                              <b style={{ fontSize: "12px" }}>Fabric Details</b>
-                            </>
-                          ),
-                          value: "Fabric",
-                        },
-                        {
-                          label: (
-                            <>
-                              <b style={{ fontSize: "12px" }}>Trim Details</b>
-                            </>
-                          ),
-                          value: "Trim",
-                        },
-                    ]}  
-                    />
-                    {tabName === 'Fabric' && <PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} />}
-                  {tabName === 'Trim' && <PurchaseOrderTrim key='trim' props={handleTrim} />}
-                    
-            </Space> */}
-            <Card>
-              <Tabs type={'card'} tabPosition={'top'}>
-                <TabPane key="1" tab={<span><b>{`Add Fabric`}</b></span>}>
-                <PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} />
-                </TabPane>
-                <TabPane key="2" tab={<span><b>{`Add Trim`}</b></span>}>
-                <PurchaseOrderTrim key='trim' props={handleTrim} />
-                </TabPane>
-            </Tabs>
+            <Card title={poType == 'Fabric'?'Fabric Details':poType =='Trim'?'Trim Details':''}>
+                {poType == 'Fabric' ?
+            <PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={indentId}/>:poType == 'Trim' ? <PurchaseOrderTrim key='trim' props={handleTrim} />:<></>
+            }
             </Card>
             </Row>
             <Row justify={'end'}>
