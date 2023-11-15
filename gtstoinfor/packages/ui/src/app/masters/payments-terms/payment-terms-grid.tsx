@@ -151,7 +151,7 @@ export function PaymentTermsGrid(
       filters: [
         {
           text: 'Customer',
-          value: PaymentTermsCategory.Customer,
+          value: PaymentTermsCategory.Buyer,
         },
         {
           text: 'Vendor',
@@ -169,10 +169,10 @@ export function PaymentTermsGrid(
             <span>Vendor</span>
           </Checkbox>
           <Checkbox
-            checked={selectedKeys.includes(PaymentTermsCategory.Customer)}
-            onChange={() => setSelectedKeys(selectedKeys.includes(PaymentTermsCategory.Customer) ? [] : [PaymentTermsCategory.Customer])}
+            checked={selectedKeys.includes(PaymentTermsCategory.Buyer)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(PaymentTermsCategory.Buyer) ? [] : [PaymentTermsCategory.Buyer])}
           >
-            <span >Customer</span>
+            <span >Buyer</span>
           </Checkbox>
           <div className="custom-filter-dropdown-btns">
             <Button onClick={() => clearFilters()} className="custom-reset-button">
@@ -187,7 +187,7 @@ export function PaymentTermsGrid(
     },
     
     {
-      title: <div style={{textAlign:"center"}}>Payment Term Name</div>,
+      title: <div style={{textAlign:"center"}}>Payment Term </div>,
       dataIndex: 'paymentTermsName',
       //  responsive: ['lg'],
        sorter: (a, b) => a.paymentTermsName.length - b.paymentTermsName.length,

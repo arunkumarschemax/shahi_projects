@@ -12,7 +12,7 @@ export class PaymentTerms {
   @Column({
     type: "enum",
     enum: PaymentTermsCategory,
-    default: PaymentTermsCategory.Customer,
+    default: PaymentTermsCategory.Buyer,
     name:'payment_terms_category'
 })
 paymentTermsCategory: PaymentTermsCategory;

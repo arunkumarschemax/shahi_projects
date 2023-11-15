@@ -354,16 +354,16 @@ export const SkuList = () => {
       sorter: (a, b) => a.color.localeCompare(b.color),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("color"),
-      render: (color, rowData) => (
-        <Tag
-          color={color}
-          style={{
-            color: rowData.color === "White" ? "black" : rowData.color === "Black" ? "white" : "inherit"
-          }}
-        >
-          {color}
-        </Tag>
-      ),
+      // render: (color, rowData) => (
+      //   <Tag
+      //     color={color}
+      //     style={{
+      //       color: rowData.color === "White" ? "black" : rowData.color === "Black" ? "white" : "inherit"
+      //     }}
+      //   >
+      //     {color}
+      //   </Tag>
+      // ),
     
     },
     {
@@ -646,12 +646,12 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
                             <Row gutter={[20, 16]}>
 
                   {itemData.map((item) => {
-                      let co;
-                      if (item.color == "white") {
-                        co = "balck";
-                      } else {
-                        co = "white";
-                      }
+                      // let co;
+                      // if (item.color == "white") {
+                      //   co = "balck";
+                      // } else {
+                      //   co = "white";
+                      // }
                  
                      return(
                        
@@ -700,14 +700,14 @@ onFilter:(value,record)=>{return record.rm_mapping_status === value}
                                       >
                                         {item.colour}
                                       </Tag> */}
-                                      <Tag
+                                      {/* <Tag
                                      color={item.color}
                                             style={{
                                             color: item.color === "White" ? "black" : item.color === "Black" ? "white" : "inherit"
                                              }}
-                                                   >
+                                                   > */}
                                                      {item.color}
-                                            </Tag>
+                                            {/* </Tag> */}
 
 
                                     </Descriptions.Item>

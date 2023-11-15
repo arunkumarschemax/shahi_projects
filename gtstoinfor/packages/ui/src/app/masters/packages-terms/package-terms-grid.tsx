@@ -143,7 +143,7 @@ export function PackageTermsGrid() {
     },
    
     {
-      title:<div style={{textAlign:"center"}}>Package Term Name</div>,
+      title:<div style={{textAlign:"center"}}>Package Term </div>,
       dataIndex: 'packageTermsName',
       // width: '400px',
        sorter: (a, b) => a.packageTermsName.length - b.packageTermsName.length,

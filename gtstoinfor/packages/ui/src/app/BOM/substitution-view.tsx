@@ -333,11 +333,11 @@ const SubstituionView=() =>{
 
     const getSubstitution=()=>{
       const req = new fgItemIdReq()
-      if(form.getFieldValue('fgItemCode') !== undefined){
-        req.fgItemCode= form.getFieldValue('fgItemCode')
+      if(form.getFieldValue('fg_item_code') !== undefined){
+        req.fgItemCode= form.getFieldValue('fg_item_code')
       }
-      if(form.getFieldValue('rmItemCode') !== undefined){
-        req.rmItemCode= form.getFieldValue('rmItemCode')
+      if(form.getFieldValue('itemCode') !== undefined){
+        req.rmItemCode= form.getFieldValue('itemCode')
       }
       service.getSubstitution(req).then(res=>{
 
@@ -501,11 +501,11 @@ const SubstituionView=() =>{
                 {
       
                   title:'Rm ItemCode',
-                  dataIndex:'rmItemCode',
-                  key:'rmItemCode',
+                  dataIndex:'itemCode',
+                  key:'itemCode',
                   sorter: (a, b) => {
-                    const valueA = a.rmItemCode || '';
-                    const valueB = b.rmItemCode || '';
+                    const valueA = a.itemCode || '';
+                    const valueB = b.itemCode || '';
                     return valueA.localeCompare(valueB);
                   },
                   sortDirections: ['descend', 'ascend'],
@@ -594,11 +594,11 @@ const SubstituionView=() =>{
 </Col>
 
 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-  <Form.Item name='rmItemCode' label='Rm ItemCode'>
+  <Form.Item name='itemCode' label='Rm ItemCode'>
     <Select showSearch placeholder="Select Rm ItemCode" optionFilterProp="children" allowClear>
 {
   itemData?.map((e:any)=>{
-return<Option key={e.rm_item_id} value={e.rm_item_code}>{e.rm_item_code}
+return<Option key={e.item_code} value={e.item_code}>{e.itemCode}
 
 </Option>
   })

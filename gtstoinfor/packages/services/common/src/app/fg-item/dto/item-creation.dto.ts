@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsNumber, IsOptional } from "class-validator";
-import { SubContractStatus } from "packages/libs/shared-models/src/enum";
+import { PropertyEnum, SubContractStatus } from "packages/libs/shared-models/src/enum";
 
 export class ItemCreationDto {
     @ApiProperty()
@@ -23,6 +23,9 @@ export class ItemCreationDto {
 
     @ApiProperty()
     subCategoryId: number;
+
+    @ApiProperty()
+    property:PropertyEnum
 
     @ApiProperty()
     season: string;

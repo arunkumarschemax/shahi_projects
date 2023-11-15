@@ -38,8 +38,8 @@ export class StyleOrderService extends CommonAxiosService{
         return this.axiosPostCall(this.URL + '/updateCoData',req)
     }
 
-    async  getCoamendment ():Promise<CommonResponseModel>{
-        return this.axiosPostCall(this.URL +'/getCoamendment')
+    async  getCoamendment (req:any):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL +'/getCoamendment',req)
     }
 
     async  getconumbered ():Promise<CommonResponseModel>{

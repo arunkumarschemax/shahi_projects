@@ -121,7 +121,7 @@ export class StyleOrderController{
     async getCoamendment(@Body() req:any):Promise<CommonResponseModel>{
         
         try{            
-            return await this.styleOrderService.getCoamendment()
+            return await this.styleOrderService.getCoamendment(req)
             
         }catch(err){
             return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
@@ -142,6 +142,7 @@ export class StyleOrderController{
     @Post('/getcoparameter')
     // @ApiBody({type:styleOrderReq})
     async getcoparameter(@Body() req:any):Promise<CommonResponseModel>{
+        console.log(req,"servv")
         try{            
             return await this.styleOrderService.getcoparameter()
             

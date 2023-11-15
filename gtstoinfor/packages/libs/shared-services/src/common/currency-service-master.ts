@@ -5,7 +5,7 @@ export class CurrencyService extends CommonAxiosService{
   URL = "/currencies";
 
   async createCurrency(currency: CurrencyDto): Promise<CurrencyResponseModel> {
-    console.log('testss',currency)
+    // console.log('testss',currency)
     return this.axiosPostCall(this.URL + "/createCurrency", currency)
 }
 

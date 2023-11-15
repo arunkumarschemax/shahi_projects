@@ -7,7 +7,7 @@ export class DeliveryMethodService extends CommonAxiosService{
 URL = '/delivery-method';
 
         async createDeliveryMethod(deliveryMethod: DeliveryMethodDto): Promise<DeliveryMethodResponseModel> {
-            console.log(deliveryMethod,'avadam ledhu')
+            // console.log(deliveryMethod,'avadam ledhu')
             return this.axiosPostCall(this.URL +  '/createDeliveryMethod',deliveryMethod)
                 
         }

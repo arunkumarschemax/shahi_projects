@@ -119,15 +119,22 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
     {
       title: <div style={{textAlign:'center'}}>Warehouse Name</div>,
       dataIndex: "warehouseName",
-      sorter: (a, b) => a.source.localeCompare(b.source),
+      sorter: (a, b) => a.warehouseName.localeCompare(b.warehouseName),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("warehouseName"),
     }, {
         title: <div style={{textAlign:'center'}}>Warehouse code</div>,
         dataIndex: "warehouseCode", align:'left',
-        sorter: (a, b) => a.source.localeCompare(b.source),
+        sorter: (a, b) => a.warehouseCode.localeCompare(b.warehouseCode),
         sortDirections: ["ascend", "descend"],
         ...getColumnSearchProps("warehouseCode"),
+      },
+      {
+        title: <div style={{textAlign:'center'}}>Category</div>,
+        dataIndex: "category", align:'left',
+        sorter: (a, b) => a.category.localeCompare(b.category),
+        sortDirections: ["ascend", "descend"],
+        ...getColumnSearchProps("category"),
       },
     {
       title: 'Status',
@@ -180,6 +187,7 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
     {
       title: `Action`,
       dataIndex: 'action',
+      align:'center',
       render: (text, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"
@@ -399,6 +407,7 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
           dataSource={variantData}
 
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

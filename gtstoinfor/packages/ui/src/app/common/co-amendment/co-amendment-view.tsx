@@ -9,7 +9,7 @@ import AlertMessages from '../../common/common-functions/alert-messages';
 import { StyleOrderService } from '@project-management-system/shared-services';
 import FormItem from 'antd/es/form/FormItem';
 import form from 'antd/es/form';
-import { CoRequest, CoUpdateReq, StyleOrderIdReq } from '@project-management-system/shared-models';
+import { CoRequest, CoUpdateReq, RequestReq, StyleOrderIdReq } from '@project-management-system/shared-models';
 import TabPane from 'antd/es/tabs/TabPane';
 export interface COAmendmentViewProps{
   // poData:any
@@ -23,16 +23,8 @@ export const COAmendmentView=(props:COAmendmentViewProps)=>{
     const [variantData, setVariantData] = useState<[]>([]);
     const [cono, setCono] = useState(null);
     const [form] = Form.useForm();
-    const [selectedItemNo, setSelectedItemNo] = useState();
-    const [searchClicked, setSearchClicked] = useState(false);
-    const [ChangeQuantity, setChangeQuantity] = useState<any[]>([]);
     const [co, setco] = useState<any[]>([]);
-    const [ChangeDeliveryDate, setChangeDeliveryDate] = useState<any[]>([]);
-    const [hangeOrderLine, setChangeOrderLine] = useState([]);
-   const [ChangeFOB, setChangeFOB] = useState([]);
    const [Number, setNumber] = useState<any[]>([]);
-   const [ChangeDestinationAddress, setChangeDestinationAddress] = useState([]);
-   const [coLineInfodata, setCoLineInfoData] = useState<any[]>([]);
     const searchInput = useRef(null);
     const [page, setPage] = React.useState(1);
     const columns = useState('');
@@ -138,7 +130,7 @@ function handleReset(clearFilters) {
 
   const getCoNum=()=>{
     service.getconumbered().then(res=>{
-      console.log(res,"::::::::::::::");
+      // console.log(res,"::::::::::::::");
       if(res){
         setCono(res.data)
       }
@@ -148,7 +140,7 @@ function handleReset(clearFilters) {
 
   const getParameter=()=>{
     service.getcoparameter().then(res=>{    
-      console.log(res,"[[[[[[[[[[");
+      // console.log(res,"[[[[[[[[[[");
         
     if(res){
       setNumber(res.data)
@@ -166,15 +158,15 @@ function handleReset(clearFilters) {
   // }
   const getCoamendment=()=>{
 
-    const req= new CoRequest()
+    const req= new RequestReq()
     if(form.getFieldValue('co_number') !== undefined){
-        req.coNumber=form.getFieldValue('co_number')
+        req.conumber=form.getFieldValue('co_number')
       }
       if(form.getFieldValue('parameter') !== undefined){
         req.parameter=form.getFieldValue('parameter')
       }
-    service.getCoamendment().then(res=>{
-      // console.log(res,"&&&&&");
+    service.getCoamendment(req).then(res=>{
+       console.log(req,"&&&&&");
       
         if(res.status){
             setVariantData(res.data)
@@ -272,6 +264,10 @@ const columnsSkelton:any=[
         title:'Status',
         dataIndex: 'status',
         filters: [
+          {
+            text: 'OPEN',
+            value: 'OPEN',
+          },
             {
               text: 'CLOSED',
               value: 'CLOSED',
@@ -293,7 +289,7 @@ const columnsSkelton:any=[
           onFilter: (value, record) => 
           {
             // === is not work
-            return record.isActive === value;
+            return record.status === value;
           },
     },
 ]
@@ -375,6 +371,7 @@ return (
                   <Button
                     type="primary"
                     icon={<SearchOutlined />}
+                    htmlType="submit"
                     // onClick={search}
                   >
                     Search
