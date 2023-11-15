@@ -20,6 +20,7 @@ import { Countries } from '../countries/countries.entity';
 import { Buyers } from '../buyers/buyers.entity';
 import { ProfitControlHead } from '../profit-control-head/profit-control-head-entity';
 import { CoTypes } from '../co-type/co-type.entity';
+import { SettingsIdReq } from '@project-management-system/shared-models';
 
 @Injectable()
 export class SettingsRepository extends Repository<Settings> {
@@ -29,9 +30,9 @@ export class SettingsRepository extends Repository<Settings> {
         super(settingsRepo.target, settingsRepo.manager, settingsRepo.queryRunner);
     }
 
-    async getAllSettingsInfo(id:number):Promise<any>{
+    async getAllSettingsInfo(req:SettingsIdReq):Promise<any>{
         const data = await this.createQueryBuilder('s')
-        .select(`s.settings_id,s.buyer_group,s.discount,s.company_id,s.factory_id,s.division_id,s.warehouse_id,s.currency_id,s.license_type_id,s.package_terms_id,s.payment_method_id,s.payment_terms_id,s.delivery_method_id,s.delivery_terms_id,s.buyer_address_id,s.account_control_id,s.sales_person_id,s.fabric_responsible_id,s.item_responsible_id,s.trim_responsible_id,s.agent as agentId,add.country_id,com.company_name as companyName,fac.name,div.division_name,wh.warehouse_name,c.currency_name,lic.liscence_type,pact.package_terms_name,paym.payment_method,payt.payment_terms_name,devm.delivery_method,devt.delivery_terms_name,acc.first_name as accountControlName,sal.first_name as salesPerson,fab.first_name as fabricResponsible,item.first_name as itemResponsible,trim.first_name as trimRespondsible,agent.first_name as agentName,add.address_id as addressId,concat(con.country_name,'-',add.state,'-',add.city,'-',add.landmark) as address,buyer.buyer_name as buyerName,s.pch_id,pch.profit_control_head,cotype.co_type_id,cotype.co_type`)
+        .select(`s.settings_id,s.buyer_group,s.discount,s.company_id,s.factory_id,s.division_id,s.warehouse_id,s.currency_id,s.license_type_id,s.package_terms_id,s.payment_method_id,s.payment_terms_id,s.delivery_method_id,s.delivery_terms_id,s.buyer_address_id,s.account_control_id,s.sales_person_id,s.fabric_responsible_id,s.item_responsible_id,s.trim_responsible_id,s.agent as agentId,add.country_id,com.company_name as companyName,fac.name,div.division_name,wh.warehouse_name,c.currency_name,lic.liscence_type,pact.package_terms_name,paym.payment_method,payt.payment_terms_name,devm.delivery_method,devt.delivery_terms_name,acc.first_name as accountControlName,sal.first_name as salesPerson,fab.first_name as fabricResponsible,item.first_name as itemResponsible,trim.first_name as trimRespondsible,agent.first_name as agentName,add.address_id as addressId,concat(con.country_name,'-',add.state,'-',add.city,'-',add.landmark) as address,buyer.buyer_name as buyerName,s.pch_id,pch.profit_control_head,cotype.co_type_id,cotype.co_type,add.state,add.city,add.landmark`)
         .leftJoin(Company,'com',`com.company_id = s.company_id`)
         .leftJoin(FactoriesEntity,'fac',`fac.id = s.factory_id`)
         .leftJoin(Division,'div',`div.division_id = s.division_id`)
@@ -54,8 +55,11 @@ export class SettingsRepository extends Repository<Settings> {
         .leftJoin(Buyers,'buyer','buyer.buyer_id = add.buyer_id')
         .leftJoin(ProfitControlHead,'pch','pch.profit_control_head_id = s.pch_id')
         .leftJoin(CoTypes,'cotype','cotype.co_type_id = s.co_type_id')
-        if(id){
-            data.andWhere(`s.settings_id = ${id}`)
+        if(req.settingsId){
+            data.andWhere(`s.settings_id = ${req.settingsId}`)
+        }
+        if(req.externalRefNumber){
+            data.andWhere(`s.external_ref_number = '${req.externalRefNumber}'`)
         }
         data.orderBy(`s.settings_id`)
         return data.getRawMany()

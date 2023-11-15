@@ -1,5 +1,5 @@
-import { BuyerExtrnalRefIdReq, BuyerIdReq, BuyersDestinationRequest, CustomerOrderStatusEnum, ItemCodeReq, MenusAndScopesEnum, SKUGenerationReq, StyleOrderIdReq, StyleOrderItemsReq, StyleOrderReq, UomCategoryEnum, UomCategoryRequest } from "@project-management-system/shared-models";
-import { BuyerDestinationService, BuyersService, CoTypeService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DestinationService, EmployeeDetailsService, FactoryService, ItemCreationService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, SKUGenerationService, StyleOrderService, UomService, WarehouseService } from "@project-management-system/shared-services"
+import { BuyerExtrnalRefIdReq, BuyerIdReq, BuyersDestinationRequest, CustomerOrderStatusEnum, ItemCodeReq, MenusAndScopesEnum, SKUGenerationReq, SettingsIdReq, StyleOrderIdReq, StyleOrderItemsReq, StyleOrderReq, UomCategoryEnum, UomCategoryRequest } from "@project-management-system/shared-models";
+import { BuyerDestinationService, BuyersService, CoTypeService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DestinationService, EmployeeDetailsService, FactoryService, ItemCreationService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, SKUGenerationService, SettingsService, StyleOrderService, UomService, WarehouseService } from "@project-management-system/shared-services"
 import { Button, Card, Col, DatePicker, Divider, Form, Input, Row, Segmented, Select, Space, Table } from "antd"
 import TextArea from "antd/es/input/TextArea";
 import { ColumnProps } from "antd/es/table";
@@ -68,7 +68,10 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
     const [loginBuyer,setLoginBuyer] = useState<number>(0)
     const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
     const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
-  let userRef    
+    const [defaultValues,setDefaultValues] = useState<any[]>([])
+    const settingsService = new SettingsService()
+
+    let userRef    
     useEffect(()=>{
         if(initialData.length > 0){
             form.setFieldsValue({
@@ -113,6 +116,23 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
     },[initialData])
 
     useEffect(() => {
+        if(defaultValues.length > 0){
+            form.setFieldsValue({
+                'warehouse' : defaultValues[0].warehouseId,
+                'packageTerms': defaultValues[0].packageTerms,
+                'deliveryMethod': defaultValues[0].deliveryMethodId,
+                'deliveryTerms': defaultValues[0].deliveryTerms,
+                'agent': Number(defaultValues[0].agent),
+                'buyerAddress': Number(defaultValues[0].buyerAddress),
+                'paymentMethod': defaultValues[0].paymentMethodId,
+                'paymentTerms': defaultValues[0].paymentTerms,
+                'facility':defaultValues[0].facilityId,
+            })
+        }
+
+    },[defaultValues])
+
+    useEffect(() => {
         if(state?.id){
             const req = new StyleOrderIdReq(state?.id)
             styleOrderService.getCOInfoById(req).then(res => {
@@ -126,6 +146,7 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
 
 
     useEffect(() => {
+        getDefaultValues()
         getItemCodes()
         // getBuyersInfo()
         getfactoryInfo()
@@ -141,6 +162,16 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
         getCoType()
         getAllUoms()
     },[])
+
+    const getDefaultValues = () => {
+        const req = new SettingsIdReq()
+        req.externalRefNumber = externalRefNo
+        settingsService.getAllSettingsInfo(req).then(res => {
+            if(res.status){
+                setDefaultValues(res.data)
+            }
+        })
+    }
     
       const Login = () => {
         const req = new BuyerExtrnalRefIdReq();
@@ -153,8 +184,10 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
             setLoginBuyer(res.data?.buyerId);
             if(req.extrnalRefId){
                 form.setFieldsValue({'buyer': res.data.buyerId})
-                }
-                      }
+            }
+            getBuyersAddressInfo(res.data?.buyerId)
+            getBuyerDestinations(res.data?.buyerId)
+            }
         });
         buyerService.getAllActiveBuyers().then((res) => {
           if (res.status) {
