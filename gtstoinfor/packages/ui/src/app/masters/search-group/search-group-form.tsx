@@ -126,6 +126,10 @@ export function SearchGroupForm(props:SearchGroupFormProps) {
             {
               required: true,
               message:"Search Group Name Is Required."
+            },
+            {
+              pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+              message: `Should contain only alphabets.`
             }
            
             
