@@ -50,7 +50,10 @@ export enum VendorNameEnum {
     extractedUps = "UPS",
     extractedCube="20 CUBE",
     extractedAps="APS",
-    extractChRowbin="CH ROWBIN"
+    extractChRowbin="CH ROWBIN",
+    extractDBSCHENKAR="DB SCHENKAR"
+
+    
     
 
     
