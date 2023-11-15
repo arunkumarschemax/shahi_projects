@@ -10,6 +10,7 @@ import { ProfitControlHeadDTO } from '../profit-control-head/dto/profit-control-
 import { ProfitControlHeadService } from '../profit-control-head/profit-control-head.service';
 import { ProductGroupService } from './product-group-service';
 import { type } from 'os';
+import { productGroupDto } from '../rm-items/dto/product-group-filter';
 
 
 
@@ -75,6 +76,16 @@ export class ProductGroupController{
         return await this.ProductGroupService.getAllActiveProductGroup()
       }catch(error){
         return this.applicationExceptionHandler.returnException(ProductGroupModel,error)
+      }
+    }
+
+    @Post('/getProductGroupById')
+    @ApiBody({type:productGroupDto})
+    async getProductGroupById(@Body() req:any):Promise<CommonResponseModel>{
+      try{
+        return await this.ProductGroupService.getProductGroupById(req)
+      }catch(error){
+        return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
       }
     }
 

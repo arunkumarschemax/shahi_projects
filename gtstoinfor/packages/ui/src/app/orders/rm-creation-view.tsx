@@ -51,7 +51,6 @@ const RMCreationView = () => {
 }
     const getAllRMItemViewData= () => {
       const req = new RMCreFilterRequest();
-  console.log(req,"req")
       if (form.getFieldValue('currency') !== undefined) {
           req.Currency = form.getFieldValue('currency');
       }
@@ -95,13 +94,8 @@ rmservice.getAllRMItems(req).then(res => {
     rmservice.itemTypeDropdown().then(res =>{
       if (res.status){
         setItemType(res.data);
-        message.success(res.internalMessage)
  
-      } else{
-        message.error(res.internalMessage)
-
-        // AlertMessages.getErrorMessage(res.internalMessage);
-         }
+      }
     })      
   }
   
@@ -112,13 +106,8 @@ rmservice.getAllRMItems(req).then(res => {
       .then((res) => {
         if (res.status) {
           setProduct(res.data);
-          message.success(res.internalMessage)
 
-        } else {
-          message.error(res.internalMessage)
-
-          // AlertMessages.getErrorMessage(res.internalMessage);
-        }
+        } 
       })
   };
   const getAllProcurement = () => {
@@ -126,20 +115,8 @@ rmservice.getAllRMItems(req).then(res => {
       .then((res) => {
         if (res.status) {
           setProcurement(res.data);
-          message.success(res.internalMessage)
-        } else {
-          message.error(res.internalMessage)
-
-          // AlertMessages.getErrorMessage(res.internalMessage);
-
-
         }
       })
-      .catch((err) => {
-        setProcurement([]);
-        AlertMessages.getErrorMessage(err.message);
-
-      });
   };
  
 
@@ -147,13 +124,8 @@ rmservice.getAllRMItems(req).then(res => {
     rmservice.itemGroupDropdown().then(res =>{
       if (res.status){
         setitemgroup(res.data);
-        message.success(res.internalMessage)
   
-      } else{
-        message.error(res.internalMessage)
-
-        // AlertMessages.getErrorMessage(res.internalMessage);
-         }
+      } 
     })        
   }
 
@@ -161,12 +133,7 @@ rmservice.getAllRMItems(req).then(res => {
   rmservice.CurrencyDropdown().then(res=>{
         if(res.status){
           setCurrency(res.data);
-          message.success(res.internalMessage)
 
-        }else{
-          message.error(res.internalMessage)
-
-            // AlertMessages.getErrorMessage(res.internalMessage)
         }
     })
  }
@@ -424,7 +391,7 @@ rmservice.getAllRMItems(req).then(res => {
 
   return (
       <>
-      <Card title={<span >RM Fabric View </span>}style={{textAlign:'left'}} headStyle={{ border: 0 }} 
+      <Card title={<span >RM Item</span>}style={{textAlign:'left'}} headStyle={{ border: 0 }} 
     extra={<Link to='/materialCreation/fabric-bom-creation' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
@@ -433,7 +400,7 @@ rmservice.getAllRMItems(req).then(res => {
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
                         <Form.Item name='currency' label='Currency' >
-                            <Select showSearch placeholder="Select Currency" optionFilterProp="children" allowClear >
+                            <Select dropdownMatchSelectWidth={false} showSearch placeholder="Select Currency" optionFilterProp="children" allowClear >
                                 {
                                     currency?.map((inc: any) => {
                                         return <Option key={inc.rm_item_id} value={inc.currency}>{inc.currency}</Option>
@@ -444,7 +411,7 @@ rmservice.getAllRMItems(req).then(res => {
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
                         <Form.Item name='itemGroup' label='Item Group'>
-                            <Select showSearch placeholder="Select Item Group" optionFilterProp="children" allowClear>
+                            <Select dropdownMatchSelectWidth={false} showSearch placeholder="Select Item Group" optionFilterProp="children" allowClear>
                                 {
                                     itemgroup?.map((inc: any) => {
                                         return <Option key={inc.rm_item_id} value={inc.item_group}>{inc.item_group}</Option>
@@ -455,7 +422,7 @@ rmservice.getAllRMItems(req).then(res => {
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
                         <Form.Item name='itemType' label='Item Type' >
-                            <Select showSearch placeholder="Select Item Type" optionFilterProp="children" allowClear>
+                            <Select showSearch placeholder="Select Item Type" optionFilterProp="children" allowClear dropdownMatchSelectWidth={false}>
                                 {
                                     ItemType?.map((inc: any) => {
                                         return <Option key={inc.rm_item_id} value={inc.item_type}>{inc.item_type}</Option>
@@ -470,7 +437,7 @@ rmservice.getAllRMItems(req).then(res => {
                                 showSearch
                                 placeholder="Select Product Group"
                                 optionFilterProp="children"
-                                allowClear
+                                allowClear dropdownMatchSelectWidth={false}
                             >
                                 {
                                     Product?.map((inc: any) => {

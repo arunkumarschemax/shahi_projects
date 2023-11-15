@@ -35,7 +35,7 @@ export class ComponentMappingRepository extends Repository<ComponentMappingEntit
     async getGarmnetDropDown():Promise<any[]>{
         const query = this.createQueryBuilder('cm')
         .select(`g.garment_id,g.garment_name`)
-        .leftJoin(Garments,`g`,`cm.style_id = g.garment_id`)
+        .leftJoin(Garments,`g`,`cm.garment_id = g.garment_id`)
         .groupBy(`g.garment_name`)
         .orderBy(`g.garment_name`)
         return await query.getRawMany()

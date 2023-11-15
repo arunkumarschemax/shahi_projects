@@ -1,5 +1,5 @@
 
-export class BomRequest {
+export class bomRequest {
     
     itemTypeId : number;
     pchId : number;
@@ -8,7 +8,7 @@ export class BomRequest {
     trim : string;
     genericCode: string;
     typeId : number;
-    groupId: number;
+    productGroupId: number;
     useInOperationId : number;
     description : string;
     responsible : string;
@@ -33,6 +33,8 @@ export class BomRequest {
     usageRemarks: string;
     taxPercentage:number;
     totalPrice:number
+    isImportedItem:string
+
   
 
     constructor(
@@ -43,7 +45,7 @@ export class BomRequest {
         trim : string,
         genericCode: string,
         typeId : number,
-        groupId: number,
+        productGroupId: number,
         useInOperationId : number,
         description : string,
         responsible : string,
@@ -67,7 +69,8 @@ export class BomRequest {
         costGroup : string,
         usageRemarks: string,
         taxPercentage:number,
-        totalPrice : number
+        totalPrice : number,
+        isImportedItem:string
        ){  
            this.itemTypeId = itemTypeId
            this.pchId = pchId
@@ -76,7 +79,7 @@ export class BomRequest {
            this.trim = trim
            this.genericCode = genericCode
            this.typeId = typeId
-           this.groupId = groupId
+           this.productGroupId = productGroupId
            this.useInOperationId = useInOperationId
            this.description = description
            this.responsible = responsible
@@ -101,6 +104,7 @@ export class BomRequest {
            this.usageRemarks = usageRemarks
            this.taxPercentage  = taxPercentage
            this.totalPrice = totalPrice
+           this.isImportedItem = isImportedItem
         
     
 

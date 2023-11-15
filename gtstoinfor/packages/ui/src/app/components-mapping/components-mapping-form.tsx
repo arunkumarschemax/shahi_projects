@@ -1,4 +1,4 @@
-import { ComponentMappingModel } from "@project-management-system/shared-models";
+import { ComponentMappingModel, GarmentsCategoryRequest } from "@project-management-system/shared-models";
 import { ComponentMappingService, ComponentService, GarmentCategoryService, GarmentService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Checkbox, Col, Descriptions, Form, Input, Row, Select } from "antd"
 import { CheckboxValueType } from "antd/es/checkbox/Group";
@@ -33,7 +33,7 @@ export const ComponentsMappingForm = () => {
     useEffect(() => {
         getStyles();
         getGarmentCategories();
-        getGarments();
+        // getGarments();
         getComponents()
     },[])
 
@@ -55,11 +55,17 @@ export const ComponentsMappingForm = () => {
 
     }
 
-    const getGarments = () => {
-        germentService.getAllGarments().then(res => {
-            if(res.status){
+    const getGarments = (id) => {
+        // germentService.getAllGarments().then(res => {
+        //     if(res.status){
+        //         setGarmentInfo(res.data)
+        //     }
+        // })
+        const req = new GarmentsCategoryRequest(id)
+        germentService.getByGarmentCategory(req).then(res => {
+            if(res.status){[
                 setGarmentInfo(res.data)
-            }
+            ]}
         })
 
     }
@@ -118,7 +124,9 @@ export const ComponentsMappingForm = () => {
     }
 
     const onGarmentCategoryChange = (val,option) => {
+        setGarmentInfo([])
         setGarmentCategory(option?.key)
+        getGarments(val)
     }
 
     const onGarmentChange = (val,option) => {
@@ -250,6 +258,7 @@ export const ComponentsMappingForm = () => {
                         </Card>
                     </Col>
                 </Row>
+                <br/>
                 <Row justify={'end'}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 2 }}>
                     <Form.Item>

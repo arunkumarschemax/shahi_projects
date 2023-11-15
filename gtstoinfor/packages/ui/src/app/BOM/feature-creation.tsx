@@ -2,6 +2,7 @@ import { FeatureDTO, OptionEnum } from '@project-management-system/shared-models
 import { ColourService, DestinationService, FeatureService, SizeService } from '@project-management-system/shared-services';
 import { Form, Input, Button, Select,Card, Row, Col, message } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
+import { Console } from 'console';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 
@@ -85,7 +86,7 @@ export const FeatureCreation = () => {
       option: selectedOption,
       optionInfo,
     };
-
+console.log(data,"data")
     service.createFeature(data).then((res) => {
       if (res.status) {
         message.success(res.internalMessage, 2);
@@ -97,6 +98,10 @@ export const FeatureCreation = () => {
     });
   });
 };
+
+const colorChange = (val,option) =>{
+  console.log(option,'--')
+}
 
       
 
@@ -166,15 +171,16 @@ export const FeatureCreation = () => {
                 },
               ]}
               >
-                <Select
+                <Select 
                 mode='multiple'
                   placeholder='Select Color'
                   allowClear
                   optionFilterProp="children"
+                  onChange={colorChange}
                   showSearch>
                   {color?.map((val) => {
                     return (
-                      <Option key={val.colourId} value={val.colourId}>{val.colour}
+                      <Option key={val.colourId} name={val.colour} value={val.colourId}>{val.colour}
                       </Option>
                     )
                   })}

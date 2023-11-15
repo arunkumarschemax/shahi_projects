@@ -24,7 +24,7 @@ export class GarmentService extends CommonAxiosService{
     }
 
     async getByGarmentCategory(req : GarmentsCategoryRequest): Promise<AllGarmentsResponse> {
-        return this.axiosPostCall(this.URL + '/getByGarmentCategory')
+        return this.axiosPostCall(this.URL + '/getByGarmentCategory',req)
 
     }
 

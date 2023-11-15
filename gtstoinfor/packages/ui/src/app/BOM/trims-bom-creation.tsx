@@ -17,6 +17,8 @@ import {
   FactoryService,
   ItemTypeService,
   LiscenceTypeService,
+  OperationsService,
+  ProductGroupService,
   ProfitControlHeadService,
   TaxesService,
   UomService,
@@ -24,7 +26,7 @@ import {
 } from "@project-management-system/shared-services";
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
-import { BomRequest } from "@project-management-system/shared-models";
+import {GlobalVariables, IsImportedItemEnum, ProductGroupFilter, bomRequest } from "@project-management-system/shared-models";
 import { Link } from "react-router-dom";
 
 export interface TrimsBomCreationProps {}
@@ -53,6 +55,13 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
   const [facilitydata, setfacilityData] = useState([]);
   const [ItemType, setItemType] = useState([]);
   const [employedata,setEmployeData] = useState([]);
+  const [operationsData, setOperationsData] = useState<any[]>([]);
+  const operationsService = new OperationsService();
+  const productservice = new ProductGroupService();
+  const [productGroupData, setProductGroupData] = useState<any[]>([]);
+
+
+
 
 
   useEffect(() => {
@@ -64,6 +73,8 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
     getAllFacilitys();
     getAllItemType();
     getAllEmployes();
+    getAllOperationsData();
+    getProductGroupById();
   }, []);
 
   useEffect(() => {
@@ -196,6 +207,31 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
       });
   };
 
+  const getAllOperationsData = () => {
+    
+    operationsService.getAllActiveOperations().then(res => {
+      if(res.status) {
+        setOperationsData(res.data);
+      } else {
+        AlertMessages.getErrorMessage(res.internalMessage)
+      }
+    })
+  }
+
+  const getProductGroupById = () => {
+    const req = new ProductGroupFilter(GlobalVariables.productGroupId)
+    productservice.getProductGroupById(req).then(res => {
+        if(res.status){
+          setProductGroupData(res.data)
+        } else {
+          AlertMessages.getErrorMessage(res.internalMessage);
+        }
+    }).catch(err => {
+      AlertMessages.getErrorMessage(err.message);
+      setProductGroupData([]);
+    })
+  }
+
   const onReset = () => {
     form.resetFields();
   };
@@ -211,7 +247,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
 
   const onFinish = (values: any) => {
     console.log(values.trimCode, "values");
-    const req = new BomRequest(
+    const req = new bomRequest(
       values.itemTypeId,
       values.pchId,
       values.facilityId,
@@ -219,7 +255,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
       values.trim,
       values.genericCode,
       values.typeId,
-      values.groupId,
+      values.productGroupId,
       values.useInOperationId,
       values.description,
       values.responsible,
@@ -243,7 +279,8 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
       values.costGroup,
       values.usageRemarks,
       values.tax,
-      values.totalPrice
+      values.totalPrice,
+      values.isImportedItem
     );
 
     bomservice
@@ -393,11 +430,11 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                       xl={{ span: 8 }}
                     >
                       <Form.Item
-                        label="Trim"
+                        label="Trim Name"
                         name="trim"
                         rules={[{ required: true, message: "Enter Trim" }]}
                       >
-                        <Input placeholder="Trim " />
+                        <Input placeholder="Trim Name" />
                       </Form.Item>
                     </Col>
                     <Col
@@ -416,6 +453,27 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                       sm={{ span: 24 }}
                       md={{ span: 8 }}
                       lg={{ span: 6 }}
+                      xl={{ span: 8 }}
+                    >
+                      <Form.Item
+                        label=" Product Group"
+                        name="productGroupId"
+                        rules={[{ required: true, message: "Enter Product Group" }]}
+                      >
+                        <Select placeholder="Select Product Group" allowClear>
+                        {
+                                productGroupData?.map((inc: any) => {
+                                    return <Option key={inc.productGroupId} value={inc.productGroupId}>{inc.productGroup}</Option>
+                                })
+                            }
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                    {/* <Col
+                      xs={{ span: 24 }}
+                      sm={{ span: 24 }}
+                      md={{ span: 8 }}
+                      lg={{ span: 6 }}
                       xl={{ span: 8}}
                     >
                       <Form.Item
@@ -427,10 +485,10 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                           <option value="1">Type1</option>
                         </Select>
                       </Form.Item>
-                    </Col>
+                    </Col> */}
                   </Row>
                   <Row gutter={8}>
-                    <Col
+                    {/* <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
                       md={{ span: 8 }}
@@ -446,7 +504,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                           <option value="1">Group1</option>
                         </Select>
                       </Form.Item>
-                    </Col>
+                    </Col> */}
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
@@ -465,10 +523,41 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                           placeholder="Select Use in Operation"
                           allowClear
                         >
-                          <option value="1">Operation1</option>
+                           {
+                                operationsData?.map((inc: any) => {
+                                    return <Option key={inc.operationId} value={inc.operationId}>{inc.operationName}</Option>
+                                })
+                            }
                         </Select>
                       </Form.Item>
                     </Col>
+                    <Col
+                      xs={{ span: 24 }}
+                      sm={{ span: 24 }}
+                      md={{ span: 8 }}
+                      lg={{ span: 6 }}
+                      xl={{ span: 8 }}
+                    >
+
+                    <Form.Item
+                    label="Is Imported Item"
+                    name="isImportedItem"
+                  >
+                    <Select
+                    showSearch
+                  
+                      placeholder="Select Is Imported Item" allowClear>
+                     {Object.values(IsImportedItemEnum).map((key,value)=>{
+                    return <Option key={key} value={key}>{key}</Option>
+            
+                         })} 
+           
+           
+                    </Select>
+                  </Form.Item>
+                  </Col>
+
+                  
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
@@ -599,12 +688,11 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     >
                       <Form.Item name="isSaleItem" label=" Is sale Item">
                         <Select placeholder="SaleItem" allowClear>
-                          <option key={1} value="Not Sale Item">
-                            Not Sale Item
-                          </option>
-                          <option key={2} value="Sale Item">
-                            Sale Item
-                          </option>
+                        {Object.values(IsImportedItemEnum).map((key,value)=>{
+                    return <Option key={key} value={key}>{key}</Option>
+            
+                         })} 
+           
                         </Select>
                       </Form.Item>
                     </Col>
@@ -824,16 +912,27 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
+                      <Form.Item label="Excise Duty" name="exciseDuty">
+                        <Input placeholder="Excise Duty" allowClear />
+                      </Form.Item>
+                    </Col>
+                    {/* <Col
+                      xs={{ span: 24 }}
+                      sm={{ span: 24 }}
+                      md={{ span: 8 }}
+                      lg={{ span: 6 }}
+                      xl={{ span: 8 }}
+                    >
                       <Form.Item label="Sales Tax" name="salesTax">
                         <Select placeholder="Select Sales Tax" allowClear>
                           <option value="SaleTax1">Sale Tax</option>
                           <option value="SaleTax2">Sale Taxs</option>
                         </Select>
                       </Form.Item>
-                    </Col>
+                    </Col> */}
                   </Row>
                   <Row gutter={8}>
-                    <Col
+                    {/* <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
                       md={{ span: 8 }}
@@ -843,7 +942,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                       <Form.Item label="Excise Duty" name="exciseDuty">
                         <Input placeholder="Excise Duty" allowClear />
                       </Form.Item>
-                    </Col>
+                    </Col> */}
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}

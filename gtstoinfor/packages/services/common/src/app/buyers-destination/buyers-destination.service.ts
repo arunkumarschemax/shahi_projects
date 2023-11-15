@@ -7,7 +7,8 @@ import { Size } from "../sizes/sizes-entity";
 import { Destination } from "../destination/destination.entity";
 import { Buyers } from "../buyers/buyers.entity";
 import {
-  BuyersDestinationResponseModel, BuyersMappingResponseModel, ColourInfoModel, CommonResponseModel, DestinationInfoModel, MappingModel, MappingResponseModel, SizeInfoModel,
+  BuyerIdReq,
+  BuyersDestinationResponseModel, BuyersMappingResponseModel, ColourDto, ColourInfoModel, ColourModel, CommonResponseModel, DestinationDto, DestinationInfoModel, MappingModel, MappingResponseModel, SizeInfoModel, SizeModel,
 } from "@project-management-system/shared-models";
 
 import { BuyersSize } from "./buyers-sizes.entity";
@@ -18,6 +19,7 @@ import { buyerColorsMappingRepository } from "./buyer-colors-repo";
 import { buyersSizesMappingRepository } from "./buyer-size-repo";
 import { buyersDestionationMappingRepository } from "./buyers-destination.repo";
 import { BuyersDestinationRequest } from "./dto/byers-destination.request";
+import { info } from "console";
 
 @Injectable()
 export class BuyersDestinationService {
@@ -234,6 +236,58 @@ async createBuyersDestination(
         throw err;
     }
 }
+
+  async getDestinationsByBuyerId(req:BuyerIdReq):Promise<CommonResponseModel>{
+    try{
+      const data = await this.buyersDesRepo.find({where:{buyerInfo:{buyerId:req.buyerId}},relations:['buyerDesInfo']})
+      let info = []
+      if(data){
+        for(const rec of data){
+          info.push(new DestinationDto(rec.buyerDesInfo.destinationId,rec.buyerDesInfo.destinationCode,rec.buyerDesInfo.description,rec.buyerDesInfo.optionGroup,rec.buyerDesInfo.destination,rec.buyerDesInfo.createdUser,rec.buyerDesInfo.updatedUser,rec.buyerDesInfo.isActive))
+        }
+        return new CommonResponseModel(true,1,'Data retrieved',info)
+      } else{
+        return new CommonResponseModel(false,0,'No data found')
+      }
+    }catch(err){
+      throw err
+    }
+  }
+
+  async getColorsByBuyerId(req:BuyerIdReq):Promise<CommonResponseModel>{
+    try{
+      const data = await this.buyerColorRepo.find({where:{buyerInfo:{buyerId:req.buyerId}},relations:['colorInfo']})
+      let info = []
+      if(data){
+        for(const rec of data){
+          info.push(new ColourModel(rec.colorInfo.colourId,rec.colorInfo.colour,rec.colorInfo.colourCode,rec.colorInfo.description,rec.colorInfo.optionGroup,null,null,rec.colorInfo.isActive,rec.colorInfo.createdAt,rec.colorInfo.createdUser,rec.colorInfo.updatedAt,rec.colorInfo.updatedUser,rec.colorInfo.versionFlag))
+        }
+        return new CommonResponseModel(true,1,'Data retrieved',info)
+      } else{
+        return new CommonResponseModel(false,0,'No data found')
+      }
+    }catch(err){
+      throw err
+    }
+  }
+
+  
+  async getSizesByBuyerId(req:BuyerIdReq):Promise<CommonResponseModel>{
+    try{
+      const data = await this.buyerSizeRepo.find({where:{buyerInfo:{buyerId:req.buyerId}},relations:['sizeInfo']})
+      let info = []
+      if(data){
+        for(const rec of data){
+          info.push(new SizeModel(rec.sizeInfo.sizeId,rec.sizeInfo.size,rec.sizeInfo.sizeCode,rec.sizeInfo.description,rec.sizeInfo.optionGroup,null,null,rec.sizeInfo.isActive,rec.sizeInfo.createdAt,rec.sizeInfo.createdUser,rec.sizeInfo.updatedAt,rec.sizeInfo.updatedUser,rec.sizeInfo.versionFlag))
+        }
+        return new CommonResponseModel(true,1,'Data retrieved',info)
+      } else{
+        return new CommonResponseModel(false,0,'No data found')
+      }
+    }catch(err){
+      throw err
+    }
+  }
 
 
 
