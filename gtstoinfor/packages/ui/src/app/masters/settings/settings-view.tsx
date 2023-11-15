@@ -11,6 +11,8 @@ export const SettingsView = () => {
     const navigate = useNavigate()
     const service = new SettingsService()
     const [data,setData] = useState<any[]>([])
+    const externalRefNo = JSON.parse(localStorage.getItem("currentUser")).user.externalRefNo;
+    const role = JSON.parse(localStorage.getItem("currentUser")).user.roles;
 
 
     useEffect(() => {
@@ -20,6 +22,7 @@ export const SettingsView = () => {
 
     const getAllInfo = () => {
         const req = new SettingsIdReq()
+        req.externalRefNumber = externalRefNo
         service.getAllSettingsInfo(req).then(res => {
             if(res.status){
                 setData(res.data)

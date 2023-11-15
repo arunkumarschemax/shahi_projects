@@ -1,5 +1,6 @@
 import {Column, Entity, PrimaryGeneratedColumn, VersionColumn, UpdateDateColumn, CreateDateColumn, ManyToOne, JoinColumn} from "typeorm";
 import { StyleOrder } from "../style-order/style-order.entity";
+import { CoLine } from "../style-order/co-line.entity";
 
 @Entity('co_bom')
 export class CoBom {
@@ -78,5 +79,9 @@ export class CoBom {
     @ManyToOne(type=> StyleOrder, co=>co.customerorder,{nullable:false,})
     @JoinColumn({name:"co_id"})
     orderId:StyleOrder
+
+    @ManyToOne(type=> CoLine, co=>co.CoBomInfo,{nullable:false,})
+    @JoinColumn({name:"co_line_id"})
+    coLineInfo:CoLine
 
 }
