@@ -813,7 +813,8 @@ export default function BasicLayout() {
         const menuData = IAMClientAuthContext.menuAccessObject ? IAMClientAuthContext.menuAccessObject : [];
     //   console.log(menuData)
         const processedMenuData = menuData
-        .filter(menuItem => menuItem.menuName !== "Sample Development")
+        .filter(menuItem => menuItem.menuName !== "Sample Development"  && menuItem.menuName !== "User Management" && menuItem.menuName !== "Operation Tracking")
+        // || menuItem.menuName !== "User Management" ||  menuItem.menuName !== "Operation Tracking")
         .map(menuItem => {
             
           const processedSubMenuItems =  menuItem.subMenuData?.map(subMenuItem => (
@@ -934,26 +935,27 @@ export default function BasicLayout() {
                         // const navigate = useNavigate();
                     
                         return (
-                            <div
-                                onClick={() => {
-                                    navigate(item?.path || "/");
-                                }}
-                                // style={{
-                                //     backgroundColor: menu.includes(item.key) ? '#1890ff' : '',
-                                //     color: menu.includes(item.key) ? '#fff' : '', // Adjust the text color
-                                // }}
-                            >
-                                {dom}
-                            </div>
-                        //     <Link
-                        //     to={item?.path || "/"}
-                        //     onClick={(e) => {
-                        //         setPathname(item.path || "/");
+                            // <div
+                            //     onClick={() => {
+                            //         navigate(item?.path || "/");
+                            //     }}
+                            //     // style={{
+                            //     //     backgroundColor: menu.includes(item.key) ? '#1890ff' : '',
+                            //     //     color: menu.includes(item.key) ? '#fff' : '', // Adjust the text color
+                            //     // }}
+                            // >
+                            //     {dom}
+                            // </div>
+                            <Link
+                            to={item?.path || "/"}
+                            onClick={(e) => {
+                                navigate(item?.path || "/");
+                                // setPathname(item.path || "/");
                                 
-                        //                                         }}
-                        // >
-                        //     {dom}
-                        // </Link>
+                                                                }}
+                        >
+                            {dom}
+                        </Link>
                         );
                     }}
                     

@@ -305,6 +305,7 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
           </Row> 
           <br></br>
           <Table
+          size='small'
           rowKey={record => record.Id}
           columns={columnsSkelton}
           dataSource={deliveryTermsData}

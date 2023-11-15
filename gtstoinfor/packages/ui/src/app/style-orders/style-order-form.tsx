@@ -441,7 +441,7 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
         styleOrderService.createCustomerOrder(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
-                navigate('/materialCreation/style-order-view')
+                navigate('/order-management/style-order-view')
             } else{
                 AlertMessages.getErrorMessage(res.internalMessage)
             }
@@ -451,7 +451,7 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
         <Card title='Style Order Creation' extra={
             <span>
               <Button
-                onClick={() => navigate("/materialCreation/style-order-view")}
+                onClick={() => navigate("/order-management/style-order-view")}
                 type={"primary"}
               >
                 View

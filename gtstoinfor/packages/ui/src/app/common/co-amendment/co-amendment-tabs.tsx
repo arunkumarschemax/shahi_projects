@@ -316,7 +316,7 @@ const buyerService = new BuyersService();
   ];
 
   return (
-    <Card title="CO Amendment" size='small' extra={<span><Button type='primary' onClick={()=>{navigate ('/materialCreation/co-amendment-view')}}>View</Button></span>}>
+    <Card title="CO Amendment" size='small' extra={<span><Button type='primary' onClick={()=>{navigate ('/order-management/co-amendment-view')}}>View</Button></span>}>
        <Form  form={form} >
          <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>

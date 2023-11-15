@@ -183,11 +183,44 @@ export function HierarchyLevelGrid(
       render: (text, object, index) => (page-1) * 10 +(index+1)
       },
       {
-        title: <div style={{textAlign:'center'}}>Hierarchy Level</div>,
-        dataIndex: "hierarchyLevel",
-        sorter: (a, b) => a.hierarchyLevel.localeCompare(b.hierarchyLevel),
+        title: <div style={{textAlign:'center'}}>Hierarchy Name</div>,
+        dataIndex: "hierarchyName",
+        sorter: (a, b) => a.hierarchyName.localeCompare(b.hierarchyName),
         sortDirections: ["ascend", "descend"],
-        ...getColumnSearchProps("hierarchyLevel"),
+        ...getColumnSearchProps("hierarchyName"),
+      },
+      {
+        title: <div style={{textAlign:'center'}}>Level1 & Code</div>,
+        dataIndex: "level1",
+        render:(val,data)=>{
+          return (<span>{data.level1} - {data.level1Code}</span>)
+        }
+      
+      },  {
+        title: <div style={{textAlign:'center'}}>Level2 & Code</div>,
+        dataIndex: "level2",
+        render:(val,data)=>{
+          return (<span>{data.level2} - {data.level2Code}</span>)
+        }
+      },  
+      {
+        title: <div style={{textAlign:'center'}}>Level3 & Code</div>,
+        dataIndex: "level3",
+        render:(val,data)=>{
+          return (<span>{data.level3} - {data.level3Code}</span>)
+        }
+      },  {
+        title: <div style={{textAlign:'center'}}>Level4 & Code</div>,
+        dataIndex: "level4",
+        render:(val,data)=>{
+          return (<span>{data.level4} - {data.level4Code}</span>)
+        }
+      },  {
+        title: <div style={{textAlign:'center'}}>Level5 & Code</div>,
+        dataIndex: "level5",
+        render:(val,data)=>{
+          return (<span>{data.level5} - {data.level5Code}</span>)
+        }
       },
       {
         title: 'Status',
@@ -301,7 +334,7 @@ export function HierarchyLevelGrid(
            {/* <Card title={'Active: ' + HierarchyLevelData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card> */}
           </Col>
           <Col span={5}>
-          <Alert type='warning' message={'Active: ' + HierarchyLevelData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'In-Active: ' + HierarchyLevelData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
            {/* <Card title={'In-Active :' + HierarchyLevelData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card> */}
           </Col>
           </Row>

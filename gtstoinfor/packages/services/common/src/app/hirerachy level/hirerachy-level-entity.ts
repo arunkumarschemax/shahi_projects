@@ -11,9 +11,71 @@ hierarchyLevelId:number;
 @Column("varchar",{
     nullable: true,
     length:15,
-    name:"hierarchy_level"
+    name:"hierarchy_name"
 })
-hierarchyLevel:string;
+hierarchyName:string;
+
+
+@Column('varchar', {
+    name: 'level_1',
+    nullable: false
+})
+level1: string;
+
+@Column('varchar', {
+    name: 'level_1_Code',
+    nullable: false
+})
+level1Code: string;
+
+@Column('varchar', {
+    name: 'level_2',
+    nullable: false
+})
+level2: string;
+
+@Column('varchar', {
+    name: 'level_2_Code',
+    nullable: false
+})
+level2Code: string;
+
+@Column('varchar', {
+    name: 'level_3',
+    nullable: false
+})
+level3: string;
+
+@Column('varchar', {
+    name: 'level_3_Code',
+    nullable: false
+})
+level3Code: string;
+
+@Column('varchar', {
+    name: 'level_4',
+    nullable: false
+})
+level4: string;
+
+@Column('varchar', {
+    name: 'level_4_Code',
+    nullable: false
+})
+level4Code: string;
+
+@Column('varchar', {
+    name: 'level_5',
+    nullable: false
+})
+level5: string;
+
+@Column('varchar', {
+    name: 'level_5_Code',
+    nullable: false
+})
+level5Code: string;
+
 
 @Column("boolean",{
     default:true,

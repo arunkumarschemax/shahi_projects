@@ -25,8 +25,18 @@ export class HierachyLevelService{
   try{
       await transactionalEntityManager.startTransaction();
       const entity = new HierarchyLevel()
-      entity.hierarchyLevel = req.hierarchyLevel;
+      entity.hierarchyName = req.hierarchyName;
       entity.hierarchyLevelId = req.hierarchyLevelId;
+      entity.level1 = req.level1;
+      entity.level1Code = req.level1Code;
+      entity.level2 = req.level2;
+      entity.level2Code = req.level2Code;
+      entity.level3 = req.level3;
+      entity.level3Code = req.level3Code;
+      entity.level4 = req.level4;
+      entity.level4Code = req.level4Code;
+      entity.level5 = req.level5;
+      entity.level5Code = req.level5Code;
       entity.createdUser = req.createdUser;
       entity.isActive = req.isActive;
       entity.versionFlag = req.versionFlag;
@@ -63,7 +73,7 @@ async updatehierachyLevel(req:HierarchyLevelRequest): Promise<hierachyLevelModel
         let Product;   
             Product = await this.hierachyLevelRepository.update(
                 { hierarchyLevelId: req.hierarchyLevelId },
-                { hierarchyLevel: req.hierarchyLevel }
+                { hierarchyName: req.hierarchyName }
             )
         if (Product.affected > 0) {
             return new hierachyLevelModel(true, 11, 'uploaded successfully', Product);
@@ -83,7 +93,7 @@ async updatehierachyLevel(req:HierarchyLevelRequest): Promise<hierachyLevelModel
          const data = await this.hierachyLevelRepository.find()
 let response=[]
          for(const res of data){
-            response.push(new HierarchyLevelDto(res.hierarchyLevelId,res.hierarchyLevel,res.isActive,res.createdUser,res.updatedUser,res.versionFlag))
+            response.push(new HierarchyLevelDto(res.hierarchyLevelId,res.hierarchyName,res.level1,res.level1Code,res.level2,res.level2Code,res.level3,res.level3Code,res.level4,res.level4Code,res.level5,res.level5Code,res.isActive,res.createdUser,res.updatedUser,res.versionFlag))
          }
          if (data.length>0){
           return new hierachyLevelModel(true,1,'data retrived Sucessfully',response)

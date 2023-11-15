@@ -1,5 +1,5 @@
 import { CommonAxiosService } from "../common-axios-service-prs";
-import {BuyerIdReq, CommonResponseModel, FabricApprovalReq, FabricDevelopmentRequestModel, FabricDevelopmentRequestResponse, FabricFilterRequest, UploadResponse } from '@project-management-system/shared-models';
+import {BuyerExtrnalRefIdReq, BuyerIdReq, CommonResponseModel, FabricApprovalReq, FabricDevReqId, FabricDevelopmentRequestModel, FabricDevelopmentRequestResponse, FabricFilterRequest, UploadResponse } from '@project-management-system/shared-models';
 
 
 export class FabricDevelopmentService extends CommonAxiosService{
@@ -303,9 +303,18 @@ async getAll(): Promise<any> {
     
 }
     
-async getFabricDevReqData(req?:BuyerIdReq): Promise<any> {
+async getFabricDevReqData(req?:BuyerExtrnalRefIdReq): Promise<any> {
     return this.axiosPostCall(this.URL + "/getFabricDevReqData",req)
   }
-           
+  async getQltyInfoById(req?:FabricDevReqId): Promise<any> {
+    return this.axiosPostCall(this.URL + "/getQltyInfoById",req)
+  }
+  async getAllItemsById(req?:FabricDevReqId): Promise<any> {
+    return this.axiosPostCall(this.URL + "/getAllItemsById",req)
+  }
+  async getAllFabricDevReqQltyData(req?:FabricDevReqId): Promise<any> {
+    return this.axiosPostCall(this.URL + "/getAllFabricDevReqQltyData",req)
+  }
+ 
 
 }
