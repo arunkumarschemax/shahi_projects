@@ -91,16 +91,16 @@ export const LocationMapping = () => {
                     <Col span={12}>
                         <Descriptions column={2}>
                             <Descriptions.Item label="GRN Number" style={{ width: '33%' }}>
-                                {grnData.grnNumber}
+                                {grnData.grn_number}
                             </Descriptions.Item>
                             <Descriptions.Item label="Received Quantity" style={{ width: '33%' }}>
-                                {Number(grnData.receivedQuantity)}
+                                {Number(grnData.received_qty)}
                             </Descriptions.Item>
                             <Descriptions.Item label="Stock" style={{ width: '33%' }}>
                                 {grnData.physicalQuantity > 0 ? Number(grnData.physicalQuantity) : 0}
                             </Descriptions.Item>
                             <Descriptions.Item label="Location Pending Quantity" style={{ width: '33%' }}>
-                                {Number((grnData.receivedQuantity) - (grnData.physicalQuantity))}
+                                {Number((grnData.received_qty) - (grnData.physicalQuantity))}
                             </Descriptions.Item>
                         </Descriptions>
                     </Col>
@@ -115,12 +115,12 @@ export const LocationMapping = () => {
                     <Row gutter={24}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                             <Form.Item name="vendorName" label="Vendor" rules={[{ required: true, message: 'Missed Vendor' }]}>
-                                <Input disabled={grnData} defaultValue={grnData.vendorName} />
+                                <Input disabled={grnData} defaultValue={grnData.vendor_name} />
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 10 }}>
                             <Form.Item name="itemName" label="Item" rules={[{ required: true, message: 'Missed Item' }]}>
-                                <Input disabled={grnData} defaultValue={grnData.item} />
+                                <Input disabled={grnData} defaultValue={grnData.m3_fabric_code} />
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>

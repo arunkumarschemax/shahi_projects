@@ -7,4 +7,8 @@ export class LocationMappingService extends CommonAxiosService {
         return this.axiosPostCall(this.URL + "/getAllActiveRackPositions");
     }
 
+    async getAllFabrics():Promise<any> {
+        return this.axiosPostCall(this.URL + "/getAllFabrics")
+    }
+
 }
