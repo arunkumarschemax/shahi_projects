@@ -1,12 +1,13 @@
 import { EditOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import { M3MastersCategoryReq } from "@project-management-system/shared-models";
-import { ColourService, M3MastersService, SampleDevelopmentService } from "@project-management-system/shared-services";
+import { ColourService, IndentService, M3MastersService, SampleDevelopmentService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Divider, Form, Input, Popconfirm, Row, Select, Table, Tag, Tooltip } from "antd";
 import { ColumnProps } from "antd/lib/table";
+import { VALUE_SPLIT } from "rc-cascader/lib/utils/commonUtil";
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-export const PurchaseOrderTrim = ({props}) =>{
+export const PurchaseOrderTrim = ({props,indentId}) =>{
     let tableData: any[] = []
     const [trimForm] = Form.useForm()
     const {Option} = Select
@@ -24,13 +25,29 @@ export const PurchaseOrderTrim = ({props}) =>{
     const colorService = new ColourService();
     const m3MasterService = new M3MastersService()
     const sampleService = new SampleDevelopmentService()
-
+    const indentservice = new IndentService()
 
     useEffect(() =>{
         getColor()
         getM3TrimCodes()
         getTrimType()
     },[])
+
+    useEffect(() =>{
+        if(indentId != undefined){
+            setTrimtableVisible(true)
+            indentTrimData(indentId)
+        }
+    },[indentId])
+
+
+    const indentTrimData = (value) =>{
+        indentservice.getAllIndentTrimDetailsAgainstIndent({indentId:value}).then(res =>{
+            if(res.status){
+                setTrimTableData(res.data);
+            }
+        })
+    }
 
     const getColor = () => {
         colorService.getAllActiveColour().then(res =>{
@@ -50,7 +67,7 @@ export const PurchaseOrderTrim = ({props}) =>{
 
     const TrimTypeOnchange = (value,option) =>{
         console.log(value)
-        trimForm.setFieldsValue({trimType:option.name})
+        trimForm.setFieldsValue({productGroup:option.name})
         getTrimCodeAgainstTrimType(value)
     }
 
@@ -111,24 +128,18 @@ export const PurchaseOrderTrim = ({props}) =>{
             width:'100px'
         },
         {
-            title:'Consumption',
-            dataIndex:'consumption',
+            title:'Indent Quantity',
+            dataIndex:'indentQuantity',
+        },
+        {
+            title:'Po Quantity',
+            dataIndex:'poQuantity',
+            
         },
         {
             title:'M3 Trim Code',
             dataIndex:'m3TrimCode',
-            width:'180px'
-        },
-        {
-            title:'Description',
-            dataIndex:'description',
-            width:'180px'
-        },
-        {
-            title:'Remarks',
-            dataIndex:'remarks',
             width:'200px'
-
         },
         {
             title: "Action",
@@ -194,7 +205,7 @@ export const PurchaseOrderTrim = ({props}) =>{
         if(defaultTrimFormData){
             trimForm.setFieldsValue({
                 colourName: defaultTrimFormData.colourName,
-                trimType: defaultTrimFormData.trimType,
+                productGroup: defaultTrimFormData.productGroup,
                 trimId: defaultTrimFormData.trimId,
                 colourId : defaultTrimFormData.colourId,
                 consumption : defaultTrimFormData.consumption,
@@ -203,18 +214,24 @@ export const PurchaseOrderTrim = ({props}) =>{
                 remarks: defaultTrimFormData.remarks,
                 trimCodeName: defaultTrimFormData.trimCodeName,
                 productGroupId: defaultTrimFormData.productGroupId,
+                indentTrmId:defaultTrimFormData.indentTrmId,
+                indentQuantity:defaultTrimFormData.indentQuantity,
+                indentQuantityUnit:defaultTrimFormData.indentQuantityUnit
             })
         }
 
     },[defaultTrimFormData])
 
     return(
-        <Card>
+        <Card className="card-header" style={{width:'100%'}}>
             <Form form={trimForm} layout="vertical" onFinish={OnTrimAdd}>
                 <Row gutter={24}>
-                <Form.Item name={'trimType'} hidden><Input></Input></Form.Item>
+                <Form.Item name={'productGroup'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'trimCodeName'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'colourName'} hidden><Input></Input></Form.Item>
+                    <Form.Item name={'indentTrmId'} hidden><Input></Input></Form.Item>
+                    <Form.Item name={'indentQuantity'} hidden><Input></Input></Form.Item>
+                    <Form.Item name={'indentQuantityUnit'} hidden><Input></Input></Form.Item>
 
                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name={'productGroupId'} label={'Trim type'}
@@ -295,13 +312,18 @@ export const PurchaseOrderTrim = ({props}) =>{
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name={'consumption'} label={'Consumption'}
+                        <Form.Item name={'poQuantity'} label={'PO Quantity'}
                          rules={[
                             {
                               required: true,
-                              message: "Consumption Type Is Required",
+                              message: "poQuantity Is Required",
                             }
                         ]}>
+                            <Input></Input>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Form.Item name={'indentQuantity'} label={'Indent Quantity'}>
                             <Input></Input>
                         </Form.Item>
                     </Col>
@@ -315,16 +337,6 @@ export const PurchaseOrderTrim = ({props}) =>{
                             })}
                         </Select>
                     </Form.Item>
-                    </Col>
-                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name={'description'} label={'Description'}>
-                            <Input></Input>
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name={'remarks'} label={'Remarks'}>
-                            <Input></Input>
-                        </Form.Item>
                     </Col>
                 </Row>
                 <Row justify={'end'}>

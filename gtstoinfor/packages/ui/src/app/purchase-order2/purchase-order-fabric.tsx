@@ -3,6 +3,7 @@ import { M3MastersCategoryReq } from "@project-management-system/shared-models"
 import { ColourService, FabricTypeService, FabricWeaveService, IndentService, M3MastersService, ProfitControlHeadService, UomService } from "@project-management-system/shared-services"
 import { Button, Card, Col, Divider, Form, Input, Popconfirm, Row, Select, Space, Tag, Tooltip, message } from "antd"
 import Table, { ColumnProps } from "antd/es/table"
+import { table } from "console"
 import moment from "moment"
 import React from "react"
 import { useEffect, useState } from "react"
@@ -246,30 +247,33 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
             setFabricTableVisible(false)
         }
         }
+
+    const onFabricAdd = (values) => {
+        fabricForm
+            .validateFields()
+            .then(() => {
+                if (fabricIndexVal !== undefined) {
+                    values.fabricTypeId = undefined; 
+                    fabricTableData[fabricIndexVal] = values;
+                    tableData = [...fabricTableData];
+                    setFabricIndexVal(undefined);
+                } else {
+                    values.fabricTypeId = undefined; 
+                    tableData = [...fabricTableData, values];
+                    setFabricTableData(tableData);
+                }
+                setFabricTableData([...tableData]); 
+                console.log(tableData)
+                props([...tableData]); 
+                fabricForm.resetFields();
+                setUpdate(false);
+                setFabricTableVisible(true);
+            })
+            .catch(() => {
+                message.error('Please fill all required fields');
+            });
+    };
     
-    const onFabricAdd=(values) =>{
-        console.log(values)
-        fabricForm.validateFields().then(() =>{
-            console.log(fabricIndexVal)
-            if(fabricIndexVal !== undefined){
-                fabricTableData[fabricIndexVal] = values;
-                tableData = [...fabricTableData]
-                setFabricIndexVal(undefined)
-            } else{
-                tableData = [...fabricTableData,values]
-            }
-            setFabricTableData(tableData)
-            props(tableData)
-            console.log(tableData)
-            fabricForm.resetFields()
-            setUpdate(false)
-            setFabricTableVisible(true)
-        }).catch(() => {
-            message.error('Please fill all required fields')
-
-        })
-    }
-
     return (
     <Card>
        <Form form={fabricForm} layout="vertical" onFinish={onFabricAdd}>
@@ -358,7 +362,9 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
                  </Form.Item>
                 </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                       <Form.Item name='shahiFabricCode' label='Shahi Fabric Code' rules={[{required:true,message:'M3 Code is required'}]}>
+                       <Form.Item name='shahiFabricCode' label='Shahi Fabric Code'
+                        // rules={[{required:true,message:'M3 Code is required'}]}
+                        >
                         <Input/>
                        </Form.Item>
                     </Col>

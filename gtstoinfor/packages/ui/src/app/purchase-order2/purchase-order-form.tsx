@@ -83,6 +83,7 @@ export const PurchaseOrderForm =()=>{
     }
     const onFinish = () =>{
         console.log(fabricData)
+        console.log(trimData)
         // console.log(trimData)
         // const req = new PurchaseOrderDto()
         for(const fabData of fabricData){
@@ -92,20 +93,20 @@ export const PurchaseOrderForm =()=>{
         }
         for(const trim of trimData){
             console.log(trim)
-            const triminfo = new PurchaseOrderTrimDto(trim.productGroupId,trim.trimId,trim.colourId,trim.m3TrimCode,trim.description,trim.consumption,trim.remarks,1)
+            const triminfo = new PurchaseOrderTrimDto(trim.productGroupId,trim.trimId,trim.colourId,trim.m3TrimCode,trim.description,trim.consumption,trim.remarks,1,'1')
             trimInfo.push(triminfo)
         }
         const poDto = new PurchaseOrderDto('po11',poForm.getFieldValue('vendorId'),poForm.getFieldValue('styleId'),poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"),poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'),poForm.getFieldValue('remarks'),poForm.getFieldValue('poMaterialType'),poForm.getFieldValue('indentId'),fabricInfo,trimInfo)
         console.log(poDto)
-        
-        purchaseOrderService.cretePurchaseOrder(poDto).then(res =>{
-            console.log(poDto)
-            if(res.status){
-                message.success(res.internalMessage)
-            }else{
-                message.error(res.internalMessage)
-            }
-        })
+
+        // purchaseOrderService.cretePurchaseOrder(poDto).then(res =>{
+        //     console.log(poDto)
+        //     if(res.status){
+        //         message.success(res.internalMessage)
+        //     }else{
+        //         message.error(res.internalMessage)
+        //     }
+        // })
     }
     const indentOnchange = (value) =>{
         console.log(value)
@@ -171,7 +172,7 @@ return(
         <Row gutter={24}>
             <Card title={poType == 'Fabric'?'Fabric Details':poType =='Trim'?'Trim Details':''}>
                 {poType == 'Fabric' ?
-            <PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={indentId}/>:poType == 'Trim' ? <PurchaseOrderTrim key='trim' props={handleTrim} />:<></>
+            <PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={indentId}/>:poType == 'Trim' ? <PurchaseOrderTrim key='trim' props={handleTrim}  indentId={indentId}/>:<></>
             }
             </Card>
             </Row>

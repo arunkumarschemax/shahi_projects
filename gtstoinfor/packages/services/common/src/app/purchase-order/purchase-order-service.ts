@@ -83,6 +83,7 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
              trimEntity.consumption=trimInfo.consumption
              trimEntity.remarks=trimInfo.remarks
              trimEntity.indentTrimId=trimInfo.indentTrimId
+             trimEntity.poQuantity=trimInfo.poQuantity
              poTrimInfo.push(trimEntity)
          }
          poEntity.poTrimInfo=poTrimInfo

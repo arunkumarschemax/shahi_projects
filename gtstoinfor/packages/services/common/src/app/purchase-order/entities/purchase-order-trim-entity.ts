@@ -56,6 +56,12 @@ export class PurchaseOrderTrimEntity{
         nullable:true
       })
       indentTrimId:number
+
+    @Column('varchar',{
+        name:'po_quantity',
+        nullable:false
+    })
+    poQuantity:string
       
     @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poTrimInfo)
     @JoinColumn({name:'purchase_order_id'})

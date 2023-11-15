@@ -204,17 +204,33 @@ export class SampleRequestService {
       
        save = await this.sampleRepo.save(sampleReqEntity)
       if(save){
-        for(const fabricData of req.fabricInfo){
-        const quantityWithWastage = Number(fabricData.consumption)+Number((2/100)*fabricData.consumption)
-        const bomEntity = new SamplingbomEntity()
-        bomEntity.sampleRequestId=save.SampleRequestId
-        bomEntity.colourId=fabricData.colourId
-        bomEntity.rmItemId=fabricData.fabricCode //rm_item_id need to be added
-        bomEntity.requiredQuantity=quantityWithWastage?quantityWithWastage:0
-        bomEntity.wastage='2'
-        bomEntity.productGroupId=fabricData.productGroupId
-         saveBomDetails = await this.bomRepo.save(bomEntity)
+        if(req.fabricInfo){
+          for(const fabricData of req.fabricInfo){
+            const quantityWithWastage = Number(fabricData.consumption)+Number((2/100)*fabricData.consumption)
+            const bomEntity = new SamplingbomEntity()
+            bomEntity.sampleRequestId=save.SampleRequestId
+            bomEntity.colourId=fabricData.colourId
+            bomEntity.rmItemId=fabricData.fabricCode //rm_item_id need to be added
+            bomEntity.requiredQuantity=quantityWithWastage?quantityWithWastage:0
+            bomEntity.wastage='2'
+            bomEntity.productGroupId=fabricData.productGroupId
+             saveBomDetails = await this.bomRepo.save(bomEntity)
+            }
         }
+        if(req.trimInfo){
+          for(const trimData of req.trimInfo){
+            const quantityWithWastage = Number(trimData.consumption)+Number((2/100)*trimData.consumption)
+            const bomEntity = new SamplingbomEntity()
+            bomEntity.sampleRequestId=save.SampleRequestId
+            bomEntity.requiredQuantity=quantityWithWastage?quantityWithWastage:0
+            bomEntity.wastage='2'
+            bomEntity.rmItemId=trimData.trimCode
+            bomEntity.productGroupId=trimData.productGroupId
+            bomEntity.colourId=trimData.colourId
+             saveBomDetails = await this.bomRepo.save(bomEntity)
+          }
+        }
+       
       }
       if(save && saveBomDetails){
         return new AllSampleDevReqResponseModel(true,1,'SampleDevelopmentRequest created successfully',[save])
