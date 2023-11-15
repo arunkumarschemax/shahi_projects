@@ -117,15 +117,16 @@ export const DivisionGrid = (props: DivisionGridProps) => {
       dataIndex: "divisionName",
       sorter: (a, b) => a.source.localeCompare(b.source),
       sortDirections: ["ascend", "descend"],
-      ...getColumnSearchProps("divisionName"),align:'center',
+      ...getColumnSearchProps("divisionName"),align:'left',
     },
     ,
     {
       title: <div style={{textAlign:'center'}}>Division Code</div>,
       dataIndex: "divisionCode",
+      align:'left',
       sorter: (a, b) => a.source.localeCompare(b.source),
       sortDirections: ["ascend", "descend"],
-      ...getColumnSearchProps("divisionCode"),align:'center',
+      ...getColumnSearchProps("divisionCode"),
     },
     {
       title: 'Status',
@@ -194,8 +195,8 @@ export const DivisionGrid = (props: DivisionGridProps) => {
           <Popconfirm onConfirm={e => { deleteVariant(rowData); }}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate this Company ?'
-                : 'Are you sure to Activate this Company ?'
+                ? 'Are you sure to Deactivate this Division ?'
+                : 'Are you sure to Activate this Division ?'
             }
           >
             <Switch size="default"
@@ -316,7 +317,7 @@ export const DivisionGrid = (props: DivisionGridProps) => {
   }
 
   return (
-<Card title={<span>Division</span>} style={{textAlign:'left'}} headStyle={{border:0}}  extra={<Link to="/masters/division/division-form"><span><Button type={'primary'}>New</Button></span></Link>}>
+<Card title={<span>Divisions</span>} style={{textAlign:'left'}} headStyle={{border:0}}  extra={<Link to="/masters/division/division-form"><span><Button type={'primary'}>New</Button></span></Link>}>
   <br></br>
     <>
       <Row gutter={24}>
@@ -340,16 +341,17 @@ export const DivisionGrid = (props: DivisionGridProps) => {
 
         <Table
           size='small'
-
+          className='custom-table-wrapper'
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }
           }}
-          scroll={{ x: true }}
+          scroll={{x: 'max-content',y:500}}
           onChange={onChange}
           bordered />
       </Card>

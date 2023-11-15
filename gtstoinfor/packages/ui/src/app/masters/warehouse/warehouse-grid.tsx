@@ -180,6 +180,7 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
     {
       title: `Action`,
       dataIndex: 'action',
+      align:'center',
       render: (text, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"
@@ -399,6 +400,7 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
           dataSource={variantData}
 
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

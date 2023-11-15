@@ -14,6 +14,7 @@ export class ItemCreationController {
     ){}
 
     @Post('/createItem')
+    @ApiBody({type:ItemCreationDto})
     async createItem(@Body() itemCreationDto:any,isUpdate:boolean=false,@Req() request:Request): Promise<ItemcreationResponseModel> {
         try {
             console.log(itemCreationDto,"uuuuuuuuuuuuu");
