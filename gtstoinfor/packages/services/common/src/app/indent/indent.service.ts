@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IndentRepository } from './dto/indent-repository';
-import { CommonResponseModel, IndentReq, IndentFabricModel, IndentModel, IndentTrimsModel } from '@project-management-system/shared-models';
+import { CommonResponseModel, IndentReq, IndentFabricModel, IndentModel, IndentTrimsModel, IndentRequestDto } from '@project-management-system/shared-models';
 import { Indent } from './indent-entity';
 import { IndentDto } from './dto/indent-dto';
 import { IndentAdapter } from './dto/indent-adapter';
@@ -86,11 +86,13 @@ export class IndentService{
         }
     }
     
-    async getIndentData( ): Promise<CommonResponseModel> {
-        const data = await this.indentRepo.getIndentData();
+    async getIndentData(req:IndentRequestDto): Promise<CommonResponseModel> {
+        const data = await this.indentRepo.getIndentData(req);
+        console.log(data,'555555555555555');
+        
         if (data.length > 0) {
             const groupedData = data.reduce((result, item) => {
-                const requestNo = item.requestNo;
+                const requestNo = item?.requestNo;
                 const style = item.style;
                 const indentDate = item.indentDate;
                 const expectedDate = item.expectedDate;
@@ -107,7 +109,7 @@ export class IndentService{
                     };
                 }
                 result[requestNo].i_items.push({
-                    requestNo: item.requestNo,
+                    requestNo: item?.requestNo,
                     fabricId: item.fabricId,
                     materialtype:item.fabricType,
                     quantity:item.fbquantity,
@@ -118,7 +120,7 @@ export class IndentService{
 
                 });
                 result[requestNo].i_items.push({
-                    requestNo: item.requestNo,
+                    requestNo: item?.requestNo,
                     itrims_id: item.itrims_id,
                     materialtype: item.trimType,
                     trimCode: item.trimCode,
@@ -138,7 +140,17 @@ export class IndentService{
         return new CommonResponseModel(false, 0, 'An error occurred', []);
     }
 
-    async getIndentDropDown(): Promise<CommonResponseModel> {
+    async getIndentDropDown(req:IndentRequestDto): Promise<CommonResponseModel> {
+        const data = await this.indentRepo.getIndentDropDown()
+        if (data.length) {
+            return new CommonResponseModel(true, 1, 'Inventory data Retrived Sucessfully', data)
+        } else {
+            return new CommonResponseModel(false, 6546, 'Inventory data Not Found', data)
+
+        }
+
+    }
+    async getIndentDate(req:IndentRequestDto): Promise<CommonResponseModel> {
         const data = await this.indentRepo.getIndentDropDown()
         if (data.length) {
             return new CommonResponseModel(true, 1, 'Inventory data Retrived Sucessfully', data)

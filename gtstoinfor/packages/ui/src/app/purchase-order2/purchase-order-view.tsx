@@ -25,6 +25,9 @@ export const PurchaseOrderView = () => {
       }
     })
   }
+  const renderCellData = (data) => {
+    return data ? data : "-";
+  }
 
   // const DetailView = (rowData, cancel) => {
   //   const navigateData = filterData.filter(req => req.sample_request_id === rowData)
@@ -42,25 +45,42 @@ export const PurchaseOrderView = () => {
       }),
       fixed: 'left',
     },
+    // {
+    //   title: 'Unit',
+    //   dataIndex: 'requestNumber',
+    // },
+    // {
+    //   title: 'Po type',
+    //   dataIndex: 'requestNumber',
+    // },
     {
-      title: 'Unit',
-      dataIndex: 'requestNumber',
-    },
-    {
-      title: 'Po type',
-      dataIndex: 'requestNumber',
-    },
-    {
-      title: 'Indent No ',
-      dataIndex: 'requestNumber',
+      title: 'Indent Code ',
+      dataIndex: 'indentCode',
     },
     {
       title: 'Po Number',
       dataIndex: 'poNumber',
     },
     {
-      title: 'Style',
-      dataIndex: 'style',
+      title: <div style={{ textAlign: 'center' }}>Material Type</div>,
+      dataIndex: "type",
+      key: "type",
+      align: 'center',
+      render: (type, text) => {
+        renderCellData(text)
+        return (
+          <Table
+            dataSource={type}
+            columns={[
+              {
+                dataIndex: "ProductName",
+                key: "ProductName", align: 'center',
+              },
+            ]}
+            pagination={false}
+          />
+        );
+      }
     },
     {
       title: 'Po Date',
@@ -73,7 +93,7 @@ export const PurchaseOrderView = () => {
     },
     {
       title: 'VenderName',
-      dataIndex: 'requestNumber',
+      dataIndex: 'vendorName',
     },
     {
       title: 'Expected Date',
@@ -85,27 +105,24 @@ export const PurchaseOrderView = () => {
       },
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-    },
-    {
       title: 'Aging',
-      dataIndex: 'requestNumber',
+      dataIndex: 'deliveryDate',
       render: (value, record) => {
         const currentDate = new Date();
         const deliveryDate = new Date(moment(record.deliveryDate).format('YYYY-MM-DD'));
         const aging = deliveryDate.getTime() - currentDate.getTime();
-        const daysDifference = Math.floor(aging / (1000 * 60 * 60 * 24));
-            const isAboveDueDate = daysDifference > 0;
+        const daysDifference = Math.ceil(aging / (1000 * 60 * 60 * 24)); // Use Math.ceil to round up to the nearest whole day
+        const isAboveDueDate = daysDifference > 0;
     
         return (
           <>
-            {isAboveDueDate ? '-' : ''}
+            {isAboveDueDate ? '+' : ''}
             {Math.abs(daysDifference)}
           </>
         );
       }
     },
+    
     
     {
       title: 'Action',
@@ -151,6 +168,23 @@ export const PurchaseOrderView = () => {
             <Button htmlType='reset' danger >Reset</Button>
           </Col>
         </Row>
+        <Row gutter={24}>  
+      <Col className="gutter-row" xs={24 } sm={ 24 } md={ 5 } lg={ 5} xl={{ span: 2}}>
+                    <Card size="small" title={'OPEN :'  } style={{ height:'35px',width:100,backgroundColor:'#E8ADFD', borderRadius:3}}></Card>
+                   </Col>
+                   <Col className="gutter-row" xs={24 } sm={ 24 } md={ 5 } lg={ 5} xl={{ span: 3}}>
+                   <Card size="small"title={'INPROGRESS  : ' } style={{ height:'35px',width:150,marginBottom:'8',backgroundColor:'#FABDA9', borderRadius:3}}></Card>
+                   </Col>
+                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3}}>
+                   <Card size="small"title={'CLOSED : ' } style={{ height:'35px',width:150,backgroundColor:'#F5B6FE',marginBottom:'2px', borderRadius:3}}></Card>                   
+                   </Col>
+                   <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3}}>
+                   <Card size="small"title={'CANCLED : '} style={{ height:'35px',backgroundColor:'#FFC0CB',marginBottom:'2px', borderRadius:3}}></Card>                   
+                   </Col> 
+                   <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3}}>
+                   <Card size="small"title={'TOTAL : '} style={{ height:'35px',backgroundColor:'#7DFEB9',marginBottom:'2px', borderRadius:3}}></Card>                   
+                   </Col>    
+               </Row>
       </Form>
       <Card>
         <Table columns={columns} dataSource={data} bordered />

@@ -96,7 +96,7 @@ const MaterialIssueReport = () => {
       fixed: 'left',
     },
     {
-      title: "Consumption ",
+      title: "Consumption Code",
       dataIndex: "consumptionCode",
       width: '150px'
 
@@ -291,7 +291,10 @@ const MaterialIssueReport = () => {
               <Col span={6}>
                 <Form.Item name='consumption' label='Consumption Code'
                   style={{ marginBottom: '10px' }}>
-                  <Select placeholder='Select Consumption Code' optionFilterProp="children" allowClear >
+                  <Select placeholder='Select Consumption Code' 
+                   optionFilterProp="children"
+                   allowClear
+                   showSearch >
                   {consmption?.map((inc: any) => {
                       return <Option key={inc.id} value={inc.consumptionCode}>{inc.consumptionCode}</Option>
                                     })

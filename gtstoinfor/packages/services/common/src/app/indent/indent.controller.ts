@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Req } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { IndentService } from "./indent.service";
-import { AllItemsResponseModel, CommonResponseModel } from "@project-management-system/shared-models";
+import { AllItemsResponseModel, CommonResponseModel, IndentRequestDto } from "@project-management-system/shared-models";
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
 import { IndentDto } from "./dto/indent-dto";
 import { IndentRepository } from "./dto/indent-repository";
@@ -61,17 +61,27 @@ export class IndentController {
   }
 
   @Post('/getIndentData')
-  async getIndentData(): Promise<CommonResponseModel> {
+  async getIndentData(@Body()  req:any): Promise<CommonResponseModel> {
     try {
-      return await this.indentService.getIndentData();
+      return await this.indentService.getIndentData(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
   @Post('/getIndentDropDown')
-  async getIndentDropDown(@Body() req:any): Promise<CommonResponseModel> {
+  async getIndentDropDown(@Body() req:IndentRequestDto): Promise<CommonResponseModel> {
+    console.log(req,'444444444444444');
   try {
-      return await this.indentService.getIndentDropDown();
+      return await this.indentService.getIndentDropDown(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+  @Post('/getIndentDate')
+  async getIndentDate(@Body() req:IndentRequestDto): Promise<CommonResponseModel> {
+    console.log(req,'444444444444444');
+  try {
+      return await this.indentService.getIndentDate(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }

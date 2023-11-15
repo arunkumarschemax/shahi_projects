@@ -19,10 +19,14 @@ export class PurchaseOrderservice extends CommonAxiosService{
 
       async getAllVendors():Promise<any>{
         try{
-          return  this.getvendorpostcall(this.vendor)
+          return  this.getvendorpostcall(this.vendor)  
         }catch(err){
           console.log(err)
         }
+      }
+
+      async getMaterialTpye(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + '/getMaterialTpye')
       }
 }
 
