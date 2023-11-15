@@ -128,7 +128,7 @@ onFinish={saveData}>
          
           ]}
         >
-                    <TextArea rows={1} placeholder="Enter Description"/>
+                    <TextArea rows={2} placeholder="Enter Description"/>
         </Form.Item>
         </Col>
         </Row>

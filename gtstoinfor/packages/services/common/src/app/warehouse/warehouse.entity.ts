@@ -25,6 +25,14 @@ export class Warehouse {
 // @Index({ unique: true })
 warehouseCode:string;
 
+@Column("char",{
+  nullable:false,
+  length:10,
+  name:"category"
+  })
+// @Index({ unique: true })
+category:string;
+
   @Column("boolean",{
     nullable:false,
     default:true,

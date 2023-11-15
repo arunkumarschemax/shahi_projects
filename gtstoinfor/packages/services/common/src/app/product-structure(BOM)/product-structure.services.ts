@@ -1,6 +1,6 @@
 
 import { Injectable } from "@nestjs/common";
-import { BomRequest, BomTrimResponseModel, CommonResponseModel, FgItemCodeReq, FgRmMappingResponseModel, ProductStructureResponseModel, RmMappingFilterRequest, SMVFilterRequest } from "@project-management-system/shared-models";
+import { BomTrimResponseModel, CommonResponseModel, FgItemCodeReq, FgRmMappingResponseModel, ProductStructureResponseModel, RmMappingFilterRequest, SMVFilterRequest } from "@project-management-system/shared-models";
 import { SMVEfficiencyRepository } from "./repository/smv-efficency.repository";
 import { SMVEfficiencyDto } from "./dto/smv-efficency.dto";
 import { SMVEfficiencyEntity } from "./smv-efficency.entity";
@@ -77,7 +77,7 @@ export class ProductStructureService {
         }
 
         async createFgRmMapping(req: FgRMMappingDto, isUpdate: boolean): Promise<FgRmMappingResponseModel> {
-          console.log(req,"service")
+          // console.log(req,"service")
   
           try {
             
@@ -136,7 +136,6 @@ export class ProductStructureService {
           
             if (data.length > 0) {
               const groupedData = data.reduce((result, item) => {
-                console.log(item,"item----------")
                 const fgItemCode = item.fg_item_code;
                 const fgItemId = item.fg_rm_id;
                 

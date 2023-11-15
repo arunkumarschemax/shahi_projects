@@ -55,23 +55,27 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
         .leftJoin(DeliveryTerms,'dt','dt.delivery_terms_id = rmi.delivery_terms')
         .leftJoin(DeliveryMethod,'dm','dm.delivery_method_id = rmi.delivery_method')
 
-        .where('1=1'); 
+       // .where('1=1'); 
       
         if (req.itemGroup !== undefined) {
           query.andWhere(`item_group = :itemGP`, { itemGP: req.itemGroup }); 
         }
         if (req.Currency !== undefined) {
-            query.andWhere(`currency_name = Currency`, {Currency: req.Currency }); 
+            query.andWhere(`c.currency_name  ='${req.Currency }'`); 
           }
+          
           if (req.itemType !== undefined) {
-            query.andWhere(`item_type = :itemtype`, { itemtype: req.itemType }); 
+            query.andWhere(`item_type='${req.itemType}'` );
           }
           if (req.productGroup !== undefined) {
-            query.andWhere(`product_group = :productGroup`, { productGroup: req.productGroup }); 
+            query.andWhere(`product_group ='${ req.productGroup }'` ); 
           }
-          if (req.procurementGroup !== undefined) {
-            query.andWhere(`procurment_group = :procurmentGroup`, { procurmentGroup: req.procurementGroup }); 
+          if (req.productGroupId !== undefined) {
+            query.andWhere(`rmi.product_group_id =  ${req.productGroupId }`); 
           }
+          // if (req.procurementGroup !== undefined) {
+          //   query.andWhere(`procurment_group = :procurmentGroup`, { procurmentGroup: req.procurementGroup }); 
+          // }
           
       
         let data:RmCreationEntity[] = await query.getRawMany();
@@ -93,12 +97,13 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
         .select(`rm_item_id,item_group`)
         .leftJoin(ItemGroup, 'ig','ig.item_group_id = rmi.item_group_id')
         .groupBy('ig.item_group')
+        .where('item_group != NULL')
         let data:RmCreationEntity[] = await query.getRawMany();
         return data;
       }
       async getItemTypedrop(): Promise<any[]> {
         const query = this.createQueryBuilder('rmi')
-        .select(`rm_item_id,item_type`)
+        .select(`DISTINCT rm_item_id,item_type`)
         .leftJoin(ItemTypeEntity,'it','it.item_type_id = rmi.item_type_id')
         .groupBy('it.item_type')
         let data:RmCreationEntity[] = await query.getRawMany();
@@ -109,14 +114,16 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
         .select(`rm_item_id,product_group`)
         .leftJoin(ProductGroup,'pg','pg.product_group_id = rmi.product_group_id')
         .groupBy('pg.product_group')
+
         let data:RmCreationEntity[] = await query.getRawMany();
         return data;
       }
       async getProcurementGroupdrop(): Promise<any[]> {
         const query = this.createQueryBuilder('rmi')
         .select(`rm_item_id,procurment_group`)
-        .leftJoin(ProcurmentGroup,'pcg',' pcg.procurment_group_id = rmi.procurement_gorup_id ')
+        .leftJoin(ProcurmentGroup,'pcg',' pcg.procurment_group_id = rmi.procurement_gorup_id')
         .groupBy('pcg.procurment_group')
+
         let data:RmCreationEntity[] = await query.getRawMany();
         return data;
       }

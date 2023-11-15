@@ -47,6 +47,7 @@ export class ItemCreationAdapter {
             entityObj.groupTechClass = dtoObj.groupTechClass
             entityObj.productGroup = dtoObj.productGroup
             entityObj.range = dtoObj.range
+            entityObj.property = dtoObj.property
             entityObj.searchGroup = dtoObj.searchGroup
             entityObj.reference = dtoObj.reference
             entityObj.itemGroup = dtoObj.itemGroup
@@ -103,6 +104,7 @@ export class ItemCreationAdapter {
         itemCreationDto.salePrice = itemCreation.salePrice
         itemCreationDto.salePriceQty = itemCreation.salePriceQty
         itemCreationDto.season= itemCreation.season
+        itemCreation.property=itemCreation.property
         itemCreationDto.styleNo = itemCreation.styleNo
         itemCreationDto.subCategoryId = itemCreation.subCategoryId
         itemCreationDto.targetCurrency = itemCreation.targetCurrency

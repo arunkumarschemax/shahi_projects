@@ -86,7 +86,7 @@ export interface PaymentMethodFormProps{
               message:' PaymentMethod Is Required'
             },
             {
-              pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+              // pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
               message: `PaymentMethod Should contain only alphabets.`
             }
           ]}

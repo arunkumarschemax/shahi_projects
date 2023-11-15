@@ -239,10 +239,11 @@ export function VendorsView(
 
       const columnsSkelton: ColumnProps<any>[] = [
         {
-          title: 'S No',
+          title: <div style={{textAlign:'center'}}>S No</div>,
           key: 'sno',
           width: '70px',
           responsive: ['sm'],
+          align:'center',
           render: (text, object, index) => (page-1) * 10 +(index+1)
         },
         {
@@ -417,7 +418,7 @@ export function VendorsView(
   
        
         {
-          title:<div style={{textAlign:'center'}}>'Status</div>,
+          title:<div style={{textAlign:'center'}}>Status</div>,
           dataIndex: 'isActive',
           align:'center',
           render: (isActive, rowData) => (

@@ -114,8 +114,6 @@ const checkAccess = (buttonParam) => {
         if(res.status){
             setBrand(res.data);
             
-        }else{
-            AlertMessages.getErrorMessage(res.internalMessage)
         }
     })
   }
@@ -125,8 +123,6 @@ const checkAccess = (buttonParam) => {
       if(res.status){
       setStyle(res.data);
    
-     }else{
-       AlertMessages.getErrorMessage(res.internalMessage);
      }
      })
      }
@@ -136,8 +132,6 @@ const checkAccess = (buttonParam) => {
         if(res.status){
          setItemName(res.data);
      
-       }else{
-         AlertMessages.getErrorMessage(res.internalMessage);
        }
        })
        }
@@ -269,7 +263,7 @@ const cancelOrder =(val:any) =>{
         sortDirections: ['descend', 'ascend'],
       },
       {
-        title: "Type",
+        title: "Item Type",
         dataIndex: "item_type",
         width:100,
         align:'center',
@@ -444,8 +438,7 @@ const cancelOrder =(val:any) =>{
       {
         title: "Order Confirmation Date",
         width:95,
-
-        dataIndex: "orderConfirmedDate",align:'center',
+        dataIndex: "order_confirmed_date",align:'center',
         render: (text) => moment(text).format('DD/MM/YYYY'),
       },
     {

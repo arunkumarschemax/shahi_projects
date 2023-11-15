@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Checkbox } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Checkbox, Alert } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps } from 'antd/lib/table';
 import { GarmentCategoryService } from '@project-management-system/shared-services';
@@ -108,7 +108,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
 
   const getAllGarmentCategory=()=>{
     service.getAllGarmentCategories().then(res=>{
-      console.log(res,'11000000000000')
+      // console.log(res,'11000000000000')
         if(res.status){
           setVariantData(res.data)
         }else{
@@ -284,21 +284,23 @@ return(
         <br></br>
 
     <>
-    <Row gutter={40}>
-    <Col>
-          <Card title={'Total Garment Categories: ' + variantData.length} style={{ textAlign: 'left', width: 250, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+    <Row gutter={24}>
+  <Col span={4}></Col>
+    <Col span={5}>
+     
+<Alert type='success' message={'Total Garment Categories: ' + variantData.length} style={{fontSize:'15px'}} />
         </Col>
-        <Col>
-          <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+        <Col span={5}>
+          {/* <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card> */}
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
-        <Col>
-          <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+        <Col span={5}>
+          {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
+          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
-        {/* <Col>
-        <span><Button onClick={() => navigate('/masters/garmentcategory/garmentcategory-form')}
-              type={'primary'}>New</Button></span>
-        </Col> */}
-    </Row>
+</Row>
+<br></br>
+
     <Card>
     <Table
         size='small'

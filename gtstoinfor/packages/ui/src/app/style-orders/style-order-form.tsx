@@ -1,6 +1,6 @@
-import { BuyerExtrnalRefIdReq, BuyerIdReq, BuyersDestinationRequest, CustomerOrderStatusEnum, ItemCodeReq, MenusAndScopesEnum, SKUGenerationReq, StyleOrderIdReq, StyleOrderItemsReq, StyleOrderReq, UomCategoryEnum, UomCategoryRequest } from "@project-management-system/shared-models";
-import { BuyerDestinationService, BuyersService, CoTypeService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DestinationService, EmployeeDetailsService, FactoryService, ItemCreationService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, SKUGenerationService, StyleOrderService, UomService, WarehouseService } from "@project-management-system/shared-services"
-import { Button, Card, Col, DatePicker, Form, Input, Row, Segmented, Select, Space, Table } from "antd"
+import { BuyerExtrnalRefIdReq, BuyerIdReq, BuyersDestinationRequest, CustomerOrderStatusEnum, ItemCodeReq, MenusAndScopesEnum, SKUGenerationReq, SettingsIdReq, StyleOrderIdReq, StyleOrderItemsReq, StyleOrderReq, UomCategoryEnum, UomCategoryRequest } from "@project-management-system/shared-models";
+import { BuyerDestinationService, BuyersService, CoTypeService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DestinationService, EmployeeDetailsService, FactoryService, ItemCreationService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, SKUGenerationService, SettingsService, StyleOrderService, UomService, WarehouseService } from "@project-management-system/shared-services"
+import { Button, Card, Col, DatePicker, Divider, Form, Input, Row, Segmented, Select, Space, Table } from "antd"
 import TextArea from "antd/es/input/TextArea";
 import { ColumnProps } from "antd/es/table";
 import { useEffect, useState } from "react"
@@ -68,7 +68,10 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
     const [loginBuyer,setLoginBuyer] = useState<number>(0)
     const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
     const role = JSON.parse(localStorage.getItem('currentUser')).user.roles
-  let userRef    
+    const [defaultValues,setDefaultValues] = useState<any[]>([])
+    const settingsService = new SettingsService()
+
+    let userRef    
     useEffect(()=>{
         if(initialData.length > 0){
             form.setFieldsValue({
@@ -113,6 +116,23 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
     },[initialData])
 
     useEffect(() => {
+        if(defaultValues.length > 0){
+            form.setFieldsValue({
+                'warehouse' : defaultValues[0].warehouseId,
+                'packageTerms': defaultValues[0].packageTerms,
+                'deliveryMethod': defaultValues[0].deliveryMethodId,
+                'deliveryTerms': defaultValues[0].deliveryTerms,
+                'agent': Number(defaultValues[0].agent),
+                'buyerAddress': Number(defaultValues[0].buyerAddress),
+                'paymentMethod': defaultValues[0].paymentMethodId,
+                'paymentTerms': defaultValues[0].paymentTerms,
+                'facility':defaultValues[0].facilityId,
+            })
+        }
+
+    },[defaultValues])
+
+    useEffect(() => {
         if(state?.id){
             const req = new StyleOrderIdReq(state?.id)
             styleOrderService.getCOInfoById(req).then(res => {
@@ -126,6 +146,7 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
 
 
     useEffect(() => {
+        getDefaultValues()
         getItemCodes()
         // getBuyersInfo()
         getfactoryInfo()
@@ -141,6 +162,16 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
         getCoType()
         getAllUoms()
     },[])
+
+    const getDefaultValues = () => {
+        const req = new SettingsIdReq()
+        req.externalRefNumber = externalRefNo
+        settingsService.getAllSettingsInfo(req).then(res => {
+            if(res.status){
+                setDefaultValues(res.data)
+            }
+        })
+    }
     
       const Login = () => {
         const req = new BuyerExtrnalRefIdReq();
@@ -153,8 +184,10 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
             setLoginBuyer(res.data?.buyerId);
             if(req.extrnalRefId){
                 form.setFieldsValue({'buyer': res.data.buyerId})
-                }
-                      }
+            }
+            getBuyersAddressInfo(res.data?.buyerId)
+            getBuyerDestinations(res.data?.buyerId)
+            }
         });
         buyerService.getAllActiveBuyers().then((res) => {
           if (res.status) {
@@ -487,10 +520,10 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
                 <Form.Item
                 initialValue={userId.length > 0 ? userId[0].buyerName : ""}
-                                label="Buyer"
-                                name="buyer"
-                                rules={[{ required: true, message: "Buyer is required" }]}
-                            >
+                    label="Buyer"
+                    name="buyer"
+                    rules={[{ required: true, message: "Buyer is required" }]}
+                >
                                 <Select
                                 defaultValue={userId.length > 0 ? userId[0].buyerName : ""}
                                     showSearch
@@ -537,7 +570,7 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
                     </Form.Item>
                 </Col> */}
                 </Row>
-                {/* <h4 style={{ color: 'grey', textAlign: 'left' }}>CO Information</h4> */}
+                                {/* <h4 style={{ color: 'grey', textAlign: 'left' }}>CO Information</h4> */}
                 <span style={{color:'blue'}}><b>CO Information</b></span>
                     <Row gutter={[8,4]}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
@@ -722,7 +755,7 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
                     </Select>
                 </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 8 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 16 }}>
             <Form.Item name='buyerAddress' label='Buyer Address' rules={[{required:true,message:'Buyer Address is required'}]}>
                     <Select showSearch allowClear optionFilterProp="children" placeholder='Select Address'>
                         {
@@ -860,7 +893,7 @@ export const StyleOrderCreation = (props:StyleOrderCreationProps) => {
                 <Row justify={'end'} style={{marginLeft:'85%',marginTop:'5px'}}>
                <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
                 <Form.Item>
-                    <Button htmlType="submit" type='primary'>Submit</Button>
+                    <Button htmlType="submit" type='primary' disabled={orderQuantityData.length > 0 ? false: true}>Submit</Button>
                 </Form.Item>
                </Col>
                </Row>

@@ -5,6 +5,7 @@ export class WarehouseDto{
     createdUser:string;
     updatedUser:string;
     isActive:boolean;
+    category:string;
 
     /**
      * 
@@ -16,12 +17,13 @@ export class WarehouseDto{
      * @param isActive This is a boolean
      */
     
-    constructor(warehouseId:number,warehouseName:string,warehouseCode:string,createdUser:string,updatedUser:string,isActive:boolean){
+    constructor(warehouseId:number,warehouseName:string,warehouseCode:string,createdUser:string,updatedUser:string,isActive:boolean,category:string){
         this.warehouseId = warehouseId;
         this.warehouseName = warehouseName;
         this.warehouseCode = warehouseCode
         this.createdUser = createdUser;
         this.updatedUser = updatedUser;
         this.isActive = isActive;
+        this.category = category;
     }
 }

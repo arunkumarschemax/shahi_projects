@@ -1,10 +1,11 @@
-import { Button, Card, Checkbox, Col, DatePicker, Form, Input, Row, Select, Space, message } from "antd";
+import { Button, Card, Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Select, Space, message } from "antd";
 import { HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link } from "react-router-dom";
-import { BusinessAreaService, BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, FactoryService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, ProductGroupService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
-import { ItemGroupEnum, SubContractStatus } from "@project-management-system/shared-models";
+import { BusinessAreaService, BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, FactoryService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, OperationsService, ProductGroupService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
+import { ItemGroupEnum, PropertyEnum, SubContractStatus } from "@project-management-system/shared-models";
+import { setOptions } from "highcharts";
  
 export interface FormProps {
   itemCreationData:any;
@@ -34,9 +35,8 @@ export function ItemCreation (props: FormProps){
          const itemTypeservice =new ItemTypeService();
          const facilityservice =new FactoryService();
          const proDUCTService = new ProductGroupService();
+         const business = new BusinessAreaService
          const [Business,setBusiness]= useState([])
-
-          const business = new BusinessAreaService
          const [Product,setProduct] = useState([]);
          const [currencydata,setCurrencyData] = useState([]);
          const [uomdata,setUomData] = useState([]);
@@ -111,6 +111,8 @@ export function ItemCreation (props: FormProps){
             //    AlertMessages.getErrorMessage(err.message);
             //  })        
           }
+
+          
 
           const getAllFacilitys=() =>{
             facilityservice.getFactories().then(res =>{
@@ -379,7 +381,7 @@ compositionservice.getActiveComposition().then(res=>{
       }
          const saveItem=()=>{
           form.validateFields().then((values) => {
-            // console.log(values,"ooooooooooooooo");
+             console.log(values,"ooooooooooooooo");
               itemCreationService.createItem(values).then((res) => {
                 if(res.status){
                   message.success(res.internalMessage,2)
@@ -454,13 +456,14 @@ compositionservice.getActiveComposition().then(res=>{
                     <Form.Item label="Item Code" name="itemCode"
                        rules={[{ required: true, message: "Enter Item code" }]}>
 
-                    <Input placeholder="Item Code" allowClear/>
+                    <Input placeholder="Item Code" allowClear disabled={props.isUpdate ? true : false}/>
 
                     </Form.Item>
                    </Col>
                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                     <Form.Item label="Item Group" name="itemGroup" 
-                       rules={[{ required: true, message: "Enter Item Group" }]}>
+                      //  rules={[{ required: true, message: "Enter Item Group" }]}
+                       >
                        <Select
                      placeholder="Select Item Group" allowClear>
                      {Object.values(ItemGroupEnum).map((key,value)=>{
@@ -527,13 +530,15 @@ compositionservice.getActiveComposition().then(res=>{
                     <h1 style={{ color: 'grey', fontSize: '15px', textAlign: 'left' }}>Manufacturing Information</h1>
                               <Row gutter={8}>
                               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                              <Form.Item
-                      name="property"
-                      label="Property"
-                    >
-                         <Input placeholder="Property" allowClear/>
-
-                    </Form.Item>
+                              <Form.Item name="property" label="Property">
+                  <Select
+                    showSearch
+                  
+                        placeholder="Select Is Imported Item" allowClear>
+                     {Object.values(PropertyEnum).map((key,value)=>{
+                       return <Option key={key} value={key}>{key}</Option>
+                        })}
+                    </Select>                  </Form.Item>
                            </Col>
                            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
                            <Form.Item name="isSubContract">
@@ -563,7 +568,9 @@ compositionservice.getActiveComposition().then(res=>{
                 </Form.Item>
                        </Col>
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                <Form.Item   name="altUoms" label="Alt UOM" rules={[{ required: true, message: "Enter Alt UOM" }]}>
+                <Form.Item   name="altUoms" label="Alt UOM" 
+                // rules={[{ required: true, message: "Enter Alt UOM" }]}
+                >
                 <Select placeholder="Select Alt UOM" allowClear >
                   {uomdata.map((e)=>{
 
@@ -671,7 +678,7 @@ compositionservice.getActiveComposition().then(res=>{
                       rules={[{ required: true, message: "Enter Sales Price Qty" }]}
 
                     >
-                      <Input placeholder="Sales Price Qty" allowClear />
+        <InputNumber placeholder="Sales Price Qty" style={{ width: '100%' }} />
                     </Form.Item>
                                   </Col>
                                  

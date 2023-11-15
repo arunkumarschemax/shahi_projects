@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsImportedItemEnum } from "@project-management-system/shared-models";
 import { IsOptional, Matches, MaxLength } from "class-validator";
 
 export class BomTrimDto {
@@ -21,11 +22,11 @@ export class BomTrimDto {
     @ApiProperty()
     genericCode: string;
 
-    @ApiProperty()
-    typeId : number;
+    // @ApiProperty()
+    // typeId : number;
 
     @ApiProperty()
-    groupId: number;
+    productGroupId: number;
 
     @ApiProperty()
     useInOperationId : number;
@@ -88,7 +89,7 @@ export class BomTrimDto {
     property : string;
 
     @ApiProperty()
-    isSaleItem : string;
+    isSaleItem : IsImportedItemEnum;
 
     @ApiProperty()
     consumption : number;
@@ -101,6 +102,12 @@ export class BomTrimDto {
 
     @ApiProperty()
     usageRemarks: string;
+
+    @ApiProperty()
+    isImportedItem: IsImportedItemEnum;
+
+    @ApiProperty()
+    itemGroup: string;
 
   
 }

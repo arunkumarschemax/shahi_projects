@@ -1,10 +1,11 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { StyleOrder } from "./style-order.entity";
 import { Colour } from "../colours/colour.entity";
 import { Destination } from "../destination/destination.entity";
 import { Size } from "../sizes/sizes-entity";
 import { UomEntity } from "../uom/uom-entity";
 import { CoLineStatusEnum, CustomerOrderStatusEnum } from "@project-management-system/shared-models";
+import { CoBom } from "../co-bom/co-bom.entity";
 
 @Entity('co_lines')
 export class CoLine{
@@ -186,4 +187,7 @@ export class CoLine{
     @ManyToOne(type=>UomEntity, uom=>uom.CoLineData,{  nullable:true, })
     @JoinColumn({ name:"uom_id"})
     uomInfo: UomEntity;
+
+    @OneToMany(type=>CoBom, co=>co.coLineInfo,{cascade: true})
+    CoBomInfo:CoBom[];
 }

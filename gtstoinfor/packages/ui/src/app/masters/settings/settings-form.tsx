@@ -1,6 +1,6 @@
 import { UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
-import { DepartmentReq, SettingsIdReq, SettingsRequest } from "@project-management-system/shared-models";
+import { BuyerExtrnalRefIdReq, BuyerIdReq, DepartmentReq, SettingsIdReq, SettingsRequest } from "@project-management-system/shared-models";
 import { BuyersService, CoTypeService, CompanyService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DivisionService, EmployeeDetailsService, FactoryService, LiscenceTypeService, PackageTermsService, PaymentMethodService, PaymentTermsService, ProfitControlHeadService, SettingsService, WarehouseService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Row, Select } from "antd"
 import { useEffect, useState } from "react";
@@ -50,6 +50,8 @@ export const SettingsForm = () => {
     const [initialData,setInitialData] = useState<any>()
     const [updateKey,setUpdateKey] = useState<number>(0)
     const { state } = useLocation();
+    const externalRefNo = JSON.parse(localStorage.getItem("currentUser")).user.externalRefNo;
+    const role = JSON.parse(localStorage.getItem("currentUser")).user.roles;
 
 
     useEffect(() => {
@@ -273,11 +275,29 @@ export const SettingsForm = () => {
     }
 
     const getBuyerAddress = () => {
-        buyerService.getAllAddress().then(res => {
+        let buyerId
+        const req = new BuyerExtrnalRefIdReq()
+        req.extrnalRefId = externalRefNo
+        buyerService.getBuyerByRefId(req).then(res => {
             if(res.status){
-                setBuyerAddress(res.data)
+                buyerId = res.data.buyerId
+                const buyerIdReq = new BuyerIdReq(res.data.buyerId)
+                buyerService.getAddressByBuyerId(buyerIdReq).then(res => {
+                    if(res.status){
+                        setBuyerAddress(res.data)
+                        form.setFieldsValue({
+                            paymentMethodId:res.data[0].buyerInfo.paymentMethodInfo.paymentMethodId,
+                            paymentTerms:res.data[0].buyerInfo.paymentTermsInfo.paymentTermsId,
+                        })
+                    }
+                })
             }
         })
+        // buyerService.getAllAddress().then(res => {
+        //     if(res.status){
+        //         setBuyerAddress(res.data)
+        //     }
+        // })
     }
 
     const onReset = () => {
@@ -285,7 +305,7 @@ export const SettingsForm = () => {
     }
 
     const updateValues = (val) => {
-        const req = new SettingsRequest(val.accountControlId,val.pchId,val.companyId,val.facilityId,val.divisionId,val.warehouseId,val.coTypeId,val.currencyId,val.licencetypeId,val.discount,val.salesPersonId,val.fabricResponsibleId,val.itemResponsibleId,val.trimResponsibleId,val.buyerAddress,val.buyerGroup,val.agent,val.packageTerms,val.paymentMethodId,val.paymentTerms,val.deliveryMethodId,val.deliveryTerms,'','admin',state?.id)
+        const req = new SettingsRequest(val.accountControlId,val.pchId,val.companyId,val.facilityId,val.divisionId,val.warehouseId,val.coTypeId,val.currencyId,val.licencetypeId,val.discount,val.salesPersonId,val.fabricResponsibleId,val.itemResponsibleId,val.trimResponsibleId,val.buyerAddress,val.buyerGroup,val.agent,val.packageTerms,val.paymentMethodId,val.paymentTerms,val.deliveryMethodId,val.deliveryTerms,'','admin',externalRefNo,state?.id)
         console.log(req)
         service.updateSettings(req).then(res => {
             if(res.status){
@@ -299,7 +319,7 @@ export const SettingsForm = () => {
     }
 
     const onSave = (val) => {
-        const req = new SettingsRequest(val.accountControlId,val.pchId,val.companyId,val.facilityId,val.divisionId,val.warehouseId,val.coTypeId,val.currencyId,val.licencetypeId,val.discount,val.salesPersonId,val.fabricResponsibleId,val.itemResponsibleId,val.trimResponsibleId,val.buyerAddress,val.buyerGroup,val.agent,val.packageTerms,val.paymentMethodId,val.paymentTerms,val.deliveryMethodId,val.deliveryTerms,'admin','')
+        const req = new SettingsRequest(val.accountControlId,val.pchId,val.companyId,val.facilityId,val.divisionId,val.warehouseId,val.coTypeId,val.currencyId,val.licencetypeId,val.discount,val.salesPersonId,val.fabricResponsibleId,val.itemResponsibleId,val.trimResponsibleId,val.buyerAddress,val.buyerGroup,val.agent,val.packageTerms,val.paymentMethodId,val.paymentTerms,val.deliveryMethodId,val.deliveryTerms,'admin','',externalRefNo)
         service.createSettings(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
@@ -510,8 +530,8 @@ export const SettingsForm = () => {
                             <h1 style={{ color: 'grey', fontSize: '20px', textAlign: 'left' }}>CUSTOMER DETAILS</h1>
                             <Row gutter={8}>
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                                <Form.Item name='buyerAddress' label='Buyer Address' rules={[{required:true,message:'Buyer Address is requried'}]}>
-                                <Select allowClear showSearch optionFilterProp="children" placeholder='Select Buyer Address' onChange={onAddressChange}>
+                                <Form.Item name='buyerAddress' label='Buyer Address' rules={[{required:true,message:'Buyer Address is requried'}]} >
+                                <Select allowClear showSearch dropdownMatchSelectWidth={false}optionFilterProp="children" placeholder='Select Buyer Address' onChange={onAddressChange}>
                                 {buyerAddress.map((e) => {
                                     return(
                                         <Option key={e.addressId} value={e.addressId} buyer={e.buyerInfo.buyerName}>{e.countryInfo.countryName}-{e.state}-{e.city}-{e.landmark}</Option>

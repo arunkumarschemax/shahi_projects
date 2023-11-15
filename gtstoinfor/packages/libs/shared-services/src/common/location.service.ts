@@ -40,7 +40,7 @@ import { AllLocationResponseModel, LocationDropDownResponseModel, LocationDto, L
       // return new DeliveryTermsDropDownResponseModel(true,11,'customersData retrived successfully',[new DeliveryTermsDropDownDto(1,'Dterm1'),new DeliveryTermsDropDownDto(2,'Dterm2')])
     }
     async getLocationById(Request: LocationRequest): Promise<LocationResponseModel> {
-      console.log(this.URL);
+      // console.log(this.URL);
       return this.axiosPostCall(this.URL + "/getlocationById", Request)
         
     }

@@ -28,7 +28,7 @@ export class RmCreationDto{
     quality:string
 
     @ApiProperty()
-    description:string
+    itemName:string
 
     @ApiProperty()
     itemIypeId:number

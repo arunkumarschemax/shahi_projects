@@ -22,44 +22,59 @@ export class Settings {
     settingsId:number
 
     @Column('int',{
-        name:'account_control_id'
+        name:'account_control_id',
+        nullable:false
     })
     accountControlId : number
 
     @Column('int',{
-        name:'sales_person_id'
+        name:'sales_person_id',
+        nullable:false
     })
     salesPersonId : number
 
     @Column('int',{
-        name:'fabric_responsible_id'
+        name:'fabric_responsible_id',
+        nullable:false
     })
     fabricResponsibleId : number
 
     @Column('int',{
-        name:'item_responsible_id'
+        name:'item_responsible_id',
+        nullable:false
     })
     itemResponsibleId : number
 
     @Column('int',{
-        name:'trim_responsible_id'
+        name:'trim_responsible_id',
+        nullable:false
     })
     trimResponsibleId : number
 
     @Column('varchar',{
-        name:'buyer_group'
+        name:'buyer_group',
+        nullable:true
     })
     buyerGroup : string
 
     @Column('int',{
-        name:'agent'
+        name:'agent',
+        nullable:false
     })
     agent : number
 
     @Column('int',{
-        name:'discount'
+        name:'discount',
+        nullable:true
     })
     discount : number
+
+    @Column('varchar',{
+        name:'external_ref_number',
+        nullable:true,
+        length:25
+    })
+    externalRefNumber : string;
 
     @Column("boolean",{
         nullable:false,

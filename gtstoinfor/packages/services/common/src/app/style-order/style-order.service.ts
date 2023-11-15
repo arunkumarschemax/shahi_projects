@@ -32,6 +32,7 @@ import { CoUpdateRepository } from "./co-updates.repo";
 import { CoUpdateEntity } from "./co-updates.entity";
 import { CoLine } from "./co-line.entity";
 import { StyleOrderColineIdReq } from "./style-order.colineId.request";
+import { RequestReq } from "../../../../../libs/shared-models/src/common/style-order/request";
 
 @Injectable()
 
@@ -438,9 +439,9 @@ export class StyleOrderService{
             }
 
     
-            async getCoamendment():Promise<CommonResponseModel>{
+            async getCoamendment(req?:RequestReq):Promise<CommonResponseModel>{
                 try{
-                    const data= await this.Coupdate.getCoamendment()
+                    const data= await this.Coupdate.getCoamendment(req)
                     
                     return new CommonResponseModel(true,1,'',data)
                 }catch(err){
@@ -451,7 +452,7 @@ export class StyleOrderService{
             async getconumbered():Promise<CommonResponseModel>{
                 try{
                     const data= await this.Coupdate.getconumbered()
-                    console.log(data,"kkkkkkkkk");
+                    // console.log(data,"kkkkkkkkk");
 
                     return new CommonResponseModel(true,1,'',data)
                 }catch(err){
@@ -462,7 +463,7 @@ export class StyleOrderService{
             async getcoparameter():Promise<CommonResponseModel>{
                 try{
                     const data= await this.Coupdate.getcoparameter()
-                    console.log(data,"kkkkkkkkk");
+                    // console.log(data,"kkkkkkkkk");
 
                     return new CommonResponseModel(true,1,'',data)
                 }catch(err){

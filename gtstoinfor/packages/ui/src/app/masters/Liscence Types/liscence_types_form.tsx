@@ -80,7 +80,7 @@ export function LiscenceTypesForm(props: LiscenceTypesFormProps) {
                       
                     },
                     {
-                      pattern: /^[a-zA-Z\d\s!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/,
+                      pattern: /^[a-zA-Z\s!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/,
                       message: 'Should contain only alphabets and allowed special characters.'
                     }                    
                     

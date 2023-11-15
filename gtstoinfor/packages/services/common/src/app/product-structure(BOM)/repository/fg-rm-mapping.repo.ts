@@ -11,6 +11,8 @@ import { ItemTypeEntity } from "../../item-type/item-type.entity";
 import { FactoriesEntity } from "../../factories/factories.entity";
 import { Operations } from "../../operations/operation.entity";
 import { OperationSequence } from "../../operation-sequence/operation-sequence.entity";
+import { groupBy } from "rxjs";
+import { RmCreationEntity } from "../../rm-items/rm-items.entity";
 
 @Injectable()
 export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
@@ -22,9 +24,10 @@ export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
 
     async getAllInfoByItemCode(req:FgItemCodeReq):Promise<any[]>{
         const data = await this.createQueryBuilder('frm')
-        .select(`frm.fg_rm_id,frm.fg_item_id,frm.fg_item_code,frm.rm_item_id,frm.rm_item_code,rmsku.item_type,rmsku.rm_sku_code,rmsku.feature_code,fe.feature_name,rmsku.option_group,rmsku.option_value,rmsku.rm_sku_id`)
+        .select(`frm.fg_rm_id,frm.fg_item_id,frm.fg_item_code,frm.rm_item_id,frm.rm_item_code,rmsku.item_type,rmsku.rm_sku_code,rmsku.feature_code,fe.feature_name,rmsku.option_group,rmsku.option_value,rmsku.rm_sku_id,rmi.consumption`)
         .leftJoin(RmSkus,'rmsku','rmsku.rm_item_id = frm.rm_item_id')
         .leftJoin(FeatureEntity,'fe','fe.feature_code = rmsku.feature_code')
+        .leftJoin(RmCreationEntity,'rmi','rmi.rm_item_id = frm.rm_item_id')
         .where(`fg_item_code = '${req.fgItemCode}'`)
         return data.getRawMany() 
     }
@@ -37,8 +40,7 @@ export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
       .leftJoin(FactoriesEntity,'f','f.id = fgi.facility_id')
       .leftJoin(Operations,'o','o.operation_id = fgm.operation_id')
       .leftJoin(OperationSequence,'os','os.operation_id = o.operation_id')
-
-
+      .groupBy(`fgm.fg_rm_id`)
 
       .where('1=1');
         if (req.fgItemCode !== undefined) {

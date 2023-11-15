@@ -17,12 +17,16 @@ export class ProductGroupService extends CommonAxiosService{
 
 
     async  activateOrDeactivateProductGroup(Dto: ProductGroupRequest): Promise<ProductGroupModel> {
-        console.log(Dto ,"front activate")
+        // console.log(Dto ,"front activate")
          return this.axiosPostCall(this.URL + '/ActivateOrDeactivateProductGroup', Dto)
                     
      }
      async getAllActiveProductGroup(): Promise<ProductGroupModel> {
         return this.axiosPostCall(this.URL + '/getAllActiveProductGroup');
     }
+
+    async getProductGroupById(req:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getProductGroupById",req)
+      }
 
 }

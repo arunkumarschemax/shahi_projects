@@ -15,6 +15,7 @@ export class WareHouseAdapter {
     warehouse.warehouseId=Dto.warehouseId;
     warehouse.warehouseName=Dto.warehouseName;
     warehouse.warehouseCode=Dto.warehouseCode;
+    warehouse.category= Dto.category;
     // company.isActive = statesDto.isActive == undefined ? true : statesDto.isActive;
     warehouse.isActive=Dto.isActive==undefined?true:Dto.isActive;
     if (isUpdate) {
@@ -36,6 +37,8 @@ export class WareHouseAdapter {
     warehouseDto.createdUser = Wobject.createdUser;
     warehouseDto.updatedUser = Wobject.updatedUser;
     warehouseDto.versionFlag = Wobject.versionFlag;
+    warehouseDto.category = Wobject.category;
+
     return warehouseDto;
   }
 }

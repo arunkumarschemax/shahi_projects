@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Checkbox } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Checkbox, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -145,7 +145,7 @@ service.createsize(variantData).then(res=>{
         if(res.status){
           message.success('Updated Successfully');
             setDrawerVisible(false);
-
+            getAllSize()
         }else{
           message.error(res.internalMessage, 2);
 
@@ -295,21 +295,23 @@ return (
   extra={<span><Button onClick={()=>navigate('/masters/size/size-form')} type={'primary'}>New</Button></span>}>
   <br/>
     <>
-    <Row gutter={40}>
-    <Col>
-          <Card title={'Total Sizes: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+    <Row gutter={24}>
+  <Col span={4}></Col>
+    <Col span={5}>
+     
+<Alert type='success' message={'Total Size: ' + variantData.length} style={{fontSize:'15px'}} />
         </Col>
-        <Col>
-          <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+        <Col span={5}>
+          {/* <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card> */}
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
-        <Col>
-          <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+        <Col span={5}>
+          {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
+          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
-        {/* <Col>
-        <span><Button onClick={() => navigate('/masters/paymentmethod/paymentmethod-form')}
-              type={'primary'}>New</Button></span>
-        </Col> */}
-    </Row>
+</Row>
+<br></br>
+
     <Card>
   <Table
         size='small'

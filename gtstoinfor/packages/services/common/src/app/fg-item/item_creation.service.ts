@@ -24,6 +24,7 @@ export class ItemCreationService {
     ) { }
 
     async createItem(itemCreationDto: ItemCreationDto, isUpdate: boolean): Promise<ItemcreationResponseModel> {
+        
         try {
             // console.log(itemCreationDto);
             const convertedItemCreationEntity: ItemCreation = this.itemCreationAdapter.convertDtoToEntity(itemCreationDto, isUpdate);
@@ -38,7 +39,7 @@ export class ItemCreationService {
             entities.buyingHouseCommision=itemCreationDto.buyingHouseCommision;
             entities.categoryId=itemCreationDto.categoryId;
             entities.composition=itemCreationDto.composition;
-            entities.conversionFactor=itemCreationDto.composition;
+            entities.conversionFactor=itemCreationDto.conversionFactor;
             entities.currency=itemCreationDto.currency;
             entities.customGroupId=itemCreationDto.customGroupId;
             entities.description=itemCreationDto.description;
@@ -86,7 +87,7 @@ export class ItemCreationService {
 const savedResult = await this.itemCreationRepository.save(entities)
 // const itemInfo = new ItemCreationDTO(savedResult.altUoms,savedResult.approver,savedResult.basicUom,savedResult.brandId,savedResult.businessArea,savedResult.businessArea,savedResult.buyingHouseCommision,savedResult.categoryId,savedResult.composition,savedResult.conversionFactor,savedResult.currency,savedResult.customGroupId,savedResult.description,savedResult.facilityId,savedResult.factoryMerchant,savedResult.fgitemId,savedResult.fgitemId,savedResult.firstExFactoryDate,savedResult.groupTechClass,savedResult.internalStyleId,savedResult.internalStyleId,savedResult.isSubContract,savedResult.isSubContract,savedResult.itemCode,savedResult.itemGroup,savedResult.itemName,savedResult.itemTypeId,savedResult.licenseId,savedResult.moq,savedResult.nationalDbk,savedResult.noOfLacePanel,savedResult.orderCloseDate,savedResult.orderConfirmedDate,savedResult.orderQty,savedResult.pdMerchant,savedResult.productDesignerId,savedResult.productDesignerId,savedResult.productGroup,savedResult.productionMerchant,savedResult.projectionOrder,savedResult.projectionOrder,savedResult.range,savedResult.reference,savedResult.responsiblePersonId,savedResult.roslGroup,savedResult.salePersonId,savedResult.salePersonId,savedResult.salePrice,savedResult.salePriceQty,savedResult.searchGroup,savedResult.season,savedResult.styleNo,savedResult.styleOrderInfo,savedResult.subCategoryId,savedResult.targetCurrency,savedResult.uom)
 
-return new CommonResponseModel (true,0,isUpdate? 'Item Updated Successfully':'Item Updated Successfully',[])
+return new CommonResponseModel (true,0,isUpdate? 'Item Updated Successfully':'Item created Successfully',[])
         } catch (err){
         }
     }

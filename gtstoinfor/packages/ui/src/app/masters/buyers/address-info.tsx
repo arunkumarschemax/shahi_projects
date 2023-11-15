@@ -30,14 +30,15 @@ export const AddressInfo = (props:AddressInfoProps) => {
 
     const columns: ColumnProps<any>[] = [
         {
-          title: 'S No',
+          title:<div style={{textAlign:'center'}}>S No</div>,
           key: 'sno',
           width: '70px',
+          align:'center',
           responsive: ['sm'],
           render: (text, object, index) => (page-1) * 10 +(index+1)
         },
         {
-            title:'Country',
+            title:<div style={{textAlign:'center'}}>Country</div>,
             dataIndex:'countryName',
             render:(text,record) => {
                 return(
@@ -48,23 +49,23 @@ export const AddressInfo = (props:AddressInfoProps) => {
             }
         },
         {
-            title:'State',
+            title:<div style={{textAlign:'center'}}>State</div>,
             dataIndex:'state'
         },
         {
-            title:'District',
+            title:<div style={{textAlign:'center'}}>District</div>,
             dataIndex:'district'
         },
         {
-            title:'City',
+            title:<div style={{textAlign:'center'}}>City</div>,
             dataIndex:'city'
         },
         {
-            title:'Landmark',
+            title:<div style={{textAlign:'center'}}>Landmark</div>,
             dataIndex:'landmark'
         },
         {
-            title:'Lane',
+            title:<div style={{textAlign:'center'}}>Lane</div>,
             dataIndex:'lane',
             render:(text,record)=>{
                 console.log(record.lane2)
@@ -76,13 +77,14 @@ export const AddressInfo = (props:AddressInfoProps) => {
             }
         },
         {
-            title:'Pincode',
-            dataIndex:'pincode'
+            title:<div style={{textAlign:'center'}}>Pincode</div>,
+            dataIndex:'pincode',
+            align:'right'
         }
     ]
     return(
         <Card>
-            <Table columns={columns} dataSource={address} pagination={false}/>
+            <Table columns={columns} dataSource={address} pagination={false} bordered/>
         </Card>
     )
 
