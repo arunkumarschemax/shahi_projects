@@ -21,6 +21,7 @@ const GRNForm = () => {
     const [vendor, setVendor] = useState<any[]>([])
     const [poData, setPoData] = useState<any[]>([])
     const poService = new PurchaseOrderservice()
+    const [poNumber, setPoNumber] = useState<string>('')
 
     useEffect(()=>{
         getVendorsData()
@@ -43,17 +44,14 @@ const GRNForm = () => {
         })
     }
 
+    const poChange= (val,option) =>{
+        setPoNumber(option.name)
+        console.log(option.name,']]]]')
+    }
 
-    const handleFabricOnchange = (fabricdata) =>{
-        console.log(fabricdata)
-        setFabricData(fabricdata)
-    }
-    const handleTrim = (trimData) =>{
-        console.log(trimData)
-        setTrimData(trimData)
-    }
     const onReset = () =>{
         form.resetFields()
+        setPoNumber('')
     }
 
 
@@ -77,10 +75,10 @@ const GRNForm = () => {
                   </Col>
                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                         <Form.Item name='purchaseOrderId' label='PO Number' rules={[{required:true,message:'PO Number is required'}]}>
-                           <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor'>
+                           <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor' onChange={poChange}>
                                 {poData.map(e => {
                                     return(
-                                        <Option key={e.purchaseOrderId} value={e.purchaseOrderId}> {e.poNumber}</Option>
+                                        <Option key={e.purchaseOrderId} value={e.purchaseOrderId} name={e.poNumber}> {e.poNumber}</Option>
                                     )
                                 })}
                             </Select>
@@ -102,6 +100,17 @@ const GRNForm = () => {
                         </Form.Item>
                   </Col>
                 </Row>
+                <Card>
+                {
+                poNumber && poNumber.includes('FB') ? (
+                    <GRNFabricForm />
+                ) : (
+                    []
+                )}
+                {poNumber && poNumber.includes('TR') ? (
+                    <GRNTrimForm />
+                ) :[]}
+                </Card>            
            
             </Form>
                 <Row justify={'end'}>

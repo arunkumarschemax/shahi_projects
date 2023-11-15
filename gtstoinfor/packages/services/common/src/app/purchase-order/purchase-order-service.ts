@@ -229,11 +229,12 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
 
     async getAllFabricsByPO(req: VendorIdReq): Promise<CommonResponseModel>{
         try{
-            let query =`SELECT pof.po_fabric_id AS poFabricId,pof.fabric_code AS fabricCode,pof.m3_fabric_code AS m3fabricCode,pof.po_quantity as poQuantity,pof.quantity_uom_id AS quantityUomId,pof.fabric_type_id AS fabricTypeId,ft.fabric_type_name AS fabricTypeName,
-            pof.purchase_order_id as purchaseOrderId,po.po_number AS poNumber 
-            from purchase_order_fabric pof
+            let query =`SELECT pof.po_fabric_id AS poFabricId,pof.fabric_code AS fabricCode,pof.m3_fabric_code AS m3fabricCode,pof.po_quantity AS poQuantity,pof.quantity_uom_id AS quantityUomId,
+            u.uom AS quantityUom,pof.fabric_type_id AS fabricTypeId,ft.fabric_type_name AS fabricTypeName,pof.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber 
+            FROM purchase_order_fabric pof
             LEFT JOIN fabric_type ft ON ft.fabric_type_id = pof.fabric_type_id  
-            LEFT JOIN purchase_order po ON po.purchase_order_id = pof.purchase_order_id 
+            LEFT JOIN purchase_order po ON po.purchase_order_id = pof.purchase_order_id
+            LEFT JOIN uom u ON u.id = pof.quantity_uom_id
             where 1=1`
             if (req.poId) {
                 query = query + ` AND pof.purchase_order_id = '${req.vendorId}'`;

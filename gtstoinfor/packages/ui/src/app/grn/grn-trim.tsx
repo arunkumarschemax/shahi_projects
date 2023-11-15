@@ -6,7 +6,7 @@ import { ColumnProps } from "antd/lib/table";
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-export const GRNTrimForm = ({props}) =>{
+export const GRNTrimForm = () =>{
     let tableData: any[] = []
     const [trimForm] = Form.useForm()
     const {Option} = Select
@@ -80,7 +80,7 @@ export const GRNTrimForm = ({props}) =>{
     const deleteData = (index:any) => {
         tableData = [...trimTableData]
         tableData.splice(index,1)
-        props(tableData)
+        // props(tableData)
         setTrimTableData(tableData)
         if (tableData.length == 0) {
             setTrimtableVisible(false)
@@ -179,7 +179,7 @@ export const GRNTrimForm = ({props}) =>{
             console.log(tableData)
           }
           setTrimTableData(tableData)
-          props(tableData)
+        //   props(tableData)
           trimForm.resetFields()
           setUpdate(false)
           setTrimtableVisible(true)
