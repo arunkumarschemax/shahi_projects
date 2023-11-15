@@ -9,10 +9,11 @@ export class ItemCreation {
   @PrimaryGeneratedColumn("increment", { name: 'fg_item_id' })
   fgitemId: number;
 
-  @Column("varchar", {
+  @Column("varchar", 
+{
     nullable: false,
     length: 255,
-    name: "item_name"
+    name: "item_name",
   })
   itemName: string;
 
@@ -137,7 +138,7 @@ export class ItemCreation {
   currency: string;
 
   @Column("varchar", {
-    nullable: false,
+    nullable: true,
     length: 40,
     name: "item_group"
   })
@@ -336,7 +337,8 @@ property:PropertyEnum;
   @Column("varchar", {
     nullable: false,
     name: "created_user",
-    length: 50
+    length: 50,
+    default:'admin'
   })
   createdUser: string | null;
 
@@ -344,6 +346,7 @@ property:PropertyEnum;
   @UpdateDateColumn({
     name: "updated_at",
     type: 'datetime'
+    
   })
   updatedAt: Date;
 

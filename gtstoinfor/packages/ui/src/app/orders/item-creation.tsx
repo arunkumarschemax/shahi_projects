@@ -1,4 +1,4 @@
-import { Button, Card, Checkbox, Col, DatePicker, Form, Input, Row, Select, Space, message } from "antd";
+import { Button, Card, Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Select, Space, message } from "antd";
 import { HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
@@ -381,7 +381,7 @@ compositionservice.getActiveComposition().then(res=>{
       }
          const saveItem=()=>{
           form.validateFields().then((values) => {
-            // console.log(values,"ooooooooooooooo");
+             console.log(values,"ooooooooooooooo");
               itemCreationService.createItem(values).then((res) => {
                 if(res.status){
                   message.success(res.internalMessage,2)
@@ -462,7 +462,8 @@ compositionservice.getActiveComposition().then(res=>{
                    </Col>
                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                     <Form.Item label="Item Group" name="itemGroup" 
-                       rules={[{ required: true, message: "Enter Item Group" }]}>
+                      //  rules={[{ required: true, message: "Enter Item Group" }]}
+                       >
                        <Select
                      placeholder="Select Item Group" allowClear>
                      {Object.values(ItemGroupEnum).map((key,value)=>{
@@ -677,7 +678,7 @@ compositionservice.getActiveComposition().then(res=>{
                       rules={[{ required: true, message: "Enter Sales Price Qty" }]}
 
                     >
-                      <Input placeholder="Sales Price Qty" allowClear />
+        <InputNumber placeholder="Sales Price Qty" style={{ width: '100%' }} />
                     </Form.Item>
                                   </Col>
                                  
