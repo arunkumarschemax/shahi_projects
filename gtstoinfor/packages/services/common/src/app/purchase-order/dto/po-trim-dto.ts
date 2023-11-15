@@ -31,5 +31,9 @@ export class PurchaseOrderTrimDto{
     @ApiProperty()
     poQuantity:string
 
+    @ApiProperty()
+    quantityUomId:number
+
+
 
 }

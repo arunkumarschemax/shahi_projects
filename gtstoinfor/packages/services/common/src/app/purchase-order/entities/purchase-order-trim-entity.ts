@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { PurchaseOrderEntity } from "./purchase-order-entity";
+import { Col } from "antd";
 
 @Entity('purchase_order_trim')
 export class PurchaseOrderTrimEntity{
@@ -62,6 +63,12 @@ export class PurchaseOrderTrimEntity{
         nullable:false
     })
     poQuantity:string
+
+    @Column('int',{
+        name:'quantity_uom_id',
+        nullable:false
+    })
+    quantityUomId:number
       
     @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poTrimInfo)
     @JoinColumn({name:'purchase_order_id'})

@@ -1,6 +1,6 @@
 import { EditOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import { M3MastersCategoryReq } from "@project-management-system/shared-models";
-import { ColourService, IndentService, M3MastersService, SampleDevelopmentService } from "@project-management-system/shared-services";
+import { ColourService, IndentService, M3MastersService, SampleDevelopmentService, UomService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Divider, Form, Input, Popconfirm, Row, Select, Table, Tag, Tooltip } from "antd";
 import { ColumnProps } from "antd/lib/table";
 import { VALUE_SPLIT } from "rc-cascader/lib/utils/commonUtil";
@@ -20,17 +20,20 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
     const [defaultTrimFormData, setDefaultTrimFormData] = useState<any>(undefined);
     const [trimCode, setTrimCode]=useState<any[]>([])
     const [trimType, setTrimType]=useState<any[]>([])
+    const [uom,setUom] = useState<any[]>([])
 
     const [color,setColor] = useState<any[]>([])
     const colorService = new ColourService();
     const m3MasterService = new M3MastersService()
     const sampleService = new SampleDevelopmentService()
     const indentservice = new IndentService()
+    const uomService =  new UomService()
 
     useEffect(() =>{
         getColor()
         getM3TrimCodes()
         getTrimType()
+        getUom()
     },[])
 
     useEffect(() =>{
@@ -40,6 +43,13 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
         }
     },[indentId])
 
+    const getUom = () => {
+        uomService.getAllUoms().then(res => {
+            if(res.status) {
+                setUom(res.data)
+            }
+        })
+    }
 
     const indentTrimData = (value) =>{
         indentservice.getAllIndentTrimDetailsAgainstIndent({indentId:value}).then(res =>{
@@ -216,7 +226,8 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
                 productGroupId: defaultTrimFormData.productGroupId,
                 indentTrmId:defaultTrimFormData.indentTrmId,
                 indentQuantity:defaultTrimFormData.indentQuantity,
-                indentQuantityUnit:defaultTrimFormData.indentQuantityUnit
+                indentQuantityUnit:defaultTrimFormData.indentQuantityUnit,
+                quantityUomId:defaultTrimFormData.quantityUomId
             })
         }
 
@@ -321,6 +332,17 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
                         ]}>
                             <Input></Input>
                         </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
+                    <Form.Item name='quantityUomId'  rules={[{required:true,message:'Quantity unit is required'}]}>
+                        <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
+                            {uom.map(e => {
+                                return(
+                                    <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
+                                )
+                            })}
+                        </Select>
+                    </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name={'indentQuantity'} label={'Indent Quantity'}>
