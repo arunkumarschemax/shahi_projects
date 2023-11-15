@@ -54,6 +54,7 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
     const indentTrimData = (value) =>{
         indentservice.getAllIndentTrimDetailsAgainstIndent({indentId:value}).then(res =>{
             if(res.status){
+                props(res.data)
                 setTrimTableData(res.data);
             }
         })

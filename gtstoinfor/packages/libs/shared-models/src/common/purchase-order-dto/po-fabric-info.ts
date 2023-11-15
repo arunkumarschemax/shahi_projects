@@ -45,7 +45,7 @@
        yarnUom:number,
        indentFabricId:number,
        poQuantity:string,
-     quantityUomId:number
+       quantityUomId:number
 
      ){
         this.colourId=colourId
@@ -66,6 +66,6 @@
         this.yarnUom=yarnUom
         this.indentFabricId=indentFabricId
         this.poQuantity=poQuantity
-        this,quantityUomId=quantityUomId
+        this.quantityUomId=quantityUomId
      }
     }

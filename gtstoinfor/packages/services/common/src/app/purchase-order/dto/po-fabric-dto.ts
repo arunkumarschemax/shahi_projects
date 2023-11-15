@@ -60,10 +60,11 @@ moq:string
 
 @ApiProperty()
 indentFabricId:number
+
 @ApiProperty()
 quantityUomId:number
-@ApiProperty()
 
+@ApiProperty()
 poQuantity:string
 
 @ApiProperty()

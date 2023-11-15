@@ -48,6 +48,7 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
 
     useEffect(() =>{
         if(indentId != undefined){
+            console.log(fabricTableData)
             setFabricTableVisible(true)
             AllIndnetDetails(indentId)
         }
@@ -56,6 +57,7 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
     const AllIndnetDetails = (value) =>{
         indentService.getAllIndentItemDetailsAgainstIndent({indentId:value}).then(res =>{
             if(res.status){
+                props(res.data)
                 setFabricTableData(res.data)
             }else{
                 setFabricTableData([])
@@ -129,27 +131,24 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
 
     useEffect(() => {
         if(defaultFabricFormData){
+            console.log(defaultFabricFormData)
             fabricForm.setFieldsValue({
                 content: defaultFabricFormData.content,
                 fabricTypeId: defaultFabricFormData.fabricTypeId,
                 weaveId: defaultFabricFormData.weaveId,
                 width: defaultFabricFormData.width,
-                construction: defaultFabricFormData.construction,
                 yarnCount: defaultFabricFormData.yarnCount,
                 yarnUnit: defaultFabricFormData.yarnUnit,
-                finish : defaultFabricFormData.finish,
-                shrinkage : defaultFabricFormData.shrinkage,
                 m3FabricCode: defaultFabricFormData.m3FabricCode,
                 colourId : defaultFabricFormData.colourId,
-                pch  : defaultFabricFormData.pch,
-                moq  : defaultFabricFormData.moq,
                 colorName:defaultFabricFormData.colorName,
                 weaveName:defaultFabricFormData.weaveName,
                 fabricTypeName:defaultFabricFormData.fabricTypeName,
-                pchName:defaultFabricFormData.pchName,
                 shahiFabricCode:defaultFabricFormData.shahiFabricCode,
                 poQuantity:defaultFabricFormData.poQuantity,
-                quantityUomId:defaultFabricFormData.quantityUomId
+                quantityUomId:defaultFabricFormData.quantityUomId,
+                indentQuantity:defaultFabricFormData.indentQuantity,
+                indentFabricId:defaultFabricFormData.indentFabricId
             })
         }
 
@@ -248,31 +247,24 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
         }
         }
 
-    const onFabricAdd = (values) => {
-        fabricForm
-            .validateFields()
-            .then(() => {
-                if (fabricIndexVal !== undefined) {
-                    values.fabricTypeId = undefined; 
-                    fabricTableData[fabricIndexVal] = values;
-                    tableData = [...fabricTableData];
-                    setFabricIndexVal(undefined);
-                } else {
-                    values.fabricTypeId = undefined; 
-                    tableData = [...fabricTableData, values];
-                    setFabricTableData(tableData);
-                }
-                setFabricTableData([...tableData]); 
-                console.log(tableData)
-                props([...tableData]); 
-                fabricForm.resetFields();
-                setUpdate(false);
-                setFabricTableVisible(true);
-            })
-            .catch(() => {
-                message.error('Please fill all required fields');
-            });
-    };
+    const onFabricAdd = (values) =>{
+        console.log(values)
+        fabricForm.validateFields().then(() =>{
+          if(fabricIndexVal !== undefined){
+            fabricTableData[fabricIndexVal] = values;
+            tableData=[...fabricTableData]
+            setFabricIndexVal(undefined)
+          }else{
+            tableData=[...fabricTableData,values]
+            console.log(tableData)
+          }
+          setFabricTableData(tableData)
+          props(tableData)
+          fabricForm.resetFields()
+          setUpdate(false)
+          setFabricTableVisible(true)
+        })
+    }
     
     return (
     <Card>
@@ -282,7 +274,8 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
             <Form.Item name='weaveName' hidden><Input ></Input></Form.Item>
             <Form.Item name='fabricTypeName' hidden><Input ></Input></Form.Item>
             <Form.Item name='pchName' hidden><Input ></Input></Form.Item>
-            <Form.Item name='indentId' hidden><Input></Input></Form.Item>
+            <Form.Item name='indentQuantity' hidden><Input></Input></Form.Item>
+            <Form.Item name={'indentFabricId'} hidden><Input></Input></Form.Item>
 
          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='content' label='Content' >
@@ -382,7 +375,7 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='poQuantity' label='Po Quantity'
+                    <Form.Item name='poQuantity' label='PO Quantity'
                    rules={[{required:true,message:'Quantity of Fabric is required'}]}
                     >
                         <Input placeholder="Enter Quantity"/>
