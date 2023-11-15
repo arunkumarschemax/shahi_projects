@@ -11,6 +11,7 @@ import { ItemTypeEntity } from "../../item-type/item-type.entity";
 import { FactoriesEntity } from "../../factories/factories.entity";
 import { Operations } from "../../operations/operation.entity";
 import { OperationSequence } from "../../operation-sequence/operation-sequence.entity";
+import { groupBy } from "rxjs";
 
 @Injectable()
 export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
@@ -37,8 +38,7 @@ export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
       .leftJoin(FactoriesEntity,'f','f.id = fgi.facility_id')
       .leftJoin(Operations,'o','o.operation_id = fgm.operation_id')
       .leftJoin(OperationSequence,'os','os.operation_id = o.operation_id')
-
-
+      .groupBy(`fgm.fg_rm_id`)
 
       .where('1=1');
         if (req.fgItemCode !== undefined) {
