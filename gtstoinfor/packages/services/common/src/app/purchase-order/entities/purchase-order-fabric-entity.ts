@@ -134,6 +134,25 @@ moq:string
   })
   yarnUom:number
 
+  @Column('int',{
+    name:'indent_fabric_id',
+    nullable:true
+  })
+  indentFabricId:number
+
+  @Column('varchar',{
+    name:'po_quantity',
+    nullable:true
+  })
+  poQuantity:string
+
+  @Column('int',{
+    name:'quantity_uom_id',
+    nullable:true
+  })
+  quantityUomId:number
+
+  
 
 @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poFabricInfo)
 @JoinColumn({name:'purchase_order_id'})

@@ -50,6 +50,9 @@ export class PurchaseOrderDto{
   yarnUom:number
 
   @ApiProperty()
+  poMaterialType:string
+
+  @ApiProperty()
   indentId:number[]
 
 
@@ -57,6 +60,6 @@ export class PurchaseOrderDto{
   poFabricInfo: PurchaseOrderFbricDto[]
 
   @ApiProperty()
-  poTrimInfo:PurchaseOrderTrimDto[]
+  poTrimInfo?:PurchaseOrderTrimDto[]
 
 }

@@ -118,9 +118,9 @@ export class SampleDevReqController {
   }
 
   @Post('/getSampleRequestReport')
-  async getSampleRequestReport(): Promise<CommonResponseModel> {
+  async getSampleRequestReport(@Body() req?:any): Promise<CommonResponseModel> {
     try {
-      return await this.sampleService.getSampleRequestReport();
+      return await this.sampleService.getSampleRequestReport(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
@@ -189,13 +189,5 @@ export class SampleDevReqController {
     return data
   }
 
-//   @Post('/getAllSampleReportData')
-// @ApiBody({type: SampleRequestFilter})
-// async getAllSampleReportData(@Body() req?:any): Promise<CommonResponseModel> {
-//   try {
-//     return await this.sampleService.getAllSampleReportData(req);
-//   } catch (error) {
-//     return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
-//   }
-// }
+
 }
