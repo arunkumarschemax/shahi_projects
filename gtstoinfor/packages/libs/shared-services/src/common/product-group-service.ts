@@ -17,7 +17,7 @@ export class ProductGroupService extends CommonAxiosService{
 
 
     async  activateOrDeactivateProductGroup(Dto: ProductGroupRequest): Promise<ProductGroupModel> {
-        console.log(Dto ,"front activate")
+        // console.log(Dto ,"front activate")
          return this.axiosPostCall(this.URL + '/ActivateOrDeactivateProductGroup', Dto)
                     
      }

@@ -139,7 +139,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
             if(res.status){
                 AlertMessages.getSuccessMessage('Updated Successfully');
                 setDrawerVisible(false);
-    
+                getAllProfitControlHead();
             }else{
                 AlertMessages.getErrorMessage(res.internalMessage);
     

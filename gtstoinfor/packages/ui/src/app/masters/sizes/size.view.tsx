@@ -145,7 +145,7 @@ service.createsize(variantData).then(res=>{
         if(res.status){
           message.success('Updated Successfully');
             setDrawerVisible(false);
-
+            getAllSize()
         }else{
           message.error(res.internalMessage, 2);
 
