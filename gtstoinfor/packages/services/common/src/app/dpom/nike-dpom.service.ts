@@ -261,7 +261,7 @@ export class DpomService {
         }
     }
 
-    @Cron('*/10 * * * *')
+    // @Cron('*/10 * * * *')
     async createCOline(req: any): Promise<CommonResponseModel> {
         const poDetails = await this.coLineRepository.getDataforCOLineCreation();
         if (!poDetails.length) {
@@ -284,41 +284,50 @@ export class DpomService {
             const frame = await driver.findElement(By.id('mainFrame'));
             await driver.switchTo().frame(frame)
             for (const po of poDetails) {
-                const data = await this.dpomRepository.getDataForColine({ poNumber: po.buyer_po, lineNumber: po.line_item_no })
-                const result = data[0].color_desc.split('/')[0]
-                const firstTenChars = result.substring(0, 10);
-                const lastFourDigits = data[0].style_number.slice(-4)
-                const gacDate = new Date(data[0].gac); // Parse the GAC date
-                // Calculate the date 7 days before the GAC date
-                const sevenDaysBeforeGAC = new Date(gacDate);
-                sevenDaysBeforeGAC.setDate(gacDate.getDate() - 7);
-                // Format the result as 'DD/MM/YYYY'
-                const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBeforeGAC)
-                const coLine = new CoLineRequest()
-                coLine.buyerPo = data[0].po_number + '-' + data[0].po_line_item_number
-                coLine.exFactoryDate = exFactoryDate
-                coLine.deliveryDate = moment(data[0].gac).format("DD/MM/YYYY")
-                const destinationsArr: Destinations[] = []
-                const destinations = new Destinations()
-                destinations.name = data[0].destination_country
-                const colorsArr: Colors[] = []
-                const colors = new Colors()
-                colors.name = firstTenChars + ' ' + lastFourDigits
-                const sizesArr: Sizes[] = []
+                const coLine = new CoLineRequest();
+                if (po.buyer === 'Nike-U12') {
+                    const data = await this.dpomRepository.getDataForColine({ poNumber: po.buyer_po, lineNumber: po.line_item_no })
+                    const result = data[0].color_desc.split('/')[0]
+                    const firstTenChars = result.substring(0, 10);
+                    const lastFourDigits = data[0].style_number.slice(-4)
+                    const gacDate = new Date(data[0].gac); // Parse the GAC date
+                    // Calculate the date 7 days before the GAC date
+                    const sevenDaysBeforeGAC = new Date(gacDate);
+                    sevenDaysBeforeGAC.setDate(gacDate.getDate() - 7);
+                    // Format the result as 'DD/MM/YYYY'
+                    const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBeforeGAC)
+                    coLine.buyerPo = data[0].po_number + '-' + data[0].po_line_item_number
+                    coLine.exFactoryDate = exFactoryDate
+                    coLine.deliveryDate = moment(data[0].gac).format("DD/MM/YYYY")
+                    const destinationsArr: Destinations[] = []
+                    const destinations = new Destinations()
+                    destinations.name = data[0].destination_country
+                    const colorsArr: Colors[] = []
+                    const colors = new Colors()
+                    colors.name = firstTenChars + ' ' + lastFourDigits
+                    const sizesArr: Sizes[] = []
 
-                for (let item of data) {
-                    const sizes = new Sizes()
-                    sizes.name = item.size_description
-                    sizes.qty = item.size_qty
-                    sizes.price = item.gross_price_fob
-                    sizesArr.push(sizes)
+                    for (let item of data) {
+                        const sizes = new Sizes()
+                        sizes.name = item.size_description
+                        sizes.qty = item.size_qty
+                        sizes.price = item.gross_price_fob
+                        sizesArr.push(sizes)
+                    }
+                    colors.sizes = sizesArr
+                    colorsArr.push(colors)
+                    destinations.colors = colorsArr
+                    destinationsArr.push(destinations)
+                    coLine.destinations = destinationsArr
+                } else if (po.buyer === 'Uniqlo-U12') {
+                    const req = { orderNumber: po.buyer_po }
+                    const response = await axios.post(`https://uniqlov2-backend.xpparel.com/api/orders/getTrimOrderDetails`, req);
+                    const coData = response.data.data;
+                    coLine.buyerPo = coData.buyerPo;
+                    coLine.deliveryDate = moment(coData.deliveryDate).format('DD/MM/YYYY')
+                    coLine.exFactoryDate = moment(coData.deliveryDate).format('DD/MM/YYYY')
+                    coLine.destinations = coData.destinations
                 }
-                colors.sizes = sizesArr
-                colorsArr.push(colors)
-                destinations.colors = colorsArr
-                destinationsArr.push(destinations)
-                coLine.destinations = destinationsArr
-
                 const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
                 const allApps = await apps.findElements(By.tagName('span'));
                 for (const app of allApps) {
@@ -367,6 +376,7 @@ export class DpomService {
                                             if (label.length)
                                                 sizeToInputMap[label] = inputElements[i];
                                         }
+                                        console.log(sizeToInputMap[size.name.trim().toUpperCase()], 'AAAAAA')
                                         const inputField = sizeToInputMap[size.name.trim().toUpperCase()];
                                         if (inputField) {
                                             // Clear the existing value (if any) and fill it with the new price.

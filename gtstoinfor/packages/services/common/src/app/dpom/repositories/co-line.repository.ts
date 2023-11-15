@@ -53,7 +53,7 @@ export class COLineRepository extends Repository<COLineEntity> {
 
     async getDataforCOLineCreation(): Promise<any[]> {
         const query = this.createQueryBuilder('co')
-            .select(`co.id, co.buyer_po, co.line_item_no, co.item_no`)
+            .select(`co.id, co.buyer_po, co.line_item_no, co.item_no, co.buyer`)
             .where(` status != 'Success' `)
             .orderBy(` created_at`, 'ASC')
         return await query.getRawMany();
