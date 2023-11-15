@@ -114,8 +114,6 @@ const checkAccess = (buttonParam) => {
         if(res.status){
             setBrand(res.data);
             
-        }else{
-            AlertMessages.getErrorMessage(res.internalMessage)
         }
     })
   }
@@ -125,8 +123,6 @@ const checkAccess = (buttonParam) => {
       if(res.status){
       setStyle(res.data);
    
-     }else{
-       AlertMessages.getErrorMessage(res.internalMessage);
      }
      })
      }
@@ -136,8 +132,6 @@ const checkAccess = (buttonParam) => {
         if(res.status){
          setItemName(res.data);
      
-       }else{
-         AlertMessages.getErrorMessage(res.internalMessage);
        }
        })
        }
@@ -269,7 +263,7 @@ const cancelOrder =(val:any) =>{
         sortDirections: ['descend', 'ascend'],
       },
       {
-        title: "Type",
+        title: "Item Type",
         dataIndex: "item_type",
         width:100,
         align:'center',
