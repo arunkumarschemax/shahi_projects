@@ -1625,7 +1625,7 @@ async processEmails():Promise<CommonResponseModel> {
        console.log(difference,'****')
        if(difference.length == 0){
             // filesArray.push(new ordersMailFileStatusArrayReq(files,'Failed','Files with same name already exists!','-'))
-            return new CommonResponseModel(false,0,'No new files are added')
+            return new CommonResponseModel(false,0,'No new files identified in the mail')
         } else{
                     for(const filerec of difference){
                         const filename = filerec

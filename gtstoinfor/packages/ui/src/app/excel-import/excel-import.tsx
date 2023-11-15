@@ -707,8 +707,8 @@ export default function ExcelImport() {
           // AlertMessages.getSuccessMessage('success')
           setMessageTableData(res.data)
    setMessageTabelOpen(true)
-
-          
+        } else{
+          AlertMessages.getErrorMessage(res.internalMessage)
         }
       })
     }, 60000);//after downloading excels from email,automatically triggering API after 30 minutes(180000)
