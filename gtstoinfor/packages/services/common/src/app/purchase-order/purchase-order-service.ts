@@ -22,6 +22,8 @@ export class PurchaseOrderService{
 
 async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
     try{
+        console.log(req.poFabricInfo)
+        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
         const currentYear =moment().format('YYYY')
         let ToYear=currentYear.toString().substr(-2)
         let FromYear=(currentYear-1).toString().substr(-2)
@@ -83,6 +85,8 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
              trimEntity.consumption=trimInfo.consumption
              trimEntity.remarks=trimInfo.remarks
              trimEntity.indentTrimId=trimInfo.indentTrimId
+             trimEntity.poQuantity=trimInfo.poQuantity
+             trimEntity.quantityUomId=trimInfo.quantityUomId
              poTrimInfo.push(trimEntity)
          }
          poEntity.poTrimInfo=poTrimInfo

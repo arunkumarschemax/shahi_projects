@@ -1,5 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { PurchaseOrderEntity } from "./purchase-order-entity";
+import { Col } from "antd";
+import { PoItemEnum } from "@project-management-system/shared-models";
 
 @Entity('purchase_order_trim')
 export class PurchaseOrderTrimEntity{
@@ -56,6 +58,31 @@ export class PurchaseOrderTrimEntity{
         nullable:true
       })
       indentTrimId:number
+
+    @Column('varchar',{
+        name:'po_quantity',
+        nullable:false
+    })
+    poQuantity:string
+
+    @Column('int',{
+        name:'quantity_uom_id',
+        nullable:false
+    })
+    quantityUomId:number
+
+    @Column('enum',{
+        name:'trim_item_status',
+        enum:PoItemEnum
+      })
+        trimItemStatus:PoItemEnum
+
+        
+    @Column('varchar',{
+        name:'grn_quantity',
+        nullable:true
+      })
+      grnQuantity:string
       
     @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poTrimInfo)
     @JoinColumn({name:'purchase_order_id'})

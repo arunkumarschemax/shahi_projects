@@ -65,5 +65,13 @@ export class IndentController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
+  @Post('/getAllIndentTrimDetailsAgainstIndent')
+  async getAllIndentTrimDetailsAgainstIndent(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.indentService.getAllIndentTrimDetailsAgainstIndent(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
 
 }

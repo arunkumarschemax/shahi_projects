@@ -4,7 +4,9 @@ import TabPane from "antd/es/tabs/TabPane";
 import { useState, useEffect } from "react";
 import PurchaseOrderfabricForm from "./purchase-order-fabric";
 import PurchaseOrderTrim from "./purchase-order-trim";
-import { PurchaseOrderDto, PurchaseOrderFbricDto, PurchaseOrderTrimDto } from "@project-management-system/shared-models";
+import { GlobalVariables, PurchaseOrderDto, PurchaseOrderFbricDto, PurchaseOrderTrimDto } from "@project-management-system/shared-models";
+import moment from "moment";
+import dayjs from "dayjs";
 
 export const PurchaseOrderForm =()=>{
     const{Option} =Select
@@ -19,9 +21,11 @@ export const PurchaseOrderForm =()=>{
     const [vendordata, setVendorData]=useState<any[]>([])
     const [indentId,setIndentId]=useState<any>([])
     const [poType, setPoType]=useState<any>('')
+    const [submitDisbale, setSubmitDisable]=useState<boolean>(true)
     let fabricInfo:PurchaseOrderFbricDto[]=[];
     let trimInfo:PurchaseOrderTrimDto[]=[];
-
+    const date = moment()
+    const now = moment().add(GlobalVariables.poExpectedDeliveryDays, 'days');
     const styleService = new StyleService()
     const purchaseOrderService = new PurchaseOrderservice()
     const indentService = new IndentService()
@@ -40,6 +44,8 @@ export const PurchaseOrderForm =()=>{
         getStyle()
         getIndnetNo()
         getAllvendors()
+        poForm.setFieldsValue({purchaseOrderDate:date})
+        poForm.setFieldsValue({expectedDeliveryDate:now})
     },[])
 
     const getStyle = () => {
@@ -82,21 +88,26 @@ export const PurchaseOrderForm =()=>{
         })
     }
     const onFinish = () =>{
-        console.log(fabricData)
-        // console.log(trimData)
-        // const req = new PurchaseOrderDto()
         for(const fabData of fabricData){
             console.log(fabData)
-            const fabInfo = new PurchaseOrderFbricDto(fabData.colourId,fabData.remarks,fabData.fabricTypeId,fabData.m3FabricCode,fabData.shahiFabricCode,fabData.content,fabData.weaveId,fabData.weight,fabData.width,fabData.construction,fabData.yarnCount,fabData.finish,fabData.shrinkage,fabData.pch,fabData.moq,fabData.yarnUnit,fabData.indentFabricId,fabData.poQuantity,fabData.quantityUomId)
-            fabricInfo.push(fabInfo)
+            if(fabData.poQuantity != ""){
+                const fabInfo = new PurchaseOrderFbricDto(fabData.colourId,fabData.remarks,fabData.fabricTypeId,fabData.m3FabricCode,fabData.shahiFabricCode,fabData.content,fabData.weaveId,fabData.weight,fabData.width,fabData.construction,fabData.yarnCount,fabData.finish,fabData.shrinkage,fabData.pch,fabData.moq,fabData.yarnUnit,fabData.indentFabricId,fabData.poQuantity,fabData.quantityUomId)
+                fabricInfo.push(fabInfo)
+            }else{
+                message.error('Please Update Po Quantity')
+            }
         }
         for(const trim of trimData){
-            console.log(trim)
-            const triminfo = new PurchaseOrderTrimDto(trim.productGroupId,trim.trimId,trim.colourId,trim.m3TrimCode,trim.description,trim.consumption,trim.remarks,1)
-            trimInfo.push(triminfo)
+            if(trim.poQuantity != ""){
+                const triminfo = new PurchaseOrderTrimDto(trim.productGroupId,trim.trimId,trim.colourId,trim.m3TrimCode,trim.description,trim.consumption,trim.remarks,trim.indentTrmId,trim.poQuantity,trim.quantityUomId)
+                trimInfo.push(triminfo)
+                setSubmitDisable(true)
+            }else{
+                message.error('Please Update Po Quantity')
+            }  
         }
         const poDto = new PurchaseOrderDto('po11',poForm.getFieldValue('vendorId'),poForm.getFieldValue('styleId'),poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"),poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'),poForm.getFieldValue('remarks'),poForm.getFieldValue('poMaterialType'),poForm.getFieldValue('indentId'),fabricInfo,trimInfo)
-        console.log(poDto)
+
         purchaseOrderService.cretePurchaseOrder(poDto).then(res =>{
             console.log(poDto)
             if(res.status){
@@ -106,13 +117,12 @@ export const PurchaseOrderForm =()=>{
             }
         })
     }
+
     const indentOnchange = (value) =>{
-        console.log(value)
         setIndentId(value)
     }
-    console.log(indentId)
+
     const poTypeOnchange = (value) =>{
-        console.log(value)
         setPoType(value)
     }
 return(
@@ -156,7 +166,7 @@ return(
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='purchaseOrderDate' label='Purchase Order Date' rules={[{required:true,message:'Style is required'}]}>
-                    <DatePicker style={{ width: '93%', marginLeft: 5 }} />
+                    <DatePicker style={{ width: '93%', marginLeft: 5 }} showToday/>
                     </Form.Item>
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
@@ -168,15 +178,15 @@ return(
        
         </Form>
         <Row gutter={24}>
-            <Card title={poType == 'Fabric'?'Fabric Details':poType =='Trim'?'Trim Details':''}>
+            <Card title={poType == 'Fabric'?<span style={{color:'blue', fontSize:'17px'}}>Fabric Details</span>:poType =='Trim'?<span style={{color:'blue', fontSize:'17px'}}>Trim Details</span>:''}>
                 {poType == 'Fabric' ?
-            <PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={indentId}/>:poType == 'Trim' ? <PurchaseOrderTrim key='trim' props={handleTrim} />:<></>
+            <PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={indentId}/>:poType == 'Trim' ? <PurchaseOrderTrim key='trim' props={handleTrim}  indentId={indentId}/>:<></>
             }
             </Card>
             </Row>
             <Row justify={'end'}>
             <Col span={24} style={{ textAlign: "right", marginTop:'10px'}} >
-              <Button type="primary" onClick={onFinish}>Submit</Button>
+              <Button type="primary" onClick={onFinish} >Submit</Button>
               <Button style={{ margin: "0 14px" }} onClick={onReset}>Reset</Button>
           </Col>
            
