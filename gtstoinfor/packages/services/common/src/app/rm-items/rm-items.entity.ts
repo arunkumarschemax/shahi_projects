@@ -283,11 +283,11 @@ productGroupId:number;
 })
 procurementGroupId:number;
 
-@Column("int",{
+@Column("varchar",{
     nullable: true,
     name:"item_group_id"
 })
-itemGroupId:number;
+itemGroupId:string;
 
 @Column("varchar",{
     nullable: true,

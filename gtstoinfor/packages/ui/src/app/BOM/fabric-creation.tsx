@@ -1044,7 +1044,6 @@ placeholder='select saleItem' allowClear>
                             )
                           })}  
                     </Select>
-                     <Input placeholder="Fabric code" allowClear /> 
                    </Form.Item>
                 </Col> 
                 </Row>

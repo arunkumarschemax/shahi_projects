@@ -118,7 +118,7 @@ export class RmCreationDto{
     remarks:string
 
     @ApiProperty()
-    itemGroupId:number
+    itemGroupId:string
 
     @ApiProperty()
     useInOperation:string
