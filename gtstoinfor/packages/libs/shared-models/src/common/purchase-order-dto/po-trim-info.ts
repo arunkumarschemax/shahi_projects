@@ -10,7 +10,8 @@ export class PurchaseOrderTrimDto{
     consumption: number
     remarks: string
     indentTrimId:number
-
+    poQuantity:string
+    quantityUomId:number
 
     constructor(
         productGroupId:number,
@@ -20,8 +21,9 @@ export class PurchaseOrderTrimDto{
         description: string,
         consumption: number,
         remarks: string,
-        indentTrimId:number
-
+        indentTrimId:number,
+        poQuantity:string,
+        quantityUomId:number
     ){
         this.productGroupId=productGroupId
         this.trimId=trimId
@@ -31,6 +33,8 @@ export class PurchaseOrderTrimDto{
         this.consumption=consumption
         this.remarks=remarks
         this.indentTrimId=indentTrimId
+        this.poQuantity=poQuantity
+        this.quantityUomId=quantityUomId
     }
 
 }

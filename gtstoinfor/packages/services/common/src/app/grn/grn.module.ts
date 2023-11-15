@@ -8,10 +8,11 @@ import { GrnRepository } from './dto/grn-repository';
 import { GrnEntity } from './entities/grn-entity';
 import { GrnService } from './grn.service';
 import { GrnAdapter } from './dto/grn-adapter';
+import { GrnItemsEntity } from './entities/grn-items-entity';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([GrnEntity,GrnFabricEntity,GrnTrimsEntity]),
+        TypeOrmModule.forFeature([GrnEntity,GrnFabricEntity,GrnTrimsEntity,GrnItemsEntity]),
       ],
       providers: [ApplicationExceptionHandler,GrnRepository,GrnService,GrnAdapter],
       controllers: [GrnController],
