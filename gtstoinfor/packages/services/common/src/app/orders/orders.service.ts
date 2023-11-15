@@ -662,14 +662,19 @@ export class OrdersService {
         }
     }
 
-    async updatePath(filePath: string, filename: string, month: number,fileType:string,uploadType:string): Promise<CommonResponseModel> {
+    async updatePath(filePath: string, filename: string, month: number,fileType:string,uploadType:string,msg?:string): Promise<CommonResponseModel> {
         const entity = new FileUploadEntity()
         entity.fileName = filename;
         entity.filePath = filePath;
         entity.month = 9;
         entity.fileType = fileType;
         entity.uploadType = uploadType
-        entity.status = 'uploading';
+        if(msg){
+            entity.status = 'Failed';
+            entity.failedReason = msg;
+        }else{
+            entity.status = 'uploading';
+        }
         const file = await this.fileUploadRepo.findOne({ where: { fileName: filename, isActive: true } })
         if (file) {
             return new CommonResponseModel(false, 0, 'File with same name already uploaded');
@@ -1710,6 +1715,7 @@ async processEmails():Promise<CommonResponseModel> {
                                             });
                                           });
                                     }else{
+                                        const saveFilePath =  this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS,'Email','Sheet Name Does Not Match')
                                         filesArray.push(new ordersMailFileStatusArrayReq(filename,'Failed',`Sheet name doesn't match`,'-'))
                                        resolve(null)
                                     }
@@ -2655,7 +2661,6 @@ async sendMail(to: string, subject: string, message : any[]) {
             }
         }
         const data = await this.trimOrderRepo.find({where:{orderNo:req.orderNumber}})
-        console.log(data,'-------')
         let destinationMap = new Map<string,Destinations>()
         if(data){
             let colorMap = new Map<string,Colors>()
