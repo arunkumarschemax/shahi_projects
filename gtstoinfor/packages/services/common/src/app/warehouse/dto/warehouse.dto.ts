@@ -8,16 +8,18 @@ export class WarehouseDTO {
   warehouseId: number;
 
   @ApiProperty()
-  // @IsNotEmpty({message:"warehouseName should not be empty"})
-  // @IsAlphanumeric()
+
   @IsOptional()
   warehouseName: string;
   @ApiProperty()
-  // @IsNotEmpty({message:"warehouseCode should not be empty"})
-  // @IsAlphanumeric()
+  
   @IsOptional()
   warehouseCode: string;
 
+  @ApiProperty()
+  @IsOptional()
+  category: string;
+  
   @ApiProperty()
   isActive: boolean;
 

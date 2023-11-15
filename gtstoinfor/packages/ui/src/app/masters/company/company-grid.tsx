@@ -148,7 +148,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
     },
     {
       title: 'Status',
-      dataIndex: 'isActive',
+      dataIndex: 'isActive',      align:'center',
       render: (isActive, rowData) => (
         <>
           {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -196,6 +196,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
     {
       title: `Action`,
       dataIndex: 'action',
+      align:'center',
       render: (record, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"

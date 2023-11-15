@@ -1,5 +1,5 @@
 import { ItemCreationService, RmCreationService, ProductStructureService, OperationsService } from '@project-management-system/shared-services';
-import { Button, Card, Col, Form, Input, Row, Select, message } from 'antd';
+import { Button, Card, Col, Divider, Form, Input, Row, Select, message } from 'antd';
 import React, { useEffect, useState } from 'react'
 import AlertMessages from '../common-functions/alert-messages';
 import Checkbox from 'antd/lib/checkbox';
@@ -238,66 +238,94 @@ const getRmItemsDatabyProductGroupId1 = () => {
         </Col>
       
       </Row>
-        <Row gutter={24}>
+        <Card>
+        <Row gutter={45} >
         <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
           <Form.Item name= "fabricitems">
-                  <Card style={{marginLeft:30,height:'100%'}}>
                         <h3>Fabric Items</h3>
                     <CheckboxGroup style={{ width: '100%' }} onChange={onChange} >
                       {data.length === 0 ?(
                           <p>No data found</p>
                          ) : (
-                    <Row>
+                    <Row gutter={240} style={{marginTop:10}} >
                         {data.map((option) => (
-                        // <Col span={12} key={option.rmitemId} >
-                        //     <Checkbox value={option.rmitemId} key={option.rmitemId}  >{option.itemCode}</Checkbox>
-                        // </Col>
-                        <Col span={16} key={option.rmitemId}>
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <div style={{ marginRight: "10px" }}>
-                                <Checkbox value={option.rmitemId} key={option.rmitemId}>{option.itemCode}</Checkbox>
-                            </div>
-                            <div>
-                            <Form.Item name={`fab_operationId_${option.rmitemId}`} >
-                                <Select  placeholder="Select Operation" onChange={(value)=>onOperation(option.rmitemId,value)} disabled={!selectedCheckbox[option.rmitemId]}>
-                                {operationsData.map((e)=>{
-                                  return(<Option key={e.operationId} value={e.operationId}>
-                                  {e.operationName}
-                                   </Option>)
-                                   })}
+                      
+      
+                      
+                            <>
+                            
+                           <Col
+                                  xs={{ span: 24 }}
+                                  sm={{ span: 24 }}
+                                  md={{ span: 12 }}
+                                  lg={{ span: 12 }}
+                                  xl={{ span: 75 }}
+                                  style={{ display: "flex", flexDirection: "row", alignItems: "center",marginBottom:10 }}
+                                >
+                                  <Checkbox value={option.rmitemId} key={option.rmitemId} style={{ marginRight: '8px' }}>
+                                    {option.itemCode}
+                                  </Checkbox>
 
-                                </Select>
-                                </Form.Item>
-                            </div>
-                        </div>
-                    </Col>
+                                  <Form.Item name={`fab_operationId_${option.rmitemId}`} style={{ margin: 0 }}>
+                                    <Select
+                                      placeholder="Select Operation"
+                                      onChange={(value) => onOperation(option.rmitemId, value)}
+                                      disabled={!selectedCheckbox[option.rmitemId]}
+                                      style={{ width: '160px' }}
+                                      allowClear
+                                    >
+                                      {operationsData.map((e) => (
+                                        <Option key={e.operationId} value={e.operationId}>
+                                          {e.operationName}
+                                        </Option>
+                                      ))}
+                                    </Select>
+                                  </Form.Item>
+                                </Col>
+
+                          </>
+                           
+                    
                         ))}
                     </Row>
                        )}
                     </CheckboxGroup>
-                    </Card>
+                 
         </Form.Item>
         </Col>
-        <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-       <Form.Item name = "trimitems">
-         
+        <Divider type='vertical' />
+        <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }} style={{marginLeft:200}}>
 
-          <Card style={{ width: '100%', marginLeft: 100 }}>
-    <h3>Trims Items</h3>
-    <CheckboxGroup style={{ width: '100%' }} onChange={onChange1}>
-        {rmData.length === 0 ? (
-            <p>No data found</p>
-        ) : (
-            <Row gutter={16} style={{ flexDirection: "row" }}>
-                {rmData.map((option) => (
-                    <Col span={16} key={option.rmitemId}>
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <div style={{ marginRight: "10px" }}>
-                                <Checkbox value={option.rmitemId} key={option.rmitemId}>{option.itemCode}</Checkbox>
-                            </div>
-                            <div>
-                            <Form.Item name={`trim_operationId_${option.rmitemId}`} >
-                                <Select  placeholder="Select Operation" onChange={(value)=>onOperation(option.rmitemId,value)} disabled={!selectedCheckbox1[option.rmitemId]} >
+             <Form.Item name= "trimitems">
+                        <h3>Trims Items</h3>
+                    <CheckboxGroup style={{ width: '100%' }} onChange={onChange1} >
+                      {rmData.length === 0 ?(
+                          <p>No data found</p>
+                         ) : (
+                    <Row gutter={240} style={{marginTop:10}} >
+                        {rmData.map((option) => (
+                      
+      
+                      
+                            <>
+                            
+                           <Col
+                                  xs={{ span: 24 }}
+                                  sm={{ span: 24 }}
+                                  md={{ span: 12 }}
+                                  lg={{ span: 12 }}
+                                  xl={{ span: 75 }}
+                                  style={{ display: "flex", flexDirection: "row", alignItems: "center",marginBottom:10 }}
+                                >
+                                  <Checkbox value={option.rmitemId} key={option.rmitemId} style={{ marginRight: '8px' }}>
+                                    {option.itemCode}
+                                  </Checkbox>
+
+                                  <Form.Item name={`trim_operationId_${option.rmitemId}`} style={{ margin: 0 }} >
+                                <Select  placeholder="Select Operation" onChange={(value)=>onOperation(option.rmitemId,value)} disabled={!selectedCheckbox1[option.rmitemId]}
+                                style={{ width: '160px' }}
+                                allowClear
+                                 >
                                 {operationsData.map((e)=>{
                                   return(<Option key={e.operationId} value={e.operationId}>
                                   {e.operationName}
@@ -306,19 +334,22 @@ const getRmItemsDatabyProductGroupId1 = () => {
 
                                 </Select>
                                 </Form.Item>
-                            </div>
-                        </div>
-                    </Col>
-                ))}
-            </Row>
-        )}
-    </CheckboxGroup>
-</Card>
+                                </Col>
 
+                          </>
+                           
+                    
+                        ))}
+                    </Row>
+                       )}
+                    </CheckboxGroup>
+                 
         </Form.Item>
          
-        </Col>
+        </Col>     
+        
         </Row>
+        </Card>
         <Row justify={'end'}>
           <Form.Item>
             <Button type='primary'  htmlType="submit">Submit</Button>

@@ -222,7 +222,7 @@ export class PaymentTermsService {
     async getAllPaymentTermsDropDown(): Promise<PaymentTermsDropDownResponseModel> {
         try {
             const paymentTermsDTO: PaymentTermsDropDownDto[] = [];
-            const paymentTermsEntities: PaymentTerms[] = await this.paymentTermsRepository.find({ select: ['paymentTermsId', 'paymentTermsName'], where: { isActive: true,paymentTermsCategory:PaymentTermsCategory.Customer }, order: {paymentTermsName: 'ASC' } });
+            const paymentTermsEntities: PaymentTerms[] = await this.paymentTermsRepository.find({ select: ['paymentTermsId', 'paymentTermsName'], where: { isActive: true,paymentTermsCategory:PaymentTermsCategory.Vendor }, order: {paymentTermsName: 'ASC' } });
             if (paymentTermsEntities && paymentTermsEntities.length > 0) {
                 paymentTermsEntities.forEach(paymentTermsEntity => {
                     paymentTermsDTO.push(new PaymentTermsDropDownDto(paymentTermsEntity.paymentTermsId, paymentTermsEntity.paymentTermsName));

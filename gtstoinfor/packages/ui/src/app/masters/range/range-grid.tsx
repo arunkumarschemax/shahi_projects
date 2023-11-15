@@ -314,6 +314,7 @@ const RangeGrid = () => {
           columns={columnsSkelton}
           dataSource={lTData}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

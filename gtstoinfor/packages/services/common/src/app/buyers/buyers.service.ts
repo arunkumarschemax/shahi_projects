@@ -224,7 +224,7 @@ export class BuyersService {
 
     async getAddressByBuyerId(req:BuyerIdReq):Promise<CommonResponseModel>{
         try{
-            const addressInfo = await this.addressRepo.find({where:{buyerInfo:{buyerId:req.buyerId}},relations:['countryInfo']})
+            const addressInfo = await this.addressRepo.find({where:{buyerInfo:{buyerId:req.buyerId}},relations:['countryInfo','buyerInfo','buyerInfo.paymentMethodInfo','buyerInfo.paymentTermsInfo']})
             if(addressInfo){
                 return new CommonResponseModel(true,1,'Data retrieved',addressInfo)
             } else{
