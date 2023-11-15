@@ -54,8 +54,8 @@ export class GrnTrimsEntity{
     })
     remarks: string
 
-    @ManyToOne(type =>GrnEntity,grn =>grn.grnTrimInfo)
-    @JoinColumn({name:'grn_id'})
-    grnEntity:GrnEntity
+    // @ManyToOne(type =>GrnEntity,grn =>grn.grnTrimInfo)
+    // @JoinColumn({name:'grn_id'})
+    // grnEntity:GrnEntity
 
 }

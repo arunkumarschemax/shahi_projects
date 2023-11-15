@@ -28,4 +28,15 @@ export class PurchaseOrderTrimDto{
     @ApiProperty()
     indentTrimId:number
 
+    @ApiProperty()
+    poQuantity:string
+
+    @ApiProperty()
+    quantityUomId:number
+
+    @ApiProperty()
+    grnQuantity:string
+
+
+
 }

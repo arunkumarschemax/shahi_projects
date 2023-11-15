@@ -83,7 +83,7 @@ export class IndentService{
     }
     async getAllIndentItemDetailsAgainstIndent(req:indentIdReq):Promise<CommonResponseModel>{
         console.log(req)
-        const data = 'SELECT ifb.ifabric_id as indentFabricId,ifb.indent_id as indentid,ft.fabric_type_id as fabric_type_id,m3_code as m3FabricCode,fabric_weave_name as fabricTypeName,p.profit_control_head AS pch,color AS colorName,fabric_weave_name AS weaveName,fabric_type_name AS fabricTypeName,content,ifb.fabric_type AS fabricTypeId,weave_id AS weaveId,weight,width,yarn_count AS yarnCount,construction,finish,shrinkage,m3_fabric_code,color AS colourId,pch,moq,moq_unit,quantity AS indentQuantity,ifb.indent_id AS indentId FROM indent_fabric ifb LEFT JOIN indent i ON ifb.indent_id=i.indent_id  LEFT JOIN fabric_type ft ON ft.fabric_type_id=ifb.fabric_type LEFT JOIN fabric_weave fw ON fw.fabric_weave_id=ifb.weave_id  LEFT JOIN colour c ON c.colour_id=ifb.color LEFT JOIN profit_control_head p ON p.profit_control_head_id=ifb.pch left join m3_masters ms on ms.m3_code=ifb.m3_fabric_code where ifb.indent_id in ('+req.indentId+') '
+        const data = 'SELECT "" as poQuantity,yarn_unit as yarnUnit,ifb.ifabric_id as indentFabricId,ifb.indent_id as indentid,ft.fabric_type_id as fabric_type_id,m3_code as m3FabricCode,fabric_weave_name as fabricTypeName,p.profit_control_head AS pch,color AS colorName,fabric_weave_name AS weaveName,fabric_type_name AS fabricTypeName,content,ifb.fabric_type AS fabricTypeId,weave_id AS weaveId,weight,width,yarn_count AS yarnCount,construction,finish,shrinkage,m3_fabric_code,color AS colourId,pch,moq,moq_unit,quantity AS indentQuantity,ifb.indent_id AS indentId FROM indent_fabric ifb LEFT JOIN indent i ON ifb.indent_id=i.indent_id  LEFT JOIN fabric_type ft ON ft.fabric_type_id=ifb.fabric_type LEFT JOIN fabric_weave fw ON fw.fabric_weave_id=ifb.weave_id  LEFT JOIN colour c ON c.colour_id=ifb.color LEFT JOIN profit_control_head p ON p.profit_control_head_id=ifb.pch left join m3_masters ms on ms.m3_code=ifb.m3_fabric_code where ifb.indent_id in ('+req.indentId+') '
         const result= await this.indentRepo.query(data)
         if(result){
             return new CommonResponseModel(true,1,'data retived sucessfully',result)
@@ -91,6 +91,19 @@ export class IndentService{
             return new CommonResponseModel(false,0,'no data found',[])
         }
     }
+
+    async getAllIndentTrimDetailsAgainstIndent(req:indentIdReq):Promise<CommonResponseModel>{
+        console.log(req)
+        const data = 'SELECT "" as poQuantity,item_code as trimCodeName,it.trim_type as productGroupId,trim_code as trimId, pg.product_group as trimType,c.colour AS colourName,item_code AS trimCodeName,product_group AS productGroup,itrims_id AS indentTrmId,trim_code AS trimId ,size AS sizeId,color AS colourId, quantity as indentQuantity,quantity_unit AS indentQuantityUnit,m3_trim_code AS m3TrimCode FROM indent_trims it LEFT JOIN indent i ON it.indent_id=i.indent_id LEFT JOIN product_group pg ON pg.product_group_id=it.trim_type LEFT JOIN rm_items ri ON ri.rm_item_id=it.trim_code LEFT JOIN colour c ON c.colour_id=it.color where it.indent_id in('+req.indentId+') '
+        const result= await this.indentRepo.query(data)
+        if(result){
+            return new CommonResponseModel(true,1,'data retived sucessfully',result)
+        }else{
+            return new CommonResponseModel(false,0,'no data found',[])
+        }
+    }
+
+
 
     
 }

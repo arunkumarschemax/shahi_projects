@@ -2,6 +2,7 @@ import { PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { GrnFabricEntity } from "./grn-fabric-entity";
 import { GrnTrimsEntity } from "./grn-trims.entity";
+import { GrnItemsEntity } from "./grn-items-entity";
 
 @Entity('grn')
 export class GrnEntity{
@@ -89,11 +90,14 @@ export class GrnEntity{
     })
     remarks:string
     
-  @OneToMany(type => GrnFabricEntity, grnFab => grnFab.grnEntity, { cascade: true })
-  grnFabricInfo: GrnFabricEntity[]
+  // @OneToMany(type => GrnFabricEntity, grnFab => grnFab.grnEntity, { cascade: true })
+  // grnFabricInfo: GrnFabricEntity[]
 
-  @OneToMany(type => GrnTrimsEntity, grnTrim => grnTrim.grnEntity, { cascade: true })
-  grnTrimInfo: GrnTrimsEntity[]
+  // @OneToMany(type => GrnTrimsEntity, grnTrim => grnTrim.grnEntity, { cascade: true })
+  // grnTrimInfo: GrnTrimsEntity[]
+
+  @OneToMany(type => GrnItemsEntity, grnItem => grnItem.grnEntity, { cascade: true })
+  grnItemInfo: GrnItemsEntity[]
 
 
 }
