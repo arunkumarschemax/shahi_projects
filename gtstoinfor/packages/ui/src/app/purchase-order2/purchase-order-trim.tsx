@@ -235,8 +235,8 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
     },[defaultTrimFormData])
 
     return(
-        <Card className="card-header" style={{width:'100%'}}>
-            <Form form={trimForm} layout="vertical" onFinish={OnTrimAdd}>
+        <Card >
+            <Form form={trimForm} layout="vertical" onFinish={OnTrimAdd} style={{width:'100%'}}>
                 <Row gutter={24}>
                 <Form.Item name={'productGroup'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'trimCodeName'} hidden><Input></Input></Form.Item>
@@ -334,7 +334,7 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
                             <Input></Input>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2.3%'}}>
                     <Form.Item name='quantityUomId'  rules={[{required:true,message:'Quantity unit is required'}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
                             {uom.map(e => {

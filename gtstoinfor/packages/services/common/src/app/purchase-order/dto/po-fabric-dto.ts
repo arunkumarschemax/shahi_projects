@@ -85,4 +85,7 @@ poQuantity:string
   @ApiProperty()
   isActive: boolean;
 
+  @ApiProperty()
+  grnQuantity:string
+
 }

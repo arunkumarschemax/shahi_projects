@@ -159,6 +159,12 @@ moq:string
   })
     fabricItemStatus:PoItemEnum
 
+    @Column('varchar',{
+      name:'grn_quantity',
+      nullable:true
+    })
+    grnQuantity:string
+    
 @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poFabricInfo)
 @JoinColumn({name:'purchase_order_id'})
 purchaseOrderEntity:PurchaseOrderEntity

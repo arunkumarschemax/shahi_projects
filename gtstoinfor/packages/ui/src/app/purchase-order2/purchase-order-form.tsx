@@ -4,7 +4,9 @@ import TabPane from "antd/es/tabs/TabPane";
 import { useState, useEffect } from "react";
 import PurchaseOrderfabricForm from "./purchase-order-fabric";
 import PurchaseOrderTrim from "./purchase-order-trim";
-import { PurchaseOrderDto, PurchaseOrderFbricDto, PurchaseOrderTrimDto } from "@project-management-system/shared-models";
+import { GlobalVariables, PurchaseOrderDto, PurchaseOrderFbricDto, PurchaseOrderTrimDto } from "@project-management-system/shared-models";
+import moment from "moment";
+import dayjs from "dayjs";
 
 export const PurchaseOrderForm =()=>{
     const{Option} =Select
@@ -21,7 +23,8 @@ export const PurchaseOrderForm =()=>{
     const [poType, setPoType]=useState<any>('')
     let fabricInfo:PurchaseOrderFbricDto[]=[];
     let trimInfo:PurchaseOrderTrimDto[]=[];
-
+    const date = moment()
+    const now = moment().add(GlobalVariables.poExpectedDeliveryDays, 'days');
     const styleService = new StyleService()
     const purchaseOrderService = new PurchaseOrderservice()
     const indentService = new IndentService()
@@ -40,6 +43,8 @@ export const PurchaseOrderForm =()=>{
         getStyle()
         getIndnetNo()
         getAllvendors()
+        poForm.setFieldsValue({purchaseOrderDate:date})
+        poForm.setFieldsValue({expectedDeliveryDate:now})
     },[])
 
     const getStyle = () => {
@@ -82,10 +87,6 @@ export const PurchaseOrderForm =()=>{
         })
     }
     const onFinish = () =>{
-        console.log(fabricData)
-        console.log(trimData)
-        // console.log(trimData)
-        // const req = new PurchaseOrderDto()
         for(const fabData of fabricData){
             console.log(fabData)
             const fabInfo = new PurchaseOrderFbricDto(fabData.colourId,fabData.remarks,fabData.fabricTypeId,fabData.m3FabricCode,fabData.shahiFabricCode,fabData.content,fabData.weaveId,fabData.weight,fabData.width,fabData.construction,fabData.yarnCount,fabData.finish,fabData.shrinkage,fabData.pch,fabData.moq,fabData.yarnUnit,fabData.indentFabricId,fabData.poQuantity,fabData.quantityUomId)
@@ -97,7 +98,8 @@ export const PurchaseOrderForm =()=>{
             trimInfo.push(triminfo)
         }
         const poDto = new PurchaseOrderDto('po11',poForm.getFieldValue('vendorId'),poForm.getFieldValue('styleId'),poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"),poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'),poForm.getFieldValue('remarks'),poForm.getFieldValue('poMaterialType'),poForm.getFieldValue('indentId'),fabricInfo,trimInfo)
-        console.log(poDto)
+        console.log(poDto.poFabricInfo)
+        console.log(poDto.poTrimInfo)
         purchaseOrderService.cretePurchaseOrder(poDto).then(res =>{
             console.log(poDto)
             if(res.status){
@@ -157,7 +159,7 @@ return(
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='purchaseOrderDate' label='Purchase Order Date' rules={[{required:true,message:'Style is required'}]}>
-                    <DatePicker style={{ width: '93%', marginLeft: 5 }} />
+                    <DatePicker style={{ width: '93%', marginLeft: 5 }} showToday/>
                     </Form.Item>
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
@@ -169,7 +171,7 @@ return(
        
         </Form>
         <Row gutter={24}>
-            <Card title={poType == 'Fabric'?'Fabric Details':poType =='Trim'?'Trim Details':''}>
+            <Card title={poType == 'Fabric'?<span style={{color:'blue', fontSize:'17px'}}>Fabric Details</span>:poType =='Trim'?<span style={{color:'blue', fontSize:'17px'}}>Trim Details</span>:''}>
                 {poType == 'Fabric' ?
             <PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={indentId}/>:poType == 'Trim' ? <PurchaseOrderTrim key='trim' props={handleTrim}  indentId={indentId}/>:<></>
             }

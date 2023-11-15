@@ -76,6 +76,13 @@ export class PurchaseOrderTrimEntity{
         enum:PoItemEnum
       })
         trimItemStatus:PoItemEnum
+
+        
+    @Column('varchar',{
+        name:'grn_quantity',
+        nullable:true
+      })
+      grnQuantity:string
       
     @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poTrimInfo)
     @JoinColumn({name:'purchase_order_id'})
