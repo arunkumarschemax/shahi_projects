@@ -417,7 +417,7 @@ export function VendorsView(
   
        
         {
-          title:<div style={{textAlign:'center'}}>'Status</div>,
+          title:<div style={{textAlign:'center'}}>Status</div>,
           dataIndex: 'isActive',
           align:'center',
           render: (isActive, rowData) => (

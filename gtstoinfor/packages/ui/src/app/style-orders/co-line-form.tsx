@@ -305,7 +305,7 @@ export const CoLineForm = () => {
                 <Row justify={'end'} style={{marginLeft:'85%',marginTop:'5px'}}>
                <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
                 <Form.Item>
-                    <Button type='primary' onClick={onSubmit}>Submit</Button>
+                    <Button type='primary' onClick={onSubmit} disabled={coLineItems.length > 0 ? false: true}>Submit</Button>
                 </Form.Item>
                </Col>
                <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>

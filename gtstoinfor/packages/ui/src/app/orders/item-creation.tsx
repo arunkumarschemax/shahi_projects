@@ -454,7 +454,7 @@ compositionservice.getActiveComposition().then(res=>{
                     <Form.Item label="Item Code" name="itemCode"
                        rules={[{ required: true, message: "Enter Item code" }]}>
 
-                    <Input placeholder="Item Code" allowClear/>
+                    <Input placeholder="Item Code" allowClear disabled={props.isUpdate ? true : false}/>
 
                     </Form.Item>
                    </Col>

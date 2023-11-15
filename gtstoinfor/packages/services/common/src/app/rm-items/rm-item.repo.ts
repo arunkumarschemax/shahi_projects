@@ -70,6 +70,9 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
           if (req.productGroup !== undefined) {
             query.andWhere(`product_group ='${ req.productGroup }'` ); 
           }
+          if (req.productGroupId !== undefined) {
+            query.andWhere(`rmi.product_group_id =  ${req.productGroupId }`); 
+          }
           // if (req.procurementGroup !== undefined) {
           //   query.andWhere(`procurment_group = :procurmentGroup`, { procurmentGroup: req.procurementGroup }); 
           // }

@@ -76,6 +76,7 @@ export class SettingsService{
             const coType = new CoTypes()
             coType.coTypeId = req.coTypeId
             settingsEntity.coTypeInfo = coType
+            settingsEntity.externalRefNumber = req.externalRefNo
             if(isUpdate){
                 settingsEntity.settingsId = req.settingsId
                 settingsEntity.updatedUser = req.updatedUser

@@ -76,7 +76,7 @@ export const RmSkusGeneration = () => {
 
     const onItemTypeChange = (val,option) => {
        const req = new RMCreFilterRequest()
-       req.productGroup = option?.key
+       req.productGroupId = option?.key
        rmItemService.getAllRMItems(req).then(res => {
         if(res.status){
             setItemCodes(res.data)
@@ -110,7 +110,7 @@ export const RmSkusGeneration = () => {
                 </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
-                <Form.Item name={'itemCode'} label='Item Code' rules={[{required:true,message:'Item Code is required'}]}>
+                <Form.Item name={'itemCode'} label='RM Item Code' rules={[{required:true,message:'Item Code is required'}]}>
                     <Select allowClear showSearch optionFilterProp="children" placeholder='Select Item Code' onChange={onItemCodeChange}>
                         {/* <Option key='1' value='I001' itemId={1}>I001</Option> */}
                         {

@@ -1,7 +1,7 @@
 
 import { Injectable } from "@nestjs/common";
 import { BomTrimRepository } from "./repository/bom-trim.repository";
-import { BomRequest, BomTrimResponseModel } from "@project-management-system/shared-models";
+import { BomTrimResponseModel, IsImportedItemEnum } from "@project-management-system/shared-models";
 import { BomTrimEntity } from "./bom-trim.entity";
 import { BomTrimDto } from "./dto/bom-trim.dto";
 
@@ -29,8 +29,8 @@ export class BomService {
             entity.trimCode = "TRIM"+"00"+(maxId+1)
             entity.trim = req.trim
             entity.genericCode = req.genericCode
-            entity.typeId = req.typeId
-            entity.groupId = req.groupId
+            // entity.typeId = req.typeId
+            entity.productGroupId = req.productGroupId
             entity.useInOperationId = req.useInOperationId
             entity.description = req.description
             entity.responsible = req.responsible
@@ -55,6 +55,8 @@ export class BomService {
             entity.licenceId = req.licenceId
             entity.property = req.property
             entity.isSaleItem = req.isSaleItem
+            entity.isImportedItem = req.isImportedItem
+            entity.itemGroup = "RM"
              
         const save = await this.TrimRepo.save(entity);
           

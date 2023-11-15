@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { CommonColumns } from "./common-columns.entity";
+import { IsImportedItemEnum } from "@project-management-system/shared-models";
 
 
 @Entity('bom_trim')
@@ -41,16 +42,16 @@ export class BomTrimEntity  {
     genericCode : string;
 
     
-    @Column('int',{
-        name:'type_id'
-    })
-    typeId : number;
+    // @Column('int',{
+    //     name:'type_id'
+    // })
+    // typeId : number;
 
     
     @Column('int',{
-        name:'group_id'
+        name:'product_group_id'
     })
-    groupId: number;
+    productGroupId: number;
 
     
     @Column('int',{
@@ -134,7 +135,8 @@ export class BomTrimEntity  {
    
     
       @Column('varchar',{
-        name:'sales_tax'
+        name:'sales_tax',
+        nullable:true
     })
       salesTax : string;
    
@@ -154,10 +156,13 @@ export class BomTrimEntity  {
     })
       property : string;
 
-      @Column('varchar',{
-        name:'is_sale_item'
+      @Column('enum',{
+        name:'is_sale_item',
+        enum:IsImportedItemEnum,
+       default:IsImportedItemEnum.NO,
+
     })
-      isSaleItem : string;
+      isSaleItem :IsImportedItemEnum;
 
 
       @Column('int',{
@@ -179,11 +184,21 @@ export class BomTrimEntity  {
       @Column('varchar',{
         name:'usage_remarks'
     })
-       usageRemarks: string;      
+       usageRemarks: string;  
+       
+    @Column('enum',{
+        name:'is_imported_item',
+       enum:IsImportedItemEnum,
+      default:IsImportedItemEnum.NO,
+     })
+     isImportedItem:IsImportedItemEnum;
     
-     // common column
+     @Column('varchar',{
+        name:'item_group'
+    })
+       itemGroup: string; 
 
-       @CreateDateColumn({
+    @CreateDateColumn({
         name: 'created_at'
     })
      createdAt: string;

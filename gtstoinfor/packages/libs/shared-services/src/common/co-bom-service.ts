@@ -13,4 +13,9 @@ export class CoBomService extends CommonAxiosService{
     async getBomAgainstItem(req?:styleOrderReq):Promise<CommonResponseModel>{
         return this.axiosPostCall(this.URL + "/getBomAgainstItem")
     }
+
+      
+    async getcoOrderNumber():Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL + "/getcoOrderNumber")
+    }
 }

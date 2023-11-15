@@ -51,4 +51,14 @@ export class CoBomService {
           }
     }
 
+    async getcoOrderNumber():Promise<CommonResponseModel>{
+        try{
+            const data= await this.corepo.getcoOrderr()
+            // console.log(data,"kkkkkkkkk");
+
+            return new CommonResponseModel(true,1,'',data)
+        }catch(err){
+            throw err
+        }
+    }
 }
