@@ -36,6 +36,7 @@ export enum VendorNameEnum {
     extractedLxpantos="LX PANTOS",
     extractedSavinoDell="SAVINO DELL",
     extractedNewblobe="NEW BLOBE",
+    extracteddachser="DACHSER",
 
 
 
