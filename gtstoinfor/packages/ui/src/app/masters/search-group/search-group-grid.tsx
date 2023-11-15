@@ -156,7 +156,7 @@ export function SearchGroupGrid(
     },
    
     {
-      title: <div style={{textAlign:"center"}}>Search Group Name</div>,
+      title: <div style={{textAlign:"center"}}>Search Group</div>,
       dataIndex: 'searchGrpName',
        sorter: (a, b) => a.searchGrpName.length - b.searchGrpName.length,
        sortDirections: ['descend', 'ascend'],

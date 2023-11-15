@@ -109,7 +109,7 @@ export function PaymentTermsForm(props:PaymentTermsFormProps) {
          //style={{ width: 200}} 
          >
           <Option value="Customer">Customer</Option>
-          <Option value="Vendor">Vendor</Option>
+          <Option value="Buyer">Buyer</Option>
           
         </Select>
         </Form.Item>
