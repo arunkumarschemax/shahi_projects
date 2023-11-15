@@ -3,25 +3,34 @@ import { ApiProperty } from '@nestjs/swagger';
 export class M3ItemsDTO {
 
     @ApiProperty()
-    itemCode: number;
+    m3ItemsId: number;
+
+    @ApiProperty()
+    itemCode: string;
 
     @ApiProperty()
     content: string;
 
     @ApiProperty()
-    fabricType: string;
+    fabricType: number;
 
     @ApiProperty()
-    weave: string;
+    weave: number;
 
     @ApiProperty()
     weight: number;
+
+    @ApiProperty()
+    weightUnit: string;
 
     @ApiProperty()
     construction: string;
 
     @ApiProperty()
     yarnCount: string;
+
+    @ApiProperty()
+    yarnUnit: string;
 
     @ApiProperty()
     finish: string;

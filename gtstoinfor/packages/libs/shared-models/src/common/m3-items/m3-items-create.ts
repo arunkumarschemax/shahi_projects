@@ -1,11 +1,14 @@
 export class M3ItemsCreateRequest {
-    itemCode:number;
+    m3ItemsId:number;
+    itemCode:string;
     content: string;
-    fabricType:string;
-    weave: string;
+    fabricType:number;
+    weave: number;
     weight:number;
+    weightUnit:string;
     construction: string;
     yarnCount: string;
+    yarnUnit: string;
     finish: string;
     shrinkage: string;
 

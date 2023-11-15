@@ -160,6 +160,7 @@ import M3StyleCode from "./masters/m3-style-codes/m3-styleCode-form"
 import M3StyleCodeView from "./masters/m3-style-codes/m3-styleCode-view"
 import GRNForm from "./grn/grn-form"
 import M3Items from "./masters/m3-items/m3-items-form"
+import M3ItemsView from "./masters/m3-items/m3-items-view"
 
 
 
@@ -213,6 +214,7 @@ export const AppRoutes = () => {
 
                     
                     <Route path='/m3-items' element={<M3Items/>}/>
+                    <Route path='/m3-items-view' element={<M3ItemsView/>}/>
 
 
                     {/* <Route path='/masters'> */}

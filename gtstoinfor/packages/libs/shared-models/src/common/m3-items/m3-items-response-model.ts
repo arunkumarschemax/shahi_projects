@@ -3,7 +3,7 @@ import { M3ItemsDTO } from "./m3-items-dto";
 
 
 
-export class M3StyleResponseModel extends GlobalResponseObject {
+export class M3ItemsResponseModel extends GlobalResponseObject {
     data? : M3ItemsDTO[];
      /**
      * 

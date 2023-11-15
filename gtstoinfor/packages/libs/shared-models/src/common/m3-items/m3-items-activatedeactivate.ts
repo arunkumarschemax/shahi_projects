@@ -1,10 +1,10 @@
 export class M3ItemsActiveDeactive {
-    itemCode:number;
+    m3ItemsId:number;
     isActive?: boolean;
     updatedUser?: string;
 
-    constructor(itemCode:number, isActive?: boolean, updatedUser?: string) {
-        this.itemCode = itemCode;
+    constructor(m3ItemsId:number, isActive?: boolean, updatedUser?: string) {
+        this.m3ItemsId = m3ItemsId;
         this.isActive = isActive;
         this.updatedUser = updatedUser;
     }
