@@ -21,6 +21,7 @@ export const PurchaseOrderForm =()=>{
     const [vendordata, setVendorData]=useState<any[]>([])
     const [indentId,setIndentId]=useState<any>([])
     const [poType, setPoType]=useState<any>('')
+    const [submitDisbale, setSubmitDisable]=useState<boolean>(true)
     let fabricInfo:PurchaseOrderFbricDto[]=[];
     let trimInfo:PurchaseOrderTrimDto[]=[];
     const date = moment()
@@ -89,17 +90,24 @@ export const PurchaseOrderForm =()=>{
     const onFinish = () =>{
         for(const fabData of fabricData){
             console.log(fabData)
-            const fabInfo = new PurchaseOrderFbricDto(fabData.colourId,fabData.remarks,fabData.fabricTypeId,fabData.m3FabricCode,fabData.shahiFabricCode,fabData.content,fabData.weaveId,fabData.weight,fabData.width,fabData.construction,fabData.yarnCount,fabData.finish,fabData.shrinkage,fabData.pch,fabData.moq,fabData.yarnUnit,fabData.indentFabricId,fabData.poQuantity,fabData.quantityUomId)
-            fabricInfo.push(fabInfo)
+            if(fabData.poQuantity != ""){
+                const fabInfo = new PurchaseOrderFbricDto(fabData.colourId,fabData.remarks,fabData.fabricTypeId,fabData.m3FabricCode,fabData.shahiFabricCode,fabData.content,fabData.weaveId,fabData.weight,fabData.width,fabData.construction,fabData.yarnCount,fabData.finish,fabData.shrinkage,fabData.pch,fabData.moq,fabData.yarnUnit,fabData.indentFabricId,fabData.poQuantity,fabData.quantityUomId)
+                fabricInfo.push(fabInfo)
+            }else{
+                message.error('Please Update Po Quantity')
+            }
         }
         for(const trim of trimData){
-            console.log(trim)
-            const triminfo = new PurchaseOrderTrimDto(trim.productGroupId,trim.trimId,trim.colourId,trim.m3TrimCode,trim.description,trim.consumption,trim.remarks,trim.indentTrmId,trim.poQuantity,trim.quantityUomId)
-            trimInfo.push(triminfo)
+            if(trim.poQuantity != ""){
+                const triminfo = new PurchaseOrderTrimDto(trim.productGroupId,trim.trimId,trim.colourId,trim.m3TrimCode,trim.description,trim.consumption,trim.remarks,trim.indentTrmId,trim.poQuantity,trim.quantityUomId)
+                trimInfo.push(triminfo)
+                setSubmitDisable(true)
+            }else{
+                message.error('Please Update Po Quantity')
+            }  
         }
         const poDto = new PurchaseOrderDto('po11',poForm.getFieldValue('vendorId'),poForm.getFieldValue('styleId'),poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"),poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'),poForm.getFieldValue('remarks'),poForm.getFieldValue('poMaterialType'),poForm.getFieldValue('indentId'),fabricInfo,trimInfo)
-        console.log(poDto.poFabricInfo)
-        console.log(poDto.poTrimInfo)
+
         purchaseOrderService.cretePurchaseOrder(poDto).then(res =>{
             console.log(poDto)
             if(res.status){
@@ -109,13 +117,12 @@ export const PurchaseOrderForm =()=>{
             }
         })
     }
+
     const indentOnchange = (value) =>{
-        console.log(value)
         setIndentId(value)
     }
-    console.log(indentId)
+
     const poTypeOnchange = (value) =>{
-        console.log(value)
         setPoType(value)
     }
 return(
@@ -179,7 +186,7 @@ return(
             </Row>
             <Row justify={'end'}>
             <Col span={24} style={{ textAlign: "right", marginTop:'10px'}} >
-              <Button type="primary" onClick={onFinish}>Submit</Button>
+              <Button type="primary" onClick={onFinish} >Submit</Button>
               <Button style={{ margin: "0 14px" }} onClick={onReset}>Reset</Button>
           </Col>
            

@@ -21,6 +21,7 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
     const [trimCode, setTrimCode]=useState<any[]>([])
     const [trimType, setTrimType]=useState<any[]>([])
     const [uom,setUom] = useState<any[]>([])
+    const [inputDisable, setInputDisable] = useState<boolean>(false)
 
     const [color,setColor] = useState<any[]>([])
     const colorService = new ColourService();
@@ -38,7 +39,6 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
 
     useEffect(() =>{
         if(indentId != undefined){
-            setTrimtableVisible(true)
             indentTrimData(indentId)
         }
     },[indentId])
@@ -54,6 +54,7 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
     const indentTrimData = (value) =>{
         indentservice.getAllIndentTrimDetailsAgainstIndent({indentId:value}).then(res =>{
             if(res.status){
+                setTrimtableVisible(true)
                 props(res.data)
                 setTrimTableData(res.data);
             }
@@ -100,6 +101,10 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
     }
 
     const setEditForm = (rowData: any, index: any) => {
+        console.log(rowData)
+        if(rowData.indentTrmId != undefined){
+            setInputDisable(true)
+        }
         setUpdate(true)
         setDefaultTrimFormData(rowData)
         setTrimIndexVal(index)
@@ -228,7 +233,8 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
                 indentTrmId:defaultTrimFormData.indentTrmId,
                 indentQuantity:defaultTrimFormData.indentQuantity,
                 indentQuantityUnit:defaultTrimFormData.indentQuantityUnit,
-                quantityUomId:defaultTrimFormData.quantityUomId
+                quantityUomId:defaultTrimFormData.quantityUomId,
+                poQuantity:defaultTrimFormData.poQuantity
             })
         }
 
@@ -264,6 +270,7 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
                              optionFilterProp="children"
                              placeholder="Select TrimType"
                              onChange={TrimTypeOnchange}
+                             disabled={inputDisable}
                             >
                             {trimType.map((item) =>{
                                 return (<Option name={item.productGroup} key={item.productGroupId} value
@@ -293,6 +300,7 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
                              optionFilterProp="children"
                              placeholder="Select Trim"
                              onChange={trimCodeOnchange}
+                             disabled={inputDisable}
                             >
                             {trimCode.map((item) =>{
                                 return (<Option type={item.trimCode} name={item.trimCode} key={item.trimId} value
@@ -312,6 +320,7 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
                             optionFilterProp="children"
                             placeholder="Select Color"
                             onChange={onColorChange}
+                            disabled={inputDisable}
                             >
                                 {color.map((e) => {
                                   return (
@@ -334,7 +343,7 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
                             <Input></Input>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2.3%'}}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2.8%'}}>
                     <Form.Item name='quantityUomId'  rules={[{required:true,message:'Quantity unit is required'}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
                             {uom.map(e => {
@@ -347,12 +356,14 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name={'indentQuantity'} label={'Indent Quantity'}>
-                            <Input></Input>
+                            <Input disabled={inputDisable}></Input>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='m3TrimCode' label='M3 Trim Code' rules={[{required:true,message:'M3 code is required'}]}>
-                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'>
+                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'
+                             disabled={inputDisable}
+                             >
                             {trimM3Code.map(e => {
                                 return(
                                     <Option key={e.m3Code} value={e.m3Code}> {e.m3Code}-{e.category}</Option>
