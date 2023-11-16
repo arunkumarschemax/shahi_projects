@@ -175,7 +175,7 @@ export function ItemTypeView(
        render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-      title: 'Division',
+      title:<div style={{ textAlign: 'center' }}>Division</div> ,
       dataIndex: 'divisionName',
       //  responsive: ['lg'],
       sorter: (a, b) => a.divisionName.localeCompare(b.divisionName),
@@ -184,7 +184,7 @@ export function ItemTypeView(
     },
    
     {
-      title: 'Item Type',
+      title:<div style={{ textAlign: 'center' }}>Item Type</div> ,
       dataIndex: 'itemType',
       //  responsive: ['lg'],
       sorter: (a, b) => a.itemType.localeCompare(b.itemType),

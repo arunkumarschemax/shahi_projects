@@ -176,8 +176,8 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
             render: (text, object, index) => (page - 1) * 10 + (index + 1) 
         },
         {
-            title: 'Profit Control Head',
-            dataIndex: 'profitControlHead',
+          title:<div style={{ textAlign: 'center' }}>Profit Control Head</div> ,
+          dataIndex: 'profitControlHead',
             sorter: (a, b) => a.profitControlHead.localeCompare(b.profitControlHead),
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('profitControlHead')

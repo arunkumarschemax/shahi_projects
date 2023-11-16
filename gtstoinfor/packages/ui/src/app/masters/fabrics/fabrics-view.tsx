@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Checkbox, Alert } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Checkbox, Alert, message } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -154,16 +154,16 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
         service.activeteOrDeactivateFabrics(Faab).then(res => { console.log(res);
           if (res.status) {
             // getAllPaymentmethod();
-            AlertMessages.getSuccessMessage('Success'); 
+            message.success(res.internalMessage, 2);
           } else {
             // if (res.intlCode) {
             //   AlertMessages.getErrorMessage(res.internalMessage);
             // } else {
-              AlertMessages.getErrorMessage(res.internalMessage);
+              message.error(res.internalMessage, 2);
             }
           
         }).catch(err => {
-          AlertMessages.getErrorMessage(err.message);
+          message.error(err.message, 2);
         })
       }
 
@@ -176,21 +176,22 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
             render: (text, object, index) => (page - 1) * 10 + (index + 1) 
         },
         {
-            title: 'Fabrics',
-            dataIndex: 'fabricsName',
+          title:<div style={{ textAlign: 'center' }}>Fabric</div> ,
+          dataIndex: 'fabricsName',
             sorter: (a, b) => a.fabricsName.localeCompare(b.fabricsName),
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('fabricsName')
         },
         {
-          title: 'Fabrics Code',
+          title:<div style={{ textAlign: 'center' }}>Fabric Code</div> ,
+
           dataIndex: 'fabricsCode',
           sorter: (a, b) => a.fabricsCode.localeCompare(b.fabricsCode),
           sortDirections: ['descend', 'ascend'],
           ...getColumnSearchProps('fabricsCode')
       },
       {
-        title: 'Description',
+        title:<div style={{ textAlign: 'center' }}>Description</div> ,
         dataIndex: 'description',
         sorter: (a, b) => a.description.localeCompare(b.description),
         sortDirections: ['descend', 'ascend'],
@@ -271,7 +272,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
       ];
 
       return (
-        <Card title='Fabrics' extra={<span><Button onClick={()=> navigate('/masters/fabrics/fabrics-form')} type={'primary'}>New</Button></span>}>
+        <Card title='Fabric' extra={<span><Button onClick={()=> navigate('/masters/fabrics/fabrics-form')} type={'primary'}>New</Button></span>}>
 <br></br>
 <>
 <Row gutter={24}>

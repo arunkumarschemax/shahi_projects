@@ -56,7 +56,7 @@ export class PaymentMethodService {
           }
           const convertedPaymentMethodEntity: PaymentMethod = this.PaymentMethodAdapter.convertDtoToEntity(PaymentMethodDTO,isUpdate);
 
-          console.log(convertedPaymentMethodEntity);
+          // console.log(convertedPaymentMethodEntity);
         const savedPaymentMethodEntity: PaymentMethod = await this.PaymentMethodRepository.save(convertedPaymentMethodEntity);
         const savedPaymentMethodDto: PaymentMethodDTO = this.PaymentMethodAdapter.convertEntityToDto(savedPaymentMethodEntity);
         PaymentMethodDtos.push(savedPaymentMethodDto)

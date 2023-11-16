@@ -89,33 +89,25 @@ export class SubstituionService{
     //         if (!DataMap.has(res.fgItemId)) {
     //           // console.log(res,'000000000000');
               
-    //           DataMap.set (res.fgItemId,new FgDataModel(res.substituionId,res.fgItemCode,res.fgItemId,res.rmItemCode,res.rmItemId,res.fgSku,res.fgSkuId,res.rmSku,res.rmSkuId,res.consumption,res.itemTypeId,res.itemGroupId,res.itemType,res.isActive,[]))
+    //           DataMap.set (res.fgItemId,new FgDataModel(res.fgItemCode,res.fgItemId,[]))
     //           //  DataMap.set(res.fgItemId, new RmDataModel(res.rmItemId,res.itemType,res.rmSku,res.featureCode,res.status,res.itemCode,res.featureOptionId,res.optionGroup,res.optionId,re));
     //           // console.log( res.fgItemId,'service item id');
         
     //         }
     //          const RmSku = DataMap.get(res.fgItemId)?.rmData;
-    //         //  console.log( RmSku,'service item id/ x`out sidex');
     //         if (RmSku) {
     //           // const data1 = new RmDataModel(featureCode,res.status,res.itemCode,res.featureOptionId,res.optionGroup,res.optionId,re
     //           const data1 = new RmDataModel(
-    //           res.rmItemId,
-    //             res.itemType,
-    //             res.rmSKuCode,
-    //             res.featureCode,
-    //             res.status,
-    //             res.itemCode,
-    //             res.featureOptionId,
-    //             res.optionGroup,res.optionId,res.optionValue
-    //           );
-    //           RmSku.push(data1);
+    //           res.fgItemId,res.fgSkuId,res.fgSkuCode,[]);
     //         }
+
+    //         const Rmitem = DataMap.get(res.fgItemId)?.rmItem
     //         // console.log(RmSku,'uuuuuuuuuuuu');
             
     //       }
         
     //       let ListArray: FgDataModel[] = Array.from(DataMap.values());
-    //       console.log(ListArray,'service............');
+    //       // console.log(ListArray,'service............');
         
     //       if(getdata.length>0){
       
@@ -130,6 +122,31 @@ export class SubstituionService{
     //     }catch(err){
     //       throw err
     //     }
+    // }
+
+    // async getSubstitution(req?:fgItemIdReq):Promise<CommonResponseModel>{
+    //        const data =await this.substitutionrepo.getSubstitution(req);
+    //        if(data.length === 0){
+    //         return new CommonResponseModel(false, 0, 'data not found');
+
+    //        }
+
+    //        const DataMap = new Map<string, FgDataModel>();
+    //        for(const res of data){
+    //         if(!DataMap.has(res.fg_item_id)){
+    //           DataMap.set(res.fg_item_id, new FgDataModel(res.fg_item_code,res.fg_item_id,[]))
+    //         }
+    //         const Fgsku=DataMap.get(res.fg_item_id)?.rmData;
+
+    //         if(Fgsku){
+    //           const data1= new RmDataModel(res.fg_sku_id,res.fg_sku,[])
+    //         }
+
+    //         const item=DataMap.get(res.)
+    //         }
+
+    //        }
+
     // }
 
     // async getSubstitution(req?:fgItemIdReq):Promise<CommonResponseModel>{
@@ -199,6 +216,40 @@ async getSubstitution(req?:fgItemIdReq):Promise<CommonResponseModel>{
     throw err
   }
 }
+
+// async getSubstitution(req?: fgItemIdReq): Promise<CommonResponseModel> {
+//   const data = await this.substitutionrepo.getSubstitution(req);
+
+//   if (data.length > 0) {
+//     const subdata = data.reduce((result, item) => {
+//       const fgItemCode = item.fg_item_code;
+//       const fgSkuCode = item.fg_sku;
+//       const rmSkuCode = item.rm_sku;
+//       const rmItemCode = item.rm_item_code;
+
+//       // Initialize nested structures if not present
+//       if (!result[fgItemCode]) {
+//         result[fgItemCode] = {};
+//       }
+//       if (!result[fgItemCode][fgSkuCode]) {
+//         result[fgItemCode][fgSkuCode] = {};
+//       }
+//       if (!result[fgItemCode][fgSkuCode][rmSkuCode]) {
+//         result[fgItemCode][fgSkuCode][rmSkuCode] = [];
+//       }
+
+//       // Add rmItemCode to the nested structure
+//       result[fgItemCode][fgSkuCode][rmSkuCode].push(rmItemCode);
+
+//       return result;
+//     }, {});
+
+//     return new CommonResponseModel(true, 111, 'Data retrieved', subdata);
+//   }
+
+//   return new CommonResponseModel(false, 0, 'Data Not retrieved', {});
+// }
+
     async getRmSku(req?:fgItemIdReq):Promise<CommonResponseModel>{
       try{
         const getData = await this.substitutionrepo.getRmSku(req)

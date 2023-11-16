@@ -1,10 +1,11 @@
-import { RmSkuModel, RmSkuReq } from "../rm-skus";
 import { RmItemModel } from "./rmItem-req";
 
-export class RmDataModel{
+export class RmSkuModel{
     // rmItemId:number;
     // itemType:string;
-    // rmSkuCode:string;
+    rmSkuCode:string;
+    fgItemId: number;
+
     // featureCode:string;
     // status:string;
     // itemCode:string;
@@ -12,25 +13,23 @@ export class RmDataModel{
     // optionGroup:string;
     // optionId:number;
     // optionValue:string;
-    fgItemId: number;
-    fgSkuId:number;
-    fgSkuCode:string;
-    rmItem:RmItemModel[]
+item:RmItemModel[]
+    
     constructor(     fgItemId: number,
-      fgSkuId:number, fgSkuCode:string,rmItem:RmItemModel[])
+        rmSkuCode:string,item:RmItemModel[])
     {
       // this.rmItemId=rmItemId;
       // this.itemType=itemType;
-      // this.rmSkuCode=rmSkuCode;
+      this.rmSkuCode=rmSkuCode;
+      this.item=item;
+      this.fgItemId=fgItemId;
       // this.featureCode=featureCode;
       // this.status=status;
       // this.featureOptionId=featureOptionId;
       // this.optionGroup=optionGroup;
       // this.optionId=optionId;
       // this.optionValue=optionValue;
-      this.fgItemId=fgItemId
-      this.fgSkuId=fgSkuId;
-      this.fgSkuCode=fgSkuCode;
-      this.rmItem=rmItem
+    //   this.fgSkuId=this.fgSkuId;
+    //   this.fgSkuCode=this.fgSkuCode;
     }
 }

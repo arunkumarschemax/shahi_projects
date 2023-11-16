@@ -177,7 +177,7 @@ service.createPaymentMethod(variantData).then(res=>{
           },
 
           {
-            title: 'Payment Method',
+            title:<div style={{ textAlign: 'center' }}>Payemnt Menthod</div> ,
             dataIndex: 'paymentMethod',
             sorter: (a, b) => a.paymentMethod.localeCompare(b.paymentMethod),
             sortDirections: ['descend', 'ascend'],

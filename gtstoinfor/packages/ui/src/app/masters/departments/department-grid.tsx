@@ -175,15 +175,15 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
             render: (text, object, index) => (page - 1) * 10 + (index + 1) 
         },
         {
-            title: 'Department',
-            dataIndex: 'deptName',
+          title:<div style={{ textAlign: 'center' }}>Department</div> ,
+          dataIndex: 'deptName',
             sorter: (a, b) => a.deptName.localeCompare(b.deptName),
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('deptName')
         },
         {
-            title: 'Department Head',
-            dataIndex: 'deptHead',
+          title:<div style={{ textAlign: 'center' }}>Department Head</div> ,
+          dataIndex: 'deptHead',
             sorter: (a, b) => a.deptHead.localeCompare(b.deptHead),
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('deptHead')
