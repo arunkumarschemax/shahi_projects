@@ -5,6 +5,7 @@ import { OperationSequence } from "../operation-sequence/operation-sequence.enti
 import { ItemSkus } from "../sku-generation/sku-generation.entity";
 import { StyleOrder } from "../style-order/style-order.entity";
 import { Indent } from "./indent-entity";
+import { Col } from "antd";
 
 @Entity('indent_trims')
 export class IndentTrimsEntity {
@@ -35,11 +36,11 @@ export class IndentTrimsEntity {
         nullable: false
         })
         color: number;
-        @Column('int',{
+        @Column('varchar',{
             name:'quantity',
             nullable: false
             })
-            quantity: number;
+            quantity: string;
 
     @Column('varchar',{
         name:'quantity_unit',
@@ -117,6 +118,12 @@ export class IndentTrimsEntity {
     name: "version_flag"
   })
   versionFlag: number;
+
+  @Column('varchar',{
+    name:'received_quantity',
+    nullable:true
+  })
+  recivedQuantity:string
 
   @ManyToOne(type => Indent, i => i.iTrimsInfo, { nullable: false, })
   @JoinColumn({ name: "indent_id" })

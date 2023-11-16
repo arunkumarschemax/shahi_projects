@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, PoItemEnum, PurchaseOrderStatus } from '@project-management-system/shared-models';
+import { CommonResponseModel, CustomerOrderStatusEnum, PoItemEnum, PurchaseOrderStatus } from '@project-management-system/shared-models';
 import { GrnRepository } from './dto/grn-repository';
 import { GrnAdapter } from './dto/grn-adapter';
 import { GrnDto, PurchaseOrderReq } from './dto/grn-dto';
@@ -11,6 +11,9 @@ import { PurchaseOrderEntity } from '../purchase-order/entities/purchase-order-e
 import { PurchaseOrderFbricEntity } from '../purchase-order/entities/purchase-order-fabric-entity';
 import { PurchaseOrderTrimEntity } from '../purchase-order/entities/purchase-order-trim-entity';
 import { GenericTransactionManager } from '../../typeorm-transactions';
+import { IndentRepository } from '../indent/dto/indent-repository';
+import { FabricIndentRepository } from '../indent/dto/fabric-indent-repository';
+import { TrimIndentRepository } from '../indent/dto/trim-indent-repository';
 
 @Injectable()
 
@@ -24,7 +27,12 @@ export class GrnService{
         private poTrimRepo:Repository<PurchaseOrderTrimEntity>,
         private readonly dataSource: DataSource,
         @InjectRepository(PurchaseOrderEntity)
-        private readonly poRepo:Repository<PurchaseOrderEntity>
+        private readonly poRepo:Repository<PurchaseOrderEntity>,
+        private readonly indentRepo:IndentRepository,
+        private readonly indentFabricRepo:FabricIndentRepository,
+        private readonly indentTrimRepo:TrimIndentRepository
+
+
       
     ){}
 
@@ -74,11 +82,47 @@ export class GrnService{
             throw err
         }
     }
+    async getAllIndentDataUPdateStatus(materialType:string,id:number):Promise<CommonResponseModel>{
+        try{
+            const manager = this.dataSource;
+            let query=' SELECT it.quantity AS trimQuantity,ifc.quantity AS fabQuantity,ifc.received_quantity,it.received_quantity,i.indent_id AS indentId,ifabric_id AS indenFabricId,itrims_id AS indentTrimId FROM indent i LEFT JOIN indent_fabric ifc ON i.indent_id=ifc.indent_id LEFT JOIN indent_trims it ON it.indent_id=i.indent_id WHERE i.indent_id>0 '
+            if(materialType == 'Fabric'){
+                query=query+' and i.indent_id ='+id+' and ifc.quantity != ifc.received_quantity'
+            }
+            if(materialType == 'Trim'){
+                query=query+' and i.indent_id='+id+'  and it.quantity != it.received_quantity'
+            }
+            const result= await manager.query(query)
+            if(result){
+                return new CommonResponseModel(true,1,'',result)
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+    async getIndentid(materialType:string,id:number):Promise<CommonResponseModel>{
+        try{
+            const manager = this.dataSource;
+            let query=' SELECT i.indent_id as indentId FROM indent i LEFT JOIN indent_fabric ifc ON i.indent_id=ifc.indent_id LEFT JOIN indent_trims it ON it.indent_id=i.indent_id WHERE i.indent_id>0 '
+            if(materialType == 'Fabric'){
+                query=query+' and ifabric_id ='+id+''
+            }
+            if(materialType == 'Trim'){
+                query=query+' and itrims_id='+id+''
+            }
+            const result= await manager.query(query)
+            if(result){
+                return new CommonResponseModel(true,1,'',result)
+            }
+        }catch(err){
+            throw err
+        }
+    }
 
     async createGrn(req:GrnDto):Promise<CommonResponseModel>{
         const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
         try{
-            // console.log(req,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
         await transactionalEntityManager.startTransaction();
             const itemInfo=[]
             const grnEntity = new GrnEntity()
@@ -91,7 +135,7 @@ export class GrnService{
             grnEntity.updatedUser=req.updatedUser
             for(const item of req.grnItemInfo){
                 const itemEntity = new GrnItemsEntity()
-                itemEntity.m3ItemCodeId=item.m3ItemCodeId
+                // itemEntity.m3ItemCodeId=item.m3ItemCodeId
                 itemEntity.productGroupId=item.productGroupId
                 itemEntity.receivedQuantity=item.receivedQuantity
                 itemEntity.receivedUomId=item.receivedUomId
@@ -108,32 +152,51 @@ export class GrnService{
             const save = await this.grnRepo.save(grnEntity)  
             if(save){
                 for(const item of req.grnItemInfo){ 
-                   if(item.poFabricId != undefined){
+                  
+                   if(req.materialtype == 'Fabric'){
                     const poQuantity = await this.poFabricRepo.find({where:{poFabricId:item.poFabricId}})
                     if(poQuantity[0].poQuantity == item.conversionQuantity){
                     await this.poFabricRepo.update({poFabricId:item.poFabricId},{grnQuantity:item.conversionQuantity,fabricItemStatus:PoItemEnum.RECEIVED})
-                    }else{
+                    }
+                    else{
                         await this.poFabricRepo.update({poFabricId:item.poFabricId},{fabricItemStatus:PoItemEnum.PARTAILLY_RECEIVED,grnQuantity:item.conversionQuantity})
                     }
+                 
+                    await this.indentFabricRepo.update({ifabricId:item.indentFabricId},{recivedQuantity:item.conversionQuantity})
+                    const indentId = await this.getIndentid(req.materialtype,item.indentFabricId) 
+                    const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype,indentId.data[0].indentId)
+                    if(indentData.data.length == 0){
+                        await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.CLOSED})
+                       }  else{
+                        await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.IN_PROGRESS})
+                       }
+
                    }
-                   if(item.poTrimId != undefined){
+                   if(req.materialtype == 'Trim'){
                     const poQuantity = await this.poTrimRepo.find({where:{poTrimId:item.poTrimId}})
                     if(poQuantity[0].poQuantity == item.conversionQuantity){
                         await this.poTrimRepo.update({poTrimId:item.poTrimId},{grnQuantity:item.conversionQuantity,trimItemStatus:PoItemEnum.RECEIVED})
                     }else{
                         await this.poTrimRepo.update({poTrimId:item.poTrimId},{grnQuantity:item.conversionQuantity,trimItemStatus:PoItemEnum.PARTAILLY_RECEIVED})
                     }
+                    await this.indentTrimRepo.update({itrimsId:item.indentTrinId},{recivedQuantity:item.conversionQuantity})
+                    const indentId = await this.getIndentid(req.materialtype,item.indentTrinId) 
+                    const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype,indentId.data[0].indentId)
+                    if(indentData.data.length == 0){
+                        await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.CLOSED})
+                       }  else{
+                        await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.IN_PROGRESS})
+                       }
                    }
-                }
+                  
+                 }
                     const poData = await this.getAllPoDataToUPdateStatus(req.poId,req.materialtype)
-                    // console.log(poData.data)
-                    // console.log(poData.data.length)
-                    // console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
                     if(poData.data.length == 0){
                         await this.poRepo.update({purchaseOrderId:req.poId},{status:PurchaseOrderStatus.CLOSED})
                     }else{
                         await this.poRepo.update({purchaseOrderId:req.poId},{status:PurchaseOrderStatus.IN_PROGRESS})
                     }
+                    
                 await transactionalEntityManager.completeTransaction();
                 return new CommonResponseModel(true,1,'Grn Created Sucessfully',save)
 
