@@ -307,7 +307,7 @@ export const  BuyersView = () => {
 
 
   return (
-    <Card title='Buyers' extra={<span><Button onClick={() => navigate('/global/buyers/buyers-form')} type={'primary'}>New</Button></span>} size='small'>
+    <Card title='Buyers'  headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/global/buyers/buyers-form')} type={'primary'}>New</Button></span>} size='small'>
      <Row gutter={40} >
       <Col>
           <Card title={'Total Buyers : ' + buyersData.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
