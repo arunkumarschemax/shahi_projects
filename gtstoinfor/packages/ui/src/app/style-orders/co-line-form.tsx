@@ -22,6 +22,7 @@ export const CoLineForm = () => {
     const [salePriceQty,setSalePriceQty] = useState<number>()
     const [coLineItems,setCoLineItems] = useState<any[]>([])
     const [form] = Form.useForm()
+    const [skucodes,setSkuCodes] = useState<any[]>([])
 
 
     useEffect(() => {
@@ -77,6 +78,7 @@ export const CoLineForm = () => {
 
     const setQuantityValue = (e,index,rowData) => {
         if(e.target.value != ''){
+            setSkuCodes([...skucodes,rowData.skuCode])            
             const iniIndex = coLineItems.findIndex(e => e.skuCode === rowData.skuCode)
             if(iniIndex != -1){
                 coLineItems[index].quantity = e.target.value
@@ -165,12 +167,12 @@ export const CoLineForm = () => {
     const [firstHalfData, secondHalfData] = splitData(data);
 
     const onSubmit = () => {
-        const req = new CoLineReq(state?.id,initialData[0].orderNumber,form.getFieldValue('exfactoryDate'),form.getFieldValue('deliveryDate'),form.getFieldValue('season'),initialData[0].buyerPoNumber,coLineItems,form.getFieldValue('coNumber'))
+        const req = new CoLineReq(state?.id,initialData[0].orderNumber,form.getFieldValue('exfactoryDate'),form.getFieldValue('deliveryDate'),form.getFieldValue('season'),initialData[0].buyerPoNumber,coLineItems,form.getFieldValue('coNumber'),null,skucodes)
         console.log(req)
         styleOrderService.createCoLine(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage('CoLine created successfully')
-                onReset()
+                // onReset()
             } else{
                 AlertMessages.getErrorMessage(res.internalMessage)
             }
