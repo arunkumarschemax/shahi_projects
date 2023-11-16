@@ -372,7 +372,7 @@ export const BuyersDestinationForm = () => {
           lg={{ span: 6 }}
           xl={{ span: 12 }}
         >
-          <Card>
+          {/* <Card> */}
             <Row gutter={24}>
               <Col
                 xs={{ span: 24 }}
@@ -403,6 +403,7 @@ export const BuyersDestinationForm = () => {
                   </Select>
                 </Form.Item>
               </Col>
+              
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
@@ -436,7 +437,7 @@ export const BuyersDestinationForm = () => {
                 </Checkbox>
               </Col>
             </Row>
-          </Card>
+          {/* </Card> */}
         </Col>
         <Form form={mapping}>
           {/* <Row gutter={24}> */}
@@ -553,7 +554,7 @@ export const BuyersDestinationForm = () => {
               >
                 <Form.Item>
                   <Button type="default" onClick={save}>
-                    ok
+                    Add
                   </Button>
                 </Form.Item>
               </Col>
@@ -561,14 +562,16 @@ export const BuyersDestinationForm = () => {
           ) : null}
           {/* </Row> */}
         </Form>
-        {selectedOptions.length > 0 && (
-          <Card title="Mapped items">
+        {/* {selectedOptions.length > 0 && (
+          // <Card title="Mapped items" bordered={false}>
             <Row gutter={[24, 24]}>
               {size.length > 0 && (
+                
                 <Card
+                size="small"
                   title="Sizes"
-                  style={{ marginLeft: 100, alignContent: "center" }}
-                  headStyle={{ textAlign: "center" }}
+                  style={{ marginLeft: 100, alignContent: "center",backgroundColor:'#c9ada7' }}
+                  headStyle={{ backgroundColor:'white',color:'black' }}
                 >
                   {size.map((item, index) => (
                     <ul>
@@ -580,13 +583,13 @@ export const BuyersDestinationForm = () => {
                 </Card>
               )}
               {destination.length > 0 && (
-                <Card
+                <Card size="small"
                   title="Destinations"
-                  style={{ marginLeft: 100, alignContent: "center" }}
-                  headStyle={{ textAlign: "center" }}
+                  style={{ marginLeft: 100, alignContent: "center",backgroundColor:'#ffc2d1' }}
+                  headStyle={{ textAlign: "center",backgroundColor:'white',color:'black' }}
                 >
                   {destination.map((item, index) => (
-                    <ul>
+                    <ul style={{listStyle: 'square inside url("sqpurple.gif")',listStylePosition:'initial'}}>
                       <li>
                         {item.destination} <br />
                       </li>
@@ -595,10 +598,10 @@ export const BuyersDestinationForm = () => {
                 </Card>
               )}
               {colour.length > 0 && (
-                <Card
+                <Card size="small"
                   title="Colors"
-                  style={{ marginLeft: 100, alignContent: "center" }}
-                  headStyle={{ textAlign: "center" }}
+                  style={{ marginLeft: 100, alignContent: "center",backgroundColor:'#c77dff' }}
+                  headStyle={{ textAlign: "center",backgroundColor:'white',color:'black' }}
                 >
                   {colour.map((item, index) => (
                     <ul>
@@ -609,15 +612,63 @@ export const BuyersDestinationForm = () => {
                   ))}
                 </Card>
               )}
-              {/* <Card title='Colors'>
-                                        {colours.length>0 &&
-                                        <Card>
-                                    {colour.map((item, index) => (<ul><li>{item.colour} <br/></li></ul> ))}
-                                           </Card>}
-                                    </Card> */}
+            
             </Row>
-          </Card>
-        )}
+        )} */}
+
+
+{selectedOptions.length > 0 && (
+  <Row gutter={[24, 24]}>
+    {size.length > 0 && (
+      <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+        <Card
+          size="small"
+          title="Sizes"
+          style={{ marginBottom: 24, backgroundColor: '#fadbca' }}
+          headStyle={{  backgroundColor: '#fadbca', color: 'black',fontStyle:'oblique',fontWeight:'bolder' }}
+        >
+          {size.map((item, index) => (
+            <ul key={index}>
+              <li>{item.size} <br /></li>
+            </ul>
+          ))}
+        </Card>
+      </Col>
+    )}
+    {destination.length > 0 && (
+      <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+        <Card
+          size="small"
+          title="Destinations"
+          style={{ marginBottom: 24, backgroundColor: '#f5e6e8' }}
+          headStyle={{  backgroundColor: '#f5e6e8', color: 'black',fontStyle:'oblique',fontWeight:'bolder'  }}
+        >
+          {destination.map((item, index) => (
+            <ul key={index} >
+              <li>{item.destination} <br /></li>
+            </ul>
+          ))}
+        </Card>
+      </Col>
+    )}
+    {colour.length > 0 && (
+      <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+        <Card
+          size="small"
+          title="Colors"
+          style={{ marginBottom: 24, backgroundColor: '#ddedaa' }}
+          headStyle={{  backgroundColor: '#ddedaa', color: 'black',fontStyle:'oblique',fontWeight:'bolder'  }}
+       >
+          {colour.map((item, index) => (
+            <ul key={index}>
+              <li>{item.colour} <br /></li>
+            </ul>
+          ))}
+        </Card>
+      </Col>
+    )}
+  </Row>
+)}
 
         <Row justify={"end"}>
           <Col

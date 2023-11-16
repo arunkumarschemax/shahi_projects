@@ -1,18 +1,21 @@
 import { PropertyEnum, SubContractStatus } from "@project-management-system/shared-models";
-import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
+import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn, PrimaryGeneratedColumn } from "typeorm";
 import { StyleOrder } from "../style-order/style-order.entity";
 import { ItemSkus } from "../sku-generation/sku-generation.entity";
 
 @Entity('fg_item')
-export class ItemCreation {
+export class 
+ItemCreation {
 
-  @PrimaryGeneratedColumn("increment", { name: 'fg_item_id' })
+  @PrimaryGeneratedColumn("increment",
+   { name: 'fg_item_id' })
   fgitemId: number;
 
-  @Column("varchar", {
+  @Column("varchar", 
+{
     nullable: false,
     length: 255,
-    name: "item_name"
+    name: "item_name",
   })
   itemName: string;
 
@@ -137,7 +140,7 @@ export class ItemCreation {
   currency: string;
 
   @Column("varchar", {
-    nullable: false,
+    nullable: true,
     length: 40,
     name: "item_group"
   })
@@ -266,7 +269,7 @@ export class ItemCreation {
     enum : SubContractStatus,
     nullable: true,
     name: 'is_sub_contract',
-    default:SubContractStatus.YES
+    // default:SubContractStatus.YES
   })
   isSubContract : SubContractStatus;
 
@@ -336,7 +339,8 @@ property:PropertyEnum;
   @Column("varchar", {
     nullable: false,
     name: "created_user",
-    length: 50
+    length: 50,
+    default:'admin'
   })
   createdUser: string | null;
 
@@ -344,6 +348,7 @@ property:PropertyEnum;
   @UpdateDateColumn({
     name: "updated_at",
     type: 'datetime'
+    
   })
   updatedAt: Date;
 

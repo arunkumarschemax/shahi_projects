@@ -298,7 +298,7 @@ const columnsSkelton:any=[
 
 
 return (
-    <Card title='CoAmendment' extra={<span><Button onClick={()=>('/materialCreation/co-amendment')} type={'primary'}>New</Button></span>}>
+    <Card title='CoAmendment' extra={<span><Button onClick={()=>navigate('/order-management/co-amendment')} type={'primary'}>New</Button></span>}>
 <br/>
 <Card>
 <Form onFinish={getCoamendment} form={form} layout='vertical'>

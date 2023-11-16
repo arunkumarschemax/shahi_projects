@@ -1038,15 +1038,14 @@ placeholder='select saleItem' allowClear>
                     >
                        {hierarchyLevel.map((e)=>{
                             return(
-                              <Option key={e.hierarchyLevelId} values={e.hierarchyLevelId}>{e.hierarchyLevel}
+                              <Option key={e.hierarchyLevelId} values={e.hierarchyLevelId}>{e.hierarchyName}
 
                               </Option>
                             )
                           })}  
                     </Select>
-                    {/* <Input placeholder="Fabric code" allowClear /> */}
-                  </Form.Item>
-                </Col>
+                   </Form.Item>
+                </Col> 
                 </Row>
                 <Row gutter={8}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>

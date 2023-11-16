@@ -51,10 +51,12 @@ export class ItemCreationDTO{
     reference: string;
     isActive: boolean;
     createdUser: string;
+    createdAt:Date;
+    updatedAt:Date;
     updatedUser: string;
     versionFlag: number;
     fgitemId?:number;
-    constructor(itemName: string,itemCode: string,description: string,itemTypeId: number,brandId: number,categoryId: number,subCategoryId: number,season: string,responsiblePersonId: number,property:PropertyEnum,productDesignerId: number,approver: number,productionMerchant: number,pdMerchant: number,factoryMerchant: number,salePersonId: number,styleNo: string,internalStyleId: number,uom: string,altUoms: string,currency: string,targetCurrency: string,conversionFactor: string,projectionOrder: string,buyingHouseCommision: number,salePriceQty: number,licenseId: number,customGroupId: number,nationalDbk: number,roslGroup: number,isSubContract: SubContractStatus,salePrice: number,orderConfirmedDate: Date,firstExFactoryDate: Date,orderCloseDate: Date,moq: number,orderQty: number,facilityId: number,itemGroup: string,productGroup: string,businessArea: string,basicUom: string,groupTechClass: string,composition: string,range: string,noOfLacePanel: string,searchGroup: number,reference: string,isActive: boolean,createdUser: string,updatedUser: string,versionFlag: number,fgitemId?:number){
+    constructor(itemName: string,itemCode: string,description: string,itemTypeId: number,brandId: number,categoryId: number,subCategoryId: number,season: string,responsiblePersonId: number,property:PropertyEnum,productDesignerId: number,approver: number,productionMerchant: number,pdMerchant: number,factoryMerchant: number,salePersonId: number,styleNo: string,internalStyleId: number,uom: string,altUoms: string,currency: string,targetCurrency: string,conversionFactor: string,projectionOrder: string,buyingHouseCommision: number,salePriceQty: number,licenseId: number,customGroupId: number,nationalDbk: number,roslGroup: number,isSubContract: SubContractStatus,salePrice: number,orderConfirmedDate: Date,firstExFactoryDate: Date,orderCloseDate: Date,moq: number,orderQty: number,facilityId: number,itemGroup: string,productGroup: string,businessArea: string,basicUom: string,groupTechClass: string,composition: string,range: string,noOfLacePanel: string,searchGroup: number,reference: string,isActive: boolean,createdUser: string,createdAt:Date,updatedAt:Date,updatedUser: string,versionFlag: number,fgitemId?:number){
         this.itemName=itemName;
         this.itemCode=itemCode;
         this.description=description;
@@ -108,5 +110,7 @@ export class ItemCreationDTO{
         this.updatedUser=updatedUser;
         this.versionFlag=versionFlag;
         this.fgitemId = fgitemId;
+        this.createdAt=createdAt;
+        this.updatedAt=updatedAt;
     }
 }

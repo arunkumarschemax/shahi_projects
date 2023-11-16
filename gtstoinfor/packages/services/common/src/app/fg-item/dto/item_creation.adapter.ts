@@ -2,8 +2,8 @@ import { ItemCreation } from "../item_creation.entity";
 import { ItemCreationDto } from "./item-creation.dto";
 
 export class ItemCreationAdapter {
-    convertDtoToEntity(dtoObj: ItemCreationDto,  isUpdate: boolean = false ): ItemCreation{
-        try {
+  convertDtoToEntity(dtoObj: ItemCreationDto, isUpdate: boolean = false): ItemCreation {
+            try {
             const entityObj = new ItemCreation();
             entityObj.altUoms = dtoObj.altUoms
             entityObj.approver = dtoObj.approver
@@ -54,12 +54,21 @@ export class ItemCreationAdapter {
             entityObj.businessArea = dtoObj.businessArea
             entityObj.noOfLacePanel = dtoObj.noOfLacePanel
             entityObj.versionFlag = dtoObj.versionFlag
-            if (isUpdate) {
+            entityObj.createdAt=dtoObj.createdAt
+            entityObj.createdUser=dtoObj.createdUser
+            entityObj.updatedAt=dtoObj.updatedAt
+            // if (isUpdate) {
+            //     entityObj.updatedUser = dtoObj.createdUser;
+            //   } else {
+            //     entityObj.isActive = true;
+            //     entityObj.createdUser = dtoObj.createdUser;
+            //   }
+              if (isUpdate) {
                 entityObj.updatedUser = dtoObj.createdUser;
-              } else {
+            } else {
                 entityObj.isActive = true;
                 entityObj.createdUser = dtoObj.createdUser;
-              }
+            }
             return entityObj;
         } catch (Error) {
             throw Error;
@@ -104,7 +113,7 @@ export class ItemCreationAdapter {
         itemCreationDto.salePrice = itemCreation.salePrice
         itemCreationDto.salePriceQty = itemCreation.salePriceQty
         itemCreationDto.season= itemCreation.season
-        itemCreation.property=itemCreation.property
+        itemCreationDto.property=itemCreation.property
         itemCreationDto.styleNo = itemCreation.styleNo
         itemCreationDto.subCategoryId = itemCreation.subCategoryId
         itemCreationDto.targetCurrency = itemCreation.targetCurrency
@@ -122,6 +131,12 @@ export class ItemCreationAdapter {
         itemCreationDto.noOfLacePanel = itemCreation.noOfLacePanel
         itemCreationDto.updatedUser = itemCreation.updatedUser
         itemCreationDto.versionFlag = itemCreation.versionFlag
+        itemCreationDto.createdAt= itemCreation.createdAt
+        itemCreationDto.updatedAt=itemCreation.updatedAt
+        console.log(itemCreationDto,"console.log dto");
+
         return itemCreationDto;
+
       }
+      
 }

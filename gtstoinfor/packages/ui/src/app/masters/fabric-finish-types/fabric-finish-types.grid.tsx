@@ -289,6 +289,7 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
           </Row> 
           <br></br>
           <Table
+          size='small'
           rowKey={record => record.Id}
           columns={columnsSkelton}
           dataSource={FabricStructuresData}

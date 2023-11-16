@@ -15,9 +15,11 @@ export class ItemCreationController {
 
     @Post('/createItem')
     @ApiBody({type:ItemCreationDto})
-    async createItem(@Body() itemCreationDto:any,isUpdate:boolean=false,@Req() request:Request): Promise<ItemcreationResponseModel> {
+    
+    async createItem(@Body() itemCreationDto:any,isUpdate:boolean=false): Promise<ItemcreationResponseModel> {
         try {
-            console.log(itemCreationDto,"uuuuuuuuuuuuu");
+            console.log(itemCreationDto,"*****************");
+            
             return await this.itemCreationService.createItem(itemCreationDto, false);
         } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
@@ -28,7 +30,7 @@ export class ItemCreationController {
     @ApiBody({type:ItemCreationDto})
     async updateItem(@Body() itemCreationDto:any,isUpdate:boolean,@Req() request:Request): Promise<ItemcreationResponseModel> {
         try {
-            console.log(itemCreationDto,"uuuuuuuuuuuuu");
+            // console.log(itemCreationDto,"uuuuuuuuuuuuu");
             return await this.itemCreationService.createItem(itemCreationDto, true);
         } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)

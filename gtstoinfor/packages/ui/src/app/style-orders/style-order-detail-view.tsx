@@ -18,7 +18,6 @@ export const StyleOrderDetailView = () => {
   const [detailsData, setDetailsData] = useState<any[]>([]);
   const [total,setTotalQty] =  useState<number>(0)
 let val =0
-  console.log(stateData, "idddddddd");
 
   useEffect(() => {
     getData();
@@ -29,7 +28,6 @@ let val =0
 }
   const getData = () => {
     // const Idreq = new styleOrderReq(stateData.fg_item_id)
-    console.log(stateData, "reqqqqqqqqqqq");
 
     const req = new styleOrderReq(stateData.fg_item_id,stateData.co_id);
     console.log(req,'reqs');
@@ -166,7 +164,7 @@ let val =0
       extra={
         <span>
           <Button
-            onClick={() => navigate("/materialCreation/style-order-view")}
+            onClick={() => navigate("/order-management/style-order-view")}
             type={"primary"}
           >
             Back

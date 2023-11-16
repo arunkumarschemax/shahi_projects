@@ -392,9 +392,20 @@ rmservice.getAllRMItems(req).then(res => {
   return (
       <>
       <Card title={<span >RM Item</span>}style={{textAlign:'left'}} headStyle={{ border: 0 }} 
-    extra={<Link to='/materialCreation/fabric-bom-creation' >
-      <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
-      </Link>} >
+     extra={
+      <div>
+        <Link to='/materialCreation/fabric-bom-creation'>
+          <span style={{ color: 'white' }}>
+            <Button type={'primary'}>Fabric Creation</Button>
+          </span>
+        </Link><span> </span>
+        <Link to='/materialCreation/bomtrimcreation/bom-trim-creation'>
+          <span style={{ color: 'white' }}>
+            <Button type={'primary'}>Trim Creation</Button>
+          </span>
+        </Link>
+      </div>
+    } >
       <Card >
       <Form onFinish={getAllRMItemViewData} form={form} layout='vertical'>
                 <Row gutter={24}>

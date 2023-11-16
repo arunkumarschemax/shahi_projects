@@ -30,7 +30,6 @@ export const FabricDevelopmentView = () =>{
 
 
     useEffect  (()=>{
-      getData()
       Login()
     },[])
     
@@ -42,70 +41,17 @@ export const FabricDevelopmentView = () =>{
       buyerService.getBuyerByRefId(req).then(res=>{
         if(res.status){
           setUserId(res.data)
-    setLoginBuyer(res.data.buyerId)
+          setLoginBuyer(res.data.buyerId)
+          
         }
       })
-      buyerService.getAllActiveBuyers().then(res=>{
+      service.getFabricDevReqData(req).then(res=>{
         if(res.status){
-              setBuyerId(res.data)
-              console.log(buyerId,'buyer');
+              setData(res.data) 
         }
       })
     }
-    const getData = ()=>{
-      const loginId = new BuyerIdReq(loginBuyer)
-      console.log(loginId,'/////////');
-      
-      service.getFabricDevReqData().then(res=>{
-        if(res.status){
-              setData(res.data)
-              console.log(res,'data');
-                
-                LocService.getAll().then(res=>{
-                  console.log(res.data,'----------')
-
-                  if(res.status){
-                        setLocId(res.data)
-                        console.log(locId,'Location');
-                  }
-                })
-                pchService.getAllProfitControlHead().then(res=>{
-                  console.log(res.data,'----------')
-
-                  if(res.status){
-                        setPchId(res.data)
-                        console.log(locId,'Location');
-                  }
-                })
-                pchService.getAllProfitControlHead().then(res=>{
-                  console.log(res.data,'--ooooooooooo---')
-
-                  if(res.status){
-                        setPchId(res.data)
-                        console.log(pchId,'pch');
-                  }
-                })
-              
-
-                employeeService.getAllActiveEmploee().then(res =>{
-                  console.log(res.data,"emp")
-                  if (res.data){
-                   setEmpId(res.data)
-                  }
-                })
-
-
-                styleService.getAllActiveStyle().then(res =>{
-                  console.log(res.data,"emp")
-                  if (res.data){
-                   setStyId(res.data)
-                  }
-                })
-                
-        }
-      })
-     
-  }
+   
   const Info = (rowData) => {
     navigate(`/fabricdevelopment/fabric-development-request-quality/fabric-development-request-quality-view/`, { state: { rowData } });
   }
