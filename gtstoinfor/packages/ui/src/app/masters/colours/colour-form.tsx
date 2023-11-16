@@ -61,7 +61,7 @@ export const ColourForm=(props:ColourFromProps)=>{
       
 
       return(
-        <Card title={<span>Colour</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+        <Card title={<span>Colour</span>} style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
         extra={props.isUpdate==true?"":<Link to='/masters/colour/colour-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
        >
 <Form

@@ -378,7 +378,7 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
     <Card
       title={<span>Buying House</span>}
       style={{ textAlign: "center" }}
-      headStyle={{ border: 0 }}
+      headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       extra={
         <Link to="/masters/buying-house/buying-house-form">
           <span style={{ color: "white" }}>

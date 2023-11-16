@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { CustomerOrderStatusEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { GrnItemsEntity } from "../entities/grn-items-entity";
+import { GRNItemDto } from "./grn-item-dto";
 
 export class GrnDto{
   @ApiProperty()
@@ -29,8 +30,36 @@ export class GrnDto{
   updatedUser?: string | null;
   @ApiProperty()
   versionFlag?: number;
-  @ApiProperty({ type: [GrnItemsEntity] })
-  grnItemInfo: GrnItemsEntity[];
+  @ApiProperty()
+  styleId:number
+  @ApiProperty()
+  materialtype:string
+  @ApiProperty({ type: [GRNItemDto] })
+  grnItemInfo: GRNItemDto[];
 
+
+}
+
+export class PurchaseOrderReq{
+  @ApiProperty()
+  purchaseOrderId:number
+  @ApiProperty()
+  poFabricId?: number;
+  @ApiProperty()
+  poTrimId?: number;
+  @ApiProperty()
+  materialType:string
+  constructor(
+  purchaseOrderId?:number,
+    poFabricId?: number,
+    poTrimId?: number,
+  materialType?:string
+
+  ){
+    this.purchaseOrderId=purchaseOrderId
+    this.poFabricId=poFabricId
+    this.poTrimId=poTrimId
+    this.materialType=materialType
+  }
 
 }

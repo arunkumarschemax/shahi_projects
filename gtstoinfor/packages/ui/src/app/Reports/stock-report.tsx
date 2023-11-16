@@ -127,7 +127,7 @@ const StockReport = () => {
 
   return (
     <div>
-        <Card  title={<span>STACK REPORT</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }}
+        <Card  title={<span>STACK REPORT</span>} style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
         className="card-header">
         <Form form={form} 
         onFinish={onFinish}

@@ -61,7 +61,7 @@ export const ProfitControlHeadForm=(props:ProfitControlHeadFromProps)=>{
       
 
       return(
-        <Card title={<span>Profit Control Head</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+        <Card title={<span>Profit Control Head</span>} style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
         extra={props.isUpdate==true?"":<Link to='/masters/profit-control-head/profit-control-head-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
        >
 <Form

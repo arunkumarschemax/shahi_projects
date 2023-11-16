@@ -262,7 +262,7 @@ export const StyleOrderCreation = () => {
         console.log(req,'---')
     }
     return(
-        <Card title='Style Order Creation' size='small'>
+        <Card title='Style Order Creation' size='small' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
             <Form layout="vertical" form={form} onFinish={onFinish}>
                <Row gutter={[8,4]}>
                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 12}}>

@@ -61,7 +61,7 @@ export const FabricsForm=(props:FabricsFromProps)=>{
       
 
       return(
-        <Card title={<span>Fabrics</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+        <Card title={<span>Fabrics</span>} style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
         extra={props.isUpdate==true?"":<Link to='/masters/fabrics/fabrics-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
        >
 <Form
