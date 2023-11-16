@@ -54,7 +54,7 @@ export function CustomGroupForm(props: CustomGroupFormProps) {
   };
 
   return (
-    <Card title={<span >Custom Groups</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={props.isUpdate==true?"":<Link to='/masters/custom-groups/custom-groups-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
+    <Card title={<span >Custom Groups</span>} style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={props.isUpdate==true?"":<Link to='/masters/custom-groups/custom-groups-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
       <Form form={form } layout={'vertical'} initialValues={props.data} name="control-hooks" onFinish={saveData}  >   
       <Form.Item name="customGroupId" style={{display:"none"}} >
         <Input hidden/>

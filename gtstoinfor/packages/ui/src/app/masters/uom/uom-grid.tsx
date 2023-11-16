@@ -164,6 +164,7 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
     <Card 
       title={<span style={{ color: "Black" }}>Unit of Measurements</span>}
       // style={{ textAlign: "center" }}
+      headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       size="small"
      className="card-header"
     //   extra={

@@ -285,7 +285,7 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
   return (
       <>
             <Card title='Styles' extra={<span><Button onClick={() =>  navigate('/style-management/style/style-form')}
-              type={'primary'}>New</Button></span>} >
+              type={'primary'}>New</Button></span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
    <Row gutter={40}>
         <Col>
           <Card title={'Total Styles: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>

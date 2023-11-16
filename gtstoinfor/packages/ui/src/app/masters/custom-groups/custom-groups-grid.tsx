@@ -263,7 +263,7 @@ export function CustomGroupsGrid(props: CustomGroupProps) {
   }
   return (
     <Card title={<span >Custom Group</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+    style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
     extra={<Link to='/masters/custom-groups/custom-groups-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
       </Link>} >

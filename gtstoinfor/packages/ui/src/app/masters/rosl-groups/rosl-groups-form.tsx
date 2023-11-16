@@ -54,7 +54,7 @@ export function ROSLGroupsForm(props: ROSLGroupsFormProps) {
   };
 
   return (
-    <Card title={<span >ROSL Groups</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={props.isUpdate==true?"":<Link to='/masters/rosl-groups/rosl-groups-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
+    <Card title={<span >ROSL Groups</span>} style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={props.isUpdate==true?"":<Link to='/masters/rosl-groups/rosl-groups-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
       <Form form={form } layout={'vertical'} initialValues={props.data} name="control-hooks" onFinish={saveData}  >   
       <Form.Item name="roslGroupId" style={{display:"none"}} >
         <Input hidden/>

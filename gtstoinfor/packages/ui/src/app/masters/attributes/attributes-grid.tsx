@@ -347,7 +347,7 @@ export function AttributesGrid(props: AttributesProps) {
     <Card
       title={<span>Attributes</span>}
       style={{ textAlign: "center"}}
-      headStyle={{ border: 0 }}
+      headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       extra={
         <Link to="/global/attributes/attributes-form">
           <span style={{ color: "white" }}>

@@ -245,7 +245,7 @@ export function PackageTermsGrid() {
 
   return (
     <Card title = "Package Terms"
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/global/package-terms/package-terms-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} 
+    style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/global/package-terms/package-terms-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} 
     >
      <br></br>
       <Row gutter={40}>

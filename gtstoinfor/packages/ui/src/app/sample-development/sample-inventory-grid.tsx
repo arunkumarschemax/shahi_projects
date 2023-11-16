@@ -228,7 +228,7 @@ const service=new SampleDevelopmentService
         <Card
         title={<span>Sample Inventory</span>}
         style={{ textAlign: "center" }}
-         headStyle={{ border: 0 }}
+         headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
         className="card-header">
             <Table columns={Columns} 
              dataSource={data}

@@ -142,6 +142,7 @@ export default function BasicLayout() {
                     layout={'mix'}
                     token={{ header: { colorBgHeader: 'transparent' }, sider: { colorBgMenuItemSelected: colorPrimaryBg,colorMenuBackground:'#bae9ef42' } }}
                     route={{
+                        key:menu,
                         path: '/',
                         routes:treeRouter(getAllSubMenus()),
                     }}
