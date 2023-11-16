@@ -6,7 +6,7 @@ import PurchaseOrderfabricForm from "./purchase-order-fabric";
 import PurchaseOrderTrim from "./purchase-order-trim";
 import { GlobalVariables, PurchaseOrderDto, PurchaseOrderFbricDto, PurchaseOrderTrimDto } from "@project-management-system/shared-models";
 import moment from "moment";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 export const PurchaseOrderForm =()=>{
     const{Option} =Select
@@ -25,7 +25,7 @@ export const PurchaseOrderForm =()=>{
     let fabricInfo:PurchaseOrderFbricDto[]=[];
     let trimInfo:PurchaseOrderTrimDto[]=[];
     const date = moment()
-    const now = moment().add(GlobalVariables.poExpectedDeliveryDays, 'days');
+    const now = dayjs().add(GlobalVariables.poExpectedDeliveryDays, 'days');
     const styleService = new StyleService()
     const purchaseOrderService = new PurchaseOrderservice()
     const indentService = new IndentService()
@@ -44,7 +44,7 @@ export const PurchaseOrderForm =()=>{
         getStyle()
         getIndnetNo()
         getAllvendors()
-        poForm.setFieldsValue({purchaseOrderDate:date})
+        poForm.setFieldsValue({purchaseOrderDate:dayjs()})
         poForm.setFieldsValue({expectedDeliveryDate:now})
     },[])
 
@@ -107,15 +107,18 @@ export const PurchaseOrderForm =()=>{
             }  
         }
         const poDto = new PurchaseOrderDto('po11',poForm.getFieldValue('vendorId'),poForm.getFieldValue('styleId'),poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"),poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'),poForm.getFieldValue('remarks'),poForm.getFieldValue('poMaterialType'),poForm.getFieldValue('indentId'),fabricInfo,trimInfo)
-
-        purchaseOrderService.cretePurchaseOrder(poDto).then(res =>{
-            console.log(poDto)
-            if(res.status){
-                message.success(res.internalMessage)
-            }else{
-                message.error(res.internalMessage)
-            }
-        })
+        if(poDto.poTrimInfo.length >0 || poDto.poFabricInfo.length >0){
+            purchaseOrderService.cretePurchaseOrder(poDto).then(res =>{
+                console.log(poDto)
+                if(res.status){
+                    message.success(res.internalMessage)
+                }
+            })
+        }
+        else{
+            message.error('Please Update Po Quantity')
+        }
+       
     }
 
     const indentOnchange = (value) =>{
