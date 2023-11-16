@@ -69,7 +69,7 @@ const RMCreationView = () => {
 rmservice.getAllRMItems(req).then(res => {
       if (res.status) {
         setItemData(res.data);
-        message.success(res.internalMessage)
+        //message.success(res.internalMessage)
 
       } else
        {
@@ -251,13 +251,13 @@ rmservice.getAllRMItems(req).then(res => {
       
 
       {
-        title: "Item Group",
-        dataIndex: "item_group",
+        title: "Item Name",
+        dataIndex: "descr",
         width:80,
         align:'center', render: (data) => {
           return data ? data : "-";
         },
-        sorter: (a, b) => a.item_group.localeCompare(b.item_group),
+        sorter: (a, b) => a.descr.localeCompare(b.descr),
         
             sortDirections: ['descend', 'ascend'],
       },
@@ -332,14 +332,32 @@ rmservice.getAllRMItems(req).then(res => {
         sorter: (a, b) => a.currency.localeCompare(b.currency),
         width:80,
       },
+ 
       {
         title: "Price",
-        dataIndex: "price",align:'right',render: (data) => {
-          return data ? data : "-";
-        },
+        dataIndex: "price",
+        align: 'right',
         sorter: (a, b) => a.price.localeCompare(b.price),
-        width:80,
-      },
+        width: 80,
+        render: (text, record) => {
+          const formattedAmount = record.price ? parseFloat(record.price).toLocaleString('en-US', { 
+            style: 'currency',
+            currency: record.currency || 'USD',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }) : "-";
+          return <>{formattedAmount}</>;
+        }
+      },  	
+        
+      // {
+      //   title: "Product Group",
+      //   dataIndex: "product_group",align:'center',render: (data) => {
+      //     return data ? data : "-";
+      //   },
+      //   sorter: (a, b) => a.product_group.localeCompare(b.product_group),
+      //   width:80,
+      // }  ,
       {
         title: `Action`,
         dataIndex: 'action',
