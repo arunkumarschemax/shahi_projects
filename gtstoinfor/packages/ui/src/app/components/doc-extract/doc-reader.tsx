@@ -4,7 +4,7 @@ import { Button, Card, Col, Form, FormInstance, Radio, Row, Select, Spin, Upload
 import { useState } from 'react';
 import { pdfjs } from 'react-pdf';
 import loadingSymbol from '../../../assets/images/1_yE-S7HG0Rg-ACAcnjvKf5Q.gif';
-import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractEfl, extractMsn, extractExpeditors, extractMaersk, extractNagel, extractOocl, extractPDFDataToLinesData, extractFredexfrieght, extractFredexCourier, extractDhlCourierfrieght, extractDhlairduty, extractTotalTransport, extractSanjayForwarder, extractOneTime, extractTiger, extractOia, extractTextiles,extractedUnicorn, extractedUnique, extractedTvs, extractedVelogicIndia, extracteWiderlogistics, extractedWorldLine, extractedKwe, extractedUps, extractedCube, extractedAps, extractChRowbin, extractSavinoDell, extractLxpantos, extractMgh, extractDelmar, extractToll, extractnewBlobe, extractDBSCHENKAR, extractdachser } from './schemax-ai-docx-pdf';
+import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractEfl, extractMsn, extractExpeditors, extractMaersk, extractNagel, extractOocl, extractPDFDataToLinesData, extractFredexfrieght, extractFredexCourier, extractDhlCourierfrieght, extractDhlairduty, extractTotalTransport, extractSanjayForwarder, extractOneTime, extractTiger, extractOia, extractTextiles,extractedUnicorn, extractedUnique, extractedTvs, extractedVelogicIndia, extracteWiderlogistics, extractedWorldLine, extractedKwe, extractedUps, extractedCube, extractedAps, extractChRowbin, extractSavinoDell, extractLxpantos, extractMgh, extractDelmar, extractToll, extractnewBlobe, extractDBSCHENKAR, extractdachser, extractCeva } from './schemax-ai-docx-pdf';
 import { extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned,  extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractOoclInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 ;
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
@@ -211,7 +211,14 @@ export const DocReader = (props: DocReaderProps) => {
                     case VendorNameEnum.extractDBSCHENKAR:
                                 processedData = await extractDBSCHENKAR(pdfData);
                                 console.log('20 CUBE:', processedData);
-                                 break;       
+                                 break;     
+                    case VendorNameEnum.extractCeva:
+                                processedData = await extractCeva(pdfData);
+                                console.log('20 CUBE:', processedData);
+                                 break;     
+                                          
+                                
+
                 // case VendorNameEnum.extractedEfl:
                 //     {
                 //         const isScannedPdf = await checkIsScannedPdf(pdfData)
