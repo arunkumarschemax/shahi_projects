@@ -2928,8 +2928,8 @@ export const extractNagel = async (pdf) => {
                 taxType = "CGST & SGST";
             }
 
-            const amount = parseFloat(extractedData[hsnId - 16].content);
-            const charge = parseFloat(extractedData[hsnId - 8].content);
+            const amount = parseFloat(extractedData[hsnId - 16].content.replace(/,/g, ""));
+            const charge = parseFloat(extractedData[hsnId - 8].content.replace(/,/g, ""));
             const unitQuantity = parseFloat(extractedData[hsnId + 1].content) || 1;
             const unitPrice = (amount / unitQuantity).toFixed(2);
 
@@ -2941,7 +2941,7 @@ export const extractNagel = async (pdf) => {
                 taxType: taxType,
                 charge: charge,
                 taxPercentage: taxPercentage,
-                taxAmount: parseFloat(extractedData[hsnId - 11].content) || 0,
+                taxAmount: parseFloat(extractedData[hsnId - 11].content.replace(/,/g, "")) || 0,
                 amount: amount,
                 igst: igst,
                 cgst: cgst,
