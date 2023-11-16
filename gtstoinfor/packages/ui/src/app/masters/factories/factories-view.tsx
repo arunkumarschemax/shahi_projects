@@ -122,6 +122,7 @@ export default function FactoriesView() {
     <ProTable<FactoryDto, any>
       request={getData}
       bordered size='small'
+      style={{ backgroundColor: '#69c0ff', border: 0 }}
       cardBordered
       editable={{
         type: 'multiple',

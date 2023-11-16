@@ -384,7 +384,7 @@ export function MarketingReqGrid(props: MarketingReqProps) {
     console.log('params', pagination, filters, sorter, extra);
   }
   return (
-    <Card className='card-header' title={<span >Marketing Requisition</span>}
+    <Card  title={<span >Marketing Requisition</span>}
     style={{textAlign:'center'}}
     extra={<Link to='/marketing-requisition-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>

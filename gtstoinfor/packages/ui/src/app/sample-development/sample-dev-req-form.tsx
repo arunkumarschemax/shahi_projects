@@ -297,7 +297,7 @@ export const SampleDevForm = () => {
   };
 
   return (
-    <Card title='Sample Development Request' className="card-header">
+    <Card title='Sample Development Request' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
       <Form layout="vertical" form={form} onFinish={onFinish}>
         <Form.Item name="sampleRequestId" style={{ display: "none" }}>
           <Input hidden />

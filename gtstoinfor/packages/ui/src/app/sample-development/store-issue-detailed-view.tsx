@@ -295,7 +295,7 @@ export const StoreIssueDetailed = () => {
   return (
     <Card
       title="Material Issue"
-      className="card-header"
+      headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       extra={
         <Button onClick={onUpdate} type={"primary"}>
           View

@@ -284,7 +284,7 @@ const MaterialIssueReport = () => {
 
 
 
-      <Card title="Material Issue Report" className='card-header' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+      <Card title="Material Issue Report"  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
         <div>
           <Form form={formRef}>
             <Row gutter={16}>

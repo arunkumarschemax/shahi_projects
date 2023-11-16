@@ -301,7 +301,7 @@ const OnReset = () => {
           .saveAs('Marketing Requisition Report.xlsx');
     }
     return(
-        <Card className="card-header" title='Marketing Requisition Report' style={{textAlign:"center"}}  extra={data1.length > 0 ? (
+        <Card headStyle={{ backgroundColor: '#69c0ff', border: 0 }} title='Marketing Requisition Report' style={{textAlign:"center"}}  extra={data1.length > 0 ? (
             <>
               <Button className='panel_button' style={{backgroundColor:'green',color:'white'}} onClick={() => exportExcel()}>Get Excel</Button>
             </>

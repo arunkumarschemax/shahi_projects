@@ -347,7 +347,7 @@ export const OperationReportingView = () => {
             <span>{'Consumption Code : ' +(data[0].consumptionCode)}</span>
             <span style={{marginLeft: "60px"}}>{'Request No : ' +(data[0].requestNo)}</span>
             </>
-        ):"Operation Reporting"} className='card-header'>
+        ):"Operation Reporting"}  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
             <Form form={form}>
                 <Row>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 6 }}>

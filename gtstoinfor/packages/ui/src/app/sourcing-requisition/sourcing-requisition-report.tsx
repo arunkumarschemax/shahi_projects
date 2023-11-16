@@ -342,7 +342,7 @@ export const SorcingRequisitionReport = () => {
           .saveAs('Sourcing Requisition Report.xlsx');
     }
     return(
-        <Card title='Sourcing Requisition Report' className="card-header" style={{textAlign:'center',color:'#00ffff'}}  extra={data.length > 0 ? (
+        <Card title='Sourcing Requisition Report' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} style={{textAlign:'center',color:'#00ffff'}}  extra={data.length > 0 ? (
             <>
               <Button className='panel_button' style={{backgroundColor:"green",color:'white'}}onClick={() => exportExcel()}>Get Excel</Button>
             </>
