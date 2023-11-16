@@ -12,11 +12,13 @@ import { CoUpdateRepository } from './co-updates.repo';
 import { CoUpdateEntity } from './co-updates.entity';
 import { CoLine } from './co-line.entity';
 import { CoLineService } from './co-line.service';
+import { CoBom } from '../co-bom/co-bom.entity';
+import { FgItemBom } from '../substituion/fg-item-bom.entity';
 
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([StyleOrder,OrderLine,CoUpdateEntity,CoLine
+        TypeOrmModule.forFeature([StyleOrder,OrderLine,CoUpdateEntity,CoLine,CoBom,FgItemBom
         ]),
       ],
       providers: [ApplicationExceptionHandler,StyleOrderService,StyleOrderRepository,OrderLineRepository,ItemCreation,CoUpdateRepository,CoLineService],

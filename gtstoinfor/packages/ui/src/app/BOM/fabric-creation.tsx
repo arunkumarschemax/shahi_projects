@@ -26,7 +26,7 @@ import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import TextArea from "antd/es/input/TextArea";
 import { IsImportedItemEnum, ItemGroupEnum, PropertyEnum, SaleItemEnum } from "@project-management-system/shared-models";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { object } from "prop-types";
 
 export interface FormProps{
@@ -77,6 +77,7 @@ const DeliveryServive = new DeliveryMethodService();
 const deliveryTermsService= new DeliveryTermsService()
 const fabricfinishservice = new  FabricFinishTypeService
 const operationservice = new OperationsService();
+let navigate = useNavigate();
 
 useEffect(() => {
     getAllCurrencies();
@@ -405,7 +406,8 @@ rmservice.createRm(values).then((res)=>{
 
   if(res.status){
     AlertMessages.getSuccessMessage(res.internalMessage)
-
+    onReset()
+    navigate('/materialCreation/rm-creation-view')
   }
   else{
     AlertMessages.getWarningMessage(res.internalMessage)

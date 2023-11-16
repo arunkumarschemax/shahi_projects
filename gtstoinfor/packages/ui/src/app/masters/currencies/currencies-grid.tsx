@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert, Checkbox, message } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
@@ -11,6 +11,7 @@ import { CurrencyDto } from '@project-management-system/shared-models';
 import { CurrencyService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import CurrenciesForm from './currency-form';
+import axios from 'axios';
 
 
 // const data:ItemVariant[] = [
@@ -45,7 +46,8 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
   const searchInput = useRef(null);
   const [page, setPage] = React.useState(1);
   const columns = useState('');
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [currencySymbols, setCurrencySymbols] = useState({});
 
   // const { formatMessage: fm } = useIntl();
   const service = new CurrencyService();
@@ -54,58 +56,28 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
    * used for column filter
    * @param dataIndex column data index
    */
-  // const getColumnSearchProps = (dataIndex: string) => ({
-  //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-  //     <div style={{ padding: 8 }}>
-  //       <Input
-  //         ref={searchInput}
-  //         placeholder={`Search ${dataIndex}`}
-  //         value={selectedKeys[0]}
-  //         onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-  //         onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-  //         style={{ width: 188, marginBottom: 8, display: 'block' }}
-  //       />
-  //       <Button
-  //         type="primary"
-  //         onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-  //         icon={<SearchOutlined />}
-  //         size="small"
-  //         style={{ width: 90, marginRight: 8 }}
-  //       >
-  //         Search
-  //       </Button>
-  //       <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-  //         Reset
-  //       </Button>
-  //     </div>
-  //   ),
-  //   filterIcon: filtered => (
-  //     <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
-  //   ),
-  //   onFilter: (value, record) =>
-  //     record[dataIndex]
-  //       ? record[dataIndex]
-  //         .toString()
-  //         .toLowerCase()
-  //         .includes(value.toLowerCase())
-  //       : false,
-  //   onFilterDropdownVisibleChange: visible => {
-  //     if (visible) { setTimeout(() => searchInput.current.select()); }
-  //   },
-  //   render: text =>
-  //     text ? (
-  //       searchedColumn === dataIndex ? (
-  //         <Highlighter
-  //           highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-  //           searchWords={[searchText]}
-  //           autoEscape
-  //           textToHighlight={text.toString()}
-  //         />
-  //       ) : text
-  //     )
-  //       : null
+  useEffect(() => {getAllCurrencys();}, [])
 
-  // });
+  const currencySymbolMapping = {
+    INR: '₹',
+    USD: '$',
+    EUR: '€',
+    JPY: '¥',
+    GBP: '£',
+    CHF: 'CHF',
+    CAD: 'CA$',
+    USDT: 'USDT',
+    CNY: 'CN¥',
+    ZAR: 'ZAR',
+    BRL: 'R$',
+    MXN: 'MXN',
+    RUB: '₽',
+    SAR: 'SAR',
+    SGD: 'SGD',
+    KRW: '₩',
+    Rupee: '₨',
+    EGP: 'EGP',
+  };
 
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -183,21 +155,36 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
   const columnsSkelton: any = [
     {
       title: 'S No',
-      key: 'sno',
-      width: '70px',
+      key: 'sno',align:'center',
+      width: '50px',
       responsive: ['sm'],
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
-    {
-      title: "Currency Name",
-      dataIndex: "currencyName",
-      sorter: (a, b) => a.source.localeCompare(b.source),
-      sortDirections: ["ascend", "descend"],
-      ...getColumnSearchProps("currencyName"),
+    // {
+    //   title: "Currency Name",
+    //   dataIndex: "currencyName",
+    //   sorter: (a, b) => a.source.localeCompare(b.source),
+    //   sortDirections: ["ascend", "descend"],
+    //   ...getColumnSearchProps("currencyName"),
+    // }, 
+     {
+      title: <div style={{textAlign:'center'}}>Currency Name</div>,
+      dataIndex: 'currencyName',
+      width: '90px',align :'left',
+      sorter: (a, b) => a.currencyName.localeCompare(b.currencyName),
+      sortDirections: ['ascend', 'descend'],
+      ...getColumnSearchProps('currencyName'),
+      render: (text, record) => (
+        <span>
+         <strong>{currencySymbolMapping[record.currencyName]}</strong>  -  {text}
+        </span>
+      ),
     },
     {
       title: 'Status',
-      dataIndex: 'isActive',
+      dataIndex: 'isActive', align:'center',
+      width: '90px',
+
       render: (isActive, rowData) => (
         <>
           {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -214,15 +201,37 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
         },
       ],
       filterMultiple: false,
-      onFilter: (value, record) => {
-        // === is not work
-        return record.isActive === value;
-      },
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{color:'green'}}>Active</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{color:'red'}}>Inactive</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns" >
+          <Button  onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          
+          </div>
+        </div>
+      ),
 
     },
     {
       title: `Action`,
-      dataIndex: 'action',
+      dataIndex: 'action',    align:'center',  width: '120px',
       render: (text, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"
@@ -267,7 +276,6 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
   }
-  useEffect(() => {getAllCurrencys();}, [])
 
   // const getAllCurrencys = async (params = {}, sort, filter) => {
   //   const res = await service.getAllCurrencies()
@@ -282,13 +290,8 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
     service.getAllCurrencies().then(res => {
       if (res.status) {setVariantData(res.data);
       } else {
-        // if (res.intlCode) {
-        //   setVariantData([]);
-        //   // console.log(res);
-        //   AlertMessages.getErrorMessage(res.internalMessage);
-        // } else {
+    
           AlertMessages.getErrorMessage(res.internalMessage);
-        // }
       }
     }).catch(err => {
       AlertMessages.getErrorMessage(err.message);
@@ -297,12 +300,12 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
   }
 
 
-  //drawer related
+ 
   const closeDrawer = () => {
     setDrawerVisible(false);
   }
 
-  //TO open the form for updation
+
   const openFormWithData = (CurrencyViewData: CurrencyDto) => {
     setDrawerVisible(true);
     setSelectedVariant(CurrencyViewData);
@@ -314,9 +317,13 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
     // variantData.isActive=true;
     service.createCurrency(variantData).then(res => {
       if (res.status) {
-        AlertMessages.getSuccessMessage('Currency Created Successfully');
+        // AlertMessages.getSuccessMessage('Currency Created Successfully');
+        message.success(res.internalMessage)
+
         // getAllCurrencys();
       } else {
+        message.error(res.internalMessage)
+
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
         // } else {
@@ -362,12 +369,15 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
       console.log(res);
       if (res.status) {
         // getAllCurrencys();
-        AlertMessages.getSuccessMessage('Success');
+        // AlertMessages.getSuccessMessage('Success');
+        message.success(res.internalMessage)
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
         // } else {
-        AlertMessages.getErrorMessage(res.internalMessage);
+        // AlertMessages.getErrorMessage(res.internalMessage);
+        message.error(res.internalMessage)
+
         // }
       }
     }).catch(err => {
@@ -375,21 +385,6 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
     })
   }
 
-  //   const cumulativeSkelton:CumulativeModel[]=[
-  //     {
-  //       dataIndex:'currencyId',
-  //       lableName:'Currency',
-  //       lablecolor:'#eb2f96',
-  //   cumulativeType:CumulativeTypes.OCCURENCE
-  //   },
-  //   // {
-  //     //   dataIndex:'variantName',
-  //   //   lableName:'Variant Name',
-  //   //   lablecolor:'#eb2f96',
-  //   //   cumulativeType:CumulativeTypes.VALUE
-  //   //   }
-
-  // ]
   return (
 <Card title='Currencies' extra={<span><Button onClick={()=>navigate('/global/currencies/currency-form')} type={'primary'}>New</Button></span>}>
       <>
@@ -437,11 +432,12 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
           columns={columnsSkelton}
           dataSource={variantData}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }
           }}
-          scroll={{x:true}}
+          scroll={{x:'max-content',y:550}}
           onChange={onChange}
           bordered />
       </Card>

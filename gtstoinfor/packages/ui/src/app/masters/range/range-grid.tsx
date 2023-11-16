@@ -319,7 +319,7 @@ const RangeGrid = () => {
               setPage(current);
             }
           }}
-          scroll={{x:true}}
+          scroll={{x:true,y:550}}
           onChange={onChange}
           bordered />
       </Card>

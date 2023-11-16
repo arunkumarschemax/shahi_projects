@@ -83,7 +83,7 @@ export class StyleOrder{
 
     @Column('datetime',{
         name:'instore_date',
-        nullable: false
+        nullable: true
     })
     instoreDate: Date;
 

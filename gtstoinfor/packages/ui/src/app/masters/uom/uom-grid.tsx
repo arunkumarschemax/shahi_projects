@@ -117,14 +117,16 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
       responsive: ["sm"],
       align:"center",
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
+      width:60
     },
     {
       title: <div style={{textAlign:"center"}}>UOM Category</div>,
       dataIndex: "uomCategory",
+      width:200,
       sorter: (a, b) => a.uom.localeCompare(b.model),
       sortDirections: ["ascend", "descend"],
+      
 
-      // width:200,    
       filters: [
         {
           text: 'Area',
@@ -144,14 +146,23 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
         },
       ],
       onFilter: (value,record) =>{ return record.uomCategory === value}
+      
     },
     {
       title: <div style={{textAlign:"center"}}>UOM</div>,
       dataIndex: "uom",
-      sorter: (a, b) => a.uom.localeCompare(b.model),
+      sorter: (a, b) => a.uom.localeCompare(b.uom),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("uom"),
-      // width:130,
+      width:120,
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Units</div>,
+      dataIndex: "units",
+      sorter: (a, b) => a.units.localeCompare(b.units),
+      sortDirections: ["ascend", "descend"],
+      ...getColumnSearchProps("units"),
+      width:120,
     },
     {
       title: <div style={{textAlign:"center"}}>Description</div>,
@@ -177,16 +188,16 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
   ) : data.length > 0 ? (
     <Table
       columns={columns}
-
       dataSource={data}
       className="custom-table-wrapper"
       size="small"
-      pagination={{
-        onChange(current, pageSize) {
-          setPage(current);
-          setPageSize(pageSize);
-        },
-      }}
+      scroll={{x:true,y:500}}
+           pagination={{
+            pageSize:50,
+            onChange(current) {
+              setPage(current);
+            }
+          }}
       rowKey={(rec) => rec.id}
     />
   ) : (

@@ -10,7 +10,8 @@ export class CoLineReq{
     coLineInfo: CoLineItemsReq[];
     coNumber: string;
     coLineId?: number;
-    constructor(coId: number,orderNumber: string,exfactoryDate: any,deliveryDate: any,season: string,buyerPoNumber: string,coLineInfo: CoLineItemsReq[],coNumber: string,coLineId?: number){
+    skucodes?:any[]
+    constructor(coId: number,orderNumber: string,exfactoryDate: any,deliveryDate: any,season: string,buyerPoNumber: string,coLineInfo: CoLineItemsReq[],coNumber: string,coLineId?: number,skucodes?:any[]){
         this.coId = coId
         this.orderNumber = orderNumber
         this.exfactoryDate = exfactoryDate
@@ -20,6 +21,7 @@ export class CoLineReq{
         this.coLineInfo = coLineInfo
         this.coNumber = coNumber
         this.coLineId = coLineId
+        this.skucodes = skucodes
 
     }
 }
