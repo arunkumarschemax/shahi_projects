@@ -11,3 +11,9 @@ export enum MaterialFabricEnum{
   OPEN = 'OPEN',
   COMPLETED = 'COMPLETED'
 }
+
+export enum LocationMappedEnum{
+  OPEN = 'OPEN',
+  PARTIALLY_COMPLETED = 'PARTIALLY_COMPLETED',
+  COMPLETED = 'COMPLETED'
+}
