@@ -37,6 +37,9 @@ export enum VendorNameEnum {
     extractedSavinoDell="SAVINO DELL",
     extractedNewblobe="NEW BLOBE",
     extracteddachser="DACHSER",
+    extractedscanWell="SCANWELL",
+    extractedMatrix="MATRIX",
+
 
 
 
