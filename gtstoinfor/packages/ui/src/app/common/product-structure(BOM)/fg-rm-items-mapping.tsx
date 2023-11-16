@@ -294,6 +294,7 @@ const getRmItemsDatabyProductGroupId1 = () => {
         </Form.Item>
         </Col>
         <Divider type='vertical' />
+        
         <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }} style={{marginLeft:200}}>
 
              <Form.Item name= "trimitems">
@@ -305,7 +306,6 @@ const getRmItemsDatabyProductGroupId1 = () => {
                     <Row gutter={240} style={{marginTop:10}} >
                         {rmData.map((option) => (
                       
-      
                       
                             <>
                             
@@ -320,6 +320,8 @@ const getRmItemsDatabyProductGroupId1 = () => {
                                   <Checkbox value={option.rmitemId} key={option.rmitemId} style={{ marginRight: '8px' }}>
                                     {option.itemCode}
                                   </Checkbox>
+                              
+
 
                                   <Form.Item name={`trim_operationId_${option.rmitemId}`} style={{ margin: 0 }} >
                                 <Select  placeholder="Select Operation" onChange={(value)=>onOperation(option.rmitemId,value)} disabled={!selectedCheckbox1[option.rmitemId]}
@@ -355,8 +357,6 @@ const getRmItemsDatabyProductGroupId1 = () => {
             <Button type='primary'  htmlType="submit">Submit</Button>
             <Button
                   type="default"
-                  danger
-                  icon={<UndoOutlined />}
                   onClick={onReset}
                   style={{ marginLeft: 20 }}
                 >
