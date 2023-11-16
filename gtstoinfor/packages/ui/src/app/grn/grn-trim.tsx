@@ -37,7 +37,7 @@ export const GRNTrimForm =() =>{
     
     const getAllFabricsByPO = () =>{
       const req = new VendorIdReq()
-      poService.getAllFabricsByPO(req).then((res)=>{
+      poService.getPODataById(req).then((res)=>{
             if(res.status){
               setFabricData(res.data)
             }

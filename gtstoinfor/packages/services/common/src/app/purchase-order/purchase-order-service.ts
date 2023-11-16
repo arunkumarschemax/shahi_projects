@@ -7,13 +7,18 @@ import { PurchaseOrderDto } from "./dto/purchase-order-dto";
 import { PurchaseOrderFbricEntity } from "./entities/purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "./entities/purchase-order-trim-entity";
 import { FORMERR } from "dns";
+import { PurchaseOrderRepository } from "./repo/purchase-order-repository";
+import { PurchaseOrderFabricRepository } from "./repo/purchase-order-fabric-repository";
+import { PurchaseOrderTrimRepository } from "./repo/purchase-order-trim-repository";
 let moment = require('moment');
 
 @Injectable()
 export class PurchaseOrderService{
     constructor(
-        @InjectRepository(PurchaseOrderEntity)
-        private poRepo:Repository<PurchaseOrderEntity>,
+        // @InjectRepository(PurchaseOrderEntity)
+        private poRepo:PurchaseOrderRepository,
+        private poFabricRepo: PurchaseOrderFabricRepository,
+        private poTrimRepo : PurchaseOrderTrimRepository,
         @InjectDataSource()
         private dataSource: DataSource,
         ){  }
@@ -124,26 +129,20 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
         }
     }
 
-    async getAllFabricsByPO(req: VendorIdReq): Promise<CommonResponseModel>{
+    async getPODataById(req: VendorIdReq): Promise<CommonResponseModel>{
         try{
-            let query =` SELECT pof.po_fabric_id AS poFabricId,pof.m3_fabric_code AS m3fabricCode,pof.po_quantity AS poQuantity,pof.quantity_uom_id AS quantityUomId,po.po_material_Type AS poMaterialType,
-            u.uom AS quantityUom,pof.fabric_type_id AS fabricTypeId,ft.fabric_type_name AS fabricTypeName,pof.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,
-            pot.po_trim_id AS poTrimId,pot.trim_id AS trimId, pot.m3_trim_code AS m3TrimCode,pot.purchase_order_id AS poId, pot.po_quantity AS poQuantity,pot.quantity_uom_id AS quantityUomId,
-            iff.ifabric_id AS indentFabricId,it.itrims_id AS indentTrimId
-            FROM purchase_order po
-            LEFT JOIN purchase_order_fabric pof ON pof.purchase_order_id = po.purchase_order_id
-            LEFT JOIN purchase_order_trim pot ON pot.purchase_order_id = pot.purchase_order_id
-            LEFT JOIN fabric_type ft ON ft.fabric_type_id = pof.fabric_type_id
-            LEFT JOIN uom u ON u.id = pof.quantity_uom_id
-            LEFT JOIN indent_fabric iff ON iff.ifabric_id = pof.indent_fabric_id
-            LEFT JOIN indent_trims it ON it.itrims_id = pot.indent_trim_id
-            WHERE 1=1`
-            if (req.poId) {
-                query = query + ` AND pof.purchase_order_id = '${req.poId}'`;
+            console.log(req,'f3-=-=-=-=-=-=-=-=-=3333333333333333')
+            let responseData 
+            if(req.materialType === 'Fabric' ){
+                const fabricData = await this.poFabricRepo.getPOFabricData(req)
+                responseData = fabricData
             }
-            const data = await this.dataSource.query(query)
-            if(data.length > 0){
-                return new CommonResponseModel(true,0, "PO Numbers retrieved successfully", data)
+            if(req.materialType === 'Trim'){
+                const trimData = await this.poTrimRepo.getPOTrimData(req)
+                responseData = trimData
+            }
+            if(responseData.length > 0){
+                return new CommonResponseModel(true,0, "PO Numbers retrieved successfully",responseData)
             }else{
                 return new CommonResponseModel(false,1,"No data found",[])
             }

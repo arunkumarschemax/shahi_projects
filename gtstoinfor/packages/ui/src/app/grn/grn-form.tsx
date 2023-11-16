@@ -4,7 +4,7 @@ import TabPane from 'antd/es/tabs/TabPane'
 import React, { useEffect, useState } from 'react'
 import PurchaseOrderfabricForm from '../purchase-order2/purchase-order-fabric'
 import PurchaseOrderTrim from '../purchase-order2/purchase-order-trim'
-import { BuyersService, PurchaseOrderservice } from '@project-management-system/shared-services'
+import { BuyersService, PurchaseOrderservice, VendorsService } from '@project-management-system/shared-services'
 import TextArea from 'antd/es/input/TextArea'
 import GRNFabricForm from './grn-fabric'
 import GRNTrimForm from './grn-trim'
@@ -17,7 +17,7 @@ const GRNForm = () => {
     const [tabName,setTabName] = useState<string>('Fabric')
     const [fabricData, setFabricData]=useState<any[]>([])
     const [trimData, setTrimData]=useState<any[]>([])
-    const vendorService = new BuyersService()
+    const vendorService = new VendorsService()
     const [vendor, setVendor] = useState<any[]>([])
     const [poData, setPoData] = useState<any[]>([])
     const poService = new PurchaseOrderservice()
@@ -28,12 +28,19 @@ const GRNForm = () => {
     },[])
 
     const getVendorsData = () =>{
-        poService.getAllVendors().then((res)=>{
+        vendorService.getAllActiveVendors().then((res)=>{
             if(res.status){
                 setVendor(res.data)
             }
         })
     }
+    // const getVendorsData = () =>{
+    //     poService.getAllVendors().then((res)=>{
+    //         if(res.status){
+    //             setVendor(res.data)
+    //         }
+    //     })
+    // }
 
     const getPoData =(value)=>{
         const req = new VendorIdReq(value)
@@ -44,10 +51,9 @@ const GRNForm = () => {
         })
     }
 
-    const getAllFabricsByPO = (value) =>{
-        console.log(value,'------------')
-      const req = new VendorIdReq(value)
-      poService.getAllFabricsByPO(req).then((res)=>{
+    const getAllFabricsByPO = (val,option) =>{
+      const req = new VendorIdReq(0,val,option.name)
+      poService.getPODataById(req).then((res)=>{
             if(res.status){
               setFabricData(res.data)
             }
@@ -68,6 +74,12 @@ const GRNForm = () => {
         console.log('Form values:', values);
         console.log('Fabric data:', fabricData);
       };
+    
+      const handleSaveFabricData = (savedData) => {
+        // Handle the saved data in the parent component
+        console.log('Saved Fabric Data:', savedData);
+        // You can set the saved data to a state or perform any other actions.
+      };
 
 
 
@@ -82,7 +94,7 @@ const GRNForm = () => {
                            <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor' onSelect={getPoData}>
                                 {vendor.map(e => {
                                     return(
-                                        <Option key={e.id} value={e.id}> {e.vendorCode}-{e.name}</Option>
+                                        <Option key={e.vendorId} value={e.vendorId}>{e.vendorName}</Option>
                                     )
                                 })}
                             </Select>
@@ -115,10 +127,10 @@ const GRNForm = () => {
                         </Form.Item>
                   </Col>
                 </Row>
-                    {fabricData && fabricData.includes('Fabric') ? (
-                        <GRNFabricForm />
+                    {fabricData[0]?.materialType === 'Fabric' ? (
+                        <GRNFabricForm fabricData={fabricData} onSaveData={handleSaveFabricData}/>
                     ) : []}
-                    {fabricData && fabricData.includes('Trim') ? (
+                    {fabricData[0]?.materialType === 'Trim' ? (
                         <GRNTrimForm />
                     ) :[]}
             </Form>

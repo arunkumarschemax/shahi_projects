@@ -29,8 +29,8 @@ export class PurchaseOrderservice extends CommonAxiosService{
         return this.axiosPostCall(this.URL + '/getMaterialTpye')
       }
 
-      async getAllFabricsByPO(req: VendorIdReq): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.URL + '/getAllFabricsByPO', req)
+      async getPODataById(req: VendorIdReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + '/getPODataById', req)
       }
 }
 
