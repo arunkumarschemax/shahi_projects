@@ -58,5 +58,13 @@ export class PurchaseOrderController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
+  @Post('/getAllPurchaseOrderData')
+  async getAllPurchaseOrderData( ): Promise<CommonResponseModel> {
+    try {
+      return await this.purchasseOrdrSerivice.getAllPurchaseOrderData();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
 
 }
