@@ -50,7 +50,7 @@ export class UomService {
 
     async getAllUoms(): Promise<UomResponse> {
         try{
-            const UomDetails = await this.uomRepo.find({order: { uomCategory: 'ASC' }})
+            const UomDetails = await this.uomRepo.find()
             console.log(UomDetails,'---------------s')
             if(UomDetails.length > 0){
                 let uomInfo = [];

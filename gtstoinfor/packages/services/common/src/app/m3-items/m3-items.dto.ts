@@ -1,23 +1,42 @@
 import { IsInt, IsEmail, IsString, IsDateString, IsNumber, IsDate, IsAlphanumeric, MaxLength, Matches, IsOptional, IsNotEmpty, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { RackPositionStatusEnum } from '@project-management-system/shared-models';
-export class RackPositionDTO {
+export class M3ItemsDTO {
 
     @ApiProperty()
-    positionId: number;
+    m3ItemsId: number;
 
     @ApiProperty()
-    rackPositionName: string;
+    itemCode: string;
 
     @ApiProperty()
-    positionCode: number;
+    content: string;
 
     @ApiProperty()
-    rackName: string;
+    fabricType: number;
 
     @ApiProperty()
-    status: RackPositionStatusEnum;
+    weave: number;
 
+    @ApiProperty()
+    weight: number;
+
+    @ApiProperty()
+    weightUnit: string;
+
+    @ApiProperty()
+    construction: string;
+
+    @ApiProperty()
+    yarnCount: string;
+
+    @ApiProperty()
+    yarnUnit: string;
+
+    @ApiProperty()
+    finish: string;
+
+    @ApiProperty()
+    shrinkage: string;
 
     @ApiProperty()
     isActive: boolean;

@@ -1,3 +1,4 @@
+import { RackPositionStatusEnum } from "../../enum/rack-position-enum";
 
 
 export class RackPositionDTO {
@@ -5,6 +6,7 @@ export class RackPositionDTO {
     rackPositionName: string;
     positionCode: number;
     rackName: string;
+    status: RackPositionStatusEnum;
     isActive?:boolean;
     versionFlag?:number;
     
@@ -12,6 +14,7 @@ export class RackPositionDTO {
     constructor(positionId:number,rackPositionName: string,
         positionCode: number,
         rackName: string,
+        status: RackPositionStatusEnum,
         isActive?:boolean,
         versionFlag?:number,
        
