@@ -1,72 +1,36 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CustomerOrderStatusEnum } from "@project-management-system/shared-models";
+import { CustomerOrderStatusEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
+import { GrnItemsEntity } from "../entities/grn-items-entity";
 
 export class GrnDto{
-  // @ApiProperty()
-  // indentId: number;
-  // @ApiProperty()
-  // requestNo: string;
-  // @ApiProperty()
-  // indentDate: Date;
-  // @ApiProperty()
-  // style: number;
-  // @ApiProperty()
-  // expectedDate: Date;
-  // @ApiProperty()
-  // indentCloseDate: Date;
-  // @ApiProperty()
-  // status: CustomerOrderStatusEnum;
-  // @ApiProperty({type:IndentFabricDto})
-  // indentFabricDetails:IndentFabricDto[];
-  // @ApiProperty({type:IndentTrimDto})
-  // indentTrimDetails:IndentTrimDto[];
-  // @ApiProperty()
-  // remarks?: string;
-  // @ApiProperty()
-  // isActive?: boolean;
-  // @ApiProperty()
-  // createdAt?: Date;
-  // @ApiProperty()
-  // createdUser?: string | null;
-  // @ApiProperty()
-  // updatedAt?: Date;
-  // @ApiProperty()
-  // updatedUser?: string | null;
-  // @ApiProperty()
-  // versionFlag?: number;
-  constructor(
-    // indentId: number,
-    // requestNo: string,
-    // indentDate: Date,
-    // expectedDate: Date,
-    // indentCloseDate: Date,
-    // status: CustomerOrderStatusEnum,
-    // indentFabricDetails:IndentFabricDto[],
-    // indentTrimDetails:IndentTrimDto[],
-    // remarks?: string,
-    // isActive?: boolean,
-    // createdAt?: Date,
-    // createdUser?: string | null,
-    // updatedAt?: Date,
-    // updatedUser?: string | null,
-    // versionFlag?: number,
-  ){
-    // this.indentId = indentId;
-    // this.requestNo = requestNo;
-    // this.indentDate = indentDate;
-    // this.expectedDate = expectedDate;
-    // this.indentCloseDate = indentCloseDate;
-    // this.status = status;
-    // this.indentFabricDetails=indentFabricDetails;
-    // this.indentTrimDetails=indentTrimDetails;
-    // this.remarks = remarks;
-    // this.isActive = isActive;
-    // this.createdAt = createdAt;
-    // this.createdUser = createdUser;
-    // this.updatedAt = updatedAt;
-    // this.updatedUser = updatedUser;
-    // this.versionFlag = versionFlag;
-  }
+  @ApiProperty()
+  grnId:number
+  @ApiProperty()
+  grnNumber:string
+  @ApiProperty()
+  vendorId:number
+  @ApiProperty()
+  poId:number
+  @ApiProperty()
+  grnDate:Date
+  @ApiProperty()
+  status:PurchaseOrderStatus
+  @ApiProperty()
+  remarks:string
+  @ApiProperty()
+  isActive?: boolean;
+  @ApiProperty()
+  createdAt?: Date;
+  @ApiProperty()
+  createdUser?: string | null;
+  @ApiProperty()
+  updatedAt?: Date;
+  @ApiProperty()
+  updatedUser?: string | null;
+  @ApiProperty()
+  versionFlag?: number;
+  @ApiProperty({ type: [GrnItemsEntity] })
+  grnItemInfo: GrnItemsEntity[];
 
 
 }

@@ -204,17 +204,33 @@ export class SampleRequestService {
       
        save = await this.sampleRepo.save(sampleReqEntity)
       if(save){
-        for(const fabricData of req.fabricInfo){
-        const quantityWithWastage = Number(fabricData.consumption)+Number((2/100)*fabricData.consumption)
-        const bomEntity = new SamplingbomEntity()
-        bomEntity.sampleRequestId=save.SampleRequestId
-        bomEntity.colourId=fabricData.colourId
-        bomEntity.rmItemId=fabricData.fabricCode //rm_item_id need to be added
-        bomEntity.requiredQuantity=quantityWithWastage?quantityWithWastage:0
-        bomEntity.wastage='2'
-        bomEntity.productGroupId=fabricData.productGroupId
-         saveBomDetails = await this.bomRepo.save(bomEntity)
+        if(req.fabricInfo){
+          for(const fabricData of req.fabricInfo){
+            const quantityWithWastage = Number(fabricData.consumption)+Number((2/100)*fabricData.consumption)
+            const bomEntity = new SamplingbomEntity()
+            bomEntity.sampleRequestId=save.SampleRequestId
+            bomEntity.colourId=fabricData.colourId
+            bomEntity.rmItemId=fabricData.fabricCode //rm_item_id need to be added
+            bomEntity.requiredQuantity=quantityWithWastage?quantityWithWastage:0
+            bomEntity.wastage='2'
+            bomEntity.productGroupId=fabricData.productGroupId
+             saveBomDetails = await this.bomRepo.save(bomEntity)
+            }
         }
+        if(req.trimInfo){
+          for(const trimData of req.trimInfo){
+            const quantityWithWastage = Number(trimData.consumption)+Number((2/100)*trimData.consumption)
+            const bomEntity = new SamplingbomEntity()
+            bomEntity.sampleRequestId=save.SampleRequestId
+            bomEntity.requiredQuantity=quantityWithWastage?quantityWithWastage:0
+            bomEntity.wastage='2'
+            bomEntity.rmItemId=trimData.trimCode
+            bomEntity.productGroupId=trimData.productGroupId
+            bomEntity.colourId=trimData.colourId
+             saveBomDetails = await this.bomRepo.save(bomEntity)
+          }
+        }
+       
       }
       if(save && saveBomDetails){
         return new AllSampleDevReqResponseModel(true,1,'SampleDevelopmentRequest created successfully',[save])
@@ -270,7 +286,7 @@ export class SampleRequestService {
   }
 
   async getTrimCodes(): Promise<CommonResponseModel> {
-    const details = 'SELECT rm_item_id AS trimId,item_code AS trimCode,ri.product_group_id FROM rm_items ri LEFT JOIN product_group pg ON pg.product_group_id=ri.product_group_id WHERE product_group="Packing Trims"'
+    const details = 'SELECT rm_item_id AS trimId,item_code AS trimCode,ri.product_group_id FROM rm_items ri LEFT JOIN product_group pg ON pg.product_group_id=ri.product_group_id WHERE product_group not in( "Fabric")'
     const result = await this.sampleRepo.query(details)
     if (details.length > 0) {
       return new CommonResponseModel(true, 1, 'data retrieved', result)
