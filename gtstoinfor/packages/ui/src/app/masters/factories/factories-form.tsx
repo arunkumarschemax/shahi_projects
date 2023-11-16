@@ -44,7 +44,7 @@ export default function FactoriesForm(props:FactoriesFormProps) {
   }
 
   return (
-    <Card title={props.isUpdate ? 'Update Factory' : 'Add factory'}
+    <Card title={props.isUpdate ? 'Update Factory' : 'Factories'}
     extra={props.isUpdate==true?"":<Link to='/global/factories/factories-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
     >
         <Form form={form} title='Factories' layout='vertical' onFinish={submitForm}  initialValues={props.factoryData}>
@@ -53,7 +53,17 @@ export default function FactoriesForm(props:FactoriesFormProps) {
                 <Input hidden/>
               </Form.Item>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name='name' label='Name'>
+                <Form.Item name='name' label='Factory Name'  rules={[
+                    {
+                      required: true,
+                      message:"Factory Name Is Required"
+                      
+                    },
+                    {
+                      pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                      message: `Should contain only alphabets and numbers.`
+                    }
+                  ]}>
                   <Input />
                 </Form.Item>
               </Col>
@@ -63,11 +73,80 @@ export default function FactoriesForm(props:FactoriesFormProps) {
                 </Form.Item>
               </Col>
             </Row>
-            <Row  gutter={24} justify={'end'}>
-              <Col xs={{ span: 6 }} sm={{ span: 6}} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button onClick={onReset}>Reset</Button></Col>
-              <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span:2  }}><Button type='primary' htmlType='submit'>Submit</Button></Col>
-            </Row>
+          <Row>
+        <Col span={24} style={{ textAlign: 'right' }}>
+          
+            <Button type="primary" htmlType="submit" >
+              Submit
+            </Button>
+            {(props.isUpdate===false) &&
+         <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset}>
+            Reset
+          </Button>
+          }
+            </Col>
+          </Row>
         </Form>
+
+{/* <Form form={form } layout={'vertical'} initialValues={props.RangeData} name="control-hooks" onFinish={saveData}  >   
+      <Form.Item name="id" style={{display:"none"}} >
+        <Input hidden/>
+      </Form.Item>
+    <Form.Item style={{display:"none"}} name="createdUser" >
+      <Input hidden/>
+    </Form.Item>
+    <Row gutter={12}>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}}>
+              <Form.Item
+                  name="rangeCode"
+                  label="Range Code"
+                  rules={[
+                    {
+                      required: true,
+                      message:"Range Code Is Required"
+                      
+                    },
+                    {
+                      pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                      message: `Should contain only alphabets and numbers.`
+                    }
+                  ]}>
+                  <Input placeholder='Enter Range Code'/>
+                </Form.Item>
+        </Col>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}}>
+              <Form.Item
+                  name="rangeDescription"
+                  label="Range Description"
+                  rules={[
+                    {
+                      required: true,
+                      message:"Range Description Is Required"
+                      
+                    },
+                    {
+                      pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                      message: `Should contain only alphabets and numbers.`
+                    }
+                  ]}>
+                  <Input placeholder='Enter Range Description'/>
+                </Form.Item>
+        </Col>
+      </Row>
+        <Row>
+        <Col span={24} style={{ textAlign: 'right' }}>
+          
+            <Button type="primary" htmlType="submit" >
+              Submit
+            </Button>
+            {(props.isUpdate===false) &&
+         <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset}>
+            Reset
+          </Button>
+          }
+            </Col>
+          </Row>
+      </Form> */}
     </Card>
    
   )

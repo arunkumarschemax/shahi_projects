@@ -34,8 +34,8 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
         const query = this.createQueryBuilder('rmi')
         .select(`rm_item_id,item_code ,item_type,item_category,profit_control_head AS pch  ,item_group, placement , NAME AS facility ,
         CONCAT(ed.first_name, ' ', ed.last_name) AS responsible_person , product_group ,procurment_group,attached_warehouse,planner ,
-        CONCAT(ba.business_area_code,'-',ba.business_area_name) AS business_area , uo.uom , currency_name AS currency,sale_tax,price,is_imported_item,rmi.structure , rmi.quality,rmi.description AS descr ,dev_responsible,supplier ,generic_code,fft.fabric_finish_type AS fabricFinish,
-        use_in_operation ,ut.uom AS altuom ,multiplication_factor ,purchase_price_qty,excise_duty , lt.liscence_type ,property,is_sale_item ,supply_lead_time,hl.hierarchy_level,total ,
+        CONCAT(ba.business_area_code,'-',ba.business_area_name) AS business_area , uo.uom , currency_name AS currency,sale_tax,price,is_imported_item,rmi.structure , rmi.quality,rmi.item_name AS descr ,dev_responsible,supplier ,generic_code,fft.fabric_finish_type AS fabricFinish,
+        use_in_operation ,ut.uom AS altuom ,multiplication_factor ,purchase_price_qty,excise_duty , lt.liscence_type ,property,is_sale_item ,supply_lead_time,hl.level_5_Code AS hierarchy_level,total ,
         tax,price,consumption ,wastage,cost_Group ,rmi.remarks , dt.delivery_terms_name ,dm.delivery_method`)
         .leftJoin(ItemCategory,'ic','ic.item_category_id = rmi.item_category_id')
         .leftJoin(ProfitControlHead,'pch','pch.profit_control_head_id = rmi.pch_id')
@@ -54,6 +54,7 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
         .leftJoin(HierarchyLevel,'hl','hl.hierarchy_level_id = rmi.hierarchy_Level_id ')
         .leftJoin(DeliveryTerms,'dt','dt.delivery_terms_id = rmi.delivery_terms')
         .leftJoin(DeliveryMethod,'dm','dm.delivery_method_id = rmi.delivery_method')
+
 
        // .where('1=1'); 
       

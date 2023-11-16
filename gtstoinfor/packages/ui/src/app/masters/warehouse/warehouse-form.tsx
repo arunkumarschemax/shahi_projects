@@ -144,7 +144,7 @@ export const WarehouseForm = (props:WarehouseFormProps) => {
           <Input  placeholder='Enter Warehouse Code'/>
         </Form.Item>
         </Col>
-        <Col>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:6}}>
         <Form.Item
                     label="Category"
                     name="category"
