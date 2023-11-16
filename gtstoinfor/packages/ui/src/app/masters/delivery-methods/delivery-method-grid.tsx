@@ -265,7 +265,7 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
   }
   return (
     <Card title={<span >Delivery Method</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+    style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
     extra={<Link to='/global/delivery-methods/delivery-method-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
       </Link>} >

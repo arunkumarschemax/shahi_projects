@@ -64,7 +64,7 @@ export function AttributesForm(props: AttributesFormProps) {
       <Card
         title={<span>Attributes</span>}
         style={{ textAlign: "center" }}
-        headStyle={{ border: 0 }}
+        headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
         extra={
           props.isUpdate == true ? (
             ""

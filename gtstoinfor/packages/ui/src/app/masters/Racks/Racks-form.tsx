@@ -36,7 +36,7 @@ const onFinish = (rackDto: RackDTO) => {
 
   return (
     <div>
-      <Card title={<span>RACKS</span>} style={{ textAlign: 'center' }} headStyle={{ border: 0 }}
+      <Card title={<span>RACKS</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       className="card-header"
         extra={<Button
           onClick={() => navigate('/masters/rack-view')}

@@ -320,7 +320,7 @@ export function CommissionGrid(props: CommissionProps) {
     <Card
       title={<span>Commission</span>}
       style={{ textAlign: "center" }}
-      headStyle={{ border: 0 }}
+      headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       extra={
         <Link to="/masters/commission/commission-form">
           <span style={{ color: "white" }}>

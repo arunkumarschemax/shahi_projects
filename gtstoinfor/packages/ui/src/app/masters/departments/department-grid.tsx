@@ -253,7 +253,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
 
       return (
         <Card title={<span>Departments</span>}
-        style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/department/department-form"  ><span><Button type={'primary'} >New </Button> </span></Link>}>
+        style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/masters/department/department-form"  ><span><Button type={'primary'} >New </Button> </span></Link>}>
 <br></br>
 <>
 <Row gutter={40}>

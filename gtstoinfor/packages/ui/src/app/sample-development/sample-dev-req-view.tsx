@@ -319,7 +319,7 @@ export const SampleDevView = () => {
     <Card
       title={<span>Sample Development</span>}
       // style={{ textAlign: "center" }}
-      // headStyle={{ border: 0 }}
+      // headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       size='small'
         extra={
           <Link to="/sample-development/sample-development-form">
