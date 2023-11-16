@@ -475,7 +475,7 @@ export const SourcingRequisitionDynamicView = () => {
 
     return(
         
-        <Card className="card-header" title='Requisition' extra={(logInUser == 'marketUser') && <span><Button onClick={() => navigate('/indent-form')}>New</Button></span>}>
+        <Card headStyle={{ backgroundColor: '#69c0ff', border: 0 }} title='Requisition' extra={(logInUser == 'marketUser') && <span><Button onClick={() => navigate('/indent-form')}>New</Button></span>}>
             {/* {barcode.length > 0 ? <BarcodePrint key={Date.now() + barcode} printBarcodes={closeWindow} closeBarcodePopUp={closeWindow}
           columns={barcodeWithColumns} newWindow={false} barcodeInfo={barcode} /> : ''} */}
             <Form form={sourcingForm}>

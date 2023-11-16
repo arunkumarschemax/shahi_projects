@@ -281,7 +281,6 @@ const SampleRequestReport = () => {
         title={<span>Sample Material Status</span>}
         style={{ textAlign: "center" }}
         headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
-        className="card-header"
       >
         <Form form={form} onFinish={onFinish}>
           <Row gutter={24}>

@@ -279,7 +279,7 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
 
   return (
 
-    <Card title='Operation Groups' extra={<span><Button onClick={() => navigate('/masters/operationgroups/operationgroups-form')} type={'primary'}>New</Button></span>}>
+    <Card title='Operation Groups' extra={<span><Button onClick={() => navigate('/masters/operationgroups/operationgroups-form')} type={'primary'}>New</Button></span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
         <br/>
       <Row gutter={40}>
         <Col>

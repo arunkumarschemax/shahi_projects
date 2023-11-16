@@ -227,7 +227,6 @@ const RackView = () => {
     return (
         <div>
             <Card title={<span>RACKS</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
-                className="card-header"
                 extra={<Button
                     onClick={() => navigate('/masters/rack-form')}
                     type="primary"

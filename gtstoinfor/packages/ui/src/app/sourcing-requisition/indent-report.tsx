@@ -241,7 +241,7 @@ export const IndentReport = () => {
   ]
   return (
     <div>
-      <Card title="Indent Report" className='card-header'>
+      <Card title="Indent Report" >
         <Form form={form}>
           <Row gutter={16}>
             <Col span={6}>

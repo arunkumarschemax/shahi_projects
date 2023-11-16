@@ -189,7 +189,7 @@ console.log(rowData?.[0].trimData,"rowData?.trimData")
   ];
 
   return (
-    <Card title='Sample Request' className="card-header" extra={<Button onClick={onUpdate} type={'primary'}>View</Button>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+    <Card title='Sample Request' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Button onClick={onUpdate} type={'primary'}>View</Button>} >
       <Descriptions size='small'>
         <DescriptionsItem label='Location'>{rowData?.[0]?.locationName}</DescriptionsItem>
         <DescriptionsItem label='PCH'>{rowData?.[0]?.pch}</DescriptionsItem>

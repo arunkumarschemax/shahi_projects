@@ -337,7 +337,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       title={<span>Sample Requests</span>}
       style={{ textAlign: "center" }}
       // headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
-      className="card-header"
+      headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
         extra={
           (logInUser == 'marketUser') &&
           <Link to="/sample-development/sample-development-form">

@@ -183,7 +183,7 @@ export const PurchaseOrderView = () => {
 
   ]
   return (
-    <div><Card title="Purchase Orders" className='card-header' >
+    <div><Card title="Purchase Orders"  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
       <Form>
         <Row gutter={12}>
           <Col span={6}>
