@@ -4,8 +4,8 @@ import { Button, Card, Col, Form, FormInstance, Radio, Row, Select, Spin, Upload
 import { useState } from 'react';
 import { pdfjs } from 'react-pdf';
 import loadingSymbol from '../../../assets/images/1_yE-S7HG0Rg-ACAcnjvKf5Q.gif';
-import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractEfl, extractMsn, extractExpeditors, extractMaersk, extractNagel, extractOocl, extractPDFDataToLinesData, extractFredexfrieght, extractFredexCourier, extractDhlCourierfrieght, extractDhlairduty, extractTotalTransport, extractSanjayForwarder, extractOneTime, extractTiger, extractOia, extractTextiles,extractedUnicorn, extractedUnique, extractedTvs, extractedVelogicIndia, extracteWiderlogistics, extractedJeena, extractedKerryIndev, extractedGateway, extractedFederationofIndian, extractedLogWin, extractedHellmann } from './schemax-ai-docx-pdf';
-import { extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNagelInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractOoclInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
+import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractEfl, extractMsn, extractExpeditors, extractMaersk, extractNagel, extractOocl, extractPDFDataToLinesData, extractFredexfrieght, extractFredexCourier, extractDhlCourierfrieght, extractDhlairduty, extractTotalTransport, extractSanjayForwarder, extractOneTime, extractTiger, extractOia, extractTextiles,extractedUnicorn, extractedUnique, extractedTvs, extractedVelogicIndia, extracteWiderlogistics, extractedWorldLine, extractedKwe, extractedUps, extractedCube, extractedAps, extractChRowbin, extractSavinoDell, extractLxpantos, extractMgh, extractDelmar, extractToll, extractnewBlobe, extractDBSCHENKAR, extractdachser, extractedJeena, extractedFederationofIndian, extractedGateway, extractedHellmann, extractedKerryIndev, extractedLogWin } from './schemax-ai-docx-pdf';
+import { extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned,  extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractOoclInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 ;
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 export interface DocReaderProps {
@@ -63,6 +63,38 @@ export const DocReader = (props: DocReaderProps) => {
             const pdfData = await pdfjs.getDocument({ data: pdfBuffer }).promise;
             let processedData: any = {};
             switch (selectedVendor) {
+                case VendorNameEnum.extracteddachser:
+                    processedData = await extractdachser(pdfData);
+                    console.log('PDF DATA NEW DACHSER:', processedData);
+                    break;
+                case VendorNameEnum.extractedNewblobe:
+                    processedData = await extractnewBlobe(pdfData);
+                    console.log('PDF DATA NEW BLOBW:', processedData);
+                    break;
+                case VendorNameEnum.extractedSavinoDell:
+                    processedData = await extractSavinoDell(pdfData);
+                    console.log('PDF DATA SAVINO DELL:', processedData);
+                    break;
+                case VendorNameEnum.extractedLxpantos:
+                    processedData = await extractLxpantos(pdfData);
+                    console.log('PDF DATA Lxpantos:', processedData);
+                    break;
+                case VendorNameEnum.extractedMgh:
+                    processedData = await extractMgh(pdfData);
+                    console.log('PDF DATA MGH:', processedData);
+                    break;
+                case VendorNameEnum.extractedNagel:
+                    processedData = await extractNagel(pdfData);
+                    console.log('PDF DATA NAGEL:', processedData);
+                    break;
+                case VendorNameEnum.extractedDelmar:
+                    processedData = await extractDelmar(pdfData);
+                    console.log('PDF DATA DELMAR:', processedData);
+                    break;
+                case VendorNameEnum.extractedToll:
+                    processedData = await extractToll(pdfData);
+                    console.log('PDF DATA TOLL:', processedData);
+                    break;
                 case VendorNameEnum.extractedDhl:
                     processedData = await extractDhl(pdfData);
                     console.log('PDF DATA DHL:', processedData);
@@ -123,34 +155,63 @@ export const DocReader = (props: DocReaderProps) => {
                     processedData = await extractOia(pdfData);
                     console.log('PDF DATA OIA:', processedData);
                     break;
-                    case VendorNameEnum.extractedTextiles:
-                        processedData = await extractTextiles(pdfData);
-                        console.log('PDF DATA TEXTILES:', processedData);
-                        break;
+                case VendorNameEnum.extractedTextiles:
+                    processedData = await extractTextiles(pdfData);
+                    console.log('PDF DATA TEXTILES:', processedData);
+                    break;
                 case VendorNameEnum.extractedUnicorn:
-                        processedData = await extractedUnicorn(pdfData);
-                        console.log('UNICORN:', processedData);
-                        break;
+                    processedData = await extractedUnicorn(pdfData);
+                    console.log('UNICORN:', processedData);
+                    break;
                 case VendorNameEnum.extractedUnique:
-                            processedData = await extractedUnique(pdfData);
-                            console.log('UNIQUE:', processedData);
-                            break;
+                    processedData = await extractedUnique(pdfData);
+                    console.log('UNIQUE:', processedData);
+                    break;
                 case VendorNameEnum.extractedTvs:
-                                processedData = await extractedTvs(pdfData);
-                                console.log('TVS:', processedData);
-                                break;
+                    processedData = await extractedTvs(pdfData);
+                    console.log('TVS:', processedData);
+                    break;
                 // case VendorNameEnum.extractedUnitedLiner:
                 //                 processedData = await extractedUnitedLiner(pdfData);
                 //                 console.log('UNITED LINER:', processedData);
                 //                 break;
                   case VendorNameEnum.extractedVelogicIndia:
                                 processedData = await extractedVelogicIndia(pdfData);
-                                console.log('UNITED LINER:', processedData);
+                                console.log('VELOGIC INDIA:', processedData);
                                 break;
                    case VendorNameEnum.extracteWiderlogistics:
                                 processedData = await extracteWiderlogistics(pdfData);
-                                console.log('UNITED LINER:', processedData);
+                                console.log('WIDER LOGISTICS:', processedData);
                                 break;
+                                // extracteWorldLine
+                    case VendorNameEnum.extractedWorldLine:
+                                processedData = await extractedWorldLine(pdfData);
+                                console.log('WORLD LINE:', processedData);
+                                break;
+                    case VendorNameEnum.extractedKwe:
+                                processedData = await extractedKwe(pdfData);
+                                console.log('KWE:', processedData);
+                                 break;
+                    case VendorNameEnum.extractedUps:
+                                processedData = await extractedUps(pdfData);
+                                console.log('UPS:', processedData);
+                                 break;
+                    case VendorNameEnum.extractedCube:
+                                processedData = await extractedCube(pdfData);
+                                console.log('20 CUBE:', processedData);
+                                 break;
+                    case VendorNameEnum.extractedAps:
+                                processedData = await extractedAps(pdfData);
+                                console.log('20 CUBE:', processedData);
+                                 break;
+                    case VendorNameEnum.extractChRowbin:
+                                processedData = await extractChRowbin(pdfData);
+                                console.log('20 CUBE:', processedData);
+                                 break;     
+                    case VendorNameEnum.extractDBSCHENKAR:
+                                processedData = await extractDBSCHENKAR(pdfData);
+                                console.log('20 CUBE:', processedData);
+                                 break;       
                 // case VendorNameEnum.extractedEfl:
                 //     {
                 //         const isScannedPdf = await checkIsScannedPdf(pdfData)
@@ -462,19 +523,19 @@ export const DocReader = (props: DocReaderProps) => {
                 //     break;
                 // }
 
-                case VendorNameEnum.extractedNagel: {
-                    const nagelPDFData = await extractNagel(pdfData);
-                    const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
-                    const allLines = await extractDataFromScannedImages(pageImages, [0]);
-                    const scannedData = await extractNagelInvoiceDataFromScanned(allLines);
-                    processedData['extractedData'] = scannedData.extractedData || {};
-                    processedData['extractedData']['invoiceAmount'] = nagelPDFData.extractedData.invoiceAmount;
-                    processedData['extractedData']['igst'] = nagelPDFData.extractedData.igst;
-                    processedData['extractedData']['cgst'] = nagelPDFData.extractedData.cgst;
-                    processedData['extractedData']['sgst'] = nagelPDFData.extractedData.sgst;
-                    processedData['extractedHsnData'] = nagelPDFData.extractedHsnData;
-                    break;
-                }
+                // case VendorNameEnum.extractedNagel: {
+                //     const nagelPDFData = await extractNagel(pdfData);
+                //     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                //     const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                //     const scannedData = await extractNagelInvoiceDataFromScanned(allLines);
+                //     processedData['extractedData'] = scannedData.extractedData || {};
+                //     processedData['extractedData']['invoiceAmount'] = nagelPDFData.extractedData.invoiceAmount;
+                //     processedData['extractedData']['igst'] = nagelPDFData.extractedData.igst;
+                //     processedData['extractedData']['cgst'] = nagelPDFData.extractedData.cgst;
+                //     processedData['extractedData']['sgst'] = nagelPDFData.extractedData.sgst;
+                //     processedData['extractedHsnData'] = nagelPDFData.extractedHsnData;
+                //     break;
+                // }
 
                 case VendorNameEnum.extractedMaersk:
                     processedData = await extractMaersk(pdfData);

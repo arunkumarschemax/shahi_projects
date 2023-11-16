@@ -30,7 +30,13 @@ export enum VendorNameEnum {
     extractedTiger="TIGER",
     extractedOia="OIA",
     extractedTextiles="TEXTILES COMMITEE",
-
+    extractedToll="TOLL",
+    extractedDelmar="DELMAR",
+    extractedMgh="MGH",
+    extractedLxpantos="LX PANTOS",
+    extractedSavinoDell="SAVINO DELL",
+    extractedNewblobe="NEW BLOBE",
+    extracteddachser="DACHSER",
 
 
 
@@ -45,6 +51,18 @@ export enum VendorNameEnum {
 
 
 
+    extractedWorldLine="WORLD LINE",
+    extractedKwe="KWE",
+    extractedUps = "UPS",
+    extractedCube="20 CUBE",
+    extractedAps="APS",
+    extractChRowbin="CH ROWBIN",
+    extractDBSCHENKAR="DB SCHENKAR",
+
+    
+    
+
+    
 
     
 
