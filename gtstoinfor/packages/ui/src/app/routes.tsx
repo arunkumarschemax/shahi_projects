@@ -190,7 +190,7 @@ export const AppRoutes = () => {
     // ))
 
     return (
-        <Router>
+        // <Router>
             <Routes>
                 <Route path='/' element={
                     <ChildProtectionWrapper>
@@ -646,6 +646,6 @@ export const AppRoutes = () => {
                 {/* </Route> */}
                 <Route path="/login" element={<Login />} />
             </Routes>
-        </Router>
+        // </Router>
     )
 }

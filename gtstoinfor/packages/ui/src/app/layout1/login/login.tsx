@@ -8,14 +8,11 @@ import {
   Row,
   Typography,
   message,
-  notification,
   theme,
 } from "antd";
 import React from "react";
 import "./login.css";
-import { useLocation, useNavigate } from "react-router-dom";
-import { loginUser, useIAMClientState } from "../../common/iam-client-react";
-import { LoginUserDto } from "../../common/iam-client-react/user-models";
+import { useNavigate } from "react-router-dom";
 const { Text, Link, Title } = Typography;
 const { useToken } = theme;
 
@@ -24,40 +21,14 @@ export default function Login() {
   const {
     token: { colorPrimary, colorPrimaryActive, colorBgTextHover },
   } = useToken();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  const { IAMClientAuthContext, dispatch } = useIAMClientState();
-  // const location = useLocation();
-  const onLogin = async (values) => {
+  const onLogin = () => {
+    console.log("login called");
+    console.log(loginForm.getFieldsValue())
+    localStorage.setItem('userName',loginForm.getFieldsValue().username)
+    console.log(localStorage.getItem('userName'))
 
-    
-    try {
-      const req = new LoginUserDto(
-        values.username,
-        values.password,
-        IAMClientAuthContext.authServerUrl
-      );
-
-      let response = await loginUser(dispatch, req);
-
-      
-      if (!response.user) return false;
-      // const from = location.state?.from;
-      // if (from) {
-      //   // navigate(from, { replace: true });
-      // } else {
-      //   // navigate("/user-management/users-from", { replace: true });
-      // }
-      return true;
-    } catch (error: any) {
-      notification.config({ maxCount: 3, duration: 3, placement: "top" });
-      notification.destroy();
-      notification.error({
-        message: "Error",
-        description: error.message,
-      });
-      return false;
-    }
     // loginForm.validateFields().then((values) => {
     //     console.log(values)
     //     const loginDto = new LoginDto(values.username,values.password)
@@ -73,7 +44,7 @@ export default function Login() {
     //     })
 
     // })
-
+    navigate("/");
   };
   return (
     <Card className="hero">
@@ -132,7 +103,7 @@ export default function Login() {
               {/* <Text style={{color:`black`}}>Enter your credentials below to login</Text> */}
               <br />
             </div>
-            <Form form={loginForm} layout="vertical" className="content" onFinish={onLogin}>
+            <Form form={loginForm} layout="vertical" className="content">
               <Form.Item
                 name="username"
                 label={<label style={{ color: "white" }}>Username</label>}
@@ -152,12 +123,13 @@ export default function Login() {
                   placeholder="enter your password"
                 />
               </Form.Item>
+            </Form>
             <Row justify={"end"}>
               <Link style={{ color: "white" }}>Forgot password ?</Link>
             </Row>
             <Row style={{ paddingTop: "20px", justifyContent: "center" }}>
               <Button
-                // onClick={onLogin}
+                onClick={onLogin}
                 style={{
                   width: "60%",
                   backgroundColor: "#BBD6EA",
@@ -165,13 +137,10 @@ export default function Login() {
                   borderRadius: 5,
                 }}
                 type={"primary"}
-                htmlType="submit"
               >
                 Login
               </Button>
             </Row>
-            </Form>
-
           </Card>
           <div
             style={{
