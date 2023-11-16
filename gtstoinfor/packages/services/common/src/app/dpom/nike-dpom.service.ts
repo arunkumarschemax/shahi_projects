@@ -2166,6 +2166,51 @@ export class DpomService {
             return new CommonResponseModel(false, 0, error)
         }
     }
+    
+
+    async getPpmDocTypeForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPpmDocTypeForFactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPpmdesGeoCodeFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPpmGeoCodeFactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPpmPoLineNumberForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPpmPoLineItemNumberForFactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPpmStyleNumberFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPpmStyleNumberForFactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPpmPlanningSeasonCodeFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPpmplanningSeasonCodeForFactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    
+    async getPpmPlanningSeasonYearFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPpmplanningSeasonYearForFactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
 
 }
 

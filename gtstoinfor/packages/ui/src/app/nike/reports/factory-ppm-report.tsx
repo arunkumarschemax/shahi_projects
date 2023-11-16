@@ -53,6 +53,15 @@ const FactoryPPMReport = () => {
     const [remarkModal, setRemarkModal] = useState<boolean>(false)
     const [itemText, setRemarks] = useState<string>('')
     const [csvData, setcsvData] = useState([]);
+    const [docType, setDocType] = useState<any>([]);
+    const [geoCode, setGeoCode] = useState<any>([]);
+    const [poLineItemNumber, setPoLineItemNumber] = useState<any>([]);
+    const [styleNumber, setStyleNumber] = useState<any>([]);
+    const [planSesCode, setPlanSesCode] = useState<any>([]);
+    const [planSesYear, setPlanSesYear] = useState<any>([]);
+
+
+
 
 
     useEffect(() => {
@@ -66,9 +75,49 @@ const FactoryPPMReport = () => {
         getItem();
         getFactory();
         getPonumber();
+        getDocType();
+        getGeoCode();
+        getPpmPoLineForFactory();
+        getStyleNumber();
+        getSesonCode();
+        getSesonYear();
     }, [])
 
+    const getSesonYear = () => {
+        service.getPpmPlanningSeasonYearFactory().then(res => {
+          setPlanSesYear(res.data)
+        })
+      }
 
+    const getSesonCode = () => {
+        service.getPpmPlanningSeasonCodeFactory().then(res => {
+          setPlanSesCode(res.data)
+        })
+      }
+
+    const getStyleNumber = () => {
+        service.getPpmStyleNumberFactory().then(res => {
+          setStyleNumber(res.data)
+        })
+      }
+    const getDocType = () => {
+        service.getPpmDocTypeForFactory().then(res => {
+          setDocType(res.data)
+        })
+      }
+
+      const getGeoCode = () => {
+        service.getPpmdesGeoCodeFactory().then(res => {
+          setGeoCode(res.data)
+        })
+      }
+      
+      
+      const getPpmPoLineForFactory = () => {
+        service.getPpmPoLineNumberForFactory().then(res => {
+          setPoLineItemNumber(res.data)
+        })
+      }
 
     const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
         const req: FactoryUpdateRequest = {
@@ -315,6 +364,30 @@ const FactoryPPMReport = () => {
         if (selectedLineItemStatus && selectedLineItemStatus.length > 0) {
             req.DPOMLineItemStatus = selectedLineItemStatus;
         }
+        if (form.getFieldValue('docType') !== undefined) {
+            req.docTypeCode = form.getFieldValue('docType');
+          }
+        if (form.getFieldValue('geoCode') !== undefined) {
+            req.geoCode = form.getFieldValue('geoCode');
+      }
+      if (form.getFieldValue('poLineItemNumber') !== undefined) {
+        req.poLineItemNumber = form.getFieldValue('poLineItemNumber');
+      }
+      if (form.getFieldValue('styleNumber') !== undefined) {
+        req.styleNumber = form.getFieldValue('styleNumber');
+      }
+      if (form.getFieldValue('planningSeasonCode') !== undefined) {
+        req.planningSeasonCode = form.getFieldValue('planningSeasonCode');
+      }
+      if (form.getFieldValue('planningSeasonYear') !== undefined) {
+        req.planningSeasonYear = form.getFieldValue('planningSeasonYear');
+      }
+      if (form.getFieldValue('gac') !== undefined) {
+        req.gacStartDate = (form.getFieldValue('gac')[0]).format('YYYY-MM-DD');
+      }
+      if (form.getFieldValue('gac') !== undefined) {
+        req.gacEndDate = (form.getFieldValue('gac')[1]).format('YYYY-MM-DD');
+      }
         setTableLoading(true)
         service.getFactoryReportData(req)
             .then(res => {
@@ -1419,104 +1492,36 @@ const FactoryPPMReport = () => {
 
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
-                            <Form.Item label="Document Date" name="documentDate">
-                                <RangePicker />
-
-                            </Form.Item>
-                        </Col>
-
+                     
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
-                            <Form.Item name='productCode' label='Product Code' >
+                            <Form.Item name="DPOMLineItemStatus" label="Line Item Status">
                                 <Select
                                     showSearch
-                                    placeholder="Select Product Code"
+                                    placeholder="Select Factory Status"
                                     optionFilterProp="children"
-                                    allowClear
-                                >
-                                    {productCode?.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
-                                    })
-                                    }
+                                    allowClear mode='multiple'>
+                                    <Option value="Accepted">ACCEPTED</Option>
+                                    <Option value="Unaccepted">UNACCEPTED</Option>
+                                    {/* <Option value="Cancelled">CANCELLED</Option> */}
+                                    <Option value="Closed">CLOSED</Option>
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
-                            <Form.Item name='poNumber' label='Po Number' >
-                                <Select
-                                    showSearch
-                                    placeholder="Select Po Number"
-                                    optionFilterProp="children"
-                                    allowClear
-
-                                >
-                                    {poNumber?.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
-                                    })
-                                    }
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} >
-                            <Form.Item name='colorDesc' label='Color Description' >
-                                <Select
-                                    showSearch
-                                    placeholder="Select Color Description"
-                                    optionFilterProp="children"
-                                    allowClear
-                                >
-                                    {colorDesc?.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.color_desc}>{inc.color_desc}</Option>
-                                    })
-                                    }
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
-                            <Form.Item name='categoryDesc' label='Category Description' >
-                                <Select
-                                    showSearch
-                                    placeholder="Select Category Description"
-                                    optionFilterProp="children"
-                                    allowClear
-                                >
-                                    {categoryDesc.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.category_desc}>{inc.category_desc}</Option>
-                                    })
-                                    }
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }}>
-                            <Form.Item name='destinationCountry' label='Destination Country' >
-                                <Select
-                                    showSearch
-                                    placeholder="Select Destination Country"
-                                    optionFilterProp="children"
-                                    allowClear
-                                >
-                                    {countryDestination?.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.destination_country}>{inc.destination_country}</Option>
-                                    })
-                                    }
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
-                            <Form.Item name='plant' label='Plant Code' >
-                                <Select
-                                    showSearch
-                                    placeholder="Select Plant Code"
-                                    optionFilterProp="children"
-                                    allowClear
-                                >
-                                    {plantCode?.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.plant}>{inc.plant}</Option>
-                                    })
-                                    }
-                                </Select>
-                            </Form.Item>
-                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
+              <Form.Item name='docType' label='Doc Type' >
+                <Select
+                  showSearch
+                  placeholder="Select Doc Type"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {docType?.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.doc_type_code}>{inc.doc_type_code}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
                             <Form.Item name='item' label='Item' >
                                 <Select
@@ -1547,19 +1552,186 @@ const FactoryPPMReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
+                            <Form.Item label="Document Date" name="documentDate">
+                                <RangePicker />
+
+                            </Form.Item>
+                        </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
-                            <Form.Item name="DPOMLineItemStatus" label="Line Item Status">
+                            <Form.Item name='poNumber' label='Purchase Order Number' >
                                 <Select
                                     showSearch
-                                    placeholder="Select Factory Status"
+                                    placeholder="Select Po Number"
                                     optionFilterProp="children"
-                                    allowClear mode='multiple'>
-                                    <Option value="Accepted">ACCEPTED</Option>
-                                    <Option value="Unaccepted">UNACCEPTED</Option>
-                                    {/* <Option value="Cancelled">CANCELLED</Option> */}
-                                    <Option value="Closed">CLOSED</Option>
+                                    allowClear
+
+                                >
+                                    {poNumber?.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
+                                    })
+                                    }
                                 </Select>
                             </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
+                    <Form.Item name='poLineItemNumber' label='Po Line Item Number' >
+                        <Select
+                        showSearch
+                        placeholder="Select poLineItemNumber"
+                        optionFilterProp="children"
+                        allowClear
+                        >
+                        {poLineItemNumber?.map((inc: any) => {
+                            return <Option key={inc.id} value={inc.po_line_item_number}>{inc.po_line_item_number}</Option>
+                        })
+                        }
+                        </Select>
+                        </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
+                        <Form.Item name='styleNumber' label='Style Number' >
+                            <Select
+                            showSearch
+                            placeholder="Select Style Number"
+                            optionFilterProp="children"
+                            allowClear
+                            >
+                            {styleNumber?.map((inc: any) => {
+                                return <Option key={inc.id} value={inc.style_number}>{inc.style_number}</Option>
+                            })
+                            }
+                            </Select>
+                        </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
+                            <Form.Item name='productCode' label='Product Code' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Product Code"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {productCode?.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
+                        <Form.Item name='planningSeasonCode' label='Planning Season Code' >
+                            <Select
+                            showSearch
+                            placeholder="Select Planning Season Code"
+                            optionFilterProp="children"
+                            allowClear
+                            >
+                            {planSesCode?.map((inc: any) => {
+                                return <Option key={inc.id} value={inc.planning_season_code}>{inc.planning_season_code}</Option>
+                            })
+                            }
+                            </Select>
+                        </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                        <Form.Item name='planningSeasonYear' label='Planning Season Year' >
+                            <Select
+                            showSearch
+                            placeholder="Select Planning Season Year"
+                            optionFilterProp="children"
+                            allowClear
+                            >
+                            {planSesYear?.map((inc: any) => {
+                                return <Option key={inc.id} value={inc.planning_season_year}>{inc.planning_season_year}</Option>
+                            })
+                            }
+                            </Select>
+                        </Form.Item>
+                        </Col>
+                      
+                       
+                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} >
+                            <Form.Item name='colorDesc' label='Color Description' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Color Description"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {colorDesc?.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.color_desc}>{inc.color_desc}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+                            <Form.Item name='categoryDesc' label='Category Description' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Category Description"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {categoryDesc.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.category_desc}>{inc.category_desc}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col> */}
+
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }}>
+                            <Form.Item name='destinationCountry' label='Destination Country' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Destination Country"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {countryDestination?.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.destination_country}>{inc.destination_country}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+              <Form.Item name='geoCode' label='Geo Code' >
+                <Select
+                  showSearch
+                  placeholder="Select Geo Code"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {geoCode?.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.geo_code}>{inc.geo_code}</Option>
+                  })
+                  }
+                     </Select>
+                    </Form.Item>
+                 </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                            <Form.Item name='plant' label='Plant Code' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Plant Code"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {plantCode?.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.plant}>{inc.plant}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
+                        <Form.Item label="GAC" name="gac">
+                            <RangePicker />
+                        </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
                             <Form.Item>
