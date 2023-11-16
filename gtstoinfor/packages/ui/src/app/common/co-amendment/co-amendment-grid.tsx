@@ -224,6 +224,7 @@ export interface COAmendmentGridProps {
           key: "sno",
           responsive: ["sm"],
           render: (text, object, index) => (page - 1) * 10 + (index + 1),
+          width:60
         },
         {
           title: "SKU Code",
@@ -259,7 +260,7 @@ export interface COAmendmentGridProps {
               sm={{ span: 24 }}
               md={{ span: 10 }}
               lg={{ span: 10 }}
-              xl={{ span: 10 }}
+              xl={{ span: 20 }}
             >
                 <Form.Item 
                   
@@ -316,6 +317,7 @@ export interface COAmendmentGridProps {
           key: "sno",
           responsive: ["sm"],
           render: (text, object, index) => (page - 1) * 10 + (index + 1),
+          width:60
         },
         {
           title: "SKU Code",
@@ -351,7 +353,7 @@ export interface COAmendmentGridProps {
               sm={{ span: 24 }}
               md={{ span: 10 }}
               lg={{ span: 10 }}
-              xl={{ span: 10 }}
+              xl={{ span: 20 }}
             >
                 <Form.Item 
                 rules={[
@@ -407,6 +409,7 @@ export interface COAmendmentGridProps {
           key: "sno",
           responsive: ["sm"],
           render: (text, object, index) => (page - 1) * 10 + (index + 1),
+          width:60
         },
         {
           title: "SKU Code",
@@ -442,7 +445,7 @@ export interface COAmendmentGridProps {
               sm={{ span: 24 }}
               md={{ span: 10 }}
               lg={{ span: 10 }}
-              xl={{ span: 10 }}
+              xl={{ span: 20 }}
             >
                 <Form.Item 
                  rules={[
@@ -498,6 +501,7 @@ export interface COAmendmentGridProps {
           key: "sno",
           responsive: ["sm"],
           render: (text, object, index) => (page - 1) * 10 + (index + 1),
+          width:60
         },
         {
           title: "SKU Code",
@@ -540,7 +544,7 @@ export interface COAmendmentGridProps {
               sm={{ span: 24 }}
               md={{ span: 10 }}
               lg={{ span: 10 }}
-              xl={{ span: 10 }}
+              xl={{ span: 20 }}
             >
                 {/* <Form.Item 
                 rules={[
@@ -610,6 +614,7 @@ export interface COAmendmentGridProps {
           key: "sno",
           responsive: ["sm"],
           render: (text, object, index) => (page - 1) * 10 + (index + 1),
+          width:60
         },
         {
           title: "SKU Code",
@@ -643,7 +648,7 @@ export interface COAmendmentGridProps {
               sm={{ span: 24 }}
               md={{ span: 10 }}
               lg={{ span: 10 }}
-              xl={{ span: 10 }}
+              xl={{ span: 20 }}
             >
                 <Form.Item 
                 rules={[
@@ -698,6 +703,7 @@ export interface COAmendmentGridProps {
           key: "sno",
           responsive: ["sm"],
           render: (text, object, index) => (page - 1) * 10 + (index + 1),
+          width:60
         },
         {
           title: "SKU Code",
@@ -733,7 +739,7 @@ export interface COAmendmentGridProps {
               sm={{ span: 24 }}
               md={{ span: 10 }}
               lg={{ span: 10 }}
-              xl={{ span: 10 }}
+              xl={{ span: 20 }}
             >
                  <Form.Item 
                 rules={[
@@ -817,6 +823,7 @@ export interface COAmendmentGridProps {
         // }
         columns={columnsToDisplay}
         pagination={false}
+        scroll={{x: '',y:300}}
       />
   )
 }
