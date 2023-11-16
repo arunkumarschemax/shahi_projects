@@ -56,7 +56,6 @@ const RackPosition = () => {
   return (
     <div>
       <Card title={<span>WARE HOUSE LOCATIONS</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
-      className="card-header"
         extra={<Button
           onClick={() => navigate('/masters/rackPosition-view')}
           type="primary"

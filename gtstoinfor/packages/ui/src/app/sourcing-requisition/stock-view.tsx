@@ -197,7 +197,7 @@ export const StockView = () => {
   ];
 
   return (
-    <Card title="Stock" className="card-header">
+    <Card title="Stock" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
       <Table
         className="custom-table-wrapper"
         dataSource={data}

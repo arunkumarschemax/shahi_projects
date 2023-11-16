@@ -63,7 +63,7 @@ const GRNForm = () => {
 
     return(
         <>
-        <Card title='GRN' className="card-header">
+        <Card title='GRN' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
             <Form form={form} layout="vertical" onFinish={onFinish}>
                 <Row gutter={8}>
                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>

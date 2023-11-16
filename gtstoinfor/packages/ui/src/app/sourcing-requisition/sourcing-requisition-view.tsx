@@ -278,7 +278,7 @@ export const SorcingRequisitionView = () => {
         }
     ]
     return(
-        <Card title='Sourcing Requisition View' className="card-header" style={{textAlign:'center'}}  extra={<span><Button onClick={() => navigate('/sourcing-requisition')} type={'primary'}>New</Button></span>}>
+        <Card title='Sourcing Requisition View' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} style={{textAlign:'center'}}  extra={<span><Button onClick={() => navigate('/sourcing-requisition')} type={'primary'}>New</Button></span>}>
               <Row gutter={40} >
       <Col>
           <Card title={'Total : ' + data.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>

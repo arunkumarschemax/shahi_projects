@@ -130,7 +130,7 @@ const column1 : any =[
   return (
     <div>
       <Card>
-      <Card title="PO Detail View" className='card-header' extra={<span style={{ color: 'white' }}> <Button className='panel_button' onClick={() => navigate('/purchase-view')}>Po View</Button> </span>} >
+      <Card title="PO Detail View"  extra={<span style={{ color: 'white' }}> <Button className='panel_button' onClick={() => navigate('/purchase-view')}>Po View</Button> </span>} >
       <Descriptions size='small' >
      
   <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Po Number</span>}>{data[0]?.poNumber}</DescriptionsItem>

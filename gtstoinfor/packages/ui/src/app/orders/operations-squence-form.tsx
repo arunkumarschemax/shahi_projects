@@ -180,7 +180,7 @@ export const OperationSequence = () => {
   }
 
   return (
-    <Card title='Operation Sequence' className='card-header'>
+    <Card title='Operation Sequence' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
       <Form layout="horizontal" form={form}>
           <Form.Item name='styleId' style={{display:'none'}}>
                 <Input hidden/>

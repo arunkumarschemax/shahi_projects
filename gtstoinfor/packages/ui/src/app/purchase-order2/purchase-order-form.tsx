@@ -127,7 +127,7 @@ export const PurchaseOrderForm =()=>{
     }
 return(
     <>
-    <Card title='Purchase Order' className="card-header">
+    <Card title='Purchase Order' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
         <Form form={poForm} layout="vertical">
             <Row gutter={8}>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>

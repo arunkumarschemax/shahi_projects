@@ -176,7 +176,7 @@ export const M3MastersView = () => {
             setDrawerVisible(false);
           }
         return(
-        <Card title='Item Codes' extra={<span><Button onClick={() => navigate('/masters/m3-itemcodes')} type={'primary'}>New</Button></span>} className="card-header">
+        <Card title='Item Codes' extra={<span><Button onClick={() => navigate('/masters/m3-itemcodes')} type={'primary'}>New</Button></span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
             <Table columns={columns} dataSource={data} size='small' className="custom-table-wrapper"/>
             <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '65%' : '65%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>

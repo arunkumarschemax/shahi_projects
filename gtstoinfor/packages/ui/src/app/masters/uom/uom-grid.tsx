@@ -166,7 +166,6 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
       // style={{ textAlign: "center" }}
       headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       size="small"
-     className="card-header"
     //   extra={
     //     <Link to="/vehicle-model-form">
     //       <Button className="panel_button">Create </Button>

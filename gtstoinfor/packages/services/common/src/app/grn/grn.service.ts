@@ -91,7 +91,7 @@ export class GrnService{
             grnEntity.updatedUser=req.updatedUser
             for(const item of req.grnItemInfo){
                 const itemEntity = new GrnItemsEntity()
-                itemEntity.m3ItemCodeId=item.m3ItemCodeId
+                // itemEntity.m3ItemCodeId=item.m3ItemCodeId
                 itemEntity.productGroupId=item.productGroupId
                 itemEntity.receivedQuantity=item.receivedQuantity
                 itemEntity.receivedUomId=item.receivedUomId

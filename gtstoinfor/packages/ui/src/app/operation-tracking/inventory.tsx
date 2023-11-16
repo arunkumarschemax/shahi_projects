@@ -112,7 +112,7 @@ export const InventoryView = () => {
     ]
 
     return (
-        <Card title='Stock View' className='card-header'>
+        <Card title='Stock View' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
             <Form form={form}>
                 <Row>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 5 }}>

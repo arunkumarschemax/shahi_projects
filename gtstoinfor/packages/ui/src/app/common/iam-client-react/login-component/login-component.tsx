@@ -41,7 +41,7 @@ export const LoginComponent = () => {
     return (
 
         <Card
-            className="card-header"
+            headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
             style={{ height: '55%', width: '300px' }}
         >
             {/* <div style={{marginLeft:'20%'}}>
