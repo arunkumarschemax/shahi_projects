@@ -1,3 +1,4 @@
+import { RackPositionStatusEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
 @Entity('rack_position')
@@ -25,6 +26,12 @@ export class RackPositionEntity {
     name: 'rack_name',
   })
   rackName: string;
+
+  @Column('enum',{
+    name:'status',
+    enum: RackPositionStatusEnum
+})
+status: RackPositionStatusEnum;
 
   @Column("boolean", {
     nullable: false,

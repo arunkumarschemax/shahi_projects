@@ -154,11 +154,17 @@ import RackForm from "./masters/Racks/Racks-form"
 import RackView from "./masters/Racks/Racks-view"
 import QualityView from "./masters/quality/quality-view"
 import QualityForm from "./masters/quality/quality-form"
+import PurchaseOrderView from "./purchase-order2/purchase-order-view"
+import PurchaseOrderDetailsView from "./purchase-order2/purchase-order-details-view"
 import { GrnPendingInfoGrid } from "./sample-development/grn-pending-info-grid"
 import { LocationMapping } from "./sample-development/location-mapping"
 import M3StyleCode from "./masters/m3-style-codes/m3-styleCode-form"
 import M3StyleCodeView from "./masters/m3-style-codes/m3-styleCode-view"
+import IndentReport from "./sourcing-requisition/indent-report"
 import GRNForm from "./grn/grn-form"
+import M3Items from "./masters/m3-items/m3-items-form"
+import M3ItemsView from "./masters/m3-items/m3-items-view"
+
 
 
 export const AppRoutes = () => {
@@ -208,6 +214,10 @@ export const AppRoutes = () => {
                     {/* <Route path='/stack-report' element={<StockReport/>}/> */}
                     <Route path='/stack-report' element={<StockReport/>}/>
                     <Route path='/material-requisition' element={<SampleRequestReport/>}/>
+
+                    
+                    <Route path='/m3-items' element={<M3Items/>}/>
+                    <Route path='/m3-items-view' element={<M3ItemsView/>}/>
 
 
                     {/* <Route path='/masters'> */}
@@ -593,6 +603,7 @@ export const AppRoutes = () => {
                     </Route>
                     <Route path='/report'>
                         <Route path='material-issue-report' element={<MaterialIssueReport />} />
+                <Route path='indent-report' element={<IndentReport/>}/>
 
                     </Route>
                     <Route path='/stock-view' element={<StockView />} />
@@ -627,6 +638,8 @@ export const AppRoutes = () => {
                     <Route path='/indent-form' element={<SourcingRequisitionDynamicForm/>}/>
                     <Route path='/requisition-view' element={<SourcingRequisitionDynamicView/>}/>
                     <Route path='/purchase-order' element={<PurchaseOrderForm/>}/>
+                    <Route path='/purchase-view' element={<PurchaseOrderView/>}/>
+                    <Route path='/purchase-detali-view' element={<PurchaseOrderDetailsView/>}/>
                     <Route path='/grn-form' element={<GRNForm/>}/>
 
 

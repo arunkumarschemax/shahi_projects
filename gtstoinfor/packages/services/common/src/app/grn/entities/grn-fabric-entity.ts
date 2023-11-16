@@ -141,8 +141,8 @@ moq:string
   })
   isActive: boolean;
 
-@ManyToOne(type =>GrnEntity,grn =>grn.grnFabricInfo)
-@JoinColumn({name:'grn_id'})
-grnEntity:GrnEntity
+// @ManyToOne(type =>GrnEntity,grn =>grn.grnFabricInfo)
+// @JoinColumn({name:'grn_id'})
+// grnEntity:GrnEntity
 
 }

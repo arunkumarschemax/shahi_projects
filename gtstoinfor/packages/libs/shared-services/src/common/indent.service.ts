@@ -1,4 +1,4 @@
-import { CommonResponseModel, IndentDTO, SourcingRequisitionReq, indentIdReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, IndentDTO, IndentRequestDto, SourcingRequisitionReq, indentIdReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class IndentService extends CommonAxiosService {
@@ -11,6 +11,13 @@ export class IndentService extends CommonAxiosService {
   async getAllIndentData(): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getAllIndentData")
   }
+  async getIndentData(req:IndentRequestDto): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getIndentData",req )
+  }
+  // async getIndentDate(): Promise<CommonResponseModel> {
+  //   return this.axiosPostCall(this.URL + "/getIndentDate" )
+  // }
+
   async getIndentnumbers(): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getIndentnumbers")
   }
@@ -20,6 +27,9 @@ export class IndentService extends CommonAxiosService {
   async getAllIndentTrimDetailsAgainstIndent(req:indentIdReq): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getAllIndentTrimDetailsAgainstIndent",req)
   }
-  
+
+  async getIndentDropDown(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getIndentDropDown")
+  }
 
 }

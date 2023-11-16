@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { PurchaseOrderEntity } from "./purchase-order-entity";
+import { PoItemEnum } from "@project-management-system/shared-models";
 
 @Entity('purchase_order_fabric')
 export class PurchaseOrderFbricEntity{
@@ -152,8 +153,18 @@ moq:string
   })
   quantityUomId:number
 
-  
+  @Column('enum',{
+    name:'fab_item_status',
+    enum:PoItemEnum
+  })
+    fabricItemStatus:PoItemEnum
 
+    @Column('varchar',{
+      name:'grn_quantity',
+      nullable:true
+    })
+    grnQuantity:string
+    
 @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poFabricInfo)
 @JoinColumn({name:'purchase_order_id'})
 purchaseOrderEntity:PurchaseOrderEntity

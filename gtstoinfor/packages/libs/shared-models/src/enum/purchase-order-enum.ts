@@ -1,0 +1,7 @@
+
+export enum PoItemEnum{
+    OPEN='OPEN',
+    PARTAILLY_RECEIVED='PARTAILLY RECEIVED',
+    RECEIVED='RECEIVED',
+
+}

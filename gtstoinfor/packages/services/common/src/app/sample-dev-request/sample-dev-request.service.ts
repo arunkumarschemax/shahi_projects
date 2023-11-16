@@ -286,7 +286,7 @@ export class SampleRequestService {
   }
 
   async getTrimCodes(): Promise<CommonResponseModel> {
-    const details = 'SELECT rm_item_id AS trimId,item_code AS trimCode,ri.product_group_id FROM rm_items ri LEFT JOIN product_group pg ON pg.product_group_id=ri.product_group_id WHERE product_group="Packing Trims"'
+    const details = 'SELECT rm_item_id AS trimId,item_code AS trimCode,ri.product_group_id FROM rm_items ri LEFT JOIN product_group pg ON pg.product_group_id=ri.product_group_id WHERE product_group not in( "Fabric")'
     const result = await this.sampleRepo.query(details)
     if (details.length > 0) {
       return new CommonResponseModel(true, 1, 'data retrieved', result)

@@ -22,6 +22,7 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
     const [defaultFabricFormData, setDefaultFabricFormData] = useState<any>(undefined);
     const [update, setUpdate]=useState<boolean>(false)
     const [fabricType, setFabricType]= useState<any[]>([])
+    const [inputDisbale, setInputDisable]= useState<boolean>(false)
 
     const [page, setPage] = React.useState(1);
     const {Option}=Select
@@ -35,7 +36,7 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
     const [indentData, setIndentData]=useState<any[]>([])
     let tableData: any[] = []
 
-    console.log(indentId)
+    console.log(fabricTableVisible)
 
     useEffect(() =>{
         getweave()
@@ -48,7 +49,6 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
 
     useEffect(() =>{
         if(indentId != undefined){
-            setFabricTableVisible(true)
             AllIndnetDetails(indentId)
         }
     },[indentId])
@@ -56,7 +56,10 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
     const AllIndnetDetails = (value) =>{
         indentService.getAllIndentItemDetailsAgainstIndent({indentId:value}).then(res =>{
             if(res.status){
+                message.info('Please Update Po Quantity')
+                props(res.data)
                 setFabricTableData(res.data)
+                setFabricTableVisible(true)
             }else{
                 setFabricTableData([])
             }
@@ -123,33 +126,33 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
 
     const setEditForm = (rowData: any, index: any) => {
         setUpdate(true)
+        if(rowData.indentFabricId != undefined){
+            setInputDisable(true)
+        }
         setDefaultFabricFormData(rowData)
         setFabricIndexVal(index)
     }
 
     useEffect(() => {
         if(defaultFabricFormData){
+            console.log(defaultFabricFormData)
             fabricForm.setFieldsValue({
                 content: defaultFabricFormData.content,
                 fabricTypeId: defaultFabricFormData.fabricTypeId,
                 weaveId: defaultFabricFormData.weaveId,
                 width: defaultFabricFormData.width,
-                construction: defaultFabricFormData.construction,
                 yarnCount: defaultFabricFormData.yarnCount,
                 yarnUnit: defaultFabricFormData.yarnUnit,
-                finish : defaultFabricFormData.finish,
-                shrinkage : defaultFabricFormData.shrinkage,
                 m3FabricCode: defaultFabricFormData.m3FabricCode,
                 colourId : defaultFabricFormData.colourId,
-                pch  : defaultFabricFormData.pch,
-                moq  : defaultFabricFormData.moq,
                 colorName:defaultFabricFormData.colorName,
                 weaveName:defaultFabricFormData.weaveName,
                 fabricTypeName:defaultFabricFormData.fabricTypeName,
-                pchName:defaultFabricFormData.pchName,
                 shahiFabricCode:defaultFabricFormData.shahiFabricCode,
                 poQuantity:defaultFabricFormData.poQuantity,
-                quantityUomId:defaultFabricFormData.quantityUomId
+                quantityUomId:defaultFabricFormData.quantityUomId,
+                indentQuantity:defaultFabricFormData.indentQuantity,
+                indentFabricId:defaultFabricFormData.indentFabricId
             })
         }
 
@@ -248,31 +251,25 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
         }
         }
 
-    const onFabricAdd = (values) => {
-        fabricForm
-            .validateFields()
-            .then(() => {
-                if (fabricIndexVal !== undefined) {
-                    values.fabricTypeId = undefined; 
-                    fabricTableData[fabricIndexVal] = values;
-                    tableData = [...fabricTableData];
-                    setFabricIndexVal(undefined);
-                } else {
-                    values.fabricTypeId = undefined; 
-                    tableData = [...fabricTableData, values];
-                    setFabricTableData(tableData);
-                }
-                setFabricTableData([...tableData]); 
-                console.log(tableData)
-                props([...tableData]); 
-                fabricForm.resetFields();
-                setUpdate(false);
-                setFabricTableVisible(true);
-            })
-            .catch(() => {
-                message.error('Please fill all required fields');
-            });
-    };
+    const onFabricAdd = (values) =>{
+        console.log(values)
+        fabricForm.validateFields().then(() =>{
+          if(fabricIndexVal !== undefined){
+            fabricTableData[fabricIndexVal] = values;
+            tableData=[...fabricTableData]
+            setFabricIndexVal(undefined)
+          }else{
+            tableData=[...fabricTableData,values]
+            console.log(tableData)
+          }
+          setFabricTableData(tableData)
+          props(tableData)
+          fabricForm.resetFields()
+          setUpdate(false)
+          setInputDisable(false)
+          setFabricTableVisible(true)
+        })
+    }
     
     return (
     <Card>
@@ -282,11 +279,12 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
             <Form.Item name='weaveName' hidden><Input ></Input></Form.Item>
             <Form.Item name='fabricTypeName' hidden><Input ></Input></Form.Item>
             <Form.Item name='pchName' hidden><Input ></Input></Form.Item>
-            <Form.Item name='indentId' hidden><Input></Input></Form.Item>
+            <Form.Item name='indentQuantity' hidden><Input></Input></Form.Item>
+            <Form.Item name={'indentFabricId'} hidden><Input></Input></Form.Item>
 
          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='content' label='Content' >
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Content'>
+                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Content' disabled={inputDisbale}>
                         <Option key='naturalFabrics' value='naturalFabrics'>Natural Fabrics</Option>
                             <Option key='manufacturedFabrics' value='manufacturedFabrics'>Manufactured Fabrics</Option>
                         </Select>
@@ -296,6 +294,7 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
                     <Form.Item name='fabricTypeId' label='Type of Fabric' rules={[{required:true,message:'Type of Fabric is required'}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Fabric Type'
                         onChange={fabrictyprOnchange}
+                        disabled={inputDisbale}
                         >
                             {fabricType.map(e => {
                                     return(
@@ -308,7 +307,8 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='weaveId' label='Weave'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select weave'
-                        onChange={weaveOnchange}>
+                        disabled={inputDisbale}
+                        onChange={weaveOnchange} >
                         {weave.map(e => {
                                 return(
                                     <Option type={e.fabricWeaveName} key={e.fabricWeaveId} value={e.fabricWeaveId} name={e.fabricWeaveName}> {e.fabricWeaveName}</Option>
@@ -326,17 +326,21 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
                 }
                ]}
                >
-                <Input placeholder="Enter Yarn Count"/>
+                <Input placeholder="Enter Yarn Count" 
+                        disabled={inputDisbale}
+                />
             </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'1.5%'}}>
             <Form.Item name='yarnUnit'  rules={[
                             {
                               required: true,
                               message: "Uom Type Is Required",
                             }
                         ]}>
-                <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
+                <Select showSearch allowClear optionFilterProp="children" placeholder='Unit' 
+                        disabled={inputDisbale}
+                        >
                     {uom.map(e => {
                             return(
                             <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
@@ -346,13 +350,17 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
                     </Form.Item>
         </Col>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-            <Form.Item name='width' label='Width'>
-                <Input placeholder="Enter Width"/>
+            <Form.Item name='width' label='Width' >
+                <Input placeholder="Enter Width"  
+                        disabled={inputDisbale}
+                        />
             </Form.Item>
           </Col>
            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
            <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{required:true,message:'M3 Code is required'}]}>
-           <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'>
+           <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'
+                        disabled={inputDisbale}
+                        >
               {fabricM3Code.map(e => {
                 return(
                  <Option key={e.m3Code} value={e.m3Code}> {e.m3Code}-{e.category}</Option>
@@ -372,6 +380,7 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
                     <Form.Item name='colourId' label='Color'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Color'
                         onChange={colorOnchange}
+                        disabled={inputDisbale}
                          >
                             {color.map(e => {
                                 return(
@@ -382,14 +391,14 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='poQuantity' label='Po Quantity'
+                    <Form.Item name='poQuantity' label='PO Quantity'
                    rules={[{required:true,message:'Quantity of Fabric is required'}]}
                     >
                         <Input placeholder="Enter Quantity"/>
                     </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
-                    <Form.Item name='quantityUomId'  rules={[{required:true,message:'Quantity unit is required'}]}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'1.5%'}}>
+                    <Form.Item name='quantityUomId' rules={[{required:true,message:'Quantity unit is required'}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
                             {uom.map(e => {
                                 return(
@@ -404,9 +413,9 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
                     <Button type='primary' htmlType="submit">{update ?'Update':'Add'}</Button>
                 </Row>
                 <Row>
-                    {fabricTableVisible ? <Table columns={columns} dataSource={fabricTableData}
+                    {fabricTableVisible && <Table columns={columns} dataSource={fabricTableData}
                      />
-                :<></>}
+                   }
 
                 </Row>
         </Form> 
