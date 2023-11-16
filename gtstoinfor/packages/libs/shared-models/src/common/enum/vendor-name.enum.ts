@@ -49,13 +49,18 @@ export enum VendorNameEnum {
     // extarctedUnitedLiner='UNITED LINER'
     extractedVelogicIndia="VELOGIC INDIA",
     extracteWiderlogistics="WIDER LOGISTICS",
+
+
+
+
+
     extractedWorldLine="WORLD LINE",
     extractedKwe="KWE",
     extractedUps = "UPS",
     extractedCube="20 CUBE",
     extractedAps="APS",
     extractChRowbin="CH ROWBIN",
-    extractDBSCHENKAR="DB SCHENKAR"
+    extractDBSCHENKAR="DB SCHENKAR",
 
     
     
@@ -64,5 +69,10 @@ export enum VendorNameEnum {
 
     
 
-
+    extractedJeena="Jeena & Company",
+    extractedKerryIndev="KERRY INDEV",
+    extractedGateway='Gateway',
+    extractedFederationofIndian='Federation of Indian',
+    extractedLogWin='LOGWIN',
+    extractedHellmann="HELLMANN"
 }
