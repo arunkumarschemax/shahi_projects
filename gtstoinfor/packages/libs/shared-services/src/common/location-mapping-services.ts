@@ -21,7 +21,7 @@ export class LocationMappingService extends CommonAxiosService {
     }
 
     async updateRackLocationStatus(req:RackLocationStatusReq): Promise<any> {
-        return this.axiosPostCall(this.URL + "/updateRackLocationStatus")
+        return this.axiosPostCall(this.URL + "/updateRackLocationStatus", req)
     }
 
 }

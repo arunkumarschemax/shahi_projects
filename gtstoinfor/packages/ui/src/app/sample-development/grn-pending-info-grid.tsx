@@ -62,7 +62,7 @@ export const GrnPendingInfoGrid = () => {
         },
         {
             title: 'Item',
-            dataIndex: "item_code",
+            dataIndex: "item_name",
             align: 'left',
             //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
             //   sortDirections: ['descend', 'ascend'],
@@ -70,24 +70,24 @@ export const GrnPendingInfoGrid = () => {
         },
         {
             title: 'Grn Quantity',
-            dataIndex: 'received_quantity',
+            dataIndex: 'conversion_quantity',
             align: 'left',
             // sorter: (a, b) => a.receivedQuantity - b.receivedQuantity,
             // sortDirections: ['descend', 'ascend'],
         },
         {
             title: 'Location Mapped',
-            dataIndex: 'accepted_quantity',
+            dataIndex: 'quantity',
             align: 'left',
-            // sorter: (a, b) => a.physicalQuantity - b.physicalQuantity,
-            // sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.quantity - b.quantity,
+            sortDirections: ['descend', 'ascend'],
         },
         {
             title: 'Balance',
             align: 'left',
             // sorter: (a, b) => a.balance - b.balance,
             render: (record) => {
-                const balance = record.received_quantity - record.accepted_quantity
+                const balance = record.conversion_quantity - record.quantity
                 return balance
             }
         },
@@ -96,7 +96,7 @@ export const GrnPendingInfoGrid = () => {
             render: (rowData) => (
                 <span>
                     <Button type="primary" shape="round" size="small"
-                        disabled={(rowData.received_quantity - rowData.accepted_quantity) <= 0}
+                        disabled={(rowData.conversion_quantity - rowData.quantity) <= 0}
                         onClick={() => {
                             setData(rowData);
                         }}>

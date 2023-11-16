@@ -4,12 +4,13 @@ import { Card, Col, Descriptions, Input, Row, Table, Form, Select, InputNumber, 
 import { Option } from 'antd/es/mentions';
 import { ColumnProps } from 'antd/es/table';
 import React, { useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AlertMessages from '../common/common-functions/alert-messages';
 
 export const LocationMapping = () => {
 
     let location = useLocation();
+    const navigate = useNavigate();
     const [form] = Form.useForm();
     const grnData = location.state.data;
     // console.log(grnData, "grnData");
@@ -51,7 +52,7 @@ export const LocationMapping = () => {
 
     const getLocationsData = () => {
         locationService.getAllActiveRackPositions().then(res => {
-            console.log(res.data, "locataionsData")
+            // console.log(res.data, "locataionsData")
             setLocations(res.data);
         });
     }
@@ -59,20 +60,60 @@ export const LocationMapping = () => {
     const saveLocation = (result) => {
         const locationId = form.getFieldValue("locationId");
         const qty = form.getFieldValue("quantity");
+        const m3_item_code = 1
         const shahi_item_code = 1;
-        const item_type_id = 1;
+        const item_type_id = 11;
         const plant_id = 1;
-        const req = new LocationMappingReq(grnData.m3_item_id, locationId, qty, grnData.grn_item_id, shahi_item_code, item_type_id, plant_id);
+        const m3_style_id = 1;
+        const req = new LocationMappingReq(m3_item_code, locationId, qty, grnData.grn_item_id, shahi_item_code, item_type_id, plant_id, m3_style_id, grnData.item_id, grnData.style_id);
         if (req) {
             locationService.postToStockLogs(req).then((res) => {
-                if (res.status === "true") {
+                if (res.status === true) {
+                    AlertMessages.getSuccessMessage("Stock Added Succesufully")
+                    form.resetFields();
                     if (locationStatusValue === "partially Occupied") {
-                        const isActive = 1
-                        const request = new RackLocationStatusReq(locationId, isActive);
+                        const isActive = 1;
+                        const request = new RackLocationStatusReq(locationStatusValue, locationId, isActive);
                         locationService.updateRackLocationStatus(request).then((res) => {
-                            console.log(res);                            
+                            if (res.status === true) {
+                                AlertMessages.getSuccessMessage("Rack location updated Succesufully")
+                                if (result === "close") {
+                                    navigate("/grn-pending-info-grid");
+                                } else if (result === "continue") {
+                                    navigate("/grn-pending-info-grid");
+                                }
+                            } else if (res.status === false) {
+                                AlertMessages.getErrorMessage("Error while updating rack location")
+                                if (result === "close") {
+                                    navigate("/grn-pending-info-grid");
+                                } else if (result === "continue") {
+                                    navigate("/grn-pending-info-grid");
+                                }
+                            }
+                        })
+                    } else if (locationStatusValue === "Occupied") {
+                        const isActive = 0;
+                        const request = new RackLocationStatusReq(locationStatusValue, locationId, isActive);
+                        locationService.updateRackLocationStatus(request).then((res) => {
+                            if (res.status === true) {
+                                AlertMessages.getSuccessMessage("Rack location updated Succesufully")
+                                if (result === "close") {
+                                    navigate("/grn-pending-info-grid");
+                                } else if (result === "continue") {
+                                    navigate("/grn-pending-info-grid");
+                                }
+                            } else if (res.status === false) {
+                                AlertMessages.getErrorMessage("Error while updating rack location")
+                                if (result === "close") {
+                                    navigate("/grn-pending-info-grid");
+                                } else if (result === "continue") {
+                                    navigate("/grn-pending-info-grid");
+                                }
+                            }                        
                         })
                     }
+                } else if (res.status === false) {
+                    AlertMessages.getErrorMessage("Error while adding stock")
                 }
             })
         }
@@ -96,7 +137,7 @@ export const LocationMapping = () => {
         },
         {
             title: 'Quantity',
-            dataIndex: 'quantity',
+            dataIndex: 'total_quantity',
             render: (text, object, index) => {
                 return <>{Number(text)}</>
             }
@@ -115,13 +156,13 @@ export const LocationMapping = () => {
                                 {grnData.grn_number}
                             </Descriptions.Item>
                             <Descriptions.Item label="Received Quantity" style={{ width: '33%' }}>
-                                {Number(grnData.received_quantity)}
+                                {Number(grnData.conversion_quantity)}
                             </Descriptions.Item>
                             <Descriptions.Item label="Stock" style={{ width: '33%' }}>
-                                {grnData.accepted_quantity > 0 ? Number(grnData.accepted_quantity) : 0}
+                                {grnData.quantity > 0 ? Number(grnData.quantity) : 0}
                             </Descriptions.Item>
                             <Descriptions.Item label="Location Pending Quantity" style={{ width: '33%' }}>
-                                {Number((grnData.received_quantity) - (grnData.accepted_quantity))}
+                                {Number((grnData.conversion_quantity) - (grnData.quantity))}
                             </Descriptions.Item>
                         </Descriptions>
                     </Col>
@@ -141,7 +182,7 @@ export const LocationMapping = () => {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 10 }}>
                             <Form.Item name="itemName" label="Item" rules={[{ required: true, message: 'Missed Item' }]}>
-                                <Input disabled={grnData} defaultValue={grnData.item_code} />
+                                <Input disabled={grnData} defaultValue={grnData.item_name} />
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
@@ -177,18 +218,18 @@ export const LocationMapping = () => {
                                 <Radio value={'partially Occupied'}>Partially Occupied</Radio>
                             </Radio.Group>
                         </Col>
-                        <Col span={4}>
+                        {/* <Col span={4}>
                             <Form.Item >
-                                <Button type='primary'
-                                    onClick={e => (saveLocation('continue'))}
+                                <Button type='primary' danger
+                                    onClick={e => (updateRackStatus())}
                                     block disabled={btnDisable}>
                                     Save & Continue...
                                 </Button>
                             </Form.Item>
-                        </Col>
+                        </Col> */}
                         <Col span={4}>
                             <Form.Item >
-                                <Button type='primary' danger
+                                <Button type='primary'
                                     onClick={e => (saveLocation('close'))}
                                     block disabled={btnDisable}>
                                     Save & Close

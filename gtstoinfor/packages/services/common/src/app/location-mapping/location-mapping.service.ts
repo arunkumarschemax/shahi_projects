@@ -9,7 +9,6 @@ export class LocationMappingService {
             let dataquery = `SELECT * FROM rack_position WHERE is_active = '1'`;
             const res = await AppDataSource.query(dataquery);
             if (res) {
-                // console.log(res, '>>>>>>>>>>>>>>>');
                 return new CommonResponseModel(true, 1111, "Data retrived Succesufully", res);
             }
         } catch (err) {
@@ -20,15 +19,29 @@ export class LocationMappingService {
     async getAllFabrics(): Promise<CommonResponseModel> {
         try {
 
-            let dataquery = `SELECT *,
+            let dataquery = `SELECT 
+            grn_it.grn_item_id,
+            grn_it.grn_id,
+            grn_it.item_id,
+            grn_it.received_quantity,
+            grn_it.received_uom_id,
+            grn_it.accepted_quantity,
+            grn_it.accepted_uom_id,
+            grn_it.rejected_quantity,
+            grn_it.rejected_uom_id,
+            grn_it.conversion_quantity,
+            grn_it.conversion_uom_id,
+            grn_it.location_mapped_status,
             g.grn_number,
             ven.vendor_code,
             ven.vendor_name,
+            sty.style_id,
             sty.style,
             sty.description,
             pro_grp.product_group,
-            m3_it.item_code,
-            m3_it.content
+            it.item_name,
+            it.item_code,
+            COALESCE(SUM(stk_log.quantity), 0) AS quantity
             
             FROM grn_items AS grn_it
             
@@ -36,11 +49,13 @@ export class LocationMappingService {
             LEFT JOIN vendors AS ven ON ven.vendor_id = g.vendor_id
             LEFT JOIN style AS sty ON sty.style_id = g.style_id
             LEFT JOIN product_group AS pro_grp ON pro_grp.product_group_id = grn_it.product_group_id
-            LEFT JOIN m3_items AS m3_it ON m3_it.m3_items_id = grn_it.m3_item_id`
+            LEFT JOIN items AS it ON it.item_id = grn_it.item_id
+            LEFT JOIN stock_log AS stk_log ON stk_log.grn_item_id = grn_it.grn_item_id
+            
+            GROUP BY grn_item_id`
 
             const res = await AppDataSource.query(dataquery);
             if (res) {
-                console.log(res, '>>>>>>>>>>>>>>>');
                 return new CommonResponseModel(true, 1111, "Data retrived Succesufully", res);
             }
 
@@ -60,22 +75,26 @@ export class LocationMappingService {
             stk_lg.location_id,
             stk_lg.plant_id,
             stk_lg.grn_item_id,
-            stk_lg.quantity,
+            SUM(stk_lg.quantity) AS total_quantity,
             m3_it.item_code,
             m3_it.content,
             rk_po.rack_position_name,
             rk_po.status
-            
-            FROM stock_log AS stk_lg
-            
-            LEFT JOIN rack_position AS rk_po ON rk_po.position_id = stk_lg.location_id
-            LEFT JOIN m3_items AS m3_it ON m3_it.m3_items_id = stk_lg.m3_item_code
-            
-            WHERE grn_item_id = '${req.id}'`;
+        FROM 
+            stock_log AS stk_lg
+        LEFT JOIN 
+            rack_position AS rk_po ON rk_po.position_id = stk_lg.location_id
+            LEFT JOIN 
+            m3_items AS m3_it ON m3_it.m3_items_id = stk_lg.m3_item_code
+        WHERE 
+            stk_lg.grn_item_id = '${req.id}'
+        GROUP BY 
+            stk_lg.location_id,
+            rk_po.rack_position_name,
+            rk_po.status;`;
 
             const res = await AppDataSource.query(dataquery);
             if (res) {
-                console.log(res, '>>>>>>>>>>>>>>>');
                 return new CommonResponseModel(true, 1111, "Data retrived Succesufully", res);
             }
 
@@ -87,13 +106,21 @@ export class LocationMappingService {
 
     async postToStockLogs(req: LocationMappingReq) {
         try {
-            let dataquery = `Insert into stock_log (m3_item_code, shahi_item_code, item_type_id, location_id, plant_id, grn_item_id, quantity) values (${req.m3_item_code},${req.shahi_item_code}, ${req.item_type_id},${req.location_id},${req.plant_id},${req.grn_item_id},${req.quantity})`
-
+            let dataquery = `INSERT INTO stocks (m3_style_id, item_type_id, item_id, quantity, location_id, style_id) VALUES (${req.m3_style_id},${req.item_type_id},${req.item_id},${req.quantity}, ${req.location_id}, ${req.style_id})`
             const res = await AppDataSource.query(dataquery);
             if (res) {
-                console.log(res.affectedRows, '>>>>>>>>>>>>>>>');
                 if (res.affectedRows > 0) {
-                    return new CommonResponseModel(true, 1111, "Data posted Succesufully");
+                    const dataquery2 = `INSERT INTO stock_log (m3_item_code, shahi_item_code, item_type_id, location_id, plant_id, grn_item_id, quantity) VALUES (${req.m3_item_code}, ${req.shahi_item_code}, ${req.item_type_id}, ${req.location_id}, ${req.plant_id}, ${req.grn_item_id}, ${req.quantity})`
+
+                    const res2 = await AppDataSource.query(dataquery2);
+
+                    if (res2) {
+                        if (res.affectedRows > 0) {
+                            return new CommonResponseModel(true, 1111, "Data posted Succesufully");
+                        }
+                    }
+                } else {
+                    return new CommonResponseModel(false, 10005, "Data not posted");
                 }
 
             }
@@ -102,8 +129,24 @@ export class LocationMappingService {
         }
     }
 
-    async updateRackLocationStatus(req:RackLocationStatusReq){
-        console.log(req, "requesttttttttttttttttttttttt");
+    async updateRackLocationStatus(req: RackLocationStatusReq) {
+        try {
+            const dataquery = `UPDATE rack_position
+            SET STATUS = '${req.locationStatusValue}', is_active = "${req.isActive}"
+            WHERE position_Id = '${req.locationId}'`
+
+            const res = await AppDataSource.query(dataquery);
+            if (res) {
+                if (res.affectedRows > 0) {
+                    return new CommonResponseModel(true, 1111, "Rack position updated Succesufully");
+                } else {
+                    return new CommonResponseModel(false, 10005, "Rack position not updated");
+                }
+            }
+
+        } catch (error) {
+            return error;
+        }
     }
 
 }
