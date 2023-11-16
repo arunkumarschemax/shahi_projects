@@ -85,7 +85,9 @@ export default function BasicLayout() {
         menu =IAMClientAuthContext.user ? IAMClientAuthContext.user : '';
         const menuData = IAMClientAuthContext.menuAccessObject ? IAMClientAuthContext.menuAccessObject : [];
     //   console.log(menuData)
-        const processedMenuData = menuData.map(menuItem => {
+    const menus = menuData.sort((a,b) => a.orderId - b.orderId);
+    console.log(menus)
+        const processedMenuData = menus.map(menuItem => {
             
           const processedSubMenuItems =  menuItem.subMenuData?.map(subMenuItem => (
             {
@@ -233,7 +235,7 @@ export default function BasicLayout() {
                   
                   
                         <Outlet />
-                        <Footer style={{ textAlign: 'center', background: '#f0f2f5' }}>©2023 Design and Developed by SchemaX</Footer>
+                        <Footer style={{ textAlign: 'center', background: '#f0f2f5', marginTop:'43%' }}>©2023 Design and Developed by SchemaX</Footer>
 
              </ProLayout> 
         
