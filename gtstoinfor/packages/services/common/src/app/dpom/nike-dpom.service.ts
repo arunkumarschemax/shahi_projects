@@ -246,8 +246,14 @@ export class DpomService {
     }
 
     async coLineCreationReq(req: any): Promise<CommonResponseModel> {
+        let buyer;
+        if (req.poLineItemNumber) {
+            buyer = 'Nike-U12'
+        } else {
+            buyer = 'Uniqlo-U12'
+        }
         const entity = new COLineEntity()
-        entity.buyer = 'Nike-U12'
+        entity.buyer = buyer
         entity.buyerPo = req.purchaseOrderNumber;
         entity.lineItemNo = req.poLineItemNumber;
         entity.itemNo = req.itemNo
@@ -367,17 +373,31 @@ export class DpomService {
                                             const ele = (await labelElement.getText())?.trim();
                                             ele.length > 0 ? fileteredElements.push(labelElement) : '';
                                         }
+                                        let tabIndex;
+                                        if (dest.name == 'UQAU') {
+                                            tabIndex = 4 //colorsTabs.indexOf(tab); // Adjust index to start from 1
+                                        } else if (dest.name == 'UQEU') {
+                                            tabIndex = 5
+                                        } else if (dest.name == 'AU') {
+                                            tabIndex = 1
+                                        } else if (dest.name = 'EU') {
+                                            tabIndex = 2
+                                        } else if (dest.name = 'IN') {
+                                            tabIndex = 3
+                                        } else {
+                                            tabIndex = 6
+                                        }
+                                        const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
                                         // Find all the input fields in the first row.
-                                        const inputElements = await driver.findElements(By.xpath("//tbody/tr[1]/td/div/input[@name='salespsizes']"));
+                                        const inputElements = await driver.findElements(By.xpath(inputElementsXPath));
                                         // Create a map of size labels to input fields.
                                         const sizeToInputMap = {};
                                         for (let i = 0; i < fileteredElements.length; i++) {
-                                            const label = (await fileteredElements[i].getText()).trim().toUpperCase(); // Remove leading/trailing spaces
+                                            const label = (await fileteredElements[i].getText()).trim().toUpperCase().toString(); // Remove leading/trailing spaces
                                             if (label.length)
                                                 sizeToInputMap[label] = inputElements[i];
                                         }
-                                        console.log(sizeToInputMap[size.name.trim().toUpperCase()], 'AAAAAA')
-                                        const inputField = sizeToInputMap[size.name.trim().toUpperCase()];
+                                        const inputField = await sizeToInputMap[size.name.trim().toUpperCase().toString()];
                                         if (inputField) {
                                             // Clear the existing value (if any) and fill it with the new price.
                                             await inputField.clear();
@@ -427,7 +447,7 @@ export class DpomService {
                     }
                 }
                 await driver.sleep(10000)
-                const element = await driver.findElement(By.id('OrderCreateID')).click();
+                // const element = await driver.findElement(By.id('OrderCreateID')).click();
                 await driver.wait(until.alertIsPresent(), 10000);
                 // Switch to the alert and accept it (click "OK")
                 const alert = await driver.switchTo().alert();
