@@ -140,7 +140,7 @@ export default function BasicLayout() {
                     <img src={xpperal} style={{marginLeft:'20px',float:'left',height:'55px'}} 
                     />}
                     layout={'mix'}
-                    token={{ header: { colorBgHeader: 'transparent' }, sider: { colorBgMenuItemSelected: colorPrimaryBg,colorMenuBackground:'azure' } }}
+                    token={{ header: { colorBgHeader: 'transparent' }, sider: { colorBgMenuItemSelected: colorPrimaryBg,colorMenuBackground:'#95c6ed8a' } }}
                     route={{
                         path: '/',
                         routes:treeRouter(getAllSubMenus()),
@@ -239,55 +239,6 @@ export default function BasicLayout() {
 
              </ProLayout> 
         
-
-// {/* <div
-//                 id="main-layout"
-//                 style={{
-//                     height: '100vh',
-//                 }}
-//             >
-//                 <Layout
-               
-//                 className="site-layout" style={{ background: ' #f0f2f5' }}>
-//                     <Sider
-//                         className='layout'
-//                         trigger={null}
-//                         breakpoint='lg'
-//                         collapsedWidth='60'
-//                         style={{
-//                             overflow: 'auto',
-//                             height: '100vh',
-//                             position: 'fixed',
-//                             left: 0,
-//                             background: '#fff',
-//                             marginTop: '56px' ,
-//                             borderRadius:'5px'
-//                         }}
-//                     >           
-//                     <Menu
-//                     theme="light"
-//                     mode="inline"
-//                     selectedKeys={[key]}
-//                 >
-//                   {getAllSubMenus()}
-//                 </Menu>         
-//                   </Sider>
-//                     <CommonHeader key={Date.now()} collapsed={collapsed} toggle={toggle}/>
-//                     <Content
-//                         className="site-layout-background"
-//                         style={{
-//                             marginTop: '40px',
-//                             padding: 14,
-//                             height: '100%',
-//                             marginLeft: 198
-//                         }}
-//                     >
-//                         <Outlet />
-//                     </Content>
-//                     <Footer style={{ textAlign: 'center', background: '#f0f2f5' }}>©2023 Design and Developed by SchemaX</Footer>
-//                 </Layout>
-
-//             </div>  */}
                     </ProConfigProvider>
 
              );
