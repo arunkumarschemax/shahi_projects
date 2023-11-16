@@ -34,6 +34,12 @@ export class UomEntity {
     })
     description:string;
 
+    @Column('varchar',{
+        name: 'units',
+        nullable:false
+    })
+    units:string;
+
     
     @CreateDateColumn({
         name: 'created_at'

@@ -35,6 +35,7 @@ export class UomService {
             uomEntity.uomCategory =uomRequest.uomCategory;
             uomEntity.description = uomRequest.description;
             uomEntity.createdUser = uomRequest.username;
+            uomEntity.units = uomRequest.units
             const savedResult = await this.uomRepo.save(uomEntity);
             const uomInfo = new UomInfoModel(savedResult.id,savedResult.uom,savedResult.uomCategory,savedResult.description,savedResult.createdUser);
             return new UomResponse(true, 0, 'Uom created successfully', [uomInfo])
@@ -55,7 +56,7 @@ export class UomService {
             if(UomDetails.length > 0){
                 let uomInfo = [];
                 for(const uom of UomDetails){
-                    uomInfo.push(new UomInfoModel(uom.id,uom.uom,uom.uomCategory,uom.description,''))
+                    uomInfo.push(new UomInfoModel(uom.id,uom.uom,uom.uomCategory,uom.description,'',uom.units))
                 }
                 return new UomResponse(true,0,'All locations retrieved successfully',uomInfo)
             } else {
@@ -73,7 +74,7 @@ export class UomService {
             let uomdetails =[]
             if(uoms){
                 for (const uom of uoms){
-                uomdetails.push(new UomInfoModel(uom.id, uom.uom, uom.uomCategory, uom.description, uom.createdUser))
+                uomdetails.push(new UomInfoModel(uom.id, uom.uom, uom.uomCategory, uom.description, uom.createdUser,uom.units))
                 }
             }
             return new UomResponse(true, 0, 'Uoms retrived successfully',uomdetails )
@@ -87,7 +88,7 @@ export class UomService {
             //get all Uoms
             const uomDetails = await this.uomRepo.findOne({ where: { id: req.uomId, isActive: true } })
             if (uomDetails) {
-                const uomInfo = new UomInfoModel(uomDetails.id, uomDetails.uom, uomDetails.uomCategory,uomDetails.description, uomDetails.createdUser)
+                const uomInfo = new UomInfoModel(uomDetails.id, uomDetails.uom, uomDetails.uomCategory,uomDetails.description, uomDetails.createdUser,uomDetails.units)
                 return new UomResponse(true, 0, 'UOM details retrieved successfully', [uomInfo])
             } else {
                 return new UomResponse(false, 1, 'No data found',[])

@@ -148,9 +148,17 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
     {
       title: <div style={{textAlign:"center"}}>UOM</div>,
       dataIndex: "uom",
-      sorter: (a, b) => a.uom.localeCompare(b.model),
+      sorter: (a, b) => a.uom.localeCompare(b.uom),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("uom"),
+      // width:130,
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Units</div>,
+      dataIndex: "units",
+      sorter: (a, b) => a.units.localeCompare(b.units),
+      sortDirections: ["ascend", "descend"],
+      ...getColumnSearchProps("units"),
       // width:130,
     },
     {
