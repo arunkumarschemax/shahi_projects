@@ -20,14 +20,15 @@ import {
   OperationsService,
   ProductGroupService,
   ProfitControlHeadService,
+  RmCreationService,
   TaxesService,
   UomService,
   bomTrimService,
 } from "@project-management-system/shared-services";
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
-import {GlobalVariables, IsImportedItemEnum, ProductGroupFilter, bomRequest } from "@project-management-system/shared-models";
-import { Link } from "react-router-dom";
+import {GlobalVariables, IsImportedItemEnum, ItemGroupEnum, ProductGroupFilter, PropertyEnum, RmCreationDTO, bomRequest } from "@project-management-system/shared-models";
+import { Link, useNavigate } from "react-router-dom";
 
 export interface TrimsBomCreationProps {}
 
@@ -59,6 +60,9 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
   const operationsService = new OperationsService();
   const productservice = new ProductGroupService();
   const [productGroupData, setProductGroupData] = useState<any[]>([]);
+  const rmservice = new RmCreationService
+  let navigate = useNavigate()
+
 
 
 
@@ -247,48 +251,50 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
 
   const onFinish = (values: any) => {
     console.log(values.trimCode, "values");
-    const req = new bomRequest(
-      values.itemTypeId,
-      values.pchId,
-      values.facilityId,
-      "",
-      values.trim,
-      values.genericCode,
-      values.typeId,
-      values.productGroupId,
-      values.useInOperationId,
-      values.description,
-      values.responsible,
-      values.developmentResponsible,
-      values.basicUomId,
-      values.alternateUomId,
-      values.factor,
-      values.orderMultipleBuom,
-      values.moq,
-      values.orderMultipleAuom,
-      values.currencyId,
-      values.price,
-      values.purchasePriceQuantity,
-      values.salesTax,
-      values.exciseDuty,
-      values.licenceId,
-      values.property,
-      values.isSaleItem,
-      values.consumption,
-      values.wastagePercentage,
-      values.costGroup,
-      values.usageRemarks,
-      values.tax,
-      values.totalPrice,
-      values.isImportedItem
-    );
+    // const req = new bomRequest(
+    //   values.itemTypeId,
+    //   values.pchId,
+    //   values.facilityId,
+    //   "",
+    //   values.trim,
+    //   values.genericCode,
+    //   values.typeId,
+    //   values.productGroupId,
+    //   values.useInOperationId,
+    //   values.description,
+    //   values.responsible,
+    //   values.developmentResponsible,
+    //   values.basicUomId,
+    //   values.alternateUomId,
+    //   values.factor,
+    //   values.orderMultipleBuom,
+    //   values.moq,
+    //   values.orderMultipleAuom,
+    //   values.currencyId,
+    //   values.price,
+    //   values.purchasePriceQuantity,
+    //   values.salesTax,
+    //   values.exciseDuty,
+    //   values.licenceId,
+    //   values.property,
+    //   values.isSaleItem,
+    //   values.consumption,
+    //   values.wastagePercentage,
+    //   values.costGroup,
+    //   values.usageRemarks,
+    //   values.tax,
+    //   values.totalPrice,
+    //   values.isImportedItem
+    // );
 
-    bomservice
-      .createBomTrim(req)
+    const req= new RmCreationDTO ("",values.itemCode,null,values.pchId,values.facilityId,values.genericCode,"","",values.trim,values.itemTypeId,"",null,values.responsible,values.developmentResponsible,values.basicUomId,values.alternateUomId,values.multiplicationFactor,values.currencyId,values.price,values.tax, values.purchasePriceQuantity,values.salesTax,values.exciseDuty,values.licenceId,values.property,values.isSaleItem,values.wastagePercentage,values.costGroup,values.usageRemarks,"","",values.itemGroupId,null,values.productGroupId,null,values.isImportedItem,null,"","","","",values.consumption,values.totalPrice,values.useInOperationId,null,"admin","",null,values.orderMultipleBuom,values.moq,values.orderMultipleAuom,values.description)
+
+    rmservice.createRm(req)
       .then((res) => {
         if (res.status) {
           onReset();
           message.success(res.internalMessage);
+          navigate("/materialCreation/rm-creation-view")
         } else {
           AlertMessages.getErrorMessage(res.internalMessage);
         }
@@ -410,6 +416,30 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                         </Select>
                       </Form.Item>
                     </Col>
+                    <Col
+                      xs={{ span: 24 }}
+                      sm={{ span: 24 }}
+                      md={{ span: 8 }}
+                      lg={{ span: 6 }}
+                      xl={{ span: 8 }}
+                    >
+                      <Form.Item
+                    label="Item Group"
+                    name="itemGroupId"
+                    rules={[{ required: true, message: "Enter Item Group" }]}
+                  >
+                    <Select
+                    showSearch
+                    optionFilterProp="children"
+                  
+                        placeholder="Select Item Group" allowClear>
+                     {Object.values(ItemGroupEnum).map((key,value)=>{
+            return <Option key={key} value={key}>{key}</Option>
+           })}
+                    </Select>
+                    {/* <Input placeholder="Fabric code" allowClear /> */}
+                  </Form.Item>
+                    </Col>
                   </Row>
 
                   <h1
@@ -444,11 +474,47 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                       lg={{ span: 6 }}
                       xl={{ span: 8}}
                     >
+                         <Form.Item
+                    label="Trim Code"
+                    name="itemCode"
+                    rules={[{ required: true, message: "Enter Trim Code" }]}
+
+                  >
+                    <Input placeholder="Enter Trim Code"/>
+                  </Form.Item>
+                    </Col>
+                    <Col
+                      xs={{ span: 24 }}
+                      sm={{ span: 24 }}
+                      md={{ span: 8 }}
+                      lg={{ span: 6 }}
+                      xl={{ span: 8}}
+                    >
                       <Form.Item label="Generic Code" name="genericCode">
                         <Input placeholder="Generic Code" allowClear />
                       </Form.Item>
                     </Col>
-                    <Col
+                  
+                    {/* <Col
+                      xs={{ span: 24 }}
+                      sm={{ span: 24 }}
+                      md={{ span: 8 }}
+                      lg={{ span: 6 }}
+                      xl={{ span: 8}}
+                    >
+                      <Form.Item
+                        label="Type"
+                        name="typeId"
+                        rules={[{ required: true, message: "Enter Type" }]}
+                      >
+                        <Select placeholder=" Select Type" allowClear>
+                          <option value="1">Type1</option>
+                        </Select>
+                      </Form.Item>
+                    </Col> */}
+                  </Row>
+                  <Row gutter={8}>
+                  <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
                       md={{ span: 8 }}
@@ -469,42 +535,6 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                         </Select>
                       </Form.Item>
                     </Col>
-                    {/* <Col
-                      xs={{ span: 24 }}
-                      sm={{ span: 24 }}
-                      md={{ span: 8 }}
-                      lg={{ span: 6 }}
-                      xl={{ span: 8}}
-                    >
-                      <Form.Item
-                        label="Type"
-                        name="typeId"
-                        rules={[{ required: true, message: "Enter Type" }]}
-                      >
-                        <Select placeholder=" Select Type" allowClear>
-                          <option value="1">Type1</option>
-                        </Select>
-                      </Form.Item>
-                    </Col> */}
-                  </Row>
-                  <Row gutter={8}>
-                    {/* <Col
-                      xs={{ span: 24 }}
-                      sm={{ span: 24 }}
-                      md={{ span: 8 }}
-                      lg={{ span: 6 }}
-                      xl={{ span: 8 }}
-                    >
-                      <Form.Item
-                        label="Group"
-                        name="groupId"
-                        rules={[{ required: true, message: "Enter Group" }]}
-                      >
-                        <Select placeholder="Select Group" allowClear>
-                          <option value="1">Group1</option>
-                        </Select>
-                      </Form.Item>
-                    </Col> */}
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
@@ -675,9 +705,15 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
-                      <Form.Item name="property" label="Property">
-                        <Input placeholder="Property" allowClear />
-                      </Form.Item>
+                     <Form.Item name="property" label="Property">
+                  <Select
+                    showSearch
+                  
+                        placeholder="Select Property" allowClear>
+                     {Object.values(PropertyEnum).map((key,value)=>{
+                       return <Option key={key} value={key}>{key}</Option>
+                        })}
+                    </Select>                  </Form.Item>
                     </Col>
                     <Col
                       xs={{ span: 24 }}
@@ -764,8 +800,8 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
-                      <Form.Item label="Factor" name="factor">
-                        <Input placeholder="Factor" allowClear />
+                      <Form.Item label="Multiplication Factor" name="multiplicationFactor">
+                        <Input placeholder="Multiplication Factor" allowClear />
                       </Form.Item>
                     </Col>
                   </Row>
@@ -1063,7 +1099,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                       xl={{ span: 8 }}
                     >
                       <Form.Item
-                        label="Placement/Usage Remarks"
+                        label="Remarks"
                         name="usageRemarks"
                       >
                         <Input placeholder="Remarks" allowClear />

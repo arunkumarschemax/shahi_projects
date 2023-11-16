@@ -10,7 +10,7 @@ export class RmCreationDTO{
     genericCode:string;
     structure:string;
     quality:string;
-    description:string;
+    itemName:string;
     itemIypeId:number;
     placement:string;
     fabricFinishId:number;
@@ -50,8 +50,12 @@ export class RmCreationDTO{
     createdUser: string;
     updatedUser: string;
     versionFlag: number;
-    constructor(rmitemId:string,itemCode:string,itemCategoryId:number, pchId:number,facilityID:number,genericCode:string,structure:string,quality:string,description:string,itemIypeId:number,placement:string, fabricFinishId:number,responsibleId:number,devResponsible:string, basicUomId:number,altUomId:number,multiplicationFactor:string,currencyId:number,price:string,tax:string,purchasePriceQty:string,saleTax:string,exciseDuty:string,licenseId:number,property:PropertyEnum,saleItem:string,wastage:string, costGroup:string, remarks:string,deliveryTerms:string,deliveryMethod:string,itemGroupId:number,procurementGroupId:number,productGroupId:number,
-          hierarchyLevelId:number,isImportedItem:IsImportedItemEnum,businessArea:number,planner:string,attachedWareHouse:string,supplyLeadTime:string,supplier:string,consumption:string, total:number,useInOperation:string,isActive: boolean,createdUser: string,updatedUser: string,versionFlag: number){
+    orderMultipleBuom?: string;
+    moq?: string;
+    orderMultipleAuom?: string;
+    description?:string
+    constructor(rmitemId:string,itemCode:string,itemCategoryId:number, pchId:number,facilityID:number,genericCode:string,structure:string,quality:string,itemName:string,itemIypeId:number,placement:string, fabricFinishId:number,responsibleId:number,devResponsible:string, basicUomId:number,altUomId:number,multiplicationFactor:string,currencyId:number,price:string,tax:string,purchasePriceQty:string,saleTax:string,exciseDuty:string,licenseId:number,property:PropertyEnum,saleItem:string,wastage:string, costGroup:string, remarks:string,deliveryTerms:string,deliveryMethod:string,itemGroupId:number,procurementGroupId:number,productGroupId:number,
+          hierarchyLevelId:number,isImportedItem:IsImportedItemEnum,businessArea:number,planner:string,attachedWareHouse:string,supplyLeadTime:string,supplier:string,consumption:string, total:number,useInOperation:string,isActive: boolean,createdUser: string,updatedUser: string,versionFlag: number, orderMultipleBuom?: string,moq?: string,orderMultipleAuom?: string,description?:string){
         this.rmitemId=rmitemId;
         this.itemCode=itemCode;
         this.itemCategoryId=itemCategoryId;
@@ -60,7 +64,7 @@ export class RmCreationDTO{
         this.genericCode=genericCode;
         this.structure=structure;
         this.quality=quality;
-        this.description=description;
+        this.itemName=itemName;
         this.itemIypeId=itemIypeId;
         this.placement=placement;
         this.fabricFinishId=fabricFinishId;
@@ -100,5 +104,9 @@ export class RmCreationDTO{
         this.createdUser=createdUser;
         this.updatedUser=updatedUser;
         this.versionFlag=versionFlag;
+        this.orderMultipleAuom = orderMultipleAuom
+        this.orderMultipleBuom = orderMultipleBuom
+        this.moq = moq
+        this.description = description
     }
 }

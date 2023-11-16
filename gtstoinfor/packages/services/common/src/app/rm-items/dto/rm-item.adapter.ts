@@ -49,6 +49,10 @@ export class RmCreationAdapter{
             entityObj.genericCode=dtoObj.genericCode;
             entityObj.fabricFinishId=dtoObj.fabricFinishId;
             entityObj.saleItem=dtoObj.saleItem;
+            entityObj.description = dtoObj.description
+            entityObj.orderMultipleBuom = dtoObj.orderMultipleBuom
+            entityObj.orderMultipleAuom = dtoObj.orderMultipleAuom
+            entityObj.moq = dtoObj.moq
 
           if(isUpdate){
     entityObj.updatedUser=dtoObj.createdUser;
@@ -81,7 +85,7 @@ return entityObj;
             rmcreationDto.price=rmcreation.price;
             rmcreationDto.tax=rmcreation.tax;
             rmcreationDto.isImportedItem=rmcreation.isImportedItem;
-           rmcreationDto.attachedWareHouse= rmcreation.attachedWareHouse;
+            rmcreationDto.attachedWareHouse= rmcreation.attachedWareHouse;
             rmcreationDto.planner=rmcreation.planner;
             rmcreationDto.businessArea=rmcreation.businessArea;
             rmcreationDto.procurementGroupId=rmcreation.procurementGroupId
@@ -110,6 +114,10 @@ return entityObj;
 
             rmcreationDto.updatedUser = rmcreation.updatedUser
             rmcreationDto.versionFlag = rmcreation.versionFlag
+            rmcreationDto.description = rmcreation.description
+            rmcreation.orderMultipleAuom = rmcreation.orderMultipleAuom
+            rmcreation.orderMultipleBuom = rmcreation.orderMultipleBuom
+            rmcreation.moq = rmcreation.moq
             return rmcreationDto;
             }
 }
