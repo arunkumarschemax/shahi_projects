@@ -1,12 +1,15 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { MaterialIssueReportsDto, RequestNoDto } from "@project-management-system/shared-models";
 import { Repository } from "typeorm";
+import { Colour } from "../../colours/colour.entity";
 import { MaterialFabricEntity } from "../entity/material-fabric-entity";
 import { MaterialIssueEntity } from "../entity/material-issue-entity";
-import { Style } from "../../style/dto/style-entity";
-import { MaterialIssueRequest } from "@project-management-system/shared-models";
 import { MaterialTrimEntity } from "../entity/material-trim-entity";
-import { Colour } from "../../colours/colour.entity";
+import { SampleTypes } from "../../sample Types/sample-types.entity";
+import { Buyers } from "../../buyers/buyers.entity";
+import { ProfitControlHead } from "../../profit-control-head/profit-control-head-entity";
+import { Location } from "../../locations/location.entity";
 
 @Injectable()
 export class MaterialIssueRepository extends Repository<MaterialIssueEntity> {
@@ -21,15 +24,23 @@ export class MaterialIssueRepository extends Repository<MaterialIssueEntity> {
             .select(` MAX(material_issue_id) as materialIssueId`)
         return await query.getRawOne();
     }
-    async getMaterialIssue (){
+    async getMaterialIssue() {
         const query = this.createQueryBuilder(`mi`)
-        .select(`mi.material_issue_id as id,mi.consumption_code as consumptioncode,mi.request_no as requestNo,mi.issue_date as date,mi.location_id as locationId ,mi.pch_id as pchId ,mi.buyer_id as buyer ,mi.sample_type_id as sampletype,mi. style_no as style_no,mi.brand_id ,mi.dmm_id,mi.technician_id,mi.description,mi.cost_ref,mi.m3_style_no as m3_style_no,mi.contact,mi.extn,mi.extn,mi.product,mi.type,mi.conversion,mi.made_in ,fb.material_fabric_id as materialcode,fb.fabric_code as fabricCode,fb.description as fbdescription,fb.consumption as consumption,fb.consumption_uom,fb.issued_quantity as issued_quantity,fb.issued_quantity_uom,tr.material_trim_id,tr.description,tr.color_id,tr.consumption as consumption,tr.consumption_uom,tr.issued_quantity as issuedQuantity,tr.issued_quantity_uom,c.colour as color`)
-        .leftJoin(MaterialFabricEntity,'fb','fb.material_issue_id = mi.material_issue_id')
-        .leftJoin(MaterialTrimEntity,'tr','tr.material_issue_id = mi.material_issue_id')
-        .leftJoin(Colour,'c','c.colour_id = fb.color_id')
-        .groupBy(' fb.fabric_code')
+            .select(`mi.material_issue_id as id,mi.consumption_code as consumptioncode,mi.request_no as requestNo,mi.issue_date as date,mi.location_id as locationId ,mi.pch_id as pchId ,mi.buyer_id as buyer ,mi.sample_type_id as sampletype,mi. style_no as style_no,mi.brand_id ,mi.dmm_id,mi.technician_id,mi.description,mi.cost_ref,mi.m3_style_no as m3_style_no,mi.contact,mi.extn,mi.extn,mi.product,mi.type,mi.conversion,mi.made_in ,fb.material_fabric_id as materialcode,fb.fabric_code as fabricCode,fb.description as fbdescription,fb.consumption as consumption,fb.consumption_uom,fb.issued_quantity as issued_quantity,fb.issued_quantity_uom,tr.material_trim_id,tr.description,tr.color_id,tr.consumption as consumption,tr.consumption_uom,tr.issued_quantity as issuedQuantity,tr.issued_quantity_uom,c.colour as color`)
+            .leftJoin(MaterialFabricEntity, 'fb', 'fb.material_issue_id = mi.material_issue_id')
+            .leftJoin(MaterialTrimEntity, 'tr', 'tr.material_issue_id = mi.material_issue_id')
+            .leftJoin(Colour, 'c', 'c.colour_id = fb.color_id')
+            .groupBy(' fb.fabric_code')
         const data = await query.getRawMany()
-        return data 
+        return data
+    }
+    async getMaterialIssues() {
+        
+        const query = await this.createQueryBuilder('mi')
+            .select(`mi.consumption_code AS consumptionCode `)
+            .groupBy(`mi.consumption_code`)
+            const data = await query.getRawMany()
+            return data
     }
 
     // async getDataByStyleId(req:MaterialIssueRequest): Promise<any> {
@@ -42,4 +53,24 @@ export class MaterialIssueRepository extends Repository<MaterialIssueEntity> {
     //         .groupBy(`mi.consumption_code`)
     //     return await query.getRawMany();
     // }
+
+
+
+    // async getMaterialData() {
+    //     const query = await this.createQueryBuilder('mi')
+    //         .select(`mi.material_issue_id AS id,mi.consumption_code AS consumptioncode,mi.issue_date AS issue_date, mi.pch_id AS profitControlId,mi.buyer_id AS buyer_id,mi.sample_type_id AS sample_type_id,mi.style_no AS style_no,mi.m3_style_no AS m3_style_no,l.location_name,smp.sample_type,b.buyer_name,ph.profit_control_head`)
+    //         .leftJoin(LocationEntity, 'l', 'l.location_id = mi.location_id')
+    //         .leftJoin(SampleTypes, 'smp', 'smp.sample_type_id = mi.sample_type_id')
+    //         .leftJoin(Buyers, 'b', 'b.buyer_id = mi.buyer_id')
+    //         .leftJoin(ProfitControlHead, 'ph', 'ph.profit_control_head_id = mi.pch_id')
+    //         .getRawMany()
+    //     return query.map(rec => {
+    //         return (new MaterialIssueReportsDto(rec.id, rec.consumptioncode, rec.m3_style_no, rec.sample_type, rec.profit_control_head, rec.location_name, rec.style_no, rec.buyer_name, rec.issue_date, [], []));
+    //     });
+    // };
+
+                // if (req && req.requestNo && req.consumption) {
+            //     query += ` WHERE mi.request_no = "${req.requestNo}" AND mi.consumption_code = "${req.consumption}"`;
+            // };  
+
 }

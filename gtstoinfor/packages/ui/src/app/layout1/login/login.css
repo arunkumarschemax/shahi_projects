@@ -1,0 +1,41 @@
+.shahi-logo {
+  letter-spacing: 15px;
+  /* color:#29397d; */
+  font-size: 40px;
+  font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+}
+
+.pro-name {
+  font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+  letter-spacing: 5px;
+  font-size: 23px;
+  margin-top: -5px;
+}
+
+.hero {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero::before {
+  content: "";
+  background-image: url("https://img.freepik.com/free-vector/illustration-data-analysis-graph_53876-18129.jpg?w=826&t=st=1687517575~exp=1687518175~hmac=c20b71cb93f6a17cd2789880bb0b9ffbea6678ae89939833ac474c2ee458dcd2");
+  background-size: cover;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  opacity: 0.3;
+}
+
+.content {
+  position: relative;
+  color: black;
+  font-size: 14rem;
+  line-height: 0.9;
+  text-align: center;
+}
