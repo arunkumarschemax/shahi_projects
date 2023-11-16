@@ -155,6 +155,13 @@ export const baseMRouterList = [
         filepath: "/purchase-order",
     },
     {
+        label: "Purchase View",
+        key: "po",
+        path: "/purchase-view",
+        // icon: <DashboardOutlined />,
+        filepath: "//purchase-view",
+    },
+    {
         label: "GRN",
         key: "grn",
         path: "grn-form",
@@ -928,6 +935,12 @@ export const baseRouterList = [
                 key: "material-issue-report",
                 path: "material-issue-report",
                 filepath: "material-issue-report",
+            },
+            {
+                label: "Indent Report",
+                key: "indent-report",
+                path: "indent-report",
+                filepath: "indent-report",
             },
         ]
     }
