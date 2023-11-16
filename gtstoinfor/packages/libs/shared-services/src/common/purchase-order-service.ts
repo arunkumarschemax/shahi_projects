@@ -9,6 +9,9 @@ export class PurchaseOrderservice extends CommonAxiosService{
         console.log(req)
         return this.axiosPostCall(this.URL + '/cretePurchaseOrder', req)
       }
+      async getPurchaseOrder(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + '/getAllPoData')
+      }
 
     async getAllPONumbers(req: VendorIdReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + '/getAllPONumbers', req)
@@ -16,13 +19,19 @@ export class PurchaseOrderservice extends CommonAxiosService{
 
       async getAllVendors():Promise<any>{
         try{
-          return  this.getvendorpostcall(this.vendor)
+          return  this.getvendorpostcall(this.vendor)  
         }catch(err){
           console.log(err)
         }
+      }
+
+      async getMaterialTpye(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + '/getMaterialTpye')
       }
 
       async getAllFabricsByPO(req: VendorIdReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + '/getAllFabricsByPO', req)
       }
 }
+
+

@@ -50,5 +50,13 @@ export class PurchaseOrderController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
+  @Post('/getMaterialTpye')
+  async getMaterialTpye( ): Promise<CommonResponseModel> {
+    try {
+      return await this.purchasseOrdrSerivice.getMaterialTpye();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
 
 }

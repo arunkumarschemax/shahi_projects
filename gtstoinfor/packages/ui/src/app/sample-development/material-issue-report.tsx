@@ -1,156 +1,89 @@
-import { FileExcelFilled } from '@ant-design/icons';
 import { MaterialIssueService } from '@project-management-system/shared-services';
-import { Button, Card, Col, Form, Input, Row, Select, Table } from 'antd';
-import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import { Button, Card, Col, Form, Row, Select, Table } from 'antd';
+import { RequestNoDto } from 'packages/libs/shared-models/src/common/material-issue/requestno.dto';
+import { useEffect, useState } from 'react';
 import './marerial.css';
+import moment from 'moment';
 
+
+const { Option } = Select;
 const MaterialIssueReport = () => {
+  const [form] = Form.useForm();
   const service = new MaterialIssueService();
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<[]>([]);
+  const [req, setReq] = useState<[]>([]);
+  const [consmption, setConsmption] = useState<RequestNoDto[]>([]);
+  const [formRef] = Form.useForm();
   const page = 1;
+
 
   useEffect(() => {
     getAllMaterial();
+    getmatirialDropDown();
   }, []);
 
-  const getAllMaterial = () => {
-    service.getAllMaterialIssues().then((res) => {
+  const getAllMaterial = (req?: RequestNoDto) => {
+    if (formRef.getFieldValue('consumption') !== undefined) {
+      req.consumption = formRef.getFieldValue('consumption')
+    }
+
+    service.getAllMaterialIssues(req).then((res) => {
       if (res.status) {
         setData(res.data);
       }
     });
   };
+//   const onSearch = () => {
+//     let filterData = []
+//     if(materialForm.getFieldValue('style') !== undefined){
+//         const styleId = materialForm.getFieldValue('consumption')
+//         filterData = data.filter((e) => e.styleId === consumption)
+//     } 
+//     setReq(filterData)
+// }
+  // const getAllMaterial = () => {
+  //   service.getAllMaterialIssues().then(res => {
+  //     if (res.status) {
+  //       setData(res.data);
 
-  const colWidth = {
-    materialtype: 120,
-    fabricCode: 100,
-    description: 100,
-    color: 50,
-    consumption: 80,
-    issuedQuantity: 80,
-    remarks: 80,
-
-  }
-  // const chcol = (noofth) => {
-  //   const mat = []
-  //   for (let i = 0; i < noofth; i++) {
-
-  //   }
-  // }
-  // function transformData(miItems) {
-  //   // Create an array to hold the transformed data
-  //   const transformedData = miItems.map(item => ({
-  //     MaterialType: item.fabricCode,
-  //     Code: item.materialcode,
-  //     Description: item.description,
-  //     Colour: item.colorId,
-  //     Consumption: item.consumption,
-  //     IssuedQuantity: item.issuedQuantity,
-  //     OperationStatus: item.remarks,
-
-  //   }));
-
-  //   return transformedData;
-  // }
-
-  // const CustomTitle = () => {
-
-  //   return (
-
-  //     // <table style={{borderRadius:0,boxSizing:'border-box', width:'max-content',minWidth:'100%',tableLayout:'auto'}}>
-  //     <table className='custom-tbl'>
-  //       <thead className='ant-table-thead'>
-  //         <tr >
-  //           <td style={{ width: `${colWidth}px` }}></td>
-
-  //           <td style={{ width: `${colWidth.materialId}px` }}>Material Type</td>
-  //           <td style={{ width: `${colWidth.fabricCode}px` }} >Code</td>
-  //           <td style={{ width: `${colWidth.description}px` }} >Description</td>
-  //           <td style={{ width: `${colWidth.colorId}px` }} >Colour</td>
-  //           <td style={{ width: `${colWidth.consumption}px` }} >Consumption</td>
-  //           <td style={{ width: `${colWidth.issuedQuantity}px` }} >Issued Quantity</td>
-  //           <td style={{ width: `${colWidth.remarks}px` }} >Operation Status</td>
-  //         </tr>
-
-  //       </thead>
-  //       <tr>
-  //       </tr>
-  //     </table>
-  //   );
+  //     }
+  //   })
   // };
+  const resetHandler = () => {
+    formRef.resetFields();
+    getAllMaterial();
 
-  // const columns1: any = [
-  //   {
-  //     dataIndex: "materialId",
-  //     width: colWidth.materialId,
-  //     render: (text, record) => {
-  //       return record.materialId ? record.materialId : '-'
+}
 
-  //     },
+  const onSearch = () => {
+    formRef.validateFields().then((values) => {
+      getAllMaterial(values);
+    });
+  };
 
-  //   },
-  //   {
-  //     // title: " Code",
-  //     dataIndex: "fabricCode",
+  const renderCellData = (data) => {
+    return data ? data : "-";
+  }
 
-  //     width: colWidth.fabricCode,
-  //     render: (text, record) => {
-  //       return record.fabricCode ? record.fabricCode : '-'
 
-  //     },
 
-  //   },
+  // const onRequestChange = (value) => {
+  //   const consumption = req.filter((rec) => rec.consumption === value);
+  //   setConsmption(consumption);
+  // }
 
-  //   {
-  //     // title: "Description",
-  //     dataIndex: "description",
-  //     width: colWidth.description,
-  //     render: (text, record) => {
-  //       return record.description ? record.description : '-'
+  const getmatirialDropDown = () => {
+    service.getMaterialIssue().then(res => {
+      if (res.status) {
+        setConsmption(res.data);
+        console.log(res.data ,'rrrrrrrrrrrrrrr')
+      }
+    }).catch(err => console.log(err))
+  }
 
-  //     },
-  //   },
 
-  //   {
-  //     // title: "Color",
-  //     dataIndex: "colorId",
-  //     width: colWidth.colorId,
-  //     render: (text, record) => {
-  //       return record.colorId ? record.colorId : '-'
-
-  //     },
-  //   },
-  //   {
-  //     // title: "Consumption",
-  //     dataIndex: "consumption",
-  //     width: colWidth.consumption,
-  //     render: (text, record) => {
-  //       return record.consumption ? record.consumption : '-'
-
-  //     },
-  //   },
-  //   {
-  //     // title: "Issued Quantity",
-  //     dataIndex: "issuedQuantity",
-  //     width: colWidth.issuedQuantity,
-  //     render: (text, record) => {
-  //       return record.issuedQuantity ? record.issuedQuantity : '-'
-
-  //     },
-  //   },
-  //   {
-  //     // title: "Operation Status",
-  //     dataIndex: "remarks",
-  //     width: colWidth.remarks,
-  //     render: (text, record) => {
-  //       return record.remarks
-
-  //     },
-  //   },
-  // ];
-
-  const columns: any = [
+  
+  const Columns: any = [
     {
       title: 'S No',
       key: 'sno',
@@ -163,214 +96,231 @@ const MaterialIssueReport = () => {
       fixed: 'left',
     },
     {
-      title: "Request No",
-      dataIndex: "request_no",
-      onCell: (record: any) => ({
-        rowSpan: record.rowSpan,
-      }),
-      fixed: 'left',
-    },
-    {
-      title: "M3 Style No",
-      dataIndex: "m3_style_no",
-      onCell: (record: any) => ({
-        rowSpan: record.rowSpan,
-      }),
-      fixed: 'left',
-    },
-    {
       title: "Consumption Code",
-      dataIndex: "consumption_code",
-      onCell: (record: any) => ({
-        rowSpan: record.rowSpan,
-      }),
-      width: '150px',
-      fixed: 'left',
+      dataIndex: "consumptionCode",
+      width: '150px'
+
     },
     {
-      title: "Sample Type",
-      dataIndex: "sampleType",
-      onCell: (record: any) => ({
-        rowSpan: record.rowSpan,
-      }),
-      fixed: 'left',
+      title: "M3 Style No ",
+      dataIndex: "m3StyleNo"
+
     },
     {
-      title: "PCH",
-      dataIndex: "pch",
-      onCell: (record: any) => ({
-        rowSpan: record.rowSpan,
-      }),
-      fixed: 'left',
+      title: "Sample Type ",
+      dataIndex: "sampleType"
+
     },
     {
-      title: "Sample Indent Date",
+      title: "Pch",
+      dataIndex: "pch"
+
+    },
+    {
+      title: "Location ",
+      dataIndex: "location"
+
+    },
+    {
+      title: " Style  ",
+      dataIndex: "style"
+
+    },
+    {
+      title: "Buyer ",
+      dataIndex: "buyername"
+
+    },
+    {
+      title: "IssuedDate ",
       dataIndex: "issue_date",
-      onCell: (record: any) => ({
-        rowSpan: record.rowSpan,
-      }),
       render: (text, record) => {
-        return record.issue_date
-          ? moment(record.issue_date).format('YYYY-MM-DD')
-          : "";
-      },
-    },
-    {
-      title: "Location",
-      dataIndex: "locationname",
-      onCell: (record: any) => ({
-        rowSpan: record.rowSpan,
-      }),
-    },
-    {
-      title: "Style",
-      dataIndex: "styleNo",
-      onCell: (record: any) => ({
-        rowSpan: record.rowSpan,
-      }),
-    },
-    {
-      title: " Buyer",
-      dataIndex: "buyername",
-      onCell: (record: any) => ({
-        rowSpan: record.rowSpan,
-      }),
-    },
-    {
-      title: "Issued Date",
-      dataIndex: "issue_date",
-      onCell: (record: any) => ({
-        rowSpan: record.rowSpan,
-      }),
-      render: (text, record) => {
-        return record.issue_date
-          ? moment(record.issue_date).format('YYYY-MM-DD')
-          : "";
-      },
-    },
-    {
-      title: " Material Type",
-      dataIndex: "materialtype",
-      width: colWidth.materialtype,
-      render: (text, record) => {
-        return record.materialtype ? record.materialtype : '-'
-
-      },
-
-    },
-    {
-      title: " Code",
-      dataIndex: "fabricCode",
-
-      width: colWidth.fabricCode,
-      render: (text, record) => {
-        return record.fabricCode ? record.fabricCode : '-'
-
+        return record.deliveryDate !== null ?
+          moment(record.deliveryDate).format('YYYY-MM-DD') : ""
       },
 
     },
 
-    {
-      title: "Description",
-      dataIndex: "description",
-      width: colWidth.description,
-      render: (text, record) => {
-        return record.description ? record.description : '-'
-
-      },
-    },
 
     {
-      title: "Color",
-      dataIndex: "color",
-      width: colWidth.color,
-      render: (text, record) => {
-        return record.color ? record.color : '-'
+      title: <div style={{ textAlign: 'center' }}>Material Type</div>,
+      dataIndex: "mi_items",
+      key: "mi_items",
+      align: 'center',
+      width: '250',
+      render: (mi_items, text) => {
+        renderCellData(text)
+        return (
+          <Table
+            dataSource={mi_items}
+            columns={[
+              {
+                dataIndex: "productName",
+                key: "productName", align: 'center',
 
-      },
+              },
+
+            ]}
+            pagination={false}
+          />
+        );
+      }
     },
     {
-      title: "Consumption",
-      dataIndex: "consumption",
-      width: colWidth.consumption,
-      render: (text, record) => {
-        return record.consumption ? record.consumption : '-'
-
-      },
+      title: <div style={{ textAlign: 'center' }}>Material Code</div>,
+      dataIndex: "mi_items",
+      key: "mi_items",
+      align: 'center',
+      render: (mi_items, text) => {
+        renderCellData(text)
+        return (
+          <Table
+            dataSource={mi_items}
+            columns={[
+              {
+                dataIndex: "materialcode",
+                key: "materialcode", align: 'center',
+              },
+            ]}
+            pagination={false}
+          />
+        );
+      }
     },
     {
-      title: "Issued Quantity",
-      dataIndex: "issuedQuantity",
-      width: colWidth.issuedQuantity,
-      render: (text, record) => {
-        return record.issuedQuantity ? record.issuedQuantity : '-'
-
-      },
+      title: <div style={{ textAlign: 'center' }}>Colour</div>,
+      dataIndex: "mi_items",
+      key: "mi_items",
+      align: 'center',
+      render: (mi_items, text) => {
+        renderCellData(text)
+        return (
+          <Table
+            dataSource={mi_items}
+            columns={[
+              {
+                dataIndex: "color",
+                key: "color", align: 'center',
+              },
+            ]}
+            pagination={false}
+          />
+        );
+      }
     },
     {
-      title: "Operation Status",
-      dataIndex: "remarks",
-      width: colWidth.remarks,
-      render: (text, record) => {
-        return record.remarks
-
-      },
+      title: <div style={{ textAlign: 'center' }}>Consumption</div>,
+      dataIndex: "mi_items",
+      key: "mi_items",
+      align: 'center',
+      render: (mi_items, text) => {
+        renderCellData(text)
+        return (
+          <Table
+            dataSource={mi_items}
+            columns={[
+              {
+                dataIndex: "consumption",
+                key: "consumption", align: 'center',
+              },
+            ]}
+            pagination={false}
+          />
+        );
+      }
     },
+    {
+      title: <div style={{ textAlign: 'center' }}>Issued Quantity</div>,
+      dataIndex: "mi_items",
+      key: "mi_items",
+      align: 'center',
+      render: (mi_items, text) => {
+        renderCellData(text)
+        return (
+          <Table
+            dataSource={mi_items}
+            columns={[
+              {
+                dataIndex: "issuedQuantity",
+                key: "issuedQuantity", align: 'center',
+              },
+            ]}
+            pagination={false}
+          />
+        );
+      }
+    },
+    {
+      title: <div style={{ textAlign: 'center' }}>Status</div>,
+      dataIndex: "mi_items",
+      key: "mi_items",
+      align: 'center',
+      render: (mi_items, text) => {
+        renderCellData(text)
+        return (
+          <Table
+            dataSource={mi_items}
+            columns={[
+              {
+                dataIndex: "status",
+                key: "status", align: 'center',
+              },
+            ]}
+            pagination={false}
+          />
+        );
+      }
+    },
+    {
+      title: "Status ",
+      dataIndex: "status"
 
-  ];
-  const allMaterialsData = (data:any) => {
-    const totalData:any[] = [];
-    data.forEach((main: any, mainIndex: number) => {
-      main.mi_items.forEach((child: any, childIndex: number) => {
-        let gridObj: any = {};
-        gridObj.request_no = main.request_no;
-        gridObj.consumption_code = main.consumption_code;
-        gridObj.styleNo = main.styleNo;
-        gridObj.sampleType = main.sampleType;
-        gridObj.pch = main.pch;
-        gridObj.issue_date = main.issue_date;
-        gridObj.locationname = main.locationname;
-        gridObj.buyername = main.buyername;
-        gridObj.m3_style_no = main.m3_style_no;
-        gridObj.mi_items = main.mi_items;
-        gridObj.rowSpan = 0;
-        if (childIndex === 0) {
-          gridObj.rowSpan = main.mi_items.length
-        }
-        gridObj.material_trim_id = child.material_trim_id
-        gridObj.fabricCode = child.fabricCode
-        gridObj.materialtype=child.materialtype
-        gridObj.description = child.description
-        gridObj.color = child.color
-        gridObj.consumption = child.consumption
-        gridObj.issuedQuantity = child.issuedQuantity;
-        totalData.push(gridObj)
-      })
-    });
-    return totalData
-  };
+    },
+  ]
 
-  console.log(allMaterialsData(data),":::::::::::::::::::::::::::::::::")
 
   return (
-    <div>
-      <Card>
-        <div style={{ overflowX: 'auto' }}>
-          <Table
-            rowKey={(rec) => rec.request_no}
-            size="small"
-            columns={columns}
-            dataSource={allMaterialsData(data)}
-            pagination={{
-              total: data.length,
-              showTotal: (total, range) =>
-                `${range[0]}-${range[1]} of ${total} items`,
-            }} scroll={{ x: 'max-content' }}
-            bordered
-          />
+    <>
+
+
+
+      <Card title="Material Issue Report" className='card-header'>
+        <div>
+          <Form form={formRef}>
+            <Row gutter={16}>
+              <Col span={6}>
+                <Form.Item name='consumption' label='Consumption Code'
+                  style={{ marginBottom: '10px' }}>
+                  <Select placeholder='Select Consumption Code' 
+                   optionFilterProp="children"
+                   allowClear
+                   showSearch >
+                  {consmption?.map((inc: any) => {
+                      return <Option key={inc.id} value={inc.consumptionCode}>{inc.consumptionCode}</Option>
+                                    })
+                                }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Form.Item style={{ marginBottom: '10px' }}>
+                  <Button
+                    htmlType='submit'
+                    type="primary"
+                    style={{ width: '80px', marginRight: "10px" }}
+                    onClick={onSearch}
+                    
+                  >Submit</Button>
+                  <Button htmlType='reset' danger style={{ width: '80px' }} onClick={resetHandler}>Reset</Button>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+
+          <Table columns={Columns} dataSource={data} scroll={{ x: 1500 }} />
         </div>
       </Card>
-    </div>
+    </>
   );
 };
 

@@ -1,65 +1,67 @@
-import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
+import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { BuyersColor } from "../buyers-destination/byers-colors.entity";
 import { ItemSkus } from "../sku-generation/sku-generation.entity";
 import { CoLine } from "../style-order/co-line.entity";
 
 @Entity('colour')
-export class Colour{
+export class Colour {
 
-@PrimaryGeneratedColumn("increment",{name:'colour_id'})
-colourId:number;
-@Column("varchar",{
-    nullable: true,
-    length:15,
-    name:"colour"
-})
-colour:string;
+    @PrimaryGeneratedColumn("increment", { name: 'colour_id' })
+    colourId: number;
 
-@Column("boolean",{
-    default:true,
-    name:"is_active"
+    
+    @Column("varchar", {
+        nullable: true,
+        length: 15,
+        name: "colour"
     })
-  isActive:boolean;
+    colour: string;
 
-  @CreateDateColumn({
-    name: "created_at",
-    type:"datetime"
-  })
-  createdAt: Date;
+    @Column("boolean", {
+        default: true,
+        name: "is_active"
+    })
+    isActive: boolean;
 
-  @Column("varchar", {
-    nullable: true,
-    name: "created_user"
-})
-createdUser: string | null;
+    @CreateDateColumn({
+        name: "created_at",
+        type: "datetime"
+    })
+    createdAt: Date;
 
-@UpdateDateColumn({
-    name: "updated_at",
-    type:'datetime'
-})
-updatedAt: Date;
+    @Column("varchar", {
+        nullable: true,
+        name: "created_user"
+    })
+    createdUser: string | null;
 
-@Column("varchar", {
-    nullable: true,
-    name: "updated_user"
-})
-updatedUser: string | null;
+    @UpdateDateColumn({
+        name: "updated_at",
+        type: 'datetime'
+    })
+    updatedAt: Date;
 
-@VersionColumn({
-    default:1,
-    name: "version_flag"
-})
-versionFlag: number;
+    @Column("varchar", {
+        nullable: true,
+        name: "updated_user"
+    })
+    updatedUser: string | null;
 
-// @OneToMany(type=>BuyersColor, buyers=>buyers.colorInfo,{cascade: true})
-// colorsInfo:BuyersColor;
+    @VersionColumn({
+        default: 1,
+        name: "version_flag"
+    })
+    versionFlag: number;
 
-@OneToMany(type=>BuyersColor, buyers=>buyers.colorInfo,{cascade: true})
-colorsInfo?:BuyersColor;
+    // @OneToMany(type=>BuyersColor, buyers=>buyers.colorInfo,{cascade: true})
+    // colorsInfo:BuyersColor;
 
-@OneToMany(type=>ItemSkus, item=>item.colorInfo,{cascade: true})
-itemSkuInfo?:ItemSkus;
+    @OneToMany(type => BuyersColor, buyers => buyers.colorInfo, { cascade: true })
+    colorsInfo?: BuyersColor;
 
-@OneToMany(type=>CoLine, co=>co.colorInfo,{cascade: true})
-coLineInfo?:CoLine;
+    @OneToMany(type => ItemSkus, item => item.colorInfo, { cascade: true })
+    itemSkuInfo?: ItemSkus;
+
+    @OneToMany(type => CoLine, co => co.colorInfo, { cascade: true })
+    coLineInfo?: CoLine;
 }
