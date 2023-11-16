@@ -37,6 +37,9 @@ export enum VendorNameEnum {
     extractedSavinoDell="SAVINO DELL",
     extractedNewblobe="NEW BLOBE",
     extracteddachser="DACHSER",
+    extractedscanWell="SCANWELL",
+    extractedMatrix="MATRIX",
+
 
 
 
@@ -46,6 +49,11 @@ export enum VendorNameEnum {
     // extarctedUnitedLiner='UNITED LINER'
     extractedVelogicIndia="VELOGIC INDIA",
     extracteWiderlogistics="WIDER LOGISTICS",
+
+
+
+
+
     extractedWorldLine="WORLD LINE",
     extractedKwe="KWE",
     extractedUps = "UPS",
@@ -53,7 +61,7 @@ export enum VendorNameEnum {
     extractedAps="APS",
     extractChRowbin="CH ROWBIN",
     extractDBSCHENKAR="DB SCHENKAR",
-    extractCeva="CEVA"
+    extractCeva="CEVA",
 
     
     
@@ -62,5 +70,10 @@ export enum VendorNameEnum {
 
     
 
-
+    extractedJeena="Jeena & Company",
+    extractedKerryIndev="KERRY INDEV",
+    extractedGateway='Gateway',
+    extractedFederationofIndian='Federation of Indian',
+    extractedLogWin='LOGWIN',
+    extractedHellmann="HELLMANN"
 }
