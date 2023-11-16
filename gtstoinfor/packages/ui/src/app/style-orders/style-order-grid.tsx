@@ -146,7 +146,7 @@ let value = 0
   const openFormWithData = (data) => {
     setDrawerVisible(true);
     setSelectedId(data.co_id);
-    navigate('/materialCreation/style-order-creation',{state:{id:data.co_id}})
+    navigate('/order-management/style-order-creation',{state:{id:data.co_id}})
   }
     const getColumnSearchProps = (dataIndex: string) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -267,9 +267,9 @@ let value = 0
      {
         title: "CO Date",
         dataIndex: "order_date",
-        // render: (val,data) => {
-        //   return data.order_date ?moment( data.order_date).format('YYYY-MM-DD') : "-";
-        // }
+        render: (val,data) => {
+          return data.order_date ?moment( data.order_date).format('YYYY-MM-DD') : "-";
+        }
       },
       
       {
@@ -459,11 +459,11 @@ let value = 0
         })
       }
       const details =(coId:number,itemId:number) =>{
-        navigate('/materialCreation/style-order-detail-view',{state :{co_id:coId,fg_item_id:itemId}})
+        navigate('/order-management/style-order-detail-view',{state :{co_id:coId,fg_item_id:itemId}})
       }
     
     return (
-        <Card title='Style Orders'  extra={<span><Button onClick={() =>  navigate('/materialCreation/style-order-creation')}
+        <Card title='Style Orders'  extra={<span><Button onClick={() =>  navigate('/order-management/style-order-creation')}
               type={'primary'}>New</Button></span>} >
     <Form  form={form} onFinish={itemChange}>
     <Row gutter={[8,8]}>
@@ -522,7 +522,10 @@ let value = 0
           scroll={{x:'max-content'}}
           bordered />
           </Card>
-           ):(<> 
+           ):
+           (selected && data.length === 0 ?  
+            (
+            <> 
             <Row>
                <Alert
                message="No data"
@@ -531,7 +534,9 @@ let value = 0
                showIcon
              />
              </Row>
-             </>)}
+             </>
+              ):(<></>)
+             )}
 
          
       {/* <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}

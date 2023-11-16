@@ -46,7 +46,7 @@ export default function Login() {
       if (from) {
         navigate(from, { replace: true });
       } else {
-        navigate("/user-management/users-from", { replace: true });
+        navigate("/", { replace: true });
       }
       return true;
     } catch (error: any) {

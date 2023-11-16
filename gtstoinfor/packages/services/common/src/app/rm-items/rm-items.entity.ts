@@ -9,14 +9,14 @@ export class RmCreationEntity{
 rmitemId:number;
 
 @Column("varchar",{
-    nullable: true,
+    nullable: false,
     length: 155,
     name:"item_code"
 })
 itemCode:string;
 
 @Column("int",{
-    nullable: false,
+    nullable: true,
     name:"item_category_id"
 })
 itemCategoriesId:number;
@@ -34,28 +34,28 @@ pchId:number;
 facilityID:number;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 150,
     name:"generic_code"
 })
 genericCode:string;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 150,
     name:"supply_lead_time"
 })
 supplyLeadTime:string;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 200,
     name:"supplier"
 })
 supplier:string;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 200,
     name:"consumption"
 })
@@ -63,7 +63,7 @@ consumption:string;
 
 
 @Column("int",{
-    nullable: false,
+    nullable: true,
     name:"total"
 })
 total:number;
@@ -83,14 +83,14 @@ deliveryTerms:string;
 deliveryMethod:string;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 255,
     name:"structure"
 })
 structure:string;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 150,
     name:"quality"
 })
@@ -99,9 +99,9 @@ quality:string;
 @Column("varchar",{
     nullable: false,
     length: 255,
-    name:"description"
+    name:"item_name"
 })
-description:string;
+itemName:string;
 
 @Column("int",{
     nullable: false,
@@ -110,26 +110,26 @@ description:string;
 itemIypeId:number;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 255,
     name:"placement"
 })
 placement:string;
 
 @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "fabric_finish_id" 
   })
   fabricFinishId: number;
 
 @Column("int",{
-    nullable: false,
+    nullable: true,
     name:"responsible_id"
 })
 responsibleId:number;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 255,
     name:"dev_responsible"
 })
@@ -143,7 +143,7 @@ basicUomId:number;
 
 
 @Column("int",{
-    nullable: false,
+    nullable: true,
     name:"alt_uom_id"
 })
 altUomId:number;
@@ -177,21 +177,21 @@ price:string;
 tax:string;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 155,
     name:"purchase_price_qty"
 })
 purchasePriceQty:string;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 155,
     name:"sale_tax"
 })
 saleTax:string;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 155,
     name:"excise_duty"
 })
@@ -199,7 +199,7 @@ exciseDuty:string;
 
 
 @Column("int",{
-    nullable: false,
+    nullable: true,
     name:"license_id"
 })
 licenseId:number;
@@ -218,21 +218,21 @@ default:IsImportedItemEnum.NO,
 isImportedItem:IsImportedItemEnum;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 155,
     name:"is_sale_item"
 })
 saleItem:string;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 155,
     name:"wastage"
 })
 wastage:string;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 155,
     name:"cost_Group"
 })
@@ -246,21 +246,21 @@ costGroup:string;
 remarks:string;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 255,
     name:"attached_warehouse"
 })
 attachedWareHouse:string;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 255,
     name:"planner"
 })
 planner:string;
 
 @Column("int",{
-    nullable: false,
+    nullable: true,
     name:"business_area_id"
 })
 businessArea:number;
@@ -283,14 +283,14 @@ productGroupId:number;
 })
 procurementGroupId:number;
 
-@Column("int",{
+@Column("varchar",{
     nullable: true,
     name:"item_group_id"
 })
-itemGroupId:number;
+itemGroupId:string;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 255,
     name:"use_in_operation"
 })

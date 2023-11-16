@@ -9,7 +9,7 @@ export class RmCreationAdapter{
             entityObj.pchId=dtoObj.pchId;
             entityObj.structure=dtoObj.structure;
             entityObj.quality=dtoObj.quality;
-            entityObj.description=dtoObj.description;
+            entityObj.itemName=dtoObj.itemName;
             entityObj.itemIypeId=dtoObj.itemIypeId;
             entityObj.placement=dtoObj.placement;
             entityObj.responsibleId=dtoObj.responsibleId;
@@ -69,7 +69,7 @@ return entityObj;
             rmcreationDto.pchId=rmcreation.pchId;
             rmcreationDto.structure=rmcreation.structure;
             rmcreationDto.quality=rmcreation.quality;
-            rmcreationDto.description=rmcreation.description;
+            rmcreationDto.itemName=rmcreation.itemName;
             rmcreationDto.itemIypeId=rmcreation.itemIypeId;
             rmcreationDto.placement=rmcreation.placement;
             rmcreationDto.responsibleId=rmcreation.responsibleId;

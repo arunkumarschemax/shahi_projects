@@ -614,9 +614,7 @@ export const AppRoutes = () => {
                         throw new Error("Function not implemented.")
                     } }/>}/>
                     <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation />} />
-                    <Route path='style-order-creation' element={<StyleOrderCreation coData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
-                    <Route path='style-order-view' element={<StyleOrderGrid />} />
-                    <Route path='style-order-detail-view' element={<StyleOrderDetailView />} />
+                   
                     <Route path='feature-creation' element={<FeatureCreation />} />
                 <Route path='feature-creation-view' element={<FeatureCreationView />} />
                 <Route path='item-creation-view' element={<ItemCreationView/>}/>    
@@ -624,8 +622,6 @@ export const AppRoutes = () => {
                 
                 <Route path='rm-detail-view' element={<RMDetailView data={''}/>}/>
 
-                <Route path="co-amendment" element ={<COAmendmentTabs key={""} />} />
-                <Route path="co-amendment-view" element ={<COAmendmentView/>} />
 
                 <Route path='rm-creation-view' element={<RMCreationView/>}/>
                 
@@ -636,9 +632,6 @@ export const AppRoutes = () => {
                 <Route path='/operation-tracking'>
                     <Route path='operation-tracking/issuing' element={<IssueScreen/>}/>
                     <Route path='operation-reporting' element={<OperationReportingView/>} />
-
-            
-
                 </Route>
                 <Route path='/product-structure'>
                 <Route path='productstructure/smv-efficiency' element={<SmvEfficiencyForm/>}/>
@@ -649,17 +642,18 @@ export const AppRoutes = () => {
                 <Route path ='rm-operation-mapping-view' element={<RMOperationMappingView />}/>
                 <Route path='substitution' element={<Substitution/>}></Route>
                 <Route path='substitution-view' element={<SubstitutionView />}/>
-
-
-            
-                            
                 </Route>
                 <Route path='/procurement'>
                 <Route path='procurement/mop-report' element={<MOPReport/>}/>    
-                <Route path='procurement/bom-report' element={<BomReport/>}/>           
-       
                 </Route>
-
+                <Route path="/order-management">
+                    <Route path='style-order-creation' element={<StyleOrderCreation coData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
+                    <Route path='style-order-view' element={<StyleOrderGrid />} />
+                    <Route path='style-order-detail-view' element={<StyleOrderDetailView />} />
+                <Route path="co-amendment" element ={<COAmendmentTabs key={""} />} />
+                <Route path="co-amendment-view" element ={<COAmendmentView/>} />
+                <Route path='bom-report' element={<BomReport/>}/>
+                    </Route>
 
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />

@@ -5,7 +5,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { FabricApprovalReq } from "../dto/fabric-approval-req";
 import { promises } from "dns";
 import { FabricRequestQualitiesEntity } from "../fabric-request-qualities.entity";
-import { StatusEnum } from "@project-management-system/shared-models";
+import { BuyerExtrnalRefIdReq, BuyerIdReq, StatusEnum } from "@project-management-system/shared-models";
 import { Style } from "../../style/dto/style-entity";
 import { Location } from "../../locations/location.entity";
 import { Buyers } from "../../buyers/buyers.entity";
@@ -36,9 +36,11 @@ export class FabricRequestRepository extends Repository<FabricRequestEntity> {
             .orderBy(`fabric_request_id`)
             return await query.getRawMany()
     }
-    async getAllFabricRequests(): Promise<any[]> {
+    async getAllFabricRequests(req?:BuyerExtrnalRefIdReq): Promise<any[]> {
+        console.log(req,'popopopo');
+        
         const query =  this.createQueryBuilder('fab')
-            .select(`fab.request_no ,fab.type,fab.status,f.name,loc.location_name,b.buyer_name,pch.profit_control_head,st.sample_type,s.style,fb.first_name,fb.last_name
+            .select(`fab.request_no ,fab.type,fab.status,f.name,loc.location_name,b.buyer_name,pch.profit_control_head,st.sample_type,s.style,fb.first_name,fb.last_name,fab.fabric_request_id
             `)
             .leftJoin(Style,'s',`s.style_id = fab.style_id`)
             .leftJoin( Location,'loc',` loc.location_id = fab.location_id`)
@@ -47,7 +49,9 @@ export class FabricRequestRepository extends Repository<FabricRequestEntity> {
  .leftJoin( SampleTypes, 'st' , `st.sample_type_id = fab.sample_type_id`)
  .leftJoin(FactoriesEntity, `f`, `f.id = fab.facility_id`)
  .leftJoin( EmplyeeDetails,`fb`, `fb.employee_id = fab.fabric_responsible`)
-
+ if (req?.extrnalRefId !== undefined) {
+    query.where(`b.external_ref_number ='${req.extrnalRefId}'`)
+}
            return await query.getRawMany()
     }
 }

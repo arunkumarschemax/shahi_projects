@@ -32,7 +32,7 @@ export class SettingsController{
     }
 
     @Post('/getAllSettingsInfo')
-    async getAllSettingsInfo(@Body() req:SettingsIdReq):Promise<SettingsResponseModel>{
+    async getAllSettingsInfo(@Body() req:any):Promise<SettingsResponseModel>{
         try{
             return await this.settingsService.getAllSettingsInfo(req)
         }catch(err){

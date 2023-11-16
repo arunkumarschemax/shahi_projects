@@ -1,19 +1,23 @@
 import { FabricRequestEntity } from "./fabric-request.entity";
 import { Injectable } from "@nestjs/common";
 import { FabricRequestRepository } from "./repository/fabric-request.repository";
-import { BuyerIdReq, CommonResponseModel, FabricDevelopmentRequestResponse, QualitiesEnum, StatusEnum, SubContractStatus, UploadResponse } from "@project-management-system/shared-models";
+import { BuyerExtrnalRefIdReq, BuyerIdReq, CommonResponseModel, FabricDevReqId, FabricDevelopmentRequestResponse, QualitiesEnum, StatusEnum, SubContractStatus, UploadResponse } from "@project-management-system/shared-models";
 import { FabricRequestDto } from "./dto/fabric-request.dto";
 import { FabricRequestQualitiesInfoEntity } from "./fabric-request-quality-info.entity";
 import { FabricRequestItemsEntity } from "./fabric-request-items.entity";
 import { FabricRequestQualitiesEntity } from "./fabric-request-qualities.entity";
 import { FabricRequestQualitiesRepository } from "./repository/fabric-request-qualities.repository";
 import { FabricApprovalReq } from "./dto/fabric-approval-req";
+import { FabricRequestQualityInfoRepository } from "./repository/fabric-request-quality-info.repository";
+import { FabricRequestItemsRepository } from "./repository/fabric-request-items.repository";
 
 @Injectable()
 export class FabricDevelopmentService {
     constructor (
          private FabricRepo: FabricRequestRepository,
-         private qualityrepo: FabricRequestQualitiesRepository
+         private qualityrepo: FabricRequestQualitiesRepository,
+         private qualityInfoRepo: FabricRequestQualityInfoRepository,
+         private itemsRepo: FabricRequestItemsRepository
     ){}
 
 
@@ -145,9 +149,9 @@ export class FabricDevelopmentService {
 
 
 
-   async getFabricDevReqData(req?:BuyerIdReq): Promise<CommonResponseModel> {
+   async getFabricDevReqData(req?:BuyerExtrnalRefIdReq): Promise<CommonResponseModel> {
       try {
-        const data = await this.FabricRepo.getAllFabricRequests()
+      const data = await this.FabricRepo.getAllFabricRequests(req)
     //  const data = await this.FabricRepo.find({
     //   relations:["fabricQuantityEntity","fabricQuantityEntity.fabricEntity","fabricQuantityEntity.fabricEntity.fabricItemsEntity"],
     //   where:{buyerId:req.buyerId}
@@ -185,5 +189,32 @@ export class FabricDevelopmentService {
         }
       }
       
-
+      async getAllFabricDevReqQltyData(req:FabricDevReqId): Promise<CommonResponseModel> {
+        try {
+          const data = await this.qualityrepo.getAllQltyData(req)
+         return new CommonResponseModel(true, 0, "Data retrived successfully", data);
+  
+          } catch (err) {
+            throw err;
+          }
+        }
+        
+      async getQltyInfoById(req:FabricDevReqId): Promise<CommonResponseModel> {
+             try {
+          const data = await this.qualityInfoRepo.getInfoByQltyId(req)
+           return new CommonResponseModel(true, 0, "Data retrived successfully", data);
+  
+          } catch (err) {
+            throw err;
+          }
+        }
+        async getAllItemsById(req:FabricDevReqId): Promise<CommonResponseModel> {
+          try {
+            const data = await this.itemsRepo.find({where:{data:{fabricRequestQualityInfoId:req.fabricRequestQltyInfoId}}})
+         return new CommonResponseModel(true, 0, "Data retrived successfully", data);
+    
+            } catch (err) {
+              throw err;
+            }
+          }
 }

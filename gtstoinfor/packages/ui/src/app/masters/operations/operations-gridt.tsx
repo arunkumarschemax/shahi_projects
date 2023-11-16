@@ -198,7 +198,7 @@ export function OperationsGrid(
       ...getColumnSearchProps("operationName"),
     },
     {
-      title: <div style={{textAlign:'center'}}>Operation Code</div>,
+      title: <div style={{textAlign:'center'}}> M3 Operation Code</div>,
       dataIndex: "operationCode",
       sorter: (a, b) => a.operationCode.localeCompare(b.operationCode),
       sortDirections: ["ascend", "descend"],
@@ -332,7 +332,7 @@ export function OperationsGrid(
           </Row>
           <br></br>
           <Table
-
+        size='small'
         rowKey={record => record.operationId}
         columns={columnsSkelton}
         dataSource={operationsData}

@@ -61,7 +61,7 @@ export const Substitution = () => {
 
     const handleRmSkusDragStart = (event: React.DragEvent<HTMLDivElement>, rmsku: any) => {
         // selectedRmSKuObject.push(rmsku)
-        selectedRmSKuObject.push(new mappedRmSKU(rmsku.rm_item_code,rmsku.rm_item_id,rmsku.rm_sku_id,rmsku.rm_sku_code,null,rmsku.item_type))
+        selectedRmSKuObject.push(new mappedRmSKU(rmsku.rm_item_code,rmsku.rm_item_id,rmsku.rm_sku_id,rmsku.rm_sku_code,rmsku.consumption,rmsku.item_type))
         // setSelectedFgSkuObject(rmsku)
         // setSelectedRmSKus([...selectedRmSKus,selectedRmSKuObject[0]])
     //   const index =  rmSkus.findIndex(e => {return e.rm_sku_code === rmsku.rm_sku_code})
