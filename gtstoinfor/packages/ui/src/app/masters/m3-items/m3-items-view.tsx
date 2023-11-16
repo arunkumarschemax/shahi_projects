@@ -58,11 +58,11 @@ const M3ItemsView = () => {
         },
         {
             title: " Yarn Count",
-            dataIndex: "yarnCount",
+            dataIndex: "yarn_count",
             render: (text,record) => {
                 return(
                     <>
-                    {record.yarnCount ? `${record.yarnCount} ${record.yarnUnit}` : '-'}
+                    {record.yarn_count ? `${record.yarn_count} ${record.yarnUnit}` : '-'}
                     </>
                 )
             }
