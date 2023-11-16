@@ -12,7 +12,7 @@ export class IndentController {
   constructor(
     private readonly indentService: IndentService,
     private readonly applicationExceptionHandler: ApplicationExceptionHandler,
-    private readonly repo:IndentRepository
+    private readonly repo: IndentRepository
 
   ) { }
   @Post('/creteIndent')
@@ -60,7 +60,7 @@ export class IndentController {
     }
   }
   @Post('/getAllIndentItemDetailsAgainstIndent')
-  async getAllIndentItemDetailsAgainstIndent(@Body() req:any): Promise<CommonResponseModel> {
+  async getAllIndentItemDetailsAgainstIndent(@Body() req: any): Promise<CommonResponseModel> {
     try {
       return await this.indentService.getAllIndentItemDetailsAgainstIndent(req);
     } catch (error) {
@@ -69,29 +69,29 @@ export class IndentController {
   }
 
   @Post('/getIndentData')
-  async getIndentData(@Body()  req:any): Promise<CommonResponseModel> {
+  async getIndentData(@Req() req: any): Promise<CommonResponseModel> {
     try {
-      return await this.indentService.getIndentData(req);
+      return await this.indentService.getIndentData(req.body);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
   @Post('/getIndentDropDown')
-  async getIndentDropDown(@Body() req:IndentRequestDto): Promise<CommonResponseModel> {
-    console.log(req,'444444444444444');
-  try {
+  async getIndentDropDown(@Body() req: IndentRequestDto): Promise<CommonResponseModel> {
+    console.log(req, '444444444444444');
+    try {
       return await this.indentService.getIndentDropDown(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
-  @Post('/getIndentDate')
-  async getIndentDate(@Body() req:IndentRequestDto): Promise<CommonResponseModel> {
-    console.log(req,'444444444444444');
-  try {
-      return await this.indentService.getIndentDate(req);
-    } catch (error) {
-      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
-    }
-  }
+  // @Post('/getIndentDate')
+  // async getIndentDate(@Req() req: any): Promise<CommonResponseModel> {
+  //   console.log(req, '444444444444444');
+  //   try {
+  //     return await this.indentService.getIndentData(req.body);
+  //   } catch (error) {
+  //     return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+  //   }
+  // }
 }

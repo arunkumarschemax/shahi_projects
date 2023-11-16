@@ -37,7 +37,7 @@ export const PurchaseOrderView = () => {
     {
       title: 'S No',
       key: 'sno',
-      width: '70px',
+      width: '20px',
       responsive: ['sm'],
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
       onCell: (record: any) => ({
@@ -45,46 +45,59 @@ export const PurchaseOrderView = () => {
       }),
       fixed: 'left',
     },
-    // {
-    //   title: 'Unit',
-    //   dataIndex: 'requestNumber',
-    // },
+   
     // {
     //   title: 'Po type',
     //   dataIndex: 'requestNumber',
     // },
+    // {
+    //   title: 'Indent Code ',
+    //   dataIndex: 'indentCode',
+    //   width:'80px',
+
+    // },
     {
-      title: 'Indent Code ',
-      dataIndex: 'indentCode',
-    },
-    {
-      title: 'Po Number',
+      title: 'PO Number',
       dataIndex: 'poNumber',
+      width:'80px'
     },
     {
-      title: <div style={{ textAlign: 'center' }}>Material Type</div>,
-      dataIndex: "type",
-      key: "type",
-      align: 'center',
-      render: (type, text) => {
-        renderCellData(text)
-        return (
-          <Table
-            dataSource={type}
-            columns={[
-              {
-                dataIndex: "ProductName",
-                key: "ProductName", align: 'center',
-              },
-            ]}
-            pagination={false}
-          />
-        );
-      }
+      title: 'Style',
+      dataIndex: 'requestNumber',
+    },
+    // {
+    //   title: <div style={{ textAlign: 'center' }}>Material Type</div>,
+    //   dataIndex: "type",
+    //   key: "type",
+    //   align: 'center',
+    //   width:'80px',
+
+    //   render: (type, text) => {
+    //     renderCellData(text)
+    //     return (
+    //       <Table
+    //         dataSource={type}
+    //         columns={[
+    //           {
+    //             dataIndex: "materialType",
+    //             key: "materialType", align: 'center',
+    //           },
+    //         ]}
+    //         pagination={false}
+    //       />
+    //     );
+    //   }
+    // },
+    {
+      title: 'Material Type',
+      dataIndex: 'materialType',
+      width:'80px'
     },
     {
       title: 'Po Date',
       dataIndex: 'orderDate',
+      width:'80px',
+
       render: (text, record) => {
         return record.orderDate
           ? moment(record.orderDate).format('YYYY-MM-DD')
@@ -94,40 +107,62 @@ export const PurchaseOrderView = () => {
     {
       title: 'VenderName',
       dataIndex: 'vendorName',
+      width:'100px',
+
     },
     {
       title: 'Expected Date',
       dataIndex: 'deliveryDate',
+      width:'100px',
       render: (text, record) => {
         return record.deliveryDate
           ? moment(record.deliveryDate).format('YYYY-MM-DD')
           : "";
       },
     },
+    // {
+    //   title: 'Aging',
+    //   dataIndex: 'deliveryDate',
+    //   render: (value, record) => {
+    //     const currentDate = new Date();
+    //     const deliveryDate = new Date(moment(record.deliveryDate).format('YYYY-MM-DD'));
+    //     const aging = deliveryDate.getTime() - currentDate.getTime();
+    //     const daysDifference = Math.ceil(aging / (1000 * 60 * 60 * 24)); // Use Math.ceil to round up to the nearest whole day
+    //     const isAboveDueDate = daysDifference > 0;
+    
+    //     return (
+    //       <>
+    //         {isAboveDueDate ? '+' : ''}
+    //         {Math.abs(daysDifference)}
+    //       </>
+    //     );
+    //   }
+    // },
     {
-      title: 'Aging',
-      dataIndex: 'deliveryDate',
-      render: (value, record) => {
-        const currentDate = new Date();
-        const deliveryDate = new Date(moment(record.deliveryDate).format('YYYY-MM-DD'));
-        const aging = deliveryDate.getTime() - currentDate.getTime();
-        const daysDifference = Math.ceil(aging / (1000 * 60 * 60 * 24)); // Use Math.ceil to round up to the nearest whole day
-        const isAboveDueDate = daysDifference > 0;
-    
-        return (
-          <>
-            {isAboveDueDate ? '+' : ''}
-            {Math.abs(daysDifference)}
-          </>
-        );
+      title: 'Aging(EPD)',
+      dataIndex:'aging',
+      width:'20px',
+      fixed: 'right',
+      align:'right',
+      render : (text,record) => {
+          const age : any ={
+              children:(moment(record.pickupDate).diff(moment(),'days')),
+              props:{
+                style:{
+                  background:(moment(record.pickupDate).diff(moment(),'days'))>0?'#3BC744':'',
+                 color:'black'
+                }
+              }
+            }
+            return age
       }
-    },
-    
+  },
     
     {
       title: 'Action',
       dataIndex: 'requestNumber',
       align: "center",
+      width:'30px',
       render: (text, rowData, index) => (
         <span>
           <Tooltip placement="top" title="Detail View">
@@ -152,7 +187,7 @@ export const PurchaseOrderView = () => {
       <Form>
         <Row gutter={12}>
           <Col span={6}>
-            <Form.Item label="EDD Date" name="deliveryDate">
+            <Form.Item label="Expected Date	" name="deliveryDate">
               <RangePicker />
             </Form.Item>
           </Col>
@@ -170,24 +205,26 @@ export const PurchaseOrderView = () => {
         </Row>
         <Row gutter={24}>  
       <Col className="gutter-row" xs={24 } sm={ 24 } md={ 5 } lg={ 5} xl={{ span: 2}}>
-                    <Card size="small" title={'OPEN :'  } style={{ height:'35px',width:100,backgroundColor:'#E8ADFD', borderRadius:3}}></Card>
+                    <Card size="small" title={'OPEN :'  } style={{ height:'35px',width:100,backgroundColor:'#FFFFFF', borderRadius:3}}></Card>
                    </Col>
                    <Col className="gutter-row" xs={24 } sm={ 24 } md={ 5 } lg={ 5} xl={{ span: 3}}>
-                   <Card size="small"title={'INPROGRESS  : ' } style={{ height:'35px',width:150,marginBottom:'8',backgroundColor:'#FABDA9', borderRadius:3}}></Card>
+                   <Card size="small"title={'INPROGRESS  : ' } style={{ height:'35px',width:150,marginBottom:'8',backgroundColor:'#FFFFFF', borderRadius:3}}></Card>
                    </Col>
                     <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3}}>
-                   <Card size="small"title={'CLOSED : ' } style={{ height:'35px',width:150,backgroundColor:'#F5B6FE',marginBottom:'2px', borderRadius:3}}></Card>                   
+                   <Card size="small"title={'CLOSED : ' } style={{ height:'35px',width:150,backgroundColor:'#FFFFFF',marginBottom:'2px', borderRadius:3}}></Card>                   
                    </Col>
                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3}}>
-                   <Card size="small"title={'CANCLED : '} style={{ height:'35px',backgroundColor:'#FFC0CB',marginBottom:'2px', borderRadius:3}}></Card>                   
+                   <Card size="small"title={'CANCLED : '} style={{ height:'35px',backgroundColor:'#FFFFFF',marginBottom:'2px', borderRadius:3}}></Card>                   
                    </Col> 
                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3}}>
-                   <Card size="small"title={'TOTAL : '} style={{ height:'35px',backgroundColor:'#7DFEB9',marginBottom:'2px', borderRadius:3}}></Card>                   
+                   <Card size="small"title={'TOTAL : '} style={{ height:'35px',backgroundColor:'#FFFFFF',marginBottom:'2px', borderRadius:3}}></Card>                   
                    </Col>    
                </Row>
       </Form>
       <Card>
-        <Table columns={columns} dataSource={data} bordered />
+        {/* <Table columns={columns} dataSource={data} bordered /> */}
+        <Table columns={columns} dataSource={data} bordered size='small' />
+
       </Card>
     </Card>
 

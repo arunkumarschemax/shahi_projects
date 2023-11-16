@@ -106,10 +106,10 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
     async getAllPoData ():Promise<CommonResponseModel>{
         try{
             let query =`SELECT po.purchase_order_id as purchaseOrderId,po.po_number AS poNumber,po.vendor_id AS vendorId,po.style_id AS styleId,s.style,po.expected_delivery_date AS deliveryDate, po.purchase_order_date AS orderDate,po.status, 
-            po.remarks,pof.po_fabric_id as poFabricId,pof.colour_id AS colorId, c.colour as fabricColor,pof.product_group_id AS productGroupId,pg.product_group AS ProductName, pof.remarks as fabricRemarks,pof.fabric_type_id AS fabricTypeId,pof.purchase_order_id as fabricPurchaseOrderId,
+            po.remarks,pof.po_fabric_id as poFabricId,pof.colour_id AS colorId, c.colour as fabricColor,pof.product_group_id AS productGroupId,po.po_material_type AS materialType, pof.remarks as fabricRemarks,pof.fabric_type_id AS fabricTypeId,pof.purchase_order_id as fabricPurchaseOrderId,
             ft.fabric_type_name AS fabricTypeName,pof.fabric_code AS fabricCode,pof.m3_fabric_code AS m3FabricCode,pof.shahi_fabric_code AS shahiFabricCode,pof.content,pof.weave_id AS weaveId,
             pof.weight,pof.width,pof.construction,pof.yarn_count AS yarnCount,pof.finish,pof.shrinkage,pof.pch,pch.profit_control_head AS profitControlHead,pof.moq,pot.po_trim_id as poTrimId,pot.trim_id,pot.description,
-            pot.consumption,pot.remarks as trimRemarks,pot.product_group_id AS trimProductGroupId,tpg.product_group AS ProductName,pot.m3_trim_code AS m3TrimCode,pot.colour_id AS trimColorId,tc.colour as trimColor,pot.purchase_order_id as trimPurchaseOrderId,i.request_no AS indentCode,v.vendor_name AS vendorName,pof.po_quantity AS poQuantity,pot.po_quantity AS trQuantity,ifa.quantity AS indentQuantity,itr.quantity AS indentTQuantity,itr.size AS trimsize
+            pot.consumption,pot.remarks as trimRemarks,pot.product_group_id AS trimProductGroupId,tpg.product_group AS ProductName,pot.m3_trim_code AS m3TrimCode,pot.colour_id AS trimColorId,tc.colour as trimColor,pot.purchase_order_id as trimPurchaseOrderId,i.request_no AS indentCode,i.request_no AS indentFbCode,v.vendor_name AS vendorName,pof.po_quantity AS poQuantity,pot.po_quantity AS trQuantity,ifa.quantity AS indentQuantity,itr.quantity AS indentTQuantity,itr.size AS trimsize
             FROM purchase_order po
             LEFT JOIN purchase_order_fabric pof ON pof.purchase_order_id = po.purchase_order_id
             LEFT JOIN purchase_order_trim pot ON pot.purchase_order_id = po.purchase_order_id
@@ -152,6 +152,7 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
                   acc[purchaseOrderId].type.push({
                     poFabricId: item.poFabricId,
                     colorId: item.colorId,
+                    indentFbCode:item.indentFbCode,
                     fabricColor: item.fabricColor,
                     productGroupId: item.productGroupId,
                     ProductName: item.ProductName,
@@ -168,6 +169,7 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
                     poQuantity:item.poQuantity,
                     indentQuantity:item.indentQuantity,
                     fabricSize:item.fabricSize,
+
                     
                   });
           
@@ -186,6 +188,8 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
                     trQuantity:item.trQuantity,
                     indentTQuantity:item.indentTQuantity,
                     trimsize:item.trimsize,
+                    materialType: item.materialType,
+
                   });
           
                   return acc;

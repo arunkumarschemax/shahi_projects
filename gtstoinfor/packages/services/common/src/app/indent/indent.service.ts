@@ -159,14 +159,14 @@ export class IndentService{
         }
 
     }
-    async getIndentDate(req:IndentRequestDto): Promise<CommonResponseModel> {
-        const data = await this.indentRepo.getIndentDropDown()
-        if (data.length) {
-            return new CommonResponseModel(true, 1, 'Inventory data Retrived Sucessfully', data)
-        } else {
-            return new CommonResponseModel(false, 6546, 'Inventory data Not Found', data)
+    // async getIndentDate(req:IndentRequestDto): Promise<CommonResponseModel> {
+    //     const data = await this.indentRepo.getIndentDropDown()
+    //     if (data.length) {
+    //         return new CommonResponseModel(true, 1, 'Inventory data Retrived Sucessfully', data)
+    //     } else {
+    //         return new CommonResponseModel(false, 6546, 'Inventory data Not Found', data)
 
-        }
+    //     }
 
-    }
+    // }
 }

@@ -67,11 +67,11 @@ const column1 : any =[
   },
   {
     title: 'Trim Code',
-    dataIndex: 'fabricCode',
+    dataIndex: '',
   },
   {
     title: 'Size',
-    dataIndex: 'indentCode',
+    dataIndex: 'trimsize',
   },
   {
     title: 'Colour',
@@ -83,7 +83,7 @@ const column1 : any =[
   },
   {
     title: 'Indent Quantity',
-    dataIndex: 'indentQuantity',
+    dataIndex: 'indentTQuantity',
   },
 ]
 
@@ -101,7 +101,7 @@ const column1 : any =[
     },
     {
       title: 'Indent Code',
-      dataIndex: 'indentCode',
+      dataIndex: 'indentFbCode',
     },
     {
       title: 'Fabric Code',
@@ -109,7 +109,7 @@ const column1 : any =[
     },
     {
       title: 'Size',
-      dataIndex: 'indentCode',
+      dataIndex: '',
     },
     {
       title: 'Colour',
@@ -121,7 +121,7 @@ const column1 : any =[
     },
     {
       title: 'Indent Quantity',
-      dataIndex: 'indentTQuantity',
+      dataIndex: 'indentQuantity',
     },
     
     
@@ -145,7 +145,7 @@ const column1 : any =[
  
 </Descriptions>
 
-<Form form={form}>
+{/* <Form form={form}>
                 <Row>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 5 }}>
                         <Form.Item label='Material Type' name='materialType'>
@@ -162,15 +162,16 @@ const column1 : any =[
                         </Form.Item>
                     </Col>
                 </Row>
-            </Form>
+            </Form> */}
 
     <Card >
-    {drop === 'Fabric'? (
+    {/* {drop === 'Fabric'? (
         <Table columns={columns} dataSource={data?.[0].type} bordered />
       ):[]}
       {drop === 'Trim'? (
-       <Table columns={column1} />
-       ):[]}
+       <Table columns={column1}dataSource={data?.[0].type} bordered  />
+       ):[]} */}
+       <Table  columns={columns} dataSource={data} />
     </Card>
     </Card>
     </Card>

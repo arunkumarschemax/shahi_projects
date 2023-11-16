@@ -18,6 +18,8 @@ export class IndentRepository extends Repository<Indent> {
         super(indent.target, indent.manager, indent.queryRunner);
     }
     async getIndentData(req: IndentRequestDto) {
+        console.log(req,"req" ,"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP")
+
         let query = this.createQueryBuilder(`i`)
             .select(`i.indent_id AS indentId,i.request_no As requestNo ,s.style AS style, i.indent_date AS indentDate, i.expected_date AS expectedDate ,i.status AS status,it.trim_type AS trimType,it.trim_code AS trimCode,it.quantity AS quantity,it.m3_trim_code AS m3TrimCode,ifa.ifabric_id AS fabricId,ifa.fabric_type AS fabricType, ifa.m3_fabric_code AS m3FabricCode,ifa.quantity AS fbquantity,c.colour AS color,ifa.content AS fabricType`)
             .leftJoin(IndentFabricEntity, 'ifa', 'ifa.indent_id = i.indent_id')
@@ -28,10 +30,19 @@ export class IndentRepository extends Repository<Indent> {
             if (req.requestNo) {
                 query.where(`i.request_no = '${req.requestNo}'`)
             }
-            if (req.indentDate) {
-                query.andWhere(` i.indent_date ='${req.indentDate}'`)
+            
+            if (req.confirmStartDate) {
+                query.andWhere(`Date(indent_date) BETWEEN '${req.confirmStartDate}' AND '${req.confirmEndDate}'`)
             }
         }
+       
+        // if (req.confirmStartDate !== undefined) {
+        //     query.andWhere('i.indent_date BETWEEN :startDate AND :endDate', {
+        //         startDate: req.confirmStartDate,
+        //         endDate: req.confirmEndDate
+        //     });
+        // }
+        
         query.groupBy(`i.indent_id`)
         console.log(query.getQuery(), "queryquery")
         return await query.getRawMany()

@@ -1,6 +1,6 @@
 import { IndentRequestDto } from '@project-management-system/shared-models';
 import { IndentService } from '@project-management-system/shared-services';
-import { Button, Card, Col, Form, Row, Select, Table } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Row, Select, Table } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 const { Option } = Select;
@@ -10,35 +10,47 @@ export const IndentReport = () => {
   const [data, setData] = useState<any[]>([]);
   const [drop, dropDown] = useState<any[]>([]);
   const [date, setDate] = useState<any[]>([]);
+  const { RangePicker } = DatePicker;
   const [form] = Form.useForm();
   const page = 1;
   useEffect(() => {
     getIndentData();
     getAll();
-    getAllDate();
   }, []);
 
   const getIndentData = (req?: IndentRequestDto) => {
     if (form.getFieldValue('requestNo') !== undefined) {
       req.requestNo = form.getFieldValue('requestNo')
+    } if (form.getFieldValue('indentDate') !== undefined) {
+      req.confirmStartDate = (form.getFieldValue('indentDate')[0]).format('YYYY-MM-DD');
     }
     if (form.getFieldValue('indentDate') !== undefined) {
-      const indentDate = form.getFieldValue('indentDate')
-      // filterData = data.filter((e) => e.requestNo === indentDate)
+      req.confirmEndDate = (form.getFieldValue('indentDate')[1]).format('YYYY-MM-DD');
     }
+    
+    // if (form.getFieldValue('indentDate') !== undefined) {
+    //   const indentDate = form.getFieldValue('indentDate')
+    //   // filterData = data.filter((e) => e.requestNo === indentDate)
+    // }
     service.getIndentData(req).then((res) => {
       if (res.status) {
         setData(res.data);
       }
     });
   }
-  const getAllDate = () => {
-    service.getIndentDate().then(res => {
-      if (res.status) {
-        setDate(res.data)
-      }
-    })
-  }
+  // const getAllDate = (req?: IndentRequestDto) => {
+  //   service.getIndentDate().then(res => {
+  //     if (form.getFieldValue('indentDate') !== undefined) {
+  //       req.confirmStartDate = (form.getFieldValue('indentDate')[0]).format('YYYY-MM-DD');
+  //     }
+  //     if (form.getFieldValue('indentDate') !== undefined) {
+  //       req.confirmEndDate = (form.getFieldValue('indentDate')[1]).format('YYYY-MM-DD');
+  //     }
+  //     if (res.status) {
+  //       setDate(res.data)
+  //     }
+  //   })
+  // }
   const resetHandler = () => {
     form.resetFields();
     getIndentData();
@@ -99,14 +111,14 @@ export const IndentReport = () => {
     {
       title: "Indent Date",
       dataIndex: "indentDate",
-      width: '150px', render: (text, record) => { return record.deliveryDate !== null ? moment(record.deliveryDate).format('YYYY-MM-DD') : "" },
+      width: '150px', render: (text, record) => { return record.indentDate !== null ? moment(record.indentDate).format('YYYY-MM-DD') : "" },
 
     },
     {
       title: "Expected Date",
       dataIndex: "expectedDate",
       width: '150px',
-      render: (text, record) => { return record.deliveryDate !== null ? moment(record.deliveryDate).format('YYYY-MM-DD') : "" },
+      render: (text, record) => { return record.expectedDate !== null ? moment(record.expectedDate).format('YYYY-MM-DD') : "" },
 
     },
     {
@@ -245,14 +257,9 @@ export const IndentReport = () => {
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item name={'indentDate'} label='Indent Date' style={{ marginBottom: '10px' }}>
-                <Select showSearch allowClear optionFilterProp="children" placeholder='Select Indent Date'>
-                  {date.map(d => (
-                    <Option key={d.indentDate} value={d.indentDate} name={d.indentDate}>
-                      {moment(d.indentDate).format('YYYY-MM-DD')}
-                    </Option>
-                  ))}
-                </Select>
+             
+                <Form.Item label="Indent Date" name="indentDate">
+              <RangePicker />
             </Form.Item>
             </Col>
             <Col span={8}>

@@ -1,9 +1,11 @@
 export class IndentRequestDto {
     requestNo?: string;
-    indentDate?:string;
-    constructor(requestNo?: string,indentDate?:string) {
+    confirmStartDate?:string;
+     confirmEndDate?:string;
+    constructor(requestNo?: string,confirmStartDate?:string,confirmEndDate?:string) {
         this.requestNo= requestNo;
-        this.indentDate = indentDate;
+        this.confirmStartDate = confirmStartDate 
+        this.confirmEndDate  = confirmEndDate
     }
 
 }
