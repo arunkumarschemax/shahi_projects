@@ -267,7 +267,7 @@ export class DpomService {
         }
     }
 
-    // @Cron('*/10 * * * *')
+    @Cron('*/10 * * * *')
     async createCOline(req: any): Promise<CommonResponseModel> {
         const poDetails = await this.coLineRepository.getDataforCOLineCreation();
         if (!poDetails.length) {
