@@ -142,11 +142,12 @@ export class IndentFabricEntity {
     name: "xl_no"
     })
     xlNo: string;
-    @Column('int',{
+
+    @Column('varchar',{
         name:'quantity',
         nullable: false
         })
-        quantity: number;
+        quantity: string;
 
         @Column('int',{
           name:'quantity_unit',
@@ -212,6 +213,12 @@ export class IndentFabricEntity {
     name: "version_flag"
   })
   versionFlag: number;
+
+  @Column('varchar',{
+    name:'received_quantity',
+    nullable:true
+  })
+  recivedQuantity:string
 
   @ManyToOne(type => Indent, i => i.iFabricInfo, { nullable: false, })
   @JoinColumn({ name: "indent_id" })

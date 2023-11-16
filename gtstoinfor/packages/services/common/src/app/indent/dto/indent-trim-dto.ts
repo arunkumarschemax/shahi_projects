@@ -12,7 +12,7 @@ export class IndentTrimDto{
     @ApiProperty()
     color: number;
     @ApiProperty()
-    quantity: number;
+    quantity: string;
     @ApiProperty()
     quantityUnit: string;
     @ApiProperty()
@@ -43,7 +43,7 @@ export class IndentTrimDto{
     trimCode: number,
     size: number,
     color: number,
-    quantity: number,
+    quantity: string,
     quantityUnit: string,
     m3TrimCode: string,
     description: string,

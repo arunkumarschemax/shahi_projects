@@ -12,12 +12,18 @@ import { GrnItemsEntity } from './entities/grn-items-entity';
 import { PurchaseOrderFbricEntity } from '../purchase-order/entities/purchase-order-fabric-entity';
 import { PurchaseOrderTrimEntity } from '../purchase-order/entities/purchase-order-trim-entity';
 import { PurchaseOrderEntity } from '../purchase-order/entities/purchase-order-entity';
+import { IndentRepository } from '../indent/dto/indent-repository';
+import { Indent } from '../indent/indent-entity';
+import { FabricIndentRepository } from '../indent/dto/fabric-indent-repository';
+import { IndentFabricEntity } from '../indent/indent-fabric-entity';
+import { TrimIndentRepository } from '../indent/dto/trim-indent-repository';
+import { IndentTrimsEntity } from '../indent/indent-trims-entity';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([GrnEntity,GrnFabricEntity,GrnTrimsEntity,GrnItemsEntity,PurchaseOrderFbricEntity,PurchaseOrderTrimEntity,PurchaseOrderEntity]),
+        TypeOrmModule.forFeature([GrnEntity,GrnFabricEntity,GrnTrimsEntity,GrnItemsEntity,PurchaseOrderFbricEntity,PurchaseOrderTrimEntity,PurchaseOrderEntity,Indent,IndentFabricEntity,IndentTrimsEntity]),
       ],
-      providers: [ApplicationExceptionHandler,GrnRepository,GrnService,GrnAdapter],
+      providers: [ApplicationExceptionHandler,GrnRepository,GrnService,GrnAdapter,IndentRepository,FabricIndentRepository,TrimIndentRepository],
       controllers: [GrnController],
       exports: []
 })

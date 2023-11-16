@@ -1,6 +1,6 @@
 import { VendorIdReq } from "@project-management-system/shared-models"
 import { PurchaseOrderservice, SampleDevelopmentService, UomService } from "@project-management-system/shared-services"
-import { Form, Input, Row, Select } from "antd"
+import { Card, Form, Input, Row, Select } from "antd"
 import Table from "antd/es/table"
 import moment from "moment"
 import React from "react"
@@ -26,7 +26,7 @@ export const GRNFabricForm =() =>{
 
     useEffect(() =>{
         // getType()
-        getAllFabricsByPO()
+        // getAllFabricsByPO()
         getUomData()
     },[])
 
@@ -38,14 +38,14 @@ export const GRNFabricForm =() =>{
     //     })
     // }
     
-    const getAllFabricsByPO = () =>{
-      const req = new VendorIdReq()
-      poService.getAllFabricsByPO(req).then((res)=>{
-            if(res.status){
-              setFabricData(res.data)
-            }
-        })
-    }
+    // const getAllFabricsByPO = () =>{
+    //   const req = new VendorIdReq()
+    //   poService.getAllFabricsByPO(req).then((res)=>{
+    //         if(res.status){
+    //           setFabricData(res.data)
+    //         }
+    //     })
+    // }
 
     const getUomData = () =>{
       uomService.getAllActiveUoms().then((res)=>{
@@ -283,7 +283,9 @@ export const GRNFabricForm =() =>{
        <Form>
         <Row>
           <div style={{ overflowX: 'auto', width: '100%' }}>
-            <Table columns={columns} dataSource={fabricData} bordered scroll={{ x: 'max-content' }} pagination={false}/>
+            <Card>
+              <Table columns={columns} dataSource={fabricData} bordered scroll={{ x: 'max-content' }} pagination={false}/>
+            </Card>
           </div>
         </Row>
       </Form>

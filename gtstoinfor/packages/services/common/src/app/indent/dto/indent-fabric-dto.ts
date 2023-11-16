@@ -53,7 +53,7 @@ export class IndentFabricDto{
     @ApiProperty()
     xlNo: string;
     @ApiProperty()
-    quantity: number;
+    quantity: string;
     @ApiProperty()
     quantityUnit: number;
     @ApiProperty()
@@ -99,7 +99,7 @@ export class IndentFabricDto{
     buyerId: number,
     grnDate: Date,
     xlNo: string,
-    quantity: number,
+    quantity: string,
     quantityUnit: number,
     file_path: string,
     isUploaded: boolean,
