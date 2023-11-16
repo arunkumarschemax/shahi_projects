@@ -168,9 +168,9 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
     //   ...getColumnSearchProps("currencyName"),
     // }, 
      {
-      title: 'Currency Name',
+      title: <div style={{textAlign:'center'}}>Currency Name</div>,
       dataIndex: 'currencyName',
-      width: '90px',
+      width: '90px',align :'left',
       sorter: (a, b) => a.currencyName.localeCompare(b.currencyName),
       sortDirections: ['ascend', 'descend'],
       ...getColumnSearchProps('currencyName'),
