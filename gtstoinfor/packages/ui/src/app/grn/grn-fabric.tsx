@@ -1,19 +1,17 @@
 import { VendorIdReq } from "@project-management-system/shared-models"
 import { PurchaseOrderservice, SampleDevelopmentService, UomService } from "@project-management-system/shared-services"
-import { Card, Form, Input, Row, Select } from "antd"
+import { Button, Card, Form, Input, Row, Select } from "antd"
 import Table from "antd/es/table"
 import moment from "moment"
 import React from "react"
 import { useEffect, useState } from "react"
 
 
-export const GRNFabricForm =() =>{
+export const GRNFabricForm =({fabricData, onSaveData }) =>{
     const [typeData, setTypeData]= useState<any[]>([])
-    const [fabricData, setFabricData] = useState<any[]>([])
     const [page, setPage] = React.useState(1);
     const {Option}=Select
-    const sampleService = new SampleDevelopmentService()
-    const poService = new PurchaseOrderservice()
+    const [form] = Form.useForm();
     const uomService = new UomService()
     const [uomData, setUomData] = useState<any[]>([])
     const [data, setData] = useState([]);
@@ -23,29 +21,9 @@ export const GRNFabricForm =() =>{
 
 
 
-
     useEffect(() =>{
-        // getType()
-        // getAllFabricsByPO()
         getUomData()
     },[])
-
-    // const getType = () =>{
-    //     sampleService.getTrimType().then((res)=>{
-    //         if(res.status){
-    //             setTypeData(res.data)
-    //         }
-    //     })
-    // }
-    
-    // const getAllFabricsByPO = () =>{
-    //   const req = new VendorIdReq()
-    //   poService.getAllFabricsByPO(req).then((res)=>{
-    //         if(res.status){
-    //           setFabricData(res.data)
-    //         }
-    //     })
-    // }
 
     const getUomData = () =>{
       uomService.getAllActiveUoms().then((res)=>{
@@ -54,39 +32,25 @@ export const GRNFabricForm =() =>{
     }
 
 
-    const handleInputChange = (event, record, type, uomId) => {
-      console.log('Input Change:', event.target.value, record, type, uomId);
-    
-      // Check if the entered value is not empty
-      if (event.target.value !== '') {
-        const updatedData = data.map((item) => {
-          if (item.poFabricId === record.poFabricId) {
-            return { ...item, [`${type}Quantity`]: event.target.value, [`${type}UomId`]: uomId };
-          }
-          return item;
-        });
-        console.log(updatedData,'ppppppppppppp')
-        setData(updatedData);
-      }
-    };
-    
-    
-    const handleUomChange = (value, type) => {
-      if (type === 'received') {
-        setSelectedReceivedUomId(value);
-      } else if (type === 'accepted') {
-        setSelectedAcceptedUomId(value);
-      } else if (type === 'rejected') {
-        setSelectedRejectedUomId(value);
-      }
+    const handleSaveData = () => {
+      form.validateFields().then((values) => {
+        const formData = fabricData.map((record) => ({
+          poFabricId: record.poFabricId,
+          receivedQuantity: values[`receivedQuantity_${record.poFabricId}_${record.key}`],
+          receivedUomId: values[`receivedUomId_${record.poFabricId}_${record.key}`],
+          acceptedQuantity: values[`acceptedQuantity_${record.poFabricId}_${record.key}`],
+          acceptedUomId: values[`acceptedUomId_${record.poFabricId}_${record.key}`],
+          rejectedQuantity: values[`rejectedQuantity_${record.poFabricId}_${record.key}`],
+          rejectedUomId: values[`rejectedUomId_${record.poFabricId}_${record.key}`],
+          ...record,
+        }));
+  
+        onSaveData(formData);
+      });
     };
 
     
     const columns:any = [
-        // {
-        //   title: <div style={{textAlign:"center"}}>Fabric Code</div>,
-        //   dataIndex: 'fabricCode'
-        // },
         {
           title: <div style={{textAlign:"center"}}>M3 Fabric Code</div>,
           dataIndex: 'm3fabricCode',
@@ -99,7 +63,7 @@ export const GRNFabricForm =() =>{
           title: <div style={{textAlign:"center"}}>PO Qty</div>,
           dataIndex: 'poQuantity',
           align:"right",
-          render: (poQuantity, row) => `${poQuantity} ${row.quantityUom}`,
+          render: (poQuantity, row) => `${poQuantity} ${row.uom}`,
         },
         {
           title: <div style={{textAlign:"center"}}>GRN Qty</div>,
@@ -111,24 +75,23 @@ export const GRNFabricForm =() =>{
           dataIndex: 'receivedQuantity',
           render: (_, record) => (
             <Form.Item
-              name={`${record.poFabricId}`+`${record.key}+'receivedQuantity'`}
-              rules={[
-                {
-                  required: true,
-                  message: 'Please enter received quantity',
-                },
-                {
-                  type: 'number',
-                  min: 0,
-                  max: record.poQuantity,
-                  message: `Received quantity should be between 0 and ${record.poQuantity}`,
-                },
-              ]}
+            name={`receivedQuantity_${record.poFabricId}_${record.key}`}
+              // rules={[
+              //   {
+              //     required: true,
+              //     message: 'Please enter received quantity',
+              //   },
+              //   {
+              //     type: 'number',
+              //     min: 0,
+              //     max: record.poQuantity,
+              //     message: `Received quantity should be between 0 and ${record.poQuantity}`,
+              //   },
+              // ]}
             >
               <Input 
-              name={`${record.poFabricId}`+`${record.key}+'receivedQuantity'`} 
+              // name={`${record.poFabricId}`+`${record.key}+'receivedQuantity'`} 
               placeholder="Received Quantity" 
-              onChange={(event) => handleInputChange(event, record, 'received', selectedReceivedUomId)}
               />
             </Form.Item>
           ),
@@ -136,15 +99,15 @@ export const GRNFabricForm =() =>{
         {
           title: <div style={{textAlign:"center"}}>UOM</div>,
           dataIndex: 'receivedUomId',
-          render: (index, record) => (
+          render: (_, record) => (
             <Form.Item
-            name={`${record.poFabricId}`+`${record.key}+'receivedUomId'`}
-            rules={[
-                {
-                  required: true,
-                  message: 'Please select UOM',
-                }
-              ]}
+            name={`receivedUomId_${record.poFabricId}_${record.key}`}
+            // rules={[
+            //     {
+            //       required: true,
+            //       message: 'Please select UOM',
+            //     }
+            //   ]}
             >
               <Select
                 allowClear
@@ -152,10 +115,9 @@ export const GRNFabricForm =() =>{
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select UOM"
-                onChange={(value) => handleUomChange(value, 'received')}
                 >
                 {uomData?.map((e) => (
-                  <Option key={e.uomId} value={e.uomId} name={`${record.poFabricId}`+`${record.key}+'receivedUomId'`}>
+                  <Option key={e.uomId} value={e.uomId}>
                     {e.uom}
                   </Option>
                 ))}
@@ -166,26 +128,25 @@ export const GRNFabricForm =() =>{
         {
           title: <div style={{textAlign:"center"}}>Accepted Qty</div>,
           dataIndex: 'acceptedQuantity',
-          render: (index, record) => (
+          render: (_, record) => (
               <Form.Item
-              name={`${record.poFabricId}`+`${record.key}+'acceptedQuantity'`}
-              rules={[
-                  {
-                    required: true,
-                    message: 'Please enter accepted quantity',
-                  },
-                  {
-                    type: 'number',
-                    min: 0,
-                    max: record.poQuantity,
-                    message: `Quantity should be between 0 and ${record.poQuantity}`,
-                  },
-                ]}
+              name={`acceptedQuantity_${record.poFabricId}_${record.key}`}
+              // rules={[
+              //     {
+              //       required: true,
+              //       message: 'Please enter accepted quantity',
+              //     },
+              //     {
+              //       type: 'number',
+              //       min: 0,
+              //       max: record.poQuantity,
+              //       message: `Quantity should be between 0 and ${record.poQuantity}`,
+              //     },
+              //   ]}
               >
                 <Input 
                 placeholder="Accepted Quantity" 
                 name={`${record.poFabricId}`+`${record.key}+'acceptedQuantity'`}
-                onChange={(event) => handleInputChange(event, record, 'accepted', selectedAcceptedUomId)}
                 />
               </Form.Item>
           ),
@@ -195,13 +156,13 @@ export const GRNFabricForm =() =>{
           dataIndex: 'acceptedUomId',
           render: (index, record) => (
             <Form.Item
-            name={`${record.poFabricId}`+`${record.key}+'acceptedUomId'`}
-            rules={[
-                {
-                  required: true,
-                  message: 'Please select UOM',
-                }
-              ]}
+            name={`acceptedUomId_${record.poFabricId}_${record.key}`}
+            // rules={[
+            //     {
+            //       required: true,
+            //       message: 'Please select UOM',
+            //     }
+            //   ]}
             >
               <Select
                 allowClear
@@ -209,7 +170,6 @@ export const GRNFabricForm =() =>{
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select UOM"
-                onChange={(value) => handleUomChange(value, 'accepted')}
               >
                 {uomData?.map((e) => (
                   <Option key={e.uomId} value={e.uomId} name={`${record.poFabricId}`+`${record.key}+'acceptedUomId'`}>
@@ -225,7 +185,7 @@ export const GRNFabricForm =() =>{
           dataIndex: 'rejectedQuantity',
           render: (index, record) => (
             <Form.Item
-            name={`${record.poFabricId}`+`${record.key}+'rejectedQuantity'`}
+            name={`rejectedQuantity_${record.poFabricId}_${record.key}`}
               // rules={[
               //   {
               //     type: 'number',
@@ -238,7 +198,6 @@ export const GRNFabricForm =() =>{
               <Input 
               placeholder="Accepted Quantity" 
               name={`${record.poFabricId}`+`${record.key}+'rejectedQuantity'`}
-              onChange={(event) => handleInputChange(event, record, 'rejected', selectedRejectedUomId)}
               />
             </Form.Item>
             ),
@@ -248,13 +207,13 @@ export const GRNFabricForm =() =>{
           dataIndex: 'rejectedUomId',
           render: (index, record) => (
             <Form.Item
-            name={`${record.poFabricId}`+`${record.key}+'rejectedUomId'`}
-            rules={[
-                {
-                  required: true,
-                  message: 'Please select UOM',
-                }
-              ]}
+            name={`rejectedUomId_${record.poFabricId}_${record.key}`}
+            // rules={[
+            //     {
+            //       required: true,
+            //       message: 'Please select UOM',
+            //     }
+            //   ]}
             >
               <Select
                 allowClear
@@ -262,7 +221,6 @@ export const GRNFabricForm =() =>{
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select UOM"
-                onChange={(value) => handleUomChange(value, 'rejected')}
               >
                 {uomData?.map((e) => (
                   <Option key={e.uomId} value={e.uomId} name={`${record.poFabricId}`+`${record.key}+'rejectedUomId'`}>
@@ -279,17 +237,20 @@ export const GRNFabricForm =() =>{
         }
       ]
 
-    return (
-       <Form>
-        <Row>
-          <div style={{ overflowX: 'auto', width: '100%' }}>
-            <Card>
-              <Table columns={columns} dataSource={fabricData} bordered scroll={{ x: 'max-content' }} pagination={false}/>
-            </Card>
-          </div>
-        </Row>
-      </Form>
-    )
+      return (
+        <Form form={form}>
+          <Row>
+            <div style={{ overflowX: "auto", width: "100%" }}>
+              <Card title={<div style={{ color: "blue", fontSize: "17px" }}>Fabric Details</div>}>
+                <Table columns={columns} dataSource={fabricData} bordered scroll={{ x: "max-content" }} pagination={false} />
+                <Button type="primary" onClick={handleSaveData}>
+                  Save
+                </Button>
+              </Card>
+            </div>
+          </Row>
+        </Form>
+      );
 
 }
 export default GRNFabricForm

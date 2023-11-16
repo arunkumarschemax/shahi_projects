@@ -41,11 +41,11 @@ export class PurchaseOrderController {
     }
   }
 
-  @Post('/getAllFabricsByPO')
+  @Post('/getPODataById')
   @ApiBody({type: VendorIdReq})
-  async getAllFabricsByPO(@Body() req: any): Promise<CommonResponseModel> {
+  async getPODataById(@Body() req: any): Promise<CommonResponseModel> {
     try {
-      return await this.purchasseOrdrSerivice.getAllFabricsByPO(req);
+      return await this.purchasseOrdrSerivice.getPODataById(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
@@ -54,6 +54,14 @@ export class PurchaseOrderController {
   async getMaterialTpye( ): Promise<CommonResponseModel> {
     try {
       return await this.purchasseOrdrSerivice.getMaterialTpye();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+  @Post('/getAllPurchaseOrderData')
+  async getAllPurchaseOrderData( ): Promise<CommonResponseModel> {
+    try {
+      return await this.purchasseOrdrSerivice.getAllPurchaseOrderData();
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }

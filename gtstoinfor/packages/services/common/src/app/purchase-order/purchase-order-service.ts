@@ -7,13 +7,20 @@ import { PurchaseOrderDto } from "./dto/purchase-order-dto";
 import { PurchaseOrderFbricEntity } from "./entities/purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "./entities/purchase-order-trim-entity";
 import { FORMERR } from "dns";
+import { purchaseOrdeIdreq } from "./dto/purchase-order-id-req";
+import { FabriCWeaveDto } from "../fabric weave/dto/fabric-weave.dto";
+import { PurchaseOrderRepository } from "./repo/purchase-order-repository";
+import { PurchaseOrderFabricRepository } from "./repo/purchase-order-fabric-repository";
+import { PurchaseOrderTrimRepository } from "./repo/purchase-order-trim-repository";
 let moment = require('moment');
 
 @Injectable()
 export class PurchaseOrderService{
     constructor(
-        @InjectRepository(PurchaseOrderEntity)
-        private poRepo:Repository<PurchaseOrderEntity>,
+        // @InjectRepository(PurchaseOrderEntity)
+        private poRepo:PurchaseOrderRepository,
+        private poFabricRepo: PurchaseOrderFabricRepository,
+        private poTrimRepo : PurchaseOrderTrimRepository,
         @InjectDataSource()
         private dataSource: DataSource,
         ){  }
@@ -124,26 +131,20 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
         }
     }
 
-    async getAllFabricsByPO(req: VendorIdReq): Promise<CommonResponseModel>{
+    async getPODataById(req: VendorIdReq): Promise<CommonResponseModel>{
         try{
-            let query =` SELECT pof.po_fabric_id AS poFabricId,pof.m3_fabric_code AS m3fabricCode,pof.po_quantity AS poQuantity,pof.quantity_uom_id AS quantityUomId,po.po_material_Type AS poMaterialType,
-            u.uom AS quantityUom,pof.fabric_type_id AS fabricTypeId,ft.fabric_type_name AS fabricTypeName,pof.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,
-            pot.po_trim_id AS poTrimId,pot.trim_id AS trimId, pot.m3_trim_code AS m3TrimCode,pot.purchase_order_id AS poId, pot.po_quantity AS poQuantity,pot.quantity_uom_id AS quantityUomId,
-            iff.ifabric_id AS indentFabricId,it.itrims_id AS indentTrimId
-            FROM purchase_order po
-            LEFT JOIN purchase_order_fabric pof ON pof.purchase_order_id = po.purchase_order_id
-            LEFT JOIN purchase_order_trim pot ON pot.purchase_order_id = pot.purchase_order_id
-            LEFT JOIN fabric_type ft ON ft.fabric_type_id = pof.fabric_type_id
-            LEFT JOIN uom u ON u.id = pof.quantity_uom_id
-            LEFT JOIN indent_fabric iff ON iff.ifabric_id = pof.indent_fabric_id
-            LEFT JOIN indent_trims it ON it.itrims_id = pot.indent_trim_id
-            WHERE 1=1`
-            if (req.poId) {
-                query = query + ` AND pof.purchase_order_id = '${req.poId}'`;
+            console.log(req,'f3-=-=-=-=-=-=-=-=-=3333333333333333')
+            let responseData 
+            if(req.materialType === 'Fabric' ){
+                const fabricData = await this.poFabricRepo.getPOFabricData(req)
+                responseData = fabricData
             }
-            const data = await this.dataSource.query(query)
-            if(data.length > 0){
-                return new CommonResponseModel(true,0, "PO Numbers retrieved successfully", data)
+            if(req.materialType === 'Trim'){
+                const trimData = await this.poTrimRepo.getPOTrimData(req)
+                responseData = trimData
+            }
+            if(responseData.length > 0){
+                return new CommonResponseModel(true,0, "PO Numbers retrieved successfully",responseData)
             }else{
                 return new CommonResponseModel(false,1,"No data found",[])
             }
@@ -182,6 +183,99 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
             }  
         }catch(err){
             throw(err)
+        }
+    }
+
+    async GetPurchaseData ():Promise<CommonResponseModel>{
+        try{
+            let query =`SELECT  null as pofabricData,null as poTrimdata, s.style AS styleName,po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.vendor_id AS vendorId,po.style_id AS styleId,
+            expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype FROM purchase_order  po LEFT JOIN style s ON s.style_id=po.style_id `
+            const data = await this.dataSource.query(query)
+            if(data.length > 0){
+                return new CommonResponseModel(true,0, "PO Numbers retrieved successfully", data)
+            }else{
+                return new CommonResponseModel(false,1,"No data found",[])
+            }  
+        }catch(err){
+            throw(err)
+        }
+    }
+
+    async GetPurchaseFabricData (purchaseOrderId:number):Promise<CommonResponseModel>{
+        try{
+            console.log(purchaseOrderId)
+            let query =`SELECT po_fabric_id AS pofabricId,colour_id AS colourId,product_group_id AS productGroupId,fabric_type_id AS fabricTypeId,
+            m3_fabric_code AS m3fabricCode,shahi_fabric_code AS shahiFabricCode,content,weave_id AS weaveId,width,yarn_count AS yarnCount,finish,shrinkage,
+            pch,moq,purchase_order_id AS purchaseOrderId,indent_fabric_id AS indentFabricId,po_quantity AS poQuantity,quantity_uom_id AS quantityUomId,
+            fab_item_status AS fabItemStatus,grn_quantity
+            FROM purchase_order_fabric pf where pf.purchase_order_id=`+purchaseOrderId+``
+            const data = await this.dataSource.query(query)
+            if(data.length > 0){
+                return new CommonResponseModel(true,0, "PO Numbers retrieved successfully", data)
+            }else{
+                return new CommonResponseModel(false,1,"No data found",[])
+            }  
+        }catch(err){
+            throw(err)
+        }
+    }
+    async GetPurchaseTrimData (purchaseOrderId:number):Promise<CommonResponseModel>{
+        try{
+            let query =`SELECT po_trim_id AS poTrimid,product_group_id AS productGrouoId,trim_id AS trimId,m3_trim_code AS m3trimCode, purchase_order_id,colour_id AS clourId,
+            indent_trim_id AS indentTrimId,po_quantity AS poQuantity,trim_item_status AS trimItemStaus,grn_quantity AS grnQuantity FROM purchase_order_trim pt where pt.purchase_order_id=`+purchaseOrderId+``
+            const data = await this.dataSource.query(query)
+            if(data.length > 0){
+                return new CommonResponseModel(true,0, "PO Numbers retrieved successfully", data)
+            }else{
+                return new CommonResponseModel(false,1,"No data found",[])
+            }  
+        }catch(err){
+            throw(err)
+        }
+    }
+    async getAllPurchaseOrderData():Promise<CommonResponseModel>{
+        try{
+            const data =[]
+            const podata= await this.GetPurchaseData()
+            for(const po of podata.data){
+                console.log(po.purchaseOrderId)
+                console.log('^^^^^^^^^^^^^^^^^^^')
+                const fabData= await this.GetPurchaseFabricData(po.purchaseOrderId)
+                 const fabricInfo=[]
+                for(const fabrData of fabData.data){
+                    console.log(fabrData)
+                    console.log('**************************8')
+                    fabricInfo.push(fabrData)
+                }
+               const trimData = await this.GetPurchaseTrimData(po.purchaseOrderId)
+                const triminfo =[]
+                for(const trim of trimData.data){
+                    triminfo.push(trim)
+                }
+                data.push({
+                    styleName:po.styleName,
+                    purchaseOrderId:po.purchaseOrderId,
+                    poNumber:po.poNumber,
+                    vendorId:po.vendorId,
+                    expectedDeliverydate:po.expectedDeliverydate,
+                    purchaseOrderDate:po.purchaseOrderDate,
+                    poMaterialtype:po.poMaterialtype,
+                    poStatus:po.poStatus,
+                    fabInfo:fabricInfo,
+                    triminfo:triminfo   
+
+                })
+            }
+            if(data){
+                return new CommonResponseModel(true,1,'data retrived sucessfully',data)
+            }else{
+                return new CommonResponseModel(false,0,'no data found',[])
+
+            }
+
+        }
+        catch(err){
+            throw err
         }
     }
 
