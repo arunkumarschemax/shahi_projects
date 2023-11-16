@@ -54,7 +54,7 @@ export const GrnPendingInfoGrid = () => {
         },
         {
             title: 'Material Type',
-            dataIndex: "fabric_type",
+            dataIndex: "product_group",
             align: 'left',
             //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
             //   sortDirections: ['descend', 'ascend'],
@@ -62,7 +62,7 @@ export const GrnPendingInfoGrid = () => {
         },
         {
             title: 'Item',
-            dataIndex: "m3_fabric_code",
+            dataIndex: "item_code",
             align: 'left',
             //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
             //   sortDirections: ['descend', 'ascend'],
@@ -70,14 +70,14 @@ export const GrnPendingInfoGrid = () => {
         },
         {
             title: 'Grn Quantity',
-            dataIndex: 'received_qty',
+            dataIndex: 'received_quantity',
             align: 'left',
             // sorter: (a, b) => a.receivedQuantity - b.receivedQuantity,
             // sortDirections: ['descend', 'ascend'],
         },
         {
             title: 'Location Mapped',
-            dataIndex: 'physicalQuantity',
+            dataIndex: 'accepted_quantity',
             align: 'left',
             // sorter: (a, b) => a.physicalQuantity - b.physicalQuantity,
             // sortDirections: ['descend', 'ascend'],
@@ -87,7 +87,7 @@ export const GrnPendingInfoGrid = () => {
             align: 'left',
             // sorter: (a, b) => a.balance - b.balance,
             render: (record) => {
-                const balance = record.received_qty - record.physicalQuantity
+                const balance = record.received_quantity - record.accepted_quantity
                 return balance
             }
         },
@@ -96,7 +96,7 @@ export const GrnPendingInfoGrid = () => {
             render: (rowData) => (
                 <span>
                     <Button type="primary" shape="round" size="small"
-                        disabled={(rowData.received_qty - rowData.physicalQuantity) <= 0}
+                        disabled={(rowData.received_quantity - rowData.accepted_quantity) <= 0}
                         onClick={() => {
                             setData(rowData);
                         }}>
@@ -114,9 +114,8 @@ export const GrnPendingInfoGrid = () => {
 
     const setData = (rowdata) => {
         console.log(rowdata)
-        const testdata = new GRNLocationPropsRequest(rowdata.grn_number, rowdata.vendor_name, rowdata.fabric_type, rowdata.m3_fabric_code, rowdata.received_qty, rowdata.physicalQuantity, rowdata.balance,)
 
-        if (testdata) {
+        if (rowdata) {
             navigate("/location-mapping", { state: { data: rowdata } });
         }
     }

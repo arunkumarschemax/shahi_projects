@@ -49,6 +49,7 @@
 
 
 export class GRNLocationPropsRequest {
+    grn_item_id:number;
     grnNumber: string;
     vendorName: string;
     materialType: string;
@@ -56,7 +57,8 @@ export class GRNLocationPropsRequest {
     receivedQuantity: number;
     physicalQuantity: number;
     balance: number;
-    constructor(grnNumber: string, vendorName: string, materialType: string, item: string, receivedQuantity: number, physicalQuantity: number, balance: number,) {
+    constructor(grn_item_id:number,grnNumber: string, vendorName: string, materialType: string, item: string, receivedQuantity: number, physicalQuantity: number, balance: number,) {
+        this.grn_item_id = grn_item_id;
         this.grnNumber = grnNumber;
         this.vendorName = vendorName;
         this.materialType = materialType;

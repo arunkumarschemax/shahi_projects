@@ -1,6 +1,7 @@
-import { Controller, Post } from "@nestjs/common";
+import { Body, Controller, Post } from "@nestjs/common";
 import { LocationMappingService } from "./location-mapping.service";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
+import { LocationMappingReq, MaterialIssueIdreq, RackLocationStatusReq } from "@project-management-system/shared-models";
 
 @ApiTags("locationMapping")
 @Controller("/locationMapping")
@@ -11,7 +12,7 @@ export class LocationMappingController {
     ) { }
 
     @Post("/getAllFabrics")
-    async getAllFabrics():Promise<any> {
+    async getAllFabrics(): Promise<any> {
         try {
             return this.service.getAllFabrics();
         } catch (error) {
@@ -27,4 +28,37 @@ export class LocationMappingController {
             return err;
         }
     }
+
+    @Post("/getOneItemAllocateDetails")
+    @ApiBody({ type: MaterialIssueIdreq })
+    async getOneItemAllocateDetails(@Body() req: any): Promise<any> {
+        try {
+            return this.service.getOneItemAllocateDetails(req)
+        } catch (err) {
+            return err;
+        }
+    }
+
+    @Post("/postToStockLogs")
+    @ApiBody({ type: LocationMappingReq })
+    async postToStockLogs(@Body() req: any) {
+        try {
+            return this.service.postToStockLogs(req)
+        } catch (err) {
+            return err;
+        }
+    }
+
+    @Post("/updateRackLocationStatus")
+    @ApiBody({ type: RackLocationStatusReq })
+    async updateRackLocationStatus(@Body() req: any) {
+        try {
+            return this.service.updateRackLocationStatus(req)
+        } catch (err) {
+            return err;
+        }
+    }
+
+
+
 }
