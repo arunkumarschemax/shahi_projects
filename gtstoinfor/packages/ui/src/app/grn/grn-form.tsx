@@ -21,7 +21,7 @@ const GRNForm = () => {
     const [vendor, setVendor] = useState<any[]>([])
     const [poData, setPoData] = useState<any[]>([])
     const poService = new PurchaseOrderservice()
-    const [poNumber, setPoNumber] = useState<string>('')
+    const [materialType, setMaterialType] = useState<string>('')
 
     useEffect(()=>{
         getVendorsData()
@@ -44,14 +44,24 @@ const GRNForm = () => {
         })
     }
 
-    const poChange= (val,option) =>{
-        setPoNumber(option.name)
-        console.log(option.name,']]]]')
+    const getAllFabricsByPO = (value) =>{
+        console.log(value,'------------')
+      const req = new VendorIdReq(value)
+      poService.getAllFabricsByPO(req).then((res)=>{
+            if(res.status){
+              setFabricData(res.data)
+            }
+        })
     }
+
+    // const poChange= (val,option) =>{
+    //     setMaterialType(option.name)
+    //     console.log(option.name,']]]]')
+    // }
 
     const onReset = () =>{
         form.resetFields()
-        setPoNumber('')
+        setFabricData([])
     }
 
     const onFinish = (values) => {
@@ -80,10 +90,10 @@ const GRNForm = () => {
                   </Col>
                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                         <Form.Item name='purchaseOrderId' label='PO Number' rules={[{required:true,message:'PO Number is required'}]}>
-                           <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor' onChange={poChange}>
+                           <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor' onChange={getAllFabricsByPO}>
                                 {poData.map(e => {
                                     return(
-                                        <Option key={e.purchaseOrderId} value={e.purchaseOrderId} name={e.poNumber}> {e.poNumber}</Option>
+                                        <Option key={e.purchaseOrderId} value={e.purchaseOrderId} name={e.materialType}> {e.poNumber}</Option>
                                     )
                                 })}
                             </Select>
@@ -105,26 +115,19 @@ const GRNForm = () => {
                         </Form.Item>
                   </Col>
                 </Row>
-                <Card>
-                {
-                poNumber && poNumber.includes('FB') ? (
-                    <GRNFabricForm />
-                ) : (
-                    []
-                )}
-                {poNumber && poNumber.includes('TR') ? (
-                    <GRNTrimForm />
-                ) :[]}
-                </Card>            
-           
+                    {fabricData && fabricData.includes('Fabric') ? (
+                        <GRNFabricForm />
+                    ) : []}
+                    {fabricData && fabricData.includes('Trim') ? (
+                        <GRNTrimForm />
+                    ) :[]}
             </Form>
-                <Row justify={'end'}>
+            <Row justify={'end'}>
                 <Col span={24} style={{ textAlign: "right", marginTop:'10px'}} >
-                  <Button type="primary">Submit</Button>
-                  <Button style={{ margin: "0 14px" }} onClick={onReset}>Reset</Button>
-              </Col>
-               
-              </Row>
+                    <Button type="primary">Submit</Button>
+                    <Button style={{ margin: "0 14px" }} onClick={onReset}>Reset</Button>
+                </Col>
+            </Row>
         </Card>
         </>
     )
