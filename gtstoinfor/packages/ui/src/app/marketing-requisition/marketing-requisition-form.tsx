@@ -83,7 +83,7 @@ export function MarketingReqForm(props: MarketingReqFormProps) {
   };
 
   return (
-    <Card className="card-header"
+    <Card headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       title={<span>Marketing Requisition</span>}
       style={{ textAlign: "center" }}
       extra={

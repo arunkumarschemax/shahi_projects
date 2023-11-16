@@ -3,6 +3,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { CommonResponseModel } from "@project-management-system/shared-models";
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
 import { GrnService } from "./grn.service";
+import { GrnDto, PurchaseOrderReq } from "./dto/grn-dto";
 
 @ApiTags('grn')
 @Controller('Grn')
@@ -12,10 +13,10 @@ export class GrnController {
     private readonly applicationExceptionHandler: ApplicationExceptionHandler
 
   ) { }
-  @Post('/creteGrn')
-  async creteGrn(@Body() dto: any, isUpdate: boolean = false): Promise<CommonResponseModel> {
+  @Post('/createGrn')
+  async creteGrn(@Body() dto: any): Promise<CommonResponseModel> {
     try {
-      return await this.grnService.createGrn(dto, false);
+      return await this.grnService.createGrn(dto);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
@@ -24,7 +25,7 @@ export class GrnController {
   @Post('/updateGrn')
   async updateGrn(@Body() dto: any, @Req() request: Request): Promise<CommonResponseModel> {
     try {
-      return await this.grnService.createGrn(dto, true);
+      return await this.grnService.createGrn(dto);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }

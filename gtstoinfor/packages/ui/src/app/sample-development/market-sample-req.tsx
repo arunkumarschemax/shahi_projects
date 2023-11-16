@@ -278,8 +278,8 @@ export const SourceSampleReq = (props: BuyingHouseProps) => {
     <Card
       title={<span>Sample Requests</span>}
       style={{ textAlign: "center" }}
-      // headStyle={{ border: 0 }}
-      className="card-header"
+      headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+      // headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
         extra={
           <Link to="/sample-development/sample-development-form">
             <span style={{ color: "white" }}>

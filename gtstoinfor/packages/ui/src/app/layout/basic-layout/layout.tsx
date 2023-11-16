@@ -140,8 +140,9 @@ export default function BasicLayout() {
                     <img src={xpperal} style={{marginLeft:'20px',float:'left',height:'55px'}} 
                     />}
                     layout={'mix'}
-                    token={{ header: { colorBgHeader: 'transparent' }, sider: { colorBgMenuItemSelected: colorPrimaryBg,colorMenuBackground:'azure' } }}
+                    token={{ header: { colorBgHeader: 'transparent' }, sider: { colorBgMenuItemSelected: colorPrimaryBg,colorMenuBackground:'#bae9ef42' } }}
                     route={{
+                        key:menu,
                         path: '/',
                         routes:treeRouter(getAllSubMenus()),
                     }}
@@ -205,28 +206,27 @@ export default function BasicLayout() {
                     // }}
                     menuItemRender={(item, dom) => {
                         // const navigate = useNavigate();
-                    
+                        console.log(item)
                         return (
-                            <div
-                                onClick={() => {
-                                    navigate(item?.path || "/");
-                                }}
-                                // style={{
-                                //     backgroundColor: menu.includes(item.key) ? '#1890ff' : '',
-                                //     color: menu.includes(item.key) ? '#fff' : '', // Adjust the text color
-                                // }}
-                            >
-                                {dom}
-                            </div>
-                        //     <Link
-                        //     to={item?.path || "/"}
-                        //     onClick={(e) => {
-                        //         setPathname(item.path || "/");
-                                
-                        //                                         }}
-                        // >
-                        //     {dom}
-                        // </Link>
+                            // <div
+                            //     onClick={() => {
+                            //         navigate(item?.path || "/");
+                            //     }}
+                            //     // style={{
+                            //     //     backgroundColor: menu.includes(item.key) ? '#1890ff' : '',
+                            //     //     color: menu.includes(item.key) ? '#fff' : '', // Adjust the text color
+                            //     // }}
+                            // >
+                            //     {dom}
+                            // </div>
+                            <Link
+                            to={item?.path || "/"}
+                            onClick={(e) => {
+                                navigate(item.path || "/");
+                                                                }}
+                        >
+                            {dom}
+                        </Link>
                         );
                     }}
                     
@@ -235,59 +235,10 @@ export default function BasicLayout() {
                   
                   
                         <Outlet />
-                        <Footer style={{ textAlign: 'center', background: '#f0f2f5', marginTop:'43%' }}>©2023 Design and Developed by SchemaX</Footer>
+                        <Footer style={{ textAlign: 'center', background: '#f0f2f5'}}>©2023 Design and Developed by SchemaX</Footer>
 
              </ProLayout> 
         
-
-// {/* <div
-//                 id="main-layout"
-//                 style={{
-//                     height: '100vh',
-//                 }}
-//             >
-//                 <Layout
-               
-//                 className="site-layout" style={{ background: ' #f0f2f5' }}>
-//                     <Sider
-//                         className='layout'
-//                         trigger={null}
-//                         breakpoint='lg'
-//                         collapsedWidth='60'
-//                         style={{
-//                             overflow: 'auto',
-//                             height: '100vh',
-//                             position: 'fixed',
-//                             left: 0,
-//                             background: '#fff',
-//                             marginTop: '56px' ,
-//                             borderRadius:'5px'
-//                         }}
-//                     >           
-//                     <Menu
-//                     theme="light"
-//                     mode="inline"
-//                     selectedKeys={[key]}
-//                 >
-//                   {getAllSubMenus()}
-//                 </Menu>         
-//                   </Sider>
-//                     <CommonHeader key={Date.now()} collapsed={collapsed} toggle={toggle}/>
-//                     <Content
-//                         className="site-layout-background"
-//                         style={{
-//                             marginTop: '40px',
-//                             padding: 14,
-//                             height: '100%',
-//                             marginLeft: 198
-//                         }}
-//                     >
-//                         <Outlet />
-//                     </Content>
-//                     <Footer style={{ textAlign: 'center', background: '#f0f2f5' }}>©2023 Design and Developed by SchemaX</Footer>
-//                 </Layout>
-
-//             </div>  */}
                     </ProConfigProvider>
 
              );

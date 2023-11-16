@@ -126,5 +126,12 @@ rejectedUomId:number;
   })
   versionFlag: number;
 
+  @Column('int', {
+    nullable: false,
+    name: 'location_mapped',
+    default:0
+  })
+  locationMapped: number;
+
 
 }

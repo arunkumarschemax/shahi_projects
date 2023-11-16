@@ -249,7 +249,7 @@ service.createsize(variantData).then(res=>{
 
 return (
   <Card title={<span>Size</span>}
-  style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/size/size-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
+  style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/masters/size/size-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
   <br></br>
     <>
     <Row gutter={40}>

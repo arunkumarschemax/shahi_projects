@@ -33,8 +33,7 @@ const M3StyleCode = () => {
 
   return (
     <div>
-            <Card title={<span>M3 STYLE CODES</span>} style={{ textAlign: 'center' }} headStyle={{ border: 0 }}
-                className="card-header"
+            <Card title={<span>M3 STYLE CODES</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
                 extra={<Button
                     onClick={() => navigate('/masters/m3-styleCodes-view')}
                     type="primary"

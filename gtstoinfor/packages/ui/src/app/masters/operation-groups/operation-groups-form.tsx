@@ -59,7 +59,7 @@ export const OperationGroupForm = (props:OperationGroupsFormProps) => {
     };
 
     return (
-      <Card title={props.isUpdate ? 'Update Operation Group' : 'Add Operation Group'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/operationgroups/operationgroups-view')} type={'primary'}>View</Button></span>}>
+      <Card title={props.isUpdate ? 'Update Operation Group' : 'Add Operation Group'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/operationgroups/operationgroups-view')} type={'primary'}>View</Button></span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
 
         <Form
           layout={'vertical'}

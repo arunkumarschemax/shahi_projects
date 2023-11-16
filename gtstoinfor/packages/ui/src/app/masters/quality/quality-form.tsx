@@ -32,8 +32,7 @@ const QualityForm = () => {
 
     return (
         <div>
-            <Card title={<span>QUALITY</span>} style={{ textAlign: 'center' }} headStyle={{ border: 0 }}
-                className="card-header"
+            <Card title={<span>QUALITY</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
                 extra={<Button
                     onClick={() => navigate('/masters/quality-view')}
                     type="primary"

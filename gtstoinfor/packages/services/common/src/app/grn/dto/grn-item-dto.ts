@@ -41,6 +41,10 @@ export class GRNItemDto{
     poFabricId?: number;
     @ApiProperty()
     poTrimId?: number;
+    @ApiProperty()
+    indentFabricId?:number
+    @ApiProperty()
+    indentTrinId?:number
 
 
 }

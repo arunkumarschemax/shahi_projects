@@ -56,7 +56,7 @@ export function LiscenceTypesForm(props: LiscenceTypesFormProps) {
   };
 
   return (
-    <Card title={<span >Liscence Type</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={props.isUpdate==true?"":<Link to='/masters/liscence-type/liscence-type-grid' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
+    <Card title={<span >Liscence Type</span>} style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={props.isUpdate==true?"":<Link to='/masters/liscence-type/liscence-type-grid' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
       <Form form={form } layout={'vertical'} initialValues={props.liscenceData} name="control-hooks" onFinish={saveData}  >   
       <Form.Item name="liscenceTypeId" style={{display:"none"}} >
         <Input hidden/>

@@ -53,8 +53,7 @@ const M3Items = () => {
 
   return (
     <div>
-        <Card title={<span>M3 ITEMS</span>} style={{ textAlign: 'center' }} headStyle={{ border: 0 }}
-        className="card-header"
+        <Card title={<span>M3 ITEMS</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
         extra={<Button
             onClick={() => navigate('/m3-items-view')}
             type="primary"

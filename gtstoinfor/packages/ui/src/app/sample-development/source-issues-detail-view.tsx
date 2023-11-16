@@ -36,7 +36,7 @@ export const SourceIssuesDetailView = (props: SourceIssuesDetailViewProps) => {
     })
   }
   return (
-    <Card className="card-header">
+    <Card headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
       <Descriptions size='small'>
         <DescriptionsItem label='RequestNo'>{data[0]?.request_no}</DescriptionsItem>
         <DescriptionsItem label='Location'>{data[0]?.location_name}</DescriptionsItem>

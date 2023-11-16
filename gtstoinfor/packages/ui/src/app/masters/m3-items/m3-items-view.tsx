@@ -58,11 +58,11 @@ const M3ItemsView = () => {
         },
         {
             title: " Yarn Count",
-            dataIndex: "yarnCount",
+            dataIndex: "yarn_count",
             render: (text,record) => {
                 return(
                     <>
-                    {record.yarnCount ? `${record.yarnCount} ${record.yarnUnit}` : '-'}
+                    {record.yarn_count ? `${record.yarn_count} ${record.yarnUnit}` : '-'}
                     </>
                 )
             }
@@ -79,8 +79,7 @@ const M3ItemsView = () => {
 
   return (
     <div>
-         <Card title={<span>M3 ITEMS</span>} style={{ textAlign: 'center' }} headStyle={{ border: 0 }}
-        className="card-header"
+         <Card title={<span>M3 ITEMS</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
         extra={<Button
             onClick={() => navigate('/m3-items')}
             type="primary"

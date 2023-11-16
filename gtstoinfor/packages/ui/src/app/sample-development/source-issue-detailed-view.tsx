@@ -140,7 +140,7 @@ export const StoreIssueDetailed = () => {
       ];
 
     return(
-        <Card title='Store Issue' className="card-header" onClick={onUpdate} extra={<Button type={'primary'}>View</Button>}>
+        <Card title='Store Issue' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} onClick={onUpdate} extra={<Button type={'primary'}>View</Button>}>
              <Descriptions size='small'>
                 <DescriptionsItem label='Location'>{data[0]?.location}</DescriptionsItem>
                 <DescriptionsItem label='PCH'>{data[0]?.pch}</DescriptionsItem>

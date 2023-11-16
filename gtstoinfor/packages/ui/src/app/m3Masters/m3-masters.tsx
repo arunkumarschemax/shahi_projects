@@ -43,7 +43,7 @@ export const M3Masters = (
       
       };
     return(
-        <Card  title={props.isUpdate ? 'Update Item Codes' : 'Item Codes'} extra={props.isUpdate === true?"":<span><Button onClick={() => navigate('/masters/m3-itemcodes-view')} type={'primary'}>View</Button></span>}className="card-header">
+        <Card  title={props.isUpdate ? 'Update Item Codes' : 'Item Codes'} extra={props.isUpdate === true?"":<span><Button onClick={() => navigate('/masters/m3-itemcodes-view')} type={'primary'}>View</Button></span>}headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
             <Form form={form} layout="vertical" onFinish={saveData} initialValues={props.m3MasterData}>
                 <Row gutter={24}>
                 <Form.Item name="m3Id" style={{display:'none'}}>
