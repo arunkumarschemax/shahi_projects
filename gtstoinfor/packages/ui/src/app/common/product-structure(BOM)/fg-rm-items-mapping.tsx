@@ -271,7 +271,7 @@ const getRmItemsDatabyProductGroupId1 = () => {
                                       placeholder="Select Operation"
                                       onChange={(value) => onOperation(option.rmitemId, value)}
                                       disabled={!selectedCheckbox[option.rmitemId]}
-                                      style={{ width: '160px' }}
+                                      style={{ width: '180px' }}
                                       allowClear
                                     >
                                       {operationsData.map((e) => (
@@ -323,7 +323,7 @@ const getRmItemsDatabyProductGroupId1 = () => {
 
                                   <Form.Item name={`trim_operationId_${option.rmitemId}`} style={{ margin: 0 }} >
                                 <Select  placeholder="Select Operation" onChange={(value)=>onOperation(option.rmitemId,value)} disabled={!selectedCheckbox1[option.rmitemId]}
-                                style={{ width: '160px' }}
+                                style={{ width: '180px' }}
                                 allowClear
                                  >
                                 {operationsData.map((e)=>{
