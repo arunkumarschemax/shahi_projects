@@ -395,8 +395,8 @@ rmservice.getAllRMItems(req).then(res => {
      extra={
       <div>
         <Link to='/materialCreation/fabric-bom-creation'>
-          <span style={{ color: 'blue' }}>
-            <Button >Fabric Creation</Button>
+          <span style={{ color: 'white' }}>
+            <Button type={'primary'}>Fabric Creation</Button>
           </span>
         </Link><span> </span>
         <Link to='/materialCreation/bomtrimcreation/bom-trim-creation'>
