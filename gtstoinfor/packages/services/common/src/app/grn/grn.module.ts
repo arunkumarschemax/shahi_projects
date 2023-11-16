@@ -9,10 +9,13 @@ import { GrnEntity } from './entities/grn-entity';
 import { GrnService } from './grn.service';
 import { GrnAdapter } from './dto/grn-adapter';
 import { GrnItemsEntity } from './entities/grn-items-entity';
+import { PurchaseOrderFbricEntity } from '../purchase-order/entities/purchase-order-fabric-entity';
+import { PurchaseOrderTrimEntity } from '../purchase-order/entities/purchase-order-trim-entity';
+import { PurchaseOrderEntity } from '../purchase-order/entities/purchase-order-entity';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([GrnEntity,GrnFabricEntity,GrnTrimsEntity,GrnItemsEntity]),
+        TypeOrmModule.forFeature([GrnEntity,GrnFabricEntity,GrnTrimsEntity,GrnItemsEntity,PurchaseOrderFbricEntity,PurchaseOrderTrimEntity,PurchaseOrderEntity]),
       ],
       providers: [ApplicationExceptionHandler,GrnRepository,GrnService,GrnAdapter],
       controllers: [GrnController],
