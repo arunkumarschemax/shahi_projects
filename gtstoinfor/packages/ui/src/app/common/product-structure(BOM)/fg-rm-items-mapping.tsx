@@ -222,7 +222,7 @@ const getRmItemsDatabyProductGroupId1 = () => {
       <Row gutter={24}>
         <Col xs={{ span: 10 }} sm={{ span: 24 }} md={{ span: 8}} lg={{ span:8 }} xl={{ span: 6 }}>
             <Form.Item label='FG Item Code' name='fgitemId' rules={[{required:true,message:'FG itemCode is required'}]}>
-                <Select showSearch allowClear placeholder='Select Item' onChange={onFgchange} >
+                <Select showSearch allowClear placeholder='Select FG Item Code' onChange={onFgchange} >
                 {fgItemsData.map((rec) => (
                         <Option key={rec.fgitemId} value={rec.fgitemId} code={rec.itemCode}>
                           {`${rec.itemName}-${rec.itemCode}`}
