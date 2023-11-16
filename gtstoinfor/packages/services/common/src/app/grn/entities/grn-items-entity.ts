@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { GrnEntity } from "./grn-entity";
-import { PurchaseOrderStatus } from "@project-management-system/shared-models";
+import { LocationMappedEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { PurchaseOrderFbricEntity } from "../../purchase-order/entities/purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "../../purchase-order/entities/purchase-order-trim-entity";
 
@@ -13,9 +13,14 @@ export class GrnItemsEntity{
     grnItemId:number
 
     @Column('int',{
-        name:'m3_item_code_id'
+        name:'item_id'
     })
-    m3ItemCodeId:number
+    itemId:number
+
+    @Column('int',{
+        name:'m3_item_id'
+    })
+    m3ItemId:number
 
     @Column('int',{
         name:'product_group_id',
@@ -71,6 +76,12 @@ export class GrnItemsEntity{
     })
     conversionUomId:number
 
+    @Column('enum',{
+        name:'location_mapped_status',
+        enum:LocationMappedEnum
+    })
+    status:LocationMappedEnum
+
     @Column('text',{
         name:'remarks',
         nullable:true
@@ -106,6 +117,7 @@ export class GrnItemsEntity{
         name: "version_flag",
     })
     versionFlag: number;
+
 
     @ManyToOne(type =>GrnEntity,grn =>grn.grnItemInfo)
     @JoinColumn({name:'grn_id'})

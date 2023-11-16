@@ -6,13 +6,14 @@ import { StocksEntity } from "./stocks.entity";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { StocksAdapter } from "./adapters/stocks.adatpters";
 import { StocksRepository } from "./repository/stocks.repository";
+import { StockLogEntity } from "./stock-log-entity";
 
 @Module({
     providers: [StocksService, ApplicationExceptionHandler, StocksAdapter, StocksRepository],
     controllers: [StocksController],
     imports: [
         TypeOrmModule.forFeature([
-            StocksEntity
+            StocksEntity,StockLogEntity
         ])
     ],
 })

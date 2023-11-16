@@ -54,12 +54,17 @@ const GRNForm = () => {
         setPoNumber('')
     }
 
+    const onFinish = (values) => {
+        console.log('Form values:', values);
+        console.log('Fabric data:', fabricData);
+      };
+
 
 
     return(
         <>
         <Card title='GRN' className="card-header">
-            <Form form={form} layout="vertical">
+            <Form form={form} layout="vertical" onFinish={onFinish}>
                 <Row gutter={8}>
                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                     <Form.Item name={'grnId'} hidden><Input></Input></Form.Item>
