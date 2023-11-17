@@ -148,7 +148,7 @@ export class FabricStructuresService {
 
                     if (Exists.isActive) {
                         if (Status.affected) {
-                            const Response: AllFabricStructuresResponseModel = new AllFabricStructuresResponseModel(true, 10115, 'FabricStructure is de-activated successfully');
+                            const Response: AllFabricStructuresResponseModel = new AllFabricStructuresResponseModel(true, 10115, 'FabricStructure is Deactivated successfully');
                             return Response;
                         } else {
                             throw new AllFabricStructuresResponseModel(false,10111, 'FabricStructure is already deactivated');

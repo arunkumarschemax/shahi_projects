@@ -160,7 +160,7 @@ export class SampleSubTypesService {
                     { isActive: Req.isActive, updatedUser: Req.updatedUser });
                 if (sampleSubTypeExists.isActive) {
                     if (sampleSubTypeStatus.affected) {
-                        const sampleSubTypeResponse: SampleSubTypesResponseModel = new SampleSubTypesResponseModel(true, 10115, 'sample Sub Type is de-activated successfully');
+                        const sampleSubTypeResponse: SampleSubTypesResponseModel = new SampleSubTypesResponseModel(true, 10115, 'sample Sub Type is Deactivated successfully');
                         return sampleSubTypeResponse;
                     } else {
                         throw new SampleSubTypesResponseModel(false,10111, 'sample Sub Type is already deactivated');

@@ -143,7 +143,7 @@ export class DeliveryTermsService {
 
                     if (deliveryTermsExists.isActive) {
                         if (deliveryTermsStatus.affected) {
-                            const deliveryTermsResponse: DeliveryTermsResponseModel = new DeliveryTermsResponseModel(true, 10115, 'Delivery Term is de-activated successfully');
+                            const deliveryTermsResponse: DeliveryTermsResponseModel = new DeliveryTermsResponseModel(true, 10115, 'Delivery Term is Deactivated successfully');
                             return deliveryTermsResponse;
                         } else {
                             throw new DeliveryTermsResponseModel(false,10111, 'Delivery Term is already deactivated');
