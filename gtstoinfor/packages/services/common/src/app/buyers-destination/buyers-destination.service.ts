@@ -126,7 +126,7 @@ async createBuyersDestination(
       }
     }
 
-  async getAll(req:BuyersDestinationRequest): Promise<BuyersMappingResponseModel> {
+  async getAll(req?:BuyersDestinationRequest): Promise<BuyersMappingResponseModel> {
     try {
         const size = await this.buyerSizeRepo.getAll(req)
         const des = await this.buyersDesRepo.getAll(req)

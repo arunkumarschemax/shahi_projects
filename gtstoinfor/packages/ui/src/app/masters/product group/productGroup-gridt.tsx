@@ -171,8 +171,6 @@ export function ProductGroupGrid(
     const openFormWithData=(viewData: ProductGroupDto)=>{
       setDrawerVisible(true);
       setSelectedProductGroup(viewData);
-      console.log(selectedProductGroup)
-      console.log('selectedProductGroup')
     }
   
     const columnsSkelton: ColumnProps<any>[] = [
@@ -361,6 +359,7 @@ export function ProductGroupGrid(
           columns={columnsSkelton}
           dataSource={ProductGroupData}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }
