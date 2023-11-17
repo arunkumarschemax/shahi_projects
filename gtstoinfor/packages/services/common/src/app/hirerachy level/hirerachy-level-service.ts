@@ -24,6 +24,10 @@ export class HierachyLevelService{
           
   try{
       await transactionalEntityManager.startTransaction();
+      const check = await this.hierachyLevelRepository.find({where: {hierarchyName : req.hierarchyName}})
+    if(check.length > 0){
+        return new hierachyLevelModel (false,0,'Hierarchy Name is already exists')
+    }
       const entity = new HierarchyLevel()
       entity.hierarchyName = req.hierarchyName;
       entity.hierarchyLevelId = req.hierarchyLevelId;

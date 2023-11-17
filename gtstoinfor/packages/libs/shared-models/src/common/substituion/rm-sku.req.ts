@@ -1,6 +1,4 @@
-import { Rm } from "./rm-sku.req"
-
-export class RmDataModel{
+export class Rm{
     // rmItemId:number;
     // itemType:string;
     // rmSkuCode:string;
@@ -11,13 +9,12 @@ export class RmDataModel{
     // optionGroup:string;
     // optionId:number;
     // optionValue:string;
-    fgSku: string
-   fgSkuId: number
-   rmDetails: Rm[]
+    rmSku: string
+   rmSkuId: number
 
     constructor( 
-      fgSku: string,
-      fgSkuId: number,
+      rmSku: string,
+      rmSkuId: number,
       // rmItemId:number,
       // itemType:string,
       // rmSkuCode:string,
@@ -28,12 +25,10 @@ export class RmDataModel{
       // optionGroup:string,
       // optionId:number,
       // optionValue:string
-      rmDetails: Rm[]
       )
     {
-      this.fgSku = fgSku
-      this.fgSkuId = fgSkuId
-      this.rmDetails = rmDetails
+      this.rmSku = rmSku
+      this.rmSkuId = rmSkuId
       // this.rmItemId=rmItemId;
       // this.itemType=itemType;
       // this.rmSkuCode=rmSkuCode;

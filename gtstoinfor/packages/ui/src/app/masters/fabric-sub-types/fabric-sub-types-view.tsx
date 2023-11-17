@@ -177,7 +177,7 @@ let navigate = useNavigate()
        render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-      title: 'Fabric Type',
+      title:<div style={{ textAlign: 'center' }}>Fabric Type</div> ,
       dataIndex: 'fabricTypeName',
       //  responsive: ['lg'],
       sorter: (a, b) => a.fabricTypeName.localeCompare(b.fabricTypeName),
@@ -186,7 +186,7 @@ let navigate = useNavigate()
     },
    
     {
-      title: 'Fabric Sub-Type',
+      title:<div style={{ textAlign: 'center' }}>Fabric Sub Type</div> ,
       dataIndex: 'fabricSubTypeName',
       //  responsive: ['lg'],
       sorter: (a, b) => a.fabricSubTypeName.localeCompare(b.fabricSubTypeName),
@@ -287,8 +287,12 @@ let navigate = useNavigate()
           columns={columnsSkelton}
           dataSource={FabricSubTypeData}
           pagination={{
+            pageSize:50,
+
             onChange(current) {
+              
               setPage(current);
+              
             }
           }}
           onChange={onChange}

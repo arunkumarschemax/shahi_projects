@@ -114,18 +114,22 @@ export class ItemGroupService{
             }
           }
       
+
           const convertedItemEntity: ItemGroup = this.ItemAdapter.convertDtoToEntity(itemgroupDTO, isUpdate);
+          const savedItemEntity:ItemGroup = await this.ItemGroupRepository.save(convertedItemEntity);
+          const savedItemGroupDto: ItemGroupDto = this.ItemAdapter.convertEntityToDto(savedItemEntity);
+          ItemGroupDtos.push(savedItemGroupDto);          
+          console.log(savedItemGroupDto,"pppppppppppp");
       
-          // console.log(convertedItemEntity);
+          // if (savedItemGroupDto) {
+          //   const presentValue=
+          //   await this.ItemGroupRepository.update({ itemGroupId: itemgroupDTO.itemGroupId }, convertedItemEntity);
+          // } else {
+          //   await this.ItemGroupRepository.save(convertedItemEntity);
+          // }
       
-          if (isUpdate) {
-            await this.ItemGroupRepository.update({ itemGroupId: itemgroupDTO.itemGroupId }, convertedItemEntity);
-          } else {
-            await this.ItemGroupRepository.save(convertedItemEntity);
-          }
-      
-          const savedItemGroupDto: ItemGroupDto = this.ItemAdapter.convertEntityToDto(convertedItemEntity);
-          ItemGroupDtos.push(savedItemGroupDto);
+          // const savedItemGroupDto: ItemGroupDto = this.ItemAdapter.convertEntityToDto(convertedItemEntity);
+          // ItemGroupDtos.push(savedItemGroupDto);
           // console.log(savedItemGroupDto );
       
           if (savedItemGroupDto) {

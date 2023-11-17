@@ -14,6 +14,7 @@ import { CoLine } from './co-line.entity';
 import { CoLineService } from './co-line.service';
 import { CoBom } from '../co-bom/co-bom.entity';
 import { FgItemBom } from '../substituion/fg-item-bom.entity';
+import { CoLineRepository } from './co-line.repo';
 
 
 @Module({
@@ -21,7 +22,7 @@ import { FgItemBom } from '../substituion/fg-item-bom.entity';
         TypeOrmModule.forFeature([StyleOrder,OrderLine,CoUpdateEntity,CoLine,CoBom,FgItemBom
         ]),
       ],
-      providers: [ApplicationExceptionHandler,StyleOrderService,StyleOrderRepository,OrderLineRepository,ItemCreation,CoUpdateRepository,CoLineService],
+      providers: [ApplicationExceptionHandler,StyleOrderService,StyleOrderRepository,OrderLineRepository,ItemCreation,CoUpdateRepository,CoLineService,CoLineRepository],
       controllers: [StyleOrderController],
       exports: []
 })

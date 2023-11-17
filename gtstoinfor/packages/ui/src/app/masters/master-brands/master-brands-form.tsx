@@ -64,7 +64,6 @@ export function MasterBrandsForm(props: MasterBrandsFormProps) {
   );
   useEffect(() => {
     if (props.masterBrandData) {
-      console.log(props.masterBrandData.fileName);
       const updateImage =
         "http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/" +
         props.masterBrandData.fileName;

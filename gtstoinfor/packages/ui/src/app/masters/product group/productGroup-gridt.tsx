@@ -178,6 +178,7 @@ export function ProductGroupGrid(
     const columnsSkelton: ColumnProps<any>[] = [
       {
         title: 'S No',
+        align:'center',
       key: 'sno',
       width: '70px',
       responsive: ['sm'],

@@ -186,7 +186,6 @@ export class ItemTypeService{
       //     return err;
       //   }
       // }  
-      
       async activateOrDeactivateItemType(itemReq: ItemTypeRequest): Promise<ItemTypeResponseModel> {
         try {
             const itemExists = await this.getItemtypeById(itemReq.itemTypeId);

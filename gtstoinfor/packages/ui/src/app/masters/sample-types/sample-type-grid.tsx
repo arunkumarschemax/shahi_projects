@@ -109,6 +109,7 @@ export const SampleTypesGrid = (props: SampleTypesGridProps) => {
   const columnsSkelton: any = [
     {
       title: 'S No',
+      align:'center',
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
