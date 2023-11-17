@@ -8,6 +8,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Body, Controller, Post, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { SampleInventoryLog } from './dto/sample-inventory-log-dto';
 
 @ApiTags('sample-request')
 @Controller('sample-request')
@@ -190,4 +191,15 @@ export class SampleDevReqController {
   }
 
 
+  @Post('/createSampling')
+  @ApiBody({ type: SampleInventoryLog })
+  async createSampling(@Req() req: any): Promise<CommonResponseModel> {
+    console.log(req.body,"::::::::::::::::::::")
+    try {
+      return await this.sampleService.createSampling(req.body)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
 }

@@ -64,6 +64,8 @@ export const PurchaseOrderView = () => {
     {
       title: 'Style',
       dataIndex: 'requestNumber',
+      width:'80px'
+
     },
     // {
     //   title: <div style={{ textAlign: 'center' }}>Material Type</div>,
@@ -140,24 +142,24 @@ export const PurchaseOrderView = () => {
     // },
     {
       title: 'Aging(EPD)',
-      dataIndex:'aging',
-      width:'20px',
+      dataIndex: 'deliveryDate', 
+      width: '20px',
       fixed: 'right',
-      align:'right',
-      render : (text,record) => {
-          const age : any ={
-              children:(moment(record.pickupDate).diff(moment(),'days')),
-              props:{
-                style:{
-                  background:(moment(record.pickupDate).diff(moment(),'days'))>0?'#3BC744':'',
-                 color:'black'
-                }
-              }
-            }
-            return age
-      }
-  },
-    
+      align: 'right',
+      render: (text, record) => {
+        const daysDifference = moment(record.deliveryDate).diff(moment(), 'days');
+        const age = {
+          children: daysDifference,
+          props: {
+            style: {
+              background: daysDifference > 0 ? '#3BC744' : '',
+              color: 'black',
+            },
+          },
+        };
+        return age;
+      },
+    },
     {
       title: 'Action',
       dataIndex: 'requestNumber',

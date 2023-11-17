@@ -14,6 +14,8 @@ import { SampleFabricRepo } from './repo/sample-dev-fabric-repo';
 import { SampleTrimRepo } from './repo/sample-dev-trim-repo';
 import { SampleProcessRepo } from './repo/sample-dev-process-repo';
 import { SamplingbomEntity } from './entities/sampling-bom-entity';
+import { SampleInventoryLogEntity } from './entities/sample-inventory-log-entity';
+import { SampleInventoryLoqRepo } from './repo/sample-inventory-loe-repo';
 
 @Module({
   imports: [
@@ -23,10 +25,11 @@ import { SamplingbomEntity } from './entities/sampling-bom-entity';
     SampleReqFabricinfoEntity,
     SampleRequestTriminfoEntity,
     SampleRequestProcessInfoEntity,
-    SamplingbomEntity
+    SamplingbomEntity,
+    SampleInventoryLogEntity
   ]),
   ],
   controllers: [SampleDevReqController],
-  providers: [SampleRequestService,ApplicationExceptionHandler,SampleRequestRepository,SampleSizeRepo,SampleFabricRepo,SampleTrimRepo,SampleProcessRepo]
+  providers: [SampleRequestService,ApplicationExceptionHandler,SampleRequestRepository,SampleSizeRepo,SampleFabricRepo,SampleTrimRepo,SampleProcessRepo,SampleInventoryLoqRepo]
 })
 export class SampleDevReqModule {}

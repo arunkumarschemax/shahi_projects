@@ -5,6 +5,7 @@ import { ApplicationExceptionHandler } from "@project-management-system/backend-
 import { CommonResponseModel, OperationInventoryResponseModel, OperationInventoryDto, OperationSequenceResponse, OperationTrackingResponseModel, OperationsRequest, TabNameReq } from "@project-management-system/shared-models";
 import { OperationTrackingDto } from "./dto/operation-tracking-dto";
 import { OperationInvRequest } from "./dto/operation-inventory-req";
+import { OperationInventoryRepository } from "./repo/operation-inventory-repository";
 
 @ApiTags('operation-inventory')
 @Controller('operation-inventory')
@@ -43,5 +44,14 @@ export class OperationIssuingController{
       } catch (error) {
         return this.applicationExceptionHandler.returnException(OperationInventoryResponseModel, error);
       }
+    }
+    @Post('/getOperationInverntory')
+    @ApiBody({ })
+    async getOperationInverntory(): Promise<any> {
+        try {
+            return await this.operationGroupsService.getOperationInverntory()
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(OperationInventoryResponseModel, error);
+        }
     }
 }

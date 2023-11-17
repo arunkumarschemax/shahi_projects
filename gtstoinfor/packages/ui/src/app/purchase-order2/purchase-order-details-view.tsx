@@ -146,22 +146,22 @@ const column1 : any =[
 </Descriptions>
 
 {/* <Form form={form}>
-                <Row>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 5 }}>
-                        <Form.Item label='Material Type' name='materialType'>
-                            <Select showSearch allowClear optionFilterProp="children" placeholder='Select Operation' onChange={onChange}>
-                                {
-                                    material.map(e => {
-                                        return (
-                                            <Option key={e.purchaseOrderId} value={e.materialType}>{e.materialType}</Option>
-                                        )
-                                    })
-                                }
+                  <Row>
+                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 5 }}>
+                          <Form.Item label='Material Type' name='materialType'>
+                              <Select showSearch allowClear optionFilterProp="children" placeholder='Select Operation' onChange={onChange}>
+                                  {
+                                      material.map(e => {
+                                          return (
+                                              <Option key={e.purchaseOrderId} value={e.materialType}>{e.materialType}</Option>
+                                          )
+                                      })
+                                  }
 
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                </Row>
+                              </Select>
+                          </Form.Item>
+                      </Col>
+                  </Row>
             </Form> */}
 
     <Card >

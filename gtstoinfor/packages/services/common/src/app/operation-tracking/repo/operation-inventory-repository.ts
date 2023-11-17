@@ -9,6 +9,8 @@ import { OperationTracking } from "../entity/operation-tracking-entity";
 import { TabNameReq } from "@project-management-system/shared-models";
 import { MaterialIssueEntity } from "../../material-issue/entity/material-issue-entity";
 import { MaterialFabricEntity } from "../../material-issue/entity/material-fabric-entity";
+import { promises } from "dns";
+import { SampleInventoryLogEntity } from "../../sample-dev-request/entities/sample-inventory-log-entity";
 
 @Injectable()
 export class OperationInventoryRepository extends Repository<OperationInventory> {
@@ -42,4 +44,15 @@ export class OperationInventoryRepository extends Repository<OperationInventory>
         const data = await query.getRawMany()
         return data
     }
+
+    async getOperationInventor(){
+        const query = await this.createQueryBuilder('oi')
+        .select(`oi.operation_inventory_id AS OperationId,oi.style_id AS styleId,s.style AS styleName,
+        oi.operation AS operation,oi.physical_quantity AS physicalQuantity,sil.quantity AS mappedQuantity `)
+        .leftJoin(Style, 's','s.style_id = oi.style_id')
+        .leftJoin(SampleInventoryLogEntity,'sil','sil.operation_inventory_id = oi.operation_inventory_id')
+        const data = await query.getRawMany()
+        return data
+    }
+
 }
