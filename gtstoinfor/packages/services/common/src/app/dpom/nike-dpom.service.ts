@@ -31,6 +31,7 @@ const path = require('path')
 const { Builder, Browser, By, Key, until } = require('selenium-webdriver');
 const moment = require('moment');
 const qs = require('querystring');
+const { Select } = require('selenium-webdriver/lib/select');
 
 @Injectable()
 export class DpomService {
@@ -349,17 +350,27 @@ export class DpomService {
                 await driver.findElement(By.id('CreateOrderID')).click();
                 await driver.wait(until.elementLocated(By.id('bpo')))
                 await driver.findElement(By.id('bpo')).sendKeys(coLine.buyerPo);
-                // const dropdownElement = await driver.wait(until.elementLocated(By.id('byd')))
-                // const dropdown = new Select(dropdownElement)
-                // const optionElement = await dropdownElement.findElement(By.xpath('//*[@id="byd"]/option[40]'));
-                // console.log(optionElement)
-                // await driver.executeScript("arguments[0].click();", optionElement);
-                // await driver.findElement(By.id('getNikeData')).click();
                 await driver.wait(until.elementLocated(By.name('dojo.EXFACTORYDATE')));
                 await driver.findElement(By.name('dojo.EXFACTORYDATE')).clear();
                 await driver.findElement(By.name('dojo.EXFACTORYDATE')).sendKeys(coLine.exFactoryDate);
                 await driver.wait(until.elementLocated(By.name('dojo.delydt')));
                 await driver.findElement(By.name('dojo.delydt')).sendKeys(coLine.deliveryDate);
+                await driver.wait(until.elementLocated(By.name('byd')));
+                const dropdown = await driver.findElement(By.name('byd'));
+                const options = await dropdown.findElements(By.tagName('option'));
+                const optionValues = [];
+                for (const option of options) {
+                    const value = await option.getAttribute('value');
+                    optionValues.push(value);
+                }
+                const number = optionValues.find(value => value.includes('96')); // give the dynamic value here
+                const valueToSelect = '10-UNIQLO CO LTD';
+                await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
+
+                // drop down selection logic starts here
+
+
+                // dropdown selection logic ends here
                 await driver.sleep(10000)
                 for (let dest of coLine.destinations) {
                     const colorsContainer = await driver.wait(until.elementLocated(By.xpath('//*[@id="COContainer"]')));
@@ -2170,7 +2181,7 @@ export class DpomService {
             return new CommonResponseModel(false, 0, error)
         }
     }
-    
+
 
     async getPpmDocTypeForFactory(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPpmDocTypeForFactory()
@@ -2207,7 +2218,7 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
-    
+
     async getPpmPlanningSeasonYearFactory(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPpmplanningSeasonYearForFactory()
         if (data.length > 0)
