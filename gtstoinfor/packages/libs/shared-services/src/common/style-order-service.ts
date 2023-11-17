@@ -59,4 +59,7 @@ export class StyleOrderService extends CommonAxiosService{
     async createCoLine(req :CoLineReq): Promise<CoLineResponseModel>{
         return this.axiosPostCall(this.URL + '/createCoLine',req)
     }
+    async getAllCoLine(req :styleOrderReq): Promise<CoLineResponseModel>{
+        return this.axiosPostCall(this.URL + '/getAllCoLines',req)
+    }
 }

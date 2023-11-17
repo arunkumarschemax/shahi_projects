@@ -1190,8 +1190,8 @@ placeholder='select saleItem' allowClear>
 
                 <Button
                   type="default"
-                  danger
-                  icon={<UndoOutlined />}
+                  // danger
+                  // icon={<UndoOutlined />}
                   onClick={onReset}
                   style={{ marginLeft: 30 }}
                 >

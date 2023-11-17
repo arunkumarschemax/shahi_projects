@@ -1,5 +1,5 @@
 import { CloseOutlined } from "@ant-design/icons";
-import { CustomerOrderStatusEnum, MenusAndScopesEnum, PackageTermsDto, PaymentMethodDto, PaymentTermsDto, styleOrderReq } from "@project-management-system/shared-models";
+import { CoLineStatusEnum, CoLineStatusEnumDisplay, CustomerOrderStatusEnum, MenusAndScopesEnum, PackageTermsDto, PaymentMethodDto, PaymentTermsDto, styleOrderReq } from "@project-management-system/shared-models";
 import { DeliveryMethodService, DeliveryTermsService, PackageTermsService, PaymentMethodService, PaymentTermsService, StyleOrderService, WarehouseService } from "@project-management-system/shared-services";
 import { Button, Card, Descriptions, Table } from "antd";
 import React from "react";
@@ -7,8 +7,9 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AlertMessages from "../common/common-functions/alert-messages";
 import RolePermission from "../roles-permission";
+import moment from "moment";
 
-export const StyleOrderDetailView = () => {
+export const CoLineView = () => {
   const service = new StyleOrderService();
   const [data, setData] = useState<any[]>([]);
   let location = useLocation();
@@ -34,7 +35,7 @@ let val =0
     
     service.getAllStyleOrdersByItem(req).then(res => {
       if(res.status){
-        console.log(res.data[0].buyer_name,'resssssss');
+        // console.log(res.data[0].buyer_name,'resssssss');
         
           setDetailsData(res.data)
           res.data.map(e =>{ 
@@ -49,52 +50,27 @@ let val =0
     
       
   })
-    service.getAllCoLinesById(req).then((res) => {
+    service.getAllCoLine(req).then((res) => {
       if (res.status) {
         setData(res.data);
       }
     });
    
-    // paymentTermsService.getAllActivePaymentTerms().then(res=>{
-    //     if(res.status){
-    //           setPaymentTermsId(res.data[0].paymentTermsName)
-    //     }
-    //   })
-    //   packingTermsService.getAllActivePackageTerms().then(res=>{
-    //     if(res.status){
-    //           setPackingTermsId(res.data[0].packageTermsName)
-    //          }
-    //   })
-    //   paymentMethodService.getAllActiveMethod().then(res=>{
-    //     if(res.status){
-    //           setPaymentMethodId(res.data[0].paymentMethod)
-    //          }
-    //   })
-    //   deliveryTermService.getAllActiveDeliveryTerms().then(res=>{
-    //     if(res.status){
-    //           setDeliveryTerm(res.data[0].deliveryTermsName)
-    //     }
-    //   })
-    //   deliveryMethodService.getAllDeliveryMethods().then(res=>{
-    //     if(res.status){
-    //           setDeliveryMethod(res.data[0].deliveryMethod)
-    //     }
-    //   })
   };
 
-  const cancelOrder =(val:any) =>{
-    service.cancelVariantOrder({variantId:val.id}).then(res => {
-      if(res.status){
-        AlertMessages.getSuccessMessage("Order Cancelled successfully. ")
-        getData();
-      }
-      else{
-        AlertMessages.getWarningMessage("Something went wrong. ")
-      }
-    }).catch(err => {
-      AlertMessages.getErrorMessage("Something went wrong. ")
-    })
-  }
+//   const cancelOrder =(val:any) =>{
+//     service.cancelVariantOrder({variantId:val.id}).then(res => {
+//       if(res.status){
+//         AlertMessages.getSuccessMessage("Order Cancelled successfully. ")
+//         getData();
+//       }
+//       else{
+//         AlertMessages.getWarningMessage("Something went wrong. ")
+//       }
+//     }).catch(err => {
+//       AlertMessages.getErrorMessage("Something went wrong. ")
+//     })
+//   }
 
   const columnsSkelton: any = [
     {
@@ -104,12 +80,28 @@ let val =0
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
+        title: <div style={{textAlign:'center'}}>CO Line Number</div>,
+        dataIndex: "co_line_number",
+        align:'center',
+        //   sorter: (a, b) => a.coNum.localeCompare(b.coNum),
+        // ...getColumnSearchProps("coNum"),
+      },
+    //   {
+    //     title: <div style={{textAlign:'center'}}>Buyer Po Num",
+    //     dataIndex: "buyer_po_number",
+    //   },
+      {
+        title: <div style={{textAlign:'center'}}>SKU Code</div>,
+        dataIndex: "sku_code",
+        align:'center',
+      },
+    {
       title: <div style={{textAlign:'center'}}>Size</div>,
       dataIndex: "size",
     },
     {
       title: <div style={{textAlign:'center'}}>Color</div>,
-      dataIndex: "color",
+      dataIndex: "colour",
     },
     {
       title: <div style={{textAlign:'center'}}>Destination</div>,
@@ -119,7 +111,6 @@ let val =0
       title: <div style={{textAlign:'center'}}>FOB</div>,
       dataIndex: "sale_price",
       align:'center',
-
     },
     {
       title: <div style={{textAlign:'center'}}>Qty</div>,
@@ -129,41 +120,80 @@ let val =0
        return( <span>{val.order_quantity}-{val.uom}</span>)
     }
     },
-    // {
-    //   title: <div style={{textAlign:'center'}}>CO Line Number</div>,
-    //   dataIndex: "coline_number",
-    //   //   sorter: (a, b) => a.coNum.localeCompare(b.coNum),
-    //   // ...getColumnSearchProps("coNum"),
-    // },
-
-    // {
-    //   title: <div style={{textAlign:'center'}}>Status</div>,
-    //   dataIndex: "status",
-    //   //   sorter: (a, b) => a.coNum.localeCompare(b.coNum),
-    //   // ...getColumnSearchProps("coNum"),
-    // },
     {
-      title: <div style={{textAlign:'center'}}>Action</div>,
-      dataIndex: 'action',
-      render: (text, rowData) => (
-        <>
-        {
-          rowData.status != CustomerOrderStatusEnum.CLOSED || checkAccess('Cancel')  ? 
-        <span>
-            <Button title={"Cancel Order"} onClick={() => cancelOrder(rowData)} >
-              <CloseOutlined />
-            </Button>
-          </span>
-          : ""
-        }
-        </>
-      )
+        title: <div style={{textAlign:'center'}}>season</div>,
+        dataIndex: "season_code",
+        align:'center',
+      },
+    {
+      title: <div style={{textAlign:'center'}}>Exf Date</div>,
+      dataIndex: "exf_date",
+      align:'center',
+    render:(data,val) =>{
+       return( val.exf_date? moment(val.exf_date).format('DD-MM-YYYY'):'-')
     }
+    },
+    {
+        title: <div style={{textAlign:'center'}}>Delivery Date</div>,
+        dataIndex: "delivery_date",
+        align:'center',
+      render:(data,val) =>{
+         return( val.delivery_date? moment(val.delivery_date).format('DD-MM-YYYY'):'-')
+      }
+      },
+      {
+        title: <div style={{textAlign:'center'}}>Status</div>,
+        dataIndex: 'status',
+        render: (text) => {
+          const EnumObj = CoLineStatusEnumDisplay.find((item) => item.name === text);
+          return EnumObj ? EnumObj.displayVal : text;
+        },  
+        filters:[
+            {
+              text:'OPEN',
+              value:'OPEN'
+            },
+            {
+              text:'IN PROGRESS',
+              value:'IN_PROGRESS'
+            }, {
+              text:'COMPLETED',
+              value:'COMPLETED'
+            },
+            {
+              text:'CLOSED',
+              value:'CLOSED'
+            },
+            {
+              text:'CONFIRMED',
+              value:'CONFIRMED'
+            }, 
+           ],
+          onFilter: (value,record) =>{ return record.status === value}
+    
+      },
+    // {
+    //   title: `Action`,
+    //   dataIndex: 'action',
+    //   render: (text, rowData) => (
+    //     <>
+    //     {
+    //       rowData.status != CustomerOrderStatusEnum.CLOSED || checkAccess('Cancel')  ? 
+    //     <span>
+    //         <Button title={"Cancel Order"} onClick={() => cancelOrder(rowData)} >
+    //           <CloseOutlined />
+    //         </Button>
+    //       </span>
+    //       : ""
+    //     }
+    //     </>
+    //   )
+    // }
 
   ];
   return (
     <Card
-      title="Quantity Details"
+      title="Co Lines"
       extra={
         <span>
           <Button
@@ -175,9 +205,9 @@ let val =0
         </span>
       }
     >
-      <Descriptions>
+         <Descriptions>
         <Descriptions.Item
-          children={detailsData?.[0]?.co_number}
+          children={detailsData?.[0]?.order_number}
           label={"Order Number"}
           labelStyle={{
             color: "black",
@@ -288,4 +318,4 @@ let val =0
     </Card>
   );
 };
-export default StyleOrderDetailView;
+export default CoLineView;

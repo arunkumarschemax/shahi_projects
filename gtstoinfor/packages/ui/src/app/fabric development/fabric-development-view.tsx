@@ -65,31 +65,31 @@ export const FabricDevelopmentView = () =>{
           render: (text, object, index) => (page - 1) * 10 + (index + 1),
         },
         {
-          title: "Location",
+          title: <div style={{textAlign:'center'}}>Location</div>,
           dataIndex: "location_name",
         
         },
         {
-          title: "Style",
+          title: <div style={{textAlign:'center'}}>Style</div>,
           dataIndex: "style",
           
         },
         {
-          title: "PCH",
+          title: <div style={{textAlign:'center'}}>PCH</div>,
           dataIndex: "profit_control_head",
          
         },
         {
-          title: "Buyer",
+          title: <div style={{textAlign:'center'}}>Buyer</div>,
           dataIndex: "buyer_name",
           
         },
         {
-          title: `Fabric Type`,
+          title: <div style={{textAlign:'center'}}>Fabric Type</div>,
           dataIndex: "type",
         },
         {
-            title: `Fabric Responsible`,
+            title: <div style={{textAlign:'center'}}>Fabric Responsible</div>,
             dataIndex: "firstName",
             render: (VAL,data) => {
               const ftname = `${data?.first_name} ${data?.last_name}`;
@@ -98,6 +98,7 @@ export const FabricDevelopmentView = () =>{
           },
           {
             title: 'Mapped',
+            align:'center',
             render: (text, val) => (
               <>
                 <Button onClick={() => Info(val)}>More Info</Button>
