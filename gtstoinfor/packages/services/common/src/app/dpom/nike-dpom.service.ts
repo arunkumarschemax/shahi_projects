@@ -47,7 +47,7 @@ export class DpomService {
     ) { }
 
     async getOctaToken() {
-        const payload = { 'grant_type': 'password', 'scope': 'iam.okta.factoryaffiliations.read iam.okta.factorygroups.read openid legacy_username email', 'username': 'aranganathan.muthukrishnan@shahi.co.in', 'password': 'Nike@123' }
+        const payload = { 'grant_type': 'password', 'scope': 'iam.okta.factoryaffiliations.read iam.okta.factorygroups.read openid legacy_username email', 'username': 'aranganathan.muthukrishnan@shahi.co.in', 'password': 'Nike@12345' }
         const headers = {
             'Authorization': 'Basic TklLRS5HU00uREgtQVBJOnVyNjNiZjR1cEIya1FKdUkxaEV6bEdYa3Z5Rjg1WHNFVE0zR0lZY3ROSDVYeVM1YU9KVDJpNVNkaWNyTUk1Nk0=', 'Cookie': 'JSESSIONID=09FD9CE633210E9561E3E8583203D2CD', 'Cache-Control': 'no-cache', 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': '*/*', 'Connection': 'keep-alive', 'Accept-Encoding': 'gzip, deflate, br'
         }
@@ -548,7 +548,7 @@ export class DpomService {
     //     }
     // }
 
-    @Cron('0 2 * * *')
+    @Cron('0 21 * * *')
     async saveDPOMApiDataToDataBase(): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
@@ -562,7 +562,7 @@ export class DpomService {
             const entity = new NikeFileUploadEntity()
             entity.fileName = 'DPOM Api';
             entity.filePath = 'DPOM Api';
-            entity.status = 'Success';
+            entity.dpomStatus = 'Success';
             entity.createdUser = 'API sync'
             const save = await transactionManager.getRepository(NikeFileUploadEntity).save(entity);
             for (const orderDetail of orderDetails.data) {
@@ -670,7 +670,7 @@ export class DpomService {
                 return new CommonResponseModel(false, 0, 'something went wrong')
             } else {
                 await transactionManager.completeTransaction()
-                await this.syncCRMData();
+                // await this.syncCRMData();
                 return new CommonResponseModel(true, 1, 'Data retrived successfully')
             }
         } catch (error) {
@@ -679,6 +679,7 @@ export class DpomService {
         }
     }
 
+    @Cron('0 2 * * *')
     async syncCRMData(): Promise<CommonResponseModel> {
         // const transactionManager = new GenericTransactionManager(this.dataSource)
         const getBuyerPOs = await this.dpomRepository.getBuyerPOs()
@@ -1048,7 +1049,7 @@ export class DpomService {
         const entity = new NikeFileUploadEntity()
         entity.fileName = filename;
         entity.filePath = filePath;
-        entity.status = 'uploading';
+        entity.dpomStatus = 'uploading';
         const file = await this.fileUploadRepo.findOne({ where: { fileName: filename } })
         if (file) {
             return new CommonResponseModel(false, 0, 'File with same name already uploaded');
@@ -1066,9 +1067,9 @@ export class DpomService {
     async updateFileStatus(req: FileStatusReq): Promise<CommonResponseModel> {
         let update
         if (req.status === 'Failed') {
-            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, isActive: false });
+            update = await this.fileUploadRepo.update({ id: req.fileId }, { dpomStatus: req.status, isActive: false });
         } else {
-            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status })
+            update = await this.fileUploadRepo.update({ id: req.fileId }, { dpomStatus: req.status })
         }
         if (update.affected) {
             return new CommonResponseModel(true, 1, 'updated successfully');

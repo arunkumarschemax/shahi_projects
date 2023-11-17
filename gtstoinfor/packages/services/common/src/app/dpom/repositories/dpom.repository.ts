@@ -20,7 +20,7 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getBuyerPOs(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(`po_number, po_line_item_number, schedule_line_item_number, po_and_line, style_number, size_qty, size_description `)
-            .where(` doc_type_code != 'ZP26'`)
+            .where(` doc_type_code != 'ZP26' AND factory IS NULL`)
             .groupBy(` po_and_line`)
         return await query.getRawMany()
     }
@@ -856,7 +856,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             .groupBy(`dpom.po_line_item_number`)
         return await query.getRawMany();
     }
-    
+
     async getPpmStyleNumberForFactory(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.style_number,dpom.id`)
