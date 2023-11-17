@@ -420,7 +420,7 @@ const getAllActiveDivision=() =>{
           <Alert type='warning' message={'Active: ' + groupTechClassData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
         <Col span={5}>
-          <Alert type='info' message={'In-Active: ' + groupTechClassData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + groupTechClassData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
           </Row> 
           <br></br>

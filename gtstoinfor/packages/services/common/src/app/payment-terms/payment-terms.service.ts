@@ -105,7 +105,7 @@ export class PaymentTermsService {
               );
               paymentTermsDTO.push(convertedstatesDto);
             });
-            const response = new AllPaymentTermsResponseModel(true,11108,"PaymentTerms retrieved successfully",paymentTermsDTO);
+            const response = new AllPaymentTermsResponseModel(true,11108,"PaymentTerms retrieved Successfully",paymentTermsDTO);
            
             
             return response;
@@ -132,7 +132,7 @@ export class PaymentTermsService {
                     );
                     paymentTermsDTO.push(convertedpaymentTermsDTO);
                 });
-                const response = new AllPaymentTermsResponseModel(true, 11108, "PaymentTerms retrieved successfully", paymentTermsDTO);
+                const response = new AllPaymentTermsResponseModel(true, 11108, "PaymentTerms retrieved Successfully", paymentTermsDTO);
                 return response;
             } else {
                 throw new PaymentTermsResponseModel(false,99998, 'Data not found'); paymentTermsDTO
@@ -162,17 +162,17 @@ export class PaymentTermsService {
                       console.log(paymentTermsStatus,"pay////////")
                       if (paymentTermsExists.isActive) {
                           if (paymentTermsStatus.affected) {
-                              const paymentTermsResponse: PaymentTermsResponseModel = new PaymentTermsResponseModel(true, 10115, 'PaymentTerm is deactivated successfully');
+                              const paymentTermsResponse: PaymentTermsResponseModel = new PaymentTermsResponseModel(true, 10115, 'PaymentTerm is Deactivated Successfully');
                               return paymentTermsResponse;
                           } else {
-                              throw new PaymentTermsResponseModel(false,10111, 'PaymentTerm is already deactivated');
+                              throw new PaymentTermsResponseModel(false,10111, 'PaymentTerm is already Deactivated');
                           }
                       } else {
                           if (paymentTermsStatus.affected) {
-                              const paymentTermsResponse: PaymentTermsResponseModel = new PaymentTermsResponseModel(true, 10114, 'PaymentTerm is activated successfully');
+                              const paymentTermsResponse: PaymentTermsResponseModel = new PaymentTermsResponseModel(true, 10114, 'PaymentTerm is Activated Successfully');
                               return paymentTermsResponse;
                           } else {
-                              throw new PaymentTermsResponseModel(false,10112, 'PaymentTerm is already activated');
+                              throw new PaymentTermsResponseModel(false,10112, 'PaymentTerm is already Activated');
                           }
                       }
                   // }
@@ -227,7 +227,7 @@ export class PaymentTermsService {
                 paymentTermsEntities.forEach(paymentTermsEntity => {
                     paymentTermsDTO.push(new PaymentTermsDropDownDto(paymentTermsEntity.paymentTermsId, paymentTermsEntity.paymentTermsName));
                 });
-                const response = new PaymentTermsDropDownResponseModel(true, 11108, "paymentTerms retrieved successfully", paymentTermsDTO);
+                const response = new PaymentTermsDropDownResponseModel(true, 11108, "PaymentTerms retrieved Successfully", paymentTermsDTO);
                 return response;
             } else {
                 throw new PaymentTermsResponseModel(false,99998, 'Data not found');
@@ -246,7 +246,7 @@ export class PaymentTermsService {
                 paymentTermsEntities.forEach(paymentTermsEntity => {
                     paymentTermsDTO.push(new PaymentTermsDropDownDto(paymentTermsEntity.paymentTermsId, paymentTermsEntity.paymentTermsName));
                 });
-                const response = new PaymentTermsDropDownResponseModel(true, 11108, "paymentTerms retrieved successfully", paymentTermsDTO);
+                const response = new PaymentTermsDropDownResponseModel(true, 11108, "PaymentTerms retrieved Successfully", paymentTermsDTO);
                 return response;
             } else {
                 throw new PaymentTermsResponseModel(false,99998, 'Data not found');

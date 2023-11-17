@@ -243,7 +243,7 @@ export const SmvEfficiencyForm = () => {
                 rules={[{ required: true, message: "Department  is required" }]}
 
               >
-                <Select placeholder="Select Deparment" allowClear>
+                <Select placeholder="Select Department" allowClear>
                 {departmentData.map((rec) => (
                         <option key={rec.deptId} value={rec.deptId}>
                           {rec.deptName}

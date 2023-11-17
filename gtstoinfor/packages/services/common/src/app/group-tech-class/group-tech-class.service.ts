@@ -218,17 +218,17 @@ async createGroupTechClass(Dto: GroupTechClassDto, isUpdate: boolean): Promise<G
                            
                             if (data.isActive) {
                                 if (status.affected) {
-                                    const Response: AllGroupTechClassResponse = new AllGroupTechClassResponse(true, 10115, 'Group Tech Class is de-activated successfully');
+                                    const Response: AllGroupTechClassResponse = new AllGroupTechClassResponse(true, 10115, 'Group Tech Class is Deactivated Successfully');
                                     return Response;
                                 } else {
-                                    throw new ErrorResponse(10111, 'Item category is already deactivated');
+                                    throw new ErrorResponse(10111, 'Group Tech Class  is already Deactivated');
                                 }
                             } else {
                                 if (status.affected) {
-                                    const Response: AllGroupTechClassResponse = new AllGroupTechClassResponse(true, 10114, 'Group Tech Class is activated successfully');
+                                    const Response: AllGroupTechClassResponse = new AllGroupTechClassResponse(true, 10114, 'Group Tech Class is Activated Successfully');
                                     return Response;
                                 } else {
-                                    throw new ErrorResponse(10112, 'Group Tech Class is already  activated');
+                                    throw new ErrorResponse(10112, 'Group Tech Class is already  Activated');
                                 }
                             }
                         // }
