@@ -3,6 +3,7 @@ import { IsEmail, IsNotEmpty, IsOptional, ValidateIf } from 'class-validator';
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 import { FeatureOptionEntity } from './feature-option-entity';
 import { OptionEnum } from '@project-management-system/shared-models';
+import { FeatureSubstitution } from '../../substituion/feature-substituion.entity';
 
 @Entity('feature')
 export class FeatureEntity {
@@ -54,5 +55,8 @@ export class FeatureEntity {
 
   @OneToMany(()=>FeatureOptionEntity, fColor => fColor.feature, {cascade: true})
   fChild : FeatureOptionEntity[]
+
+  @OneToMany(type=>FeatureSubstitution, item=>item.featureInfo,{cascade: true})
+  featureSubstitutionInfo:FeatureSubstitution;
   
-  }
+}

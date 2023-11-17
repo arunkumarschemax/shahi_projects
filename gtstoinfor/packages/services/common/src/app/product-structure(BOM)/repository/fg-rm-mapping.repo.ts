@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FgRmMappingEntity } from "../fg-rm-mapping.entity";
-import { FgItemCodeReq } from "@project-management-system/shared-models";
+import { FgItemCodeReq, FgItemCreIdRequest } from "@project-management-system/shared-models";
 import { RmSkus } from "../../rm-skus/rm-sku.entity";
 import { FeatureEntity } from "../../feature-creation/entities/feature.entity";
 import { RmMappingFilterRequest } from "@project-management-system/shared-models";
@@ -13,6 +13,7 @@ import { Operations } from "../../operations/operation.entity";
 import { OperationSequence } from "../../operation-sequence/operation-sequence.entity";
 import { groupBy } from "rxjs";
 import { RmCreationEntity } from "../../rm-items/rm-items.entity";
+import { FeatureOptionEntity } from "../../feature-creation/entities/feature-option-entity";
 import { ProductGroup } from "../../product group/product-group-entity";
 import { ProcurmentGroup } from "../../procurment group/procurment-group-entity";
 
@@ -57,4 +58,13 @@ export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
         let data:FgRmMappingEntity[] = await query.getRawMany();
         return data;
       }
+
+    async getInfoByFgItem(req:FgItemCreIdRequest):Promise<any[]>{
+      const query = this.createQueryBuilder('fgm')
+      .select(`fgm.fg_item_id,fgm.rm_item_id,rmsku.rm_sku_code,rmsku.feature_code,rmsku.item_code,rmsku.feature_option_id,rmsku.option_group,rmsku.option_value,rmsku.option_id,fgm.rm_item_code,feop.feature_id`)
+      .leftJoin(RmSkus,'rmsku','rmsku.rm_item_id = fgm.rm_item_id')
+      .leftJoin(FeatureOptionEntity,'feop','feop.feature_code = rmsku.feature_code')
+      .where(`fgm.fg_item_id = ${req.fgItemId}`)
+      return await query.getRawMany()
+    }
 }

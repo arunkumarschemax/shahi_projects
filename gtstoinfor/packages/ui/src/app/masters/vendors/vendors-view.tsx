@@ -23,7 +23,7 @@ export function VendorsView(
   const [page, setPage] = React.useState(1);
   const [searchText, setSearchText] = useState(''); 
   const [searchedColumn, setSearchedColumn] = useState('');
-
+  const [pageSize, setPageSize] = useState<number>(1);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [vendorsData, setVendorsData] = useState<VendorsDto[]>([]);
   const [selectedVendorsData, setSelectedVendorsData] = useState<any>(undefined);
@@ -640,8 +640,10 @@ export function VendorsView(
           dataSource={vendorsData}
           scroll={{ x:500 }}
           pagination={{
-            onChange(current) {
-              setPage(current);
+            pageSize: 50, 
+            onChange(current, pageSize) {
+                setPage(current);
+                setPageSize(pageSize);
             }
           }}
           onChange={onChange}

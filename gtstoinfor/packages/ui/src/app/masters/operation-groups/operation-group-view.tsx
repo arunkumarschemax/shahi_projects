@@ -25,6 +25,7 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
   const [page, setPage] = React.useState(1);
   const columns = useState('');
   const navigate = useNavigate()
+  const [pageSize, setPageSize] = useState<number>(1);
 
   const service = new OperationGroupsService();
 
@@ -333,8 +334,10 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
           columns={columnsSkelton}
           dataSource={variantData}
           pagination={{
-            onChange(current) {
-              setPage(current);
+            pageSize: 50, 
+            onChange(current, pageSize) {
+                setPage(current);
+                setPageSize(pageSize);
             }
           }}
           scroll={{x:true}}

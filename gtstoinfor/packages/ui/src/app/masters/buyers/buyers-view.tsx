@@ -381,12 +381,14 @@ let userRef
      columns={columnsSkelton} 
      dataSource={buyersData} size='small' bordered
      scroll={{ x:500 }}
-          pagination={{
-            onChange(current) {
-              setPage(current);
-            }
-          }}
-          onChange={onChange}
+     pagination={{
+      pageSize: 50, 
+      onChange(current, pageSize) {
+          setPage(current);
+          setPageSize(pageSize);
+      }
+      }}
+      onChange={onChange}
      />
       </Card>
 
