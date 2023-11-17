@@ -92,6 +92,7 @@ import { ItemSkus } from "../sku-generation/sku-generation.entity";
 //   Colour:Size[]
 //   @OneToOne(()=> Colour,destination=>destination.division,{cascade: true})
 //   Destination:Size[]
+
 //   @OneToOne(()=> ItemTypeEntity,itemtype=>itemtype.division,{cascade: true})
 //   ItemType:ItemTypeEntity[]
 
@@ -151,8 +152,23 @@ updatedUser: string | null;
     type: "datetime",
   })
   createdAt: Date;
+    @UpdateDateColumn({
+      name: "updated_at",
+      type:'datetime'
+  })
+  updatedAt: Date;
 
-  // Other columns...
+  @Column("varchar", {
+    nullable: false,
+    name: "created_user",
+    length:50
+})
+createdUser: string | null;
+  @VersionColumn({
+      default:1,
+      name: "version_flag"
+  })
+  versionFlag: number;
 
   @OneToMany(type => Settings, settings => settings.divisionInfo)
   settingsInfo: Settings[];
@@ -161,11 +177,14 @@ updatedUser: string | null;
   sizes: Size[];
 
   @OneToMany(() => Colour, color => color.division)
-  colours: Colour[];
+  Colour: Colour[];
 
   @OneToMany(() => ItemTypeEntity, itemType => itemType.division)
   itemTypes: ItemTypeEntity[];
 
   @OneToMany(() => ItemSkus, item => item.styleInfo)
   itemSkuInfo: ItemSkus[];
+
+  @OneToOne(()=> Colour,destination=>destination.division,{cascade: true})
+   Destination:Size[]
 }
