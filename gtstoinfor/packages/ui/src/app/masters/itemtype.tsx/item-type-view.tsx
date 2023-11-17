@@ -293,6 +293,7 @@ export function ItemTypeView(
           columns={columnsSkelton}
           dataSource={ItemTypeData}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

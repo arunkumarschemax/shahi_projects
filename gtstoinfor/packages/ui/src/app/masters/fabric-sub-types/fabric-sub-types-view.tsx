@@ -287,8 +287,12 @@ let navigate = useNavigate()
           columns={columnsSkelton}
           dataSource={FabricSubTypeData}
           pagination={{
+            pageSize:50,
+
             onChange(current) {
+              
               setPage(current);
+              
             }
           }}
           onChange={onChange}

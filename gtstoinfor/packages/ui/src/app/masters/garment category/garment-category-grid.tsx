@@ -309,6 +309,7 @@ return(
           columns={columnsSkelton}
           dataSource={variantData}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

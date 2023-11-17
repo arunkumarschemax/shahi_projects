@@ -7,6 +7,7 @@ import { GenericTransactionManager } from "../../typeorm-transactions";
 import { DataSource } from "typeorm";
 import { FGItemBomRepository } from "./fg-item-bom-repo";
 import { SubstituionRequest } from "./substitution-req";
+import { Rm } from "packages/libs/shared-models/src/common/substituion/rm-sku.req";
 
 @Injectable()
 
@@ -140,51 +141,53 @@ export class SubstituionService{
 
     //         if(Fgsku){
     //           const data1= new RmDataModel(res.fg_sku_id,res.fg_sku,[])
-    //         }
+    //         } 
 
     //         const item=DataMap.get(res.)
     //         }
 
     //        }
 
-    // }
-
-    // async getSubstitution(req?:fgItemIdReq):Promise<CommonResponseModel>{
-    //   const data =await this.substitutionrepo.getSubstitution(req);
-    //   if(data.length > 0){
-    //   const subdata=data.reduce((result,item)=>{
-    //     console.log(item,"/////////");
-        
-    //     const fgItemCode = item.fg_item_code;
-    //     const fgItemId = item.fg_rm_id;
-    //     const fgSkuCode= item.fg_sku;
-    //     if(!result[fgItemCode]){
-    //       result[fgItemCode]={
-    //         fg_item_id:fgItemId,
-    //         fg_item_code:fgItemCode,
-    //         fg_sku:fgSkuCode,
-    //         rm_items:[],
-    //       };
-    //     }
-    //     result[fgItemCode].rm_items.push({
-    //       rm_sku:item.rm_sku,
-    //       rm_item_code:item.rm_item_code,
-    //       item_type:item.item_type,
-    //       consumption:item.consumption,
-    //       feature_code:item.feature_code,
-    //       option_group:item.option_group,
-    //       option_value:item.option_value,
-    //     });
-    //     return result;
-
-    //   },{});
-    //   return new  CommonResponseModel(true,111,'Data retrieved',Object.values(subdata));
-    //   }
-    //   return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
-
-    // }
-
     
+
+    async getSubstitution(req?: fgItemIdReq): Promise<SubResponseModel> {
+      try {
+        const data = await this.substitutionrepo.getSubstitution(req);
+    
+        const DataMap = new Map<string, FgDataModel>();
+    
+        for (const res of data) {
+          if (!DataMap.has(res.fgItemId)) {
+            DataMap.set(res.fgItemId, new FgDataModel(res.fgItemCode, res.fgItemId, []));
+          }
+    
+          // Assuming that FgDataModel has an rmData property
+          const Fgsku = DataMap.get(res.fgItemId)?.rmData;
+    
+          if (Fgsku) {
+            const rmData = new RmDataModel(res.fgSkuId, res.fgSkuCode, []);
+    
+            // Assuming RmDataModel has an rmDetails property
+            rmData.rmDetails.push(new Rm(res.rmSku, res.rmSkuId));
+            Fgsku.push(rmData);
+          }
+          console.log(Fgsku,'[[[[[[[[');
+          
+        }
+    
+        // Convert the Map values to an array
+        let ListArray: FgDataModel[] = Array.from(DataMap.values());
+        console.log(ListArray, 'service............');
+    
+        if (data.length > 0) {
+          return new SubResponseModel(true, 1, 'data retrieved', ListArray);
+        } else {
+          return new CommonResponseModel(false, 0, 'No data found');
+        }
+      } catch (err) {
+        throw err;
+      }
+    }
     
     async getFgSku(req?:fgItemIdReq):Promise<CommonResponseModel>{
       try{
@@ -204,18 +207,18 @@ export class SubstituionService{
       
     }  
 
-async getSubstitution(req?:fgItemIdReq):Promise<CommonResponseModel>{
-  try{
-    const getdata= await this.substitutionrepo.getSubstitution(req)
-    if(getdata){
-      return new CommonResponseModel(true,1,'Data retreived',getdata)
-    }else{
-      return new CommonResponseModel(false,0,'No data found')
-    }
-  }catch (err){
-    throw err
-  }
-}
+// async getSubstitution(req?:fgItemIdReq):Promise<CommonResponseModel>{
+//   try{
+//     const getdata= await this.substitutionrepo.getSubstitution(req)
+//     if(getdata){
+//       return new CommonResponseModel(true,1,'Data retreived',getdata)
+//     }else{
+//       return new CommonResponseModel(false,0,'No data found')
+//     }
+//   }catch (err){
+//     throw err
+//   }
+// }
 
 // async getSubstitution(req?: fgItemIdReq): Promise<CommonResponseModel> {
 //   const data = await this.substitutionrepo.getSubstitution(req);
