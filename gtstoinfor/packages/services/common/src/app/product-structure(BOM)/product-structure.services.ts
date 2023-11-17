@@ -138,14 +138,22 @@ export class ProductStructureService {
           
             if (data.length > 0) {
               const groupedData = data.reduce((result, item) => {
+                // console.log(item,"item")
                 const fgItemCode = item.fg_item_code;
                 const fgItemId = item.fg_rm_id;
+                const fgitemName = item.item_name;
+                const productGroup = item.productGroup;
+                const fbStyle = item.style_no
                 
                 
                 if (!result[fgItemCode]) {
                   result[fgItemCode] = {
                     fg_item_id: fgItemId,
                     fg_item_code: fgItemCode,
+                    item_name:fgitemName,
+                    productGroup:productGroup,
+                    style_no:fbStyle,
+
                     rm_items: [],
                   };
                 }
@@ -158,13 +166,18 @@ export class ProductStructureService {
                   facility:item.facility,
                   season:item.season,
                   operation_name:item.operation_name,
-                  sequence:item.sequence
+                  sequence:item.sequence,
+                  rmItemName:item.rmItemName,
+                  consumption:item.consumption,
+                  procurement: item.rmprocurment_group,
+                  product:item.productGroup,
+                  consumtion:item.consumption,
 
                 });
                 return result;
               }, {});
           
-              return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
+              return new CommonResponseModel(true, 1111, 'Rm Mapped Data retrieved', Object.values(groupedData));
             }
           
             return new CommonResponseModel(false, 0, 'Data Not retrieved', []);

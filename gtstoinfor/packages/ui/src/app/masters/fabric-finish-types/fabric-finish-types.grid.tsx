@@ -148,6 +148,7 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
     {
       title: 'S No',
       key: 'sno',
+      align:'center',
       width: '70px',
       responsive: ['sm'],
        render: (text, object, index) => (page-1) * 10 +(index+1)
@@ -274,7 +275,7 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
       <Row gutter={40}>
       <Col span={4}></Col>
 
-<Col span={5}>
+<Col span={6}>
       <Alert type='success' message={'Total Fabric Finish Types: ' + FabricStructuresData.length} style={{fontSize:'15px'}} />
           {/* <Card title={'Total Fabric Finish Types: ' + FabricStructuresData.length} style={{textAlign: 'left', width: 250, height: 41,backgroundColor:'#bfbfbf'}}></Card> */}
           </Col>

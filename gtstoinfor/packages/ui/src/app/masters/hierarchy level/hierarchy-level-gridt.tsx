@@ -177,7 +177,8 @@ export function HierarchyLevelGrid(
     const columnsSkelton: ColumnProps<any>[] = [
       {
         title: 'S No',
-      key: 'sno',
+        align:'center',
+     key: 'sno',
       width: '70px',
       responsive: ['sm'],
       render: (text, object, index) => (page-1) * 10 +(index+1)

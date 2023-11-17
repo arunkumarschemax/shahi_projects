@@ -28,6 +28,10 @@ export class RmCreationDto{
     quality:string
 
     @ApiProperty()
+    description:string
+
+
+    @ApiProperty()
     itemName:string
 
     @ApiProperty()
@@ -141,6 +145,15 @@ export class RmCreationDto{
 
     @ApiProperty()
     procurementGroupId:number
+
+    @ApiProperty()
+    orderMultipleBuom : string;
+    
+    @ApiProperty()
+    moq : string;
+    
+    @ApiProperty()
+    orderMultipleAuom : string;
 
     @ApiProperty()
     isActive: boolean;

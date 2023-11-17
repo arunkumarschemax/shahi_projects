@@ -126,7 +126,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Operation"
                 name="operationId"
-                rules={[{ required: true, message:  "Select Operation" }]}
+                rules={[{ required: true, message:  "Operation  is required" }]}
               >
                 <Select placeholder="Select Operation"> 
                 {operationsData.map((rec) => (
@@ -146,7 +146,7 @@ export const SmvEfficiencyForm = () => {
               xl={{ span: 4 }}
             >
               <Form.Item label="Capacity Type" name="capacityType"
-              rules={[{ required: true, message: "Select Capacity Type" }]}
+              rules={[{ required: true, message: "Capacity Type  is required" }]}
               >
               <Select placeholder="Select Capacity Type" allowClear>
               <option value="test">test</option>
@@ -162,9 +162,9 @@ export const SmvEfficiencyForm = () => {
               xl={{ span: 4 }}
             >
                <Form.Item label='Valid From Date' name='validFromDate'
-               rules={[{ required: true, message: "Valid From Date" }]}
+               rules={[{ required: true, message: "Valid From Date  is required" }]}
                 >
-                 <DatePicker style={{width:'100%'}}/>
+                 <DatePicker style={{width:'100%'}} placeholder="Select  Valid From Date"/>
                </Form.Item>
             </Col>
             <Col
@@ -175,9 +175,9 @@ export const SmvEfficiencyForm = () => {
               xl={{ span: 4 }}
             >
                <Form.Item label='Valid To Date' name='validToDate'
-               rules={[{ required: true, message: "Valid To Date" }]}
+               rules={[{ required: true, message: "Valid To Date  is required" }]}
                 >
-                 <DatePicker style={{width:'100%'}} />
+                 <DatePicker style={{width:'100%'}} placeholder="Select Valid To Date " />
                </Form.Item>
             </Col>
 
@@ -191,9 +191,9 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Revision No"
                 name="revisionNo"
-                rules={[{ required: true, message: "Enter Revision No" }]}
+                rules={[{ required: true, message: "Revision No  is required" }]}
               >
-                <Input  placeholder="Revision No" allowClear />
+                <Input  placeholder="Enter Revision No" allowClear />
              
               </Form.Item>
             </Col>
@@ -207,7 +207,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Work Center"
                 name="workCenter"
-                rules={[{ required: true, message: "Enter Work Center" }]}
+                rules={[{ required: true, message: "Work Center  is required" }]}
 
               >
                 <Input placeholder="Enter Work Center" />
@@ -224,7 +224,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Operation Description"
                 name="operationDescription"
-                rules={[{ required: true, message: "Enter Operation Description" }]}
+                rules={[{ required: true, message: "Operation Description  is required" }]}
 
               >
                   <Input  placeholder="Enter Operation Description"/>
@@ -240,7 +240,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Department"
                 name="departmentId"
-                rules={[{ required: true, message: "Select Department" }]}
+                rules={[{ required: true, message: "Department  is required" }]}
 
               >
                 <Select placeholder="Select Deparment" allowClear>
@@ -265,7 +265,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Planing Area"
                 name="planingArea"
-                rules={[{ required: true, message: "Enter Planing Area" }]}
+                rules={[{ required: true, message: "Planing Area  is required" }]}
               >
                 
                 <Input  placeholder="Enter Planing Area"/>
@@ -282,7 +282,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Run Time (Mins)"
                 name="runTime"
-                rules={[{ required: true, message: "Enter Run Time" }]}
+                rules={[{ required: true, message: "Run Time  is required" }]}
               >
                 <Input placeholder="Enter Run Time" allowClear />
             
@@ -299,7 +299,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Price/time Qty"
                 name="priceTimeQty"
-                rules={[{ required: true, message: "Enter Price/time Qty" }]}
+                rules={[{ required: true, message: "Price/time Qty  is required" }]}
               >
                 <Input placeholder="Enter Price/time Qty" allowClear />
             
@@ -317,7 +317,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Setup Time "
                 name="setupTime"
-                rules={[{ required: true, message: "Enter Setup Time" }]}
+                rules={[{ required: true, message: "Setup Time  is required" }]}
               >
                 <Input placeholder="Enter Setup Time" allowClear />
             
@@ -334,7 +334,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="External Setup"
                 name="externalSetup"
-                rules={[{ required: true, message: "Enter External Setup" }]}
+                rules={[{ required: true, message: "External Setup  is required" }]}
               >
                 <Input placeholder="Enter Setup Time" allowClear />
             
@@ -351,7 +351,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Fixed Time"
                 name="fixedTime"
-                rules={[{ required: true, message: "Enter Fixed Time" }]}
+                rules={[{ required: true, message: "Fixed Time  is required" }]}
               >
                 <Input placeholder="Enter Fixed Time" allowClear />
             
@@ -368,7 +368,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Pln no. Machine"
                 name="plnnoMachine"
-                rules={[{ required: true, message: "Enter Pln no. machine" }]}
+                rules={[{ required: true, message: "Pln no. machine  is required" }]}
               >
                 <Input placeholder="Enter Pln no Machine" allowClear />
             
@@ -385,7 +385,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Pln no. Workers"
                 name="plnnoWorkers"
-                rules={[{ required: true, message: "Enter Pln no. Workers" }]}
+                rules={[{ required: true, message: "Pln no. Workers  is required" }]}
               >
                 <Input placeholder="Enter Pln no Workers" allowClear />
             
@@ -402,7 +402,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Pln no. setup"
                 name="plnnoSetup"
-                rules={[{ required: true, message: "Enter Pln no. Setup" }]}
+                rules={[{ required: true, message: "Pln no. Setup  is required" }]}
               >
                 <Input placeholder="Enter Pln no Setup" allowClear />
             
@@ -419,7 +419,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Phantom Op Mtd"
                 name="phantom"
-                rules={[{ required: true, message: "Select Phantom Op Mtd" }]}
+                rules={[{ required: true, message: "Phantom Op Mtd  is required" }]}
 
               >
                 <Select placeholder="Select Phantom Op Mtd" allowClear>
@@ -439,7 +439,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Lead tm offset"
                 name="leadtmOffset"
-                rules={[{ required: true, message: "Enter lead tm Offset" }]}
+                rules={[{ required: true, message: "Lead tm Offset  is required" }]}
               >
                 <Input placeholder="Enter Lead tm offset " allowClear />
             
@@ -457,7 +457,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="P day"
                 name="pdays"
-                rules={[{ required: true, message: "Enter P days" }]}
+                rules={[{ required: true, message: "P days  is required" }]}
               >
                 <Input placeholder="Enter P days" allowClear />
             
@@ -474,7 +474,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Options Percent"
                 name="optionsPercent"
-                rules={[{ required: true, message: "Enter Options Percent" }]}
+                rules={[{ required: true, message: "Options Percent  is required" }]}
               >
                 <Input placeholder="Enter  Options Percent" allowClear />
             
@@ -491,7 +491,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Scrap pct"
                 name="scrapPct"
-                rules={[{ required: true, message: "Enter Scrap pct" }]}
+                rules={[{ required: true, message: "Scrap pct  is required" }]}
               >
                 <Input placeholder="Enter  Scrap pct" allowClear />
             
@@ -508,7 +508,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Setup Scrap"
                 name="setupScrap"
-                rules={[{ required: true, message: "Enter Setup Scrap" }]}
+                rules={[{ required: true, message: "Setup Scrap  is required" }]}
               >
                 <Input placeholder="Enter  Setup Scrap" allowClear />
             
@@ -525,7 +525,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Document ID"
                 name="documentId"
-                rules={[{ required: true, message: "Enter Document ID" }]}
+                rules={[{ required: true, message: "Document ID  is required" }]}
               >
                 <Input placeholder="Enter  Document ID" allowClear />
             
@@ -542,7 +542,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Tool no"
                 name="toolNo"
-                rules={[{ required: true, message: "Enter Tool no" }]}
+                rules={[{ required: true, message: "Tool no  is required" }]}
               >
                 <Input placeholder="Enter  Tool no" allowClear />
             
@@ -559,7 +559,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Subcontr ctrl"
                 name="subcontrCtrl"
-                rules={[{ required: true, message: "Select Subcontr ctrl" }]}
+                rules={[{ required: true, message: "Subcontr ctrl  is required" }]}
 
               >
                 <Select placeholder="Select Subcontr ctrl" allowClear>
@@ -579,7 +579,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Finite"
                 name="finite"
-                rules={[{ required: true, message: "Enter Finite" }]}
+                rules={[{ required: true, message: "Finite  is required" }]}
               >
                 <Input placeholder="Enter  Finite" allowClear />
             
@@ -596,7 +596,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Qty per Hour"
                 name="qtyPerHour"
-                rules={[{ required: true, message: "Enter Qty per Hour" }]}
+                rules={[{ required: true, message: "Qty per Hour  is required" }]}
               >
                 <Input placeholder="Enter  Qty per Hour" allowClear />
             
@@ -613,7 +613,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Crit Resource"
                 name="critResource"
-                rules={[{ required: true, message: "Select Crit Resource" }]}
+                rules={[{ required: true, message: "Crit Resource  is required" }]}
 
               >
                 <Select placeholder="Select Crit Resource" allowClear>
@@ -633,7 +633,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Add mtrl Offset"
                 name="addMtrlOffset"
-                rules={[{ required: true, message: "Enter Add mtrl Offset" }]}
+                rules={[{ required: true, message: "Add mtrl Offset  is required"  }]}
               >
                 <Input placeholder="Enter  Add mtrl Offset" allowClear />
             
@@ -650,7 +650,7 @@ export const SmvEfficiencyForm = () => {
               <Form.Item
                 label="Shipping Buffer"
                 name="shippingBuffer"
-                rules={[{ required: true, message: "Enter Shipping Buffer" }]}
+                rules={[{ required: true, message: "Shipping Buffer  is required" }]}
               >
                 <Input placeholder="Enter  Shipping Buffer" allowClear />
             
@@ -684,8 +684,6 @@ export const SmvEfficiencyForm = () => {
                 </Button>
                 <Button
                   type="default"
-                  danger
-                  icon={<UndoOutlined />}
                   onClick={onReset}
                   style={{ marginLeft: 20 }}
                 >

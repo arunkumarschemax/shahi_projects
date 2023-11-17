@@ -175,7 +175,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
             render: (text, object, index) => (page - 1) * 10 + (index + 1) 
         },
         {
-          title: 'Division',
+          title:<div style={{ textAlign: 'center' }}>Division</div> ,
           dataIndex: 'divisionName',
           sorter: (a, b) => {
             const valueA = a.divisionName || '';
@@ -188,7 +188,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
        
         
         {
-          title: 'Option Group',
+          title:<div style={{ textAlign: 'center' }}>Option Group</div> ,
           dataIndex: 'optionGroup',
           sorter: (a, b) => {
             const valueA = a.optionGroup || '';
@@ -200,13 +200,13 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
         },
         
         {
-          title:'Colour Code',
+          title:<div style={{ textAlign: 'center' }}>Colour Code</div> ,
           dataIndex: 'colourCode',
           ...getColumnSearchProps('optionGroup')
         },
         {
-            title: 'Colour',
-            dataIndex: 'colour',
+          title:<div style={{ textAlign: 'center' }}>Colour</div> ,
+          dataIndex: 'colour',
             sorter: (a, b) => {
               const valueA = a.colour || '';
               const valueB = b.colour || '';
@@ -216,7 +216,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
             ...getColumnSearchProps('colour')
         },
         {
-          title: 'Description',
+          title:<div style={{ textAlign: 'center' }}>Description</div> ,
           dataIndex: 'description',
           // ...getColumnSearchProps('description')
         },

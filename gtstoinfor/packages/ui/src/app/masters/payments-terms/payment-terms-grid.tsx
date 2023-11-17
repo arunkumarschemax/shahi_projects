@@ -356,8 +356,9 @@ export function PaymentTermsGrid(
           columns={columnsSkelton}
           dataSource={paymentTermsData}
 
-          scroll={{x:true}}
-          pagination={{
+          scroll={{x:true,y:500}}
+           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

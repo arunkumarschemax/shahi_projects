@@ -21,6 +21,10 @@ export class ProcurmentGroupService{
           const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
   try{
       await transactionalEntityManager.startTransaction();
+      const Check = await this.ProcurmentGroupRepository.find({where:{procurmentGroup:req.procurmentGroup}})
+      if(Check.length > 0){
+                    return new ProcurmentGroupModel(false,0,'Procurment Group already exists')
+                }
       const entity = new ProcurmentGroup()
       entity.procurmentGroup = req.procurmentGroup;
       entity.procurmentGroupId = req.procurmentGroupId;

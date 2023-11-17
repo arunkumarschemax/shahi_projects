@@ -177,6 +177,7 @@ export function ProcurmentGroupGrid(
     const columnsSkelton: ColumnProps<any>[] = [
       {
         title: 'S No',
+        align:'center',
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
@@ -296,7 +297,7 @@ export function ProcurmentGroupGrid(
      <Col span={4}></Col>
      <Col span={5}>
       <Alert type='success' message={'Total Operations: ' + ProcurmentGroupData.length} style={{fontSize:'15px'}} />
-          <Card title={'Total Procurement Groups: ' + ProcurmentGroupData.length} style={{textAlign: 'left', height: 41,backgroundColor:'#bfbfbf'}}></Card>
+          {/* <Card title={'Total Procurement Groups: ' + ProcurmentGroupData.length} style={{textAlign: 'left', height: 41,backgroundColor:'#bfbfbf'}}></Card> */}
           </Col>
           
           {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
@@ -310,7 +311,7 @@ export function ProcurmentGroupGrid(
      <Col span={5}>
           <Alert type='info' message={'In-Active: ' + ProcurmentGroupData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
 
-           <Card title={'In-Active :' + ProcurmentGroupData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
+           {/* <Card title={'In-Active :' + ProcurmentGroupData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card> */}
           </Col>
           </Row>
           <br></br>

@@ -66,9 +66,6 @@ const Login = () =>{
   getSizes();
   getDestinations();
 }
-console.log(loginBuyer,'buyer');
-console.log(userId,'buyer');
-
     const getSizes = ()=>{
         sizeService.getAllActiveSize().then(res=>{
             if(res.status){
@@ -143,7 +140,7 @@ const columns: ColumnProps<any>[]  = [
         render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-        title:'Buyers',
+        title:<div style={{textAlign:'center'}}>Buyers</div>,
         dataIndex:'buyerName',
         // render:(text,val) =>{
         //     return (val.buyerInfo.buyerName)
@@ -151,7 +148,7 @@ const columns: ColumnProps<any>[]  = [
     },
     //
     {
-        title: 'Mapped',
+        title: <div style={{textAlign:'center'}}>Mapped</div>,
         render: (text, val) => (
           <>
             <Row>
@@ -264,7 +261,7 @@ initialValue={userId.length > 0 ? userId[0].buyerName : ""}
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 2 }} >
                       <Form.Item>
-                        <Button icon={<UndoOutlined/>} danger onClick={onReset}>Reset</Button>
+                        <Button icon={<UndoOutlined/>}  onClick={onReset}>Reset</Button>
                       </Form.Item>
                     </Col>
                 </Row>

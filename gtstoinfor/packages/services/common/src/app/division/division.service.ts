@@ -137,47 +137,90 @@ export class DivisionService {
             return err;
         }
     }
-      async activateOrDeactivatedivision(divisionReq: DivisionRequest): Promise<DivisionResponseModel> {
-        try {
-          // console.log(divisionReq,"divisionReq");
+    //   async activateOrDeactivatedivision(divisionReq: DivisionRequest): Promise<DivisionResponseModel> {
+    //     try {
+    //       // console.log(divisionReq,"divisionReq");
           
-            const divisionExists = await this.getdivisionById(divisionReq.divisionId);
-            console.log(divisionExists,"divisionExists");
+    //         const divisionExists = await this.getdivisionById(divisionReq.divisionId);
+    //         console.log(divisionExists,"divisionExists");
             
-            if (divisionExists) {
-                if (!divisionExists) {
-                    throw new DivisionResponseModel(false,10113, 'Someone updated the current  information.Refresh and try again');
-                } else {
+    //         if (divisionExists) {
+    //             if (!divisionExists) {
+    //                 throw new DivisionResponseModel(false,10113, 'Someone updated the current  information.Refresh and try again');
+    //             } else {
                     
-                        const divisionStatus =  await this.divisionRepository.update(
-                            { divisionId: divisionReq.divisionId },
-                            { isActive: divisionReq.isActive,updatedUser: divisionReq.updatedUser });
+    //                     const divisionStatus =  await this.divisionRepository.update(
+    //                         { divisionId: divisionReq.divisionId },
+    //                         { isActive: divisionReq.isActive,updatedUser: divisionReq.updatedUser });
                        
-                        if (divisionExists.isActive) {
-                            if (divisionStatus.affected) {
-                                const divisionResponse: DivisionResponseModel = new DivisionResponseModel(true, 10115, 'Division is de-activated successfully');
-                                return divisionResponse;
-                            } else {
-                                throw new DivisionResponseModel(false,10111, 'division is already deactivated');
-                            }
-                        } else {
-                            if (divisionStatus.affected) {
-                                const divisionResponse: DivisionResponseModel = new DivisionResponseModel(true, 10114, 'Division is activated successfully');
-                                return divisionResponse;
-                            } else {
-                                throw new DivisionResponseModel(false,10112, 'Division is already  activated');
-                            }
-                        }
-                    // }
-                }
-            } else {
-                throw new DivisionResponseModel(false,99998, 'No Records Found');
-            }
-        } catch (err) {
-            return err;
+    //                     if (divisionExists.isActive) {
+    //                         if (divisionStatus.affected) {
+    //                             const divisionResponse: DivisionResponseModel = new DivisionResponseModel(true, 10115, 'Division is de-activated successfully');
+    //                             return divisionResponse;
+    //                         } else {
+    //                             throw new DivisionResponseModel(false,10111, 'division is already deactivated');
+    //                         }
+    //                     } else {
+    //                         if (divisionStatus.affected) {
+    //                             const divisionResponse: DivisionResponseModel = new DivisionResponseModel(true, 10114, 'Division is activated successfully');
+    //                             return divisionResponse;
+    //                         } else {
+    //                             throw new DivisionResponseModel(false,10112, 'Division is already  activated');
+    //                         }
+    //                     }
+    //                 // }
+    //             }
+    //         } else {
+    //             throw new DivisionResponseModel(false,99998, 'No Records Found');
+    //         }
+    //     } catch (err) {
+    //         return err;
+    //     }
+    // }
+    async activateOrDeactivatedivision(divisionReq: DivisionRequest): Promise<DivisionResponseModel> {
+      try {
+        const divisionExists = await this.getdivisionById(divisionReq.divisionId);
+    
+        if (divisionExists) {
+          const updateData: Partial<Division> = {
+            isActive: divisionReq.isActive,
+            updatedUser: divisionReq.updatedUser,
+          };
+    
+          const divisionStatus = await this.divisionRepository.update(
+            { divisionId: divisionReq.divisionId },
+            updateData,
+          );
+    
+          if (divisionStatus.affected) {
+            const action = divisionReq.isActive ? 'Activated' : 'Deactivated';
+            const message = `Division is ${action} successfully`;
+    
+            const divisionResponse: DivisionResponseModel = new DivisionResponseModel(
+              true,
+              10114, // Use a proper status code based on your requirements
+              message,
+            );
+    
+            return divisionResponse;
+          } else {
+            const action = divisionReq.isActive ? 'Activate' : 'Deactivate';
+            throw new DivisionResponseModel(
+              false,
+              10112, // Use a proper status code based on your requirements
+              `Division is already ${action}d`,
+            );
+          }
+        } else {
+          throw new DivisionResponseModel(false, 99998, 'No Records Found');
         }
+      } catch (err) {
+        // Handle the error appropriately, log it, and consider providing a more detailed error message
+        console.error(err);
+        return new DivisionResponseModel(false, 99999, 'Internal Server Error');
+      }
     }
-
+    
   
       async getActivedivisionById(divisionReq: DivisionRequest): Promise<DivisionResponseModel> {
         try {

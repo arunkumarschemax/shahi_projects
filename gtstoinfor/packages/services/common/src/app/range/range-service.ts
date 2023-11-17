@@ -97,14 +97,14 @@ export class RangeService {
                        
                         if (CompostionExists.isActive) {
                             if (compositionStatus.affected) {
-                                const liscenceTypeResponse: RangeResponse = new RangeResponse(true, 10115, 'Composition is deactivated successfully');
+                                const liscenceTypeResponse: RangeResponse = new RangeResponse(true, 10115, 'Range is Deactivated successfully');
                                 return liscenceTypeResponse;
                             } else {
-                                throw new RangeResponse(false,10111, 'Composition is already deactivated');
+                                throw new RangeResponse(false,10111, 'Range is already deactivated');
                             }
                         } else {
                             if (compositionStatus.affected) {
-                                const liscenceTypeResponse: RangeResponse = new RangeResponse(true, 10114, 'Composition is activated successfully');
+                                const liscenceTypeResponse: RangeResponse = new RangeResponse(true, 10114, 'Range is Activated successfully');
                                 return liscenceTypeResponse;
                             } else {
                                 throw new RangeResponse(false,10112, 'Composition is already  activated');

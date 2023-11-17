@@ -30,7 +30,7 @@ export class DeliveryTermsService {
             if (!isUpdate) {
                 const DeliveryTermsEntity = await this.getDeliveryTermsDetailsWithoutRelations(deliveryTermsDTO.deliveryTermsName);
                 if (DeliveryTermsEntity) {
-                    throw new DeliveryTermsResponseModel(false,11104, 'DeliveryTerms already exists');
+                    throw new DeliveryTermsResponseModel(false,11104, 'Delivery Term already exists');
                 }
                 // var notificationStatus='Created';
             }
@@ -40,7 +40,7 @@ export class DeliveryTermsService {
                 const DeliveryTermsEntity = await this.getDeliveryTermsDetailsWithoutRelations(deliveryTermsDTO.deliveryTermsName);
                 if (DeliveryTermsEntity) {
                     if(DeliveryTermsEntity.deliveryTermsId!=deliveryTermsDTO.deliveryTermsId) {
-                        throw new DeliveryTermsResponseModel(false,11104, 'DeliveryTerms already exists');      
+                        throw new DeliveryTermsResponseModel(false,11104, 'Delivery Term already exists');      
                     }
                 }
             }
@@ -55,16 +55,16 @@ export class DeliveryTermsService {
             if (savedDeliveryTermsDto) {
             const presentValue = deliveryTermsDTO.deliveryTermsName;
                 // generating resposnse
-                const response = new DeliveryTermsResponseModel(true, isUpdate ? 11101 : 11100, isUpdate ? 'DeliveryTerms Updated Successfully' : 'DeliveryTerms Created Successfully', [savedDeliveryTermsDto]);
+                const response = new DeliveryTermsResponseModel(true, isUpdate ? 11101 : 11100, isUpdate ? 'Delivery Term Updated Successfully' : 'DeliveryTerms Created Successfully', [savedDeliveryTermsDto]);
                 const name=isUpdate?'updated':'created'
-                const displayValue = isUpdate? 'DeliveryTerms Updated Successfully': 'DeliveryTerms Created Successfully'
+                const displayValue = isUpdate? 'Delivery Term Updated Successfully': 'Delivery Term Created Successfully'
             const userName = isUpdate? savedDeliveryTermsDto.updatedUser :savedDeliveryTermsDto.createdUser;
                 // const newLogDto = new LogsDto(1,name, 'DeliveryTerms', savedDeliveryTermsDto.deliveryTermsId, true, displayValue,userName,previousValue,presentValue)
                 // let res = await this.logService.createLog(newLogDto);
                 // console.log(res);
                 return response;
             } else {
-                throw new DeliveryTermsResponseModel(false,11106, 'DeliveryTerms saved but issue while transforming into DTO');
+                throw new DeliveryTermsResponseModel(false,11106, 'Delivery Term saved but issue while transforming into DTO');
             }
         } catch (error) {
             // when error occures while saving the data , the execution will come to catch block.
@@ -108,9 +108,9 @@ export class DeliveryTermsService {
                     );
                     deliveryTermsDTO.push(convertedstatesDto);
                 });
-                const response = new AllDeliveryTermsResponseModel(true, 11108, "DeliveryTerms retrieved successfully", deliveryTermsDTO);
+                const response = new AllDeliveryTermsResponseModel(true, 11108, "Delivery Term retrieved successfully", deliveryTermsDTO);
                 // if(req?.createdUser){
-                //     const newLogDto = new LogsDto(1,'view', 'DeliveryTerms', 0, true, 'DeliveryTerms retrieved successfully',req.createdUser,"",'')
+                //     const newLogDto = new LogsDto(1,'view', 'DeliveryTerms', 0, true, 'Delivery Term retrieved successfully',req.createdUser,"",'')
                 //     let res = await this.logService.createLog(newLogDto);
                 //     console.log(res);
                 // }
@@ -143,17 +143,17 @@ export class DeliveryTermsService {
 
                     if (deliveryTermsExists.isActive) {
                         if (deliveryTermsStatus.affected) {
-                            const deliveryTermsResponse: DeliveryTermsResponseModel = new DeliveryTermsResponseModel(true, 10115, 'DeliveryTerms is de-activated successfully');
+                            const deliveryTermsResponse: DeliveryTermsResponseModel = new DeliveryTermsResponseModel(true, 10115, 'Delivery Term is de-activated successfully');
                             return deliveryTermsResponse;
                         } else {
-                            throw new DeliveryTermsResponseModel(false,10111, 'DeliveryTerms is already deactivated');
+                            throw new DeliveryTermsResponseModel(false,10111, 'Delivery Term is already deactivated');
                         }
                     } else {
                         if (deliveryTermsStatus.affected) {
-                            const deliveryTermsResponse: DeliveryTermsResponseModel = new DeliveryTermsResponseModel(true, 10114, 'DeliveryTerms is activated successfully');
+                            const deliveryTermsResponse: DeliveryTermsResponseModel = new DeliveryTermsResponseModel(true, 10114, 'Delivery Term is activated successfully');
                             return deliveryTermsResponse;
                         } else {
-                            throw new DeliveryTermsResponseModel(false,10112, 'DeliveryTerms is already activated');
+                            throw new DeliveryTermsResponseModel(false,10112, 'Delivery Term is already activated');
                         }
                     }
                     // }
@@ -174,7 +174,7 @@ export class DeliveryTermsService {
                 
                 const deliveryTermsData: DeliveryTermsDTO = this.deliveryTermsAdapter.convertEntityToDto(deliveryTermsEntities);
                 if (deliveryTermsData) {
-                    const response = new DeliveryTermsResponseModel(true, 11101 , 'Cutrrency retrived Successfully',[deliveryTermsData]);
+                    const response = new DeliveryTermsResponseModel(true, 11101 , 'Delivery Terms retrived Successfully',[deliveryTermsData]);
                     return response;
                 }
                 else{
@@ -201,7 +201,7 @@ export class DeliveryTermsService {
                     );
                     deliveryTermsDTO.push(converteddeliveryTermsDTO);
                 });
-                const response = new AllDeliveryTermsResponseModel(true, 11108, "DeliveryTerms retrieved successfully", deliveryTermsDTO);
+                const response = new AllDeliveryTermsResponseModel(true, 11108, "Delivery Terms retrieved successfully", deliveryTermsDTO);
                 return response;
             } else {
                 throw new DeliveryTermsResponseModel(false,99998, 'Data not found'); deliveryTermsDTO
@@ -242,7 +242,7 @@ export class DeliveryTermsService {
                 deliveryTermsEntities.forEach(deliveryTermsEntity => {
                     deliveryTermsDTO.push(new DeliveryTermsDropDownDto(deliveryTermsEntity.deliveryTermsId, deliveryTermsEntity.deliveryTermsName));
                 });
-                const response = new DeliveryTermsDropDownResponseModel(true, 11108, "DeliveryTerms retrieved successfully", deliveryTermsDTO);
+                const response = new DeliveryTermsDropDownResponseModel(true, 11108, "Delivery Terms retrieved successfully", deliveryTermsDTO);
                 return response;
             } else {
                 throw new DeliveryTermsResponseModel(false,99998, 'Data not found');

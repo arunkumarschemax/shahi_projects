@@ -82,8 +82,8 @@ export class DepartmentsController {
      * @param getSingleDepartment DepartmentResponseModel 
      * @returns Value Department
      */
-    @Post('/activateOrDeactivateDepartment')
-    async activateOrDeactivateDepartment(@Body() departmentReq: DepartmentRequest): Promise<DepartmentResponseModel> {
+    @Post('/ActivateorDeactivateDepartment')
+    async ActivateorDeactivateDepartment(@Body() departmentReq: DepartmentRequest): Promise<DepartmentResponseModel> {
         try {
             return await this.departmentsService.activateOrDeactivateDepartment(departmentReq);
         } catch (err) {

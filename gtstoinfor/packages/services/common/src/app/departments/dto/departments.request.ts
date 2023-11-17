@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class DepartmentRequest {
     @ApiProperty()
     @IsNotEmpty()
-    @IsAlphanumeric()
+    // @IsAlphanumeric()
     deptId: number;
 
     @ApiProperty()

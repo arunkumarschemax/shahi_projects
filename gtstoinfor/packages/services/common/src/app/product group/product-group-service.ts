@@ -21,6 +21,10 @@ export class ProductGroupService{
         async createProductGroup(req:ProductGroupRequest):Promise<ProductGroupModel>{
           const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
   try{
+    const check = await this.ProductGroupRepository.find({where: {productGroup : req.productGroup}})
+    if(check.length > 0){
+        return new ProductGroupModel (false,0,'Product Group is already exists')
+    }
       await transactionalEntityManager.startTransaction();
       const entity = new ProductGroup()
       entity.productGroup = req.productGroup;

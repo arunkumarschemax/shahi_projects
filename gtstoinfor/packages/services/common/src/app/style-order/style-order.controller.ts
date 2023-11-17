@@ -181,5 +181,15 @@ export class StyleOrderController{
             return this.applicationExceptionHandler.returnException(CoLineResponseModel,err)
         }
     }
+    
+    @Post('/getAllCoLines')
+     @ApiBody({type:styleOrderReq})
+    async getAllCoLines(@Body() req:any):Promise<CoLineResponseModel>{
+        try{
+            return await this.coLineService.getAllCoLine(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CoLineResponseModel,err)
+        }
+    }
 
 }

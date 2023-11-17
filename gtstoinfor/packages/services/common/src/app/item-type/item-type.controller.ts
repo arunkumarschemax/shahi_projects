@@ -60,9 +60,9 @@ export class ItemTypeController{
     }
   }
 
-  @Post('/activeteOrDeactivateItemi')
+  @Post('/ActivateorDeactivateItemType')
   @ApiBody({type:ItemTypeDtos})
-  async activeteOrDeactivateItemType( @Body()request:any ): Promise<AllItemTypeResponseModel> {
+  async ActivateorDeactivateItemType( @Body()request:any ): Promise<AllItemTypeResponseModel> {
     try {
       return await this.itemTypeService.activateOrDeactivateItemType
       (request);

@@ -72,9 +72,9 @@ export function MasterBrandsGrid(
 const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
     BrandsViewData.isActive = BrandsViewData.isActive ? false : true;
     masterBrandService.ActivateDeActivateBrand(BrandsViewData).then(res => {
-      console.log(res);
       if (res.status) {
         message.success(res.internalMessage, 2);
+        getAllMasterBrands()
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
@@ -89,11 +89,11 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
   const updateBrand = (brandsData: MasterBrandsDto) => {
     brandsData.updatedUser = JSON.parse(localStorage.getItem('username'))
     masterBrandService.updateBrand(brandsData).then(res => {
-      console.log(res);
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Successfully');
         // getAllCurrencys();
         setDrawerVisible(false);
+        getAllMasterBrands()
       } else {
       
         AlertMessages.getErrorMessage(res.internalMessage);
@@ -249,7 +249,6 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
       setDrawerVisible(true);
      
       setSelectedMasterBrandData(viewData);
-     console.log(selectedMasterBrandData);
     }
   
     const columnsSkelton: any = [

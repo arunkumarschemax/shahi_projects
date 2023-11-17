@@ -14,6 +14,8 @@ import { OperationSequence } from "../../operation-sequence/operation-sequence.e
 import { groupBy } from "rxjs";
 import { RmCreationEntity } from "../../rm-items/rm-items.entity";
 import { FeatureOptionEntity } from "../../feature-creation/entities/feature-option-entity";
+import { ProductGroup } from "../../product group/product-group-entity";
+import { ProcurmentGroup } from "../../procurment group/procurment-group-entity";
 
 @Injectable()
 export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
@@ -35,12 +37,15 @@ export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
 
     async getAllFgRmMapped(req: RmMappingFilterRequest ): Promise<any[]> {
         const query = this.createQueryBuilder('fgm')
-        .select(`fgm.rm_item_code AS rm_item_code , item_type,fgi.item_group,fgm.fg_rm_id , fgm.fg_item_code ,fgi.is_sub_contract ,fgi.order_qty ,f.name AS facility ,fgi.season, o.operation_name,os.sequence `) 
+        .select(`fgm.rm_item_code AS rm_item_code , item_type,fgi.item_group,fgm.fg_rm_id , fgm.fg_item_code ,fgi.is_sub_contract ,fgi.order_qty ,f.name AS facility ,fgi.season, o.operation_name,os.sequence,pg.product_group AS productGroup ,fgi.item_name ,fgi.style_no ,ri.item_name AS rmItemName , ri.consumption , procurment_group AS rmprocurment_group`) 
       .leftJoin(ItemCreation,'fgi','fgi.fg_item_id = fgm.fg_item_id')
       .leftJoin(ItemTypeEntity,'it','it.item_type_id = fgi.item_type_id')
       .leftJoin(FactoriesEntity,'f','f.id = fgi.facility_id')
       .leftJoin(Operations,'o','o.operation_id = fgm.operation_id')
       .leftJoin(OperationSequence,'os','os.operation_id = o.operation_id')
+      .leftJoin(ProductGroup,'pg','pg.product_group_id = fgi.product_group')
+      .leftJoin(RmCreationEntity,'ri','ri.rm_item_id = fgm.rm_item_id ')
+      .leftJoin(ProcurmentGroup,'pcg','pcg.procurment_group_id = ri.procurement_gorup_id')
       .groupBy(`fgm.fg_rm_id`)
 
       .where('1=1');
