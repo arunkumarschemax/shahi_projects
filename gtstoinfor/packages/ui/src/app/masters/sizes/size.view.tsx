@@ -181,35 +181,35 @@ service.createsize(variantData).then(res=>{
             render: (text, object, index) => (page - 1) * 10 + (index + 1)
           },
           {
-            title: 'Division',
+            title:<div style={{ textAlign: 'center' }}>Division</div> ,
             dataIndex: 'divisionName',
             sorter: (a, b) => a.divisionName.localeCompare(b.divisionName),
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('divisionName')
           },
           {
-            title: 'Option Group',
+            title:<div style={{ textAlign: 'center' }}>Option Group</div> ,
             dataIndex: 'optionGroup',
             sorter: (a, b) => a.optionGroup.localeCompare(b.optionGroup),
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('optionGroup')
           },
           {
-            title: 'Size Code',
+            title:<div style={{ textAlign: 'center' }}>Size Code</div> ,
             dataIndex: 'sizeCode',
             sorter: (a, b) => a.sizeCode.localeCompare(b.sizeCode),
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('sizeCode')
           },
           {
-            title: 'Size',
+            title:<div style={{ textAlign: 'center' }}>Size</div> ,
             dataIndex: 'size',
             sorter: (a, b) => a.size.localeCompare(b.size),
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('size')
           },
           {
-            title: 'Description',
+            title:<div style={{ textAlign: 'center' }}>Description</div> ,
             dataIndex: 'description',
             sorter: (a, b) => a.description.localeCompare(b.description),
             sortDirections: ['descend', 'ascend'],

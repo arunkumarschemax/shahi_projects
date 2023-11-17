@@ -154,8 +154,15 @@ export class ItemCreationDto {
     createdUser: string;
 
     @ApiProperty()
+    createdAt: Date;
+
+    @ApiProperty()
     @IsOptional()
     updatedUser: string;
+
+    @ApiProperty()
+    @IsOptional()
+    updatedAt: Date;
 
     @ApiProperty()
     @IsOptional()

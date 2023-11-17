@@ -11,12 +11,15 @@ export class UomRequest extends CommonRequestAttrs {
     uomCategory: UomCategoryEnum;
     @ApiProperty()
     description: string;
+    @ApiProperty()
+    units: string;
 
-    constructor(uomId: number, uom: string, uomCategory: UomCategoryEnum, description: string, username: string) {
+    constructor(uomId: number, uom: string, uomCategory: UomCategoryEnum, description: string, username: string,units:string) {
         super(username);
         this.uomId = uomId;
         this.uom = uom;
         this.uomCategory = uomCategory;
         this.description = description;
+        this.units = units
     }
 }

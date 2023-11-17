@@ -19,7 +19,7 @@ export class ItemTypeService extends CommonAxiosService{
 
           async ActivateorDeactivateItemType(Dtos: ItemTypeDto): Promise<AllItemTypeResponseModel> {
             // console.log(Dtos);
-            return this.axiosPostCall(this.URL + '/activeteOrDeactivateItemType', Dtos)
+            return this.axiosPostCall(this.URL + '/ActivateorDeactivateItemType', Dtos)
              
           }
 

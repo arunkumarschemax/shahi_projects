@@ -15,10 +15,10 @@ export class CoBom {
     })
     fgItemBomId:number;
 
-    @Column("varchar",{
+    @Column("int",{
         name:"quantity"
     })
-    quantity:string
+    quantity:number
 
     @Column("varchar",{
         name:"co_number"

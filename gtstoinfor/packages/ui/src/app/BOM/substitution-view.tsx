@@ -456,9 +456,9 @@ const SubstituionView=() =>{
                 },
       
                 {
-                  title:'Fg SkuCode',
-                  dataIndex:'fgSku',
-                    key:'fgSku',
+                  title:'Fg ItemCode',
+                  dataIndex:'fgItemCode',
+                    key:'fgItemCode',
                     sorter: (a, b) => {
                       const valueA = a.fgSku || '';
                       const valueB = b.fgSku || '';
@@ -466,35 +466,69 @@ const SubstituionView=() =>{
                     },
                     sortDirections: ['descend', 'ascend'],
                     width:'120px',
-                    ...getColumnSearchProps('fgSku'),
+                    ...getColumnSearchProps('fgItemCode'),
 
                 },
                 {
-                  title:'Fg ItemCode',
-                  dataIndex:'fgItemCode',
-                  key:'fgItemCode',
-                  sorter: (a, b) => {
-                    const valueA = a.fgItemCode || '';
-                    const valueB = b.fgItemCode || '';
-                    return valueA.localeCompare(valueB);
-                  },
-                  sortDirections: ['descend', 'ascend'],
-                  width:'120px'
+                  title:'Fg Sku',
+                  dataIndex:'rmData',
+                  key:'rmData',
+                  // sorter: (a, b) => {
+                  //   const valueA = a.fgItemCode || '';
+                  //   const valueB = b.fgItemCode || '';
+                  //   return valueA.localeCompare(valueB);
+                  // },
+                  // sortDirections: ['descend', 'ascend'],
+                  // width:'120px'
+                  render:(fg)=>{
+                    return(
+                      <Table
+                      dataSource={fg}
+                      columns={[
+                        {
+                        dataIndex:'fgSku',
+                        key:'fgSku',
+                        align:'center',
+                        render:(data)=>{
+                          return data? data:'-'
+                        }
+                        }
+                      ]}
+                      pagination={false}
+                      />
+                    )
+                  }
 
                 },
                 {
-                  title: 'Rm SkuCode',
-                  dataIndex: 'rmSku',
-                  key: 'rmSku',
-                  sorter: (a, b) => {
-                    const valueA = a.rmSku || '';
-                    const valueB = b.rmSku || '';
-                    return valueA.localeCompare(valueB);
-                  },
-                  sortDirections: ['descend', 'ascend'],
-                  width:'120px',
-                  ...getColumnSearchProps('rmSku'),
-
+                  title:'Rm Sku',
+                  dataIndex:'rmDetails',
+                  key:'rmDetails',
+                  // sorter: (a, b) => {
+                  //   const valueA = a.fgItemCode || '';
+                  //   const valueB = b.fgItemCode || '';
+                  //   return valueA.localeCompare(valueB);
+                  // },
+                  // sortDirections: ['descend', 'ascend'],
+                  // width:'120px'
+                  render:(fg)=>{
+                    return(
+                      <Table
+                      dataSource={fg}
+                      columns={[
+                        {
+                        dataIndex:'rmSku',
+                        key:'rmSku',
+                        align:'center',
+                        render:(data)=>{
+                          return data? data:'-'
+                        }
+                        }
+                      ]}
+                      pagination={false}
+                      />
+                    )
+                  }
 
                 },
                 

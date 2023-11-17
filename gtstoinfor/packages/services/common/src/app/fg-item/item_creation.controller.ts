@@ -15,8 +15,11 @@ export class ItemCreationController {
 
     @Post('/createItem')
     @ApiBody({type:ItemCreationDto})
+    
     async createItem(@Body() itemCreationDto:any,isUpdate:boolean=false): Promise<ItemcreationResponseModel> {
         try {
+            console.log(itemCreationDto,"*****************");
+            
             return await this.itemCreationService.createItem(itemCreationDto, false);
         } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)

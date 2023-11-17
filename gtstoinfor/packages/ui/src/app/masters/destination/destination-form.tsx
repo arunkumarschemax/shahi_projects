@@ -101,12 +101,12 @@ export const DestinationForm = (props: DestinationFormProps) => {
     form.resetFields();
   };
   return (
-    <Card
-    title={props.isUpdate?
-    'Destination':'Destination'}
-    extra={( props.isUpdate == true) && <span> <Button onClick={()=>navigate('/global/destination/destination-grid')} type={'primary'}>View</Button></span>}>
+    // <Card
+    // title={props.isUpdate?
+    // 'Destination':'Destination'}
+    // extra={( props.isUpdate == true) && <span> <Button onClick={()=>navigate('/global/destination/destination-grid')} type={'primary'}>View</Button></span>}>
 
-
+    <Card title={props.isUpdate ? 'Destination':'Destination'}  extra={(props.isUpdate == false) && <span><Button onClick={()=> navigate('/global/destination/destination-grid')} type={'primary'}>View</Button></span>}>
 
       <Form
         layout={'vertical'}

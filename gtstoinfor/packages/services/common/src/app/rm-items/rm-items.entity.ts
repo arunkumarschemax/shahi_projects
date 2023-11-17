@@ -69,14 +69,14 @@ consumption:string;
 total:number;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 200,
     name:"delivery_terms"
 })
 deliveryTerms:string;
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 200,
     name:"delivery_method"
 })
@@ -95,6 +95,12 @@ structure:string;
     name:"quality"
 })
 quality:string;
+
+@Column("varchar",{
+    nullable: true,
+    name:"description"
+})
+description:string;
 
 @Column("varchar",{
     nullable: false,
@@ -150,7 +156,7 @@ altUomId:number;
 
 
 @Column("varchar",{
-    nullable: false,
+    nullable: true,
     length: 255,
     name:"multiplication_factor"
 })
@@ -266,7 +272,7 @@ planner:string;
 businessArea:number;
 
 @Column("int",{
-    nullable: false,
+    nullable: true,
     name:"hierarchy_Level_id"
 })
 hierarchyLevelId:number;
@@ -278,16 +284,16 @@ hierarchyLevelId:number;
 productGroupId:number;
 
 @Column("int",{
-    nullable: false,
+    nullable: true,
     name:"procurement_gorup_id"
 })
 procurementGroupId:number;
 
-@Column("int",{
+@Column("varchar",{
     nullable: true,
     name:"item_group_id"
 })
-itemGroupId:number;
+itemGroupId:string;
 
 @Column("varchar",{
     nullable: true,
@@ -295,6 +301,25 @@ itemGroupId:number;
     name:"use_in_operation"
 })
 useInOperation:string;
+
+@Column('varchar',{
+    name:'order_multiple_buom',
+    nullable: true,
+})
+orderMultipleBuom : string;
+
+
+@Column('varchar',{
+    name:'moq',
+    nullable: true,
+})
+moq : string;
+
+@Column('varchar',{
+    name:'order_multiple_Auom',
+    nullable: true,
+})
+orderMultipleAuom : string;
 
 @Column("boolean", {
     nullable: false,

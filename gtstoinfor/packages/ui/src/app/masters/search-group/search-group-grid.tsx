@@ -151,6 +151,7 @@ export function SearchGroupGrid(
     {
       title: <div style={{textAlign:"center"}}>Search Group Code</div>,
       dataIndex:'searchGrpCode',
+      width:180,
 
      
     },
@@ -323,8 +324,9 @@ export function SearchGroupGrid(
           size="small"
           columns={columnsSkelton}
           dataSource={groupData}
-          scroll={{x:true}}
-          pagination={{
+          scroll={{x:true,y:500}}
+           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

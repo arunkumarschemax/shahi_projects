@@ -149,10 +149,10 @@ service.createItemGroup(variantData).then(res=>{
     service.updateItemGroup(Item).then(res=>{
         if(res.status){
             AlertMessages.getSuccessMessage('Updated Successfully');
-           
-            // getAllItemGroup();
             setDrawerVisible(false);
-
+            getAllItemGroup()
+            // getAllItemGroup();
+                    
         }else{
             AlertMessages.getErrorMessage(res.internalMessage);
 
@@ -230,8 +230,8 @@ service.createItemGroup(variantData).then(res=>{
   
 
     {
-    title: 'Item Group',
-    dataIndex: 'itemGroup',
+      title:<div style={{ textAlign: 'center' }}>Item Group</div> ,
+      dataIndex: 'itemGroup',
     render: (text) => {
         const EnumObj = ItemGroupDisplayvalue.find((item) => item.name === text);
         return EnumObj ? text : text;
@@ -347,6 +347,7 @@ return (
           columns={columnsSkelton}
           dataSource={variantData}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

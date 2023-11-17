@@ -310,11 +310,12 @@ const CompositionGrid = () => {
           columns={columnsSkelton}
           dataSource={lTData}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }
           }}
-          scroll={{x:true}}
+          scroll={{x:true,y:550}}
           onChange={onChange}
           bordered />
       </Card>
