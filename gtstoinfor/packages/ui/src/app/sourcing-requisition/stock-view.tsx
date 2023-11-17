@@ -131,56 +131,27 @@ export const StockView = () => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
-      title: "Plant",
-      dataIndex: "name",
-      ...getColumnSearchProps("name"),
+      title: "M3 Style",
+      dataIndex: "m3_style_code",
+      ...getColumnSearchProps("m3_style_code"),
       // sorter: (a, b) => a.plant - b.plant,
       // sortDirections: ['descend', 'ascend'],
     },
     {
-      title: "M3 Item Code",
-      dataIndex: "m3_item_code",
-      ...getColumnSearchProps("m3_item_code"),
-    },
-    {
-      title: "Shahi Item Code",
-      dataIndex: "shahi_item_code",
-      ...getColumnSearchProps("shahi_item_code"),
-    },
-    {
       title: "Item Type",
       dataIndex: "item_type",
-      // filters: [
-      //   {
-      //     text: "Fabric",
-      //     value: "Fabric",
-      //   },
-      //   {
-      //     text: "Trim",
-      //     value: "Trim",
-      //   },
-      // ],
-      // filterSearch: true,
-      // onFilter: (value, record) => record.itemType.startsWith(value),
+      ...getColumnSearchProps("item_type"),
     },
     {
-      title: "Product Group",
-      dataIndex: "item_type",
-      // filters: [
-      //   {
-      //     text: "Fabric",
-      //     value: "Fabric",
-      //   },
-      //   {
-      //     text: "Trim",
-      //     value: "Trim",
-      //   },
-      // ],
-      // filterSearch: true,
-      // onFilter: (value, record) => record.itemType.startsWith(value),
+      title: "Item",
+      dataIndex: "item_name",
+      ...getColumnSearchProps("item_name"),
     },
-
-
+    {
+      title: "Style",
+      dataIndex: "style",
+      ...getColumnSearchProps("style"),
+    },
     {
       title: "Location",
       dataIndex: "rack_position_name",
@@ -190,7 +161,7 @@ export const StockView = () => {
 
     {
       title: "Quantity",
-      dataIndex: "quantity",
+      dataIndex: "total_quantity",
       // sorter: (a, b) => a.itemQuantity - b.itemQuantity,
       // sortDirections: ['descend', 'ascend'],
     },

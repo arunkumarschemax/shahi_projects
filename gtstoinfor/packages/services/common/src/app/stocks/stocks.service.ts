@@ -35,23 +35,40 @@ export class StocksService {
         // }
         try {
             let dataquery = `SELECT 
-            st.m3_item_code,
-            st.shahi_item_code,
-            it.item_type,
-            loc.location_name,
-            st.quantity,
-            f.name,
-            rac.rack_position_name
-            
-            FROM stocks AS st
-            LEFT JOIN location AS loc ON loc.location_id = st.location_id
-            LEFT JOIN rack_position AS rac ON rac.position_Id = st.location_id
-            LEFT JOIN item_type AS it ON it.item_type_id = st.item_type_id
-            LEFT JOIN factory AS f ON f.id = st.plant_id`
+            m3_st.m3_style_code,
+            it_ty.item_type,
+            it.item_name,
+            it.item_code,
+            SUM(st.quantity) AS total_quantity,
+            rac_pos.rack_position_name,
+            rac_pos.status,
+            s.style,
+            s.description
+        FROM 
+            stocks AS st
+        LEFT JOIN 
+            m3_style AS m3_st ON m3_st.m3_style_Id = st.m3_style_id
+        LEFT JOIN 
+            item_type AS it_ty ON it_ty.item_type_id = st.item_type_id
+        LEFT JOIN 
+            items AS it ON it.item_id = st.item_id
+        LEFT JOIN 
+            rack_position AS rac_pos ON rac_pos.position_Id = st.location_id
+        LEFT JOIN 
+            style AS s ON s.style_id = st.style_id
+        GROUP BY 
+            m3_st.m3_style_code,
+            it_ty.item_type,
+            it.item_name,
+            it.item_code,
+            rac_pos.rack_position_name,
+            rac_pos.status,
+            s.style,
+            s.description;
+        `
 
             const res = await AppDataSource.query(dataquery);
             if (res) {
-                console.log(res, "......................");
                 return res;
             } else {
                 console.log("NO data");
@@ -63,7 +80,6 @@ export class StocksService {
             return new AllStocksResponseModel(false, 1011, "No data found");
         }
 
-        // console.log(stocksData, '..................................');        
     }
 
     async getStockReport(): Promise<CommonResponseModel> {

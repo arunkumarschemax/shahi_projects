@@ -4,16 +4,9 @@ import { Column, Entity } from "typeorm";
 @Entity("stocks")
 export class StocksEntity extends CommonColumns {
     @Column({
-        name: "m3_item_code",
-        length: 100,
+        name: "m3_style_id",
     })
-    m3ItemCode: string;
-
-    @Column({
-        name: "shahi_item_code",
-        length: 100
-    })
-    shahiItemCode: string;
+    m3_style_id: number;
 
     @Column({
         name: "item_type_id",
@@ -21,18 +14,22 @@ export class StocksEntity extends CommonColumns {
     item_type_id: number;
 
     @Column({
+        name: "item_id",
+    })
+
+    item_id: number;
+    @Column({
         name: "location_id",
     })
     location_id: number;
 
     @Column({
-        name: "plant_id",
+        name: "quantity",
     })
-    plant_id: number;
+    quantity: number;
 
     @Column({
-        name: "quantity",
-        length: 50,
+        name: "style_id",
     })
-    quantity: string;
+    style_id: number;
 }

@@ -1,61 +1,123 @@
+import { LocationMappingReq, MaterialIssueIdreq, RackLocationStatusReq } from '@project-management-system/shared-models';
 import { LocationMappingService } from '@project-management-system/shared-services';
 import { Card, Col, Descriptions, Input, Row, Table, Form, Select, InputNumber, Radio, Button, Modal, RadioChangeEvent } from 'antd'
 import { Option } from 'antd/es/mentions';
 import { ColumnProps } from 'antd/es/table';
 import React, { useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import AlertMessages from '../common/common-functions/alert-messages';
 
 export const LocationMapping = () => {
 
     let location = useLocation();
+    const navigate = useNavigate();
     const [form] = Form.useForm();
     const grnData = location.state.data;
-    console.log(grnData, "grnData");
+    // console.log(grnData, "grnData");
 
     const locationService = new LocationMappingService();
     const [page, setPage] = React.useState(1);
     const [vendorData, setVendorData] = useState<[]>([]);
     const [locations, setLocations] = useState<any[]>([]);
-    // const [tableData, setTableData] = useState<any[]>([]);
+    const [tableData, setTableData] = useState<any[]>([]);
     const [prevTransactionsInfo, sePrevTransactionsInfo] = useState<any[]>([]);
     const [btnDisable, setBtnDisable] = useState<boolean>(false);
-    const [locationStatusValue, setValue] = useState<string>('Occupied');
+    const [locationStatusValue, setValue] = useState<string>('partially Occupied');
     const [showQrSacn, setShowQrScan] = useState<boolean>(false);
     const [vendorName, setVendorName] = useState<string>("Hello")
 
     useEffect(() => {
+        if (grnData) {
+            if (grnData.grn_item_id) {
+                const id = grnData.grn_item_id;
+                getOneItemAllocateDetailsData(id);
+            } else {
+                AlertMessages.getInfoMessage("GRN Item Id not found");
+            }
+        }
         getLocationsData();
     }, [])
 
     const onChange = (e: RadioChangeEvent) => {
-        console.log('radio checked', e.target.value);
+        // console.log('radio checked', e.target.value);
         setValue(e.target.value);
     };
 
+    const getOneItemAllocateDetailsData = (id) => {
+        const req = new MaterialIssueIdreq(id)
+        locationService.getOneItemAllocateDetails(req).then((res) => {
+            setTableData(res.data);
+        })
+    }
+
     const getLocationsData = () => {
         locationService.getAllActiveRackPositions().then(res => {
+            // console.log(res.data, "locataionsData")
             setLocations(res.data);
-            console.log(res.data, '//////////////////////////////');
         });
     }
 
-    const tableData = [
-        {
-            itemName: grnData.item,
-            location: "A1L1",
-            quantity: "200",
-        },
-        {
-            itemName: grnData.item,
-            location: "A1L2",
-            quantity: "500",
-        },
-        {
-            itemName: grnData.item,
-            location: "A1L3",
-            quantity: "1000",
-        },
-    ]
+    const saveLocation = (result) => {
+        const locationId = form.getFieldValue("locationId");
+        const qty = form.getFieldValue("quantity");
+        const m3_item_code = 1
+        const shahi_item_code = 1;
+        const item_type_id = 11;
+        const plant_id = 1;
+        const m3_style_id = 1;
+        const req = new LocationMappingReq(m3_item_code, locationId, qty, grnData.grn_item_id, shahi_item_code, item_type_id, plant_id, m3_style_id, grnData.item_id, grnData.style_id);
+        if (req) {
+            locationService.postToStockLogs(req).then((res) => {
+                if (res.status === true) {
+                    AlertMessages.getSuccessMessage("Stock Added Succesufully")
+                    form.resetFields();
+                    if (locationStatusValue === "partially Occupied") {
+                        const isActive = 1;
+                        const request = new RackLocationStatusReq(locationStatusValue, locationId, isActive);
+                        locationService.updateRackLocationStatus(request).then((res) => {
+                            if (res.status === true) {
+                                AlertMessages.getSuccessMessage("Rack location updated Succesufully")
+                                if (result === "close") {
+                                    navigate("/grn-pending-info-grid");
+                                } else if (result === "continue") {
+                                    navigate("/grn-pending-info-grid");
+                                }
+                            } else if (res.status === false) {
+                                AlertMessages.getErrorMessage("Error while updating rack location")
+                                if (result === "close") {
+                                    navigate("/grn-pending-info-grid");
+                                } else if (result === "continue") {
+                                    navigate("/grn-pending-info-grid");
+                                }
+                            }
+                        })
+                    } else if (locationStatusValue === "Occupied") {
+                        const isActive = 0;
+                        const request = new RackLocationStatusReq(locationStatusValue, locationId, isActive);
+                        locationService.updateRackLocationStatus(request).then((res) => {
+                            if (res.status === true) {
+                                AlertMessages.getSuccessMessage("Rack location updated Succesufully")
+                                if (result === "close") {
+                                    navigate("/grn-pending-info-grid");
+                                } else if (result === "continue") {
+                                    navigate("/grn-pending-info-grid");
+                                }
+                            } else if (res.status === false) {
+                                AlertMessages.getErrorMessage("Error while updating rack location")
+                                if (result === "close") {
+                                    navigate("/grn-pending-info-grid");
+                                } else if (result === "continue") {
+                                    navigate("/grn-pending-info-grid");
+                                }
+                            }                        
+                        })
+                    }
+                } else if (res.status === false) {
+                    AlertMessages.getErrorMessage("Error while adding stock")
+                }
+            })
+        }
+    }
 
     const columnsSkelton: ColumnProps<any>[] = [
         {
@@ -67,15 +129,15 @@ export const LocationMapping = () => {
         },
         {
             title: 'Item',
-            dataIndex: 'itemName',
+            dataIndex: 'item_code',
         },
         {
             title: 'Location',
-            dataIndex: 'location',
+            dataIndex: 'rack_position_name',
         },
         {
             title: 'Quantity',
-            dataIndex: 'quantity',
+            dataIndex: 'total_quantity',
             render: (text, object, index) => {
                 return <>{Number(text)}</>
             }
@@ -91,16 +153,16 @@ export const LocationMapping = () => {
                     <Col span={12}>
                         <Descriptions column={2}>
                             <Descriptions.Item label="GRN Number" style={{ width: '33%' }}>
-                                {grnData.grnNumber}
+                                {grnData.grn_number}
                             </Descriptions.Item>
                             <Descriptions.Item label="Received Quantity" style={{ width: '33%' }}>
-                                {Number(grnData.receivedQuantity)}
+                                {Number(grnData.conversion_quantity)}
                             </Descriptions.Item>
                             <Descriptions.Item label="Stock" style={{ width: '33%' }}>
-                                {grnData.physicalQuantity > 0 ? Number(grnData.physicalQuantity) : 0}
+                                {grnData.quantity > 0 ? Number(grnData.quantity) : 0}
                             </Descriptions.Item>
                             <Descriptions.Item label="Location Pending Quantity" style={{ width: '33%' }}>
-                                {Number((grnData.receivedQuantity) - (grnData.physicalQuantity))}
+                                {Number((grnData.conversion_quantity) - (grnData.quantity))}
                             </Descriptions.Item>
                         </Descriptions>
                     </Col>
@@ -115,12 +177,12 @@ export const LocationMapping = () => {
                     <Row gutter={24}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                             <Form.Item name="vendorName" label="Vendor" rules={[{ required: true, message: 'Missed Vendor' }]}>
-                                <Input disabled={grnData} defaultValue={grnData.vendorName} />
+                                <Input disabled={grnData} defaultValue={grnData.vendor_name} />
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 10 }}>
                             <Form.Item name="itemName" label="Item" rules={[{ required: true, message: 'Missed Item' }]}>
-                                <Input disabled={grnData} defaultValue={grnData.item} />
+                                <Input disabled={grnData} defaultValue={grnData.item_name} />
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
@@ -132,7 +194,7 @@ export const LocationMapping = () => {
                                     dropdownMatchSelectWidth={false}
                                 >
                                     {locations.map((locationData) => {
-                                        return <Option style={{ color: locationData.color }} value={locationData.position_id}>{locationData.rack_position_name}</Option>
+                                        return <Option style={{ backgroundColor: locationData.status === "NOT OCCUPIED" ? "green" : locationData.status === "PARTIALLY OCCUPIED" ? "orange" : "red", color: "white", marginTop: 5 }} value={locationData.position_Id}>{locationData.rack_position_name}</Option>
                                     })}
 
                                 </Select>
@@ -156,19 +218,19 @@ export const LocationMapping = () => {
                                 <Radio value={'partially Occupied'}>Partially Occupied</Radio>
                             </Radio.Group>
                         </Col>
-                        <Col span={4}>
+                        {/* <Col span={4}>
                             <Form.Item >
-                                <Button type='primary'
-                                    // onClick={e => (saveLocation('continue'))} 
+                                <Button type='primary' danger
+                                    onClick={e => (updateRackStatus())}
                                     block disabled={btnDisable}>
                                     Save & Continue...
                                 </Button>
                             </Form.Item>
-                        </Col>
+                        </Col> */}
                         <Col span={4}>
                             <Form.Item >
-                                <Button type='primary' danger
-                                    //  onClick={e => (saveLocation('close'))} 
+                                <Button type='primary'
+                                    onClick={e => (saveLocation('close'))}
                                     block disabled={btnDisable}>
                                     Save & Close
                                 </Button>
