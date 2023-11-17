@@ -353,7 +353,7 @@ export function PaymentTermsGrid(
           <Alert type='warning' message={'Active: ' + paymentTermsData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
         <Col span={5}>
-          <Alert type='info' message={'In-Active: ' + paymentTermsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + paymentTermsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         
            
            
