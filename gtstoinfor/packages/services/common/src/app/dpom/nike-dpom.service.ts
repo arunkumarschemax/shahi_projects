@@ -31,7 +31,6 @@ const path = require('path')
 const { Builder, Browser, By, Key, until } = require('selenium-webdriver');
 const moment = require('moment');
 const qs = require('querystring');
-const { Select } = require('selenium-webdriver/lib/select');
 
 @Injectable()
 export class DpomService {
@@ -367,10 +366,7 @@ export class DpomService {
                 const valueToSelect = '10-UNIQLO CO LTD';
                 await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
 
-                // drop down selection logic starts here
-
-
-                // dropdown selection logic ends here
+               
                 await driver.sleep(10000)
                 for (let dest of coLine.destinations) {
                     const colorsContainer = await driver.wait(until.elementLocated(By.xpath('//*[@id="COContainer"]')));
