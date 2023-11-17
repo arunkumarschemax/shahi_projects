@@ -82,35 +82,44 @@ export class DivisionService {
         }
       }  
 
-      async getAlldivision(req?:UserRequestDto): Promise<AllDivisionResponseModel> {
-        // const page: number = 1;
-        try {
-          const divisionDtos: DivisionDTO[] = [];
-          //retrieves all companies
-          const divisionEntities: Division[] = await this.divisionRepository.find({order :{'divisionName':'ASC'}});
-          //console.log(statesEntities);
-          if (divisionEntities) {
-            // converts the data fetched from the database which of type companies array to type StateDto array.
-            divisionEntities.forEach(divisionEntity => {
-              const converteddivisionDto: DivisionDTO = this.divisionAdapter.convertEntityToDto(
-                divisionEntity
-              );
-              divisionDtos.push(converteddivisionDto);
-            });
-            const response = new AllDivisionResponseModel(true,1,'Division retrieved successfully',divisionDtos);
-            // if(req?.createdUser){
-            //   const newLogDto = new LogsDto(0,'view', 'Currencies', 0, true, 'Currencies retrieved successfully',req.createdUser,"","")
-            //   let res = await this.logService.createLog(newLogDto);
-            //   console.log(res);
-            // }
-            return response;
-          } else {
-            throw new DivisionResponseModel(false,99998, 'Data not found');
-          }
+      // async getAlldivision(req?:UserRequestDto): Promise<AllDivisionResponseModel> {
+      //   // const page: number = 1;
+      //   try {
+      //     console.log()
+      //     const divisionDtos: DivisionDTO[] = [];
+      //     //retrieves all companies
+      //     const divisionEntities: Division[] = await this.divisionRepository.find({order :{'divisionName':'ASC'}});
+      //     //console.log(statesEntities);
+      //     if (divisionEntities) {
+      //       // converts the data fetched from the database which of type companies array to type StateDto array.
+      //       divisionEntities.forEach(divisionEntity => {
+      //         const converteddivisionDto: DivisionDTO = this.divisionAdapter.convertEntityToDto(
+      //           divisionEntity
+      //         );
+      //         divisionDtos.push(converteddivisionDto);
+      //       });
+      //       const response = new AllDivisionResponseModel(true,1,'Division retrieved successfully',divisionDtos);
+      //       // if(req?.createdUser){
+      //       //   const newLogDto = new LogsDto(0,'view', 'Currencies', 0, true, 'Currencies retrieved successfully',req.createdUser,"","")
+      //       //   let res = await this.logService.createLog(newLogDto);
+      //       //   console.log(res);
+      //       // }
+      //       return response;
+      //     } else {
+      //       throw new DivisionResponseModel(false,99998, 'Data not found');
+      //     }
           
-        } catch (err) {
-          return err;
+      //   } catch (err) {
+      //     return err;
+      //   }
+      // }
+      async getAlldivision(): Promise<AllDivisionResponseModel> {
+        const data = await this.divisionRepository.find({order :{'divisionName':'ASC'}})
+        if (data.length > 0){
+
+            return new AllDivisionResponseModel(true, 1111, 'Data retreived',data )
         }
+        return new AllDivisionResponseModel(false, 0, 'Data Not retreived',[])
       }
       async getAllActivedivision(): Promise<AllDivisionResponseModel> {
         // const page: number = 1;

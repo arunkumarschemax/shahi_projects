@@ -30,8 +30,10 @@ import { ItemSkus } from "../sku-generation/sku-generation.entity";
   
 //     name:"company_id"
 //     })
+
 // // @Index({ unique: true })
 // companyId:number;
+
 
 // // @Index({ unique: true })
 // organizationCode:string;
@@ -126,12 +128,14 @@ export class Division extends BaseEntity {
   })
   companyId: number;
 
-  @Column("varchar", {
-    nullable: true,
-    name: "organization_code",
-    length: 50,
-  })
-  organizationCode: string;
+  // @Column("varchar", {
+  //   nullable: true,
+  //   name: "organization_code",
+  //   length: 50,
+  // })
+  // organizationCode: string;
+  // // @Index({ unique: true })
+ organizationCode:string;
 
     @Column("varchar", {
     nullable: true,
