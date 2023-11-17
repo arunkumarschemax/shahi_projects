@@ -39,6 +39,7 @@ export enum VendorNameEnum {
     extracteddachser="DACHSER",
     extractedscanWell="SCANWELL",
     extractedMatrix="MATRIX",
+    extractedcogoPort="COGO PORT",
 
 
 
