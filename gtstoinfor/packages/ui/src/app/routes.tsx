@@ -173,6 +173,7 @@ import RMOperationMappingView from "./common/product-structure(BOM)/rm-operation
 import COAmendmentView from "./common/co-amendment/co-amendment-view"
 import CoLineForm from "./style-orders/co-line-form"
 import RMDetailView from "./orders/rm-detail-view"
+import FeatureSubstitution from "./BOM/feature-substitution"
 import CoLineView from "./style-orders/co-line-view"
 
 
@@ -642,6 +643,7 @@ export const AppRoutes = () => {
                 <Route path ='smv-efficiency-detail-view' element={<SMKDetailView data={''}/>}/>
                 <Route path ='rm-operation-mapping-view' element={<RMOperationMappingView />}/>
                 <Route path='substitution' element={<Substitution/>}></Route>
+                <Route path='feature-substitution' element={<FeatureSubstitution/>}></Route>
                 <Route path='substitution-view' element={<SubstitutionView />}/>
                 </Route>
                 <Route path='/procurement'>

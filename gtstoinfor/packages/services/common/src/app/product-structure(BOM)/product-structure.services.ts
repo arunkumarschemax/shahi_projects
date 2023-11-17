@@ -1,6 +1,6 @@
 
 import { Injectable } from "@nestjs/common";
-import { BomTrimResponseModel, CommonResponseModel, FgItemCodeReq, FgRmMappingResponseModel, ProductStructureResponseModel, RmMappingFilterRequest, SMVFilterRequest } from "@project-management-system/shared-models";
+import { BomTrimResponseModel, CommonResponseModel, FeatureInfoModel, FeatureSubstitutionModel, FgItemCodeReq, FgItemCreIdRequest, FgRmMappingResponseModel, ProductStructureResponseModel, RmMappingFilterRequest, SKUlistFilterRequest, SMVFilterRequest, fgInfoModel, optionInfoModel } from "@project-management-system/shared-models";
 import { SMVEfficiencyRepository } from "./repository/smv-efficency.repository";
 import { SMVEfficiencyDto } from "./dto/smv-efficency.dto";
 import { SMVEfficiencyEntity } from "./smv-efficency.entity";
@@ -8,13 +8,15 @@ import { FgRMMappingDto } from "./dto/fg-rm-mapping.dto";
 import { FgRmMappingEntity } from "./fg-rm-mapping.entity";
 import { FgRmMappingRepository } from "./repository/fg-rm-mapping.repo";
 import { FgRMItemsMappingDto } from "./dto/rm-item-dto";
+import { SKUGenerationService } from "@project-management-system/shared-services";
 
 
 @Injectable()
 export class ProductStructureService {
     constructor (
          private Repo: SMVEfficiencyRepository,
-         private fgrmRepo : FgRmMappingRepository 
+         private fgrmRepo : FgRmMappingRepository,
+         private fgSkuService : SKUGenerationService 
          
     ){}
 
@@ -136,14 +138,22 @@ export class ProductStructureService {
           
             if (data.length > 0) {
               const groupedData = data.reduce((result, item) => {
+                // console.log(item,"item")
                 const fgItemCode = item.fg_item_code;
                 const fgItemId = item.fg_rm_id;
+                const fgitemName = item.item_name;
+                const productGroup = item.productGroup;
+                const fbStyle = item.style_no
                 
                 
                 if (!result[fgItemCode]) {
                   result[fgItemCode] = {
                     fg_item_id: fgItemId,
                     fg_item_code: fgItemCode,
+                    item_name:fgitemName,
+                    productGroup:productGroup,
+                    style_no:fbStyle,
+
                     rm_items: [],
                   };
                 }
@@ -156,13 +166,18 @@ export class ProductStructureService {
                   facility:item.facility,
                   season:item.season,
                   operation_name:item.operation_name,
-                  sequence:item.sequence
+                  sequence:item.sequence,
+                  rmItemName:item.rmItemName,
+                  consumption:item.consumption,
+                  procurement: item.rmprocurment_group,
+                  product:item.productGroup,
+                  consumtion:item.consumption,
 
                 });
                 return result;
               }, {});
           
-              return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
+              return new CommonResponseModel(true, 1111, 'Rm Mapped Data retrieved', Object.values(groupedData));
             }
           
             return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
@@ -178,5 +193,48 @@ export class ProductStructureService {
             return new CommonResponseModel(false, 0, 'Data Not retreived',[])
           }
       
-
+    
+  async getFeaturesInfoByFgItem(req:FgItemCreIdRequest):Promise<CommonResponseModel>{
+    try{
+      const data =[]
+      const skureq = new SKUlistFilterRequest(req.fgItemId)
+      const sizeInfo = await this.fgSkuService.getSize(skureq)
+      const colorInfo = await this.fgSkuService.getColor(skureq)
+      const destinationInfo = await this.fgSkuService.getDestination(skureq)
+      const featureMap = new Map<string,FeatureInfoModel>()
+      const info = await this.fgrmRepo.getInfoByFgItem(req)
+      if(info){
+        for(const rec of info){
+          if(!featureMap.has(rec.feature_code)){
+            featureMap.set(rec.feature_code,new FeatureInfoModel(rec.feature_code,rec.feature_id,rec.option_group,[],[]))
+         
+          }
+          featureMap.get(rec.feature_code).optionInfo.push(new optionInfoModel(rec.option_value,rec.rm_item_id,rec.rm_item_code,rec.rm_sku_id,rec.rm_sku_code,rec.feature_option_id,rec.option_id))
+          
+        }
+        const featureModel : FeatureInfoModel[] =[];
+        featureMap.forEach((e => {
+          if(e.option == 'COLOR'){
+            for(const col of colorInfo.data){
+              featureMap.get(e.featureCode).fgInfo.push(new fgInfoModel(col.color,e.featureCode))
+            }
+          }
+          if(e.option == 'SIZE'){
+            for(const si of sizeInfo.data){
+              featureMap.get(e.featureCode).fgInfo.push(new fgInfoModel(si.size,e.featureCode))
+            }
+          }
+          if(e.option == 'DESTINATION'){
+            for(const des of destinationInfo.data){
+              featureMap.get(e.featureCode).fgInfo.push(new fgInfoModel(des.destination,e.featureCode))
+            }
+          }
+          featureModel.push(e)}))
+        data.push(new FeatureSubstitutionModel(info[0].fg_item_id,info[0].fg_item_code,featureModel))
+      }
+      return new CommonResponseModel(true,1,'Data retrieved',data)
+    }catch(err){
+      return new CommonResponseModel(false,0,'No data found')
+    }
+  }
 }

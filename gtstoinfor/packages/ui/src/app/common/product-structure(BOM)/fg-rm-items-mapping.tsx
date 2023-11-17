@@ -260,9 +260,9 @@ const getRmItemsDatabyProductGroupId1 = () => {
                                   md={{ span: 12 }}
                                   lg={{ span: 12 }}
                                   xl={{ span: 75 }}
-                                  style={{ display: "flex", flexDirection: "row", alignItems: "center",marginBottom:10 }}
+                                  style={{ display: "flex",alignItems: "center",marginBottom:10}}
                                 >
-                                  <Checkbox value={option.rmitemId} key={option.rmitemId} style={{ marginRight: '8px' }}>
+                                  <Checkbox value={option.rmitemId} key={option.rmitemId} style={{whiteSpace:'nowrap'}}>
                                     {option.itemCode}
                                   </Checkbox>
 
@@ -315,9 +315,9 @@ const getRmItemsDatabyProductGroupId1 = () => {
                                   md={{ span: 12 }}
                                   lg={{ span: 12 }}
                                   xl={{ span: 75 }}
-                                  style={{ display: "flex", flexDirection: "row", alignItems: "center",marginBottom:10 }}
+                                  style={{ display: "flex", alignItems: "center",marginBottom:10 }}
                                 >
-                                  <Checkbox value={option.rmitemId} key={option.rmitemId} style={{ marginRight: '8px' }}>
+                                  <Checkbox value={option.rmitemId} key={option.rmitemId} style={{whiteSpace:'nowrap'}}>
                                     {option.itemCode}
                                   </Checkbox>
                               

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, FgDataModel, RmDataModel, SubResponseModel, SubstituionModel, SubstituionReq, fgItemIdReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, FeatureSubstituionReq, FgDataModel, RmDataModel, SubResponseModel, SubstituionModel, SubstituionReq, fgItemIdReq } from "@project-management-system/shared-models";
 import { SubstitutionRepository } from "./substitution-repo";
 import { Substitution } from "./substituion.entity";
 import { FgItemBom } from "./fg-item-bom.entity";
@@ -7,6 +7,10 @@ import { GenericTransactionManager } from "../../typeorm-transactions";
 import { DataSource } from "typeorm";
 import { FGItemBomRepository } from "./fg-item-bom-repo";
 import { SubstituionRequest } from "./substitution-req";
+import { FeatureSubstitution } from "./feature-substituion.entity";
+import { ItemCreation } from "../fg-item/item_creation.entity";
+import { RmCreationEntity } from "../rm-items/rm-items.entity";
+import { FeatureEntity } from "../feature-creation/entities/feature.entity";
 import { Rm } from "packages/libs/shared-models/src/common/substituion/rm-sku.req";
 
 @Injectable()
@@ -267,7 +271,51 @@ export class SubstituionService{
       } catch(err){
         throw err
       }
-
-      
     }  
+
+    async createFeatureSubstitution(req: FeatureSubstituionReq):Promise<CommonResponseModel>{
+      const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
+      try{
+        await transactionalEntityManager.startTransaction();
+        let saveFlag = new Set<boolean>()
+        for(const rec of req.rmInfo){
+          const entity = new FeatureSubstitution()
+          entity.fgItemCode = req.fgItemCode
+          const fgItem = new ItemCreation()
+          fgItem.fgitemId = req.fgItemId
+          entity.fgItemInfo = fgItem
+          entity.rmItemCode = rec.rmItemCode
+          const rmItem = new RmCreationEntity()
+          rmItem.rmitemId = rec.rmItemId
+          entity.rmItemInfo = rmItem
+          entity.rmSkuCode = rec.rmSkuCode
+          entity.featureCode = rec.featureCode
+          const feature = new FeatureEntity()
+          feature.featureId = rec.featureId
+          entity.featureInfo = feature
+          entity.fgOption = rec.fgOption
+          entity.fgOptionValue = rec.fgOptionValue
+          entity.rmOption = rec.rmOption
+          entity.rmOptionValue = rec.rmOptionValue
+          entity.status = rec.status
+          const savedata = await transactionalEntityManager.getRepository(FeatureSubstitution).save(entity)
+          if(savedata){
+            saveFlag.add(true)
+          } else{
+            saveFlag.add(false)
+            break
+          }
+        }
+        if(!(saveFlag.has(false))){
+          await transactionalEntityManager.completeTransaction()
+          return new CommonResponseModel(true,1,'Feature Substitution done successfully')
+        }else{
+            await transactionalEntityManager.releaseTransaction()
+            return new CommonResponseModel(false,0,'Feature Substitution Creation Failed')
+        }
+      }catch(err){
+        await transactionalEntityManager.releaseTransaction()
+        throw err
+      }
+    }
 }
