@@ -891,5 +891,59 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+    
+
+    @Post('/getPpmDocTypeForFactory')
+    async getPpmDocTypeForFactory(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmDocTypeForFactory();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getPpmdesGeoCodeFactory')
+    async getPpmdesGeoCodeFactory(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmdesGeoCodeFactory();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    } 
+    @Post('/getPpmPoLineNumberForFactory')
+    async getPpmPoLineNumberForFactory(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmPoLineNumberForFactory();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getPpmStyleNumberFactory')
+    async getPpmStyleNumberFactory(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmStyleNumberFactory();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getPpmPlanningSeasonCodeFactory')
+    async getPpmPlanningSeasonCodeFactory(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmPlanningSeasonCodeFactory();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    
+    @Post('/getPpmPlanningSeasonYearFactory')
+    async getPpmPlanningSeasonYearFactory(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmPlanningSeasonYearFactory();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
 

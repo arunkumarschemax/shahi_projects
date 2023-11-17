@@ -525,6 +525,27 @@ export class DpomRepository extends Repository<DpomEntity> {
         if (req.factory !== undefined) {
             query.andWhere(`dpom.factory ='${req.factory}'`)
         }
+        if (req.gacStartDate !== undefined) {
+            query.andWhere(`Date(dpom.gac) BETWEEN '${req.gacStartDate}' AND '${req.gacEndDate}'`)
+        }
+        if (req.docTypeCode !== undefined) {
+            query.andWhere(`dpom.doc_type_code ='${req.docTypeCode}'`)
+        }
+        if (req.poLineItemNumber !== undefined) {
+            query.andWhere(`dpom.po_line_item_number ='${req.poLineItemNumber}'`)
+        }
+        if (req.styleNumber !== undefined) {
+            query.andWhere(`dpom.style_number ='${req.styleNumber}'`)
+        }
+        if (req.planningSeasonCode !== undefined) {
+            query.andWhere(`dpom.planning_season_code ='${req.planningSeasonCode}'`)
+        }
+        if (req.planningSeasonYear !== undefined) {
+            query.andWhere(`dpom.planning_season_year ='${req.planningSeasonYear}'`)
+        }
+        if (req.geoCode !== undefined) {
+            query.andWhere(`dpom.geo_code ='${req.geoCode}'`)
+        }
 
         return await query.getRawMany();
     }
@@ -813,4 +834,48 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
 
+    async getPpmDocTypeForFactory(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.doc_type_code,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' AND dpom.doc_type_code IS NOT Null`)
+            .groupBy(`dpom.doc_type_code`)
+        return await query.getRawMany();
+    }
+    async getPpmGeoCodeFactory(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.geo_code, dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' AND dpom.geo_code IS NOT Null`)
+            .groupBy(`dpom.geo_code`)
+
+        return await query.getRawMany();
+    }
+    async getPpmPoLineItemNumberForFactory(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.po_line_item_number,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' AND dpom.po_line_item_number IS NOT Null`)
+            .groupBy(`dpom.po_line_item_number`)
+        return await query.getRawMany();
+    }
+    
+    async getPpmStyleNumberForFactory(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.style_number,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' AND dpom.style_number IS NOT Null`)
+            .groupBy(`dpom.style_number`)
+        return await query.getRawMany();
+    }
+    async getPpmplanningSeasonCodeForFactory(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.planning_season_code,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' AND dpom.planning_season_code IS NOT Null`)
+            .groupBy(`dpom.planning_season_code`)
+        return await query.getRawMany();
+    }
+    async getPpmplanningSeasonYearForFactory(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.planning_season_year,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' AND dpom.planning_season_year IS NOT Null`)
+            .groupBy(`dpom.planning_season_year`)
+        return await query.getRawMany();
+    }
 }

@@ -349,5 +349,26 @@ export class NikeService extends CommonAxiosService {
     async getColineOrderNo(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getColineOrderNo")
     }
+    
+    async getPpmDocTypeForFactory(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmDocTypeForFactory")
+    }
+
+    async getPpmdesGeoCodeFactory(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmdesGeoCodeFactory")
+    }
+    
+    async getPpmPoLineNumberForFactory(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmPoLineNumberForFactory")
+    }
+    async getPpmStyleNumberFactory(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmStyleNumberFactory")
+    } 
+    async getPpmPlanningSeasonCodeFactory(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmPlanningSeasonCodeFactory")
+    }
+    async getPpmPlanningSeasonYearFactory(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmPlanningSeasonYearFactory")
+    }
 }
 
