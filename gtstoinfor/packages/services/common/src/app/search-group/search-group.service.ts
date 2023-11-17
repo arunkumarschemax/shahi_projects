@@ -80,8 +80,8 @@ export class SearchGrpService {
               }
             );
             const internalMessage: string = !roleExists.isActive
-              ? "Search Group Activated Successfully"
-              : "Search Group Daectivated Successfully";
+              ? "Search Group is  Activated Successfully"
+              : "Search Group  is Deactivated Successfully";
             return new SearchGrpResponse(true, 54654, internalMessage);
           } else {
             return new SearchGrpResponse(false, 654695, "Data Not Found");
