@@ -267,7 +267,7 @@ export class DpomService {
         }
     }
 
-    @Cron('*/10 * * * *')
+    // @Cron('*/10 * * * *')
     async createCOline(req: any): Promise<CommonResponseModel> {
         const poDetails = await this.coLineRepository.getDataforCOLineCreation();
         if (!poDetails.length) {
@@ -349,6 +349,11 @@ export class DpomService {
                 await driver.findElement(By.id('CreateOrderID')).click();
                 await driver.wait(until.elementLocated(By.id('bpo')))
                 await driver.findElement(By.id('bpo')).sendKeys(coLine.buyerPo);
+                // const dropdownElement = await driver.wait(until.elementLocated(By.id('byd')))
+                // const dropdown = new Select(dropdownElement)
+                // const optionElement = await dropdownElement.findElement(By.xpath('//*[@id="byd"]/option[40]'));
+                // console.log(optionElement)
+                // await driver.executeScript("arguments[0].click();", optionElement);
                 // await driver.findElement(By.id('getNikeData')).click();
                 await driver.wait(until.elementLocated(By.name('dojo.EXFACTORYDATE')));
                 await driver.findElement(By.name('dojo.EXFACTORYDATE')).clear();
@@ -447,7 +452,7 @@ export class DpomService {
                     }
                 }
                 await driver.sleep(10000)
-                // const element = await driver.findElement(By.id('OrderCreateID')).click();
+                const element = await driver.findElement(By.id('OrderCreateID')).click();
                 await driver.wait(until.alertIsPresent(), 10000);
                 // Switch to the alert and accept it (click "OK")
                 const alert = await driver.switchTo().alert();
@@ -455,7 +460,6 @@ export class DpomService {
                 if (await this.isAlertPresent(driver)) {
                     const alert = await driver.switchTo().alert();
                     const alertText = await alert.getText();
-                    console.log('Alert Text:', alertText);
                     const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'failed', errorMsg: alertText });
                     await alert.accept();
                     await driver.navigate().refresh();
