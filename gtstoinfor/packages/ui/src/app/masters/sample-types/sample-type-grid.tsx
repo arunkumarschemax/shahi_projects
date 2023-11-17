@@ -226,7 +226,6 @@ export const SampleTypesGrid = (props: SampleTypesGridProps) => {
    * @param extra 
    */
   const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
   }
 
   useEffect(() => {getAllSampleTypes();}, [])
@@ -261,10 +260,9 @@ export const SampleTypesGrid = (props: SampleTypesGridProps) => {
    * @param variantData 
    */
   const updateOperationGroup = (sampleTypeData: SampleTypesDto) => {
-    console.log(sampleTypeData,'------sampleTypeData')
+
     sampleTypeData.updatedUser = JSON.parse(localStorage.getItem('username'))
     service.updateSampleType(sampleTypeData).then(res => {
-      console.log(res);
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Successfully');
         setDrawerVisible(false);
@@ -284,7 +282,6 @@ export const SampleTypesGrid = (props: SampleTypesGridProps) => {
     const req = new SampleTypesRequest(data.sampleTypeId,'admin',data.versionFlag)
     req.isActive = data.isActive ? false : true;
     service.activateOrDeactivateSampleTypes(req).then(res => {
-      console.log(res);
       if (res.status) {
         getAllSampleTypes();
         AlertMessages.getSuccessMessage(res.internalMessage);
@@ -326,6 +323,7 @@ export const SampleTypesGrid = (props: SampleTypesGridProps) => {
           columns={columnsSkelton}
           dataSource={Data}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

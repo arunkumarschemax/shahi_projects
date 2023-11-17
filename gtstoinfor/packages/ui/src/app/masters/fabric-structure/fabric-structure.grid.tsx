@@ -52,7 +52,7 @@ export function FabricStructuresGrid(props: FabricStructuresGridProps) {
  
   const deleteUser = (Data:FabricStructuresDTO) => {
     Data.isActive=Data.isActive?false:true;
-    service.activateOrDeactivateFabricStructure(Data).then(res => { console.log(res);
+    service.activateOrDeactivateFabricStructure(Data).then(res => {
       if (res.status) {
         getAll();
         AlertMessages.getSuccessMessage(res.internalMessage); 
@@ -292,7 +292,7 @@ export function FabricStructuresGrid(props: FabricStructuresGridProps) {
 
   const updateUser = (Data: FabricStructuresDTO) => {
     Data.updatedUser= JSON.parse(localStorage.getItem('username'))
-      service.update(Data).then(res => { console.log(res);
+      service.update(Data).then(res => {
         if (res.status) {
           AlertMessages.getSuccessMessage('Updated Successfully');
           getAll();
@@ -312,7 +312,6 @@ export function FabricStructuresGrid(props: FabricStructuresGridProps) {
     setDrawerVisible(false);
   }
   const onChange=(pagination, filters, sorter, extra)=> {
-    console.log('params', pagination, filters, sorter, extra);
   }
 
 
@@ -344,6 +343,7 @@ export function FabricStructuresGrid(props: FabricStructuresGridProps) {
           dataSource={FabricStructuresData}
           scroll={{x:true}}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

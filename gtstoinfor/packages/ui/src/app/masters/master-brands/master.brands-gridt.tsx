@@ -279,7 +279,6 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
 // const updateImage = `http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/${encodedFileName}`;
 
             const updateImage = 'http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/' + rowData.filePath;
-console.log('Update Image URL:', updateImage);
 
 return (
   <div>
@@ -436,6 +435,7 @@ return (
           dataSource={masterBrandData}
           scroll = {{x:true}}
           pagination={{
+            pageSize: 50 ,
             onChange(current) {
               setPage(current);
             }
