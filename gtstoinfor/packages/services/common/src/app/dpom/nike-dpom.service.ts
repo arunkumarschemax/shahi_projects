@@ -663,7 +663,7 @@ export class DpomService {
                 return new CommonResponseModel(false, 0, 'something went wrong')
             } else {
                 await transactionManager.completeTransaction()
-                await this.syncCRMData();
+                // await this.syncCRMData();
                 return new CommonResponseModel(true, 1, 'Data retrived successfully')
             }
         } catch (error) {
