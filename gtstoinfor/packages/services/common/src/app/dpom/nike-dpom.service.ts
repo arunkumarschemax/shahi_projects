@@ -330,8 +330,14 @@ export class DpomService {
                     const response = await axios.post(`https://uniqlov2-backend.xpparel.com/api/orders/getTrimOrderDetails`, req);
                     const coData = response.data.data;
                     coLine.buyerPo = coData.buyerPo;
+                    const gacDate = new Date(coData.deliveryDate); // Parse the GAC date
+                    // Calculate the date 7 days before the GAC date
+                    const sevenDaysBeforeGAC = new Date(gacDate);
+                    sevenDaysBeforeGAC.setDate(gacDate.getDate() - 7);
+                    // Format the result as 'DD/MM/YYYY'
+                    const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBeforeGAC)
                     coLine.deliveryDate = moment(coData.deliveryDate).format('DD/MM/YYYY')
-                    coLine.exFactoryDate = moment(coData.deliveryDate).format('DD/MM/YYYY')
+                    coLine.exFactoryDate = exFactoryDate
                     coLine.destinations = coData.destinations
                 }
                 const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
@@ -348,11 +354,13 @@ export class DpomService {
                 await driver.sleep(3000)
                 await driver.findElement(By.id('CreateOrderID')).click();
                 await driver.wait(until.elementLocated(By.id('bpo')))
+                await driver.findElement(By.id('bpo')).clear();
                 await driver.findElement(By.id('bpo')).sendKeys(coLine.buyerPo);
                 await driver.wait(until.elementLocated(By.name('dojo.EXFACTORYDATE')));
                 await driver.findElement(By.name('dojo.EXFACTORYDATE')).clear();
                 await driver.findElement(By.name('dojo.EXFACTORYDATE')).sendKeys(coLine.exFactoryDate);
                 await driver.wait(until.elementLocated(By.name('dojo.delydt')));
+                await driver.findElement(By.name('dojo.delydt')).clear();
                 await driver.findElement(By.name('dojo.delydt')).sendKeys(coLine.deliveryDate);
                 await driver.wait(until.elementLocated(By.name('byd')));
                 const dropdown = await driver.findElement(By.name('byd'));
@@ -362,11 +370,9 @@ export class DpomService {
                     const value = await option.getAttribute('value');
                     optionValues.push(value);
                 }
-                const number = optionValues.find(value => value.includes('96')); // give the dynamic value here
-                const valueToSelect = '10-UNIQLO CO LTD';
-                await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
 
-               
+                const number = optionValues.find(value => value.includes('48')); // give the dynamic value here
+                await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
                 await driver.sleep(10000)
                 for (let dest of coLine.destinations) {
                     const colorsContainer = await driver.wait(until.elementLocated(By.xpath('//*[@id="COContainer"]')));
