@@ -39,7 +39,6 @@ export class StyleOrderRepository extends Repository<StyleOrder> {
     }
     
     async getAllStyleOrders(req: styleOrderReq):Promise<any>{
-        console.log(req);
         
         const query = await this.createQueryBuilder('co')
         .select(`item_code,co.order_number,agent,discount_amount,discount_per,discount_per,f.name,f.name AS factory,wh.warehouse_name,cu.currency_name,order_date,instore_date,co.sale_price,buyer_po_number,shipment_type,buyer_style,ct.co_type,b.buyer_name,price_quantity,SUM(c.order_quantity)AS qty,co.co_id,co.fg_item_id,co.status,payter.payment_terms_name,payme.payment_method,delimet.delivery_method,pacter.package_terms_name,delter.delivery_terms_name`)

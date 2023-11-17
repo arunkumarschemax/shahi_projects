@@ -53,46 +53,48 @@ let filterData = data.filter(e =>e.quality === selectedQuality)
           render: (text, object, index) => (page - 1) * 10 + (index + 1),
         },
         {
-          title: "Style",
+          title: <div style={{textAlign:'center'}}>Style</div>,
           dataIndex: "style",
          
         },
         {
-          title: "Color",
+          title: <div style={{textAlign:'center'}}>Color</div>,
           dataIndex: "colour",
          
         },
         {
-          title: "Garment Quantity",
+          title: <div style={{textAlign:'center'}}>Garment Quantity</div>,
           dataIndex: "garment_quantity",
        
         },
         {
-          title: "Consumption(YY)",
+          title: <div style={{textAlign:'center'}}>Consumption(YY)</div>,
           dataIndex: "consumption",
        
         },
         {
-          title: "Wastage(X%)",
+          title: <div style={{textAlign:'center'}}>Wastage(X%)</div>,
           dataIndex: "wastage",
        
         },
 
         {
           title: "Fabric Quantity",
+          align:'center',
           dataIndex: "fabric_quantity",
        
         },
         {
           title: "UOM",
           dataIndex: "uom",
-       
+          align:'center',
        
         },
 
        
           {
             title: 'Mapped',
+            align:'center',
             render: (text, val) => (
               <>
               <Button onClick={() => mappedModal(text,val) }>Mapped Items</Button>              
@@ -104,11 +106,12 @@ let filterData = data.filter(e =>e.quality === selectedQuality)
        
         {
           title: "Item Code",
+          align:'center',
           dataIndex: "itemCode",
 
         },
         {
-          title: "Description",
+          title: <div style={{textAlign:'center'}}>Description</div>,
           dataIndex: "description",
          
         },

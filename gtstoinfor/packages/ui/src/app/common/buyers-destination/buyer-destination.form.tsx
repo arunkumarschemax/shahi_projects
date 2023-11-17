@@ -669,8 +669,21 @@ export const BuyersDestinationForm = () => {
     )}
   </Row>
 )}
-
-        <Row justify={"end"}>
+   <Col span={24} style={{ textAlign: "right" }}>
+        <Button type="primary"  htmlType="submit" disabled={selectedOptions.length === 0}>
+              Submit
+            </Button>
+          {/* {props.isUpdate === false && ( */}
+          <Button
+            htmlType="button"
+            style={{ margin: "0 14px" }}
+            onClick={onReset}
+          >
+            Reset
+          </Button>
+          {/* )} */}
+        </Col>
+        {/* <Row justify={"end"}>
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
@@ -699,7 +712,7 @@ export const BuyersDestinationForm = () => {
               <Button onClick={onReset}>Reset</Button>
             </Form.Item>
           </Col>
-        </Row>
+        </Row> */}
       </Form>
     </Card>
   );

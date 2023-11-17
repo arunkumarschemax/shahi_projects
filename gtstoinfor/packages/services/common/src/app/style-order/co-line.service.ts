@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CoLine } from "./co-line.entity";
 import { DataSource, Repository } from "typeorm";
-import { CoLineReq, CoLineResponseModel } from "@project-management-system/shared-models";
+import { CoLineReq, CoLineResponseModel, CommonResponseModel, StyleOrderIdReq, styleOrderReq } from "@project-management-system/shared-models";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { Size } from "../sizes/sizes-entity";
 import { Destination } from "../destination/destination.entity";
@@ -10,6 +10,7 @@ import { Colour } from "../colours/colour.entity";
 import { UomEntity } from "../uom/uom-entity";
 import { UomRequest } from "../uom/dto/uom.request";
 import { StyleOrder } from "./style-order.entity";
+import { CoLineRepository } from "./co-line.repo";
 
 @Injectable()
 
@@ -17,10 +18,11 @@ export class CoLineService{
     constructor(
         @InjectRepository(CoLine)
         private repo:Repository <CoLine>,
+        private coLineRepo:CoLineRepository,
         private dataSource: DataSource
 
     ){}
-         async createCoLine(req:CoLineReq):Promise<CoLineResponseModel>{
+         async createCoLine(req:CoLineReq):Promise<CoLineResponseModel>{-
             console.log(req,'----------')
             const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
             try{
@@ -87,5 +89,18 @@ export class CoLineService{
             }
         }
 
-    
+        async getAllCoLine(req:styleOrderReq): Promise<CommonResponseModel> {
+            try {
+            const data = await this.coLineRepo.getAllCoLines(req)
+         
+            if(data.length > 0){
+                return new CommonResponseModel(true,1,'Data retrieved',data)
+            } else{
+                return new CommonResponseModel(false,1,'No data found')
+            }        
+              } catch (err) {
+                throw err;
+              }
+             
+            }  
 }

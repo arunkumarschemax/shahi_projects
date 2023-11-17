@@ -23,6 +23,7 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
   const [imageUrl,setImageUrl] = useState('')
   const [loading, setLoading] = useState<boolean>(false);
   const [isUpdateImg, setIsUpdateImg]=useState('')
+  const [disable, setDisable] = useState<boolean>(false);
 
   const Service = new FabricWeaveService();
 
@@ -35,7 +36,6 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
 
   useEffect(() => {
     if(props.data){
-     console.log(props.data.fabricWeaveImageName)
      const updateImage ='http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/'+props.data.fabricWeaveImageName
      // const updateImage ='http://165.22.220.143/crm/gtstoinfor/upload-files/'+props.styleData.styleFileName
      setIsUpdateImg(updateImage)
@@ -49,6 +49,12 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
       <div style={{ marginTop: 8 }}>Upload Style</div>
     </div>
   );
+  let createdUser = "";
+
+  if (!props.isUpdate) {
+    // createdUser= localStorage.getItem("createdUser");
+    createdUser = "admin";
+  }
 
   const onReset = () => {
     form.resetFields();
@@ -63,14 +69,14 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
   }
 
   const saveFabricWeave = (data: FabricWeaveDto) => {
-
+    setDisable(true);
     // const file:any = data.fabricWeaveImageName
     // const abc:string =file.file.name
-     console.log(data,'data')
     const req = new FabricWeaveDto(data.fabricWeaveId,data.fabricWeaveName,data.fabricWeaveCode,null,null,data.isActive,data.createdAt,data.createdUser,data.updatedAt,data.updatedUser,data.versionFlag)
     Service.createFabricWeave(req).then((res) => {
       // console.log(req,'req');
-      
+      setDisable(false);
+
         if (res.status) {
           AlertMessages.getSuccessMessage('Fabric Weave Created Successfully');
           if(fileList.length > 0){
@@ -91,7 +97,7 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
         }
       })
       .catch((err) => {
-        // setDisable(false)
+         setDisable(false)
         message.success(err.message,2);
       });
    
@@ -101,8 +107,8 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
     if (props.isUpdate) {
       props.updateFabricWeave(values, fileList);
     } else {
+      setDisable(false);
       saveFabricWeave(values);
-      console.log(values,'ooooooooooooooooooooooooo')
     }
   };
 

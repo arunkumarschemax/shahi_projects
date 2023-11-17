@@ -12,6 +12,7 @@ import { CoUpdateRepository } from './co-updates.repo';
 import { CoUpdateEntity } from './co-updates.entity';
 import { CoLine } from './co-line.entity';
 import { CoLineService } from './co-line.service';
+import { CoLineRepository } from './co-line.repo';
 
 
 @Module({
@@ -19,7 +20,7 @@ import { CoLineService } from './co-line.service';
         TypeOrmModule.forFeature([StyleOrder,OrderLine,CoUpdateEntity,CoLine
         ]),
       ],
-      providers: [ApplicationExceptionHandler,StyleOrderService,StyleOrderRepository,OrderLineRepository,ItemCreation,CoUpdateRepository,CoLineService],
+      providers: [ApplicationExceptionHandler,StyleOrderService,StyleOrderRepository,OrderLineRepository,ItemCreation,CoUpdateRepository,CoLineService,CoLineRepository],
       controllers: [StyleOrderController],
       exports: []
 })

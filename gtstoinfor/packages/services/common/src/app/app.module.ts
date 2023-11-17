@@ -94,11 +94,9 @@ import { SubstituionModule } from './substituion/substituion.module';
       username: appConfig.database.username,
       password: appConfig.database.password,
       database: appConfig.database.dbName,
-     
       autoLoadEntities: true,
       synchronize: false,
-      logging: false,
-      
+      logging: true,
       extra: {
         connectionLimit: 20
       }
