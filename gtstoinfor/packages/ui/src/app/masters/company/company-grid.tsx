@@ -465,7 +465,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
 
         </Col>
         <Col span={5}>
-        <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
           {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
         </Col>
         {/* <Col>
@@ -481,6 +481,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
           columns={columnsSkelton}
           dataSource={variantData}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

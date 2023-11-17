@@ -148,14 +148,14 @@ export class CurrenciesService {
                        
                         if (currencyExists.isActive) {
                             if (currencyStatus.affected) {
-                                const currencyResponse: CurrencyResponseModel = new CurrencyResponseModel(true, 10115, 'Currency is de-activated successfully');
+                                const currencyResponse: CurrencyResponseModel = new CurrencyResponseModel(true, 10115, 'Currency is Deactivated successfully');
                                 return currencyResponse;
                             } else {
                                 throw new CurrencyResponseModel(false,10111, 'Currency is already deactivated');
                             }
                         } else {
                             if (currencyStatus.affected) {
-                                const CurrencyResponse: CurrencyResponseModel = new CurrencyResponseModel(true, 10114, 'Currency is activated successfully');
+                                const CurrencyResponse: CurrencyResponseModel = new CurrencyResponseModel(true, 10114, 'Currency is Activated successfully');
                                 return CurrencyResponse;
                             } else {
                                 throw new CurrencyResponseModel(false,10112, 'Currency is already  activated');
