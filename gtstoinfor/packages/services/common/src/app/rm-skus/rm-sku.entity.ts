@@ -13,12 +13,11 @@ export class RmSkus {
   })
   rmItemId : number
 
-  @Column('enum',{
+  @Column('varchar',{
     name:'item_type',
-    enum:RmItemTypeEnum,
     nullable: false
   })
-  itemType : RmItemTypeEnum
+  itemType : string
 
   @Column('varchar',{
     name:'rm_sku_code',

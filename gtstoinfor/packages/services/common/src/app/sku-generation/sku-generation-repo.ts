@@ -75,21 +75,30 @@ export class ItemSkuRepository extends Repository<ItemSkus> {
     async getSize(req:SKUlistFilterRequest):Promise<any>{
         const query = await this.createQueryBuilder('i')
      .select(`size,size_id`)
-     .groupBy(`size_id`)
+     if(req.itemNoId != undefined){
+        query.where(`fg_item_id = ${req.itemNoId}`)
+     }
+     query.groupBy(`size_id`)
      return await query.getRawMany()
     }
 
     async getColor(req:SKUlistFilterRequest):Promise<any>{
         const query = await this.createQueryBuilder()
         .select(`color,color_id`)
-        .groupBy(`color_id`)
+        if(req.itemNoId != undefined){
+            query.where(`fg_item_id = ${req.itemNoId}`)
+         }
+        query.groupBy(`color_id`)
         return await query.getRawMany()
     }
 
     async getDestination(req:SKUlistFilterRequest):Promise<any>{
         const query = await this.createQueryBuilder()
         .select(`destination,destination_id`)
-        .groupBy(`destination_id`)
+        if(req.itemNoId != undefined){
+            query.where(`fg_item_id = ${req.itemNoId}`)
+         }
+        query.groupBy(`destination_id`)
         return await query.getRawMany()
     }
 }

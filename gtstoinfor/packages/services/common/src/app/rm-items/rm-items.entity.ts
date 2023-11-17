@@ -1,6 +1,7 @@
 import { IsImportedItemEnum, PropertyEnum } from "@project-management-system/shared-models";
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { FgItemBom } from "../substituion/fg-item-bom.entity";
+import { FeatureSubstitution } from "../substituion/feature-substituion.entity";
 
 @Entity('rm_items')
 export class RmCreationEntity{
@@ -338,4 +339,7 @@ useInOperation:string;
 
   @OneToMany(type=>FgItemBom, fg=>fg.rmItemInfo,{cascade: true})
     fgItemBomInfo:FgItemBom[];
+
+    @OneToMany(type=>FeatureSubstitution, item=>item.rmItemInfo,{cascade: true})
+    featureSubstitutionInfo:FeatureSubstitution;
 }

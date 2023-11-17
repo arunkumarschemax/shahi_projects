@@ -259,10 +259,9 @@ export function SKUGeneration  (props:FormProps){
     setSelectedColors([])
     setSelectedDestinations([])
     setSelectedSizes([])
+    mappingInfo()
 
   }
-
-
 
   return (
     <Card  title={<><span>FG SKU Mapping</span></>} extra={<Link to='/materialCreation/sku-list'><Button type='primary'>View</Button></Link>}>
@@ -277,9 +276,9 @@ export function SKUGeneration  (props:FormProps){
       <br/>
       <Form layout="horizontal" form={form}>
       <Row gutter={24}>
-        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 6 }}>
             <Form.Item label='FG Item' name='itemCode' rules={[{required:true,message:'Item is required'}]}>
-                <Select showSearch allowClear placeholder='Select Item' onChange={onItemCodeChange}>
+                <Select showSearch allowClear placeholder='Select FG Item' onChange={onItemCodeChange}>
                     {/* <Option key='itemcode' value='itemcode' itemId='itemId'>Item Codes </Option> */}
                     {
                         itemcodes.map((e)=>{
@@ -291,7 +290,7 @@ export function SKUGeneration  (props:FormProps){
                 </Select>
             </Form.Item>
         </Col>
-        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 6 }}>
             <Form.Item label='Style' name='style' rules={[{required:true,message:'Style is required'}]}>
                 <Select showSearch allowClear placeholder='Select Style'>
                     {/* <Option key='itemcode' value='itemcode' itemId='itemId'>Item Codes </Option> */}
@@ -305,7 +304,7 @@ export function SKUGeneration  (props:FormProps){
                 </Select>
             </Form.Item>
         </Col>
-        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 6 }}>
             <Form.Item label='Division' name='divisionId' rules={[{required:true,message:'Divison is required'}]}>
                 <Select showSearch allowClear placeholder='Select Division'>
                     {/* <Option key='itemcode' value='itemcode' itemId='itemId'>Item Codes </Option> */}
@@ -438,9 +437,17 @@ export function SKUGeneration  (props:FormProps){
           </Col>
         </Row>
         <Row justify={'end'}>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 2 }}>
           <Form.Item>
             <Button type='primary' onClick={onSubmit} disabled={form.getFieldValue('itemCode') !== undefined && form.getFieldValue('divisionId') !== undefined && selectedColors.length > 0 && selectedSizes.length > 0 && selectedDestinations.length > 0 ? false : true}>Submit</Button>
           </Form.Item>
+        </Col>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 2 }}>
+        <Form.Item>
+            <Button onClick={resetHandler}>Reset</Button>
+        </Form.Item>
+        </Col>
+
         </Row>
       </Form>
     </Card>

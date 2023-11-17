@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FeatureRepository } from './repo/feature-repository';
-import { CommonResponseModel, FeatureDTO, FeatureFilterRequest, FeatureModel, FeatureOptionModel, FeatureResponseModel, OptionEnum } from '@project-management-system/shared-models';
+import { CommonResponseModel, FeatureDTO, FeatureFilterRequest, FeatureModel, FeatureOptionModel, FeatureResponseModel, FgItemCreIdRequest, OptionEnum } from '@project-management-system/shared-models';
 import { FeatureEntity } from './entities/feature.entity';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { FeatureOptionEntity } from './entities/feature-option-entity';
@@ -25,7 +25,6 @@ export class FeatureService {
         if(featureData){
           throw new ErrorResponse(0,'Feature already exists!!!');
         }
-        console.log(req,'------------------')
         const featureEntity = new FeatureEntity()
         featureEntity.featureName = req.featureName
         const data = await this.featureRepo.getFeatureId()
@@ -141,7 +140,7 @@ async getOptionGropup(): Promise<CommonResponseModel> {
       const destMap = new Map<number,string>()
       destInfo.data.forEach(des => destMap.set(des.destinationId,des.destination))
       const data = await this.featureRepo.find({relations:['fChild']})
-            let featureInfo = []
+      let featureInfo = []
       if (data.length > 0){
         for(const rec of data){
           let featureOptions: FeatureOptionModel[] =[]
@@ -166,5 +165,6 @@ async getOptionGropup(): Promise<CommonResponseModel> {
       throw err
     }
   }
+
 
 }

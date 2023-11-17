@@ -1,4 +1,4 @@
-import { FgRmMappingRequest, FgRmMappingResponseModel, CommonResponseModel, FgItemCodeReq, ProductStructureResponseModel, SMVEfficiencyRequest } from "@project-management-system/shared-models";
+import { FgRmMappingRequest, FgRmMappingResponseModel, CommonResponseModel, FgItemCodeReq, ProductStructureResponseModel, SMVEfficiencyRequest, FgItemCreIdRequest } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 
@@ -26,6 +26,10 @@ async getRmMapped(req:any): Promise<CommonResponseModel> {
 
   async getAllSmvData(req:any): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getAllSmvData",req)
+  }
+
+  async getFeaturesInfoByFgItem(req:FgItemCreIdRequest): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getFeaturesInfoByFgItem",req)
   }
 
 
