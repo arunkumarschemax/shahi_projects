@@ -132,6 +132,13 @@ export class Division extends BaseEntity {
   })
   organizationCode: string;
 
+    @Column("varchar", {
+    nullable: true,
+    name: "updated_user",
+    length:50
+})
+updatedUser: string | null;
+
   @Column("boolean", {
     nullable: false,
     default: true,
