@@ -2068,10 +2068,10 @@ export class DpomService {
                     waitUntil: 'networkidle0', // Wait until there are no more network connections
                 }).then(async () => {
                     // const filePath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO/3503368108.pdf';
-                    const directoryPath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO';
+                    const directoryPath = 'D:/Nike PDF/Nike-PDF PO';
                     // Specify the source and destination directories
-                    const sourceDirectory = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO';
-                    const destinationDirectory = 'C:/Users/saipr/Downloads/PDF PO & DIA/Read';
+                    const sourceDirectory = 'D:/Nike PDF/Nike-PDF PO';
+                    const destinationDirectory = 'D:/Nike PDF/Read';
                     const files = fs.readdirSync(directoryPath)
                     for (const file of files) {
                         await page.waitForSelector('input[type="file"]');
@@ -2086,19 +2086,18 @@ export class DpomService {
                         await page.waitForSelector('button.ant-btn-primary')
                         await page.click('button.ant-btn-primary');
                         // Check the status after submission
-                        const reset = await page.waitForSelector('button.ant-btn-default')
-                        console.log(reset, 'reset')
-                        if (reset) {
-                            await page.click('button.ant-btn-default')
-                        } else {
-                            const sourceFilePath = path.join(sourceDirectory, file);
-                            const destinationFilePath = path.join(destinationDirectory, file);
-                            fs.rename(sourceFilePath, destinationFilePath, (err) => {
-                                if (err) {
-                                    return new CommonResponseModel(false, 0, '')
-                                }
-                            });
-                        }
+                        // const reset = await page.waitForSelector('button.ant-btn-default')
+                        // if (reset) {
+                        //     await page.click('button.ant-btn-default')
+                        // } else {
+                        const sourceFilePath = path.join(sourceDirectory, file);
+                        const destinationFilePath = path.join(destinationDirectory, file);
+                        fs.rename(sourceFilePath, destinationFilePath, (err) => {
+                            if (err) {
+                                return new CommonResponseModel(false, 0, '')
+                            }
+                        });
+                        // }
                     }
                 });
             }, 4000);
@@ -2132,10 +2131,10 @@ export class DpomService {
                     waitUntil: 'networkidle0', // Wait until there are no more network connections
                 }).then(async () => {
                     // const filePath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO/3503368108.pdf';
-                    const directoryPath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-DIA';
+                    const directoryPath = 'D:/Nike PDF/Nike-DIA';
                     // Specify the source and destination directories
-                    const sourceDirectory = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-DIA';
-                    const destinationDirectory = 'C:/Users/saipr/Downloads/PDF PO & DIA/Read';
+                    const sourceDirectory = 'D:/Nike PDF/Nike-DIA';
+                    const destinationDirectory = 'D:/Nike PDF/Read';
                     const files = fs.readdirSync(directoryPath)
                     for (const file of files) {
                         await page.waitForSelector('input[type="file"]');
@@ -2150,19 +2149,18 @@ export class DpomService {
                         await page.waitForSelector('button.ant-btn-primary')
                         await page.click('button.ant-btn-primary');
                         // Check the status after submission
-                        const reset = await page.waitForSelector('button.ant-btn-default')
-                        console.log(reset, 'reset')
-                        if (reset) {
-                            await page.click('button.ant-btn-default')
-                        } else {
-                            const sourceFilePath = path.join(sourceDirectory, file);
-                            const destinationFilePath = path.join(destinationDirectory, file);
-                            fs.rename(sourceFilePath, destinationFilePath, (err) => {
-                                if (err) {
-                                    return new CommonResponseModel(false, 0, '')
-                                }
-                            });
-                        }
+                        // const reset = await page.waitForSelector('button.ant-btn-default')
+                        // if (reset) {
+                        //     await page.click('button.ant-btn-default')
+                        // } else {
+                        const sourceFilePath = path.join(sourceDirectory, file);
+                        const destinationFilePath = path.join(destinationDirectory, file);
+                        fs.rename(sourceFilePath, destinationFilePath, (err) => {
+                            if (err) {
+                                return new CommonResponseModel(false, 0, '')
+                            }
+                        });
+                        // }
                     }
                 });
             }, 4000);
