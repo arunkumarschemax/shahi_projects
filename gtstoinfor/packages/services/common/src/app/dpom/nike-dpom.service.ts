@@ -555,7 +555,7 @@ export class DpomService {
             const entity = new NikeFileUploadEntity()
             entity.fileName = 'DPOM Api';
             entity.filePath = 'DPOM Api';
-            entity.status = 'Success';
+            entity.dpomStatus = 'Success';
             entity.createdUser = 'API sync'
             const save = await transactionManager.getRepository(NikeFileUploadEntity).save(entity);
             for (const orderDetail of orderDetails.data) {
@@ -1042,7 +1042,7 @@ export class DpomService {
         const entity = new NikeFileUploadEntity()
         entity.fileName = filename;
         entity.filePath = filePath;
-        entity.status = 'uploading';
+        entity.dpomStatus = 'uploading';
         const file = await this.fileUploadRepo.findOne({ where: { fileName: filename } })
         if (file) {
             return new CommonResponseModel(false, 0, 'File with same name already uploaded');
@@ -1060,9 +1060,9 @@ export class DpomService {
     async updateFileStatus(req: FileStatusReq): Promise<CommonResponseModel> {
         let update
         if (req.status === 'Failed') {
-            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, isActive: false });
+            update = await this.fileUploadRepo.update({ id: req.fileId }, { dpomStatus: req.status, isActive: false });
         } else {
-            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status })
+            update = await this.fileUploadRepo.update({ id: req.fileId }, { dpomStatus: req.status })
         }
         if (update.affected) {
             return new CommonResponseModel(true, 1, 'updated successfully');
