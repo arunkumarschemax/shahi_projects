@@ -67,4 +67,13 @@ export class ProductStructureController {
     }
 }
 
-    }
+  @Post('/getFeaturesInfoByFgItem')
+  async getFeaturesInfoByFgItem(@Body() req:any): Promise<CommonResponseModel> {
+  try {
+      return await this.Servie.getFeaturesInfoByFgItem(req)
+  } catch (error) {
+    return (this.applicationExceptionHandler.returnException(CommonResponseModel, error));
+  }
+  }
+
+}

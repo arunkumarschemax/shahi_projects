@@ -211,7 +211,7 @@ export class SampleTypesService{
                        
                         if (sampleTypesExists.isActive) {
                             if (currencyStatus.affected) {
-                                const currencyResponse: SampleTypesResponseModel = new SampleTypesResponseModel(true, 10115, 'Sample Type is de-activated successfully');
+                                const currencyResponse: SampleTypesResponseModel = new SampleTypesResponseModel(true, 10115, 'Sample Type is Deactivated successfully');
                                 return currencyResponse;
                             } else {
                                 throw new SampleTypesResponseModel(false,10111, 'Sample Type is already deactivated');

@@ -230,10 +230,10 @@ export const Substitution = () => {
     }
 
     return(
-        <Card title='Substituion' size='small' extra={<span><Button type='primary' onClick={() => {navigate('/product-structure/substitution-view')}}>View</Button></span>}>
+        <Card title='Substituion' extra={<span><Button type='primary' onClick={() => {navigate('/product-structure/substitution-view')}}>View</Button></span>}>
             <Form form={form}>
                 <Row gutter={24}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 5 }}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 7 }}>
                 <Form.Item name='fgItemCode' label='FG Item Code' rules={[{required:true,message:'FG Item Code is required'}]}>
                     <Select placeholder='Select FG Item Code' showSearch allowClear optionFilterProp="children" onChange={onFgItemChange}>
                         {

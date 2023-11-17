@@ -89,9 +89,9 @@ export const RmSkusGeneration = () => {
         <Card title='Rm Feature Mapping & Rm Sku Generation' extra={<Link to='/materialCreation/rm-skus-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>}>
             <Form layout="vertical" form={form} onFinish={onFinish}>
                 <Row gutter={8}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
-                <Form.Item name={'itemType'} label='Item Type' rules={[{required:true,message:'Item Type is required'}]}>
-                    <Select allowClear showSearch optionFilterProp="children" placeholder='Select Item Type' onChange={onItemTypeChange}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 5 }}>
+                <Form.Item name={'itemType'} label='Product Group' rules={[{required:true,message:'Item Type is required'}]}>
+                    <Select allowClear showSearch optionFilterProp="children" placeholder='Select Product Group' onChange={onItemTypeChange}>
                         {/* {
                             Object.values(RmItemTypeEnum).map(e => {
                                 return(
@@ -109,7 +109,7 @@ export const RmSkusGeneration = () => {
                     </Select>
                 </Form.Item>
                 </Col>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 5 }}>
                 <Form.Item name={'itemCode'} label='RM Item Code' rules={[{required:true,message:'Item Code is required'}]}>
                     <Select allowClear showSearch optionFilterProp="children" placeholder='Select Item Code' onChange={onItemCodeChange}>
                         {/* <Option key='1' value='I001' itemId={1}>I001</Option> */}

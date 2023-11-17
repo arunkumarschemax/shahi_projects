@@ -160,162 +160,188 @@ const RmCodeData = () =>{
 
 const columns: any = [
   {
-          title: 'S No',
-          key: 'sno',
-          responsive: ['sm'],
-          render: (text, object, index) => (page - 1) * 10 + (index + 1), align:'center',
-        },
+    title: 'S No',
+    key: 'sno',
+    width: 50,
+    responsive: ['sm'],
+    render: (text, object, index) => (page - 1) * 10 + (index + 1),
+    align: 'center',
+    fixed:'left'
+
+  },
   {
     title: "FG Item Code",
     dataIndex: "fg_item_code",
     key: "fg_item_code",
-    align:'center',
+    align: 'center',
+    width: 90,
+    fixed:'left'
   },
   {
-    title:<div style={{ textAlign: 'center' }}>RM Item Codes</div> ,
+    title: "FG Item Name",
+    dataIndex: "item_name",
+    key: "item_name",
+    align: 'center',
+    width: 90,
+  },
+  {
+    title: "Product Group",
+    dataIndex: "productGroup",
+    width: 90,
+    key: "productGroup",
+    align: 'center',
+  },
+  {
+    title: "Style",
+    dataIndex: "style_no",
+    key: "style_no",
+    align: 'center',
+    width: 90,
+  },
+  
+  {
+    title: <div style={{ textAlign: 'center' }}>RM Codes</div>,
     dataIndex: "rm_items",
     key: "rm_items",
-    align:'center',
+    align: 'center',
+    width: 120,
     render: (rmItems) => {
-      return (
-        <Table
-          dataSource={rmItems}
-          columns={[
-            {
-              dataIndex: "rm_item_code",
-              key: "rm_item_code", align:'center',
-              render:(data)=>{
-                return data ? data :'-'
-              }
-            },
-           
-          ]}
-          pagination={false}
-        />
-      );
+      const rmItemCodes = rmItems.map((item, index) => (
+        <div key={index} style={{ padding: '5px', borderBottom: index !== rmItems.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+          {item.rm_item_code || '-'}
+        </div>
+      ));
+      return <div style={{ display: 'flex', flexDirection: 'column' }}>{rmItemCodes}</div>;
+    },
+  },
+  {
+    title: <div style={{ textAlign: 'center' }}>Product</div>,
+    dataIndex: "rm_items",
+    key: "rm_items",
+    align: 'center',
+    width: 130,
+  render: (rmItems) => {
+    const product = rmItems.map((item, index) => (
+      <div key={index} style={{ padding: '5px', borderBottom: index !== rmItems.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+        {item.product || '-'}
+      </div>
+    ));
+    return <div style={{ display: 'flex', flexDirection: 'column' }}>{product}</div>;
     }
   },
   {
-    title:<div style={{ textAlign: 'center' }}>Item Type</div> ,
+    title: <div style={{ textAlign: 'center' }}>Item Name</div>,
     dataIndex: "rm_items",
     key: "rm_items",
-    align:'center',
-    render: (rmItems) => {
-      return (
-        <Table
-          dataSource={rmItems}
-          columns={[
-            
-            {
-              dataIndex: "item_type",
-              key: "item_type", align:'center',
-              render:(data)=>{
-                return data ? data :'-'
-              }
-            },
-          ]}
-          pagination={false}
-        />
-      );
+    align: 'center',
+    width: 130,
+  render: (rmItems) => {
+    const itemName = rmItems.map((item, index) => (
+      <div key={index} style={{ padding: '5px', borderBottom: index !== rmItems.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+        {item.rmItemName || '-'}
+      </div>
+    ));
+    return <div style={{ display: 'flex', flexDirection: 'column' }}>{itemName}</div>;
     }
   },
   {
-    title:<div style={{ textAlign: 'center' }}>Item Group</div> ,
+    title: <div style={{ textAlign: 'center' }}>Item Type</div>,
     dataIndex: "rm_items",
     key: "rm_items",
-    align:'center',
+    align: 'center',
+    width: 120,
     render: (rmItems) => {
-      return (
-        <Table
-          dataSource={rmItems}
-          columns={[
-            {
-              dataIndex: "item_group",
-              key: "item_group", align:'center',
-              render:(data)=>{
-                return data ? data :'-'
-              }
-            },
-          ]}
-          pagination={false}
-        />
-      );
-    }
+      const itemTypes = rmItems.map((item, index) => (
+        <div key={index} style={{ padding: '5px', borderBottom: index !== rmItems.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+          {item.item_type || '-'}
+        </div>
+      ));
+      return <div style={{ display: 'flex', flexDirection: 'column' }}>{itemTypes}</div>;
+    
   },
-  // {
-  //   title:<div style={{ textAlign: 'center' }}>Is Sub Contract</div> ,
-  //   dataIndex: "rm_items",
-  //   key: "rm_items",
-  //   align:'center',
-  //   render: (rmItems) => {
-  //     return (
-  //       <Table
-  //         dataSource={rmItems}
-  //         columns={[
-           
-  //           {
-  //             dataIndex: "is_sub_contract",
-  //             key: "rm_item_code", align:'center',
-  //             render:(data)=>{
-  //               return data ? data :'-'
-  //             }
-  //           },
-           
-  //         ]}
-  //         pagination={false}
-  //       />
-  //     );
-  //   }
-  // },
+  },
   {
-    title:<div style={{ textAlign: 'center' }}>Facility</div> ,
+    title: <div style={{ textAlign: 'center' }}>Item Group</div>,
     dataIndex: "rm_items",
     key: "rm_items",
-    align:'center',
+    align: 'center',
+    width: 120,
+   
     render: (rmItems) => {
-      return (
-        <Table
-          dataSource={rmItems}
-          columns={[
-           
-           
-            {
-              dataIndex: "facility",
-              key: "facility", align:'center',
-              render:(data)=>{
-                return data ? data :'-'
-              }
-            }, 
-          ]}
-          pagination={false}
-        />
-      );
-    }
+      const itemGroups = rmItems.map((item, index) => (
+        <div key={index} style={{ padding: '5px', borderBottom: index !== rmItems.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+          {item.item_group || '-'}
+        </div>
+      ));
+      return <div style={{ display: 'flex', flexDirection: 'column' }}>{itemGroups}</div>;
+    
   },
-  // {
-  //   title:<div style={{ textAlign: 'center' }}>Season</div> ,
-  //   dataIndex: "rm_items",
-  //   key: "rm_items",
-  //   align:'center',
-  //   render: (rmItems) => {
-  //     return (
-  //       <Table
-  //         dataSource={rmItems}
-  //         columns={[
-  //           {
-  //             dataIndex: "season",
-  //             key: "season", align:'center',
-  //             render:(data)=>{
-  //               return data ? data :'-'
-  //             }
-  //           }
-  //         ]}
-  //         pagination={false}
-  //       />
-  //     );
-  //   }
-  // }
+  },
+
+  {
+    title: <div style={{ textAlign: 'center' }}>Facility</div>,
+    dataIndex: "rm_items",
+    key: "rm_items",
+    align: 'center',
+    width: 100,
+  render: (rmItems) => {
+    const facilities = rmItems.map((item, index) => (
+      <div key={index} style={{ padding: '5px', borderBottom: index !== rmItems.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+        {item.facility || '-'}
+      </div>
+    ));
+    return <div style={{ display: 'flex', flexDirection: 'column' }}>{facilities}</div>;
+    }
+},
+{
+  title: <div style={{ textAlign: 'center' }}>Operation</div>,
+  dataIndex: "rm_items",
+  key: "rm_items",
+  align: 'center',
+  width: 130,
+render: (rmItems) => {
+  const operation = rmItems.map((item, index) => (
+    <div key={index} style={{ padding: '5px', borderBottom: index !== rmItems.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+      {item.operation_name || '-'}
+    </div>
+  ));
+  return <div style={{ display: 'flex', flexDirection: 'column' }}>{operation}</div>;
+  }
+},
+
+{
+  title: <div style={{ textAlign: 'center' }}>Consumption</div>,
+  dataIndex: "rm_items",
+  key: "rm_items",
+  align: 'center',
+  width: 130,
+render: (rmItems) => {
+  const Consumption = rmItems.map((item, index) => (
+    <div key={index} style={{ padding: '5px', borderBottom: index !== rmItems.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+      {item.consumption || '-'}
+    </div>
+  ));
+  return <div style={{ display: 'flex', flexDirection: 'column' }}>{Consumption}</div>;
+  }
+},
+{
+  title: <div style={{ textAlign: 'center' }}>Procurement</div>,
+  dataIndex: "rm_items",
+  key: "rm_items",
+  align: 'center',
+  width: 130,
+render: (rmItems) => {
+  const procurement = rmItems.map((item, index) => (
+    <div key={index} style={{ padding: '5px', borderBottom: index !== rmItems.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+      {item.procurement || '-'}
+    </div>
+  ));
+  return <div style={{ display: 'flex', flexDirection: 'column' }}>{procurement}</div>;
+  }
+},
+
 ];
+
 
 
 //   const onChange = (pagination, filters, sorter, extra) => {

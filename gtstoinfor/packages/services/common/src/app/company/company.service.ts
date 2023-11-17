@@ -150,14 +150,14 @@ export class CompanyService {
                        
                         if (companyExists.isActive) {
                             if (companyStatus.affected) {
-                                const companyResponse: CompanyResponseModel = new CompanyResponseModel(true, 10115, 'Company is de-activated successfully');
+                                const companyResponse: CompanyResponseModel = new CompanyResponseModel(true, 10115, 'Company is Deactivated successfully');
                                 return companyResponse;
                             } else {
                                 throw new CompanyResponseModel(false,10111, 'company is already deactivated');
                             }
                         } else {
                             if (companyStatus.affected) {
-                                const CompanyResponse: CompanyResponseModel = new CompanyResponseModel(true, 10114, 'Company is activated successfully');
+                                const CompanyResponse: CompanyResponseModel = new CompanyResponseModel(true, 10114, 'Company is Activated successfully');
                                 return CompanyResponse;
                             } else {
                                 throw new CompanyResponseModel(false,10112, 'Company is already  activated');

@@ -192,7 +192,7 @@ export class FabricFinishTypesService {
 
                     if (Exists.isActive) {
                         if (Status.affected) {
-                            const Response: AllFabricFinishTypesResponseModel = new AllFabricFinishTypesResponseModel(true, 10115, 'FabricFinishType is de-activated successfully');
+                            const Response: AllFabricFinishTypesResponseModel = new AllFabricFinishTypesResponseModel(true, 10115, 'FabricFinishType is Deactivated successfully');
                             return Response;
                         } else {
                             throw new AllFabricFinishTypesResponseModel(false,10111, 'FabricFinishType is already deactivated');

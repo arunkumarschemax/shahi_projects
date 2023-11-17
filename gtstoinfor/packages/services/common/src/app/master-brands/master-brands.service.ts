@@ -188,7 +188,7 @@ export class MasterBrandsService {
                     { isActive: brandReq.isActive, updatedUser: brandReq.updatedUser });
                 if (brandExists.isActive) {
                     if (brandStatus.affected) {
-                        const brandResponse: MasterBrandsResponseModel = new MasterBrandsResponseModel(true, 10115, 'Brand is de-activated successfully');
+                        const brandResponse: MasterBrandsResponseModel = new MasterBrandsResponseModel(true, 10115, 'Brand is Deactivated successfully');
                         return brandResponse;
                     } else {
                         throw new MasterBrandsResponseModel(false,10111, 'Brand is already deactivated');

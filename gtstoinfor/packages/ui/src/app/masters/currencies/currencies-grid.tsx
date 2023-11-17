@@ -187,7 +187,7 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
 
       render: (isActive, rowData) => (
         <>
-          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">InActive</Tag>}
         </>
       ),
       filters: [

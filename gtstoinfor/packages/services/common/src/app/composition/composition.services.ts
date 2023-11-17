@@ -141,14 +141,14 @@ export class CompositionService {
                        
                         if (CompostionExists.isActive) {
                             if (compositionStatus.affected) {
-                                const liscenceTypeResponse: CompositionResponse = new CompositionResponse(true, 10115, 'Composition is deactivated successfully');
+                                const liscenceTypeResponse: CompositionResponse = new CompositionResponse(true, 10115, 'Composition is Deactivated successfully');
                                 return liscenceTypeResponse;
                             } else {
                                 throw new CompositionResponse(false,10111, 'Composition is already deactivated');
                             }
                         } else {
                             if (compositionStatus.affected) {
-                                const liscenceTypeResponse: CompositionResponse = new CompositionResponse(true, 10114, 'Composition is activated successfully');
+                                const liscenceTypeResponse: CompositionResponse = new CompositionResponse(true, 10114, 'Composition is Activated successfully');
                                 return liscenceTypeResponse;
                             } else {
                                 throw new CompositionResponse(false,10112, 'Composition is already  activated');

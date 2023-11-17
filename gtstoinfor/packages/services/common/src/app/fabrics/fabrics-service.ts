@@ -160,7 +160,7 @@ export class FabricsService{
                        
                         if (FabExists.isActive) {
                             if (FabStatus.affected) {
-                                const fabResponse: FabricsResponseModel = new FabricsResponseModel(true, 10115, 'Fabrics  is de-activated successfully');
+                                const fabResponse: FabricsResponseModel = new FabricsResponseModel(true, 10115, 'Fabrics  is Deactivated successfully');
                                 return fabResponse;
                             } else {
                                 throw new FabricsResponseModel(false,10111, 'Fabrics is already deactivated');
