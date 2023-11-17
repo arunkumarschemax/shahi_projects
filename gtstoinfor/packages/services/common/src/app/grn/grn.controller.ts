@@ -6,7 +6,7 @@ import { GrnService } from "./grn.service";
 import { GrnDto, PurchaseOrderReq } from "./dto/grn-dto";
 
 @ApiTags('grn')
-@Controller('Grn')
+@Controller('grn')
 export class GrnController {
   constructor(
     private readonly grnService: GrnService,

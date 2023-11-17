@@ -3,36 +3,42 @@ import { CustomerOrderStatusEnum, PurchaseOrderStatus } from "@project-managemen
 import { GrnItemsDto } from "./grn-items-dto";
 
 export class GrnDto{
-  grnId:number
-  grnNumber:string
   vendorId:number
   poId:number
   grnDate:Date
   status:PurchaseOrderStatus
   remarks:string
-  grnItemInfo: GrnItemsDto[];
   isActive?: boolean;
   createdAt?: Date;
   createdUser?: string | null;
   updatedAt?: Date;
   updatedUser?: string | null;
   versionFlag?: number;
+  styleId?:number
+  materialtype?:string
+  grnItemInfo?: GrnItemsDto[];
+  grnId?:number
+  grnNumber?:string
+
 
   constructor(
-    grnId:number,
-    grnNumber:string,
     vendorId:number,
     poId:number,
     grnDate:Date,
     status:PurchaseOrderStatus,
     remarks:string,
-    grnItemInfo: GrnItemsDto[],
     isActive?: boolean,
     createdAt?: Date,
     createdUser?: string | null,
     updatedAt?: Date,
     updatedUser?: string | null,
-    versionFlag?: number
+    versionFlag?: number,
+    styleId?:number,
+    materialtype?:string,
+    grnItemInfo?: GrnItemsDto[],
+    grnId?:number,
+    grnNumber?:string,
+  
   ){
     this.grnId = grnId
     this.grnNumber = grnNumber
@@ -48,6 +54,8 @@ export class GrnDto{
     this.updatedAt = updatedAt
     this.updatedUser = updatedUser
     this.versionFlag = versionFlag
+    this.styleId = styleId
+    this.materialtype = materialtype
   }
 
 

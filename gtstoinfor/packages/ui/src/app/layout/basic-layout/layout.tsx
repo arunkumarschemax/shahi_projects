@@ -206,7 +206,7 @@ export default function BasicLayout() {
                     // }}
                     menuItemRender={(item, dom) => {
                         // const navigate = useNavigate();
-                        console.log(item)
+                        // console.log(item)
                         return (
                             // <div
                             //     onClick={() => {

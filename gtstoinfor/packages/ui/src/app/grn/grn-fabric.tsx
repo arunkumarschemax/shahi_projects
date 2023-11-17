@@ -1,4 +1,4 @@
-import { VendorIdReq } from "@project-management-system/shared-models"
+import { GrnItemsDto, VendorIdReq } from "@project-management-system/shared-models"
 import { PurchaseOrderservice, SampleDevelopmentService, UomService } from "@project-management-system/shared-services"
 import { Button, Card, Form, Input, Row, Select } from "antd"
 import Table from "antd/es/table"
@@ -14,11 +14,7 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
     const [form] = Form.useForm();
     const uomService = new UomService()
     const [uomData, setUomData] = useState<any[]>([])
-    const [data, setData] = useState([]);
-    const [selectedReceivedUomId, setSelectedReceivedUomId] = useState('');
-    const [selectedAcceptedUomId, setSelectedAcceptedUomId] = useState('');
-    const [selectedRejectedUomId, setSelectedRejectedUomId] = useState('');
-
+    const [formData, setFormData] = useState([]);
 
 
     useEffect(() =>{
@@ -34,20 +30,55 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
 
     const handleSaveData = () => {
       form.validateFields().then((values) => {
-        const formData = fabricData.map((record) => ({
-          poFabricId: record.poFabricId,
-          receivedQuantity: values[`receivedQuantity_${record.poFabricId}_${record.key}`],
-          receivedUomId: values[`receivedUomId_${record.poFabricId}_${record.key}`],
-          acceptedQuantity: values[`acceptedQuantity_${record.poFabricId}_${record.key}`],
-          acceptedUomId: values[`acceptedUomId_${record.poFabricId}_${record.key}`],
-          rejectedQuantity: values[`rejectedQuantity_${record.poFabricId}_${record.key}`],
-          rejectedUomId: values[`rejectedUomId_${record.poFabricId}_${record.key}`],
-          ...record,
-        }));
+        const updatedFormData = fabricData
+          .filter((record) => {
+            const key = record.key;
+            return (
+              values[`receivedQuantity_${record.poFabricId}_${key}`] ||
+              values[`acceptedQuantity_${record.poFabricId}_${key}`] ||
+              values[`rejectedQuantity_${record.poFabricId}_${key}`]
+            );
+          })
+          .map((record) => ({
+            poFabricId: record.poFabricId,
+            receivedQuantity: values[`receivedQuantity_${record.poFabricId}_${record.key}`],
+            receivedUomId: values[`receivedUomId_${record.poFabricId}_${record.key}`],
+            acceptedQuantity: values[`acceptedQuantity_${record.poFabricId}_${record.key}`],
+            acceptedUomId: values[`acceptedUomId_${record.poFabricId}_${record.key}`],
+            rejectedQuantity: values[`rejectedQuantity_${record.poFabricId}_${record.key}`],
+            rejectedUomId: values[`rejectedUomId_${record.poFabricId}_${record.key}`],
+            ...record,
+          }));
   
-        onSaveData(formData);
+        setFormData(updatedFormData);
+        console.log("FormData:", updatedFormData);
+        fabricForm()
       });
     };
+
+    const fabricForm = () => {
+      const grnItemsArray = [];
+      formData.forEach((record) => {
+        const grnItem = new GrnItemsDto()
+        grnItem.poFabricId = record.poFabricId
+        grnItem.m3ItemCodeId = record.m3ItemCodeId
+        grnItem.productGroupId = record.productGroupId
+        grnItem.receivedQuantity = record.receivedQuantity
+        grnItem.receivedUomId = record.receivedUomId
+        grnItem.acceptedQuantity = record.acceptedQuantity
+        grnItem.acceptedUomId = record.acceptedUomId
+        grnItem.rejectedQuantity = record.rejectedQuantity
+        grnItem.rejectedUomId = record.rejectedUomId
+        grnItem.indentFabricId = record.indentFabricId
+        grnItem.conversionQuantity = record.conversionQuantity
+        grnItem.conversionUomId = record.conversionUomId
+        grnItem.remarks = record.remarks
+        grnItemsArray.push(grnItem)
+      });
+      onSaveData(grnItemsArray)
+      console.log("GrnItemsArray:", grnItemsArray);
+    };
+    
 
     
     const columns:any = [
@@ -75,23 +106,22 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
           dataIndex: 'receivedQuantity',
           render: (_, record) => (
             <Form.Item
-            name={`receivedQuantity_${record.poFabricId}_${record.key}`}
-              // rules={[
-              //   {
-              //     required: true,
-              //     message: 'Please enter received quantity',
-              //   },
-              //   {
-              //     type: 'number',
-              //     min: 0,
-              //     max: record.poQuantity,
-              //     message: `Received quantity should be between 0 and ${record.poQuantity}`,
-              //   },
-              // ]}
+              name={`receivedQuantity_${record.poFabricId}_${record.key}`}
+              rules={[
+                {
+                  validator: (_, value) => {
+                    if (!value || (Number(value) <= record.poQuantity)) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject('Cannot exceed PO Qty');
+                  },
+                },
+              ]}
             >
               <Input 
-              // name={`${record.poFabricId}`+`${record.key}+'receivedQuantity'`} 
-              placeholder="Received Quantity" 
+                placeholder="Received Quantity" 
+                type="number"
+                pattern="^[0-9]*$"
               />
             </Form.Item>
           ),
@@ -102,12 +132,6 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
           render: (_, record) => (
             <Form.Item
             name={`receivedUomId_${record.poFabricId}_${record.key}`}
-            // rules={[
-            //     {
-            //       required: true,
-            //       message: 'Please select UOM',
-            //     }
-            //   ]}
             >
               <Select
                 allowClear
@@ -131,22 +155,21 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
           render: (_, record) => (
               <Form.Item
               name={`acceptedQuantity_${record.poFabricId}_${record.key}`}
-              // rules={[
-              //     {
-              //       required: true,
-              //       message: 'Please enter accepted quantity',
-              //     },
-              //     {
-              //       type: 'number',
-              //       min: 0,
-              //       max: record.poQuantity,
-              //       message: `Quantity should be between 0 and ${record.poQuantity}`,
-              //     },
-              //   ]}
+              rules={[
+                {
+                  validator: (_, value) => {
+                    if (!value || (Number(value) <= record.poQuantity)) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject('Cannot exceed PO Qty');
+                  },
+                },
+              ]}
               >
                 <Input 
                 placeholder="Accepted Quantity" 
-                name={`${record.poFabricId}`+`${record.key}+'acceptedQuantity'`}
+                type="number"
+                pattern="^[0-9]*$"
                 />
               </Form.Item>
           ),
@@ -186,18 +209,11 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
           render: (index, record) => (
             <Form.Item
             name={`rejectedQuantity_${record.poFabricId}_${record.key}`}
-              // rules={[
-              //   {
-              //     type: 'number',
-              //     min: 0,
-              //     max: record.poQuantity,
-              //     message: `Quantity should be between 0 and ${record.poQuantity}`,
-              //   },
-              // ]}
             >
               <Input 
-              placeholder="Accepted Quantity" 
-              name={`${record.poFabricId}`+`${record.key}+'rejectedQuantity'`}
+              placeholder="Rejected Quantity" 
+              type="number"
+                pattern="^[0-9]*$"
               />
             </Form.Item>
             ),
@@ -208,12 +224,6 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
           render: (index, record) => (
             <Form.Item
             name={`rejectedUomId_${record.poFabricId}_${record.key}`}
-            // rules={[
-            //     {
-            //       required: true,
-            //       message: 'Please select UOM',
-            //     }
-            //   ]}
             >
               <Select
                 allowClear
