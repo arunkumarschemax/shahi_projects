@@ -58,20 +58,20 @@ export function NikeFileRevert() {
         },
         {
             title: 'DPOM API (sync status)',
-            dataIndex: 'status',align:'center'
+            dataIndex: 'status', align: 'center'
         },
         {
             title: 'CRM API (sync status)',
-            dataIndex: 'status',align:'center'
+            dataIndex: 'crmStatus', align: 'center'
         },
         {
             title: 'Type Of Sync',
-            dataIndex: 'createdUser',align:'center'
+            dataIndex: 'createdUser', align: 'center'
         },
         {
             title: 'Action',
             dataIndex: 'Action',
-            width:150,
+            width: 150,
             render: (text, record, index) => {
                 const isFirstRecord = index === 0 && page === 1;
                 return (
@@ -100,7 +100,7 @@ export function NikeFileRevert() {
                 <Table
                     columns={columns}
                     dataSource={data}
-                    
+
                     className="custom-table-wrapper"
                     scroll={{ x: 'max-content', y: 450 }}
                     pagination={{

@@ -57,7 +57,7 @@ export default function DPOMSyncManually() {
                             {filesData[0]?.uploadedDate ? moment(filesData[0]?.uploadedDate).format('YYYY-MM-DD HH:mm:ss') : '-'}
                         </Descriptions.Item>
                         <Descriptions.Item label={<b>Last Sync Status</b>}>
-                            {'DPOM : ' + filesData[0]?.status} <br /> {'CRM : ' + filesData[0]?.status}
+                            {'DPOM : ' + filesData[0]?.status} <br /> {'CRM : ' + filesData[0]?.crmStatus}
                         </Descriptions.Item>
                         <Descriptions.Item label={<b>Last Sync data</b>}>
                             {'Total Records : ' + (syncdata[0]?.totalRecords == '0' ? '0' : syncdata[0]?.totalRecords)} <br />
