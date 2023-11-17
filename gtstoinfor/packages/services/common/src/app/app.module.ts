@@ -77,7 +77,6 @@ import { LocationMappingModule } from './location-mapping/location-mapping.modul
 import { QualityModule } from './quality/quality.module';
 import { M3StyleModule } from './m3-style-codes/m3-style.module';
 import { GrnModule } from './grn/grn.module';
-import { M3ItemsModule } from './m3-items/m3-items.module';
 
 
 @Module({
@@ -85,11 +84,11 @@ import { M3ItemsModule } from './m3-items/m3-items.module';
     TypeOrmModule.forRoot({
       type: "mysql",
       timezone: 'Z',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'sampling',
+      host: appConfig.database.host,
+      port: appConfig.database.port,
+      username: appConfig.database.username,
+      password: appConfig.database.password,
+      database: appConfig.database.dbName,
       autoLoadEntities: true,
       synchronize: false,
       logging: true,
@@ -138,7 +137,6 @@ import { M3ItemsModule } from './m3-items/m3-items.module';
     RacksModule,
     QualityModule,
     M3StyleModule,
-    M3ItemsModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,M3MastersModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,OperationTrackingModule,MaterialIssueModule,IndentModule,RackPositionModule,StocksModule,GrnModule,LocationMappingModule],
   controllers: [AppController],
   providers: [AppService],
