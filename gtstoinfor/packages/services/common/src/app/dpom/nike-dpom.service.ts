@@ -28,7 +28,7 @@ import puppeteer from 'puppeteer';
 import { COLineEntity } from './entites/co-line.entity';
 const fs = require('fs');
 const path = require('path')
-const { Builder, Browser, By, Key, until } = require('selenium-webdriver');
+const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
 const moment = require('moment');
 const qs = require('querystring');
 
@@ -267,7 +267,7 @@ export class DpomService {
         }
     }
 
-    // @Cron('*/10 * * * *')
+    @Cron('*/10 * * * *')
     async createCOline(req: any): Promise<CommonResponseModel> {
         const poDetails = await this.coLineRepository.getDataforCOLineCreation();
         if (!poDetails.length) {
@@ -291,6 +291,12 @@ export class DpomService {
             await driver.switchTo().frame(frame)
             for (const po of poDetails) {
                 const coLine = new CoLineRequest();
+                let buyerValue1;
+                let buyerValue2;
+                let agent;
+                let buyerAddress;
+                let pkgTerms;
+                let paymentTerms;
                 if (po.buyer === 'Nike-U12') {
                     const data = await this.dpomRepository.getDataForColine({ poNumber: po.buyer_po, lineNumber: po.line_item_no })
                     const result = data[0].color_desc.split('/')[0]
@@ -325,6 +331,12 @@ export class DpomService {
                     destinations.colors = colorsArr
                     destinationsArr.push(destinations)
                     coLine.destinations = destinationsArr
+                    buyerValue1 = "NKE-NIKE"
+                    buyerValue2 = "NIK00003-NIKE USA INC"
+                    agent = "NA-DIRECT CUSTOMER"
+                    buyerAddress = '19'
+                    pkgTerms = "BOX-BOXES"
+                    paymentTerms = "031-Trde Card45 Day"
                 } else if (po.buyer === 'Uniqlo-U12') {
                     const req = { orderNumber: po.buyer_po }
                     const response = await axios.post(`https://uniqlov2-backend.xpparel.com/api/orders/getTrimOrderDetails`, req);
@@ -339,6 +351,12 @@ export class DpomService {
                     coLine.deliveryDate = moment(coData.deliveryDate).format('DD/MM/YYYY')
                     coLine.exFactoryDate = exFactoryDate
                     coLine.destinations = coData.destinations
+                    buyerValue1 = "UNQ-UNIQLO"
+                    buyerValue2 = "UNI0003-UNIQLO CO LTD"
+                    agent = "-NA"
+                    buyerAddress = '10'
+                    pkgTerms = "STD-STD PACK"
+                    paymentTerms = "048-TT 15 DAYS"
                 }
                 const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
                 const allApps = await apps.findElements(By.tagName('span'));
@@ -350,12 +368,28 @@ export class DpomService {
                 }
                 await driver.wait(until.elementLocated(By.id('styleid2H')))
                 await driver.findElement(By.id('styleid2H')).sendKeys(po.item_no);
+                await driver.sleep(10000)
+                await driver.wait(until.elementLocated(By.id('bgpset1')));
+                const dropdownElement1 = await driver.findElement(By.id('bgpset1'));
+                const dropdown1 = await driver.wait(until.elementIsVisible(dropdownElement1)).then(element => new Select(element))
+                await dropdown1.selectByValue(buyerValue1)
+                // await driver.executeScript(`arguments[0].value = '${buyerValue1}';`, buyerDropDown1)
+                await driver.sleep(10000)
+                await driver.wait(until.elementLocated(By.id('byr')));
+                const dropdownElement2 = await driver.findElement(By.id('byr'));
+                const dropdown2 = await driver.wait(until.elementIsVisible(dropdownElement2)).then(element => new Select(element))
+                await dropdown2.selectByValue(buyerValue2)
+                // await driver.executeScript(`arguments[0].value = '${buyerValue2}';`, dropdownElement2)
+                await driver.sleep(5000)
                 await driver.wait(until.elementLocated(By.id('CreateOrderID')))
                 await driver.sleep(3000)
                 await driver.findElement(By.id('CreateOrderID')).click();
                 await driver.wait(until.elementLocated(By.id('bpo')))
                 await driver.findElement(By.id('bpo')).clear();
                 await driver.findElement(By.id('bpo')).sendKeys(coLine.buyerPo);
+                await driver.wait(until.elementLocated(By.id('agnt')));
+                const agentDropDown = await driver.findElement(By.id('agnt'));
+                await driver.executeScript(`arguments[0].value = '${agent}';`, agentDropDown)
                 await driver.wait(until.elementLocated(By.name('dojo.EXFACTORYDATE')));
                 await driver.findElement(By.name('dojo.EXFACTORYDATE')).clear();
                 await driver.findElement(By.name('dojo.EXFACTORYDATE')).sendKeys(coLine.exFactoryDate);
@@ -370,9 +404,14 @@ export class DpomService {
                     const value = await option.getAttribute('value');
                     optionValues.push(value);
                 }
-
-                const number = optionValues.find(value => value.includes('48')); // give the dynamic value here
+                const number = optionValues.find(value => value.includes(buyerAddress)); // give the dynamic value here
                 await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
+                await driver.wait(until.elementLocated(By.id('packtrm')));
+                const pkgTermsDropDown = await driver.findElement(By.id('packtrm'));
+                await driver.executeScript(`arguments[0].value = '${pkgTerms}';`, pkgTermsDropDown)
+                await driver.wait(until.elementLocated(By.id('ptr')));
+                const ptrDropDown = await driver.findElement(By.id('ptr'));
+                await driver.executeScript(`arguments[0].value = '${paymentTerms}';`, ptrDropDown)
                 await driver.sleep(10000)
                 for (let dest of coLine.destinations) {
                     const colorsContainer = await driver.wait(until.elementLocated(By.xpath('//*[@id="COContainer"]')));
