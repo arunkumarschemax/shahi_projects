@@ -2,7 +2,7 @@ import { Button, Card, Col, DatePicker, Divider, Form, Input, Popconfirm, Row, S
 import { ColumnProps } from "antd/es/table";
 import React, { useEffect } from "react";
 import { useState } from "react"
-import { BuyersService, ColourService, CurrencyService, FabricTypeService, FabricWeaveService, IndentService, M3MastersService, M3StyleService, ProfitControlHeadService, SampleDevelopmentService, SizeService, StyleService, UomService, VendorsService } from "@project-management-system/shared-services";
+import { BuyersService, ColourService, CurrencyService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, ProfitControlHeadService, SampleDevelopmentService, SizeService, StyleService, UomService, VendorsService } from "@project-management-system/shared-services";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { EditOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
@@ -59,7 +59,7 @@ export const SourcingRequisitionDynamicForm = () => {
     const [trimSize , setTrimSize] = useState<string>('')
     const sizeService = new SizeService()
     const m3MasterService = new M3MastersService()
-    const m3StyleService = new M3StyleService()
+    const m3ItemsService = new M3ItemsService()
 
     const [fabricM3Code,setFabricM3Code] = useState<any[]>([])
     const [trimM3Code,setTrimM3Code] = useState<any[]>([])
@@ -200,7 +200,7 @@ export const SourcingRequisitionDynamicForm = () => {
         })
     }
     const getM3FabricStyleCodes = () => {
-        m3StyleService.getM3Style().then(res => {
+        m3ItemsService.getM3Items().then(res => {
             if(res.status){
                 setFabricM3Code(res.data)
             }
@@ -565,7 +565,7 @@ export const SourcingRequisitionDynamicForm = () => {
 
             if(fabricIndexVal !== undefined){
                 console.log(fabricIndexVal)
-                values.m3FabricCode = fabricM3Code.find((e) => { e.m3StyleId === values.m3FabricCode }).m3StyleCode;
+                values.m3FabricCode = fabricM3Code.find((e) => { e.m3ItemsId === values.m3FabricCode }).itemCode;
                 fabricTableData[fabricIndexVal] = values;
 
                 tableData = [...fabricTableData]
@@ -927,7 +927,7 @@ export const SourcingRequisitionDynamicForm = () => {
                     <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'>
                             {fabricM3Code.map(e => {
                                 return(
-                                    <Option key={e.m3StyleId} value={e.m3StyleId}> {e.m3StyleCode}</Option>
+                                    <Option key={e.m3ItemsId} value={e.m3ItemsId}> {e.itemCode}</Option>
                                 )
                             })}
                         </Select>
