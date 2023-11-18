@@ -215,22 +215,22 @@ export class TaxesService {
               const taxResponse: TaxesResponseModel = new TaxesResponseModel(
                 true,
                 10115,
-                'Tax is de-activated successfully'
+                'Tax is Deactivated successfully'
               );
               return taxResponse;
             } else {
-              throw new TaxesResponseModel(false,10111, 'Tax is already deactivated');
+              throw new TaxesResponseModel(false,10111, 'Tax is already Deactivated');
             }
           } else {
             if (taxStatus.affected) {
               const taxResponse: TaxesResponseModel = new TaxesResponseModel(
                 true,
                 10114,
-                'Tax is activated successfully'
+                'Tax is Activated successfully'
               );
               return taxResponse;
             } else {
-              throw new TaxesResponseModel(false,10112, 'Tax is already activated');
+              throw new TaxesResponseModel(false,10112, 'Tax is already Activated');
             }
           }
           // }
