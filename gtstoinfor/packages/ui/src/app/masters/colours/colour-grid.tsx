@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Badge, Space, Alert, Checkbox } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Badge, Space, Alert, Checkbox, message } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -153,7 +153,8 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
         service.activeteOrDeactivateColour(profitControlHead).then(res => { console.log(res);
           if (res.status) {
             // getAllPaymentmethod();
-            AlertMessages.getSuccessMessage('Success'); 
+            message.success(res.internalMessage)
+            // AlertMessages.getSuccessMessage('Success'); 
           } else {
             // if (res.intlCode) {
             //   AlertMessages.getErrorMessage(res.internalMessage);
@@ -225,7 +226,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
             dataIndex: 'isActive',
             render: (isActive, rowData) => (
               <>
-                {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+                {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">Inactive</Tag>}
               </>
             ),
             onFilter: (value, record) => record.isActive === value,

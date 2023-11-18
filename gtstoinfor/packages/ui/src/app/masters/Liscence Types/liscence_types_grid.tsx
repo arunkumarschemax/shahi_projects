@@ -180,7 +180,7 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
         width:'80px',
       render: (isActive, rowData) => (
         <>
-          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">Inactive</Tag>}
         </>
       ),
       filters: [
@@ -300,7 +300,7 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
         </Col>
         <Col span={5}>
           {/* <Card title={'In-Active: ' + lTData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
-          <Alert type='info' message={'In-Active: ' + lTData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + lTData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
 
         </Col>
       </Row><br></br>

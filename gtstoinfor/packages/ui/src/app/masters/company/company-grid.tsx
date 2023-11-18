@@ -151,7 +151,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
       dataIndex: 'isActive',      align:'center',
       render: (isActive, rowData) => (
         <>
-          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">Inactive</Tag>}
         </>
       ),
       filters: [
@@ -160,7 +160,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
           value: true,
         },
         {
-          text: 'InActive',
+          text: 'Inactive',
           value: false,
         },
       ],
