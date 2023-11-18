@@ -135,7 +135,7 @@ let response=[]
                         { isActive: req.isActive, updatedUser: req.updatedUser });
                     if (Exists.isActive) {
                         if (update.affected) {
-                            const Response: hierachyLevelModel = new hierachyLevelModel(true, 10115, ' Hierarchy Level is de-activated successfully');
+                            const Response: hierachyLevelModel = new hierachyLevelModel(true, 10115, ' Hierarchy Level is Deactivated successfully');
                             return Response;
                         } else {
                             throw new hierachyLevelModel(false,10111, ' Hierarchy Level is already deactivated');

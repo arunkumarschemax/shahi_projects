@@ -19,6 +19,7 @@ export const CoTypeView = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [drawerVisible, setDrawerVisible] = useState(false);
     const [selectedData, setSelectedData] = useState<any>(undefined);
+    const [pageSize, setPageSize] = useState<number>(1);
 
 
 
@@ -277,7 +278,13 @@ export const CoTypeView = () => {
             <br></br>
             <div style={{overflowX :'auto' }}>
 
-            <Table columns={columns}
+            <Table columns={columns} pagination={{
+            pageSize: 50,
+            onChange(current, pageSize) {
+                setPage(current);
+                setPageSize(pageSize);
+            }
+        }}
                     dataSource={data} size='small' bordered/>
             </div>
             <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}

@@ -120,7 +120,7 @@ let response=[]
                         { isActive: req.isActive, updatedUser: req.updatedUser });
                     if (Exists.isActive) {
                         if (update.affected) {
-                            const Response: ProcurmentGroupModel = new ProcurmentGroupModel(true, 10115, 'Procurment Group is de-activated successfully');
+                            const Response: ProcurmentGroupModel = new ProcurmentGroupModel(true, 10115, 'Procurment Group is Deactivated successfully');
                             return Response;
                         } else {
                             throw new ProcurmentGroupModel(false,10111, 'Procurment Group is already deactivated');

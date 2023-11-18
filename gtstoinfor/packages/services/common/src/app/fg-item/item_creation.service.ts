@@ -24,7 +24,7 @@ export class ItemCreationService {
     ) { }
 
     async createItem(itemCreationDto: ItemCreationDto, isUpdate: boolean): Promise<ItemcreationResponseModel> {
-        console.log(isUpdate,"update");
+        console.log(itemCreationDto,"service");
         const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
 
         try {
@@ -100,9 +100,17 @@ const savedResult = await this.itemCreationRepository.save(entities)
                     // return new CoLineResponseModel(true,1,'Created successfully',[])
                     await transactionalEntityManager.completeTransaction()
                     // return new CommonResponseModel(true,1,'Created successfully',[])
+                    if(savedResult){
+                return new CommonResponseModel (true,0,isUpdate? 'Item Updated Successfully':'Item created Successfully',[])
+                       
+                    } else {
+                return new CommonResponseModel (false,0,"Something went Wrong")
+                         
+                    }
                         
-return new CommonResponseModel (true,0,isUpdate? 'Item Updated Successfully':'Item created Successfully',[])
+
         } catch (err){
+            return err;
         }
     }
 

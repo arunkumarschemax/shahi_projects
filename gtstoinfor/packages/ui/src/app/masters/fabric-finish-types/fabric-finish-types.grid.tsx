@@ -52,7 +52,7 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
  
   const deleteUser = (Data:FabricFinishTypesDTO) => {
     Data.isActive=Data.isActive?false:true;
-    service.activateOrDeactivateFabricFinishTypes(Data).then(res => { console.log(res);
+    service.activateOrDeactivateFabricFinishTypes(Data).then(res => { 
       if (res.status) {
         getAll();
         AlertMessages.getSuccessMessage('Success'); 
@@ -244,7 +244,7 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
 
   const updateUser = (Data: FabricFinishTypesDTO) => {
     Data.updatedUser= JSON.parse(localStorage.getItem('username'))
-      service.update(Data).then(res => { console.log(res);
+      service.update(Data).then(res => {
         if (res.status) {
           AlertMessages.getSuccessMessage('Updated Successfully');
           getAll();
@@ -264,7 +264,6 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
     setDrawerVisible(false);
   }
   const onChange=(pagination, filters, sorter, extra)=> {
-    console.log('params', pagination, filters, sorter, extra);
   }
 
 
@@ -296,6 +295,7 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
           dataSource={FabricStructuresData}
           scroll={{x:true}}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

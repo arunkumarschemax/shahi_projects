@@ -154,12 +154,12 @@ service.createPaymentMethod(variantData).then(res=>{
     service.activateDeActivatePaymentMethod(paymentmethodData).then(res => { console.log(res);
       if (res.status) {
         // getAllPaymentmethod();
-        message.success(res.internalMessage, 2);
+        message.success(res.internalMessage, 1);
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
         // } else {
-          message.error(res.internalMessage, 2);
+          message.error(res.internalMessage, 1);
         }
       
     }).catch(err => {
@@ -185,10 +185,10 @@ service.createPaymentMethod(variantData).then(res=>{
           },
           {
             title: 'Status',
-            dataIndex: 'isActive',
+            dataIndex: 'isActive',align:'center',
             render: (isActive, rowData) => (
               <>
-                {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+                {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">Inactive</Tag>}
               </>
             ),
             filters: [
@@ -233,6 +233,7 @@ service.createPaymentMethod(variantData).then(res=>{
     {
         title:`Action`,
         dataIndex: 'action',
+        align:'center',
         render: (text, rowData) => (
           <span>  
            <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
@@ -251,8 +252,8 @@ service.createPaymentMethod(variantData).then(res=>{
               <Popconfirm onConfirm={e =>{deletePaymentmode(rowData);}}
               title={
                 rowData.isActive
-                  ? 'Are you sure to Deactivate Paymentmethod ?'
-                  :  'Are you sure to Activate Paymentmethod ?'
+                  ? 'Are you sure to Deactivate Payment Method ?'
+                  :  'Are you sure to Activate Payment Method ?'
               }
             >
               <Switch  size="default"
@@ -284,7 +285,7 @@ return (
         </Col>
         <Col span={5}>
           {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
-          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
 </Row>
 <br></br>

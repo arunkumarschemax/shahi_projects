@@ -161,7 +161,7 @@ export class OperationsService {
                     { isActive: operationReq.isActive, updatedUser: operationReq.updatedUser });
                 if (operationExists.isActive) {
                     if (operationStatus.affected) {
-                        const operationResponse: OperationsResponseModel = new OperationsResponseModel(true, 10115, 'operation is de-activated successfully');
+                        const operationResponse: OperationsResponseModel = new OperationsResponseModel(true, 10115, 'operation is Deactivated successfully');
                         return operationResponse;
                     } else {
                         throw new OperationsResponseModel(false,10111, 'operation is already deactivated');

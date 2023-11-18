@@ -105,7 +105,7 @@ export  class FabricTypeService {
                        
                         if (fabrictypeExists.isActive) {
                             if (fabrictypeStatus.affected) {
-                                const fabricResponse: FabricTypeResponse = new FabricTypeResponse(true, 10115, 'Fabric Type is de-activated successfully');
+                                const fabricResponse: FabricTypeResponse = new FabricTypeResponse(true, 10115, 'Fabric Type is Deactivated successfully');
                                 return fabricResponse;
                             } else {
                                 throw new ErrorResponse(10111, 'Fabric Type is already deactivated');

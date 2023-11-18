@@ -302,7 +302,6 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
    * @param extra 
    */
   const onChange=(pagination, filters, sorter, extra)=> {
-    console.log('params', pagination, filters, sorter, extra);
   }
   return (
     <Card title="Fabric Weave"
@@ -336,6 +335,7 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
           dataSource={data}
           scroll={{x:true}}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

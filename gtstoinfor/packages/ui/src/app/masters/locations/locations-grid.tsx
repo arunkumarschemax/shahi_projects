@@ -53,7 +53,7 @@ export function LocationsGrid(props: LocationsGridProps) {
  
   const deleteUser = (Data:LocationDto) => {
     Data.isActive=Data.isActive?false:true;
-    service.activatedeActivate(Data).then(res => { console.log(res);
+    service.activatedeActivate(Data).then(res => {
       if (res.status) {
         getAll();
         message.success(res.internalMessage, 2);
@@ -266,7 +266,7 @@ export function LocationsGrid(props: LocationsGridProps) {
 
   const updateUser = (Data: LocationDto) => {
     Data.updatedUser= JSON.parse(localStorage.getItem('username'))
-      service.update(Data).then(res => { console.log(res);
+      service.update(Data).then(res => { 
         if (res.status) {
           AlertMessages.getSuccessMessage('Updated Successfully');
           getAll();
@@ -286,7 +286,6 @@ export function LocationsGrid(props: LocationsGridProps) {
     setDrawerVisible(false);
   }
   const onChange=(pagination, filters, sorter, extra)=> {
-    console.log('params', pagination, filters, sorter, extra);
   }
 
 
@@ -317,6 +316,7 @@ export function LocationsGrid(props: LocationsGridProps) {
           dataSource={locationData}
           scroll={{x:true}}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

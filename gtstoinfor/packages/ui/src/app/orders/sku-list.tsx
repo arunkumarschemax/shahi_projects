@@ -91,6 +91,7 @@ export const SkuList = () => {
     services.closeSKUById(req).then((res: any) => {
       if (res.status) {
         message.success(res.internalMessage);
+        handleSearch()
       } else {
         message.error(res.internalMessage);
       }
@@ -195,8 +196,8 @@ export const SkuList = () => {
     services.cancelSku(req).then(res => {
       
       if(res.status){
-        AlertMessages.getSuccessMessage("Sku Cancelled successfully. ")
-        // getData(selected);
+        AlertMessages.getSuccessMessage(res.internalMessage)
+         handleSearch();
       }
       else{
         AlertMessages.getWarningMessage("Something went wrong. ")

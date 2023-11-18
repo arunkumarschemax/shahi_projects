@@ -144,7 +144,7 @@ export class LocationService {
 
                     if (locationExists.isActive) {
                         if (locationStatus.affected) {
-                            const LocationResponse: LocationResponseModel = new LocationResponseModel(true, 10115, 'Location is de-activated successfully');
+                            const LocationResponse: LocationResponseModel = new LocationResponseModel(true, 10115, 'Location is Deactivated successfully');
                             return LocationResponse;
                         } else {
                             throw new LocationResponseModel(false,10111, 'Location is already deactivated');

@@ -165,7 +165,7 @@ export class FabricSubTypeService {
                        
                         if (SubTypeExists.isActive) {
                             if (SubTypeSatatus.affected) {
-                                const FabricResponse: FabricSubTypeResponse = new FabricSubTypeResponse (true, 10115, ' Fabric subType is de-activated successfully');
+                                const FabricResponse: FabricSubTypeResponse = new FabricSubTypeResponse (true, 10115, ' Fabric subType is Deactivated successfully');
                                 return FabricResponse;
                             } else {
                                 throw new ErrorResponse(10111, ' Fabric subType is already deactivated');
