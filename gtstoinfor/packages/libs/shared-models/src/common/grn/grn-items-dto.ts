@@ -2,18 +2,18 @@ import { ApiProperty } from "@nestjs/swagger";
 import { CustomerOrderStatusEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
 
 export class GrnItemsDto{
-    grnItemId:number
-    m3ItemCodeId:number
-    productGroupId:number
-    receivedQuantity:string
-    receivedUomId:number
-    acceptedQuantity:string
-    acceptedUomId:number
-    rejectedQuantity:string
-    rejectedUomId:number
-    conversionQuantity:string
-    conversionUomId:number
-    remarks:string
+    grnItemId?:number
+    m3ItemCodeId?:number
+    productGroupId?:number
+    receivedQuantity?:string
+    receivedUomId?:number
+    acceptedQuantity?:string
+    acceptedUomId?:number
+    rejectedQuantity?:string
+    rejectedUomId?:number
+    conversionQuantity?:string
+    conversionUomId?:number
+    remarks?:string
     createdAt?: Date;
     createdUser?: string | null;
     updatedAt?: Date;
@@ -22,20 +22,22 @@ export class GrnItemsDto{
     grnId?: number;
     poFabricId?: number;
     poTrimId?: number;
+    indentFabricId?:number
+    indentTrimId?:number
 
   constructor(
-    grnItemId:number,
-    m3ItemCodeId:number,
-    productGroupId:number,
-    receivedQuantity:string,
-    receivedUomId:number,
-    acceptedQuantity:string,
-    acceptedUomId:number,
-    rejectedQuantity:string,
-    rejectedUomId:number,
-    conversionQuantity:string,
-    conversionUomId:number,
-    remarks:string,
+    grnItemId?:number,
+    m3ItemCodeId?:number,
+    productGroupId?:number,
+    receivedQuantity?:string,
+    receivedUomId?:number,
+    acceptedQuantity?:string,
+    acceptedUomId?:number,
+    rejectedQuantity?:string,
+    rejectedUomId?:number,
+    conversionQuantity?:string,
+    conversionUomId?:number,
+    remarks?:string,
     createdAt?: Date,
     createdUser?: string | null,
     updatedAt?: Date,
@@ -44,6 +46,9 @@ export class GrnItemsDto{
     grnId?: number,
     poFabricId?: number,
     poTrimId?: number,
+    indentFabricId?:number,
+    indentTrimId?:number
+
   ){
     this.grnItemId = grnItemId
     this.m3ItemCodeId = m3ItemCodeId
@@ -65,6 +70,8 @@ export class GrnItemsDto{
     this.grnId = grnId
     this.poFabricId = poFabricId
     this.poTrimId = poTrimId
+    this.indentFabricId = indentFabricId
+    this.indentTrimId = indentTrimId
   }
 
 

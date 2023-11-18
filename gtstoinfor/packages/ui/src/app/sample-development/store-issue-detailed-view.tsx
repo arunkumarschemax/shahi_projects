@@ -185,17 +185,15 @@ export const StoreIssueDetailed = () => {
     {
       title: "Issued Quantity",
       dataIndex: "issuingQuantity",
-      render: (text, row, index) => {
+      render: (_, record) => {
         return (
           <>
-          {/* <Form.Item name={"issuingQuantity" + index}> */}
+          <Form.Item 
+            name={`receivedQuantity_${record.poFabricId}_${record.key}`}>
             <Input
-              key={row.materialFabricId}
               placeholder="Issued Quantity"
-              onChange={e=> fabricDataInfo(e,index,row)}
-              // value={formData.issuedQuantity}
             />
-            {/* </Form.Item> */}
+            </Form.Item>
           </>
         );
       },
