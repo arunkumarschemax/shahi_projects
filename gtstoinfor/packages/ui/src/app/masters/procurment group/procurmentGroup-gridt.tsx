@@ -49,7 +49,6 @@ export function ProcurmentGroupGrid(
 
   const updateProcurmentGroup = (ProcurmentGroupData:ProcurmentGroupRequest) => {
   procurmentGroupService.updateProcurmentGroup(ProcurmentGroupData).then(res => {
-      console.log(res);
       if(res.status){
         getAllProcurmentGroupData();
         setDrawerVisible(false);
@@ -170,8 +169,6 @@ export function ProcurmentGroupGrid(
     const openFormWithData=(viewData: ProcurmentGroupDto)=>{
       setDrawerVisible(true);
       setSelectedProcurmentGroup(viewData);
-      console.log(selectedProcurmentGroup)
-      console.log('selectedProcurmentGroup')
     }
   
     const columnsSkelton: ColumnProps<any>[] = [
@@ -284,7 +281,6 @@ export function ProcurmentGroupGrid(
    * @param extra 
    */
   const onChange=(pagination, filters, sorter, extra)=> {
-    console.log('params', pagination, filters, sorter, extra);
   } 
 
   return (
@@ -321,6 +317,7 @@ export function ProcurmentGroupGrid(
           columns={columnsSkelton}
           dataSource={ProcurmentGroupData}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

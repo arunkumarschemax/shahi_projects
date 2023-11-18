@@ -163,12 +163,31 @@ const getRmItemsDatabyProductGroupId1 = () => {
 
 
  const onFinish =(values)=>{
-  // console.log(values,"vvvvv")
+  // validation for select either one trim item or fabric item
   if (!rmItems.length && !fabItems.length) {
     message.error('Please select at least one item in Fabric Items or Trims Items');
     return;
   }
+  // ----- end of validation
+
+  // for select operation dropdown before submit
+  const checkOperations = (items, selectedCheckbox) => {
+    for (const item of items) {
+      if (selectedCheckbox[item.rmitemId] && !itemOpMap.get(item.rmitemId)) {
+        message.error(`Please select operation for respective checkbox`);
+        return false;
+      }
+    }
+    return true;
+  };
+
+  if (!checkOperations(rmItems, selectedCheckbox) || !checkOperations(fabItems, selectedCheckbox1)) {
+    return;
+  }
   
+  //---end of select operation dropdown
+
+
   rmItems.forEach(res=>{
     res.operationId = itemOpMap.get(res.rmitemId)
    })

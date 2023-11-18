@@ -93,7 +93,7 @@ export class PackageTermsService {
               );
               packageTermsDTO.push(convertedstatesDto);
             });
-            const response = new AllPackageTermsResponseModel(true,11108,"PackageTerms retrieved successfully",packageTermsDTO);
+            const response = new AllPackageTermsResponseModel(true,11108,"PackageTerms retrieved Successfully",packageTermsDTO);
            
             
             return response;
@@ -150,17 +150,17 @@ export class PackageTermsService {
                       console.log(packageTermsStatus,"pay////////")
                       if (packageTermsExists.isActive) {
                           if (packageTermsStatus.affected) {
-                              const packageTermsResponse: PackageTermsResponseModel = new PackageTermsResponseModel(true, 10115, 'PackageTerm is deactivated successfully');
+                              const packageTermsResponse: PackageTermsResponseModel = new PackageTermsResponseModel(true, 10115, 'PackageTerm is Deactivated Successfully');
                               return packageTermsResponse;
                           } else {
-                              throw new PackageTermsResponseModel(false,10111, 'PackageTerm is already deactivated');
+                              throw new PackageTermsResponseModel(false,10111, 'PackageTerm is already Deactivated');
                           }
                       } else {
                           if (packageTermsStatus.affected) {
-                              const packageTermsResponse: PackageTermsResponseModel = new PackageTermsResponseModel(true, 10114, 'PackageTerm is activated successfully');
+                              const packageTermsResponse: PackageTermsResponseModel = new PackageTermsResponseModel(true, 10114, 'PackageTerm is Activated Successfully');
                               return packageTermsResponse;
                           } else {
-                              throw new PackageTermsResponseModel(false,10112, 'PackageTerm is already activated');
+                              throw new PackageTermsResponseModel(false,10112, 'PackageTerm is already Activated');
                           }
                       }
                   // }
@@ -181,7 +181,7 @@ export class PackageTermsService {
               
               const packageTermsData: PackageTermsDTO = this.packageTermsAdapter.convertEntityToDto(packageTermsEntities);
               if (packageTermsData) {
-                  const response = new PackageTermsResponseModel(true, 11101 , 'Package Terms retrived Successfully',packageTermsData);
+                  const response = new PackageTermsResponseModel(true, 11101 , 'PackageTerms retrived Successfully',packageTermsData);
                   return response;
               }
               else{
@@ -212,7 +212,7 @@ export class PackageTermsService {
                 packageTermsEntities.forEach(packageTermsEntity => {
                     packageTermsDTO.push(new PackageTermsDropDownDto(packageTermsEntity.packageTermsId, packageTermsEntity.packageTermsName));
                 });
-                const response = new PackageTermsDropDownResponseModel(true, 11108, "packageTerms retrieved successfully", packageTermsDTO);
+                const response = new PackageTermsDropDownResponseModel(true, 11108, "PackageTerms retrieved Successfully", packageTermsDTO);
                 return response;
             } else {
                 throw new PackageTermsResponseModel(false,99998, 'Data not found');
@@ -231,7 +231,7 @@ export class PackageTermsService {
                 packageTermsEntities.forEach(packageTermsEntity => {
                     packageTermsDTO.push(new PackageTermsDropDownDto(packageTermsEntity.packageTermsId, packageTermsEntity.packageTermsName));
                 });
-                const response = new PackageTermsDropDownResponseModel(true, 11108, "packageTerms retrieved successfully", packageTermsDTO);
+                const response = new PackageTermsDropDownResponseModel(true, 11108, "PackageTerms retrieved Successfully", packageTermsDTO);
                 return response;
             } else {
                 throw new PackageTermsResponseModel(false,99998, 'Data not found');

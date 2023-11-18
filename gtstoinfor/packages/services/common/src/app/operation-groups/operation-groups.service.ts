@@ -166,7 +166,7 @@ export class OperationGroupsService{
                        
                         if (operationGroupExists.isActive) {
                             if (currencyStatus.affected) {
-                                const currencyResponse: OperationGroupsResponseModel = new OperationGroupsResponseModel(true, 10115, 'Operation Group is de-activated successfully');
+                                const currencyResponse: OperationGroupsResponseModel = new OperationGroupsResponseModel(true, 10115, 'Operation Group is Deactivated successfully');
                                 return currencyResponse;
                             } else {
                                 throw new OperationGroupsResponseModel(false,10111, 'Operation Group is already deactivated');

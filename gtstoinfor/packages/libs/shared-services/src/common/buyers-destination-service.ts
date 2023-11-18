@@ -8,7 +8,7 @@ export class BuyerDestinationService  extends CommonAxiosService{
         return this.axiosPostCall(this.URL + '/createbuyersDes',req)
     }
 
-    async getAll(req:BuyersDestinationRequest):Promise<BuyersDestinationResponseModel>{
+    async getAll(req?:BuyersDestinationRequest):Promise<BuyersDestinationResponseModel>{
         return this.axiosPostCall(this.URL + '/getAll',req)
     }
 

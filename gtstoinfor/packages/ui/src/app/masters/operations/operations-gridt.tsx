@@ -49,7 +49,6 @@ export function OperationsGrid(
 
   const updateOperation = (operationData: OperationsDTO) => {
     operationsService.updateOperations(operationData).then(res => {
-      console.log(res);
       if (res.status) {
         getAllOperationsData();
         setDrawerVisible(false);
@@ -171,8 +170,6 @@ export function OperationsGrid(
   const openFormWithData = (viewData: OperationsDTO) => {
     setDrawerVisible(true);
     setSelectedOperation(viewData);
-    console.log(selectedOperation)
-    console.log('selectedOperation')
   }
 
   const columnsSkelton: ColumnProps<any>[] = [
@@ -302,7 +299,6 @@ export function OperationsGrid(
 * @param extra 
 */
   const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
   }
 
   return (
@@ -338,6 +334,7 @@ export function OperationsGrid(
         columns={columnsSkelton}
         dataSource={operationsData}
         pagination={{
+          pageSize:50,
           onChange(current) {
             setPage(current);
           }
