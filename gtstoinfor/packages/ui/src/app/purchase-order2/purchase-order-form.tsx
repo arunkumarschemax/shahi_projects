@@ -183,7 +183,10 @@ return(
         <Row gutter={24}>
             <Card title={poType == 'Fabric'?<span style={{color:'blue', fontSize:'17px'}}>Fabric Details</span>:poType =='Trim'?<span style={{color:'blue', fontSize:'17px'}}>Trim Details</span>:''}>
                 {poType == 'Fabric' ?
-            <PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={indentId}/>:poType == 'Trim' ? <PurchaseOrderTrim key='trim' props={handleTrim}  indentId={indentId}/>:<></>
+                <Card style={{width:'150%'}}><PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={indentId}/></Card>
+           :poType == 'Trim' ?
+           <Card style={{width:'130%'}}> <PurchaseOrderTrim key='trim' props={handleTrim}  indentId={indentId}/></Card>
+            :<></>
             }
             </Card>
             </Row>

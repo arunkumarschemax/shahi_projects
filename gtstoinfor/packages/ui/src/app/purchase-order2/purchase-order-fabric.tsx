@@ -1,6 +1,6 @@
 import { EditOutlined, EnvironmentOutlined, MinusCircleOutlined, PlusOutlined, UndoOutlined } from "@ant-design/icons"
 import { M3MastersCategoryReq } from "@project-management-system/shared-models"
-import { ColourService, FabricTypeService, FabricWeaveService, IndentService, M3MastersService, ProfitControlHeadService, UomService } from "@project-management-system/shared-services"
+import { ColourService, FabricTypeService, FabricWeaveService, IndentService, M3MastersService, M3StyleService, ProfitControlHeadService, UomService } from "@project-management-system/shared-services"
 import { Button, Card, Col, Divider, Form, Input, Popconfirm, Row, Select, Space, Tag, Tooltip, message } from "antd"
 import Table, { ColumnProps } from "antd/es/table"
 import { table } from "console"
@@ -35,17 +35,21 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
     const indentService = new IndentService()
     const [indentData, setIndentData]=useState<any[]>([])
     let tableData: any[] = []
+    const m3StyleService = new M3StyleService()
+
 
     console.log(fabricTableVisible)
 
     useEffect(() =>{
         getweave()
         getUom()
-        getM3FabricCodes()
+        // getM3FabricCodes()
         getColor()
         getPCH()
         getFabricType()
+        getM3FabricStyleCodes()
     },[])
+
 
     useEffect(() =>{
         if(indentId != undefined){
@@ -53,9 +57,18 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
         }
     },[indentId])
 
+    const getM3FabricStyleCodes = () => {
+        m3StyleService.getM3Style().then(res => {
+            if(res.status){
+                setFabricM3Code(res.data)
+            }
+        })
+    }
+
     const AllIndnetDetails = (value) =>{
         indentService.getAllIndentItemDetailsAgainstIndent({indentId:value}).then(res =>{
             if(res.status){
+                console.log(res.data)
                 message.info('Please Update Po Quantity')
                 props(res.data)
                 setFabricTableData(res.data)
@@ -166,36 +179,16 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
         {
-            title:'Content',
-            dataIndex:'content',
-            width:'100px'
-        },
-        {
-            title:'Fabric Type',
-            dataIndex:'fabricTypeName',
-            width:'130px'
-            
-        },
-        {
-            title:'Weave',
-            dataIndex:'weaveName',
-            width:'130px'
-        },
-        {
-            title:'Width',
-            dataIndex:'width',
-            width:'100px'
-        },
-        {
-            title:'Yarn Count',
-            dataIndex:'yarnCount',
-            width:'100px'
-        },
-        {
             title:'M3 Fabric Code',
             dataIndex:'m3FabricCode',
             width:'170px'
         },
+        {
+            title:'Shahi Fabric Code',
+            dataIndex:'shahiFabricCode',
+            width:'170px'
+        },
+        
         {
             title:'Color',
             dataIndex:'colorName',
@@ -270,6 +263,7 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
           setFabricTableVisible(true)
         })
     }
+    console.log(fabricTableData)
     
     return (
     <Card>
@@ -282,7 +276,7 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
             <Form.Item name='indentQuantity' hidden><Input></Input></Form.Item>
             <Form.Item name={'indentFabricId'} hidden><Input></Input></Form.Item>
 
-         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:'none'}}>
                     <Form.Item name='content' label='Content' >
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Content' disabled={inputDisbale}>
                         <Option key='naturalFabrics' value='naturalFabrics'>Natural Fabrics</Option>
@@ -290,8 +284,8 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
                         </Select>
                     </Form.Item>
          </Col>
-         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='fabricTypeId' label='Type of Fabric' rules={[{required:true,message:'Type of Fabric is required'}]}>
+         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:'none'}}>
+                    <Form.Item name='fabricTypeId' label='Type of Fabric'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Fabric Type'
                         onChange={fabrictyprOnchange}
                         disabled={inputDisbale}
@@ -304,7 +298,7 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
                             </Select>
                     </Form.Item>
         </Col>
-        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:'none'}}>
                     <Form.Item name='weaveId' label='Weave'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select weave'
                         disabled={inputDisbale}
@@ -317,27 +311,16 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
                         </Select>
                     </Form.Item>
          </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:'none'}}>
             <Form.Item name='yarnCount' label='Yarn Count'
-             rules={[
-                {
-                  required: true,
-                  message: "YarnCount Is Required",
-                }
-               ]}
                >
                 <Input placeholder="Enter Yarn Count" 
                         disabled={inputDisbale}
                 />
             </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'1.5%'}}>
-            <Form.Item name='yarnUnit'  rules={[
-                            {
-                              required: true,
-                              message: "Uom Type Is Required",
-                            }
-                        ]}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'1.5%',display:'none'}}>
+            <Form.Item name='yarnUnit'>
                 <Select showSearch allowClear optionFilterProp="children" placeholder='Unit' 
                         disabled={inputDisbale}
                         >
@@ -349,34 +332,35 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
                         </Select>
                     </Form.Item>
         </Col>
-        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:'none'}}>
             <Form.Item name='width' label='Width' >
                 <Input placeholder="Enter Width"  
                         disabled={inputDisbale}
                         />
             </Form.Item>
           </Col>
-           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
            <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{required:true,message:'M3 Code is required'}]}>
            <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'
                         disabled={inputDisbale}
                         >
               {fabricM3Code.map(e => {
                 return(
-                 <Option key={e.m3Code} value={e.m3Code}> {e.m3Code}-{e.category}</Option>
+                //  <Option key={e.m3Code} value={e.m3Code}> {e.m3Code}-{e.category}</Option>
+                 <Option key={e.m3StyleId} value={e.m3StyleId}> {e.m3StyleCode}</Option>
                        )
                       })}
                   </Select>
                  </Form.Item>
                 </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
                        <Form.Item name='shahiFabricCode' label='Shahi Fabric Code'
                         // rules={[{required:true,message:'M3 Code is required'}]}
                         >
                         <Input/>
                        </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
                     <Form.Item name='colourId' label='Color'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Color'
                         onChange={colorOnchange}
@@ -397,7 +381,7 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
                         <Input placeholder="Enter Quantity"/>
                     </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'1.5%'}}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{marginTop:'2%'}}>
                     <Form.Item name='quantityUomId' rules={[{required:true,message:'Quantity unit is required'}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
                             {uom.map(e => {
