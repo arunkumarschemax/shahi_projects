@@ -207,6 +207,7 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
           }
           setTrimTableData(tableData)
           props(tableData)
+          setInputDisable(false)
           trimForm.resetFields()
           setUpdate(false)
           setTrimtableVisible(true)
@@ -343,7 +344,7 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
                             <Input></Input>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2.8%'}}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
                     <Form.Item name='quantityUomId'  rules={[{required:true,message:'Quantity unit is required'}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
                             {uom.map(e => {
