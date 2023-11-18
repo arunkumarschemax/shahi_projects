@@ -412,6 +412,7 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
               setPage(current);
             }
           }}
+          className='custom-table-wrapper'
           scroll={{x:true}}
           onChange={onChange}
           bordered />

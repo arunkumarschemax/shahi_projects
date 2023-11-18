@@ -370,6 +370,7 @@ export const DestinationGrid = (props: DestinationGridProps) => {
 
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
+          className='custom-table-wrapper'
           dataSource={variantData}
           pagination={{
             onChange(current) {
