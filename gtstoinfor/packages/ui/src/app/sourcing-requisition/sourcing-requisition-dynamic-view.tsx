@@ -89,66 +89,66 @@ export const SourcingRequisitionDynamicView = () => {
                 )
             }
         },
-        {
-            title:'Content',
-            dataIndex:'content'
-        },
-        {
-            title:'Fabric Type',
-            dataIndex:'fabricType',
+        // {
+        //     title:'Content',
+        //     dataIndex:'content'
+        // },
+        // {
+        //     title:'Fabric Type',
+        //     dataIndex:'fabricType',
             
-        },
-        {
-            title:'Weave',
-            dataIndex:'weave',
-            // render: (text,record) => {
-            //     return(
-            //         <>
-            //         {record.weave ? record.weaveName : '-'}
-            //         </>
-            //     )
-            // }
-        },
-        {
-            title:'Weight',
-            dataIndex:'weight',
-            render: (text,record) => {
-                return(
-                    <>
-                    {record.weight ? `${record.weight} ${record.weightUnit}` : '-'}
-                    </>
-                )
-            }
-        },
-        {
-            title:'Width',
-            dataIndex:'width'
-        },
-        {
-            title:'Construction',
-            dataIndex:'construction'
-        },
-        {
-            title:'Yarn Count',
-            dataIndex:'yarnCount',
-            render: (text,record) => {
-                return(
-                    <>
-                    {record.yarnCount ? `${record.yarnCount} ${record.unit}` : '-'}
-                    </>
-                )
-            }
-        },
-        {
-            title:'Finish',
-            dataIndex:'finish',
-          //   sorter: (a, b) => a.finish.length - b.finish.length,
-          // sortDirections: ['descend', 'ascend'],
-        },
-        {
-            title:'Shrinkage',
-            dataIndex:'shrinkage',
-        },
+        // },
+        // {
+        //     title:'Weave',
+        //     dataIndex:'weave',
+        //     // render: (text,record) => {
+        //     //     return(
+        //     //         <>
+        //     //         {record.weave ? record.weaveName : '-'}
+        //     //         </>
+        //     //     )
+        //     // }
+        // },
+        // {
+        //     title:'Weight',
+        //     dataIndex:'weight',
+        //     render: (text,record) => {
+        //         return(
+        //             <>
+        //             {record.weight ? `${record.weight} ${record.weightUnit}` : '-'}
+        //             </>
+        //         )
+        //     }
+        // },
+        // {
+        //     title:'Width',
+        //     dataIndex:'width'
+        // },
+        // {
+        //     title:'Construction',
+        //     dataIndex:'construction'
+        // },
+        // {
+        //     title:'Yarn Count',
+        //     dataIndex:'yarnCount',
+        //     render: (text,record) => {
+        //         return(
+        //             <>
+        //             {record.yarnCount ? `${record.yarnCount} ${record.unit}` : '-'}
+        //             </>
+        //         )
+        //     }
+        // },
+        // {
+        //     title:'Finish',
+        //     dataIndex:'finish',
+        //   //   sorter: (a, b) => a.finish.length - b.finish.length,
+        //   // sortDirections: ['descend', 'ascend'],
+        // },
+        // {
+        //     title:'Shrinkage',
+        //     dataIndex:'shrinkage',
+        // },
         {
             title:'Color',
             dataIndex:'color',
@@ -161,52 +161,52 @@ export const SourcingRequisitionDynamicView = () => {
             // }
             
         },
-        {
-            title:'PCH',
-            dataIndex:'pch',
-            // render: (text,record) => {
-            //     return(
-            //         <>
-            //         {record.pch ? record.pchName : '-'}
-            //         </>
-            //     )
-            // }
+        // {
+        //     title:'PCH',
+        //     dataIndex:'pch',
+        //     // render: (text,record) => {
+        //     //     return(
+        //     //         <>
+        //     //         {record.pch ? record.pchName : '-'}
+        //     //         </>
+        //     //     )
+        //     // }
             
-        },
-        {
-            title:'MOQ',
-            dataIndex:'moq',
-            render: (text,record) => {
-                return(
-                    <>
-                    {record.moq ? `${record.moq} ${record.moqUnit}` : '-'}
-                    </>
-                )
-            }
-        },
+        // },
+        // {
+        //     title:'MOQ',
+        //     dataIndex:'moq',
+        //     render: (text,record) => {
+        //         return(
+        //             <>
+        //             {record.moq ? `${record.moq} ${record.moqUnit}` : '-'}
+        //             </>
+        //         )
+        //     }
+        // },
         {
             title:'Season',
             dataIndex:'season',
             
         },
-        {
-            title:'MOQ Price',
-            dataIndex:'moqPrice',
-            render: (text,record) => {
-                return(
-                    <>
-                    {record.moqPrice ? `${record.moqPrice} ${record.moqPriceUnit}` : '-'}
-                    </>
-                )
-            }
-        },
+        // {
+        //     title:'MOQ Price',
+        //     dataIndex:'moqPrice',
+        //     render: (text,record) => {
+        //         return(
+        //             <>
+        //             {record.moqPrice ? `${record.moqPrice} ${record.moqPriceUnit}` : '-'}
+        //             </>
+        //         )
+        //     }
+        // },
         {
             title:'Supplier',
-            dataIndex:'supplier',
+            dataIndex:'supplierId',
             render: (text,record) => {
                 return(
                     <>
-                    {record.supplier ? record.supplierName : '-'}
+                    {record.supplierId ? record.supplierId : '-'}
                     </>
                 )
             }
@@ -262,10 +262,10 @@ export const SourcingRequisitionDynamicView = () => {
             //     )
             // }
         },
-        {
-            title:'Status',
-            dataIndex:'status'
-        },
+        // {
+        //     title:'Status',
+        //     dataIndex:'status'
+        // },
         {
             title:'To Be Procured',
             dataIndex:'tobeProcured',
