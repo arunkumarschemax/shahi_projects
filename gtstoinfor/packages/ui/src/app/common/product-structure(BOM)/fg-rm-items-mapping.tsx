@@ -246,7 +246,7 @@ const getRmItemsDatabyProductGroupId1 = () => {
                 } >
                 {fgItemsData.map((rec) => (
                         <Option key={rec.fgitemId} value={rec.fgitemId} code={rec.itemCode}>
-                          {`${rec.itemName}-${rec.itemCode}`}
+                          {`${rec.itemCode}-${rec.itemName}`}
                         </Option>
                      ))}
     
