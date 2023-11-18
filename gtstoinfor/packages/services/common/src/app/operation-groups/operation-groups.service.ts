@@ -166,17 +166,17 @@ export class OperationGroupsService{
                        
                         if (operationGroupExists.isActive) {
                             if (currencyStatus.affected) {
-                                const currencyResponse: OperationGroupsResponseModel = new OperationGroupsResponseModel(true, 10115, 'Operation Group is de-activated successfully');
+                                const currencyResponse: OperationGroupsResponseModel = new OperationGroupsResponseModel(true, 10115, 'Operation Group is Deactivated successfully');
                                 return currencyResponse;
                             } else {
-                                throw new OperationGroupsResponseModel(false,10111, 'Operation Group is already deactivated');
+                                throw new OperationGroupsResponseModel(false,10111, 'Operation Group is already Deactivated');
                             }
                         } else {
                             if (currencyStatus.affected) {
-                                const CurrencyResponse: OperationGroupsResponseModel = new OperationGroupsResponseModel(true, 10114, 'Operation Group is activated successfully');
+                                const CurrencyResponse: OperationGroupsResponseModel = new OperationGroupsResponseModel(true, 10114, 'Operation Group is Activated successfully');
                                 return CurrencyResponse;
                             } else {
-                                throw new OperationGroupsResponseModel(false,10112, 'Operation Group is already  activated');
+                                throw new OperationGroupsResponseModel(false,10112, 'Operation Group is already  Activated');
                             }
                         }
                     // }

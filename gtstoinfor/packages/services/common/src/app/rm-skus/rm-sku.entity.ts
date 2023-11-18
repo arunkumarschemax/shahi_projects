@@ -1,5 +1,6 @@
 import { RmItemTypeEnum, RmStatusEnum } from "@project-management-system/shared-models";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { FeatureSubstitution } from "../substituion/feature-substituion.entity";
 
 @Entity('rm_skus')
 export class RmSkus {
@@ -108,5 +109,8 @@ updatedUser: string | null;
     name: "version_flag"
 })
 versionFlag: number;
+
+  @OneToMany(type=>FeatureSubstitution, item=>item.rmSkuInfo,{cascade: true})
+  featureSubstitutionInfo:FeatureSubstitution;
 
 }

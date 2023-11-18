@@ -28,6 +28,7 @@ export const Substitution = () => {
     const [form] = Form.useForm()
     const service = new SubstitutionService()
     const navigate = useNavigate()
+    const substitutionService = new SubstitutionService()
     
 
     useEffect(() => {
@@ -50,12 +51,17 @@ export const Substitution = () => {
                 setFgSkus(res.data)
             }
         })
-          const rmskureq = new FgItemCodeReq(val)
-          rmSkuService.getAllInfoByItemCode(rmskureq).then(res => {
-            if(res.status){
-                setRmSKus(res.data)
-            }
-          })
+        const rmskureq = new FgItemCodeReq(val)
+        rmSkuService.getAllInfoByItemCode(rmskureq).then(res => {
+        if(res.status){
+            setRmSKus(res.data)
+        }
+        })
+        // substitutionService.getFeatureSubstitutionByFgItem(rmskureq).then(res => {
+        //     if(res.status){
+        //         setRmSKus(res.data)
+        //     }
+        // })
         
     }
 

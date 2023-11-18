@@ -43,7 +43,7 @@ export const FeatureSubstitution = () =>{
     }
 
     const onChange = (checkedValues,e,rowData,info) => {
-        const req = new RMInfoReq(e.rmItemId,e.rmItemCode,e.rmSkuCode,info[0].featureId,rowData.fetaureCode,info[0].option,rowData.fgOptionValue,info[0].option,checkedValues.target.value,StatusEnum.OPEN)
+        const req = new RMInfoReq(e.rmItemId,e.rmItemCode,e.rmSkuId,e.rmSkuCode,info[0].featureId,rowData.fetaureCode,info[0].option,rowData.fgOptionValue,info[0].option,checkedValues.target.value,StatusEnum.OPEN)
         if(checkedValues.target.checked){
             setCheckValues([...checkValues,req]);
         } else{

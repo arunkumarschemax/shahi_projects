@@ -278,7 +278,7 @@ export function SKUGeneration  (props:FormProps){
       <Row gutter={24}>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 6 }}>
             <Form.Item label='FG Item' name='itemCode' rules={[{required:true,message:'Item is required'}]}>
-                <Select showSearch allowClear placeholder='Select FG Item' onChange={onItemCodeChange}>
+                <Select showSearch allowClear placeholder='Select FG Item' onChange={onItemCodeChange} optionFilterProp='children'>
                     {/* <Option key='itemcode' value='itemcode' itemId='itemId'>Item Codes </Option> */}
                     {
                         itemcodes.map((e)=>{
