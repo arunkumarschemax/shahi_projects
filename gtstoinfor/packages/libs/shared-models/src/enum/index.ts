@@ -10,3 +10,6 @@ export * from './rack-enum'
 export * from './bom-status-enum'
 export * from './rack-position-enum'
 export * from './purchase-order-enum'
+export * from './property.enum'
+export * from './is-imported-item.enum'
+
