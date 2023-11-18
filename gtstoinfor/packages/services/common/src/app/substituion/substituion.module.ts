@@ -8,13 +8,14 @@ import { SubstitutionRepository } from "./substitution-repo";
 import { FGItemBomRepository } from "./fg-item-bom-repo";
 import { FgItemBom } from "./fg-item-bom.entity";
 import { FeatureSubstitution } from "./feature-substituion.entity";
+import { FeatureSubstitutionRepository } from "./feature-substitution-repo";
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([Substitution,FgItemBom,FeatureSubstitution]),
       ],
       controllers: [SubstituionController],
-      providers: [SubstituionService,ApplicationExceptionHandler,SubstitutionRepository,FGItemBomRepository],
+      providers: [SubstituionService,ApplicationExceptionHandler,SubstitutionRepository,FGItemBomRepository,FeatureSubstitutionRepository],
       exports: []
 })
 export class SubstituionModule { }

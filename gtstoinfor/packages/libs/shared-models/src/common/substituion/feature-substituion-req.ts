@@ -15,6 +15,7 @@ export class FeatureSubstituionReq{
 export class RMInfoReq{
     rmItemId: number;
     rmItemCode: string;
+    rmSkuId: number;
     rmSkuCode: string;
     featureId: number;
     featureCode: string;
@@ -24,9 +25,10 @@ export class RMInfoReq{
     rmOptionValue: string;
     status: StatusEnum;
 
-    constructor(rmItemId: number,rmItemCode: string,rmSkuCode: string,featureId: number,featureCode: string,fgOption: string,fgOptionValue: string,rmOption: string,rmOptionValue: string,status: StatusEnum){
+    constructor(rmItemId: number,rmItemCode: string,rmSkuId: number,rmSkuCode: string,featureId: number,featureCode: string,fgOption: string,fgOptionValue: string,rmOption: string,rmOptionValue: string,status: StatusEnum){
     this.rmItemId = rmItemId
     this.rmItemCode = rmItemCode
+    this.rmSkuId = rmSkuId
     this.rmSkuCode = rmSkuCode
     this.featureId = featureId
     this.featureCode = featureCode

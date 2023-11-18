@@ -3,6 +3,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, Pr
 import { ItemCreation } from "../fg-item/item_creation.entity";
 import { RmCreationEntity } from "../rm-items/rm-items.entity";
 import { FeatureEntity } from "../feature-creation/entities/feature.entity";
+import { RmSkus } from "../rm-skus/rm-sku.entity";
 
 @Entity('feature_substitution')
 export class FeatureSubstitution{
@@ -126,6 +127,10 @@ export class FeatureSubstitution{
     @ManyToOne(type => FeatureEntity, fgi => fgi.featureSubstitutionInfo,{nullable:false})
     @JoinColumn({name:'feature_id'})
     featureInfo: FeatureEntity
+
+    @ManyToOne(type => RmSkus, rms => rms.featureSubstitutionInfo,{nullable: false})
+    @JoinColumn({name:'rm_sku_id'})
+    rmSkuInfo: RmSkus
 
     
 }

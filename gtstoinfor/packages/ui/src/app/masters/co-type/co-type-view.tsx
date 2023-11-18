@@ -147,7 +147,7 @@ export const CoTypeView = () => {
 
     const columns: ColumnProps<any>[] = [
         {
-            title: 'S No',
+            title: <div style={{textAlign:'center'}}>S No</div>,
             key: 'sno',
             width: '70px',
             responsive: ['sm'],
@@ -163,6 +163,7 @@ export const CoTypeView = () => {
         {
             title:<div style={{textAlign:'center'}}>Status</div>,
             dataIndex: 'isActive',
+            align:'center',
             render: (isActive, rowData) => (
               <>
                 {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -212,6 +213,7 @@ export const CoTypeView = () => {
           {
             title:<div style={{textAlign:'center'}}>Action</div>,
             dataIndex: 'action',
+            align:'center',
             render: (text, rowData) => (
               <span>   
                   <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
@@ -270,7 +272,7 @@ export const CoTypeView = () => {
           <Alert type='warning' message={'Active: ' + data.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
-          <Alert type='info' message={'In-Active: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'InActive: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
             </Row>
             <br></br>
