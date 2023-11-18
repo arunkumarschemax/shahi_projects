@@ -91,7 +91,7 @@ export interface PaymentMethodFormProps{
             }
           ]}
         >
-          <Input  placeholder='enter PaymentMethod'/>
+          <Input  placeholder='Enter Payment Method'/>
         </Form.Item>
         </Col>
         </Row>
