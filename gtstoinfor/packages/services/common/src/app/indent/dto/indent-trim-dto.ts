@@ -4,7 +4,7 @@ export class IndentTrimDto{
     @ApiProperty()
     itrimsId: number;
     @ApiProperty()
-    trimType: string;
+    trimType: number;
     @ApiProperty()
     trimCode: number;
     @ApiProperty()
@@ -12,9 +12,9 @@ export class IndentTrimDto{
     @ApiProperty()
     color: number;
     @ApiProperty()
-    quantity: string;
+    quantity: number;
     @ApiProperty()
-    quantityUnit: string;
+    quantityUnit: number;
     @ApiProperty()
     m3TrimCode: string;
     @ApiProperty()
@@ -39,12 +39,12 @@ export class IndentTrimDto{
     versionFlag?: number;
   constructor(
     itrimsId: number,
-    trimType: string,
+    trimType: number,
     trimCode: number,
     size: number,
     color: number,
-    quantity: string,
-    quantityUnit: string,
+    quantity: number,
+    quantityUnit: number,
     m3TrimCode: string,
     description: string,
     remarks: string,

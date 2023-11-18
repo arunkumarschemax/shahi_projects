@@ -4,44 +4,44 @@ import { CustomerOrderStatusEnum } from "@project-management-system/shared-model
 export class IndentFabricDto{
     @ApiProperty()
     ifabricId: number;
-    @ApiProperty()
-    content: string;
-    @ApiProperty()
-    fabricType: string;
-    @ApiProperty()
-    weaveId: number;
-    @ApiProperty()
-    weight: number;
+    // @ApiProperty()
+    // content: string;
+    // @ApiProperty()
+    // fabricType: string;
+    // @ApiProperty()
+    // weaveId: number;
+    // @ApiProperty()
+    // weight: number;
     @ApiProperty()
     uomId: number;
+    // @ApiProperty()
+    // width: number;
+    // @ApiProperty()
+    // yarnCount: number;
+    // @ApiProperty()
+    // yarnUnit: number;
+    // @ApiProperty()
+    // weightUnit:number;
+    // @ApiProperty()
+    // construction: string;
+    // @ApiProperty()
+    // finish: string;
+    // @ApiProperty()
+    // shrinkage: string;
     @ApiProperty()
-    width: number;
-    @ApiProperty()
-    yarnCount: number;
-    @ApiProperty()
-    yarnUnit: number;
-    @ApiProperty()
-    weightUnit:number;
-    @ApiProperty()
-    construction: string;
-    @ApiProperty()
-    finish: string;
-    @ApiProperty()
-    shrinkage: string;
-    @ApiProperty()
-    m3FabricCode: string;
+    m3FabricCode: number;
     @ApiProperty()
     color: number;
-    @ApiProperty()
-    pch: number;
-    @ApiProperty()
-    moq: number;
-    @ApiProperty()
-    moqUnit: number;
-    @ApiProperty()
-    moqPrice: number;
-    @ApiProperty()
-    moqPriceUnit: number;
+    // @ApiProperty()
+    // pch: number;
+    // @ApiProperty()
+    // moq: number;
+    // @ApiProperty()
+    // moqUnit: number;
+    // @ApiProperty()
+    // moqPrice: number;
+    // @ApiProperty()
+    // moqPriceUnit: number;
     @ApiProperty()
     season: string;
     @ApiProperty()
@@ -53,7 +53,7 @@ export class IndentFabricDto{
     @ApiProperty()
     xlNo: string;
     @ApiProperty()
-    quantity: string;
+    quantity: number;
     @ApiProperty()
     quantityUnit: number;
     @ApiProperty()
@@ -76,30 +76,30 @@ export class IndentFabricDto{
     versionFlag?: number;
   constructor(
     ifabricId: number,
-    content: string,
-    fabricType: string,
-    weaveId: number,
-    weight: number,
-    width: number,
-    yarnCount: number,
-    yarnUnit: number,
-    weightUnit:number,
-    construction: string,
-    finish: string,
-    shrinkage: string,
-    m3FabricCode: string,
+    // content: string,
+    // fabricType: string,
+    // weaveId: number,
+    // weight: number,
+    // width: number,
+    // yarnCount: number,
+    // yarnUnit: number,
+    // weightUnit:number,
+    // construction: string,
+    // finish: string,
+    // shrinkage: string,
+    m3FabricCode: number,
     color: number,
-    pch: number,
-    moq: number,
-    moqUnit: number,
-    moqPrice: number,
-    moqPriceUnit: number,
+    // pch: number,
+    // moq: number,
+    // moqUnit: number,
+    // moqPrice: number,
+    // moqPriceUnit: number,
     season: string,
     supplierId: number,
     buyerId: number,
     grnDate: Date,
     xlNo: string,
-    quantity: string,
+    quantity: number,
     quantityUnit: number,
     file_path: string,
     isUploaded: boolean,
@@ -112,24 +112,24 @@ export class IndentFabricDto{
     versionFlag?: number,
   ){
     this.ifabricId=ifabricId;
-    this.content=content;
-    this.fabricType=fabricType;
-    this.weaveId=weaveId;
-    this.weight=weight;
-    this.width=width;
-    this.yarnCount=yarnCount;
-    this.yarnUnit=yarnUnit;
-    this.weightUnit = weightUnit;
-    this.construction=construction;
-    this.finish=finish;
-    this.shrinkage=shrinkage;
+    // this.content=content;
+    // this.fabricType=fabricType;
+    // this.weaveId=weaveId;
+    // this.weight=weight;
+    // this.width=width;
+    // this.yarnCount=yarnCount;
+    // this.yarnUnit=yarnUnit;
+    // this.weightUnit = weightUnit;
+    // this.construction=construction;
+    // this.finish=finish;
+    // this.shrinkage=shrinkage;
     this.m3FabricCode=m3FabricCode;
     this.color=color;
-    this.pch=pch;
-    this.moq=moq;
-    this.moqUnit=moqUnit;
-    this.moqPrice=moqPrice;
-    this.moqPriceUnit=moqPriceUnit;
+    // this.pch=pch;
+    // this.moq=moq;
+    // this.moqUnit=moqUnit;
+    // this.moqPrice=moqPrice;
+    // this.moqPriceUnit=moqPriceUnit;
     this.season=season;
     this.supplierId=supplierId;
     this.buyerId=buyerId;

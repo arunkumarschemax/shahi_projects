@@ -13,12 +13,11 @@ export class IndentTrimsEntity {
   @PrimaryGeneratedColumn("increment", { name: 'itrims_id' })
   itrimsId: number;
 
-  @Column("varchar", {
+  @Column("int", {
     nullable: false,
-    length: 255,
     name: "trim_type"
   })
-  trimType: string;
+  trimType: number;
 
   @Column('int',{
     name:'trim_code',
@@ -36,18 +35,15 @@ export class IndentTrimsEntity {
         nullable: false
         })
         color: number;
-        @Column('varchar',{
-            name:'quantity',
-            nullable: false
-            })
-            quantity: string;
-
-    @Column('varchar',{
+        @Column('decimal', {
+          name: 'quantity',
+        })
+        quantity: number
+    @Column('int',{
         name:'quantity_unit',
         nullable: false,
-        length: 255,
         })
-        quantityUnit: string;
+        quantityUnit: number;
    
 @Column("varchar", {
     nullable: false,
@@ -56,7 +52,7 @@ export class IndentTrimsEntity {
     })
     m3TrimCode: string;
     @Column("varchar", {
-        nullable: false,
+        nullable: true,
         length: 255,
         name: "description"
       })
@@ -119,11 +115,12 @@ export class IndentTrimsEntity {
   })
   versionFlag: number;
 
-  @Column('varchar',{
-    name:'received_quantity',
-    nullable:true
+  @Column('decimal', {
+    name: 'received_quantity',
+    default: 0,
   })
-  recivedQuantity:string
+  receivedQuantity: number
+  
 
   @ManyToOne(type => Indent, i => i.iTrimsInfo, { nullable: false, })
   @JoinColumn({ name: "indent_id" })
