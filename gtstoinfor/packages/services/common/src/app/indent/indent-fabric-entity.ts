@@ -12,108 +12,107 @@ export class IndentFabricEntity {
   @PrimaryGeneratedColumn("increment", { name: 'ifabric_id' })
   ifabricId: number;
 
-  @Column("varchar", {
-    nullable: false,
-    length: 255,
-    name: "content"
-  })
-  content: string;
+//   @Column("varchar", {
+//     nullable: false,
+//     length: 255,
+//     name: "content"
+//   })
+//   content: string;
 
-  @Column("varchar", {
-    nullable: false,
-    length: 255,
-    name: "fabric_type"
-  })
-  fabricType: string;
+//   @Column("varchar", {
+//     nullable: false,
+//     length: 255,
+//     name: "fabric_type"
+//   })
+//   fabricType: string;
 
-  @Column('int',{
-    name:'weave_id',
-    nullable: false
-    })
-    weaveId: number;
+//   @Column('int',{
+//     name:'weave_id',
+//     nullable: false
+//     })
+//     weaveId: number;
 
-@Column('int',{
-    name:'weight',
-    nullable: false
-    })
-    weight: number;
+// @Column('int',{
+//     name:'weight',
+//     nullable: false
+//     })
+//     weight: number;
   
-    @Column('int',{
-      name:'weight_unit',
-      nullable: false
-      })
-      weightUnit: number;
+//     @Column('int',{
+//       name:'weight_unit',
+//       nullable: false
+//       })
+//       weightUnit: number;
 
-    @Column('int',{
-        name:'width',
-        nullable: false
-        })
-        width: number;
-    @Column('int',{
-        name:'yarn_count',
-        nullable: false
-        })
-        yarnCount: number;
-        @Column('int',{
-          name:'yarn_unit',
-          nullable: false
-          })
-          yarnUnit: number;
-@Column("varchar", {
+//     @Column('int',{
+//         name:'width',
+//         nullable: false
+//         })
+//         width: number;
+//     @Column('int',{
+//         name:'yarn_count',
+//         nullable: false
+//         })
+//         yarnCount: number;
+//         @Column('int',{
+//           name:'yarn_unit',
+//           nullable: false
+//           })
+//           yarnUnit: number;
+// @Column("varchar", {
+//     nullable: false,
+//     length: 255,
+//     name: "construction"
+//     })
+//     construction: string;
+//     @Column("varchar", {
+//         nullable: false,
+//         length: 255,
+//         name: "finish"
+//       })
+//       finish: string;
+//       @Column("varchar", {
+//         nullable: false,
+//         length: 255,
+//         name: "shrinkage"
+//       })
+//       shrinkage: string;
+    @Column("int", {
     nullable: false,
-    length: 255,
-    name: "construction"
-    })
-    construction: string;
-    @Column("varchar", {
-        nullable: false,
-        length: 255,
-        name: "finish"
-      })
-      finish: string;
-      @Column("varchar", {
-        nullable: false,
-        length: 255,
-        name: "shrinkage"
-      })
-      shrinkage: string;
-    @Column("varchar", {
-    nullable: false,
-    length: 255,
     name: "m3_fabric_code"
     })
-    m3FabricCode: string;
+    m3FabricCode: number;
     @Column('int',{
         name:'color',
         nullable: false
         })
         color: number;
-        @Column('int',{
-            name:'pch',
-            nullable: false
-            })
-            pch: number;
-            @Column('int',{
-                name:'moq',
-                nullable: false
-                })
-                moq: number;
-                @Column('int',{
-                    name:'moq_unit',
-                    nullable: false
-                    })
-                    moqUnit: number;
-                    @Column('int',{
-                        name:'moq_price',
-                        nullable: false
-                        })
-                        moqPrice: number;
+        // @Column('int',{
+        //     name:'pch',
+        //     nullable: false
+        //     })
+        //     pch: number;
+        //     @Column('int',{
+        //         name:'moq',
+        //         nullable: false
+        //         })
+        //         moq: number;
+        //         @Column('int',{
+        //             name:'moq_unit',
+        //             nullable: false
+        //             })
+        //             moqUnit: number;
+        //             @Column('int',{
+        //                 name:'moq_price',
+        //                 nullable: false
+        //                 })
+        //                 moqPrice: number;
 
-                        @Column('int',{
-                            name:'moq_price_unit',
-                            nullable: false
-                            })
-                            moqPriceUnit: number;
+        //                 @Column('int',{
+        //                     name:'moq_price_unit',
+        //                     nullable: false
+        //                     })
+        //                     moqPriceUnit: number;
     
                     @Column("varchar", {
                         nullable: false,
@@ -142,12 +141,10 @@ export class IndentFabricEntity {
     name: "xl_no"
     })
     xlNo: string;
-
-    @Column('varchar',{
-        name:'quantity',
-        nullable: false
-        })
-        quantity: string;
+    @Column('decimal', {
+      name: 'quantity',
+    })
+    quantity: number
 
         @Column('int',{
           name:'quantity_unit',
@@ -214,9 +211,9 @@ export class IndentFabricEntity {
   })
   versionFlag: number;
 
-  @Column('varchar',{
-    name:'received_quantity',
-    nullable:true
+  @Column('decimal', {
+    name: 'received_quantity',
+    default: 0,
   })
   recivedQuantity:number
 

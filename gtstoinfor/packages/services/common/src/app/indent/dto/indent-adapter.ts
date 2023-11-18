@@ -43,33 +43,32 @@ export class IndentAdapter
               }
               fabEntity.buyerId =indentitems.buyerId;
               fabEntity.color =indentitems.color;
-              fabEntity.construction =indentitems.construction;
-              fabEntity.content=indentitems.content;
-              fabEntity.quantity=indentitems.quantity;
-              fabEntity.fabricType=indentitems.fabricType;
+              // fabEntity.construction =indentitems.construction;
+              // fabEntity.content=indentitems.content;
+              // fabEntity.fabricType=indentitems.fabricType;
               fabEntity.file_path=indentitems.file_path;
-              fabEntity.finish=indentitems.finish;
+              // fabEntity.finish=indentitems.finish;
               fabEntity.grnDate=indentitems.grnDate;
               fabEntity.isUploaded=indentitems.isUploaded;
               fabEntity.m3FabricCode=indentitems.m3FabricCode;
-              fabEntity.moq=indentitems.moq;
-              fabEntity.moqPrice=indentitems.moqPrice;
-              fabEntity.moqPriceUnit=indentitems.moqPriceUnit;
-              fabEntity.moqUnit=indentitems.moqUnit;
-              fabEntity.pch=indentitems.pch;
+              // fabEntity.moq=indentitems.moq;
+              // fabEntity.moqPrice=indentitems.moqPrice;
+              // fabEntity.moqPriceUnit=indentitems.moqPriceUnit;
+              // fabEntity.moqUnit=indentitems.moqUnit;
+              // fabEntity.pch=indentitems.pch;
               fabEntity.quantity=indentitems.quantity;
               fabEntity.quantityUnit=indentitems.quantityUnit;
               fabEntity.remarks=indentitems.remarks;
               fabEntity.season=indentitems.season;
-              fabEntity.shrinkage=indentitems.shrinkage;
+              // fabEntity.shrinkage=indentitems.shrinkage;
               fabEntity.supplierId=indentitems.supplierId;
-              fabEntity.yarnUnit=indentitems.yarnUnit;
-              fabEntity.yarnCount=indentitems.yarnCount;
+              // fabEntity.yarnUnit=indentitems.yarnUnit;
+              // fabEntity.yarnCount=indentitems.yarnCount;
               fabEntity.xlNo=indentitems.xlNo;
-              fabEntity.weight=indentitems.weight;
-              fabEntity.width=indentitems.width;
-              fabEntity.weaveId=indentitems.weaveId;
-              fabEntity.weightUnit = indentitems.weightUnit;
+              // fabEntity.weight=indentitems.weight;
+              // fabEntity.width=indentitems.width;
+              // fabEntity.weaveId=indentitems.weaveId;
+              // fabEntity.weightUnit = indentitems.weightUnit;
               fabricDetails.push(fabEntity);
           }
           indententity.iFabricInfo = fabricDetails;
@@ -106,7 +105,11 @@ export class IndentAdapter
 
         const fabDto:IndentFabricDto[] = [];
         for (const fabItem of indentObject.iFabricInfo) {
-            const fabricdata= new IndentFabricDto(fabItem.ifabricId,fabItem.content,fabItem.fabricType,fabItem.weaveId,fabItem.weight,fabItem.width,fabItem.yarnCount,fabItem.yarnCount,fabItem.weightUnit,fabItem.construction,fabItem.finish,fabItem.shrinkage,fabItem.m3FabricCode,fabItem.color,fabItem.pch,fabItem.moq,fabItem.moqUnit,fabItem.moqPrice,fabItem.moqPriceUnit,fabItem.season,fabItem.supplierId,fabItem.buyerId,fabItem.grnDate,fabItem.xlNo,fabItem.quantity,fabItem.quantityUnit,fabItem.file_path,fabItem.isUploaded,fabItem.remarks,fabItem.isActive,fabItem.createdAt,fabItem.createdUser,fabItem.updatedAt,fabItem.updatedUser);
+            const fabricdata= new IndentFabricDto(fabItem.ifabricId
+              // fabItem.content,fabItem.fabricType,fabItem.weaveId,fabItem.weight,fabItem.width,fabItem.yarnCount,fabItem.yarnCount,fabItem.weightUnit,fabItem.construction,fabItem.finish,fabItem.shrinkage
+              ,fabItem.m3FabricCode,fabItem.color,
+              // fabItem.pch,fabItem.moq,fabItem.moqUnit,fabItem.moqPrice,fabItem.moqPriceUnit,
+              fabItem.season,fabItem.supplierId,fabItem.buyerId,fabItem.grnDate,fabItem.xlNo,fabItem.quantity,fabItem.quantityUnit,fabItem.file_path,fabItem.isUploaded,fabItem.remarks,fabItem.isActive,fabItem.createdAt,fabItem.createdUser,fabItem.updatedAt,fabItem.updatedUser);
             fabDto.push(fabricdata);
         }
 
