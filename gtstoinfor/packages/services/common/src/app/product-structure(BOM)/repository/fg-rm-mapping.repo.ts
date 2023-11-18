@@ -61,7 +61,7 @@ export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
 
     async getInfoByFgItem(req:FgItemCreIdRequest):Promise<any[]>{
       const query = this.createQueryBuilder('fgm')
-      .select(`fgm.fg_item_id,fgm.rm_item_id,rmsku.rm_sku_code,rmsku.feature_code,rmsku.item_code,rmsku.feature_option_id,rmsku.option_group,rmsku.option_value,rmsku.option_id,fgm.rm_item_code,feop.feature_id`)
+      .select(`fgm.fg_item_id,fgm.rm_item_id,rmsku.rm_sku_code,rmsku.feature_code,rmsku.item_code,rmsku.feature_option_id,rmsku.option_group,rmsku.option_value,rmsku.option_id,fgm.rm_item_code,feop.feature_id,rmsku.rm_sku_id`)
       .leftJoin(RmSkus,'rmsku','rmsku.rm_item_id = fgm.rm_item_id')
       .leftJoin(FeatureOptionEntity,'feop','feop.feature_code = rmsku.feature_code')
       .where(`fgm.fg_item_id = ${req.fgItemId}`)

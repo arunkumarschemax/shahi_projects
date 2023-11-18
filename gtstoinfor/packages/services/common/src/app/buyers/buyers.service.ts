@@ -160,17 +160,17 @@ export class BuyersService {
 
                     if (buyerExists.isActive) {
                         if (buyerStatus.affected) {
-                            const buyerResponse: BuyersResponseModel = new BuyersResponseModel(true, 10115, 'Buyer is de-activated successfully');
+                            const buyerResponse: BuyersResponseModel = new BuyersResponseModel(true, 10115, 'Buyer is Deactivated successfully');
                             return buyerResponse;
                         } else {
-                            throw new ErrorResponse(10111, 'Buyer is already deactivated');
+                            throw new ErrorResponse(10111, 'Buyer is already Deactivated');
                         }
                     } else {
                         if (buyerStatus.affected) {
-                            const buyerResponse: BuyersResponseModel = new BuyersResponseModel(true, 10114, 'Buyer is activated successfully');
+                            const buyerResponse: BuyersResponseModel = new BuyersResponseModel(true, 10114, 'Buyer is Activated successfully');
                             return buyerResponse;
                         } else {
-                            throw new ErrorResponse(10112, 'Buyer is already activated');
+                            throw new ErrorResponse(10112, 'Buyer is already Activated');
                         }
                     }
                     // }

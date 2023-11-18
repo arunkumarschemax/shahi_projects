@@ -17,7 +17,6 @@ export const SettingsView = () => {
 
     useEffect(() => {
         getAllInfo()
-
     },[])
 
     const getAllInfo = () => {
@@ -78,7 +77,8 @@ export const SettingsView = () => {
 
         </Card>
             </>) : (<>
-            <SettingsForm/>
+            {/* <SettingsForm/> */}
+            {navigate('/settings/settings-form')}
             </>)
         }
         

@@ -193,7 +193,7 @@ let userRef
         key: 'sno',
         width: '70px',
         responsive: ['sm'],
-        align:'center',
+        // align:'center',
         render: (text, object, index) => (page-1) * 10 +(index+1)
       },
       {
@@ -368,7 +368,7 @@ let userRef
           <Alert type='warning' message={'Active: ' + buyersData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
-          <Alert type='info' message={'Inactive: ' + buyersData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'InActive: ' + buyersData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
 
 
