@@ -24,7 +24,7 @@
 }
 
 .custom-tab-styles .ant-tabs-tab:nth-child(odd) {
-  background-color: #d3adf7; /* Background color for odd tabs */
+  background-color: #E6E6FA; /* Background color for odd tabs */
   color: white; /* Text color for odd tabs */
 }
 
