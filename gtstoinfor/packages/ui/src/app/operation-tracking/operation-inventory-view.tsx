@@ -2,6 +2,7 @@ import { OperationInventoryService } from '@project-management-system/shared-ser
 import { Button, Card, Table, Tooltip } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { render } from 'react-dom';
 
 export const OperationInventoryView = () => {
     const service = new OperationInventoryService()
@@ -23,8 +24,8 @@ export const OperationInventoryView = () => {
         })
     }
 
-    const allocate =(rowData)=>{
-        return  navigate('/operation-tracking/operation-mapping',{state:{data: rowData}})
+    const allocate = (rowData, remainingQty:number) => {
+        return navigate('/operation-tracking/operation-mapping', { state: { data: [rowData ,remainingQty]} })
     }
     const columns: any = [
         {
@@ -63,32 +64,41 @@ export const OperationInventoryView = () => {
         },
         {
             title: 'Mapped Quantity',
-            dataIndex: '',
+            dataIndex: 'mappedQuantity',
             width: '80px'
 
         },
         {
             title: 'Balance',
             dataIndex: '',
-            width: '80px'
+            width: '80px',
+            render: (value, record) => {
+                return <>
+                    {Number(record.physicalQuantity) - Number(record.mappedQuantity)}
+                </>
+            }
+
 
         },
         {
             title: 'Action',
             align: "center",
             width: '10px',
-            render: (text, rowData, index) => (
-                <span>
-                    <Tooltip placement="top" title="Detail View">
-                        <Button  onClick={() => {
-                            allocate(rowData.OperationId)
-                        }}
+            render: (text, rowData, index) => {
+                const validation = Number(rowData.physicalQuantity) - Number(rowData.mappedQuantity)
+                console.log(validation === Number(rowData.physicalQuantity), validation > Number(rowData.physicalQuantity))
+                return <>
+                    <Button
+                        disabled={Number(rowData.physicalQuantity) === Number(rowData.mappedQuantity) ? true : false}
                         type='primary'
-                        > Allocate</Button>
+                        onClick={() => {
+                            allocate(rowData.OperationId , Number(rowData.physicalQuantity) - Number(rowData.mappedQuantity))
+                        }}
+                    > Allocate
+                    </Button>
 
-                    </Tooltip>
-                </span>
-            ),
+                </>
+            },
         }
     ]
     return (

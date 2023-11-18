@@ -1,9 +1,11 @@
 import { CloseOutlined, EyeOutlined } from '@ant-design/icons';
+import { PurchaseViewDto } from '@project-management-system/shared-models';
 import { PurchaseOrderservice } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tooltip } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { log } from 'console';
 
 export const PurchaseOrderView = () => {
   const page = 1;
@@ -13,17 +15,25 @@ export const PurchaseOrderView = () => {
   const { RangePicker } = DatePicker;
   let navigate = useNavigate();
   const Service = new PurchaseOrderservice()
+  const [form] = Form.useForm();
+
+  // let Location = useLocation()
+  // const stateData = Location.state.data
 
   useEffect(() => {
     getPo();
   }, [])
 
-  const getPo = () => {
+  const getPo = (req?:PurchaseViewDto) => {
+   
     Service.getPurchaseOrder().then(res => {
       if (res.status) {
         setData(res.data)
       }
     })
+  }
+  const getDates=(req?:PurchaseViewDto)=>{
+
   }
   const renderCellData = (data) => {
     return data ? data : "-";
@@ -169,8 +179,11 @@ export const PurchaseOrderView = () => {
         <span>
           <Tooltip placement="top" title="Detail View">
             <EyeOutlined
-              onClick={() => {
-                navigate('/purchase-detali-view')
+              onClick={() => { 
+                console.log(rowData.id);
+                
+                navigate('/purchase-detali-view',{state:rowData.id})
+                
                 // setHideCancelButton(false);
                 // DetailView(rowData.SampleRequestId, false);
               }}
@@ -186,7 +199,7 @@ export const PurchaseOrderView = () => {
   ]
   return (
     <div><Card title="Purchase Orders"  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
-      <Form>
+      <Form form={form}>
         <Row gutter={12}>
           <Col span={6}>
             <Form.Item label="Expected Date	" name="deliveryDate">
@@ -225,6 +238,7 @@ export const PurchaseOrderView = () => {
       </Form>
       <Card>
         {/* <Table columns={columns} dataSource={data} bordered /> */}
+        
         <Table columns={columns} dataSource={data} bordered size='small' />
 
       </Card>

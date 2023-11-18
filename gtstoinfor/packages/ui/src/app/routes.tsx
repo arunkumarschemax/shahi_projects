@@ -154,7 +154,6 @@ import RackForm from "./masters/Racks/Racks-form"
 import RackView from "./masters/Racks/Racks-view"
 import QualityView from "./masters/quality/quality-view"
 import QualityForm from "./masters/quality/quality-form"
-import PurchaseOrderView from "./purchase-order2/purchase-order-view"
 import PurchaseOrderDetailsView from "./purchase-order2/purchase-order-details-view"
 import { GrnPendingInfoGrid } from "./sample-development/grn-pending-info-grid"
 import { LocationMapping } from "./sample-development/location-mapping"
@@ -166,6 +165,7 @@ import M3Items from "./masters/m3-items/m3-items-form"
 import M3ItemsView from "./masters/m3-items/m3-items-view"
 import OperationInventoryView from "./operation-tracking/operation-inventory-view"
 import OperationMapping from "./operation-tracking/operation-mapping"
+import { PurchaseOrderView } from "./purchase-order2/purchase-order-view"
 
 
 

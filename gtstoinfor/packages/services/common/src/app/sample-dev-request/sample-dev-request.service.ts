@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Raw, Repository } from 'typeorm';
+import { DataSource, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
 import { AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, UploadResponse } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
@@ -28,6 +28,7 @@ import { SampleInventoryLogEntity } from './entities/sample-inventory-log-entity
 import { Size } from '../sizes/sizes-entity';
 import { OperationInventory } from '../operation-tracking/entity/operation-inventory-entity';
 import { GenericTransactionManager } from '../../typeorm-transactions';
+import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 
 
 
@@ -478,12 +479,14 @@ LEFT JOIN
       return new CommonResponseModel(false, 0, 'No data found')
   }
 
+
+
+
   async createSampling(req: SampleInventoryLog): Promise<CommonResponseModel> {
-    console.log(req, 'service')
+    // console.log(req, 'service')
     let save;
-    const transactionEntityManager = new GenericTransactionManager(this.dataSource);
     try {
-      await transactionEntityManager.startTransaction();
+      const conversion = []
       for (const rec of req.addressInfo) {
         const entity = new SampleInventoryLogEntity();
         const size = new Size();
@@ -494,23 +497,27 @@ LEFT JOIN
         lo.locationId = rec.location;
         entity.locationName = lo;
         const oInventory = new OperationInventory()
-        oInventory.operationInventoryId = req.operationInventoryId
+        oInventory.operationInventoryId = req.operation
         entity.operation = oInventory;
         oInventory.locationMapped = rec.quantity;
-        save = await transactionEntityManager.getRepository(SampleInventoryLogEntity).save(entity);
-        await transactionEntityManager.getRepository(OperationInventory).save(oInventory);
-        if (save) {
-          return new CommonResponseModel(true, 1223, 'created sucesses')
+        conversion.push(entity);
+      };
+      save = await this.logRepo.save(conversion);
+      if (save) {
+        const qtyTotal = req.addressInfo.reduce((a, c) => a + Number(c.quantity), 0);
+        const mappedQty = await this.dataSource.getRepository(OperationInventory).findOne({ select: ['locationMapped'], where: { operationInventoryId: req.operation } })
+        const total = qtyTotal + Number(mappedQty.locationMapped);
+        if (qtyTotal > Number(mappedQty.locationMapped)) {
+          throw new ErrorResponse(65465, "Do Not Enter The Quantity To More Than Remaing Mapped Quantity")
+        } else {
+          await this.dataSource.getRepository(OperationInventory).update({ operationInventoryId: req.operation }, { locationMapped: total });
+          return new CommonResponseModel(true, 1223, 'created sucesses', save);
         };
-        await transactionEntityManager.completeTransaction();
-      }
+      };
+
     } catch (error) {
-
-      await transactionEntityManager.releaseTransaction();
-      new CommonResponseModel(false, 321, 'Not created')
-
+      return new CommonResponseModel(false, 321, 'Not created', error)
     }
 
   }
-
 }

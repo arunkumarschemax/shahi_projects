@@ -194,7 +194,6 @@ export class SampleDevReqController {
   @Post('/createSampling')
   @ApiBody({ type: SampleInventoryLog })
   async createSampling(@Req() req: any): Promise<CommonResponseModel> {
-    console.log(req.body,"::::::::::::::::::::")
     try {
       return await this.sampleService.createSampling(req.body)
     }

@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { PurchaseOrderEntity } from "./entities/purchase-order-entity";
-import { CommonResponseModel, VendorIdReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, PurchaseViewDto, VendorIdReq } from "@project-management-system/shared-models";
 import { PurchaseOrderDto } from "./dto/purchase-order-dto";
 import { PurchaseOrderFbricEntity } from "./entities/purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "./entities/purchase-order-trim-entity";
@@ -169,12 +169,17 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
        
     }
 
-    async getAllPoData ():Promise<CommonResponseModel>{
+    async getAllPoData (req?:PurchaseViewDto):Promise<CommonResponseModel>{
+        console.log(req,'uuuuuuuuuuuuu');
+        
         try{
             let query =`SELECT po.purchase_order_id AS id, po.po_number AS poNumber, po.vendor_id AS vendorId, v.vendor_code AS vendorCode,
             v.vendor_name AS vendorName,po.expected_delivery_date AS deliveryDate, po.purchase_order_date AS orderDate,po.status,po.po_material_type AS materialType
             FROM purchase_order po
             LEFT JOIN vendors v ON v.vendor_id = po.vendor_id`
+            if(req?.id){
+                query += ` where po.purchase_order_id = ${req?.id}`
+            }
             const data = await this.dataSource.query(query)
             if(data.length > 0){
                 return new CommonResponseModel(true,0, "PO Numbers retrieved successfully", data)
@@ -186,10 +191,13 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
         }
     }
 
-    async GetPurchaseData ():Promise<CommonResponseModel>{
+    async GetPurchaseData (req?:PurchaseViewDto):Promise<CommonResponseModel>{
         try{
             let query =`SELECT  null as pofabricData,null as poTrimdata, s.style AS styleName,po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.vendor_id AS vendorId,po.style_id AS styleId,
             expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype FROM purchase_order  po LEFT JOIN style s ON s.style_id=po.style_id `
+            if(req?.id){
+                query += ` where po.purchase_order_id = ${req?.id}`
+            }
             const data = await this.dataSource.query(query)
             if(data.length > 0){
                 return new CommonResponseModel(true,0, "PO Numbers retrieved successfully", data)
@@ -233,10 +241,10 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
             throw(err)
         }
     }
-    async getAllPurchaseOrderData():Promise<CommonResponseModel>{
+    async getAllPurchaseOrderData(req?:PurchaseViewDto):Promise<CommonResponseModel>{
         try{
             const data =[]
-            const podata= await this.GetPurchaseData()
+            const podata= await this.GetPurchaseData(req)
             for(const po of podata.data){
                 console.log(po.purchaseOrderId)
                 console.log('^^^^^^^^^^^^^^^^^^^')

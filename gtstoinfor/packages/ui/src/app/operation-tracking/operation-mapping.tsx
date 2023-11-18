@@ -7,6 +7,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { SampleInventoryLogEntity } from './../../../../services/common/src/app/sample-dev-request/entities/sample-inventory-log-entity';
+import AlertMessages from '../common/common-functions/alert-messages';
 
 export const OperationMapping = () => {
     const [data, setData] = useState<any[]>([])
@@ -20,7 +21,7 @@ export const OperationMapping = () => {
     const { Option } = Select
     let Location = useLocation()
     const stateData = Location.state.data
-    console.log(stateData,'[[[[[[[[[[[[[[')
+
 
 
     useEffect(() => {
@@ -42,15 +43,15 @@ export const OperationMapping = () => {
             }
         })
     }
-    const onSave = (value: any) => {
-        console.log(value,'=======================------------------------')
-        // const req = new SamplieMappingDto(value.addressInfo[0]?.size, value.addressInfo[0]?.quantity, value.addressInfo[0]?.location,stateData.data[0]?.OperationId)
-        // console.log(req,'====================')
-        service1.createMapping({...value,operation:stateData}).then(res => {
+    const onSave = (value: any) => { 
+        // if (qtyTotal > stateData[1]) {
+        //     return AlertMessages.getErrorMessage("Do Not Enter The Quantity To More Than Remaing Mapped Quantity")
+        // }
+        service1.createMapping({ ...value, operation: stateData[0] }).then((res: any) => {
             if (res.status) {
                 message.success(res.internalMessage)
             } else {
-                message.error(res.internalMessage)
+                message.error(res.data.message)
             }
 
         })
@@ -91,6 +92,9 @@ export const OperationMapping = () => {
     // ]
 
 
+
+
+
     return (
         <div>
             <Card title="ALLocation" className='card-header' extra={<span style={{ color: 'white' }}> <Button className='panel_button' onClick={() => navigate('/operation-tracking/operation-inventory-view')}>Alloaction View</Button> </span>} >
@@ -109,7 +113,8 @@ export const OperationMapping = () => {
 
                     </Descriptions>
                 </Card>
-                <Form onFinish={onSave}>
+                <Form
+                    onFinish={onSave}>
                     <Row gutter={8}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 12 }} xl={{ span: 24 }}>
                             <Form.List name='addressInfo' initialValue={[{}]}>
@@ -143,7 +148,7 @@ export const OperationMapping = () => {
                                                             </Select>
                                                         </Form.Item>
                                                     </Col>
-                                                    
+
                                                     <Col span={6}>
                                                         <Form.Item
                                                             {...field}

@@ -3,8 +3,9 @@ import { Button, Card, Col, Descriptions, Form, Row, Select, Table } from 'antd'
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
-import {  useNavigate } from 'react-router-dom';
+import {  useLocation, useNavigate } from 'react-router-dom';
 import { type } from 'os';
+import { PurchaseViewDto } from '@project-management-system/shared-models';
 
 export const PurchaseOrderDetailsView = () => {
   const [data, setData] = useState<any[]>([])
@@ -12,15 +13,15 @@ export const PurchaseOrderDetailsView = () => {
   const navigate = useNavigate();
   const Service = new PurchaseOrderservice()
   const [form] = Form.useForm()
- const [material,setMaterial] = useState<any[]>([])
+  const [material,setMaterial] = useState<any[]>([])
   const { Option } = Select
   const [drop,setDrop] = useState('')
-
+  const location = useLocation()
 
 
   useEffect(() => {
     getPo();
-    getMaterial();
+    getMaterialTypeDate();
 
   }, [])
 
@@ -28,16 +29,21 @@ export const PurchaseOrderDetailsView = () => {
     return data ? data : "-";
   }
   const getPo = () => {
-    Service.getPurchaseOrder().then(res => {
+    const req = new PurchaseViewDto(location.state)
+    console.log(req,'-----------');
+    
+    Service.getPurchaseOrder(req).then(res => {
       if (res.status) {
         setData(res.data)
-        console.log(res.data?.[0].type,'>>>>>>>>>>>>>>>')
       }
     })
   }
-const getMaterial=(()=>{
-  Service.getMaterialTpye().then(res=>{
+const getMaterialTypeDate=(()=>{
+  const req = new PurchaseViewDto(location.state)
+  console.log(req,'5555555555555555555555555')
+  Service.getPAllPurchaseOrderData(req).then(res=>{
     if (res.status) {
+      console.log(res.data,'44444444444444444444444444')
       setMaterial(res.data)
     }
   })
@@ -63,28 +69,34 @@ const column1 : any =[
   },
   {
     title: 'Indent Code',
-    dataIndex: 'indentCode',
+    dataIndex: 'indentTrimId',
   },
   {
     title: 'Trim Code',
-    dataIndex: '',
+    dataIndex: 'm3trimCode',
   },
-  {
-    title: 'Size',
-    dataIndex: 'trimsize',
-  },
-  {
-    title: 'Colour',
-    dataIndex: 'trimColor', 
-  },
+  // {
+  //   title: 'M3 Code',
+  //   dataIndex: 'm3trimCode',
+  // },
+  // {
+  //   title: 'Colour',
+  //   dataIndex: 'trimColor', 
+  // },
   {
     title: 'Po Quantity',
-    dataIndex: 'trQuantity',
+    dataIndex: 'poQuantity',
   },
+ 
   {
-    title: 'Indent Quantity',
-    dataIndex: 'indentTQuantity',
+    title: 'Grn Quantity',
+    dataIndex: 'grnQuantity',
+  }, {
+    title: 'Status',
+    dataIndex: 'trimItemStaus',
   },
+
+  
 ]
 
   const columns : any=[
@@ -101,36 +113,43 @@ const column1 : any =[
     },
     {
       title: 'Indent Code',
-      dataIndex: 'indentFbCode',
+      dataIndex: 'indentFabricId',
     },
     {
       title: 'Fabric Code',
-      dataIndex: 'fabricCode',
+      dataIndex: 'm3fabricCode',
     },
-    {
-      title: 'Size',
-      dataIndex: '',
-    },
-    {
-      title: 'Colour',
-      dataIndex: 'fabricColor', 
-    },
+    // {
+    //   title: 'M3 Code',
+    //   dataIndex: 'm3fabricCode',
+    // },
+    // {
+    //   title: 'Colour',
+    //   dataIndex: 'fabricColor', 
+    // },
     {
       title: 'Po Quantity',
       dataIndex: 'poQuantity',
+    }, 
+    {
+      title: 'Grn Quantity',
+      dataIndex: 'grn_quantity',
     },
     {
       title: 'Indent Quantity',
       dataIndex: 'indentQuantity',
     },
-    
+    {
+      title: 'Status',
+      dataIndex: 'fabItemStatus',
+    },
     
   ]
 
   return (
     <div>
       <Card>
-      <Card title="PO Detail View"  extra={<span style={{ color: 'white' }}> <Button className='panel_button' onClick={() => navigate('/purchase-view')}>Po View</Button> </span>} >
+      <Card title="PO Detail View"  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}  extra={<span style={{ color: 'white' }} > <Button className='panel_button' onClick={() => navigate('/purchase-view')}>Po View</Button> </span>} >
       <Descriptions size='small' >
      
   <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Po Number</span>}>{data[0]?.poNumber}</DescriptionsItem>
@@ -171,7 +190,8 @@ const column1 : any =[
       {drop === 'Trim'? (
        <Table columns={column1}dataSource={data?.[0].type} bordered  />
        ):[]} */}
-       <Table  columns={columns} dataSource={data} />
+      {material && material[0]?.fabInfo.length >0 ?(<Table  columns={columns} dataSource={material?.[0]?.fabInfo} />):('')}
+      {material && material[0]?.triminfo.length >0 ?(<Table  columns={column1} dataSource={material?.[0]?.triminfo} />):('')}
     </Card>
     </Card>
     </Card>
