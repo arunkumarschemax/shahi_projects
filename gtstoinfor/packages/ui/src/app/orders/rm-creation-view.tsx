@@ -324,32 +324,61 @@ rmservice.getAllRMItems(req).then(res => {
         width:80,
 
       },
+   
+  
+      {title:"Item Price",
+    children:[
+       
       {
-        title: "Currency",
-        dataIndex: "currency",align:'center',render: (data) => {
-          return data ? data : "-";
-        },
-        sorter: (a, b) => a.currency.localeCompare(b.currency),
-        width:80,
-      },
- 
-      {
-        title: "Price",
+        title: "Price + Tax Amount",
         dataIndex: "price",
-        align: 'right',
-        sorter: (a, b) => a.price.localeCompare(b.price),
-        width: 80,
-        render: (text, record) => {
-          const formattedAmount = record.price ? parseFloat(record.price).toLocaleString('en-US', { 
-            style: 'currency',
-            currency: record.currency || 'USD',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          }) : "-";
-          return <>{formattedAmount}</>;
-        }
-      },  	
+        align: 'center',
+        width: 150,
+        render: (price, record) => {
+          const tax = record.tax || 0;
+          const taxAmount = (price * tax / 100).toFixed(2);
+          const displayValue = `${price || "-"} + ${taxAmount}`;
         
+          return displayValue;
+        },
+      },
+      {
+            title: "Total Unit Price",
+            dataIndex: "total",
+            align: 'right',
+            sorter: (a, b) => a.total.localeCompare(b.total),
+            width: 80,
+            render: (text, record) => {
+              const formattedAmount = record.total ? parseFloat(record.total).toLocaleString('en-US', { 
+                style: 'currency',
+                currency: record.currency || 'USD',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              }) : "-";
+              return <>{formattedAmount}</>;
+            }
+          },  
+    ]},
+  	
+  // {
+  //   title: "Price + Tax % = Total Unit Price",
+  //   align: 'center',
+  //   width: 200,
+  //   render: (text, record) => {
+  //     const price = record.price || "-";
+  //     const tax = record.tax || 0;
+  //     const total = record.total ? parseFloat(record.total).toLocaleString('en-US', {
+  //       style: 'currency',
+  //       currency: record.currency || 'USD',
+  //       minimumFractionDigits: 2,
+  //       maximumFractionDigits: 2
+  //     }) : "-";
+  
+  //     const displayValue = `${price} + ${tax}%  =  ${total}`;
+  //     return displayValue;
+  //   },
+  // },
+  
       // {
       //   title: "Product Group",
       //   dataIndex: "product_group",align:'center',render: (data) => {
