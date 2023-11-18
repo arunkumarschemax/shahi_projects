@@ -234,14 +234,16 @@ const getRmItemsDatabyProductGroupId1 = () => {
 
 
   return (
-    <Card size="default" title="RM TO FG Mapping"  extra={<Link to='/product-structure/fg-rm-mapping-view' >
+    <Card size="default" title="RM To FG Mapping"  extra={<Link to='/product-structure/fg-rm-mapping-view' >
     <span style={{color:'white'}} ><Button type={'primary'} >View</Button> </span>
     </Link>} >
       <Form layout="horizontal" form={form} onFinish={onFinish}>
       <Row gutter={24}>
         <Col xs={{ span: 10 }} sm={{ span: 24 }} md={{ span: 8}} lg={{ span:8 }} xl={{ span: 6 }}>
-            <Form.Item label='FG Item Code' name='fgitemId' rules={[{required:true,message:'FG itemCode is required'}]}>
-                <Select showSearch allowClear placeholder='Select FG Item Code' onChange={onFgchange} >
+            <Form.Item label='FG Item Code' name='fgitemId' rules={[{required:true,message:'FG itemCode is required'}]} >
+                <Select showSearch allowClear placeholder='Select FG Item Code'  onChange={onFgchange} filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                } >
                 {fgItemsData.map((rec) => (
                         <Option key={rec.fgitemId} value={rec.fgitemId} code={rec.itemCode}>
                           {`${rec.itemName}-${rec.itemCode}`}

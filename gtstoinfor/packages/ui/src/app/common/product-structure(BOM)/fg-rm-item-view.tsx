@@ -350,7 +350,7 @@ render: (rmItems) => {
 
   return (
       <>
-      <Card title={<span >Fg Rm Mapping</span>}
+      <Card title={<span >RM To FG Mapping</span>}
     extra={<Link to='/product-structure/fg-rm-mapping' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
