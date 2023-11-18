@@ -20,7 +20,7 @@ export class GRNItemDto{
     @ApiProperty()
     rejectedUomId:number
     @ApiProperty()
-    conversionQuantity:string
+    conversionQuantity:number
     @ApiProperty()
     conversionUomId:number
     @ApiProperty()

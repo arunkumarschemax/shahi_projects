@@ -142,7 +142,7 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
                 colourId : defaultFabricFormData.colourId,
                 colorName:defaultFabricFormData.colorName,
                 shahiFabricCode:defaultFabricFormData.shahiFabricCode,
-                poQuantity:defaultFabricFormData.poQuantity,
+                poQuantity:defaultFabricFormData.indentQuantity,
                 quantityUomId:defaultFabricFormData.quantityUomId,
                 indentQuantity:defaultFabricFormData.indentQuantity,
                 indentFabricId:defaultFabricFormData.indentFabricId,
