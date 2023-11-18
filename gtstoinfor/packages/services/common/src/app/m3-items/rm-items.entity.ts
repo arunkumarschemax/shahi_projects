@@ -1,3 +1,4 @@
+import { IsImportedItemEnum, PropertyEnum } from "@project-management-system/shared-models";
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 
 @Entity('rm_items')
