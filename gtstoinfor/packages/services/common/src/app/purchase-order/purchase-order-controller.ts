@@ -24,7 +24,7 @@ export class PurchaseOrderController {
 
   @Post('/getAllPoData')
   async getAllPoData(@Body() req?:any): Promise<CommonResponseModel> {
-    console.log(req,'ppppppp');
+   
     
     try {
       return await this.purchasseOrdrSerivice.getAllPoData(req);

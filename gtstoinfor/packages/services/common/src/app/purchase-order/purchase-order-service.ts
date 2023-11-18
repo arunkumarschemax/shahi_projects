@@ -170,7 +170,6 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
     }
 
     async getAllPoData (req?:PurchaseViewDto):Promise<CommonResponseModel>{
-        console.log(req,'uuuuuuuuuuuuu');
         
         try{
             let query =`SELECT po.purchase_order_id AS id, po.po_number AS poNumber, po.vendor_id AS vendorId, v.vendor_code AS vendorCode,
@@ -180,7 +179,16 @@ async cretePurchaseOrder(req:PurchaseOrderDto):Promise<CommonResponseModel>{
             if(req?.id){
                 query += ` where po.purchase_order_id = ${req?.id}`
             }
+            if (req.confirmStartDate) {
+            query +=   ` WHERE ${req.confirmStartDate ? `Date(expected_delivery_date) BETWEEN '${req.confirmStartDate}' AND '${req.confirmEndDate}'` : '1=1'}`
+            }
+            if (req.poconfirmStartDate) {
+                query +=   ` WHERE ${req.poconfirmStartDate ? `Date(purchase_order_date) BETWEEN '${req.poconfirmStartDate}' AND '${req.poconfirmEndDate}'` : '1=1'}`
+                }
+          
+            
             const data = await this.dataSource.query(query)
+            console.log(data,'1245789633')
             if(data.length > 0){
                 return new CommonResponseModel(true,0, "PO Numbers retrieved successfully", data)
             }else{

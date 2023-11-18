@@ -135,10 +135,10 @@ const column1 : any =[
       title: 'Grn Quantity',
       dataIndex: 'grn_quantity',
     },
-    {
-      title: 'Indent Quantity',
-      dataIndex: 'indentQuantity',
-    },
+    // {
+    //   title: 'Indent Quantity',
+    //   dataIndex: 'indentQuantity',
+    // },
     {
       title: 'Status',
       dataIndex: 'fabItemStatus',
@@ -155,9 +155,12 @@ const column1 : any =[
   <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Po Number</span>}>{data[0]?.poNumber}</DescriptionsItem>
   <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Po Date</span>}>{moment(data[0]?.orderDates).format('YYYY-MM-DD')}
 {data[0]?.orderDates}</DescriptionsItem>
+<DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Material Type</span>}>{data[0]?.materialType}</DescriptionsItem>
+
     <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>VenderName</span>}>{data[0]?.vendorName}</DescriptionsItem>
     <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Expected Date</span>}>{moment(data[0]?.deliveryDate).format('YYYY-MM-DD')}
 </DescriptionsItem>
+
     <DescriptionsItem label={<span style={{ marginBottom:'30px', fontWeight: 'bold', color: 'darkblack' }}>Delivery Address</span>}>
       {data[0]?.location_name}
     </DescriptionsItem>
@@ -184,14 +187,12 @@ const column1 : any =[
             </Form> */}
 
     <Card >
-    {/* {drop === 'Fabric'? (
-        <Table columns={columns} dataSource={data?.[0].type} bordered />
-      ):[]}
-      {drop === 'Trim'? (
-       <Table columns={column1}dataSource={data?.[0].type} bordered  />
-       ):[]} */}
-      {material && material[0]?.fabInfo.length >0 ?(<Table  columns={columns} dataSource={material?.[0]?.fabInfo} />):('')}
-      {material && material[0]?.triminfo.length >0 ?(<Table  columns={column1} dataSource={material?.[0]?.triminfo} />):('')}
+    {data[0]?.materialType === 'Fabric'?(<Table  columns={columns} dataSource={material?.[0]?.fabInfo} />):('')}
+    {data[0]?.materialType === 'Trim'?(<Table  columns={column1} dataSource={material?.[0]?.triminfo} />):('')}
+    
+
+       {/* {material && material[0]?.fabInfo.length >0 ?(<Table  columns={columns} dataSource={material?.[0]?.fabInfo} />):('')}
+      {material && material[0]?.triminfo.length >0 ?(<Table  columns={column1} dataSource={material?.[0]?.triminfo} />):('')} */}
     </Card>
     </Card>
     </Card>
