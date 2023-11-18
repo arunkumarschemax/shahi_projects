@@ -476,7 +476,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
       <Card >
         <Table
           size='small'
-
+          className='custom-table-wrapper'
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}

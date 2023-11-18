@@ -36,7 +36,7 @@ export class Destination {
 
   @Column("char", {
     nullable: false,
-    length: 10,
+    length: 30,
     name: "option_Group"
   })
   // @Index({ unique: true })

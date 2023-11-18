@@ -307,6 +307,7 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
       <Card >
         <Table
        size='middle'
+       className='custom-table-wrapper'
         rowKey={record => record}
           columns={columnsSkelton}
           dataSource={lTData}
