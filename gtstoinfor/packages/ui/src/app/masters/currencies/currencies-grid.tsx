@@ -427,7 +427,7 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
 
         <Table
         size='small'
-
+        className='custom-table-wrapper'
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}

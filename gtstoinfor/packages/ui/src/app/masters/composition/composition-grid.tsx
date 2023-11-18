@@ -305,7 +305,7 @@ const CompositionGrid = () => {
       <Card >
         <Table
         size='small'
-
+        className='custom-table-wrapper'
         rowKey={record => record}
           columns={columnsSkelton}
           dataSource={lTData}
