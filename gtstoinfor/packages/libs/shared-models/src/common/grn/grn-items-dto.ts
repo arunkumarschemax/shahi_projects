@@ -5,13 +5,13 @@ export class GrnItemsDto{
     grnItemId?:number
     m3ItemCodeId?:number
     productGroupId?:number
-    receivedQuantity?:string
+    receivedQuantity?:number
     receivedUomId?:number
-    acceptedQuantity?:string
+    acceptedQuantity?:number
     acceptedUomId?:number
-    rejectedQuantity?:string
+    rejectedQuantity?:number
     rejectedUomId?:number
-    conversionQuantity?:string
+    conversionQuantity?:number
     conversionUomId?:number
     remarks?:string
     createdAt?: Date;
@@ -29,13 +29,13 @@ export class GrnItemsDto{
     grnItemId?:number,
     m3ItemCodeId?:number,
     productGroupId?:number,
-    receivedQuantity?:string,
+    receivedQuantity?:number,
     receivedUomId?:number,
-    acceptedQuantity?:string,
+    acceptedQuantity?:number,
     acceptedUomId?:number,
-    rejectedQuantity?:string,
+    rejectedQuantity?:number,
     rejectedUomId?:number,
-    conversionQuantity?:string,
+    conversionQuantity?:number,
     conversionUomId?:number,
     remarks?:string,
     createdAt?: Date,

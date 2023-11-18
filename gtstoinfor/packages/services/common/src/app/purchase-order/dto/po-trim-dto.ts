@@ -29,7 +29,7 @@ export class PurchaseOrderTrimDto{
     indentTrimId:number
 
     @ApiProperty()
-    poQuantity:string
+    poQuantity:number
 
     @ApiProperty()
     quantityUomId:number

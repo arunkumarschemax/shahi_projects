@@ -123,7 +123,7 @@ export class IndentTrimsEntity {
     name:'received_quantity',
     nullable:true
   })
-  recivedQuantity:string
+  recivedQuantity:number
 
   @ManyToOne(type => Indent, i => i.iTrimsInfo, { nullable: false, })
   @JoinColumn({ name: "indent_id" })

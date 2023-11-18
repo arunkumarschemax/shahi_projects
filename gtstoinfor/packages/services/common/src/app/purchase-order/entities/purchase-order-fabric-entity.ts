@@ -145,7 +145,7 @@ moq:string
     name:'po_quantity',
     nullable:true
   })
-  poQuantity:string
+  poQuantity:number
 
   @Column('int',{
     name:'quantity_uom_id',
@@ -163,7 +163,7 @@ moq:string
       name:'grn_quantity',
       nullable:true
     })
-    grnQuantity:string
+    grnQuantity:number
     
 @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poFabricInfo)
 @JoinColumn({name:'purchase_order_id'})

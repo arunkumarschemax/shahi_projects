@@ -65,7 +65,7 @@ indentFabricId:number
 quantityUomId:number
 
 @ApiProperty()
-poQuantity:string
+poQuantity:number
 
 @ApiProperty()
   createdAt: string;
