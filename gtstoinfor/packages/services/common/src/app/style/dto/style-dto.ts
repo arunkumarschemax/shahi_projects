@@ -6,7 +6,7 @@ export class StyleReq {
   @ApiProperty()
  locationId:number;
  @ApiProperty()
-  pch:string;
+  profitControlHeadId:number;
   @ApiProperty()
   style:string;
   @ApiProperty()
@@ -24,7 +24,7 @@ export class StyleReq {
   constructor(
     styleId:number,
     locationId:number,
-    pch:string,
+    profitControlHeadId:number,
     style:string,
     description:string,
     styleFileName: string,
@@ -40,7 +40,7 @@ export class StyleReq {
     this.styleFilePath=styleFilePath
     this.locationId=locationId
     this.isActive=isActive
-    this.pch=pch
+    this.profitControlHeadId=profitControlHeadId
     this.createdUser=createdUser
     this.updatedUser=updatedUser
 

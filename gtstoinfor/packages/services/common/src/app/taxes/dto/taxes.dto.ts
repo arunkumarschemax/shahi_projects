@@ -1,6 +1,6 @@
 import {IsAlphanumeric, MaxLength, Matches, IsOptional, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { TaxCategoriesEnum } from '@project-management-system/shared-models';
+import { TaxCategoriesEnum, TaxtypeEnum } from '@project-management-system/shared-models';
 
 export class TaxesDTO {
   @ApiProperty()
@@ -20,7 +20,7 @@ export class TaxesDTO {
   taxPercentage: number;
 
   @ApiProperty()
-  taxCategory:TaxCategoriesEnum
+  taxCategory:TaxtypeEnum
   @ApiProperty()
   isActive: boolean;
 

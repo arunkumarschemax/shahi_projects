@@ -125,7 +125,7 @@ export class TaxesService {
   async getAllTaxes(req?:UserRequestDto): Promise<AllTaxesResponseModel> {
     // const page: number = 1;
     try {
-      const taxesDTO: TaxesDTO[] = [];
+      const taxesDTO: any[] = [];
       //retrieves all companies
       const taxesEntities: Taxes[] = await this.taxesRepository.find({
         order: { taxName: 'ASC' },
@@ -157,7 +157,7 @@ export class TaxesService {
   async getAllActiveTaxes(): Promise<AllTaxesResponseModel> {
     // const page: number = 1;
     try {
-      const taxesEntities: TaxesDTO[] = [];
+      const taxesEntities: any[] = [];
       //retrieves all companies
       const TaxesEntities: Taxes[] = await this.taxesRepository.find({
         order: { taxName: 'ASC' },
