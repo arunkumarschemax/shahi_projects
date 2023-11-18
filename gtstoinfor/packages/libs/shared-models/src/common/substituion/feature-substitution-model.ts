@@ -2,10 +2,16 @@ export class FeatureSubstitutionModel{
     fgItemId: number;
     fgItemCode: string;
     featuresInfo : FeatureInfoModel[];
-    constructor(fgItemId: number,fgItemCode: string,featuresInfo : FeatureInfoModel[]){
+    style: string;
+    internalStyle: string;
+    itemType: string;
+    constructor(fgItemId: number,fgItemCode: string,featuresInfo : FeatureInfoModel[],style: string,internalStyle: string,itemType: string){
     this.fgItemId = fgItemId
     this.fgItemCode = fgItemCode
     this.featuresInfo = featuresInfo
+    this.style = style
+    this.internalStyle = internalStyle
+    this.itemType = itemType
 
     }
 }
@@ -16,12 +22,14 @@ export class FeatureInfoModel{
     option: string;
     optionInfo:optionInfoModel[];
     fgInfo:fgInfoModel[];
-    constructor(featureCode: string,featureId: number,option: string,optionInfo:optionInfoModel[],fgInfo:fgInfoModel[]){
+    featureName: string;
+    constructor(featureCode: string,featureId: number,option: string,optionInfo:optionInfoModel[],fgInfo:fgInfoModel[],featureName: string){
     this.featureCode  = featureCode 
     this.featureId  = featureId 
     this.option  = option 
     this.optionInfo  = optionInfo 
     this.fgInfo = fgInfo
+    this.featureName = featureName
     }
 }
 

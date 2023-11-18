@@ -206,7 +206,7 @@ export class ProductStructureService {
       if(info){
         for(const rec of info){
           if(!featureMap.has(rec.feature_code)){
-            featureMap.set(rec.feature_code,new FeatureInfoModel(rec.feature_code,rec.feature_id,rec.option_group,[],[]))
+            featureMap.set(rec.feature_code,new FeatureInfoModel(rec.feature_code,rec.feature_id,rec.option_group,[],[],rec.feature_name))
          
           }
           featureMap.get(rec.feature_code).optionInfo.push(new optionInfoModel(rec.option_value,rec.rm_item_id,rec.rm_item_code,rec.rm_sku_id,rec.rm_sku_code,rec.feature_option_id,rec.option_id))
@@ -230,7 +230,7 @@ export class ProductStructureService {
             }
           }
           featureModel.push(e)}))
-        data.push(new FeatureSubstitutionModel(info[0].fg_item_id,info[0].fg_item_code,featureModel))
+        data.push(new FeatureSubstitutionModel(info[0].fg_item_id,info[0].fg_item_code,featureModel,info[0].style_no,`${info[0].style}-${info[0].description}`,info[0].fgItemType))
       }
       return new CommonResponseModel(true,1,'Data retrieved',data)
     }catch(err){

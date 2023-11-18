@@ -16,6 +16,7 @@ import { RmCreationEntity } from "../../rm-items/rm-items.entity";
 import { FeatureOptionEntity } from "../../feature-creation/entities/feature-option-entity";
 import { ProductGroup } from "../../product group/product-group-entity";
 import { ProcurmentGroup } from "../../procurment group/procurment-group-entity";
+import { Style } from "../../style/dto/style-entity";
 
 @Injectable()
 export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
@@ -27,11 +28,15 @@ export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
 
     async getAllInfoByItemCode(req:FgItemCodeReq):Promise<any[]>{
         const data = await this.createQueryBuilder('frm')
-        .select(`frm.fg_rm_id,frm.fg_item_id,frm.fg_item_code,frm.rm_item_id,frm.rm_item_code,rmsku.item_type,rmsku.rm_sku_code,rmsku.feature_code,fe.feature_name,rmsku.option_group,rmsku.option_value,rmsku.rm_sku_id,rmi.consumption`)
+        .select(`frm.fg_rm_id as fgRmId,frm.fg_item_id as fgItemId,frm.fg_item_code as fgItemCode,frm.rm_item_id as rmItemId,frm.rm_item_code as rmItemCode,rmsku.item_type as itemType,rmsku.rm_sku_code as rmSkuCode,rmsku.feature_code as featureCode,fe.feature_name as featureName,rmsku.option_group as optionGroup,rmsku.option_value as optionValue,rmsku.rm_sku_id as rmSkuId,rmi.consumption as consumption,fg.style_no,st.style,st.description,it.item_type as fgItemType`)
         .leftJoin(RmSkus,'rmsku','rmsku.rm_item_id = frm.rm_item_id')
         .leftJoin(FeatureEntity,'fe','fe.feature_code = rmsku.feature_code')
         .leftJoin(RmCreationEntity,'rmi','rmi.rm_item_id = frm.rm_item_id')
-        .where(`fg_item_code = '${req.fgItemCode}'`)
+        .leftJoin(ItemCreation,'fg','fg.fg_item_id = frm.fg_item_id')
+        .leftJoin(Style,'st','st.style_id = fg.internal_style_id')
+      .leftJoin(ItemTypeEntity,'it','it.item_type_id = fg.item_type_id')
+        .where(`fg_item_code = '${req.fgItemCode}' and rmsku.rm_sku_code IS NOT NULL`)
+        .groupBy(`rmsku.rm_sku_code`)
         return data.getRawMany() 
     }
 
@@ -61,10 +66,16 @@ export class FgRmMappingRepository extends Repository<FgRmMappingEntity> {
 
     async getInfoByFgItem(req:FgItemCreIdRequest):Promise<any[]>{
       const query = this.createQueryBuilder('fgm')
-      .select(`fgm.fg_item_id,fgm.rm_item_id,rmsku.rm_sku_code,rmsku.feature_code,rmsku.item_code,rmsku.feature_option_id,rmsku.option_group,rmsku.option_value,rmsku.option_id,fgm.rm_item_code,feop.feature_id,rmsku.rm_sku_id`)
+      .select(`fgm.fg_item_id,fgm.rm_item_id,rmsku.rm_sku_code,rmsku.feature_code,rmsku.item_code,rmsku.feature_option_id,rmsku.option_group,rmsku.option_value,rmsku.option_id,fgm.rm_item_code,feop.feature_id,rmsku.rm_sku_id,rmsku.item_type,rmi.consumption,fe.feature_name,fg.style_no,st.style,st.description,it.item_type as fgItemType`)
       .leftJoin(RmSkus,'rmsku','rmsku.rm_item_id = fgm.rm_item_id')
       .leftJoin(FeatureOptionEntity,'feop','feop.feature_code = rmsku.feature_code')
-      .where(`fgm.fg_item_id = ${req.fgItemId}`)
+      .leftJoin(RmCreationEntity,'rmi','rmi.rm_item_id = fgm.rm_item_id')
+      .leftJoin(FeatureEntity,'fe','fe.feature_id = feop.feature_id')
+      .leftJoin(ItemCreation,'fg','fg.fg_item_id = fgm.fg_item_id')
+      .leftJoin(Style,'st','st.style_id = fg.internal_style_id')
+      .leftJoin(ItemTypeEntity,'it','it.item_type_id = fg.item_type_id')
+      .where(`fgm.fg_item_id = ${req.fgItemId} and rmsku.rm_sku_code IS NOT NULL`)
+      .groupBy(`rmsku.rm_sku_code`)
       return await query.getRawMany()
     }
 }

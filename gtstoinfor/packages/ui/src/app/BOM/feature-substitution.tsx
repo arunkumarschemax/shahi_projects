@@ -1,10 +1,11 @@
 import { CaretRightOutlined } from "@ant-design/icons";
 import { FeatureSubstituionReq, FgItemCreIdRequest, RMInfoReq, StatusEnum } from "@project-management-system/shared-models";
 import { ItemCreationService, ProductStructureService, SubstitutionService } from "@project-management-system/shared-services";
-import { Button, Card, Checkbox, Col, Collapse, Form, Row, Select, Space, Table } from "antd"
+import { Button, Card, Checkbox, Col, Collapse, Descriptions, Form, Row, Select, Space, Table, Tag } from "antd"
 import { ColumnProps } from "antd/es/table";
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
+import DescriptionsItem from "antd/es/descriptions/Item";
 
 const {Option} = Select;
 const CheckboxGroup = Checkbox.Group;
@@ -32,6 +33,8 @@ export const FeatureSubstitution = () =>{
     }
 
     const onFgItemChange = (val,option) => {
+        setData([])
+        setCheckValues([])
         setFgItemId(option?.key)
         const req = new FgItemCreIdRequest(option.key)
         fgrmMappingService.getFeaturesInfoByFgItem(req).then(res => {
@@ -74,9 +77,10 @@ export const FeatureSubstitution = () =>{
                     {info[0]?.optionInfo.map((e) => (
                         <Checkbox value={e.optionValue} key={e.rmItemId} onChange={(val) => onChange(val,e,record,info)}>
                             <Space direction='vertical' size='middle' style={{width:'100%'}}>
-                               <Card key={e.optionValue} style={{marginLeft:'1%',backgroundColor:'#FFDAB9',width:'100%'}} size='small'>
+                               {/* <Card key={e.optionValue} style={{marginLeft:'1%',backgroundColor:'#FFDAB9',width:'100%',height:'40%'}} size='small'>
                                 <p>{e.optionValue}</p>
-                                </Card>
+                                </Card> */}
+                                <Tag key={e.optionValue} color="geekblue">{e.optionValue}</Tag>
                             </Space>
                         </Checkbox>
                     ))}
@@ -88,15 +92,15 @@ export const FeatureSubstitution = () =>{
     ]
 
     const HeaderRow = (props: any,) => {
-        const {featureCode,option} = props
+        const {featureCode,option,featureName} = props
         
         return (
         <div style={{ display: "flex" }}>
             <span>Feature Code : {<b>{featureCode}</b>}</span>
             <span style={{width:'10px'}}></span>
+            <span>FeatureName : {<b>{featureName}</b>}</span>
+            <span style={{width:'10px'}}></span>
             <span>Option : {<b>{option}</b>}</span>
-            {/* <span style={{width:'10px'}}></span>
-            <span>Description : {<b>{styleDescription}</b>}</span> */}
             {/* <span style={{width:'10px'}}></span>
             <span>Indent Date : {<b>{indentDate}</b>}</span>
             <span style={{width:'10px'}}></span>
@@ -134,29 +138,49 @@ export const FeatureSubstitution = () =>{
         <Card title='Feature Substitution'>
             <Form form={form}>
                 <Row gutter={24}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 7 }}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item name='fgItemCode' label='FG Item Code' rules={[{required:true,message:'FG Item Code is required'}]}>
                     <Select placeholder='Select FG Item Code' showSearch allowClear optionFilterProp="children" onChange={onFgItemChange}>
                         {
                             fgItems.map((e) => {
                                 return(
-                                    <Option key={e.fgitemId} value={e.itemCode}>{e.itemCode}-{e.itemCode}</Option>
+                                    <Option key={e.fgitemId} value={e.itemCode}>{e.itemCode}-{e.itemName}</Option>
                                 )
                             })
                         }
                     </Select>
                 </Form.Item>
                 </Col>
+                { data.length > 0 ? (<>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+                    <Descriptions>
+                        <DescriptionsItem label={<b style={{color:'green',height:'20px'}}>Style</b>}>{data[0].style} </DescriptionsItem>
+                    </Descriptions>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+                    <Descriptions>
+                        <DescriptionsItem label={<b style={{color:'green',height:'20px'}}>Internal Style</b>}>{data[0].internalStyle} </DescriptionsItem>
+                    </Descriptions>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+                    <Descriptions>
+                        <DescriptionsItem label={<b style={{color:'green',height:'20px'}}>Item Type</b>}>{data[0].itemType} </DescriptionsItem>
+                    </Descriptions>
+                </Col>
+                </>) : (<></>)
+                    
+                }
+               
                 </Row>
             </Form>
             {data.length > 0 ? (<>
             
-                <Collapse collapsible="icon" expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />} accordion>
+                <Collapse expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />} accordion>
                 {data[0]?.featuresInfo.map((e:any,index:any) => (
-                    <Collapse.Panel header={<HeaderRow featureCode={e.featureCode} option={e.option}/>} key={index}>
-                        <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}>
-                            <Table columns={columns} dataSource={e.fgInfo} style={{width:'100%'}} pagination={false}/>
-                        </Space>
+                    <Collapse.Panel header={<HeaderRow featureCode={e.featureCode} option={e.option} featureName={e.featureName}/>} key={index}>
+                        {/* <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}> */}
+                            <Table columns={columns} dataSource={e.fgInfo} style={{width:'100%'}} pagination={false} size="small" bordered/>
+                        {/* </Space> */}
                     </Collapse.Panel>
                 ))
                 }

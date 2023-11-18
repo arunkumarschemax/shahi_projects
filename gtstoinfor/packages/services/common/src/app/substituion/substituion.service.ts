@@ -181,13 +181,11 @@ export class SubstituionService{
             rmData.rmDetails.push(new Rm(res.rmSku, res.rmSkuId));
             Fgsku.push(rmData);
           }
-          console.log(Fgsku,'[[[[[[[[');
           
         }
     
         // Convert the Map values to an array
         let ListArray: FgDataModel[] = Array.from(DataMap.values());
-        console.log(ListArray, 'service............');
     
         if (data.length > 0) {
           return new SubResponseModel(true, 1, 'data retrieved', ListArray);
