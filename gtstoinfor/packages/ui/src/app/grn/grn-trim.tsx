@@ -271,9 +271,9 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
         <Form form={form}>
           <Row>
             <div style={{ overflowX: "auto", width: "100%" }}>
-              <Card title={<div style={{ color: "blue", fontSize: "17px" }}>Trim Details</div>}>
+              <Card title={<div style={{ color: "blue", fontSize: "17px",textAlign:"left" }}>Trim Details</div>} style={{ textAlign: 'right' }}>
                 <Table columns={columns} dataSource={trimData} bordered scroll={{ x: "max-content" }} pagination={false} />
-                <Button type="primary" onClick={handleSaveData}>
+                <Button type="primary" onClick={handleSaveData} style={{margin:"10px"}}>
                   Save
                 </Button>
               </Card>

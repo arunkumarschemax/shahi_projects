@@ -32,7 +32,7 @@ export class GrnItemsEntity{
         name:'received_quantity',
         nullable:false
     })
-    receivedQuantity:string
+    receivedQuantity:number
 
     @Column('int',{
         name:'received_uom_id',
@@ -44,7 +44,7 @@ export class GrnItemsEntity{
         name:'accepted_quantity',
         nullable:false
     })
-    acceptedQuantity:string
+    acceptedQuantity:number
 
     @Column('int',{
         name:'accepted_uom_id',
@@ -56,7 +56,7 @@ export class GrnItemsEntity{
         name:'rejected_quantity',
         nullable:false
     })
-    rejectedQuantity:string
+    rejectedQuantity:number
 
     @Column('int',{
         name:'rejected_uom_id',

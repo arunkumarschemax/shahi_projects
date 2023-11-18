@@ -8,15 +8,15 @@ export class GRNItemDto{
     @ApiProperty()
     productGroupId:number
     @ApiProperty()
-    receivedQuantity:string
+    receivedQuantity:number
     @ApiProperty()
     receivedUomId:number
     @ApiProperty()
-    acceptedQuantity:string
+    acceptedQuantity:number
     @ApiProperty()
     acceptedUomId:number
     @ApiProperty()
-    rejectedQuantity:string
+    rejectedQuantity:number
     @ApiProperty()
     rejectedUomId:number
     @ApiProperty()

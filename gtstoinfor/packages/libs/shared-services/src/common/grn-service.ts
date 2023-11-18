@@ -6,8 +6,8 @@ export class GRNService extends CommonAxiosService {
   // vendor='https://tms-backend.shahiapps.in/api/vendor-master-data/getAllVendors'
 
 
-  async creteGrn(dto: GrnDto): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/creteGrn", dto)
+  async createGrn(dto: GrnDto): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/createGrn", dto)
   }
 
   async updateGrn(): Promise<CommonResponseModel> {

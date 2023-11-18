@@ -215,7 +215,7 @@ export class IndentFabricEntity {
     name: 'received_quantity',
     default: 0,
   })
-  receivedQuantity: number
+  recivedQuantity:number
 
   @ManyToOne(type => Indent, i => i.iFabricInfo, { nullable: false, })
   @JoinColumn({ name: "indent_id" })
