@@ -2466,8 +2466,7 @@ async sendMail(to: string, subject: string, message : any[]) {
                 }
                 let dtoData: SaveOrderDto;
                 if(updatedObj.Order_Plan_Number !== null){
-                    console.log(moment(updatedObj.WH).add(1, 'days').format('MM-DD'),'ggggg')
-                    dtoData = new SaveOrderDto(null,updatedObj.Year,updatedObj.Planning_Ssn,updatedObj.Biz,updatedObj.Core_Category,updatedObj.Planning_Sum,updatedObj.Coeff,updatedObj.Publish_Flag_for_Factory,updatedObj.Order_Plan_Number,(updatedObj.Order_Plan_Qty).toString().replace(/,/g,''),(updatedObj.Order_Plan_QtyCoeff)?.toString().replace(/,/g,''),updatedObj.Prod_Plan_Type,updatedObj.WH ? moment(updatedObj.WH).add(1, 'days').format('MM-DD') : null,updatedObj.EXF_ETD,updatedObj.ETD_WH,updatedObj.Sample,updatedObj.EXF ? moment(updatedObj.EXF).add(1, 'days').format('MM-DD'): null,id,null,'bidhun')
+                    dtoData = new SaveOrderDto(null,updatedObj.Year,updatedObj.Planning_Ssn,updatedObj.Biz,updatedObj.Core_Category,updatedObj.Planning_Sum,updatedObj.Coeff,updatedObj.Publish_Flag_for_Factory,updatedObj.Order_Plan_Number,(updatedObj.Order_Plan_Qty).toString().replace(/,/g,''),(updatedObj.Order_Plan_QtyCoeff)?.toString().replace(/,/g,''),updatedObj.Prod_Plan_Type,updatedObj.WH ? moment(updatedObj.WH).format('MM-DD') : null,updatedObj.EXF_ETD,updatedObj.ETD_WH,updatedObj.Sample,updatedObj.EXF ? moment(updatedObj.EXF).format('MM-DD'): null,id,null,'bidhun')
                     let newDate
                     if(dtoData.exf == null && dtoData.publishFlagForFactory !== 'NotPub'){
                     let inputDate = dtoData.wh ? moment(dtoData.wh).format('MM-DD') : null;
