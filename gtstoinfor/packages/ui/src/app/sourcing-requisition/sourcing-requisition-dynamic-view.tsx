@@ -399,20 +399,23 @@ export const SourcingRequisitionDynamicView = () => {
         {
             title:'Action',
             dataIndex:'action',
-            render:(text,record) =>{
+            render:(text,rowData) =>{
                 return(
                     <span>
                         {/* <Button type='primary' shape='round' onClick={() => generateBarcode(record.m3TrimCode)}>
                             <PrinterOutlined />
                         </Button>
                         <Divider type='vertical'/> */}
-                    <Button type='primary' disabled={logInUser == 'marketUser' ? true : false}>Generate PO</Button>
+                    <Button type='primary' disabled={logInUser == 'marketUser' ? true : false} onClick={() =>genereatePo(rowData.indent_id)}>Generate PO</Button>
                     </span>
                 )
             }
         },
         
     ]
+        const genereatePo = (rowData:any) =>{
+            navigate('/purchase-order', { state: { indentId: rowData.indent_id } })
+        }
 
     const onSegmentChange = (val) => {
         setTabName(val)
