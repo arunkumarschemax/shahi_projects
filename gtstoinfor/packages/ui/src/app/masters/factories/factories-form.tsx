@@ -64,12 +64,12 @@ export default function FactoriesForm(props:FactoriesFormProps) {
                       message: `Should contain only alphabets and numbers.`
                     }
                   ]}>
-                  <Input />
+                  <Input placeholder='Enter Factory Name'/>
                 </Form.Item>
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item name='address' label='Address'>
-                  <TextArea />
+                  <TextArea placeholder='Enter Address'/>
                 </Form.Item>
               </Col>
             </Row>

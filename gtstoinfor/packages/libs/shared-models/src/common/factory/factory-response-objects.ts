@@ -14,6 +14,8 @@ export class FactoryResponseModel extends GlobalResponseObject {
      constructor(status: boolean, errorCode: number, internalMessage: string, data?: FactoryDto){
         super(status, errorCode, internalMessage);
         this.data = data;
+        this.internalMessage = internalMessage;
+        this.data = data;
      }
 
 }

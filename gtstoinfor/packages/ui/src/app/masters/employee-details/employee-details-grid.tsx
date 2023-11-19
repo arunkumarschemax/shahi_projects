@@ -139,13 +139,13 @@ const getColumnSearchPropsss = (dataIndices) => ({
     {
         title: <div style={{ textAlign: 'center' }}>Employee Code</div>,
         dataIndex: "employeeCode",
-        width:'80px',align:'left',
+        width:'120px',align:'left',
         sorter: (a, b) => a.employeeCode.localeCompare(b.employeeCode),
       ...getColumnSearchProps("employeeCode"),
       },
     {
       title: <div style={{ textAlign: 'center' }}>Name</div>,
-      width:'120px',align:'left',
+      width:'160px',align:'left',
       render:(text,record) =>{
         return (
             <span>
@@ -158,7 +158,7 @@ const getColumnSearchPropsss = (dataIndices) => ({
     {
         title: <div style={{ textAlign: 'center' }}>Mobile Number</div>,
         dataIndex: "mobileNumber",
-      width:'90px',align:'left',
+      width:'120px',align:'left',
         // sorter: (a, b) => a.mobileNumber.localeCompare(b.mobileNumber),
       },
     //   {
@@ -184,14 +184,16 @@ const getColumnSearchPropsss = (dataIndices) => ({
     //   },
       {
         title:  <div style={{ textAlign: 'center' }}>Email</div>,
-        dataIndex: "emial",align:"left",width:120,
+        dataIndex: "emial",align:"left",width:180,
         // sorter: (a, b) => a.address.localeCompare(b.address),
     
       },
       {
         title: <div style={{ textAlign: 'center' }}>Department</div>,
-        dataIndex: "deptName",align:'left',
-        width:90,
+          dataIndex: 'Department',
+          key: 'deptName',
+          render: (Department) => Department ? Department.deptName : null,
+        
         sorter: (a, b) => a.deptName.localeCompare(b.deptName),
     ...getColumnSearchProps("deptName")
       },
@@ -317,7 +319,7 @@ const getColumnSearchPropsss = (dataIndices) => ({
   }
 
   const openFormWithData = (viewdata: EmployeeDetailsResponse) => {
-    // console.log(viewdata)
+    console.log(viewdata,"444")
      const date = viewdata.dateOfBirth?dayjs(moment(viewdata.dateOfBirth).format("YYYY-MM-DD")):null
      viewdata.dateOfBirth = dayjs(date)
     // console.log(viewdata.dateOfBirth)

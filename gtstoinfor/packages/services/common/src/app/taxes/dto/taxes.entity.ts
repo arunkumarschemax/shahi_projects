@@ -1,4 +1,4 @@
-import { TaxCategoriesEnum } from '@project-management-system/shared-models';
+import { TaxCategoriesEnum, TaxtypeEnum } from '@project-management-system/shared-models';
 import {Column,Entity,Index,PrimaryGeneratedColumn,VersionColumn,UpdateDateColumn,CreateDateColumn} from 'typeorm';
 
 @Entity('taxes')
@@ -24,11 +24,10 @@ export class Taxes {
   @Column({
     type: 'enum',
     nullable: false,
-    enum: TaxCategoriesEnum,
-    // default: TaxCategoriesEnum.OPEN,
+    enum: TaxtypeEnum,
     name: "tax_category"
   })
-  taxcategory: TaxCategoriesEnum;
+  taxcategory: TaxtypeEnum;
 
   @Column('boolean', {
     nullable: false,

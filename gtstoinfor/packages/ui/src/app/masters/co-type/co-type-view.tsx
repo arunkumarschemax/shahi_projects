@@ -19,6 +19,7 @@ export const CoTypeView = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [drawerVisible, setDrawerVisible] = useState(false);
     const [selectedData, setSelectedData] = useState<any>(undefined);
+    const [pageSize, setPageSize] = useState<number>(1);
 
 
 
@@ -146,7 +147,7 @@ export const CoTypeView = () => {
 
     const columns: ColumnProps<any>[] = [
         {
-            title: 'S No',
+            title: <div style={{textAlign:'center'}}>S No</div>,
             key: 'sno',
             width: '70px',
             responsive: ['sm'],
@@ -162,6 +163,7 @@ export const CoTypeView = () => {
         {
             title:<div style={{textAlign:'center'}}>Status</div>,
             dataIndex: 'isActive',
+            align:'center',
             render: (isActive, rowData) => (
               <>
                 {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -211,6 +213,7 @@ export const CoTypeView = () => {
           {
             title:<div style={{textAlign:'center'}}>Action</div>,
             dataIndex: 'action',
+            align:'center',
             render: (text, rowData) => (
               <span>   
                   <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
@@ -269,13 +272,19 @@ export const CoTypeView = () => {
           <Alert type='warning' message={'Active: ' + data.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
-          <Alert type='info' message={'In-Active: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'InActive: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
             </Row>
             <br></br>
             <div style={{overflowX :'auto' }}>
 
-            <Table columns={columns}
+            <Table columns={columns} pagination={{
+            pageSize: 50,
+            onChange(current, pageSize) {
+                setPage(current);
+                setPageSize(pageSize);
+            }
+        }}
                     dataSource={data} size='small' bordered/>
             </div>
             <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}

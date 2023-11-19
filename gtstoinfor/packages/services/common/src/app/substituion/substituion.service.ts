@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, FeatureSubstituionReq, FgDataModel, RmDataModel, SubResponseModel, SubstituionModel, SubstituionReq, fgItemIdReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, FeatureSubstituionReq, FgDataModel, FgItemCodeReq, RmDataModel, SubResponseModel, SubstituionModel, SubstituionReq, fgItemIdReq } from "@project-management-system/shared-models";
 import { SubstitutionRepository } from "./substitution-repo";
 import { Substitution } from "./substituion.entity";
 import { FgItemBom } from "./fg-item-bom.entity";
 import { GenericTransactionManager } from "../../typeorm-transactions";
-import { DataSource } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 import { FGItemBomRepository } from "./fg-item-bom-repo";
 import { SubstituionRequest } from "./substitution-req";
 import { FeatureSubstitution } from "./feature-substituion.entity";
@@ -12,6 +12,9 @@ import { ItemCreation } from "../fg-item/item_creation.entity";
 import { RmCreationEntity } from "../rm-items/rm-items.entity";
 import { FeatureEntity } from "../feature-creation/entities/feature.entity";
 import { Rm } from "packages/libs/shared-models/src/common/substituion/rm-sku.req";
+import { InjectRepository } from "@nestjs/typeorm";
+import { FeatureSubstitutionRepository } from "./feature-substitution-repo";
+import { RmSkus } from "../rm-skus/rm-sku.entity";
 
 @Injectable()
 
@@ -20,6 +23,9 @@ export class SubstituionService{
         private substitutionrepo:SubstitutionRepository,
         private fgItemBomRepo:FGItemBomRepository,
         private readonly dataSource: DataSource,
+        // @InjectRepository(FeatureSubstitution)
+        // private featureSubstitutionRepo: Repository<FeatureSubstitution>
+        private featureSubstitutionRepo : FeatureSubstitutionRepository,
     ){}
     async createSubstitution(req:SubstituionRequest):Promise<CommonResponseModel>{
         const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
@@ -154,8 +160,6 @@ export class SubstituionService{
 
     
 
-  
-    
     async getSubstitution(req?: fgItemIdReq): Promise<SubResponseModel> {
       try {
         const data = await this.substitutionrepo.getSubstitution(req);
@@ -295,6 +299,9 @@ export class SubstituionService{
           const rmItem = new RmCreationEntity()
           rmItem.rmitemId = rec.rmItemId
           entity.rmItemInfo = rmItem
+          const rmSkus = new RmSkus()
+          rmSkus.rmSkuId = rec.rmSkuId
+          entity.rmSkuInfo = rmSkus
           entity.rmSkuCode = rec.rmSkuCode
           entity.featureCode = rec.featureCode
           const feature = new FeatureEntity()
@@ -322,6 +329,20 @@ export class SubstituionService{
         }
       }catch(err){
         await transactionalEntityManager.releaseTransaction()
+        throw err
+      }
+    }
+
+    async getFeatureSubstitutionByFgItem(req:FgItemCodeReq):Promise<CommonResponseModel>{
+      try{
+        const data = await this.featureSubstitutionRepo.find({where:{fgItemCode:req.fgItemCode},relations:['rmItemInfo','fgItemInfo','featureInfo','rmSkuInfo']})
+        if(data){
+          return new CommonResponseModel(true,1,'Data retrieved',data)
+        } else{
+          return new CommonResponseModel(false,0,'No data found')
+        }
+
+      }catch(err){
         throw err
       }
     }

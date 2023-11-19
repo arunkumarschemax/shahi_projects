@@ -2,9 +2,9 @@ import { Button, Card, Checkbox, Col, DatePicker, Form, Input, InputNumber, Row,
 import { HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useNavigation } from "react-router-dom";
 import { BusinessAreaService, BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, FactoryService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, OperationsService, ProductGroupService, ROSLGroupsService, RangeService, SearchGroupService, SettingsService, StyleService, UomService } from "@project-management-system/shared-services";
-import { ItemGroupEnum, PropertyEnum, SettingsIdReq, SubContractStatus } from "@project-management-system/shared-models";
+import { ItemCreationDTO, ItemGroupEnum, PropertyEnum, SettingsIdReq, SubContractStatus } from "@project-management-system/shared-models";
 import { setOptions } from "highcharts";
  
 export interface FormProps {
@@ -81,7 +81,8 @@ form.setFieldValue('facilityId',res.data?.[0]?.facilityId)
              })
          }
          
-     
+              const navigate = useNavigate()
+
 
          useEffect (()=>{
             getAllCurrencies();
@@ -401,23 +402,29 @@ compositionservice.getActiveComposition().then(res=>{
          
 
 
-         const onReset = () => {
-          // form.resetFields()
+  const onReset = () => {
+  form.resetFields()
       }
-         const saveItem=()=>{
-          form.validateFields().then((values) => {
-              itemCreationService.createItem(values).then((res) => {
+
+         const saveItem=(values)=>{
+          const req = new ItemCreationDTO(values.itemName,values.itemCode,values.description,values.itemTypeId,values.brandId,values.categoryId,null,values.season,values.responsiblePersonId,values.property,values.productDesignerId,values.approver,values.productionMerchant,values.pdMerchant,values.factoryMerchant,values.salePersonId,values.styleNo,values.internalStyleId,values.basicUom,values.altUoms,values.currency,values.targetCurrency,values.conversionFactor,values.projectionOrder,values.buyingHouseCommision,values.salePriceQty,values.licenseId,values.customGroupId,values.nationalDbk,values.roslGroup,values.isSubContract,values.salePrice,values.orderConfirmedDate,values.firstExFactoryDate,values.orderCloseDate,values.moq,values.orderQty,values.facilityId,values.itemGroup,values.productGroup,values.businessArea,values.basicUom,values.groupTechClass,values.composition,values.range,values.noOfLacePanel,values.searchGroup,values.reference,null,values.createdUser,null,null,null,null)
+          // form.validateFields().then((values) => {
+            //  console.log(values,"ooooooooooooooo");
+              itemCreationService.createItem(req).then((res) => {
+                console.log(res,"res")
                 if(res.status){
                   message.success(res.internalMessage,2)
+                  onReset();
+                  navigate("/materialCreation/item-creation-view")
                 }
                 else{
-                  message.error(res.internalMessage,2)
+                  message.error("something went wrong")
                 }
               })
               // .catch(err => {
               //   AlertMessages.getWarningMessage(err.message)
               // })
-          })
+          // })
          }
 
         
@@ -565,7 +572,7 @@ compositionservice.getActiveComposition().then(res=>{
                     </Select>                  </Form.Item>
                            </Col>
                            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                           <Form.Item name="isSubContract">
+                           <Form.Item name = "checkbox">
                 <div style={{ padding: '25px' }}>
                   <Checkbox>Check if Manufacturing Subcontracted</Checkbox>
                 </div>
@@ -952,8 +959,9 @@ compositionservice.getActiveComposition().then(res=>{
                             <Form.Item
                       name="moq"
                       label="Moq"
+    
                     >
-                      <Input placeholder="Moq" allowClear />
+                      <InputNumber placeholder="moq" style={{ width: '100%' }} />
                     </Form.Item>
                                   </Col>
                                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>

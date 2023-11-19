@@ -1,4 +1,4 @@
-import { FeatureSubstituionReq, SubResponseModel, SubstituionReq, SubstituionResponseModel, fgItemIdReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, FeatureSubstituionReq, FgItemCodeReq, SubResponseModel, SubstituionReq, SubstituionResponseModel, fgItemIdReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class SubstitutionService extends CommonAxiosService{
@@ -25,6 +25,10 @@ export class SubstitutionService extends CommonAxiosService{
 
     async createFeatureSubstitution(req:FeatureSubstituionReq): Promise<SubstituionResponseModel> {
         return this.axiosPostCall(this.URL + '/createFeatureSubstitution',req)   
+    }
+
+    async getFeatureSubstitutionByFgItem(req:FgItemCodeReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + '/getFeatureSubstitutionByFgItem',req)   
     }
     
 }

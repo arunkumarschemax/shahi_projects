@@ -157,17 +157,17 @@ export class VendorsService {
                        
                         if (vendorExists.isActive) {
                             if (vendorStatus.affected) {
-                                const vendorResponse: VendorsResponseModel = new VendorsResponseModel(true, 10115, 'Vendor is de-activated successfully');
+                                const vendorResponse: VendorsResponseModel = new VendorsResponseModel(true, 10115, 'Vendor is Deactivated successfully');
                                 return vendorResponse;
                             } else {
-                                throw new VendorsResponseModel(false,10111, 'Vendor is already deactivated');
+                                throw new VendorsResponseModel(false,10111, 'Vendor is already Deactivated');
                             }
                         } else {
                             if (vendorStatus.affected) {
-                                const vendorResponse: VendorsResponseModel = new VendorsResponseModel(true, 10114, 'vendor is activated successfully');
+                                const vendorResponse: VendorsResponseModel = new VendorsResponseModel(true, 10114, 'vendor is Activated successfully');
                                 return vendorResponse;
                             } else {
-                                throw new VendorsResponseModel(false,10112, 'vendor is already  activated');
+                                throw new VendorsResponseModel(false,10112, 'vendor is already Activated');
                             }
                         }
                     // }

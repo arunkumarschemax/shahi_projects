@@ -34,6 +34,8 @@ export function ItemCreationDetailView  (props: Props)  {
                     <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Season</span>} >{stateData.season}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Shahi Style</span>} >{stateData?.style}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Referenced</span>} >{stateData.reference}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Item Code</span>} >{stateData.item_code}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Item Name</span>} >{stateData.item_name}</Descriptions.Item>
 
                     </Descriptions>
 </Card></Col>

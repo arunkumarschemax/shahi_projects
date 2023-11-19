@@ -181,14 +181,14 @@ async activateOrDeactivateLiscenceType(liscenceTypeReq: LiscenceTypeRequest): Pr
                  
                   if (liscenceTypeExists.isActive) {
                       if (liscenceTypeStatus.affected) {
-                          const liscenceTypeResponse: LiscenceTypeResponseModel = new LiscenceTypeResponseModel(true, 10115, 'Liscence Type is deactivated successfully');
+                          const liscenceTypeResponse: LiscenceTypeResponseModel = new LiscenceTypeResponseModel(true, 10115, 'Liscence Type is Deactivated Successfully');
                           return liscenceTypeResponse;
                       } else {
                           throw new LiscenceTypeResponseModel(false,10111, 'Liscence Type is already deactivated');
                       }
                   } else {
                       if (liscenceTypeStatus.affected) {
-                          const liscenceTypeResponse: LiscenceTypeResponseModel = new LiscenceTypeResponseModel(true, 10114, 'Liscence Type is activated successfully');
+                          const liscenceTypeResponse: LiscenceTypeResponseModel = new LiscenceTypeResponseModel(true, 10114, 'Liscence Type is Activated Successfully');
                           return liscenceTypeResponse;
                       } else {
                           throw new LiscenceTypeResponseModel(false,10112, 'Liscence Type is already  activated');

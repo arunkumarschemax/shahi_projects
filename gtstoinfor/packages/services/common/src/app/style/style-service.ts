@@ -17,7 +17,7 @@ export class StyleService{
             
             style.style=req.style
             style.locationId=req.locationId
-            style.pch=req.pch
+            style.profitControlHeadId=req.profitControlHeadId
             style.description=req.description
             if(isUpdate){
                 style.styleId=req.styleId
@@ -27,7 +27,7 @@ export class StyleService{
             }
             const save = await this.styleRepo.save(style)
             if(save){
-                return new AllStyleResponseModel(true,1,'Style created Sucessfully..',[style])
+                return new AllStyleResponseModel(true,1,'Style  created Sucessfully..',[style])
             }
             
         }
@@ -57,7 +57,8 @@ export class StyleService{
     }
    
     async getAllStyle():Promise<AllStyleResponseModel>{
-        const style = await this.styleRepo.find({order:{createdAt:'ASC'}})
+        const style = await this.styleRepo.getAllActiveStyle()
+        console.log(style,"daaaaaa")
         if(style.length >0){
             return new AllStyleResponseModel(true,1,'Styles Retrived Sucessfully',style)
         }else{
@@ -72,7 +73,7 @@ export class StyleService{
             order:{createdAt:'ASC'}
         })
         if(style.length >0){
-            return new AllStyleResponseModel(true,1,'Active Styles Retrived Sucessfully',style)
+            return new AllStyleResponseModel(true,1,'Styles Retrived Sucessfully',style)
         }else{
             return new AllStyleResponseModel(false,0,'No  Employees Found ',[])
 
@@ -90,15 +91,15 @@ export class StyleService{
                 if (StyleDetails.isActive) {
                     console.log('activeeeee')
                     if (StyleUpdate.affected) {
-                        return new AllStyleResponseModel(true, 0, 'style deactivated successfully', [])
+                        return new AllStyleResponseModel(true, 0, 'style is Deactivated successfully', [])
                     } else {
-                        throw new AllStyleResponseModel(false, 1, 'style already deactivated', [])
+                        throw new AllStyleResponseModel(false, 1, 'style  is already Deactivated', [])
                     }
                 } else {
                     if (StyleUpdate.affected) {
-                        return new AllStyleResponseModel(true, 0, 'style activated successfully', [])
+                        return new AllStyleResponseModel(true, 0, 'style is Activated successfully', [])
                     } else {
-                        throw new AllStyleResponseModel(false, 1, 'style already activated', [])
+                        throw new AllStyleResponseModel(false, 1, 'style  is already Activated', [])
                     }
                 }
             }

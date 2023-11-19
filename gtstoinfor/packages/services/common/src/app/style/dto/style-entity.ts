@@ -17,12 +17,11 @@ export class Style {
     })
     locationId:number;
 
-  @Column("varchar",{
+  @Column("int",{
     nullable:false,
-    length:100,
     name:"pch"
     })
-  pch:string;
+    profitControlHeadId:number;
 
   @Column("varchar",{
     nullable:false,

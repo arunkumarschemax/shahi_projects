@@ -165,14 +165,14 @@ export class PaymentMethodService {
                      
                       if (paymentExists.isActive) {
                           if (PaymentStatus.affected) {
-                              const paymentResponse: PaymentMethodResponseModel = new PaymentMethodResponseModel(true, 10115, 'PaymentMethod is de-activated successfully');
+                              const paymentResponse: PaymentMethodResponseModel = new PaymentMethodResponseModel(true, 10115, 'PaymentMethod is Deactivated Successfully');
                               return paymentResponse;
                           } else {
                               throw new PaymentMethodResponseModel(false,10111, 'PaymentMethod is already deactivated');
                           }
                       } else {
                           if (PaymentStatus.affected) {
-                              const paymentResponse: PaymentMethodResponseModel = new PaymentMethodResponseModel(true, 10114, 'PaymentMethod is activated successfully');
+                              const paymentResponse: PaymentMethodResponseModel = new PaymentMethodResponseModel(true, 10114, 'PaymentMethod is Activated Successfully');
                               return paymentResponse;
                           } else {
                               throw new PaymentMethodResponseModel(false,10112, 'PaymentMethod is already  activated');

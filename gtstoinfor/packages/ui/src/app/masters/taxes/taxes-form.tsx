@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Select, Input, Card, Form, Col, Row, Divider, Button, Popconfirm, message, InputNumber } from 'antd';
-import { Link } from "react-router-dom";
-import { TaxCategoriesEnum, TaxesDto } from '@project-management-system/shared-models';
+import { Link, useNavigate } from "react-router-dom";
+import { TaxCategoriesEnum, TaxesDto, TaxtypeEnum } from '@project-management-system/shared-models';
 import { TaxesService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
 
@@ -31,12 +31,17 @@ labelCol:{span:8}
     const [disable, setDisable] = useState<boolean>(false)
     const service = new TaxesService();
     const { Option } = Select;
+    const navigate = useNavigate()
 
-    let createdUser="";
-    if(!props.isUpdate){
-      createdUser= localStorage.getItem("createdUser");
+    // let createdUser="";
+    // if(!props.isUpdate){
+    //   createdUser= localStorage.getItem("createdUser");
+    // }
+    const userName = JSON.parse(localStorage.getItem("currentUser")).user.userName;
+    if (userName){
+     form.setFieldsValue({createdUser:userName})
     }
-
+    
     const onReset = () => {
       console.log('hhhhhh');
       form.resetFields();
@@ -61,7 +66,7 @@ const save = (taxesData: TaxesDto) => {
     setDisable(false)
     if (res.status) {
       AlertMessages.getSuccessMessage('Tax Created Successfully');
-      // history.push("/taxes-view");
+      navigate('/global/taxes/taxes-grid' )
       onReset();
     } else {
       if (res.status) {
@@ -92,7 +97,7 @@ const onBlur=() =>{
 
   return (
     
-   <Card title={'Taxes'}
+   <Card title={'Tax'}
     
     extra={props.isUpdate==true?"":<Link to='/global/taxes/taxes-grid' ><Button className='panel_button' type={'primary'}>View </Button></Link>}
     >
@@ -101,18 +106,18 @@ const onBlur=() =>{
       <Form.Item name="taxId" style={{display:"none"}} >
         <Input hidden/>
       </Form.Item>
-    <Form.Item style={{display:"none"}} name="createdUser"  initialValue={createdUser}>
+    <Form.Item style={{display:"none"}} name="createdUser" >
       <Input hidden/>
     </Form.Item>
     <Row>
     
-        <Col span={8} style={{margin:'2%'}}>
+        <Col span={5} style={{margin:'2%'}}>
             <Form.Item
                 name="taxName"
                 label="Tax Name"
                 rules={[
                   {
-                     required: true,message: 'Tax name is mandatory'
+                     required: true,message: 'Tax Name is required'
                   },
                   {
                     pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z\\0-9\[\]()@#$_\-+/`~{}:";'<>,.?|\s-]*$/,
@@ -120,16 +125,16 @@ const onBlur=() =>{
                   }
                 ]}>
     
-          <Input/>
+          <Input placeholder='Enter Tax Name'/>
           </Form.Item>
     </Col>
-    <Col style={{margin:'2%'}}>
+    <Col span ={5}  style={{margin:'2%'}}>
     <Form.Item
       name="taxPercentage"
       label="Tax Percentage(%)"
       rules={[
         {
-          required: true, message: 'Tax Percentage(%) is mandatory, enter a correct value',
+          required: true, message: 'Tax Percentage(%) is required',
           
         },
         {
@@ -139,16 +144,16 @@ const onBlur=() =>{
 
       ]}
     >
-      <Input />
+      <Input placeholder='Enter Tax Percentage ' />
         </Form.Item>
       </Col>
-      <Col style={{margin:'2%'}}>
+      <Col span ={5} style={{margin:'2%'}}>
     <Form.Item
       name="taxCategory"
       label="Tax Category"
       rules={[
         {
-          required: true, message: 'Tax Category is mandatory',
+          required: true, message: 'Tax Category is required',
           
         },
        
@@ -163,10 +168,13 @@ const onBlur=() =>{
                 onFocus={onFocus}
                 onBlur={onBlur}
                 onSearch={onSearch}
+                
               >
-                <Option key={0} value={null}>Select State Category</Option>
-                <Option key={TaxCategoriesEnum.Central} value={TaxCategoriesEnum.Central}>Central</Option>
-                <Option key={TaxCategoriesEnum.State} value={TaxCategoriesEnum.State}>State</Option>
+                {/* <Option key={TaxCategoriesEnum.Central} value={TaxCategoriesEnum.Central}>Central</Option>
+                <Option key={TaxCategoriesEnum.State} value={TaxCategoriesEnum.State}>State</Option> */}
+                {Object.values(TaxtypeEnum).map((key,value)=>{
+            return <Option key={key} value={key}>{key}</Option>
+           })}
                
               </Select>
         </Form.Item>

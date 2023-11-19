@@ -1,6 +1,6 @@
 import { SettingsIdReq, SettingsModel } from "@project-management-system/shared-models"
 import { SettingsService } from "@project-management-system/shared-services"
-import { Button, Card, Descriptions, Tag } from "antd"
+import { Button, Card, Col, Descriptions, Row, Tag } from "antd"
 import DescriptionsItem from "antd/es/descriptions/Item"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -17,7 +17,6 @@ export const SettingsView = () => {
 
     useEffect(() => {
         getAllInfo()
-
     },[])
 
     const getAllInfo = () => {
@@ -39,9 +38,11 @@ export const SettingsView = () => {
         <>
         {
             data.length > 0 ? (<>
-            
             <Card title='Settings' extra={<Button onClick={onUpdate} type={'primary'}>Change</Button>}>
-             <Descriptions title={<Tag color="gold" style={{fontSize:'15px'}}>COMPANY DETAILS</Tag>} size='small'>
+                {/* <Row gutter={24}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}> */}
+            <b style={{fontSize:'13px',color:"green"}}>COMPANY DETAILS</b>
+             <Descriptions size='small'>
                 <DescriptionsItem label='Account Control Head'>{data[0]?.accountControlName}</DescriptionsItem>
                 <DescriptionsItem label='PCH'>{data[0]?.profitControlHead}</DescriptionsItem>
                 <DescriptionsItem label='Company'>{data[0]?.companyName}</DescriptionsItem>
@@ -51,20 +52,25 @@ export const SettingsView = () => {
                 <DescriptionsItem label='CO Type'>{data[0]?.coType}</DescriptionsItem>
             </Descriptions>
             <br/>
-            <Descriptions title={<Tag color="lime" style={{fontSize:'15px'}}>TEAM DETAILS</Tag>} size='small'>
+            <b style={{fontSize:'13px',color:'green'}}>TEAM DETAILS</b>
+            <Descriptions size='small'>
                 <DescriptionsItem label='Sales Person'>{data[0]?.salesPerson}</DescriptionsItem>
                 <DescriptionsItem label='Fabric Responsible'>{data[0]?.fabricResponsible}</DescriptionsItem>
                 <DescriptionsItem label='Item Responsible'>{data[0]?.itemResponsible}</DescriptionsItem>
                 <DescriptionsItem label='Trim Responsible'>{data[0]?.trimRespondsible}</DescriptionsItem>
             </Descriptions>
-            <br/>
-            <Descriptions title={<Tag color="gold" style={{fontSize:'15px'}}>PRODUCT DETAILS</Tag>} size='small'>
+         <br/>
+         <b style={{fontSize:'13px',color:'green'}}>PRODUCT DETAILS</b>
+            <Descriptions size='small'>
                 <DescriptionsItem label='Currency'>{data[0]?.currencyName}</DescriptionsItem>
                 <DescriptionsItem label='Licence Type'>{data[0]?.liscenceType}</DescriptionsItem>
             </Descriptions>
             <br/>
-            <Descriptions title={<Tag color="lime" style={{fontSize:'15px'}}>CUSTOMER DETAILS</Tag>} size='small'>
-                <DescriptionsItem label='Buyer Address'>{data[0]?.address}</DescriptionsItem>
+            {/* </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}> */}
+            <b style={{fontSize:'13px',color:'green'}}>CUSTOMER DETAILS</b>
+            <Descriptions size='small'>
+                <DescriptionsItem label='Buyer Address' span={3}>{data[0]?.address}</DescriptionsItem>
                 <DescriptionsItem label='Buyer Name'>{data[0]?.buyerName}</DescriptionsItem>
                 <DescriptionsItem label='Buyer Group'>{data[0]?.buyerGroup}</DescriptionsItem>
                 <DescriptionsItem label='Agent'>{data[0]?.agentName}</DescriptionsItem>
@@ -72,13 +78,21 @@ export const SettingsView = () => {
                 <DescriptionsItem label='Payment Method'>{data[0]?.paymentMethod}</DescriptionsItem>
                 <DescriptionsItem label='Payment Terms'>{data[0]?.paymentTermsName}</DescriptionsItem>
                 <DescriptionsItem label='Delivery Method'>{data[0]?.deliveryMethod}</DescriptionsItem>
-                <DescriptionsItem label='Delivery Terms'>{data[0]?.deliveryTermsName}</DescriptionsItem>
+                <DescriptionsItem label='Delivery Terms' span={2}>{data[0]?.deliveryTermsName}</DescriptionsItem>
             <DescriptionsItem label={<b>Discount(%)</b>}>{data[0]?.discount}</DescriptionsItem>
             </Descriptions>
+            <br/>
+            
+            {/* </Col>
+            </Row> */}
 
         </Card>
             </>) : (<>
             <SettingsForm/>
+            
+            
+             {/* {navigate('/settings/settings-form')} */}
+            
             </>)
         }
         

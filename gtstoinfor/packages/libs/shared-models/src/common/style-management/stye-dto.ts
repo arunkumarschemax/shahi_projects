@@ -1,8 +1,8 @@
 
 export class StyleDto {
   styleId:number;
- locationId:number;
-  pch:string;
+  locationId:number;
+  profitControlHeadId:number;
   style:string;
   description:string;
   styleFileName: string;
@@ -14,7 +14,7 @@ export class StyleDto {
   constructor(
     styleId:number,
     locationId:number,
-    pch:string,
+    profitControlHeadId:number,
     style:string,
     description:string,
     styleFileName: string,
@@ -30,7 +30,7 @@ export class StyleDto {
     this.styleFilePath=styleFilePath
     this.locationId=locationId
     this.isActive=isActive
-    this.pch=pch
+    this.profitControlHeadId=profitControlHeadId
     this.createdUser=createdUser
     this.updatedUser=updatedUser
 
