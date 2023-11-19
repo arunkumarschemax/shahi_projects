@@ -1,8 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Req } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { PurchaseOrderService } from './purchase-order-service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { CommonResponseModel, PurchaseOrderDto, VendorIdReq } from '@project-management-system/shared-models';
+import { CommonResponseModel, PurchaseOrderDto, PurchaseViewDto, VendorIdReq } from '@project-management-system/shared-models';
 
 @ApiTags('po')
 @Controller('po')
@@ -23,9 +23,11 @@ export class PurchaseOrderController {
   }
 
   @Post('/getAllPoData')
-  async getAllPoData(): Promise<CommonResponseModel> {
+  @ApiBody({type: PurchaseViewDto})
+  async getAllPoData(@Req() req?:any): Promise<CommonResponseModel> {
+
     try {
-      return await this.purchasseOrdrSerivice.getAllPoData();
+      return await this.purchasseOrdrSerivice.getAllPoData(req.body);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
@@ -59,9 +61,9 @@ export class PurchaseOrderController {
     }
   }
   @Post('/getAllPurchaseOrderData')
-  async getAllPurchaseOrderData( ): Promise<CommonResponseModel> {
+  async getAllPurchaseOrderData(@Body() req?: any ): Promise<CommonResponseModel> {
     try {
-      return await this.purchasseOrdrSerivice.getAllPurchaseOrderData();
+      return await this.purchasseOrdrSerivice.getAllPurchaseOrderData(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }

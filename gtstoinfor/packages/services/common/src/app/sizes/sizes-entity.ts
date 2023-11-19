@@ -3,6 +3,7 @@ import { BuyersDestionations } from "../buyers-destination/buyers-destination.en
 import { BuyersSize } from "../buyers-destination/buyers-sizes.entity";
 import { ItemSkus } from "../sku-generation/sku-generation.entity";
 import { CoLine } from "../style-order/co-line.entity";
+import { SampleInventoryLogEntity } from "../sample-dev-request/entities/sample-inventory-log-entity";
 
 @Entity('size')
 export class Size{
@@ -61,4 +62,7 @@ itemSkuInfo:ItemSkus;
 
 @OneToMany(type=>CoLine, co=>co.sizeInfo,{cascade: true})
 coLineInfo:CoLine;
+
+@OneToMany(Type=> SampleInventoryLogEntity, inventory=>inventory.size,{cascade: true} )
+sInventory:SampleInventoryLogEntity[]
 }
