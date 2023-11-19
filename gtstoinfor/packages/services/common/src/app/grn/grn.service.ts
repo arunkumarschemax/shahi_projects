@@ -162,7 +162,7 @@ export class GrnService{
                         await this.poFabricRepo.update({poFabricId:item.poFabricId},{fabricItemStatus:PoItemEnum.PARTAILLY_RECEIVED,grnQuantity:item.conversionQuantity})
                     }
                  
-                    await this.indentFabricRepo.update({ifabricId:item.indentFabricId},{recivedQuantity:item.conversionQuantity})
+                    await this.indentFabricRepo.update({ifabricId:item.indentFabricId},{receivedQuantity:item.conversionQuantity})
                     const indentId = await this.getIndentid(req.materialtype,item.indentFabricId) 
                     const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype,indentId.data[0].indentId)
                     if(indentData.data.length == 0){
@@ -179,7 +179,7 @@ export class GrnService{
                     }else{
                         await this.poTrimRepo.update({poTrimId:item.poTrimId},{grnQuantity:item.conversionQuantity,trimItemStatus:PoItemEnum.PARTAILLY_RECEIVED})
                     }
-                    await this.indentTrimRepo.update({itrimsId:item.indentTrinId},{recivedQuantity:item.conversionQuantity})
+                    await this.indentTrimRepo.update({itrimsId:item.indentTrinId},{receivedQuantity:item.conversionQuantity})
                     const indentId = await this.getIndentid(req.materialtype,item.indentTrinId) 
                     const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype,indentId.data[0].indentId)
                     if(indentData.data.length == 0){

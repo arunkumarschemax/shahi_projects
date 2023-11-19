@@ -10,6 +10,8 @@ import GRNFabricForm from './grn-fabric'
 import GRNTrimForm from './grn-trim'
 import { GrnDto, VendorIdReq } from '@project-management-system/shared-models'
 import AlertMessages from '../common/common-functions/alert-messages'
+import dayjs, { Dayjs } from "dayjs";
+
 
 const GRNForm = () => {
 
@@ -28,13 +30,14 @@ const GRNForm = () => {
     const [trimFormData, setTrimFormData]=useState<any[]>([])
     useEffect(()=>{
         getVendorsData()
+        form.setFieldsValue({grnDate:dayjs()})
     },[])
 
     const createGrn = (value:any) => {
-        // console.log(value,'-------------------------------')
-        const req = new GrnDto(value.vendorId,poData[0]?.poId,value.grnDate,undefined,value.remarks,undefined,undefined,'',undefined,'',0,0,poData[0]?.materialType,formData,0,'');
+        console.log(poData,'-------------------------------')
+        const req = new GrnDto(value.vendorId,poData[0]?.purchaseOrderId,form.getFieldValue('grnDate').format('YYYY-MM-DD'),undefined,value.remarks,undefined,undefined,'',undefined,'',0,0,poData[0]?.materialType,formData,0,'');
         console.log(req,'[][][][][][][]')
-        grnService.creteGrn(req).then((res) => {
+        grnService.createGrn(req).then((res) => {
             if (res.status) {
               AlertMessages.getSuccessMessage(res.internalMessage);
             } else {
@@ -83,7 +86,6 @@ const GRNForm = () => {
     
     const handleSaveData = (savedData) => {
         setFormData(savedData)
-        console.log('Saved --------------- Data:', savedData);
     }
 
 

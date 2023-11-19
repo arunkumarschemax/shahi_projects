@@ -59,11 +59,11 @@ export class PurchaseOrderTrimEntity{
       })
       indentTrimId:number
 
-    @Column('varchar',{
+    @Column('decimal',{
         name:'po_quantity',
         nullable:false
     })
-    poQuantity:string
+    poQuantity:number
 
     @Column('int',{
         name:'quantity_uom_id',
@@ -78,11 +78,11 @@ export class PurchaseOrderTrimEntity{
         trimItemStatus:PoItemEnum
 
         
-    @Column('varchar',{
+    @Column('decimal',{
         name:'grn_quantity',
         nullable:true
       })
-      grnQuantity:string
+      grnQuantity:number
       
     @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poTrimInfo)
     @JoinColumn({name:'purchase_order_id'})

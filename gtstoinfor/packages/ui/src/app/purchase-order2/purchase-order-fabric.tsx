@@ -1,6 +1,6 @@
 import { EditOutlined, EnvironmentOutlined, MinusCircleOutlined, PlusOutlined, UndoOutlined } from "@ant-design/icons"
 import { M3MastersCategoryReq } from "@project-management-system/shared-models"
-import { ColourService, FabricTypeService, FabricWeaveService, IndentService, M3MastersService, M3StyleService, ProfitControlHeadService, UomService } from "@project-management-system/shared-services"
+import { ColourService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, ProfitControlHeadService, UomService } from "@project-management-system/shared-services"
 import { Button, Card, Col, Divider, Form, Input, Popconfirm, Row, Select, Space, Tag, Tooltip, message } from "antd"
 import Table, { ColumnProps } from "antd/es/table"
 import { table } from "console"
@@ -36,6 +36,8 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
     const [indentData, setIndentData]=useState<any[]>([])
     let tableData: any[] = []
     const m3StyleService = new M3StyleService()
+    const m3ItemsService = new M3ItemsService()
+
 
 
     console.log(fabricTableVisible)
@@ -43,7 +45,6 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
     useEffect(() =>{
         getweave()
         getUom()
-        // getM3FabricCodes()
         getColor()
         getPCH()
         getFabricType()
@@ -58,7 +59,7 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
     },[indentId])
 
     const getM3FabricStyleCodes = () => {
-        m3StyleService.getM3Style().then(res => {
+        m3ItemsService.getM3Items().then(res => {
             if(res.status){
                 setFabricM3Code(res.data)
             }
@@ -101,14 +102,7 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
             }
         })
     }
-    const getM3FabricCodes = () => {
-        const req = new M3MastersCategoryReq('Fabric')
-        m3MasterService.getByCategory(req).then(res => {
-            if(res.status){
-                setFabricM3Code(res.data)
-            }
-        })
-    }
+  
     const getColor = () => {
         colorService.getAllActiveColour().then(res =>{
             if(res.status) {
@@ -124,23 +118,17 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
         })
     }
 
-    const fabrictyprOnchange = (value,option) =>{
-        console.log(option.type)
-        fabricForm.setFieldsValue({fabricTypeName:option?.type?option.type:''})
-    }
+  
     const colorOnchange = (value,option) =>{
         console.log(option.type)
         fabricForm.setFieldsValue({colorName:option?.type?option.type:''})
     }
-    const weaveOnchange = (value,option) =>{
-        console.log(option.type)
-        fabricForm.setFieldsValue({weaveName:option?.type?option.type:''})
-    }
-
     const setEditForm = (rowData: any, index: any) => {
+        console.log(rowData)
         setUpdate(true)
         if(rowData.indentFabricId != undefined){
             setInputDisable(true)
+            fabricForm.setFieldsValue({poQuantity:rowData.indentQuantity})
         }
         setDefaultFabricFormData(rowData)
         setFabricIndexVal(index)
@@ -149,23 +137,16 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
     useEffect(() => {
         if(defaultFabricFormData){
             console.log(defaultFabricFormData)
-            fabricForm.setFieldsValue({
-                content: defaultFabricFormData.content,
-                fabricTypeId: defaultFabricFormData.fabricTypeId,
-                weaveId: defaultFabricFormData.weaveId,
-                width: defaultFabricFormData.width,
-                yarnCount: defaultFabricFormData.yarnCount,
-                yarnUnit: defaultFabricFormData.yarnUnit,
+             fabricForm.setFieldsValue({
                 m3FabricCode: defaultFabricFormData.m3FabricCode,
                 colourId : defaultFabricFormData.colourId,
                 colorName:defaultFabricFormData.colorName,
-                weaveName:defaultFabricFormData.weaveName,
-                fabricTypeName:defaultFabricFormData.fabricTypeName,
                 shahiFabricCode:defaultFabricFormData.shahiFabricCode,
-                poQuantity:defaultFabricFormData.poQuantity,
+                poQuantity:defaultFabricFormData.indentQuantity,
                 quantityUomId:defaultFabricFormData.quantityUomId,
                 indentQuantity:defaultFabricFormData.indentQuantity,
-                indentFabricId:defaultFabricFormData.indentFabricId
+                indentFabricId:defaultFabricFormData.indentFabricId,
+                itemCode:defaultFabricFormData.itemCode
             })
         }
 
@@ -180,7 +161,7 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
         },
         {
             title:'M3 Fabric Code',
-            dataIndex:'m3FabricCode',
+            dataIndex:'itemCode',
             width:'170px'
         },
         {
@@ -263,19 +244,20 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
           setFabricTableVisible(true)
         })
     }
-    console.log(fabricTableData)
+ 
+    const m3FabricOnchange = (value,option) =>{
+        fabricForm.setFieldsValue({itemCode:option.name})
+    }
     
     return (
     <Card>
        <Form form={fabricForm} layout="vertical" onFinish={onFabricAdd}>
         <Row gutter={24}>
             <Form.Item name='colorName' hidden><Input ></Input></Form.Item>
-            <Form.Item name='weaveName' hidden><Input ></Input></Form.Item>
-            <Form.Item name='fabricTypeName' hidden><Input ></Input></Form.Item>
-            <Form.Item name='pchName' hidden><Input ></Input></Form.Item>
             <Form.Item name='indentQuantity' hidden><Input></Input></Form.Item>
             <Form.Item name={'indentFabricId'} hidden><Input></Input></Form.Item>
-
+            <Form.Item name={'itemCode'} hidden><Input></Input></Form.Item>
+{/* 
          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:'none'}}>
                     <Form.Item name='content' label='Content' >
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Content' disabled={inputDisbale}>
@@ -338,21 +320,33 @@ export const PurchaseOrderfabricForm =({props,indentId}) =>{
                         disabled={inputDisbale}
                         />
             </Form.Item>
-          </Col>
-           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+          </Col> */}
+
+           {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
            <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{required:true,message:'M3 Code is required'}]}>
            <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'
                         disabled={inputDisbale}
+                        onChange={m3FabricOnchange}
                         >
               {fabricM3Code.map(e => {
                 return(
-                //  <Option key={e.m3Code} value={e.m3Code}> {e.m3Code}-{e.category}</Option>
-                 <Option key={e.m3StyleId} value={e.m3StyleId}> {e.m3StyleCode}</Option>
+                 <Option key={e.m3ItemsId} value={e.m3ItemsId} name={e.itemCode}> {e.itemCode}</Option>
                        )
                       })}
                   </Select>
                  </Form.Item>
-                </Col>
+                </Col> */}
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                    <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{required:true,message:'M3 Code is required'}]}>
+                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'  onChange={m3FabricOnchange}>
+                            {fabricM3Code.map(e => {
+                                return(
+                                    <Option key={e.m3ItemsId} value={e.m3ItemsId}> {e.itemCode}</Option>
+                                )
+                            })}
+                        </Select>
+                    </Form.Item>
+                    </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
                        <Form.Item name='shahiFabricCode' label='Shahi Fabric Code'
                         // rules={[{required:true,message:'M3 Code is required'}]}

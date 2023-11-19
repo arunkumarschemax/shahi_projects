@@ -14,7 +14,7 @@ export class GrnController {
 
   ) { }
   @Post('/createGrn')
-  async creteGrn(@Body() dto: any): Promise<CommonResponseModel> {
+  async createGrn(@Body() dto: any): Promise<CommonResponseModel> {
     try {
       return await this.grnService.createGrn(dto);
     } catch (error) {
