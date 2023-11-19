@@ -57,10 +57,12 @@ export class IndentService{
             const fabricModel = [];
             const trimModel = [];
             const fabricIndentData = await this.indentFabricRepo.getFabricIndentData(data.indent_id);
+            console.log(fabricIndentData);
+            
             for(const fabric of fabricIndentData){
                 fabricModel.push(new IndentFabricModel(fabric.ifabric_id,fabric.content, 
-                    fabric.fabric_type_name,fabric.fabric_weave_name,fabric.weight,fabric.width,fabric.yarn_count,fabric.unit,fabric.construction,fabric.finish,fabric.shrinkage,fabric.m3_fabric_code,fabric.colour,
-                    fabric.pch,fabric.moq,fabric.moqUnit,fabric.moq_price,fabric.moqPriceUnit,fabric.season,fabric.supplier_id,
+                    fabric.fabric_type_name,fabric.fabric_weave_name,fabric.weight,fabric.width,fabric.yarn_count,fabric.unit,fabric.construction,fabric.finish,fabric.shrinkage,fabric.item_code,fabric.colour,
+                    fabric.pch,fabric.moq,fabric.moqUnit,fabric.moq_price,fabric.moqPriceUnit,fabric.season,fabric.vendor_name,
                     fabric.buyer_name,fabric.grn_date,fabric.xl_no,fabric.quantity,fabric.quantityUnit,fabric.status))
                 }
             const trimIndentData = await this.indentTrimRepo.getTrimIndentData(data.indent_id); 

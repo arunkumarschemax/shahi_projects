@@ -21,7 +21,7 @@ export class IndentFabricModel{
     moqPrice: number;
     moqPriceUnit: string;
     season: string;
-    supplierId: number;
+    supplierId: string;
     buyer: string;
     grnDate: Date;
     xlNo: string;
@@ -51,7 +51,7 @@ export class IndentFabricModel{
     moqPrice: number,
     moqPriceUnit: string,
     season: string,
-    supplierId: number,
+    supplierId: string,
     buyer: string,
     grnDate: Date,
     xlNo: string,
