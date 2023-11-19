@@ -3,7 +3,8 @@ export enum StatusEnum {
     IN_PROGRESS = 'IN_PROGRESS',
     CANCELLED = 'CANCELLED',
     CLOSED = 'CLOSED',
-    APPROVED = 'APPROVED'
+    APPROVED = 'APPROVED',
+    TOTAL = 'TOTAL'
 
   }
 

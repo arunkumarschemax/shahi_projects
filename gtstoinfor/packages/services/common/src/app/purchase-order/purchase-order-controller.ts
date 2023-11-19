@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Req } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { PurchaseOrderService } from './purchase-order-service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
@@ -23,11 +23,11 @@ export class PurchaseOrderController {
   }
 
   @Post('/getAllPoData')
-  async getAllPoData(@Body() req?:any): Promise<CommonResponseModel> {
-   
-    
+  @ApiBody({type: PurchaseViewDto})
+  async getAllPoData(@Req() req?:any): Promise<CommonResponseModel> {
+
     try {
-      return await this.purchasseOrdrSerivice.getAllPoData(req);
+      return await this.purchasseOrdrSerivice.getAllPoData(req.body);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }

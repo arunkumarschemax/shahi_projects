@@ -1,7 +1,7 @@
 import { CloseOutlined, EyeOutlined } from '@ant-design/icons';
-import { PurchaseViewDto } from '@project-management-system/shared-models';
+import { PurchaseViewDto, StatusEnum } from '@project-management-system/shared-models';
 import { PurchaseOrderservice } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tooltip } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tabs, Tooltip } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -16,6 +16,9 @@ export const PurchaseOrderView = () => {
   let navigate = useNavigate();
   const Service = new PurchaseOrderservice()
   const [form] = Form.useForm();
+  const [count, setCount] = useState<any>(0);
+  const k = [];
+
 
   // let Location = useLocation()
   // const stateData = Location.state.data
@@ -24,7 +27,7 @@ export const PurchaseOrderView = () => {
     getPo();
   }, [])
 
-  const getPo = () => {
+  const getPo = (status?: StatusEnum) => {
     const req = new PurchaseViewDto()
     if (form.getFieldValue('deliveryDate') !== undefined) {
       req.confirmStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
@@ -37,10 +40,13 @@ export const PurchaseOrderView = () => {
     }
     if (form.getFieldValue('orderDate') !== undefined) {
       req.poconfirmEndDate = (form.getFieldValue('orderDate')[1]).format('YYYY-MM-DD');
-    }
+    };
+    req.status = status
     Service.getPurchaseOrder(req).then(res => {
       if (res.status) {
-        setData(res.data)
+        setCount(res?.data[res.data?.length - 1]);
+        res.data.pop()
+        setData(res.data);
       } else {
         setData([])
       }
@@ -57,11 +63,13 @@ export const PurchaseOrderView = () => {
     getPo();
 
   }
+
+
   const renderCellData = (data) => {
     return data ? data : "-";
   }
 
-  
+
   const columns: any = [
     {
       title: 'S No',
@@ -74,17 +82,6 @@ export const PurchaseOrderView = () => {
       }),
       fixed: 'left',
     },
-
-    // {
-    //   title: 'Po type',
-    //   dataIndex: 'requestNumber',
-    // },
-    // {
-    //   title: 'Indent Code ',
-    //   dataIndex: 'indentCode',
-    //   width:'80px',
-
-    // },
     {
       title: 'PO Number',
       dataIndex: 'poNumber',
@@ -151,24 +148,6 @@ export const PurchaseOrderView = () => {
           : "";
       },
     },
-    // {
-    //   title: 'Aging',
-    //   dataIndex: 'deliveryDate',
-    //   render: (value, record) => {
-    //     const currentDate = new Date();
-    //     const deliveryDate = new Date(moment(record.deliveryDate).format('YYYY-MM-DD'));
-    //     const aging = deliveryDate.getTime() - currentDate.getTime();
-    //     const daysDifference = Math.ceil(aging / (1000 * 60 * 60 * 24)); // Use Math.ceil to round up to the nearest whole day
-    //     const isAboveDueDate = daysDifference > 0;
-
-    //     return (
-    //       <>
-    //         {isAboveDueDate ? '+' : ''}
-    //         {Math.abs(daysDifference)}
-    //       </>
-    //     );
-    //   }
-    // },
     {
       title: 'Aging(EPD)',
       dataIndex: 'deliveryDate',
@@ -215,7 +194,8 @@ export const PurchaseOrderView = () => {
     },
 
 
-  ]
+  ];
+
   return (
     <div><Card title="Purchase Orders" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
       <Form form={form}>
@@ -235,10 +215,10 @@ export const PurchaseOrderView = () => {
             <Button htmlType='submit' type="primary" onClick={onSearch}> Get Detail </Button>
           </Col>
           <Col span={2}>
-            <Button htmlType='reset' danger onClick ={resetHandler}>Reset</Button>
+            <Button htmlType='reset' danger onClick={resetHandler}>Reset</Button>
           </Col>
         </Row>
-        <Row gutter={24}>
+        {/* <Row gutter={24}>
           <Col className="gutter-row" xs={24} sm={24} md={5} lg={5} xl={{ span: 2 }}>
             <Card size="small" title={'OPEN :' + data.filter(r => r.status === 'OPEN').length} style={{ height: '35px', width: 100, backgroundColor: '#FFFFFF', borderRadius: 3 }}></Card>
           </Col>
@@ -254,7 +234,27 @@ export const PurchaseOrderView = () => {
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }}>
             <Card size="small" title={'TOTAL : ' + data.length} style={{ height: '35px', backgroundColor: '#FFFFFF', marginBottom: '2px', borderRadius: 3 }}></Card>
           </Col>
-        </Row>
+        </Row> */}
+
+        <Tabs
+          defaultActiveKey="1"
+          type="card"
+          onChange={getPo}
+          // size={size}
+          items={Object.keys(StatusEnum).filter((rec) => rec !== StatusEnum.APPROVED).map((key, i) => {
+            const colours = ['#F5222D', '#52C41A', '#722ED1', '#663300', '#FFA500'];
+            let counts: number;
+            if (count.length) {
+              counts = count[i] ? count[i][StatusEnum[key]] : 0;
+              k.push(counts)
+            };
+            const total = k.filter((rec) => rec !== undefined).reduce((c, a) => c + Number(a), 0);
+            return {
+              label: <span style={{ color: colours[i] }}>{StatusEnum[key] + ":" + " " + (StatusEnum[key] !== StatusEnum.TOTAL ? counts : total)}</span>,
+              key: key,
+            };
+          })}
+        />
       </Form>
       <Card>
         {/* <Table columns={columns} dataSource={data} bordered /> */}
