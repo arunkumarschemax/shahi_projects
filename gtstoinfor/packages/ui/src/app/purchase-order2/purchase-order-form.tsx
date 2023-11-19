@@ -101,6 +101,7 @@ export const PurchaseOrderForm =()=>{
         })
     }
     const onFinish = () =>{
+        console.log(poForm.getFieldValue('styleId'))
         for(const fabData of fabricData){
             console.log(fabData)
             if(fabData.poQuantity != ""){
@@ -120,6 +121,7 @@ export const PurchaseOrderForm =()=>{
             }  
         }
         const poDto = new PurchaseOrderDto('po11',poForm.getFieldValue('vendorId'),poForm.getFieldValue('styleId'),poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"),poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'),poForm.getFieldValue('remarks'),poForm.getFieldValue('poMaterialType'),poForm.getFieldValue('indentId'),fabricInfo,trimInfo)
+        console.log(poDto)
         if(poDto.poTrimInfo.length >0 || poDto.poFabricInfo.length >0){
             purchaseOrderService.cretePurchaseOrder(poDto).then(res =>{
                 console.log(poDto)
@@ -175,7 +177,7 @@ return(
                     </Form.Item>
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }} style={{display:styleVisible == true ? '':'none'}}>
-                    <Form.Item name='style' label='Style' 
+                    <Form.Item name='styleId' label='Style' 
                     rules={[{required:styleVisible,
                         message:'Style is required'}]}
                     >
@@ -228,7 +230,7 @@ return(
         <Row gutter={24}>
             <Card title={poType == 'Fabric'?<span style={{color:'blue', fontSize:'17px'}}>Fabric Details</span>:poType =='Trim'?<span style={{color:'blue', fontSize:'17px'}}>Trim Details</span>:''}>
                 {poType == 'Fabric' ?
-                <Card style={{width:'150%'}}><PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={indentId}/></Card>
+                <Card style={{width:'150%'}}><PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={poType == 'Fabric' ?indentId:undefined}/></Card>
            :poType == 'Trim' ?
            <Card style={{width:'130%'}}> <PurchaseOrderTrim key='trim' props={handleTrim}  indentId={indentId}/></Card>
             :<></>

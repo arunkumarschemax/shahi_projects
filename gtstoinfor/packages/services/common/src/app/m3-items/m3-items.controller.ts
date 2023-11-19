@@ -7,7 +7,7 @@ import { M3ItemsDTO } from "./m3-items.dto";
 
 
 
-@ApiTags('M3 Items')
+@ApiTags('m3Items')
 @Controller('/m3Items')
 export class M3ItemsController {
   constructor(private readonly Service: M3ItemsService,
