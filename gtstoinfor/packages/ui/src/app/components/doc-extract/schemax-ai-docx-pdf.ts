@@ -2804,7 +2804,7 @@ export const extractEfl = async (pdf: PDFDocumentProxy) => {
             }
         }
         if (currentHSN?.description?.includes('-')) {
-            currentHSN.description = currentHSN.description.split('-')[0];
+            currentHSN.description = currentHSN.description.split('-')[0].replace(/\d+/g,"");
         }
 
         const calculateChargeForItem = (item) => {
@@ -2876,10 +2876,23 @@ export const extractEfl = async (pdf: PDFDocumentProxy) => {
                 const invoiceNumberData = extractedData.find((item) => item.content.match(invoiceNumberId));
                 const invoiceNumberNew = invoiceNumberData ? invoiceNumberData.content.split('|')[1] : '';
 
-                const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
-                    const amount = parseFloat(hsnLine.amount) || 0;
+                // const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
+                //     const amount = parseFloat(hsnLine.amount) || 0;
+                //     const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
+                //     return add + amount + taxAmount * 2;
+                // }, 0).toFixed(2);
+
+                const invoiceAmount = structuredHSNLines.reduce((total, hsnLine) => {
                     const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
-                    return add + amount + taxAmount * 2;
+                    const amount = parseFloat(hsnLine.amount) || 0;
+                    const taxPercentage = parseFloat(hsnLine.taxPercentage) || 0;
+
+                    if (taxPercentage === 18) {
+                        return total + taxAmount + amount;
+                    } else if (taxPercentage === 9) {
+                        return total + ((taxAmount * 2) + amount);
+                    }
+                    return total;
                 }, 0).toFixed(2);
 
                 let igst = "0.00";
