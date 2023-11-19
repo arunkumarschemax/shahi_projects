@@ -343,7 +343,7 @@ const SubstituionView=() =>{
 
       if(res.status){
             setdata(res.data)
-            // console.log(res,'dataaaaaaaaaaaaa')
+            console.log(res.data,'dataaaaaaaaaaaaa')
         }else{
             AlertMessages.getErrorMessage(res.internalMessage);
         }
@@ -442,7 +442,35 @@ const SubstituionView=() =>{
           )
               : null
   })
-
+  const CustomTitle = () => {
+    return (
+    <div>
+    <tr>
+      <th>
+      <td style={{ marginLeft:10,width:150}}>FG SKU</td>
+      </th>
+      <th>
+      <td style={{ marginLeft:10,width:180}}>Rm SKU</td>
+      </th>
+      <th>
+      <td style={{width:180}}>Rm Item Code</td>
+      </th>
+      <th>
+      <td style={{width:150}}>Item Type</td>
+      </th>
+      <th>
+      <td style={{width:120}}>Consumption</td>
+      </th>
+      <th>
+      <td style={{width:130}}>Feature Code</td>
+      </th>
+      <th>
+      <td style={{width:130}}>Option Group</td>
+      </th>
+      </tr>
+      </div>
+  )
+}
 
     const columnsSkelton:any=[
     
@@ -458,152 +486,276 @@ const SubstituionView=() =>{
                 {
                   title:'Fg ItemCode',
                   dataIndex:'fgItemCode',
-                    key:'fgItemCode',
-                    sorter: (a, b) => {
-                      const valueA = a.fgSku || '';
-                      const valueB = b.fgSku || '';
-                      return valueA.localeCompare(valueB);
-                    },
-                    sortDirections: ['descend', 'ascend'],
-                    width:'120px',
-                    ...getColumnSearchProps('fgItemCode'),
-
+                   
                 },
+             
+                // },
+                // {
+                //   title: <div style={{ textAlign: 'center' }}>RM Sku</div>,
+                //   dataIndex: "rmData",
+                //   key: "rmData",
+                //   align: 'center',
+                //   width: 130,
+                // render: (val) => {
+                //   const product = val.map((item, index) => (
+                //     item.rmDetails.map((item, index) => (
+                //       <div key={index} style={{ padding: '5px', borderBottom: index !== val.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+                //         {item.rmSku || '-'}
+                //       </div>
+                //     ))
+                //   ));
+                //   return <div style={{ display: 'flex', flexDirection: 'column' }}>{product}</div>;
+                //   }
+                // },
+                // {
+                //   title: <div style={{ textAlign: 'center' }}>RM Sku</div>,
+                //   dataIndex: "rmData",
+                //   key: "rmData",
+                //   align: 'center',
+                //   width: 130,
+                // render: (val) => {
+                //   const product = val.map((item, index) => (
+                //     item.rmDetails.map((item, index) => (
+                //       <div key={index} style={{ padding: '5px', borderBottom: index !== val.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+                //         {item.rmSku || '-'}
+                //       </div>
+                //     ))
+                //   ));
+                //   return <div style={{ display: 'flex', flexDirection: 'column' }}>{product}</div>;
+                //   }
+                // },
+                // {
+                //   title: <div style={{ textAlign: 'center' }}>Item Type</div>,
+                //   dataIndex: "rmData",
+                //   key: "rmData",
+                //   align: 'center',
+                //   width: 130,
+                // render: (val) => {
+                //   const product = val.map((item, index) => (
+                //     item.rmDetails.map((item, index) => (
+                //       <div key={index} style={{ padding: '5px', borderBottom: index !== val.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+                //         {item.itemType || '-'}
+                //       </div>
+                //     ))
+                //   ));
+                //   return <div style={{ display: 'flex', flexDirection: 'column' }}>{product}</div>;
+                //   }
+                // },
+                // {
+                //   title: <div style={{ textAlign: 'center' }}>Feature Code</div>,
+                //   dataIndex: "rmData",
+                //   key: "rmData",
+                //   align: 'center',
+                //   width: 130,
+                // render: (val) => {
+                //   const product = val.map((item, index) => (
+                //     item.rmDetails.map((item, index) => (
+                //       <div key={index} style={{ padding: '5px', borderBottom: index !== val.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+                //         {item.featureCode || '-'}
+                //       </div>
+                //     ))
+                //   ));
+                //   return <div style={{ display: 'flex', flexDirection: 'column' }}>{product}</div>;
+                //   }
+                // }, {
+                //   title: <div style={{ textAlign: 'center' }}>Option Group</div>,
+                //   dataIndex: "rmData",
+                //   key: "rmData",
+                //   align: 'center',
+                //   width: 130,
+                // render: (val) => {
+                //   const product = val.map((item, index) => (
+                //     item.rmDetails.map((item, index) => (
+                //       <div key={index} style={{ padding: '5px', borderBottom: index !== val.length - 2 ? '1px solid #e8e8e8' : 'none' }}>
+                //         {item.optionGroup || '-'}
+                //       </div>
+                //     ))
+                //   ));
+                //   return <div style={{ display: 'flex', flexDirection: 'column' }}>{product}</div>;
+                //   }
+                // },
                 {
-                  title:'Fg Sku',
+                  title:<CustomTitle/>,
                   dataIndex:'rmData',
                   key:'rmData',
-                  // sorter: (a, b) => {
-                  //   const valueA = a.fgItemCode || '';
-                  //   const valueB = b.fgItemCode || '';
-                  //   return valueA.localeCompare(valueB);
-                  // },
-                  // sortDirections: ['descend', 'ascend'],
-                  // width:'120px'
-                  render:(fg)=>{
+                  render:(fg,val)=>{
                     return(
+                     <div style={{marginLeft:-30}}>
                       <Table
-                      dataSource={fg}
+                      size='small'
+                      showHeader={false}
+                       bordered
+                      dataSource={val.rmData}
                       columns={[
                         {
                         dataIndex:'fgSku',
                         key:'fgSku',
-                        align:'center',
+
                         render:(data)=>{
                           return data? data:'-'
                         }
-                        }
-                      ]}
-                      pagination={false}
-                      />
-                    )
-                  }
-
-                },
-                {
-                  title:'Rm Sku',
-                  dataIndex:'rmDetails',
-                  key:'rmDetails',
-                  // sorter: (a, b) => {
-                  //   const valueA = a.fgItemCode || '';
-                  //   const valueB = b.fgItemCode || '';
-                  //   return valueA.localeCompare(valueB);
-                  // },
-                  // sortDirections: ['descend', 'ascend'],
-                  // width:'120px'
-                  render:(fg)=>{
-                    return(
-                      <Table
-                      dataSource={fg}
-                      columns={[
+                        },
                         {
-                        dataIndex:'rmSku',
-                        key:'rmSku',
-                        align:'center',
-                        render:(data)=>{
-                          return data? data:'-'
-                        }
-                        }
+                            // title: <div style={{ textAlign: 'center' }}>Item Type</div>,
+                            dataIndex: "rmDetails",
+                            key: "rmDetails",
+                            align: 'center',
+                          render: (val) => {
+                            const product = val.map((item, index) => (
+                              // item.rmDetails.map((item, index) => (
+                                <div key={index} style={{ padding: '5px', borderBottom: index !== val.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+                                  {item.rmSku || '-'}
+                                </div>
+                              // ))
+                            ));
+                            return <div style={{ display: 'flex', flexDirection: 'column' }}>{product}</div>;
+                            }
+                          },
+                          {
+                            // title: <div style={{ textAlign: 'center' }}>Item Type</div>,
+                            dataIndex: "rmDetails",
+                            key: "rmDetails",
+                            align: 'center',
+                          render: (val) => {
+                            const product = val.map((item, index) => (
+                              // item.rmDetails.map((item, index) => (
+                                <div key={index} style={{ padding: '5px', borderBottom: index !== val.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+                                  {item.itemCode || '-'}
+                                </div>
+                              // ))
+                            ));
+                            return <div style={{ display: 'flex', flexDirection: 'column' }}>{product}</div>;
+                            }
+                          },
+                          {
+                            // title: <div style={{ textAlign: 'center' }}>Item Type</div>,
+                            dataIndex: "rmDetails",
+                            key: "rmDetails",
+                            align: 'center',
+                          render: (val) => {
+                            const product = val.map((item, index) => (
+                              // item.rmDetails.map((item, index) => (
+                                <div key={index} style={{ padding: '5px', borderBottom: index !== val.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+                                  {item.itemType || '-'}
+                                </div>
+                              // ))
+                            ));
+                            return <div style={{ display: 'flex', flexDirection: 'column' }}>{product}</div>;
+                            }
+                          }, 
+                              {
+                            // title: <div style={{ textAlign: 'center' }}>Item Type</div>,
+                            dataIndex: "rmDetails",
+                            key: "rmDetails",
+                            align: 'center',
+                          render: (val) => {
+                            const product = val.map((item, index) => (
+                              // item.rmDetails.map((item, index) => (
+                                <div key={index} style={{ padding: '5px', borderBottom: index !== val.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+                                  {item.consumption || '-'}
+                                </div>
+                              // ))
+                            ));
+                            return <div style={{ display: 'flex', flexDirection: 'column' }}>{product}</div>;
+                            }
+                          },
+                          {
+                            // title: <div style={{ textAlign: 'center' }}>Item Type</div>,
+                            dataIndex: "rmDetails",
+                            key: "rmDetails",
+                            align: 'center',
+                          render: (val) => {
+                            const product = val.map((item, index) => (
+                              // item.rmDetails.map((item, index) => (
+                                <div key={index} style={{ padding: '5px', borderBottom: index !== val.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+                                  {item.featureCode || '-'}
+                                </div>
+                              // ))
+                            ));
+                            return <div style={{ display: 'flex', flexDirection: 'column' }}>{product}</div>;
+                            }
+                          },
+                          {
+                            // title: <div style={{ textAlign: 'center' }}>Item Type</div>,
+                            dataIndex: "rmDetails",
+                            key: "rmDetails",
+                            align: 'center',
+                          render: (val) => {
+                            const product = val.map((item, index) => (
+                              // item.rmDetails.map((item, index) => (
+                                <div key={index} style={{ padding: '5px', borderBottom: index !== val.length - 1 ? '1px solid #e8e8e8' : 'none' }}>
+                                  {item.optionGroup || '-'}
+                                </div>
+                              // ))
+                            ));
+                            return <div style={{ display: 'flex', flexDirection: 'column' }}>{product}</div>;
+                            }
+                          },
+                        // {
+                        //   dataIndex:'rmDetails',
+                        //   key:'rmDetails',
+                        //   render:(fg,val)=>{
+                        //     return(
+                        //       <div style={{marginLeft:-30}}>
+                        //       <Table
+                        //       showHeader={false}
+                        //       dataSource={val.rmDetails}
+                        //       columns={[
+                        //         {
+                        //           width:10,
+                        //         dataIndex:'rmSku',
+                        //         render:(data)=>{
+                        //           return data? data:'-'
+                        //         }
+                        //         },                            
+                        //         {
+                      
+                        //           // title:'Rm ItemCode',
+                        //           dataIndex:'itemCode',
+                                
+                      
+                        //         },
+                        //         {
+                        //           // title:'Item Type',
+                        //           dataIndex:'itemType',
+                                 
+                        //         },
+                        //         {
+                        //           // title:'Consumption',
+                        //           dataIndex:'consumption',
+                                  
+                
+                        //         },
+                        //         {
+                        //           // title: 'Feature Code',
+                        //           dataIndex: 'featureCode',
+                                 
+                
+                        //         },
+                                
+                        //         {
+                        //           // title:'Option Group',
+                        //           dataIndex:'optionGroup',
+                                  
+                
+                
+                        //         },
+                        //       ]}
+                        //       pagination={false}
+                        //       />
+                        //       </div>
+                        //     )
+                        //   }
+                        //   }
                       ]}
                       pagination={false}
                       />
+                      </div>
                     )
                   }
 
                 },
-                
-                {
-      
-                  title:'Rm ItemCode',
-                  dataIndex:'itemCode',
-                  key:'itemCode',
-                  sorter: (a, b) => {
-                    const valueA = a.itemCode || '';
-                    const valueB = b.itemCode || '';
-                    return valueA.localeCompare(valueB);
-                  },
-                  sortDirections: ['descend', 'ascend'],
-                  width:'120px'
-
-      
-                },
-                {
-                  title:'Item Type',
-                  dataIndex:'itemType',
-                  key:'itemType',
-                  sorter: (a, b) => {
-                    const valueA = a.itemType || '';
-                    const valueB = b.itemType || '';
-                    return valueA.localeCompare(valueB);
-                  },
-                  sortDirections: ['descend', 'ascend'],
-                  ...getColumnSearchProps('itemType'),
-                  width:'120px'
-
-                },
-                {
-                  title:'Consumption',
-                  dataIndex:'consumption',
-                  key:'consumption',
-                  sorter: (a, b) => {
-                    const valueA = a.consumption || '';
-                    const valueB = b.consumption || '';
-                    return valueA.localeCompare(valueB);
-                  },
-                  sortDirections: ['descend', 'ascend'],
-                  ...getColumnSearchProps('consumption'),
-                  width:'120px'
-
-                },
-                {
-                  title: 'Feature Code',
-                  dataIndex: 'featureCode',
-                  key: 'featureCode',
-                  sorter: (a, b) => {
-                    const valueA = a.featureCode || '';
-                    const valueB = b.featureCode || '';
-                    return valueA.localeCompare(valueB);
-                  },
-                  sortDirections: ['descend', 'ascend'],
-                  width:'120px'
-
-                },
-                
-                {
-                  title:'Option Group',
-                  dataIndex:'optionGroup',
-                  sorter: (a, b) => {
-                    const valueA = a.optionGroup || '';
-                    const valueB = b.optionGroup || '';
-                    return valueA.localeCompare(valueB);
-                  },
-                  sortDirections: ['descend', 'ascend'],
-                  ...getColumnSearchProps('optionGroup'),
-                  width:'120px'
-
-
-
-                },
+             
       
               ]
       
@@ -671,7 +823,7 @@ className='custom-table-wrapper'
         setPageSize(pageSize);
     }
 }}
-   scroll={{x: 'max-content',y:500}}
+   scroll={{x: 'max-content'}}
   // onChange={}
   bordered />
 </>
