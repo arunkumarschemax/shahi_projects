@@ -12,4 +12,5 @@ export * from './rack-position-enum'
 export * from './purchase-order-enum'
 export * from './property.enum'
 export * from './is-imported-item.enum'
+export * from './status-purchase'
 
