@@ -17,7 +17,7 @@ export const OperationInventoryView = () => {
     }, [])
 
     const getOperation = () => {
-        service.getOperationInverntory().then(res => {
+        service.getOperationInverntoryData().then(res => {
             if (res.status) {
                 setData(res.data)
             }
@@ -25,7 +25,9 @@ export const OperationInventoryView = () => {
     }
 
     const allocate = (rowData, remainingQty:number) => {
-        return navigate('/operation-tracking/operation-mapping', { state: { data: [rowData ,remainingQty]} })
+        console.log(rowData,remainingQty,'------------');
+        
+        return navigate('/operation-tracking/operation-mapping', { state: { data: [rowData,remainingQty]} })
     }
     const columns: any = [
         {
