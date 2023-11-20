@@ -158,8 +158,8 @@ const getColumnSearchPropsss = (dataIndices) => ({
     {
         title: <div style={{ textAlign: 'center' }}>Mobile Number</div>,
         dataIndex: "mobileNumber",
-      width:'120px',align:'left',
-        // sorter: (a, b) => a.mobileNumber.localeCompare(b.mobileNumber),
+        width:'120px',align:'left',
+        sorter: (a, b) => a.mobileNumber.localeCompare(b.mobileNumber),
       },
     //   {
     //     title:<div style={{ textAlign: 'center' }}>Alternate Number</div> ,
@@ -185,17 +185,18 @@ const getColumnSearchPropsss = (dataIndices) => ({
       {
         title:  <div style={{ textAlign: 'center' }}>Email</div>,
         dataIndex: "emial",align:"left",width:180,
-        // sorter: (a, b) => a.address.localeCompare(b.address),
+        sorter: (a, b) => a.emial.localeCompare(b.emial),
     
       },
       {
         title: <div style={{ textAlign: 'center' }}>Department</div>,
-          dataIndex: 'Department',
-          key: 'deptName',
-          render: (Department) => Department ? Department.deptName : null,
+        dataIndex: 'Department',
+        render: (department,val) => ( department.deptName),
+        sorter: (a, b) => a.Department.deptName.localeCompare(b.Department.deptName)
         
-        sorter: (a, b) => a.deptName.localeCompare(b.deptName),
-    ...getColumnSearchProps("deptName")
+        
+        
+      
       },
     
     {
@@ -363,8 +364,11 @@ const getColumnSearchPropsss = (dataIndices) => ({
 
   return (
       <>
-      <Card title='Employees' extra={<span><Button onClick={() => navigate('/global/employee-details/employee-details-form')}
-              type={'primary'}>New</Button></span>}>
+      <Card title='Employees'
+      //  extra={<span><Button onClick={() => navigate('/global/employee-details/employee-details-form')}
+      //         type={'primary'}>New</Button>
+      //         </span>}
+              >
       <Row gutter={40}>
         <Col span={4}></Col>
         <Col span={5}>
