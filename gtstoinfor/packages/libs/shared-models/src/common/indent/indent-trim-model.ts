@@ -13,6 +13,8 @@ export class IndentTrimsModel{
     availableQuantity:number;
     quantityUnit:string;
     status:string;
+    indentId?:number
+    materialType?:string
 
 
   constructor(
@@ -28,6 +30,8 @@ export class IndentTrimsModel{
     availableQuantity:number,
     quantityUnit:string,
     status:string,
+    indentId?:number,
+    materialType?:string
   
   
   ){
@@ -43,7 +47,8 @@ export class IndentTrimsModel{
     this.availableQuantity = availableQuantity;
     this.quantityUnit=quantityUnit;
     this.status=status;
-
+    this.indentId=indentId
+    this.materialType=materialType
 
   }
 
