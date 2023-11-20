@@ -99,7 +99,7 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
         {
           title: <div style={{textAlign:"center"}}>GRN Qty</div>,
           align:"right",
-          dataIndex: 'prevAcceptedQty',
+          dataIndex: 'grnQuantity',
         },
         {
           title: <div style={{textAlign:"center"}}>Received Qty</div>,
