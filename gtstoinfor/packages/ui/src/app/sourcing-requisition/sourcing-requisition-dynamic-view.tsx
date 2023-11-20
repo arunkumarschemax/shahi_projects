@@ -84,10 +84,7 @@ export const SourcingRequisitionDynamicView = () => {
   //     }
   //   });
   // };
-  const generatePoForFabric = (rowData:any) =>{
-    // console.log(rowData)
-    navigate('/purchase-order', { state: { data: rowData } })
-  }
+
 
   const getAll = () => {
     const req = new IndentRequestFilter();
@@ -122,6 +119,10 @@ export const SourcingRequisitionDynamicView = () => {
     setBarcodeModal(true);
   };
 
+  const generatePoForFabric = (rowData:any) =>{
+    // console.log(rowData)
+    navigate('/purchase-order', { state: { data: rowData, type:'Indent' } })
+  }
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -490,7 +491,7 @@ export const SourcingRequisitionDynamicView = () => {
     },
   ];
   const genereatePoForTrim = (rowData: any) => {
-    navigate("/purchase-order", { state: { data: rowData } });
+    navigate("/purchase-order", { state: { data: rowData, type:'Indent'  } });
   };
 
   const onSegmentChange = (val) => {

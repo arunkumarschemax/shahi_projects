@@ -7,7 +7,7 @@ import { VALUE_SPLIT } from "rc-cascader/lib/utils/commonUtil";
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-export const PurchaseOrderTrim = ({props,indentId}) =>{
+export const PurchaseOrderTrim = ({props,indentId,data}) =>{
     let tableData: any[] = []
     const [trimForm] = Form.useForm()
     const {Option} = Select
@@ -42,6 +42,15 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
             indentTrimData(indentId)
         }
     },[indentId])
+
+    useEffect(() =>{
+        if(data.length != 0){
+            trimForm.setFieldsValue({productGroupId:data.data.productGroupId})
+            trimForm.setFieldsValue({trimId:data.data.rmItemId})
+            trimForm.setFieldsValue({colourId:data.data.colourId})
+            trimForm.setFieldsValue({poQuantity:data.data.requiredQuantity})
+        }
+    },[data])
 
     const getUom = () => {
         uomService.getAllUoms().then(res => {

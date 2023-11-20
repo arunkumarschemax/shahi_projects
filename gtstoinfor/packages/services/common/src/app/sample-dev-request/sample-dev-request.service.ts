@@ -332,7 +332,7 @@ export class SampleRequestService {
 
   async getSampleRequestReport(req?: any): Promise<CommonResponseModel> {
     const manager = this.dataSource;
-    let rawData = `SELECT sb.sampling_bom_id,sr.sample_request_id, sr.request_no AS requestNo, sr.m3_style_no, sb.rm_item_id, ri.item_code, sb.required_quantity,sb.created_at, sb.assigned_quantity,sb.colour_id,co.colour,st.style,bu.buyer_name,pg.product_group,ss.quantity,fa.name   FROM sampling_bom sb LEFT JOIN sample_request sr ON sb.sample_request_id = sr.sample_request_id LEFT JOIN rm_items ri ON ri.rm_item_id LEFT JOIN colour co ON co.colour_id = sb.colour_id = sb.rm_item_id LEFT JOIN style st ON st.style_id = sr.style_id LEFT JOIN buyers bu ON bu.buyer_id = sr.buyer_id LEFT JOIN product_group pg ON pg.product_group_id = sb.product_group_id LEFT JOIN stocks ss ON ss.item_type_id = sb.rm_item_id LEFT JOIN factory fa ON fa.id=sr.facility_id WHERE sr.sample_request_id IS NOT NULL `;
+    let rawData = `SELECT sb.rm_item_id as rmItemId,sb.colour_id as colourId,sr.m3_style_no as m3StleNo,sr.style_id as styleId,sb.sampling_bom_id,sr.sample_request_id, sr.request_no AS requestNo, sr.m3_style_no, sb.rm_item_id, ri.item_code, sb.required_quantity as requiredQuantity,sb.created_at, sb.assigned_quantity,sb.colour_id,co.colour,st.style,bu.buyer_name,pg.product_group,ss.quantity,fa.name   FROM sampling_bom sb LEFT JOIN sample_request sr ON sb.sample_request_id = sr.sample_request_id LEFT JOIN rm_items ri ON ri.rm_item_id LEFT JOIN colour co ON co.colour_id = sb.colour_id  LEFT JOIN style st ON st.style_id = sr.style_id LEFT JOIN buyers bu ON bu.buyer_id = sr.buyer_id LEFT JOIN product_group pg ON pg.product_group_id = sb.product_group_id LEFT JOIN stocks ss ON ss.item_type_id = sb.rm_item_id LEFT JOIN factory fa ON fa.id=sr.facility_id WHERE sr.sample_request_id IS NOT NULL `;
     if (req.buyerName) {
       rawData = rawData + ' and bu.buyer_name = "' + req.buyerName + '"'
     }
@@ -356,7 +356,12 @@ export class SampleRequestService {
         const buyers = item.buyer_name;
         const date = item.created_at;
         const style = item.style;
-        const unit = item.name
+        const unit = item.name;
+        const styleId=item.styleId
+        const requiredQuantity=item.requiredQuantity
+        const m3StleNo=item.m3StleNo
+        const  colourId=item.colourId
+        const rmItemId=item.rmItemId
         if (!result[requestNo]) {
           result[requestNo] = {
             request_no: requestNo,
@@ -365,6 +370,11 @@ export class SampleRequestService {
             created_at: date,
             style: style,
             name: unit,
+            styleId:styleId,
+            requiredQuantity:requiredQuantity,
+            m3StleNo:m3StleNo,
+            colourId:colourId,
+            rmItemId:rmItemId,
             sm: [],
           };
         }
@@ -377,6 +387,11 @@ export class SampleRequestService {
             consumption: item.required_quantity,
             quantity: item.quantity,
             color: item.colour,
+            styleId:item.styleId,
+            requiredQuantity:item.requiredQuantity,
+            m3StleNo:item.m3StleNo,
+            colourId:item.colourId,
+            rmItemId:item.rmItemId,
             // style:item.style,
             // date:item.created_at,
           }
