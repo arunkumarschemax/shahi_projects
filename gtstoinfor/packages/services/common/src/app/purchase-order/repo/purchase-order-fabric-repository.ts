@@ -7,6 +7,7 @@ import { FabricType } from "../../fabric-types/fabric-type.entity";
 import { UomEntity } from "../../uom/uom-entity";
 import { IndentFabricEntity } from "../../indent/indent-fabric-entity";
 import { PurchaseOrderFbricEntity } from "../entities/purchase-order-fabric-entity";
+import { ProductGroup } from "../../m3-items/product-group-entity";
 
 @Injectable()
 export class PurchaseOrderFabricRepository extends Repository<PurchaseOrderFbricEntity> {
@@ -18,11 +19,13 @@ export class PurchaseOrderFabricRepository extends Repository<PurchaseOrderFbric
     async getPOFabricData(req:VendorIdReq):Promise<any>{
         const query = await this.createQueryBuilder('pof')
         .select(`pof.po_fabric_id AS poFabricId,pof.m3_fabric_code AS m3fabricCode,pof.po_quantity AS poQuantity,pof.quantity_uom_id AS quantityUomId,u.uom,pof.purchase_order_id AS purchaseOrderId,
-        pof.fabric_type_id AS fabricTypeId,ft.fabric_type_name AS fabricTypeName,iff.ifabric_id AS indentFabricId,po.po_material_type AS materialType`)
+        pof.fabric_type_id AS fabricTypeId,ft.fabric_type_name AS fabricTypeName,iff.ifabric_id AS indentFabricId,po.po_material_type AS materialType,
+        pof.grn_quantity AS grnQuantity`)
         .leftJoin(PurchaseOrderEntity,'po','po.purchase_order_id = pof.purchase_order_id')
         .leftJoin(FabricType,'ft','ft.fabric_type_id = pof.fabric_type_id')
         .leftJoin(UomEntity,'u','u.id = pof.quantity_uom_id')
         .leftJoin(IndentFabricEntity,'iff','iff.ifabric_id = pof.indent_fabric_id')
+        // .leftJoin(ProductGroup,'pg', 'pg.product_group_id = pof.product_group_id')
         .where(`1=1`)
         if (req.poId !== undefined) {
             query.andWhere(`pof.purchase_order_id = '${req.poId}'`)

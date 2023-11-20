@@ -78,6 +78,35 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
       onSaveData(grnItemsArray)
       console.log("GrnItemsArray:", grnItemsArray);
     };
+
+    const uomConversionFactors = {
+      m: 1,          // 1 meter
+      yd: 0.9144,    // 1 yard = 0.9144 meters
+      gsm: 1,        // 1 gram per square meter
+      'oz/yd²': 33.906, // 1 ounce per square yard = 33.906 grams per square meter
+      pc: 1,         // 1 piece
+      ly: 1,         // 1 length (assuming length is in meters)
+      mm: 0.001,     // 1 millimeter = 0.001 meters
+      in: 0.0254,    // 1 inch = 0.0254 meters
+      cm: 0.01,      // 1 centimeter = 0.01 meters
+      gr: 0.001      // 1 gram
+    };
+    
+
+    const convertQuantity = (quantity, fromUom, toUom) => {
+      if (fromUom === toUom) {
+        return quantity;
+      }
+    
+      if (!(fromUom in uomConversionFactors) || !(toUom in uomConversionFactors)) {
+        throw new Error('Invalid units of measure');
+      }
+    
+      const baseQuantity = quantity * uomConversionFactors[fromUom];
+      const convertedQuantity = baseQuantity / uomConversionFactors[toUom];
+    
+      return convertedQuantity;
+    };
     
 
     
@@ -99,7 +128,7 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
         {
           title: <div style={{textAlign:"center"}}>GRN Qty</div>,
           align:"right",
-          dataIndex: 'prevAcceptedQty',
+          dataIndex: 'grnQuantity',
         },
         {
           title: <div style={{textAlign:"center"}}>Received Qty</div>,
@@ -242,9 +271,16 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
           ),
         },
         {
-          title: 'Converted Qty',
+          title: <div style={{ textAlign: 'center' }}>Converted Qty</div>,
           dataIndex: 'convertedQty',
-        }
+          render: (_, record) => {
+            const acceptedQuantity = form.getFieldValue(`acceptedQuantity_${record.poFabricId}_${record.key}`);
+            const acceptedUom = form.getFieldValue(`acceptedUomId_${record.poFabricId}_${record.key}`);
+            const convertedQty = convertQuantity(acceptedQuantity, acceptedUom, 'm');
+    
+            return <div style={{ textAlign: 'center' }}>{convertedQty.toFixed(2)} m</div>;
+          },
+        },
       ]
 
       return (

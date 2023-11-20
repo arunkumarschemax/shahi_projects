@@ -121,6 +121,9 @@ export class GrnService{
     }
 
     async createGrn(req:GrnDto):Promise<CommonResponseModel>{
+
+        // console.log(req,'@@@@@@@@@@@@@@@@@@@@@@@@')
+        
         const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
         try{
         await transactionalEntityManager.startTransaction();
@@ -134,6 +137,8 @@ export class GrnService{
             grnEntity.createdUser=req.createdUser
             grnEntity.updatedUser=req.updatedUser
             for(const item of req.grnItemInfo){
+                item.conversionQuantity=200
+                item.conversionUomId=1
                 const itemEntity = new GrnItemsEntity()
                 // itemEntity.m3ItemCodeId=item.m3ItemCodeId
                 itemEntity.productGroupId=item.productGroupId
@@ -152,8 +157,9 @@ export class GrnService{
             const save = await this.grnRepo.save(grnEntity)  
             if(save){
                 for(const item of req.grnItemInfo){ 
-                  
+                  if(item.poFabricId != null){
                    if(req.materialtype == 'Fabric'){
+                    console.log('****************************')
                     const poQuantity = await this.poFabricRepo.find({where:{poFabricId:item.poFabricId}})
                     if(poQuantity[0].poQuantity == item.conversionQuantity){
                     await this.poFabricRepo.update({poFabricId:item.poFabricId},{grnQuantity:item.conversionQuantity,fabricItemStatus:PoItemEnum.RECEIVED})
@@ -162,7 +168,7 @@ export class GrnService{
                         await this.poFabricRepo.update({poFabricId:item.poFabricId},{fabricItemStatus:PoItemEnum.PARTAILLY_RECEIVED,grnQuantity:item.conversionQuantity})
                     }
                  
-                    await this.indentFabricRepo.update({ifabricId:item.indentFabricId},{receivedQuantity:item.conversionQuantity})
+                    await this.indentFabricRepo.update({ifabricId:item.indentFabricId},{recivedQuantity:item.conversionQuantity})
                     const indentId = await this.getIndentid(req.materialtype,item.indentFabricId) 
                     const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype,indentId.data[0].indentId)
                     if(indentData.data.length == 0){
@@ -172,23 +178,32 @@ export class GrnService{
                        }
 
                    }
-                   if(req.materialtype == 'Trim'){
-                    const poQuantity = await this.poTrimRepo.find({where:{poTrimId:item.poTrimId}})
-                    if(poQuantity[0].poQuantity == item.conversionQuantity){
-                        await this.poTrimRepo.update({poTrimId:item.poTrimId},{grnQuantity:item.conversionQuantity,trimItemStatus:PoItemEnum.RECEIVED})
-                    }else{
-                        await this.poTrimRepo.update({poTrimId:item.poTrimId},{grnQuantity:item.conversionQuantity,trimItemStatus:PoItemEnum.PARTAILLY_RECEIVED})
-                    }
-                    await this.indentTrimRepo.update({itrimsId:item.indentTrinId},{receivedQuantity:item.conversionQuantity})
-                    const indentId = await this.getIndentid(req.materialtype,item.indentTrinId) 
-                    const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype,indentId.data[0].indentId)
-                    if(indentData.data.length == 0){
-                        await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.CLOSED})
-                       }  else{
-                        await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.IN_PROGRESS})
+                }
+                if(item.poFabricId == null){
+                    await  this.poFabricRepo.update({poFabricId:item.poFabricId},{grnQuantity:item.conversionQuantity})
+                }
+                if(item.poTrimId != null){
+                    if(req.materialtype == 'Trim'){
+                        const poQuantity = await this.poTrimRepo.find({where:{poTrimId:item.poTrimId}})
+                        if(poQuantity[0].poQuantity == item.conversionQuantity){
+                            await this.poTrimRepo.update({poTrimId:item.poTrimId},{grnQuantity:item.conversionQuantity,trimItemStatus:PoItemEnum.RECEIVED})
+                        }else{
+                            await this.poTrimRepo.update({poTrimId:item.poTrimId},{grnQuantity:item.conversionQuantity,trimItemStatus:PoItemEnum.PARTAILLY_RECEIVED})
+                        }
+                        await this.indentTrimRepo.update({itrimsId:item.indentTrinId},{recivedQuantity:item.conversionQuantity})
+                        const indentId = await this.getIndentid(req.materialtype,item.indentTrinId) 
+                        const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype,indentId.data[0].indentId)
+                        if(indentData.data.length == 0){
+                            await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.CLOSED})
+                           }  else{
+                            await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.IN_PROGRESS})
+                           }
                        }
-                   }
-                  
+                }
+                if(item.poTrimId == null){
+                    await this.poTrimRepo.update({poTrimId:item.poTrimId},{grnQuantity:item.conversionQuantity})
+                }
+                     
                  }
                     const poData = await this.getAllPoDataToUPdateStatus(req.poId,req.materialtype)
                     if(poData.data.length == 0){

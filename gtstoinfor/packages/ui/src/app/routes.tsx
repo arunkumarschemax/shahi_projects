@@ -798,8 +798,7 @@ export const AppRoutes = () => {
                 }} isUpdate={false} closeForm={function (): void {
                     throw new Error("Function not implemented.")
                 }} />} />
-            </Route>
-            <Route path='/global'>
+                <Route path='/global'>
                 <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
                 <Route path='buyers-destination/buyers-destination-grid' element={<BuyersDestinationGrid />} />
 
@@ -1000,6 +999,7 @@ export const AppRoutes = () => {
             <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             {/* </Route> */}
             <Route path="/login" element={<Login />} />
+            </Route>
        
             </Routes >
     );

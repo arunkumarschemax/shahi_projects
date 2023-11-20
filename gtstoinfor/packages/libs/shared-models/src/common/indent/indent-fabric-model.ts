@@ -21,15 +21,15 @@ export class IndentFabricModel{
     moqPrice: number;
     moqPriceUnit: string;
     season: string;
-    supplierId: number;
+    supplierId: string;
     buyer: string;
     grnDate: Date;
     xlNo: string;
     quantity: number;
     quantityUnit: string;
     status:string;
-  
-
+    indentId?:number
+    materialType?:string
 
   constructor(
     ifabricId: number,
@@ -51,14 +51,15 @@ export class IndentFabricModel{
     moqPrice: number,
     moqPriceUnit: string,
     season: string,
-    supplierId: number,
+    supplierId: string,
     buyer: string,
     grnDate: Date,
     xlNo: string,
     quantity: number,
     quantityUnit: string,
     status:string,
-
+    indentId?:number,
+    materialType?:string
  
   ){
     this.ifabricId=ifabricId;
@@ -87,7 +88,8 @@ export class IndentFabricModel{
     this.quantity=quantity;
     this.quantityUnit=quantityUnit;
     this.status=status;
-
+    this.indentId=indentId;
+    this.materialType=materialType
 
   }
 

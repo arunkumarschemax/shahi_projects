@@ -56,7 +56,7 @@ const GRNForm = () => {
         vendorService.getAllActiveVendors().then((res)=>{
             if(res.status){
                 setVendor(res.data)
-                setPoData([])
+                setPoNoData([])
             }
         })
     }
@@ -71,7 +71,7 @@ const GRNForm = () => {
     }
 
     const getPODataById = (val,option) =>{
-      const req = new VendorIdReq(0,val,option.name)
+      const req = new VendorIdReq(0,val,option?.name)
       poService.getPODataById(req).then((res)=>{
             if(res.status){
               setPoData(res.data)
@@ -120,7 +120,7 @@ const GRNForm = () => {
                   </Col>
                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                         <Form.Item name='grnDate' label='GRN Date' rules={[{required:true,message:'Date is required'}]}>
-                        <DatePicker style={{ width: '93%', marginLeft: 5 }} />
+                        <DatePicker style={{ width: '93%', marginLeft: 5 }} showToday/>
                         </Form.Item>
                   </Col>
                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
