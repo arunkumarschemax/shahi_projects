@@ -91,7 +91,7 @@ export const SourcingRequisitionDynamicView = () => {
 
   const generatePoForFabric = (rowData:any) =>{
     // console.log(rowData)
-    navigate('/purchase-order', { state: { data: rowData } })
+    navigate('/purchase-order', { state: { data: rowData, type:'Indent' } })
   }
 
   const columns: ColumnProps<any>[] = [
@@ -363,7 +363,7 @@ export const SourcingRequisitionDynamicView = () => {
     },
   ];
   const genereatePoForTrim = (rowData: any) => {
-    navigate("/purchase-order", { state: { data: rowData } });
+    navigate("/purchase-order", { state: { data: rowData, type:'Indent'  } });
   };
 
   const onSegmentChange = (val) => {

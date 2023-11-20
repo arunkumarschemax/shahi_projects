@@ -4,6 +4,7 @@ import { SampleDevelopmentService } from "@project-management-system/shared-serv
 import { Button, Card, Col, Form, Row, Select, Table } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const SampleRequestReport = () => {
   const service = new SampleDevelopmentService();
@@ -13,6 +14,7 @@ const SampleRequestReport = () => {
   const [form] = Form.useForm();
   const [sampleData, setSampleData] = useState<any[]>([]);
   const [filterData, setFilterData] = useState<any[]>([]);
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -273,7 +275,37 @@ const SampleRequestReport = () => {
         );
       },
     },
+    {
+      title: <div style={{ textAlign: "center" }}>Action</div>,
+      dataIndex: "sm",
+      key: "sm",
+      align: "center",
+      render: (sm) => {
+        return (
+          <Table
+            dataSource={sm}
+            columns={[
+              {
+                render:(value,rowdata) =>{
+                  return(
+                    <Button  type="primary" onClick={() =>generatePo(rowdata)}>Generate Po</Button>
+                  )
+                }
+                // dataIndex: "quantity",
+                // key: "quantity",
+                // align: "center",
+              },
+            ]}
+            pagination={false}
+          />
+        );
+      },
+    },
   ];
+    const generatePo = (rowdata:any) =>{
+       console.log(rowdata)
+       navigate('/purchase-order', { state: { data: rowdata,type:'Sampling' } })
+    }
 
   return (
     <div>

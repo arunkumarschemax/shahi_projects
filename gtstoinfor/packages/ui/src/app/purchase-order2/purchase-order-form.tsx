@@ -24,8 +24,10 @@ export const PurchaseOrderForm =()=>{
     const [poType, setPoType]=useState<any>('')
     const [submitDisbale, setSubmitDisable]=useState<boolean>(true)
     const [styleVisible, setStyleVisible]= useState<boolean>(undefined)
+    const [navigateData,setnavigateData] = useState<any>([])
     let fabricInfo:PurchaseOrderFbricDto[]=[];
     let trimInfo:PurchaseOrderTrimDto[]=[];
+
     const date = moment()
     const now = dayjs().add(GlobalVariables.poExpectedDeliveryDays, 'days');
     const styleService = new StyleService()
@@ -33,6 +35,7 @@ export const PurchaseOrderForm =()=>{
     const indentService = new IndentService()
     const location = useLocation()
     const stateData :any=location.state
+
 
 
 
@@ -53,24 +56,39 @@ export const PurchaseOrderForm =()=>{
     }
 
     useEffect(() =>{
-        if(stateData != undefined){
-            console.log(stateData)
-            poForm.setFieldsValue({indentId:stateData.data.indentId})
-            setIndentId(stateData)
-            poForm.setFieldsValue({indentAgainst:'Indent'})
-            setStyleVisible(false)
-            setIndentId(stateData.data.indentId)
-            if(stateData.data.materialType == "Fabric"){
-                poForm.setFieldsValue({poMaterialType:"Fabric"})
-                setPoType('Fabric')
+        if(stateData != undefined ){
+            if(stateData.type == 'Indent'){
+                poForm.setFieldsValue({indentId:stateData.data.indentId})
+                setIndentId(stateData)
+                poForm.setFieldsValue({indentAgainst:'Indent'})
+                setStyleVisible(false)
+                setIndentId(stateData.data.indentId)
+                if(stateData.data.materialType == "Fabric"){
+                    poForm.setFieldsValue({poMaterialType:"Fabric"})
+                    setPoType('Fabric')
+                }
+                if(stateData.data.materialType == 'Trim'){
+                    setPoType('Trim')
+                    poForm.setFieldsValue({poMaterialType:"Trim"})
+    
+                }
             }
-            if(stateData.data.materialType == 'Trim'){
-                setPoType('Trim')
-                poForm.setFieldsValue({poMaterialType:"Trim"})
-
-            }
+            if(stateData.type == 'Sampling'){
+                setnavigateData(stateData)
+                poForm.setFieldsValue({indentAgainst:'Style'})
+                setStyleVisible(true)
+                poForm.setFieldsValue({styleId:stateData.data.styleId})
+                if(stateData.data.fabricName == "Fabric"){
+                    console.log('UUUUUUU')
+                    poForm.setFieldsValue({poMaterialType:"Fabric"})
+                    setPoType('Fabric')
+                }
+                if(stateData.data.fabricName != 'Fabric'){
+                    setPoType('Trim')
+                    poForm.setFieldsValue({poMaterialType:"Trim"})
+                }
+            }  
         }
-
     },[stateData])
 
     const handleFabricOnchange = (fabricdata) =>{
@@ -234,9 +252,9 @@ return(
         <Row gutter={24}>
             <Card title={poType == 'Fabric'?<span style={{color:'blue', fontSize:'17px'}}>Fabric Details</span>:poType =='Trim'?<span style={{color:'blue', fontSize:'17px'}}>Trim Details</span>:''}>
                 {poType == 'Fabric' ?
-                <Card style={{width:'150%'}}><PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={poType == 'Fabric' ?indentId:undefined}/></Card>
+                <Card style={{width:'150%'}}><PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={poType == 'Fabric' ?indentId:undefined} data={navigateData}/></Card>
            :poType == 'Trim' ?
-           <Card style={{width:'130%'}}> <PurchaseOrderTrim key='trim' props={handleTrim}  indentId={indentId}/></Card>
+           <Card style={{width:'130%'}}> <PurchaseOrderTrim key='trim' props={handleTrim}  indentId={indentId} data={navigateData}/></Card>
             :<></>
             }
             </Card>

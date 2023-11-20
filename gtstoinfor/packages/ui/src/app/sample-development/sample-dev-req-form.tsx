@@ -1,7 +1,7 @@
 import { PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
 import { DepartmentReq,SampleDevelopmentRequest } from "@project-management-system/shared-models";
-import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,MasterBrandsService,ProfitControlHeadService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
+import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProfitControlHeadService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Modal, Row, Select, Tabs, message } from "antd";
 import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
@@ -45,6 +45,8 @@ export const SampleDevForm = () => {
   const [fabricsData, setFabricsData] = useState([]);
   const [trimsData, setTrimsData] = useState([]);
   const [data, setData] = useState<any>();
+  const [fabricM3Code,setFabricM3Code] = useState<any[]>([])
+
   const pchService = new ProfitControlHeadService();
   const styleService = new StyleService();
   const brandService = new MasterBrandsService();
@@ -59,6 +61,8 @@ export const SampleDevForm = () => {
   const subTypeService = new SampleSubTypesService()
   const fabricTypeService = new FabricTypeService()
   const fabSubTypeService = new FabricSubtypeservice()
+  const m3ItemsService = new M3ItemsService()
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -75,7 +79,16 @@ export const SampleDevForm = () => {
     getDMM()
     getM3StyleCode()
     getfabricType()
+    getM3FabricStyleCodes()
   }, []);
+
+  const getM3FabricStyleCodes = () => {
+    m3ItemsService.getM3Items().then(res => {
+        if(res.status){
+            setFabricM3Code(res.data)
+        }
+    })
+}
 
   const getBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -553,7 +566,7 @@ export const SampleDevForm = () => {
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="m3Style"
-              label="M3 Style No"
+              label="M3 Fabric Code"
               rules={[{ required: true, message: "" }]}
             >
               {/* <Input placeholder="M3 Style No" /> */}
@@ -563,13 +576,18 @@ export const SampleDevForm = () => {
                   optionFilterProp="children"
                   placeholder="Select Licence Type"
                 >
-                  {m3StleCode.map((e) => {
+                   {fabricM3Code.map(e => {
+                                return(
+                                    <Option key={e.m3ItemsId} value={e.m3ItemsId} name={e.itemCode}> {e.itemCode}</Option>
+                                )
+                            })}
+                  {/* {m3StleCode.map((e) => {
                     return (
                       <Option key={e.m3StyleId} value={e.m3StyleId}>
                         {e.m3StyleCode}
                       </Option>
                     );
-                  })}
+                  })} */}
                 </Select>
             </Form.Item>
           </Col>
