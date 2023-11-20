@@ -171,23 +171,28 @@ export class SubstituionService{
             DataMap.set(res.fgItemId, new FgDataModel(res.fgItemCode, res.fgItemId, []));
           }
     
-          // Assuming that FgDataModel has an rmData property
           const Fgsku = DataMap.get(res.fgItemId)?.rmData;
     
           if (Fgsku) {
-            const rmData = new RmDataModel(res.fgSkuId, res.fgSkuCode, []);
+            
+            const existingRmData = Fgsku.find((rmData) => rmData.fgSkuId === res.fgSkuId);
     
-            // Assuming RmDataModel has an rmDetails property
-            rmData.rmDetails.push(new Rm(res.rmSku, res.rmSkuId));
-            Fgsku.push(rmData);
-          }
-          console.log(Fgsku,'[[[[[[[[');
+            if (!existingRmData) {
+              const rmData = new RmDataModel(res.fgSku, res.fgSkuId, []);
+              rmData.rmDetails.push(new Rm(res.rmSku, res.rmSkuId, res.rmItemId, res.itemType, res.rmSkuCode, res.featureCode, res.status, res.rmItemCode, res.featureOptionId, res.optionGroup, res.optionId, res.optionValue,res.consumption));
+              Fgsku.push(rmData);
+            }
+            else {
+              // Check for duplicate rmSkuId before adding
+              const isDuplicateRmSkuId = existingRmData.rmDetails.some((rmDetail) => rmDetail.rmSkuId === res.rmSkuId);
           
+              if (!isDuplicateRmSkuId) {
+                existingRmData.rmDetails.push(new Rm(res.rmSku, res.rmSkuId, res.rmItemId, res.itemType, res.rmSkuCode, res.featureCode, res.status, res.rmItemCode, res.featureOptionId, res.optionGroup, res.optionId, res.optionValue,res.consumption));
+              }}
+          }
         }
     
-        // Convert the Map values to an array
         let ListArray: FgDataModel[] = Array.from(DataMap.values());
-        console.log(ListArray, 'service............');
     
         if (data.length > 0) {
           return new SubResponseModel(true, 1, 'data retrieved', ListArray);

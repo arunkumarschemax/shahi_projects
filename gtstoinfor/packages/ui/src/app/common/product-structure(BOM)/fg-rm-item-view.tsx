@@ -410,7 +410,7 @@ render: (rmItems) => {
                 setPage(current);
               },
             }}
-            scroll={{ x: 'max-content',y:1000}}
+            scroll={{ x: 'max-content',y:550}}
             // onChange={onChange}
             bordered
           />

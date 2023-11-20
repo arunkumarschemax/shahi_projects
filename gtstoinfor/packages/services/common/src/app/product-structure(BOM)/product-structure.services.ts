@@ -124,63 +124,120 @@ export class ProductStructureService {
       throw err
     }
    }       
-          // async getRmMapped(req?:RmMappingFilterRequest): Promise<CommonResponseModel> {
-          //   const data = await this.fgrmRepo.getAllFgRmMapped(req)
-          //   if (data.length > 0){
-    
-          //       return new CommonResponseModel(true, 1111, 'Data retreived',data )
-          //   }
-          //   return new CommonResponseModel(false, 0, 'Data Not retreived',[])
-          // }
+        
 
-          async getRmMapped(req?: RmMappingFilterRequest): Promise<CommonResponseModel> {
-            const data = await this.fgrmRepo.getAllFgRmMapped(req);
+          // async getRmMapped(req?: RmMappingFilterRequest): Promise<CommonResponseModel> {
+          //   const data = await this.fgrmRepo.getAllFgRmMapped(req);
           
+          //   if (data.length > 0) {
+          //     const groupedData = data.reduce((result, item) => {
+          //        console.log(item,"item")
+          //       const fgItemCode = item.fg_item_code;
+          //       const fgItemId = item.fg_rm_id;
+          //       const fgitemName = item.item_name;
+          //       const productGroup = item.productGroup;
+          //       const fbStyle = item.style_no
+                
+                
+          //       if (!result[fgItemCode]) {
+          //         result[fgItemCode] = {
+          //           fg_item_id: fgItemId,
+          //           fg_item_code: fgItemCode,
+          //           item_name:fgitemName,
+          //           productGroup:productGroup,
+          //           style_no:fbStyle,
+
+          //           rm_items: [],
+          //         };
+          //       }
+          //       result[fgItemCode].rm_items.push({
+          //         rm_item_id: item.rm_item_id,
+          //         rm_item_code: item.rm_item_code,
+          //         item_type: item.item_type,
+          //         item_group:item.item_group,
+          //         is_sub_contract:item.is_sub_contract,
+          //         facility:item.facility,
+          //         season:item.season,
+          //         operation_name:item.operation_name,
+          //         sequence:item.sequence,
+          //         rmItemName:item.rmItemName,
+          //         consumption:item.consumption,
+          //         procurement: item.rmprocurment_group,
+          //         product:item.productGroup,
+          //         consumtion:item.consumption,
+          //         rmId:item.rmId,
+
+          //       });
+          //       return result;
+          //     }, {});
+          
+          //     return new CommonResponseModel(true, 1111, 'Rm Mapped Data retrieved', Object.values(groupedData));
+          //   }
+          
+          //   return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
+          // }
+          //getting dulicate values in rm_items
+     
+          async getRmMapped(req?: RmMappingFilterRequest): Promise<any> {
+            const data = await this.fgrmRepo.getAllFgRmMapped(req); // Replace with the actual method in your repository
+        
             if (data.length > 0) {
               const groupedData = data.reduce((result, item) => {
-                // console.log(item,"item")
                 const fgItemCode = item.fg_item_code;
-                const fgItemId = item.fg_rm_id;
-                const fgitemName = item.item_name;
-                const productGroup = item.productGroup;
-                const fbStyle = item.style_no
-                
-                
+                // console.log(item,"item")
                 if (!result[fgItemCode]) {
                   result[fgItemCode] = {
-                    fg_item_id: fgItemId,
+                    fg_item_id: item.fg_item_id,
                     fg_item_code: fgItemCode,
-                    item_name:fgitemName,
-                    productGroup:productGroup,
-                    style_no:fbStyle,
-
+                    item_name: item.item_name,
+                    productGroup: item.productGroup,
+                    style_no: item.style_no,
                     rm_items: [],
                   };
                 }
-                result[fgItemCode].rm_items.push({
-                  rm_item_id: item.rm_item_id,
-                  rm_item_code: item.rm_item_code,
-                  item_type: item.item_type,
-                  item_group:item.item_group,
-                  is_sub_contract:item.is_sub_contract,
-                  facility:item.facility,
-                  season:item.season,
-                  operation_name:item.operation_name,
-                  sequence:item.sequence,
-                  rmItemName:item.rmItemName,
-                  consumption:item.consumption,
-                  procurement: item.rmprocurment_group,
-                  product:item.productGroup,
-                  consumtion:item.consumption,
-
-                });
+        
+                 const existingRmItem = result[fgItemCode].rm_items.find((rmItem) => rmItem.rmId === item.rmId);
+                // const existingRmItem = result[fgItemCode].rm_items.find(
+                //   (rmItem) => rmItem.rmId === item.rmId && rmItem.style_no === item.style_no
+                // ); if styles are must be multiple
+                console.log(item.style_no,"rmItem.style_no")
+                if (!existingRmItem) {
+                  result[fgItemCode].rm_items.push({
+                    rm_item_id: item.rm_item_id,
+                    rm_item_code: item.rm_item_code,
+                    item_type: item.item_type,
+                    item_group: item.item_group,
+                    is_sub_contract: item.is_sub_contract,
+                    facility: item.facility,
+                    season: item.season,
+                    operation_name: item.operation_name,
+                    sequence: item.sequence,
+                    rmItemName: item.rmItemName,
+                    consumption: item.consumption,
+                    procurement: item.rmprocurment_group,
+                    product: item.productGroup,
+                    consumtion: item.consumption,
+                    rmId: item.rmId,
+                  });
+                }
+        
                 return result;
               }, {});
-          
-              return new CommonResponseModel(true, 1111, 'Rm Mapped Data retrieved', Object.values(groupedData));
+        
+              return {
+                status: true,
+                errorCode: 1111,
+                internalMessage: 'Rm Mapped Data retrieved',
+                data: Object.values(groupedData),
+              };
             }
-          
-            return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
+        
+            return {
+              status: false,
+              errorCode: 0,
+              internalMessage: 'Data Not retrieved',
+              data: [],
+            };
           }
 
           async getAllSmvData(req?:SMVFilterRequest): Promise<CommonResponseModel> {
@@ -206,7 +263,7 @@ export class ProductStructureService {
       if(info){
         for(const rec of info){
           if(!featureMap.has(rec.feature_code)){
-            featureMap.set(rec.feature_code,new FeatureInfoModel(rec.feature_code,rec.feature_id,rec.option_group,[],[]))
+            featureMap.set(rec.feature_code,new FeatureInfoModel(rec.feature_code,rec.feature_id,rec.option_group,[],[],rec.feature_name))
          
           }
           featureMap.get(rec.feature_code).optionInfo.push(new optionInfoModel(rec.option_value,rec.rm_item_id,rec.rm_item_code,rec.rm_sku_id,rec.rm_sku_code,rec.feature_option_id,rec.option_id))
@@ -230,7 +287,7 @@ export class ProductStructureService {
             }
           }
           featureModel.push(e)}))
-        data.push(new FeatureSubstitutionModel(info[0].fg_item_id,info[0].fg_item_code,featureModel))
+        data.push(new FeatureSubstitutionModel(info[0].fg_item_id,info[0].fg_item_code,featureModel,info[0].style_no,`${info[0].style}-${info[0].description}`,info[0].fgItemType))
       }
       return new CommonResponseModel(true,1,'Data retrieved',data)
     }catch(err){
