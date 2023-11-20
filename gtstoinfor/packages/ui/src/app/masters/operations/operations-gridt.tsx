@@ -214,17 +214,7 @@ export function OperationsGrid(
 
         </>
       ),
-      // filters: [
-      //   {
-      //     text: 'Active',
-      //     value: true,
-      //   },
-      //   {
-      //     text: 'InActive',
-      //     value: false,
-      //   },
-      // ],
-      filterMultiple: false,
+     filterMultiple: false,
       onFilter: (value, record) => record.isActive === value,
       filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
             <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
@@ -252,6 +242,43 @@ export function OperationsGrid(
             </div>
           ),
 
+    },
+    {
+      title: <div style={{textAlign:'center'}}>Operation Type</div>,
+      dataIndex: "operationType",
+      
+      onFilter: (value, record) => record.operationType === value,
+      
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+            <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+              <Row>
+              <Checkbox
+                checked={selectedKeys.includes('INTERNAL')}
+                onChange={() => setSelectedKeys(selectedKeys.includes('INTERNAL') ? [] : ['INTERNAL'])}
+              >
+                <span >INTERNAL</span>
+              </Checkbox>
+              </Row>
+              <Row>
+              <Checkbox
+                checked={selectedKeys.includes('EXTERNAL')}
+                onChange={() => setSelectedKeys(selectedKeys.includes('EXTERNAL') ? [] : ['EXTERNAL'])}
+              >
+                <span >EXTERNAL</span>
+              </Checkbox>
+              </Row>
+              
+              <div className="custom-filter-dropdown-btns" >
+              <Button  onClick={() => clearFilters()} className="custom-reset-button">
+                  Reset
+                </Button>
+                <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+                  OK
+                </Button>
+              
+              </div>
+            </div>
+          ),
     },
 
     {

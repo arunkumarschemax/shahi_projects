@@ -1,13 +1,14 @@
 import { CloseOutlined } from "@ant-design/icons";
-import { CoLineStatusEnum, CoLineStatusEnumDisplay, CustomerOrderStatusEnum, MenusAndScopesEnum, PackageTermsDto, PaymentMethodDto, PaymentTermsDto, styleOrderReq } from "@project-management-system/shared-models";
-import { DeliveryMethodService, DeliveryTermsService, PackageTermsService, PaymentMethodService, PaymentTermsService, StyleOrderService, WarehouseService } from "@project-management-system/shared-services";
-import { Button, Card, Descriptions, Table } from "antd";
+
 import React from "react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AlertMessages from "../common/common-functions/alert-messages";
 import RolePermission from "../roles-permission";
 import moment from "moment";
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space, Checkbox, message, Descriptions } from 'antd';
+import { StyleOrderService } from "@project-management-system/shared-services";
+import { MenusAndScopesEnum, styleOrderReq, CoLineStatusEnumDisplay } from "@project-management-system/shared-models";
 
 export const CoLineView = () => {
   const service = new StyleOrderService();
@@ -148,30 +149,62 @@ let val =0
           const EnumObj = CoLineStatusEnumDisplay.find((item) => item.name === text);
           return EnumObj ? EnumObj.displayVal : text;
         },  
-        filters:[
-            {
-              text:'OPEN',
-              value:'OPEN'
-            },
-            {
-              text:'IN PROGRESS',
-              value:'IN_PROGRESS'
-            }, {
-              text:'COMPLETED',
-              value:'COMPLETED'
-            },
-            {
-              text:'CLOSED',
-              value:'CLOSED'
-            },
-            {
-              text:'CONFIRMED',
-              value:'CONFIRMED'
-            }, 
-           ],
-          onFilter: (value,record) =>{ return record.status === value}
-    
-      },
+      
+        onFilter: (value, record) => record.operationType === value,
+      
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+              <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+                <Row>
+                <Checkbox
+                  checked={selectedKeys.includes('OPEN')}
+                  onChange={() => setSelectedKeys(selectedKeys.includes('OPEN') ? [] : ['OPEN'])}
+                >
+                  <span >OPEN</span>
+                </Checkbox>
+                </Row>
+                <Row>
+                <Checkbox
+                  checked={selectedKeys.includes('IN_PROGRESS')}
+                  onChange={() => setSelectedKeys(selectedKeys.includes('IN_PROGRESS') ? [] : ['IN_PROGRESS'])}
+                >
+                  <span >IN PROGRESS</span>
+                </Checkbox>
+                </Row>
+                <Row>
+                <Checkbox
+                  checked={selectedKeys.includes('COMPLETED')}
+                  onChange={() => setSelectedKeys(selectedKeys.includes('COMPLETED') ? [] : ['COMPLETED'])}
+                >
+                  <span ></span>
+                </Checkbox>
+                </Row><Row>
+                <Checkbox
+                  checked={selectedKeys.includes('CLOSED')}
+                  onChange={() => setSelectedKeys(selectedKeys.includes('CLOSED') ? [] : ['CLOSED'])}
+                >
+                  <span >CLOSED</span>
+                </Checkbox>
+                </Row><Row>
+                <Checkbox
+                  checked={selectedKeys.includes('CONFIRMED')}
+                  onChange={() => setSelectedKeys(selectedKeys.includes('CONFIRMED') ? [] : ['CONFIRMED'])}
+                >
+                  <span >CONFIRMED</span>
+                </Checkbox>
+                </Row>
+                <div className="custom-filter-dropdown-btns" >
+                <Button  onClick={() => clearFilters()} className="custom-reset-button">
+                    Reset
+                  </Button>
+                  <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+                    OK
+                  </Button>
+                
+                </div>
+              </div>
+            ),
+    },
+      
     // {
     //   title: `Action`,
     //   dataIndex: 'action',

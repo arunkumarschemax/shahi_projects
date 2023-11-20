@@ -2,6 +2,7 @@ import {IsInt, IsEmail, IsString, IsDateString, IsNumber, IsDate,IsAlphanumeric,
 import { ApiProperty } from '@nestjs/swagger';
 import { OneToMany } from 'typeorm';
 import { OperationGroupsDto } from '../../operation-groups/dto/operation-groups.dto';
+import { OperationTypeEnum } from '@project-management-system/shared-models';
 
 export class OperationDTO {
   @ApiProperty()
@@ -14,7 +15,8 @@ export class OperationDTO {
   // @IsAlphanumeric()
   // @IsOptional()
   operationCode: string;
-
+ @ApiProperty()
+ operationType: OperationTypeEnum;
   @ApiProperty()
   @IsNotEmpty({message:"operationName should not be empty"})
   @IsAlphanumeric()
