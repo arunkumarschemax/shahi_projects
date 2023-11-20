@@ -405,7 +405,7 @@ rmservice.createRm(values).then((res)=>{
   // console.log(res.data,"PPPPPPPPPP");
 
   if(res.status){
-    AlertMessages.getSuccessMessage(res.internalMessage)
+    AlertMessages.getSuccessMessage("Fabric Item Created Sucessfully")
     onReset()
     navigate('/materialCreation/rm-creation-view')
   }
@@ -707,7 +707,19 @@ rmservice.createRm(values).then((res)=>{
                     name="devResponsible"
                     label="Development Responsible"
                   >
-                                       <Input placeholder="Development Responsible" allowClear />
+                <Select
+                          placeholder="Select Development Responsible"
+                          allowClear
+                        >
+                          
+                      {employedata.map((e)=>{
+                        return(
+                          <Option key={e.employeeId} values={e.employeeId}>{e.firstName}
+
+                          </Option>
+                        )
+                      })}
+                        </Select>
 
                   </Form.Item>
                 </Col>
