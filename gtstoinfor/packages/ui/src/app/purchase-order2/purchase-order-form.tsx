@@ -1,4 +1,4 @@
-import { IndentService, PurchaseOrderservice, StyleService } from "@project-management-system/shared-services";
+import { IndentService, PurchaseOrderservice, StyleService, VendorsService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, Row, Segmented, Select, Space, Tabs, message } from "antd"
 import TabPane from "antd/es/tabs/TabPane";
 import { useState, useEffect } from "react";
@@ -35,6 +35,7 @@ export const PurchaseOrderForm =()=>{
     const indentService = new IndentService()
     const location = useLocation()
     const stateData :any=location.state
+    const vendorService = new VendorsService()
 
 
 
@@ -42,7 +43,8 @@ export const PurchaseOrderForm =()=>{
     useEffect(() =>{
         getStyle()
         getIndnetNo()
-        getAllvendors()
+        // getAllvendors()
+        getVendors()
         poForm.setFieldsValue({purchaseOrderDate:dayjs()})
         poForm.setFieldsValue({expectedDeliveryDate:now})
     },[])
@@ -103,8 +105,18 @@ export const PurchaseOrderForm =()=>{
         poForm.resetFields()
     }
 
-    const getAllvendors =() =>{
-        purchaseOrderService.getAllVendors().then(res =>{
+    // const getAllvendors =() =>{
+    //     purchaseOrderService.getAllVendors().then(res =>{
+    //         if(res.status){
+    //             setVendorData(res.data)
+    //         }else{
+    //             setVendorData([])
+    //         }
+    //     })
+    // }
+
+    const getVendors = () =>{
+        vendorService.getAllActiveVendors().then((res)=>{
             if(res.status){
                 setVendorData(res.data)
             }else{
@@ -230,7 +242,7 @@ return(
                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor'>
                             {vendordata.map(e => {
                                 return(
-                                    <Option key={e.id} value={e.id} name={e.id}>{e.name}</Option>
+                                    <Option key={e.vendorId} value={e.vendorId} name={e.vendorId}>{e.vendorName}</Option>
                                 )
                             })}
                         </Select>
