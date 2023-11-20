@@ -153,7 +153,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
         .then((res) => { 
           if (res.status) {
             // getAllPaymentmethod();
-            message.success(res.internalMessage, 2);
+            AlertMessages.getSuccessMessage(res.internalMessage);
           } else {
             // if (res.intlCode) {
             //   AlertMessages.getErrorMessage(res.internalMessage);

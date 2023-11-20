@@ -729,7 +729,7 @@ rmservice.createRm(values).then((res)=>{
                     label="Sourcing Merchant"
                     name="sourcingMerchant"
                   >
-                    <Input placeholder="Sourcing Merchan" allowClear />
+                    <Input placeholder="Sourcing Merchant" allowClear />
                   </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -930,7 +930,7 @@ rmservice.createRm(values).then((res)=>{
 
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                   <Form.Item label="Multiplication Factor" name="multiplicationFactor">
-                    <Input placeholder="Factor" allowClear />
+                    <Input placeholder="Multiplication Factor" allowClear />
                   </Form.Item>
                 </Col>
                 </Row>
