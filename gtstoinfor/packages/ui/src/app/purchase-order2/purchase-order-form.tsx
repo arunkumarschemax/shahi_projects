@@ -32,7 +32,7 @@ export const PurchaseOrderForm =()=>{
     const purchaseOrderService = new PurchaseOrderservice()
     const indentService = new IndentService()
     const location = useLocation()
-    const stateIndentId :any=location.state
+    const stateData :any=location.state
 
 
 
@@ -53,21 +53,25 @@ export const PurchaseOrderForm =()=>{
     }
 
     useEffect(() =>{
-        if(stateIndentId != undefined){
-            poForm.setFieldsValue({indentId:stateIndentId})
-            setIndentId(stateIndentId)
+        if(stateData != undefined){
+            console.log(stateData)
+            poForm.setFieldsValue({indentId:stateData.data.indentId})
+            setIndentId(stateData)
             poForm.setFieldsValue({indentAgainst:'Indent'})
             setStyleVisible(false)
+            setIndentId(stateData.data.indentId)
+            if(stateData.data.materialType == "Fabric"){
+                poForm.setFieldsValue({poMaterialType:"Fabric"})
+                setPoType('Fabric')
+            }
+            if(stateData.data.materialType == 'Trim'){
+                setPoType('Trim')
+                poForm.setFieldsValue({poMaterialType:"Trim"})
 
-            // if(stateIndentId.poMaterialType == 'Fabric'){
-            //     setPoType('Fabric')
-            // }
-            // if(stateIndentId.poMaterialType == 'Trim'){
-            //     setPoType('Trim')
-            // }
+            }
         }
 
-    },[stateIndentId])
+    },[stateData])
 
     const handleFabricOnchange = (fabricdata) =>{
         console.log(fabricdata)

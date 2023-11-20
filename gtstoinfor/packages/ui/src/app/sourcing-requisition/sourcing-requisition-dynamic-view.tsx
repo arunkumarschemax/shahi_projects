@@ -62,6 +62,7 @@ export const SourcingRequisitionDynamicView = () => {
 
   useEffect(() => {
     if (data) {
+    console.log(tableData)
       setTableData(data);
     }
   }, [data]);
@@ -87,6 +88,11 @@ export const SourcingRequisitionDynamicView = () => {
     setBarcodeInfo(info);
     setBarcodeModal(true);
   };
+
+  const generatePoForFabric = (rowData:any) =>{
+    // console.log(rowData)
+    navigate('/purchase-order', { state: { data: rowData } })
+  }
 
   const columns: ColumnProps<any>[] = [
     {
@@ -119,67 +125,7 @@ export const SourcingRequisitionDynamicView = () => {
           </span>
         );
       },
-    },
-    // {
-    //     title:'Content',
-    //     dataIndex:'content'
-    // },
-    // {
-    //     title:'Fabric Type',
-    //     dataIndex:'fabricType',
-
-    // },
-    // {
-    //     title:'Weave',
-    //     dataIndex:'weave',
-    //     // render: (text,record) => {
-    //     //     return(
-    //     //         <>
-    //     //         {record.weave ? record.weaveName : '-'}
-    //     //         </>
-    //     //     )
-    //     // }
-    // },
-    // {
-    //     title:'Weight',
-    //     dataIndex:'weight',
-    //     render: (text,record) => {
-    //         return(
-    //             <>
-    //             {record.weight ? `${record.weight} ${record.weightUnit}` : '-'}
-    //             </>
-    //         )
-    //     }
-    // },
-    // {
-    //     title:'Width',
-    //     dataIndex:'width'
-    // },
-    // {
-    //     title:'Construction',
-    //     dataIndex:'construction'
-    // },
-    // {
-    //     title:'Yarn Count',
-    //     dataIndex:'yarnCount',
-    //     render: (text,record) => {
-    //         return(
-    //             <>
-    //             {record.yarnCount ? `${record.yarnCount} ${record.unit}` : '-'}
-    //             </>
-    //         )
-    //     }
-    // },
-    // {
-    //     title:'Finish',
-    //     dataIndex:'finish',
-    //   //   sorter: (a, b) => a.finish.length - b.finish.length,
-    //   // sortDirections: ['descend', 'ascend'],
-    // },
-    // {
-    //     title:'Shrinkage',
-    //     dataIndex:'shrinkage',
-    // },
+    }, 
     {
       title: "Color",
       dataIndex: "color",
@@ -191,44 +137,10 @@ export const SourcingRequisitionDynamicView = () => {
       //     )
       // }
     },
-    // {
-    //     title:'PCH',
-    //     dataIndex:'pch',
-    //     // render: (text,record) => {
-    //     //     return(
-    //     //         <>
-    //     //         {record.pch ? record.pchName : '-'}
-    //     //         </>
-    //     //     )
-    //     // }
-
-    // },
-    // {
-    //     title:'MOQ',
-    //     dataIndex:'moq',
-    //     render: (text,record) => {
-    //         return(
-    //             <>
-    //             {record.moq ? `${record.moq} ${record.moqUnit}` : '-'}
-    //             </>
-    //         )
-    //     }
-    // },
     {
       title: "Season",
       dataIndex: "season",
     },
-    // {
-    //     title:'MOQ Price',
-    //     dataIndex:'moqPrice',
-    //     render: (text,record) => {
-    //         return(
-    //             <>
-    //             {record.moqPrice ? `${record.moqPrice} ${record.moqPriceUnit}` : '-'}
-    //             </>
-    //         )
-    //     }
-    // },
     {
       title: "Supplier",
       dataIndex: "supplierId",
@@ -279,10 +191,6 @@ export const SourcingRequisitionDynamicView = () => {
       //     )
       // }
     },
-    // {
-    //     title:'Status',
-    //     dataIndex:'status'
-    // },
     {
       title: "To Be Procured",
       dataIndex: "tobeProcured",
@@ -299,7 +207,7 @@ export const SourcingRequisitionDynamicView = () => {
     {
       title: "Action",
       dataIndex: "action",
-      render: (text, record) => {
+      render: (text, rowData) => {
         return (
           <span>
             {/* <Button onClick={() => generateBarcode(record.m3FabricCode)}>
@@ -309,6 +217,7 @@ export const SourcingRequisitionDynamicView = () => {
             <Button
               type="primary"
               disabled={logInUser == "marketUser" ? true : false}
+              onClick={() =>generatePoForFabric(rowData)}
             >
               Generate PO
             </Button>
@@ -444,7 +353,7 @@ export const SourcingRequisitionDynamicView = () => {
             <Button
               type="primary"
               disabled={logInUser == "marketUser" ? true : false}
-              onClick={() => genereatePo(rowData.indent_id)}
+              onClick={() => genereatePoForTrim(rowData)}
             >
               Generate PO
             </Button>
@@ -453,8 +362,8 @@ export const SourcingRequisitionDynamicView = () => {
       },
     },
   ];
-  const genereatePo = (rowData: any) => {
-    navigate("/purchase-order", { state: { indentId: rowData.indent_id } });
+  const genereatePoForTrim = (rowData: any) => {
+    navigate("/purchase-order", { state: { data: rowData } });
   };
 
   const onSegmentChange = (val) => {

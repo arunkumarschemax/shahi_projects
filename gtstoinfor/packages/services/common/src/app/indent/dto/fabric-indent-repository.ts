@@ -25,7 +25,7 @@ export class FabricIndentRepository extends Repository<IndentFabricEntity> {
 
     async getFabricIndentData(indentId: number) {
         const query = this.createQueryBuilder(`itf`)
-            .select(`itf.ifabric_id,
+            .select(`"Fabric" as materialType,itf.ifabric_id,itf.indent_id as indentId,
         itf.m3_fabric_code,itf.color,itf.season,itf.supplier_id,itf.buyer_id,itf.grn_date,itf.xl_no,itf.quantity,itf.quantity_unit,
         itf.created_at,itf.updated_at,itf.indent_id,m3.item_code,
         co.colour,bu.buyer_name,it.status, uom.uom AS quantityUnit,ven.vendor_name `)
