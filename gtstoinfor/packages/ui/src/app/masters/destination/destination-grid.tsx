@@ -113,6 +113,7 @@ export const DestinationGrid = (props: DestinationGridProps) => {
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
+      align:"center",
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
@@ -153,6 +154,8 @@ export const DestinationGrid = (props: DestinationGridProps) => {
     {
       title: 'Status',
       dataIndex: 'isActive',
+      align:"center",
+
       render: (isActive, rowData) => (
         <>
           {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -190,6 +193,7 @@ export const DestinationGrid = (props: DestinationGridProps) => {
     {
       title: `Action`,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"
@@ -359,7 +363,7 @@ export const DestinationGrid = (props: DestinationGridProps) => {
         </Col>
         <Col span={5}>
           {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
-          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
 </Row>
 <br></br>
