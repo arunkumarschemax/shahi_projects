@@ -26,7 +26,7 @@ export class Vendors {
   vendorName:string;
 
   @Column("varchar",{
-    nullable:true,
+    nullable:false,
     length:50,
     name:"gst_number"
     })
@@ -58,15 +58,15 @@ street:string;
     })
 apartment:string;
 @Column("varchar",{
-    nullable:true,
+    nullable:false,
     length:50,
     name:"city"
     })
 city:string;
 @Column("varchar",{
-    nullable:true,
+    nullable:false,
     length:50,
-    name:"postal_code,"
+    name:"postal_code"
     })
 postalCode:string;
 
@@ -83,31 +83,31 @@ privateNote:string;
     })
 publicNote:string;
 @Column("varchar",{
-    nullable:true,
+    nullable:false,
     length:50,
     name:"bank_acc_no"
     })
 bankAccNo:string;
 @Column("varchar",{
-    nullable:true,
+    nullable:false,
     length:50,
     name:"bank_ifsc"
     })
 bankIfsc:string;
 @Column("varchar",{
-    nullable:true,
+    nullable:false,
     length:50,
     name:"bank_name"
     })
 bankName:string;
 @Column("varchar",{
-    nullable:true,
+    nullable:false,
     length:50,
     name:"bank_branch"
     })
 bankBranch:string;
 @Column("varchar",{
-    nullable: true,
+    nullable: false,
     length:50,
     name:"contact_number"
     })

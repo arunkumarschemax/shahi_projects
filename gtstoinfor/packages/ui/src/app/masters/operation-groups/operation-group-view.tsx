@@ -113,12 +113,13 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
-      // align:'center',
+      align:'center',
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
       title: <div style={{textAlign:'center'}}>Operation Group Code</div>,
       dataIndex: "operationGroupCode",
+      align:'center',
       sorter: (a, b) => a.operationGroupCode.localeCompare(b.operationGroupCode),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("operationGroupCode"),
@@ -147,7 +148,7 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
           value: true,
         },
         {
-          text: 'InActive',
+          text: 'Inactive',
           value: false,
         },
       ],
@@ -325,7 +326,7 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
           <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
-          <Alert type='info' message={'InActive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
       </Row><br></br>
         <Table

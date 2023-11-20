@@ -150,12 +150,13 @@ export const BusinessAreaView = () => {
             key: 'sno',
             width: '70px',
             responsive: ['sm'],
-            // align:'center',
+            align:'center',
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
         {
             dataIndex:'businessAreaCode',
             title:<div style={{textAlign:'center'}}>Business Area Code</div>,
+            align:'center',
             sorter: (a, b) => a.businessAreaCode?.localeCompare(b.businessAreaCode),
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('businessAreaCode')
@@ -183,7 +184,7 @@ export const BusinessAreaView = () => {
                 value: true,
               },
               {
-                text: 'InActive',
+                text: 'Inactive',
                 value: false,
               },
             ],
@@ -278,7 +279,7 @@ export const BusinessAreaView = () => {
           <Alert type='warning' message={'Active: ' + data.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
-          <Alert type='info' message={'InActive: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
             </Row>
             <br></br>

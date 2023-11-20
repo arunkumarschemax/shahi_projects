@@ -243,13 +243,14 @@ export function VendorsView(
           key: 'sno',
           width: '70px',
           responsive: ['sm'],
-          // align:'center',
+          align:'center',
           render: (text, object, index) => (page-1) * 10 +(index+1)
         },
         {
           dataIndex:"vendorCode",
           title:<div style={{textAlign:'center'}}>Vendor Code</div>,
           // responsive: ['lg'],
+        align:'center',
           sorter: (a, b) => a.vendorCode?.localeCompare(b.vendorCode),
           sortDirections: ['descend', 'ascend'],
           ...getColumnSearchProps('vendorCode')
@@ -304,15 +305,22 @@ export function VendorsView(
         {
           dataIndex:"contactNumber",
           title:<div style={{textAlign:'center'}}>Contact Number</div>,
-          // responsive: ['lg'],
+        align:'center',
+        // responsive: ['lg'],
           sorter: (a, b) => a.contactNumber.localeCompare(b.contactNumber),
           sortDirections: ['descend', 'ascend'],
-          ...getColumnSearchProps('contactNumber')
+          ...getColumnSearchProps('contactNumber'),
+          render:(text,record) => (
+            <span>
+              {record.contactNumber ? record.contactNumber :'-'}
+            </span>
+          )
         },
         {
           dataIndex:"gstNumber",
           title:<div style={{textAlign:'center'}}>GST Number</div>,
           // responsive: ['lg'],
+        align:'center',
           sorter: (a, b) => a.gstNumber.localeCompare(b.gstNumber),
           sortDirections: ['descend', 'ascend'],
           ...getColumnSearchProps('gstNumber')
@@ -433,7 +441,7 @@ export function VendorsView(
               value: true,
             },
             {
-              text: 'InActive',
+              text: 'Inactive',
               value: false,
             },
           ],
@@ -543,7 +551,7 @@ export function VendorsView(
           <Alert type='warning' message={'Active: ' + vendorsData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
-          <Alert type='info' message={'InActive: ' + vendorsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + vendorsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
           </Row>
           <br></br>
