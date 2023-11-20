@@ -12,9 +12,10 @@ const { Option } = Select
 
 export interface MarketingReqFormProps {
   data: MarketingRequisitionDto;
-  update: (dto: MarketingRequisitionDto) => void;
+  update?: (dto: MarketingRequisitionDto) => void;
   isUpdate: boolean;
   closeForm: () => void;
+  updateCustomGroups?: any
 }
 
 export function MarketingReqForm(props: MarketingReqFormProps) {

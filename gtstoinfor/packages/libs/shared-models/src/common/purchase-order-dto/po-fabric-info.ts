@@ -24,7 +24,7 @@
     isActive: boolean;
     yarnUom:number
     indentFabricId:number
-    poQuantity:string
+    poQuantity:number
    quantityUomId:number
     constructor(
     colourId:number,
@@ -44,7 +44,7 @@
        moq:string,
        yarnUom:number,
        indentFabricId:number,
-       poQuantity:string,
+       poQuantity:number,
        quantityUomId:number
 
      ){

@@ -7,4 +7,7 @@ export class OperationInventoryService extends CommonAxiosService {
     async getOperationinventory(req:OperationsRequest): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getAllOperations",req)
     }
+    async getOperationInverntory(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + '/getOperationInverntory')
+      }
 }

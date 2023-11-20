@@ -32,4 +32,6 @@ export class OperationsService extends CommonAxiosService{
     console.log(Req,'shared-----------')
     return  this.axiosPostCall(this.URL + '/activateOrDeactivateOperations', Req)
 }
+
+
 }

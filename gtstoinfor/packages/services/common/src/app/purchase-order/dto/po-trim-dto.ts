@@ -35,7 +35,7 @@ export class PurchaseOrderTrimDto{
     quantityUomId:number
 
     @ApiProperty()
-    grnQuantity:string
+    grnQuantity:number
 
 
 

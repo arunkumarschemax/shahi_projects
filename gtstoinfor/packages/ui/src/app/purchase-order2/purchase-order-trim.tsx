@@ -103,7 +103,7 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
     const setEditForm = (rowData: any, index: any) => {
         console.log(rowData)
         if(rowData.indentTrmId != undefined){
-            setInputDisable(true)
+        setInputDisable(true)
         }
         setUpdate(true)
         setDefaultTrimFormData(rowData)
@@ -220,6 +220,7 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
 
     useEffect(() =>{
         if(defaultTrimFormData){
+            console.log(defaultTrimFormData)
             trimForm.setFieldsValue({
                 colourName: defaultTrimFormData.colourName,
                 productGroup: defaultTrimFormData.productGroup,
@@ -235,7 +236,7 @@ export const PurchaseOrderTrim = ({props,indentId}) =>{
                 indentQuantity:defaultTrimFormData.indentQuantity,
                 indentQuantityUnit:defaultTrimFormData.indentQuantityUnit,
                 quantityUomId:defaultTrimFormData.quantityUomId,
-                poQuantity:defaultTrimFormData.poQuantity
+                poQuantity:defaultTrimFormData.indentQuantity
             })
         }
 

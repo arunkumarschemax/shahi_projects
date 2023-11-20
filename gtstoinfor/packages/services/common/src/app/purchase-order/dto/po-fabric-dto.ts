@@ -86,6 +86,6 @@ poQuantity:number
   isActive: boolean;
 
   @ApiProperty()
-  grnQuantity:string
+  grnQuantity:number
 
 }

@@ -6,6 +6,7 @@ export class OperationInventoryDto{
     styleId: number
     operationSequenceId: number
     operation:string;
+    location_mapped:string;
     physicalQuantity:number;
     physicalUomId:number;
     issuedQuantity:number;
@@ -26,6 +27,7 @@ export class OperationInventoryDto{
         operationSequenceId: number,
         operation:string,
         physicalQuantity:number,
+        location_mapped:string,
         physicalUomId:number,
         issuedQuantity:number,
         issuedUomId:number,
@@ -56,5 +58,6 @@ export class OperationInventoryDto{
         this.updatedAt = updatedAt
         this.updatedUser = updatedUser
         this.versionFlag = versionFlag
+        this.location_mapped = location_mapped
     }
 }

@@ -64,7 +64,7 @@ export class GrnItemsEntity{
     })
     rejectedUomId:number
 
-    @Column('varchar',{
+    @Column('decimal',{
         name:'conversion_quantity',
         nullable:false
     })

@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, VersionColumn, ManyToOne, JoinColumn, Generated } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, VersionColumn, ManyToOne, JoinColumn, Generated, OneToMany } from "typeorm";
 import { OperationSequence } from "../../operation-sequence/operation-sequence.entity";
 import { Style } from "../../style/dto/style-entity";
+import { SampleInventoryLogEntity } from "../../sample-dev-request/entities/sample-inventory-log-entity";
 
 @Entity('operation_inventory')
 export class OperationInventory {
@@ -133,5 +134,11 @@ rejectedUomId:number;
   })
   locationMapped: number;
 
+  
+
+
+
+  @OneToMany(Type =>SampleInventoryLogEntity,operation=>operation.operation,{cascade: true})
+  operationinventort:SampleInventoryLogEntity
 
 }

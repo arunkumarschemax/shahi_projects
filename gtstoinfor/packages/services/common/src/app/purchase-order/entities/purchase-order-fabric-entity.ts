@@ -141,7 +141,7 @@ moq:string
   })
   indentFabricId:number
 
-  @Column('varchar',{
+  @Column('decimal',{
     name:'po_quantity',
     nullable:true
   })
@@ -159,7 +159,7 @@ moq:string
   })
     fabricItemStatus:PoItemEnum
 
-    @Column('varchar',{
+    @Column('decimal',{
       name:'grn_quantity',
       nullable:true
     })

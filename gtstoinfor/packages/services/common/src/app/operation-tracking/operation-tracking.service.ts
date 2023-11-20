@@ -115,6 +115,17 @@ export class OperationTrackingService {
           return new CommonResponseModel(false, 0, 'data not found')
         }
       }
+
+
+      async getOperationInverntory(): Promise<CommonResponseModel> {
+        const data = await this.inventoryRepo.getOperationInventor ()
+        if (data.length > 0) {
+            return new CommonResponseModel(true, 1, 'operation data Retrived Sucessfully', data)
+        } else {
+            return new CommonResponseModel(false, 6546, 'operation data Not Found')
+
+        }
 }
+   
 
-
+}

@@ -59,7 +59,7 @@ export class PurchaseOrderTrimEntity{
       })
       indentTrimId:number
 
-    @Column('varchar',{
+    @Column('decimal',{
         name:'po_quantity',
         nullable:false
     })
@@ -78,7 +78,7 @@ export class PurchaseOrderTrimEntity{
         trimItemStatus:PoItemEnum
 
         
-    @Column('varchar',{
+    @Column('decimal',{
         name:'grn_quantity',
         nullable:true
       })
