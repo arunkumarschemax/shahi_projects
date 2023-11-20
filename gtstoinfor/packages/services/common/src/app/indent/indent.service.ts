@@ -47,8 +47,19 @@ export class IndentService {
         }
     }
 
-    async getAllIndentData(): Promise<CommonResponseModel> {
+    async getAllIndentData(req?: any): Promise<CommonResponseModel> {
         const indentData = await this.indentRepo.getAllIndentData();
+        // if (req.requestNo) {
+        //     indentData = indentData + ' and ,it.request_no = "' + req.requestNo + '"'
+        //   }
+        //   if (req.style) {
+        //     indentData = indentData + ' and ,st.style = "' + req.style + '"'
+        //   }
+        //   if (req.status) {
+        //     indentData = indentData + ' and ,it.status = "' + req.status + '"'
+        //   }
+        //   indentData = indentData + ' group by it.indent_id '
+      
         const indentModel = []
         // const uomInfo = await this.uomService.getAllActiveUoms();
         //   const uomNameMap = new Map<number, string>();
@@ -67,12 +78,13 @@ export class IndentService {
             }
             const trimIndentData = await this.indentTrimRepo.getTrimIndentData(data.indent_id);
             for (const trim of trimIndentData) {
-                trimModel.push(new IndentTrimsModel(trim.itrims_id, trim.trim_type, trim.trim_code, trim.sizes, trim.colour,
+                trimModel.push(new IndentTrimsModel(trim.itrims_id, trim.product_group, trim.item_code, trim.sizes, trim.colour,
                     trim.quantity, trim.m3_trim_code, trim.description,
-                    trim.remarks, trim.quantity, trim.status))
+                    trim.remarks, trim.quantity,trim.quantityUnit, trim.status))
             }
             indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, fabricModel, trimModel, data.style, data.description, data.created_at))
         }
+        
         return new CommonResponseModel(true, 1235, 'Data retrieved Successfully', indentModel);
     }
 

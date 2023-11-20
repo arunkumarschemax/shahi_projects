@@ -19,6 +19,7 @@ import {
   Collapse,
   Divider,
   Form,
+  Input,
   Modal,
   Row,
   Segmented,
@@ -30,11 +31,16 @@ import {
 import style from "antd/es/alert/style";
 import { ColumnProps } from "antd/es/table";
 import moment from "moment";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Barcode from "react-barcode";
 import BarcodePrint from "./barcode-print";
+import {
+  CustomerOrderStatusEnum,
+  IndentRequestFilter,
+} from "@project-management-system/shared-models";
+import Highlighter from "react-highlight-words";
 
 const { Option } = Select;
 
@@ -52,11 +58,15 @@ export const SourcingRequisitionDynamicView = () => {
   const [barcodeModal, setBarcodeModal] = useState<boolean>(false);
   const [tableData, setTableData] = useState<any[]>([]);
   const [barcodeInfo, setBarcodeInfo] = useState<string>("");
-
+  const [form] = Form.useForm();
+  const [filterData, setFilterData] = useState<any[]>([]);
   const [data, setData] = useState<any[]>([]);
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef(null);
 
   useEffect(() => {
-    getStyle();
+    // getStyle();
     getAll();
   }, []);
 
@@ -66,10 +76,29 @@ export const SourcingRequisitionDynamicView = () => {
     }
   }, [data]);
 
+  // const getAll = () => {
+  //   service.getAllIndentData().then((res) => {
+  //     if (res.status) {
+  //       setData(res.data);
+  //     }
+  //   });
+  // };
+
   const getAll = () => {
-    service.getAllIndentData().then((res) => {
+    const req = new IndentRequestFilter();
+    if (form.getFieldValue("requestNo") !== undefined) {
+      req.requestNo = form.getFieldValue("requestNo");
+    }
+    if (form.getFieldValue("style") !== undefined) {
+      req.style = form.getFieldValue("style");
+    }
+    if (form.getFieldValue("status") !== undefined) {
+      req.status = form.getFieldValue("status");
+    }
+    service.getAllIndentData(req).then((res) => {
       if (res.status) {
         setData(res.data);
+        setFilterData(res.data);
       }
     });
   };
@@ -88,7 +117,89 @@ export const SourcingRequisitionDynamicView = () => {
     setBarcodeModal(true);
   };
 
-  const columns: ColumnProps<any>[] = [
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
+  const getColumnSearchProps = (dataIndex: string) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: "block" }}
+        />
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button
+          size="small"
+          style={{ width: 90 }}
+          onClick={() => {
+            handleReset(clearFilters);
+            setSearchedColumn(dataIndex);
+            confirm({ closeDropdown: true });
+          }}
+        >
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        type="search"
+        style={{ color: filtered ? "#1890ff" : undefined }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ? record[dataIndex]
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
+        : false,
+    onFilterDropdownVisibleChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current.select());
+      }
+    },
+    render: (text) =>
+      text ? (
+        searchedColumn === dataIndex ? (
+          <Highlighter
+            highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+            searchWords={[searchText]}
+            autoEscape
+            textToHighlight={text.toString()}
+          />
+        ) : (
+          text
+        )
+      ) : null,
+  });
+
+  const Columns: any = [
     {
       title: "S No",
       key: "sno",
@@ -99,10 +210,12 @@ export const SourcingRequisitionDynamicView = () => {
     {
       title: "M3 Fabric Code",
       dataIndex: "m3FabricCode",
+      ...getColumnSearchProps("m3FabricCode"),
     },
     {
       title: "Shahi Fabric Code",
       dataIndex: "shahiFabricCode",
+      // ...getColumnSearchProps('shahiFabricCode'),
       render: (text, record) => {
         return (
           <span>
@@ -183,6 +296,7 @@ export const SourcingRequisitionDynamicView = () => {
     {
       title: "Color",
       dataIndex: "color",
+      ...getColumnSearchProps("color"),
       // render: (text,record) => {
       //     return(
       //         <>
@@ -232,6 +346,7 @@ export const SourcingRequisitionDynamicView = () => {
     {
       title: "Supplier",
       dataIndex: "supplierId",
+      ...getColumnSearchProps("supplierId"),
       render: (text, record) => {
         return <>{record.supplierId ? record.supplierId : "-"}</>;
       },
@@ -247,6 +362,7 @@ export const SourcingRequisitionDynamicView = () => {
     {
       title: "Buyer",
       dataIndex: "buyer",
+      ...getColumnSearchProps("buyer"),
       render: (text, record) => {
         return <>{record.buyer ? record.buyer : "-"}</>;
       },
@@ -258,6 +374,8 @@ export const SourcingRequisitionDynamicView = () => {
     {
       title: "Quantity",
       dataIndex: "quantity",
+      sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+      sortDirections: ["descend", "ascend"],
       render: (text, record) => {
         return (
           <>
@@ -271,6 +389,8 @@ export const SourcingRequisitionDynamicView = () => {
     {
       title: "Available Quantity",
       dataIndex: "quantity",
+      sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+      sortDirections: ["descend", "ascend"],
       // render: (text,record) => {
       //     return(
       //         <>
@@ -329,6 +449,7 @@ export const SourcingRequisitionDynamicView = () => {
     {
       title: "M3 Trim Code",
       dataIndex: "m3TrimCode",
+      ...getColumnSearchProps("m3TrimCode"),
     },
     {
       title: "Shahi Trim Code",
@@ -351,16 +472,23 @@ export const SourcingRequisitionDynamicView = () => {
       },
     },
     {
+      title: "Description",
+      dataIndex: "description",
+    },
+    {
       title: "Trim Type",
       dataIndex: "trimType",
+      ...getColumnSearchProps("trimType"),
     },
     {
       title: "Trim Code",
       dataIndex: "trimCode",
+      ...getColumnSearchProps("trimCode"),
     },
     {
       title: "Size",
       dataIndex: "size",
+      ...getColumnSearchProps("size"),
       //   render: (text,record) => {
       //     return(
       //         <>
@@ -372,6 +500,7 @@ export const SourcingRequisitionDynamicView = () => {
     {
       title: "Color",
       dataIndex: "color",
+      ...getColumnSearchProps("color"),
       //     render: (text,record) => {
       //       return(
       //           <>
@@ -383,6 +512,8 @@ export const SourcingRequisitionDynamicView = () => {
     {
       title: "Quantity",
       dataIndex: "quantity",
+      sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+      sortDirections: ["descend", "ascend"],
       render: (text, record) => {
         return (
           <>
@@ -393,17 +524,16 @@ export const SourcingRequisitionDynamicView = () => {
         );
       },
     },
-    {
-      title: "Description",
-      dataIndex: "description",
-    },
-    {
-      title: "Remarks",
-      dataIndex: "remarks",
-    },
+
+    // {
+    //   title: "Remarks",
+    //   dataIndex: "remarks",
+    // },
     {
       title: "Available Quantity",
       dataIndex: "availableQuantity",
+      sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+      sortDirections: ["descend", "ascend"],
       render: (text, record) => {
         return (
           <>
@@ -413,10 +543,6 @@ export const SourcingRequisitionDynamicView = () => {
           </>
         );
       },
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
     },
     {
       title: "To Be Procured",
@@ -500,11 +626,14 @@ export const SourcingRequisitionDynamicView = () => {
   const onSearch = () => {
     let filterData = [];
     if (sourcingForm.getFieldValue("style") !== undefined) {
-      const styleId = sourcingForm.getFieldValue("style");
-      filterData = data.filter((e) => e.styleId === styleId);
+      const style = sourcingForm.getFieldValue("style");
+      filterData = data.filter((e) => e.style === style);
     } else if (sourcingForm.getFieldValue("requestNo") !== undefined) {
       const reqno = sourcingForm.getFieldValue("requestNo");
       filterData = data.filter((e) => e.requestNo === reqno);
+    } else if (sourcingForm.getFieldValue("status") !== undefined) {
+      const status = sourcingForm.getFieldValue("status");
+      filterData = data.filter((e) => e.status === status);
     }
     setTableData(filterData);
   };
@@ -562,6 +691,7 @@ export const SourcingRequisitionDynamicView = () => {
               </Select>
             </Form.Item>
           </Col>
+
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
@@ -576,14 +706,41 @@ export const SourcingRequisitionDynamicView = () => {
                 optionFilterProp="children"
                 placeholder="Select Style"
               >
-                {style.map((e) => {
+                {data.map((e) => {
                   return (
-                    <Option key={e.styleId} value={e.styleId} name={e.style}>
+                    <Option key={e.style} value={e.style} name={e.style}>
                       {" "}
-                      {e.style}-{e.description}
+                      {e.style}
                     </Option>
                   );
                 })}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 4 }}
+            lg={{ span: 4 }}
+            xl={{ span: 6 }}
+          >
+            <Form.Item name="status" label="Status">
+              <Select
+                // showSearch
+                // placeholder="Vendors"
+                optionFilterProp="children"
+                placeholder="Select Status"
+              >
+                {Object.keys(CustomerOrderStatusEnum)
+                  .sort()
+                  .map((status) => (
+                    <Select.Option
+                      key={CustomerOrderStatusEnum[status]}
+                      value={CustomerOrderStatusEnum[status]}
+                    >
+                      {CustomerOrderStatusEnum[status]}
+                    </Select.Option>
+                  ))}
               </Select>
             </Form.Item>
           </Col>
@@ -680,7 +837,7 @@ export const SourcingRequisitionDynamicView = () => {
                 {tabName === "Fabric" ? (
                   <>
                     <Table
-                      columns={columns}
+                      columns={Columns}
                       dataSource={item.indentFabricDetails}
                       pagination={false}
                       scroll={{ x: "max-content" }}
