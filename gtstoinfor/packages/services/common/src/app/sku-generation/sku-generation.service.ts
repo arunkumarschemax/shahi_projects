@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ItemSkus } from "./sku-generation.entity";
 import { DataSource, Repository } from "typeorm";
-import { ColorInfoReq, CommonResponseModel, DestinationInfoReq, ItemCodeReq, ItemSKusModel, ItemSKusReq, SKUGenerationResponseModel, SizeInfoReq, SKUlistFilterRequest, SkuStatusEnum, SKUDTO, SKUListDto, SkuIdReq } from "@project-management-system/shared-models";
+import { ColorInfoReq, CommonResponseModel, DestinationInfoReq, ItemCodeReq, ItemSKusModel, ItemSKusReq, SKUGenerationResponseModel, SizeInfoReq, SKUlistFilterRequest, SkuStatusEnum, SKUDTO, SKUListDto, SkuIdReq, RmMappingStatusEnum } from "@project-management-system/shared-models";
 import { Item } from "../items/item-entity";
 import { Destination } from "../destination/destination.entity";
 import { Size } from "../sizes/sizes-entity";
@@ -54,6 +54,7 @@ export class ItemSkuService{
             division.divisionId = req.divisonId
             entity.divisionInfo = division
             entity.status = req.status
+            entity.rmMappingStatus = RmMappingStatusEnum.NO
             entity.createdUser = req.createdUser
             const destinationEntity = new Destination()
             destinationEntity.destinationId = dest.destinationId

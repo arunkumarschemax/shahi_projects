@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, FeatureSubstituionReq, FgDataModel, FgItemCodeReq, RmDataModel, SubResponseModel, SubstituionModel, SubstituionReq, fgItemIdReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, FeatureSubstituionReq, FgDataModel, FgItemCodeReq, RmDataModel, RmMappingStatusEnum, SubResponseModel, SubstituionModel, SubstituionReq, fgItemIdReq } from "@project-management-system/shared-models";
 import { SubstitutionRepository } from "./substitution-repo";
 import { Substitution } from "./substituion.entity";
 import { FgItemBom } from "./fg-item-bom.entity";
@@ -15,6 +15,7 @@ import { Rm } from "packages/libs/shared-models/src/common/substituion/rm-sku.re
 import { InjectRepository } from "@nestjs/typeorm";
 import { FeatureSubstitutionRepository } from "./feature-substitution-repo";
 import { RmSkus } from "../rm-skus/rm-sku.entity";
+import { ItemSkus } from "../sku-generation/sku-generation.entity";
 
 @Injectable()
 
@@ -45,9 +46,7 @@ export class SubstituionService{
                     obj.rmSkuId = rmRec.rmSkuId;
                     obj.fgSkuId = rec.fgSkuId;
                     const savedata = await transactionalEntityManager.getRepository(Substitution).save(obj)
-                    console.log(savedata,'savedatalll')
                     if(savedata){
-                        console.log('yesss')
                         const fgBomobj = new FgItemBom;
                         fgBomobj.rmItemId = rmRec.rmItemId;
                         fgBomobj.rmItemCode = rmRec.rmItemCode;
@@ -62,7 +61,13 @@ export class SubstituionService{
                         // fgBomobj.rmItemType = rmRec.rmItemType
                         const fgBomSave = await transactionalEntityManager.getRepository(FgItemBom).save(fgBomobj)
                         if(fgBomSave){
+                          const rmMappingStatusUpdate = await transactionalEntityManager.getRepository(ItemSkus).update({skuCode : rec.fgSkuCode},{rmMappingStatus : RmMappingStatusEnum.YES})
+                          if(rmMappingStatusUpdate.affected){
                             saveFlag.add(true)
+                          } else{
+                            saveFlag.add(false)
+                            break
+                          }
                         }else{
                             saveFlag.add(false)
                             break
@@ -73,9 +78,7 @@ export class SubstituionService{
                     }
                 }
             }
-            console.log(saveFlag)
             if(!(saveFlag.has(false))){
-                console.log('innnn')
                 await transactionalEntityManager.completeTransaction()
                 return new CommonResponseModel(true,1,'Substitution done successfully')
             }else{
