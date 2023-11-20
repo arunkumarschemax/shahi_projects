@@ -149,6 +149,7 @@ export const ComponentsMappingForm = () => {
                       <Form.Item label='Style' name='styleId' rules={[{required:true,message:'Style is required'}]}>
                         {/* <Input onChange={(val) => onStyleChange(val)}/> */}
                         <Select
+                        dropdownMatchSelectWidth={false}
                         showSearch
                         allowClear
                         optionFilterProp="children"
@@ -169,6 +170,7 @@ export const ComponentsMappingForm = () => {
                       <Form.Item label='Garment Category' name='garmentCategoryId'  rules={[{required:true,message:'Garment Category is required'}]}>
                         {/* <Input onChange={onGarmentCategoryChange}/> */}
                         <Select
+                        dropdownMatchSelectWidth={false}
                         showSearch
                         allowClear
                         optionFilterProp="children"
@@ -189,6 +191,7 @@ export const ComponentsMappingForm = () => {
                       <Form.Item label='Garment' name='garmentId' rules={[{required:true,message:'Garment is required'}]}>
                         {/* <Input onChange={onGarmentChange}/> */}
                         <Select
+                        dropdownMatchSelectWidth={false}
                         showSearch
                         allowClear
                         optionFilterProp="children"

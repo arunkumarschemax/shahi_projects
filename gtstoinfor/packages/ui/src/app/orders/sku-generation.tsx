@@ -322,18 +322,19 @@ export function SKUGeneration  (props:FormProps){
         <Row gutter={24}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
             <Card title='Available Colors' size='small'
+              headStyle={{backgroundColor:'#70a9a1',color:'black'}}
                 onDragOver={handleDragOver}
                 onDrop={handleAvailableDrop}>
                 {color?.map((comment, index) => (
                     <Card
                         // key={comment.colourId}
                         size='small'
-                        style={{ background: '#f7c78d', marginBottom: '10px',height:'35px'}}
+                        style={{backgroundColor:'#e4f0d0', marginBottom: '10px',height:'35px'}}
                         draggable
                         onDragStart={(event) => handleColorDragStart(event, comment)}
                     >
                         <span style={{ wordWrap: 'break-word' }}>
-                            <li style={{ color: 'black',textAlign:'center'}}>{comment.colour}</li>
+                            <li style={{ color: 'black',textAlign:'center'}}><b>{comment.colour}</b></li>
                         </span>
                     </Card>
                 ))}
@@ -341,18 +342,19 @@ export function SKUGeneration  (props:FormProps){
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
           <Card title='Selected Colors' size='small'
+            headStyle={{backgroundColor:'#9ec1a3',color:'black'}}
             onDragOver={handleDragOver}
             onDrop={handleDrop}>
             {selectedColors?.map((comment, index) => (
                 <Card
                     // key={comment}
                     size='small'
-                    style={{ background: '#f7c78d', marginBottom: '10px',height:'35px' }}
+                    style={{backgroundColor:'#e4f0d0', marginBottom: '10px',height:'35px' }}
                     draggable
                     onDragStart={(event) => handleAssignedColorDragStart(event, comment)}
                 >
                     <span style={{ wordWrap: 'break-word' }}>
-                        <li style={{ color: 'black',textAlign:'center' }}>{comment.colour}</li>
+                        <li style={{ color: 'black',textAlign:'center' }}><b>{comment.colour}</b></li>
                     </span>
                 </Card>
             ))}
@@ -360,18 +362,21 @@ export function SKUGeneration  (props:FormProps){
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
             <Card title='Available Sizes'  size='small'
+                headStyle={{backgroundColor:'#70a9a1',color:'black'}}
                 onDragOver={handleDragOver}
                 onDrop={handleAvailableDrop}>
                 {size?.map((comment, index) => (
                     <Card
                     size='small'
+                    bordered
+
                         // key={comment.colourId}
-                        style={{ background: '#f7c78d', marginBottom: '10px',height:'35px' }}
+                        style={{backgroundColor:'#e4f0d0', marginBottom: '10px',height:'35px'}}
                         draggable
                         onDragStart={(event) => handleSizeDragStart(event, comment)}
                     >
                         <span style={{ wordWrap: 'break-word' }}>
-                            <li style={{ color: 'black',textAlign:'center' }}>{comment.size}</li>
+                            <li style={{ color: 'black',textAlign:'center' }}><b>{comment.size}</b></li>
                         </span>
                     </Card>
                 ))}
@@ -379,18 +384,19 @@ export function SKUGeneration  (props:FormProps){
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
           <Card title='Selected Sizes' size='small'
+            headStyle={{backgroundColor:'#9ec1a3',color:'black'}}
             onDragOver={handleDragOver}
             onDrop={handleDrop}>
             {selectedSizes?.map((comment, index) => (
                 <Card
                 size='small'
                     // key={comment}
-                    style={{ background: '#f7c78d', marginBottom: '10px',height:'35px' }}
+                    style={{backgroundColor:'#e4f0d0', marginBottom: '10px',height:'35px' }}
                     draggable
                     onDragStart={(event) => handleAssignedSizesDragStart(event, comment)}
                 >
                     <span style={{ wordWrap: 'break-word' }}>
-                        <li style={{ color: 'black',textAlign:'center' }}>{comment.size}</li>
+                        <li style={{ color: 'black',textAlign:'center' }}><b>{comment.size}</b></li>
                     </span>
                 </Card>
             ))}
@@ -398,18 +404,19 @@ export function SKUGeneration  (props:FormProps){
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
             <Card title='Available Destinations' size='small'
+               headStyle={{backgroundColor:'#70a9a1',color:'black'}}
                 onDragOver={handleDragOver}
                 onDrop={handleAvailableDrop}>
                 {destination?.map((comment, index) => (
                     <Card
                     size='small'
                         // key={comment.colourId}
-                        style={{ background: '#f7c78d', marginBottom: '10px',height:'35px' }}
+                        style={{backgroundColor:'#e4f0d0', marginBottom: '10px',height:'35px' }}
                         draggable
                         onDragStart={(event) => handleDestinationsDragStart(event, comment)}
                     >
                         <span style={{ wordWrap: 'break-word' }}>
-                            <li style={{ color: 'black',textAlign:'center' }}>{comment.destination}</li>
+                            <li style={{ color: 'black',textAlign:'center' }}><b>{comment.destination}</b></li>
                         </span>
                     </Card>
                 ))}
@@ -418,18 +425,19 @@ export function SKUGeneration  (props:FormProps){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
           <Card title='Selected Destinations'
             size='small'
+            headStyle={{backgroundColor:'#9ec1a3',color:'black'}}
             onDragOver={handleDragOver}
             onDrop={handleDrop}>
             {selectedDestinations?.map((comment, index) => (
                 <Card
                 size='small'
                     // key={comment}
-                    style={{ background: '#f7c78d', marginBottom: '10px',height:'35px' }}
+                    style={{ backgroundColor:'#e4f0d0',marginBottom: '10px',height:'35px' }}
                     draggable
                     onDragStart={(event) => handleAssignedDestinationsDragStart(event, comment)}
                 >
                     <span style={{ wordWrap: 'break-word' }}>
-                        <li style={{ color: 'black',marginBottom:'1px' }}>{comment.destination}</li>
+                        <li style={{ color: 'black',textAlign:'center' }}><b>{comment.destination}</b></li>
                     </span>
                 </Card>
             ))}

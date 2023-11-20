@@ -80,7 +80,7 @@ export const FeatureSubstitution = () =>{
                                {/* <Card key={e.optionValue} style={{marginLeft:'1%',backgroundColor:'#FFDAB9',width:'100%',height:'40%'}} size='small'>
                                 <p>{e.optionValue}</p>
                                 </Card> */}
-                                <Tag key={e.optionValue} color="geekblue">{e.optionValue}</Tag>
+                                <Tag key={e.optionValue} color="geekblue">{`${e.optionValue} (${e.rmItemType}/${e.rmItemName})`}</Tag>
                             </Space>
                         </Checkbox>
                     ))}

@@ -41,7 +41,9 @@ export class optionInfoModel{
     rmSkuCode: string;
     featureOptionId: number;
     featureId: number;
-    constructor(optionValue:string,rmItemId:number,rmItemCode: string,rmSkuId: number,rmSkuCode: string,featureOptionId: number,featureId: number){
+    rmItemType: string;
+    rmItemName: string;
+    constructor(optionValue:string,rmItemId:number,rmItemCode: string,rmSkuId: number,rmSkuCode: string,featureOptionId: number,featureId: number,rmItemType: string,rmItemName: string){
         this.optionValue = optionValue
         this.rmItemId = rmItemId
         this.rmItemCode = rmItemCode
@@ -49,6 +51,8 @@ export class optionInfoModel{
         this.rmSkuCode = rmSkuCode
         this.featureOptionId = featureOptionId
         this.featureId = featureId
+        this.rmItemType = rmItemType
+        this.rmItemName = rmItemName
     }
 }
 
