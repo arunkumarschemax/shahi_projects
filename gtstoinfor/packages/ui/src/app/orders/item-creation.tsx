@@ -1152,7 +1152,13 @@ compositionservice.getActiveComposition().then(res=>{
 <Form.Item
                       name="orderQty"
                       label="Order Qty"
-                      rules={[{ required: true, message: "Enter  Order Qty" }]}>
+                      rules={[{ required: true, message: "Enter  Order Qty" },
+                      { 
+                        pattern: /^[0-9]+$/, 
+                        message: "Please Enter  Order Qty" 
+                      },
+                         ]}
+                      >
                       <Input placeholder="Total Order Qty" allowClear />
                     </Form.Item>
                      </Col>
