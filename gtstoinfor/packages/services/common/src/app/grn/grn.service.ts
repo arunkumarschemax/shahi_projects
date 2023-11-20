@@ -137,8 +137,8 @@ export class GrnService{
             grnEntity.createdUser=req.createdUser
             grnEntity.updatedUser=req.updatedUser
             for(const item of req.grnItemInfo){
-                // item.conversionQuantity=200
-                // item.conversionUomId=1
+                item.conversionQuantity=200
+                item.conversionUomId=1
                 const itemEntity = new GrnItemsEntity()
                 // itemEntity.m3ItemCodeId=item.m3ItemCodeId
                 itemEntity.productGroupId=item.productGroupId

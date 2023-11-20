@@ -133,7 +133,7 @@ export class PurchaseOrderService {
 
     async getPODataById(req: VendorIdReq): Promise<CommonResponseModel> {
         try {
-            console.log(req, 'f3-=-=-=-=-=-=-=-=-=3333333333333333')
+            // console.log(req, 'f3-=-=-=-=-=-=-=-=-=3333333333333333')
             let responseData
             if (req.materialType === 'Fabric') {
                 const fabricData = await this.poFabricRepo.getPOFabricData(req)
