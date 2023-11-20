@@ -113,12 +113,13 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
-      // align:'center',
+      align:'center',
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
       title: <div style={{textAlign:'center'}}>Operation Group Code</div>,
       dataIndex: "operationGroupCode",
+      align:'center',
       sorter: (a, b) => a.operationGroupCode.localeCompare(b.operationGroupCode),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("operationGroupCode"),

@@ -150,12 +150,13 @@ export const BusinessAreaView = () => {
             key: 'sno',
             width: '70px',
             responsive: ['sm'],
-            // align:'center',
+            align:'center',
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
         {
             dataIndex:'businessAreaCode',
             title:<div style={{textAlign:'center'}}>Business Area Code</div>,
+            align:'center',
             sorter: (a, b) => a.businessAreaCode?.localeCompare(b.businessAreaCode),
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('businessAreaCode')

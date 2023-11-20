@@ -151,6 +151,7 @@ export const CoTypeView = () => {
             key: 'sno',
             width: '70px',
             responsive: ['sm'],
+            align:'center',
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
         {
