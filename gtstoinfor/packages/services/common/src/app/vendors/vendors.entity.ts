@@ -66,7 +66,7 @@ city:string;
 @Column("varchar",{
     nullable:true,
     length:50,
-    name:"postal_code,"
+    name:"postal_code"
     })
 postalCode:string;
 
