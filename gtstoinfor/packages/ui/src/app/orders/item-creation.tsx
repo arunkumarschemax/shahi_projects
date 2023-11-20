@@ -492,14 +492,14 @@ compositionservice.getActiveComposition().then(res=>{
                     </Form.Item>
                    </Col>
                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                    <Form.Item label="Item Group" name="itemGroup" 
+                    <Form.Item label="Item Group" name="itemGroup"  initialValue={ItemGroupEnum.FG}
                       //  rules={[{ required: true, message: "Enter Item Group" }]}
                        >
                        <Select
-                     placeholder="Select Item Group" allowClear>
-                     {Object.values(ItemGroupEnum).map((key,value)=>{
+                     placeholder="Select Item Group" allowClear disabled>
+                     {/* {Object.values(ItemGroupEnum).map((key,value)=>{
             return <Option key={key} value={key}>{key}</Option>
-           })}
+           })} */}
                  
                     </Select>
                     </Form.Item>

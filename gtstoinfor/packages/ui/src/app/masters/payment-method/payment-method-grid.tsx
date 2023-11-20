@@ -171,13 +171,14 @@ service.createPaymentMethod(variantData).then(res=>{
         {
             title: 'S No',
             key: 'sno',
+            align:'center',
             width: '70px',
             responsive: ['sm'],
             render: (text, object, index) => (page - 1) * 10 + (index + 1)
           },
 
           {
-            title:<div style={{ textAlign: 'center' }}>Payemnt Menthod</div> ,
+            title:<div style={{ textAlign: 'center' }}>Payment Method</div> ,
             dataIndex: 'paymentMethod',
             sorter: (a, b) => a.paymentMethod.localeCompare(b.paymentMethod),
             sortDirections: ['descend', 'ascend'],
@@ -270,7 +271,7 @@ service.createPaymentMethod(variantData).then(res=>{
     ];
 
 return (
-  <Card title= 'Payment Method' extra={<span><Button onClick={()=>navigate('/global/paymentmethod/paymentmethod-form')} type={'primary'}>New</Button></span>}>
+  <Card title= 'Payment Methods' extra={<span><Button onClick={()=>navigate('/global/paymentmethod/paymentmethod-form')} type={'primary'}>New</Button></span>}>
     <>
    
     <Row gutter={24}>
@@ -297,13 +298,13 @@ return (
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}
-          pagination={{
+          scroll={{x:true,y:500}}
+           pagination={{
             pageSize:50,
             onChange(current) {
               setPage(current);
             }
           }}
-          scroll={{x:true}}
           onChange={onChange}
           bordered />
     </Card>
