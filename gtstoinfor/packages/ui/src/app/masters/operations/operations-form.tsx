@@ -3,7 +3,7 @@ import {Form, Input, Button, Select, Card, Row, Col, InputNumber} from 'antd';
 
 
 import TextArea from 'antd/lib/input/TextArea';
-import { OperationsDTO } from '@project-management-system/shared-models';
+import { OperationTypeEnum, OperationsDTO } from '@project-management-system/shared-models';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { OperationsService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';

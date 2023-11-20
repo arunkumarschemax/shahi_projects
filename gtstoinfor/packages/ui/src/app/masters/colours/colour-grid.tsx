@@ -173,6 +173,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
             key: 'sno',
             width: '70px',
             responsive: ['sm'],
+            align:'center',
             render: (text, object, index) => (page - 1) * 10 + (index + 1) 
         },
         {
@@ -224,6 +225,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
         {
             title: 'Status',
             dataIndex: 'isActive',
+            align:'center',
             render: (isActive, rowData) => (
               <>
                 {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">Inactive</Tag>}
@@ -261,6 +263,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
           {
             title:`Action`,
             dataIndex: 'action',
+            align:'center',
             render: (text, rowData) => (
               <span>  
                <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
@@ -312,7 +315,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
         </Col>
         <Col span={5}>
           {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
-          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
 </Row>
 <br/>
@@ -324,12 +327,13 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
                 // rowKey={record => record.variantId}
                 columns={columnsSkelton}
                 dataSource={variantData}
+                scroll={{x:true,y:500}}
                 pagination={{
-                  onChange(current) {
-                    setPage(current);
-                  }
-                }}
-                scroll={{x:true}}
+                 pageSize:50,
+                 onChange(current) {
+                   setPage(current);
+                 }
+               }}
                 onChange={onChange}
                 bordered />
           </Card>
