@@ -1073,7 +1073,7 @@ placeholder='select saleItem' allowClear>
                 </Col>
                 <span style={{ fontSize: "24px", lineHeight: "70px" }}>+</span>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                    <Form.Item label="Tax" name="tax">
+                    <Form.Item label="Tax(%)" name="tax">
                         <Select
                         placeholder="Select Tax"
                         onChange={handleTaxChange}

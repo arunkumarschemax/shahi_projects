@@ -322,6 +322,7 @@ export const SkuList = () => {
       dataIndex: "sku_code",
       key: "sku_code",
       width: "300px",
+      align:"center"
 
       // render: (skus) => skus.map((sku) => sku.skuId),
     },
@@ -330,13 +331,16 @@ export const SkuList = () => {
       dataIndex: "size",
       key: "size",
       width: "300px",
+      align:"center",
+
       sorter: (a, b) => a.size.localeCompare(b.size),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("size"),
       // render: (skus) => skus.map((sku) => sku.sizes),
     },
     {
-      title: "Destinations",
+      // title: "Destinations",
+      title: <div style={{textAlign:"center"}}>Destinations</div>,
       dataIndex: "destination",
       key: "destination",
       width: "300px",
@@ -347,7 +351,9 @@ export const SkuList = () => {
       // render: (skus) => skus.map((sku) => sku.destination),
     },
     {
-      title: "Colours",
+      // title: "Colours",
+      title: <div style={{textAlign:"center"}}>Colours</div>,
+
       dataIndex: "color",
       key: "color",
       width: "300px",
@@ -368,7 +374,8 @@ export const SkuList = () => {
     
     },
     {
-      title: "Style",
+      // title: "Style",
+      title: <div style={{textAlign:"center"}}>Style</div>,
       dataIndex: "style",
       key: "style",
       width: "300px",
@@ -382,7 +389,8 @@ export const SkuList = () => {
       // render: (skus) => skus.map((sku) => sku.destination),
    
     {
-      title: "Division",
+      // title: "Division",
+      title: <div style={{textAlign:"center"}}>Division</div>,
       dataIndex: "division_name",
                 width: "300px",
       sorter: (a, b) => a.division_name.localeCompare(b.division_name),
@@ -395,7 +403,9 @@ export const SkuList = () => {
       title: "RM Mapping",
       dataIndex: "rm_mapping_status",
       key: "rm_mapping_status",
-      width: "300px",
+      width: "200px",
+      align: "center",
+
       // sorter: (a, b) => a.rm_mapping_status.localeCompare(b.rm_mapping_status),
       // sortDirections: ["descend", "ascend"],
       // ...getColumnSearchProps("rm_mapping_status"),
@@ -457,6 +467,7 @@ filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
     {
       title: "Action",
       dataIndex: "action",
+      width: "200px",
       align: "center",
       render: (text, rowData, index) => {
         console.log(rowData,'rowwwwwwwwww')
@@ -474,9 +485,11 @@ filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
                 <Button type="primary" shape="circle">Close</Button>
               </Popconfirm>
             </Tooltip>
-            </>              
+            </>  
+                        
             
           ) : null}
+          <Divider type="vertical" />
 
               {rowData.status === SkuStatusEnum.CANCELLED || rowData.coStatus === CustomerOrderStatusEnum.COMPLETED||rowData.coStatus === CustomerOrderStatusEnum.CLOSED|| checkAccess('Cancel') ? <><CloseOutlined disabled={true}/></> :
             <Popconfirm onConfirm={vale => { cancelOrder(rowData) }} title={"Are you sure to Cancel ?"}>
@@ -781,7 +794,7 @@ filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
               ) : (
                 <div>
                   <Card
-                   title={`item code:${selectedItemNo}`} 
+                   title={`Item Code:${selectedItemNo}`} 
                      >
                     <Table
                     size="small"

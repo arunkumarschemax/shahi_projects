@@ -565,7 +565,7 @@ compositionservice.getActiveComposition().then(res=>{
                   <Select
                     showSearch
                   
-                        placeholder="Select Is Imported Item" allowClear>
+                        placeholder="Select Property" allowClear>
                      {Object.values(PropertyEnum).map((key,value)=>{
                        return <Option key={key} value={key}>{key}</Option>
                         })}
@@ -983,7 +983,7 @@ compositionservice.getActiveComposition().then(res=>{
                     <Select
                     showSearch
                   
-                        placeholder="Select Is SubControl Status" allowClear>
+                        placeholder="Select Is SubContract Status" allowClear>
                      {Object.values(SubContractStatus).map((key,value)=>{
             return <Option key={key} value={key}>{key}</Option>
            })}

@@ -896,7 +896,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                       lg={{ span: 6 }}
                       xl={{ span: 8 }}
                     >
-                      <Form.Item label="Tax" name="tax" 
+                      <Form.Item label="Tax(%)" name="tax" 
                         rules={[{ required: true, message: "Select Tax" }]}
 
                       >
