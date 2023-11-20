@@ -203,27 +203,40 @@ export const OperationReportingView = () => {
             title:<div style={{textAlign:"center"}}>Reported Quantity</div>,
             dataIndex: 'reportedQuantity',
             align:"right",
-            render: (text, record, index) => {
-              return (
-                <>
-                  <Input
-                    key={index}
-                    defaultValue={record.issuedQuantity}
-                    // value={reportedQuantity}
-                    onChange={(e) => setReportedInfo(e,index,record)}
+            render: (_, record) => (
+                <Form.Item
+                name={`reportedQuantity${record.materialFabricId}_${record.key}`}
+                rules={[
+                    {
+                      validator: (_, value) => {
+                        if (!value || (Number(value) <= record.issuedQuantity)) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject('Cannot exceed PO Qty');
+                      },
+                    },
+                  ]}
+                >
+                    <Input
+                    placeholder="Enter Quantity"
+                    // key={index}
+                    // defaultValue={record.issuedQuantity}
+                    // max={record.issuedQuantity}
+                    // onChange={(e) => setReportedInfo(e,index,record)}
                   />
-                </>
-              );
-            },
+                </Form.Item>
+            )
           },
           {
             title: 'Uom',
             dataIndex: 'reportedUomId',
-            render: (text,record,index) => (
-                <Form.Item>
+            render: (_,record) => (
+                <Form.Item
+                name={`reportedUomId${record.materialFabricId}_${record.key}`}
+                >
                 <Select
-                value={reportedUom}
-                onChange={(val) => reportedUomId(val, index, record)}
+                // value={reportedUom}
+                // onChange={(val) => reportedUomId(val, index, record)}
                 allowClear
                 style={{ width: "100%" }}
                 showSearch

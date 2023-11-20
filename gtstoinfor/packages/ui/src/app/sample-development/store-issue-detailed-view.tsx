@@ -1,26 +1,6 @@
-import {
-  MaterialFabricDto,
-  MaterialIssueDto,
-  MaterialTrimDto,
-} from "@project-management-system/shared-models";
-import {
-  ColourService,
-  MaterialIssueService,
-  SampleDevelopmentService,
-  UomService,
-} from "@project-management-system/shared-services";
-import {
-  Button,
-  Card,
-  Col,
-  Descriptions,
-  Form,
-  Input,
-  Row,
-  Select,
-  Table,
-  Tabs,
-} from "antd";
+import {MaterialFabricDto,MaterialIssueDto,MaterialTrimDto,} from "@project-management-system/shared-models";
+import {ColourService,MaterialIssueService,SampleDevelopmentService,UomService,} from "@project-management-system/shared-services";
+import {Button,Card,Col,Descriptions,Form,Input,Row,Select,Table,Tabs,} from "antd";
 import DescriptionsItem from "antd/es/descriptions/Item";
 import TabPane from "antd/es/tabs/TabPane";
 import React, { useEffect, useState } from "react";
@@ -47,7 +27,8 @@ export const StoreIssueDetailed = () => {
   const {Option}  =Select
   const [form] = Form.useForm()
   const [selectedUom, setSelectedUom] = useState<number>();
-
+  const [formFabricData, setFormFabricData] = useState<any[]>([])
+  const [formTrimData, setFormTrimData] = useState<any[]>([])
 
 
 
@@ -63,11 +44,12 @@ export const StoreIssueDetailed = () => {
 }
 
   const customIssueDate = new Date("2023-11-07T07:23:49.140Z");
-
-  const formattedIssueDate = customIssueDate.toISOString().split("T")[0];
+  const formattedIssueDate = customIssueDate.toISOString().split("T")[0]
 
   const saveData = () => {
-    const req = new MaterialIssueDto(rowData?.[0]?.requestNo,formattedIssueDate,rowData?.[0]?.location_id,rowData?.[0]?.profit_control_head_id,rowData?.[0]?.buyer_id,rowData?.[0]?.sample_type_id,rowData?.[0]?.sample_sub_type_id,rowData?.[0]?.style_id,rowData?.[0]?.style,rowData?.[0]?.brand_id,rowData?.[0]?.dmm_id,rowData?.[0]?.technician_id,rowData?.[0]?.description,rowData?.[0]?.costRef,rowData?.[0]?.m3StyleNo,rowData?.[0]?.contact,rowData?.[0]?.extension,rowData?.[0]?.samValue,rowData?.[0]?.product,rowData?.[0]?.type,rowData?.[0]?.conversion,rowData?.[0]?.madeIn,rowData?.[0]?.remarks,fabricData,trimData,0,"","",undefined,"");
+    handleFabricData();
+    handleTrimData();
+    const req = new MaterialIssueDto(rowData?.[0]?.requestNo,formattedIssueDate,rowData?.[0]?.location_id,rowData?.[0]?.profit_control_head_id,rowData?.[0]?.buyer_id,rowData?.[0]?.sample_type_id,rowData?.[0]?.sample_sub_type_id,rowData?.[0]?.style_id,rowData?.[0]?.style,rowData?.[0]?.brand_id,rowData?.[0]?.dmm_id,rowData?.[0]?.technician_id,rowData?.[0]?.description,rowData?.[0]?.costRef,rowData?.[0]?.m3StyleNo,rowData?.[0]?.contact,rowData?.[0]?.extension,rowData?.[0]?.samValue,rowData?.[0]?.product,rowData?.[0]?.type,rowData?.[0]?.conversion,rowData?.[0]?.madeIn,rowData?.[0]?.remarks,formFabricData,formTrimData,0,"","",undefined,"");
     console.log(req,'====')
     if (fabricData.length > 0) {
     materialIssue.createMaterialIssue(req).then((res) => {
@@ -94,62 +76,83 @@ export const StoreIssueDetailed = () => {
     });
   };
 
-  const trimDataInfo = (e,index,rowData) =>{
-    if(e.target.value != ''){
-      const iniIndex = trimData.findIndex(e => e.fabricCode === rowData.fabric_code)
-      if(iniIndex != -1){
-        trimData[index].issuedQuantity = e.target.value
-      }else{
-        const req = new MaterialTrimDto(rowData.trimCode,rowData.trim_description,rowData.trim_consumption,rowData.uomId,e.target.value,form.getFieldValue('issuedUomId'),rowData.tri_remarks,undefined,'','','',0,0)
-        setTrimData([...trimData,req])
-      }
+  // const handleData =()=>{
+  //   handleFabricData()
+  //   handleTrimData()
+  // }
 
-  }
-}
-  const fabricDataInfo = (e,index,rowData) =>{
-    console.log(selectedUom,'====')
-    if(e.target.value != ''){
-      const iniIndex = fabricData.findIndex(e => e.fabricCode === rowData.fabric_code)
-      if(iniIndex != -1){
-        fabricData[index].issuedQuantity = e.target.value
-      } else{
-        const req = new MaterialFabricDto(rowData.fabric_code,rowData.fabric_description,rowData.colour_id,rowData.fabric_consumption,rowData.uomId,e.target.value,selectedUom,rowData.fab_remarks,undefined,'','','',0)
-        setFabricData([...fabricData,req])
-        console.log(req,'_______________________')
-      }
-    }
-  }
+//   const trimDataInfo = (e,index,rowData) =>{
+//     if(e.target.value != ''){
+//       const iniIndex = trimData.findIndex(e => e.fabricCode === rowData.fabric_code)
+//       if(iniIndex != -1){
+//         trimData[index].issuedQuantity = e.target.value
+//       }else{
+//         const req = new MaterialTrimDto(rowData.trimCode,rowData.trim_description,rowData.trim_consumption,rowData.uomId,e.target.value,form.getFieldValue('issuedUomId'),rowData.tri_remarks,undefined,'','','',0,0)
+//         setTrimData([...trimData,req])
+//       }
+
+//   }
+// }
+//   const fabricDataInfo = (e,index,rowData) =>{
+//     // console.log(selectedUom,'====')
+//     if(e.target.value != ''){
+//       const iniIndex = fabricData.findIndex(e => e.fabricCode === rowData.fabric_code)
+//       if(iniIndex != -1){
+//         fabricData[index].issuedQuantity = e.target.value
+//       } else{
+//         const req = new MaterialFabricDto(rowData.fabric_code,rowData.fabric_description,rowData.colour_id,rowData.fabric_consumption,rowData.uomId,e.target.value,selectedUom,rowData.fab_remarks,undefined,'','','',0)
+//         setFabricData([...fabricData,req])
+//         // console.log(req,'_______________________')
+//       }
+//     }
+//   }
 
   const onUpdate = () => {
     //  navigate('/sample-development/sample-requests', { state: { id: data[0]?.settingsId } })
     navigate("/sample-development/sample-requests");
   };
 
-  // const issuedInfo = (e, index, record) => {
-  //   setCreateData(e.target.value);
-  // };
 
-  // const handleUomChange = (value, index, recordKey) => {
-  //   console.log(`UOM changed for record ${recordKey} to ${value}`);
-  //   // Set the state with the updated UOM value
-  //     setSelectedUom((prevState) => {
-  //     const updatedUoms = [...prevState.uoms];
-  //     updatedUoms[index] = { ...updatedUoms[index], issuedUomId: value };
-  //     return { ...prevState, uoms: updatedUoms };
-  //   });
-  // };
+  const handleFabricData = () => {
+    form.validateFields().then((values) => {
+      const updatedFormData = fabricData.filter((record) => {
+          const key = record.key;
+          return (
+            values[`issuedQuantity_${record.sampleFabricId}_${key}`] ||
+            values[`issuedUomId_${record.sampleFabricId}_${key}`]
+          )
+        })
+        .map((record) => ({
+          sampleFabricId: record.sampleFabricId,
+          issuedQuantity: values[`issuedQuantity_${record.sampleFabricId}_${record.key}`],
+          issuedUomId: values[`issuedUomId_${record.sampleFabricId}_${record.key}`],
+          ...record,
+        }));
 
-  const handleUomChange = (value, index, key) => {
-    // // Update the state with the selected UOM value
-    // setSelectedUom((prevSelectedUomId) => ({
-    //   ...prevSelectedUomId,
-    //   [key]: value,
-    // }));
+        setFormFabricData(updatedFormData);
+      console.log("FormData:", updatedFormData);
+    });
+  };
 
-    // Your other logic goes here, if needed
+  const handleTrimData = () => {
+    form.validateFields().then((values) => {
+      const updatedFormData = fabricData.filter((record) => {
+          const key = record.key;
+          return (
+            values[`issuedQuantity_${record.sampleTrimId}_${key}`] ||
+            values[`issuedUomId_${record.sampleTrimId}_${key}`]
+          )
+        })
+        .map((record) => ({
+          sampleTrimId: record.sampleTrimId,
+          issuedQuantity: values[`issuedQuantity_${record.sampleTrimId}_${record.key}`],
+          issuedUomId: values[`issuedUomId_${record.sampleTrimId}_${record.key}`],
+          ...record,
+        }));
 
-    // Logging the selected UOM value to the console
-    console.log(`Selected UOM for key ${key}: ${value}`);
+        setFormTrimData(updatedFormData);
+      console.log("FormData:", updatedFormData);
+    });
   };
   
   
@@ -186,25 +189,40 @@ export const StoreIssueDetailed = () => {
       title: "Issued Quantity",
       dataIndex: "issuingQuantity",
       render: (_, record) => {
-        return (
-          <>
+        // return (
+        //   <>
           <Form.Item 
-            name={`receivedQuantity_${record.poFabricId}_${record.key}`}>
+            name={`issuingQuantity_${record.sampleFabricId}_${record.key}`}
+            rules={[
+              {
+                validator: (_, value) => {
+                  if (!value || (Number(value) <= record.poQuantity)) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject('Cannot exceed PO Qty');
+                },
+              },
+            ]}
+            >
             <Input
               placeholder="Issued Quantity"
+              type="number"
+              pattern="^[0-9]*$"
             />
             </Form.Item>
-          </>
-        );
+        //   </>
+        // );
       },
     },
     {
       title: 'Uom',
       dataIndex: 'issuedUomId',
       render: (_,record,index) => (
-        <Form.Item name={`issuedUomId${record.key}`}>
+        <Form.Item 
+        name={`issuedUomId_${record.sampleFabricId}_${record.key}`}
+        >
         <Select
-          onChange={(value) => handleUomChange(value,index,record.key)}
+          // onChange={(value) => handleUomChange(value,index,record.key)}
           allowClear
           style={{ width: "100%" }}
           showSearch
@@ -244,26 +262,21 @@ export const StoreIssueDetailed = () => {
     {
       title: "Issued Quantity",
       dataIndex: "issuingQuantity",
-      render: (text, row, index) => {
-        return (
-          <>
-          {/* <Form.Item name={"issuingQuantity" + index}> */}
+      render: (_,record) => {
+          <Form.Item
+          name={`issuingQuantity_${record.sampleTrimId}`}>
             <Input
-              key={row.materialTrimId}
               placeholder="Issued Quantity"
-              onChange={e=> trimDataInfo(e,index,row)}
-              // value={formData.issuedQuantity}
             />
-            {/* </Form.Item> */}
-          </>
-        );
+          </Form.Item>
       },
     },
     {
       title: 'Uom',
       dataIndex: 'issuedUomId',
-      render: (text,record,index) => (
-          <Form.Item name={"issuedUomId" + index}>
+      render: (_,record) => (
+          <Form.Item 
+          name={`issuedUomId${record.sampleTrimId}`}>
           <Select
           // value={reportedUom}
           // onChange={(val) => reportedUomId(val, index, record)}
@@ -333,7 +346,7 @@ export const StoreIssueDetailed = () => {
             </span>
           }
         >
-          <Form form={formRef}>
+          <Form form={form}>
             <Table
               size="small"
               columns={columnsSkelton}
@@ -352,7 +365,7 @@ export const StoreIssueDetailed = () => {
             </span>
           }
         >
-          <Form form={formRef}>
+          <Form form={form}>
           <Table
             size="small"
             columns={columns}
