@@ -293,7 +293,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
       .then((res) => {
         if (res.status) {
           onReset();
-          message.success(res.internalMessage);
+          message.success("Trim Item Created Sucessfully");
           navigate("/materialCreation/rm-creation-view")
         } else {
           AlertMessages.getErrorMessage(res.internalMessage);

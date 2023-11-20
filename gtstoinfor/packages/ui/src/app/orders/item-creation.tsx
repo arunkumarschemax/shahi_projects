@@ -3,8 +3,8 @@ import { HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link, useNavigate, useNavigation } from "react-router-dom";
-import { BusinessAreaService, BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, FactoryService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, OperationsService, ProductGroupService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
-import { ItemCreationDTO, ItemGroupEnum, PropertyEnum, SubContractStatus } from "@project-management-system/shared-models";
+import { BusinessAreaService, BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, FactoryService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, OperationsService, ProductGroupService, ROSLGroupsService, RangeService, SearchGroupService, SettingsService, StyleService, UomService } from "@project-management-system/shared-services";
+import { ItemCreationDTO, ItemGroupEnum, PropertyEnum, SettingsIdReq, SubContractStatus } from "@project-management-system/shared-models";
 import { setOptions } from "highcharts";
  
 export interface FormProps {
@@ -56,7 +56,32 @@ export function ItemCreation (props: FormProps){
          const [styledata,setStyle]=useState([])
          const[brand,setBrand]=useState([])
          const {Option}=Select
-         const navigate = useNavigate()
+         const service = new SettingsService()
+         const [data,setData] = useState<any[]>([])
+         const externalRefNo = JSON.parse(localStorage.getItem("currentUser")).user.externalRefNo;
+         const role = JSON.parse(localStorage.getItem("currentUser")).user.roles;
+     
+     
+         useEffect(() => {
+             getAllInfo()
+     
+         },[])
+     
+         const getAllInfo = () => {
+             const req = new SettingsIdReq()
+             req.externalRefNumber = externalRefNo
+             service.getAllSettingsInfo(req).then(res => {
+                 if(res.status){
+                     setData(res.data)
+form.setFieldValue('currency',res.data?.[0]?.currencyName)                   
+form.setFieldValue('salePersonId',res.data?.[0]?.salesPerson)                     
+form.setFieldValue('facilityId',res.data?.[0]?.facilityId)                     
+
+                 }
+             })
+         }
+         
+              const navigate = useNavigate()
 
 
          useEffect (()=>{
@@ -890,9 +915,9 @@ compositionservice.getActiveComposition().then(res=>{
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item name="salePersonId" label="Sales Person" 
+                        <Form.Item name="salePersonId" label="Sales Person"  
                         rules={[{ required: true, message: "Enter Sales Person" }]}>
-                        <Select placeholder="Select Approve" allowClear> 
+                        <Select placeholder="Select Approve" allowClear > 
                           {employedata.map((e)=>{
                             return(
                               <Option key={e.employeeId} values={e.employeeId}>{e.firstName}

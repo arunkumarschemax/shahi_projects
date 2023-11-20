@@ -399,17 +399,60 @@ export const SkuList = () => {
       // sorter: (a, b) => a.rm_mapping_status.localeCompare(b.rm_mapping_status),
       // sortDirections: ["descend", "ascend"],
       // ...getColumnSearchProps("rm_mapping_status"),
-filters:[
+// filters:[
+//   {
+//     text:'Yes',
+//     value:'Yes',
+//   },
+//   {
+//     text:'No',
+//     value:'No',
+//   }
+// ],
+// onFilter:(value,record)=>{return record.rm_mapping_status === value}
+filters: [
   {
-    text:'Yes',
-    value:'Yes',
+    text: 'Yes',
+    value: true,
   },
   {
-    text:'No',
-    value:'No',
-  }
+    text: 'No',
+    value: false,
+  },
 ],
-onFilter:(value,record)=>{return record.rm_mapping_status === value}
+// filterMultiple: false,
+// onFilter: (value, record) => 
+// {
+//   // === is not work
+//   return record.isActive === value;
+// },
+filterMultiple: false,
+onFilter: (value, record) => record.isActive === value,
+filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+  <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+    <Checkbox
+      checked={selectedKeys.includes(true)}
+      onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+    >
+      <span >Yes</span>
+    </Checkbox>
+    <Checkbox
+      checked={selectedKeys.includes(false)}
+      onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+    >
+      <span>No</span>
+    </Checkbox>
+    <div className="custom-filter-dropdown-btns" >
+    <Button  onClick={() => clearFilters()} className="custom-reset-button">
+        Reset
+      </Button>
+      <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+        OK
+      </Button>
+    
+    </div>
+  </div>
+),
     },
     {
       title: "Action",

@@ -8,6 +8,7 @@ import { MasterBrandsService } from '@project-management-system/shared-services'
 import { MasterBrandsDto } from '@project-management-system/shared-models';
 import { Link, useNavigate } from 'react-router-dom';
 import MasterBrandsForm from './master-brands-form';
+import { config } from 'packages/libs/shared-services/config';
 
 /* eslint-disable-next-line */
 export interface MasterBrandsGridProps {}
@@ -271,14 +272,10 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
           align:'center',
           dataIndex: 'fileName',
           responsive: ['lg'],
-          // sorter: (a, b) => a.fileName.localeCompare(b.fileName),
-          // sortDirections: ['descend', 'ascend'],
-          // ...getColumnSearchProps('fileName'),
+          
           render: (fileName,rowData) => {
-            // const encodedFileName = encodeURIComponent(rowData.filePath);
-// const updateImage = `http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/${encodedFileName}`;
-
-            const updateImage = 'http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/' + rowData.filePath;
+    
+            const updateImage = config.upload_file_path+ rowData.fileName;
 
 return (
   <div>
@@ -392,10 +389,8 @@ return (
    * @param extra 
    */
   const onChange=(pagination, filters, sorter, extra)=> {
-    console.log('params', pagination, filters, sorter, extra);
   }
   const OpenFormTocreateRecord = () => {
-   console.log('redirect here');
   }
   return (
     // <Card title={<span style={{color:'white'}}>Brands</span>}

@@ -25,7 +25,7 @@ export class MasterBrandsController {
 
       @Post('/createMasterBrand')
       async createMasterBrand(@Body() brandDto:any): Promise<MasterBrandsResponseModel> {
-       // console.log('hi--------')
+        
           try {
            return await this.brandService.createMasterBrand(brandDto,false);
          } catch (error) {
@@ -102,8 +102,7 @@ export class MasterBrandsController {
        }))
      
        async fabricWeaveImageUpload(@UploadedFile() file, @Body() uploadData: any): Promise<UploadResponse> {
-       //  console.log(file,'-------file')
-        // console.log(uploadData,'uploaddata')
+       
          try {
            return await this.brandService.updatePath(file.path,file.filename, uploadData.brandId)
          } catch (error) {
