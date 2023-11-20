@@ -42,7 +42,7 @@ export function OperationsForm(
       setDisable(false)
       if(res.status){
         AlertMessages.getSuccessMessage('Operation Created Successfully');
-        // location.push("/operations-view");
+        navigate('/masters/operations/operation-view')
         onReset();
       } else {
         AlertMessages.getErrorMessage(res.internalMessage);
@@ -55,40 +55,20 @@ export function OperationsForm(
   }
 
   const onReset=()=>{
-    console.log('');
     form.resetFields();
     
   }
 
-  const onFocus=() =>{
-    console.log('focus');
-  }
-  
-  const onSearch=(val)=> {
-    console.log('search:', val);
-  }
-  const onBlur=() =>{
-    console.log('blur');
-  }
 
-  // const handleWorkStationCategory=(value)=>{
-  //   setSelectedWorkStationCategory(value);
-  //   if(value == ''){
-  //     setDisplay('block');
-  //   } else {
-  //     setDisplay('none');
-  //   } 
-  // }
+
   
   const saveData = (values: OperationsDTO) => {
     setDisable(false)
     if(props.isUpdate){
       // form.setFieldValue({'operationGroup'})
-      console.log(values,'===========')
       props.updateOperation(values);
     }else{
       setDisable(false)
-      console.log(values,'=======----')
       createOperation(values);
     }
   
@@ -146,7 +126,19 @@ export function OperationsForm(
             <Input placeholder='Enter Operation Name'/>
           </Form.Item>
         </Col>
-
+        <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:6}} >
+          <Form.Item
+            name="operationType"
+            label="Operation Type">
+             <Select
+              showSearch
+              placeholder='select operation type' allowClear>
+              {Object.values(OperationTypeEnum).map((key,value)=>{
+                        return <Option key={key} value={key}>{key}</Option>
+                    })}
+              </Select>
+          </Form.Item>
+        </Col>
         {/* <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:6}} >
           <Form.Item
             name="workstationCategoryId"

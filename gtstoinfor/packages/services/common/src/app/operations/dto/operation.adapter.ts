@@ -18,6 +18,7 @@ export class OperationsAdapter {
     operations.operationCode = operationsDto.operationCode;
     operationgroup.operationGroupId = operationsDto.operationGroupId
     operationgroup.operationGroupName= operationsDto.operationGroupName
+    operations.operationType = operationsDto.operationType;
     operations.operationGroupInfo = operationgroup
     operations.isActive = operationsDto.isActive == undefined?true:operationsDto.isActive;
     if(isUpdate){
@@ -34,6 +35,7 @@ export class OperationsAdapter {
     operationsDto.key = index+1
     operationsDto.operationId = operationsObject.operationId;
     operationsDto.operationName = operationsObject.operationName;
+    operationsDto.operationType = operationsObject.operationType
     operationsDto.operationGroupId = (operationsObject.operationGroupInfo)?.operationGroupId;
     operationsDto.operationGroupName = (operationsObject.operationGroupInfo)?.operationGroupName;
     operationsDto.isActive = operationsObject.isActive;
