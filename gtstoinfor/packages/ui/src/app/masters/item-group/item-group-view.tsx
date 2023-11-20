@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Checkbox } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Checkbox, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -185,48 +185,9 @@ service.createItemGroup(variantData).then(res=>{
             key: 'sno',
             width: '70px',
             responsive: ['sm'],
+            align:"center",
             render: (text, object, index) => (page - 1) * 10 + (index + 1)
           },
-    //       {
-    //         title: 'Division',
-    //         dataIndex: 'divisionName',
-    //         sorter: (a, b) => a.divisionName.localeCompare(b.divisionName),
-    //         sortDirections: ['descend', 'ascend'],
-    //         ...getColumnSearchProps('divisionName')
-    //       },
-    //       {
-    //         title: 'Size',
-    //         dataIndex: 'size',
-    //         sorter: (a, b) => a.size.localeCompare(b.size),
-    //         sortDirections: ['descend', 'ascend'],
-    //         ...getColumnSearchProps('size')
-    //       },
-    //       {
-    //         title: 'Status',
-    //         dataIndex: 'isActive',
-    //         render: (isActive, rowData) => (
-    //           <>
-    //             {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
-    //           </>
-    //         ),
-    //         filters: [
-    //           {
-    //             text: 'Active',
-    //             value: true,
-    //           },
-    //           {
-    //             text: 'InActive',
-    //             value: false,
-    //           },
-    //         ],
-    //         filterMultiple: false,
-    //         onFilter: (value, record) => 
-    //         {
-    //           // === is not work
-    //           return record.isActive === value;
-    //         },
-            
-    //       },
   
 
     {
@@ -236,6 +197,7 @@ service.createItemGroup(variantData).then(res=>{
         const EnumObj = ItemGroupDisplayvalue.find((item) => item.name === text);
         return EnumObj ? text : text;
     },
+    
 },
 {
   title: 'Status',
@@ -282,6 +244,7 @@ service.createItemGroup(variantData).then(res=>{
 {
     title:`Action`,
     dataIndex: 'action',
+    align:"center",
     render: (text, rowData) => (
       <span>  
        <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
@@ -324,7 +287,7 @@ return (
   style={{textAlign:'left'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/item-group/item-group-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
   <br></br>
     <>
-    <Row gutter={40}>
+    {/* <Row gutter={40}>
     <Col>
           <Card title={'Total ItemGroup: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
@@ -338,7 +301,23 @@ return (
         <span><Button onClick={() => navigate('/masters/paymentmethod/paymentmethod-form')}
               type={'primary'}>New</Button></span>
         </Col> */}
-    </Row>
+    {/* </Row> */} 
+    <Row gutter={24}>
+  <Col span={4}></Col>
+    <Col span={5}>
+     
+<Alert type='success' message={'Total ItemGroup: ' + variantData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          {/* <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card> */}
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        </Col>
+</Row>
+<br></br>
     <Card>
   <Table
         size='small'
@@ -346,13 +325,14 @@ return (
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}
-          pagination={{
+         
+          scroll={{x:true,y:500}}
+           pagination={{
             pageSize:50,
             onChange(current) {
               setPage(current);
             }
           }}
-          scroll={{x:true}}
           onChange={onChange}
           bordered />
     </Card>

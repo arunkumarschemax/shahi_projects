@@ -112,10 +112,13 @@ export const AccountControlObjectGrid = (props: AccountControlObjectGridProps) =
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
+      align:'center',
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
-      title: "Account Control Object",
+      // title: "Account Control Object",
+      title:<div style={{ textAlign: 'center' }}>Account Control Object</div> ,
+
       dataIndex: "accountControlObjectsName",
       sorter: (a, b) => {
         const valueA = a.accountControlObjectsName || '';
@@ -129,6 +132,7 @@ export const AccountControlObjectGrid = (props: AccountControlObjectGridProps) =
     {
       title: 'Status',
       dataIndex: 'isActive',
+      align:'center',
       // ...getColumnSearchProps("isActive"),
       render: (isActive, rowData) => (
         <>
@@ -157,6 +161,7 @@ export const AccountControlObjectGrid = (props: AccountControlObjectGridProps) =
     {
       title: `Action`,
       dataIndex: 'action',
+      align:'center',
       render: (text, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"
@@ -292,7 +297,7 @@ const deleteVariant = (Data:AccountControlObjectDto) => {
         </Col>
         <Col span={5}>
           {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
-          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
 </Row>
 <br></br>
@@ -302,12 +307,13 @@ const deleteVariant = (Data:AccountControlObjectDto) => {
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}
+          scroll={{x:true,y:500}}
           pagination={{
-            onChange(current) {
-              setPage(current);
-            }
-          }}
-          scroll={{x:true}}
+           pageSize:50,
+           onChange(current) {
+             setPage(current);
+           }
+         }}
           onChange={onChange}
           bordered />
       <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}

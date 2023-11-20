@@ -27,9 +27,10 @@ export class Destination {
   destinationCode: string;
 
   @Column("char", {
-    nullable: false,
+    nullable: true,
     length: 250,
     name: "description"
+  
   })
   // @Index({ unique: true })
   description: string;

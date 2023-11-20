@@ -61,7 +61,7 @@ export const DestinationForm = (props: DestinationFormProps) => {
       setDisable(false)
       if (res.status) {
         AlertMessages.getSuccessMessage('Destination Created Successfully');
-        //   location.push("/Currencies-view");
+        navigate('/global/destination/destination-grid')
         onReset();
       } else {
         AlertMessages.getErrorMessage(res.internalMessage);
