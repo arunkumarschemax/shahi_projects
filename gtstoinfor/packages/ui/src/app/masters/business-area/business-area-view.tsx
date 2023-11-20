@@ -184,7 +184,7 @@ export const BusinessAreaView = () => {
                 value: true,
               },
               {
-                text: 'InActive',
+                text: 'Inactive',
                 value: false,
               },
             ],
@@ -279,7 +279,7 @@ export const BusinessAreaView = () => {
           <Alert type='warning' message={'Active: ' + data.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
-          <Alert type='info' message={'InActive: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
             </Row>
             <br></br>

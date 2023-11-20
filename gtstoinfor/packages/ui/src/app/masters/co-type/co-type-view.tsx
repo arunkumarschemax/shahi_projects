@@ -177,7 +177,7 @@ export const CoTypeView = () => {
                 value: true,
               },
               {
-                text: 'InActive',
+                text: 'Inactive',
                 value: false,
               },
             ],
