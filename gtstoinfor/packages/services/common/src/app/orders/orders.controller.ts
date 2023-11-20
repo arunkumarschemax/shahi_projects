@@ -606,4 +606,14 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+
+    // @Cron('0 4 * * *')
+    @Post('/trimOrdersReadCell')
+    async trimOrdersReadCell(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+             return this.ordersService.trimOrdersReadCell();
+            } catch (err) {
+                return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+            }
+    }
 }
