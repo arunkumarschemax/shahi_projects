@@ -376,12 +376,13 @@ export const DestinationGrid = (props: DestinationGridProps) => {
           columns={columnsSkelton}
           className='custom-table-wrapper'
           dataSource={variantData}
+          scroll={{x:true,y:500}}
           pagination={{
-            onChange(current) {
-              setPage(current);
-            }
-          }}
-          scroll={{ x: true }}
+           pageSize:50,
+           onChange(current) {
+             setPage(current);
+           }
+         }}
           onChange={onChange}
           bordered />
       </Card>

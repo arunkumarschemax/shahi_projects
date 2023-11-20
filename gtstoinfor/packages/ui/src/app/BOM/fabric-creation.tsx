@@ -1140,7 +1140,7 @@ placeholder='select saleItem' allowClear>
                                          <Select
                     allowClear
                     optionFilterProp="children"
-                    placeholder="Select facility"
+                    placeholder="Select Delivery Terms"
                     >
 
                      {Deliveryterms.map((e)=>{
@@ -1163,7 +1163,7 @@ placeholder='select saleItem' allowClear>
                                          <Select
                     allowClear
                     optionFilterProp="children"
-                    placeholder="Select facility"
+                    placeholder="Select Delivery Method"
                     >
 
                  {DeliveryMethod.map((e)=>{
