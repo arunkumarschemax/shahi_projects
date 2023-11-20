@@ -74,7 +74,7 @@ export function ItemCreation (props: FormProps){
                  if(res.status){
                      setData(res.data)
 form.setFieldValue('currency',res.data?.[0]?.currencyName)                   
-form.setFieldValue('salePersonId',res.data?.[0]?.salesPerson)                     
+form.setFieldValue('salesPersonId',res.data?.[0]?.salesPersonId)                     
 form.setFieldValue('facilityId',res.data?.[0]?.facilityId)                     
 
                  }
@@ -407,7 +407,7 @@ compositionservice.getActiveComposition().then(res=>{
       }
 
          const saveItem=(values)=>{
-          const req = new ItemCreationDTO(values.itemName,values.itemCode,values.description,values.itemTypeId,values.brandId,values.categoryId,null,values.season,values.responsiblePersonId,values.property,values.productDesignerId,values.approver,values.productionMerchant,values.pdMerchant,values.factoryMerchant,values.salePersonId,values.styleNo,values.internalStyleId,values.basicUom,values.altUoms,values.currency,values.targetCurrency,values.conversionFactor,values.projectionOrder,values.buyingHouseCommision,values.salePriceQty,values.licenseId,values.customGroupId,values.nationalDbk,values.roslGroup,values.isSubContract,values.salePrice,values.orderConfirmedDate,values.firstExFactoryDate,values.orderCloseDate,values.moq,values.orderQty,values.facilityId,values.itemGroup,values.productGroup,values.businessArea,values.basicUom,values.groupTechClass,values.composition,values.range,values.noOfLacePanel,values.searchGroup,values.reference,null,values.createdUser,null,null,null,null)
+          const req = new ItemCreationDTO(values.itemName,values.itemCode,values.description,values.itemTypeId,values.brandId,null,values.category,null,values.season,values.responsiblePersonId,values.property,values.productDesignerId,values.approver,values.productionMerchant,values.pdMerchant,values.factoryMerchant,values.salesPersonId,values.styleNo,values.internalStyleId,values.basicUom,values.altUoms,values.currency,values.targetCurrency,values.conversionFactor,values.projectionOrder,values.buyingHouseCommision,values.salePriceQty,values.licenseId,values.customGroupId,values.nationalDbk,values.roslGroup,values.isSubContract,values.salePrice,values.orderConfirmedDate,values.firstExFactoryDate,values.orderCloseDate,values.moq,values.orderQty,values.facilityId,values.itemGroup,values.productGroup,values.businessArea,values.basicUom,values.groupTechClass,values.composition,values.range,values.noOfLacePanel,values.searchGroup,values.reference,null,values.createdUser,null,null,null,null)
           // form.validateFields().then((values) => {
             //  console.log(values,"ooooooooooooooo");
               itemCreationService.createItem(req).then((res) => {
@@ -544,16 +544,18 @@ compositionservice.getActiveComposition().then(res=>{
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                    <Form.Item label="Category" name="categoryId" rules={[{ required: true, message: "Enter category" }]}>
-                       <Select placeholder="Select Category" allowClear>
+                    <Form.Item label="Category" name="category" rules={[{ required: true, message: "Enter category" }]}>
+                       {/* <Select placeholder="Select Category" allowClear>
                     {itemCategory.map((e)=>{
                         return(
                             <Option key={e.itemCategoryId} value={e.itemCategoryId}>
                              {e.itemCategory}
                             </Option>
                         )
+                        
                     })}
-                      </Select>
+                      </Select> */}
+                      <Input placeholder="Enter Category" allowClear />
                     </Form.Item>
                    </Col>
                     </Row>
@@ -915,10 +917,34 @@ compositionservice.getActiveComposition().then(res=>{
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item name="salePersonId" label="Sales Person"  
+                     <Form.Item  label="Sales Person"name="salesPersonId"
+                     rules={[{ required: true, message: "Enter Sales Person" }]}
+                     >
+                     <Select
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                    placeholder="Select Sales Person"
+                    >
+
+                     {employedata.map((e)=>{
+                    return(
+                    <Option key={e.employeeId} value={e.employeeId}>{e.firstName}
+                    </Option>)
+                  })
+
+                  }
+                  </Select>
+
+                     </Form.Item>
+                     </Col>
+                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                        <Form.Item name="salesPersonId" label="Sales Person" initialValue={data?.[0]?.salesPersonId}
                         rules={[{ required: true, message: "Enter Sales Person" }]}>
-                        <Select placeholder="Select Approve" allowClear > 
+                        <Select placeholder="Select Approve" allowClear defaultValue={data?.[0]?.salesPersonId}> 
                           {employedata.map((e)=>{
+                            console.log(typeof e.employeeId,'employeeeeeeee');
+                            
                             return(
                               <Option key={e.employeeId} values={e.employeeId}>{e.firstName}
 
@@ -927,7 +953,7 @@ compositionservice.getActiveComposition().then(res=>{
                           })}                       
                         </Select>
                         </Form.Item>
-                         </Col>
+                         </Col> */}
                          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                       <Form.Item   name="noOfLacePanel" label="No Of Lace Panel" 
                       rules={[{ required: true, message: "Enter No Of Lace Panel" }]}>

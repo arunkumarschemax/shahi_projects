@@ -10,6 +10,7 @@ export class ItemCreationAdapter {
             entityObj.brandId = dtoObj.brandId
             entityObj.buyingHouseCommision = dtoObj.buyingHouseCommision
             entityObj.categoryId = dtoObj.categoryId
+            entityObj.category = dtoObj.category
             entityObj.conversionFactor = dtoObj.conversionFactor
             entityObj.currency = dtoObj.currency
             entityObj.customGroupId = dtoObj.customGroupId
@@ -82,6 +83,7 @@ export class ItemCreationAdapter {
         itemCreationDto.brandId = itemCreation.brandId
         itemCreationDto.buyingHouseCommision = itemCreation.buyingHouseCommision
         itemCreationDto.categoryId = itemCreation.categoryId
+        itemCreationDto.category = itemCreation.category
         itemCreationDto.conversionFactor = itemCreation.conversionFactor
         itemCreationDto.createdUser = itemCreation.createdUser
         itemCreationDto.currency = itemCreation.currency
