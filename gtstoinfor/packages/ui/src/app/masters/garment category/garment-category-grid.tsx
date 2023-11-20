@@ -175,6 +175,7 @@ const columnsSkelton:any=[
         title: 'S No',
         key: 'sno',
         width: '70px',
+        align:"center",
         responsive: ['sm'],
         render: (text, object, index) => (page - 1) * 10 + (index + 1)
       },
@@ -296,7 +297,7 @@ return(
         </Col>
         <Col span={5}>
           {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
-          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
 </Row>
 <br></br>

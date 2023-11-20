@@ -101,8 +101,8 @@ export const GarmentCategoryForm=(props:GarmentCategoryProps)=>{
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
             <Form.Item
               name="Remarks"
-              label="remarks">
-              <Input placeholder='Enter remarks'/>
+              label="Remarks">
+              <Input placeholder='Enter Remarks'/>
             </Form.Item>
           </Col>
         </Row>
