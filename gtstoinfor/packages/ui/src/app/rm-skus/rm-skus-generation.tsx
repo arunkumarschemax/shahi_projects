@@ -111,7 +111,7 @@ export const RmSkusGeneration = () => {
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 5 }}>
                 <Form.Item name={'itemCode'} label='RM Item Code' rules={[{required:true,message:'Item Code is required'}]}>
-                    <Select allowClear showSearch optionFilterProp="children" placeholder='Select Item Code' onChange={onItemCodeChange}>
+                    <Select allowClear showSearch optionFilterProp="children" placeholder='Select RM Item Code' onChange={onItemCodeChange}>
                         {/* <Option key='1' value='I001' itemId={1}>I001</Option> */}
                         {
                             itemCodes.map(e => {

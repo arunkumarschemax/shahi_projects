@@ -101,7 +101,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
     service.getAllSettingsInfo(req).then(res => {
         if(res.status){
             // setData(res.data)
-form.setFieldValue('currency',res.data?.[0]?.currencyName)                   
+// form.setFieldValue('currency',res.data?.[0]?.currencyName)                   
 form.setFieldValue('salesPersonId',res.data?.[0]?.salesPersonId)                     
 form.setFieldValue('facilityId',res.data?.[0]?.facilityId)
 form.setFieldValue('pchId',res.data?.[0]?.pchId)  

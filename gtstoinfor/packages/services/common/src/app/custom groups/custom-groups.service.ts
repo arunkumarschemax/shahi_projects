@@ -120,17 +120,17 @@ async activateOrDeactivateCustomGroup(customGroupReq: CustomGroupsRequest): Prom
                  
                   if (customGroupExists.isActive) {
                       if (CustomGroupStatus.affected) {
-                          const CustomGroupResponse: CustomGroupsResponseModel = new CustomGroupsResponseModel(true, 10115, 'Custom Group is de-activated successfully');
+                          const CustomGroupResponse: CustomGroupsResponseModel = new CustomGroupsResponseModel(true, 10115, 'Custom Group is Deactivated successfully');
                           return CustomGroupResponse;
                       } else {
-                          throw new CustomGroupsResponseModel(false,10111, 'Custom Group is already deactivated');
+                          throw new CustomGroupsResponseModel(false,10111, 'Custom Group is already Deactivated');
                       }
                   } else {
                       if (CustomGroupStatus.affected) {
-                          const CustomGroupResponse: CustomGroupsResponseModel = new CustomGroupsResponseModel(true, 10114, 'Custom Group is activated successfully');
+                          const CustomGroupResponse: CustomGroupsResponseModel = new CustomGroupsResponseModel(true, 10114, 'Custom Group is Activated successfully');
                           return CustomGroupResponse;
                       } else {
-                          throw new CustomGroupsResponseModel(false,10112, 'Custom Group is already  activated');
+                          throw new CustomGroupsResponseModel(false,10112, 'Custom Group is already  Activated');
                       }
                   }
               // }

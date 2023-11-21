@@ -284,8 +284,8 @@ export function PaymentTermsGrid(
               <Popconfirm onConfirm={e =>{deleteTerm(rowData);}}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate '
-                :  'Are you sure to Activate '
+                ? 'Are you sure to Deactivate this Payment Term ?'
+                :  'Are you sure to Activate this Payment Term ? '
             }
           >  
              <Switch  size="default"
@@ -306,7 +306,7 @@ export function PaymentTermsGrid(
     Data.updatedUser= JSON.parse(localStorage.getItem('username'))
     service.updatePaymentTerms(Data).then(res => { console.log(res);
       if (res.status) {
-        AlertMessages.getSuccessMessage('Updated Successfully');
+        AlertMessages.getSuccessMessage('Payment Term Updated Successfully');
         getAll();
         setDrawerVisible(false);
       } else {

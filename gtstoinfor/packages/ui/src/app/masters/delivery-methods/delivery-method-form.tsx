@@ -66,7 +66,7 @@ export function DeliveryMethodForm(props: DeliveryMethodFormProps) {
       <Input hidden/>
     </Form.Item>
     <Row>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}}>
               <Form.Item
                   name="deliveryMethod"
                   label="Delivery Method"
@@ -81,7 +81,7 @@ export function DeliveryMethodForm(props: DeliveryMethodFormProps) {
                       message: `Should contain only alphabets.`
                     }
                   ]}>
-                  <Input placeholder='Enter Delivery Method'/>
+                  <Input placeholder='Enter Delivery Method' allowClear/>
                 </Form.Item>
         </Col>
       </Row>
@@ -91,11 +91,11 @@ export function DeliveryMethodForm(props: DeliveryMethodFormProps) {
             <Button type="primary" htmlType="submit" >
               Submit
             </Button>
-            {(props.isUpdate===false) &&
+            {/* {(props.isUpdate===false) && */}
          <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset}>
             Reset
           </Button>
-          }
+          {/* } */}
             </Col>
           </Row>
       </Form>

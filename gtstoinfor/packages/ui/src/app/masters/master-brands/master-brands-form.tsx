@@ -31,6 +31,7 @@ import {
 import { MasterBrandsDto } from "@project-management-system/shared-models";
 import { MasterBrandsService } from "@project-management-system/shared-services";
 import AlertMessages from "../../common/common-functions/alert-messages";
+import { config } from "packages/libs/shared-services/config";
 
 const { Option } = Select;
 /* eslint-disable-next-line */
@@ -64,9 +65,11 @@ export function MasterBrandsForm(props: MasterBrandsFormProps) {
   );
   useEffect(() => {
     if (props.masterBrandData) {
-      const updateImage =
-        "http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/" +
-        props.masterBrandData.fileName;
+      const updateImage = config.upload_file_path+ props.masterBrandData.fileName;
+
+      // const updateImage = config.upload_file_path+ rowData.fileName;
+      //   "http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/" +
+      //   props.masterBrandData.fileName;
       // const updateImage ='http://165.22.220.143/crm/gtstoinfor/upload-files/'+props.styleData.styleFileName
       setIsUpdateImg(updateImage);
     }

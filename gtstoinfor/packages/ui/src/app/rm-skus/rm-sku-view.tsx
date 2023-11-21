@@ -171,14 +171,14 @@ export function RMSkuView() {
 
   const columnsSkelton: any = [
     {
-      title: 'S No',
+      title: <div style={{textAlign:'center'}}>S No</div>,
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
       render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-      title: 'Item Code',
+       title: <div style={{textAlign:'center'}}>RM Item Code</div>,
       dataIndex: 'itemCode',
       // responsive: ['lg'],
       sorter: (a, b) => a.itemCode.localeCompare(b.itemCode),
@@ -186,7 +186,7 @@ export function RMSkuView() {
       ...getColumnSearchProps('itemCode')
     },
     {
-      title: 'Item Type',
+       title: <div style={{textAlign:'center'}}>Product Group</div>,
       dataIndex: 'itemType',
       // responsive: ['lg'],
       sorter: (a, b) => a.itemType.localeCompare(b.itemType),
@@ -205,7 +205,7 @@ export function RMSkuView() {
     //   ...getColumnSearchProps('itemType')
     },
     {
-      title: 'SKU Code',
+       title: <div style={{textAlign:'center'}}>SKU Code</div>,
       dataIndex: 'rmSkuCode',
       // responsive: ['lg'],
       sorter: (a, b) => a.rmSkuCode.localeCompare(b.rmSkuCode),
@@ -213,7 +213,7 @@ export function RMSkuView() {
       ...getColumnSearchProps('rmSkuCode')
     },
     {
-      title: 'Feature Code',
+       title: <div style={{textAlign:'center'}}>Feature Code</div>,
       dataIndex: 'featureCode',
       // responsive: ['lg'],
       sorter: (a, b) => a.featureCode.localeCompare(b.featureCode),
@@ -221,7 +221,7 @@ export function RMSkuView() {
       ...getColumnSearchProps('featureCode')
     },
     {
-      title: 'Option Group',
+       title: <div style={{textAlign:'center'}}>Option Group</div>,
       dataIndex: 'optionGroup',
       // responsive: ['lg'],
       sorter: (a, b) => a.optionGroup.localeCompare(b.optionGroup),
@@ -244,7 +244,7 @@ export function RMSkuView() {
     //   ...getColumnSearchProps('optionGroup')
     },
     {
-      title: 'Option Value',
+       title: <div style={{textAlign:'center'}}>Option Value</div>,
       dataIndex: 'optionValue',
       // responsive: ['lg'],
       sorter: (a, b) => a.optionValue.localeCompare(b.optionValue),
@@ -259,7 +259,6 @@ export function RMSkuView() {
 //   }
   return (
     <Card title={<span >RM SKU</span>}
-    style={{textAlign:'center'}} 
     // headStyle={{ border: 0 }} 
     extra={<Link to='/materialCreation/rm-skus' >
       <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
@@ -267,8 +266,8 @@ export function RMSkuView() {
       <Form onFinish={getAllRmSku} form={form} layout='vertical'>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='itemCode' label='Item Code' >
-                            <Select showSearch placeholder="Select Item Code" optionFilterProp="children" allowClear>
+                        <Form.Item name='itemCode' label='RM Item Code' >
+                            <Select showSearch placeholder="Select RM Item Code" optionFilterProp="children" allowClear>
                                 {
                                     itemCode?.map((inc: any) => {
                                         return <Option key={inc.itemCode} value={inc.itemCode}>{inc.itemCode}</Option>
@@ -321,7 +320,7 @@ export function RMSkuView() {
                                 icon={<SearchOutlined />}
                                 type="primary">Search</Button>
                             <Button
-                                htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, position: "relative" }} onClick={resetHandler} danger>
+                                htmlType='button' style={{ margin: 10, position: "relative" }} onClick={resetHandler} >
                                 Reset
                             </Button>
                         </Form.Item>
@@ -335,7 +334,7 @@ export function RMSkuView() {
           rowKey={record => record.roslGroupId}
           columns={columnsSkelton}
           dataSource={data}
-          scroll={{x:true}}
+          scroll={{x:true,y:500}}
           pagination={{
             onChange(current) {
               setPage(current);

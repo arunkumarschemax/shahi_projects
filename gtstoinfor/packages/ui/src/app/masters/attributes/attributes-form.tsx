@@ -112,7 +112,7 @@ export function AttributesForm(props: AttributesFormProps) {
                   },
                 ]}
               >
-                <Input placeholder="Enter Attribute" />
+                <Input placeholder="Enter Attribute Name" />
               </Form.Item>
             </Col>
             <Col span={4}>
