@@ -22,6 +22,9 @@ export class ItemCreationDto {
     categoryId: number;
 
     @ApiProperty()
+    category: string;
+
+    @ApiProperty()
     subCategoryId: number;
 
     @ApiProperty()

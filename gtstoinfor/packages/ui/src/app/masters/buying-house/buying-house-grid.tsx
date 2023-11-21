@@ -13,6 +13,8 @@ import {
   Col,
   Drawer,
   message,
+  Checkbox,
+  Alert,
 } from "antd";
 import {
   CheckCircleOutlined,
@@ -28,6 +30,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BuyingHouseDto } from "@project-management-system/shared-models";
 import { BuyingHouseService } from "@project-management-system/shared-services";
 import { BuyingHouseForm } from "./buying-house-form";
+import AlertMessages from "../../common/common-functions/alert-messages";
 
 export interface BuyingHouseProps {}
 
@@ -99,11 +102,12 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
     Service.updateBuyingHouse(data)
       .then((res) => {
         if (res.status) {
-          message.success("Updated Successfully", 2);
+          // message.success(res.internalMessage, 2);
           getAllBuyingHouse();
           setDrawerVisible(false);
+          AlertMessages.getSuccessMessage(res.internalMessage)
         } else {
-          message.error(res.internalMessage, 2);
+          AlertMessages.getErrorMessage(res.internalMessage)
         }
       })
       .catch((err) => {
@@ -217,16 +221,18 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
 
   const columnsSkelton: any = [
     {
-      title: "S No",
+      title: <div style={{textAlign:"center"}}>S No</div>,
       key: "sno",
       width: "70px",
       responsive: ["sm"],
+      align:'center',
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
       title: <div style={{textAlign:"center"}}>Buying House</div> ,
       dataIndex: "buyingHouse",
       // responsive: ['lg'],
+      align:'center',
       sorter: (a, b) => a.buyingHouse.localeCompare(b.buyingHouse),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("buyingHouse"),
@@ -242,6 +248,7 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
     {
       title: <div style={{textAlign:"center"}}>Email</div> ,
       dataIndex: "email",
+      align:'center',
       // responsive: ['lg'],
       sorter: (a, b) => a.email.localeCompare(b.email),
       sortDirections: ["descend", "ascend"],
@@ -255,6 +262,7 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
     {
       title: <div style={{textAlign:"center"}}>Contact</div> ,
       dataIndex: "contact",
+      align:'center',
       // responsive: ['lg'],
       sorter: (a, b) => a.contact.localeCompare(b.contact),
       sortDirections: ["descend", "ascend"],
@@ -266,12 +274,12 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
       ),
     },
     {
-      title: <div style={{textAlign:"center"}}>Address</div> ,
-      dataIndex: "address",
+      title: <div style={{textAlign:"center"}}>Country</div> ,
+      dataIndex: "countryName",
       // responsive: ['lg'],
-      sorter: (a, b) => a.address.localeCompare(b.address),
+      sorter: (a, b) => a.countryName.localeCompare(b.countryName),
       sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("address"),
+      ...getColumnSearchProps("countryName"),
     },
     {
       title: <div style={{textAlign:"center"}}>City</div> ,
@@ -282,12 +290,12 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
       ...getColumnSearchProps("city"),
     },
     {
-      title: <div style={{textAlign:"center"}}>Country</div> ,
-      dataIndex: "countryName",
+      title: <div style={{textAlign:"center"}}>Address</div> ,
+      dataIndex: "address",
       // responsive: ['lg'],
-      sorter: (a, b) => a.countryName.localeCompare(b.countryName),
+      sorter: (a, b) => a.address.localeCompare(b.address),
       sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("countryName"),
+      ...getColumnSearchProps("address"),
     },
     {
       title: <div style={{textAlign:"center"}}>Status</div> ,
@@ -306,11 +314,6 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
           )}
         </>
       ),
-      filterMultiple: false,
-      onFilter: (value, record) => {
-        // === is not work
-        return record.isActive === value;
-      },
       filters: [
         {
           text: "Active",
@@ -321,6 +324,33 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
           value: false,
         },
       ],
+      filterMultiple: false,
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+  <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+    <Checkbox
+      checked={selectedKeys.includes(true)}
+      onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+    >
+      <span style={{color:'green'}}>Active</span>
+    </Checkbox>
+    <Checkbox
+      checked={selectedKeys.includes(false)}
+      onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+    >
+      <span style={{color:'red'}}>Inactive</span>
+    </Checkbox>
+    <div className="custom-filter-dropdown-btns" >
+    <Button  onClick={() => clearFilters()} className="custom-reset-button">
+        Reset
+      </Button>
+      <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+        OK
+      </Button>
+    
+    </div>
+  </div>
+       ),
     },
     {
       title: <div style={{textAlign:"center"}}>Action</div> ,
@@ -385,7 +415,7 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
         <span><Button onClick={()=>navigate('/masters/buying-house/buying-house-form')} type={'primary'}>New</Button></span>}>
        
       <br></br>
-      <Row gutter={40}>
+      {/* <Row gutter={40}>
         <Col>
           <Card
             title={"Total Buying House: " + buyingHouseData.length}
@@ -424,6 +454,19 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
             }}
           ></Card>
         </Col>
+      </Row> */}
+      <Row gutter={24}>
+      <Col span={4}></Col>
+       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
+        <Alert type='success' message={'Total Buying House: ' + buyingHouseData.length} style={{fontSize:'15px'}} />
+        </Col>
+           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
+          <Alert type='warning' message={'Active: ' + buyingHouseData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
+          <Alert type='info' message={'Inactive: ' + buyingHouseData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        </Col>
+
       </Row>
       <br></br>
       <Table
@@ -434,6 +477,7 @@ export function BuyingHouseGrid(props: BuyingHouseProps) {
         dataSource={buyingHouseData}
         scroll={{ x: 'max-content' }}
         pagination={{
+          pageSize:50,
           onChange(current) {
             setPage(current);
           },

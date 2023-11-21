@@ -173,6 +173,7 @@ let navigate = useNavigate()
       title: 'S No',
       key: 'sno',
       width: '70px',
+      align:"center",
       responsive: ['sm'],
        render: (text, object, index) => (page-1) * 10 +(index+1)
     },
@@ -197,6 +198,7 @@ let navigate = useNavigate()
     {
       title: 'Status',
       dataIndex: 'isActive',
+      align:"center",
        render: (isActive, rowData) => (
         <>
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -223,6 +225,7 @@ let navigate = useNavigate()
     {
       title:`Action`,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         // rowData.fabricSubTypeName.trim()=='Packing Material' || rowData.fabricSubTypeName.trim()=='Raw Material' ? <span> </span>:
         <span>         
@@ -277,26 +280,23 @@ let navigate = useNavigate()
         </Col>
         <Col span={5}>
           {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
-          <Alert type='info' message={'In-Active: ' + FabricSubTypeData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + FabricSubTypeData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
 </Row>
           <br></br>
           <Table
           // rowKey={record => record.productId}
-
+          size='small'
           columns={columnsSkelton}
           dataSource={FabricSubTypeData}
+          scroll={{x:true,y:500}}
           pagination={{
-            pageSize:50,
-
-            onChange(current) {
-              
-              setPage(current);
-              
-            }
-          }}
+           pageSize:50,
+           onChange(current) {
+             setPage(current);
+           }
+         }}
           onChange={onChange}
-          scroll={{x:true}}
           bordered />
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>

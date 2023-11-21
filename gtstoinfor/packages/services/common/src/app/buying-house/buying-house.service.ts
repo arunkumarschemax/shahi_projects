@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Raw, Repository } from 'typeorm';
+import { Not, Raw, Repository } from 'typeorm';
 import { BuyingHouse } from './buying-house.entity';
 import { BuyingHouseAdapter } from './dto/buying-house.adapter';
 import { BuyingHouseDTO } from './dto/buying-house.dto';
@@ -33,9 +33,16 @@ export class BuyingHouseService {
     async createBuyingHouse(dto: BuyingHouseDTO, isUpdate: boolean): Promise<BuyingHouseResponseModel> {
       try {
         let previousValue;
-        const buyingHouseEntity = await this.buyingHouseRepository.findOne({ where: { buyingHouse: dto.buyingHouse } });
-        if (buyingHouseEntity) {
-          throw new BuyingHouseResponseModel(false, 11104, 'Buying House already exists');
+        if(!isUpdate){
+          const buyingHouseEntity = await this.buyingHouseRepository.findOne({ where: { buyingHouse: dto.buyingHouse } });
+          if (buyingHouseEntity) {
+            throw new BuyingHouseResponseModel(false, 11104, 'Buying House already exists');
+          }
+        }else{
+          const buyerHouseCheck = await this.buyingHouseRepository.find({where:{buyingHouse:dto.buyingHouse,buyingHouseId: Not(dto.buyingHouseId )}})
+          if(buyerHouseCheck.length > 0){
+            return new BuyingHouseResponseModel(false,0,'Buying House already exists')
+        }
         }
         if(isUpdate){
           const certificatePrevious = await this.buyingHouseRepository.findOne({ where: { buyingHouseId: dto.buyingHouseId } });
@@ -117,7 +124,7 @@ async activateOrDeactivateBuyingHouse(req: BuyingHouseRequest): Promise<BuyingHo
                  
                   if (buyingHouseExists.isActive) {
                       if (buyingHouseStatus.affected) {
-                          const buyingHouseResponse: BuyingHouseResponseModel = new BuyingHouseResponseModel(true, 10115, 'Buying House is de-activated successfully');
+                          const buyingHouseResponse: BuyingHouseResponseModel = new BuyingHouseResponseModel(true, 10115, 'Buying House is deactivated successfully');
                           return buyingHouseResponse;
                       } else {
                           throw new BuyingHouseResponseModel(false,10111, 'Buying House is already deactivated');

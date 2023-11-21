@@ -52,6 +52,13 @@ ItemCreation {
   })
   categoryId: number;
 
+  @Column("varchar",{
+    nullable: true,
+    length: 255,
+    name: "category",
+  })
+  category: string;
+
   @Column("int", {
     nullable: true,
     name: "sub_category_id" /// foregn key

@@ -201,17 +201,17 @@ export class ItemTypeService{
                        
                         if (itemExists.isActive) {
                             if (ItemTypeStatus.affected) {
-                                const Response: ItemTypeResponseModel = new ItemTypeResponseModel(true, 10115, 'ItemType is de-activated successfully');
+                                const Response: ItemTypeResponseModel = new ItemTypeResponseModel(true, 10115, 'ItemType is Deactivated successfully');
                                 return Response;
                             } else {
-                                throw new ItemTypeResponseModel(false,10111, 'ItemType is already deactivated');
+                                throw new ItemTypeResponseModel(false,10111, 'ItemType is already Deactivated');
                             }
                         } else {
                             if (ItemTypeStatus.affected) {
-                                const sizesResponse: ItemTypeResponseModel = new ItemTypeResponseModel(true, 10114, 'ItemType is activated successfully');
+                                const sizesResponse: ItemTypeResponseModel = new ItemTypeResponseModel(true, 10114, 'ItemType is Activated successfully');
                                 return sizesResponse;
                             } else {
-                                throw new ItemTypeResponseModel(false,10112, 'ItemType is already  activated');
+                                throw new ItemTypeResponseModel(false,10112, 'ItemType is already  Activated');
                             }
                         }
                     // }

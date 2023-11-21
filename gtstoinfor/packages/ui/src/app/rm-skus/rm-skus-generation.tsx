@@ -138,12 +138,12 @@ export const RmSkusGeneration = () => {
                             <Checkbox value={option.featureId} key={option.featureName}>
                             <Space direction="vertical" size="middle" style={{ width: '100%' }}>
                             <Badge.Ribbon text={option.featureName} color="volcano">    
-                                <Card title={`${option.option}`} size='small' style={{width:'300px'}}>
+                                <Card title={`${option.option}`} size='small' style={{width:'300px'}} headStyle={{backgroundColor:'#cde5d7',color:'black'}}>
                                 <Row gutter={24}>
                                     {option.optionInfo[0]?.option.map((e, index) => (
                                         <>
                                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6}}>
-                                        <Tag key={index} color="#cde5d7" style={{color:'black',fontSize:'15px'}}>{e}</Tag>
+                                        <Tag key={index} color="#e4f0d0" style={{color:'black',fontSize:'15px'}}>{e}</Tag>
                                     </Col>
                                     <br/>
                                     <br/>

@@ -77,7 +77,7 @@ export const ComponentMappingView = () => {
             key: 'sno',
             width: '70px',
             responsive: ['sm'],
-            // align:'center',
+            align:'center',
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
         {
@@ -150,6 +150,7 @@ export const ComponentMappingView = () => {
                       <Form.Item label='Style' name='styleId'>
                         {/* <Input onChange={(val) => onStyleChange(val)}/> */}
                         <Select
+                        dropdownMatchSelectWidth={false}
                         showSearch
                         allowClear
                         optionFilterProp="children"
@@ -169,6 +170,7 @@ export const ComponentMappingView = () => {
                       <Form.Item label='Garment Category' name='garmentCategoryId'>
                         {/* <Input onChange={onGarmentCategoryChange}/> */}
                         <Select
+                        dropdownMatchSelectWidth={false}
                         showSearch
                         allowClear
                         optionFilterProp="children"
@@ -188,6 +190,7 @@ export const ComponentMappingView = () => {
                       <Form.Item label='Garment' name='garmentId'>
                         {/* <Input onChange={onGarmentChange}/> */}
                         <Select
+                        dropdownMatchSelectWidth={false}
                         showSearch
                         allowClear
                         optionFilterProp="children"

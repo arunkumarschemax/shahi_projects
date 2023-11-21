@@ -347,7 +347,7 @@ export const DestinationGrid = (props: DestinationGridProps) => {
   }
 
   return (
-    <Card title='Destination' 
+    <Card title='Destinations' 
     extra={<span><Button onClick={()=>navigate('/global/destination/destination-form')} type={'primary'}>New</Button></span>}>
     <br/>
     <>

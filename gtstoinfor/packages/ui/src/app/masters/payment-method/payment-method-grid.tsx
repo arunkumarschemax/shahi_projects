@@ -153,7 +153,7 @@ service.createPaymentMethod(variantData).then(res=>{
     paymentmethodData.isActive=paymentmethodData.isActive?false:true;
     service.activateDeActivatePaymentMethod(paymentmethodData).then(res => { console.log(res);
       if (res.status) {
-        // getAllPaymentmethod();
+        getAllPaymentMethods()
         message.success(res.internalMessage, 1);
       } else {
         // if (res.intlCode) {

@@ -38,6 +38,7 @@ export class FeatureService {
           const childData = new FeatureOptionEntity()
           childData.option = featureEntity.option,
           childData.optionId = child.optionId,
+          childData.optionValue = child.optionValue,
           childData.featureCode = featureEntity.featureCode
           featureChild.push(childData)
         }

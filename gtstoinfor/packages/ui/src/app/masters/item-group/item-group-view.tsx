@@ -166,9 +166,9 @@ service.createItemGroup(variantData).then(res=>{
     service.ActivateorDeactivateItemGroup(size).then(res => { console.log(res);
       if (res.status) {
         // getAllPaymentmethod();
-        AlertMessages.getSuccessMessage('Success'); 
+        AlertMessages.getSuccessMessage(res.internalMessage); 
       } else {
-        // if (res.intlCode) {
+        // if (res.intlCode) {3
         //   AlertMessages.getErrorMessage(res.internalMessage);
         // } else {
           AlertMessages.getErrorMessage(res.internalMessage);

@@ -266,7 +266,7 @@ export class ProductStructureService {
             featureMap.set(rec.feature_code,new FeatureInfoModel(rec.feature_code,rec.feature_id,rec.option_group,[],[],rec.feature_name))
          
           }
-          featureMap.get(rec.feature_code).optionInfo.push(new optionInfoModel(rec.option_value,rec.rm_item_id,rec.rm_item_code,rec.rm_sku_id,rec.rm_sku_code,rec.feature_option_id,rec.option_id))
+          featureMap.get(rec.feature_code).optionInfo.push(new optionInfoModel(rec.option_value,rec.rm_item_id,rec.rm_item_code,rec.rm_sku_id,rec.rm_sku_code,rec.feature_option_id,rec.option_id,rec.rmItemType,rec.rmItemName))
           
         }
         const featureModel : FeatureInfoModel[] =[];

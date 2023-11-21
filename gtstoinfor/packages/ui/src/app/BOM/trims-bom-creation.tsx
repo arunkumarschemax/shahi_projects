@@ -21,13 +21,14 @@ import {
   ProductGroupService,
   ProfitControlHeadService,
   RmCreationService,
+  SettingsService,
   TaxesService,
   UomService,
   bomTrimService,
 } from "@project-management-system/shared-services";
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
-import {GlobalVariables, IsImportedItemEnum, ItemGroupEnum, ProductGroupFilter, PropertyEnum, RmCreationDTO, bomRequest } from "@project-management-system/shared-models";
+import {GlobalVariables, IsImportedItemEnum, ItemGroupEnum, ProductGroupFilter, PropertyEnum, RmCreationDTO, SettingsIdReq, bomRequest } from "@project-management-system/shared-models";
 import { Link, useNavigate } from "react-router-dom";
 
 export interface TrimsBomCreationProps {}
@@ -62,6 +63,10 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
   const [productGroupData, setProductGroupData] = useState<any[]>([]);
   const rmservice = new RmCreationService
   let navigate = useNavigate()
+  const service = new SettingsService()
+  const externalRefNo = JSON.parse(localStorage.getItem("currentUser")).user.externalRefNo;
+
+
 
 
 
@@ -79,15 +84,37 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
     getAllEmployes();
     getAllOperationsData();
     getProductGroupById();
+    getAllInfo();
   }, []);
 
   useEffect(() => {
     if (taxvalue) {
       const taxcal = Number(taxvalue / 100);
-      const cal: any = Number(form.getFieldValue("price")) + taxcal;
+      const cal: any = Number(form.getFieldValue("price")) + (taxcal*Number(form.getFieldValue("price")));
       form.setFieldsValue({ totalPrice: cal });
     }
   }, [taxvalue]);
+
+  const getAllInfo = () => {
+    const req = new SettingsIdReq()
+    req.externalRefNumber = externalRefNo
+    service.getAllSettingsInfo(req).then(res => {
+        if(res.status){
+            // setData(res.data)
+// form.setFieldValue('currency',res.data?.[0]?.currencyName)                   
+form.setFieldValue('salesPersonId',res.data?.[0]?.salesPersonId)                     
+form.setFieldValue('facilityId',res.data?.[0]?.facilityId)
+form.setFieldValue('pchId',res.data?.[0]?.pchId)  
+form.setFieldValue('currencyId',res.data?.[0]?.currencyId) 
+form.setFieldValue('trimResponsibleId',res.data?.[0]?.trimResponsibleId)   
+form.setFieldValue('licenceId',res.data?.[0]?.licencetypeId)                  
+
+
+
+
+        }
+    })
+}
 
   const getAllEmployes=() =>{
     employeservice.getAllActiveEmploee().then(res =>{
@@ -287,7 +314,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
     //   values.isImportedItem
     // );
 
-    const req= new RmCreationDTO ("",values.itemCode,null,values.pchId,values.facilityId,values.genericCode,"","",values.trim,values.itemTypeId,"",null,values.responsible,values.developmentResponsible,values.basicUomId,values.alternateUomId,values.multiplicationFactor,values.currencyId,values.price,values.tax, values.purchasePriceQuantity,values.salesTax,values.exciseDuty,values.licenceId,values.property,values.isSaleItem,values.wastagePercentage,values.costGroup,values.usageRemarks,"","",values.itemGroupId,null,values.productGroupId,null,values.isImportedItem,null,"","","","",values.consumption,values.totalPrice,values.useInOperationId,null,"admin","",null,values.orderMultipleBuom,values.moq,values.orderMultipleAuom,values.description)
+    const req= new RmCreationDTO ("",values.itemCode,null,values.pchId,values.facilityId,values.genericCode,"","",values.trim,values.itemTypeId,"",null,values.trimResponsibleId,values.developmentResponsible,values.basicUomId,values.alternateUomId,values.multiplicationFactor,values.currencyId,values.price,values.tax, values.purchasePriceQuantity,values.salesTax,values.exciseDuty,values.licenceId,values.property,values.isSaleItem,values.wastagePercentage,values.costGroup,values.usageRemarks,"","",values.itemGroupId,null,values.productGroupId,null,values.isImportedItem,null,"","","","",values.consumption,values.totalPrice,values.useInOperationId,null,"admin","",null,values.orderMultipleBuom,values.moq,values.orderMultipleAuom,values.description)
 
     rmservice.createRm(req)
       .then((res) => {
@@ -616,7 +643,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                     Performance Responsible Team
                   </h1>
                   <Row gutter={8}>
-                    <Col
+                  <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
                       md={{ span: 8 }}
@@ -624,15 +651,37 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                       xl={{ span: 8 }}
                     >
                       <Form.Item
-                        name="responsible"
                         label="Responsible"
+                        name="trimResponsibleId"
+                        style={{ marginTop: 30 }}
                         rules={[
                           { required: true, message: "Enter Responsible" },
-                        ]}
-                        style={{ marginTop: 30 }}
+                        ]}                      >
+                        <Select placeholder="Select  Responsible" allowClear>
+                          {employedata.map((rec) => (
+                            <option
+                              key={rec.employeeId}
+                              value={rec.employeeId}
+                            >
+                              {rec.firstName}
+                            </option>
+                          ))}
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                    {/* <Col
+                      xs={{ span: 24 }}
+                      sm={{ span: 24 }}
+                      md={{ span: 8 }}
+                      lg={{ span: 6 }}
+                      xl={{ span: 8 }}
+                    >
+                      <Form.Item
+                        name="trimResponsibleId"
+                        label="Responsible"
+                     
                       >
                        <Select
-                          placeholder="Select  Responsible"
                           allowClear
                         >
                       {employedata.map((e)=>{
@@ -644,7 +693,7 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                       })}
                       </Select> 
                       </Form.Item>
-                    </Col>
+                    </Col> */}
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
@@ -875,12 +924,17 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                       sm={{ span: 24 }}
                       md={{ span: 8 }}
                       lg={{ span: 6 }}
-                      xl={{ span: 8 }}
+                      xl={{ span: 7 }}
                     >
                       <Form.Item
                         label="Price"
                         name="price"
-                        rules={[{ required: true, message: "Enter Price" }]}
+                        rules={[{ required: true, message: "Enter  Price" },
+                        { 
+                          pattern: /^[0-9]+$/, 
+                          message: "Please Enter Price" 
+                        },
+                           ]}
                       >
                         <Input
                           placeholder="Price"
@@ -889,12 +943,13 @@ export const TrimsBomCreation = (props: TrimsBomCreationProps) => {
                         />
                       </Form.Item>
                     </Col>
+                    <span style={{ fontSize: "24px", lineHeight: "70px" }}>+</span>
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 24 }}
                       md={{ span: 8 }}
                       lg={{ span: 6 }}
-                      xl={{ span: 8 }}
+                      xl={{ span: 7}}
                     >
                       <Form.Item label="Tax(%)" name="tax" 
                         rules={[{ required: true, message: "Select Tax" }]}

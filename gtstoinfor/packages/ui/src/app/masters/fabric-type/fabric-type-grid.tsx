@@ -171,6 +171,7 @@ service.createFabricType(variantData).then(res=>{
             title: 'S No',
             key: 'sno',
             width: '70px',
+             align:"center",
             responsive: ['sm'],
             render: (text, object, index) => (page - 1) * 10 + (index + 1)
           },
@@ -185,6 +186,8 @@ service.createFabricType(variantData).then(res=>{
           {
             title: 'Status',
             dataIndex: 'isActive',
+             align:"center",
+
             render: (isActive, rowData) => (
               <>
                 {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -222,6 +225,7 @@ service.createFabricType(variantData).then(res=>{
     {
         title:`Action`,
         dataIndex: 'action',
+         align:"center",
         render: (text, rowData) => (
           <span>  
            <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
@@ -274,7 +278,7 @@ return (
         </Col>
         <Col span={5}>
           {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
-          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
 </Row>
 <br></br>
@@ -286,13 +290,13 @@ return (
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}
-          pagination={{
+          scroll={{x:true,y:500}}
+           pagination={{
             pageSize:50,
             onChange(current) {
               setPage(current);
             }
           }}
-          scroll={{x:true}}
           onChange={onChange}
           bordered />
     </Card>

@@ -154,17 +154,17 @@ export class DepartmentService{
                        
                         if (deptExists.isActive) {
                             if (DepartmentStatus.affected) {
-                                const DepartmentResponse: DepartmentResponseModel = new DepartmentResponseModel(true, 10115, 'Department is de-activated successfully');
+                                const DepartmentResponse: DepartmentResponseModel = new DepartmentResponseModel(true, 10115, 'Department is Deactivated successfully');
                                 return DepartmentResponse;
                             } else {
-                                throw new DepartmentResponseModel(false,10111, 'Department  is already deactivated');
+                                throw new DepartmentResponseModel(false,10111, 'Department  is already Deactivated');
                             }
                         } else {
                             if (DepartmentStatus.affected) {
-                                const DepartResponse: DepartmentResponseModel = new DepartmentResponseModel(true, 10114, 'Department  is activated successfully');
+                                const DepartResponse: DepartmentResponseModel = new DepartmentResponseModel(true, 10114, 'Department  is Activated successfully');
                                 return DepartResponse;
                             } else {
-                                throw new DepartmentResponseModel(false,10112, 'Department is already  activated');
+                                throw new DepartmentResponseModel(false,10112, 'Department is already  Activated');
                             }
                         }
                     // }
