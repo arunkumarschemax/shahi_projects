@@ -76,5 +76,7 @@ export enum VendorNameEnum {
     extractedGateway='Gateway',
     extractedFederationofIndian='Federation of Indian',
     extractedLogWin='LOGWIN',
-    extractedHellmann="HELLMANN"
+    extractedHellmann="HELLMANN",
+    extractedGeodis="GEODIS"
+    
 }
