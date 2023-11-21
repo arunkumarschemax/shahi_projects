@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { PurchaseOrderEntity } from "./entities/purchase-order-entity";
-import { CommonResponseModel, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
 import { PurchaseOrderDto } from "./dto/purchase-order-dto";
 import { PurchaseOrderFbricEntity } from "./entities/purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "./entities/purchase-order-trim-entity";
@@ -170,8 +170,15 @@ export class PurchaseOrderService {
     }
 
     async getAllPoData(req?: PurchaseViewDto): Promise<CommonResponseModel> {
-console.log(req,":;;;;;;;;;;;;;;;;;;;;;;;;;;;;")
         try {
+            let query2 = `Select po.status as status  FROM purchase_order po LEFT JOIN vendors v ON v.vendor_id = po.vendor_id `
+            const statuses = await this.dataSource.query(query2);
+            const count = Object.keys(PurchaseStatusEnum).map((key) => {
+                
+                return {
+                    [PurchaseStatusEnum[key]]: statuses.filter((rec => rec.status === PurchaseStatusEnum[key])).length
+                }
+            });
             let query = `SELECT po.purchase_order_id AS id, po.po_number AS poNumber, po.vendor_id AS vendorId, v.vendor_code AS vendorCode,
             v.vendor_name AS vendorName,po.expected_delivery_date AS deliveryDate, po.purchase_order_date AS orderDate,po.status,po.po_material_type AS materialType
             FROM purchase_order po
@@ -186,16 +193,12 @@ console.log(req,":;;;;;;;;;;;;;;;;;;;;;;;;;;;;")
                 if (req?.poconfirmStartDate) {
                     query += `WHERE ${req?.poconfirmStartDate ? `Date(purchase_order_date) BETWEEN '${req?.poconfirmStartDate}' AND '${req?.poconfirmEndDate}'` : '1=1'}`
                 }
-                if (req.status) {
+                if (req?.status) {
+                    
                     query += `Where po.status = "${req.status}"`
                 }
             }
             const data: any = await this.dataSource.query(query);
-            const count = Object.keys(StatusEnum).map((key) => {
-                return {
-                    [StatusEnum[key]]: data.filter((rec => rec.status === StatusEnum[key])).length
-                }
-            }); 
             data.push(count)
             if (data.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)

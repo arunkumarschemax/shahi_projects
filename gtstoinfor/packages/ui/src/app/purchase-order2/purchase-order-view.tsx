@@ -1,5 +1,5 @@
 import { CloseOutlined, EyeOutlined } from '@ant-design/icons';
-import { PurchaseViewDto, StatusEnum } from '@project-management-system/shared-models';
+import { PurchaseStatusEnum, PurchaseViewDto } from '@project-management-system/shared-models';
 import { PurchaseOrderservice } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tabs, Tooltip } from 'antd';
 import moment from 'moment';
@@ -27,7 +27,12 @@ export const PurchaseOrderView = () => {
     getPo();
   }, [])
 
-  const getPo = (status?: StatusEnum) => {
+  const getPo = (status?: PurchaseStatusEnum) => {
+    // if (status === PurchaseStatusEnum.INPROGRESS) {
+    //   status === "IN PROGRESS"
+    // }
+    console.log(status, 'ttttttttttttttttttttttt');
+
     const req = new PurchaseViewDto()
     if (form.getFieldValue('deliveryDate') !== undefined) {
       req.confirmStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
@@ -241,16 +246,15 @@ export const PurchaseOrderView = () => {
           type="card"
           onChange={getPo}
           // size={size}
-          items={Object.keys(StatusEnum).filter((rec) => rec !== StatusEnum.APPROVED).map((key, i) => {
-            const colours = ['#F5222D', '#52C41A', '#722ED1', '#663300', '#FFA500'];
+          items={Object.keys(PurchaseStatusEnum).map((key, i) => {
+            const colours = ['#F5222D', '#52C41A', '#722ED1', '#663300'];
             let counts: number;
             if (count.length) {
-              counts = count[i] ? count[i][StatusEnum[key]] : 0;
+              counts = count[i] ? count[i][PurchaseStatusEnum[key]] : 0;
               k.push(counts)
             };
-            const total = k.filter((rec) => rec !== undefined).reduce((c, a) => c + Number(a), 0);
             return {
-              label: <span style={{ color: colours[i] }}>{StatusEnum[key] + ":" + " " + (StatusEnum[key] !== StatusEnum.TOTAL ? counts : total)}</span>,
+              label: <span style={{ color: colours[i] }}>{PurchaseStatusEnum[key] + ":" + " " + (counts ? counts : 0)}</span>,
               key: key,
             };
           })}

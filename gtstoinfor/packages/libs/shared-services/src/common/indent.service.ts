@@ -8,8 +8,8 @@ export class IndentService extends CommonAxiosService {
     return this.axiosPostCall(this.URL + "/creteIndent", dto)
   }
 
-  async getAllIndentData(): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getAllIndentData")
+  async getAllIndentData(req:any): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllIndentData",req)
   }
   async getIndentData(req:IndentRequestDto): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getIndentData",req )
