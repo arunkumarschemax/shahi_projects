@@ -114,7 +114,7 @@ export const StoreIssueDetailed = () => {
 
 
   const handleFabricData = () => {
-    form.validateFields().then((values) => {
+    form.validateFields()?.then((values) => {
       const updatedFormData = fabricData.filter((record) => {
           const key = record.key;
           return (
@@ -157,7 +157,7 @@ export const StoreIssueDetailed = () => {
   
   
 
-  const columnsSkelton = [
+  const columnsSkelton:any = [
     {
       title: "S.No",
       dataIndex: "sNo",
@@ -186,34 +186,31 @@ export const StoreIssueDetailed = () => {
       dataIndex: "fabric_consumption",
     },
     {
-      title: "Issued Quantity",
+      title: <div style={{ textAlign: "center" }}>Issued Quantity</div>,
       dataIndex: "issuingQuantity",
-      render: (_, record) => {
-        // return (
-        //   <>
-          <Form.Item 
-            name={`issuingQuantity_${record.sampleFabricId}_${record.key}`}
-            rules={[
-              {
-                validator: (_, value) => {
-                  if (!value || (Number(value) <= record.poQuantity)) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject('Cannot exceed PO Qty');
-                },
+      render: (_, record) => (
+        <Form.Item
+          name={`issuingQuantity_${record.sampleFabricId}_${record.key}`}
+          rules={[
+            {
+              validator: (_, value) => {
+                if (!value || (Number(value) <= record.fabric_consumption)) {
+                  return Promise.resolve();
+                }
+                return Promise.reject('Cannot exceed PO Qty');
               },
-            ]}
-            >
-            <Input
-              placeholder="Issued Quantity"
-              type="number"
-              pattern="^[0-9]*$"
-            />
-            </Form.Item>
-        //   </>
-        // );
-      },
+            },
+          ]}
+        >
+          <Input
+            placeholder="Issued Quantity"
+            type="number"
+            pattern="^[0-9]*$"
+          />
+        </Form.Item>
+      ),
     },
+    
     {
       title: 'Uom',
       dataIndex: 'issuedUomId',
@@ -245,7 +242,7 @@ export const StoreIssueDetailed = () => {
     },
   ];
 
-  const columns = [
+  const columns:any = [
     {
       title: "S.No",
       dataIndex: "sNo",
@@ -260,17 +257,31 @@ export const StoreIssueDetailed = () => {
       dataIndex: "trim_consumption",
     },
     {
-      title: "Issued Quantity",
+      title: <div style={{textAlign:"center"}}>Issued Quantity</div>,
       dataIndex: "issuingQuantity",
-      render: (_,record) => {
-          <Form.Item
-          name={`issuingQuantity_${record.sampleTrimId}`}>
-            <Input
-              placeholder="Issued Quantity"
-            />
-          </Form.Item>
-      },
+      render: (_, record) => (
+        <Form.Item
+          name={`issuingQuantity_${record.sampleTrimId}_${record.key}`}
+          rules={[
+            {
+              validator: (_, value) => {
+                if (!value || (Number(value) <= record.trim_consumption)) {
+                  return Promise.resolve();
+                }
+                return Promise.reject('Cannot exceed Consumption');
+              },
+            },
+          ]}
+        >
+          <Input
+            placeholder="Issued Quantity"
+            type="number"
+            pattern="^[0-9]*$"
+          />
+        </Form.Item>
+      ),
     },
+    
     {
       title: 'Uom',
       dataIndex: 'issuedUomId',
