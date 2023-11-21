@@ -754,8 +754,7 @@ export const SourcingRequisitionDynamicForm = () => {
       
   const handleCancel = () => {
     setVisibleModel(false);
-    window.location.reload();
-
+    getM3FabricStyleCodes();
   };
 
     const validateExpectedDate = (e) => {
