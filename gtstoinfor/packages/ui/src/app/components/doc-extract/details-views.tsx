@@ -8,7 +8,7 @@ import { ColumnType } from "antd/es/table";
 import { ServiceFilterDto, StatusEnumDisplay } from "@xpparel/shared-models";
 import { PricesService } from "@xpparel/shared-services";
 
-export const ScanDetailView=()=> {
+export const ScanDetailView = () => {
 
   const navigate = useNavigate();
   const rowData = useLocation();
@@ -293,7 +293,7 @@ export const ScanDetailView=()=> {
       title: "Tax Type",
       dataIndex: "taxType",
       key: "taxType",
-      align:"center",
+      align: "center",
       ...getColumnSearchProps("taxType"),
       sorter: (a, b) => a.taxType.localeCompare(b.taxType),
       render: (_, record) => record?.taxType || "-",
@@ -303,7 +303,7 @@ export const ScanDetailView=()=> {
       title: "Tax Percentage",
       dataIndex: "taxPercentage",
       key: "taxPercentage",
-      align:"right",
+      align: "right",
       ...getColumnSearchProps("taxPercentage"),
       sorter: (a, b) => a.taxPercentage.localeCompare(b.taxPercentage),
       // render: (_, record) => (record?.taxPercentage || "-"),
@@ -316,7 +316,7 @@ export const ScanDetailView=()=> {
       title: "Unit Price",
       dataIndex: "unitPrice",
       key: "unitPrice",
-      align:"right",
+      align: "right",
       ...getColumnSearchProps("unitPrice"),
       sorter: (a, b) => a.unitPrice.localeCompare(b.unitPrice),
       render: (text, record) => {
@@ -328,7 +328,7 @@ export const ScanDetailView=()=> {
       title: "Unit Quantity",
       dataIndex: "unitQuantity",
       key: "unitQuantity",
-      align:"right",
+      align: "right",
       ...getColumnSearchProps("unitQuantity"),
       sorter: (a, b) => a.unitQuantity.localeCompare(b.unitQuantity),
       // render: (_, record) =>
@@ -341,7 +341,7 @@ export const ScanDetailView=()=> {
       title: "Subject Amount",
       dataIndex: "unitPrice",
       key: "unitPrice",
-      align:"right",
+      align: "right",
       // ...getColumnSearchProps("SubjectAmount"),
       // sorter: (a, b) => a.SubjectAmount.localeCompare(b.SubjectAmount),
       render: (text, record) => {
@@ -358,7 +358,7 @@ export const ScanDetailView=()=> {
       title: "Tax Amount",
       dataIndex: "taxAmount",
       key: "taxAmount",
-      align:"right",
+      align: "right",
       ...getColumnSearchProps("taxAmount"),
       sorter: (a, b) => a.taxAmount.localeCompare(b.taxAmount),
       // render: (_, record) =>
@@ -376,7 +376,7 @@ export const ScanDetailView=()=> {
       title: "Total Amount",
       dataIndex: "unitPrice",
       key: "unitQuantity",
-      align:"right",
+      align: "right",
       // ...getColumnSearchProps("unitquantity"),
       sorter: (a, b) => a.unitQuantity.localeCompare(b.unitQuantity),
       render: (text, record, index) => {
@@ -492,13 +492,21 @@ export const ScanDetailView=()=> {
             : "--"}
         </Descriptions.Item> */}
 
-
         <Descriptions.Item
           label="Invoice Amount"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {rowData.state.rowData.invoiceAmount ? rowData.state.rowData.invoiceAmount : "--"}
+          {rowData.state.rowData.invoiceAmount ? (
+            <>
+              <span>{rowData.state.rowData.invoiceAmount}</span>
+              <span style={{ color: "black", fontWeight: "bold" }}>&nbsp;INR</span>
+            </>
+          ) : (
+            "--"
+          )}
         </Descriptions.Item>
+
+
 
         <Descriptions.Item
           label="Invoice Currency"
