@@ -53,6 +53,17 @@ const M3ItemsView = () => {
             }
         },
         {
+            title: "Width",
+            dataIndex: "width",
+            render: (text,record) => {
+                return(
+                    <>
+                    {record.width ? `${record.width} ${record.widthUnit}` : '-'}
+                    </>
+                )
+            }
+        },
+        {
             title: "Construction",
             dataIndex: "construction",
         },
