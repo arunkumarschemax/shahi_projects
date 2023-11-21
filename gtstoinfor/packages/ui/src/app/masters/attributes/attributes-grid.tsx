@@ -13,6 +13,8 @@ import {
   Col,
   Drawer,
   message,
+  Alert,
+  Checkbox
 } from "antd";
 import {
   CheckCircleOutlined,
@@ -84,9 +86,10 @@ export function AttributesGrid(props: AttributesProps) {
       .activateOrDeactivateAttributes(attributesDto)
       .then((res) => {
         if (res.status) {
-          message.success(res.internalMessage,2);
+          AlertMessages.getSuccessMessage(res.internalMessage);
+          getAllAttributes()
         } else {
-          message.success(res.internalMessage,2);
+          AlertMessages.getErrorMessage(res.internalMessage);
         }
       })
       .catch((err) => {
@@ -256,37 +259,46 @@ export function AttributesGrid(props: AttributesProps) {
       ...getColumnSearchProps("attributeName"),
     },
     {
-      title: <div style={{textAlign:"center"}}>Status</div> ,
-      dataIndex: "isActive",
-      align:"center",
+      title: 'Status',
+      align:'center',
+      dataIndex: 'isActive',
+      // sorter: (a, b) => a.isActive.localeCompare(b.isActive),
+      // sortDirections: ["ascend", "descend"],
+      // ...getColumnSearchProps("isActive"),
       render: (isActive, rowData) => (
         <>
-          {isActive ? (
-            <Tag icon={<CheckCircleOutlined />} color="#87d068">
-              Active
-            </Tag>
-          ) : (
-            <Tag icon={<CloseCircleOutlined />} color="#f50">
-              In Active
-            </Tag>
-          )}
+          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
         </>
       ),
-      filters: [
-        {
-          text: "Active",
-          value: true,
-        },
-        {
-          text: "InActive",
-          value: false,
-        },
-      ],
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{color:'green'}}>Active</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{color:'red'}}>Inactive</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns" >
+          <Button  onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          
+          </div>
+        </div>
+      ),
       filterMultiple: false,
-      onFilter: (value, record) => {
-        // === is not work
-        return record.isActive === value;
-      },
+     
+
     },
     {
       title: <div style={{textAlign:"center"}}>Action</div> ,
@@ -360,7 +372,11 @@ export function AttributesGrid(props: AttributesProps) {
     >
       <br></br>
       <Row gutter={40}>
-        <Col>
+      <Col span={4}></Col>
+      <Col span={5}>
+                <Alert type='success' message={'Total Attributes: ' + attributesData.length} style={{fontSize:'15px'}} />
+         </Col>
+        {/* <Col>
           <Card
             title={"Total Attributes: " + attributesData.length}
             style={{
@@ -371,8 +387,11 @@ export function AttributesGrid(props: AttributesProps) {
               borderBottom: "none"
             }}
           ></Card>
-        </Col>
-        <Col>
+        </Col> */}
+        <Col span={5}>
+            <Alert type='warning' message={'Active: ' + attributesData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+           </Col>
+        {/* <Col>
           <Card
             title={
               "Active: " + attributesData.filter((el) => el.isActive).length
@@ -385,8 +404,11 @@ export function AttributesGrid(props: AttributesProps) {
               borderBottom: 0,
             }}
           ></Card>
-        </Col>
-        <Col>
+        </Col> */}
+        <Col span={5}>
+                      <Alert type='info' message={'In-Active: ' + attributesData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+           </Col>
+        {/* <Col>
           <Card
             title={
               "In-Active: " +
@@ -399,7 +421,7 @@ export function AttributesGrid(props: AttributesProps) {
               backgroundColor: "#f5222d",
             }}
           ></Card>
-        </Col>
+        </Col> */}
       </Row>
       <br></br>
       <Table
@@ -408,8 +430,9 @@ export function AttributesGrid(props: AttributesProps) {
 
         columns={columnsSkelton}
         dataSource={attributesData}
-        scroll={{ x: true }}
+        scroll={{ x: true ,y:500}}
         pagination={{
+          pageSize: 50 ,
           onChange(current) {
             setPage(current);
           },
@@ -420,7 +443,7 @@ export function AttributesGrid(props: AttributesProps) {
       <Drawer
         bodyStyle={{ paddingBottom: 80 }}
         title="Update"
-        width={window.innerWidth > 768 ? "50%" : "85%"}
+        width={window.innerWidth > 768 ? "60%" : "85%"}
         onClose={closeDrawer}
         visible={drawerVisible}
         closable={true}

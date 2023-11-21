@@ -293,7 +293,7 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
           rowKey={record => record.Id}
           columns={columnsSkelton}
           dataSource={FabricStructuresData}
-          scroll={{x:true}}
+          scroll = {{x:true,y:500}}
           pagination={{
             pageSize:50,
             onChange(current) {

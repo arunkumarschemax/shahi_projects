@@ -95,7 +95,7 @@ export class AttributeService {
                        
                         if (attributeExists.isActive) {
                             if (attributeStatus.affected) {
-                                const response: AttributeResponse = new AttributeResponse(true, 10115, 'Attribute is de-activated successfully');
+                                const response: AttributeResponse = new AttributeResponse(true, 10115, 'Attribute is deactivated successfully');
                                 return response;
                             } else {
                                 throw new AttributeResponse(false,10111, 'Attribute is already deactivated');

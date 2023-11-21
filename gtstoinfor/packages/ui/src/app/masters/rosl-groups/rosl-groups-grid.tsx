@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message } from 'antd';
+import {  Divider, Table,Alert, Popconfirm, Card,Checkbox, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/lib/table';
@@ -177,6 +177,7 @@ export function ROSLGroupsGrid(props: ROSLGroupProps) {
       title: 'S No',
       key: 'sno',
       width: '70px',
+      align:'center',
       responsive: ['sm'],
       render: (text, object, index) => (page-1) * 10 +(index+1)
     },
@@ -189,30 +190,45 @@ export function ROSLGroupsGrid(props: ROSLGroupProps) {
       ...getColumnSearchProps('roslGroup')
     },
     {
-      title: <div style={{textAlign:"center"}}>Status</div> ,
+      title: 'Status',
+      align:'center',
       dataIndex: 'isActive',
-      align:"center",
+      // sorter: (a, b) => a.isActive.localeCompare(b.isActive),
+      // sortDirections: ["ascend", "descend"],
+      // ...getColumnSearchProps("isActive"),
       render: (isActive, rowData) => (
         <>
-          {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
         </>
       ),
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{color:'green'}}>Active</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{color:'red'}}>Inactive</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns" >
+          <Button  onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          
+          </div>
+        </div>
+      ),
       filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-        // === is not work
-        return record.isActive === value;
-      },
-      filters: [
-        {
-          text: 'Active',
-          value: true,
-        },
-        {
-          text: 'InActive',
-          value: false,
-        },
-      ],
+     
 
     },
     {
@@ -270,7 +286,7 @@ export function ROSLGroupsGrid(props: ROSLGroupProps) {
       <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
       </Link>} >
      <br></br>
-     <Row gutter={40}>
+     {/* <Row gutter={40}>
       
         <Col>
           <Card title={'Total ROSL Groups: ' + roslGroupsData.length} style={{ textAlign: 'left', width: 220, height: 41, backgroundColor: '#bfbfbf' }}></Card>
@@ -281,16 +297,31 @@ export function ROSLGroupsGrid(props: ROSLGroupProps) {
         <Col>
           <Card title={'In-Active: ' + roslGroupsData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
-          </Row>
+          </Row> */}
+            <Row gutter={40}>
+      <Col span={4}></Col>
+      <Col span={5}>
+                <Alert type='success' message={'Total ROSL Groups: ' + roslGroupsData.length} style={{fontSize:'15px'}} />
+         </Col>
+       
+        <Col span={5}>
+            <Alert type='warning' message={'Active: ' + roslGroupsData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+           </Col>
+      
+        <Col span={5}>
+                      <Alert type='info' message={'In-Active: ' + roslGroupsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+           </Col>
+        
+      </Row>
           <br></br>
           <Table
           size='small'
-
           rowKey={record => record.roslGroupId}
           columns={columnsSkelton}
           dataSource={roslGroupsData}
-          scroll={{x:true}}
+          scroll={{x:true,y:500}}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }
