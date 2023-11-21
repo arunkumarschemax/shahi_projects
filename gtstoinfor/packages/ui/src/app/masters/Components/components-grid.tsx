@@ -178,6 +178,7 @@ export function ComponentsGrid(props: ComponentsProps) {
     {
       title: 'S No',
       key: 'sno',
+      align:'center',
       width: '70px',
       responsive: ['sm'],
       render: (text, object, index) => (page-1) * 10 +(index+1)
