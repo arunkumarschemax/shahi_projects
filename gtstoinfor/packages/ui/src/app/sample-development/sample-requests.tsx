@@ -316,7 +316,9 @@ export const SampleRequests = (props: BuyingHouseProps) => {
           <EyeOutlined onClick={() => DetailView(rowData.sample_request_id)} style={{fontSize:'15px',marginLeft:'-5px'}}/>
           </Tooltip>
           <Divider type="vertical"/>
-          <Button onClick={() => MarketIssueDetailView(rowData.sample_request_id)} type='primary' disabled={logInUser == 'marketUser' ? true:false}>Issue Material</Button>
+          <Button onClick={() => MarketIssueDetailView(rowData.sample_request_id)} type='primary' 
+          // disabled={logInUser == 'marketUser' ? true:false}
+          >Issue Material</Button>
         </span>
       ),
     },

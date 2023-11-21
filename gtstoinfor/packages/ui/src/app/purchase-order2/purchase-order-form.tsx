@@ -193,7 +193,7 @@ return(
     <Card title='Purchase Order' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to='/purchase-view' > <Button className='panel_button' >View </Button></Link>}>
         <Form form={poForm} layout="vertical">
             <Row gutter={8}>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
                     <Form.Item name='indentAgainst' label='Indent Against' rules={[{required:true,message:'PO Type is required'}]}>
                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select PoType' 
                        onChange={IndentAginstOnchange}
@@ -203,7 +203,7 @@ return(
                         </Select>
                     </Form.Item>
               </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
                     <Form.Item name='poMaterialType' label='PO Type' rules={[{required:true,message:'PO Type is required'}]}>
                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select PoType' 
                        onChange={poTypeOnchange}
@@ -213,7 +213,7 @@ return(
                         </Select>
                     </Form.Item>
               </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }} style={{display:styleVisible == true ? '':'none'}}>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:styleVisible == true ? '':'none'}}>
                     <Form.Item name='styleId' label='Style' 
                     rules={[{required:styleVisible,
                         message:'Style is required'}]}
@@ -227,7 +227,7 @@ return(
                         </Select>
                     </Form.Item>
                     </Col>
-             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }} style={{display:styleVisible == false ? '':'none'}}>
+             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:styleVisible == false ? '':'none'}}>
                     <Form.Item name='indentId' label='Indent Code' rules={[{required:styleVisible == false?true:false,message:'IndentCode is required'}]}>
                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Indent' mode="multiple"
                        onChange={indentOnchange}
@@ -265,14 +265,14 @@ return(
        
         </Form>
         <Row gutter={24}>
-            <Card title={poType == 'Fabric'?<span style={{color:'blue', fontSize:'17px'}}>Fabric Details</span>:poType =='Trim'?<span style={{color:'blue', fontSize:'17px'}}>Trim Details</span>:''}>
+            {/* <Card title={poType == 'Fabric'?<span style={{color:'blue', fontSize:'17px'}} >Fabric Details</span>:poType =='Trim'?<span style={{color:'blue', fontSize:'17px'}}>Trim Details</span>:''} style={{width:'200%'}}> */}
                 {poType == 'Fabric' ?
-                <Card style={{width:'150%'}}><PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={poType == 'Fabric' ?indentId:undefined} data={navigateData}/></Card>
+                <Card style={{width:'200%'}}><PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={poType == 'Fabric' ?indentId:undefined} data={navigateData}/></Card>
            :poType == 'Trim' ?
            <Card style={{width:'130%'}}> <PurchaseOrderTrim key='trim' props={handleTrim}  indentId={indentId} data={navigateData}/></Card>
             :<></>
             }
-            </Card>
+            {/* </Card> */}
             </Row>
             <Row justify={'end'}>
             <Col span={24} style={{ textAlign: "right", marginTop:'10px'}} >
