@@ -72,18 +72,18 @@ export class DpomService {
         try {
             const tokenResponse = await this.getOctaToken();
             if (!tokenResponse.status) throw new Error(tokenResponse.error)
-            const offsets = ["0", "5000", "10000", "20000", "25000", "30000", "35000", "40000", "45000", "50000"]
+            // const dpomItemStatusValues = ["Accepted", "Unaccepted", "Closed", "Cancelled"];
+            const offsets = ["0", "5000", "10000", "15000", "20000", "25000", "30000", "35000", "40000", "45000", "50000", "55000", "60000", "65000", "70000", "75000", "80000", "85000", "90000", "95000", "100000", "105000", "110000"]
             const currentDate = new Date();
-
             // Calculate 1.5 years (18 months) ago
             currentDate.setMonth(currentDate.getMonth() - 18);
-
             // Format the result as "YYYY-MM-DD"
             const year = currentDate.getFullYear();
             const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
             const day = currentDate.getDate().toString().padStart(2, '0');
             const formattedDate = `${year}-${month}-${day}`;
             const results = [];
+            // for (const status of dpomItemStatusValues) {
             for (const offset of offsets) {
                 const payload = {
                     "fields": [
@@ -158,6 +158,11 @@ export class DpomService {
                             "operator": ">",
                             "fieldValue": formattedDate
                         }
+                        // {
+                        //     "fieldName": "poLine.dpomItemStatus",
+                        //     "operator": "=",
+                        //     "fieldValue": "Accepted"
+                        // }
                     ],
 
                     "offset": offset,
@@ -178,6 +183,7 @@ export class DpomService {
                 } else {
                     break;
                 }
+                // }
             }
             if (results.length > 0) {
                 return { status: true, data: results };
@@ -267,7 +273,7 @@ export class DpomService {
         }
     }
 
-    @Cron('*/10 * * * *')
+    // @Cron('*/10 * * * *')
     async createCOline(req: any): Promise<CommonResponseModel> {
         const poDetails = await this.coLineRepository.getDataforCOLineCreation();
         if (!poDetails.length) {
@@ -433,16 +439,10 @@ export class DpomService {
                                         let tabIndex;
                                         if (dest.name == 'UQAU') {
                                             tabIndex = 4 //colorsTabs.indexOf(tab); // Adjust index to start from 1
-                                        } else if (dest.name == 'UQEU') {
-                                            tabIndex = 5
-                                        } else if (dest.name == 'AU') {
-                                            tabIndex = 1
-                                        } else if (dest.name = 'EU') {
+                                        } else if (dest.name = 'UQJP') {
                                             tabIndex = 2
-                                        } else if (dest.name = 'IN') {
-                                            tabIndex = 3
                                         } else {
-                                            tabIndex = 6
+                                            tabIndex = 1
                                         }
                                         const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
                                         // Find all the input fields in the first row.
@@ -462,7 +462,7 @@ export class DpomService {
                                         }
                                     }
                                     const inputId = `${size.name}:${color.name}:${dest.name}`.replace(/\*/g, '');
-                                    await driver.wait(until.elementLocated(By.id(inputId)))
+                                    const input = await driver.wait(until.elementLocated(By.id(inputId)))
                                     await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                                 }
                             }
@@ -673,7 +673,7 @@ export class DpomService {
                         const existingDataKeys = Object.keys(details)
                         const currentDataKeys = Object.keys(dtoData)
                         for (const existingDataKey of existingDataKeys) {
-                            if (details[existingDataKey] != orderDetail[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'odVersion' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'versionFlag' && existingDataKey != 'isActive' && existingDataKey != 'recordDate' && existingDataKey != 'lastModifiedDate' && existingDataKey != 'id' && existingDataKey != 'divertedToPos'
+                            if (details[existingDataKey] != orderDetail[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'odVersion' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'versionFlag' && existingDataKey != 'isActive' && existingDataKey != 'recordDate' && existingDataKey != 'lastModifiedDate' && existingDataKey != 'id' && existingDataKey != 'divertedToPos' && existingDataKey != 'item' && existingDataKey != 'factory' && existingDataKey != 'paymentTerm' && existingDataKey != 'crmCoQty' && existingDataKey != 'coPrice' && existingDataKey != 'coPriceCurrency' && existingDataKey != 'styleDesc' && existingDataKey != 'PCD' && existingDataKey != 'planNo' && existingDataKey != 'coFinalApprovalDate' && existingDataKey != 'customerOrder'
                             ) {
                                 const dpomDiffObj = new DpomDifferenceEntity();
                                 dpomDiffObj.oldValue = details[existingDataKey]
@@ -739,7 +739,7 @@ export class DpomService {
                     const CRMData3 = await this.getCRMOrderDetails3(styleNo);
                     if (CRMData2.status) {
                         for (const data1 of CRMData1.data) {
-                            const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, factory: CRMData2?.data[0].plan_UNIT, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, planNo: CRMData2?.data[0].plan_NUMB, coPrice: data1.price, coPriceCurrency: data1.currency, paymentTerm: CRMData2?.data[0].pay_TERM_DESC, styleDesc: '', commission: data1.commission, PCD: data1.pcd, crmCoQty: data1.ord_QTY })
+                            const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, planNo: CRMData2?.data[0].plan_NUMB, coPrice: data1.price, coPriceCurrency: data1.currency, paymentTerm: CRMData2?.data[0].pay_TERM_DESC, styleDesc: '', commission: data1.commission, PCD: data1.pcd, crmCoQty: data1.ord_QTY })
                             if (updateOrder.affected) {
                                 continue;
                             } else {
@@ -750,7 +750,7 @@ export class DpomService {
                         }
                     } else {
                         for (const data1 of CRMData1.data) {
-                            const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, coPrice: data1.price, coPriceCurrency: data1.currency, styleDesc: '', commission: data1.commission, PCD: data1.pcd, crmCoQty: data1.ord_QTY })
+                            const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, coPrice: data1.price, coPriceCurrency: data1.currency, styleDesc: '', commission: data1.commission, PCD: data1.pcd, crmCoQty: data1.ord_QTY })
                             if (updateOrder.affected) {
                                 continue;
                             } else {
