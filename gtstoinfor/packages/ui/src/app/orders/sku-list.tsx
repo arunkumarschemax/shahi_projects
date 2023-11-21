@@ -381,7 +381,7 @@ export const SkuList = () => {
       width: "300px",
       sorter: (a, b) => a.style.localeCompare(b.style),
       sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("destination"),
+      ...getColumnSearchProps("style"),
   // console.log(data,'id');
   
  

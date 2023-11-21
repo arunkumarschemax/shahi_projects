@@ -657,8 +657,15 @@ compositionservice.getActiveComposition().then(res=>{
                       </Col>
                       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                         <Form.Item  name="salePrice" label="Sales Price"
-                         rules={[{ required: true, message: "Enter Sales Price" }]}>
-                        <Input placeholder="Sales  Price" allowClear />
+                        //  rules={[{ required: true, message: "Enter Sales Price" }]}
+                        rules={[{ required: true, message: "Enter Sales Price" },
+                        { 
+                          pattern: /^[0-9]+$/, 
+                          message: "Please Enter numbers only" 
+                        },
+                           ]}
+                        >
+                        <Input placeholder="Sales  Price"  />
                         </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -864,8 +871,16 @@ compositionservice.getActiveComposition().then(res=>{
                             <Form.Item
                       name="nationalDbk"
                       label="National DBK%"
+                      rules={[
+                        // { required: true, message: "Enter Order Qty" },
+                      { 
+                        pattern: /^[0-9]+$/, 
+                        message: "Please Enter numbers only" 
+                      },
+                         ]}
+                      
                     >
-                      <Input placeholder="National DBK%" allowClear />
+                      <Input placeholder="National DBK%" allowClear  />
                     </Form.Item>
                                   </Col>
                                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -985,9 +1000,17 @@ compositionservice.getActiveComposition().then(res=>{
                             <Form.Item
                       name="moq"
                       label="Moq"
+                      rules={[
+                        // { required: true, message: "Enter Sales Price" },
+                      { 
+                        pattern: /^[0-9]+$/, 
+                        message: "Please Enter numbers only" 
+                      },
+                         ]}
+                      
     
                     >
-                      <InputNumber placeholder="moq" style={{ width: '100%' }} />
+                      <Input placeholder="moq" style={{ width: '100%' }} />
                     </Form.Item>
                                   </Col>
                                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -1152,10 +1175,10 @@ compositionservice.getActiveComposition().then(res=>{
 <Form.Item
                       name="orderQty"
                       label="Order Qty"
-                      rules={[{ required: true, message: "Enter  Order Qty" },
+                      rules={[{ required: true, message: "Enter Order Qty" },
                       { 
                         pattern: /^[0-9]+$/, 
-                        message: "Please Enter  Order Qty" 
+                        message: "Please Enter numbers only" 
                       },
                          ]}
                       >
