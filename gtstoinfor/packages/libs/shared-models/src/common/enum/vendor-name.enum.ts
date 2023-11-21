@@ -39,22 +39,15 @@ export enum VendorNameEnum {
     extracteddachser="DACHSER",
     extractedscanWell="SCANWELL",
     extractedMatrix="MATRIX",
+
+
+
     extractedcogoPort="COGO PORT",
-
-
-
-
     extractedUnicorn="UNICORN",
     extractedUnique="UNIQUE",
     extractedTvs="TVS",
-    // extarctedUnitedLiner='UNITED LINER'
     extractedVelogicIndia="VELOGIC INDIA",
     extracteWiderlogistics="WIDER LOGISTICS",
-
-
-
-
-
     extractedWorldLine="WORLD LINE",
     extractedKwe="KWE",
     extractedUps = "UPS",
