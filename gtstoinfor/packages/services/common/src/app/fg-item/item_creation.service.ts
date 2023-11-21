@@ -47,6 +47,7 @@ export class ItemCreationService {
             entities.businessArea=itemCreationDto.businessArea;
             entities.buyingHouseCommision=itemCreationDto.buyingHouseCommision;
             entities.categoryId=itemCreationDto.categoryId;
+            entities.category=itemCreationDto.category;
             entities.composition=itemCreationDto.composition;
             entities.conversionFactor=itemCreationDto.conversionFactor;
             entities.currency=itemCreationDto.currency;
