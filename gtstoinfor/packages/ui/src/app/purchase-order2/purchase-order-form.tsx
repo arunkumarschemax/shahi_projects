@@ -7,7 +7,7 @@ import PurchaseOrderTrim from "./purchase-order-trim";
 import { GlobalVariables, PurchaseOrderDto, PurchaseOrderFbricDto, PurchaseOrderTrimDto } from "@project-management-system/shared-models";
 import moment from "moment";
 import dayjs, { Dayjs } from "dayjs";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export const PurchaseOrderForm =()=>{
     const{Option} =Select
@@ -27,6 +27,7 @@ export const PurchaseOrderForm =()=>{
     const [navigateData,setnavigateData] = useState<any>([])
     let fabricInfo:PurchaseOrderFbricDto[]=[];
     let trimInfo:PurchaseOrderTrimDto[]=[];
+    const navigate = useNavigate()
 
     const date = moment()
     const now = dayjs().add(GlobalVariables.poExpectedDeliveryDays, 'days');
@@ -161,7 +162,9 @@ export const PurchaseOrderForm =()=>{
                 console.log(poDto)
                 if(res.status){
                     message.success(res.internalMessage)
+                    navigate('/purchase-view')
                 }
+                
             })
         }
         else{
@@ -187,7 +190,7 @@ export const PurchaseOrderForm =()=>{
     }
 return(
     <>
-    <Card title='Purchase Order' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+    <Card title='Purchase Order' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to='/purchase-view' > <Button className='panel_button' >View </Button></Link>}>
         <Form form={poForm} layout="vertical">
             <Row gutter={8}>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
