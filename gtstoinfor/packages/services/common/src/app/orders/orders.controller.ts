@@ -11,6 +11,7 @@ import { extname } from 'path';
 import { FileIdReq } from './models/file-id.req';
 import { type } from 'os';
 import { TrimDetailsRequest } from './models/trim-details.req';
+import { multerOptions } from './models/upload-interceptor';
 ''
 
 @Controller('orders')
@@ -120,6 +121,8 @@ export class OrdersController {
 
         }
     }
+
+    
 
     @Post('/fileUpload/:month/:fileType/:uploadType')
     @ApiConsumes('multipart/form-data')
@@ -605,5 +608,26 @@ export class OrdersController {
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
+    }
+
+    @Post('/uploadTrimFiles')
+    uploadFile() {
+    const sourceFilePath = 'C:/Users/admin/Downloads/RawMaterialOrderListReport_test.xlsx'; // Specify the local path of your file
+    const destinationServerFolder = './upload-files/';
+    const destinationFilePath = `${destinationServerFolder}RawMaterialOrderListReport_test.xlsx`;
+
+    // Read the file from the local path
+    try {
+        const fs = require('fs');
+
+        const fileData = fs.readFileSync(sourceFilePath);
+
+        // Upload the file to the server folder
+        fs.writeFileSync(destinationFilePath, fileData);
+
+        return { success: 'File uploaded successfully' };
+    } catch (error) {
+        return { error: 'Failed to upload file', details: error.message };
+    }
     }
 }
