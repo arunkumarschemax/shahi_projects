@@ -304,14 +304,14 @@ export const extractScanWell = async (pdf) => {
     for (let hsnId = 0; hsnId < extractedData.length; hsnId++) {
         const line = extractedData[hsnId].content;
 
-        const currencyRegex = /(INR|USD)/
+        const currencyRegex =/(INR|USD)\s+(\w+)\s+(\w+)+(\s|\w)+/
         const currencyData = extractedData.find((item) => item.content.match(currencyRegex));
         currency = currencyData ? currencyData.content : '';
 
         const matchData = line.match(/(\d+\.\d+)\s+([\d,.]+)\s+(\d+)\s+([\d,.]+)\s+(\d+\.\d+)/);
         if (matchData) {
 
-            const unitQuantity = parseInt(matchData[1]);
+            const unitQuantity = parseInt(matchData[1]).toFixed(2);
             const unitPrice = parseFloat(matchData[2].replace(/,/g, '')).toFixed(2);
             const charge = parseFloat(matchData[4].replace(/,/g, '')).toFixed(2);
 
@@ -452,7 +452,7 @@ export const extractScanWell = async (pdf) => {
         extractedHsnData: structuredHSNLines
     }
 }
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
 export const extractdachser = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
