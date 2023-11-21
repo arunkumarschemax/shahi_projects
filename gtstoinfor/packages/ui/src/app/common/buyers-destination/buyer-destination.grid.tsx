@@ -279,7 +279,7 @@ initialValue={userId.length > 0 ? userId[0].buyerName : ""}
                 </Row>
 
             </Form>
-            <Table columns={columns} pagination={{pageSize:50}}
+            <Table columns={columns} pagination={{pageSize:50}} scroll = {{x:true,y:500}}
                     dataSource={data} size="small" bordered />
             <Modal
       visible={sizeModalVisible}

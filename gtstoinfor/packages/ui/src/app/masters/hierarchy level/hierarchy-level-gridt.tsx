@@ -349,7 +349,7 @@ size='small'
               setPage(current);
             }
           }}
-          scroll={{x:true}}
+          scroll = {{x:true,y:500}}
           onChange={onChange}
           bordered />
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}

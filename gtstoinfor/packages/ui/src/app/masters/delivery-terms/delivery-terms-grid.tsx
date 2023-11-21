@@ -309,7 +309,7 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
           rowKey={record => record.Id}
           columns={columnsSkelton}
           dataSource={deliveryTermsData}
-          scroll={{x:true}}
+          scroll = {{x:true,y:500}}
           pagination={{
             pageSize:50,
             onChange(current) {

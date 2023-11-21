@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Alert, Checkbox } from 'antd';
+import {  Divider, Table,Alert, Popconfirm, Card,Checkbox, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Alert, Checkbox } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/lib/table';
@@ -193,12 +193,15 @@ export function ROSLGroupsGrid(props: ROSLGroupProps) {
       ...getColumnSearchProps('roslGroup')
     },
     {
-      title: <div style={{textAlign:"center"}}>Status</div> ,
+      title: 'Status',
+      align:'center',
       dataIndex: 'isActive',
-      align:"center",
+      // sorter: (a, b) => a.isActive.localeCompare(b.isActive),
+      // sortDirections: ["ascend", "descend"],
+      // ...getColumnSearchProps("isActive"),
       render: (isActive, rowData) => (
         <>
-          {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
         </>
       ),
       // filterMultiple: false,
@@ -335,10 +338,10 @@ export function ROSLGroupsGrid(props: ROSLGroupProps) {
           <Card>
           <Table
           size='small'
-
           rowKey={record => record.roslGroupId}
           columns={columnsSkelton}
           dataSource={roslGroupsData}
+          scroll={{x:true,y:500}}
           scroll={{x:true,y:500}}
           pagination={{
            pageSize:50,

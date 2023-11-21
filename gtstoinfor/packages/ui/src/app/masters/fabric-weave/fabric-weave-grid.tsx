@@ -333,7 +333,7 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
           rowKey={record => record.fabricWeaveId}
           columns={columnsSkelton}
           dataSource={data}
-          scroll={{x:true}}
+          scroll = {{x:true,y:500}}
           pagination={{
             pageSize:50,
             onChange(current) {
