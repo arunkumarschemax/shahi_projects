@@ -133,6 +133,7 @@ export class GrnService{
             grnEntity.grnDate=req.grnDate
             grnEntity.createdUser=req.createdUser
             grnEntity.updatedUser=req.updatedUser
+            console.log(req,'===========')
             for(const item of req.grnItemInfo){
                 // item.conversionQuantity=200
                 // item.conversionUomId=1
