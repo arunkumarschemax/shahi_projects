@@ -106,7 +106,9 @@ form.setFieldValue('salesPersonId',res.data?.[0]?.salesPersonId)
 form.setFieldValue('facilityId',res.data?.[0]?.facilityId)
 form.setFieldValue('pchId',res.data?.[0]?.pchId)  
 form.setFieldValue('currencyId',res.data?.[0]?.currencyId) 
-form.setFieldValue('trimResponsibleId',res.data?.[0]?.trimResponsibleId)                  
+form.setFieldValue('trimResponsibleId',res.data?.[0]?.trimResponsibleId)   
+form.setFieldValue('licenceId',res.data?.[0]?.licencetypeId)                  
+
 
 
 
