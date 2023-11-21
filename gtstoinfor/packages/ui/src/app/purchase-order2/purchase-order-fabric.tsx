@@ -147,7 +147,8 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
                 quantityUomId:defaultFabricFormData.quantityUomId,
                 indentQuantity:defaultFabricFormData.indentQuantity,
                 indentFabricId:defaultFabricFormData.indentFabricId,
-                itemCode:defaultFabricFormData.itemCode
+                itemCode:defaultFabricFormData.itemCode,
+                quantityUom:defaultFabricFormData.quantityUom
             })
         }
 
@@ -182,6 +183,10 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
         {
             title:'PO Quantity',
             dataIndex:'poQuantity',
+        },
+        {
+            title:'UOM',
+            dataIndex:'quantityUom',
         },
         {
             title: "Action",
@@ -256,7 +261,16 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
     const m3FabricOnchange = (value,option) =>{
         fabricForm.setFieldsValue({itemCode:option.name})
     }
-    
+
+    const quantityUomOnchange = (value,option) =>{
+        console.log(value)
+        console.log(option.name)
+        fabricForm.setFieldsValue({quantityUom:option.name})
+    }
+    const quantiyOnchange = (value) =>{
+        console.log(value)
+        
+    }
     return (
     <Card title={<span style={{color:'blue', fontSize:'17px'}} >Fabric Details</span>}>
        <Form form={fabricForm} layout="vertical" onFinish={onFabricAdd}>
@@ -265,6 +279,8 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
             <Form.Item name='indentQuantity' hidden><Input></Input></Form.Item>
             <Form.Item name={'indentFabricId'} hidden><Input></Input></Form.Item>
             <Form.Item name={'itemCode'} hidden><Input></Input></Form.Item>
+            <Form.Item name={'quantityUom'} hidden><Input></Input></Form.Item>
+
 
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{required:true,message:'M3 Code is required'}]}>
@@ -301,15 +317,15 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
                     <Form.Item name='poQuantity' label='PO Quantity'
                    rules={[{required:true,message:'Quantity of Fabric is required'}]}
                     >
-                        <Input placeholder="Enter Quantity"/>
+                        <Input placeholder="Enter Quantity"   onChange={(e) => quantiyOnchange(e.target.value)}/>
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{marginTop:'2%'}}>
                     <Form.Item name='quantityUomId' rules={[{required:true,message:'Quantity unit is required'}]}>
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
+                        <Select showSearch allowClear optionFilterProp="children" placeholder='Unit' onChange={quantityUomOnchange}>
                             {uom.map(e => {
                                 return(
-                                    <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
+                                    <Option key={e.uomId} value={e.uomId} name={e.uom}>{e.uom}</Option>
                                 )
                             })}
                         </Select>
