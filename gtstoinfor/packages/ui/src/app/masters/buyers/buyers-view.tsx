@@ -257,29 +257,18 @@ let userRef
             
           </>
       ),
-        filters: [
-          {
-            text: 'Active',
-            value: true,
-          },
-          {
-            text: 'Inactive',
-            value: false,
-          },
-        ],
-        filterMultiple: false,
         onFilter: (value, record) => record.isActive === value,
           filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
       <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
         <Checkbox
-          checked={selectedKeys.includes(true)}
-          onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          checked={selectedKeys.includes(1)}
+          onChange={() => setSelectedKeys(selectedKeys.includes(1) ? [] : [1])}
         >
           <span style={{color:'green'}}>Active</span>
         </Checkbox>
         <Checkbox
-          checked={selectedKeys.includes(false)}
-          onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          checked={selectedKeys.includes(0)}
+          onChange={() => setSelectedKeys(selectedKeys.includes(0) ? [] : [0])}
         >
           <span style={{color:'red'}}>Inactive</span>
         </Checkbox>

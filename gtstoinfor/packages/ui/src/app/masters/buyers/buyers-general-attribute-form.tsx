@@ -131,6 +131,12 @@ export const BuyersGeneralAttributeForm = () => {
 
     const onReset= () => {
         setAttributeValue([])
+        setAttributes([])
+        if(state?.state.id!= undefined){
+            getByBuyerId(state.state.id)
+        }else{
+            getAttributes()
+        }
     }
     
 
