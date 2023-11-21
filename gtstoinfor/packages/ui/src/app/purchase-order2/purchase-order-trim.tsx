@@ -252,7 +252,7 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
     },[defaultTrimFormData])
 
     return(
-        <Card >
+        <Card title={<span style={{color:'blue', fontSize:'17px'}} >Trim Details</span>}>
             <Form form={trimForm} layout="vertical" onFinish={OnTrimAdd} style={{width:'100%'}}>
                 <Row gutter={24}>
                 <Form.Item name={'productGroup'} hidden><Input></Input></Form.Item>
@@ -365,7 +365,7 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
                         </Select>
                     </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{display:'none'}}>
                         <Form.Item name={'indentQuantity'} label={'Indent Quantity'}>
                             <Input disabled={inputDisable}></Input>
                         </Form.Item>
