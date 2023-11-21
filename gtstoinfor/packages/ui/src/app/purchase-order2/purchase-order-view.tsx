@@ -4,7 +4,7 @@ import { PurchaseOrderservice } from '@project-management-system/shared-services
 import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tabs, Tooltip } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { log } from 'console';
 
 export const PurchaseOrderView = () => {
@@ -197,7 +197,7 @@ export const PurchaseOrderView = () => {
   ];
 
   return (
-    <div><Card title="Purchase Orders" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+    <div><Card title="Purchase Orders" headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to={'/purchase-order'}><Button className='panel_button'>Create</Button></Link>}>
       <Form form={form}>
         <Row gutter={12}>
           <Col span={6}>
