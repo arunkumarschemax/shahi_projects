@@ -228,7 +228,12 @@ let userRef
         align:'center',
         sorter: (a, b) => a.phoneNo.localeCompare(b.phoneNo),
         sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('phoneNo')
+        ...getColumnSearchProps('phoneNo'),
+        render: (contact) => (
+          <span>
+            <a href={`tel:${contact}`}>{contact}</a>
+          </span>
+        ),
       },
       // {
       //   dataIndex:"address",

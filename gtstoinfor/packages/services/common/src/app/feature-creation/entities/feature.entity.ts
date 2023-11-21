@@ -15,7 +15,7 @@ export class FeatureEntity {
 
   @Column("varchar",{
     nullable: true,
-    length:15,
+    length:30,
     name:"feature_name"
   })
   featureName:string;
@@ -29,7 +29,6 @@ export class FeatureEntity {
     
   @Column("varchar",{
     nullable: true,
-    length:15,
     name:"description"
   })
   description:string;
