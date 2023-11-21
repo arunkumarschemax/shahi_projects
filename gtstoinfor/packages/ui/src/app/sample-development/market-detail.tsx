@@ -22,20 +22,12 @@ export const MarketIssueDetail = () => {
   const rowData = location.state.data
 
 
-  //console.log('****************************************',rowData)
-
-  
-  
-
   const colorService = new ColourService()
   const [colorData, setColorData] = useState<any[]>([])
 
   useEffect(() => {
     getData()
   },[])
-
-
-
 
 
 
@@ -48,17 +40,14 @@ export const MarketIssueDetail = () => {
   //   }
 
   const getData = () => {
-    service.getAllSampleData().then((res) => {
-
-      setData(res.data)
+    service.getAllSampleDevData().then((res) => {
+      if(res.status){
+        setData(res.data);
+      }  
     })
-
-
-
 
     colorService.getAllColour().then(res => {
       if (res.status) {
-
         setColorData(res.data)
       }
     })
@@ -85,7 +74,6 @@ export const MarketIssueDetail = () => {
   }
 
   const handleFormSubmit = () => {
-    // Capture and log the issuing quality for both trims and fabric
     const issuingQualityForFabric = data[0]?.fabricInfo.map((record) => ({
       key: record.key,
       issuingQuantity: record.issuingQuantity,
@@ -113,7 +101,7 @@ console.log(rowData?.[0].trimData,"rowData?.trimData")
     },
     {
       title: 'Fabric Code',
-      dataIndex: 'fabric_code',
+      dataIndex: 'fabric_item_code',
       width: "20%",
     },
     {
@@ -165,6 +153,11 @@ console.log(rowData?.[0].trimData,"rowData?.trimData")
       render: (_, record, index) => index + 1,
     },
     {
+      title: 'Trim Code',
+      dataIndex: 'trim_item_code',
+      width: "20%",
+    },
+    {
       title: 'Description',
       dataIndex: 'trim_description',
     },
@@ -201,7 +194,7 @@ console.log(rowData?.[0].trimData,"rowData?.trimData")
         <DescriptionsItem label='Description'>{rowData?.[0]?.description}</DescriptionsItem>
         <DescriptionsItem label='Brand'>{rowData?.[0]?.brandName}</DescriptionsItem>
         <DescriptionsItem label='Cost Ref'>{rowData?.[0]?.costRef}</DescriptionsItem>
-        <DescriptionsItem label='M3 Style No'>{rowData?.[0]?.m3StyleNo}</DescriptionsItem>
+        <DescriptionsItem label='M3 Style No'>{rowData?.[0]?.m3StyleCode}</DescriptionsItem>
         <DescriptionsItem label='Contact No'>{rowData?.[0]?.contact}</DescriptionsItem>
         <DescriptionsItem label='Extn'>{rowData?.[0]?.extension}</DescriptionsItem>
         <DescriptionsItem label='SAM'>{rowData?.[0]?.samValue}</DescriptionsItem>
@@ -210,7 +203,7 @@ console.log(rowData?.[0].trimData,"rowData?.trimData")
         <DescriptionsItem label='Product'>{rowData?.[0]?.product}</DescriptionsItem>
         <DescriptionsItem label='Type'>{rowData?.[0]?.type}</DescriptionsItem>
         <DescriptionsItem label='Conversion'>{rowData?.[0]?.conversion}</DescriptionsItem>
-        <DescriptionsItem label='Made In'>{rowData?.[0]?.madeIn}</DescriptionsItem>
+        <DescriptionsItem label='Made In'>{rowData?.[0]?.country_name}</DescriptionsItem>
         <DescriptionsItem label='Remarks'>{rowData?.[0]?.remarks}</DescriptionsItem>
       </Descriptions>
 

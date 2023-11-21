@@ -2,6 +2,7 @@ import { Repository } from "typeorm";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { SampleReqFabricinfoEntity } from "../entities/sample-request-fabric-info-entity";
+import { SampleRequest } from "../entities/sample-dev-request.entity";
 
 @Injectable()
 export class SampleFabricRepo extends Repository<SampleReqFabricinfoEntity> {
@@ -17,5 +18,8 @@ export class SampleFabricRepo extends Repository<SampleReqFabricinfoEntity> {
         console.log('hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
         return query
     }
+
+
+
    
 }
