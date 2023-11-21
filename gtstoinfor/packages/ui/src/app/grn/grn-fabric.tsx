@@ -55,14 +55,16 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
           }));
   
         setFormData(updatedFormData);
-        console.log("FormData:", updatedFormData);
+                console.log("FormData:", updatedFormData);
         fabricForm()
       });
     };
 
     const fabricForm = () => {
       const grnItemsArray = [];
+      console.log(formData)
       formData.forEach((record) => {
+        console.log(record)
         const grnItem = new GrnItemsDto()
         grnItem.poFabricId = record.poFabricId
         grnItem.m3ItemCodeId = record.m3ItemCodeId
@@ -74,7 +76,7 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
         grnItem.rejectedQuantity = record.rejectedQuantity
         grnItem.rejectedUomId = record.rejectedUomId
         grnItem.indentFabricId = record.indentFabricId
-        grnItem.conversionQuantity = record.conversionQuantity
+        grnItem.conversionQuantity = record.conversionQuantity 
         grnItem.conversionUomId = record.conversionUomId
         grnItem.remarks = record.remarks
         grnItemsArray.push(grnItem)
@@ -301,7 +303,7 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
           title: <div style={{ textAlign: 'center' }}>Converted Qty</div>,
           dataIndex: 'convertedQty',
           render: (_, record) => {
-            return <div style={{ textAlign: 'center' }}>{Number(quantity)}</div>;
+            return <div style={{ textAlign: 'center' }}>{Number(quantity)?Number(quantity):''}</div>;
           },
         },
       ]
