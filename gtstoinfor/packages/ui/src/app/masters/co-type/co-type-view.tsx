@@ -232,8 +232,8 @@ export const CoTypeView = () => {
                   <Popconfirm onConfirm={e =>{deleteCoType(rowData);}}
                   title={
                     rowData.isActive
-                      ? 'Are you sure to Deactivate Co Type ?'
-                      :  'Are you sure to Activate Co Type ?'
+                      ? 'Are you sure to Deactivate this Co Type ?'
+                      :  'Are you sure to Activate this Co Type ?'
                   }
                 >
                   <Switch  size="default"

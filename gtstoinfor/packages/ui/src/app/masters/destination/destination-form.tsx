@@ -59,8 +59,9 @@ export const DestinationForm = (props: DestinationFormProps) => {
     Data.destinationId = 0;
     service.createDestination(Data).then((res) => {
       setDisable(false)
+      console.log(res)
       if (res.status) {
-        AlertMessages.getSuccessMessage('Destination Created Successfully');
+        AlertMessages.getSuccessMessage(res.internalMessage);
         navigate('/global/destination/destination-grid')
         onReset();
       } else {

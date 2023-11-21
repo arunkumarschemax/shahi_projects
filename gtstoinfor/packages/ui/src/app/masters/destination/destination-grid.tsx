@@ -126,6 +126,8 @@ export const DestinationGrid = (props: DestinationGridProps) => {
     {
       title: <div style={{textAlign:"center"}}>Destination Code</div>,
       dataIndex: 'destinationCode',
+      width: '150px',
+
       sorter: (a, b) => a.destinationCode.localeCompare(b.destinationCode),
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps('destinationCode')
@@ -309,7 +311,7 @@ export const DestinationGrid = (props: DestinationGridProps) => {
     service.updateDestination(Data).then(res => {
       console.log(res);
       if (res.status) {
-        AlertMessages.getSuccessMessage('Updated Successfully');
+        AlertMessages.getSuccessMessage('Destinations Updated Successfully');
         getAlldestination();
         setDrawerVisible(false);
       } else {

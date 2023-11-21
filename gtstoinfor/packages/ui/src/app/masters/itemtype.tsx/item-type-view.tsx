@@ -137,7 +137,7 @@ export function ItemTypeView(
   const updateItem = (Data: ItemTypeDto) => {
     Service.updateItemType(Data).then(res => { console.log(res);
       if (res.status) {
-        AlertMessages.getSuccessMessage('Updated Successfully');
+        AlertMessages.getSuccessMessage('Item Type Updated Successfully');
         getAllItemType();
         setDrawerVisible(false);
       } else {
@@ -253,8 +253,8 @@ export function ItemTypeView(
               <Popconfirm onConfirm={e =>{deleteItemType(rowData);}}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate  ?'
-                :  'Are you sure to Activate  ?'
+                ? 'Are you sure to Deactivate this Item Type ?'
+                :  'Are you sure to Activate  this Item Type ?'
             }
           >  
             
