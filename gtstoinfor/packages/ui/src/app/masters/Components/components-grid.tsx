@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Checkbox, Alert } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/lib/table';
@@ -57,6 +57,7 @@ export function ComponentsGrid(props: ComponentsProps) {
     componentsData.isActive= componentsData.isActive?false:true;
     componentsService.activateOrDeactivateComponent(componentsData).then(res => {
       if (res.status) {
+        getAllComponents()
         AlertMessages.getSuccessMessage(res.internalMessage); 
       } else {
           AlertMessages.getErrorMessage(res.internalMessage);
@@ -178,6 +179,7 @@ export function ComponentsGrid(props: ComponentsProps) {
     {
       title: 'S No',
       key: 'sno',
+      align:"center",
       width: '70px',
       responsive: ['sm'],
       render: (text, object, index) => (page-1) * 10 +(index+1)
@@ -199,22 +201,50 @@ export function ComponentsGrid(props: ComponentsProps) {
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
         </>
       ),
-      filters: [
-        {
-          text: 'Active',
-          value: true,
-        },
-        {
-          text: 'InActive',
-          value: false,
-        },
-      ],
+      // filters: [
+      //   {
+      //     text: 'Active',
+      //     value: true,
+      //   },
+      //   {
+      //     text: 'InActive',
+      //     value: false,
+      //   },
+      // ],
+      // filterMultiple: false,
+      // onFilter: (value, record) => 
+      // {
+      //   // === is not work
+      //   return record.isActive === value;
+      // },
       filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-        // === is not work
-        return record.isActive === value;
-      },
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{color:'green'}}>Active</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{color:'red'}}>Inactive</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns" >
+          <Button  onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          
+          </div>
+        </div>
+      ),
+
       
     },
     {
@@ -267,7 +297,7 @@ export function ComponentsGrid(props: ComponentsProps) {
   }
   return (
     <Card title='Components' extra={<span><Button onClick={()=> navigate('/masters/components/components-form')} type={'primary'}>New</Button></span>}>
-   <br></br>
+   {/* <br></br>
      <Row gutter={40}>
       
         <Col>
@@ -280,20 +310,42 @@ export function ComponentsGrid(props: ComponentsProps) {
           <Card title={'In-Active: ' + componentsData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
           </Row>
+          <br></br> */}
           <br></br>
+      <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+       
+           <Alert type='success' message={'Total Components: ' + componentsData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + componentsData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + componentsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
+          <Card>
           <Table
+          size='small'
           rowKey={record => record.componentId}
 
           columns={columnsSkelton}
           dataSource={componentsData}
-          scroll={{x:true}}
-          pagination={{
+          scroll={{x:true,y:500}}
+           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }
           }}
           onChange={onChange}
           bordered />
+          </Card>
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>
             {/* <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'> */}

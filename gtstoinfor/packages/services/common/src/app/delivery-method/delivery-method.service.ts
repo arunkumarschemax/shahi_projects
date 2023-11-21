@@ -130,14 +130,14 @@ async activateOrDeactivateDeliveryMethod(deliveryMethodReq: DeliveryMethodReques
                  
                   if (deliveryMethodExists.isActive) {
                       if (deliveryMethodStatus.affected) {
-                          const deliveryMethodResponse: DeliveryMethodResponseModel = new DeliveryMethodResponseModel(true, 10115, 'Delivery Method is de-activated successfully');
+                          const deliveryMethodResponse: DeliveryMethodResponseModel = new DeliveryMethodResponseModel(true, 10115, 'Delivery Method is Deactivated successfully');
                           return deliveryMethodResponse;
                       } else {
                           throw new DeliveryMethodResponseModel(false,10111, 'Delivery Method is already deactivated');
                       }
                   } else {
                       if (deliveryMethodStatus.affected) {
-                          const deliveryMethodResponse: DeliveryMethodResponseModel = new DeliveryMethodResponseModel(true, 10114, 'Delivery Method is activated successfully');
+                          const deliveryMethodResponse: DeliveryMethodResponseModel = new DeliveryMethodResponseModel(true, 10114, 'Delivery Method is Activated successfully');
                           return deliveryMethodResponse;
                       } else {
                           throw new DeliveryMethodResponseModel(false,10112, 'Delivery Method is already  activated');
