@@ -133,6 +133,7 @@ export class GrnService{
             grnEntity.grnDate=req.grnDate
             grnEntity.createdUser=req.createdUser
             grnEntity.updatedUser=req.updatedUser
+            console.log(req,'===========')
             for(const item of req.grnItemInfo){
                 // item.conversionQuantity=200
                 // item.conversionUomId=1
@@ -154,7 +155,7 @@ export class GrnService{
             const save = await this.grnRepo.save(grnEntity)  
             if(save){
                 for(const item of req.grnItemInfo){ 
-                  if(item.poFabricId != null){
+                  if(item.indentFabricId != null){
                    if(req.materialtype == 'Fabric'){
                     console.log('****************************')
                     const poQuantity = await this.poFabricRepo.find({where:{poFabricId:item.poFabricId}})
@@ -176,10 +177,10 @@ export class GrnService{
 
                    }
                 }
-                if(item.poFabricId == null){
+                if(item.indentFabricId == null){
                     await  this.poFabricRepo.update({poFabricId:item.poFabricId},{grnQuantity:item.conversionQuantity})
                 }
-                if(item.poTrimId != null){
+                if(item.indentTrinId != null){
                     if(req.materialtype == 'Trim'){
                         const poQuantity = await this.poTrimRepo.find({where:{poTrimId:item.poTrimId}})
                         if(poQuantity[0].poQuantity == item.conversionQuantity){
@@ -197,7 +198,7 @@ export class GrnService{
                            }
                        }
                 }
-                if(item.poTrimId == null){
+                if(item.indentTrinId == null){
                     await this.poTrimRepo.update({poTrimId:item.poTrimId},{grnQuantity:item.conversionQuantity})
                 }
                      

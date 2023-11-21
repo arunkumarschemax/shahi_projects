@@ -100,30 +100,31 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
     
 
     const convertQuantity = (quantity, fromUom, toUom) => {
-      console.log(quantity,fromUom,toUom)
-      if (fromUom === toUom) {
-      console.log(quantity)
-      setQuantity(quantity)
-        return quantity;
-      }
-      if (!(fromUom in uomConversionFactors) || !(toUom in uomConversionFactors)) {
-        console.log(fromUom in uomConversionFactors)
-        throw new Error('Invalid units of measure');
-      }
-    
-      const baseQuantity = quantity * uomConversionFactors[fromUom];
-      const convertedQuantity = baseQuantity / uomConversionFactors[toUom];
-      console.log(convertedQuantity)
-      setQuantity(convertedQuantity)
-      return convertedQuantity;
+      if(quantity != null && fromUom != undefined && toUom != undefined){
+        console.log(quantity,fromUom,toUom)
+        if (fromUom === toUom) {
+        console.log(quantity)
+        setQuantity(quantity)
+          return quantity;
+        }
+        if (!(fromUom in uomConversionFactors) || !(toUom in uomConversionFactors)) {
+          console.log(fromUom in uomConversionFactors)
+          throw new Error('Invalid units of measure');
+        }
       
+        const baseQuantity = quantity * uomConversionFactors[fromUom];
+        const convertedQuantity = baseQuantity / uomConversionFactors[toUom];
+        console.log(convertedQuantity)
+        setQuantity(convertedQuantity)
+        return convertedQuantity;
+      }  
     };
     
     let convertedQty
 
     const acceptUomOnchange = (option, value, record) =>{
       const acceptedQuantity = form.getFieldValue(`acceptedQuantity_${record.poFabricId}_${record.key}`);
-       convertedQty = convertQuantity(acceptedQuantity, reciveUomName, value.type);
+       convertedQty = convertQuantity(acceptedQuantity, reciveUomName, value?.type?value.type:undefined);
     }
    
     const receiveuomOnChange = (value,option) =>{
@@ -303,7 +304,8 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
           title: <div style={{ textAlign: 'center' }}>Converted Qty</div>,
           dataIndex: 'convertedQty',
           render: (_, record) => {
-            return <div style={{ textAlign: 'center' }}>{Number(quantity)?Number(quantity):''}</div>;
+            return   <Form.Item  name={`convertedQty_${record.poFabricId}_${record.key}`}>  
+              {<span>{Number(quantity)?Number(quantity):''}</span>}</Form.Item>
           },
         },
       ]

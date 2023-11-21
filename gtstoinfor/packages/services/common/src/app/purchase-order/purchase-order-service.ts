@@ -231,12 +231,15 @@ export class PurchaseOrderService {
     async GetPurchaseFabricData(purchaseOrderId: number): Promise<CommonResponseModel> {
         try {
             console.log(purchaseOrderId)
-            let query = `SELECT po_fabric_id AS pofabricId,colour_id AS colourId,product_group_id AS productGroupId,fabric_type_id AS fabricTypeId,
-            m3_fabric_code AS m3fabricCode,shahi_fabric_code AS shahiFabricCode,content,weave_id AS weaveId,width,yarn_count AS yarnCount,finish,shrinkage,
-            pch,moq,purchase_order_id AS purchaseOrderId,indent_fabric_id AS indentFabricId,po_quantity AS poQuantity,quantity_uom_id AS quantityUomId,
+            let query = `SELECT u.uom AS quantityUom,item_code AS itemCode,c.colour AS colourName,po_fabric_id AS pofabricId,pf.colour_id AS colourId,
+            m3_fabric_code AS m3fabricCode,shahi_fabric_code AS shahiFabricCode,purchase_order_id AS purchaseOrderId,
+            indent_fabric_id AS indentFabricId,po_quantity AS poQuantity,
+            quantity_uom_id AS quantityUomId,
             fab_item_status AS fabItemStatus,grn_quantity
-            FROM purchase_order_fabric pf where pf.purchase_order_id=`+ purchaseOrderId + ``
-            
+            FROM purchase_order_fabric pf
+            LEFT JOIN colour c ON c.colour_id=pf.colour_id
+            LEFT JOIN m3_items mi ON mi.m3_items_Id=pf.m3_fabric_code
+            LEFT JOIN uom u ON u.id=quantity_uom_id where pf.purchase_order_id=`+ purchaseOrderId + ``
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)
@@ -249,8 +252,13 @@ export class PurchaseOrderService {
     }
     async GetPurchaseTrimData(purchaseOrderId: number): Promise<CommonResponseModel> {
         try {
-            let query = `SELECT po_trim_id AS poTrimid,product_group_id AS productGrouoId,trim_id AS trimId,m3_trim_code AS m3trimCode, purchase_order_id,colour_id AS clourId,
-            indent_trim_id AS indentTrimId,po_quantity AS poQuantity,trim_item_status AS trimItemStaus,grn_quantity AS grnQuantity FROM purchase_order_trim pt where pt.purchase_order_id=`+ purchaseOrderId + ``
+            let query = `SELECT ri.item_code AS itemCode,pg.product_group AS productGroup,po_trim_id AS poTrimid,pt.product_group_id AS productGrouoId,trim_id AS trimId,m3_trim_code AS m3trimCode,
+            purchase_order_id,colour_id AS clourId,
+                       indent_trim_id AS indentTrimId,po_quantity AS poQuantity,trim_item_status AS trimItemStaus,
+                       grn_quantity AS grnQuantity 
+                       FROM purchase_order_trim pt
+                       LEFT JOIN product_group pg ON pg.product_group_id=pt.product_group_id
+                       LEFT JOIN rm_items ri ON ri.rm_item_id=pt.trim_id where pt.purchase_order_id=`+ purchaseOrderId + ``
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)

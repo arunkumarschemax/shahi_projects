@@ -6,7 +6,6 @@ export class GrnDto{
   vendorId:number
   poId:number
   grnDate:Date
-  status:PurchaseOrderStatus
   remarks:string
   isActive?: boolean;
   createdAt?: Date;
@@ -19,6 +18,7 @@ export class GrnDto{
   grnItemInfo?: GrnItemsDto[];
   grnId?:number
   grnNumber?:string
+  status:PurchaseOrderStatus
 
 
   constructor(
