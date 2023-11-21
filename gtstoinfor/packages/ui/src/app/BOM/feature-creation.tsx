@@ -17,6 +17,9 @@ export const FeatureCreation = () => {
     const sizeService = new SizeService()
     const desService = new DestinationService()
     const service = new FeatureService()
+    const [selectedColors,setSelectedColors] = useState<any[]>([])
+    const [selectedSize,setSelectedSize] = useState<any[]>([])
+    const [selectedDestination,setSelectedDestination] = useState<any[]>([])
 
     useEffect(() => {
         colorData();
@@ -67,16 +70,19 @@ export const FeatureCreation = () => {
       optionInfo = values.optionId.map(colorId => ({
         option: selectedOption,
         optionId: colorId,
+        optionValue: selectedColors.filter(e => e.key == colorId)[0].name
       }));
     } else if (selectedOption === 'SIZE') {
       optionInfo = values.optionId.map(sizeId => ({
         option: selectedOption,
         optionId: sizeId,
+        optionValue: selectedSize.filter(e => e.key == sizeId)[0].name
       }));
     } else if (selectedOption === 'DESTINATION') {
       optionInfo = values.optionId.map(destinationId => ({
         option: selectedOption,
         optionId: destinationId,
+        optionValue: selectedDestination.filter(e => e.key == destinationId)[0].name
       }));
     }
 
@@ -101,6 +107,15 @@ console.log(data,"data")
 
 const colorChange = (val,option) =>{
   console.log(option,'--')
+  setSelectedColors(option)
+}
+
+const sizeChange = (val,option) => {
+  setSelectedSize(option)
+}
+
+const destinationChange = (val,option) => {
+  setSelectedDestination(option)
 }
 
       
@@ -203,10 +218,12 @@ const colorChange = (val,option) =>{
                   placeholder='Select Size'
                   allowClear
                   optionFilterProp="children"
-                  showSearch>
+                  showSearch
+                  onChange={sizeChange}
+                  >
                   {size?.map((val) => {
                     return (
-                      <Option key={val.sizeId} value={val.sizeId}>
+                      <Option key={val.sizeId} value={val.sizeId} name={val.size}>
                         {val.size}
                       </Option>
                     )
@@ -230,10 +247,13 @@ const colorChange = (val,option) =>{
                   placeholder='Select Destination'
                   allowClear
                   optionFilterProp="children"
-                  showSearch>
+                  showSearch
+                  onChange={destinationChange}
+                
+                  >
                   {des?.map((val) => {
                     return (
-                      <Option key={val.destinationId} value={val.destinationId}>
+                      <Option key={val.destinationId} value={val.destinationId} name={val.destination}>
                         {val.destination}
                       </Option>
                     )

@@ -267,12 +267,13 @@ export const Substitution = () => {
             }
         })
     }
-
+    ``
     const onReset = () => {
         form.resetFields()
         setSelectedRmSKus([])
         setFgSkus([])
         setRmSKus([])
+        setTotalRmSkus([])
     }
 
     return(
@@ -327,27 +328,28 @@ export const Substitution = () => {
                 </>) : (<></>)
             }
             {
-                rmSkus.length > 0 ? (<>
+                unmappedRmSkus.length > 0 ? (<>
                      <Row gutter={24}>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 24 }}>
                 <Card title='UnMapped RM SKUS'
                 onDragOver={handleDragOver}
                 onDrop={handleAvailableDrop}
                 size='small'
+                headStyle={{backgroundColor:'#70a9a1'}}
                 >
                 <Row gutter={8}>
                 {unmappedRmSkus?.map((e,index) => (
                         <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
                     <Card
                     size='small'
-                    style={{ background: '#f7c78d', marginBottom: '10px',height:'35px'}}
+                    style={{ background: '#e4f0d0', marginBottom: '10px',height:'35px'}}
                     draggable
                     onDragStart={(event) => handleRmSkusDragStart(event, e)}
                     onDragEnd={handleRmDragEnd}
                     onDrop={handleDrop}
                     >
                         <span style={{ wordWrap: 'break-word' }}>
-                            <li style={{ color: 'black',textAlign:'center'}}>{e.rmSkuCode}</li>
+                            <li style={{ color: 'black',textAlign:'center'}}><b>{e.rmSkuCode}</b></li>
                         </span>
                     </Card>
                         </Col>
@@ -369,6 +371,7 @@ export const Substitution = () => {
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 5 }}>
                                 <Card title={`${rec.sku_code} (${rec.color}/${rec.size}/${rec.destination})`}
                                 size='small'
+                                headStyle={{backgroundColor:'#70a9a1'}}
                                 onDragOver={handleDragOver}
                                 onDrop={(event) => handleFGDrop(event,rec.sku_code,rec.item_sku_id)}
                                 >
@@ -381,12 +384,12 @@ export const Substitution = () => {
                                                     <>
                                                     <Card
                                                     size='small'
-                                                    style={{ background: '#f7c78d', marginBottom: '10px',height:'35px' }}
+                                                    style={{ background: '#e4f0d0', marginBottom: '10px',height:'35px' }}
                                                     draggable
                                                     onDragStart={(event) => handleAssignedRmSkusDragStart(event, rmsku,rec.sku_code)}
                                                     >
                                                         <span style={{ wordWrap: 'break-word' }}>
-                                                            <li style={{ color: 'black',textAlign:'center' }}>{rmsku.rmSKuCode}</li>
+                                                            <li style={{ color: 'black',textAlign:'center' }}><b>{rmsku.rmSKuCode}</b></li>
                                                         </span>
                                                     </Card>
                                                     </>
