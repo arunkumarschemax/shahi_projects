@@ -69,4 +69,16 @@ export class PurchaseOrderController {
     }
   }
 
+  // @Post('/activeOrDeactivePo')
+  // async activateOrDeactivatePo(@Body() req?: any ): Promise<CommonResponseModel> {
+  //   console.log(req,'555555222222222222222');
+    
+  //   try {
+  //     return await this.purchasseOrdrSerivice.activateOrDeactivatePo(req);
+  //   } catch (error) {
+  //     return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+  //   }
+  // }
+
+
 }

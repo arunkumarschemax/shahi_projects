@@ -90,7 +90,7 @@ const column1 : any =[
  
   {
     title: 'Grn Quantity',
-    dataIndex: 'grnQuantity',
+    dataIndex: 'grn_quantity',
   }, {
     title: 'Status',
     dataIndex: 'trimItemStaus',
@@ -149,7 +149,7 @@ const column1 : any =[
   return (
     <div>
       <Card>
-      <Card title="PO Detail View"  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}  extra={<span style={{ color: 'white' }} > <Button className='panel_button' onClick={() => navigate('/purchase-view')}>Po View</Button> </span>} >
+      <Card title="PO Detail View"  headStyle={{ backgroundColor: '#69c0ff', border: 0 , textAlign: 'center'  }}  extra={<span style={{ color: 'white' }} > <Button className='panel_button' onClick={() => navigate('/purchase-view')}>Po View</Button> </span>} >
       <Descriptions size='small' >
      
   <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Po Number</span>}>{data[0]?.poNumber}</DescriptionsItem>
@@ -161,9 +161,7 @@ const column1 : any =[
     <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Expected Date</span>}>{moment(data[0]?.deliveryDate).format('YYYY-MM-DD')}
 </DescriptionsItem>
 
-    <DescriptionsItem label={<span style={{ marginBottom:'30px', fontWeight: 'bold', color: 'darkblack' }}>Delivery Address</span>}>
-      {data[0]?.location_name}
-    </DescriptionsItem>
+    
  
 </Descriptions>
 

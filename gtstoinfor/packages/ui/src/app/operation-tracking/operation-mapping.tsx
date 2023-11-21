@@ -1,4 +1,4 @@
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { MinusCircleOutlined, PlusOutlined, UndoOutlined } from '@ant-design/icons';
 import { OperationsRequest, SamplieMappingDto } from '@project-management-system/shared-models';
 import { LocationsService, OperationInventoryService, SampleDevelopmentService, SizeService } from '@project-management-system/shared-services';
 import { Button, Card, Col, Descriptions, Form, Input, Row, Select, Space, Table, message } from 'antd';
@@ -222,6 +222,9 @@ console.log(stateData,'pppp');
                                             </Col>
                                             <Col >
                                                 <Button type='primary' htmlType="submit" block >Submit</Button>
+                                            </Col>
+                                            <Col >
+                                                <Button danger icon={<UndoOutlined />} htmlType="reset" block >Reset</Button>
                                             </Col>
                                         </Row>
                                     </>

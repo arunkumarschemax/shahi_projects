@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { PurchaseOrderEntity } from "./entities/purchase-order-entity";
-import { CommonResponseModel, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
+import { CommonResponseModel,PoActiveOrDeactive, PurchaseStatusEnum, PurchaseViewDto, VendorIdReq } from "@project-management-system/shared-models";
 import { PurchaseOrderDto } from "./dto/purchase-order-dto";
 import { PurchaseOrderFbricEntity } from "./entities/purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "./entities/purchase-order-trim-entity";
@@ -236,6 +236,7 @@ export class PurchaseOrderService {
             pch,moq,purchase_order_id AS purchaseOrderId,indent_fabric_id AS indentFabricId,po_quantity AS poQuantity,quantity_uom_id AS quantityUomId,
             fab_item_status AS fabItemStatus,grn_quantity
             FROM purchase_order_fabric pf where pf.purchase_order_id=`+ purchaseOrderId + ``
+            
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)
@@ -305,5 +306,16 @@ export class PurchaseOrderService {
             throw err
         }
     }
+
+
+//     async activateOrDeactivatePo(req?: PoActiveOrDeactive): Promise<CommonResponseModel> {        
+//     const find = await this.poRepo.findOne({ where: { purchaseOrderId: req.PurchaseId } });
+//     if (find.isActive || !find.isActive) {
+//       await this.poRepo.update({ purchaseOrderId: req.PurchaseId }, { isActive: !find.isActive });
+//       return new CommonResponseModel(true, 125478, `${find.isActive ? "Deactivated Successfully" : !find.isActive ? "Record Activated Successfully" : "Failed"}`);
+//     } else {
+//       throw new CommonResponseModel(false,123458, "Status Not Found");
+//     }
+//   }
 
 }

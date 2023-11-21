@@ -1,11 +1,12 @@
-import { CloseOutlined, EyeOutlined } from '@ant-design/icons';
-import { PurchaseStatusEnum, PurchaseViewDto } from '@project-management-system/shared-models';
+import { CheckOutlined, CloseCircleOutlined, CloseOutlined, EditOutlined, EyeOutlined, RightSquareOutlined, UndoOutlined } from '@ant-design/icons';
+import { PoActiveOrDeactive, PurchaseStatusEnum, PurchaseViewDto } from '@project-management-system/shared-models';
 import { PurchaseOrderservice } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tabs, Tooltip } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Popconfirm, Row, Select, Switch, Table, Tabs, Tooltip, message } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { log } from 'console';
+import AlertMessages from '../common/common-functions/alert-messages';
 
 export const PurchaseOrderView = () => {
   const page = 1;
@@ -69,7 +70,21 @@ export const PurchaseOrderView = () => {
 
   }
 
+  //   const activateOrDeactivate =  (id:number) => {
+  //     const req = new PoActiveOrDeactive(id);
+  //     console.log(req,'2111211111112');
 
+
+  //     Service.activeOrDeActive(req).then((response) => {
+  //         if (response.status) {
+  //             AlertMessages.getSuccessMessage(response.internalMessage);
+  //         } else {
+  //             AlertMessages.getErrorMessage(response.internalMessage);
+  //         }
+  //     }).catch(err => {
+  //         AlertMessages.getErrorMessage(err.message);
+  //     })
+  // };
   const renderCellData = (data) => {
     return data ? data : "-";
   }
@@ -156,7 +171,7 @@ export const PurchaseOrderView = () => {
     {
       title: 'Aging(EPD)',
       dataIndex: 'deliveryDate',
-      width: '20px',
+      width: '10px',
       fixed: 'right',
       align: 'right',
       render: (text, record) => {
@@ -174,11 +189,18 @@ export const PurchaseOrderView = () => {
       },
     },
     {
+      title: 'Status',
+      dataIndex: 'status',
+      width: '50px',
+
+    },
+    {
       title: 'Action',
       dataIndex: 'requestNumber',
       align: "center",
-      width: '30px',
-      render: (text, rowData, index) => (
+      width: '80px',
+      render: (text, rowData, record) => (
+
         <span>
           <Tooltip placement="top" title="Detail View">
             <EyeOutlined
@@ -193,6 +215,23 @@ export const PurchaseOrderView = () => {
               style={{ color: "blue", fontSize: 20 }}
             />
           </Tooltip>
+          {/* <Tooltip placement="top" title="Edit">
+            <EditOutlined />
+          </Tooltip>
+          <Popconfirm
+            onConfirm={() => { active(rowData) }}
+            title={rowData.isActive ? 'Are you sure to Deactivate?' : 'Are you sure to Activate?'}
+          >
+            <Switch
+              size="default"
+              className={rowData.isActive ? 'toggle-activated' : 'toggle-deactivated'}
+              checkedChildren={<RightSquareOutlined type="check" />}
+              unCheckedChildren={<RightSquareOutlined type="close" />}
+              checked={rowData.isActive}
+              disabled={!rowData.isActive} // Set disabled to true if isActive is false
+            />
+          </Popconfirm> */}
+
         </span>
       ),
 
@@ -202,7 +241,8 @@ export const PurchaseOrderView = () => {
   ];
 
   return (
-    <div><Card title="Purchase Orders" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+    <div><Card
+      title="Purchase Order View" headStyle={{ backgroundColor: '#69c0ff', border: 0, textAlign: 'center' }}>
       <Form form={form}>
         <Row gutter={12}>
           <Col span={6}>
@@ -220,7 +260,7 @@ export const PurchaseOrderView = () => {
             <Button htmlType='submit' type="primary" onClick={onSearch}> Get Detail </Button>
           </Col>
           <Col span={2}>
-            <Button htmlType='reset' danger onClick={resetHandler}>Reset</Button>
+            <Button htmlType='reset' danger icon={<UndoOutlined />} onClick={resetHandler}>Reset</Button>
           </Col>
         </Row>
         {/* <Row gutter={24}>
