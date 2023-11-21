@@ -6,6 +6,7 @@ import { SearchOutlined} from "@ant-design/icons";
 import { FilterConfirmProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
 import { UomService } from "@project-management-system/shared-services";
+import { useNavigate } from "react-router-dom";
 
 export function UomGrid() {
   const [page, setPage] = useState<number>(1);
@@ -16,6 +17,7 @@ export function UomGrid() {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<any>(null);
+  const navigate=useNavigate();
 
 
   useEffect(() => {
@@ -165,7 +167,15 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
       title={<span style={{ color: "Black" }}>Unit of Measurements</span>}
       // style={{ textAlign: "center" }}
       headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+      
       size="small"
+      extra={<Button
+        className="panel_button"
+        onClick={() => navigate('uom/uom-form')}
+        type="primary"
+        style={{ background: "white", color: "#3C085C" }}
+    >Create</Button>
+    }
     //   extra={
     //     <Link to="/vehicle-model-form">
     //       <Button className="panel_button">Create </Button>

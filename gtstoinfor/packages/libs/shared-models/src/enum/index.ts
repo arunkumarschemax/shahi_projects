@@ -13,4 +13,5 @@ export * from './purchase-order-enum'
 export * from './property.enum'
 export * from './is-imported-item.enum'
 export * from './status-purchase'
+export * from './m3Items-content-enum'
 

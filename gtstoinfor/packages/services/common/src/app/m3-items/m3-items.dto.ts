@@ -1,5 +1,7 @@
 import { IsInt, IsEmail, IsString, IsDateString, IsNumber, IsDate, IsAlphanumeric, MaxLength, Matches, IsOptional, IsNotEmpty, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { m3ItemsContentEnum } from 'packages/libs/shared-models/src/enum';
+
 export class M3ItemsDTO {
 
     @ApiProperty()
@@ -9,7 +11,7 @@ export class M3ItemsDTO {
     itemCode: string;
 
     @ApiProperty()
-    content: string;
+    content: m3ItemsContentEnum;
 
     @ApiProperty()
     fabricType: number;
@@ -31,6 +33,12 @@ export class M3ItemsDTO {
 
     @ApiProperty()
     yarnUnit: string;
+
+    @ApiProperty()
+    width: number;
+
+    @ApiProperty()
+    widthUnit: string;
 
     @ApiProperty()
     finish: string;
