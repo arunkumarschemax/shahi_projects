@@ -166,6 +166,7 @@ import M3ItemsView from "./masters/m3-items/m3-items-view"
 import OperationInventoryView from "./operation-tracking/operation-inventory-view"
 import OperationMapping from "./operation-tracking/operation-mapping"
 import { PurchaseOrderView } from "./purchase-order2/purchase-order-view"
+import UomForm from "./masters/uom/uom-form"
 
 
 
@@ -209,6 +210,9 @@ export const AppRoutes = () => {
                 {/* <Route path='/stack-report' element={<StockReport/>}/> */}
                 <Route path='/stack-report' element={<StockReport />} />
                 <Route path='/material-requisition' element={<SampleRequestReport />} />
+
+
+                <Route path='/uom-form' element={<UomForm/>} />
 
 
                 <Route path='/m3-items' element={<M3Items />} />

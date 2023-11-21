@@ -1,6 +1,5 @@
-import { RackEnum } from "@project-management-system/shared-models";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
-import { Buyers } from "../buyers/buyers.entity";
+import { RackEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
 @Entity('m3_items')
 export class M3ItemsEntity {
@@ -34,7 +33,7 @@ export class M3ItemsEntity {
     length: 30,
     name: 'content',
   })
-  content: string;
+  content: m3ItemsContentEnum;
 
   @Column('varchar', {
     nullable: false,
@@ -85,6 +84,20 @@ export class M3ItemsEntity {
     name: 'yarn_unit',
   })
   yarnUnit: string;
+
+  @Column('varchar', {
+    nullable: false,
+    length: 11,
+    name: 'width',
+  })
+  width: number;
+
+  @Column('varchar', {
+    nullable: false,
+    length: 30,
+    name: 'width_unit',
+  })
+  widthUnit: string;
 
   @Column('varchar', {
     nullable: false,
