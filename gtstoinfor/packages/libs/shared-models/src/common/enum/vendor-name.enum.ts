@@ -77,6 +77,7 @@ export enum VendorNameEnum {
     extractedFederationofIndian='Federation of Indian',
     extractedLogWin='LOGWIN',
     extractedHellmann="HELLMANN",
-    extractedGeodis="GEODIS"
+    extractedGeodis="GEODIS",
+    extractedJas="JAS",
     
 }
