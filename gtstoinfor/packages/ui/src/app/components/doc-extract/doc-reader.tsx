@@ -183,10 +183,6 @@ export const DocReader = (props: DocReaderProps) => {
                     processedData = await extractedTvs(pdfData);
                     console.log('TVS:', processedData);
                     break;
-                // case VendorNameEnum.extractedUnitedLiner:
-                //                 processedData = await extractedUnitedLiner(pdfData);
-                //                 console.log('UNITED LINER:', processedData);
-                //                 break;
                   case VendorNameEnum.extractedVelogicIndia:
                                 processedData = await extractedVelogicIndia(pdfData);
                                 console.log('VELOGIC INDIA:', processedData);
@@ -195,7 +191,6 @@ export const DocReader = (props: DocReaderProps) => {
                                 processedData = await extracteWiderlogistics(pdfData);
                                 console.log('WIDER LOGISTICS:', processedData);
                                 break;
-                                // extracteWorldLine
                     case VendorNameEnum.extractedWorldLine:
                                 processedData = await extractedWorldLine(pdfData);
                                 console.log('WORLD LINE:', processedData);
