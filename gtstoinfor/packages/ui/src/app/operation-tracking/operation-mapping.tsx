@@ -1,6 +1,6 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { SamplieMappingDto } from '@project-management-system/shared-models';
-import { LocationsService, SampleDevelopmentService, SizeService } from '@project-management-system/shared-services';
+import { OperationsRequest, SamplieMappingDto } from '@project-management-system/shared-models';
+import { LocationsService, OperationInventoryService, SampleDevelopmentService, SizeService } from '@project-management-system/shared-services';
 import { Button, Card, Col, Descriptions, Form, Input, Row, Select, Space, Table, message } from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import moment from 'moment';
@@ -18,15 +18,18 @@ export const OperationMapping = () => {
     let navigate = useNavigate();
     const service = new LocationsService()
     const service1 = new SampleDevelopmentService()
+    const services1 = new OperationInventoryService()
     const { Option } = Select
     let Location = useLocation()
     const stateData = Location.state.data
 
+console.log(stateData,'pppp');
 
 
     useEffect(() => {
         getLocation();
         getSize();
+        getOperation();
     }, [])
 
     const getLocation = () => {
@@ -34,6 +37,19 @@ export const OperationMapping = () => {
             if (res.status) {
                 setDrop(res.data)
             }
+        })
+    }
+
+    const getOperation =()=>{
+        const req = new OperationsRequest(stateData?.[0])
+        console.log(req,'ppppppp');
+        
+        services1.getOperationInverntoryData(req).then(res =>{
+            if (res.status) {
+                setData(res.data)
+                console.log(res.data,'pppppppppppp');
+                
+            } 
         })
     }
     const getSize = () => {
@@ -101,10 +117,10 @@ export const OperationMapping = () => {
                 <Card>
                     <Descriptions size='small' >
 
-                        <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Style</span>}>{data[0]?.poNumber}</DescriptionsItem>
-                        <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>M3 Style Code</span>}>{moment(data[0]?.orderDates).format('YYYY-MM-DD')}
-                            {data[0]?.orderDates}</DescriptionsItem>
-                        <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Size</span>}>{data[0]?.vendorName}</DescriptionsItem>
+                        <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Style</span>}>{data[0]?.styleName}</DescriptionsItem>
+                        <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Operation</span>}>{data[0]?.operation}</DescriptionsItem>
+                        <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Physical Quantity</span>}>{data[0]?.physicalQuantity}</DescriptionsItem>
+                        <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Mapped Quantity</span>}>{data[0]?.mappedQuantity}</DescriptionsItem>
                         {/* <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Buyer</span>}>{moment(data[0]?.deliveryDate).format('YYYY-MM-DD')}
                         </DescriptionsItem>
                         <DescriptionsItem label={<span style={{ marginBottom: '30px', fontWeight: 'bold', color: 'darkblack' }}>Buyer Address</span>}>
@@ -113,6 +129,7 @@ export const OperationMapping = () => {
 
                     </Descriptions>
                 </Card>
+                <Card>
                 <Form
                     onFinish={onSave}>
                     <Row gutter={8}>
@@ -213,7 +230,7 @@ export const OperationMapping = () => {
                         </Col>
                     </Row>
                 </Form>
-
+                </Card>
 
                 {/* <Table columns={columms}/> */}
             </Card>

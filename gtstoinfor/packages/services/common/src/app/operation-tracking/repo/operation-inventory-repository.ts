@@ -6,7 +6,7 @@ import { OperationInvRequest } from "../dto/operation-inventory-req";
 import { Style } from "../../style/dto/style-entity";
 import { UomEntity } from "../../uom/uom-entity";
 import { OperationTracking } from "../entity/operation-tracking-entity";
-import { TabNameReq } from "@project-management-system/shared-models";
+import { OperationsRequest, TabNameReq } from "@project-management-system/shared-models";
 import { MaterialIssueEntity } from "../../material-issue/entity/material-issue-entity";
 import { MaterialFabricEntity } from "../../material-issue/entity/material-fabric-entity";
 import { promises } from "dns";
@@ -45,10 +45,14 @@ export class OperationInventoryRepository extends Repository<OperationInventory>
         return data
     }
 
-    async getOperationInventor(){
+    async getOperationInventor(req?:OperationsRequest){        
         const query = await this.createQueryBuilder('oi')
         .select(`oi.operation_inventory_id AS OperationId,oi.style_id AS styleId,s.style AS styleName,oi.operation AS operation,oi.physical_quantity AS physicalQuantity,oi.location_mapped as mappedQuantity`)
         .leftJoin(Style, 's','s.style_id = oi.style_id')
+        .where (`oi.operation = 'packing'`)
+        if(req?.operationId != undefined){
+        query.andWhere(`oi.operation_inventory_id = '${req?.operationId}'`)
+        }
         const data = await query.getRawMany()
         return data
     }
