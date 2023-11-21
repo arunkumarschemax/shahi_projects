@@ -56,7 +56,7 @@ export function CommissionForm(props: CommissionFormProps) {
   return (
     <Card
       title={props.isUpdate ?
-      'Commision':'Commision'}
+      'Buying House Commision':'Buying House Commision'}
       extra={(props.isUpdate === false) && <span><Button onClick={()=>navigate('/masters/commission/commission-view')} type={'primary'}>View</Button></span> }>
       
     
@@ -79,11 +79,11 @@ export function CommissionForm(props: CommissionFormProps) {
             sm={{ span: 24 }}
             md={{ span: 8 }}
             lg={{ span: 8 }}
-            xl={{ span: 8 }}
+            xl={{ span: 6 }}
           >
             <Form.Item
               name="commission"
-              label="Commission"
+              label="Buying House Commission"
               rules={[
                 {
                   required: true,
@@ -95,7 +95,7 @@ export function CommissionForm(props: CommissionFormProps) {
                 },
               ]}
             >
-              <Input placeholder="Enter Commission" />
+              <Input placeholder="Enter Buying House Commission" />
             </Form.Item>
           </Col>
         </Row>

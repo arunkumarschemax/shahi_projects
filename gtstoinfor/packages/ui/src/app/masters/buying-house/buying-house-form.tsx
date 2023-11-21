@@ -104,10 +104,10 @@ export function BuyingHouseForm(props: BuyingHouseFormProps) {
                   required: true,
                   message: "Buying House Is Required",
                 },
-                {
-                  pattern: /^[a-zA-Z\s]*$/,
-                  message: "Should contain only alphabets",
-                },
+                // {
+                //   pattern: /^[a-zA-Z\s]*$/,
+                //   message: "Should contain only alphabets",
+                // },
               ]}
             >
               <Input placeholder="Enter Buying House" />

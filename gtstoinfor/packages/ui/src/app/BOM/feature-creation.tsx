@@ -106,7 +106,6 @@ console.log(data,"data")
 };
 
 const colorChange = (val,option) =>{
-  console.log(option,'--')
   setSelectedColors(option)
 }
 
@@ -268,7 +267,7 @@ const destinationChange = (val,option) => {
             <Button type="primary" htmlType="submit" >
               Submit
             </Button>
-         <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset} danger>
+         <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset}>
             Reset
           </Button>
             </Col>

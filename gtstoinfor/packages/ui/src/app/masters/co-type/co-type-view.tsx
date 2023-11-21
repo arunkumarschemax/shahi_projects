@@ -288,7 +288,7 @@ export const CoTypeView = () => {
              }
            }}
         
-                    dataSource={data} size='small' bordered/>
+            dataSource={data} size='small' bordered/>
             </div>
             <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>

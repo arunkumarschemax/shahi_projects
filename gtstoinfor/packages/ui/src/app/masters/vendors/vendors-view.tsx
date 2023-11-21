@@ -310,11 +310,11 @@ export function VendorsView(
           sorter: (a, b) => a.contactNumber.localeCompare(b.contactNumber),
           sortDirections: ['descend', 'ascend'],
           ...getColumnSearchProps('contactNumber'),
-          render:(text,record) => (
+          render: (contact) => (
             <span>
-              {record.contactNumber ? record.contactNumber :'-'}
+              <a href={`tel:${contact}`}>{contact}</a>
             </span>
-          )
+          ),
         },
         {
           dataIndex:"gstNumber",
