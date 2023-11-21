@@ -5952,7 +5952,7 @@ export const extractedTvs = async (pdf) => {
                     invoiceNumber = invoiceNumberData ? invoiceNumberData.content.match(invoiceNumberRegex) : "";
 
                     const invoiceAmountData = extractedData.find((item) => item.content.match(invoiceAmountRegex) );
-                    invoiceAmount = invoiceAmountData ? invoiceAmountData.content.replace(/\w+\s+\w+\s+\w+\s+(\d|,)+\.\d+\s+(\d|,)+\.\d+\s+/g, "") : "";
+                    invoiceAmount = invoiceAmountData ? invoiceAmountData.content.replace(/\w+\s+\w+\s+\w+\s+(\d|,)+\.\d+\s+(\d|,)+\.\d+\s+/g, "").replace(/\,/g,"") : "";
 
                     let igst = "0.00";
                     let cgst = "0.00";
@@ -6768,7 +6768,7 @@ export const extracteWiderlogistics = async (pdf) => {
 //         extractedHsnData: structuredHSNLines
 //     };
 // }
-
+// /(996|998)\d+\s+((\d+(\.\d))|(\d+\.\d+\s+\d+\.\d+))\s+\d+(,|.)(\.\d|\d)+\s+\d+/
 export const extractedKwe = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
