@@ -304,7 +304,8 @@ export function BuyersForm(props: BuyersFormProps) {
                 label="Payment Terms"
                 rules={[
                   {
-                    required: false,
+                    required: true,
+                    message:'Missing Payment terms'
                   },
                 ]}
               >
@@ -340,7 +341,7 @@ export function BuyersForm(props: BuyersFormProps) {
                 label="Payment Method"
                 rules={[
                   {
-                    required: true, message: 'Missing payment mode',
+                    required: true, message: 'Missing payment method',
                   },
                 ]}
               >

@@ -118,14 +118,18 @@ export const SettingsForm = () => {
     },[initialData])
 
     const getSettingsData = () => {
+
         const req = new SettingsIdReq()
         req.externalRefNumber = externalRefNo
-        service.getAllSettingsInfo(req).then(res => {
-            if(res.status){
-                navigate('/settings/settings-view')
-                // location.reload();
-            }
-        })
+        if(state?.id == null){
+
+            service.getAllSettingsInfo(req).then(res => {
+                if(res.status){
+                    navigate('/settings/settings-view')
+                    // location.reload();
+                }
+            })
+        }
     }
 
     const getAllInfo = () => {

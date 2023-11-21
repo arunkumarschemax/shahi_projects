@@ -213,7 +213,7 @@ export const ComponentMappingView = () => {
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 2 }}>
                       <Form.Item>
-                        <Button icon={<UndoOutlined/>} danger onClick={onReset}>Reset</Button>
+                        <Button onClick={onReset}>Reset</Button>
                       </Form.Item>
                     </Col>
                 </Row>

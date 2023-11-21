@@ -31,7 +31,6 @@ export const GarmentCategoryForm=(props:GarmentCategoryProps)=>{
         const saveGarment=(garment:GarmentCategoryDto)=>{
           garment.garmentCategoryId=0;
           service.createGarmentCategories(garment).then((res) => {
-            console.log(res,'0000000000')
             setDisable(false)
             if (res.status) {
               AlertMessages.getSuccessMessage('garment category Created Successfully');
@@ -100,7 +99,7 @@ export const GarmentCategoryForm=(props:GarmentCategoryProps)=>{
         </Col>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
             <Form.Item
-              name="Remarks"
+              name="remarks"
               label="Remarks">
               <Input placeholder='Enter Remarks'/>
             </Form.Item>
