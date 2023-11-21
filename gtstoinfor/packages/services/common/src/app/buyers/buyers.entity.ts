@@ -10,6 +10,8 @@ import { BuyersSize } from "../buyers-destination/buyers-sizes.entity";
 import { BuyersColor } from "../buyers-destination/byers-colors.entity";
 import { SampleRequest } from "../sample-dev-request/entities/sample-dev-request.entity";
 import { StyleOrder } from "../style-order/style-order.entity";
+import { M3ItemsEntity } from "../m3-items/m3-items.entity";
+import { M3TrimsEntity } from "../m3-trims/m3-trims.entity";
 // import { PaymentMode } from "../payment-mode/payment-mode.entity";
 // import { ShippingTerms } from "../shipping-terms/shipping-terms.entity";
 
@@ -25,6 +27,13 @@ export class Buyers {
     name:"buyer_code"
   })
   buyerCode:string;
+
+  @Column("varchar",{
+    nullable:false,
+    length:15,
+    name:"short_code"
+  })
+  shortCode:string;
 
   @Column("varchar",{
     nullable:false,
@@ -236,4 +245,8 @@ export class Buyers {
 
   @OneToMany(type=>StyleOrder, buyer=>buyer.buyerInfo,{cascade: true})
   styleOrderInfo:StyleOrder;
+  @OneToMany(type=>M3ItemsEntity, m3Item=>m3Item.buyerInfo,{cascade: true})
+  M3ItemCodes:M3ItemsEntity[];
+  @OneToMany(type=>M3TrimsEntity, m3Trims=>m3Trims.buyerInfo,{cascade: true})
+  M3TrimCodes:M3TrimsEntity[];
 }

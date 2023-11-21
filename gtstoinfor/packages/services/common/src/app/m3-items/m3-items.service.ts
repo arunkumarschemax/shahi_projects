@@ -4,7 +4,7 @@ import { Repository, Not, DataSource } from "typeorm";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
 import { M3ItemsAdapter } from "./m3-items.adaptor";
 import { M3ItemsEntity } from "./m3-items.entity";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { BuyerIdReq, CommonResponseModel } from "@project-management-system/shared-models";
 import { M3ItemsDTO } from "./m3-items.dto";
 import { M3ItemsRepo } from "./m3-items.repository";
 
@@ -43,4 +43,20 @@ export class M3ItemsService {
     else
       return new CommonResponseModel(false, 0, 'No data found')
   }
+
+  async getM3FabricsByBuyer(createDto: BuyerIdReq): Promise<CommonResponseModel> {
+    try{
+      console.log("**********************************")
+      console.log(createDto)
+
+      const query = "Select m3_items_Id AS m3ItemsId, item_code AS itemCode, description AS description from m3_items where buyer_id ="+createDto.buyerId;
+      const data = await this.datasource.query(query)
+      if(data.length > 0){
+        return new CommonResponseModel(true, 1001, "Data Retrieved Successfully", data)
+      }
+    }catch (error) {
+      return new CommonResponseModel(false, 0, error)
+    }
+  }
+
 }

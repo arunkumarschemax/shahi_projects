@@ -2,7 +2,8 @@ import { AddressDto } from "./address-dto";
 
 export class BuyersDto{
     buyerId : number;
-    buyerCode : string;            
+    buyerCode : string;     
+    shortCode:string;       
     buyerName : string; 
     // accountType : string;           
     gstNumber : string; 
@@ -44,10 +45,11 @@ export class BuyersDto{
     * @param paymentMethod string
     * 
     */
-    constructor(buyerId : number,buyerCode : string,buyerName : string,gstNumber : string,contactPerson :string,phoneNo : string,email : string, currency : string, publicNote : string,privateNote : string,paymentTerms : string, shipmentTerms : string,paymentMethodId : number,isActive: boolean,createdUser : string,updatedUser : string,versionFlag:number,paymentTermsId: number,paymentMethod : string,addressInfo: AddressDto[])
+    constructor(buyerId : number,buyerCode : string,shortCode:string,buyerName : string,gstNumber : string,contactPerson :string,phoneNo : string,email : string, currency : string, publicNote : string,privateNote : string,paymentTerms : string, shipmentTerms : string,paymentMethodId : number,isActive: boolean,createdUser : string,updatedUser : string,versionFlag:number,paymentTermsId: number,paymentMethod : string,addressInfo: AddressDto[])
     {
         this.buyerId = buyerId;
-        this.buyerCode = buyerCode;     
+        this.buyerCode = buyerCode;   
+        this.shortCode = shortCode;     
         this.buyerName = buyerName;
         // this.accountType = accountType;  
         this.gstNumber = gstNumber;

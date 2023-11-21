@@ -254,6 +254,5 @@ async createBuyersDestination(
       new CommonResponseModel(false,0,'No data found this buyer',[])
     }
   }
-
-
+ 
 }

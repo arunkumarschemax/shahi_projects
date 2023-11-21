@@ -6,6 +6,9 @@ export class M3ItemsDTO {
     m3ItemsId: number;
 
     @ApiProperty()
+    buyerId: number;
+
+    @ApiProperty()
     itemCode: string;
 
     @ApiProperty()

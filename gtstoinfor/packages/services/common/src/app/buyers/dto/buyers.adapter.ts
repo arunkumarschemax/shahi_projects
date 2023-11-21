@@ -18,6 +18,7 @@ export class BuyersAdapter {
     const buyer = new Buyers();
     buyer.buyerCode=buyersDTO.buyerCode;
     buyer.buyerName=buyersDTO.buyerName;
+    buyer.shortCode=buyersDTO.shortCode;
     // buyer.accountType=buyersDTO.accountType;
     buyer.gstNumber=buyersDTO.gstNumber;
     buyer.contactPerson=buyersDTO.contactPerson;
@@ -75,6 +76,7 @@ export class BuyersAdapter {
     buyersDTO.buyerId=buyersObject.buyerId;
     buyersDTO.buyerCode=buyersObject.buyerCode;
     buyersDTO.buyerName=buyersObject.buyerName;
+    buyersDTO.shortCode=buyersObject.shortCode;
     // buyersDTO.accountType=buyersObject.accountType;
     buyersDTO.gstNumber=buyersObject.gstNumber;
     buyersDTO.phoneNo=buyersObject.phoneNo;

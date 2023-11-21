@@ -2,15 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button, Input, Select, Tooltip, message, Form } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
-import { ColourService, SampleDevelopmentService } from '@project-management-system/shared-services';
+import { ColourService, M3ItemsService, SampleDevelopmentService, UomService } from '@project-management-system/shared-services';
+import { UomCategoryEnum } from '@project-management-system/shared-models';
 
-const FabricsForm = ({props}) => {
+const FabricsForm = ({props, buyerId}) => {
   const [data, setData] = useState([]);
+  const [uom, setUom] = useState([]);
   const [count, setCount] = useState(0);
   const [fabricCodeData, setFabricCodeData] = useState<any[]>([])
   const [color, setColor] = useState<any[]>([])
   const {Option}=Select
   const service = new SampleDevelopmentService()
+  const m3ItemsService = new M3ItemsService()
+  const uomService =  new UomService()
+
   const colorService = new ColourService()
 
   const [form] = Form.useForm();
@@ -23,6 +28,21 @@ const FabricsForm = ({props}) => {
     setCount(count + 1);
   };
 
+  useEffect(() =>{
+    if(buyerId != null){
+      fabricCode(buyerId)
+    }
+  },[buyerId])
+  useEffect(() =>{
+      getUom()
+  },[])
+  const getUom = () => {
+    uomService.getAllUoms().then(res => {
+        if(res.status) {
+            setUom(res.data)
+        }
+    })
+  }
   // const handleInputChange = (e, key, field,productGroupId) => {
   //   const updatedData = data.map((record) => {
   //     if (record.key === key) {
@@ -59,12 +79,12 @@ const FabricsForm = ({props}) => {
   };
 
   useEffect(() =>{
-    fabricCode()
+    console.log(props);
     getColors()
   },[])
 
-  const fabricCode = () =>{
-    service.getFabricCodes().then(res =>{
+  const fabricCode = (buyerId) =>{
+    m3ItemsService.getM3FabricsByBuyer({buyerId:buyerId}).then(res =>{
       if(res.status){
         setFabricCodeData(res.data)
       }else{
@@ -107,7 +127,7 @@ const FabricsForm = ({props}) => {
         <><Form.Item>
           <Select
             value={record.fabricCode}
-            onChange={(e) => handleInputChange(e, record.key, 'fabricCode',getSelectedProductGroupId(e))}
+            // onChange={(e) => handleInputChange(e, record.key, 'fabricCode',getSelectedProductGroupId(e))}
             style={{ width: "100%" }}
             allowClear
             showSearch
@@ -115,27 +135,28 @@ const FabricsForm = ({props}) => {
             placeholder="Select Fabric Code"
           >
             {fabricCodeData.map(item => {
-              return <Option type={item.productGroupId} key={item.fabricId} valu={item.fabricId}>{item.fabricCode}</Option>;
+              return <Option key={item.m3ItemsId} valu={item.m3ItemsId}>{item.itemCode+ "-"+ item.description}</Option>;
             })}
           </Select>
 
         </Form.Item>
-        <Form.Item name={'productGroupId'} hidden>
+        {/* <Form.Item name={'productGroupId'} hidden>
             <Input hidden></Input>
-          </Form.Item></>
+          </Form.Item> */}
+      </>
       ),
     },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      width:"15%",
-      render: (_, record) => (
-        <Input
-        value={record.description}
-        onChange={(e) => handleInputChange(e.target.value, record.key, 'description',0)}
-        />
-      ),
-    },
+    // {
+    //   title: 'Description',
+    //   dataIndex: 'description',
+    //   width:"15%",
+    //   render: (_, record) => (
+    //     <Input
+    //     value={record.description}
+    //     onChange={(e) => handleInputChange(e.target.value, record.key, 'description',0)}
+    //     />
+    //   ),
+    // },
     {
       title: 'Color',
       dataIndex: 'color',
@@ -172,6 +193,27 @@ const FabricsForm = ({props}) => {
         value={record.consumption}
         onChange={(e) => handleInputChange(e.target.value, record.key, 'consumption',0)}
         />
+      ),
+    },
+    {
+      title:"UOM",
+      dataIndex: 'Uom',
+
+      render: (_, record) => (
+        <Select
+        value={record.uomId}
+        style={{width:"100%"}}
+        allowClear
+        showSearch
+        optionFilterProp="children"
+        placeholder="Select UOM" >
+            {uom.map(e => {
+              return(
+                  <option key={e.uomId} value={e.uomId}>{e.uom}</option>
+                  
+              )
+          })}
+        </Select>
       ),
     },
     {

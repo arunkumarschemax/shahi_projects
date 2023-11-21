@@ -1,5 +1,6 @@
 import { RackEnum } from "@project-management-system/shared-models";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Buyers } from "../buyers/buyers.entity";
 
 @Entity('m3_items')
 export class M3ItemsEntity {
@@ -14,10 +15,18 @@ export class M3ItemsEntity {
 
   @Column('varchar', {
     name: 'item_code',
-    default: () => "'FAB' || LPAD(nextval('item_code_seq')::text, 3, '0')",
+    // default: () => "'FAB' || LPAD(nextval('item_code_seq')::text, 3, '0')",
     unique: true,
   })
   itemCode: string;
+
+  @Column('varchar', {
+    nullable: false,
+    length: 30,
+    name: 'description',
+    unique: true,
+  })
+  description: string;
 
 
   @Column('varchar', {
@@ -126,5 +135,9 @@ export class M3ItemsEntity {
     name: 'version_flag'
   })
   versionFlag: number;
+
+  @ManyToOne(type=>Buyers, m3Items=>m3Items.M3ItemCodes,{  nullable:false, })
+  @JoinColumn({ name:"buyer_id"})
+  buyerInfo: Buyers;
 
 }

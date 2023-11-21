@@ -31,4 +31,10 @@ export class M3ItemsController {
     const data=await this.Service.getM3Items()
     return  data
 }
+
+@Post('/getM3FabricsByBuyer')
+  async getM3FabricsByBuyer(@Body() req: any): Promise<CommonResponseModel> {
+    const data=await this.Service.getM3FabricsByBuyer(req)
+    return  data
+}
 }
