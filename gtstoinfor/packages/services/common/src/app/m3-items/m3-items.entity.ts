@@ -14,10 +14,18 @@ export class M3ItemsEntity {
 
   @Column('varchar', {
     name: 'item_code',
-    default: () => "'FAB' || LPAD(nextval('item_code_seq')::text, 3, '0')",
+    // default: () => "'FAB' || LPAD(nextval('item_code_seq')::text, 3, '0')",
     unique: true,
   })
   itemCode: string;
+
+  @Column('varchar', {
+    nullable: false,
+    length: 30,
+    name: 'description',
+    unique: true,
+  })
+  description: string;
 
 
   @Column('varchar', {
@@ -140,5 +148,9 @@ export class M3ItemsEntity {
     name: 'version_flag'
   })
   versionFlag: number;
+
+  @ManyToOne(type=>Buyers, m3Items=>m3Items.M3ItemCodes,{  nullable:false, })
+  @JoinColumn({ name:"buyer_id"})
+  buyerInfo: Buyers;
 
 }

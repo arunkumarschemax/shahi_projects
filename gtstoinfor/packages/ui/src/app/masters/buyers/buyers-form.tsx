@@ -154,6 +154,23 @@ export function BuyersForm(props: BuyersFormProps) {
             <Input hidden />
           </Form.Item>
           <Row gutter={24}>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+                <Form.Item
+                  name="shortCode"
+                  label="Short Code"
+                  rules={[
+                    {
+                      required: true, message: 'Missing Short code',
+                    },
+                    {
+                      pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z\\0-9\[\]()@#$_\-+/`~{}:";'<>,.?|\s-]*$/,
+                      message: `Invalid Short code`
+                    }
+                  ]}
+                >
+                  <Input placeholder='Enter Short Code'/>
+                </Form.Item>
+              </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
                 <Form.Item
                   name="buyerCode"
@@ -291,7 +308,7 @@ export function BuyersForm(props: BuyersFormProps) {
                 label="Payment Terms"
                 rules={[
                   {
-                    required: false,
+                    required: true,
                   },
                 ]}
               >

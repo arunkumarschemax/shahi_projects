@@ -411,7 +411,7 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="sampleTypeId"
               label="fabric Type"
@@ -433,8 +433,8 @@ export const SampleDevForm = () => {
                 })}
               </Select>
             </Form.Item>
-          </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} style={{ margin: 0 }} >
+          </Col> */}
+          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} style={{ margin: 0 }} >
             <Form.Item
               name="sampleSubTypeId"
               label="Fabric Sub Type"
@@ -460,7 +460,7 @@ export const SampleDevForm = () => {
                 })}
               </Select>
             </Form.Item>
-          </Col>
+          </Col> */}
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="styleId"
@@ -563,34 +563,8 @@ export const SampleDevForm = () => {
               </Upload>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
-            <Form.Item
-              name="m3Style"
-              label="M3 Fabric Code"
-              rules={[{ required: true, message: "" }]}
-            >
-              {/* <Input placeholder="M3 Style No" /> */}
-              <Select
-                  allowClear
-                  showSearch
-                  optionFilterProp="children"
-                  placeholder="Select Licence Type"
-                >
-                   {fabricM3Code.map(e => {
-                                return(
-                                    <Option key={e.m3ItemsId} value={e.m3ItemsId} name={e.itemCode}> {e.itemCode}</Option>
-                                )
-                            })}
-                  {/* {m3StleCode.map((e) => {
-                    return (
-                      <Option key={e.m3StyleId} value={e.m3StyleId}>
-                        {e.m3StyleCode}
-                      </Option>
-                    );
-                  })} */}
-                </Select>
-            </Form.Item>
-          </Col>
+        </Row>
+        <Row gutter={16}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
               name="contact"
@@ -772,10 +746,10 @@ export const SampleDevForm = () => {
              <SizeDetail props = {handleSizeDataUpdate} buyerId={selectedBuyerId}/>
              </TabPane>
              <TabPane key="2" tab={<span><b>{`Fabric`}</b></span>}>
-             <FabricsForm props = {handleFabricsDataUpdate}/>
+             <FabricsForm props = {handleFabricsDataUpdate} buyerId={selectedBuyerId}/>
              </TabPane>
              <TabPane key="3" tab={<span><b>{`Trims`}</b></span>}>
-             <TrimsForm props = {handleTrimsDataUpdate}/>
+             <TrimsForm props = {handleTrimsDataUpdate} buyerId={selectedBuyerId}/>
              </TabPane>
              <TabPane key="4" tab={<span><b>{`Process`}</b></span>}>
              <ProcessForm props={handleProcessDataUpdate}/>

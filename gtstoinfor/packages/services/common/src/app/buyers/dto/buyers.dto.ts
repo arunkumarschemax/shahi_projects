@@ -11,6 +11,9 @@ export class BuyersDTO {
   buyerCode: string;
 
   @ApiProperty()
+  shortCode: string;
+
+  @ApiProperty()
   buyerName: string;
 
   // @ApiProperty()

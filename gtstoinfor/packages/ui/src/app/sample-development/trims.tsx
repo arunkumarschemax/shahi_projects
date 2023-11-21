@@ -2,14 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button, Input, Select, Tooltip, message } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
-import { SampleDevelopmentService } from '@project-management-system/shared-services';
+import { M3TrimsService, SampleDevelopmentService, UomService } from '@project-management-system/shared-services';
 
-const TrimsForm = ({props}) => {
+const TrimsForm = ({props, buyerId}) => {
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
   const [trimCode, setTrimCode]=useState<any[]>([])
   const [trimType, setTrimtype]= useState<any[]>([])
-  const service = new SampleDevelopmentService()
+  const [uom, setUom] = useState([]);
+  const service = new M3TrimsService()
+  const uomService =  new UomService()
+
  const {Option}=Select
 
   const handleAddRow = () => {
@@ -21,11 +24,23 @@ const TrimsForm = ({props}) => {
   };
 
   useEffect(() =>{
-    getTrimTypes()
-  },[])
+    if(buyerId != null){
+      getTrimTypes(buyerId)
+    }
+  },[buyerId])
 
-  const getTrimTypes = () =>{
-    service.getTrimType().then(res =>{
+  useEffect(() =>{
+    getUom()
+  },[])
+  const getUom = () => {
+    uomService.getAllUoms().then(res => {
+        if(res.status) {
+            setUom(res.data)
+        }
+    })
+  }
+  const getTrimTypes = (buyerId) =>{
+    service.getM3TrimsByBuyer({buyerId:buyerId}).then(res =>{
       if(res.status){
         setTrimtype(res.data)
       }else{
@@ -36,7 +51,7 @@ const TrimsForm = ({props}) => {
   }
 
   const getTrimCodes = (value) =>{
-    service.getTrimCodeAgainstTrimType({productGroupId:value}).then(res =>{
+    service.getM3TrimsByTrimCode({trimType:value}).then(res =>{
       if(res.status){
         setTrimCode(res.data)
       }else{
@@ -89,7 +104,7 @@ const TrimsForm = ({props}) => {
           onSelect={trimTypeOnchange}
          >
           {trimType.map(item =>{
-            return <Option key={item.productGroupId} valu={item.productGroupId}>{item.productGroup}</Option>
+            return <Option key={item.trimType} valu={item.trimType}>{item.trimType}</Option>
           })}
           </Select>
       ),
@@ -109,7 +124,7 @@ const TrimsForm = ({props}) => {
           placeholder="Select Trim"
          >
           {trimCode.map(item =>{
-            return <Option key={item.trimId} valu={item.trimId}>{item.trimCode}</Option>
+            return <Option key={item.trimId} value={item.trimId}>{item.trimCode}</Option>
           })}
           </Select>
       ),
@@ -126,13 +141,24 @@ const TrimsForm = ({props}) => {
       ),
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
+      title:"UOM",
+      dataIndex: 'Uom',
+
       render: (_, record) => (
-        <Input
-        value={record.description}
-        onChange={(e) => handleInputChange(e.target.value, record.key, 'description')}
-        />
+        <Select
+        value={record.uomId}
+        style={{width:"100%"}}
+        allowClear
+        showSearch
+        optionFilterProp="children"
+        placeholder="Select UOM" >
+            {uom.map(e => {
+              return(
+                  <option key={e.uomId} value={e.uomId}>{e.uom}</option>
+                  
+              )
+          })}
+        </Select>
       ),
     },
     {
