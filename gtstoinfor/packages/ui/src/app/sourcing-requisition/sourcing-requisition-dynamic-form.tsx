@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Divider, Form, Input, Popconfirm, Row, Segmented, Select, Space, Table, Tag, Tooltip, Upload, UploadProps, message } from "antd"
+import { Button, Card, Col, DatePicker, Divider, Form, Input, Popconfirm, Row, Segmented, Select, Space, Table, Tag, Tooltip, Upload, UploadProps, message, Modal } from "antd"
 import { ColumnProps } from "antd/es/table";
 import React, { useEffect } from "react";
 import { useState } from "react"
@@ -11,6 +11,7 @@ import { M3MastersCategoryReq, SourcingRequisitionReq, UomCategoryEnum } from "@
 import FormItem from "antd/es/form/FormItem";
 import TextArea from "antd/es/input/TextArea";
 import AlertMessages from "../common/common-functions/alert-messages";
+import M3Items from "../masters/m3-items/m3-items-form";
 
 
 const {Option} = Select;
@@ -64,6 +65,7 @@ export const SourcingRequisitionDynamicForm = () => {
     const [fabricM3Code,setFabricM3Code] = useState<any[]>([])
     const [trimM3Code,setTrimM3Code] = useState<any[]>([])
     const [loading, setLoading] = useState<boolean>(false);
+    const [visibleModel, setVisibleModel] = useState<boolean>(false);
     const [fabricfilelist, setFabricfilelist] = useState<any>([]);
     const [isUpdateimg, setisUpdateImg]=useState('')
     const [imageUrl, setImageUrl] = useState('');
@@ -749,6 +751,13 @@ export const SourcingRequisitionDynamicForm = () => {
       };
 
 
+      
+  const handleCancel = () => {
+    setVisibleModel(false);
+    window.location.reload();
+
+  };
+
     const validateExpectedDate = (e) => {
         let selectedDate = e.format("YYYY-MM-DD");
         let indentDate = sourcingForm.getFieldValue("indentDate").format("YYYY-MM-DD");
@@ -761,559 +770,552 @@ export const SourcingRequisitionDynamicForm = () => {
         }
     }
     return(
-        <Card title='Indent' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/requisition-view')}>View</Button></span>} >
+        <><Card title='Indent' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/requisition-view')}>View</Button></span>}>
             <Form form={sourcingForm}>
                 <Row gutter={8}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
-                    <Form.Item name='style' label='Style' rules={[{required:true,message:'Style is required'}]}>
-                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select Style'>
-                            {style.map(e => {
-                                return(
-                                    <Option key={e.styleId} value={e.styleId} name={e.style}> {e.style}-{e.description}</Option>
-                                )
-                            })}
-                        </Select>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
-                    <Form.Item name='indentDate' label='Indent Date' rules={[{required:true,message:'Indent Date is required'}]} initialValue={dayjs(dayjs())}>
-                        <DatePicker style={{width:'100%'}} defaultValue={dayjs(dayjs())}/>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
-                    <Form.Item name='expectedDate' label='Expected Date' rules={[{required:true,message:'Expected Date is required'}]}>
-                        <DatePicker style={{width:'100%'}} onChange={validateExpectedDate}/>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
-                    <Form.Item name='requestNo' label='Request Number' rules={[{required:false,message:'Request Number is required'}]} style={{display:'none'}}>
-                        <Input placeholder="Enter Request Number"/>
-                    </Form.Item>
-                    </Col>
-                </Row>
-                </Form>
-                <Row gutter={8}>
-                <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}>
-                    <Segmented onChange={onSegmentChange} style={{backgroundColor:'#68cc6b'}}
-                      options={[
-                        {
-                          label: (
-                            <>
-                              <b style={{ fontSize: "12px" }}>Fabric Details</b>
-                            </>
-                          ),
-                          value: "Fabric",
-                        },
-                        {
-                          label: (
-                            <>
-                              <b style={{ fontSize: "12px" }}>Trim Details</b>
-                            </>
-                          ),
-                          value: "Trim",
-                        },
-                    ]}  
-                    />
-                    <div>
-                        {
-                            tabName === 'Fabric' ? (<>
-                            <Card>
-                                <Form layout="vertical" onFinish={onFabricAdd} form={fabricForm}>
-                    <h1 style={{ color: '#6b54bf', fontSize: '15px', textAlign: 'left' }}>FABRIC DETAILS</h1>
-                    <Form.Item name='sourcingRequisitionId' style={{display:'none'}}>
-                            <Input disabled/>
-                        </Form.Item>
-                        <Form.Item name='colorName' style={{display:'none'}}>
-                            <Input disabled/>
-                        </Form.Item>
-                        <Form.Item name='pchName' style={{display:'none'}}>
-                            <Input disabled/>
-                        </Form.Item>
-                        <Form.Item name='supplierName' style={{display:'none'}}>
-                            <Input disabled/>
-                        </Form.Item>
-                        <Form.Item name='buyerName' style={{display:'none'}}>
-                            <Input disabled/>
-                        </Form.Item>
-                        <Form.Item name='weaveName' style={{display:'none'}}>
-                            <Input disabled/>
-                        </Form.Item>
-                <Row gutter={8}>
-                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}> */}
-                    {/* <Form.Item name='content' label='Content' >
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Content'>
-                        <Option key='naturalFabrics' value='naturalFabrics'>Natural Fabrics</Option>
-                            <Option key='manufacturedFabrics' value='manufacturedFabrics'>Manufactured Fabrics</Option>
-                        </Select>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='fabricType' label='Type of Fabric' rules={[{required:true,message:'Type of Fabric is required'}]}>
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Fabric Type'>
-                            {fabricType.map(e => {
-                                    return(
-                                        <Option key={e.fabricTypeId} value={e.fabricTypeId} name={e.fabricTypeId}> {e.fabricTypeName}</Option>
-                                    )
+                        <Form.Item name='style' label='Style' rules={[{ required: true, message: 'Style is required' }]}>
+                            <Select showSearch allowClear optionFilterProp="children" placeholder='Select Style'>
+                                {style.map(e => {
+                                    return (
+                                        <Option key={e.styleId} value={e.styleId} name={e.style}> {e.style}-{e.description}</Option>
+                                    );
                                 })}
                             </Select>
-                    </Form.Item>
+                        </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='weaveId' label='Weave'>
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select weave' onChange={onWeaveChange}>
-                        {weave.map(e => {
-                                return(
-                                    <Option key={e.fabricWeaveId} value={e.fabricWeaveId} name={e.fabricWeaveName}> {e.fabricWeaveName}</Option>
-                                )
-                            })}
-                        </Select> */}
-                        {/* <Input placeholder="Enter Weave"/> */}
-                    {/* </Form.Item> */}
-                    {/* </Col> */}
-                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='weight' label='Weight'>
-                        <Input placeholder="Enter Weight"/>
-                    </Form.Item>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
+                        <Form.Item name='indentDate' label='Indent Date' rules={[{ required: true, message: 'Indent Date is required' }]} initialValue={dayjs(dayjs())}>
+                            <DatePicker style={{ width: '100%' }} defaultValue={dayjs(dayjs())} />
+                        </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
-                    <Form.Item name='weightUnit'>
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
-                            {uom.map(e => {
-                                return(
-                                    <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
-                                )
-                            })}
-                        </Select>
-                    </Form.Item>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
+                        <Form.Item name='expectedDate' label='Expected Date' rules={[{ required: true, message: 'Expected Date is required' }]}>
+                            <DatePicker style={{ width: '100%' }} onChange={validateExpectedDate} />
+                        </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='width' label='Width'>
-                        <Input placeholder="Enter Width"/>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='construction' label='Construction(EPI XPPI)'>
-                        <Input placeholder="Enter Construction"/>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='yarnCount' label='Yarn Count'>
-                        <Input placeholder="Enter Yarn Count"/>
-                    </Form.Item>
-                    </Col> */}
-                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
-                    <Form.Item name='yarnUnit'>
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
-                            {uom.map(e => {
-                                return(
-                                    <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
-                                )
-                            })}
-                        </Select>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='finish' label='Finish'>
-                        <Input placeholder="Enter Finish"/>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='shrinkage' label='Shrinkage'>
-                        <Input placeholder="Enter Shrinkage"/>
-                    </Form.Item>
-                    </Col> */}
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{required:true,message:'M3 Code is required'}]}>
-                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'>
-                            {fabricM3Code.map(e => {
-                                return(
-                                    <Option key={e.m3ItemsId} value={e.m3ItemsId}> {e.itemCode}</Option>
-                                )
-                            })}
-                        </Select>
-                    </Form.Item>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
+                        <Form.Item name='requestNo' label='Request Number' rules={[{ required: false, message: 'Request Number is required' }]} style={{ display: 'none' }}>
+                            <Input placeholder="Enter Request Number" />
+                        </Form.Item>
                     </Col>
                 </Row>
-                {/* <Row gutter={24}>
-                    <h1 style={{ color: '#6b54bf', fontSize: '20px', textAlign: 'left' }}>ITEM DETAILS</h1>
-                </Row> */}
-                    <h1 style={{ color: '#6b54bf', fontSize: '15px', textAlign: 'left' }}>ITEM DETAILS</h1>
-                <Row gutter={8}>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='color' label='Color' rules={[{required:true,message:'Color is required'}]}>
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Color' onChange={onFabricColorChange}>
-                            {color.map(e => {
-                                return(
-                                    <Option key={e.colourId} value={e.colourId} name={e.colour}> {e.colour}</Option>
-                                )
-                            })}
-                        </Select>
-                        {/* <Input placeholder="Enter Color"/> */}
-                    </Form.Item>
-                    </Col>
-                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='pch' label='PCH'>
-                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select PCH' onChange={onPCHChange}>
-                         {pch.map(e => {
-                                return(
-                                    <Option key={e.profitControlHeadId} value={e.profitControlHeadId} name={e.profitControlHead}> {e.profitControlHead}</Option>
-                                )
-                            })}
-                        </Select>
-                    </Form.Item>
-                    </Col> */}
-                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='moq' label='MOQ'
-                    > */}
-                        {/* <Select showSearch allowClear optionFilterProp="children">
-                            <Option key='content' value='content'>
-                                Content
-                            </Option>
-                        </Select> */}
-                        {/* <Input placeholder="Enter MOQ"/> */}
-                    {/* </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
-                    <Form.Item name='moqUnit' rules={[{required:true,message:'Unit is required'}]}>
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
-                            {uom.map(e => {
-                                return(
-                                    <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
-                                )
-                            })}
-                        </Select>
-                    </Form.Item>
-                    </Col> */}
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='season' label='Season' rules={[{required:true,message:'Season is required'}]}>
-                        {/* <Input placeholder="Enter Season"/> */}
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Enter Season'>
-                            <Option key='autumn' value='autumn'>Autumn</Option>
-                            <Option key='spring' value='spring'>Spring</Option>
-                            <Option key='summer' value='summer'>Summer</Option>
-                            <Option key='winter' value='winter'>Winter</Option>
-                        </Select>
-                    </Form.Item>
-                    </Col>
-                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='moqPrice' label='MOQ Price'>
-                        <Input placeholder="Enter MOQ Price"/>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
-                    <Form.Item name='moqPriceUnit' rules={[{required: fabricForm.getFieldValue('moqPrice') !== undefined ? true : false}]}>
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
-                            {currency.map(e => {
-                                return(
-                                    <Option key={e.currencyId} value={e.currencyId}>{e.currencyName}</Option>
-                                )
-                            })}
-                        </Select>
-                    </Form.Item>
-                    </Col> */}
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='supplier' label='Supplier' rules={[{required:true,message:'Supplier is required'}]}>
-                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select Supplier' onChange={onSupplierChange}>
-                        {supplier.map(e => {
-                                return(
-                                    <Option key={e.vendorId} value={e.vendorId} name={e.vendorName}>{e.vendorCode}-{e.vendorName}</Option>
-                                )
-                            })} 
-                        </Select>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='grnDate' label='GRN Date' rules={[{required:true,message:'Grn date is required'}]}>
-                        <DatePicker style={{width:'100%'}}/>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='buyer' label='Buyer' rules={[{required:true,message:'Buyer is required'}]}>
-                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select Buyer' onChange={onBuyerChange}>
-                        {buyer.map(e => {
-                                return(
-                                    <Option key={e.buyerId} value={e.buyerId} name={e.buyerName}>{e.buyerCode}-{e.buyerName}</Option>
-                                )
-                            })} 
-                        </Select>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='xlNo' label='XL No' rules={[{required:true,message:'XL No is required'}]}>
-                        <Input placeholder="Enter XL No"/>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='quantity' label='Quantity'  rules={[{required:true,message:'Quantity is required'}]}>
-                        <Input placeholder="Enter Quantity"/>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
-                    <Form.Item name='quantityUnit' rules={[{required:true,message:'Unit is required'}]}>
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
-                            {uom.map(e => {
-                                return(
-                                    <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
-                                )
-                            })}
-                        </Select>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:12 }}>
-                    <Form.Item name="fabricUpload" label='Fabric Upload'
-                            // rules={[
-                            //     {required:true,message:'Upload Fabric'}
-                            // ]}  
-                            // initialValue={props.isUpdate ? props.styleData.styleFileName:''}
-                        >
-                           <Upload  {...uploadFabricProps} style={{  width:'100%' }} listType="picture-card">
-                            
-                           <div>
-                                {loading ? <LoadingOutlined /> : <PlusOutlined />}
-                                <div style={{ marginTop: 8 }}>Upload Fabric</div>
-                            </div>
-                            </Upload>
-                        </Form.Item>
-                </Col>
-                </Row>
-                <Row justify={'end'}>
-                    <Button type='primary' htmlType="submit">Add</Button>
-                </Row>
-                </Form>
-                </Card>
-                {
-                    fabricTableVisible ? (<>
-                        <Table columns={columns} dataSource={fabricTableData} scroll={{x:'max-content'}}/>
-                    </>) : (<></>)
-                }
-                {/* <Card>
-                </Card> */}
-                </>) : (<></>)}
-            </div>
-            <div>
-                {tabName === 'Trim' ? (<>
-                <Card>
-                    <Form layout="vertical" onFinish={onTrimAdd} form={trimForm}>
-                    <h1 style={{ color: '#6b54bf', fontSize: '15px', textAlign: 'left' }}>TRIM DETAILS</h1>
-                        <Form.Item name='sizeName' style={{display:'none'}}>
-                            <Input disabled/>
-                        </Form.Item>
-                        <Form.Item name='colorName' style={{display:'none'}}>
-                            <Input disabled/>
-                        </Form.Item>
-                <Row gutter={8}>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
-                        <Form.Item
-                        name="trimType"
-                        label="Trim Type"
-                        rules={[
+            </Form>
+            <Row gutter={8}>
+                <Space direction="vertical" style={{ fontSize: "16px", width: '100%' }}>
+                    <Segmented onChange={onSegmentChange} style={{ backgroundColor: '#68cc6b' }}
+                        options={[
                             {
-                              required: true,
-                              message: "Trim Type Is Required",
+                                label: (
+                                    <>
+                                        <b style={{ fontSize: "12px" }}>Fabric Details</b>
+                                    </>
+                                ),
+                                value: "Fabric",
                             },
                             {
-                                pattern:/^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                                message: `Should contain only alphabets.`,
+                                label: (
+                                    <>
+                                        <b style={{ fontSize: "12px" }}>Trim Details</b>
+                                    </>
+                                ),
+                                value: "Trim",
                             },
-                        ]}>
-                            <Select
-                            allowClear
-                            showSearch
-                            optionFilterProp="children"
-                            placeholder="Select Trim Type"
-                            onChange={getTrimCodes}
-                            >
-                                {trimTypes?.map((e) => {
-                                  return (
-                                    <Option key={e.productGroupId} value={e.productGroupId} name={e.productGroup}>
-                                  {e.productGroup}
-                                </Option>
-                              );
-                            })}
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
-                        <Form.Item
-                        name="trimCode"
-                        label="Trim Code"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Trim Code Is Required",
-                            },
-                            {
-                                pattern:/^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                                message: `Should contain only alphabets.`,
-                            },
-                        ]}>
-                            <Select
-                            allowClear
-                            showSearch
-                            optionFilterProp="children"
-                            placeholder="Select Trim Code"
-                            >
-                                {trimCodes.map((e) => {
-                                  return (
-                                    <Option key={e.fabricId} value={e.fabricId} name={e.fabricCode}>
-                                  {e.fabricCode}
-                                </Option>
-                              );
-                            })}
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
-                        <Form.Item
-                        name="size"
-                        label="Size"
-                        >
-                            <Select
-                            allowClear
-                            showSearch
-                            optionFilterProp="children"
-                            placeholder="Select Size"
-                            onChange={onSizeChange}
-                            >
-                                {size.map((e) => {
-                                  return (
-                                    <Option key={e.sizeId} value={e.sizeId} name={e.size}>
-                                  {e.size}
-                                </Option>
-                              );
-                            })}
-                            </Select>
-                        </Form.Item>
-                        </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
-                            <Form.Item
-                            name="color"
-                            label="Color"
-                        >
-                            <Select
-                            allowClear
-                            showSearch
-                            optionFilterProp="children"
-                            placeholder="Select Color"
-                            onChange={onColorChange}
-                            >
-                                {color.map((e) => {
-                                  return (
-                                    <Option key={e.colourId} value={e.colourId} name={e.colour}>
-                                  {e.colour}
-                                </Option>
-                              );
-                            })}
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
-                        <Form.Item
-                        name="quantity"
-                        label="Quantity"
-                        rules={[
-                            {
-                              required: true,
-                              message: "Quantity Is Required",
-                            },
-                            {
-                                pattern:/^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                                message: `Should contain only alphabets.`,
-                            },
-                        ]}>
-                            <Input placeholder="Enter Quantity" />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
-                    <Form.Item name='quantityUnit' rules={[{required:true,message:'Unit is required'}]}>
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
-                            {uom.map(e => {
-                                return(
-                                    <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
-                                )
-                            })}
-                        </Select>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='m3TrimCode' label='M3 Trim Code' rules={[{required:true,message:'M3 code is required'}]}>
-                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'>
-                            {trimM3Code.map(e => {
-                                return(
-                                    <Option key={e.m3Code} value={e.m3Code}> {e.m3StyleCode}-{e.category}</Option>
-                                )
-                            })}
-                        </Select>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
-                        <Form.Item
-                        name="description"
-                        label="Description"
-                        // rules={[
-                        //     {
-                        //         required: true,
-                        //         message: "Trim Description Is Required",
-                        //     },
-                        //     {
-                        //         pattern:/^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                        //         message: `Should contain only alphabets.`,
-                        //     },
-                        // ]}
-                        >
-                            <TextArea rows={1} placeholder="Enter Trim Description" />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
-                        <Form.Item
-                        name="remarks"
-                        label="Remarks"
-                        >
-                            <TextArea rows={1} placeholder="Enter Remarks" />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:12 }}>
-                    <Form.Item name="trimUpload" label='Trim Upload'
-                            // rules={[
-                            //     {required:true,message:'Upload Trim'}
-                            // ]}  
-                            // initialValue={props.isUpdate ? props.styleData.styleFileName:''}
-                        >
-                           <Upload  {...uploadTrimProps} style={{  width:'100%' }} listType="picture-card">
-                            
-                           <div>
-                                {loading ? <LoadingOutlined /> : <PlusOutlined />}
-                                <div style={{ marginTop: 8 }}>Upload Trim</div>
-                            </div>
-                            </Upload>
-                        </Form.Item>
-                </Col>
-                    </Row>
-                    <Row justify={'end'}>
-                        <Button type='primary' htmlType="submit">Add</Button>
-                    </Row>
-                    </Form>
-                </Card>
-                {
-                    trimTableVisible ? (<>
-                        <Table columns={columnsSkelton} dataSource={trimsTableData} scroll={{x:'max-content'}}/>
-                    </>) : (<></>)
-                }
-                </>) : (<></>)}
-            </div>
-                        
-                </Space>
-                </Row>
-                <Row justify={'end'}>
-                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }}>
-                    <Button type="primary" onClick={onSubmit} disabled={fabricTableData.length > 0 && trimsTableData.length > 0 ? false : true}>Submit</Button>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2}}>
-                    <Button onClick={onReset}>Reset</Button>
-                    </Col>
+                        ]} />
+                    <div>
+                        {tabName === 'Fabric' ? (<>
+                            <Card>
+                                <Form layout="vertical" onFinish={onFabricAdd} form={fabricForm}>
+                                    <h1 style={{ color: '#6b54bf', fontSize: '15px', textAlign: 'left' }}>FABRIC DETAILS</h1>
+                                    <Form.Item name='sourcingRequisitionId' style={{ display: 'none' }}>
+                                        <Input disabled />
+                                    </Form.Item>
+                                    <Form.Item name='colorName' style={{ display: 'none' }}>
+                                        <Input disabled />
+                                    </Form.Item>
+                                    <Form.Item name='pchName' style={{ display: 'none' }}>
+                                        <Input disabled />
+                                    </Form.Item>
+                                    <Form.Item name='supplierName' style={{ display: 'none' }}>
+                                        <Input disabled />
+                                    </Form.Item>
+                                    <Form.Item name='buyerName' style={{ display: 'none' }}>
+                                        <Input disabled />
+                                    </Form.Item>
+                                    <Form.Item name='weaveName' style={{ display: 'none' }}>
+                                        <Input disabled />
+                                    </Form.Item>
+                                    <Row gutter={8}>
+                                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}> */}
+                                        {/* <Form.Item name='content' label='Content' >
+            <Select showSearch allowClear optionFilterProp="children" placeholder='Select Content'>
+            <Option key='naturalFabrics' value='naturalFabrics'>Natural Fabrics</Option>
+                <Option key='manufacturedFabrics' value='manufacturedFabrics'>Manufactured Fabrics</Option>
+            </Select>
+        </Form.Item>
+        </Col>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+        <Form.Item name='fabricType' label='Type of Fabric' rules={[{required:true,message:'Type of Fabric is required'}]}>
+            <Select showSearch allowClear optionFilterProp="children" placeholder='Select Fabric Type'>
+                {fabricType.map(e => {
+                        return(
+                            <Option key={e.fabricTypeId} value={e.fabricTypeId} name={e.fabricTypeId}> {e.fabricTypeName}</Option>
+                        )
+                    })}
+                </Select>
+        </Form.Item>
+        </Col>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+        <Form.Item name='weaveId' label='Weave'>
+            <Select showSearch allowClear optionFilterProp="children" placeholder='Select weave' onChange={onWeaveChange}>
+            {weave.map(e => {
+                    return(
+                        <Option key={e.fabricWeaveId} value={e.fabricWeaveId} name={e.fabricWeaveName}> {e.fabricWeaveName}</Option>
+                    )
+                })}
+            </Select> */}
+                                        {/* <Input placeholder="Enter Weave"/> */}
+                                        {/* </Form.Item> */}
+                                        {/* </Col> */}
+                                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+        <Form.Item name='weight' label='Weight'>
+            <Input placeholder="Enter Weight"/>
+        </Form.Item>
+        </Col>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
+        <Form.Item name='weightUnit'>
+            <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
+                {uom.map(e => {
+                    return(
+                        <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
+                    )
+                })}
+            </Select>
+        </Form.Item>
+        </Col>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+        <Form.Item name='width' label='Width'>
+            <Input placeholder="Enter Width"/>
+        </Form.Item>
+        </Col>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+        <Form.Item name='construction' label='Construction(EPI XPPI)'>
+            <Input placeholder="Enter Construction"/>
+        </Form.Item>
+        </Col>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+        <Form.Item name='yarnCount' label='Yarn Count'>
+            <Input placeholder="Enter Yarn Count"/>
+        </Form.Item>
+        </Col> */}
+                                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
+        <Form.Item name='yarnUnit'>
+            <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
+                {uom.map(e => {
+                    return(
+                        <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
+                    )
+                })}
+            </Select>
+        </Form.Item>
+        </Col>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+        <Form.Item name='finish' label='Finish'>
+            <Input placeholder="Enter Finish"/>
+        </Form.Item>
+        </Col>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+        <Form.Item name='shrinkage' label='Shrinkage'>
+            <Input placeholder="Enter Shrinkage"/>
+        </Form.Item>
+        </Col> */}
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                                            <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{ required: true, message: 'M3 Code is required' }]}>
+                                                <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'>
+                                                    {fabricM3Code.map(e => {
+                                                        return (
+                                                            <Option key={e.m3ItemsId} value={e.m3ItemsId}> {e.itemCode}</Option>
+                                                        );
+                                                    })}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span = {4} style={{paddingTop:'24px'}}>
+                                            <Button onClick={(e) => setVisibleModel(true)}>Add M3 Fabric</Button>
+                                        </Col>
+                                    </Row>
+                                    {/* <Row gutter={24}>
+            <h1 style={{ color: '#6b54bf', fontSize: '20px', textAlign: 'left' }}>ITEM DETAILS</h1>
+        </Row> */}
+                                    <h1 style={{ color: '#6b54bf', fontSize: '15px', textAlign: 'left' }}>ITEM DETAILS</h1>
+                                    <Row gutter={8}>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                                            <Form.Item name='color' label='Color' rules={[{ required: true, message: 'Color is required' }]}>
+                                                <Select showSearch allowClear optionFilterProp="children" placeholder='Select Color' onChange={onFabricColorChange}>
+                                                    {color.map(e => {
+                                                        return (
+                                                            <Option key={e.colourId} value={e.colourId} name={e.colour}> {e.colour}</Option>
+                                                        );
+                                                    })}
+                                                </Select>
+                                                {/* <Input placeholder="Enter Color"/> */}
+                                            </Form.Item>
+                                        </Col>
+                                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+        <Form.Item name='pch' label='PCH'>
+             <Select showSearch allowClear optionFilterProp="children" placeholder='Select PCH' onChange={onPCHChange}>
+             {pch.map(e => {
+                    return(
+                        <Option key={e.profitControlHeadId} value={e.profitControlHeadId} name={e.profitControlHead}> {e.profitControlHead}</Option>
+                    )
+                })}
+            </Select>
+        </Form.Item>
+        </Col> */}
+                                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+        <Form.Item name='moq' label='MOQ'
+        > */}
+                                        {/* <Select showSearch allowClear optionFilterProp="children">
+            <Option key='content' value='content'>
+                Content
+            </Option>
+        </Select> */}
+                                        {/* <Input placeholder="Enter MOQ"/> */}
+                                        {/* </Form.Item>
+        </Col>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
+        <Form.Item name='moqUnit' rules={[{required:true,message:'Unit is required'}]}>
+            <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
+                {uom.map(e => {
+                    return(
+                        <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
+                    )
+                })}
+            </Select>
+        </Form.Item>
+        </Col> */}
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                                            <Form.Item name='season' label='Season' rules={[{ required: true, message: 'Season is required' }]}>
+                                                {/* <Input placeholder="Enter Season"/> */}
+                                                <Select showSearch allowClear optionFilterProp="children" placeholder='Enter Season'>
+                                                    <Option key='autumn' value='autumn'>Autumn</Option>
+                                                    <Option key='spring' value='spring'>Spring</Option>
+                                                    <Option key='summer' value='summer'>Summer</Option>
+                                                    <Option key='winter' value='winter'>Winter</Option>
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+        <Form.Item name='moqPrice' label='MOQ Price'>
+            <Input placeholder="Enter MOQ Price"/>
+        </Form.Item>
+        </Col>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
+        <Form.Item name='moqPriceUnit' rules={[{required: fabricForm.getFieldValue('moqPrice') !== undefined ? true : false}]}>
+            <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
+                {currency.map(e => {
+                    return(
+                        <Option key={e.currencyId} value={e.currencyId}>{e.currencyName}</Option>
+                    )
+                })}
+            </Select>
+        </Form.Item>
+        </Col> */}
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                                            <Form.Item name='supplier' label='Supplier' rules={[{ required: true, message: 'Supplier is required' }]}>
+                                                <Select showSearch allowClear optionFilterProp="children" placeholder='Select Supplier' onChange={onSupplierChange}>
+                                                    {supplier.map(e => {
+                                                        return (
+                                                            <Option key={e.vendorId} value={e.vendorId} name={e.vendorName}>{e.vendorCode}-{e.vendorName}</Option>
+                                                        );
+                                                    })}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                                            <Form.Item name='grnDate' label='GRN Date' rules={[{ required: true, message: 'Grn date is required' }]}>
+                                                <DatePicker style={{ width: '100%' }} />
+                                            </Form.Item>
+                                        </Col>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                                            <Form.Item name='buyer' label='Buyer' rules={[{ required: true, message: 'Buyer is required' }]}>
+                                                <Select showSearch allowClear optionFilterProp="children" placeholder='Select Buyer' onChange={onBuyerChange}>
+                                                    {buyer.map(e => {
+                                                        return (
+                                                            <Option key={e.buyerId} value={e.buyerId} name={e.buyerName}>{e.buyerCode}-{e.buyerName}</Option>
+                                                        );
+                                                    })}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                                            <Form.Item name='xlNo' label='XL No' rules={[{ required: true, message: 'XL No is required' }]}>
+                                                <Input placeholder="Enter XL No" />
+                                            </Form.Item>
+                                        </Col>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                                            <Form.Item name='quantity' label='Quantity' rules={[{ required: true, message: 'Quantity is required' }]}>
+                                                <Input placeholder="Enter Quantity" />
+                                            </Form.Item>
+                                        </Col>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{ marginTop: '2%' }}>
+                                            <Form.Item name='quantityUnit' rules={[{ required: true, message: 'Unit is required' }]}>
+                                                <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
+                                                    {uom.map(e => {
+                                                        return (
+                                                            <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
+                                                        );
+                                                    })}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                                            <Form.Item name="fabricUpload" label='Fabric Upload'
+                                            >
+                                                <Upload {...uploadFabricProps} style={{ width: '100%' }} listType="picture-card">
 
-                </Row>
+                                                    <div>
+                                                        {loading ? <LoadingOutlined /> : <PlusOutlined />}
+                                                        <div style={{ marginTop: 8 }}>Upload Fabric</div>
+                                                    </div>
+                                                </Upload>
+                                            </Form.Item>
+                                        </Col>
+                                    </Row>
+                                    <Row justify={'end'}>
+                                        <Button type='primary' htmlType="submit">Add</Button>
+                                    </Row>
+                                </Form>
+                            </Card>
+                            {fabricTableVisible ? (<>
+                                <Table columns={columns} dataSource={fabricTableData} scroll={{ x: 'max-content' }} />
+                            </>) : (<></>)}
+                            {/* <Card>
+        </Card> */}
+                        </>) : (<></>)}
+                    </div>
+                    <div>
+                        {tabName === 'Trim' ? (<>
+                            <Card>
+                                <Form layout="vertical" onFinish={onTrimAdd} form={trimForm}>
+                                    <h1 style={{ color: '#6b54bf', fontSize: '15px', textAlign: 'left' }}>TRIM DETAILS</h1>
+                                    <Form.Item name='sizeName' style={{ display: 'none' }}>
+                                        <Input disabled />
+                                    </Form.Item>
+                                    <Form.Item name='colorName' style={{ display: 'none' }}>
+                                        <Input disabled />
+                                    </Form.Item>
+                                    <Row gutter={8}>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+                                            <Form.Item
+                                                name="trimType"
+                                                label="Trim Type"
+                                                rules={[
+                                                    {
+                                                        required: true,
+                                                        message: "Trim Type Is Required",
+                                                    },
+                                                    {
+                                                        pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                                                        message: `Should contain only alphabets.`,
+                                                    },
+                                                ]}>
+                                                <Select
+                                                    allowClear
+                                                    showSearch
+                                                    optionFilterProp="children"
+                                                    placeholder="Select Trim Type"
+                                                    onChange={getTrimCodes}
+                                                >
+                                                    {trimTypes?.map((e) => {
+                                                        return (
+                                                            <Option key={e.productGroupId} value={e.productGroupId} name={e.productGroup}>
+                                                                {e.productGroup}
+                                                            </Option>
+                                                        );
+                                                    })}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+                                            <Form.Item
+                                                name="trimCode"
+                                                label="Trim Code"
+                                                rules={[
+                                                    {
+                                                        required: true,
+                                                        message: "Trim Code Is Required",
+                                                    },
+                                                    {
+                                                        pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                                                        message: `Should contain only alphabets.`,
+                                                    },
+                                                ]}>
+                                                <Select
+                                                    allowClear
+                                                    showSearch
+                                                    optionFilterProp="children"
+                                                    placeholder="Select Trim Code"
+                                                >
+                                                    {trimCodes.map((e) => {
+                                                        return (
+                                                            <Option key={e.fabricId} value={e.fabricId} name={e.fabricCode}>
+                                                                {e.fabricCode}
+                                                            </Option>
+                                                        );
+                                                    })}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+                                            <Form.Item
+                                                name="size"
+                                                label="Size"
+                                            >
+                                                <Select
+                                                    allowClear
+                                                    showSearch
+                                                    optionFilterProp="children"
+                                                    placeholder="Select Size"
+                                                    onChange={onSizeChange}
+                                                >
+                                                    {size.map((e) => {
+                                                        return (
+                                                            <Option key={e.sizeId} value={e.sizeId} name={e.size}>
+                                                                {e.size}
+                                                            </Option>
+                                                        );
+                                                    })}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+                                            <Form.Item
+                                                name="color"
+                                                label="Color"
+                                            >
+                                                <Select
+                                                    allowClear
+                                                    showSearch
+                                                    optionFilterProp="children"
+                                                    placeholder="Select Color"
+                                                    onChange={onColorChange}
+                                                >
+                                                    {color.map((e) => {
+                                                        return (
+                                                            <Option key={e.colourId} value={e.colourId} name={e.colour}>
+                                                                {e.colour}
+                                                            </Option>
+                                                        );
+                                                    })}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+                                            <Form.Item
+                                                name="quantity"
+                                                label="Quantity"
+                                                rules={[
+                                                    {
+                                                        required: true,
+                                                        message: "Quantity Is Required",
+                                                    },
+                                                    {
+                                                        pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                                                        message: `Should contain only alphabets.`,
+                                                    },
+                                                ]}>
+                                                <Input placeholder="Enter Quantity" />
+                                            </Form.Item>
+                                        </Col>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{ marginTop: '2%' }}>
+                                            <Form.Item name='quantityUnit' rules={[{ required: true, message: 'Unit is required' }]}>
+                                                <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
+                                                    {uom.map(e => {
+                                                        return (
+                                                            <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
+                                                        );
+                                                    })}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                                            <Form.Item name='m3TrimCode' label='M3 Trim Code' rules={[{ required: true, message: 'M3 code is required' }]}>
+                                                <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'>
+                                                    {trimM3Code.map(e => {
+                                                        return (
+                                                            <Option key={e.m3Code} value={e.m3Code}> {e.m3StyleCode}-{e.category}</Option>
+                                                        );
+                                                    })}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+                                            <Form.Item
+                                                name="description"
+                                                label="Description"
+                                            >
+                                                <TextArea rows={1} placeholder="Enter Trim Description" />
+                                            </Form.Item>
+                                        </Col>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+                                            <Form.Item
+                                                name="remarks"
+                                                label="Remarks"
+                                            >
+                                                <TextArea rows={1} placeholder="Enter Remarks" />
+                                            </Form.Item>
+                                        </Col>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                                            <Form.Item name="trimUpload" label='Trim Upload'
+                                            >
+                                                <Upload {...uploadTrimProps} style={{ width: '100%' }} listType="picture-card">
+
+                                                    <div>
+                                                        {loading ? <LoadingOutlined /> : <PlusOutlined />}
+                                                        <div style={{ marginTop: 8 }}>Upload Trim</div>
+                                                    </div>
+                                                </Upload>
+                                            </Form.Item>
+                                        </Col>
+                                    </Row>
+                                    <Row justify={'end'}>
+                                        <Button type='primary' htmlType="submit">Add</Button>
+                                    </Row>
+                                </Form>
+                            </Card>
+                            {trimTableVisible ? (<>
+                                <Table columns={columnsSkelton} dataSource={trimsTableData} scroll={{ x: 'max-content' }} />
+                            </>) : (<></>)}
+                        </>) : (<></>)}
+                    </div>
+
+                </Space>
+            </Row>
+            <Row justify={'end'}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }}>
+                    <Button type="primary" onClick={onSubmit} disabled={fabricTableData.length > 0 && trimsTableData.length > 0 ? false : true}>Submit</Button>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }}>
+                    <Button onClick={onReset}>Reset</Button>
+                </Col>
+
+            </Row>
         </Card>
+        <Modal
+            className='rm-'
+            key={'modal' + Date.now()}
+            width={'80%'}
+            style={{ top: 30, alignContent: 'right' }}
+            visible={visibleModel}
+            title={<React.Fragment>
+            </React.Fragment>}
+            onCancel={handleCancel}
+            footer={[]}
+        >
+            <M3Items />
+
+            </Modal></>
     )
 }
 export default SourcingRequisitionDynamicForm
