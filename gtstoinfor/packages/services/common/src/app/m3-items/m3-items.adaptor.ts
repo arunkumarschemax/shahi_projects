@@ -22,6 +22,8 @@ export class M3ItemsAdapter {
         entity.yarnCount = dto.yarnCount;
         entity.yarnUnit = dto.yarnUnit;
         entity.finish = dto.finish;
+        entity.buyerId = dto.buyerId;
+        entity.description = dto.description;
         entity.shrinkage = dto.shrinkage;
         if (dto.m3ItemsId) {
             entity.m3ItemsId = dto.m3ItemsId;

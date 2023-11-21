@@ -16,6 +16,8 @@ export class M3ItemsDTO {
     widthUnit:string;
     finish: string;
     shrinkage: string;
+    buyerId: number;
+    description:string;
     isActive?:boolean;
     versionFlag?:number;
     
@@ -25,6 +27,8 @@ export class M3ItemsDTO {
         weight:number,weightUnit:string,construction: string,
         yarnCount: string,yarnUnit: string,width:number,widthUnit:string,finish: string,
         shrinkage: string,
+        buyerId: number,
+        description:string,
         isActive?:boolean,
         versionFlag?:number,
        
@@ -37,6 +41,8 @@ export class M3ItemsDTO {
         this.fabricType = fabricType;
         this.weave = weave;
         this.weight = weight;
+        this.buyerId = buyerId;
+        this.description = description;
         this.weightUnit = weightUnit;
         this.construction = construction;
         this.yarnCount = yarnCount;

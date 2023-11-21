@@ -23,6 +23,7 @@ export class M3ItemsService {
   async createM3Items(createDto: M3ItemsDTO): Promise<CommonResponseModel> {
     try {
       const existingItemCount: number = await this.repository.count();
+      console.log(existingItemCount)
       const nextItemCode: string = `FAB${(existingItemCount + 1).toString().padStart(3, '0')}`;
       const entity: M3ItemsEntity = this.adapter.convertDtoToEntity(createDto);
       entity.itemCode = nextItemCode;

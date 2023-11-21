@@ -1,4 +1,5 @@
 import {
+  BuyersService,
   FabricTypeService,
   FabricWeaveService,
   M3ItemsService,
@@ -22,12 +23,54 @@ const M3Items = () => {
   const [weightData, setWeightData] = useState<any[]>([]);
   const [yarnData, setYarnData] = useState<any[]>([]);
   const [widthData, setWidthData] = useState<any[]>([]);
+  const [buyer, setBuyer] = useState<any[]>([]);
   const uomService = new UomService();
   const fabricService = new FabricTypeService();
   const weaveService = new FabricWeaveService();
   const [weave, setWeave] = useState<any[]>([]);
+  const buyerService = new BuyersService();
 
   const [fabricType, setFabricType] = useState<any[]>([]);
+
+
+  const generateItemCode = () => {
+    console.log(form.getFieldsValue())
+    const buyersData = buyer.find((e) => e.buyerId === form.getFieldValue("buyerId"))?.shortCode;
+    console.log(buyer.find((e) => e.buyerId === form.getFieldValue("buyerId")));
+    const Content = form.getFieldValue("content")
+    console.log(Content);
+
+    const weight = form.getFieldValue("weight")
+    console.log(weight);
+
+    const construction = form.getFieldValue("construction");
+    console.log(construction);
+
+    const yarnCount = form.getFieldValue("yarnCount")
+    console.log(yarnCount);
+
+    const finish = form.getFieldValue("finish");
+    console.log(finish);
+
+    const weightUnit = weightData.find((e) => e.uomId === form.getFieldValue("weightUnit"))?.uom
+    console.log(weightUnit);
+
+    const weaveData = weave.find((e) => e.buyerId === form.getFieldValue("weave"))?.fabricWeaveName;
+    console.log(weaveData);
+
+    const yarnUnit = yarnData.find((e) => e.uomId === form.getFieldValue("yarnUnit"))?.uom
+    console.log(yarnUnit);
+
+    let code = buyersData != undefined? buyersData:""+"/"+Content!=undefined?Content:""+"/"+weaveData!=undefined?weaveData:""+"/"+weight+weightUnit!=undefined?weightUnit:""+"/"+construction+"/"+yarnCount+yarnUnit+"/"+finish;
+    form.setFieldsValue({"itemCode":code})
+  }
+  const getBuyers = () => {
+    buyerService.getAllActiveBuyers().then((res) => {
+      if (res.status) {
+        setBuyer(res.data);
+      }
+    });
+  };
 
   const getFabricTypedata = () => {
     fabricService
@@ -63,6 +106,7 @@ const M3Items = () => {
     getUom();
     getFabricTypedata();
     getWeaveData();
+    getBuyers();
   }, []);
 
   const getUom = () => {
@@ -124,13 +168,33 @@ const M3Items = () => {
       >
         <Form layout="vertical" form={form} onFinish={onFinish}>
           <Row gutter={24}>
-            <Col
-              xs={{ span: 12 }}
-              sm={{ span: 12 }}
-              md={{ span: 4 }}
-              lg={{ span: 8 }}
-              xl={{ span: 5 }}
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+            <Form.Item
+              name="buyerId"
+              label="Buyer"
+              rules={[{ required: true, message: "Buyer is required" }]}
             >
+              <Select
+                allowClear
+                showSearch
+                optionFilterProp="children"
+                placeholder="Select Buyer"
+                onChange={generateItemCode}
+              >
+                {buyer.map((e) => {
+                  return (
+                    <option
+                      key={e.buyerId}
+                      value={e.buyerId}
+                    >
+                      {`${e.buyerCode} - ${e.buyerName}`}
+                    </option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
               <Form.Item
                 label="Content"
                 name="content"
@@ -139,6 +203,7 @@ const M3Items = () => {
                 <Select
                   optionFilterProp="children"
                   placeholder=" Select Content"
+                  onChange={generateItemCode}
                 >
                   {Object.keys(m3ItemsContentEnum)
                     .sort()
@@ -153,17 +218,12 @@ const M3Items = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col
-              xs={{ span: 12 }}
-              sm={{ span: 12 }}
-              md={{ span: 4 }}
-              lg={{ span: 8 }}
-              xl={{ span: 5 }}
-            >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+
               <Form.Item
                 label=" Fabric Type"
                 name="fabricType"
-                rules={[{ required: true, message: "Field is required" }]}
+                rules={[{ required: false, message: "Field is required" }]}
               >
                 <Select placeholder=" Select Fabric Type">
                   {fabricType.map((option) => (
@@ -177,19 +237,16 @@ const M3Items = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col
-              xs={{ span: 12 }}
-              sm={{ span: 12 }}
-              md={{ span: 4 }}
-              lg={{ span: 8 }}
-              xl={{ span: 5 }}
-            >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+
               <Form.Item
                 label=" Weave"
                 name="weave"
                 rules={[{ required: true, message: "Field is required" }]}
               >
-                <Select placeholder=" Select Weave">
+                <Select placeholder=" Select Weave" 
+                  onChange={generateItemCode}
+                >
                   {weave.map((option) => (
                     <option
                       key={option.fabricWeaveName}
@@ -201,35 +258,27 @@ const M3Items = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col
-              xs={{ span: 12 }}
-              sm={{ span: 12 }}
-              md={{ span: 4 }}
-              lg={{ span: 8 }}
-              xl={{ span: 5 }}
-            >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+
               <Form.Item
                 label="Weight"
                 name="weight"
                 rules={[{ required: true, message: "Field is required" }]}
               >
-                <Input placeholder=" Enter Weight" />
+                <Input placeholder=" Enter Weight" onBlur={generateItemCode} />
               </Form.Item>
             </Col>
-            <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 2 }}
-              style={{ marginTop: "2%" }}
-            >
-              <Form.Item name="weightUnit">
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} style={{ marginTop: "2%" }}>
+
+              <Form.Item name="weightUnit" 
+                rules={[{ required: true, message: "Field is required" }]}
+              >
                 <Select
                   showSearch
                   allowClear
                   optionFilterProp="children"
                   placeholder="Unit"
+                  onChange={generateItemCode}
                 >
                   {weightData.map((e) => {
                     return (
@@ -241,29 +290,18 @@ const M3Items = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col
-              xs={{ span: 12 }}
-              sm={{ span: 12 }}
-              md={{ span: 4 }}
-              lg={{ span: 8 }}
-              xl={{ span: 5 }}
-            >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+
               <Form.Item
                 label="Width"
                 name="width"
-                rules={[{ required: true, message: "Field is required" }]}
+                rules={[{ required: false, message: "Field is required" }]}
               >
                 <Input placeholder=" Enter Width" />
               </Form.Item>
             </Col>
-            <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 2 }}
-              style={{ marginTop: "2%" }}
-            >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} style={{ marginTop: "2%" }}>
+
               <Form.Item name="widthUnit">
                 <Select
                   showSearch
@@ -281,21 +319,16 @@ const M3Items = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col
-              xs={{ span: 12 }}
-              sm={{ span: 12 }}
-              md={{ span: 4 }}
-              lg={{ span: 8 }}
-              xl={{ span: 5 }}
-            >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+
               <Form.Item
                 label=" Construction"
                 name="construction"
-                //  rules={[
-                //   { required: true, message: 'Field is required' },
-                // ]}
+                 rules={[
+                  { required: true, message: 'Field is required' },
+                ]}
               >
-                <Input placeholder=" Enter  Construction" />
+                <Input placeholder=" Enter  Construction" onBlur={generateItemCode}/>
               </Form.Item>
             </Col>
             <Col
@@ -308,11 +341,11 @@ const M3Items = () => {
               <Form.Item
                 label=" Yarn Count"
                 name="yarnCount"
-                //  rules={[
-                //   { required: true, message: 'Field is required' },
-                // ]}
+                 rules={[
+                  { required: true, message: 'Field is required' },
+                ]}
               >
-                <Input placeholder=" Enter  Yarn Count" />
+                <Input placeholder=" Enter  Yarn Count"  onBlur={generateItemCode}/>
               </Form.Item>
             </Col>
             <Col
@@ -323,12 +356,17 @@ const M3Items = () => {
               xl={{ span: 2 }}
               style={{ marginTop: "2%" }}
             >
-              <Form.Item name="yarnUnit">
+              <Form.Item name="yarnUnit"
+              rules={[
+                { required: true, message: 'Field is required' },
+              ]}
+              >
                 <Select
                   showSearch
                   allowClear
                   optionFilterProp="children"
                   placeholder="Unit"
+                  onChange={generateItemCode}
                 >
                   {yarnData.map((e) => {
                     return (
@@ -351,11 +389,11 @@ const M3Items = () => {
               <Form.Item
                 label=" Finish"
                 name="finish"
-                //  rules={[
-                //   { required: true, message: 'Field is required' },
-                // ]}
+                 rules={[
+                  { required: true, message: 'Field is required' },
+                ]}
               >
-                <Input placeholder=" Enter  Finish" />
+                <Input placeholder=" Enter  Finish" onBlur={generateItemCode} />
               </Form.Item>
             </Col>
             <Col
@@ -368,13 +406,27 @@ const M3Items = () => {
               <Form.Item
                 label=" Shrinkage"
                 name="shrinkage"
-                //  rules={[
-                //   { required: true, message: 'Field is required' },
-                // ]}
+                 rules={[
+                  { required: true, message: 'Field is required' },
+                ]}
               >
                 <Input placeholder=" Enter  Shrinkage" />
               </Form.Item>
             </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+            <Form.Item
+              name="itemCode"
+              label="Description"
+              rules={[
+                {
+                  required: true,
+                  message: 'Description is required'
+                },
+              ]}
+            >
+              <Input disabled />
+            </Form.Item>
+          </Col>
           </Row>
           <Row>
             <Col span={24} style={{ textAlign: "right" }}>

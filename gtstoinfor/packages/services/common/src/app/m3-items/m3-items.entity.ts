@@ -1,5 +1,6 @@
 import { RackEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Buyers } from "../buyers/buyers.entity";
 
 @Entity('m3_items')
 export class M3ItemsEntity {
@@ -113,7 +114,11 @@ export class M3ItemsEntity {
   })
   shrinkage: string;
 
-
+  @Column("int", {
+    nullable: false,
+    name: "buyer_id"
+  })
+  buyerId: number;
   @Column("boolean", {
     nullable: false,
     default: true,

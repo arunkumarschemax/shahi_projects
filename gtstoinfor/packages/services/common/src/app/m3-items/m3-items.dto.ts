@@ -48,6 +48,8 @@ export class M3ItemsDTO {
 
     @ApiProperty()
     shrinkage: string;
+    @ApiProperty()
+    description: string;
 
     @ApiProperty()
     isActive: boolean;
