@@ -7462,7 +7462,7 @@ export const extractedUps = async (pdf) => {
                 description: `${extractedData[hsnId - 3].content} ${extractedData[hsnId - 2].content} `,
                 HSN: line.content.includes("996") ? line.content.match(/\d+/) : line.content.trim(),
                 unitQuantity: unitQuantity,
-                unitPrice: (charge / unitQuantity).toFixed(2),
+                // unitPrice: (charge / unitQuantity).toFixed(2),
                 taxType: taxType,
                 charge: charge,
                 taxPercentage: taxPercentage,
