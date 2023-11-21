@@ -120,10 +120,7 @@ export class GrnService{
         }
     }
 
-    async createGrn(req:GrnDto):Promise<CommonResponseModel>{
-
-        // console.log(req,'@@@@@@@@@@@@@@@@@@@@@@@@')
-        
+    async createGrn(req:GrnDto):Promise<CommonResponseModel>{        
         const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
         try{
         await transactionalEntityManager.startTransaction();
@@ -137,8 +134,8 @@ export class GrnService{
             grnEntity.createdUser=req.createdUser
             grnEntity.updatedUser=req.updatedUser
             for(const item of req.grnItemInfo){
-                item.conversionQuantity=200
-                item.conversionUomId=1
+                // item.conversionQuantity=200
+                // item.conversionUomId=1
                 const itemEntity = new GrnItemsEntity()
                 // itemEntity.m3ItemCodeId=item.m3ItemCodeId
                 itemEntity.productGroupId=item.productGroupId

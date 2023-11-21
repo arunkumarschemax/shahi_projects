@@ -4,7 +4,7 @@ import { PurchaseOrderservice } from '@project-management-system/shared-services
 import { Button, Card, Col, DatePicker, Form, Popconfirm, Row, Select, Switch, Table, Tabs, Tooltip, message } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { log } from 'console';
 import AlertMessages from '../common/common-functions/alert-messages';
 
@@ -242,7 +242,7 @@ export const PurchaseOrderView = () => {
 
   return (
     <div><Card
-      title="Purchase Order View" headStyle={{ backgroundColor: '#69c0ff', border: 0, textAlign: 'center' }}>
+      title="Purchase Order View" headStyle={{ backgroundColor: '#69c0ff', border: 0, textAlign: 'center' }} extra={<Link to={'/purchase-order'}><Button className='panel_button'>Create</Button></Link>}>
       <Form form={form}>
         <Row gutter={12}>
           <Col span={6}>
