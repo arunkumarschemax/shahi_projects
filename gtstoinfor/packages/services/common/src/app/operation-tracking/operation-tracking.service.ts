@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationInventoryResponseModel, TrackingEnum, OperationTrackingDto, MaterialFabricEnum, TabNameReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationInventoryResponseModel, TrackingEnum, OperationTrackingDto, MaterialFabricEnum, TabNameReq, OperationsRequest } from "@project-management-system/shared-models";
 import { Item } from "../items/item-entity";
 import { OperationGroups } from "../operation-groups/operation-groups.entity";
 import { Operations } from "../operations/operation.entity";
@@ -117,8 +117,11 @@ export class OperationTrackingService {
       }
 
 
-      async getOperationInverntory(): Promise<CommonResponseModel> {
-        const data = await this.inventoryRepo.getOperationInventor ()
+      async getOperationInverntory(req?:OperationsRequest): Promise<CommonResponseModel> {
+
+        const data = await this.inventoryRepo.getOperationInventor (req)
+        console.log(data,'7777777777777777777777777');
+        
         if (data.length > 0) {
             return new CommonResponseModel(true, 1, 'operation data Retrived Sucessfully', data)
         } else {

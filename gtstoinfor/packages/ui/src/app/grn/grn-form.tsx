@@ -8,7 +8,7 @@ import { BuyersService, GRNService, PurchaseOrderservice, VendorsService } from 
 import TextArea from 'antd/es/input/TextArea'
 import GRNFabricForm from './grn-fabric'
 import GRNTrimForm from './grn-trim'
-import { GrnDto, VendorIdReq } from '@project-management-system/shared-models'
+import { GrnDto, PurchaseOrderStatus, VendorIdReq } from '@project-management-system/shared-models'
 import AlertMessages from '../common/common-functions/alert-messages'
 import dayjs, { Dayjs } from "dayjs";
 
@@ -35,7 +35,7 @@ const GRNForm = () => {
 
     const createGrn = (value:any) => {
         console.log(poData,'-------------------------------')
-        const req = new GrnDto(value.vendorId,poData[0]?.purchaseOrderId,form.getFieldValue('grnDate').format('YYYY-MM-DD'),undefined,value.remarks,undefined,undefined,'',undefined,'',0,0,poData[0]?.materialType,formData,0,'');
+        const req = new GrnDto(value.vendorId,poData[0]?.purchaseOrderId,form.getFieldValue('grnDate').format('YYYY-MM-DD'),PurchaseOrderStatus.OPEN,value.remarks,undefined,undefined,'',undefined,'',0,0,poData[0]?.materialType,formData,0,'');
         console.log(req,'[][][][][][][]')
         grnService.createGrn(req).then((res) => {
             if (res.status) {

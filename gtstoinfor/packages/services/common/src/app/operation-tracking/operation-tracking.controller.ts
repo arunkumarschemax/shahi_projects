@@ -46,10 +46,12 @@ export class OperationIssuingController{
       }
     }
     @Post('/getOperationInverntory')
-    @ApiBody({ })
-    async getOperationInverntory(): Promise<any> {
+    @ApiBody({type:OperationsRequest })
+    async getOperationInverntory(@Body() req:any): Promise<any> {
+      console.log(req,'022222222222222222');
+      
         try {
-            return await this.operationGroupsService.getOperationInverntory()
+            return await this.operationGroupsService.getOperationInverntory(req)
         } catch (error) {
             return this.applicationExceptionHandler.returnException(OperationInventoryResponseModel, error);
         }

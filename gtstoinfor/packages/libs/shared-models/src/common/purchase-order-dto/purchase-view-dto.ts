@@ -1,4 +1,4 @@
-import { StatusEnum } from "../../enum";
+import { PurchaseStatusEnum } from "../../enum";
 
 export class PurchaseViewDto {
     id?: number;
@@ -6,8 +6,8 @@ export class PurchaseViewDto {
     confirmEndDate?: string;
     poconfirmStartDate?: string;
     poconfirmEndDate?: string;
-    status?:StatusEnum
-    constructor(id?: number, confirmStartDate?: string, confirmEndDate?: string, poconfirmStartDate?: string, poconfirmEndDate?: string,status?:StatusEnum) {
+    status?:PurchaseStatusEnum
+    constructor(id?: number, confirmStartDate?: string, confirmEndDate?: string, poconfirmStartDate?: string, poconfirmEndDate?: string,status?:PurchaseStatusEnum) {
         this.id = id;
         this.confirmStartDate = confirmStartDate
         this.confirmEndDate = confirmEndDate

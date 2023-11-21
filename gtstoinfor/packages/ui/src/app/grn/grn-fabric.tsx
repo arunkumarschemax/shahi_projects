@@ -15,6 +15,8 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
     const uomService = new UomService()
     const [uomData, setUomData] = useState<any[]>([])
     const [formData, setFormData] = useState([]);
+    const [reciveUomName, setReciveUomName] = useState<any>('')
+    const [quantity, setQuantity]= useState<any>(undefined)
 
 
     useEffect(() =>{
@@ -47,18 +49,22 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
             acceptedUomId: values[`acceptedUomId_${record.poFabricId}_${record.key}`],
             rejectedQuantity: values[`rejectedQuantity_${record.poFabricId}_${record.key}`],
             rejectedUomId: values[`rejectedUomId_${record.poFabricId}_${record.key}`],
+            conversionQuantity:quantity,
+            conversionUomId:values[`acceptedUomId_${record.poFabricId}_${record.key}`],
             ...record,
           }));
   
         setFormData(updatedFormData);
-        console.log("FormData:", updatedFormData);
+                console.log("FormData:", updatedFormData);
         fabricForm()
       });
     };
 
     const fabricForm = () => {
       const grnItemsArray = [];
+      console.log(formData)
       formData.forEach((record) => {
+        console.log(record)
         const grnItem = new GrnItemsDto()
         grnItem.poFabricId = record.poFabricId
         grnItem.m3ItemCodeId = record.m3ItemCodeId
@@ -70,7 +76,7 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
         grnItem.rejectedQuantity = record.rejectedQuantity
         grnItem.rejectedUomId = record.rejectedUomId
         grnItem.indentFabricId = record.indentFabricId
-        grnItem.conversionQuantity = record.conversionQuantity
+        grnItem.conversionQuantity = record.conversionQuantity 
         grnItem.conversionUomId = record.conversionUomId
         grnItem.remarks = record.remarks
         grnItemsArray.push(grnItem)
@@ -94,22 +100,42 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
     
 
     const convertQuantity = (quantity, fromUom, toUom) => {
-      if (fromUom === toUom) {
-        return quantity;
-      }
-    
-      if (!(fromUom in uomConversionFactors) || !(toUom in uomConversionFactors)) {
-        throw new Error('Invalid units of measure');
-      }
-    
-      const baseQuantity = quantity * uomConversionFactors[fromUom];
-      const convertedQuantity = baseQuantity / uomConversionFactors[toUom];
-    
-      return convertedQuantity;
+      if(quantity != null && fromUom != undefined && toUom != undefined){
+        console.log(quantity,fromUom,toUom)
+        if (fromUom === toUom) {
+        console.log(quantity)
+        setQuantity(quantity)
+          return quantity;
+        }
+        if (!(fromUom in uomConversionFactors) || !(toUom in uomConversionFactors)) {
+          console.log(fromUom in uomConversionFactors)
+          throw new Error('Invalid units of measure');
+        }
+      
+        const baseQuantity = quantity * uomConversionFactors[fromUom];
+        const convertedQuantity = baseQuantity / uomConversionFactors[toUom];
+        console.log(convertedQuantity)
+        setQuantity(convertedQuantity)
+        return convertedQuantity;
+      }  
     };
     
+    let convertedQty
 
-    
+    const acceptUomOnchange = (option, value, record) =>{
+      const acceptedQuantity = form.getFieldValue(`acceptedQuantity_${record.poFabricId}_${record.key}`);
+       convertedQty = convertQuantity(acceptedQuantity, reciveUomName, value?.type?value.type:undefined);
+    }
+   
+    const receiveuomOnChange = (value,option) =>{
+      console.log(option.name)
+      setReciveUomName(option.name)
+
+    }
+    const acceptedQuantityOnchange =(value) =>{
+    console.log(value)
+    }
+
     const columns:any = [
         {
           title: <div style={{textAlign:"center"}}>M3 Fabric Code</div>,
@@ -168,9 +194,10 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select UOM"
+                onChange={receiveuomOnChange}
                 >
                 {uomData?.map((e) => (
-                  <Option key={e.uomId} value={e.uomId}>
+                  <Option key={e.uomId} value={e.uomId} name={e.uom}>
                     {e.uom}
                   </Option>
                 ))}
@@ -199,6 +226,7 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
                 placeholder="Accepted Quantity" 
                 type="number"
                 pattern="^[0-9]*$"
+                onChange={acceptedQuantityOnchange}
                 />
               </Form.Item>
           ),
@@ -222,9 +250,11 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select UOM"
+                // onChange={acceptUomOnchange}
+                onChange={(option, value) => acceptUomOnchange(option, value, record)}
               >
                 {uomData?.map((e) => (
-                  <Option key={e.uomId} value={e.uomId} name={`${record.poFabricId}`+`${record.key}+'acceptedUomId'`}>
+                  <Option key={e.uomId} value={e.uomId} name={`${record.poFabricId}`+`${record.key}+'acceptedUomId'`} type={e.uom}>
                     {e.uom}
                   </Option>
                 ))}
@@ -274,11 +304,8 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
           title: <div style={{ textAlign: 'center' }}>Converted Qty</div>,
           dataIndex: 'convertedQty',
           render: (_, record) => {
-            const acceptedQuantity = form.getFieldValue(`acceptedQuantity_${record.poFabricId}_${record.key}`);
-            const acceptedUom = form.getFieldValue(`acceptedUomId_${record.poFabricId}_${record.key}`);
-            const convertedQty = convertQuantity(acceptedQuantity, acceptedUom, 'm');
-    
-            return <div style={{ textAlign: 'center' }}>{convertedQty.toFixed(2)} m</div>;
+            return   <Form.Item  name={`convertedQty_${record.poFabricId}_${record.key}`}>  
+              {<span>{Number(quantity)?Number(quantity):''}</span>}</Form.Item>
           },
         },
       ]
