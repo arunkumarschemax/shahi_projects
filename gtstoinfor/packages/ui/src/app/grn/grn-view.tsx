@@ -2,6 +2,7 @@ import {
     BarcodeOutlined,
     CaretDownOutlined,
     CaretRightOutlined,
+    EyeOutlined,
     InfoCircleOutlined,
     PrinterOutlined,
     SearchOutlined,
@@ -96,11 +97,9 @@ import { GrnReq } from "@project-management-system/shared-models";
       });
     };
   
-    // const generateBarcode = (m3Code, info) => {
-    //   setBarcode(m3Code);
-    //   setBarcodeInfo(info);
-    //   setBarcodeModal(true);
-    // };
+   const details =(id:number,type:string) =>{
+    navigate('/grn-detail-view',{state:{id:id,type:type}})
+   }
   
     const generatePoForFabric = (rowData:any) =>{
       // console.log(rowData)
@@ -290,7 +289,103 @@ import { GrnReq } from "@project-management-system/shared-models";
       },
     
     ];
+    const tableColumns: any = [
   
+      {
+        title: "S No",
+        key: "sno",
+        // width: '70px',
+        responsive: ["sm"],
+        render: (text, object, index) => (page - 1) * 10 + (index + 1),
+      },
+      {
+        title: "Po Number",
+        dataIndex: "po_number",
+        ...getColumnSearchProps("po_number"),
+        render: (val,data) => {
+          return data.po_number ? data.po_number : "-";
+        }
+      },
+      {
+        title: "GRN Number",
+        dataIndex: "grn_number",
+        ...getColumnSearchProps("grn_number"),
+        render: (val,data) => {
+          return data.grn_number ? data.grn_number : "-";
+        }
+      },
+   
+      {
+        title: "Vendor",
+        dataIndex: "vendor_name",
+        ...getColumnSearchProps("vendor_name"),
+        render: (val,data) => {
+          return data.vendor_name ? data.vendor_name : "-";
+        }
+       
+      }, {
+        title: "Buyer",
+        dataIndex: "buyer_name",
+        ...getColumnSearchProps("buyer_name"),
+        render: (val,data) => {
+          return data.buyer_name ? data.buyer_name : "-";
+        }
+       
+      },
+      {
+        title: "Material Type",
+        dataIndex: "po_material_type",
+        ...getColumnSearchProps("po_material_type"),
+        render: (val,data) => {
+          return data.po_material_type ? data.po_material_type : "-";
+        }
+       
+      }, {
+        title: "Contact Person",
+        dataIndex: "contact_person",
+        ...getColumnSearchProps("contact_person"),
+        render: (val,data) => {
+          return data.contact_person ? data.contact_person : "-";
+        }
+      },
+      // {
+      //   title: "Grn Date",
+      //   dataIndex: "grn_date",
+      //   // render(data,val):{
+      //   //   return 
+      //   // }
+      // },
+      {
+        title: "Grn Date",
+        align:'center',
+        dataIndex: "grn_date",
+        render: (val,data) => {
+          return data.grn_date ?moment( data.grn_date).format('YYYY-MM-DD') : "-";
+        }
+      },
+      {
+        title: "Status",
+        dataIndex: "status",
+        render: (val,data) => {
+          return data.status ? data.status : "-";
+        }
+      },
+      {
+        title: <div style={{textAlign:'center'}}>Action</div>,
+        dataIndex: 'action',
+        render: (text, rowData) => {
+          
+          return(
+          <><span>
+           <Button title={"Detail View"} onClick={() => details(rowData.grn_id,rowData.po_material_type)}>
+              <EyeOutlined />
+            </Button>
+          </span>
+                 </>
+          )
+        }
+      },
+    ];
     const columnsSkelton: any = [
   
       {
@@ -594,7 +689,7 @@ import { GrnReq } from "@project-management-system/shared-models";
           </Row>
         </Form> */}
   
-        <Collapse
+        {/* <Collapse
           collapsible="icon"
           expandIcon={({ isActive }) => (
             <CaretRightOutlined rotate={isActive ? 90 : 0} />
@@ -602,8 +697,10 @@ import { GrnReq } from "@project-management-system/shared-models";
           accordion
         >
           {tableData.map((item: any, index: any) => (
+            
             <Collapse.Panel
-            onClick={(rowData)=>getStyle(rowData.id)}
+            
+            // onClick={(rowData)=>getStyle(rowData.id)}
               header={
                 <HeaderRow
                   PoNo={item.po_number}
@@ -617,6 +714,7 @@ import { GrnReq } from "@project-management-system/shared-models";
                   buyer={item.buyer_name}
                 />
               }
+                            // onChange={()=}
               key={index}
             //   extra={
             //     <Tag
@@ -653,8 +751,8 @@ import { GrnReq } from "@project-management-system/shared-models";
                     },
                   ]}
                 /> */}
-                <div>
-                  {item.po_material_type === "Fabric" ? (
+                {/* <div> */}
+                  {/* {item.po_material_type === "Fabric" ? (
                     <>
                       <Table
                         columns={Columns}
@@ -684,9 +782,9 @@ import { GrnReq } from "@project-management-system/shared-models";
                   )}
                 </div>
               </Space>
-            </Collapse.Panel>
-          ))}
-        </Collapse>
+            </Collapse.Panel> */}
+          {/* ))} */}
+        {/* </Collapse> */} 
         {/* <Modal
           open={barcodeModal}
           footer={[]}
@@ -696,6 +794,10 @@ import { GrnReq } from "@project-management-system/shared-models";
             <Barcode value={barcode} height={30} />
           </div>
         </Modal> */}
+        <Table
+        columns={tableColumns}
+        dataSource={filterData}
+        />
       </Card>
     );
   };
