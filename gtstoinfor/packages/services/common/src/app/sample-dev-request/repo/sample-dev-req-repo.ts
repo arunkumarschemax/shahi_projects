@@ -297,6 +297,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
 
 
     async getAllSampleDevData(req?: SampleFilterRequest): Promise<any[]> {
+        console.log(req,"req")
         const query = this.createQueryBuilder('sr')
             .select(`sr.sample_request_id,sr.description,sr.remarks,sr.user,sr.request_no AS requestNo,sr.cost_ref AS costRef,sr.contact,sr.extension,sr.sam_value AS samValue,sr.product,sr.type,sr.conversion,sr.made_in AS madeIn,sr.facility_id,sr.status,sr.location_id,sr.style_id,sr.profit_control_head_id,sr.buyer_id,sr.brand_id,sr.dmm_id,sr.technician_id,co.country_name,s.style`)
             .addSelect(`l.location_name AS locationName,s.style,pch.profit_control_head AS pch,b.buyer_name AS buyerName,b.buyer_code AS buyerCode,br.brand_name AS brandName,ed1.first_name AS dmmName,ed2.first_name AS techName,srfi.fabric_code ,srti.trim_code ,m3items.item_code as m3itemCode,m3trims.trim_code`)

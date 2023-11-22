@@ -40,10 +40,19 @@ export const SampleRequests = (props: BuyingHouseProps) => {
     if (form.getFieldValue('reqNo') !== undefined) {
       req.reqNo = form.getFieldValue('reqNo')
     }
-    Service.getAllSampleDevData().then((res) => {
+    if (form.getFieldValue('pch') !== undefined) {
+      req.pch = form.getFieldValue('pch')
+    }
+    if (form.getFieldValue('status') !== undefined) {
+      req.status = form.getFieldValue('status')
+    }
+    
+    console.log(req,"ree")
+
+    Service.getAllSampleDevData(req).then((res) => {
       console.log(res.data,'------------------------------')
       if (res.data) {
-        console.table(res)
+        // console.table(res)
         setFilterData(res.data);
         setBuyingHouseData(res.data);
         setReqNo(res.data)
