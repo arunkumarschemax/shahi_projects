@@ -212,8 +212,10 @@ export class PurchaseOrderService {
 
     async GetPurchaseData(req?: PurchaseViewDto): Promise<CommonResponseModel> {
         try {
-            let query = `SELECT  null as pofabricData,null as poTrimdata, s.style AS styleName,po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.vendor_id AS vendorId,po.style_id AS styleId,
-            expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype FROM purchase_order  po LEFT JOIN style s ON s.style_id=po.style_id `
+            let query = `SELECT  null as pofabricData,null as poTrimdata, s.style AS styleName,po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.vendor_id AS vendorId,po.style_id AS styleId,po.vendor_id AS vendorId, v.vendor_name AS vendorName,
+            expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype FROM purchase_order  po 
+            LEFT JOIN style s ON s.style_id=po.style_id
+            LEFT JOIN  vendors v ON v.vendor_name= po.vendor_id`
             if (req?.id) {
                 query += ` where po.purchase_order_id = ${req?.id}`
             }
@@ -252,13 +254,14 @@ export class PurchaseOrderService {
     }
     async GetPurchaseTrimData(purchaseOrderId: number): Promise<CommonResponseModel> {
         try {
-            let query = `SELECT ri.item_code AS itemCode,pg.product_group AS productGroup,po_trim_id AS poTrimid,pt.product_group_id AS productGrouoId,trim_id AS trimId,m3_trim_code AS m3trimCode,
+            let query = `SELECT ri.trim_code AS trimcode,ri.trim_type AS trimtype,pg.product_group AS productGroup,po_trim_id AS poTrimid,pt.product_group_id AS productGrouoId,trim_id AS trimId,m3_trim_code AS m3trimCode,
             purchase_order_id,colour_id AS clourId,
-                       indent_trim_id AS indentTrimId,po_quantity AS poQuantity,trim_item_status AS trimItemStaus,
+                       indent_trim_id AS indentTrimId,po_quantity AS poQuantity,trim_item_status AS trimItemStaus ,
                        grn_quantity AS grnQuantity 
                        FROM purchase_order_trim pt
                        LEFT JOIN product_group pg ON pg.product_group_id=pt.product_group_id
-                       LEFT JOIN rm_items ri ON ri.rm_item_id=pt.trim_id where pt.purchase_order_id=`+ purchaseOrderId + ``
+                       LEFT JOIN m3_trims ri ON ri.m3_trim_Id =pt.trim_id
+                        where pt.purchase_order_id=`+ purchaseOrderId + ``
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)
@@ -274,13 +277,13 @@ export class PurchaseOrderService {
             const data = []
             const podata = await this.GetPurchaseData(req)
             for (const po of podata.data) {
-                console.log(po.purchaseOrderId)
-                console.log('^^^^^^^^^^^^^^^^^^^')
+                // console.log(po.purchaseOrderId)
+                // console.log('^^^^^^^^^^^^^^^^^^^')
                 const fabData = await this.GetPurchaseFabricData(po.purchaseOrderId)
                 const fabricInfo = []
                 for (const fabrData of fabData.data) {
-                    console.log(fabrData)
-                    console.log('**************************8')
+                //     console.log(fabrData)
+                //     console.log('**************************8')
                     fabricInfo.push(fabrData)
                 }
                 const trimData = await this.GetPurchaseTrimData(po.purchaseOrderId)
