@@ -7,6 +7,7 @@ import { StyleOrder } from "../style-order/style-order.entity";
 import { CustomerOrderStatusEnum } from "@project-management-system/shared-models";
 import { IndentFabricEntity } from "./indent-fabric-entity";
 import { IndentTrimsEntity } from "./indent-trims-entity";
+import { SampleRequest } from "../sample-dev-request/entities/sample-dev-request.entity";
 
 @Entity('indent')
 export class Indent {
@@ -106,5 +107,9 @@ export class Indent {
 
   @OneToMany(type => IndentTrimsEntity, trim => trim.indentInfo, { cascade: true })
   iTrimsInfo: IndentTrimsEntity[];
+
+  @ManyToOne(type =>SampleRequest,sampleReq =>sampleReq.indentInfo)
+  @JoinColumn({name:'sample_request_id'})
+  sampleReq:SampleRequest
 
 }

@@ -26,11 +26,11 @@ export class SampleRequestTriminfoEntity {
     })
     remarks: string
     
-    @Column('varchar', {
+    @Column('int', {
         name: 'trim_code',
-        nullable: true
+        nullable: false
     })
-    trimCode: string
+    trimCode: number
 
     @Column('varchar', {
         name: 'trim_type',

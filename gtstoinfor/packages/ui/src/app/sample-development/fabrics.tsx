@@ -56,6 +56,7 @@ const FabricsForm = ({props, buyerId}) => {
   // };
 
   const handleInputChange = (e, key, field, additionalValue) => {
+    console.log(data);
     let updatedData;
   
     if (field === 'fabricCode') {
@@ -123,9 +124,9 @@ const FabricsForm = ({props, buyerId}) => {
     {
       title: 'Fabric Code',
       dataIndex: 'fabricCode',
-      width:"20%",
+      width:"45%",
       render: (_, record) => (
-        <><Form.Item>
+        <><Form.Item name="fabricId">
           <Select
             // onChange={(e) => handleInputChange(e, record.key, 'fabricCode',getSelectedProductGroupId(e))}
             style={{ width: "100%" }}
@@ -133,6 +134,7 @@ const FabricsForm = ({props, buyerId}) => {
             showSearch
             optionFilterProp="children"
             placeholder="Select Fabric Code"
+            onChange={(e) => handleInputChange(e, record.key, 'fabricCode',0)}
           >
             {fabricCodeData?.map(item => {
               return <Option key={item.m3ItemsId} valu={item.m3ItemsId}>{item.itemCode+ "-"+ item.description}</Option>;
@@ -160,7 +162,7 @@ const FabricsForm = ({props, buyerId}) => {
     {
       title: 'Color',
       dataIndex: 'color',
-      width:"20%",
+      width:"15%",
       render: (_, record) => (
         // <Input
         // value={record.color}
@@ -188,6 +190,7 @@ const FabricsForm = ({props, buyerId}) => {
     {
       title: 'Consumption',
       dataIndex: 'consumption',
+      width:"10%",
       render: (_, record) => (
         <Input
         value={record.consumption}
@@ -197,8 +200,8 @@ const FabricsForm = ({props, buyerId}) => {
     },
     {
       title:"UOM",
-      dataIndex: 'Uom',
-
+      dataIndex: 'UomId',
+      width:"10%",
       render: (_, record) => (
         <Select
         value={record.uomId}
@@ -206,7 +209,9 @@ const FabricsForm = ({props, buyerId}) => {
         allowClear
         showSearch
         optionFilterProp="children"
-        placeholder="Select UOM" >
+        placeholder="Select UOM"
+        onChange={(e) => handleInputChange(e, record.key, 'uomId',0)}
+        >
             {uom.map(e => {
               return(
                   <option key={e.uomId} value={e.uomId}>{e.uom}</option>

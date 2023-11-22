@@ -62,6 +62,7 @@ const TrimsForm = ({props, buyerId}) => {
   }
 
   const handleInputChange = (e, key, field) => {
+    console.log(data)
     const updatedData = data.map((record) => {
       if (record.key === key) {
         return { ...record, [field]: e };
@@ -90,12 +91,12 @@ const TrimsForm = ({props, buyerId}) => {
     },
     {
       title: 'Trim Type',
-      dataIndex: 'productGroupId',
+      dataIndex: 'trimType',
       width:"20%",
       render: (_, record) => (
         <Select
-          value={record.productGroupId}
-          onChange={(e) => handleInputChange(e, record.key, 'productGroupId')}
+          value={record.trimType}
+          onChange={(e) => handleInputChange(e, record.key, 'trimType')}
           style={{width:"100%"}}
           allowClear
           showSearch
@@ -124,7 +125,7 @@ const TrimsForm = ({props, buyerId}) => {
           placeholder="Select Trim"
          >
           {trimCode.map(item =>{
-            return <Option key={item.trimId} value={item.trimId}>{item.trimCode}</Option>
+            return <Option key={item.m3TrimsId} value={item.m3TrimsId}>{item.trimCode}</Option>
           })}
           </Select>
       ),
@@ -151,7 +152,9 @@ const TrimsForm = ({props, buyerId}) => {
         allowClear
         showSearch
         optionFilterProp="children"
-        placeholder="Select UOM" >
+        placeholder="Select UOM" 
+        onChange={(e) => handleInputChange(e, record.key, 'uomId')}
+        >
             {uom.map(e => {
               return(
                   <option key={e.uomId} value={e.uomId}>{e.uom}</option>

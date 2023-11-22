@@ -14,6 +14,7 @@ import {
   m3ItemsContentEnum,
 } from "@project-management-system/shared-models";
 import { useNavigate } from "react-router-dom";
+const { TextArea } = Input;
 
 const M3Items = () => {
   const service = new M3ItemsService();
@@ -29,40 +30,71 @@ const M3Items = () => {
   const weaveService = new FabricWeaveService();
   const [weave, setWeave] = useState<any[]>([]);
   const buyerService = new BuyersService();
-
   const [fabricType, setFabricType] = useState<any[]>([]);
 
 
+  const getVarcodeDefaultValue = (defaultCode: string) => {
+    console.log(defaultCode);
+    // if(code==''){
+    form.setFieldsValue({
+      description: defaultCode,
+    });
+    // }
+  }
+
   const generateItemCode = () => {
-    console.log(form.getFieldsValue())
-    const buyersData = buyer.find((e) => e.buyerId === form.getFieldValue("buyerId"))?.shortCode;
-    console.log(buyer.find((e) => e.buyerId === form.getFieldValue("buyerId")));
-    const Content = form.getFieldValue("content")
-    console.log(Content);
+    // console.log(form.getFieldsValue())
+    let buyerDetails = buyer.find((e) => e.buyerId === form.getFieldValue("buyerId"))?.shortCode;
+    const buyersData = buyerDetails != undefined? buyerDetails + '/' : "";
+    form.setFieldsValue({buyerCode:buyerDetails != undefined ? buyerDetails : ""});
+    // console.log(buyersData)
+    // console.log(buyer.find((e) => e.buyerId === form.getFieldValue("buyerId")));
+    const Content = form.getFieldValue("content") != undefined ? form.getFieldValue("content") + '/' : "" ;
+    // console.log(Content);
 
-    const weight = form.getFieldValue("weight")
-    console.log(weight);
+    const weight = form.getFieldValue("weight") != undefined ? form.getFieldValue("weight") : "";
+    // console.log(weight);
 
-    const construction = form.getFieldValue("construction");
-    console.log(construction);
+    const construction = form.getFieldValue("construction") != undefined ? form.getFieldValue("construction") + '/' : "" ;
+    // console.log(construction);
 
-    const yarnCount = form.getFieldValue("yarnCount")
-    console.log(yarnCount);
+    const yarnCount = form.getFieldValue("yarnCount") != undefined ? form.getFieldValue("yarnCount") : "";
+    // console.log(yarnCount);
 
-    const finish = form.getFieldValue("finish");
-    console.log(finish);
+    const finish = form.getFieldValue("finish") != undefined ? form.getFieldValue("finish") + '/' : "" ;
+    // console.log(finish);
 
-    const weightUnit = weightData.find((e) => e.uomId === form.getFieldValue("weightUnit"))?.uom
-    console.log(weightUnit);
 
-    const weaveData = weave.find((e) => e.buyerId === form.getFieldValue("weave"))?.fabricWeaveName;
-    console.log(weaveData);
+    const shrinkage = form.getFieldValue("shrinkage") != undefined ? form.getFieldValue("shrinkage") : "";
+    // console.log(shrinkage);
 
-    const yarnUnit = yarnData.find((e) => e.uomId === form.getFieldValue("yarnUnit"))?.uom
-    console.log(yarnUnit);
+    let weightDetails = weightData.find((e) => e.uomId === form.getFieldValue("weightUnit"))?.uom;
+    const weightUnit = weightDetails != undefined ? weightDetails + '/' : ""  ;
+    // console.log(weightUnit);
 
-    let code = buyersData != undefined? buyersData:""+"/"+Content!=undefined?Content:""+"/"+weaveData!=undefined?weaveData:""+"/"+weight+weightUnit!=undefined?weightUnit:""+"/"+construction+"/"+yarnCount+yarnUnit+"/"+finish;
-    form.setFieldsValue({"itemCode":code})
+    let weaveDetails = weave.find((e) => e.fabricWeaveId === form.getFieldValue("weave"))?.fabricWeaveName;
+    const weaveData = weaveDetails != undefined ? weaveDetails + '/' : ""  ;
+    // console.log(weaveData);
+
+    let yarnDetails = yarnData.find((e) => e.uomId === form.getFieldValue("yarnUnit"))?.uom;
+    const yarnUnit = yarnDetails != undefined ?  yarnDetails + '/' : ""  ;
+    // console.log(yarnUnit);
+
+    const width = form.getFieldValue("width") != undefined ? form.getFieldValue("width") : "";
+    // console.log(width);
+
+    let widthDetails = widthData.find((e) => e.uomId === form.getFieldValue("widthUnit"))?.uom;
+    const widthUnit = widthDetails != undefined ? widthDetails + '/' : ""  ;
+    // console.log(widthUnit);
+
+    let fabricTypeDetails = fabricType.find((e) => e.fabricTypeId === form.getFieldValue("fabricType"))?.fabricTypeName;
+    const fabricTypeData =  fabricTypeDetails != undefined ? fabricTypeDetails + '/' : "" ;
+    // console.log(fabricTypeData);
+
+    // let code = buyersData != undefined? buyersData:""+"/"+Content!=undefined?Content:""+"/"+fabricTypeData!=undefined?fabricTypeData:""+"/"+weaveData!=undefined?weaveData:""+"/"+weight+weightUnit!=undefined?weightUnit:""+"/"+width+widthUnit+"/"+construction+"/"+yarnCount+yarnUnit+"/"+finish+"/"+shrinkage;
+    // console.log(code);
+    getVarcodeDefaultValue(`${buyersData != undefined ? buyersData : ''}${Content != undefined ? Content : ''}${fabricTypeData != undefined ? fabricTypeData : ''}${weaveData != undefined ? weaveData : ''}${weight != undefined ? weight + ' ' : ''}${weightUnit != undefined ? weightUnit : ''}${width != undefined ? width + ' ' : ''}${widthUnit != undefined ? widthUnit : ''}${construction != undefined ? construction : ''}${yarnCount != undefined ? yarnCount + ' ' : ''}${yarnUnit != undefined ? yarnUnit : ''}${finish != undefined ? finish : ''}${shrinkage != undefined ? shrinkage : ''}`);
+    // form.setFieldsValue({"itemCode":code})
   }
   const getBuyers = () => {
     buyerService.getAllActiveBuyers().then((res) => {
@@ -140,6 +172,9 @@ const M3Items = () => {
             window.location.reload();
           }, 500);
         }
+        else{
+          AlertMessages.getWarningMessage(res.internalMessage);
+        }
       })
       .catch((err) => {
         AlertMessages.getErrorMessage(err.message);
@@ -153,7 +188,7 @@ const M3Items = () => {
   return (
     <div>
       <Card
-        title={<span>M3 ITEMS</span>}
+        title={<span>M3 Fabric</span>}
         style={{ textAlign: "center" }}
         headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
         extra={
@@ -194,6 +229,14 @@ const M3Items = () => {
               </Select>
             </Form.Item>
           </Col>
+          <Col style={{display:"none"}}>
+          <Form.Item
+              name="buyerCode"
+              rules={[{ required: true, message: "BuyerCode is required" }]}
+            >
+                <Input />
+            </Form.Item>
+          </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
               <Form.Item
                 label="Content"
@@ -218,18 +261,18 @@ const M3Items = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
 
               <Form.Item
                 label=" Fabric Type"
                 name="fabricType"
                 rules={[{ required: false, message: "Field is required" }]}
               >
-                <Select placeholder=" Select Fabric Type">
+                <Select placeholder=" Select Fabric Type" onChange={generateItemCode}>
                   {fabricType.map((option) => (
                     <option
-                      key={option.fabricTypeName}
-                      value={option.fabricTypeName}
+                      key={option.fabricTypeId}
+                      value={option.fabricTypeId}
                     >
                       {option.fabricTypeName}
                     </option>
@@ -249,8 +292,8 @@ const M3Items = () => {
                 >
                   {weave.map((option) => (
                     <option
-                      key={option.fabricWeaveName}
-                      value={option.fabricWeaveName}
+                      key={option.fabricWeaveId}
+                      value={option.fabricWeaveId}
                     >
                       {option.fabricWeaveName}
                     </option>
@@ -258,7 +301,7 @@ const M3Items = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 2 }}>
 
               <Form.Item
                 label="Weight"
@@ -268,7 +311,7 @@ const M3Items = () => {
                 <Input placeholder=" Enter Weight" onBlur={generateItemCode} />
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} style={{ marginTop: "2%" }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 2 }} style={{ marginTop: "2%" }}>
 
               <Form.Item name="weightUnit" 
                 rules={[{ required: true, message: "Field is required" }]}
@@ -290,17 +333,17 @@ const M3Items = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 2 }}>
 
               <Form.Item
                 label="Width"
                 name="width"
                 rules={[{ required: false, message: "Field is required" }]}
               >
-                <Input placeholder=" Enter Width" />
+                <Input placeholder=" Enter Width" onBlur={generateItemCode}/>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} style={{ marginTop: "2%" }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 2 }} style={{ marginTop: "2%" }}>
 
               <Form.Item name="widthUnit">
                 <Select
@@ -308,6 +351,7 @@ const M3Items = () => {
                   allowClear
                   optionFilterProp="children"
                   placeholder="Unit"
+                  onClick={generateItemCode}
                 >
                   {widthData.map((e) => {
                     return (
@@ -336,7 +380,7 @@ const M3Items = () => {
               sm={{ span: 12 }}
               md={{ span: 4 }}
               lg={{ span: 8 }}
-              xl={{ span: 5 }}
+              xl={{ span: 3 }}
             >
               <Form.Item
                 label=" Yarn Count"
@@ -384,7 +428,7 @@ const M3Items = () => {
               sm={{ span: 12 }}
               md={{ span: 4 }}
               lg={{ span: 8 }}
-              xl={{ span: 5 }}
+              xl={{ span: 3 }}
             >
               <Form.Item
                 label=" Finish"
@@ -401,7 +445,7 @@ const M3Items = () => {
               sm={{ span: 12 }}
               md={{ span: 4 }}
               lg={{ span: 8 }}
-              xl={{ span: 5 }}
+              xl={{ span: 3 }}
             >
               <Form.Item
                 label=" Shrinkage"
@@ -410,12 +454,12 @@ const M3Items = () => {
                   { required: true, message: 'Field is required' },
                 ]}
               >
-                <Input placeholder=" Enter  Shrinkage" />
+                <Input placeholder=" Enter  Shrinkage"  onBlur={generateItemCode}/>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+            <Col span={6}>
             <Form.Item
-              name="itemCode"
+              name="description"
               label="Description"
               rules={[
                 {
@@ -424,7 +468,7 @@ const M3Items = () => {
                 },
               ]}
             >
-              <Input disabled />
+              <TextArea rows={2}  disabled />
             </Form.Item>
           </Col>
           </Row>

@@ -15,6 +15,7 @@ import { SampleReqSizeEntity } from './sample-requset-size-info-entity';
 import { SampleReqFabricinfoEntity } from './sample-request-fabric-info-entity';
 import { SampleRequestTriminfoEntity } from './sample-request-trim-info-entity';
 import { SampleRequestProcessInfoEntity } from './sample-request-process-info-entity';
+import { Indent } from '../../indent/indent-entity';
 
 @Entity('sample_request')
 export class SampleRequest {
@@ -46,7 +47,7 @@ export class SampleRequest {
   pch: ProfitControlHead;
 
   @Column("varchar", {
-    nullable: false,
+    nullable: true,
     name: "remarks"
   })
   remarks: string;
@@ -68,7 +69,7 @@ export class SampleRequest {
   style: Style;
 
   @Column("varchar", {
-    nullable: false,
+    nullable: true,
     name: "description"
   })
   description: string;
@@ -78,7 +79,7 @@ export class SampleRequest {
   brand: Brands;
 
   @Column("varchar", {
-    nullable: false,
+    nullable: true,
     name: "cost_ref"
   })
   costRef: string;
@@ -98,13 +99,13 @@ export class SampleRequest {
   contact: string;
 
   @Column("varchar", {
-    nullable: false,
+    nullable: true,
     name: "extension"
   })
   extension: string;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "sam_value"
   })
   samValue: number;
@@ -118,13 +119,13 @@ export class SampleRequest {
   technician: EmplyeeDetails;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "product"
   })
   product: number;
 
   @Column("varchar", {
-    nullable: false,
+    nullable: true,
     name: "type"
   })
   type: string;
@@ -141,18 +142,6 @@ export class SampleRequest {
   })
   user: string;
 
-  @Column("varchar", {
-    nullable: false,
-    name: "file_name"
-  })
-  file_name: string;
-
-  @Column("varchar", {
-    nullable: false,
-    name: "file_path"
-  })
-  file_path: string;
-
   @Column("int", {
     nullable: false,
     name: "made_in"
@@ -160,7 +149,7 @@ export class SampleRequest {
   madeIn: number;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "facility_id"
   })
   facilityId: number;
@@ -176,14 +165,14 @@ export class SampleRequest {
   @Column('varchar', {
     name: 'file_name',
     length: 200,
-    nullable: false
+    nullable: true
   })
   
   fileName: string;
   @Column('varchar', {
     name: 'file_path',
     length: 200,
-    nullable: false
+    nullable: true
   })
   filepath: string;
 
@@ -199,4 +188,6 @@ export class SampleRequest {
 
   @OneToMany(type => SampleRequestProcessInfoEntity, sampleReqTrim => sampleReqTrim.sampleReq, { cascade: true })
   sampleProcessInfo: SampleRequestProcessInfoEntity[]
+  @OneToMany(type => Indent, indent => indent.sampleReq, { cascade: true })
+  indentInfo: Indent[]
 }

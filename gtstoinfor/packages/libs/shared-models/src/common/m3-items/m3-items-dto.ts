@@ -18,6 +18,7 @@ export class M3ItemsDTO {
     shrinkage: string;
     buyerId: number;
     description:string;
+    buyerCode:string;
     isActive?:boolean;
     versionFlag?:number;
     
@@ -29,6 +30,7 @@ export class M3ItemsDTO {
         shrinkage: string,
         buyerId: number,
         description:string,
+        buyerCode:string,
         isActive?:boolean,
         versionFlag?:number,
        
@@ -50,7 +52,9 @@ export class M3ItemsDTO {
         this.finish = finish;
         this.shrinkage = shrinkage;
         this.isActive = isActive;
-        versionFlag = versionFlag;
+        this.versionFlag = versionFlag;
+        this.buyerCode = buyerCode;
+
        
        
     }

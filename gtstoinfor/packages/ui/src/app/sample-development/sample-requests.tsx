@@ -341,7 +341,6 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       // headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
         extra={
-          (logInUser == 'marketUser') &&
           <Link to="/sample-development/sample-development-form">
             <span style={{ color: "white" }}>
               <Button type={"primary"}>New </Button>{" "}

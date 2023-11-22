@@ -62,5 +62,9 @@ export class M3ItemsDTO {
 
     @ApiProperty()
     versionFlag: number;
+
+    @ApiProperty()
+    buyerCode?: string;
+
 }
 
