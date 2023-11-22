@@ -1110,7 +1110,11 @@ placeholder='select saleItem' allowClear>
                   <Form.Item
                     label="Price"
                     name="price"
-                    rules={[{ required: true, message: "Enter Price" }]}
+                    rules={[{ required: true, message: "Enter Price" },
+                    { 
+                      pattern: /^[0-9]+$/, 
+                      message: "Please Enter numbers only" 
+                    },]}
                   >
                     <Input placeholder="Price" allowClear onChange={onPriceChange}/>
                   </Form.Item>

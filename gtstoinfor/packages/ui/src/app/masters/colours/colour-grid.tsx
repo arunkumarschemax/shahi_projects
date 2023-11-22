@@ -136,7 +136,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
         colour.updatedUser=JSON.parse(localStorage.getItem('username'))
         service.updateColour(colour).then(res=>{
             if(res.status){
-                AlertMessages.getSuccessMessage('Updated Successfully');
+                AlertMessages.getSuccessMessage('Colour Updated Successfully');
                 setDrawerVisible(false);
                 getAllColour();
             }else{
@@ -282,8 +282,8 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
                   <Popconfirm onConfirm={e =>{deleteColour(rowData);}}
                   title={
                     rowData.isActive
-                      ? 'Are you sure to Deactivate colour ?'
-                      :  'Are you sure to Activate colour ?'
+                      ? 'Are you sure to Deactivate  this colour ?'
+                      :  'Are you sure to Activate  this colour ?'
                   }
                 >
                   <Switch  size="default"
