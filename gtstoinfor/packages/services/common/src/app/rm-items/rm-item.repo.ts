@@ -95,10 +95,10 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
       }
       async getItemGroupdrop(): Promise<any[]> {
         const query = this.createQueryBuilder('rmi')
-        .select(`rm_item_id,item_group`)
-        .leftJoin(ItemGroup, 'ig','ig.item_group_id = rmi.item_group_id')
-        .groupBy('ig.item_group')
-        .where('item_group != NULL')
+        .select(`rm_item_id,item_group_id AS item_group`)
+        // .leftJoin(ItemGroup, 'ig','ig.item_group_id = rmi.item_group_id')
+        .groupBy('item_group_id')
+        .where('item_group_id IS NOT NULL')
         let data:RmCreationEntity[] = await query.getRawMany();
         return data;
       }
@@ -106,6 +106,7 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
         const query = this.createQueryBuilder('rmi')
         .select(`DISTINCT rm_item_id,item_type`)
         .leftJoin(ItemTypeEntity,'it','it.item_type_id = rmi.item_type_id')
+        .where(`it.item_type IS NOT NULL`)
         .groupBy('it.item_type')
         let data:RmCreationEntity[] = await query.getRawMany();
         return data;
@@ -114,6 +115,7 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
         const query = this.createQueryBuilder('rmi')
         .select(`rm_item_id,product_group`)
         .leftJoin(ProductGroup,'pg','pg.product_group_id = rmi.product_group_id')
+        .where(`product_group IS NOT NULL`)
         .groupBy('pg.product_group')
 
         let data:RmCreationEntity[] = await query.getRawMany();
@@ -123,6 +125,7 @@ export class RmCreationRepository extends Repository<RmCreationEntity> {
         const query = this.createQueryBuilder('rmi')
         .select(`rm_item_id,procurment_group`)
         .leftJoin(ProcurmentGroup,'pcg',' pcg.procurment_group_id = rmi.procurement_gorup_id')
+        .where(`procurment_group IS NOT NULL`)
         .groupBy('pcg.procurment_group')
 
         let data:RmCreationEntity[] = await query.getRawMany();

@@ -30,7 +30,7 @@ export function ItemCreationDetailView  (props: Props)  {
                     <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>ItemType</span>} >{stateData.item_type}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Brand</span>} >{(stateData.brand_name)}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Category</span>} >{stateData.item_category}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Item Group</span>} >{stateData.item_group}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Item Group</span>} >{stateData.itemGroup}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Season</span>} >{stateData.season}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Shahi Style</span>} >{stateData?.style}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{color:'#687170',fontWeight: 'bold' }}>Referenced</span>} >{stateData.reference}</Descriptions.Item>
