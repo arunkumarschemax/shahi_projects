@@ -148,7 +148,8 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
                 indentQuantity:defaultFabricFormData.indentQuantity,
                 indentFabricId:defaultFabricFormData.indentFabricId,
                 itemCode:defaultFabricFormData.itemCode,
-                quantityUom:defaultFabricFormData.quantityUom
+                quantityUom:defaultFabricFormData.quantityUom,
+                indentCode:defaultFabricFormData.indentCode
             })
         }
 
@@ -160,6 +161,10 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
             key: 'sno',
             responsive: ['sm'],
             render: (text, object, index) => (page-1) * 10 +(index+1)
+        },
+        {
+            title:'Indent Code',
+            dataIndex:'indentCode',
         },
         {
             title:'M3 Fabric Code',
@@ -269,7 +274,7 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
     }
     const quantiyOnchange = (value) =>{
         console.log(value)
-        
+
     }
     return (
     <Card title={<span style={{color:'blue', fontSize:'17px'}} >Fabric Details</span>}>
@@ -280,6 +285,7 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
             <Form.Item name={'indentFabricId'} hidden><Input></Input></Form.Item>
             <Form.Item name={'itemCode'} hidden><Input></Input></Form.Item>
             <Form.Item name={'quantityUom'} hidden><Input></Input></Form.Item>
+            <Form.Item name={'indentCode'} hidden><Input></Input></Form.Item>
 
 
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
