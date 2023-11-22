@@ -11,6 +11,7 @@ import GRNTrimForm from './grn-trim'
 import { GrnDto, PurchaseOrderStatus, VendorIdReq } from '@project-management-system/shared-models'
 import AlertMessages from '../common/common-functions/alert-messages'
 import dayjs, { Dayjs } from "dayjs";
+import { useNavigate } from 'react-router-dom'
 
 
 const GRNForm = () => {
@@ -28,6 +29,8 @@ const GRNForm = () => {
     const grnService = new GRNService()
     const [formData,setFormData] = useState<any[]>([])
     const [trimFormData, setTrimFormData]=useState<any[]>([])
+    const navigate = useNavigate();
+
     useEffect(()=>{
         getVendorsData()
         form.setFieldsValue({grnDate:dayjs()})
@@ -92,7 +95,11 @@ const GRNForm = () => {
 
     return(
         <>
-        <Card title='GRN' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+        <Card title='GRN' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}   extra={
+          <span>
+            <Button onClick={() => navigate("/grn-view")}>View</Button>
+          </span>
+        }>
             <Form form={form} layout="vertical" onFinish={createGrn}>
                 <Row gutter={8}>
                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
