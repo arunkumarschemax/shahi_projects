@@ -17,6 +17,9 @@ export class PurchaseOrderDto{
     styleId:number
 
     @ApiProperty()
+    buyerId:number
+
+    @ApiProperty()
     expectedDeliveryDate:Date
 
     @ApiProperty()

@@ -53,6 +53,14 @@ export const GrnPendingInfoGrid = () => {
             //   ...getColumnSearchProps('vendorName')
         },
         {
+            title: 'Buyer',
+            dataIndex: "buyer_name",
+            align: 'left',
+            //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
+            //   sortDirections: ['descend', 'ascend'],
+            //   ...getColumnSearchProps('vendorName')
+        },
+        {
             title: 'Material Type',
             dataIndex: "product_group",
             align: 'left',
@@ -93,7 +101,12 @@ export const GrnPendingInfoGrid = () => {
         },
         {
             title: 'Allocate',
+            // render:(record) =>{
+            //     console.log(record,"rowdata")
+            //     return('')
+            // }
             render: (rowData) => (
+                
                 <span>
                     <Button type="primary" shape="round" size="small"
                         disabled={(rowData.conversion_quantity - rowData.quantity) <= 0}

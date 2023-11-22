@@ -138,6 +138,11 @@ export const StockView = () => {
       // sortDirections: ['descend', 'ascend'],
     },
     {
+      title: "Buyer",
+      dataIndex: "buyer_name",
+      ...getColumnSearchProps("buyer_name"),
+    },
+    {
       title: "Item Type",
       dataIndex: "item_type",
       ...getColumnSearchProps("item_type"),

@@ -28,6 +28,12 @@ export class PurchaseOrderEntity{
     })
     styleId:number
 
+    @Column('int',{
+      name:'buyer_id',
+      nullable:false
+  })
+    buyerId:number
+
 
     @Column('date',{
         name:'expected_delivery_date',

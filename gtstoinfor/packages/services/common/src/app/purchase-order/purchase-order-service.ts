@@ -50,6 +50,7 @@ export class PurchaseOrderService {
             poEntity.poNumber = poNumber
             poEntity.vendorId = req.vendorId
             poEntity.styleId = req.styleId
+            poEntity.buyerId = req.buyerId
             poEntity.expectedDeliveryDate = req.expectedDeliveryDate
             poEntity.purchaseOrderDate = req.purchaseOrderDate
             poEntity.createdUser = req.createdUser

@@ -168,6 +168,7 @@ import OperationMapping from "./operation-tracking/operation-mapping"
 import { PurchaseOrderView } from "./purchase-order2/purchase-order-view"
 import UomForm from "./masters/uom/uom-form"
 import BomIndentView from "./sourcing-requisition/bom-indent-view"
+import GRNView from "./grn/grn-view"
 
 
 
@@ -989,7 +990,7 @@ export const AppRoutes = () => {
             <Route path='/purchase-view' element={<PurchaseOrderView />} />
             <Route path='/purchase-detali-view' element={<PurchaseOrderDetailsView />} />
             <Route path='/grn-form' element={<GRNForm />} />
-
+            <Route path='/grn-view' element={<GRNView />} />
 
             <Route path='/excel-import'>
                 <Route path='excel-import' element={<ExcelImport />} />

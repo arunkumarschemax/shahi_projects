@@ -32,4 +32,9 @@ export class StocksEntity extends CommonColumns {
         name: "style_id",
     })
     style_id: number;
+
+    @Column({
+        name: "buyer_id",
+    })
+    buyer_id: number;
 }

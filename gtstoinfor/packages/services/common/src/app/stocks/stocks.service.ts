@@ -43,7 +43,9 @@ export class StocksService {
             rac_pos.rack_position_name,
             rac_pos.status,
             s.style,
-            s.description
+            s.description,
+            st.buyer_id,
+            buyer.buyer_name
         FROM 
             stocks AS st
         LEFT JOIN 
@@ -56,6 +58,7 @@ export class StocksService {
             rack_position AS rac_pos ON rac_pos.position_Id = st.location_id
         LEFT JOIN 
             style AS s ON s.style_id = st.style_id
+            LEFT JOIN buyers AS buyer ON buyer.buyer_id = st.buyer_id
         GROUP BY 
             m3_st.m3_style_code,
             it_ty.item_type,
