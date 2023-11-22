@@ -11,6 +11,7 @@ export class StocksAdapter {
         entity.location_id = dto.location_id;
         entity.quantity = dto.quantity;
         entity.style_id = dto.style_id;
+        entity.buyer_id = dto.buyer_id
         return entity;
     }
 
@@ -23,6 +24,7 @@ export class StocksAdapter {
         dto.location_id = entity.location_id;
         dto.quantity = entity.quantity;
         dto.style_id = entity.style_id;
+        dto.style_id = entity.buyer_id
 
         return dto;
     }

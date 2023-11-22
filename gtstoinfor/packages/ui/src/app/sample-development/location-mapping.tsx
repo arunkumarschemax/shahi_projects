@@ -13,7 +13,7 @@ export const LocationMapping = () => {
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const grnData = location.state.data;
-    // console.log(grnData, "grnData");
+    console.log(grnData, "grnData");
 
     const locationService = new LocationMappingService();
     const [page, setPage] = React.useState(1);
@@ -65,7 +65,7 @@ export const LocationMapping = () => {
         const item_type_id = 11;
         const plant_id = 1;
         const m3_style_id = 1;
-        const req = new LocationMappingReq(m3_item_code, locationId, qty, grnData.grn_item_id, shahi_item_code, item_type_id, plant_id, m3_style_id, grnData.item_id, grnData.style_id);
+        const req = new LocationMappingReq(m3_item_code, locationId, qty, grnData.grn_item_id, shahi_item_code, item_type_id, plant_id, m3_style_id, grnData.item_id, grnData.style_id,grnData.buyer_id );
         if (req) {
             locationService.postToStockLogs(req).then((res) => {
                 if (res.status === true) {
@@ -154,6 +154,9 @@ export const LocationMapping = () => {
                         <Descriptions column={2}>
                             <Descriptions.Item label="GRN Number" style={{ width: '33%' }}>
                                 {grnData.grn_number}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Buyer" style={{ width: '33%' }}>
+                                {grnData.buyer_name}
                             </Descriptions.Item>
                             <Descriptions.Item label="Received Quantity" style={{ width: '33%' }}>
                                 {Number(grnData.conversion_quantity)}
