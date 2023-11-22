@@ -66,6 +66,9 @@ export const SampleDevForm = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('currentUser'))
+    const loginUser = userData?.user?.userName
+    form.setFieldsValue({"user":loginUser})
     getLocations();
     getPCHData();
     getBuyers();

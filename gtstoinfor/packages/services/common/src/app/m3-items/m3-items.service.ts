@@ -51,7 +51,8 @@ export class M3ItemsService {
       console.log(createDto)
 
       const query = "Select m3_items_Id AS m3ItemsId, item_code AS itemCode, description AS description from m3_items where buyer_id ="+createDto.buyerId;
-      const data = await this.datasource.query(query)
+      const data = await this.datasource.query(query);
+      console.log(data)
       if(data.length > 0){
         return new CommonResponseModel(true, 1001, "Data Retrieved Successfully", data)
       }

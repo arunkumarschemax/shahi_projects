@@ -79,17 +79,18 @@ const FabricsForm = ({props, buyerId}) => {
   };
 
   useEffect(() =>{
-    console.log(props);
     getColors()
   },[])
 
   const fabricCode = (buyerId) =>{
+    console.log(buyerId)
     m3ItemsService.getM3FabricsByBuyer({buyerId:buyerId}).then(res =>{
+      console.log(res)
       if(res.status){
         setFabricCodeData(res.data)
       }else{
         setFabricCodeData([])
-        message.info(res.internalMessage)
+        message.info("hi"+res.internalMessage)
       }
     })
   }
@@ -126,7 +127,6 @@ const FabricsForm = ({props, buyerId}) => {
       render: (_, record) => (
         <><Form.Item>
           <Select
-            value={record.fabricCode}
             // onChange={(e) => handleInputChange(e, record.key, 'fabricCode',getSelectedProductGroupId(e))}
             style={{ width: "100%" }}
             allowClear
@@ -134,7 +134,7 @@ const FabricsForm = ({props, buyerId}) => {
             optionFilterProp="children"
             placeholder="Select Fabric Code"
           >
-            {fabricCodeData.map(item => {
+            {fabricCodeData?.map(item => {
               return <Option key={item.m3ItemsId} valu={item.m3ItemsId}>{item.itemCode+ "-"+ item.description}</Option>;
             })}
           </Select>

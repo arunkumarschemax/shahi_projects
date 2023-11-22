@@ -8,11 +8,11 @@ export class SampleRequestTriminfoEntity {
     })
     trimInfoId: number
 
-    @Column('text', {
-        name: 'description',
+    @Column('int', {
+        name: 'uom_id',
         nullable: false
     })
-    description: string
+    uomId: number
 
     @Column('decimal', {
         name: 'consumption',
@@ -32,11 +32,17 @@ export class SampleRequestTriminfoEntity {
     })
     trimCode: string
 
-    @Column('int',{
-        name:'product_group_id',
-        nullable:false
+    @Column('varchar', {
+        name: 'trim_type',
+        nullable: true
     })
-    productGroupId:number
+    trimType: string
+
+    // @Column('int',{
+    //     name:'product_group_id',
+    //     nullable:false
+    // })
+    // productGroupId:number
 
     @ManyToOne(() => SampleRequest, sampleDevReq => sampleDevReq.sampleTrimInfo)
     @JoinColumn({ name: 'sample_request_id' })

@@ -137,10 +137,10 @@ export class SampleRequestService {
       sampleReqEntity.buyer = buyer
       const samType = new SampleTypes()
       samType.sampleTypeId = req.sampleTypeId
-      sampleReqEntity.sampleType = samType
+      // sampleReqEntity.sampleType = samType
       const samSubType = new SampleSubTypes()
       samSubType.sampleSubTypeId = req.sampleSubTypeId
-      sampleReqEntity.sampleSubType = samSubType
+      // sampleReqEntity.sampleSubType = samSubType
       const styleEntity = new Style()
       styleEntity.styleId = req.styleId
       sampleReqEntity.style = styleEntity
@@ -149,7 +149,7 @@ export class SampleRequestService {
       brand.brandId = req.brandId
       sampleReqEntity.brand = brand
       sampleReqEntity.costRef = req.costRef
-      sampleReqEntity.m3StyleNo = req.m3Style
+      // sampleReqEntity.m3StyleNo = req.m3Style
       sampleReqEntity.contact = req.contact
       sampleReqEntity.extension = req.extension
       sampleReqEntity.samValue = req.samValue
@@ -183,20 +183,20 @@ export class SampleRequestService {
         console.log(fabricObj, '##############################################')
         const fabricEntity = new SampleReqFabricinfoEntity()
         fabricEntity.fabricCode = fabricObj.fabricCode
-        fabricEntity.description = fabricObj.description
+        // fabricEntity.description = fabricObj.description
         fabricEntity.colourId = fabricObj.colourId
         fabricEntity.consumption = fabricObj.consumption
-        fabricEntity.productGroupId = fabricObj.productGroupId
+        // fabricEntity.productGroupId = fabricObj.productGroupId
         fabricEntity.remarks = fabricObj.remarks
         sampleFabricInfo.push(fabricEntity)
       }
       sampleReqEntity.sampleReqFabricInfo = sampleFabricInfo
       for (const trimObj of req.trimInfo) {
         const trimEntity = new SampleRequestTriminfoEntity()
-        trimEntity.trimCode = trimObj.trimCode
-        trimEntity.productGroupId = trimObj.productGroupId
+        // trimEntity.trimCode = trimObj.trimCode
+        // trimEntity.productGroupId = trimObj.productGroupId
         trimEntity.consumption = trimObj.consumption
-        trimEntity.description = trimObj.description
+        // trimEntity.description = trimObj.description
         trimEntity.remarks = trimObj.remarks
         sampleTrimInfo.push(trimEntity)
       }

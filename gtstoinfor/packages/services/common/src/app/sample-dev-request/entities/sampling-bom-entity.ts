@@ -18,11 +18,11 @@ export class SamplingbomEntity {
     })
     productGroupId:number
 
-    @Column('varchar',{
+    @Column('int',{
         name:'rm_item_id',
         nullable:false
     })
-    rmItemId:string
+    rmItemId:number
 
     @Column('int',{
         name:'fabric_id',

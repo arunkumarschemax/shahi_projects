@@ -47,21 +47,21 @@ export class SampleRequest {
 
   @Column("varchar", {
     nullable: false,
-    name: "user"
+    name: "remarks"
   })
-  user: string;
+  remarks: string;
 
   @ManyToOne(() => Buyers, buyers => buyers.sampleReq, { nullable: false })
   @JoinColumn({ name: 'buyer_id' })
   buyer: Buyers;
 
-  @ManyToOne(() => SampleTypes, sampleTypes => sampleTypes.sampleReq, { nullable: false })
-  @JoinColumn({ name: 'sample_type_id' })
-  sampleType: SampleTypes;
+  // @ManyToOne(() => SampleTypes, sampleTypes => sampleTypes.sampleReq, { nullable: false })
+  // @JoinColumn({ name: 'sample_type_id' })
+  // sampleType: SampleTypes;
 
-  @ManyToOne(() => SampleSubTypes, sampleSubType => sampleSubType.sampleReq, { nullable: false })
-  @JoinColumn({ name: 'sample_sub_type_id' })
-  sampleSubType: SampleSubTypes;
+  // @ManyToOne(() => SampleSubTypes, sampleSubType => sampleSubType.sampleReq, { nullable: false })
+  // @JoinColumn({ name: 'sample_sub_type_id' })
+  // sampleSubType: SampleSubTypes;
 
   @ManyToOne(() => Style, style => style.sampleReq, { nullable: false })
   @JoinColumn({ name: 'style_id' })
@@ -83,12 +83,12 @@ export class SampleRequest {
   })
   costRef: string;
 
-  @Column("varchar", {
-    nullable: false,
-    name: "m3_style_no",
-    length: 150
-  })
-  m3StyleNo: string;
+  // @Column("varchar", {
+  //   nullable: false,
+  //   name: "m3_style_no",
+  //   length: 150
+  // })
+  // m3StyleNo: string;
 
   @Column("varchar", {
     nullable: false,
@@ -135,6 +135,24 @@ export class SampleRequest {
   })
   conversion: string;
 
+  @Column("varchar", {
+    nullable: false,
+    name: "user"
+  })
+  user: string;
+
+  @Column("varchar", {
+    nullable: false,
+    name: "file_name"
+  })
+  file_name: string;
+
+  @Column("varchar", {
+    nullable: false,
+    name: "file_path"
+  })
+  file_path: string;
+
   @Column("int", {
     nullable: false,
     name: "made_in"
@@ -147,11 +165,6 @@ export class SampleRequest {
   })
   facilityId: number;
 
-  @Column('varchar', {
-    name: 'remarks',
-    nullable: false,
-  })
-  remarks: string;
 
   @Column('enum', {
     name: 'status',

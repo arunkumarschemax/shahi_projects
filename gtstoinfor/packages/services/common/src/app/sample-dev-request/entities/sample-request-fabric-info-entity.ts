@@ -8,18 +8,12 @@ export class SampleReqFabricinfoEntity{
         name:'fabric_info_id'
       })
       fabricInfoId:number;
-      @Column('varchar',{
+      @Column('int',{
         name:'fabric_code',
         nullable:false,
-        length:100
       })
-      fabricCode:string
+      fabricCode:number
 
-      @Column('text',{
-        name:'description',
-        nullable:false,
-      })
-      description:string
 
       @Column('int',{
         name:'colour_id',
@@ -28,10 +22,10 @@ export class SampleReqFabricinfoEntity{
       colourId:number
 
       @Column('int',{
-        name:'product_group_id',
+        name:'uom_id',
         nullable:false,
       })
-      productGroupId:number
+      uomId:number
 
       @Column('decimal',{
         name:'consumption',

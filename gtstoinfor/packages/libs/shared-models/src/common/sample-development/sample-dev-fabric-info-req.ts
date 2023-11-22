@@ -1,5 +1,5 @@
 export class SampleFabricReq {
-    fabricCode: string
+    fabricCode: number
     description: string
     colourId: number
     productGroupId:number
@@ -7,7 +7,7 @@ export class SampleFabricReq {
     remarks: string
     fabricInfoId: number;
     constructor(
-        fabricCode: string,
+        fabricCode: number,
         description: string,
         colourId: number,
          productGroupId:number,

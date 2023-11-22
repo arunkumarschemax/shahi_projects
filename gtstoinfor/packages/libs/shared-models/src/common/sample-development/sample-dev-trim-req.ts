@@ -1,5 +1,6 @@
 export class SampleTrimReq {
-    trimCode:string
+    trimType:string
+    trimCode:number
     productGroupId:number
     description: string
     consumption: number
@@ -7,7 +8,8 @@ export class SampleTrimReq {
     trimInfoId?: number
     colourId?:number
     constructor(
-        trimCode:string,
+        trimType:string,
+        trimCode:number,
         productGroupId:number,
         description: string,
         consumption: number,
@@ -16,6 +18,7 @@ export class SampleTrimReq {
        colourId?:number
 
     ) {
+        this.trimType=trimType
         this.trimCode=trimCode
         this.productGroupId=productGroupId
         this, description = description

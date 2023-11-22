@@ -61,7 +61,7 @@ export class SampleSubTypes {
   @JoinColumn({ name:"sample_type_id"})
   sampleSubTypes: SampleTypes;
   
-  @OneToMany(()=>SampleRequest, sampleReq => sampleReq.sampleSubType, {cascade: true})
-  sampleReq : SampleRequest[]
+  // @OneToMany(()=>SampleRequest, sampleReq => sampleReq.sampleSubType, {cascade: true})
+  // sampleReq : SampleRequest[]
 
 }
