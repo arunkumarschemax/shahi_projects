@@ -10,7 +10,7 @@ export class Destination {
   @PrimaryGeneratedColumn("increment", { name: 'destination_id' })
   destinationId: number;
 
-  @Column("char", {
+  @Column("varchar", {
     nullable: false,
     length: 50,
     name: "destination"

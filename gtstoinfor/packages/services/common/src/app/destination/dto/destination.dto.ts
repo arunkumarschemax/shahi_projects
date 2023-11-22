@@ -9,7 +9,7 @@ export class DestinationDTO {
 
   @ApiProperty()
   @IsNotEmpty({ message: "destination should not be empty" })
-  @IsAlphanumeric()
+  // @IsAlphanumeric()
   @IsOptional()
   destination: string;
 
