@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Raw, Repository } from 'typeorm';
-import { ItemGroupEnum, ItemGroupResponseModel } from '@project-management-system/shared-models';
+import { Not, Raw, Repository } from 'typeorm';
+import { CommonResponseModel, GlobalVariables, ItemGroupEnum, ItemGroupResponseModel } from '@project-management-system/shared-models';
 import { AllItemGroupResponseModel,ItemGroupDto,ItemgroupDropDownResponse } from '@project-management-system/shared-models';
 import { UserRequestDto } from '../currencies/dto/user-logs-dto';
 // import { SizeAdapter } from './dto/sizes-adapter';
@@ -180,7 +180,7 @@ export class ItemGroupService{
       }  
       async activateOrDeactivateItemGroup(profitReq: ItemGroupRequest): Promise<ItemGroupResponseModel> {
         try {
-            const deptExists = await this.getItemGroupById(profitReq.itemGroupId);
+            const deptExists = await this.ItemGroupRepository.findOne({where:{itemGroupId:profitReq.itemGroupId}});
             if (deptExists) {
                 if (!deptExists) {
                     throw new ItemGroupResponseModel(false,10113, 'Someone updated the current  ItemGroup information.Refresh and try again');
@@ -266,16 +266,38 @@ export class ItemGroupService{
         }
     }
 
-    async getItemGroupById(itemgroupId: number): Promise<ItemGroup> {
-      //  console.log(employeeId);
-          const Response = await this.ItemGroupRepository.findOne({
-          where: {itemGroupId: itemgroupId},
-          });
-          // console.log(employeeResponse);
-          if (Response) {
-          return Response;
-          } else {
-          return null;
+   
+
+      async getItemGroupNotId(itemgroupId: number): Promise<CommonResponseModel> {
+        //  console.log(employeeId);
+        try{
+            const Response = await this.ItemGroupRepository.findOne({
+            where: {
+              itemGroupId: Not(GlobalVariables.itemGroupId)
+            },
+            });
+            // console.log(employeeResponse);
+            return new CommonResponseModel(true, 0, "Data retrieved successfully", Response);
+          } catch (err) {
+            throw err;
           }
-      } 
+        } 
+
+
+        async getItemGroupById(itemgroupId: number):Promise<CommonResponseModel>{
+          try{
+            const Response = await this.ItemGroupRepository.findOne({
+              where:{
+                itemGroupId: (GlobalVariables.itemGroupId)
+
+              },
+            });
+            return new CommonResponseModel(true,0,"Data retrieved successfully",Response);
+          
+        }catch (err){
+          throw err;
+        }
+        
 }
+}
+

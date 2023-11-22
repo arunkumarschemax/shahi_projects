@@ -66,4 +66,26 @@ export class ItemGroupController{
       return this.applicationExceptionHandler.returnException(AllItemGroupResponseModel, error);
     }
   }
+
+  @Post('/getItemGroupById')
+  @ApiBody({type:ItemGroupDto})
+  async getItemGroupById( @Body()request:any ): Promise<AllItemGroupResponseModel> {
+    try {
+      return await this.iteGroupService.getItemGroupById(request);
+    } catch (error) {
+      // return errorHandler(AllSizeResponseModel, error);
+      return this.applicationExceptionHandler.returnException(AllItemGroupResponseModel, error);
+    }
+  }
+
+  @Post('/getItemGroupNotId')
+  @ApiBody({type:ItemGroupDto})
+  async getItemGroupNotId( @Body()request:any ): Promise<AllItemGroupResponseModel> {
+    try {
+      return await this.iteGroupService.getItemGroupNotId(request);
+    } catch (error) {
+      // return errorHandler(AllSizeResponseModel, error);
+      return this.applicationExceptionHandler.returnException(AllItemGroupResponseModel, error);
+    }
+  }
     }

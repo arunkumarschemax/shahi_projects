@@ -1,5 +1,5 @@
 import { CommonAxiosService } from "packages/libs/shared-services/src/common-axios-service-prs";
-import { AllItemGroupResponseModel,ItemGroupResponseModel,ItemGroupDto,ItemGroupRequestDto,ItemgroupDropDownResponse } from "@project-management-system/shared-models";
+import { AllItemGroupResponseModel,ItemGroupResponseModel,ItemGroupDto,ItemGroupRequestDto,ItemgroupDropDownResponse, CommonResponseModel } from "@project-management-system/shared-models";
 export class ItemGroupService extends CommonAxiosService{
 
     URL ="/itemGroup";
@@ -32,4 +32,13 @@ export class ItemGroupService extends CommonAxiosService{
             return this.axiosPostCall(this.URL + '/getActiveItemGroupById', deptReq)
               
           }
-}
+
+          async getItemGroupById(req:any): Promise<CommonResponseModel> {
+            return this.axiosPostCall(this.URL + "/getItemGroupById",req)
+          }
+
+
+          async getItemGroupNotId(req:any): Promise<CommonResponseModel> {
+            return this.axiosPostCall(this.URL + "/getItemGroupNotcId",req)
+          }
+    }
