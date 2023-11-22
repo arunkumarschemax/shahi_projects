@@ -322,13 +322,13 @@ const cancelOrder =(val:any) =>{
       // },
       {
         title: "Item Group",
-        dataIndex: "item_group",width:70,align:'center',
+        dataIndex: "itemGroup",width:70,align:'center',
         render: (data) => {
           return data ? data : "-";
         },
         sorter: (a, b) => {
-          const itemA = a.item_group || ""; 
-          const itemB = b.item_group || "";
+          const itemA = a.itemGroup || ""; 
+          const itemB = b.itemGroup || "";
       
           return itemA.localeCompare(itemB);
         },        sortDirections: ['descend', 'ascend'],

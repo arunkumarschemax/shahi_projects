@@ -37,7 +37,7 @@ export class ItemCreationRepository extends Repository<ItemCreation> {
 
     async getAllFgItemCrted(req: ItemCreFilterRequest): Promise<any[]> {
         const query = this.createQueryBuilder('fgi')
-        .select(`fg_item_id,fgi.is_active,reference,style_no,item_name,fgi.item_group, item_type, item_code, brand_name, item_category, item_sub_category,CONCAT(ed.first_name, ' ', ed.last_name) AS responsible_person,CONCAT(epr.first_name, ' ', epr.last_name) AS product_designer,
+        .select(`fg_item_id,fgi.is_active,reference,style_no,item_name,fgi.item_group AS itemGroup, item_type, item_code, brand_name, item_category, item_sub_category AS itemSubCtegory,CONCAT(ed.first_name, ' ', ed.last_name) AS responsible_person,CONCAT(epr.first_name, ' ', epr.last_name) AS product_designer,
         CONCAT(epa.first_name, ' ', epa.last_name) AS approver,CONCAT(eppt.first_name, ' ', eppt.last_name) AS pd_merchant,CONCAT(ept.first_name, ' ', ept.last_name) AS factory_merchant,
         CONCAT(eps.first_name, ' ', eps.last_name) AS sale_person_id,internal_style_id,uo.uom AS uom,ut.uom AS alt_uom,currencies.currency_name AS currency_name,
         ig.item_group AS item_group,pgi.product_group,business_area,uo.uom AS basicUom,group_tech_class,co.composition_code AS composition ,gtc.group_tech_class_code AS group_tech_class,

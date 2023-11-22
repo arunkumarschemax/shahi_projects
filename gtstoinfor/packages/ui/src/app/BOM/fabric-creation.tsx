@@ -414,6 +414,7 @@ form.setFieldValue('deliveryMethod',res.data?.[0]?.deliveryMethodId)
   }
 
   const onPriceChange = () => {
+    console.log(form.getFieldValue('tax'))
     if(form.getFieldValue('tax') != undefined){
       calculateTotal()
     }
@@ -438,6 +439,7 @@ rmservice.createRm(values).then((res)=>{
     navigate('/materialCreation/rm-creation-view')
   }
   else{
+    
     AlertMessages.getWarningMessage(res.internalMessage)
   }
 })
@@ -1108,18 +1110,26 @@ placeholder='select saleItem' allowClear>
                   <Form.Item
                     label="Price"
                     name="price"
-                    rules={[{ required: true, message: "Enter Price" }]}
+                    rules={[{ required: true, message: "Enter Price" },
+                    { 
+                      pattern: /^[0-9]+$/, 
+                      message: "Please Enter numbers only" 
+                    },]}
                   >
                     <Input placeholder="Price" allowClear onChange={onPriceChange}/>
                   </Form.Item>
                 </Col>
                 <span style={{ fontSize: "24px", lineHeight: "70px" }}>+</span>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                    <Form.Item label="Tax(%)" name="tax">
+                    <Form.Item label="Tax(%)" name="tax"
+                    rules={[{ required: true, message: "Tax% is required" }]}
+
+                    >
                         <Select
                         placeholder="Select Tax"
                         onChange={handleTaxChange}
                         defaultValue="0"
+                        allowClear
                         >
                             {tax.map((e)=>(
                                 <Option key={e.taxId} value={e.taxId}>

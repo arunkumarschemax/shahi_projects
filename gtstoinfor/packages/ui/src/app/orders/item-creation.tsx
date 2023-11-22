@@ -6,6 +6,7 @@ import { Link, useNavigate, useNavigation } from "react-router-dom";
 import { BusinessAreaService, BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, FactoryService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, OperationsService, ProductGroupService, ROSLGroupsService, RangeService, SearchGroupService, SettingsService, StyleService, UomService } from "@project-management-system/shared-services";
 import { ItemCreationDTO, ItemGroupEnum, PropertyEnum, SettingsIdReq, SubContractStatus } from "@project-management-system/shared-models";
 import { setOptions } from "highcharts";
+import moment from "moment";
  
 export interface FormProps {
   itemCreationData:any;
@@ -657,8 +658,15 @@ compositionservice.getActiveComposition().then(res=>{
                       </Col>
                       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                         <Form.Item  name="salePrice" label="Sales Price"
-                         rules={[{ required: true, message: "Enter Sales Price" }]}>
-                        <Input placeholder="Sales  Price" allowClear />
+                        //  rules={[{ required: true, message: "Enter Sales Price" }]}
+                        rules={[{ required: true, message: "Enter Sales Price" },
+                        { 
+                          pattern: /^[0-9]+$/, 
+                          message: "Please Enter numbers only" 
+                        },
+                           ]}
+                        >
+                        <Input placeholder="Sales  Price"  />
                         </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -864,8 +872,16 @@ compositionservice.getActiveComposition().then(res=>{
                             <Form.Item
                       name="nationalDbk"
                       label="National DBK%"
+                      rules={[
+                        // { required: true, message: "Enter Order Qty" },
+                      { 
+                        pattern: /^[0-9]+$/, 
+                        message: "Please Enter numbers only" 
+                      },
+                         ]}
+                      
                     >
-                      <Input placeholder="National DBK%" allowClear />
+                      <Input placeholder="National DBK%" allowClear  />
                     </Form.Item>
                                   </Col>
                                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -985,9 +1001,17 @@ compositionservice.getActiveComposition().then(res=>{
                             <Form.Item
                       name="moq"
                       label="Moq"
+                      rules={[
+                        // { required: true, message: "Enter Sales Price" },
+                      { 
+                        pattern: /^[0-9]+$/, 
+                        message: "Please Enter numbers only" 
+                      },
+                         ]}
+                      
     
                     >
-                      <InputNumber placeholder="moq" style={{ width: '100%' }} />
+                      <Input placeholder="moq" style={{ width: '100%' }} />
                     </Form.Item>
                                   </Col>
                                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -1119,7 +1143,9 @@ compositionservice.getActiveComposition().then(res=>{
                 rules={[{ required: true, message: "Enter Order ConfirmedDate" }]}>
 
               
-                <DatePicker style={{ width: "100%" }} />
+                <DatePicker style={{ width: "100%" }} 
+                disabledDate={(current) => current && current > moment().endOf('day')} 
+                />
               </Form.Item>
 </Col>
 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -1127,7 +1153,9 @@ compositionservice.getActiveComposition().then(res=>{
                 label="Order Close Date"
                 name="orderCloseDate"
                 rules={[{ required: true, message: "Enter order CloseDate" }]}>
-                <DatePicker style={{ width: "100%" }} />
+                <DatePicker style={{ width: "100%" }}  
+                
+                />
               </Form.Item>
 </Col>
 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -1152,10 +1180,10 @@ compositionservice.getActiveComposition().then(res=>{
 <Form.Item
                       name="orderQty"
                       label="Order Qty"
-                      rules={[{ required: true, message: "Enter  Order Qty" },
+                      rules={[{ required: true, message: "Enter Order Qty" },
                       { 
                         pattern: /^[0-9]+$/, 
-                        message: "Please Enter  Order Qty" 
+                        message: "Please Enter numbers only" 
                       },
                          ]}
                       >

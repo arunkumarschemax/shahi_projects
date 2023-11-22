@@ -16,11 +16,11 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import FabricDevelopmentTabs from "./fabric-development-tabs";
-import { BuyersService, EmployeeDetailsService, FabricDevelopmentService, FabricTypeService, LocationsService, ProfitControlHeadService, StyleService } from "@project-management-system/shared-services";
+import { BuyersService, EmployeeDetailsService, FabricDevelopmentService, FabricTypeService, LocationsService, ProfitControlHeadService, SettingsService, StyleService } from "@project-management-system/shared-services";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link, useNavigate } from "react-router-dom";
 import FabricDevelopmentRequestQuality from "./fabric-development-quality-request";
-import { BuyerExtrnalRefIdReq, BuyerIdReq, FabricDevelopmentRequestModel, MenusAndScopesEnum, StatusEnum } from "@project-management-system/shared-models";
+import { BuyerExtrnalRefIdReq, BuyerIdReq, FabricDevelopmentRequestModel, MenusAndScopesEnum, SettingsIdReq, StatusEnum } from "@project-management-system/shared-models";
 
 export interface FabricDevelopmentRequestProps {
   placementForm:FormInstance<any>;
@@ -61,6 +61,30 @@ let userRef
     const locationservice = new LocationsService();
     const styleservice =  new StyleService()
     const service = new FabricDevelopmentService()
+    const services = new SettingsService()
+
+
+  // from setting screen data will render 
+    useEffect(() => {
+      getBuyer()
+
+  },[])
+
+  const getBuyer = () => {
+    const req = new BuyerExtrnalRefIdReq()
+    req.extrnalRefId = externalRefNo
+    // console.log(req,"req")
+    buyerService.getBuyerByRefId(req).then(res => {
+        if(res.status){
+        form.setFieldValue('buyerId',res?.data?.buyerId)                   
+          
+        }
+    })
+
+}
+
+  // end of setting screen
+  
 
 
 
@@ -212,17 +236,18 @@ console.log(filesArray,"######");
   }
 
   const getAllActiveBuyers=() =>{
-    const req = new BuyerExtrnalRefIdReq
-    if(role === MenusAndScopesEnum.roles.crmBuyer){
-      req.extrnalRefId = externalRefNo
-    }
-    buyerService.getBuyerByRefId(req).then(res=>{
-      if(res.status){
-        setUserId(res.data)
-  setLoginBuyer(res.data.buyerId)
-      }
-    })
-        // const loginId = new BuyerIdReq(loginBuyer)
+    // const req = new BuyerExtrnalRefIdReq
+  //   if(role === MenusAndScopesEnum.roles.crmBuyer){
+  //     req.extrnalRefId = externalRefNo
+  //   }
+  //   buyerService.getBuyerByRefId(req).then(res=>{
+  //     if(res.status){
+  //       setUserId(res.data)
+  // setLoginBuyer(res.data.buyerId)
+  //     }
+  //   })
+  //       // const loginId = new BuyerIdReq(loginBuyer)
+
     buyerService.getAllActiveBuyers().then(res =>{
     if (res.status){
       setBuyerData(res.data);
