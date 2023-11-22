@@ -85,6 +85,8 @@ export class PurchaseOrderService {
             if (req.poTrimInfo) {
                 for (const trimInfo of req.poTrimInfo) {
                     const trimEntity = new PurchaseOrderTrimEntity()
+                    console.log(trimInfo)
+                    console.log('""""""""""""""""""""""""""""""""""""""""""""')
                     trimEntity.colourId = trimInfo.colourId
                     trimEntity.productGroupId = trimInfo.productGroupId
                     trimEntity.trimId = trimInfo.trimId

@@ -330,83 +330,7 @@ export class SampleRequestService {
   }
 
 
-  async getSampleRequestReport(req?: any): Promise<CommonResponseModel> {
-    const manager = this.dataSource;
-    let rawData = `SELECT sb.rm_item_id as rmItemId,sb.colour_id as colourId,sr.m3_style_no as m3StleNo,sr.style_id as styleId,sb.sampling_bom_id,sr.sample_request_id, sr.request_no AS requestNo, sr.m3_style_no, sb.rm_item_id, ri.item_code, sb.required_quantity as requiredQuantity,sb.created_at, sb.assigned_quantity,sb.colour_id,co.colour,st.style,bu.buyer_name,pg.product_group,ss.quantity,fa.name   FROM sampling_bom sb LEFT JOIN sample_request sr ON sb.sample_request_id = sr.sample_request_id LEFT JOIN rm_items ri ON ri.rm_item_id LEFT JOIN colour co ON co.colour_id = sb.colour_id  LEFT JOIN style st ON st.style_id = sr.style_id LEFT JOIN buyers bu ON bu.buyer_id = sr.buyer_id LEFT JOIN product_group pg ON pg.product_group_id = sb.product_group_id LEFT JOIN stocks ss ON ss.item_type_id = sb.rm_item_id LEFT JOIN factory fa ON fa.id=sr.facility_id WHERE sr.sample_request_id IS NOT NULL `;
-    if (req.buyerName) {
-      rawData = rawData + ' and bu.buyer_name = "' + req.buyerName + '"'
-    }
-    if (req.requestNo) {
-      rawData = rawData + ' and sr.request_no = "' + req.requestNo + '"'
-    }
-    if (req.style) {
-      rawData = rawData + ' and sr.style = "' + req.style + '"'
-    }
-    rawData = rawData + ' group by sb.sampling_bom_id '
-
-    const rmData = await manager.query(rawData);
-    console.log(rmData, "4444444444")
-    console.log("**********************************************************************")
-
-    if (rmData.length > 0) {
-      const groupedData = rmData.reduce((result, item) => {
-        console.log(item, "ittttteemmmm")
-        const samplerequestid = item.sample_request_id;
-        const requestNo = item.requestNo;
-        const buyers = item.buyer_name;
-        const date = item.created_at;
-        const style = item.style;
-        const unit = item.name;
-        const styleId=item.styleId
-        const requiredQuantity=item.requiredQuantity
-        const m3StleNo=item.m3StleNo
-        const  colourId=item.colourId
-        const rmItemId=item.rmItemId
-        if (!result[requestNo]) {
-          result[requestNo] = {
-            request_no: requestNo,
-            sample_request_id: samplerequestid,
-            buyer_name: buyers,
-            created_at: date,
-            style: style,
-            name: unit,
-            styleId:styleId,
-            requiredQuantity:requiredQuantity,
-            m3StleNo:m3StleNo,
-            colourId:colourId,
-            rmItemId:rmItemId,
-            sm: [],
-          };
-        }
-
-        result[requestNo].sm.push(
-          {
-            code: item.item_code,
-            // buyers: item.buyer_name,
-            fabricName: item.product_group,
-            consumption: item.required_quantity,
-            quantity: item.quantity,
-            color: item.colour,
-            styleId:item.styleId,
-            requiredQuantity:item.requiredQuantity,
-            m3StleNo:item.m3StleNo,
-            colourId:item.colourId,
-            rmItemId:item.rmItemId,
-            // style:item.style,
-            // date:item.created_at,
-          }
-
-        );
-
-        return result;
-      }, {});
-
-      return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
-    }
-
-    return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
-  }
-
+ 
 
   async getM3StyleCode(): Promise<CommonResponseModel> {
     const manager = this.dataSource;
@@ -535,4 +459,133 @@ LEFT JOIN
     }
 
   }
+
+  async getAllSmaplingDevData(req?: any): Promise<CommonResponseModel> {
+    const manager = this.dataSource;
+    let rawData = `SELECT sb.rm_item_id as rmItemId,sb.colour_id as colourId,sr.m3_style_no as m3StleNo,sr.style_id as styleId,sb.sampling_bom_id,sr.sample_request_id, sr.request_no AS requestNo, sr.m3_style_no, sb.rm_item_id, ri.item_code, sb.required_quantity as requiredQuantity,sb.created_at, sb.assigned_quantity,sb.colour_id,co.colour,st.style,bu.buyer_name,pg.product_group,ss.quantity,fa.name   FROM sampling_bom sb LEFT JOIN sample_request sr ON sb.sample_request_id = sr.sample_request_id LEFT JOIN rm_items ri ON ri.rm_item_id LEFT JOIN colour co ON co.colour_id = sb.colour_id  LEFT JOIN style st ON st.style_id = sr.style_id LEFT JOIN buyers bu ON bu.buyer_id = sr.buyer_id LEFT JOIN product_group pg ON pg.product_group_id = sb.product_group_id LEFT JOIN stocks ss ON ss.item_type_id = sb.rm_item_id LEFT JOIN factory fa ON fa.id=sr.facility_id WHERE sr.sample_request_id IS NOT NULL `;
+    if (req.buyerName) {
+      rawData = rawData + ' and bu.buyer_name = "' + req.buyerName + '"'
+    }
+    if (req.requestNo) {
+      rawData = rawData + ' and sr.request_no = "' + req.requestNo + '"'
+    }
+    if (req.style) {
+      rawData = rawData + ' and sr.style = "' + req.style + '"'
+    }
+    rawData = rawData + ' group by sb.sampling_bom_id '
+
+    const rmData = await manager.query(rawData);
+    console.log(rmData, "4444444444")
+    console.log("**********************************************************************")
+
+    if (rmData.length > 0) {
+      const groupedData = rmData.reduce((result, item) => {
+        console.log(item, "ittttteemmmm")
+        const samplerequestid = item.sample_request_id;
+        const requestNo = item.requestNo;
+        const buyers = item.buyer_name;
+        const date = item.created_at;
+        const style = item.style;
+        const unit = item.name;
+        const styleId=item.styleId
+        const requiredQuantity=item.requiredQuantity
+        const m3StleNo=item.m3StleNo
+        const  colourId=item.colourId
+        const rmItemId=item.rmItemId
+        if (!result[requestNo]) {
+          result[requestNo] = {
+            request_no: requestNo,
+            sample_request_id: samplerequestid,
+            buyer_name: buyers,
+            created_at: date,
+            style: style,
+            name: unit,
+            styleId:styleId,
+            requiredQuantity:requiredQuantity,
+            m3StleNo:m3StleNo,
+            colourId:colourId,
+            rmItemId:rmItemId,
+            sm: [],
+          };
+        }
+
+        result[requestNo].sm.push(
+          {
+            code: item.item_code,
+            // buyers: item.buyer_name,
+            fabricName: item.product_group,
+            consumption: item.required_quantity,
+            quantity: item.quantity,
+            color: item.colour,
+            styleId:item.styleId,
+            requiredQuantity:item.requiredQuantity,
+            m3StleNo:item.m3StleNo,
+            colourId:item.colourId,
+            rmItemId:item.rmItemId,
+            // style:item.style,
+            // date:item.created_at,
+          }
+
+        );
+
+        return result;
+      }, {});
+
+      return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
+    }
+
+    return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
+  }
+
+
+  async getSampleRequestReport(req?: any):Promise<CommonResponseModel>{
+    try{
+    const manager = this.dataSource;
+      const query =' SELECT st.style AS styleName,b.buyer_name AS buyerName,"Fabric" AS fabricType,s.request_no AS sampleReqNo,mi.item_code AS itemCode,i.request_no AS indentCode,i.indent_id AS indentId,i.status,quantity FROM indent i LEFT JOIN indent_fabric ifc ON i.indent_id=ifc.indent_id LEFT JOIN m3_items mi ON mi.m3_items_Id=ifc.m3_fabric_code LEFT JOIN sample_request s ON s.sample_request_id=i.sample_request_id   LEFT JOIN buyers b ON b.buyer_id=s.buyer_id    LEFT JOIN style st ON st.style_id=s.style_id UNION ALL SELECT st.style AS stylename,b.buyer_name AS buyername,mt.trim_type AS fabricType,s.request_no AS sampleReqNo,mt.trim_code AS itemCode,i.request_no AS indentCode,i.indent_id AS indentId,i.status,quantity FROM indent i    LEFT JOIN indent_trims it ON it.indent_id =i.indent_id  LEFT JOIN sample_request s ON s.sample_request_id=i.sample_request_id  LEFT JOIN m3_trims mt ON it.trim_code =mt.m3_trim_Id LEFT JOIN buyers b ON b.buyer_id=s.buyer_id LEFT JOIN style st ON st.style_id=s.style_id'
+
+      const rmData = await manager.query(query);
+
+      if (rmData.length > 0) {
+        const groupedData = rmData.reduce((result, item) => {
+          console.log(item, "ittttteemmmm")
+          const sampleReqNo = item.sampleReqNo;
+          const indentCode = item.indentCode;
+          const buyerName = item.buyerName;
+          const styleName = item.styleName;
+          const status = item.status;
+          if (!result[sampleReqNo]) {
+            result[sampleReqNo] = {
+              sampleReqNo: sampleReqNo,
+              indentCode: indentCode,
+              buyerName: buyerName,
+              styleName: styleName,
+              status: status,
+              sm: [],
+            };
+          }
+  
+          result[sampleReqNo].sm.push(
+            {
+              fabricType: item.fabricType,
+              itemCode: item.itemCode,
+              consumption: item.required_quantity,
+              quantity: item.quantity,
+              indentId:item.indentId
+            }
+  
+          );
+          console.log(result)
+          console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$')
+          return result;
+        }, {});
+        console.log(Object.values(groupedData))
+        console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+        return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
+
+        }
+      }
+      catch(err){
+        throw err
+      }
+    }
 }
