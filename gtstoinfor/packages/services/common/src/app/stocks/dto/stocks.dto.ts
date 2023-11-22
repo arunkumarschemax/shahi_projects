@@ -17,4 +17,7 @@ export class StocksDTO {
     quantity: number;
     @ApiProperty()
     style_id: number;
+    @ApiProperty()
+    buyer_id: number;
+
 }

@@ -11,6 +11,7 @@ import GRNTrimForm from './grn-trim'
 import { GrnDto, PurchaseOrderStatus, VendorIdReq } from '@project-management-system/shared-models'
 import AlertMessages from '../common/common-functions/alert-messages'
 import dayjs, { Dayjs } from "dayjs";
+import { useNavigate } from 'react-router-dom'
 
 
 const GRNForm = () => {
@@ -28,6 +29,8 @@ const GRNForm = () => {
     const grnService = new GRNService()
     const [formData,setFormData] = useState<any[]>([])
     const [trimFormData, setTrimFormData]=useState<any[]>([])
+    const navigate = useNavigate();
+
     useEffect(()=>{
         getVendorsData()
         form.setFieldsValue({grnDate:dayjs()})
@@ -35,7 +38,7 @@ const GRNForm = () => {
 
     const createGrn = (value:any) => {
         console.log(poData,'-------------------------------')
-        const req = new GrnDto(value.vendorId,poData[0]?.purchaseOrderId,form.getFieldValue('grnDate').format('YYYY-MM-DD'),PurchaseOrderStatus.OPEN,value.remarks,undefined,undefined,'',undefined,'',0,0,poData[0]?.materialType,formData,0,'');
+        const req = new GrnDto(value.vendorId,poData[0]?.purchaseOrderId,form.getFieldValue('grnDate').format('YYYY-MM-DD'),value.contactPerson,PurchaseOrderStatus.OPEN,value.remarks,undefined,undefined,'',undefined,'',0,0,poData[0]?.materialType,formData,0,'');
         console.log(req,'[][][][][][][]')
         grnService.createGrn(req).then((res) => {
             if (res.status) {
@@ -92,7 +95,11 @@ const GRNForm = () => {
 
     return(
         <>
-        <Card title='GRN' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+        <Card title='GRN' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}   extra={
+          <span>
+            <Button onClick={() => navigate("/grn-view")}>View</Button>
+          </span>
+        }>
             <Form form={form} layout="vertical" onFinish={createGrn}>
                 <Row gutter={8}>
                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>

@@ -6,6 +6,7 @@ export class GrnDto{
   vendorId:number
   poId:number
   grnDate:Date
+  contactPerson:string
   remarks:string
   isActive?: boolean;
   createdAt?: Date;
@@ -25,6 +26,7 @@ export class GrnDto{
     vendorId:number,
     poId:number,
     grnDate:Date,
+    contactPerson:string,
     status:PurchaseOrderStatus,
     remarks:string,
     isActive?: boolean,
@@ -45,6 +47,7 @@ export class GrnDto{
     this.vendorId = vendorId
     this.poId = poId
     this.grnDate = grnDate
+    this.contactPerson = contactPerson
     this.status = status
     this.remarks = remarks
     this.grnItemInfo = grnItemInfo

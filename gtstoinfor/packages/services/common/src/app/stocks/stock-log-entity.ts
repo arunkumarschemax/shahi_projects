@@ -42,6 +42,11 @@ export class StockLogEntity{
     grnItemId: number;
 
     @Column({
+        name: "buyer_id",
+    })
+    buyer_id: number;
+
+    @Column({
         name: "quantity",
         length: 50,
     })

@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Body, Controller, Post, Req } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
+import { CommonResponseModel, GrnReq } from "@project-management-system/shared-models";
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
 import { GrnService } from "./grn.service";
 import { GrnDto, PurchaseOrderReq } from "./dto/grn-dto";
@@ -30,5 +32,21 @@ export class GrnController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
-
+  @Post('/getAllGrn')
+  async getAllGrn(@Body() dto: any): Promise<CommonResponseModel> {
+    try {
+      return await this.grnService.getAllGrn();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+  @Post('/getGrnItemById')
+  @ApiBody({type:GrnReq})
+  async getGrnItemById(@Body()  request: any): Promise<CommonResponseModel> {
+    try {
+      return await this.grnService.getGrnItemById(request);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
 }

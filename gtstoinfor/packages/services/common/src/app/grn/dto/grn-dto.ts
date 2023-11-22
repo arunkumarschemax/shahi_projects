@@ -15,6 +15,8 @@ export class GrnDto{
   @ApiProperty()
   grnDate:Date
   @ApiProperty()
+  contactPerson: string ;
+  @ApiProperty()
   status:PurchaseOrderStatus
   @ApiProperty()
   remarks:string

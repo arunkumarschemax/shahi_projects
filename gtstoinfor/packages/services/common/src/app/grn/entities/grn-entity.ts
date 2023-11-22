@@ -41,6 +41,13 @@ export class GrnEntity{
     })
     grnDate:Date
 
+    @Column("varchar", {
+      nullable: false,
+      length: 70,
+      name: "contact_person",
+    })
+    contactPerson: string ;
+
      @CreateDateColumn({
         name: "created_at",
       })

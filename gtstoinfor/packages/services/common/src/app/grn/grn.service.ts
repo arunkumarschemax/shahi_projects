@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, CustomerOrderStatusEnum, PoItemEnum, PurchaseOrderStatus } from '@project-management-system/shared-models';
+import { CommonResponseModel, CustomerOrderStatusEnum, GrnReq, PoItemEnum, PurchaseOrderStatus } from '@project-management-system/shared-models';
 import { GrnRepository } from './dto/grn-repository';
 import { GrnAdapter } from './dto/grn-adapter';
 import { GrnDto, PurchaseOrderReq } from './dto/grn-dto';
@@ -131,6 +131,7 @@ export class GrnService{
             grnEntity.styleId=req.styleId
             grnEntity.poId=req.poId
             grnEntity.grnDate=req.grnDate
+            grnEntity.contactPerson = req.contactPerson
             grnEntity.createdUser=req.createdUser
             grnEntity.updatedUser=req.updatedUser
             console.log(req,'===========')
@@ -223,5 +224,50 @@ export class GrnService{
             throw err
         }
     }
-    
+    async getAllGrn():Promise<CommonResponseModel>{
+        try{
+            const manager = this.dataSource;
+            let query=`SELECT grn_id,grn.vendor_id,grn.grn_number,b.buyer_name,po_id,grn_date,grn.contact_person,grn.status,po.po_number,po.po_material_type,v.vendor_name FROM grn
+            LEFT JOIN purchase_order po ON po.purchase_order_id = grn.po_id
+            LEFT JOIN buyers b ON b.buyer_id = po.buyer_id
+            LEFT JOIN vendors v ON v.vendor_id = po.vendor_id
+
+`
+            // if(materialType == 'Fabric'){
+            //     query=query+' and ifabric_id ='+id+''
+            // }
+            // if(materialType == 'Trim'){
+            //     query=query+' and itrims_id='+id+''
+            // }
+            const result= await manager.query(query)
+            if(result){
+                return new CommonResponseModel(true,1,'',result)
+            }
+        }catch(err){
+            throw err
+        }
+    }
+    async getGrnItemById(req:GrnReq):Promise<CommonResponseModel>{
+        try{
+            const manager = this.dataSource;
+            let query=`SELECT grn_item_id , grn_items.item_id ,rm.item_code AS fabricCode,t.trim_code, grn_items.m3_item_id , grn_items.product_group_id , grn_items.received_quantity , grn_items.received_uom_id , grn_items.accepted_quantity , grn_items.accepted_uom_id , 
+            grn_items.rejected_quantity , grn_items.rejected_uom_id ,grn_items.conversion_quantity,  grn_items.conversion_uom_id , grn_items.location_mapped_status , grn_items.grn_id , grn_items.m3_item_code_id,u.uom FROM grn_items
+            LEFT JOIN m3_items rm ON rm.rm_item_id = grn_items.m3_item_code_id
+            LEFT JOIN m3_trims t ON t.m3_trim_Id = grn_items.m3_item_code_id
+            LEFT JOIN uom u ON u.id = grn_items.received_uom_id
+            WHERE grn_items.grn_id = '${req.grnId}'`
+            // if(materialType == 'Fabric'){
+            //     query=query+' and ifabric_id ='+id+''
+            // }
+            // if(materialType == 'Trim'){
+            //     query=query+' and itrims_id='+id+''
+            // }
+            const result= await manager.query(query)
+            if(result){
+                return new CommonResponseModel(true,1,'',result)
+            }
+        }catch(err){
+            throw err
+        }
+    }
 }
