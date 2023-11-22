@@ -10,7 +10,7 @@ export class Destination {
   @PrimaryGeneratedColumn("increment", { name: 'destination_id' })
   destinationId: number;
 
-  @Column("char", {
+  @Column("varchar", {
     nullable: false,
     length: 50,
     name: "destination"
@@ -27,16 +27,17 @@ export class Destination {
   destinationCode: string;
 
   @Column("char", {
-    nullable: false,
+    nullable: true,
     length: 250,
     name: "description"
+  
   })
   // @Index({ unique: true })
   description: string;
 
   @Column("char", {
     nullable: false,
-    length: 10,
+    length: 30,
     name: "option_Group"
   })
   // @Index({ unique: true })

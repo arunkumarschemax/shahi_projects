@@ -35,15 +35,15 @@ export class DivisionController {
       return this.applicationExceptionHandler.returnException(DivisionResponseModel, error);
     }
   }
-  @Post('/getAllDivision')
-  // @UseGuards(AuthGuard('jwt'))
-  async getAllDivision(@Body() req?:UserRequestDto): Promise<AllDivisionResponseModel> {
-    try {
-      return await this.divisionService.getAlldivision(req);
-    } catch (error) {
-      return this.applicationExceptionHandler.returnException(AllDivisionResponseModel, error);
-    }
-  }
+  // @Post('/getAllDivision')
+  // // @UseGuards(AuthGuard('jwt'))
+  // async getAllDivision(@Body() req?:UserRequestDto): Promise<AllDivisionResponseModel> {
+  //   try {
+  //     return await this.divisionService.getAlldivision(req);
+  //   } catch (error) {
+  //     return this.applicationExceptionHandler.returnException(AllDivisionResponseModel, error);
+  //   }
+  // }
   @Post('/getAllActiveDivision')
   async getAllActiveDivision(@Req() request: Request): Promise<AllDivisionResponseModel> {
       try {
@@ -68,5 +68,15 @@ export class DivisionController {
       } catch (err) {
           return this.applicationExceptionHandler.returnException(DivisionResponseModel, err);
       }
+  }
+
+    @Post('/getAllDivision')
+  // @UseGuards(AuthGuard('jwt'))
+  async getAllDivision(): Promise<AllDivisionResponseModel> {
+    try {
+      return await this.divisionService.getAlldivision();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(AllDivisionResponseModel, error);
+    }
   }
 }

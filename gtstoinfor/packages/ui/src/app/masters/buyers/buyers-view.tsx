@@ -200,6 +200,7 @@ let userRef
         dataIndex:"buyerCode",
         title:<div style={{textAlign:'center'}}>Buyer Code</div>,
         // responsive: ['lg'],
+        align:'center',
         sorter: (a, b) => a.buyerCode.localeCompare(b.buyerCode),
         sortDirections: ['descend', 'ascend'],
         ...getColumnSearchProps('buyerCode')
@@ -224,9 +225,15 @@ let userRef
         dataIndex:"phoneNo",
         title:<div style={{textAlign:'center'}}>Contact Number</div>,
         // responsive: ['lg'],
+        align:'center',
         sorter: (a, b) => a.phoneNo.localeCompare(b.phoneNo),
         sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('phoneNo')
+        ...getColumnSearchProps('phoneNo'),
+        render: (contact) => (
+          <span>
+            <a href={`tel:${contact}`}>{contact}</a>
+          </span>
+        ),
       },
       // {
       //   dataIndex:"address",
@@ -250,43 +257,32 @@ let userRef
             
           </>
       ),
-        filters: [
-          {
-            text: 'Active',
-            value: true,
-          },
-          {
-            text: 'InActive',
-            value: false,
-          },
-        ],
-        filterMultiple: false,
         onFilter: (value, record) => record.isActive === value,
-            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
-        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
-          <Checkbox
-            checked={selectedKeys.includes(true)}
-            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
-          >
-            <span style={{color:'green'}}>Active</span>
-          </Checkbox>
-          <Checkbox
-            checked={selectedKeys.includes(false)}
-            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
-          >
-            <span style={{color:'red'}}>Inactive</span>
-          </Checkbox>
-          <div className="custom-filter-dropdown-btns" >
-          <Button  onClick={() => clearFilters()} className="custom-reset-button">
-              Reset
-            </Button>
-            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
-              OK
-            </Button>
-          
-          </div>
+          filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+      <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+        <Checkbox
+          checked={selectedKeys.includes(1)}
+          onChange={() => setSelectedKeys(selectedKeys.includes(1) ? [] : [1])}
+        >
+          <span style={{color:'green'}}>Active</span>
+        </Checkbox>
+        <Checkbox
+          checked={selectedKeys.includes(0)}
+          onChange={() => setSelectedKeys(selectedKeys.includes(0) ? [] : [0])}
+        >
+          <span style={{color:'red'}}>Inactive</span>
+        </Checkbox>
+        <div className="custom-filter-dropdown-btns" >
+        <Button  onClick={() => clearFilters()} className="custom-reset-button">
+            Reset
+          </Button>
+          <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+            OK
+          </Button>
+        
         </div>
-             ),
+      </div>
+           ),
         
       },
       {
@@ -368,7 +364,7 @@ let userRef
           <Alert type='warning' message={'Active: ' + buyersData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
-          <Alert type='info' message={'In-Active: ' + buyersData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + buyersData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
 
 
@@ -381,12 +377,14 @@ let userRef
      columns={columnsSkelton} 
      dataSource={buyersData} size='small' bordered
      scroll={{ x:500 }}
-          pagination={{
-            onChange(current) {
-              setPage(current);
-            }
-          }}
-          onChange={onChange}
+     pagination={{
+      pageSize: 50, 
+      onChange(current, pageSize) {
+          setPage(current);
+          setPageSize(pageSize);
+      }
+      }}
+      onChange={onChange}
      />
       </Card>
 

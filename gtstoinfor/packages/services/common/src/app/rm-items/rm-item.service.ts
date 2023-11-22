@@ -44,7 +44,7 @@ return response;
         try{
             const data = await this.repository.getAllRmCrted(req)
             if(data.length === 0){
-                return new CommonResponseModel(false,0,'No data found')
+                return new CommonResponseModel(false,0,'RM Creation data found')
             } else{
                 return new CommonResponseModel(true,1,'RM Creation Data retrieved',data)
 

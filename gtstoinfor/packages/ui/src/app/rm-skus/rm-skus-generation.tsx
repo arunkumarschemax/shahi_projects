@@ -89,9 +89,9 @@ export const RmSkusGeneration = () => {
         <Card title='Rm Feature Mapping & Rm Sku Generation' extra={<Link to='/materialCreation/rm-skus-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>}>
             <Form layout="vertical" form={form} onFinish={onFinish}>
                 <Row gutter={8}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
-                <Form.Item name={'itemType'} label='Item Type' rules={[{required:true,message:'Item Type is required'}]}>
-                    <Select allowClear showSearch optionFilterProp="children" placeholder='Select Item Type' onChange={onItemTypeChange}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 5 }}>
+                <Form.Item name={'itemType'} label='Product Group' rules={[{required:true,message:'Item Type is required'}]}>
+                    <Select allowClear showSearch optionFilterProp="children" placeholder='Select Product Group' onChange={onItemTypeChange}>
                         {/* {
                             Object.values(RmItemTypeEnum).map(e => {
                                 return(
@@ -109,9 +109,9 @@ export const RmSkusGeneration = () => {
                     </Select>
                 </Form.Item>
                 </Col>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 5 }}>
                 <Form.Item name={'itemCode'} label='RM Item Code' rules={[{required:true,message:'Item Code is required'}]}>
-                    <Select allowClear showSearch optionFilterProp="children" placeholder='Select Item Code' onChange={onItemCodeChange}>
+                    <Select allowClear showSearch optionFilterProp="children" placeholder='Select RM Item Code' onChange={onItemCodeChange}>
                         {/* <Option key='1' value='I001' itemId={1}>I001</Option> */}
                         {
                             itemCodes.map(e => {
@@ -138,12 +138,12 @@ export const RmSkusGeneration = () => {
                             <Checkbox value={option.featureId} key={option.featureName}>
                             <Space direction="vertical" size="middle" style={{ width: '100%' }}>
                             <Badge.Ribbon text={option.featureName} color="volcano">    
-                                <Card title={`${option.option}`} size='small' style={{width:'300px'}}>
+                                <Card title={`${option.option}`} size='small' style={{width:'300px'}} headStyle={{backgroundColor:'#cde5d7',color:'black'}}>
                                 <Row gutter={24}>
                                     {option.optionInfo[0]?.option.map((e, index) => (
                                         <>
                                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6}}>
-                                        <Tag key={index} color="#cde5d7" style={{color:'black',fontSize:'15px'}}>{e}</Tag>
+                                        <Tag key={index} color="#e4f0d0" style={{color:'black',fontSize:'15px'}}>{e}</Tag>
                                     </Col>
                                     <br/>
                                     <br/>

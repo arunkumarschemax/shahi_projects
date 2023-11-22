@@ -19,7 +19,7 @@ export const BusinessAreaView = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [drawerVisible, setDrawerVisible] = useState(false);
     const [selectedData, setSelectedData] = useState<any>(undefined);
-
+    const [pageSize, setPageSize] = useState<number>(1);
 
 
     useEffect(() => {
@@ -156,6 +156,7 @@ export const BusinessAreaView = () => {
         {
             dataIndex:'businessAreaCode',
             title:<div style={{textAlign:'center'}}>Business Area Code</div>,
+            align:'center',
             sorter: (a, b) => a.businessAreaCode?.localeCompare(b.businessAreaCode),
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('businessAreaCode')
@@ -183,7 +184,7 @@ export const BusinessAreaView = () => {
                 value: true,
               },
               {
-                text: 'InActive',
+                text: 'Inactive',
                 value: false,
               },
             ],
@@ -278,14 +279,22 @@ export const BusinessAreaView = () => {
           <Alert type='warning' message={'Active: ' + data.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
-          <Alert type='info' message={'In-Active: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
             </Row>
             <br></br>
             <div style={{overflowX :'auto' }}>
 
             <Table columns={columns} dataSource={data}
-                    size='small' bordered/>
+            size='small' bordered
+            pagination={{
+              pageSize: 50, 
+              onChange(current, pageSize) {
+                  setPage(current);
+                  setPageSize(pageSize);
+              }
+            }}
+            />
             </div>
             <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>

@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CoLine } from "./co-line.entity";
 import { DataSource, In, Repository } from "typeorm";
-import { CoLineReq, CoLineResponseModel } from "@project-management-system/shared-models";
+import { CoLineReq, CoLineResponseModel, CommonResponseModel, StyleOrderIdReq, styleOrderReq } from "@project-management-system/shared-models";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { Size } from "../sizes/sizes-entity";
 import { Destination } from "../destination/destination.entity";
@@ -12,6 +12,7 @@ import { UomRequest } from "../uom/dto/uom.request";
 import { StyleOrder } from "./style-order.entity";
 import { CoBom } from "../co-bom/co-bom.entity";
 import { FgItemBom } from "../substituion/fg-item-bom.entity";
+import { CoLineRepository } from "./co-line.repo";
 
 @Injectable()
 
@@ -19,6 +20,7 @@ export class CoLineService{
     constructor(
         @InjectRepository(CoLine)
         private repo:Repository <CoLine>,
+        private coLineRepo:CoLineRepository,
         private dataSource: DataSource,
         @InjectRepository(CoBom)
         private coBomRepo: Repository<CoBom>,
@@ -112,5 +114,18 @@ export class CoLineService{
             }
         }
 
-    
+        async getAllCoLine(req:styleOrderReq): Promise<CommonResponseModel> {
+            try {
+            const data = await this.coLineRepo.getAllCoLines(req)
+         
+            if(data.length > 0){
+                return new CommonResponseModel(true,1,'Data retrieved',data)
+            } else{
+                return new CommonResponseModel(false,1,'No data found')
+            }        
+              } catch (err) {
+                throw err;
+              }
+             
+            }  
 }

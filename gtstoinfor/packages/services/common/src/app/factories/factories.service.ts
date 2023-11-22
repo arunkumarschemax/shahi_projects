@@ -66,24 +66,70 @@ export class FactoriesService {
         return new AllFactoriesResponseModel(true, 1111, 'Data retreived', activeFactoriesData)
     }
 
-    async activateOrDeactivate(req: FactoryActivateDeactivateDto): Promise<FactoryResponseModel> {
-        const factoryExists = await this.factoryRepository.findOne({ where: { id: req.id } })
+    // async activateOrDeactivate(req: FactoryActivateDeactivateDto): Promise<FactoryResponseModel> {
+    //   const factoryExists = await this.factoryRepository.findOne({ where: { id: req.id } });
+    
+    //   if (factoryExists) {
+    //     if (factoryExists.versionFlag != req.versionFlag) {
+    //       return new FactoryResponseModel(false, 10113, 'Someone updated the current user information. Refresh and try again');
+    //     } else {
+    //       const updateStatus = await this.factoryRepository.update({ id: req.id }, { isActive: req.isActive, updatedUser: req.updatedUser });
+    
+    //       if (updateStatus) {
+    //         const action = req.isActive ? 'Activated' : 'Deactivated';
+    //         return new FactoryResponseModel(true, 10115, `Factory is ${action} Successfully`);
+    //       } else {
+    //         return new FactoryResponseModel(false, 500, 'Error while updating');
+    //       }
+    //     }
+    //   } else {
+    //     return new FactoryResponseModel(false, 99999, 'No records found');
+    //   }
+    // }
+    async activateOrDeactivateFactory(factoryReq: any): Promise<FactoryResponseModel> {
+      try {
+        const factoryExists = await this.getFactoryById(factoryReq.id);
+  
         if (factoryExists) {
-            if (factoryExists.versionFlag != req.versionFlag) {
-                return new FactoryResponseModel(false, 10113, 'Someone updated the current user information.Refresh and try again')
+          const factoryStatus = await this.factoryRepository.update(
+            { id: factoryReq.id },
+            { isActive: factoryReq.isActive, updatedUser: factoryReq.updatedUser }
+          );
+  
+          if (factoryExists.isActive) {
+            if (factoryStatus.affected) {
+              const response: FactoryResponseModel = new FactoryResponseModel(true, 10115, 'Factory is deactivated successfully');
+              return response;
             } else {
-                const updateStatus = await this.factoryRepository.update({ id: req.id }, { isActive: req.isActive, updatedUser: req.updatedUser })
-                if (updateStatus) {
-                    return new FactoryResponseModel(true, 10115, `User is ${factoryExists.isActive ? 'de-activated' : 'activated'}-activated successfully `)
-                } else {
-                    return new FactoryResponseModel(false, 500, 'Error while updating');
-                }
+              throw new FactoryResponseModel(false, 10111, 'Factory is already deactivated');
             }
+          } else {
+            if (factoryStatus.affected) {
+              const response: FactoryResponseModel = new FactoryResponseModel(true, 10114, 'Factory is activated successfully');
+              return response;
+            } else {
+              throw new FactoryResponseModel(false, 10112, 'Factory is already activated');
+            }
+          }
         } else {
-            new ErrorResponse(99999, 'No records found')
+          throw new FactoryResponseModel(false, 99998, 'No Records Found');
         }
-
+      } catch (err) {
+        // You might want to log the error or handle it differently based on your requirements
+        return err;
+      }
     }
+  
+
+    async getFactoryById(id: number): Promise<FactoriesEntity> {
+      const Response = await this.factoryRepository.findOne({ where: { id: id }, });
+      if (Response) {
+        return Response;
+      } else {
+        return null;
+      }
+    }
+    
 
     async getFactoriesDataFromM3() {
         try {

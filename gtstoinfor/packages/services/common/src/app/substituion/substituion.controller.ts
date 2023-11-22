@@ -51,4 +51,22 @@ export class SubstituionController{
             return this.applicationExceptionHandler.returnException(SubResponseModel,err)
         }
     }
+
+    @Post('/createFeatureSubstitution')
+    async createFeatureSubstitution(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return await this.substituionService.createFeatureSubstitution(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+
+    @Post('/getFeatureSubstitutionByFgItem')
+    async getFeatureSubstitutionByFgItem(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return await this.substituionService.getFeatureSubstitutionByFgItem(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
 }

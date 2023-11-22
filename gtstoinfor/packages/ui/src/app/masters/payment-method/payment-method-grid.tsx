@@ -153,13 +153,13 @@ service.createPaymentMethod(variantData).then(res=>{
     paymentmethodData.isActive=paymentmethodData.isActive?false:true;
     service.activateDeActivatePaymentMethod(paymentmethodData).then(res => { console.log(res);
       if (res.status) {
-        // getAllPaymentmethod();
-        message.success(res.internalMessage, 2);
+        getAllPaymentMethods()
+        message.success(res.internalMessage, 1);
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
         // } else {
-          message.error(res.internalMessage, 2);
+          message.error(res.internalMessage, 1);
         }
       
     }).catch(err => {
@@ -171,13 +171,14 @@ service.createPaymentMethod(variantData).then(res=>{
         {
             title: 'S No',
             key: 'sno',
+            align:'center',
             width: '70px',
             responsive: ['sm'],
             render: (text, object, index) => (page - 1) * 10 + (index + 1)
           },
 
           {
-            title:<div style={{ textAlign: 'center' }}>Payemnt Menthod</div> ,
+            title:<div style={{ textAlign: 'center' }}>Payment Method</div> ,
             dataIndex: 'paymentMethod',
             sorter: (a, b) => a.paymentMethod.localeCompare(b.paymentMethod),
             sortDirections: ['descend', 'ascend'],
@@ -185,10 +186,10 @@ service.createPaymentMethod(variantData).then(res=>{
           },
           {
             title: 'Status',
-            dataIndex: 'isActive',
+            dataIndex: 'isActive',align:'center',
             render: (isActive, rowData) => (
               <>
-                {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+                {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">Inactive</Tag>}
               </>
             ),
             filters: [
@@ -233,6 +234,7 @@ service.createPaymentMethod(variantData).then(res=>{
     {
         title:`Action`,
         dataIndex: 'action',
+        align:'center',
         render: (text, rowData) => (
           <span>  
            <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
@@ -251,8 +253,8 @@ service.createPaymentMethod(variantData).then(res=>{
               <Popconfirm onConfirm={e =>{deletePaymentmode(rowData);}}
               title={
                 rowData.isActive
-                  ? 'Are you sure to Deactivate Paymentmethod ?'
-                  :  'Are you sure to Activate Paymentmethod ?'
+                  ? 'Are you sure to Deactivate Payment Method ?'
+                  :  'Are you sure to Activate Payment Method ?'
               }
             >
               <Switch  size="default"
@@ -269,7 +271,7 @@ service.createPaymentMethod(variantData).then(res=>{
     ];
 
 return (
-  <Card title= 'Payment Method' extra={<span><Button onClick={()=>navigate('/global/paymentmethod/paymentmethod-form')} type={'primary'}>New</Button></span>}>
+  <Card title= 'Payment Methods' extra={<span><Button onClick={()=>navigate('/global/paymentmethod/paymentmethod-form')} type={'primary'}>New</Button></span>}>
     <>
    
     <Row gutter={24}>
@@ -284,7 +286,7 @@ return (
         </Col>
         <Col span={5}>
           {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
-          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
 </Row>
 <br></br>
@@ -296,13 +298,13 @@ return (
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}
-          pagination={{
+          scroll={{x:true,y:500}}
+           pagination={{
             pageSize:50,
             onChange(current) {
               setPage(current);
             }
           }}
-          scroll={{x:true}}
           onChange={onChange}
           bordered />
     </Card>

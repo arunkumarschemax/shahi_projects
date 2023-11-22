@@ -14,7 +14,6 @@ export class SampleTrimRepo extends Repository<SampleRequestTriminfoEntity> {
       async getAllSampleReqNo(): Promise<any> {
         const query = await this.createQueryBuilder()
             .select(`description`)
-            console.log(query,'[[[[[[[[[[[[[[[[[[[[[[[')
         return query.getRawMany()
     }
 }

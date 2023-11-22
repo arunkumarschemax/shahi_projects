@@ -128,7 +128,7 @@ export function LocationsForm(
             }
           ]}
         >
-          <Input/>
+          <Input placeholder='Enter Location Code'/>
         </Form.Item>
         </Col>
         </Row>

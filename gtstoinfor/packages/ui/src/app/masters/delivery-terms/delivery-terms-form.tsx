@@ -121,7 +121,7 @@ export function DeliveryTermsForm(
             }
           ]}
         >
-          <Input/>
+          <Input placeholder='Enter the Delivery Term Name'/>
         </Form.Item>
         </Col>
         </Row>

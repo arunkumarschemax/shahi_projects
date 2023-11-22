@@ -52,7 +52,7 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
  
   const deleteUser = (Data:FabricFinishTypesDTO) => {
     Data.isActive=Data.isActive?false:true;
-    service.activateOrDeactivateFabricFinishTypes(Data).then(res => { console.log(res);
+    service.activateOrDeactivateFabricFinishTypes(Data).then(res => { 
       if (res.status) {
         getAll();
         AlertMessages.getSuccessMessage('Success'); 
@@ -148,6 +148,7 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
     {
       title: 'S No',
       key: 'sno',
+      align:'center',
       width: '70px',
       responsive: ['sm'],
        render: (text, object, index) => (page-1) * 10 +(index+1)
@@ -243,7 +244,7 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
 
   const updateUser = (Data: FabricFinishTypesDTO) => {
     Data.updatedUser= JSON.parse(localStorage.getItem('username'))
-      service.update(Data).then(res => { console.log(res);
+      service.update(Data).then(res => {
         if (res.status) {
           AlertMessages.getSuccessMessage('Updated Successfully');
           getAll();
@@ -263,7 +264,6 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
     setDrawerVisible(false);
   }
   const onChange=(pagination, filters, sorter, extra)=> {
-    console.log('params', pagination, filters, sorter, extra);
   }
 
 
@@ -274,7 +274,7 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
       <Row gutter={40}>
       <Col span={4}></Col>
 
-<Col span={5}>
+<Col span={6}>
       <Alert type='success' message={'Total Fabric Finish Types: ' + FabricStructuresData.length} style={{fontSize:'15px'}} />
           {/* <Card title={'Total Fabric Finish Types: ' + FabricStructuresData.length} style={{textAlign: 'left', width: 250, height: 41,backgroundColor:'#bfbfbf'}}></Card> */}
           </Col>
@@ -293,8 +293,9 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
           rowKey={record => record.Id}
           columns={columnsSkelton}
           dataSource={FabricStructuresData}
-          scroll={{x:true}}
+          scroll = {{x:true,y:500}}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

@@ -173,6 +173,8 @@ import RMOperationMappingView from "./common/product-structure(BOM)/rm-operation
 import COAmendmentView from "./common/co-amendment/co-amendment-view"
 import CoLineForm from "./style-orders/co-line-form"
 import RMDetailView from "./orders/rm-detail-view"
+import FeatureSubstitution from "./BOM/feature-substitution"
+import CoLineView from "./style-orders/co-line-view"
 
 
 export const AppRoutes = () => {
@@ -583,7 +585,6 @@ export const AppRoutes = () => {
                         <Route path='style/style-grid' element={<StyleGrid />} />
                         <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
                         <Route path='component-mapping/component-mapping-view' element={<ComponentMappingView/>}/>
-                        <Route path='operation-sequence' element={<OperationSequenceForm/>} />
                    
                         </Route>
                 <Route path='fabricdevelopment'>
@@ -641,18 +642,23 @@ export const AppRoutes = () => {
                 <Route path ='smv-efficiency-detail-view' element={<SMKDetailView data={''}/>}/>
                 <Route path ='rm-operation-mapping-view' element={<RMOperationMappingView />}/>
                 <Route path='substitution' element={<Substitution/>}></Route>
+                <Route path='feature-substitution' element={<FeatureSubstitution/>}></Route>
                 <Route path='substitution-view' element={<SubstitutionView />}/>
                 </Route>
                 <Route path='/procurement'>
-                <Route path='procurement/mop-report' element={<MOPReport/>}/>    
+                <Route path='procurement/mop-report' element={<MOPReport/>}/> 
+                <Route path='operation-sequence' element={<OperationSequenceForm/>} />
+   
                 </Route>
                 <Route path="/order-management">
                     <Route path='style-order-creation' element={<StyleOrderCreation coData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
                     <Route path='style-order-view' element={<StyleOrderGrid />} />
+                    <Route path="co-line-view" element={<CoLineView/>}/>
                     <Route path='style-order-detail-view' element={<StyleOrderDetailView />} />
                 <Route path="co-amendment" element ={<COAmendmentTabs key={""} />} />
                 <Route path="co-amendment-view" element ={<COAmendmentView/>} />
                 <Route path='bom-report' element={<BomReport/>}/>
+                {/* <Route path='co-line-view' element={<CoLineView/>}/> */}
                     </Route>
 
                     <Route path='/excel-import'>

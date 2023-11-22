@@ -240,8 +240,8 @@ export function SearchGroupGrid(
               <Popconfirm onConfirm={e =>{deleteTerm(rowData);}}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate '
-                :  'Are you sure to Activate '
+                ? 'Are you sure to Deactivate this Search Group ?'
+                :  'Are you sure to Activate  this Search Group ?'
             }
           >  
              <Switch  size="default"
@@ -262,7 +262,7 @@ export function SearchGroupGrid(
     Data.updatedUser= JSON.parse(localStorage.getItem('username'))
     service.UpdateSearchGroup(Data).then(res => { console.log(res);
       if (res.status) {
-        AlertMessages.getSuccessMessage('Updated Successfully');
+        AlertMessages.getSuccessMessage('Search Group Updated Successfully');
         getAll();
         setDrawerVisible(false);
       } else {
@@ -315,7 +315,7 @@ export function SearchGroupGrid(
           <Alert type='warning' message={'Active: ' + groupData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
         <Col span={5}>
-          <Alert type='info' message={'In-Active: ' + groupData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + groupData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
           </Row> 
           <br></br>

@@ -74,7 +74,10 @@ export const SettingsForm = () => {
         getEmployees()
         getBuyerAddress()
         getCoType()
+        getSettingsData()
     },[])
+
+    
 
     useEffect(() => {
         if(state?.id){
@@ -113,6 +116,21 @@ export const SettingsForm = () => {
         }
 
     },[initialData])
+
+    const getSettingsData = () => {
+
+        const req = new SettingsIdReq()
+        req.externalRefNumber = externalRefNo
+        if(state?.id == null){
+
+            service.getAllSettingsInfo(req).then(res => {
+                if(res.status){
+                    navigate('/settings/settings-view')
+                    // location.reload();
+                }
+            })
+        }
+    }
 
     const getAllInfo = () => {
         const req = new SettingsIdReq(state?.id)

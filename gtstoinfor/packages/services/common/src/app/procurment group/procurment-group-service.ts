@@ -21,6 +21,10 @@ export class ProcurmentGroupService{
           const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
   try{
       await transactionalEntityManager.startTransaction();
+      const Check = await this.ProcurmentGroupRepository.find({where:{procurmentGroup:req.procurmentGroup}})
+      if(Check.length > 0){
+                    return new ProcurmentGroupModel(false,0,'Procurment Group already exists')
+                }
       const entity = new ProcurmentGroup()
       entity.procurmentGroup = req.procurmentGroup;
       entity.procurmentGroupId = req.procurmentGroupId;
@@ -116,7 +120,7 @@ let response=[]
                         { isActive: req.isActive, updatedUser: req.updatedUser });
                     if (Exists.isActive) {
                         if (update.affected) {
-                            const Response: ProcurmentGroupModel = new ProcurmentGroupModel(true, 10115, 'Procurment Group is de-activated successfully');
+                            const Response: ProcurmentGroupModel = new ProcurmentGroupModel(true, 10115, 'Procurment Group is Deactivated successfully');
                             return Response;
                         } else {
                             throw new ProcurmentGroupModel(false,10111, 'Procurment Group is already deactivated');

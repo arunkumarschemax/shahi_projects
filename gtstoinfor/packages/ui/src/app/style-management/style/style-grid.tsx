@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert, Checkbox } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -26,6 +26,7 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
   const navigate = useNavigate()
 
   const service = new StyleService();
+
 
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -98,41 +99,42 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
     {
       title: 'S No',
       key: 'sno',
-      width: '70px',
       responsive: ['sm'],
-      render: (text, object, index) => (page - 1) * 10 + (index + 1)
+      render: (text, object, index) => (page - 1) * 10 + (index + 1),
+      align:"center"
     },
     {
-        title: "Style",
+      title: <div style={{textAlign:"center"}}>Style </div>,
+
         dataIndex: "style",
         width:'100px',
         sorter: (a, b) => a.style.localeCompare(b.style),
       ...getColumnSearchProps("style"),
       },
-      {
-        title: "File Name",
-        dataIndex: "styleFileName",
-        width:'150px',
-        sorter: (a, b) => a.styleFileName.localeCompare(b.styleFileName),
-      ...getColumnSearchProps("styleFileName"),
-      },
+     
     {
-      title: "Location",
-      dataIndex: "location",
-      width:'150px',
+      title: <div style={{textAlign:"center"}}>Location </div>,
+      dataIndex: "locationName",
+      sorter: (a, b) => a.locationName.localeCompare(b.locationName),
+      ...getColumnSearchProps("locationName"),
     },
     {
-        title: "PCH",
-        dataIndex: "pch",
-      width:'100px',
-        sorter: (a, b) => a.pch.localeCompare(b.pch),
-      ...getColumnSearchProps("pch"),
+      title: <div style={{textAlign:"center"}}>PCH </div>,
+        dataIndex: "profitControlHead",
+        sorter: (a, b) => a.profitControlHead.localeCompare(b.profitControlHead),
+      ...getColumnSearchProps("profitControlHead"),
       },
+      {
+        title: <div style={{textAlign:"center"}}>File Name </div>,
+          dataIndex: "styleFileName",
+          sorter: (a, b) => a.styleFileName.localeCompare(b.styleFileName),
+       
+        },
     
     {
       title: 'Status',
       dataIndex: 'isActive',
-    //   width:'80px',
+      align:"center",
       render: (isActive, rowData) => (
         <>
           {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -149,15 +151,38 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
         },
       ],
       filterMultiple: false,
-      onFilter: (value, record) => {
-        // === is not work
-        return record.isActive === value;
-      },
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{color:'green'}}>Active</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{color:'red'}}>Inactive</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns" >
+          <Button  onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          
+          </div>
+        </div>
+      ),
 
     },
     {
       title: `Action`,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"
@@ -227,7 +252,7 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
   }
 
   const openFormWithData = (viewdata: StyleDto) => {
-    // console.log(viewdata)
+    console.log(viewdata,"8888")
     setDrawerVisible(true);
     setSelectedVariant(viewdata);
   }
@@ -264,8 +289,9 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
 
   const deleteStyle = (data:StyleIdReq ) => {
     data.isActive = data.isActive ? false : true;
+    console.log(data,"data")
     service.ActivateOrDeactivateStyle(data).then(res => {
-      // console.log(res);
+      console.log(res,"tttttttt");
       if (res.status) {
         getAllStyles();
         AlertMessages.getSuccessMessage(res.internalMessage);
@@ -286,7 +312,7 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
       <>
             <Card title='Styles' extra={<span><Button onClick={() =>  navigate('/style-management/style/style-form')}
               type={'primary'}>New</Button></span>} >
-   <Row gutter={40}>
+   {/* <Row gutter={40}>
         <Col>
           <Card title={'Total Styles: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
@@ -296,18 +322,34 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
         <Col>
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
-      </Row><br></br>
+      </Row><br></br> */}
+
+<Row gutter={24}>
+  <Col span={4}></Col>
+    <Col span={5}>
+     
+<Alert type='success' message={'Total Styles: ' + variantData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        </Col>
+</Row>
+<br/>
       <Card size='small'>
         <Table
         size='small'
           columns={columnsSkelton}
           dataSource={variantData}
+          scroll={{x:true,y:500}}
           pagination={{
-            onChange(current) {
-              setPage(current);
-            }
-          }}
-          scroll={{x:true}}
+           pageSize:50,
+           onChange(current) {
+             setPage(current);
+           }
+         }}
           onChange={onChange}
           bordered />
       </Card>

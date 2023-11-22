@@ -142,7 +142,7 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
       align:'center',
       render: (isActive, rowData) => (
         <>
-          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">Inactive</Tag>}
         </>
       ),
       filters: [
@@ -373,7 +373,7 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
         </Col>
         <Col span={5}>
           {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
-          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
 
         </Col>
         <Col>
@@ -412,6 +412,7 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
               setPage(current);
             }
           }}
+          className='custom-table-wrapper'
           scroll={{x:true}}
           onChange={onChange}
           bordered />

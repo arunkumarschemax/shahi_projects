@@ -171,13 +171,12 @@ export function ProductGroupGrid(
     const openFormWithData=(viewData: ProductGroupDto)=>{
       setDrawerVisible(true);
       setSelectedProductGroup(viewData);
-      console.log(selectedProductGroup)
-      console.log('selectedProductGroup')
     }
   
     const columnsSkelton: ColumnProps<any>[] = [
       {
         title: 'S No',
+        align:'center',
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
@@ -360,11 +359,12 @@ export function ProductGroupGrid(
           columns={columnsSkelton}
           dataSource={ProductGroupData}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }
           }}
-          scroll={{x:true}}
+          scroll = {{x:true,y:500}}
           onChange={onChange}
           bordered />
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}

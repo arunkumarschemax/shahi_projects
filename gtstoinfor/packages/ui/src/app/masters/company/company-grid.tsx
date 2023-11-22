@@ -151,7 +151,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
       dataIndex: 'isActive',      align:'center',
       render: (isActive, rowData) => (
         <>
-          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">Inactive</Tag>}
         </>
       ),
       filters: [
@@ -160,7 +160,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
           value: true,
         },
         {
-          text: 'InActive',
+          text: 'Inactive',
           value: false,
         },
       ],
@@ -413,7 +413,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
           <Row gutter={24}>
             <Col>
               <Form.Item style={{ display: 'none' }} label="Company Id" name="companyId" initialValue={selectedData.companyId}>
-                <Input disabled />
+                <Input disabled  />
               </Form.Item>
             </Col>
             <Col span={4}>
@@ -421,7 +421,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
                   required: true,
                   message: " Division Name Is Required",
                 },]}>
-                <Input />
+                <Input placeholder='Enter Division Name' />
               </Form.Item>
             </Col>
             <Col span={4}>
@@ -429,7 +429,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
                   required: true,
                   message: " Division Code Is Required",
                 },]}>
-                <Input />
+                <Input  placeholder='Enter Division Code'/>
               </Form.Item>
             </Col>
           </Row>
@@ -465,7 +465,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
 
         </Col>
         <Col span={5}>
-        <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
           {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
         </Col>
         {/* <Col>
@@ -476,11 +476,12 @@ export const CompanyGrid = (props: CompanyGridProps) => {
       <Card >
         <Table
           size='small'
-
+          className='custom-table-wrapper'
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

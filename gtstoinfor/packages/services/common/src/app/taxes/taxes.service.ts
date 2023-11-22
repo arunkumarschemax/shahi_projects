@@ -125,7 +125,7 @@ export class TaxesService {
   async getAllTaxes(req?:UserRequestDto): Promise<AllTaxesResponseModel> {
     // const page: number = 1;
     try {
-      const taxesDTO: TaxesDTO[] = [];
+      const taxesDTO: any[] = [];
       //retrieves all companies
       const taxesEntities: Taxes[] = await this.taxesRepository.find({
         order: { taxName: 'ASC' },
@@ -157,7 +157,7 @@ export class TaxesService {
   async getAllActiveTaxes(): Promise<AllTaxesResponseModel> {
     // const page: number = 1;
     try {
-      const taxesEntities: TaxesDTO[] = [];
+      const taxesEntities: any[] = [];
       //retrieves all companies
       const TaxesEntities: Taxes[] = await this.taxesRepository.find({
         order: { taxName: 'ASC' },
@@ -215,22 +215,22 @@ export class TaxesService {
               const taxResponse: TaxesResponseModel = new TaxesResponseModel(
                 true,
                 10115,
-                'Tax is de-activated successfully'
+                'Tax is Deactivated successfully'
               );
               return taxResponse;
             } else {
-              throw new TaxesResponseModel(false,10111, 'Tax is already deactivated');
+              throw new TaxesResponseModel(false,10111, 'Tax is already Deactivated');
             }
           } else {
             if (taxStatus.affected) {
               const taxResponse: TaxesResponseModel = new TaxesResponseModel(
                 true,
                 10114,
-                'Tax is activated successfully'
+                'Tax is Activated successfully'
               );
               return taxResponse;
             } else {
-              throw new TaxesResponseModel(false,10112, 'Tax is already activated');
+              throw new TaxesResponseModel(false,10112, 'Tax is already Activated');
             }
           }
           // }

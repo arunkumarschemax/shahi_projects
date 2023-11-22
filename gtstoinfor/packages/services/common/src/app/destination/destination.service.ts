@@ -141,17 +141,17 @@ export class DestinationService {
 
           if (Exists.isActive) {
             if (Status.affected) {
-              const DestinationResponse: DestinationResponseModel = new DestinationResponseModel(true, 10115, 'Destination is de-activated successfully');
+              const DestinationResponse: DestinationResponseModel = new DestinationResponseModel(true, 10115, 'Destination is Deactivated successfully');
               return DestinationResponse;
             } else {
-              throw new DestinationResponseModel(false, 10111, 'Destination is already deactivated');
+              throw new DestinationResponseModel(false, 10111, 'Destination is already Deactivated');
             }
           } else {
             if (Status.affected) {
-              const DestinationResponse: DestinationResponseModel = new DestinationResponseModel(true, 10114, 'Destination is activated successfully');
+              const DestinationResponse: DestinationResponseModel = new DestinationResponseModel(true, 10114, 'Destination is Activated successfully');
               return DestinationResponse;
             } else {
-              throw new DestinationResponseModel(false, 10112, 'Destination is already  activated');
+              throw new DestinationResponseModel(false, 10112, 'Destination is already  Activated');
             }
           }
           // }

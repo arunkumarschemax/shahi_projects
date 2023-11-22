@@ -167,7 +167,7 @@ export class ItemGroupService{
     
             //generated response
   
-            const response = new AllItemGroupResponseModel(true,11208,'size retrieved successfully',itemdto);
+            const response = new AllItemGroupResponseModel(true,11208,'ItemGroup retrieved successfully',itemdto);
         
             return response;
           } else {
@@ -192,17 +192,17 @@ export class ItemGroupService{
                        
                         if (deptExists.isActive) {
                             if (DepartmentStatus.affected) {
-                                const DepartmentResponse: ItemGroupResponseModel = new ItemGroupResponseModel(true, 10115, 'ItemGroup is de-activated successfully');
+                                const DepartmentResponse: ItemGroupResponseModel = new ItemGroupResponseModel(true, 10115, 'ItemGroup is Deactivated successfully');
                                 return DepartmentResponse;
                             } else {
-                                throw new ItemGroupResponseModel(false,10111, 'ItemGroup is already deactivated');
+                                throw new ItemGroupResponseModel(false,10111, 'ItemGroup is already Deactivated');
                             }
                         } else {
                             if (DepartmentStatus.affected) {
-                                const DepartResponse: ItemGroupResponseModel = new ItemGroupResponseModel(true, 10114, 'ItemGroup is activated successfully');
+                                const DepartResponse: ItemGroupResponseModel = new ItemGroupResponseModel(true, 10114, 'ItemGroup is Activated successfully');
                                 return DepartResponse;
                             } else {
-                                throw new ItemGroupResponseModel(false,10112, 'Department is already  activated');
+                                throw new ItemGroupResponseModel(false,10112, 'ItemGroup is already  activated');
                             }
                         }
                     // }
@@ -235,7 +235,7 @@ export class ItemGroupService{
     
             //generated response
   
-            const response = new AllItemGroupResponseModel(true,1,'Department retrieved successfully',groupDTO);
+            const response = new AllItemGroupResponseModel(true,1,'ItemGroup retrieved successfully',groupDTO);
             return response;
           } else {
             throw new AllItemGroupResponseModel(false,99998, 'Data not found');

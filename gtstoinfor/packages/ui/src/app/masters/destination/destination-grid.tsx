@@ -113,6 +113,7 @@ export const DestinationGrid = (props: DestinationGridProps) => {
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
+      align:"center",
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
@@ -125,6 +126,8 @@ export const DestinationGrid = (props: DestinationGridProps) => {
     {
       title: <div style={{textAlign:"center"}}>Destination Code</div>,
       dataIndex: 'destinationCode',
+      width: '150px',
+
       sorter: (a, b) => a.destinationCode.localeCompare(b.destinationCode),
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps('destinationCode')
@@ -153,6 +156,8 @@ export const DestinationGrid = (props: DestinationGridProps) => {
     {
       title: 'Status',
       dataIndex: 'isActive',
+      align:"center",
+
       render: (isActive, rowData) => (
         <>
           {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -190,6 +195,7 @@ export const DestinationGrid = (props: DestinationGridProps) => {
     {
       title: `Action`,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"
@@ -305,7 +311,7 @@ export const DestinationGrid = (props: DestinationGridProps) => {
     service.updateDestination(Data).then(res => {
       console.log(res);
       if (res.status) {
-        AlertMessages.getSuccessMessage('Updated Successfully');
+        AlertMessages.getSuccessMessage('Destinations Updated Successfully');
         getAlldestination();
         setDrawerVisible(false);
       } else {
@@ -343,7 +349,7 @@ export const DestinationGrid = (props: DestinationGridProps) => {
   }
 
   return (
-    <Card title='Destination' 
+    <Card title='Destinations' 
     extra={<span><Button onClick={()=>navigate('/global/destination/destination-form')} type={'primary'}>New</Button></span>}>
     <br/>
     <>
@@ -359,7 +365,7 @@ export const DestinationGrid = (props: DestinationGridProps) => {
         </Col>
         <Col span={5}>
           {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
-          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
 </Row>
 <br></br>
@@ -370,13 +376,15 @@ export const DestinationGrid = (props: DestinationGridProps) => {
 
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
+          className='custom-table-wrapper'
           dataSource={variantData}
+          scroll={{x:true,y:500}}
           pagination={{
-            onChange(current) {
-              setPage(current);
-            }
-          }}
-          scroll={{ x: true }}
+           pageSize:50,
+           onChange(current) {
+             setPage(current);
+           }
+         }}
           onChange={onChange}
           bordered />
       </Card>

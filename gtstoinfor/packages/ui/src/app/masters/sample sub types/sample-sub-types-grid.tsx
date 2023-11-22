@@ -64,7 +64,7 @@ export function SampleSubTypesGrid(
   
   const deleteSampleSubType = (Data: SampleSubTypesDTO) => {
     Data.isActive = Data.isActive? false : true;
-    Service.activateOrDeactivateSampleSubType(Data).then(res => {console.log(res);
+    Service.activateOrDeactivateSampleSubType(Data).then(res => {
     if(res.status){
       getAllSampleSubTypeData();
       AlertMessages.getSuccessMessage(res.internalMessage);
@@ -174,6 +174,7 @@ export function SampleSubTypesGrid(
     const columnsSkelton: ColumnProps<any>[] = [
       {
         title: 'S No',
+        align:'center',
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
@@ -255,7 +256,6 @@ export function SampleSubTypesGrid(
           <span>         
               <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
                 onClick={() => {
-                  console.log(rowData,'roww')
 
                   if (rowData.isActive) {
                     openFormWithData(rowData);
@@ -295,7 +295,6 @@ export function SampleSubTypesGrid(
    * @param extra 
    */
   const onChange=(pagination, filters, sorter, extra)=> {
-    console.log('params', pagination, filters, sorter, extra);
   } 
 
   return (
@@ -329,11 +328,12 @@ export function SampleSubTypesGrid(
           columns={columnsSkelton}
           dataSource={Data}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }
           }}
-          scroll={{x:true}}
+          scroll = {{x:true,y:500}}
           onChange={onChange}
           bordered />
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}

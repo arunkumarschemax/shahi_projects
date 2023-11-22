@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Checkbox, message } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Checkbox, message, Alert } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps } from 'antd/lib/table';
 import Highlighter from 'react-highlight-words';
@@ -137,7 +137,7 @@ export function ItemTypeView(
   const updateItem = (Data: ItemTypeDto) => {
     Service.updateItemType(Data).then(res => { console.log(res);
       if (res.status) {
-        AlertMessages.getSuccessMessage('Updated Successfully');
+        AlertMessages.getSuccessMessage('Item Type Updated Successfully');
         getAllItemType();
         setDrawerVisible(false);
       } else {
@@ -172,6 +172,7 @@ export function ItemTypeView(
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
+      align:"center",
        render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
@@ -195,6 +196,7 @@ export function ItemTypeView(
     {
       title: 'Status',
       dataIndex: 'isActive',
+      align:"center",
        render: (isActive, rowData) => (
         <>
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -232,6 +234,7 @@ export function ItemTypeView(
     {
       title:`Action`,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         // rowData.fabricSubTypeName.trim()=='Packing Material' || rowData.fabricSubTypeName.trim()=='Raw Material' ? <span> </span>:
         <span>         
@@ -250,8 +253,8 @@ export function ItemTypeView(
               <Popconfirm onConfirm={e =>{deleteItemType(rowData);}}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate  ?'
-                :  'Are you sure to Activate  ?'
+                ? 'Are you sure to Deactivate this Item Type ?'
+                :  'Are you sure to Activate  this Item Type ?'
             }
           >  
             
@@ -273,8 +276,8 @@ export function ItemTypeView(
 
   return (
     <Card title={<span >Item Type</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/item-type-form/item-type-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
-     <br></br>
+     headStyle={{ border: 0 }} extra={<Link to = "/masters/item-type-form/item-type-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
+     {/* <br></br>
       <Row gutter={40}>
       <Col>
           <Card title={'Total Item Type : ' + ItemTypeData.length} style={{textAlign: 'left', width: 290, height: 41,backgroundColor:'#bfbfbf'}}></Card>
@@ -285,22 +288,41 @@ export function ItemTypeView(
           <Col>
            <Card title={'In-Active :' + ItemTypeData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 150, height: 41,backgroundColor:'#f5222d'}}></Card>
           </Col>
+          </Row>  */}
+          {/* <br></br> */}
+          <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+       
+           <Alert type='success' message={'Total Item Type: ' + ItemTypeData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + ItemTypeData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + ItemTypeData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
           </Row> 
           <br></br>
-          <Table
+          <Card>
 
+          <Table
+          size='small'
           // rowKey={record => record.productId}
           columns={columnsSkelton}
           dataSource={ItemTypeData}
+          scroll={{x:true,y:500}}
           pagination={{
-            pageSize:50,
-            onChange(current) {
-              setPage(current);
-            }
-          }}
-          onChange={onChange}
-          scroll={{x:true}}
+           pageSize:50,
+           onChange(current) {
+             setPage(current);
+           }
+         }}
           bordered />
+          </Card>
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>
              <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>

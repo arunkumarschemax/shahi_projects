@@ -13,6 +13,8 @@ import {
   Col,
   Drawer,
   message,
+  Checkbox,
+  Alert,
 } from "antd";
 import {
   CheckCircleOutlined,
@@ -217,16 +219,18 @@ export function CommissionGrid(props: CommissionProps) {
 
   const columnsSkelton: any = [
     {
-      title: "S No",
+      title: <div style={{textAlign:"center"}}>S No</div>,
       key: "sno",
       width: "70px",
+      align:'center',
       responsive: ["sm"],
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
-      title: <div style={{textAlign:"center"}}>Commission</div> ,
+      title: <div style={{textAlign:"center"}}>Buying House Commission</div> ,
       dataIndex: "commission",
       // responsive: ['lg'],
+      align:'center',
       sorter: (a, b) => a.commission.localeCompare(b.commission),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("commission"),
@@ -248,11 +252,6 @@ export function CommissionGrid(props: CommissionProps) {
           )}
         </>
       ),
-      filterMultiple: false,
-      onFilter: (value, record) => {
-        // === is not work
-        return record.isActive === value;
-      },
       filters: [
         {
           text: "Active",
@@ -263,6 +262,33 @@ export function CommissionGrid(props: CommissionProps) {
           value: false,
         },
       ],
+      filterMultiple: false,
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+  <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+    <Checkbox
+      checked={selectedKeys.includes(true)}
+      onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+    >
+      <span style={{color:'green'}}>Active</span>
+    </Checkbox>
+    <Checkbox
+      checked={selectedKeys.includes(false)}
+      onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+    >
+      <span style={{color:'red'}}>Inactive</span>
+    </Checkbox>
+    <div className="custom-filter-dropdown-btns" >
+    <Button  onClick={() => clearFilters()} className="custom-reset-button">
+        Reset
+      </Button>
+      <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+        OK
+      </Button>
+    
+    </div>
+  </div>
+       ),
     },
     {
       title: <div style={{textAlign:"center"}}>Action</div> ,
@@ -321,10 +347,10 @@ export function CommissionGrid(props: CommissionProps) {
   };
   return (
     <Card
-      title='Commission' extra={<span><Button onClick={()=> navigate('/masters/commission/commission-form')} type={'primary'}>New </Button></span>}>
+      title='Buying House Commission' extra={<span><Button onClick={()=> navigate('/masters/commission/commission-form')} type={'primary'}>New </Button></span>}>
       
       <br></br>
-      <Row gutter={40}>
+      {/* <Row gutter={40}>
         <Col>
           <Card
             title={"Total Commissions: " + commissionData.length}
@@ -363,6 +389,18 @@ export function CommissionGrid(props: CommissionProps) {
             }}
           ></Card>
         </Col>
+      </Row> */}
+      <Row gutter={24}>
+      <Col span={4}></Col>
+       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 6}}>
+        <Alert type='success' message={'Total Buying House Commissions: ' + commissionData.length} style={{fontSize:'15px'}} />
+        </Col>
+           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
+          <Alert type='warning' message={'Active: ' + commissionData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
+          <Alert type='info' message={'Inactive: ' + commissionData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        </Col>
       </Row>
       <br></br>
       <Table
@@ -371,12 +409,13 @@ export function CommissionGrid(props: CommissionProps) {
         rowKey={(record) => record.commissionId}
         columns={columnsSkelton}
         dataSource={commissionData}
-        scroll={{ x: true }}
+        scroll={{x:true,y:500}}
         pagination={{
-          onChange(current) {
-            setPage(current);
-          },
-        }}
+         pageSize:50,
+         onChange(current) {
+           setPage(current);
+         }
+       }}
         onChange={onChange}
         bordered
       />

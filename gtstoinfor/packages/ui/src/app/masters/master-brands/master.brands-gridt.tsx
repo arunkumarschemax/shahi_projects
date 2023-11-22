@@ -8,6 +8,7 @@ import { MasterBrandsService } from '@project-management-system/shared-services'
 import { MasterBrandsDto } from '@project-management-system/shared-models';
 import { Link, useNavigate } from 'react-router-dom';
 import MasterBrandsForm from './master-brands-form';
+import { config } from 'packages/libs/shared-services/config';
 
 /* eslint-disable-next-line */
 export interface MasterBrandsGridProps {}
@@ -72,9 +73,9 @@ export function MasterBrandsGrid(
 const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
     BrandsViewData.isActive = BrandsViewData.isActive ? false : true;
     masterBrandService.ActivateDeActivateBrand(BrandsViewData).then(res => {
-      console.log(res);
       if (res.status) {
         message.success(res.internalMessage, 2);
+        getAllMasterBrands()
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
@@ -89,11 +90,11 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
   const updateBrand = (brandsData: MasterBrandsDto) => {
     brandsData.updatedUser = JSON.parse(localStorage.getItem('username'))
     masterBrandService.updateBrand(brandsData).then(res => {
-      console.log(res);
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Successfully');
         // getAllCurrencys();
         setDrawerVisible(false);
+        getAllMasterBrands()
       } else {
       
         AlertMessages.getErrorMessage(res.internalMessage);
@@ -249,7 +250,6 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
       setDrawerVisible(true);
      
       setSelectedMasterBrandData(viewData);
-     console.log(selectedMasterBrandData);
     }
   
     const columnsSkelton: any = [
@@ -272,15 +272,10 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
           align:'center',
           dataIndex: 'fileName',
           responsive: ['lg'],
-          // sorter: (a, b) => a.fileName.localeCompare(b.fileName),
-          // sortDirections: ['descend', 'ascend'],
-          // ...getColumnSearchProps('fileName'),
+          
           render: (fileName,rowData) => {
-            // const encodedFileName = encodeURIComponent(rowData.filePath);
-// const updateImage = `http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/${encodedFileName}`;
-
-            const updateImage = 'http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/' + rowData.filePath;
-console.log('Update Image URL:', updateImage);
+    
+            const updateImage = config.upload_file_path+ rowData.fileName;
 
 return (
   <div>
@@ -394,10 +389,8 @@ return (
    * @param extra 
    */
   const onChange=(pagination, filters, sorter, extra)=> {
-    console.log('params', pagination, filters, sorter, extra);
   }
   const OpenFormTocreateRecord = () => {
-   console.log('redirect here');
   }
   return (
     // <Card title={<span style={{color:'white'}}>Brands</span>}
@@ -435,8 +428,9 @@ return (
 
           columns={columnsSkelton}
           dataSource={masterBrandData}
-          scroll = {{x:true}}
+          scroll = {{x:true,y:500}}
           pagination={{
+            pageSize: 50 ,
             onChange(current) {
               setPage(current);
             }

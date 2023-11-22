@@ -73,7 +73,7 @@ export function RMDetailView  (props: Props)  {
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Supply Lead Time</span>} >{stateDatas?.supply_lead_time}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}>Hierarchy Level</span>} >{stateDatas?.hierarchy_level}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}> Price</span>} >{stateDatas?.price}</Descriptions.Item>
-                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}> Tax</span>} >{stateDatas?.tax}</Descriptions.Item>
+                    <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}> Tax %</span>} >{stateDatas?.tax}</Descriptions.Item>
                     <Descriptions.Item label={<span style={{ fontWeight: 'bold',color:'#687170' }}> Total</span>} >{stateDatas?.total}</Descriptions.Item>
 
                     </Descriptions>

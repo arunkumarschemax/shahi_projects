@@ -23,7 +23,7 @@ export function VendorsView(
   const [page, setPage] = React.useState(1);
   const [searchText, setSearchText] = useState(''); 
   const [searchedColumn, setSearchedColumn] = useState('');
-
+  const [pageSize, setPageSize] = useState<number>(1);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [vendorsData, setVendorsData] = useState<VendorsDto[]>([]);
   const [selectedVendorsData, setSelectedVendorsData] = useState<any>(undefined);
@@ -250,6 +250,7 @@ export function VendorsView(
           dataIndex:"vendorCode",
           title:<div style={{textAlign:'center'}}>Vendor Code</div>,
           // responsive: ['lg'],
+        align:'center',
           sorter: (a, b) => a.vendorCode?.localeCompare(b.vendorCode),
           sortDirections: ['descend', 'ascend'],
           ...getColumnSearchProps('vendorCode')
@@ -304,15 +305,22 @@ export function VendorsView(
         {
           dataIndex:"contactNumber",
           title:<div style={{textAlign:'center'}}>Contact Number</div>,
-          // responsive: ['lg'],
+        align:'center',
+        // responsive: ['lg'],
           sorter: (a, b) => a.contactNumber.localeCompare(b.contactNumber),
           sortDirections: ['descend', 'ascend'],
-          ...getColumnSearchProps('contactNumber')
+          ...getColumnSearchProps('contactNumber'),
+          render: (contact) => (
+            <span>
+              <a href={`tel:${contact}`}>{contact}</a>
+            </span>
+          ),
         },
         {
           dataIndex:"gstNumber",
           title:<div style={{textAlign:'center'}}>GST Number</div>,
           // responsive: ['lg'],
+        align:'center',
           sorter: (a, b) => a.gstNumber.localeCompare(b.gstNumber),
           sortDirections: ['descend', 'ascend'],
           ...getColumnSearchProps('gstNumber')
@@ -433,7 +441,7 @@ export function VendorsView(
               value: true,
             },
             {
-              text: 'InActive',
+              text: 'Inactive',
               value: false,
             },
           ],
@@ -543,7 +551,7 @@ export function VendorsView(
           <Alert type='warning' message={'Active: ' + vendorsData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
-          <Alert type='info' message={'In-Active: ' + vendorsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + vendorsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
           </Row>
           <br></br>
@@ -640,8 +648,10 @@ export function VendorsView(
           dataSource={vendorsData}
           scroll={{ x:500 }}
           pagination={{
-            onChange(current) {
-              setPage(current);
+            pageSize: 50, 
+            onChange(current, pageSize) {
+                setPage(current);
+                setPageSize(pageSize);
             }
           }}
           onChange={onChange}

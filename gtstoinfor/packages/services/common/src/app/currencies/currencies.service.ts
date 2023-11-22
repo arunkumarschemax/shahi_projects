@@ -148,14 +148,14 @@ export class CurrenciesService {
                        
                         if (currencyExists.isActive) {
                             if (currencyStatus.affected) {
-                                const currencyResponse: CurrencyResponseModel = new CurrencyResponseModel(true, 10115, 'Currency is de-activated successfully');
+                                const currencyResponse: CurrencyResponseModel = new CurrencyResponseModel(true, 10115, 'Currency is Deactivated Successfully');
                                 return currencyResponse;
                             } else {
                                 throw new CurrencyResponseModel(false,10111, 'Currency is already deactivated');
                             }
                         } else {
                             if (currencyStatus.affected) {
-                                const CurrencyResponse: CurrencyResponseModel = new CurrencyResponseModel(true, 10114, 'Currency is activated successfully');
+                                const CurrencyResponse: CurrencyResponseModel = new CurrencyResponseModel(true, 10114, 'Currency is Activated Successfully');
                                 return CurrencyResponse;
                             } else {
                                 throw new CurrencyResponseModel(false,10112, 'Currency is already  activated');
@@ -179,7 +179,7 @@ export class CurrenciesService {
               
               const currencyData: CurrenciesDTO = this.currenciesAdapter.convertEntityToDto(currencyEntities);
               if (currencyData) {
-                  const response = new CurrencyResponseModel(true, 11101 , 'Currency retrived Successfully',currencyData);
+                  const response = new CurrencyResponseModel(true, 11101 , 'Currency Retrived Successfully',currencyData);
                   return response;
               }
               else{

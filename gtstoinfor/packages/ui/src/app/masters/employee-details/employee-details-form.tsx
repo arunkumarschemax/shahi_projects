@@ -30,16 +30,16 @@ export const EmployeeDetsilsForm = (props:EmployeeDetailsFormProps) => {
     createdUser= 'admin';
   }
 
-  const dateOfBirth = moment().subtract(18, 'years');
-  const date = dayjs(moment(dateOfBirth).format('YYYY-MM-DD'))
-  console.log(dateOfBirth.format('YYYY-MM-DD'))
+  // const dateOfBirth = moment().subtract(18, 'years');
+  // const date = dayjs(moment(dateOfBirth).format('YYYY-MM-DD'))
+  // console.log(dateOfBirth.format('YYYY-MM-DD'))
 
 
   useEffect(() =>{
     if(props.isUpdate){
       form.setFieldsValue({dateOfBirth:props.employeeData.dateOfBirth})
     }else{
-      form.setFieldsValue({dateOfBirth:date})
+      // form.setFieldsValue({dateOfBirth:date})
     }
 
   },[])
@@ -114,9 +114,9 @@ const getAllDepartments=()=>{
     form.resetFields();
   };
 
-  const disabledDate = (current) => {
-    return current && current > date;
-  };
+  // const disabledDate = (current) => {
+  //   return current && current > date;
+  // };
 
   return (
  <Card title={<span style={{color:'black'}}>Add Employee</span>}
@@ -142,7 +142,7 @@ const getAllDepartments=()=>{
                 message:'Module Is Required'
               }
             ]}>
-          <Input />
+          <Input placeholder='Enter Module' />
         </Form.Item>
         </Col>
          <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}> <Form.Item
@@ -158,7 +158,7 @@ const getAllDepartments=()=>{
                 message: `Should contain only alphabets.`
               }
             ]}>
-          <Input />
+          <Input placeholder='Enter First Name' />
         </Form.Item>
         </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}> <Form.Item
@@ -175,14 +175,14 @@ const getAllDepartments=()=>{
             }
           ]}
         >
-          <Input />
+          <Input placeholder='Enter Last Name' />
         </Form.Item>
         </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}>
            <Form.Item  name="dateOfBirth" label="Date of Birth"
-            rules={[ { required: true, message: 'Please select from DOB' }]}
+            rules={[ { required: true, message: 'Please select  Date of Birth' }]}
                >
-                <DatePicker style={{ width: '95%', }} disabledDate={disabledDate}/>
+                <DatePicker style={{ width: '95%', }} placeholder='Select Date of Birth'/>
                </Form.Item>
            </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}> <Form.Item
@@ -199,7 +199,7 @@ const getAllDepartments=()=>{
             },
           ]}
         >
-          <Input />
+          <Input placeholder='Enter Contact Number' />
           </Form.Item>
           </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}> 
@@ -217,10 +217,10 @@ const getAllDepartments=()=>{
             }
           ]}
         >
-          <Input onChange={alertNativeOnchange}/>
+          <Input onChange={alertNativeOnchange} placeholder='Enter Alternate Number'/>
         </Form.Item>
         </Col>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:5}} style={{margin:'1%'}}> <Form.Item
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}> <Form.Item
           name="emial"
           label="Email"
           rules={[
@@ -233,7 +233,7 @@ const getAllDepartments=()=>{
             }
           ]}
         >
-          <Input />
+          <Input placeholder='Enter Email' />
         </Form.Item>
         </Col>
        
@@ -251,10 +251,10 @@ const getAllDepartments=()=>{
             }
           ]}
         >
-          <Input type='Number'/>
+          <Input type='Number' placeholder='Enter PostalCode'/>
         </Form.Item>
         </Col>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}} style={{margin:'1%'}}> <Form.Item
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}> <Form.Item
           name="address"
           label="Address"
           rules={[
@@ -264,7 +264,7 @@ const getAllDepartments=()=>{
             }
           ]}
         >
-          <Input.TextArea rows={1}/>
+          <Input.TextArea rows={1} placeholder='Enter Address'/>
         </Form.Item>
         </Col>
         <Col
@@ -272,10 +272,11 @@ const getAllDepartments=()=>{
                     sm={{ span: 24 }}
                     md={{ span: 4 }}
                     lg={{ span: 7 }}
-                    xl={{ span: 7 }}
+                    xl={{ span: 4 }}
+                    style={{margin:'1%'}}
                   >
                     <Form.Item
-                      name="deptName"
+                      name="departments"
                       label="Department"
                     >
                        <Select
@@ -299,11 +300,11 @@ const getAllDepartments=()=>{
             <Button type="primary" disabled={disable} htmlType="submit">
               Submit
             </Button>
-            {/* {(props.isUpdate===false) && */}
+            {(props.isUpdate===false) &&
          <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset}>
             Reset
           </Button>
-          {/* } */}
+          }
           </Col>
         </Row>
       </Form>

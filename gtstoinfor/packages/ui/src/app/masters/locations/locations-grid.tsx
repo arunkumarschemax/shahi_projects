@@ -53,7 +53,7 @@ export function LocationsGrid(props: LocationsGridProps) {
  
   const deleteUser = (Data:LocationDto) => {
     Data.isActive=Data.isActive?false:true;
-    service.activatedeActivate(Data).then(res => { console.log(res);
+    service.activatedeActivate(Data).then(res => {
       if (res.status) {
         getAll();
         message.success(res.internalMessage, 2);
@@ -148,6 +148,7 @@ export function LocationsGrid(props: LocationsGridProps) {
   const columnsSkelton: ColumnProps<any>[] = [
     {
       title: 'S No',
+      align:'center',
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
@@ -265,7 +266,7 @@ export function LocationsGrid(props: LocationsGridProps) {
 
   const updateUser = (Data: LocationDto) => {
     Data.updatedUser= JSON.parse(localStorage.getItem('username'))
-      service.update(Data).then(res => { console.log(res);
+      service.update(Data).then(res => { 
         if (res.status) {
           AlertMessages.getSuccessMessage('Updated Successfully');
           getAll();
@@ -285,7 +286,6 @@ export function LocationsGrid(props: LocationsGridProps) {
     setDrawerVisible(false);
   }
   const onChange=(pagination, filters, sorter, extra)=> {
-    console.log('params', pagination, filters, sorter, extra);
   }
 
 
@@ -314,8 +314,9 @@ export function LocationsGrid(props: LocationsGridProps) {
 
           columns={columnsSkelton}
           dataSource={locationData}
-          scroll={{x:true}}
+          scroll = {{x:true,y:500}}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

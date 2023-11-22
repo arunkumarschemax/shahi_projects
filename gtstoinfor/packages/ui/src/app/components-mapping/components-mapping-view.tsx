@@ -150,6 +150,7 @@ export const ComponentMappingView = () => {
                       <Form.Item label='Style' name='styleId'>
                         {/* <Input onChange={(val) => onStyleChange(val)}/> */}
                         <Select
+                        dropdownMatchSelectWidth={false}
                         showSearch
                         allowClear
                         optionFilterProp="children"
@@ -169,6 +170,7 @@ export const ComponentMappingView = () => {
                       <Form.Item label='Garment Category' name='garmentCategoryId'>
                         {/* <Input onChange={onGarmentCategoryChange}/> */}
                         <Select
+                        dropdownMatchSelectWidth={false}
                         showSearch
                         allowClear
                         optionFilterProp="children"
@@ -188,6 +190,7 @@ export const ComponentMappingView = () => {
                       <Form.Item label='Garment' name='garmentId'>
                         {/* <Input onChange={onGarmentChange}/> */}
                         <Select
+                        dropdownMatchSelectWidth={false}
                         showSearch
                         allowClear
                         optionFilterProp="children"
@@ -210,7 +213,7 @@ export const ComponentMappingView = () => {
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 2 }}>
                       <Form.Item>
-                        <Button icon={<UndoOutlined/>} danger onClick={onReset}>Reset</Button>
+                        <Button onClick={onReset}>Reset</Button>
                       </Form.Item>
                     </Col>
                 </Row>

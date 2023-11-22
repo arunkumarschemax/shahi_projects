@@ -24,6 +24,10 @@ export class HierachyLevelService{
           
   try{
       await transactionalEntityManager.startTransaction();
+      const check = await this.hierachyLevelRepository.find({where: {hierarchyName : req.hierarchyName}})
+    if(check.length > 0){
+        return new hierachyLevelModel (false,0,'Hierarchy Name is already exists')
+    }
       const entity = new HierarchyLevel()
       entity.hierarchyName = req.hierarchyName;
       entity.hierarchyLevelId = req.hierarchyLevelId;
@@ -131,7 +135,7 @@ let response=[]
                         { isActive: req.isActive, updatedUser: req.updatedUser });
                     if (Exists.isActive) {
                         if (update.affected) {
-                            const Response: hierachyLevelModel = new hierachyLevelModel(true, 10115, ' Hierarchy Level is de-activated successfully');
+                            const Response: hierachyLevelModel = new hierachyLevelModel(true, 10115, ' Hierarchy Level is Deactivated successfully');
                             return Response;
                         } else {
                             throw new hierachyLevelModel(false,10111, ' Hierarchy Level is already deactivated');

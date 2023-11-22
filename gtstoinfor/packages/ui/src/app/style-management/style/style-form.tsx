@@ -5,7 +5,7 @@ import { LoadingOutlined, MinusCircleOutlined, PlusOutlined, UploadOutlined } fr
 import { Link } from 'react-router-dom';
 import TextArea from 'antd/lib/input/TextArea';
 import { StyleDto } from '@project-management-system/shared-models';
-import { StyleService } from '@project-management-system/shared-services';
+import { LocationsService, ProfitControlHeadService, StyleService } from '@project-management-system/shared-services';
 import { useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
 
@@ -25,6 +25,11 @@ export function StyleForm(props: StyleFormProps) {
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
   const [isUpdateimg, setisUpdateImg]=useState('')
+  const [locationData,setLocationData] = useState<any>([])
+  const [pchData,setPchData] = useState<any>([])
+  
+
+
 
   const [filelist, setfilelist] = useState<any>(props.isUpdate?[{
     name: props.styleData.styleFileName,
@@ -32,6 +37,12 @@ export function StyleForm(props: StyleFormProps) {
     url:props.styleData.styleFileName,
 
   }]:[]);
+
+  const userName = JSON.parse(localStorage.getItem("currentUser")).user.userName;
+  if (userName){
+   form.setFieldsValue({createdUser:userName})
+  }
+
 
   useEffect(() => {
    if(props.styleData){
@@ -42,7 +53,19 @@ export function StyleForm(props: StyleFormProps) {
    }
   }, [])
 
+  useEffect(()=>{
+    getAllActiveLocations();
+    getAllActiveProfitControlHead();
+
+  },[])
+
+  console.log(props.styleData,"dddddddddddd")
+
 const service = new StyleService()
+const locationservice = new LocationsService();
+const Pchservice =new ProfitControlHeadService();
+
+
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -99,6 +122,35 @@ const service = new StyleService()
     setfilelist([]);
 
    }
+   const getAllActiveLocations=() =>{
+    locationservice.getAllActiveLocations().then(res =>{
+    if (res.status){
+      setLocationData(res.data);
+       
+    } else{
+      AlertMessages.getErrorMessage(res.internalMessage);
+       }
+  }).catch(err => {
+    setLocationData([]);
+     AlertMessages.getErrorMessage(err.message);
+   })
+  
+  }
+
+  const getAllActiveProfitControlHead=() =>{
+    Pchservice.getAllActiveProfitControlHead().then(res =>{
+    if (res.status){
+      setPchData(res.data);
+       
+    } else{
+      AlertMessages.getErrorMessage(res.internalMessage);
+       }
+  }).catch(err => {
+    setPchData([]);
+     AlertMessages.getErrorMessage(err.message);
+   })
+  
+}
 
   const saveEmployee = (data: StyleDto) => {
     service.creteStyle(data).then((res) => {
@@ -141,22 +193,22 @@ const service = new StyleService()
   
   return (
     
-    <Card title={props.isUpdate ? 'Update Stle' : 'Add Stle'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/style-management/style/style-grid')} type={'primary'}>View</Button></span>}>
+    <Card title={props.isUpdate ? 'Update Style' : 'Add Style'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/style-management/style/style-grid')} type={'primary'}>View</Button></span>}>
         <Form form={form}
          onFinish={saveData}
           initialValues={props.styleData} layout="vertical">
           <Form.Item name="styleId" style={{ display: "none" }} >
             <Input hidden />
           </Form.Item>
-          <Form.Item style={{ display: "none" }} name="createdUser" initialValue={''}>
+          <Form.Item style={{ display: "none" }} name="createdUser">
             <Input hidden />
           </Form.Item>
          <Row gutter={24}>
          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 14 }}>
-            <Card>
+            {/* <Card style={{width:"100%"}}> */}
             <Row gutter={24}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
-                        <Form.Item name='locationId' label='Location'
+                        {/* <Form.Item name='locationId' label='Location'
                           rules={[
                             {
                               required: true,
@@ -165,10 +217,27 @@ const service = new StyleService()
                           ]}
                         >
                             <Input/>
-                        </Form.Item>
-                </Col>
+                        </Form.Item> */}
+               
+                <Form.Item
+                label="Location"
+                name="locationId"
+                rules={[{ required: true, message: "Location is required" }]}
+              >
+                <Select placeholder=" Select Location" allowClear>
+                  
+                  {locationData.map((rec) => (
+                    <option key={rec.locationId} value={rec.locationId}>
+                      {rec.locationName}
+                     </option>
+                         ))}
+                         
+  
+                  </Select>
+              </Form.Item>
+            </Col> 
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
-                        <Form.Item name='pch' label='PCH'
+                        {/* <Form.Item name='pch' label='PCH'
                          rules={[
                           {
                             required: true,
@@ -176,24 +245,41 @@ const service = new StyleService()
                           }
                         ]}
                         >
-                            <Input/>
-                        </Form.Item>
+                            <Input placeholder=''/>
+                        </Form.Item> */}
+
+              <Form.Item
+                label="PCH"
+                name='profitControlHeadId'
+                rules={[{ required: true, message: "PCH is required" }]}
+              >
+                <Select placeholder=" Select PCH" allowClear>
+                  
+                {pchData.map((rec) => (
+                  <option key={rec.profitControlHeadId} value={rec.profitControlHeadId}>
+                    {rec.profitControlHead}
+                   </option>
+                       ))}
+                       
+
+                </Select>
+              </Form.Item>      
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
                         <Form.Item name='style' label='Style'
                          rules={[
                           {
                             required: true,
-                            message:'Location Is Required'
+                            message:'style Is Required'
                           }
                         ]}
                         >
-                            <Input/>
+                            <Input placeholder='Enter Style'/>
                         </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:12 }}>
                         <Form.Item name='description' label='Description'>
-                            <Input.TextArea rows={1}/>
+                            <Input.TextArea rows={1} placeholder='Enter Description'/>
                         </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:12 }}>
@@ -215,17 +301,18 @@ const service = new StyleService()
             <Button type="primary" htmlType="submit">
               Submit
             </Button>
-            {/* {(props.isUpdate===false) && */}
+            {(props.isUpdate===false) &&
          <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset}>
             Reset
           </Button>
-          {/* } */}
+          }
           </Col>
         </Row>
-            </Card>  
+            {/* </Card>  */}
          </Col>
-         {/* {imageUrl &&
-         (  */}
+      
+
+         {imageUrl ? (
          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 10 }} >
             <Card style={{height:'331px'}}>
                     <Form.Item >
@@ -237,8 +324,8 @@ const service = new StyleService()
                     </Form.Item>        
             </Card>
          </Col>
-        {/* //  )
-        //  } */}
+        ):"" }
+       
         
          </Row>
         </Form>

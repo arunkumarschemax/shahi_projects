@@ -139,13 +139,13 @@ const getColumnSearchPropsss = (dataIndices) => ({
     {
         title: <div style={{ textAlign: 'center' }}>Employee Code</div>,
         dataIndex: "employeeCode",
-        width:'80px',align:'left',
+        width:'120px',align:'left',
         sorter: (a, b) => a.employeeCode.localeCompare(b.employeeCode),
       ...getColumnSearchProps("employeeCode"),
       },
     {
       title: <div style={{ textAlign: 'center' }}>Name</div>,
-      width:'120px',align:'left',
+      width:'160px',align:'left',
       render:(text,record) =>{
         return (
             <span>
@@ -158,8 +158,8 @@ const getColumnSearchPropsss = (dataIndices) => ({
     {
         title: <div style={{ textAlign: 'center' }}>Mobile Number</div>,
         dataIndex: "mobileNumber",
-      width:'90px',align:'left',
-        // sorter: (a, b) => a.mobileNumber.localeCompare(b.mobileNumber),
+        width:'120px',align:'left',
+        sorter: (a, b) => a.mobileNumber.localeCompare(b.mobileNumber),
       },
     //   {
     //     title:<div style={{ textAlign: 'center' }}>Alternate Number</div> ,
@@ -184,16 +184,19 @@ const getColumnSearchPropsss = (dataIndices) => ({
     //   },
       {
         title:  <div style={{ textAlign: 'center' }}>Email</div>,
-        dataIndex: "emial",align:"left",width:120,
-        // sorter: (a, b) => a.address.localeCompare(b.address),
+        dataIndex: "emial",align:"left",width:180,
+        sorter: (a, b) => a.emial.localeCompare(b.emial),
     
       },
       {
         title: <div style={{ textAlign: 'center' }}>Department</div>,
-        dataIndex: "deptName",align:'left',
-        width:90,
-        sorter: (a, b) => a.deptName.localeCompare(b.deptName),
-    ...getColumnSearchProps("deptName")
+        dataIndex: 'Department',
+        render: (department,val) => ( department.deptName),
+        sorter: (a, b) => a.Department.deptName.localeCompare(b.Department.deptName)
+        
+        
+        
+      
       },
     
     {
@@ -317,7 +320,7 @@ const getColumnSearchPropsss = (dataIndices) => ({
   }
 
   const openFormWithData = (viewdata: EmployeeDetailsResponse) => {
-    // console.log(viewdata)
+    console.log(viewdata,"444")
      const date = viewdata.dateOfBirth?dayjs(moment(viewdata.dateOfBirth).format("YYYY-MM-DD")):null
      viewdata.dateOfBirth = dayjs(date)
     // console.log(viewdata.dateOfBirth)
@@ -361,8 +364,11 @@ const getColumnSearchPropsss = (dataIndices) => ({
 
   return (
       <>
-      <Card title='Employees' extra={<span><Button onClick={() => navigate('/global/employee-details/employee-details-form')}
-              type={'primary'}>New</Button></span>}>
+      <Card title='Employees'
+      //  extra={<span><Button onClick={() => navigate('/global/employee-details/employee-details-form')}
+      //         type={'primary'}>New</Button>
+      //         </span>}
+              >
       <Row gutter={40}>
         <Col span={4}></Col>
         <Col span={5}>

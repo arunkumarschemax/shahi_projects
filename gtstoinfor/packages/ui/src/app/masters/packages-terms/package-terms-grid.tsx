@@ -69,9 +69,19 @@ export function PackageTermsGrid() {
         >
           Search
         </Button>
-        <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-          Reset
-        </Button>
+          <Button
+            onClick={() =>{
+              handleReset(clearFilters)
+              setSearchedColumn(dataIndex)
+              confirm({closeDropdown:true})
+            }
+               }
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
+         
       </div>
     ),
     filterIcon: filtered => (
@@ -224,8 +234,8 @@ export function PackageTermsGrid() {
               <Popconfirm onConfirm={e =>{deleteTerm(rowData);}}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate '
-                :  'Are you sure to Activate '
+                ? 'Are you sure to Deactivate this Package Term ?'
+                :  'Are you sure to Activate this Package Term ?'
             }
           >  
              <Switch  size="default"
@@ -246,7 +256,7 @@ export function PackageTermsGrid() {
     Data.updatedUser= JSON.parse(localStorage.getItem('username'))
     service.updatePackageTerms(Data).then(res => { console.log(res,"update");
       if (res.status) {
-        AlertMessages.getSuccessMessage('Updated Successfully');
+        AlertMessages.getSuccessMessage('Package Term Updated Successfully');
         getAll();
         setDrawerVisible(false);
       } else {
@@ -292,7 +302,7 @@ export function PackageTermsGrid() {
           <Alert type='warning' message={'Active: ' + packageTermsData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
         <Col span={5}>
-          <Alert type='info' message={'In-Active: ' + packageTermsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + packageTermsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
           
           </Row> 

@@ -1,5 +1,5 @@
 import { CheckCircleOutlined, CloseCircleOutlined, CloseOutlined, EditOutlined, EyeOutlined, RightSquareOutlined, SearchOutlined } from "@ant-design/icons";
-import { Alert, Button, Card, Col, Divider, Drawer, Form, Input, Popconfirm, Row, Select, Switch, Table, Tag, Tooltip } from "antd"
+import { Alert, Button, Card, Checkbox, Col, Divider, Drawer, Form, Input, Popconfirm, Row, Select, Switch, Table, Tag, Tooltip } from "antd"
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import Highlighter from "react-highlight-words";
@@ -103,41 +103,7 @@ let value = 0
         
           
       })
-      // deliveryTermService.getAllActiveDeliveryTerms().then(res=>{
-      //   if(res.status){
-      //         setDeliveryTerm(res.data)
-      //   }
-      // })
-      // deliveryMethodService.getAllDeliveryMethods().then(res=>{
-      //   if(res.status){
-      //         setDeliveryMethod(res.data)
-      //   }
-      // })
-      // paymentTermsService.getAllActivePaymentTerms().then(res=>{
-      //   if(res.status){
-      //         setPaymentTermsId([res.data]) 
-      //   }
-      // })
-      // packingTermsService.getAllActivePackageTerms().then(res=>{
-      //   if(res.status){
-      //         setPackingTermsId(res.data)
-      //        }
-      // })
-      // paymentMethodService.getAllActiveMethod().then(res=>{
-      //   if(res.status){
-      //         setPaymentMethodId(res.data)
-      //        }
-      // })
-      // warehouseService.getAllActiveWarehouse().then(res=>{
-      //   if(res.status){
-      //         setWareHouseId(res.data)
-      //        }
-      // })
-      // currencyService.getAllActiveCurrencys().then(res=>{
-      //   if(res.status){
-      //         setCurrencyId(res.data)
-      //        }
-      // })
+    
   }
   const onReset = () => {
     form.resetFields();
@@ -218,54 +184,59 @@ let value = 0
 
       const columnsSkelton: any = [
         {
-          title: 'S No',
+          title: <div style={{textAlign:'center'}}>S No</div>,
           key: 'sno',
           responsive: ['sm'],
           render: (text, object, index) => (page - 1) * 10 + (index + 1)
         },
         {
-            title: "CO Type",
+            title: <div style={{textAlign:'center'}}>CO Type</div>,
             dataIndex: "co_type",
             sorter: (a, b) => a.co_type.localeCompare(b.co_type),
           ...getColumnSearchProps("co_type"),
           },
           {
-          title: "Buyer",
+          title: <div style={{textAlign:'center'}}>Buyer</div>,
           dataIndex: "buyer_name",
            render: (data,val) => {
             return val.buyer_name? val.buyer_name : "-";
           }
         },
         {
-            title: "Style",
+            title: <div style={{textAlign:'center'}}>Style</div>,
             dataIndex: "buyer_style",
           },
           {
-            title: "Buyer PO",
+            title: <div style={{textAlign:'center'}}>Buyer PO</div>,
             dataIndex: "buyer_po_number",
+            align:'center',
+
           },
           {
-            title: "Agent",
+            title: <div style={{textAlign:'center'}}>Agent</div>,
             dataIndex: "agent",
             render: (data,val) => {
               return val.agent? val.agent : "-";
             }
           },
           {
-            title: "Facility",
+            title: <div style={{textAlign:'center'}}>Facility</div>,
             dataIndex: "factory",
           },
           {
-            title: "Warehouse",
+            title: <div style={{textAlign:'center'}}>Warehouse</div>,
             dataIndex: "warehouse_name",
          
           },
         {
-          title: 'CO Num',
-          dataIndex: 'co_number',
+          title: <div style={{textAlign:'center'}}>Order Num</div>,
+          dataIndex: 'order_number',
+          align:'center',
+
         },
      {
-        title: "CO Date",
+        title: <div style={{textAlign:'center'}}>CO Date</div>,
+        align:'center',
         dataIndex: "order_date",
         render: (val,data) => {
           return data.order_date ?moment( data.order_date).format('YYYY-MM-DD') : "-";
@@ -273,44 +244,48 @@ let value = 0
       },
       
       {
-        title: "Season",
+        title: <div style={{textAlign:'center'}}>Season</div>,
         dataIndex: "season",
         render: (data,val) => {
           return val.season? val.season : "-";
         }
       },
        {
-          title: 'Order Quantity',
+          title: <div style={{textAlign:'center'}}>Order Quantity</div>,
+          align:'center',
           dataIndex: 'qty',
           render: (data,val) => {
             return val.qty? val.qty : "-";
           }
      },
-     {
-      title: 'Ex-Factory',
-      dataIndex: 'exfactory_date',
-      // render: (val,data) => {
-      //   return data.exfactory_date?moment( data.exfactory_date).format('YYYY-MM-DD') : "-";
-      // }
-      // sorter: (a, b) => a.PiEx_Factory.localeCompare(b.PiEx_Factory),
-  //   ...getColumnSearchProps("PiEx_Factory"),    
-  },
+  //    {
+  //     title: <div style={{textAlign:'center'}}>Ex-Factory</div>,
+  //     dataIndex: 'exfactory_date',
+  //     align:'center',
+  //     // render: (val,data) => {
+  //     //   return data.exfactory_date?moment( data.exfactory_date).format('YYYY-MM-DD') : "-";
+  //     // }
+  //     // sorter: (a, b) => a.PiEx_Factory.localeCompare(b.PiEx_Factory),
+  // //   ...getColumnSearchProps("PiEx_Factory"),    
+  // },
   {
-    title: 'Sales Price',
+    title: <div style={{textAlign:'center'}}>Sales Price</div>,
     dataIndex: 'sale_price',
+    align:'center',
     render: (data,val) => {
       return val.sale_price? val.sale_price : "-";
     }
   },
   {
-    title: 'Quantity(pcs)',
+    title: <div style={{textAlign:'center'}}>Quantity(pcs)</div>,
     dataIndex: 'price_quantity',
+    align:'center',
     render: (data,val) => {
       return val.sale_price? val.sale_price : "-";
     }
   },
   {
-    title: 'Status',
+    title: <div style={{textAlign:'center'}}>Status</div>,
     dataIndex: 'status',
     render: (text) => {
       const EnumObj = CustomerOrderStatusEnumDisplay.find((item) => item.name === text);
@@ -337,11 +312,58 @@ let value = 0
           value:'CONFIRMED'
         }, 
        ],
-      onFilter: (value,record) =>{ return record.status === value}
-
+       onFilter: (value, record) => record.isActive === value,
+       filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+            //  <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+           <> <Row>   <Checkbox
+                 checked={selectedKeys.includes(true)}
+                 onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+               >
+                 <span >OPEN</span>
+               </Checkbox>
+               </Row>
+               <Row>
+               <Checkbox
+                 checked={selectedKeys.includes(false)}
+                 onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+               >
+                 <span style={{color:'red'}}>IN PROGRESS</span>
+               </Checkbox></Row>
+               <Row>   <Checkbox
+                 checked={selectedKeys.includes(true)}
+                 onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+               >
+                 <span >COMPLETED</span>
+               </Checkbox>
+               </Row>
+               <Row>
+               <Checkbox
+                 checked={selectedKeys.includes(false)}
+                 onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+               >
+                 <span >CLOSED</span>
+               </Checkbox></Row>
+               <Row>
+               <Checkbox
+                 checked={selectedKeys.includes(false)}
+                 onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+               >
+                 <span style={{color:'red'}}>CONFIRMED</span>
+               </Checkbox></Row>
+              {/* //  <div className="custom-filter-dropdown-btns" > */}
+               <Button  onClick={() => clearFilters()} className="custom-reset-button">
+                   Reset
+                 </Button>
+                 <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+                   OK
+                 </Button>
+               </>
+              //  </div>
+            //  </div>
+           )
   },
   {
-    title: `Action`,
+    title: <div style={{textAlign:'center'}}>Action</div>,
     dataIndex: 'action',
     render: (text, rowData) => {
       
@@ -371,6 +393,13 @@ let value = 0
     } 
       <Divider type='vertical'/>
       <Button onClick={() => {navigate('/co-line-creation',{state:{id:rowData.co_id}})}}>Create CO Line</Button>
+      <Divider type='vertical'/>
+
+      <span>
+       <Button onClick={() => coDetails(rowData.co_id,rowData.fg_item_id)}>
+          Co Lines
+        </Button>
+      </span>
       </>
       )
     }
@@ -461,7 +490,9 @@ let value = 0
       const details =(coId:number,itemId:number) =>{
         navigate('/order-management/style-order-detail-view',{state :{co_id:coId,fg_item_id:itemId}})
       }
-    
+      const coDetails =(coId:number,itemId:number) =>{
+        navigate('/order-management/co-line-view',{state :{co_id:coId,fg_item_id:itemId}})
+      }
     return (
         <Card title='Style Orders'  extra={<span><Button onClick={() =>  navigate('/order-management/style-order-creation')}
               type={'primary'}>New</Button></span>} >

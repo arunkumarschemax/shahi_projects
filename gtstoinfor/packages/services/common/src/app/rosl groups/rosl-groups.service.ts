@@ -116,17 +116,17 @@ async activateOrDeactivateROSLGroup(req: ROSLGroupsRequest): Promise<ROSLGroupsR
                  
                   if (roslGroupExists.isActive) {
                       if (roslGroupStatus.affected) {
-                          const roslGroupResponse: ROSLGroupsResponseModel = new ROSLGroupsResponseModel(true, 10115, 'rosl Group is de-activated successfully');
+                          const roslGroupResponse: ROSLGroupsResponseModel = new ROSLGroupsResponseModel(true, 10115, 'ROSL Group is Deactivated successfully');
                           return roslGroupResponse;
                       } else {
-                          throw new ROSLGroupsResponseModel(false,10111, 'rosl Group is already deactivated');
+                          throw new ROSLGroupsResponseModel(false,10111, 'rosl Group is already Deactivated');
                       }
                   } else {
                       if (roslGroupStatus.affected) {
-                          const roslGroupResponse: ROSLGroupsResponseModel = new ROSLGroupsResponseModel(true, 10114, 'rosl Group is activated successfully');
+                          const roslGroupResponse: ROSLGroupsResponseModel = new ROSLGroupsResponseModel(true, 10114, 'ROSL Group is Activated successfully');
                           return roslGroupResponse;
                       } else {
-                          throw new ROSLGroupsResponseModel(false,10112, 'rosl Group is already  activated');
+                          throw new ROSLGroupsResponseModel(false,10112, 'rosl Group is already  Activated');
                       }
                   }
           }

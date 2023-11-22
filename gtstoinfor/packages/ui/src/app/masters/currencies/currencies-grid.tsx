@@ -160,26 +160,49 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
       responsive: ['sm'],
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
-    // {
-    //   title: "Currency Name",
-    //   dataIndex: "currencyName",
-    //   sorter: (a, b) => a.source.localeCompare(b.source),
-    //   sortDirections: ["ascend", "descend"],
-    //   ...getColumnSearchProps("currencyName"),
-    // }, 
-     {
-      title: <div style={{textAlign:'center'}}>Currency Name</div>,
+ 
+    //  {
+    //   title: <div style={{textAlign:'center'}}>Currency Name</div>,
+    //   dataIndex: 'currencyName',
+    //   width: '90px',align :'left',
+    //   sorter: (a, b) => a.currencyName.localeCompare(b.currencyName),
+    //   sortDirections: ['ascend', 'descend'],
+    //   ...getColumnSearchProps('currencyName'),
+    //   render: (text, record) => (
+    //     <span>
+    //      <strong>{currencySymbolMapping[record.currencyName]}</strong>  -  {text}
+    //     </span>
+    //   ),
+    // }, this can be used for only concatenated values
+    {
+      title: <div style={{ textAlign: 'center' }}>Currency Symbol</div>,
       dataIndex: 'currencyName',
-      width: '90px',align :'left',
+      width: '90px',
+      align: 'left',
       sorter: (a, b) => a.currencyName.localeCompare(b.currencyName),
       sortDirections: ['ascend', 'descend'],
       ...getColumnSearchProps('currencyName'),
       render: (text, record) => (
         <span>
-         <strong>{currencySymbolMapping[record.currencyName]}</strong>  -  {text}
+          <strong>{currencySymbolMapping[record.currencyName]}</strong>
         </span>
       ),
     },
+    {
+      title: <div style={{ textAlign: 'center' }}>Currency Name</div>,
+      dataIndex: 'currencyName',
+      width: '90px',
+      align: 'left',
+      sorter: (a, b) => a.currencyName.localeCompare(b.currencyName),
+      sortDirections: ['ascend', 'descend'],
+      ...getColumnSearchProps('currencyName'),
+      render: (text, record) => (
+        <span>
+          {text}
+        </span>
+      ),
+    },
+    
     {
       title: 'Status',
       dataIndex: 'isActive', align:'center',
@@ -187,7 +210,7 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
 
       render: (isActive, rowData) => (
         <>
-          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">InActive</Tag>}
         </>
       ),
       filters: [
@@ -427,7 +450,7 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
 
         <Table
         size='small'
-
+        className='custom-table-wrapper'
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}

@@ -173,18 +173,21 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
             key: 'sno',
             width: '70px',
             responsive: ['sm'],
+           align:"center",
             render: (text, object, index) => (page - 1) * 10 + (index + 1) 
         },
         {
           title:<div style={{ textAlign: 'center' }}>Fabric</div> ,
           dataIndex: 'fabricsName',
+          width: '90px',
             sorter: (a, b) => a.fabricsName.localeCompare(b.fabricsName),
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('fabricsName')
         },
         {
           title:<div style={{ textAlign: 'center' }}>Fabric Code</div> ,
-
+          width: '130px',
+          align:"center",
           dataIndex: 'fabricsCode',
           sorter: (a, b) => a.fabricsCode.localeCompare(b.fabricsCode),
           sortDirections: ['descend', 'ascend'],
@@ -200,6 +203,10 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
         {
             title: 'Status',
             dataIndex: 'isActive',
+          width: '120px',
+
+             align:"center",
+
             render: (isActive, rowData) => (
               <>
                 {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -236,6 +243,8 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
           {
             title:`Action`,
             dataIndex: 'action',
+          width: '130px',
+             align:"center",
             render: (text, rowData) => (
               <span>  
                <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
@@ -287,7 +296,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
         </Col>
         <Col span={5}>
           {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
-          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
 </Row>
 <br></br>
@@ -299,13 +308,13 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
                 // rowKey={record => record.variantId}
                 columns={columnsSkelton}
                 dataSource={variantData}
-                pagination={{
-                  pageSize:50,
-                  onChange(current) {
-                    setPage(current);
-                  }
-                }}
-                scroll={{x:true}}
+                scroll={{x:true,y:500}}
+           pagination={{
+            pageSize:50,
+            onChange(current) {
+              setPage(current);
+            }
+          }}
                 onChange={onChange}
                 bordered />
           </Card>

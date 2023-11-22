@@ -348,8 +348,8 @@ const getAllActiveDivision=() =>{
               <Popconfirm onConfirm={e =>{deleteTerm(rowData);}}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate '
-                :  'Are you sure to Activate '
+                ? 'Are you sure to Deactivate this Group Tech Class ?'
+                :  'Are you sure to Activate this Group Tech Class ?'
             }
           >  
              <Switch  size="default"
@@ -370,7 +370,7 @@ const getAllActiveDivision=() =>{
     Data.updatedUser= JSON.parse(localStorage.getItem('username'))
     service.updateGroupTechClass(Data).then(res => { console.log(res);
       if (res.status) {
-        AlertMessages.getSuccessMessage('Updated Successfully');
+        AlertMessages.getSuccessMessage('Group Tech Class Updated Successfully');
         getAll();
         setDrawerVisible(false);
       } else {
@@ -420,7 +420,7 @@ const getAllActiveDivision=() =>{
           <Alert type='warning' message={'Active: ' + groupTechClassData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
         <Col span={5}>
-          <Alert type='info' message={'In-Active: ' + groupTechClassData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + groupTechClassData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
           </Row> 
           <br></br>

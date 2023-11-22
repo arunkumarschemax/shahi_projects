@@ -19,13 +19,14 @@ import {
   ProductGroupService,
   ProfitControlHeadService,
   RmCreationService,
+  SettingsService,
   TaxesService,
   UomService,
 } from "@project-management-system/shared-services";
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import TextArea from "antd/es/input/TextArea";
-import { IsImportedItemEnum, ItemGroupEnum, PropertyEnum, SaleItemEnum } from "@project-management-system/shared-models";
+import { IsImportedItemEnum, ItemGroupEnum, PropertyEnum, SaleItemEnum, SettingsIdReq } from "@project-management-system/shared-models";
 import { Link, useNavigate } from "react-router-dom";
 import { object } from "prop-types";
 
@@ -78,6 +79,8 @@ const deliveryTermsService= new DeliveryTermsService()
 const fabricfinishservice = new  FabricFinishTypeService
 const operationservice = new OperationsService();
 let navigate = useNavigate();
+const service = new SettingsService()
+  const externalRefNo = JSON.parse(localStorage.getItem("currentUser")).user.externalRefNo;
 
 useEffect(() => {
     getAllCurrencies();
@@ -98,7 +101,32 @@ useEffect(() => {
     getAllFabricFinish();
     getAllBusinessArea();
     getAllOperations();
+    getAllInfo();
   }, []);
+
+  const getAllInfo = () => {
+    const req = new SettingsIdReq()
+    req.externalRefNumber = externalRefNo
+    service.getAllSettingsInfo(req).then(res => {
+        if(res.status){
+            // setData(res.data)
+// form.setFieldValue('salesPersonId',res.data?.[0]?.salesPersonId)                     
+form.setFieldValue('facilityID',res.data?.[0]?.facilityId)
+form.setFieldValue('pchId',res.data?.[0]?.pchId)  
+form.setFieldValue('currencyId',res.data?.[0]?.currencyId) 
+form.setFieldValue('responsibleId',res.data?.[0]?.itemResponsibleId)   
+form.setFieldValue('licenseId',res.data?.[0]?.licencetypeId)
+form.setFieldValue('deliveryTerms',res.data?.[0]?.deliveryTerms)  
+form.setFieldValue('deliveryMethod',res.data?.[0]?.deliveryMethodId)  
+
+
+
+
+
+
+        }
+    })
+}
 
   const getAllCurrencies = () => {
     currencyServices
@@ -386,6 +414,7 @@ useEffect(() => {
   }
 
   const onPriceChange = () => {
+    console.log(form.getFieldValue('tax'))
     if(form.getFieldValue('tax') != undefined){
       calculateTotal()
     }
@@ -405,11 +434,12 @@ rmservice.createRm(values).then((res)=>{
   // console.log(res.data,"PPPPPPPPPP");
 
   if(res.status){
-    AlertMessages.getSuccessMessage(res.internalMessage)
+    AlertMessages.getSuccessMessage("Fabric Item Created Sucessfully")
     onReset()
     navigate('/materialCreation/rm-creation-view')
   }
   else{
+    
     AlertMessages.getWarningMessage(res.internalMessage)
   }
 })
@@ -683,7 +713,7 @@ rmservice.createRm(values).then((res)=>{
               <Row gutter={8}>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                 
-                  <Form.Item
+                  {/* <Form.Item
                     name="responsibleId"
                     label="Responsible"
                     rules={[{ required: true, message: "Enter Responsible" }]}
@@ -697,7 +727,21 @@ rmservice.createRm(values).then((res)=>{
                             )
                           })}                       
                         </Select>
-                                       </Form.Item>
+                                       </Form.Item> */}
+                                        <Form.Item label="Responsible" name="responsibleId"
+                                        rules={[{ required: true, message: "Enter Responsible" }]}
+                                        >
+                    <Select placeholder="Select Responsible" allowClear>
+                      {employedata.map((rec) => (
+                        <option
+                          key={rec.employeeId}
+                          value={rec.employeeId}
+                        >
+                          {rec.firstName}
+                        </option>
+                      ))}
+                    </Select>
+                  </Form.Item>
                 </Col>
                 
                 {/* </Row>
@@ -707,7 +751,19 @@ rmservice.createRm(values).then((res)=>{
                     name="devResponsible"
                     label="Development Responsible"
                   >
-                                       <Input placeholder="Development Responsible" allowClear />
+                <Select
+                          placeholder="Select Development Responsible"
+                          allowClear
+                        >
+                          
+                      {employedata.map((e)=>{
+                        return(
+                          <Option key={e.employeeId} values={e.employeeId}>{e.firstName}
+
+                          </Option>
+                        )
+                      })}
+                        </Select>
 
                   </Form.Item>
                 </Col>
@@ -717,7 +773,7 @@ rmservice.createRm(values).then((res)=>{
                     label="Sourcing Merchant"
                     name="sourcingMerchant"
                   >
-                    <Input placeholder="Sourcing Merchan" allowClear />
+                    <Input placeholder="Sourcing Merchant" allowClear />
                   </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -918,7 +974,7 @@ rmservice.createRm(values).then((res)=>{
 
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                   <Form.Item label="Multiplication Factor" name="multiplicationFactor">
-                    <Input placeholder="Factor" allowClear />
+                    <Input placeholder="Multiplication Factor" allowClear />
                   </Form.Item>
                 </Col>
                 </Row>
@@ -1054,18 +1110,26 @@ placeholder='select saleItem' allowClear>
                   <Form.Item
                     label="Price"
                     name="price"
-                    rules={[{ required: true, message: "Enter Price" }]}
+                    rules={[{ required: true, message: "Enter Price" },
+                    { 
+                      pattern: /^[0-9]+$/, 
+                      message: "Please Enter numbers only" 
+                    },]}
                   >
                     <Input placeholder="Price" allowClear onChange={onPriceChange}/>
                   </Form.Item>
                 </Col>
                 <span style={{ fontSize: "24px", lineHeight: "70px" }}>+</span>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                    <Form.Item label="Tax" name="tax">
+                    <Form.Item label="Tax(%)" name="tax"
+                    rules={[{ required: true, message: "Tax% is required" }]}
+
+                    >
                         <Select
                         placeholder="Select Tax"
                         onChange={handleTaxChange}
                         defaultValue="0"
+                        allowClear
                         >
                             {tax.map((e)=>(
                                 <Option key={e.taxId} value={e.taxId}>
@@ -1119,16 +1183,16 @@ placeholder='select saleItem' allowClear>
                 </Col>
                
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                  <Form.Item
+                  {/* <Form.Item
                     label="Delivery Terms"
                     name="deliveryTerms"
                     rules={[{ required: true, message: "Enter Delivery Terms" }]}
 
                   >
-                                         <Select
+                  <Select
                     allowClear
                     optionFilterProp="children"
-                    placeholder="Select facility"
+                    placeholder="Select Delivery Terms"
                     >
 
                      {Deliveryterms.map((e)=>{
@@ -1139,10 +1203,23 @@ placeholder='select saleItem' allowClear>
                             )
                           })}         
                                             </Select>
-           </Form.Item>
+           </Form.Item> */}
+                 <Form.Item
+                    label="Delivery Terms"
+                    name="deliveryTerms"
+                    rules={[{ required: true, message: "Select the Delivery Terms" }]}
+                  >
+                    <Select placeholder="Select Delivery Terms" allowClear>
+                      {Deliveryterms.map((rec) => (
+                        <option key={rec.deliveryTermsId} value={rec.deliveryTermsId}>
+                          {rec.deliveryTermsName}
+                        </option>
+                      ))}
+                    </Select>
+                  </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                  <Form.Item
+                  {/* <Form.Item
                     label="Delivery Method"
                     name="deliveryMethod"
                     rules={[{ required: true, message: "Enter Delivery Method" }]}
@@ -1151,7 +1228,7 @@ placeholder='select saleItem' allowClear>
                                          <Select
                     allowClear
                     optionFilterProp="children"
-                    placeholder="Select facility"
+                    placeholder="Select Delivery Method"
                     >
 
                  {DeliveryMethod.map((e)=>{
@@ -1162,7 +1239,27 @@ placeholder='select saleItem' allowClear>
                             )
                           })}           
                                             </Select>
-         </Form.Item>
+         </Form.Item> */}
+
+                  <Form.Item
+                    label="Delivery Method"
+                    name="deliveryMethod"
+                    rules={[{ required: true, message: "Enter Delivery Method" }]}
+                  >
+                    <Select
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                    placeholder="Select Delivery Method"
+                    >
+                      {DeliveryMethod.map((e)=>{
+                      return(<Option key={e.deliveryMethodId} value={e.deliveryMethodId}>
+                          {e.deliveryMethod}
+                      </Option>)
+                    })}
+                    </Select>
+                  </Form.Item>
+         
                 </Col>
                 </Row>
                 <Row gutter={8}>

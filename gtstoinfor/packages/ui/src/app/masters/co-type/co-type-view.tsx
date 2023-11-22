@@ -19,6 +19,7 @@ export const CoTypeView = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [drawerVisible, setDrawerVisible] = useState(false);
     const [selectedData, setSelectedData] = useState<any>(undefined);
+    const [pageSize, setPageSize] = useState<number>(1);
 
 
 
@@ -146,10 +147,11 @@ export const CoTypeView = () => {
 
     const columns: ColumnProps<any>[] = [
         {
-            title: 'S No',
+            title: <div style={{textAlign:'center'}}>S No</div>,
             key: 'sno',
             width: '70px',
             responsive: ['sm'],
+            align:'center',
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
         {
@@ -162,6 +164,7 @@ export const CoTypeView = () => {
         {
             title:<div style={{textAlign:'center'}}>Status</div>,
             dataIndex: 'isActive',
+            align:'center',
             render: (isActive, rowData) => (
               <>
                 {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -174,7 +177,7 @@ export const CoTypeView = () => {
                 value: true,
               },
               {
-                text: 'InActive',
+                text: 'Inactive',
                 value: false,
               },
             ],
@@ -211,6 +214,7 @@ export const CoTypeView = () => {
           {
             title:<div style={{textAlign:'center'}}>Action</div>,
             dataIndex: 'action',
+            align:'center',
             render: (text, rowData) => (
               <span>   
                   <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
@@ -228,8 +232,8 @@ export const CoTypeView = () => {
                   <Popconfirm onConfirm={e =>{deleteCoType(rowData);}}
                   title={
                     rowData.isActive
-                      ? 'Are you sure to Deactivate Co Type ?'
-                      :  'Are you sure to Activate Co Type ?'
+                      ? 'Are you sure to Deactivate this Co Type ?'
+                      :  'Are you sure to Activate this Co Type ?'
                   }
                 >
                   <Switch  size="default"
@@ -269,14 +273,22 @@ export const CoTypeView = () => {
           <Alert type='warning' message={'Active: ' + data.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
-          <Alert type='info' message={'In-Active: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
             </Row>
             <br></br>
             <div style={{overflowX :'auto' }}>
 
-            <Table columns={columns}
-                    dataSource={data} size='small' bordered/>
+            <Table columns={columns} 
+            scroll={{x:true,y:500}}
+            pagination={{
+             pageSize:50,
+             onChange(current) {
+               setPage(current);
+             }
+           }}
+        
+            dataSource={data} size='small' bordered/>
             </div>
             <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>

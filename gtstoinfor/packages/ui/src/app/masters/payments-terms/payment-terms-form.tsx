@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Select,Card, Row, Col } from 'antd';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { PaymentTermsDto } from '@project-management-system/shared-models';
+import { PaymentTermsCategory, PaymentTermsDto } from '@project-management-system/shared-models';
 import { PaymentTermsService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
 
@@ -106,10 +106,13 @@ export function PaymentTermsForm(props:PaymentTermsFormProps) {
           ]}
         >
          <Select placeholder="Select Category" 
-         //style={{ width: 200}} 
+         //style={{ width: 200}} PaymentTermsCategory
          >
-          <Option value="Customer">Customer</Option>
-          <Option value="Buyer">Buyer</Option>
+          {/* <Option value="Customer">Customer</Option>
+          <Option value="Buyer">Buyer</Option> */}
+           {Object.values(PaymentTermsCategory).map((key,value)=>{
+                       return <Option key={key} value={key}>{key}</Option>
+                        })}
           
         </Select>
         </Form.Item>
@@ -138,11 +141,11 @@ export function PaymentTermsForm(props:PaymentTermsFormProps) {
             <Button type="primary" disabled={disable} htmlType="submit" >
             Submit
           </Button>
-          {/* {(props.isUpdate === false) && */}
+          {(props.isUpdate === false) &&
      <Button htmlType="button" style={{ margin: '0 8px' }} onClick={onReset}>
             Reset
           </Button>
-           {/* }  */}
+           } 
          
           </Col>
           

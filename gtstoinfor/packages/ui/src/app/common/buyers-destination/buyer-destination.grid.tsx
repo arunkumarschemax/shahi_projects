@@ -1,6 +1,6 @@
 import { BgColorsOutlined, EnvironmentOutlined, SearchOutlined, SkinOutlined, UndoOutlined } from "@ant-design/icons"
 import { BuyerExtrnalRefIdReq, BuyerIdReq, BuyersDestinationRequest, MenusAndScopesEnum } from "@project-management-system/shared-models"
-import { BuyerDestinationService, BuyersService, DestinationService, SizeService } from "@project-management-system/shared-services"
+import { BuyerDestinationService, BuyersService, ColourService, DestinationService, SizeService } from "@project-management-system/shared-services"
 import { Button, Row, Col, Select, Table,Form, Modal, Divider } from "antd"
 import Card from "antd/es/card/Card"
 import form from "antd/es/form"
@@ -19,6 +19,8 @@ const [page, setPage] = useState<number>(1);
 const sizeService = new SizeService()
 const desService = new DestinationService()
 const service = new BuyerDestinationService()
+const colorService = new ColourService()
+
 const [sizeModalVisible, setSizeModalVisible] = useState(false);
 const [destinationModalVisible, setDestinationModalVisible] = useState(false);
 const [colorModalVisible, setColorModalVisible] = useState(false);
@@ -37,8 +39,8 @@ const [userId, setUserId] = useState([]);
 let userRef
     useEffect(()=>{
       getBuyers();
-        getData();
-        Login()
+      getData();
+      Login()
     },[])
     
 const Login = () =>{
@@ -51,7 +53,6 @@ const Login = () =>{
       setUserId(res.data)
       setLoginBuyer(res.data.buyerId)
       if(req.extrnalRefId != undefined){
-        console.log(req.extrnalRefId,'ssssssssss');
         
       form.setFieldsValue({'buyer': res.data.buyerId})
       }
@@ -65,10 +66,8 @@ const Login = () =>{
   getBuyers();
   getSizes();
   getDestinations();
+  getColors()
 }
-console.log(loginBuyer,'buyer');
-console.log(userId,'buyer');
-
     const getSizes = ()=>{
         sizeService.getAllActiveSize().then(res=>{
             if(res.status){
@@ -89,14 +88,22 @@ console.log(userId,'buyer');
             }
         })
     }
+    const getColors = ()=>{
+      colorService.getAllActiveColour().then(res=>{
+          if(res.status){
+              setColors(res.data)
+          }
+          else{
+              setColors([])
+          }
+      })
+  }
     const getBuyers = () => {
         //   const loginId = new BuyerIdReq(loginBuyer)
         // buyerService.getAllActiveBuyers().then((res) => {
-        //   console.log(res.data,'000000000');
 
         //     if (res.status) {
         //         setBuyers(res.data);
-        //         console.log(res.data,'000000000');
 
         //     }
         // });
@@ -118,13 +125,15 @@ console.log(userId,'buyer');
     }
     const openSizeModal = (val) => {
         setSizeModalVisible(true);
-        setModalData(sizes); // Set the sizes data here
+        setModalData(sizes); 
         setSize(val.size)
       };
       
       const openDestinationModal = (val) => {
+        
         setDestinationModalVisible(true);
-        setModalData(destinations); // Set the destinations data here
+        setModalData(destinations); 
+        
         setDestination(val.destination)
       };
       
@@ -143,7 +152,7 @@ const columns: ColumnProps<any>[]  = [
         render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-        title:'Buyers',
+        title:<div style={{textAlign:'center'}}>Buyers</div>,
         dataIndex:'buyerName',
         // render:(text,val) =>{
         //     return (val.buyerInfo.buyerName)
@@ -151,7 +160,7 @@ const columns: ColumnProps<any>[]  = [
     },
     //
     {
-        title: 'Mapped',
+        title: <div style={{textAlign:'center'}}>Mapped</div>,
         render: (text, val) => (
           <>
             <Row>
@@ -264,13 +273,13 @@ initialValue={userId.length > 0 ? userId[0].buyerName : ""}
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 2 }} >
                       <Form.Item>
-                        <Button icon={<UndoOutlined/>} danger onClick={onReset}>Reset</Button>
+                        <Button icon={<UndoOutlined/>}  onClick={onReset}>Reset</Button>
                       </Form.Item>
                     </Col>
                 </Row>
 
             </Form>
-            <Table columns={columns} 
+            <Table columns={columns} pagination={{pageSize:50}} scroll = {{x:true,y:500}}
                     dataSource={data} size="small" bordered />
             <Modal
       visible={sizeModalVisible}
@@ -304,7 +313,7 @@ initialValue={userId.length > 0 ? userId[0].buyerName : ""}
     >
         <ul>
     {color.map(item => (
-      <li key={item.colourId}>{item.color}</li>
+      <li key={item.colourId}>{item.colour}</li>
     ))}
   </ul>
     </Modal>

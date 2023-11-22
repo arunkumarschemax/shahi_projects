@@ -54,7 +54,7 @@ versionFlag: number;
 
 
 
-@ManyToOne(()=> Division, division=>division.ItemType)
+@ManyToOne(()=> Division, division=>division.itemTypes)
 @JoinColumn({name:'division_id'})
 division:Division;
 
@@ -63,3 +63,4 @@ division:Division;
 @JoinColumn({name:'product_group_id'})
   productGroup: ProductGroup;
 }
+

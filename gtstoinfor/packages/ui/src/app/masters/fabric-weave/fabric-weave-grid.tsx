@@ -33,7 +33,6 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
   const getAllFabricWeave = () => {
     Service.getAllFabricWeave().then(res => {
       if (res.status) {
-        console.log(res,'llllll')
         setData(res.data);
       } else {
         if (res.data) {
@@ -56,7 +55,8 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
     data.isActive = data.isActive?false:true;
     Service.activateOrDeactivateFabricWeave(data).then(res => {
       if (res.status) {
-        message.success(res.internalMessage,2); 
+        message.success(res.internalMessage,2);
+        getAllFabricWeave() 
       } else {
           message.error(res.internalMessage,2);
       }
@@ -74,8 +74,8 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
       Service.updateFabricWeave(data).then(res => {
         if (res.status) {
           message.success('Updated Successfully',2);
-          getAllFabricWeave();
           setDrawerVisible(false);
+          getAllFabricWeave();
         } else {
             message.error(res.internalMessage,2);
         }
@@ -177,6 +177,7 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
     {
       title: 'S No',
       key: 'sno',
+      align:'center',
       width: '70px',
       responsive: ['sm'],
       render: (text, object, index) => (page-1) * 10 +(index+1)
@@ -301,7 +302,6 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
    * @param extra 
    */
   const onChange=(pagination, filters, sorter, extra)=> {
-    console.log('params', pagination, filters, sorter, extra);
   }
   return (
     <Card title="Fabric Weave"
@@ -333,8 +333,9 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
           rowKey={record => record.fabricWeaveId}
           columns={columnsSkelton}
           dataSource={data}
-          scroll={{x:true}}
+          scroll = {{x:true,y:500}}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }

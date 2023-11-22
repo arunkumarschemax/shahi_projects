@@ -191,10 +191,10 @@ export function BuyersForm(props: BuyersFormProps) {
                   {
                     required: true, message: 'Missing Buyer Name'
                   },
-                  {
-                    pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
-                    message: `Should contain only alphabets.`
-                  }
+                  // {
+                  //   pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                  //   message: `Should contain only alphabets.`
+                  // }
                 ]}
               >
                 <Input placeholder='Enter Buyer Name'/>
@@ -210,7 +210,7 @@ export function BuyersForm(props: BuyersFormProps) {
                   },
                   {
                     pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
-                    message: `Don't Allow Spaces`
+                    message: `Invalid Contact Person`
                   }
                 ]}
               >
@@ -304,7 +304,8 @@ export function BuyersForm(props: BuyersFormProps) {
                 label="Payment Terms"
                 rules={[
                   {
-                    required: false,
+                    required: true,
+                    message:'Missing Payment terms'
                   },
                 ]}
               >
@@ -340,7 +341,7 @@ export function BuyersForm(props: BuyersFormProps) {
                 label="Payment Method"
                 rules={[
                   {
-                    required: true, message: 'Missing payment mode',
+                    required: true, message: 'Missing payment method',
                   },
                 ]}
               >

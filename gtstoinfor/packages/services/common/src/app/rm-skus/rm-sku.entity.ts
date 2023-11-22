@@ -1,5 +1,6 @@
 import { RmItemTypeEnum, RmStatusEnum } from "@project-management-system/shared-models";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { FeatureSubstitution } from "../substituion/feature-substituion.entity";
 
 @Entity('rm_skus')
 export class RmSkus {
@@ -13,12 +14,11 @@ export class RmSkus {
   })
   rmItemId : number
 
-  @Column('enum',{
+  @Column('varchar',{
     name:'item_type',
-    enum:RmItemTypeEnum,
     nullable: false
   })
-  itemType : RmItemTypeEnum
+  itemType : string
 
   @Column('varchar',{
     name:'rm_sku_code',
@@ -109,5 +109,8 @@ updatedUser: string | null;
     name: "version_flag"
 })
 versionFlag: number;
+
+  @OneToMany(type=>FeatureSubstitution, item=>item.rmSkuInfo,{cascade: true})
+  featureSubstitutionInfo:FeatureSubstitution;
 
 }

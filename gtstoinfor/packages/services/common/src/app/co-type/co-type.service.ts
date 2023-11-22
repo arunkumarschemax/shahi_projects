@@ -28,7 +28,7 @@ export class CoTypeService {
             }
             const save = await this.repo.save(entity)
             const convertedData = new CoTypeModel(save.coTypeId,save.coType,save.isActive,save.versionFlag)
-            return new CoTypeResponseModel(true,1,'Saved succesfully',[convertedData])
+            return new CoTypeResponseModel(true,1,isUpdate ? 'Co Type Updated successfully' : 'Co Type Saved successfully',[convertedData])
 
         } catch(err){
             throw err
@@ -67,17 +67,17 @@ export class CoTypeService {
 
                 if (coTypeExists.isActive) {
                     if (coTypeStatus.affected) {
-                        const busAreaResponse: CoTypeResponseModel = new CoTypeResponseModel(true, 10115, 'Co Type is de-activated successfully');
+                        const busAreaResponse: CoTypeResponseModel = new CoTypeResponseModel(true, 10115, 'Co Type is Deactivated successfully');
                         return busAreaResponse;
                     } else {
-                        return new CoTypeResponseModel(false,10111, 'Co Type is already deactivated');
+                        return new CoTypeResponseModel(false,10111, 'Co Type is already Deactivated');
                     }
                 } else {
                     if (coTypeStatus.affected) {
-                        const busAreaResponse: CoTypeResponseModel = new CoTypeResponseModel(true, 10114, 'Co Type is activated successfully');
+                        const busAreaResponse: CoTypeResponseModel = new CoTypeResponseModel(true, 10114, 'Co Type is Activated successfully');
                         return busAreaResponse;
                     } else {
-                        return new CoTypeResponseModel(false,10112, 'Co Type is already activated');
+                        return new CoTypeResponseModel(false,10112, 'Co Type is already Activated');
                     }
                 }
                 // }

@@ -75,17 +75,17 @@ export class BusinessAreaService {
 
                     if (busAreaExists.isActive) {
                         if (busAreaStatus.affected) {
-                            const busAreaResponse: BusinessAreaResponseModel = new BusinessAreaResponseModel(true, 10115, 'Business Area is de-activated successfully');
+                            const busAreaResponse: BusinessAreaResponseModel = new BusinessAreaResponseModel(true, 10115, 'Business Area is Deactivated successfully');
                             return busAreaResponse;
                         } else {
-                            return new BusinessAreaResponseModel(false,10111, 'Business Area is already deactivated');
+                            return new BusinessAreaResponseModel(false,10111, 'Business Area is already Deactivated');
                         }
                     } else {
                         if (busAreaStatus.affected) {
-                            const busAreaResponse: BusinessAreaResponseModel = new BusinessAreaResponseModel(true, 10114, 'Business Area is activated successfully');
+                            const busAreaResponse: BusinessAreaResponseModel = new BusinessAreaResponseModel(true, 10114, 'Business Area is Activated successfully');
                             return busAreaResponse;
                         } else {
-                            return new BusinessAreaResponseModel(false,10112, 'Business Area is already activated');
+                            return new BusinessAreaResponseModel(false,10112, 'Business Area is already Activated');
                         }
                     }
                     // }

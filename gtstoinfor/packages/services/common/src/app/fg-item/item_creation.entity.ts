@@ -2,6 +2,7 @@ import { PropertyEnum, SubContractStatus } from "@project-management-system/shar
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn, PrimaryGeneratedColumn } from "typeorm";
 import { StyleOrder } from "../style-order/style-order.entity";
 import { ItemSkus } from "../sku-generation/sku-generation.entity";
+import { FeatureSubstitution } from "../substituion/feature-substituion.entity";
 
 @Entity('fg_item')
 export class 
@@ -50,6 +51,13 @@ ItemCreation {
     name: "category_id" /// foregn key
   })
   categoryId: number;
+
+  @Column("varchar",{
+    nullable: true,
+    length: 255,
+    name: "category",
+  })
+  category: string;
 
   @Column("int", {
     nullable: true,
@@ -372,5 +380,8 @@ property:PropertyEnum;
   
   @OneToMany(type=>ItemSkus, item=>item.fgitemInfo,{cascade: true})
   itemSkuInfo:ItemSkus;
+
+  @OneToMany(type=>FeatureSubstitution, item=>item.fgItemInfo,{cascade: true})
+  featureSubstitutionInfo:FeatureSubstitution;
 
 }

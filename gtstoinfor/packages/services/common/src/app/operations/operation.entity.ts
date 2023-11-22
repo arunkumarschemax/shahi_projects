@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { OperationGroups } from "../operation-groups/operation-groups.entity";
 import { OperationSequence } from "../operation-sequence/operation-sequence.entity";
+import { OperationTypeEnum } from "@project-management-system/shared-models";
 
 @Entity('operations')
 export class Operations {
@@ -21,6 +22,15 @@ export class Operations {
     name:"operation_name"
     })
   operationName:string;
+
+  
+  @Column('enum',{
+    name:'operation_type',
+    enum:OperationTypeEnum,
+    nullable:false
+})
+operationType : OperationTypeEnum
+
   
   @Column("boolean",{
     nullable:false,

@@ -172,17 +172,17 @@ export class ColourService{
                        
                         if (profitExists.isActive) {
                             if (ProfitStatus.affected) {
-                                const ProfitResponse: ColourResponseModel = new ColourResponseModel(true, 10115, 'Colour  is de-activated successfully');
+                                const ProfitResponse: ColourResponseModel = new ColourResponseModel(true, 10115, 'Colour  is Deactivated Successfully');
                                 return ProfitResponse;
                             } else {
                                 throw new ColourResponseModel(false,10111, 'Colour  is already deactivated');
                             }
                         } else {
                             if (ProfitStatus.affected) {
-                                const ProfitResponse: ColourResponseModel = new ColourResponseModel(true, 10114, 'Colour   is activated successfully');
+                                const ProfitResponse: ColourResponseModel = new ColourResponseModel(true, 10114, 'Colour   is Activated Successfully');
                                 return ProfitResponse;
                             } else {
-                                throw new ColourResponseModel(false,10112, 'Colour  is already  activated');
+                                throw new ColourResponseModel(false,10112, 'Colour  is already  Activated');
                             }
                         }
                     // }

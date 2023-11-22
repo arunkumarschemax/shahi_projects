@@ -49,7 +49,6 @@ export function OperationsGrid(
 
   const updateOperation = (operationData: OperationsDTO) => {
     operationsService.updateOperations(operationData).then(res => {
-      console.log(res);
       if (res.status) {
         getAllOperationsData();
         setDrawerVisible(false);
@@ -171,13 +170,12 @@ export function OperationsGrid(
   const openFormWithData = (viewData: OperationsDTO) => {
     setDrawerVisible(true);
     setSelectedOperation(viewData);
-    console.log(selectedOperation)
-    console.log('selectedOperation')
   }
 
   const columnsSkelton: ColumnProps<any>[] = [
     {
       title: 'S No',
+      align:'center',
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
@@ -216,17 +214,7 @@ export function OperationsGrid(
 
         </>
       ),
-      // filters: [
-      //   {
-      //     text: 'Active',
-      //     value: true,
-      //   },
-      //   {
-      //     text: 'InActive',
-      //     value: false,
-      //   },
-      // ],
-      filterMultiple: false,
+     filterMultiple: false,
       onFilter: (value, record) => record.isActive === value,
       filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
             <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
@@ -254,6 +242,43 @@ export function OperationsGrid(
             </div>
           ),
 
+    },
+    {
+      title: <div style={{textAlign:'center'}}>Operation Type</div>,
+      dataIndex: "operationType",
+      
+      onFilter: (value, record) => record.operationType === value,
+      
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+            <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+              <Row>
+              <Checkbox
+                checked={selectedKeys.includes('INTERNAL')}
+                onChange={() => setSelectedKeys(selectedKeys.includes('INTERNAL') ? [] : ['INTERNAL'])}
+              >
+                <span >INTERNAL</span>
+              </Checkbox>
+              </Row>
+              <Row>
+              <Checkbox
+                checked={selectedKeys.includes('EXTERNAL')}
+                onChange={() => setSelectedKeys(selectedKeys.includes('EXTERNAL') ? [] : ['EXTERNAL'])}
+              >
+                <span >EXTERNAL</span>
+              </Checkbox>
+              </Row>
+              
+              <div className="custom-filter-dropdown-btns" >
+              <Button  onClick={() => clearFilters()} className="custom-reset-button">
+                  Reset
+                </Button>
+                <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+                  OK
+                </Button>
+              
+              </div>
+            </div>
+          ),
     },
 
     {
@@ -301,7 +326,6 @@ export function OperationsGrid(
 * @param extra 
 */
   const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
   }
 
   return (
@@ -337,11 +361,12 @@ export function OperationsGrid(
         columns={columnsSkelton}
         dataSource={operationsData}
         pagination={{
+          pageSize:50,
           onChange(current) {
             setPage(current);
           }
         }}
-        scroll={{ x: true }}
+        scroll = {{x:true,y:500}}
         onChange={onChange}
         bordered />
       <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}

@@ -63,7 +63,7 @@ export function CustomGroupForm(props: CustomGroupFormProps) {
       <Input hidden/>
     </Form.Item>
     <Row>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}}>
               <Form.Item
                   name="customGroup"
                   label="Custom Group"
@@ -78,7 +78,7 @@ export function CustomGroupForm(props: CustomGroupFormProps) {
                       message: `Should contain only alphabets and numbers.`
                     }
                   ]}>
-                  <Input placeholder='Enter Custom Group'/>
+                  <Input placeholder='Enter Custom Group' allowClear/>
                 </Form.Item>
         </Col>
       </Row>

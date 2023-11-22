@@ -65,57 +65,7 @@ export class MasterBrandsService {
         return error;
       }
     }
-    // async createMasterBrand(masterBrandsDto: BrandsDTO, isUpdate: boolean): Promise<MasterBrandsResponseModel> {
-    //     console.log(masterBrandsDto,'nnnnnh');
-        
-    //     try {
-    //       let previousValue
-    //       // to check whether State exists with the passed  State code or not. if isUpdate is false, a check will be done whether a record with the passed Statecode is existing or not. if a record exists then a return message wil be send with out saving the data.  if record is not existing with the passed State code then a new record will be created. if isUpdate is true, then no check will be performed and  record will be updated(if record exists with the passed cluster code) or created.
-    //       if (!isUpdate) {
-    //         const masterBrandsEntity = await this.getMasterBrandWithoutRelations(masterBrandsDto.brandName);
-    //         if (masterBrandsEntity) {
-    //           //return new InformationMessageError(11104, "State already exists");
-    //           throw new MasterBrandsResponseModel(false,11104, 'Brand already exists');
-    //         }
-    //       }
-    //       else{
-    //         const certificatePrevious = await this.masterBrandsRepository.findOne({where:{brandId:masterBrandsDto.brandId}})
-    //         previousValue = certificatePrevious.brandName
-    //         const masterBrandsEntity = await this.getMasterBrandWithoutRelations(masterBrandsDto.brandName);
-    //         if (masterBrandsEntity) {
-    //           if(masterBrandsEntity.brandId!=masterBrandsDto.brandId) {
-    //             throw new MasterBrandsResponseModel(false,11104, 'Brand already exists');      
-    //           }
-    //         }
-    //       }
-    //       const convertedBrandEntity: Brands = this.masterBrandsAdapter.convertDtoToEntity(masterBrandsDto,isUpdate);
-    //       const savedCurrencyEntity: Brands = await this.masterBrandsRepository.save(
-    //         convertedBrandEntity
-    //       );
-    //       const savedBrandsDto: BrandsDTO = this.masterBrandsAdapter.convertEntityToDto(convertedBrandEntity);
-    //         // console.log(savedStateDto);
-    //       if (savedBrandsDto) {
-    //         const presentValue = savedBrandsDto.brandName;
-    //        // generating resposnse
-    //        const response = new MasterBrandsResponseModel(true,1,isUpdate? 'Brand Updated Successfully': 'Brand Created Successfully');
-    //        const name=isUpdate?'updated':'created'
-    //        const displayValue = isUpdate? 'Brand Updated Successfully': 'Brand Created Successfully'
-    //        const userName = isUpdate? savedBrandsDto.updatedUser :savedBrandsDto.createdUser;
-    //       //  const newLogDto = new LogsDto(1,name, 'Currencies', savedBrandsDto.currencyId, true, displayValue,userName,previousValue,presentValue)
-    //       //  let res = await this.logService.createLog(newLogDto);
-    //       //  console.log(res);
-    //        return response
-    //       } else {
-    //         //return new InformationMessageError(11106, "State saved but issue while transforming into DTO");
-    //         throw new MasterBrandsResponseModel(false,11106,'Brand saved but issue while transforming into DTO');
-    //       }
-    //     } catch (error) {
-    //       // when error occures while saving the data , the execution will come to catch block.
-    //       // tslint:disable-next-line: typedef
-    //       return  new MasterBrandsResponseModel(false,11108,'Brand is not created due to invalid file');
-    //     }
-    //   }  
-  
+   
       async getAllBrands(req?:UserRequestDto): Promise<AllBrandsResponseModel> {
         // const page: number = 1;
         try {
@@ -130,6 +80,7 @@ export class MasterBrandsService {
                 CurrencyEntity
               );
               BrandsDtos.push(convertedCurrenciesDto);
+              
             });
             const response = new AllBrandsResponseModel(true,1,'Brands retrieved successfully',BrandsDtos);
             // if(req?.createdUser){
@@ -163,7 +114,7 @@ export class MasterBrandsService {
                       countriesEntity
                     );
                     masterBrandsDto.push(convertedBrandsDtos);
-                });
+                                    });
                 const response = new AllBrandsResponseModel(true, 11108, "Brands retrieved successfully", masterBrandsDto);
                 return response;
             } else {
@@ -188,7 +139,7 @@ export class MasterBrandsService {
                     { isActive: brandReq.isActive, updatedUser: brandReq.updatedUser });
                 if (brandExists.isActive) {
                     if (brandStatus.affected) {
-                        const brandResponse: MasterBrandsResponseModel = new MasterBrandsResponseModel(true, 10115, 'Brand is de-activated successfully');
+                        const brandResponse: MasterBrandsResponseModel = new MasterBrandsResponseModel(true, 10115, 'Brand is Deactivated successfully');
                         return brandResponse;
                     } else {
                         throw new MasterBrandsResponseModel(false,10111, 'Brand is already deactivated');

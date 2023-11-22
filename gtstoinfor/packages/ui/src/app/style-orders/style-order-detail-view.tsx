@@ -98,49 +98,52 @@ let val =0
 
   const columnsSkelton: any = [
     {
-      title: "S No",
+      title: <div style={{textAlign:'center'}}>S No</div>,
       key: "sno",
       responsive: ["sm"],
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
-      title: "Size",
+      title: <div style={{textAlign:'center'}}>Size</div>,
       dataIndex: "size",
     },
     {
-      title: "Color",
+      title: <div style={{textAlign:'center'}}>Color</div>,
       dataIndex: "color",
     },
     {
-      title: "Destination",
+      title: <div style={{textAlign:'center'}}>Destination</div>,
       dataIndex: "destination",
     },
     {
-      title: "FOB",
+      title: <div style={{textAlign:'center'}}>FOB</div>,
       dataIndex: "sale_price",
+      align:'center',
+
     },
     {
-      title: "Qty",
+      title: <div style={{textAlign:'center'}}>Qty</div>,
       dataIndex: "order_quantity",
+      align:'center',
     render:(data,val) =>{
        return( <span>{val.order_quantity}-{val.uom}</span>)
     }
     },
-    {
-      title: "CO Line Number",
-      dataIndex: "coline_number",
-      //   sorter: (a, b) => a.coNum.localeCompare(b.coNum),
-      // ...getColumnSearchProps("coNum"),
-    },
+    // {
+    //   title: <div style={{textAlign:'center'}}>CO Line Number</div>,
+    //   dataIndex: "coline_number",
+    //   //   sorter: (a, b) => a.coNum.localeCompare(b.coNum),
+    //   // ...getColumnSearchProps("coNum"),
+    // },
 
+    // {
+    //   title: <div style={{textAlign:'center'}}>Status</div>,
+    //   dataIndex: "status",
+    //   //   sorter: (a, b) => a.coNum.localeCompare(b.coNum),
+    //   // ...getColumnSearchProps("coNum"),
+    // },
     {
-      title: "Status",
-      dataIndex: "status",
-      //   sorter: (a, b) => a.coNum.localeCompare(b.coNum),
-      // ...getColumnSearchProps("coNum"),
-    },
-    {
-      title: `Action`,
+      title: <div style={{textAlign:'center'}}>Action</div>,
       dataIndex: 'action',
       render: (text, rowData) => (
         <>
@@ -175,7 +178,7 @@ let val =0
       <Descriptions>
         <Descriptions.Item
           children={detailsData?.[0]?.co_number}
-          label={"CO Number"}
+          label={"Order Number"}
           labelStyle={{
             color: "black",
             fontStyle: "italic",

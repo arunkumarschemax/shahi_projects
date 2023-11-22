@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Alert, Checkbox } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/lib/table';
@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { CustomGroupsDto } from '@project-management-system/shared-models';
 import { CustomGroupsService } from '@project-management-system/shared-services';
 import { CustomGroupForm } from './custom-groups-form';
+import AlertMessages from '../../common/common-functions/alert-messages';
 
 
 export interface CustomGroupProps {}
@@ -37,9 +38,10 @@ export function CustomGroupsGrid(props: CustomGroupProps) {
       } else {
         if (res.data) {
           setCustomGroupsData([]);
-            message.error(res.internalMessage,2);
+          ;
         } else {
-         message.error(res.internalMessage,2);
+          AlertMessages.getErrorMessage(res.internalMessage);
+
         }
       }
     }).catch(err => {
@@ -55,9 +57,10 @@ export function CustomGroupsGrid(props: CustomGroupProps) {
     data.isActive = data.isActive?false:true;
     Service.activateOrDeactivateCustomGroup(data).then(res => {
       if (res.status) {
-        message.success('Success',2); 
+        AlertMessages.getSuccessMessage(res.internalMessage); 
       } else {
-          message.error(res.internalMessage,2);
+        AlertMessages.getErrorMessage(res.internalMessage);
+
       }
     }).catch(err => {
       message.error(err.message,2);
@@ -177,6 +180,8 @@ export function CustomGroupsGrid(props: CustomGroupProps) {
       title: 'S No',
       key: 'sno',
       width: '70px',
+      align:"center",
+
       responsive: ['sm'],
       render: (text, object, index) => (page-1) * 10 +(index+1)
     },
@@ -197,22 +202,49 @@ export function CustomGroupsGrid(props: CustomGroupProps) {
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
         </>
       ),
+      // filterMultiple: false,
+      // onFilter: (value, record) => 
+      // {
+      //   // === is not work
+      //   return record.isActive === value;
+      // },
+      // filters: [
+      //   {
+      //     text: 'Active',
+      //     value: true,
+      //   },
+      //   {
+      //     text: 'InActive',
+      //     value: false,
+      //   },
+      // ],
       filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-        // === is not work
-        return record.isActive === value;
-      },
-      filters: [
-        {
-          text: 'Active',
-          value: true,
-        },
-        {
-          text: 'InActive',
-          value: false,
-        },
-      ],
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{color:'green'}}>Active</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{color:'red'}}>Inactive</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns" >
+          <Button  onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          
+          </div>
+        </div>
+      ),
 
     },
     {
@@ -266,7 +298,7 @@ export function CustomGroupsGrid(props: CustomGroupProps) {
   return (
     <Card title="Custom Groups" extra={<span><Button onClick={()=> navigate('/masters/custom-groups/custom-groups-form')} type={'primary'}>New</Button></span>}>
    
-     <br></br>
+     {/* <br></br>
      <Row gutter={40}>
       
         <Col>
@@ -279,21 +311,42 @@ export function CustomGroupsGrid(props: CustomGroupProps) {
           <Card title={'In-Active: ' + customGroupsData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
           </Row>
+          <br></br> */}
+           <br></br>
+      <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+        
+           <Alert type='success' message={'Total Custom Groups: ' + customGroupsData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + customGroupsData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + customGroupsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
           <br></br>
+          <Card>
           <Table
           size='small'
 
           rowKey={record => record.customGroupId}
           columns={columnsSkelton}
           dataSource={customGroupsData}
-          scroll={{x:true}}
-          pagination={{
+          scroll={{x:true,y:500}}
+           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }
           }}
           onChange={onChange}
           bordered />
+          </Card>
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>
               <CustomGroupForm key={Date.now()}

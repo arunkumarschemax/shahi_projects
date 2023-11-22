@@ -52,7 +52,6 @@ export function HierarchyLevelGrid(
 
   const updateHierarchyLevel = (req:HierarchyLevelRequest) => {
     hierarchyLevelService.updatehierachyLevel(req).then(res => {
-        console.log(res);
         if(res.status){
           getAllHierarchyLevelData();
           setDrawerVisible(false);
@@ -67,7 +66,7 @@ export function HierarchyLevelGrid(
     }
   const deleteHierarchyLevel = (HierarchyLevelData: HierarchyLevelRequest) => {
     HierarchyLevelData.isActive = HierarchyLevelData.isActive? false : true;
-    hierarchyLevelService.activateOrDeactivatehierachyLevel(HierarchyLevelData).then(res => {console.log(res);
+    hierarchyLevelService.activateOrDeactivatehierachyLevel(HierarchyLevelData).then(res => {
     if(res.status){
       getAllHierarchyLevelData();
       AlertMessages.getSuccessMessage(res.internalMessage);
@@ -177,7 +176,8 @@ export function HierarchyLevelGrid(
     const columnsSkelton: ColumnProps<any>[] = [
       {
         title: 'S No',
-      key: 'sno',
+        align:'center',
+     key: 'sno',
       width: '70px',
       responsive: ['sm'],
       render: (text, object, index) => (page-1) * 10 +(index+1)
@@ -312,7 +312,6 @@ export function HierarchyLevelGrid(
    * @param extra 
    */
   const onChange=(pagination, filters, sorter, extra)=> {
-    console.log('params', pagination, filters, sorter, extra);
   } 
 
   return (
@@ -345,11 +344,12 @@ size='small'
           columns={columnsSkelton}
           dataSource={HierarchyLevelData}
           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }
           }}
-          scroll={{x:true}}
+          scroll = {{x:true,y:500}}
           onChange={onChange}
           bordered />
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}

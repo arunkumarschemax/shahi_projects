@@ -1,13 +1,21 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, FgDataModel, RmDataModel, SubResponseModel, SubstituionModel, SubstituionReq, fgItemIdReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, FeatureSubstituionReq, FgDataModel, FgItemCodeReq, RmDataModel, RmMappingStatusEnum, SubResponseModel, SubstituionModel, SubstituionReq, fgItemIdReq } from "@project-management-system/shared-models";
 import { SubstitutionRepository } from "./substitution-repo";
 import { Substitution } from "./substituion.entity";
 import { FgItemBom } from "./fg-item-bom.entity";
 import { GenericTransactionManager } from "../../typeorm-transactions";
-import { DataSource } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 import { FGItemBomRepository } from "./fg-item-bom-repo";
 import { SubstituionRequest } from "./substitution-req";
+import { FeatureSubstitution } from "./feature-substituion.entity";
+import { ItemCreation } from "../fg-item/item_creation.entity";
+import { RmCreationEntity } from "../rm-items/rm-items.entity";
+import { FeatureEntity } from "../feature-creation/entities/feature.entity";
 import { Rm } from "packages/libs/shared-models/src/common/substituion/rm-sku.req";
+import { InjectRepository } from "@nestjs/typeorm";
+import { FeatureSubstitutionRepository } from "./feature-substitution-repo";
+import { RmSkus } from "../rm-skus/rm-sku.entity";
+import { ItemSkus } from "../sku-generation/sku-generation.entity";
 
 @Injectable()
 
@@ -16,6 +24,9 @@ export class SubstituionService{
         private substitutionrepo:SubstitutionRepository,
         private fgItemBomRepo:FGItemBomRepository,
         private readonly dataSource: DataSource,
+        // @InjectRepository(FeatureSubstitution)
+        // private featureSubstitutionRepo: Repository<FeatureSubstitution>
+        private featureSubstitutionRepo : FeatureSubstitutionRepository,
     ){}
     async createSubstitution(req:SubstituionRequest):Promise<CommonResponseModel>{
         const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
@@ -35,9 +46,7 @@ export class SubstituionService{
                     obj.rmSkuId = rmRec.rmSkuId;
                     obj.fgSkuId = rec.fgSkuId;
                     const savedata = await transactionalEntityManager.getRepository(Substitution).save(obj)
-                    console.log(savedata,'savedatalll')
                     if(savedata){
-                        console.log('yesss')
                         const fgBomobj = new FgItemBom;
                         fgBomobj.rmItemId = rmRec.rmItemId;
                         fgBomobj.rmItemCode = rmRec.rmItemCode;
@@ -52,7 +61,13 @@ export class SubstituionService{
                         // fgBomobj.rmItemType = rmRec.rmItemType
                         const fgBomSave = await transactionalEntityManager.getRepository(FgItemBom).save(fgBomobj)
                         if(fgBomSave){
+                          const rmMappingStatusUpdate = await transactionalEntityManager.getRepository(ItemSkus).update({skuCode : rec.fgSkuCode},{rmMappingStatus : RmMappingStatusEnum.YES})
+                          if(rmMappingStatusUpdate.affected){
                             saveFlag.add(true)
+                          } else{
+                            saveFlag.add(false)
+                            break
+                          }
                         }else{
                             saveFlag.add(false)
                             break
@@ -63,9 +78,7 @@ export class SubstituionService{
                     }
                 }
             }
-            console.log(saveFlag)
             if(!(saveFlag.has(false))){
-                console.log('innnn')
                 await transactionalEntityManager.completeTransaction()
                 return new CommonResponseModel(true,1,'Substitution done successfully')
             }else{
@@ -161,23 +174,28 @@ export class SubstituionService{
             DataMap.set(res.fgItemId, new FgDataModel(res.fgItemCode, res.fgItemId, []));
           }
     
-          // Assuming that FgDataModel has an rmData property
           const Fgsku = DataMap.get(res.fgItemId)?.rmData;
     
           if (Fgsku) {
-            const rmData = new RmDataModel(res.fgSkuId, res.fgSkuCode, []);
+            
+            const existingRmData = Fgsku.find((rmData) => rmData.fgSkuId === res.fgSkuId);
     
-            // Assuming RmDataModel has an rmDetails property
-            rmData.rmDetails.push(new Rm(res.rmSku, res.rmSkuId));
-            Fgsku.push(rmData);
-          }
-          console.log(Fgsku,'[[[[[[[[');
+            if (!existingRmData) {
+              const rmData = new RmDataModel(res.fgSku, res.fgSkuId, []);
+              rmData.rmDetails.push(new Rm(res.rmSku, res.rmSkuId, res.rmItemId, res.itemType, res.rmSkuCode, res.featureCode, res.status, res.rmItemCode, res.featureOptionId, res.optionGroup, res.optionId, res.optionValue,res.consumption));
+              Fgsku.push(rmData);
+            }
+            else {
+              // Check for duplicate rmSkuId before adding
+              const isDuplicateRmSkuId = existingRmData.rmDetails.some((rmDetail) => rmDetail.rmSkuId === res.rmSkuId);
           
+              if (!isDuplicateRmSkuId) {
+                existingRmData.rmDetails.push(new Rm(res.rmSku, res.rmSkuId, res.rmItemId, res.itemType, res.rmSkuCode, res.featureCode, res.status, res.rmItemCode, res.featureOptionId, res.optionGroup, res.optionId, res.optionValue,res.consumption));
+              }}
+          }
         }
     
-        // Convert the Map values to an array
         let ListArray: FgDataModel[] = Array.from(DataMap.values());
-        console.log(ListArray, 'service............');
     
         if (data.length > 0) {
           return new SubResponseModel(true, 1, 'data retrieved', ListArray);
@@ -267,7 +285,68 @@ export class SubstituionService{
       } catch(err){
         throw err
       }
-
-      
     }  
+
+    async createFeatureSubstitution(req: FeatureSubstituionReq):Promise<CommonResponseModel>{
+      const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
+      try{
+        await transactionalEntityManager.startTransaction();
+        let saveFlag = new Set<boolean>()
+        for(const rec of req.rmInfo){
+          const entity = new FeatureSubstitution()
+          entity.fgItemCode = req.fgItemCode
+          const fgItem = new ItemCreation()
+          fgItem.fgitemId = req.fgItemId
+          entity.fgItemInfo = fgItem
+          entity.rmItemCode = rec.rmItemCode
+          const rmItem = new RmCreationEntity()
+          rmItem.rmitemId = rec.rmItemId
+          entity.rmItemInfo = rmItem
+          const rmSkus = new RmSkus()
+          rmSkus.rmSkuId = rec.rmSkuId
+          entity.rmSkuInfo = rmSkus
+          entity.rmSkuCode = rec.rmSkuCode
+          entity.featureCode = rec.featureCode
+          const feature = new FeatureEntity()
+          feature.featureId = rec.featureId
+          entity.featureInfo = feature
+          entity.fgOption = rec.fgOption
+          entity.fgOptionValue = rec.fgOptionValue
+          entity.rmOption = rec.rmOption
+          entity.rmOptionValue = rec.rmOptionValue
+          entity.status = rec.status
+          const savedata = await transactionalEntityManager.getRepository(FeatureSubstitution).save(entity)
+          if(savedata){
+            saveFlag.add(true)
+          } else{
+            saveFlag.add(false)
+            break
+          }
+        }
+        if(!(saveFlag.has(false))){
+          await transactionalEntityManager.completeTransaction()
+          return new CommonResponseModel(true,1,'Feature Substitution done successfully')
+        }else{
+            await transactionalEntityManager.releaseTransaction()
+            return new CommonResponseModel(false,0,'Feature Substitution Creation Failed')
+        }
+      }catch(err){
+        await transactionalEntityManager.releaseTransaction()
+        throw err
+      }
+    }
+
+    async getFeatureSubstitutionByFgItem(req:FgItemCodeReq):Promise<CommonResponseModel>{
+      try{
+        const data = await this.featureSubstitutionRepo.find({where:{fgItemCode:req.fgItemCode},relations:['rmItemInfo','fgItemInfo','featureInfo','rmSkuInfo']})
+        if(data){
+          return new CommonResponseModel(true,1,'Data retrieved',data)
+        } else{
+          return new CommonResponseModel(false,0,'No data found')
+        }
+
+      }catch(err){
+        throw err
+      }
+    }
 }

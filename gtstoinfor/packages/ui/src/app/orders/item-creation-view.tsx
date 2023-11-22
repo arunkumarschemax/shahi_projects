@@ -252,6 +252,17 @@ const cancelOrder =(val:any) =>{
             sortDirections: ['descend', 'ascend'],
       },
       {
+        title: "Item Code",
+        dataIndex: "item_code",
+        width:80,
+        align:'center',
+        render: (data) => {
+          return data ? data : "-";
+        },
+        sorter: (a, b) => a.item_code.localeCompare(b.item_code),
+            sortDirections: ['descend', 'ascend'],
+      },
+      {
         title: "Item Name",
         dataIndex: "item_name",
         width:100,
@@ -311,13 +322,13 @@ const cancelOrder =(val:any) =>{
       // },
       {
         title: "Item Group",
-        dataIndex: "item_group",width:70,align:'center',
+        dataIndex: "itemGroup",width:70,align:'center',
         render: (data) => {
           return data ? data : "-";
         },
         sorter: (a, b) => {
-          const itemA = a.item_group || ""; 
-          const itemB = b.item_group || "";
+          const itemA = a.itemGroup || ""; 
+          const itemB = b.itemGroup || "";
       
           return itemA.localeCompare(itemB);
         },        sortDirections: ['descend', 'ascend'],

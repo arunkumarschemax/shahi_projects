@@ -1,9 +1,10 @@
 import { FgItemCodeReq, MappedInfo, SKUlistFilterRequest, SubstituionReq, mappedRmSKU } from "@project-management-system/shared-models";
 import { DivisionService, ItemCreationService, SKUGenerationService, StyleService, ProductStructureService, SubstitutionService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Row, Select, Table, Tag } from "antd"
+import { Button, Card, Col, Descriptions, Form, Row, Select, Table, Tag } from "antd"
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useNavigate } from "react-router-dom";
+import DescriptionsItem from "antd/es/descriptions/Item";
 
 const {Option} = Select;
 
@@ -28,6 +29,9 @@ export const Substitution = () => {
     const [form] = Form.useForm()
     const service = new SubstitutionService()
     const navigate = useNavigate()
+    const substitutionService = new SubstitutionService()
+    const [totalRmSkus,setTotalRmSkus] = useState<any[]>([])
+    const [unmappedRmSkus,setUnmappedRmSkus] = useState<any[]>([])
     
 
     useEffect(() => {
@@ -45,23 +49,65 @@ export const Substitution = () => {
     const onFgItemChange = (val,option) => {
         setFgItemId(option?.key)
         const req = new SKUlistFilterRequest(option?.key,val)
-        fgSKuService.getSkuList(req).then(res => {
-            if(res.status){
-                setFgSkus(res.data)
+        const rmskureq = new FgItemCodeReq(val)
+        fgSKuService.getSkuList(req).then(res1 => {
+            if(res1.status){
+                setFgSkus(res1.data)
             }
         })
-          const rmskureq = new FgItemCodeReq(val)
-          rmSkuService.getAllInfoByItemCode(rmskureq).then(res => {
-            if(res.status){
-                setRmSKus(res.data)
+
+        rmSkuService.getAllInfoByItemCode(rmskureq).then(res => {
+        if(res.status){
+            setTotalRmSkus(res.data)
+            
+        }
+        })
+
+        substitutionService.getFeatureSubstitutionByFgItem(rmskureq).then(rmres => {
+            if(rmres.status){
+                setRmSKus(rmres.data)
             }
-          })
-        
+        })
     }
+
+    const getDifference = (array1, array2) => {
+        return array1.filter(
+            object1 => !array2.some(
+              object2 => object1.rmSkuCode === object2.rmSkuCode
+            ),
+          );
+      }
+
+    useEffect(() => {
+        let defaultRmSkus = []
+        fgSkus.map(rec => {
+            let mappedrmsku = []
+            const filteredrmskus = rmSkus.filter(e => e.rmOptionValue === rec.color || e.rmOptionValue === rec.size || e.rmOptionValue === rec.destination)
+            for(const rmrec of filteredrmskus){
+                mappedrmsku.push(new mappedRmSKU(rmrec.rmItemCode,rmrec.rmItemInfo.rmitemId,rmrec.rmSkuInfo.rmSkuId,rmrec.rmSkuCode,null,null))
+            }
+            const fgsku = new MappedInfo(rec.sku_code,rec.item_sku_id,mappedrmsku)
+            defaultRmSkus.push(fgsku)
+        })
+        setSelectedRmSKus(defaultRmSkus)
+        if(totalRmSkus.length > 0){
+            const diff = getDifference(totalRmSkus,rmSkus)
+            setUnmappedRmSkus(diff)
+        }
+
+    },[rmSkus])
+
+    // const diff = () => {
+    //     return totalRmSkus.filter(object1 => {
+    //      return !rmSkus.some(object2 => {
+    //        return object1.id === object2.id;
+    //      });
+    // });}
 
     const handleRmSkusDragStart = (event: React.DragEvent<HTMLDivElement>, rmsku: any) => {
         // selectedRmSKuObject.push(rmsku)
-        selectedRmSKuObject.push(new mappedRmSKU(rmsku.rm_item_code,rmsku.rm_item_id,rmsku.rm_sku_id,rmsku.rm_sku_code,rmsku.consumption,rmsku.item_type))
+        selectedRmSKuObject.push(new mappedRmSKU(rmsku.rmItemCode,rmsku.rmItemId,rmsku.rmSkuId,rmsku.rmSkuCode,rmsku.consumption,rmsku.itemType))
+        console.log(selectedRmSKuObject)
         // setSelectedFgSkuObject(rmsku)
         // setSelectedRmSKus([...selectedRmSKus,selectedRmSKuObject[0]])
     //   const index =  rmSkus.findIndex(e => {return e.rm_sku_code === rmsku.rm_sku_code})
@@ -174,35 +220,35 @@ export const Substitution = () => {
 
     const rmSkuColumns: any = [
         {
-            dataIndex:'rm_item_code',
+            dataIndex:'rmItemCode',
             title:'Rm Item Code'
         },
         {
-            dataIndex:'item_type',
+            dataIndex:'itemType',
             title:'Item Type'
         },
         {
-            dataIndex:'rm_sku_code',
+            dataIndex:'rmSkuCode',
             title:'Rm Sku Code'
         },
         {
-            dataIndex:'rm_item_code',
+            dataIndex:'rmItemCode',
             title:'Rm Item Code'
         },
         {
-            dataIndex:'feature_code',
+            dataIndex:'featureCode',
             title:'Feature Code'
         },
         {
-            dataIndex:'feature_name',
+            dataIndex:'featureName',
             title:'Feature Name'
         },
         {
-            dataIndex:'option_group',
+            dataIndex:'optionGroup',
             title:'Option Group'
         },
         {
-            dataIndex:'option_value',
+            dataIndex:'optionValue',
             title:'Option Value'
         },
     ]
@@ -221,66 +267,89 @@ export const Substitution = () => {
             }
         })
     }
-
+    ``
     const onReset = () => {
         form.resetFields()
         setSelectedRmSKus([])
         setFgSkus([])
         setRmSKus([])
+        setTotalRmSkus([])
     }
 
     return(
-        <Card title='Substituion' size='small' extra={<span><Button type='primary' onClick={() => {navigate('/product-structure/substitution-view')}}>View</Button></span>}>
+        <Card title='Substitution' extra={<span><Button type='primary' onClick={() => {navigate('/product-structure/substitution-view')}}>View</Button></span>}>
             <Form form={form}>
                 <Row gutter={24}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 5 }}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item name='fgItemCode' label='FG Item Code' rules={[{required:true,message:'FG Item Code is required'}]}>
                     <Select placeholder='Select FG Item Code' showSearch allowClear optionFilterProp="children" onChange={onFgItemChange}>
                         {
                             fgItems.map((e) => {
                                 return(
-                                    <Option key={e.fgitemId} value={e.itemCode}>{e.itemCode}-{e.itemCode}</Option>
+                                    <Option key={e.fgitemId} value={e.itemCode}>{e.itemCode}-{e.itemName}</Option>
                                 )
                             })
                         }
                     </Select>
                 </Form.Item>
                 </Col>
+                {
+                    totalRmSkus.length > 0 ? (<>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+                        <Descriptions>
+                            <DescriptionsItem label={<b style={{color:'green',height:'20px'}}>Style</b>}>{totalRmSkus[0].style_no}</DescriptionsItem>
+                        </Descriptions>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+                    <Descriptions>
+                        <DescriptionsItem label={<b style={{color:'green',height:'20px'}}>Internal Style</b>}>{`${totalRmSkus[0].style}-${totalRmSkus[0].description}`}</DescriptionsItem>
+                    </Descriptions>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+                    <Descriptions>
+                        <DescriptionsItem label={<b style={{color:'green',height:'20px'}}>Item Type</b>}>{totalRmSkus[0].fgItemType}</DescriptionsItem>
+                    </Descriptions>
+                    </Col>
+                    </>)
+                     : (<></>)
+                }
                 </Row>
             </Form>
-            {
+            {/* {
                 fgSkus.length > 0 ? (<>
                     <b>FG SKUS</b>
                     <Table columns={fgSkuColumns} dataSource={fgSkus} size='small' pagination={false}/>
                 </>) : (<></>)
-            }
+            } */}
             {
                 rmSkus.length > 0 ? (<>
                   <b>RM SKUS</b>
-                <Table columns={rmSkuColumns} dataSource={rmSkus} size='small'/>
+                <Table columns={rmSkuColumns} dataSource={totalRmSkus} size='small' pagination={false}/>
                 </>) : (<></>)
             }
             {
-                rmSkus.length > 0 ? (<>
+                unmappedRmSkus.length > 0 ? (<>
                      <Row gutter={24}>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 24 }}>
-                <Card title='RM SKUS'
+                <Card title='UnMapped RM SKUS'
                 onDragOver={handleDragOver}
                 onDrop={handleAvailableDrop}
+                size='small'
+                headStyle={{backgroundColor:'#70a9a1'}}
                 >
                 <Row gutter={8}>
-                {rmSkus?.map((e,index) => (
+                {unmappedRmSkus?.map((e,index) => (
                         <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
                     <Card
                     size='small'
-                    style={{ background: '#f7c78d', marginBottom: '10px',height:'35px'}}
+                    style={{ background: '#e4f0d0', marginBottom: '10px',height:'35px'}}
                     draggable
                     onDragStart={(event) => handleRmSkusDragStart(event, e)}
                     onDragEnd={handleRmDragEnd}
                     onDrop={handleDrop}
                     >
                         <span style={{ wordWrap: 'break-word' }}>
-                            <li style={{ color: 'black',textAlign:'center'}}>{e.rm_sku_code}</li>
+                            <li style={{ color: 'black',textAlign:'center'}}><b>{e.rmSkuCode}</b></li>
                         </span>
                     </Card>
                         </Col>
@@ -294,29 +363,33 @@ export const Substitution = () => {
             }
             <br></br>
        
+            {fgSkus.length > 0 ? <b>FG SKUS</b> : ''}
             <Row gutter={8}>
                 {
                     fgSkus.map(rec => {
                         return(
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 5 }}>
-                                <Card title={`FG SKU:${rec.sku_code}`}
+                                <Card title={`${rec.sku_code} (${rec.color}/${rec.size}/${rec.destination})`}
+                                size='small'
+                                headStyle={{backgroundColor:'#70a9a1'}}
                                 onDragOver={handleDragOver}
                                 onDrop={(event) => handleFGDrop(event,rec.sku_code,rec.item_sku_id)}
                                 >
                                     {
                                         selectedRmSKus?.map((rmskuList,index) => (
+                                            
                                             rmskuList.fgSkuCode === rec.sku_code ? (<>
                                             {
                                                    rmskuList.mappedRmSKuList.map((rmsku) => (
                                                     <>
                                                     <Card
                                                     size='small'
-                                                    style={{ background: '#f7c78d', marginBottom: '10px',height:'35px' }}
+                                                    style={{ background: '#e4f0d0', marginBottom: '10px',height:'35px' }}
                                                     draggable
                                                     onDragStart={(event) => handleAssignedRmSkusDragStart(event, rmsku,rec.sku_code)}
                                                     >
                                                         <span style={{ wordWrap: 'break-word' }}>
-                                                            <li style={{ color: 'black',textAlign:'center' }}>{rmsku.rmSKuCode}</li>
+                                                            <li style={{ color: 'black',textAlign:'center' }}><b>{rmsku.rmSKuCode}</b></li>
                                                         </span>
                                                     </Card>
                                                     </>

@@ -8,6 +8,7 @@ import { ProductStructureService } from "./product-structure.services";
 import { SMVEfficiencyRepository } from "./repository/smv-efficency.repository";
 import { FgRmMappingEntity } from "./fg-rm-mapping.entity";
 import { FgRmMappingRepository } from "./repository/fg-rm-mapping.repo";
+import { SKUGenerationService } from "@project-management-system/shared-services";
 
 
 
@@ -16,6 +17,6 @@ import { FgRmMappingRepository } from "./repository/fg-rm-mapping.repo";
     TypeOrmModule.forFeature([SMVEfficiencyEntity,FgRmMappingEntity],),
     ],
     controllers: [ProductStructureController],
-    providers: [ProductStructureService,SMVEfficiencyRepository,FgRmMappingRepository,ApplicationExceptionHandler]
+    providers: [ProductStructureService,SMVEfficiencyRepository,FgRmMappingRepository,ApplicationExceptionHandler,SKUGenerationService]
   }) 
   export class ProductStructureModule {}

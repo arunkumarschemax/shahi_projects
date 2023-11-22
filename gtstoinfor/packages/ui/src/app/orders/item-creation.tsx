@@ -2,10 +2,11 @@ import { Button, Card, Checkbox, Col, DatePicker, Form, Input, InputNumber, Row,
 import { HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
-import { Link } from "react-router-dom";
-import { BusinessAreaService, BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, FactoryService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, OperationsService, ProductGroupService, ROSLGroupsService, RangeService, SearchGroupService, StyleService, UomService } from "@project-management-system/shared-services";
-import { ItemGroupEnum, PropertyEnum, SubContractStatus } from "@project-management-system/shared-models";
+import { Link, useNavigate, useNavigation } from "react-router-dom";
+import { BusinessAreaService, BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, FactoryService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, OperationsService, ProductGroupService, ROSLGroupsService, RangeService, SearchGroupService, SettingsService, StyleService, UomService } from "@project-management-system/shared-services";
+import { ItemCreationDTO, ItemGroupEnum, PropertyEnum, SettingsIdReq, SubContractStatus } from "@project-management-system/shared-models";
 import { setOptions } from "highcharts";
+import moment from "moment";
  
 export interface FormProps {
   itemCreationData:any;
@@ -56,6 +57,32 @@ export function ItemCreation (props: FormProps){
          const [styledata,setStyle]=useState([])
          const[brand,setBrand]=useState([])
          const {Option}=Select
+         const service = new SettingsService()
+         const [data,setData] = useState<any[]>([])
+         const externalRefNo = JSON.parse(localStorage.getItem("currentUser")).user.externalRefNo;
+         const role = JSON.parse(localStorage.getItem("currentUser")).user.roles;
+     
+     
+         useEffect(() => {
+             getAllInfo()
+     
+         },[])
+     
+         const getAllInfo = () => {
+             const req = new SettingsIdReq()
+             req.externalRefNumber = externalRefNo
+             service.getAllSettingsInfo(req).then(res => {
+                 if(res.status){
+                     setData(res.data)
+form.setFieldValue('currency',res.data?.[0]?.currencyName)                   
+form.setFieldValue('salesPersonId',res.data?.[0]?.salesPersonId)                     
+form.setFieldValue('facilityId',res.data?.[0]?.facilityId)                     
+
+                 }
+             })
+         }
+         
+              const navigate = useNavigate()
 
 
          useEffect (()=>{
@@ -165,7 +192,7 @@ export function ItemCreation (props: FormProps){
           const getAllItemGroups=() =>{
             itemGroupservice.getAllActiveItemGroup().then(res =>{
               if (res.status){
-                // console.log(res,'llllll')
+                console.log(res.data,'llllll')
                 setitemgroup(res.data);
               }
               // else{
@@ -376,24 +403,29 @@ compositionservice.getActiveComposition().then(res=>{
          
 
 
-         const onReset = () => {
-          // form.resetFields()
+  const onReset = () => {
+  form.resetFields()
       }
-         const saveItem=()=>{
-          form.validateFields().then((values) => {
-             console.log(values,"ooooooooooooooo");
-              itemCreationService.createItem(values).then((res) => {
+
+         const saveItem=(values)=>{
+          const req = new ItemCreationDTO(values.itemName,values.itemCode,values.description,values.itemTypeId,values.brandId,null,values.category,null,values.season,values.responsiblePersonId,values.property,values.productDesignerId,values.approver,values.productionMerchant,values.pdMerchant,values.factoryMerchant,values.salesPersonId,values.styleNo,values.internalStyleId,values.basicUom,values.altUoms,values.currency,values.targetCurrency,values.conversionFactor,values.projectionOrder,values.buyingHouseCommision,values.salePriceQty,values.licenseId,values.customGroupId,values.nationalDbk,values.roslGroup,values.isSubContract,values.salePrice,values.orderConfirmedDate,values.firstExFactoryDate,values.orderCloseDate,values.moq,values.orderQty,values.facilityId,values.itemGroup,values.productGroup,values.businessArea,values.basicUom,values.groupTechClass,values.composition,values.range,values.noOfLacePanel,values.searchGroup,values.reference,null,values.createdUser,null,null,null,null)
+          // form.validateFields().then((values) => {
+            //  console.log(values,"ooooooooooooooo");
+              itemCreationService.createItem(req).then((res) => {
+                console.log(res,"res")
                 if(res.status){
                   message.success(res.internalMessage,2)
+                  onReset();
+                  navigate("/materialCreation/item-creation-view")
                 }
                 else{
-                  message.error(res.internalMessage,2)
+                  message.error("something went wrong")
                 }
               })
               // .catch(err => {
               //   AlertMessages.getWarningMessage(err.message)
               // })
-          })
+          // })
          }
 
         
@@ -461,14 +493,20 @@ compositionservice.getActiveComposition().then(res=>{
                     </Form.Item>
                    </Col>
                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                    <Form.Item label="Item Group" name="itemGroup" 
+                    <Form.Item label="Item Group" name="itemGroup"
                       //  rules={[{ required: true, message: "Enter Item Group" }]}
                        >
                        <Select
-                     placeholder="Select Item Group" allowClear>
-                     {Object.values(ItemGroupEnum).map((key,value)=>{
+                     placeholder="Select Item Group" allowClear >
+                      
+                     {/* {Object.values(ItemGroupEnum).map((key,value)=>{
             return <Option key={key} value={key}>{key}</Option>
-           })}
+           })} */}
+                     {itemgroup.map((e)=>{
+                      return(<Option key={e.itemGroupId} value={e.itemGroupId}>
+                          {e.itemGroup}
+                      </Option>)
+                    })}
                  
                     </Select>
                     </Form.Item>
@@ -513,16 +551,18 @@ compositionservice.getActiveComposition().then(res=>{
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                    <Form.Item label="Category" name="categoryId" rules={[{ required: true, message: "Enter category" }]}>
-                       <Select placeholder="Select Category" allowClear>
+                    <Form.Item label="Category" name="category" rules={[{ required: true, message: "Enter category" }]}>
+                       {/* <Select placeholder="Select Category" allowClear>
                     {itemCategory.map((e)=>{
                         return(
                             <Option key={e.itemCategoryId} value={e.itemCategoryId}>
                              {e.itemCategory}
                             </Option>
                         )
+                        
                     })}
-                      </Select>
+                      </Select> */}
+                      <Input placeholder="Enter Category" allowClear />
                     </Form.Item>
                    </Col>
                     </Row>
@@ -534,14 +574,14 @@ compositionservice.getActiveComposition().then(res=>{
                   <Select
                     showSearch
                   
-                        placeholder="Select Is Imported Item" allowClear>
+                        placeholder="Select Property" allowClear>
                      {Object.values(PropertyEnum).map((key,value)=>{
                        return <Option key={key} value={key}>{key}</Option>
                         })}
                     </Select>                  </Form.Item>
                            </Col>
                            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                           <Form.Item name="isSubContract">
+                           <Form.Item name = "checkbox">
                 <div style={{ padding: '25px' }}>
                   <Checkbox>Check if Manufacturing Subcontracted</Checkbox>
                 </div>
@@ -624,8 +664,15 @@ compositionservice.getActiveComposition().then(res=>{
                       </Col>
                       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                         <Form.Item  name="salePrice" label="Sales Price"
-                         rules={[{ required: true, message: "Enter Sales Price" }]}>
-                        <Input placeholder="Sales  Price" allowClear />
+                        //  rules={[{ required: true, message: "Enter Sales Price" }]}
+                        rules={[{ required: true, message: "Enter Sales Price" },
+                        { 
+                          pattern: /^[0-9]+$/, 
+                          message: "Please Enter numbers only" 
+                        },
+                           ]}
+                        >
+                        <Input placeholder="Sales  Price"  />
                         </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -831,8 +878,16 @@ compositionservice.getActiveComposition().then(res=>{
                             <Form.Item
                       name="nationalDbk"
                       label="National DBK%"
+                      rules={[
+                        // { required: true, message: "Enter Order Qty" },
+                      { 
+                        pattern: /^[0-9]+$/, 
+                        message: "Please Enter numbers only" 
+                      },
+                         ]}
+                      
                     >
-                      <Input placeholder="National DBK%" allowClear />
+                      <Input placeholder="National DBK%" allowClear  />
                     </Form.Item>
                                   </Col>
                                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -884,10 +939,34 @@ compositionservice.getActiveComposition().then(res=>{
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item name="salePersonId" label="Sales Person" 
+                     <Form.Item  label="Sales Person"name="salesPersonId"
+                     rules={[{ required: true, message: "Enter Sales Person" }]}
+                     >
+                     <Select
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                    placeholder="Select Sales Person"
+                    >
+
+                     {employedata.map((e)=>{
+                    return(
+                    <Option key={e.employeeId} value={e.employeeId}>{e.firstName}
+                    </Option>)
+                  })
+
+                  }
+                  </Select>
+
+                     </Form.Item>
+                     </Col>
+                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                        <Form.Item name="salesPersonId" label="Sales Person" initialValue={data?.[0]?.salesPersonId}
                         rules={[{ required: true, message: "Enter Sales Person" }]}>
-                        <Select placeholder="Select Approve" allowClear> 
+                        <Select placeholder="Select Approve" allowClear defaultValue={data?.[0]?.salesPersonId}> 
                           {employedata.map((e)=>{
+                            console.log(typeof e.employeeId,'employeeeeeeee');
+                            
                             return(
                               <Option key={e.employeeId} values={e.employeeId}>{e.firstName}
 
@@ -896,7 +975,7 @@ compositionservice.getActiveComposition().then(res=>{
                           })}                       
                         </Select>
                         </Form.Item>
-                         </Col>
+                         </Col> */}
                          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                       <Form.Item   name="noOfLacePanel" label="No Of Lace Panel" 
                       rules={[{ required: true, message: "Enter No Of Lace Panel" }]}>
@@ -928,8 +1007,17 @@ compositionservice.getActiveComposition().then(res=>{
                             <Form.Item
                       name="moq"
                       label="Moq"
+                      rules={[
+                        // { required: true, message: "Enter Sales Price" },
+                      { 
+                        pattern: /^[0-9]+$/, 
+                        message: "Please Enter numbers only" 
+                      },
+                         ]}
+                      
+    
                     >
-                      <Input placeholder="Moq" allowClear />
+                      <Input placeholder="moq" style={{ width: '100%' }} />
                     </Form.Item>
                                   </Col>
                                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -951,7 +1039,7 @@ compositionservice.getActiveComposition().then(res=>{
                     <Select
                     showSearch
                   
-                        placeholder="Select Is SubControl Status" allowClear>
+                        placeholder="Select Is SubContract Status" allowClear>
                      {Object.values(SubContractStatus).map((key,value)=>{
             return <Option key={key} value={key}>{key}</Option>
            })}
@@ -1061,7 +1149,9 @@ compositionservice.getActiveComposition().then(res=>{
                 rules={[{ required: true, message: "Enter Order ConfirmedDate" }]}>
 
               
-                <DatePicker style={{ width: "100%" }} />
+                <DatePicker style={{ width: "100%" }} 
+                disabledDate={(current) => current && current > moment().endOf('day')} 
+                />
               </Form.Item>
 </Col>
 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -1069,7 +1159,9 @@ compositionservice.getActiveComposition().then(res=>{
                 label="Order Close Date"
                 name="orderCloseDate"
                 rules={[{ required: true, message: "Enter order CloseDate" }]}>
-                <DatePicker style={{ width: "100%" }} />
+                <DatePicker style={{ width: "100%" }}  
+                
+                />
               </Form.Item>
 </Col>
 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -1094,7 +1186,13 @@ compositionservice.getActiveComposition().then(res=>{
 <Form.Item
                       name="orderQty"
                       label="Order Qty"
-                      rules={[{ required: true, message: "Enter  Order Qty" }]}>
+                      rules={[{ required: true, message: "Enter Order Qty" },
+                      { 
+                        pattern: /^[0-9]+$/, 
+                        message: "Please Enter numbers only" 
+                      },
+                         ]}
+                      >
                       <Input placeholder="Total Order Qty" allowClear />
                     </Form.Item>
                      </Col>

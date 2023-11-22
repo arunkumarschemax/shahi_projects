@@ -25,6 +25,7 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
   const [page, setPage] = React.useState(1);
   const columns = useState('');
   const navigate = useNavigate()
+  const [pageSize, setPageSize] = useState<number>(1);
 
   const service = new OperationGroupsService();
 
@@ -118,6 +119,7 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
     {
       title: <div style={{textAlign:'center'}}>Operation Group Code</div>,
       dataIndex: "operationGroupCode",
+      align:'center',
       sorter: (a, b) => a.operationGroupCode.localeCompare(b.operationGroupCode),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("operationGroupCode"),
@@ -146,7 +148,7 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
           value: true,
         },
         {
-          text: 'InActive',
+          text: 'Inactive',
           value: false,
         },
       ],
@@ -324,7 +326,7 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
           <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
-          <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
         </Col>
       </Row><br></br>
         <Table
@@ -333,8 +335,10 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
           columns={columnsSkelton}
           dataSource={variantData}
           pagination={{
-            onChange(current) {
-              setPage(current);
+            pageSize: 50, 
+            onChange(current, pageSize) {
+                setPage(current);
+                setPageSize(pageSize);
             }
           }}
           scroll={{x:true}}

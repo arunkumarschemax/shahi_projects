@@ -1,13 +1,13 @@
 
 
 import React, { useState, useEffect, useRef } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button, Row, Col, Drawer, Tag, } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button, Row, Col, Drawer, Tag, Alert, Checkbox, } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/lib/table';
 import {RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined,CheckCircleOutlined,CloseCircleOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { TaxesService } from '@project-management-system/shared-services';
-import { TaxesDto } from '@project-management-system/shared-models';
+import { TaxesDto, TaxtypeEnum } from '@project-management-system/shared-models';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import TaxesForm from './taxes-form';
 export interface TaxesGridProps {
@@ -28,7 +28,7 @@ export const TaxesGrid = (props:  TaxesGridProps) => {
 
   const service = new TaxesService;
 
-  const getColumnSearchProps = dataIndex => ({
+  const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
         <Input
@@ -48,9 +48,18 @@ export const TaxesGrid = (props:  TaxesGridProps) => {
         >
           Search
         </Button>
-        <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-          Reset
-        </Button>
+        <Button
+            onClick={() =>{
+              handleReset(clearFilters)
+              setSearchedColumn(dataIndex)
+              confirm({closeDropdown:true})
+            }
+               }
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
       </div>
     ),
     filterIcon: filtered => (
@@ -120,7 +129,7 @@ export const TaxesGrid = (props:  TaxesGridProps) => {
     service.ActivateOrDeactivateTax(taxesDto).then(res => { console.log(res);
       if (res.status) {
         getAllTaxes();
-        AlertMessages.getSuccessMessage('Success');
+        AlertMessages.getSuccessMessage(res.internalMessage);
       } else {
         if (res.status) {
           AlertMessages.getErrorMessage(res.internalMessage);
@@ -155,6 +164,10 @@ export const TaxesGrid = (props:  TaxesGridProps) => {
       })
     }
 
+    
+
+    
+
 // Example data
     const data =[{
       taxId:'1',
@@ -162,43 +175,94 @@ export const TaxesGrid = (props:  TaxesGridProps) => {
       taxPercentage:'0',
       status:'true'
     }]
-  const sampleTypeColumns: ColumnProps<any>[] = [
+  const sampleTypeColumns:any= [
     {
       title: 'S No',
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
+      align:"center",
       render: (text, object, index) => (page-1) * 10 +(index+1)
     
     },
     {
-      title: 'Tax Name',
+      title:<div style={{ textAlign: 'center' }}>Tax</div> ,
       dataIndex: 'taxName', 
-      // responsive: ['lg'],
+      sorter: (a, b) => {
+        const valueA = a.taxName || '';
+        const valueB = b.taxName || '';
+        return valueA.localeCompare(valueB);
+        
+      },
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('taxName')
+
+      
     },
     {
-      title: 'Tax Percentage(%)',
+      title:<div style={{ textAlign: 'center' }}>Tax Percentage(%)</div> ,
+
       dataIndex: 'taxPercentage', 
+      sorter: (a, b) => {
+        const valueA = a.taxPercentage || '';
+        const valueB = b.taxPercentage || '';
+        return valueA.localeCompare(valueB);
+      },
+      ...getColumnSearchProps('taxPercentage')
+
     },
     {
-      title:'Tax Category',
+      title:<div style={{ textAlign: 'center' }}>Tax Category</div> ,
+
       dataIndex:'taxCategory',
+      responsive: ['sm'],
       filters: [
         {
-          text: 'State',
-          value: 'State',
+          text: 'GST',
+          value: TaxtypeEnum.GST,
         },
         {
-          text: 'Central',
-          value: 'Central',
+          text: 'TDS',
+          value: TaxtypeEnum.TDS,
+        },
+        {
+          text: 'VAT',
+          value: TaxtypeEnum.VAT,
         },
       ],
       filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-     
-        return record.taxCategory === value;
-      },
+      onFilter: (value, record) => record.taxCategory === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+          <Checkbox
+            checked={selectedKeys.includes(TaxtypeEnum.GST)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(TaxtypeEnum.GST) ? [] : [TaxtypeEnum.GST])}
+          >
+            <span>GST</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(TaxtypeEnum.TDS)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(TaxtypeEnum.TDS) ? [] : [TaxtypeEnum.TDS])}
+          >
+            <span >TDS</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(TaxtypeEnum.VAT)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(TaxtypeEnum.VAT) ? [] : [TaxtypeEnum.VAT])}
+          >
+            <span >VAT</span>
+          </Checkbox>
+          
+          <div className="custom-filter-dropdown-btns">
+            <Button onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          </div>
+        </div>
+      ),
       // sorter: (a,b) => a.taxCategory - b.taxCategory,
       // sortDirections: ['descend', 'ascend'],
       // ...getColumnSearchProps('taxCategory')
@@ -206,6 +270,7 @@ export const TaxesGrid = (props:  TaxesGridProps) => {
     {
       title: 'Status',
       dataIndex: 'isActive',
+      align:"center",
        render: (isActive, rowData) => (
         <>
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -222,16 +287,38 @@ export const TaxesGrid = (props:  TaxesGridProps) => {
         },
       ],
       filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-        // === is not work
-        return record.isActive === value;
-      },
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{color:'green'}}>Active</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{color:'red'}}>Inactive</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns" >
+          <Button  onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          
+          </div>
+        </div>
+      ),
       
     },
     {
       title:`Action     `,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         <span>
           
@@ -293,7 +380,7 @@ export const TaxesGrid = (props:  TaxesGridProps) => {
     <Card title={'Taxes'}
    extra={<Link to='/global/taxes/taxes-form' ><span style={{color:'white'}} >{<Button className='panel_button' type={'primary'}>New </Button>}</span></Link>} >
   
-    <Row gutter={40}>
+    {/* <Row gutter={40}>
      
          <Card title={'Total Taxes: ' + taxesData.length} style={{textAlign: 'left', width: 150, height: 41,backgroundColor:'#bfbfbf',marginLeft:'20px'}}></Card>
          
@@ -301,19 +388,35 @@ export const TaxesGrid = (props:  TaxesGridProps) => {
          
           <Card title={'In-Active: ' + taxesData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 150, height: 41,backgroundColor:'#f5222d'}}></Card>
          
-         </Row><br></br>
+         </Row><br></br> */}
+
+<Row gutter={24}>
+  <Col span={4}></Col>
+    <Col span={5}>
+     
+<Alert type='success' message={'Total Taxes: ' + taxesData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + taxesData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + taxesData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        </Col>
+</Row>
+<br></br>
      <Card>
      <Table
-            rowKey={record => record.stateId}
+            // rowKey={record => record.stateId}
 
             columns={sampleTypeColumns}
-            scroll = {{x:true}}
             dataSource={taxesData}
-              pagination={{
-            onChange(current) {
-              setPage(current);
-            }
-          }}
+            scroll={{x:true,y:500}}
+            pagination={{
+             pageSize:50,
+             onChange(current) {
+               setPage(current);
+             }
+           }}
           size='small'
           onChange={onChange} 
             bordered
