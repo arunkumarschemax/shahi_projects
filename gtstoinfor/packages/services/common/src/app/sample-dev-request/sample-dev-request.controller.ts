@@ -201,4 +201,13 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
+  @Post('/getAllSmaplingDevData')
+  async getAllSmaplingDevData(): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getAllSmaplingDevData()
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
 }

@@ -47,7 +47,7 @@ export const PurchaseOrderView = () => {
       req.poconfirmEndDate = (form.getFieldValue('orderDate')[1]).format('YYYY-MM-DD');
     };
     req.status = status
-    Service.getPurchaseOrder(req).then(res => {
+    Service.getAllPurchaseOrderData(req).then(res => {
       if (res.status) {
         setCount(res?.data[res.data?.length - 1]);
         res.data.pop()
@@ -79,7 +79,7 @@ export const PurchaseOrderView = () => {
     {
       title: 'S No',
       key: 'sno',
-      width: '20px',
+      width: '50px',
       responsive: ['sm'],
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
       onCell: (record: any) => ({
@@ -90,50 +90,95 @@ export const PurchaseOrderView = () => {
     {
       title: 'PO Number',
       dataIndex: 'poNumber',
-      width: '80px'
+      width: '150px'
     },
+    
     // {
-    //   title: 'Style',
-    //   dataIndex: 'requestNumber',
-    //   width:'80px'
-
+    //   title: 'Material Type',
+    //   dataIndex: 'materialType',
+    //   width: '80px'
     // },
-    // {
-    //   title: <div style={{ textAlign: 'center' }}>Material Type</div>,
-    //   dataIndex: "type",
-    //   key: "type",
-    //   align: 'center',
-    //   width:'80px',
 
-    //   render: (type, text) => {
-    //     renderCellData(text)
-    //     return (
-    //       <Table
-    //         dataSource={type}
-    //         columns={[
-    //           {
-    //             dataIndex: "materialType",
-    //             key: "materialType", align: 'center',
-    //           },
-    //         ]}
-    //         pagination={false}
-    //       />
-    //     );
-    //   }
-    // },
     {
-      title: 'Material Type',
-      dataIndex: 'materialType',
-      width: '80px'
+      title: <div style={{ textAlign: 'center' }}>M3 ItemCode</div>,
+      dataIndex: 'fabInfo',
+      key:'fabInfo',
+      width: '150px',
+      align: 'center',
+
+      render:(fabInfo,text)=>{
+        renderCellData(text)
+        return(
+          <Table 
+          dataSource={fabInfo}
+          columns={[
+            {
+              dataIndex:"itemCode",
+              key:"itemCode",align:'center',
+            }
+          ]}
+          pagination={false}
+          />
+          
+        )
+      }
     },
     {
-      title: 'Po Date',
-      dataIndex: 'orderDate',
+      title: <div style={{ textAlign: 'center' }}>M3 trimCode</div>,
+      dataIndex: 'triminfo',
+      key:"triminfo",
+      width: '150px',
+      align: 'center',
+      render: (triminfo, text) => {
+        renderCellData(text)
+        return (
+          <Table
+            dataSource={triminfo}
+            columns={[
+              {
+                dataIndex: "trimcode",
+                key: "trimcode", align: 'center',
+              },
+
+            ]}
+            pagination={false}
+          />
+        );
+      }
+    },
+    {
+      title: <div style={{ textAlign: 'center' }}>M3 TrimType</div>,
+      dataIndex: 'triminfo',
+      key:"triminfo",
+      width: '150px',
+      align: 'center',
+      render: (triminfo, text) => {
+        renderCellData(text)
+        return (
+          <Table
+            dataSource={triminfo}
+            columns={[
+              {
+                dataIndex: "trimtype",
+                key: "trimtype", align: 'center',
+                
+              },
+
+            ]}
+            pagination={false}
+          />
+        );
+      }
+    },
+   
+    {
+      title: <div style={{ textAlign: 'center' }}>Po Date</div>,
+      dataIndex: 'purchaseOrderDate',
       width: '80px',
 
       render: (text, record) => {
-        return record.orderDate
-          ? moment(record.orderDate).format('YYYY-MM-DD')
+        return record.purchaseOrderDate
+          ? moment(record.purchaseOrderDate).format('YYYY-MM-DD')
           : "";
       },
     },
@@ -145,11 +190,11 @@ export const PurchaseOrderView = () => {
     },
     {
       title: 'Expected Date',
-      dataIndex: 'deliveryDate',
-      width: '100px',
+      dataIndex: 'expectedDeliverydate',
+      width: '90px',
       render: (text, record) => {
-        return record.deliveryDate
-          ? moment(record.deliveryDate).format('YYYY-MM-DD')
+        return record.expectedDeliverydate
+          ? moment(record.expectedDeliverydate).format('YYYY-MM-DD')
           : "";
       },
     },
@@ -201,6 +246,17 @@ export const PurchaseOrderView = () => {
 
   ];
 
+  const CustomTitle=()=>{
+    return (
+      <div>
+        <tr>
+          <th>
+            <td style={{marginLeft:10,width:150}}> Item Code</td>
+          </th>
+        </tr>
+      </div>
+    )
+  }
   return (
     <div><Card title="Purchase Orders" headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to={'/purchase-order'}><Button className='panel_button'>Create</Button></Link>}>
       <Form form={form}>

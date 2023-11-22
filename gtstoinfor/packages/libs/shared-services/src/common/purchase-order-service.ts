@@ -36,7 +36,11 @@ export class PurchaseOrderservice extends CommonAxiosService{
         return this.axiosPostCall(this.URL + '/getAllPurchaseOrderData',req)
       }
 
+      async getAllPurchaseOrderData(req?:PurchaseViewDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + '/getAllPurchaseOrderData',req)
+      }
+
 }
 
 
-///getAllPurchaseOrderData
+///getAllPurchaseOrderData getAllPurchaseOrderData

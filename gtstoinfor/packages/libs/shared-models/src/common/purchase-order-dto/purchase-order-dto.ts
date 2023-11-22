@@ -19,6 +19,7 @@ export class PurchaseOrderDto{
   remarks:string
   poMaterialType:string
   indentId:number[]
+  buyerId:number
   poFabricInfo: PurchaseOrderFbricDto[]
   poTrimInfo?:PurchaseOrderTrimDto[]
   constructor(
@@ -30,6 +31,7 @@ export class PurchaseOrderDto{
     remarks:string,
     poMaterialType:string,
     indentId:number[],
+    buyerId:number,
     poFabricInfo: PurchaseOrderFbricDto[],
   poTrimInfo?:PurchaseOrderTrimDto[]
   ){
@@ -43,6 +45,7 @@ export class PurchaseOrderDto{
     this.poTrimInfo=poTrimInfo
     this.indentId=indentId
     this.poMaterialType=poMaterialType
+    this.buyerId=buyerId
   }
 
 }
