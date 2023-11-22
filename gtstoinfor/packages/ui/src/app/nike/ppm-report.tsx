@@ -2825,11 +2825,13 @@ const PPMReport = () => {
         title: 'Item Vas Text',
         dataIndex: 'itemVasText', width: 80,
         render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
+          return (
+            <>
+              {record.itemVasText?.length > 30 ? (<><Tooltip title='Cilck to open full itemVasText'><p><span onClick={() => handleTextClick(record.itemVasText)} style={{ cursor: 'pointer' }}>
+                {record.itemVasText.length > 30 ? `${record.itemVasText?.substring(0, 30)}....` : record.itemVasText}
+              </span></p></Tooltip></>) : (<>{record.itemVasText}</>)}
+            </>
+          )
         },
       },
       {
@@ -2882,7 +2884,6 @@ const PPMReport = () => {
       {
         title: 'Item Text',
         dataIndex: 'itemText', width: 80,
-
         render: (text, record) => {
           return (
             <>
@@ -2900,7 +2901,9 @@ const PPMReport = () => {
           if (!text || text.trim() === '') {
             return '-';
           } else {
-            return text;
+            const data = record.itemVasText
+            const isHangerRequired = data?.includes("HANGING IS REQUIRED");
+            return isHangerRequired ? 'YES' : 'NO';
           }
         },
       },
