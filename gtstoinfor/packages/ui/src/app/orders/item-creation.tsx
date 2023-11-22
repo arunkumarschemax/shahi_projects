@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link, useNavigate, useNavigation } from "react-router-dom";
 import { BusinessAreaService, BuyingHouseService, CompositionService, CurrencyService, CustomGroupsService, EmployeeDetailsService, FactoryService, GroupTechClassService, ItemCategoryService, ItemCreationService, ItemGroupService, ItemTypeService, LiscenceTypeService, MasterBrandsService, OperationsService, ProductGroupService, ROSLGroupsService, RangeService, SearchGroupService, SettingsService, StyleService, UomService } from "@project-management-system/shared-services";
-import { ItemCreationDTO, ItemGroupEnum, PropertyEnum, SettingsIdReq, SubContractStatus } from "@project-management-system/shared-models";
+import { GlobalVariables, ItemCreationDTO, ItemGroupEnum, ItemGroupFilter, PropertyEnum, SettingsIdReq, SubContractStatus } from "@project-management-system/shared-models";
 import { setOptions } from "highcharts";
 import moment from "moment";
  
@@ -41,7 +41,7 @@ export function ItemCreation (props: FormProps){
          const [Product,setProduct] = useState([]);
          const [currencydata,setCurrencyData] = useState([]);
          const [uomdata,setUomData] = useState([]);
-         const [itemgroup,setitemgroup] = useState([]);
+         const [itemGroup,setitemgroup] = useState<any[]>([]);
          const [group,setGroup] = useState([]);
          const [compositiondata,setCompositionData] = useState([]);
          const [facilitydata,setfacilityData] = useState([]);
@@ -190,10 +190,12 @@ form.setFieldValue('facilityId',res.data?.[0]?.facilityId)
             //  })        
           }
           const getAllItemGroups=() =>{
-            itemGroupservice.getAllActiveItemGroup().then(res =>{
+            const req = new ItemGroupFilter(GlobalVariables.itemGroupId)
+            itemGroupservice.getItemGroupById(req).then(res =>{
               if (res.status){
-                console.log(res.data,'llllll')
+                // console.log(res.data,'========')
                 setitemgroup(res.data);
+                form.setFieldValue("itemGroup", res?.data?.itemGroupId)
               }
               // else{
               //   AlertMessages.getErrorMessage(res.internalMessage);
@@ -407,6 +409,8 @@ compositionservice.getActiveComposition().then(res=>{
   form.resetFields()
       }
 
+      
+
          const saveItem=(values)=>{
           const req = new ItemCreationDTO(values.itemName,values.itemCode,values.description,values.itemTypeId,values.brandId,null,values.category,null,values.season,values.responsiblePersonId,values.property,values.productDesignerId,values.approver,values.productionMerchant,values.pdMerchant,values.factoryMerchant,values.salesPersonId,values.styleNo,values.internalStyleId,values.basicUom,values.altUoms,values.currency,values.targetCurrency,values.conversionFactor,values.projectionOrder,values.buyingHouseCommision,values.salePriceQty,values.licenseId,values.customGroupId,values.nationalDbk,values.roslGroup,values.isSubContract,values.salePrice,values.orderConfirmedDate,values.firstExFactoryDate,values.orderCloseDate,values.moq,values.orderQty,values.facilityId,values.itemGroup,values.productGroup,values.businessArea,values.basicUom,values.groupTechClass,values.composition,values.range,values.noOfLacePanel,values.searchGroup,values.reference,null,values.createdUser,null,null,null,null)
           // form.validateFields().then((values) => {
@@ -498,16 +502,23 @@ compositionservice.getActiveComposition().then(res=>{
                        >
                        <Select
                      placeholder="Select Item Group" allowClear >
-                      
-                     {/* {Object.values(ItemGroupEnum).map((key,value)=>{
-            return <Option key={key} value={key}>{key}</Option>
-           })} */}
-                     {itemgroup.map((e)=>{
+                   
+                     
+                     {
+                     [itemGroup]?.map((e:any)=>{
                       return(<Option key={e.itemGroupId} value={e.itemGroupId}>
                           {e.itemGroup}
                       </Option>)
-                    })}
-                 
+                    })
+                    }
+               {/* {
+                   itemgroup.map((inc: any) => {
+    
+          return <Option key={inc.itemGroupId} value={inc.itemGroupId}>
+           {inc.itemGroup}</Option>
+              })
+            } */}
+
                     </Select>
                     </Form.Item>
                    </Col>

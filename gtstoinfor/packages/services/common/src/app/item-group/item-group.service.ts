@@ -268,7 +268,7 @@ export class ItemGroupService{
 
    
 
-      async getItemGroupNotId(itemgroupId: number): Promise<CommonResponseModel> {
+      async getItemGroupNotId(itemgroupId: ItemGroupDto): Promise<CommonResponseModel> {
         //  console.log(employeeId);
         try{
             const Response = await this.ItemGroupRepository.findOne({
@@ -284,7 +284,7 @@ export class ItemGroupService{
         } 
 
 
-        async getItemGroupById(itemgroupId: number):Promise<CommonResponseModel>{
+        async getItemGroupById(req: ItemGroupDto):Promise<CommonResponseModel>{
           try{
             const Response = await this.ItemGroupRepository.findOne({
               where:{

@@ -26,7 +26,7 @@ import {
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import TextArea from "antd/es/input/TextArea";
-import { IsImportedItemEnum, ItemGroupEnum, PropertyEnum, SaleItemEnum, SettingsIdReq } from "@project-management-system/shared-models";
+import { GlobalVariables, IsImportedItemEnum, ItemGroupEnum, ItemGroupFilter, PropertyEnum, SaleItemEnum, SettingsIdReq } from "@project-management-system/shared-models";
 import { Link, useNavigate } from "react-router-dom";
 import { object } from "prop-types";
 
@@ -42,7 +42,7 @@ export const FabricBomCreation = (props:FormProps) => {
   const [pchData, setpchData] = useState([]);
   const [facilitydata,setfacilityData] = useState([]);
   const [employedata,setEmployeData] = useState([]);
-  const [itemgroup,setitemgroup] = useState([]);
+  const [itemGroup,setitemgroup] = useState<any[]>([]);
   const [Procurement,setProcurement] = useState([]);
   const [Product,setProduct] = useState([]);
   const [hierarchyLevel,sethierarchyLevel] = useState([]);
@@ -341,10 +341,12 @@ form.setFieldValue('deliveryMethod',res.data?.[0]?.deliveryMethodId)
       // });
   };
   const getAllItemGroups=() =>{
-    itemGroupservice.getAllActiveItemGroup().then(res =>{
+    const req = new ItemGroupFilter(GlobalVariables.itemGroupId)
+    itemGroupservice.getItemGroupNotId(req).then(res =>{
       if (res.status){
         // console.log(res,'llllll')
         setitemgroup(res.data);
+        
          
       } 
       // else{
@@ -545,9 +547,13 @@ rmservice.createRm(values).then((res)=>{
                     optionFilterProp="children"
                   
                         placeholder="Select Item Group" allowClear>
-                     {Object.values(ItemGroupEnum).map((key,value)=>{
-            return <Option key={key} value={key}>{key}</Option>
-           })}
+                    {
+                     [itemGroup]?.map((e:any)=>{
+                      return(<Option key={e.itemGroupId} value={e.itemGroupId}>
+                          {e.itemGroup}
+                      </Option>)
+                    })
+                    }
                     </Select>
                     {/* <Input placeholder="Fabric code" allowClear /> */}
                   </Form.Item>

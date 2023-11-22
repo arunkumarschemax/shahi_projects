@@ -39,6 +39,6 @@ export class ItemGroupService extends CommonAxiosService{
 
 
           async getItemGroupNotId(req:any): Promise<CommonResponseModel> {
-            return this.axiosPostCall(this.URL + "/getItemGroupNotcId",req)
+            return this.axiosPostCall(this.URL + "/getItemGroupNotId",req)
           }
     }
