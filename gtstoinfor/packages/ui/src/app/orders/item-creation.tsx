@@ -192,7 +192,7 @@ form.setFieldValue('facilityId',res.data?.[0]?.facilityId)
           const getAllItemGroups=() =>{
             itemGroupservice.getAllActiveItemGroup().then(res =>{
               if (res.status){
-                // console.log(res,'llllll')
+                console.log(res.data,'llllll')
                 setitemgroup(res.data);
               }
               // else{
@@ -493,14 +493,20 @@ compositionservice.getActiveComposition().then(res=>{
                     </Form.Item>
                    </Col>
                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                    <Form.Item label="Item Group" name="itemGroup"  initialValue={ItemGroupEnum.FG}
+                    <Form.Item label="Item Group" name="itemGroup"
                       //  rules={[{ required: true, message: "Enter Item Group" }]}
                        >
                        <Select
-                     placeholder="Select Item Group" allowClear disabled>
+                     placeholder="Select Item Group" allowClear >
+                      
                      {/* {Object.values(ItemGroupEnum).map((key,value)=>{
             return <Option key={key} value={key}>{key}</Option>
            })} */}
+                     {itemgroup.map((e)=>{
+                      return(<Option key={e.itemGroupId} value={e.itemGroupId}>
+                          {e.itemGroup}
+                      </Option>)
+                    })}
                  
                     </Select>
                     </Form.Item>
