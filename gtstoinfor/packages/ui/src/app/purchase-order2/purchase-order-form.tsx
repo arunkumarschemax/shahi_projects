@@ -23,7 +23,7 @@ export const PurchaseOrderForm =()=>{
     const [indentId,setIndentId]=useState<any>([])
     const [poType, setPoType]=useState<any>('')
     const [submitDisbale, setSubmitDisable]=useState<boolean>(true)
-    const [styleVisible, setStyleVisible]= useState<boolean>(undefined)
+    // const [styleVisible, setStyleVisible]= useState<boolean>(undefined)
     const [navigateData,setnavigateData] = useState<any>([])
     let fabricInfo:PurchaseOrderFbricDto[]=[];
     let trimInfo:PurchaseOrderTrimDto[]=[];
@@ -63,8 +63,8 @@ export const PurchaseOrderForm =()=>{
             if(stateData.type == 'Indent'){
                 poForm.setFieldsValue({indentId:stateData.data.indentId})
                 setIndentId(stateData)
-                poForm.setFieldsValue({indentAgainst:'Indent'})
-                setStyleVisible(false)
+                // poForm.setFieldsValue({indentAgainst:'Indent'})
+                // setStyleVisible(false)
                 setIndentId(stateData.data.indentId)
                 if(stateData.data.materialType == "Fabric"){
                     poForm.setFieldsValue({poMaterialType:"Fabric"})
@@ -76,21 +76,21 @@ export const PurchaseOrderForm =()=>{
     
                 }
             }
-            if(stateData.type == 'Sampling'){
-                setnavigateData(stateData)
-                poForm.setFieldsValue({indentAgainst:'Style'})
-                setStyleVisible(true)
-                poForm.setFieldsValue({styleId:stateData.data.styleId})
-                if(stateData.data.fabricName == "Fabric"){
-                    console.log('UUUUUUU')
-                    poForm.setFieldsValue({poMaterialType:"Fabric"})
-                    setPoType('Fabric')
-                }
-                if(stateData.data.fabricName != 'Fabric'){
-                    setPoType('Trim')
-                    poForm.setFieldsValue({poMaterialType:"Trim"})
-                }
-            }  
+            // if(stateData.type == 'Sampling'){
+            //     setnavigateData(stateData)
+            //     // poForm.setFieldsValue({indentAgainst:'Style'})
+            //     // setStyleVisible(true)
+            //     poForm.setFieldsValue({styleId:stateData.data.styleId})
+            //     if(stateData.data.fabricName == "Fabric"){
+            //         console.log('UUUUUUU')
+            //         poForm.setFieldsValue({poMaterialType:"Fabric"})
+            //         setPoType('Fabric')
+            //     }
+            //     if(stateData.data.fabricName != 'Fabric'){
+            //         setPoType('Trim')
+            //         poForm.setFieldsValue({poMaterialType:"Trim"})
+            //     }
+            // }  
         }
     },[stateData])
 
@@ -180,20 +180,20 @@ export const PurchaseOrderForm =()=>{
     const poTypeOnchange = (value) =>{
         setPoType(value)
     }
-    const IndentAginstOnchange = (value) =>{
-        if(value == 'Indent'){
-            setStyleVisible(false)
-        }if(value  == 'Style'){
-            setStyleVisible(true)
-        }
+    // const IndentAginstOnchange = (value) =>{
+    //     if(value == 'Indent'){
+    //         setStyleVisible(false)
+    //     }if(value  == 'Style'){
+    //         setStyleVisible(true)
+    //     }
 
-    }
+    // }
 return(
     <>
     <Card title='Purchase Order' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to='/purchase-view' > <Button className='panel_button' >View </Button></Link>}>
         <Form form={poForm} layout="vertical">
             <Row gutter={8}>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
+            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
                     <Form.Item name='indentAgainst' label='Indent Against' rules={[{required:true,message:'PO Type is required'}]}>
                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select PoType' 
                        onChange={IndentAginstOnchange}
@@ -202,7 +202,7 @@ return(
                         <Option value={'Style'}>{'Style'}</Option>
                         </Select>
                     </Form.Item>
-              </Col>
+              </Col> */}
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
                     <Form.Item name='poMaterialType' label='PO Type' rules={[{required:true,message:'PO Type is required'}]}>
                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select PoType' 
@@ -213,7 +213,7 @@ return(
                         </Select>
                     </Form.Item>
               </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:styleVisible == true ? '':'none'}}>
+              {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:styleVisible == true ? '':'none'}}>
                     <Form.Item name='styleId' label='Style' 
                     rules={[{required:styleVisible,
                         message:'Style is required'}]}
@@ -226,9 +226,10 @@ return(
                             })}
                         </Select>
                     </Form.Item>
-                    </Col>
-             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:styleVisible == false ? '':'none'}}>
-                    <Form.Item name='indentId' label='Indent Code' rules={[{required:styleVisible == false?true:false,message:'IndentCode is required'}]}>
+                    </Col> */}
+             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                    <Form.Item name='indentId' label='Indent Code' 
+                    rules={[{required:true,message:'IndentCode is required'}]}>
                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Indent' mode="multiple"
                        onChange={indentOnchange}
                        >
@@ -257,7 +258,7 @@ return(
                     </Form.Item>
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='expectedDeliveryDate' label='Expected Delivery Data' rules={[{required:true,message:'expectedDeliveryDate is required'}]}>
+                    <Form.Item name='expectedDeliveryDate' label='Expected Delivery Date' rules={[{required:true,message:'expectedDeliveryDate is required'}]}>
                     <DatePicker style={{ width: '93%', marginLeft: 5 }} />
                     </Form.Item>
               </Col>

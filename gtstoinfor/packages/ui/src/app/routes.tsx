@@ -167,6 +167,7 @@ import OperationInventoryView from "./operation-tracking/operation-inventory-vie
 import OperationMapping from "./operation-tracking/operation-mapping"
 import { PurchaseOrderView } from "./purchase-order2/purchase-order-view"
 import UomForm from "./masters/uom/uom-form"
+import BomIndentView from "./sourcing-requisition/bom-indent-view"
 
 
 
@@ -948,6 +949,8 @@ export const AppRoutes = () => {
             <Route path='/report'>
                 <Route path='material-issue-report' element={<MaterialIssueReport />} />
                 <Route path='indent-report' element={<IndentReport />} />
+                <Route path='bom-view' element={<BomIndentView />} />
+
 
             </Route>
             <Route path='/stock-view' element={<StockView />} />

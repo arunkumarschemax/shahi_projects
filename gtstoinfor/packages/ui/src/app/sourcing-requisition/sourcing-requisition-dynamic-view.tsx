@@ -328,24 +328,24 @@ export const SourcingRequisitionDynamicView = () => {
     },
     {
       title: "Action",
-      dataIndex: "action",
-      render: (text, rowData) => {
-        return (
-          <span>
-            {/* <Button onClick={() => generateBarcode(record.m3FabricCode)}>
-                        <BarcodeOutlined/>
-                    </Button>
-                    <Divider type='vertical'/> */}
-            <Button
-              type="primary"
-              disabled={logInUser == "marketUser" ? true : false}
-              onClick={() =>generatePoForFabric(rowData)}
-            >
+    dataIndex: "action",
+    render: (text, rowData) => {
+    return (
+    <span>
+    {/* <Button onClick={() => generateBarcode(record.m3FabricCode)}>
+    <BarcodeOutlined/>
+    </Button>
+    <Divider type='vertical'/> */}
+    <Button
+    type="primary"
+    disabled={logInUser == "marketUser" ? true : false}
+    onClick={() =>generatePoForFabric(rowData)}
+    >
               Generate PO
-            </Button>
-          </span>
-        );
-      },
+    </Button>
+    </span>
+    );
+    },
     },
   ];
 
@@ -470,24 +470,24 @@ export const SourcingRequisitionDynamicView = () => {
     },
     {
       title: "Action",
-      dataIndex: "action",
-      render: (text, rowData) => {
-        return (
-          <span>
-            {/* <Button type='primary' shape='round' onClick={() => generateBarcode(record.m3TrimCode)}>
-                            <PrinterOutlined />
-                        </Button>
-                        <Divider type='vertical'/> */}
-            <Button
-              type="primary"
-              disabled={logInUser == "marketUser" ? true : false}
-              onClick={() => genereatePoForTrim(rowData)}
-            >
+    dataIndex: "action",
+    render: (text, rowData) => {
+    return (
+    <span>
+    {/* <Button type='primary' shape='round' onClick={() => generateBarcode(record.m3TrimCode)}>
+    <PrinterOutlined />
+    </Button>
+    <Divider type='vertical'/> */}
+    <Button
+    type="primary"
+    disabled={logInUser == "marketUser" ? true : false}
+    onClick={() => genereatePoForTrim(rowData)}
+    >
               Generate PO
-            </Button>
-          </span>
-        );
-      },
+    </Button>
+    </span>
+    );
+    },
     },
   ];
   const genereatePoForTrim = (rowData: any) => {
