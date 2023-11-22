@@ -43,6 +43,9 @@ export class LocationMappingService {
             it.item_code,
             po.buyer_id,
             buyer.buyer_name,
+            m3items.m3_items_Id,
+             m3items.item_code AS m3_item_code,
+            
             
             COALESCE(SUM(stk_log.quantity), 0) AS quantity
             
@@ -56,6 +59,9 @@ export class LocationMappingService {
             LEFT JOIN stock_log AS stk_log ON stk_log.grn_item_id = grn_it.grn_item_id
             LEFT JOIN purchase_order AS po ON po.purchase_order_id = g.po_id
             LEFT JOIN buyers AS buyer ON buyer.buyer_id = po.buyer_id
+            LEFT JOIN  m3_items AS m3items ON m3items.m3_items_Id = grn_it.m3_item_code_id 
+            
+            
             
             GROUP BY grn_item_id`
 

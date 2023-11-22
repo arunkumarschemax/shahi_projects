@@ -60,12 +60,13 @@ export const LocationMapping = () => {
     const saveLocation = (result) => {
         const locationId = form.getFieldValue("locationId");
         const qty = form.getFieldValue("quantity");
-        const m3_item_code = 1
+        // const m3_item_code = 1
         const shahi_item_code = 1;
         const item_type_id = 11;
         const plant_id = 1;
-        const m3_style_id = 1;
-        const req = new LocationMappingReq(m3_item_code, locationId, qty, grnData.grn_item_id, shahi_item_code, item_type_id, plant_id, m3_style_id, grnData.item_id, grnData.style_id,grnData.buyer_id );
+        // const m3_style_id = 1;
+        const req = new LocationMappingReq(grnData.m3_items_Id
+            , locationId, qty, grnData.grn_item_id, shahi_item_code, item_type_id, plant_id,grnData.style_id, grnData.item_id, grnData.style_id,grnData.buyer_id );
         if (req) {
             locationService.postToStockLogs(req).then((res) => {
                 if (res.status === true) {
