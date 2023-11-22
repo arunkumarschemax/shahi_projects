@@ -131,6 +131,7 @@ export class GrnService{
             grnEntity.styleId=req.styleId
             grnEntity.poId=req.poId
             grnEntity.grnDate=req.grnDate
+            grnEntity.contactPerson = req.contactPerson
             grnEntity.createdUser=req.createdUser
             grnEntity.updatedUser=req.updatedUser
             console.log(req,'===========')

@@ -60,7 +60,7 @@ updatedUser: string | null;
   @OneToMany(type=>SampleSubTypes, subType=>subType.sampleSubTypes,{cascade: true})
   subTypesInfo:SampleSubTypes;
 
-  @OneToMany(()=>SampleRequest, sampleReq => sampleReq.sampleType, {cascade: true})
-  sampleReq : SampleRequest[]
+  // @OneToMany(()=>SampleRequest, sampleReq => sampleReq.sampleType, {cascade: true})
+  // sampleReq : SampleRequest[]
 
 }
