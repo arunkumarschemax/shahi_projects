@@ -14,6 +14,7 @@ import { GenericTransactionManager } from '../../typeorm-transactions';
 import { IndentRepository } from '../indent/dto/indent-repository';
 import { FabricIndentRepository } from '../indent/dto/fabric-indent-repository';
 import { TrimIndentRepository } from '../indent/dto/trim-indent-repository';
+let moment = require('moment');
 
 @Injectable()
 
@@ -123,11 +124,22 @@ export class GrnService{
     async createGrn(req:GrnDto):Promise<CommonResponseModel>{        
         const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
         try{
+
+            const currentYear = moment().format('YYYY')
+            let ToYear = currentYear.toString().substr(-2)
+            let FromYear = (currentYear - 1).toString().substr(-2)
+            let grnNumber
+            const data = 'select max(grn_id) as grnId from grn'
+            const maxId = await this.grnRepo.query(data)
+            if (maxId[0].grnId == null) {
+                grnNumber = 'GRN/' + FromYear + '-' + ToYear + '/' + '001' + ''
+            } else {
+                grnNumber = 'GRN/' + FromYear + '-' + ToYear + '/' + maxId[0].grnId.toString().padStart(3, 0) + ''
+            }
         await transactionalEntityManager.startTransaction();
             const itemInfo=[]
-            req.grnNumber='grnoo2'
             const grnEntity = new GrnEntity()
-            grnEntity.grnNumber=req.grnNumber
+            grnEntity.grnNumber=grnNumber
             grnEntity.vendorId=req.vendorId
             grnEntity.styleId=req.styleId
             grnEntity.poId=req.poId
