@@ -36,6 +36,8 @@ export class GrnDto{
   styleId:number
   @ApiProperty()
   materialtype:string
+  @ApiProperty()
+  itemType:string
   @ApiProperty({ type: [GRNItemDto] })
   grnItemInfo: GRNItemDto[];
 

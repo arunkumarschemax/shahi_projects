@@ -14,6 +14,7 @@ import { GenericTransactionManager } from '../../typeorm-transactions';
 import { IndentRepository } from '../indent/dto/indent-repository';
 import { FabricIndentRepository } from '../indent/dto/fabric-indent-repository';
 import { TrimIndentRepository } from '../indent/dto/trim-indent-repository';
+let moment = require('moment');
 
 @Injectable()
 
@@ -123,10 +124,22 @@ export class GrnService{
     async createGrn(req:GrnDto):Promise<CommonResponseModel>{        
         const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
         try{
+
+            const currentYear = moment().format('YYYY')
+            let ToYear = currentYear.toString().substr(-2)
+            let FromYear = (currentYear - 1).toString().substr(-2)
+            let grnNumber
+            const data = 'select max(grn_id) as grnId from grn'
+            const maxId = await this.grnRepo.query(data)
+            if (maxId[0].grnId == null) {
+                grnNumber = 'GRN/' + FromYear + '-' + ToYear + '/' + '001' + ''
+            } else {
+                grnNumber = 'GRN/' + FromYear + '-' + ToYear + '/' + maxId[0].grnId.toString().padStart(3, 0) + ''
+            }
         await transactionalEntityManager.startTransaction();
             const itemInfo=[]
             const grnEntity = new GrnEntity()
-            grnEntity.grnNumber=req.grnNumber
+            grnEntity.grnNumber=grnNumber
             grnEntity.vendorId=req.vendorId
             grnEntity.styleId=req.styleId
             grnEntity.poId=req.poId
@@ -134,13 +147,15 @@ export class GrnService{
             grnEntity.contactPerson = req.contactPerson
             grnEntity.createdUser=req.createdUser
             grnEntity.updatedUser=req.updatedUser
+            grnEntity.itemType=req.materialtype
             console.log(req,'===========')
             for(const item of req.grnItemInfo){
+                console.log(item,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
                 // item.conversionQuantity=200
                 // item.conversionUomId=1
                 const itemEntity = new GrnItemsEntity()
                 // itemEntity.m3ItemCodeId=item.m3ItemCodeId
-                itemEntity.productGroupId=item.productGroupId
+                // itemEntity.productGroupId=item.productGroupId
                 itemEntity.receivedQuantity=item.receivedQuantity
                 itemEntity.receivedUomId=item.receivedUomId
                 itemEntity.acceptedQuantity=item.acceptedQuantity
@@ -150,6 +165,7 @@ export class GrnService{
                 itemEntity.conversionQuantity=item.conversionQuantity
                 itemEntity.conversionUomId=item.conversionUomId
                 itemEntity.remarks=item.remarks
+                itemEntity.m3ItemCodeId=item.m3ItemCodeId
                 itemInfo.push(itemEntity)
             }
             grnEntity.grnItemInfo=itemInfo
@@ -227,10 +243,11 @@ export class GrnService{
     async getAllGrn():Promise<CommonResponseModel>{
         try{
             const manager = this.dataSource;
-            let query=`SELECT grn_id,grn.vendor_id,grn.grn_number,b.buyer_name,po_id,grn_date,grn.contact_person,grn.status,po.po_number,po.po_material_type,v.vendor_name FROM grn
-            LEFT JOIN purchase_order po ON po.purchase_order_id = grn.po_id
-            LEFT JOIN buyers b ON b.buyer_id = po.buyer_id
-            LEFT JOIN vendors v ON v.vendor_id = po.vendor_id
+            let query=`SELECT v.vendor_name AS vendorName,po_number AS poNumber,item_type AS materialTYpe,grn_id,grn.vendor_id,grn.grn_number,b.buyer_name,po_id,grn_date,grn.contact_person,
+            grn.status,po.po_number,po.po_material_type,v.vendor_name FROM grn
+                        LEFT JOIN purchase_order po ON po.purchase_order_id = grn.po_id
+                        LEFT JOIN buyers b ON b.buyer_id = po.buyer_id
+                        LEFT JOIN vendors v ON v.vendor_id = po.vendor_id
 
 `
             // if(materialType == 'Fabric'){
@@ -252,7 +269,7 @@ export class GrnService{
             const manager = this.dataSource;
             let query=`SELECT grn_item_id , grn_items.item_id ,rm.item_code AS fabricCode,t.trim_code, grn_items.m3_item_id , grn_items.product_group_id , grn_items.received_quantity , grn_items.received_uom_id , grn_items.accepted_quantity , grn_items.accepted_uom_id , 
             grn_items.rejected_quantity , grn_items.rejected_uom_id ,grn_items.conversion_quantity,  grn_items.conversion_uom_id , grn_items.location_mapped_status , grn_items.grn_id , grn_items.m3_item_code_id,u.uom FROM grn_items
-            LEFT JOIN m3_items rm ON rm.rm_item_id = grn_items.m3_item_code_id
+            LEFT JOIN m3_items rm ON rm.m3_items_Id = grn_items.m3_item_code_id
             LEFT JOIN m3_trims t ON t.m3_trim_Id = grn_items.m3_item_code_id
             LEFT JOIN uom u ON u.id = grn_items.received_uom_id
             WHERE grn_items.grn_id = '${req.grnId}'`

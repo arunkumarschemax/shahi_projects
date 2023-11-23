@@ -60,21 +60,21 @@ export class PurchaseOrderService {
                 for (const poFabric of req.poFabricInfo) {
                     const pofabricEntity = new PurchaseOrderFbricEntity()
                     pofabricEntity.colourId = poFabric.colourId
-                    pofabricEntity.productGroupId = poFabric.productGroupId
+                    // pofabricEntity.productGroupId = poFabric.productGroupId
                     pofabricEntity.remarks = poFabric.remarks
-                    pofabricEntity.fabricTypeId = poFabric.fabricTypeId
+                    // pofabricEntity.fabricTypeId = poFabric.fabricTypeId
                     pofabricEntity.shahiFabricCode = poFabric.shahiFabricCode
-                    pofabricEntity.weaveId = poFabric.weaveId
-                    pofabricEntity.weight = poFabric.weight
-                    pofabricEntity.width = poFabric.width
-                    pofabricEntity.construction = poFabric.construction
-                    pofabricEntity.yarnCount = poFabric.yarnCount
-                    pofabricEntity.finish = poFabric.finish
-                    pofabricEntity.shrinkage = poFabric.shrinkage
-                    pofabricEntity.pch = poFabric.pch
-                    pofabricEntity.moq = poFabric.moq
+                    // pofabricEntity.weaveId = poFabric.weaveId
+                    // pofabricEntity.weight = poFabric.weight
+                    // pofabricEntity.width = poFabric.width
+                    // pofabricEntity.construction = poFabric.construction
+                    // pofabricEntity.yarnCount = poFabric.yarnCount
+                    // pofabricEntity.finish = poFabric.finish
+                    // pofabricEntity.shrinkage = poFabric.shrinkage
+                    // pofabricEntity.pch = poFabric.pch
+                    // pofabricEntity.moq = poFabric.moq
                     pofabricEntity.m3FabricCode = poFabric.m3FabricCode
-                    pofabricEntity.content = poFabric.content
+                    // pofabricEntity.content = poFabric.content
                     pofabricEntity.indentFabricId = poFabric.indentFabricId
                     pofabricEntity.poQuantity = poFabric.poQuantity
                     pofabricEntity.quantityUomId = poFabric.quantityUomId
@@ -88,8 +88,8 @@ export class PurchaseOrderService {
                     console.log(trimInfo)
                     console.log('""""""""""""""""""""""""""""""""""""""""""""')
                     trimEntity.colourId = trimInfo.colourId
-                    trimEntity.productGroupId = trimInfo.productGroupId
-                    trimEntity.trimId = trimInfo.trimId
+                    // trimEntity.productGroupId = trimInfo.productGroupId
+                    // trimEntity.trimId = trimInfo.trimId
                     trimEntity.m3TrimCode = trimInfo.m3TrimCode
                     trimEntity.description = trimInfo.description
                     trimEntity.consumption = trimInfo.consumption
@@ -216,9 +216,12 @@ export class PurchaseOrderService {
     async GetPurchaseData(req?: PurchaseViewDto): Promise<CommonResponseModel> {
         try {
             let query = `SELECT  null as pofabricData,null as poTrimdata, s.style AS styleName,po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.vendor_id AS vendorId,po.style_id AS styleId,po.vendor_id AS vendorId, v.vendor_name AS vendorName,
-            expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype FROM purchase_order  po 
+            expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype,b.buyer_name as buyername
+             FROM purchase_order  po 
             LEFT JOIN style s ON s.style_id=po.style_id
-            LEFT JOIN  vendors v ON v.vendor_name= po.vendor_id`
+            LEFT JOIN  vendors v ON v.vendor_id= po.vendor_id
+            LEFT JOIN buyers b ON  b.buyer_id = po.buyer_id
+            `
             if (req?.id) {
                 query += ` where po.purchase_order_id = ${req?.id}`
             }
@@ -280,8 +283,7 @@ export class PurchaseOrderService {
             const data = []
             const podata = await this.GetPurchaseData(req)
             for (const po of podata.data) {
-                // console.log(po.purchaseOrderId)
-                // console.log('^^^^^^^^^^^^^^^^^^^')
+                console.log(po,'^^^^^^^^^^^^^^^^^^^')
                 const fabData = await this.GetPurchaseFabricData(po.purchaseOrderId)
                 const fabricInfo = []
                 for (const fabrData of fabData.data) {
@@ -298,7 +300,10 @@ export class PurchaseOrderService {
                     styleName: po.styleName,
                     purchaseOrderId: po.purchaseOrderId,
                     poNumber: po.poNumber,
+                    buyerId:po.buyerId,
+                    buyername:po.buyername,
                     vendorId: po.vendorId,
+                    vendorName:po.vendorName,
                     expectedDeliverydate: po.expectedDeliverydate,
                     purchaseOrderDate: po.purchaseOrderDate,
                     poMaterialtype: po.poMaterialtype,
@@ -309,7 +314,10 @@ export class PurchaseOrderService {
                 })
             }
             if (data) {
+                console.log(data,"kkkkkkkkkkkk");
+                
                 return new CommonResponseModel(true, 1, 'data retrived sucessfully', data)
+                
             } else {
                 return new CommonResponseModel(false, 0, 'no data found', [])
 

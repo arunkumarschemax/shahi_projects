@@ -37,7 +37,7 @@ const GRNForm = () => {
     },[])
 
     const createGrn = (value:any) => {
-        console.log(poData,'-------------------------------')
+        console.log(formData,'-------------------------------')
         const req = new GrnDto(value.vendorId,poData[0]?.purchaseOrderId,form.getFieldValue('grnDate').format('YYYY-MM-DD'),value.contactPerson,PurchaseOrderStatus.OPEN,value.remarks,undefined,undefined,'',undefined,'',0,0,poData[0]?.materialType,formData,0,'');
         console.log(req,'[][][][][][][]')
         grnService.createGrn(req).then((res) => {

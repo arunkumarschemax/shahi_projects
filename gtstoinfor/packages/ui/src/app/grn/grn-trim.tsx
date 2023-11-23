@@ -61,7 +61,7 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
       formData.forEach((record) => {
         const grnItem = new GrnItemsDto()
         grnItem.poTrimId = record.poTrimId
-        grnItem.m3ItemCodeId = record.m3ItemCodeId
+        grnItem.m3ItemCodeId = record.m3TrimCode
         grnItem.productGroupId = record.productGroupId
         grnItem.receivedQuantity = record.receivedQuantity
         grnItem.receivedUomId = record.receivedUomId
@@ -73,6 +73,7 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
         grnItem.conversionQuantity = record.conversionQuantity
         grnItem.conversionUomId = record.conversionUomId
         grnItem.remarks = record.remarks
+        // grnItem.m3TrimCode = record.m3TrimCode
         grnItemsArray.push(grnItem)
       })
       onSaveData(grnItemsArray)

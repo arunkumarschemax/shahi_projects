@@ -268,6 +268,9 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .select(`srfi.fabric_info_id,srfi.fabric_code,srfi.colour_id,srfi.remarks AS fab_remarks,srfi.consumption AS fabric_consumption,srfi.sample_request_id AS fabric_sample_request_id,rm.item_code AS fabric_item_code`)
             .leftJoin(SampleRequest, 'sr', ' sr.sample_request_id=srfi.sample_request_id ')
             .leftJoin(RmCreationEntity, 'rm', ' rm.rm_item_id=srfi.fabric_code ')
+            .leftJoin(M3ItemsEntity,'m3items','m3items.m3_items_Id  = srfi.fabric_code')
+
+
             .where(`srfi.sample_request_id = "${sampleId}"`)
             .getRawMany()
         return query.map((rec) => {
