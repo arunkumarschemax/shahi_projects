@@ -4,20 +4,17 @@ export class StocksDTO {
     @ApiProperty()
     id: number;
     @ApiProperty()
-    m3_style_id: number;
+    m3Item: number;
     @ApiProperty()
-    item_type_id: number;
+    itemType: string;
     @ApiProperty()
-    item_id: number;
+    buyerId: number;
     @ApiProperty()
-    location_id: number;
-    @ApiProperty()
-    plant: number;
+    locationId: number;
     @ApiProperty()
     quantity: number;
     @ApiProperty()
-    style_id: number;
+    uomId: number;
     @ApiProperty()
-    buyer_id: number;
-
+    plant?: number;
 }

@@ -170,6 +170,7 @@ import UomForm from "./masters/uom/uom-form"
 import BomIndentView from "./sourcing-requisition/bom-indent-view"
 import GRNView from "./grn/grn-view"
 import GRNDetailView from "./grn/grn-detail-view"
+import { Reclassification } from "./sourcing-requisition/reclassification"
 
 
 
@@ -224,6 +225,8 @@ export const AppRoutes = () => {
 
                 {/* <Route path='/masters'> */}
                 <Route path='quality-form' element={<QualityForm />} />
+                <Route path='reclassification' element={<Reclassification />} />
+
                 <Route path='quality-view' element={<QualityView />} />
                 <Route path='rack-form' element={<RackForm />} />
                 <Route path='rack-view' element={<RackView />} />

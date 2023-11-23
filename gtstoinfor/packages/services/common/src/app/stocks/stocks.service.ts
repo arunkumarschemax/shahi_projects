@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { AllStocksResponseModel, CommonResponseModel, StockFilterRequest, StocksDto } from "@project-management-system/shared-models";
+import { AllStocksResponseModel, CommonResponseModel, M3ItemsDTO, StockFilterRequest, StocksDto } from "@project-management-system/shared-models";
 import { StocksRepository } from "./repository/stocks.repository";
 import { StocksAdapter } from "./adapters/stocks.adatpters";
 import { AppDataSource } from "../app-datasource";
@@ -17,7 +17,7 @@ export class StocksService {
         return "Connected";
     }
 
-    async getAllStocks(): Promise<AllStocksResponseModel> {
+    async getAllStocks(req?: M3ItemsDTO): Promise<AllStocksResponseModel> {
         // try{
         //     const data = await this.stocksRepository.find();
         //     const stocksData: StocksDto[] = [];
@@ -34,43 +34,46 @@ export class StocksService {
         //     }
         // }
         try {
-            let dataquery = `SELECT 
-            m3_st.m3_style_code,
-            it_ty.item_type,
-            it.item_name,
-            it.item_code,
-            SUM(st.quantity) AS total_quantity,
-            rac_pos.rack_position_name,
-            rac_pos.status,
-            s.style,
-            s.description,
-            st.buyer_id,
-            buyer.buyer_name
-        FROM 
-            stocks AS st
-        LEFT JOIN 
-            m3_style AS m3_st ON m3_st.m3_style_Id = st.m3_style_id
-        LEFT JOIN 
-            item_type AS it_ty ON it_ty.item_type_id = st.item_type_id
-        LEFT JOIN 
-            items AS it ON it.item_id = st.item_id
-        LEFT JOIN 
-            rack_position AS rac_pos ON rac_pos.position_Id = st.location_id
-        LEFT JOIN 
-            style AS s ON s.style_id = st.style_id
-            LEFT JOIN buyers AS buyer ON buyer.buyer_id = st.buyer_id
-        GROUP BY 
-            m3_st.m3_style_code,
-            it_ty.item_type,
-            it.item_name,
-            it.item_code,
-            rac_pos.rack_position_name,
-            rac_pos.status,
-            s.style,
-            s.description;
-        `
+            console.log(req);
+            let query = "SELECT if(s.item_type != 'fabric' , itt.trim_code, concat(it.item_code,'-',it.description)) AS m3Item, s.item_type AS itemType, quantity AS qty, u.uom AS uom, b.buyer_name AS buyer,r.rack_position_name AS location  from stocks s left join buyers b on b.buyer_id = s.buyer_id left join m3_items it on it.m3_items_Id = s.m3_item and s.item_type = 'Fabric' left join m3_trims itt on itt.m3_trim_id = s.m3_item and s.item_type != 'fabric' left join rack_position r on r.position_Id = s.location_id left join uom u on u.id = s.uom_id where s.id > 0";
+            if(req.buyerId != undefined){
+                query = query + " and b.buyer_id = "+req.buyerId;
+            }
+            if(req.construction != undefined){
+                query = query + " and it.construction = "+req.construction;
+            }if(req.content != undefined){
+                query = query + " and it.content = '"+req.content+"'";
+            }if(req.fabricType != undefined){
+                query = query + " and it.fabric_type = "+req.fabricType;
+            }if(req.finish != undefined){
+                query = query + " and it.finish = '"+req.finish+"'";
+            }
+            if(req.shrinkage != undefined){
+                query = query + " and it.shrinkage = '"+req.shrinkage+"'";
+            }
+            if(req.weave != undefined){
+                query = query + " and it.weave = "+req.weave;
+            }
+            if(req.weight != undefined){
+                query = query + " and it.weight = '"+req.weight+"'";
+            }
+            if(req.width != undefined){
+                query = query + " and it.width = '"+req.width+"'";
+            }
+            if(req.yarnCount != undefined){
+                query = query + " and it.yarn_count = '"+req.yarnCount+"'";
+            }
 
-            const res = await AppDataSource.query(dataquery);
+            if(req.yarnUnit != undefined){
+                query = query + " and it.yarn_unit = "+req.yarnUnit;
+            }
+            if(req.widthUnit != undefined){
+                query = query + " and it.width_unit = "+req.widthUnit;
+            }
+            if(req.weightUnit != undefined){
+                query = query + " and it.weight_unit = "+req.weightUnit;
+            }
+            const res = await AppDataSource.query(query);
             if (res) {
                 return res;
             } else {

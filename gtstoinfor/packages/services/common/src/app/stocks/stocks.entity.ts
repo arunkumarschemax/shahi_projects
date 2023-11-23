@@ -1,40 +1,41 @@
 import { CommonColumns } from "packages/services/common/common-columns.entity";
-import { Column, Entity } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("stocks")
 export class StocksEntity extends CommonColumns {
-    @Column({
-        name: "m3_style_id",
+      @Column('int',{
+        name:'m3_item',
+        nullable:false
     })
-    m3_style_id: number;
+    m3Item:number;
 
-    @Column({
-        name: "item_type_id",
+    @Column('int',{
+        name:'buyer_id',
+        nullable:false
     })
-    item_type_id: number;
+    buyerId:number;
 
-    @Column({
-        name: "item_id",
+    @Column('int',{
+        name:'uom_id',
+        nullable:false
     })
+    uomId:number;
 
-    item_id: number;
+    @Column('varchar', {
+        nullable: false,
+        length: 30,
+        name: 'item_type',
+      })
+    itemType: string;
+
     @Column({
         name: "location_id",
     })
-    location_id: number;
+    locationId: number;
 
     @Column({
         name: "quantity",
     })
     quantity: number;
 
-    @Column({
-        name: "style_id",
-    })
-    style_id: number;
-
-    @Column({
-        name: "buyer_id",
-    })
-    buyer_id: number;
 }

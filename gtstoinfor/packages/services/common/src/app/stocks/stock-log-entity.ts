@@ -9,48 +9,45 @@ export class StockLogEntity{
     })
     stockLogId:number
     
-    @Column({
-        name: "m3_item_code",
-        length: 100,
+    @Column('int',{
+        name:'m3_item',
+        nullable:false
     })
-    m3ItemCode: string;
+    m3Item:number;
 
-    @Column({
-        name: "shahi_item_code",
-        length: 100
+    @Column('int',{
+        name:'buyer_id',
+        nullable:false
     })
-    shahiItemCode: string;
+    buyerId:number;
 
-    @Column({
-        name: "item_type_id",
+    @Column('int',{
+        name:'uom_id',
+        nullable:false
     })
-    item_type_id: number;
+    uomId:number;
+
+    @Column('varchar', {
+        nullable: false,
+        length: 30,
+        name: 'item_type',
+      })
+    itemType: string;
 
     @Column({
         name: "location_id",
     })
-    location_id: number;
+    locationId: number;
 
     @Column({
-        name: "plant_id",
+        name: "quantity",
     })
-    plant_id: number;
-
+    quantity: number;
+    
     @Column({
         name: "grn_item_id",
     })
     grnItemId: number;
-
-    @Column({
-        name: "buyer_id",
-    })
-    buyer_id: number;
-
-    @Column({
-        name: "quantity",
-        length: 50,
-    })
-    quantity: string;
 
     @CreateDateColumn({
         name: "created_at",
