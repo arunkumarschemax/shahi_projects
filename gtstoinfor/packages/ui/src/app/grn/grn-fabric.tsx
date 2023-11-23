@@ -64,7 +64,7 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
       const grnItemsArray = [];
       console.log(formData)
       formData.forEach((record) => {
-        console.log(record)
+        console.log(record,'>>>>>>>')
         const grnItem = new GrnItemsDto()
         grnItem.poFabricId = record.poFabricId
         grnItem.m3ItemCodeId = record.m3ItemCodeId
@@ -79,6 +79,7 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
         grnItem.conversionQuantity = record.conversionQuantity 
         grnItem.conversionUomId = record.conversionUomId
         grnItem.remarks = record.remarks
+        grnItem.m3FabricCode = record.m3FabricCode
         grnItemsArray.push(grnItem)
       });
       onSaveData(grnItemsArray)
