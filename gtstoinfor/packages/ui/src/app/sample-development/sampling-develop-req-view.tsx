@@ -325,7 +325,7 @@ import {
     };
   
     const HeaderRow = (props: any) => {
-      const { requestNo, style, buyerName, expectedDate, indentDate, status, lifeCycleStatus, location, brandName } =
+      const { requestNo, style, buyerName, expectedDate, indentDate, status, lifeCycleStatus, location, brandName,pch } =
         props;
       const formattedIndentDate = moment(indentDate).format("YYYY-MM-DD");
       const formattedExpectedDate = moment(expectedDate).format("YYYY-MM-DD");
@@ -337,6 +337,8 @@ import {
           <span>Style : {<b>{style}</b>}</span>
           <span style={{ width: "10px" }}></span>
           <span>Brand : {<b>{brandName}</b>}</span>
+          <span style={{ width: "10px" }}></span>
+          <span>PCH : {<b>{pch}</b>}</span>
           <span style={{ width: "10px" }}></span>
           <span>Buyer : {<b>{buyerName}</b>}</span>
           <span style={{ width: "10px" }}></span>
@@ -558,6 +560,7 @@ import {
                   lifeCycleStatus={item.lifeCycleStatus}
                   location={item.location}
                   brandName={item.brandName}
+                  pch={item.pch}
                 //   expectedDate={item.expectedDate}
                 //   indentDate={item.indentDate}
                   status={item.status}
