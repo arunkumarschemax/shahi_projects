@@ -61,8 +61,11 @@ export class PurchaseOrderController {
     }
   }
   @Post('/getAllPurchaseOrderData')
+  @ApiBody({type:PurchaseViewDto})
   async getAllPurchaseOrderData(@Body() req?: any ): Promise<CommonResponseModel> {
     try {
+      console.log(">>>>>>>>>>>>>>>>>>");
+      
       return await this.purchasseOrdrSerivice.getAllPurchaseOrderData(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
@@ -72,3 +75,5 @@ export class PurchaseOrderController {
 
 
 }
+
+
