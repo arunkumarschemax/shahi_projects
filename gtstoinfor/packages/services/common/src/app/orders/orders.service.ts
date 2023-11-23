@@ -1354,9 +1354,10 @@ async getExfactoryMonthExcelData(req:YearReq): Promise<CommonResponseModel> {
 
     return new CommonResponseModel(true, 1, 'data retrieved', data);
 }
-
 async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel> {
+    // console.log(req,'-------')
     const data = await this.ordersChildRepo.getMonthlyComparisionData(req);
+  console.log(data,'backendddddddd');
     
     if (data.length === 0) {
         return new CommonResponseModel(false, 0, 'data not found');

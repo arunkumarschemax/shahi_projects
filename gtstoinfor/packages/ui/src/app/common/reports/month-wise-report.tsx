@@ -110,7 +110,7 @@ export const MonthWiseReport = () => {
 
   const pagination = {
     current: page,
-    pageSize: pageSize,
+    pageSize: filteredData.length,
     total: filteredData.length,
     showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
     onChange: (current, pageSize) => {
