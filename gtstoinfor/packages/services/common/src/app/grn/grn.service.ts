@@ -155,7 +155,7 @@ export class GrnService{
                 // item.conversionUomId=1
                 const itemEntity = new GrnItemsEntity()
                 // itemEntity.m3ItemCodeId=item.m3ItemCodeId
-                itemEntity.productGroupId=item.productGroupId
+                // itemEntity.productGroupId=item.productGroupId
                 itemEntity.receivedQuantity=item.receivedQuantity
                 itemEntity.receivedUomId=item.receivedUomId
                 itemEntity.acceptedQuantity=item.acceptedQuantity
@@ -165,6 +165,7 @@ export class GrnService{
                 itemEntity.conversionQuantity=item.conversionQuantity
                 itemEntity.conversionUomId=item.conversionUomId
                 itemEntity.remarks=item.remarks
+                itemEntity.m3ItemCodeId=item.m3ItemCodeId
                 itemInfo.push(itemEntity)
             }
             grnEntity.grnItemInfo=itemInfo

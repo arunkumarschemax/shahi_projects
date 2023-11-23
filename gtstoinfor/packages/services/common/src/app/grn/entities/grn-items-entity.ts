@@ -118,6 +118,13 @@ export class GrnItemsEntity{
     })
     versionFlag: number;
 
+    
+    @Column('int',{
+        name:'m3_item_code_id',
+        nullable:false
+    })
+    m3ItemCodeId:number
+
 
     @ManyToOne(type =>GrnEntity,grn =>grn.grnItemInfo)
     @JoinColumn({name:'grn_id'})
