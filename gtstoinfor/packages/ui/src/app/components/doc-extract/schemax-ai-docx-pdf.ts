@@ -9638,7 +9638,7 @@ export const extractedJeena = async (pdf) => {
         //console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>",matchData)
         //console.log("************************",matchData[8]?.replace(/0.00\s+18.0%/, '').trim()||'')
         if (matchData.length > 0) {
-            const description = matchData[1]?.trim();
+            const description = matchData[1]?.trim().replace(/\d/g,"");
             const HSN = matchData[2]?.trim();
             const unitPrice = (matchData[4] || '').replace(/,/g, "").trim();
             const charge = matchData[4]?.replace(/,/g, "").trim();
