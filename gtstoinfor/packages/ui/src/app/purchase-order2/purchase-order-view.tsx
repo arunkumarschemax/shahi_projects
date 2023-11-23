@@ -1,11 +1,12 @@
-import { CloseOutlined, EyeOutlined } from '@ant-design/icons';
+import { CloseOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
 import { PurchaseStatusEnum, PurchaseViewDto } from '@project-management-system/shared-models';
 import { PurchaseOrderservice } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tabs, Tooltip } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, Tabs, Tooltip } from 'antd';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { log } from 'console';
+import Highlighter from 'react-highlight-words';
 
 export const PurchaseOrderView = () => {
   const page = 1;
@@ -18,7 +19,9 @@ export const PurchaseOrderView = () => {
   const [form] = Form.useForm();
   const [count, setCount] = useState<any>(0);
   const k = [];
-
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef(null);
 
   // let Location = useLocation()
   // const stateData = Location.state.data
@@ -27,32 +30,125 @@ export const PurchaseOrderView = () => {
     getPo();
   }, [])
 
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
+  const getColumnSearchProps = (dataIndex: string) => ({
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }) => (
+        <div style={{ padding: 8 }}>
+          <Input
+            ref={searchInput}
+            placeholder={`Search ${dataIndex}`}
+            value={selectedKeys[0]}
+            onChange={(e) =>
+              setSelectedKeys(e.target.value ? [e.target.value] : [])
+            }
+            onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            style={{ width: 188, marginBottom: 8, display: "block" }}
+          />
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90, marginRight: 8 }}
+          >
+            Search
+          </Button>
+          <Button
+            size="small"
+            style={{ width: 90 }}
+            onClick={() => {
+              handleReset(clearFilters);
+              setSearchedColumn(dataIndex);
+              confirm({ closeDropdown: true });
+            }}
+          >
+            Reset
+          </Button>
+        </div>
+      ),
+      filterIcon: (filtered) => (
+        <SearchOutlined
+          type="search"
+          style={{ color: filtered ? "#1890ff" : undefined }}
+        />
+      ),
+      onFilter: (value, record) =>
+        record[dataIndex]
+          ? record[dataIndex]
+              .toString()
+              .toLowerCase()
+              .includes(value.toLowerCase())
+          : false,
+      onFilterDropdownVisibleChange: (visible) => {
+        if (visible) {
+          setTimeout(() => searchInput.current.select());
+        }
+      },
+      render: (text) =>
+        text ? (
+          searchedColumn === dataIndex ? (
+            <Highlighter
+              highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+              searchWords={[searchText]}
+              autoEscape
+              textToHighlight={text.toString()}
+            />
+          ) : (
+            text
+          )
+        ) : null,
+    });
   const getPo = (status?: PurchaseStatusEnum) => {
     // if (status === PurchaseStatusEnum.INPROGRESS) {
     //   status === "IN PROGRESS"
     // }
     console.log(status, 'ttttttttttttttttttttttt');
 
-    const req = new PurchaseViewDto()
-    if (form.getFieldValue('deliveryDate') !== undefined) {
-      req.confirmStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
-    }
-    if (form.getFieldValue('deliveryDate') !== undefined) {
-      req.confirmEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
-    }
-    if (form.getFieldValue('orderDate') !== undefined) {
-      req.poconfirmStartDate = (form.getFieldValue('orderDate')[0]).format('YYYY-MM-DD');
-    }
-    if (form.getFieldValue('orderDate') !== undefined) {
-      req.poconfirmEndDate = (form.getFieldValue('orderDate')[1]).format('YYYY-MM-DD');
-    };
-    req.status = status
-    Service.getAllPurchaseOrderData(req).then(res => {
-      if (res.status) {
-        setCount(res?.data[res.data?.length - 1]);
-        res.data.pop()
-        setData(res.data);
-      } else {
+    // const req = new PurchaseViewDto()
+    // if (form.getFieldValue('deliveryDate') !== undefined) {
+    //   req.confirmStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
+    // }
+    // if (form.getFieldValue('deliveryDate') !== undefined) {
+    //   req.confirmEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
+    // }
+    // if (form.getFieldValue('orderDate') !== undefined) {
+    //   req.poconfirmStartDate = (form.getFieldValue('orderDate')[0]).format('YYYY-MM-DD');
+    // }
+    // if (form.getFieldValue('orderDate') !== undefined) {
+    //   req.poconfirmEndDate = (form.getFieldValue('orderDate')[1]).format('YYYY-MM-DD');
+    // };
+    // req.status = status
+    // Service.getAllPurchaseOrderData().then((res) => {
+    //   console.log(res,"llllllllllllll");
+      
+    //   if (res.status) {
+    //     console.log(res,":::::::::::::::::");
+        
+    //     setCount(res?.data[res.data?.length - 1]);
+    //     res.data.pop()
+    //     setData(res.data);
+    //   } else {
+    //     setData([])
+    //   }
+    // })
+
+    Service.getAllPurchaseOrderData().then((res)=>{
+      if(res.status){
+        setData(res.data)
+      }else{
         setData([])
       }
     })
@@ -90,7 +186,8 @@ export const PurchaseOrderView = () => {
     {
       title: 'PO Number',
       dataIndex: 'poNumber',
-      width: '150px'
+      width: '150px',
+      render: text => (text ? text : "-")
     },
     
     // {
@@ -182,12 +279,14 @@ export const PurchaseOrderView = () => {
           : "";
       },
     },
-    {
-      title: 'VenderName',
-      dataIndex: 'vendorName',
-      width: '100px',
+    // {
+    //   title: 'VenderName',
+    //   dataIndex: 'vendorName',
+      
+    //   width: '100px',
 
-    },
+    // },
+    
     {
       title: 'Expected Date',
       dataIndex: 'expectedDeliverydate',
@@ -200,12 +299,12 @@ export const PurchaseOrderView = () => {
     },
     {
       title: 'Aging(EPD)',
-      dataIndex: 'deliveryDate',
+      dataIndex: 'expectedDeliverydate',
       width: '20px',
       fixed: 'right',
       align: 'right',
       render: (text, record) => {
-        const daysDifference = moment(record.deliveryDate).diff(moment(), 'days');
+        const daysDifference = moment(record.expectedDeliverydate).diff(moment(), 'days');
         const age = {
           children: daysDifference,
           props: {

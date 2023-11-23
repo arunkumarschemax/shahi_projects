@@ -12,7 +12,9 @@ import { SampleRequest } from "../../sample-dev-request/entities/sample-dev-requ
 export class IndentAdapter
 {
     public convertDtoToEntity(indentDto:IndentDto, isUpdate: boolean = false ):Indent{
+        console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
         console.log(indentDto)
+
         const indententity = new Indent();
         indententity.indentId=indentDto.indentId;
         indententity.indentDate=indentDto.indentDate;
@@ -25,9 +27,9 @@ export class IndentAdapter
         indententity.updatedAt=indentDto.updatedAt;
         indententity.versionFlag=indentDto.versionFlag;
         indententity.status=indentDto.status;
-        // let sampleId = new SampleRequest();
-        // sampleId.SampleRequestId=indentDto.sampleRequestId;
-        // indententity.sampleReq.SampleRequestId = indentDto.sampleRequestId;
+        let sampleId = new SampleRequest();
+        sampleId.SampleRequestId=indentDto.sampleRequestId;
+        indententity.sampleReq = sampleId;
         if (isUpdate) {
           indententity.updatedUser = indentDto.updatedUser;
         } else {
@@ -122,7 +124,7 @@ export class IndentAdapter
             trimDto.push(trimData);
         }
 
-        const indentDto= new IndentDto(indentObject.indentId,indentObject.requestNo,indentObject.indentDate,indentObject.expectedDate,indentObject.indentCloseDate,indentObject.status,fabDto,trimDto,indentObject.remarks,indentObject.isActive,indentObject.createdAt,indentObject.createdUser,indentObject.updatedAt,indentObject.updatedUser,indentObject.versionFlag);
+        const indentDto= new IndentDto(indentObject.indentId,indentObject.requestNo,indentObject.indentDate,indentObject.expectedDate,indentObject.indentCloseDate,indentObject.status,fabDto,trimDto,0,indentObject.remarks,indentObject.isActive,indentObject.createdAt,indentObject.createdUser,indentObject.updatedAt,indentObject.updatedUser,indentObject.versionFlag);
         return indentDto;
       }
 }
