@@ -125,6 +125,7 @@ export class GrnService{
         try{
         await transactionalEntityManager.startTransaction();
             const itemInfo=[]
+            req.grnNumber='grnoo2'
             const grnEntity = new GrnEntity()
             grnEntity.grnNumber=req.grnNumber
             grnEntity.vendorId=req.vendorId
@@ -134,8 +135,10 @@ export class GrnService{
             grnEntity.contactPerson = req.contactPerson
             grnEntity.createdUser=req.createdUser
             grnEntity.updatedUser=req.updatedUser
+            grnEntity.itemType=req.materialtype
             console.log(req,'===========')
             for(const item of req.grnItemInfo){
+                console.log(item,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
                 // item.conversionQuantity=200
                 // item.conversionUomId=1
                 const itemEntity = new GrnItemsEntity()
@@ -227,10 +230,11 @@ export class GrnService{
     async getAllGrn():Promise<CommonResponseModel>{
         try{
             const manager = this.dataSource;
-            let query=`SELECT grn_id,grn.vendor_id,grn.grn_number,b.buyer_name,po_id,grn_date,grn.contact_person,grn.status,po.po_number,po.po_material_type,v.vendor_name FROM grn
-            LEFT JOIN purchase_order po ON po.purchase_order_id = grn.po_id
-            LEFT JOIN buyers b ON b.buyer_id = po.buyer_id
-            LEFT JOIN vendors v ON v.vendor_id = po.vendor_id
+            let query=`SELECT v.vendor_name AS vendorName,po_number AS poNumber,item_type AS materialTYpe,grn_id,grn.vendor_id,grn.grn_number,b.buyer_name,po_id,grn_date,grn.contact_person,
+            grn.status,po.po_number,po.po_material_type,v.vendor_name FROM grn
+                        LEFT JOIN purchase_order po ON po.purchase_order_id = grn.po_id
+                        LEFT JOIN buyers b ON b.buyer_id = po.buyer_id
+                        LEFT JOIN vendors v ON v.vendor_id = po.vendor_id
 
 `
             // if(materialType == 'Fabric'){

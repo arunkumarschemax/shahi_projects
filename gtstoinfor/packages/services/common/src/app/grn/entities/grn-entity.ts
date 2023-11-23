@@ -96,7 +96,12 @@ export class GrnEntity{
         nullable:true
     })
     remarks:string
-    
+
+    @Column('varchar',{
+      name:'item_type',
+      nullable:false
+    })
+    itemType:string
   // @OneToMany(type => GrnFabricEntity, grnFab => grnFab.grnEntity, { cascade: true })
   // grnFabricInfo: GrnFabricEntity[]
 

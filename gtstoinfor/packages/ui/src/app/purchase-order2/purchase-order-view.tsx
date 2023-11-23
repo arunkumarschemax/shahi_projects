@@ -99,77 +99,77 @@ export const PurchaseOrderView = () => {
     //   width: '80px'
     // },
 
-    {
-      title: <div style={{ textAlign: 'center' }}>M3 ItemCode</div>,
-      dataIndex: 'fabInfo',
-      key:'fabInfo',
-      width: '150px',
-      align: 'center',
+    // {
+    //   title: <div style={{ textAlign: 'center' }}>M3 ItemCode</div>,
+    //   dataIndex: 'fabInfo',
+    //   key:'fabInfo',
+    //   width: '150px',
+    //   align: 'center',
 
-      render:(fabInfo,text)=>{
-        renderCellData(text)
-        return(
-          <Table 
-          dataSource={fabInfo}
-          columns={[
-            {
-              dataIndex:"itemCode",
-              key:"itemCode",align:'center',
-            }
-          ]}
-          pagination={false}
-          />
+    //   render:(fabInfo,text)=>{
+    //     renderCellData(text)
+    //     return(
+    //       <Table 
+    //       dataSource={fabInfo}
+    //       columns={[
+    //         {
+    //           dataIndex:"itemCode",
+    //           key:"itemCode",align:'center',
+    //         }
+    //       ]}
+    //       pagination={false}
+    //       />
           
-        )
-      }
-    },
-    {
-      title: <div style={{ textAlign: 'center' }}>M3 trimCode</div>,
-      dataIndex: 'triminfo',
-      key:"triminfo",
-      width: '150px',
-      align: 'center',
-      render: (triminfo, text) => {
-        renderCellData(text)
-        return (
-          <Table
-            dataSource={triminfo}
-            columns={[
-              {
-                dataIndex: "trimcode",
-                key: "trimcode", align: 'center',
-              },
+    //     )
+    //   }
+    // },
+    // {
+    //   title: <div style={{ textAlign: 'center' }}>M3 trimCode</div>,
+    //   dataIndex: 'triminfo',
+    //   key:"triminfo",
+    //   width: '150px',
+    //   align: 'center',
+    //   render: (triminfo, text) => {
+    //     renderCellData(text)
+    //     return (
+    //       <Table
+    //         dataSource={triminfo}
+    //         columns={[
+    //           {
+    //             dataIndex: "trimcode",
+    //             key: "trimcode", align: 'center',
+    //           },
 
-            ]}
-            pagination={false}
-          />
-        );
-      }
-    },
-    {
-      title: <div style={{ textAlign: 'center' }}>M3 TrimType</div>,
-      dataIndex: 'triminfo',
-      key:"triminfo",
-      width: '150px',
-      align: 'center',
-      render: (triminfo, text) => {
-        renderCellData(text)
-        return (
-          <Table
-            dataSource={triminfo}
-            columns={[
-              {
-                dataIndex: "trimtype",
-                key: "trimtype", align: 'center',
+    //         ]}
+    //         pagination={false}
+    //       />
+    //     );
+    //   }
+    // },
+    // {
+    //   title: <div style={{ textAlign: 'center' }}>M3 TrimType</div>,
+    //   dataIndex: 'triminfo',
+    //   key:"triminfo",
+    //   width: '150px',
+    //   align: 'center',
+    //   render: (triminfo, text) => {
+    //     renderCellData(text)
+    //     return (
+    //       <Table
+    //         dataSource={triminfo}
+    //         columns={[
+    //           {
+    //             dataIndex: "trimtype",
+    //             key: "trimtype", align: 'center',
                 
-              },
+    //           },
 
-            ]}
-            pagination={false}
-          />
-        );
-      }
-    },
+    //         ]}
+    //         pagination={false}
+    //       />
+    //     );
+    //   }
+    // },
    
     {
       title: <div style={{ textAlign: 'center' }}>Po Date</div>,
