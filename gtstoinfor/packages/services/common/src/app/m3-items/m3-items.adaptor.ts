@@ -11,6 +11,9 @@ import { M3ItemsEntity } from "./m3-items.entity";
 export class M3ItemsAdapter {
 
     convertDtoToEntity(dto: M3ItemsDTO): M3ItemsEntity {
+        console.log("********************************************************");
+        console.log(dto);
+
         const entity = new M3ItemsEntity();
         // entity.itemCode = dto.itemCode;
         entity.content = dto.content;
@@ -25,6 +28,8 @@ export class M3ItemsAdapter {
         entity.buyerId = dto.buyerId;
         entity.description = dto.description;
         entity.shrinkage = dto.shrinkage;
+        entity.width = dto.width;
+        entity.widthUnit = dto.widthUnit;
         if (dto.m3ItemsId) {
             entity.m3ItemsId = dto.m3ItemsId;
             entity.updatedUser = dto.updatedUser

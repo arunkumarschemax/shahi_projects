@@ -1,4 +1,4 @@
-import { IndentService, PurchaseOrderservice, StyleService, VendorsService } from "@project-management-system/shared-services";
+import { BuyersService, IndentService, PurchaseOrderservice, StyleService, VendorsService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, Row, Segmented, Select, Space, Tabs, message } from "antd"
 import TabPane from "antd/es/tabs/TabPane";
 import { useState, useEffect } from "react";
@@ -24,6 +24,8 @@ export const PurchaseOrderForm =()=>{
     const [poType, setPoType]=useState<any>('')
     const [submitDisbale, setSubmitDisable]=useState<boolean>(true)
     // const [styleVisible, setStyleVisible]= useState<boolean>(undefined)
+  const [buyer, setBuyer] = useState<any[]>([]);
+
     const [navigateData,setnavigateData] = useState<any>([])
     let fabricInfo:PurchaseOrderFbricDto[]=[];
     let trimInfo:PurchaseOrderTrimDto[]=[];
@@ -37,6 +39,7 @@ export const PurchaseOrderForm =()=>{
     const location = useLocation()
     const stateData :any=location.state
     const vendorService = new VendorsService()
+    const buyerService = new BuyersService();
 
 
 
@@ -44,11 +47,19 @@ export const PurchaseOrderForm =()=>{
     useEffect(() =>{
         getStyle()
         getIndnetNo()
-        // getAllvendors()
+        getBuyers()
         getVendors()
         poForm.setFieldsValue({purchaseOrderDate:dayjs()})
         poForm.setFieldsValue({expectedDeliveryDate:now})
     },[])
+
+    const getBuyers = () => {
+        buyerService.getAllActiveBuyers().then((res) => {
+          if (res.status) {
+            setBuyer(res.data);
+          }
+        });
+      };
 
     const getStyle = () => {
         styleService.getAllActiveStyle().then(res =>{
@@ -60,9 +71,14 @@ export const PurchaseOrderForm =()=>{
 
     useEffect(() =>{
         if(stateData != undefined ){
+            // console.log(stateData)
+            // console.log(stateData.data)
+            // console.log(stateData.data[0].materialType)
+            // console.log(stateData.data[1].indentIds)
+
             if(stateData.type == 'Indent'){
                 poForm.setFieldsValue({indentId:stateData.data.indentId})
-                setIndentId(stateData)
+                // setIndentId(stateData)
                 // poForm.setFieldsValue({indentAgainst:'Indent'})
                 // setStyleVisible(false)
                 setIndentId(stateData.data.indentId)
@@ -76,21 +92,23 @@ export const PurchaseOrderForm =()=>{
     
                 }
             }
-            // if(stateData.type == 'Sampling'){
-            //     setnavigateData(stateData)
-            //     // poForm.setFieldsValue({indentAgainst:'Style'})
-            //     // setStyleVisible(true)
-            //     poForm.setFieldsValue({styleId:stateData.data.styleId})
-            //     if(stateData.data.fabricName == "Fabric"){
-            //         console.log('UUUUUUU')
-            //         poForm.setFieldsValue({poMaterialType:"Fabric"})
-            //         setPoType('Fabric')
-            //     }
-            //     if(stateData.data.fabricName != 'Fabric'){
-            //         setPoType('Trim')
-            //         poForm.setFieldsValue({poMaterialType:"Trim"})
-            //     }
-            // }  
+            if(stateData.type == 'Sampling'){
+                setnavigateData(stateData)
+                // poForm.setFieldsValue({indentAgainst:'Style'})
+                // setStyleVisible(true)
+                poForm.setFieldsValue({indentId:stateData.data[1].indentIds})
+                setIndentId(stateData.data[1].indentIds)
+                if(stateData.data[0].materialType == "Fabric"){
+                    console.log('UUUUUUU')
+                    setPoType('Fabric')
+                    poForm.setFieldsValue({poMaterialType:"Fabric"})
+                }
+                if(stateData.data[0].materialType != 'Fabric'){
+                    console.log('xxxxxx')
+                    setPoType('Trim')
+                    poForm.setFieldsValue({poMaterialType:"Trim"})
+                }
+            }  
         }
     },[stateData])
 
@@ -140,10 +158,11 @@ export const PurchaseOrderForm =()=>{
         for(const fabData of fabricData){
             console.log(fabData)
             if(fabData.poQuantity != ""){
+                console.log('^^^^^^^^^')
                 const fabInfo = new PurchaseOrderFbricDto(fabData.colourId,fabData.remarks,fabData.fabricTypeId,fabData.m3FabricCode,fabData.shahiFabricCode,fabData.content,fabData.weaveId,fabData.weight,fabData.width,fabData.construction,fabData.yarnCount,fabData.finish,fabData.shrinkage,fabData.pch,fabData.moq,fabData.yarnUnit,fabData.indentFabricId,fabData.poQuantity,fabData.quantityUomId)
                 fabricInfo.push(fabInfo)
             }else{
-                message.error('Please Update Po Quantity')
+                // message.error('Please Update Po Quantity')
             }
         }
         for(const trim of trimData){
@@ -155,9 +174,10 @@ export const PurchaseOrderForm =()=>{
                 message.error('Please Update Po Quantity')
             }  
         }
-        const poDto = new PurchaseOrderDto('po11',poForm.getFieldValue('vendorId'),poForm.getFieldValue('styleId'),poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"),poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'),poForm.getFieldValue('remarks'),poForm.getFieldValue('poMaterialType'),poForm.getFieldValue('indentId'),fabricInfo,trimInfo)
+        const poDto = new PurchaseOrderDto('po11',poForm.getFieldValue('vendorId'),poForm.getFieldValue('styleId'),poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"),poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'),poForm.getFieldValue('remarks'),poForm.getFieldValue('poMaterialType'),poForm.getFieldValue('indentId'),poForm.getFieldValue('buyerId'),fabricInfo,trimInfo)
         console.log(poDto)
         if(poDto.poTrimInfo.length >0 || poDto.poFabricInfo.length >0){
+            console.log('%%%%%%')
             purchaseOrderService.cretePurchaseOrder(poDto).then(res =>{
                 console.log(poDto)
                 if(res.status){
@@ -227,7 +247,29 @@ return(
                         </Select>
                     </Form.Item>
                     </Col> */}
-             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+                        <Form.Item
+                        name="buyerId"
+                        label="Buyer"
+                        rules={[{ required: true, message: "Buyer is required" }]}
+                        >
+                        <Select
+                            allowClear
+                            showSearch
+                            optionFilterProp="children"
+                            placeholder="Select Buyer"
+                        >
+                            {buyer.map((e) => {
+                            return (
+                                <Option key={e.buyerId} value={e.buyerId}>
+                                {`${e.buyerCode} - ${e.buyerName}`}
+                                </Option>
+                            );
+                            })}
+                        </Select>
+                        </Form.Item>
+                    </Col>
+             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:'none'}}>
                     <Form.Item name='indentId' label='Indent Code' 
                     rules={[{required:true,message:'IndentCode is required'}]}>
                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Indent' mode="multiple"

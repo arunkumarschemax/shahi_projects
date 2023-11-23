@@ -1,7 +1,7 @@
 import { UndoOutlined } from "@ant-design/icons";
 import { SampleRequestFilter } from "@project-management-system/shared-models";
 import { SampleDevelopmentService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Row, Select, Table } from "antd";
+import { Button, Card, Checkbox, Col, Form, Row, Select, Table } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -15,7 +15,9 @@ const SampleRequestReport = () => {
   const [sampleData, setSampleData] = useState<any[]>([]);
   const [filterData, setFilterData] = useState<any[]>([]);
   const navigate = useNavigate();
-
+  const [selectedIndentIds, setSelectedIndentIds] = useState([]);
+  const [btnEnable,setbtnEnable]=useState<boolean>(false)
+  const [selectedItems, setSelectedItems] = useState({});
 
   useEffect(() => {
     getData();
@@ -82,44 +84,29 @@ const SampleRequestReport = () => {
     },
     {
       title: "Buyer",
-      dataIndex: "buyer_name",
-      sorter: (a, b) => a.buyer_name.localeCompare(b.buyer_name),
+      dataIndex: "buyerName",
+      sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
       sortDirections: ['descend', 'ascend'],
     },
     {
       title: "Request No",
-      dataIndex: "request_no",
-      sorter: (a, b) => a.request_no.localeCompare(b.request_no),
-      sortDirections: ['descend', 'ascend'],
-    },
-    {
-      title: "Style",
-      dataIndex: "style",
-      sorter: (a, b) => a.style.localeCompare(b.style),
+      dataIndex: "sampleReqNo",
+      sorter: (a, b) => a.sampleReqNo.localeCompare(b.sampleReqNo),
       sortDirections: ['descend', 'ascend'],
     },
     // {
-    //   title:<div style={{ textAlign: 'center' }}>Buyer</div> ,
-    //   dataIndex: "sm",
-    //   key: "sm",
-    //   align:'center',
-    //   render: (sm,text) => {
-    //     renderCellData(text)
-    //     return (
-    //       <Table
-    //         dataSource={sm}
-    //         columns={[
-    //           {
-    //             dataIndex: "buyers",
-    //             key: "buyers", align:'center',
-    //           },
-
-    //         ]}
-    //         pagination={false}
-    //       />
-    //     );
-    //   }
+    //   title: "Indent Code",
+    //   dataIndex: "indentCode",
+    //   sorter: (a, b) => a.indentCode.localeCompare(b.indentCode),
+    //   sortDirections: ['descend', 'ascend'],
     // },
+    {
+      title: "Style",
+      dataIndex: "styleName",
+      sorter: (a, b) => a.styleName.localeCompare(b.styleName),
+      sortDirections: ['descend', 'ascend'],
+    },
+   
     {
       title: <div style={{ textAlign: "center" }}>Fabric Name</div>,
       dataIndex: "sm",
@@ -132,8 +119,8 @@ const SampleRequestReport = () => {
             dataSource={sm}
             columns={[
               {
-                dataIndex: "fabricName",
-                key: "fabricName",
+                dataIndex: "fabricType",
+                key: "fabricType",
                 align: "center",
               },
             ]}
@@ -142,55 +129,7 @@ const SampleRequestReport = () => {
         );
       },
     },
-    // {
-    //   title:<div style={{ textAlign: 'center' }}>Style</div> ,
-    //   dataIndex: "sm",
-    //   key: "sm",
-    //   align:'center',
-    //   render: (sm,text) => {
-    //     renderCellData(text)
-    //     return (
-    //       <Table
-    //         dataSource={sm}
-    //         columns={[
-    //           {
-    //             dataIndex: "style",
-    //             key: "style", align:'center',
-    //           },
-
-    //         ]}
-    //         pagination={false}
-    //       />
-    //     );
-    //   }
-    // },
-
-    // {
-    //   title: <div style={{ textAlign: 'center' }}>Date</div>,
-    //   dataIndex: "sm",
-    //   key: "sm",
-    //   align: 'center',
-    //   render: (sm, record) => {
-    //     return (
-    //       <>
-    //         <Table
-    //           dataSource={sm}
-    //           columns={[
-    //             {
-    //               dataIndex: "date",
-    //               key: "date",
-    //               align: 'center',
-    //               render:(record)=>{
-    //                return record ? moment(record).format("YYYY-MM-DD") : null
-    //               }
-    //             }
-    //           ]}
-    //           pagination={false}
-    //         />
-    //       </>
-    //     );
-    //   }
-    // },
+ 
     {
       title: <div style={{ textAlign: "center" }}>Item</div>,
       dataIndex: "sm",
@@ -203,8 +142,8 @@ const SampleRequestReport = () => {
             dataSource={sm}
             columns={[
               {
-                dataIndex: "code",
-                key: "code",
+                dataIndex: "itemCode",
+                key: "itemCode",
                 align: "center",
               },
             ]}
@@ -213,49 +152,8 @@ const SampleRequestReport = () => {
         );
       },
     },
-    // {
-    //   title:<div style={{ textAlign: 'center' }}>Color</div> ,
-    //   dataIndex: "sm",
-    //   key: "sm",
-    //   align:'center',
-    //   render: (sm) => {
-    //     return (
-    //       <Table
-    //         dataSource={sm}
-    //         columns={[
-    //           {
-    //             dataIndex: "color",
-    //             key: "color", align:'center',
-    //           },
-    //         ]}
-    //         pagination={false}
-    //       />
-    //     );
-    //   }
-    // },
     {
       title: <div style={{ textAlign: "center" }}>Required Qty</div>,
-      dataIndex: "sm",
-      key: "sm",
-      align: "center",
-      render: (sm) => {
-        return (
-          <Table
-            dataSource={sm}
-            columns={[
-              {
-                dataIndex: "consumption",
-                key: "consumption",
-                align: "center",
-              },
-            ]}
-            pagination={false}
-          />
-        );
-      },
-    },
-    {
-      title: <div style={{ textAlign: "center" }}>Available Qty</div>,
       dataIndex: "sm",
       key: "sm",
       align: "center",
@@ -275,8 +173,29 @@ const SampleRequestReport = () => {
         );
       },
     },
+    // {
+    //   title: <div style={{ textAlign: "center" }}>Available Qty</div>,
+    //   dataIndex: "sm",
+    //   key: "sm",
+    //   align: "center",
+    //   render: (sm) => {
+    //     return (
+    //       <Table
+    //         dataSource={sm}
+    //         columns={[
+    //           {
+    //             dataIndex: "",
+    //             key: "quantity",
+    //             align: "center",
+    //           },
+    //         ]}
+    //         pagination={false}
+    //       />
+    //     );
+    //   },
+    // },
     {
-      title: <div style={{ textAlign: "center" }}>Action</div>,
+      title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" onClick={() =>generatePo()} >Generate Po</Button>:'Genereate PO'}</div>,
       dataIndex: "sm",
       key: "sm",
       align: "center",
@@ -286,14 +205,15 @@ const SampleRequestReport = () => {
             dataSource={sm}
             columns={[
               {
-                render:(value,rowdata) =>{
+                render:(value,rowData) =>{
                   return(
-                    <Button  type="primary" onClick={() =>generatePo(rowdata)}>Generate Po</Button>
+                    <Checkbox 
+                    onChange={() => onCheck(rowData.indentId,rowData.fabricType)}
+                    // checked={selectedIndentIds.includes(rowData.indentId)}
+                  />
+                    // <Button  type="primary" onClick={() =>generatePo(rowdata)}>Generate Po</Button>
                   )
                 }
-                // dataIndex: "quantity",
-                // key: "quantity",
-                // align: "center",
               },
             ]}
             pagination={false}
@@ -302,15 +222,31 @@ const SampleRequestReport = () => {
       },
     },
   ];
-    const generatePo = (rowdata:any) =>{
-       console.log(rowdata)
-       navigate('/purchase-order', { state: { data: rowdata,type:'Sampling' } })
-    }
 
+  const generatePo =()=>{
+    navigate("/purchase-order", { state: { data: selectedItems, type:'Sampling'  } });
+  }
+  const dataa=[];
+   const onCheck = (indentId,fabricType) => {
+    console.log(fabricType)
+    const updatedIndentIds = selectedIndentIds.includes(indentId)
+      ? selectedIndentIds.filter(id => id !== indentId)
+      : [...selectedIndentIds, indentId];
+    setSelectedIndentIds(updatedIndentIds);
+    setbtnEnable(true)
+    const resultArray = [{materialType:fabricType}, { indentIds: updatedIndentIds }];
+    console.log(resultArray)
+    setSelectedItems(resultArray)
+  };
+  console.log(selectedIndentIds)
+  console.log(selectedItems)
+
+  
+  // console.log(selectedIndentIds)
   return (
     <div>
       <Card
-        title={<span>Sample Material Status</span>}
+        title={<span>Sample Raw Material </span>}
         style={{ textAlign: "center" }}
         headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       >

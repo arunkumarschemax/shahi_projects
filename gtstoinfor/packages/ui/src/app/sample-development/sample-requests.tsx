@@ -40,10 +40,19 @@ export const SampleRequests = (props: BuyingHouseProps) => {
     if (form.getFieldValue('reqNo') !== undefined) {
       req.reqNo = form.getFieldValue('reqNo')
     }
-    Service.getAllSampleDevData().then((res) => {
+    if (form.getFieldValue('pch') !== undefined) {
+      req.pch = form.getFieldValue('pch')
+    }
+    if (form.getFieldValue('status') !== undefined) {
+      req.status = form.getFieldValue('status')
+    }
+    
+    console.log(req,"ree")
+
+    Service.getAllSampleDevData(req).then((res) => {
       console.log(res.data,'------------------------------')
       if (res.data) {
-        console.table(res)
+        // console.table(res)
         setFilterData(res.data);
         setBuyingHouseData(res.data);
         setReqNo(res.data)
@@ -227,35 +236,53 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       ...getColumnSearchProps("requestNo"),
     },
     {
-      title: "Style No",
-      dataIndex: "m3StyleNo",
+      title: "Style",
+      dataIndex: "style",
       // responsive: ['lg'],
-      sorter: (a, b) => a.m3StyleNo.localeCompare(b.m3StyleNo),
+      sorter: (a, b) => a.style.localeCompare(b.style),
       sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("m3StyleNo"),
+      ...getColumnSearchProps("style"),
+    },
+    // {
+    //   title: "Style Code",
+    //   dataIndex: "m3StyleCode",
+    //   // responsive: ['lg'],
+    //   sorter: (a, b) => a.m3StyleCode.localeCompare(b.m3StyleCode),
+    //   sortDirections: ["descend", "ascend"],
+    //   ...getColumnSearchProps("m3StyleCode"),
+    // },
+    {
+      title: "Fabric Code",
+      dataIndex: "m3itemCode",
+      // responsive: ['lg'],
+      sorter: (a, b) => a.m3itemCode.localeCompare(b.m3itemCode),
+      sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("m3itemCode"),
     },
     {
-      title: "Date",
-      dataIndex: "date",
+      title: "Trim Code",
+      dataIndex: "trim_code",
       // responsive: ['lg'],
-      sorter: (a, b) => a.date.localeCompare(b.date),
+      sorter: (a, b) => a.trim_code.localeCompare(b.trim_code),
       sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("date"),
+      ...getColumnSearchProps("trim_code"),
     },
+    // {
+    //   title: "Date",
+    //   dataIndex: "date",
+    //   // responsive: ['lg'],
+    //   sorter: (a, b) => a.date.localeCompare(b.date),
+    //   sortDirections: ["descend", "ascend"],
+    //   ...getColumnSearchProps("date"),
+    // },
     {
       title: "Location",
       dataIndex: "locationName",
       // responsive: ['lg'],
-      sorter: (a, b) => a.locationName
-.localeCompare(b.locationName
-),
+      sorter: (a, b) => a.locationName.localeCompare(b.locationName),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("locationName"),
     },
-
-  
-
-
 
     {
       title: "PCH",
@@ -265,14 +292,14 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("pch"),
     },
-    {
-      title: "Type",
-      dataIndex: "type",
-      // responsive: ['lg'],
-      sorter: (a, b) => a.type.localeCompare(b.type),
-      sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("type"),
-    },
+    // {
+    //   title: "Type",
+    //   dataIndex: "type",
+    //   // responsive: ['lg'],
+    //   sorter: (a, b) => a.type.localeCompare(b.type),
+    //   sortDirections: ["descend", "ascend"],
+    //   ...getColumnSearchProps("type"),
+    // },
     {
       title: "Buyer",
       dataIndex: "buyerName",
@@ -341,7 +368,6 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       // headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
         extra={
-          (logInUser == 'marketUser') &&
           <Link to="/sample-development/sample-development-form">
             <span style={{ color: "white" }}>
               <Button type={"primary"}>New </Button>{" "}

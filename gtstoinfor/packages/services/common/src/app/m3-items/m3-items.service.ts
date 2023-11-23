@@ -22,15 +22,20 @@ export class M3ItemsService {
 
   async createM3Items(createDto: M3ItemsDTO): Promise<CommonResponseModel> {
     try {
-      const existingItemCount: number = await this.repository.count();
-      console.log(existingItemCount)
-      const nextItemCode: string = `FAB${(existingItemCount + 1).toString().padStart(3, '0')}`;
-      const entity: M3ItemsEntity = this.adapter.convertDtoToEntity(createDto);
-      entity.itemCode = nextItemCode;
-      const count: M3ItemsEntity = await this.repository.save(entity);
-      const saveDto: M3ItemsDTO = this.adapter.convertEntityToDto(count);
-
-      return new CommonResponseModel(true, 1, 'Data saved successfully', saveDto);
+      let checkData = await this.checkDuplicate(createDto);
+      if(checkData.status){
+        return new CommonResponseModel(false, 0, "Item already exist. ")
+      }
+      else{
+        const existingItemCount: number = await this.repository.count();
+        console.log(existingItemCount)
+        const nextItemCode: string = createDto.buyerCode + "/" + `FAB${(existingItemCount + 1).toString().padStart(5, '0')}`;
+        const entity: M3ItemsEntity = this.adapter.convertDtoToEntity(createDto);
+        entity.itemCode = nextItemCode;
+        const count: M3ItemsEntity = await this.repository.save(entity);
+        const saveDto: M3ItemsDTO = this.adapter.convertEntityToDto(count);
+        return new CommonResponseModel(true, 1, 'Data saved successfully', saveDto);
+      }
     } catch (error) {
       return new CommonResponseModel(false, 0, error)
     }
@@ -60,5 +65,16 @@ export class M3ItemsService {
       return new CommonResponseModel(false, 0, error)
     }
   }
+  async checkDuplicate(createDto: M3ItemsDTO): Promise<CommonResponseModel> {
+    let query = `Select * from m3_items m3 where content = "` + createDto.content + `" and fabric_type = ` + createDto.fabricType + ` and weave = ` + createDto.weave + ` and weight = "` + createDto.weight + `" and weight_unit = ` + createDto.weightUnit + ` and construction = "` + createDto.construction + `" and yarn_count = "` + createDto.yarnCount + `" and yarn_unit = ` + createDto.yarnUnit + ` and finish = "` + createDto.finish + `" and shrinkage = "` + createDto.shrinkage+`"`;
+    const data = await this.datasource.query(query)
+    if (data.length > 0){
+      return new CommonResponseModel(true, 1001, "Data Retrieved Successfully", data)
+    }
+    else{
+      return new CommonResponseModel(false, 1001, "", )
+    }
+  }
+
 
 }

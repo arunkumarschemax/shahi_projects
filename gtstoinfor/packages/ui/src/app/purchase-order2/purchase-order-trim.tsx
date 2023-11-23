@@ -1,6 +1,7 @@
 import { EditOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import { faDisplay } from "@fortawesome/free-solid-svg-icons";
 import { M3MastersCategoryReq } from "@project-management-system/shared-models";
-import { ColourService, IndentService, M3MastersService, SampleDevelopmentService, UomService } from "@project-management-system/shared-services";
+import { ColourService, IndentService, M3MastersService, M3TrimsService, SampleDevelopmentService, UomService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Divider, Form, Input, Popconfirm, Row, Select, Table, Tag, Tooltip } from "antd";
 import { ColumnProps } from "antd/lib/table";
 import { VALUE_SPLIT } from "rc-cascader/lib/utils/commonUtil";
@@ -29,6 +30,7 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
     const sampleService = new SampleDevelopmentService()
     const indentservice = new IndentService()
     const uomService =  new UomService()
+    const m3TrimService = new M3TrimsService()
 
     useEffect(() =>{
         getColor()
@@ -45,10 +47,14 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
 
     useEffect(() =>{
         if(data.length != 0){
-            trimForm.setFieldsValue({productGroupId:data.data.productGroupId})
-            trimForm.setFieldsValue({trimId:data.data.rmItemId})
+            console.log(data)
+            // trimForm.setFieldsValue({productGroupId:data.data.productGroupId})
+            // trimForm.setFieldsValue({trimId:data.data.rmItemId})
             trimForm.setFieldsValue({colourId:data.data.colourId})
             trimForm.setFieldsValue({poQuantity:data.data.requiredQuantity})
+            trimForm.setFieldsValue({m3TrimCodeName:data.data.requiredQuantity})
+            trimForm.setFieldsValue({indentCode:data.data.indentCode})
+            trimForm.setFieldsValue({m3TrimCode:data.data.m3TrimCode})
         }
     },[data])
 
@@ -101,8 +107,7 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
     }
 
     const getM3TrimCodes = () => {
-        const req = new M3MastersCategoryReq('Trim')
-        m3MasterService.getByCategory(req).then(res => {
+        m3TrimService.getM3Trims().then(res => {
             if(res.status){
                 setTrimM3Code(res.data)
             }
@@ -136,17 +141,22 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
             responsive: ['sm'],
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
+        // {
+        //     title:' Indent Code',
+        //     dataIndex:'indentCode',
+        //     width:'100px'
+        // },
         {
-            title:'Trim Type',
-            dataIndex:'trimType',
+            title:'M3 Trim Code',
+            dataIndex:'m3TrimCodeName',
             width:'100px'
         },
-        {
-            title:'Trim Code',
-            dataIndex:'trimCodeName',
-            width:'100px'
+        // {
+        //     title:'Trim Code',
+        //     dataIndex:'trimCodeName',
+        //     width:'100px'
             
-        },
+        // },
         {
             title:'Color',
             dataIndex:'colourName',
@@ -160,11 +170,6 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
             title:'Po Quantity',
             dataIndex:'poQuantity',
             
-        },
-        {
-            title:'M3 Trim Code',
-            dataIndex:'m3TrimCode',
-            width:'200px'
         },
         {
             title: "Action",
@@ -245,35 +250,33 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
                 indentQuantity:defaultTrimFormData.indentQuantity,
                 indentQuantityUnit:defaultTrimFormData.indentQuantityUnit,
                 quantityUomId:defaultTrimFormData.quantityUomId,
-                poQuantity:defaultTrimFormData.indentQuantity
+                poQuantity:defaultTrimFormData.indentQuantity,
+                m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
+                indentCode:defaultTrimFormData.indentCode
             })
         }
 
     },[defaultTrimFormData])
 
+    const m3trimOnchange = (value,option) =>{
+        trimForm.setFieldsValue({m3TrimCodeName:option.name})
+
+    }
     return(
         <Card title={<span style={{color:'blue', fontSize:'17px'}} >Trim Details</span>}>
             <Form form={trimForm} layout="vertical" onFinish={OnTrimAdd} style={{width:'100%'}}>
                 <Row gutter={24}>
-                <Form.Item name={'productGroup'} hidden><Input></Input></Form.Item>
-                    <Form.Item name={'trimCodeName'} hidden><Input></Input></Form.Item>
+                {/* <Form.Item name={'productGroup'} hidden><Input></Input></Form.Item>
+                    <Form.Item name={'trimCodeName'} hidden><Input></Input></Form.Item> */}
                     <Form.Item name={'colourName'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'indentTrmId'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'indentQuantity'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'indentQuantityUnit'} hidden><Input></Input></Form.Item>
+                    <Form.Item name={'m3TrimCodeName'} hidden><Input></Input></Form.Item>
+                    <Form.Item name={'indentCode'} hidden><Input></Input></Form.Item>
 
-                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                     {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:'none'}}>
                         <Form.Item name={'productGroupId'} label={'Trim type'}
-                         rules={[
-                            {
-                              required: true,
-                              message: "Trim Type Is Required",
-                            },
-                            {
-                                pattern:/^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                                message: `Should contain only alphabets.`,
-                            },
-                        ]}
                         >
                             <Select
                              allowClear
@@ -288,10 +291,11 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
                                 ={item.productGroupId}>{item.productGroup}</Option>)
                             }) }
                             </Select>
-                            {/* <Input></Input> */}
+                            <Input></Input>
                         </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+                    </Col> */}
+                    
+                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
                         <Form.Item
                         name="trimId"
                         label="Trim"
@@ -319,6 +323,20 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
                             }) }
                             </Select>
                         </Form.Item>
+                    </Col> */}
+                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                    <Form.Item name='m3TrimCode' label='M3 Trim Code' rules={[{required:true,message:'M3 code is required'}]}>
+                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'
+                             disabled={inputDisable}
+                             onChange={m3trimOnchange}
+                             >
+                            {trimM3Code.map(e => {
+                                return(
+                                    <Option key={e.m3TrimsId} value={e.m3TrimsId} name={e.trimCode}>{e.trimCode}</Option>
+                                )
+                            })}
+                        </Select>
+                    </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
                             <Form.Item
@@ -370,19 +388,7 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
                             <Input disabled={inputDisable}></Input>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='m3TrimCode' label='M3 Trim Code' rules={[{required:true,message:'M3 code is required'}]}>
-                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'
-                             disabled={inputDisable}
-                             >
-                            {trimM3Code.map(e => {
-                                return(
-                                    <Option key={e.m3Code} value={e.m3Code}> {e.m3Code}-{e.category}</Option>
-                                )
-                            })}
-                        </Select>
-                    </Form.Item>
-                    </Col>
+                   
                 </Row>
                 <Row justify={'end'}>
                 <Button type='primary' htmlType="submit">{update ?'Update':'Add'}</Button>

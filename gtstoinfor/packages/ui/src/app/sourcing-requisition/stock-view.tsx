@@ -130,13 +130,15 @@ export const StockView = () => {
       responsive: ["sm"],
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
-    {
-      title: "M3 Style",
-      dataIndex: "m3_style_code",
-      ...getColumnSearchProps("m3_style_code"),
-      // sorter: (a, b) => a.plant - b.plant,
-      // sortDirections: ['descend', 'ascend'],
-    },
+    // {
+    //   title: "M3 Style",
+    //   dataIndex: "m3_style_code",
+    //   ...getColumnSearchProps("m3_style_code"),
+    //   // sorter: (a, b) => a.plant - b.plant,
+    //   // sortDirections: ['descend', 'ascend'],
+    // },
+    
+
     {
       title: "Buyer",
       dataIndex: "buyer_name",
@@ -147,6 +149,16 @@ export const StockView = () => {
       dataIndex: "item_type",
       ...getColumnSearchProps("item_type"),
     },
+    // {
+    //   title: "Item Code",
+    //   dataIndex: "code",
+    //   render: (text) => (
+    //     <span>
+    //       {text ? text : "Fab001"} {/* Display data if available, otherwise show "No Data" */}
+    //     </span>
+    //   ),
+    //   ...getColumnSearchProps("item_code"),
+    // },
     {
       title: "Item",
       dataIndex: "item_name",

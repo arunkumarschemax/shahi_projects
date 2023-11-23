@@ -85,6 +85,8 @@ export class PurchaseOrderService {
             if (req.poTrimInfo) {
                 for (const trimInfo of req.poTrimInfo) {
                     const trimEntity = new PurchaseOrderTrimEntity()
+                    console.log(trimInfo)
+                    console.log('""""""""""""""""""""""""""""""""""""""""""""')
                     trimEntity.colourId = trimInfo.colourId
                     trimEntity.productGroupId = trimInfo.productGroupId
                     trimEntity.trimId = trimInfo.trimId
@@ -264,7 +266,7 @@ export class PurchaseOrderService {
                        grn_quantity AS grnQuantity 
                        FROM purchase_order_trim pt
                        LEFT JOIN product_group pg ON pg.product_group_id=pt.product_group_id
-                       LEFT JOIN m3_trims ri ON ri.m3_trim_Id =pt.trim_id
+                       LEFT JOIN m3_trims ri ON ri.m3_trim_Id =pt.m3_trim_code
                         where pt.purchase_order_id=`+ purchaseOrderId + ``
             const data = await this.dataSource.query(query)
             if (data.length > 0) {

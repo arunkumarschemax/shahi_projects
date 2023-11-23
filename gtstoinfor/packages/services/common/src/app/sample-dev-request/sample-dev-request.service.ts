@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, UploadResponse } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, CommonResponseModel, FabricInfoReq, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SourcingRequisitionReq, TrimInfoReq, UploadResponse } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -29,6 +29,7 @@ import { Size } from '../sizes/sizes-entity';
 import { OperationInventory } from '../operation-tracking/entity/operation-inventory-entity';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
+import { IndentService } from '@project-management-system/shared-services';
 
 
 
@@ -46,6 +47,7 @@ export class SampleRequestService {
     @InjectRepository(SamplingbomEntity)
     private bomRepo: Repository<SamplingbomEntity>,
     private logRepo: SampleInventoryLoqRepo,
+    private indentService: IndentService
   ) { }
 
 
@@ -178,27 +180,33 @@ export class SampleRequestService {
           sampleSizeInfo.push(sizeEntity)
         }
       }
-      sampleReqEntity.sampleReqSizeInfo = sampleSizeInfo
+      sampleReqEntity.sampleReqSizeInfo = sampleSizeInfo;
+      let indentFabInfo : FabricInfoReq[] = [];
       for (const fabricObj of req.fabricInfo) {
         console.log(fabricObj, '##############################################')
         const fabricEntity = new SampleReqFabricinfoEntity()
         fabricEntity.fabricCode = fabricObj.fabricCode
-        // fabricEntity.description = fabricObj.description
         fabricEntity.colourId = fabricObj.colourId
         fabricEntity.consumption = fabricObj.consumption
-        // fabricEntity.productGroupId = fabricObj.productGroupId
+        fabricEntity.uomId = fabricObj.uomId
         fabricEntity.remarks = fabricObj.remarks
         sampleFabricInfo.push(fabricEntity)
+        const fabricInfoReq = new FabricInfoReq(fabricObj.fabricCode,fabricObj.colourId,fabricObj.consumption,fabricObj.uomId,fabricObj.remarks)
+        indentFabInfo.push(fabricInfoReq);
       }
-      sampleReqEntity.sampleReqFabricInfo = sampleFabricInfo
+      sampleReqEntity.sampleReqFabricInfo = sampleFabricInfo;
+      let indentTrimInfo : TrimInfoReq[] = [];
       for (const trimObj of req.trimInfo) {
         const trimEntity = new SampleRequestTriminfoEntity()
-        // trimEntity.trimCode = trimObj.trimCode
-        // trimEntity.productGroupId = trimObj.productGroupId
+        trimEntity.trimCode = trimObj.trimCode
+        trimEntity.uomId = trimObj.uomId
         trimEntity.consumption = trimObj.consumption
-        // trimEntity.description = trimObj.description
+        trimEntity.trimType = trimObj.trimType
         trimEntity.remarks = trimObj.remarks
         sampleTrimInfo.push(trimEntity)
+        const trimInfoReq = new TrimInfoReq(trimObj.trimType,trimObj.trimCode,trimObj.consumption,trimObj.uomId,trimObj.remarks)
+        indentTrimInfo.push(trimInfoReq);
+        
       }
       sampleReqEntity.sampleTrimInfo = sampleTrimInfo
       for (const processObj of req.processInfo) {
@@ -220,8 +228,8 @@ export class SampleRequestService {
             bomEntity.rmItemId = fabricData.fabricCode //rm_item_id need to be added
             bomEntity.requiredQuantity = quantityWithWastage ? quantityWithWastage : 0
             bomEntity.wastage = '2'
-            bomEntity.productGroupId = fabricData.productGroupId
             saveBomDetails = await this.bomRepo.save(bomEntity)
+
           }
         }
         if (req.trimInfo) {
@@ -232,7 +240,6 @@ export class SampleRequestService {
             bomEntity.requiredQuantity = quantityWithWastage ? quantityWithWastage : 0
             bomEntity.wastage = '2'
             bomEntity.rmItemId = trimData.trimCode
-            bomEntity.productGroupId = trimData.productGroupId
             bomEntity.colourId = trimData.colourId
             saveBomDetails = await this.bomRepo.save(bomEntity)
           }
@@ -240,7 +247,17 @@ export class SampleRequestService {
 
       }
       if (save && saveBomDetails) {
-        return new AllSampleDevReqResponseModel(true, 1, 'SampleDevelopmentRequest created successfully', [save])
+        console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        console.log(save);
+
+        const req1 = new SourcingRequisitionReq(req.styleId,new Date(),"",new Date(),indentFabInfo,indentTrimInfo,save.SampleRequestId);
+        const raiseIndent = await this.indentService.createItems(req1);
+        if(raiseIndent.status){
+          return new AllSampleDevReqResponseModel(true, 1, 'SampleDevelopmentRequest created successfully', [save])
+        }
+        else {
+          return new AllSampleDevReqResponseModel(false, 0, 'SampleDevelopmentRequest creation Failed', [])
+        }
       }
       else {
         return new AllSampleDevReqResponseModel(false, 0, 'SampleDevelopmentRequest creation Failed', [])
@@ -330,83 +347,7 @@ export class SampleRequestService {
   }
 
 
-  async getSampleRequestReport(req?: any): Promise<CommonResponseModel> {
-    const manager = this.dataSource;
-    let rawData = `SELECT sb.rm_item_id as rmItemId,sb.colour_id as colourId,sr.m3_style_no as m3StleNo,sr.style_id as styleId,sb.sampling_bom_id,sr.sample_request_id, sr.request_no AS requestNo, sr.m3_style_no, sb.rm_item_id, ri.item_code, sb.required_quantity as requiredQuantity,sb.created_at, sb.assigned_quantity,sb.colour_id,co.colour,st.style,bu.buyer_name,pg.product_group,ss.quantity,fa.name   FROM sampling_bom sb LEFT JOIN sample_request sr ON sb.sample_request_id = sr.sample_request_id LEFT JOIN rm_items ri ON ri.rm_item_id LEFT JOIN colour co ON co.colour_id = sb.colour_id  LEFT JOIN style st ON st.style_id = sr.style_id LEFT JOIN buyers bu ON bu.buyer_id = sr.buyer_id LEFT JOIN product_group pg ON pg.product_group_id = sb.product_group_id LEFT JOIN stocks ss ON ss.item_type_id = sb.rm_item_id LEFT JOIN factory fa ON fa.id=sr.facility_id WHERE sr.sample_request_id IS NOT NULL `;
-    if (req.buyerName) {
-      rawData = rawData + ' and bu.buyer_name = "' + req.buyerName + '"'
-    }
-    if (req.requestNo) {
-      rawData = rawData + ' and sr.request_no = "' + req.requestNo + '"'
-    }
-    if (req.style) {
-      rawData = rawData + ' and sr.style = "' + req.style + '"'
-    }
-    rawData = rawData + ' group by sb.sampling_bom_id '
-
-    const rmData = await manager.query(rawData);
-    console.log(rmData, "4444444444")
-    console.log("**********************************************************************")
-
-    if (rmData.length > 0) {
-      const groupedData = rmData.reduce((result, item) => {
-        console.log(item, "ittttteemmmm")
-        const samplerequestid = item.sample_request_id;
-        const requestNo = item.requestNo;
-        const buyers = item.buyer_name;
-        const date = item.created_at;
-        const style = item.style;
-        const unit = item.name;
-        const styleId=item.styleId
-        const requiredQuantity=item.requiredQuantity
-        const m3StleNo=item.m3StleNo
-        const  colourId=item.colourId
-        const rmItemId=item.rmItemId
-        if (!result[requestNo]) {
-          result[requestNo] = {
-            request_no: requestNo,
-            sample_request_id: samplerequestid,
-            buyer_name: buyers,
-            created_at: date,
-            style: style,
-            name: unit,
-            styleId:styleId,
-            requiredQuantity:requiredQuantity,
-            m3StleNo:m3StleNo,
-            colourId:colourId,
-            rmItemId:rmItemId,
-            sm: [],
-          };
-        }
-
-        result[requestNo].sm.push(
-          {
-            code: item.item_code,
-            // buyers: item.buyer_name,
-            fabricName: item.product_group,
-            consumption: item.required_quantity,
-            quantity: item.quantity,
-            color: item.colour,
-            styleId:item.styleId,
-            requiredQuantity:item.requiredQuantity,
-            m3StleNo:item.m3StleNo,
-            colourId:item.colourId,
-            rmItemId:item.rmItemId,
-            // style:item.style,
-            // date:item.created_at,
-          }
-
-        );
-
-        return result;
-      }, {});
-
-      return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
-    }
-
-    return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
-  }
-
+ 
 
   async getM3StyleCode(): Promise<CommonResponseModel> {
     const manager = this.dataSource;
@@ -535,4 +476,133 @@ LEFT JOIN
     }
 
   }
+
+  async getAllSmaplingDevData(req?: any): Promise<CommonResponseModel> {
+    const manager = this.dataSource;
+    let rawData = `SELECT sb.rm_item_id as rmItemId,sb.colour_id as colourId,sr.m3_style_no as m3StleNo,sr.style_id as styleId,sb.sampling_bom_id,sr.sample_request_id, sr.request_no AS requestNo, sr.m3_style_no, sb.rm_item_id, ri.item_code, sb.required_quantity as requiredQuantity,sb.created_at, sb.assigned_quantity,sb.colour_id,co.colour,st.style,bu.buyer_name,pg.product_group,ss.quantity,fa.name   FROM sampling_bom sb LEFT JOIN sample_request sr ON sb.sample_request_id = sr.sample_request_id LEFT JOIN rm_items ri ON ri.rm_item_id LEFT JOIN colour co ON co.colour_id = sb.colour_id  LEFT JOIN style st ON st.style_id = sr.style_id LEFT JOIN buyers bu ON bu.buyer_id = sr.buyer_id LEFT JOIN product_group pg ON pg.product_group_id = sb.product_group_id LEFT JOIN stocks ss ON ss.item_type_id = sb.rm_item_id LEFT JOIN factory fa ON fa.id=sr.facility_id WHERE sr.sample_request_id IS NOT NULL `;
+    if (req.buyerName) {
+      rawData = rawData + ' and bu.buyer_name = "' + req.buyerName + '"'
+    }
+    if (req.requestNo) {
+      rawData = rawData + ' and sr.request_no = "' + req.requestNo + '"'
+    }
+    if (req.style) {
+      rawData = rawData + ' and sr.style = "' + req.style + '"'
+    }
+    rawData = rawData + ' group by sb.sampling_bom_id '
+
+    const rmData = await manager.query(rawData);
+    console.log(rmData, "4444444444")
+    console.log("**********************************************************************")
+
+    if (rmData.length > 0) {
+      const groupedData = rmData.reduce((result, item) => {
+        console.log(item, "ittttteemmmm")
+        const samplerequestid = item.sample_request_id;
+        const requestNo = item.requestNo;
+        const buyers = item.buyer_name;
+        const date = item.created_at;
+        const style = item.style;
+        const unit = item.name;
+        const styleId=item.styleId
+        const requiredQuantity=item.requiredQuantity
+        const m3StleNo=item.m3StleNo
+        const  colourId=item.colourId
+        const rmItemId=item.rmItemId
+        if (!result[requestNo]) {
+          result[requestNo] = {
+            request_no: requestNo,
+            sample_request_id: samplerequestid,
+            buyer_name: buyers,
+            created_at: date,
+            style: style,
+            name: unit,
+            styleId:styleId,
+            requiredQuantity:requiredQuantity,
+            m3StleNo:m3StleNo,
+            colourId:colourId,
+            rmItemId:rmItemId,
+            sm: [],
+          };
+        }
+
+        result[requestNo].sm.push(
+          {
+            code: item.item_code,
+            // buyers: item.buyer_name,
+            fabricName: item.product_group,
+            consumption: item.required_quantity,
+            quantity: item.quantity,
+            color: item.colour,
+            styleId:item.styleId,
+            requiredQuantity:item.requiredQuantity,
+            m3StleNo:item.m3StleNo,
+            colourId:item.colourId,
+            rmItemId:item.rmItemId,
+            // style:item.style,
+            // date:item.created_at,
+          }
+
+        );
+
+        return result;
+      }, {});
+
+      return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
+    }
+
+    return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
+  }
+
+
+  async getSampleRequestReport(req?: any):Promise<CommonResponseModel>{
+    try{
+    const manager = this.dataSource;
+      const query =' SELECT st.style AS styleName,b.buyer_name AS buyerName,"Fabric" AS fabricType,s.request_no AS sampleReqNo,mi.item_code AS itemCode,i.request_no AS indentCode,i.indent_id AS indentId,i.status,quantity FROM indent i LEFT JOIN indent_fabric ifc ON i.indent_id=ifc.indent_id LEFT JOIN m3_items mi ON mi.m3_items_Id=ifc.m3_fabric_code LEFT JOIN sample_request s ON s.sample_request_id=i.sample_request_id   LEFT JOIN buyers b ON b.buyer_id=s.buyer_id    LEFT JOIN style st ON st.style_id=s.style_id UNION ALL SELECT st.style AS stylename,b.buyer_name AS buyername,mt.trim_type AS fabricType,s.request_no AS sampleReqNo,mt.trim_code AS itemCode,i.request_no AS indentCode,i.indent_id AS indentId,i.status,quantity FROM indent i    LEFT JOIN indent_trims it ON it.indent_id =i.indent_id  LEFT JOIN sample_request s ON s.sample_request_id=i.sample_request_id  LEFT JOIN m3_trims mt ON it.trim_code =mt.m3_trim_Id LEFT JOIN buyers b ON b.buyer_id=s.buyer_id LEFT JOIN style st ON st.style_id=s.style_id'
+
+      const rmData = await manager.query(query);
+
+      if (rmData.length > 0) {
+        const groupedData = rmData.reduce((result, item) => {
+          console.log(item, "ittttteemmmm")
+          const sampleReqNo = item.sampleReqNo;
+          const indentCode = item.indentCode;
+          const buyerName = item.buyerName;
+          const styleName = item.styleName;
+          const status = item.status;
+          if (!result[sampleReqNo]) {
+            result[sampleReqNo] = {
+              sampleReqNo: sampleReqNo,
+              indentCode: indentCode,
+              buyerName: buyerName,
+              styleName: styleName,
+              status: status,
+              sm: [],
+            };
+          }
+  
+          result[sampleReqNo].sm.push(
+            {
+              fabricType: item.fabricType,
+              itemCode: item.itemCode,
+              consumption: item.required_quantity,
+              quantity: item.quantity,
+              indentId:item.indentId
+            }
+  
+          );
+          console.log(result)
+          console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$')
+          return result;
+        }, {});
+        console.log(Object.values(groupedData))
+        console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+        return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
+
+        }
+      }
+      catch(err){
+        throw err
+      }
+    }
 }

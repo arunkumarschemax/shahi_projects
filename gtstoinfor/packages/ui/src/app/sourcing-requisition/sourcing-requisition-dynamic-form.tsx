@@ -651,7 +651,7 @@ export const SourcingRequisitionDynamicForm = () => {
 
     const onSubmit = () =>{
         sourcingForm.validateFields().then(() => {
-            const req = new SourcingRequisitionReq(sourcingForm.getFieldValue('style'),sourcingForm.getFieldValue('expectedDate'),sourcingForm.getFieldValue('requestNo'),sourcingForm.getFieldValue('indentDate'),fabricTableData,trimsTableData)
+            const req = new SourcingRequisitionReq(sourcingForm.getFieldValue('style'),sourcingForm.getFieldValue('expectedDate'),sourcingForm.getFieldValue('requestNo'),sourcingForm.getFieldValue('indentDate'),fabricTableData,trimsTableData,0)
             console.log(req)
             indentService.createItems(req).then(res => {
                 if(res.status){

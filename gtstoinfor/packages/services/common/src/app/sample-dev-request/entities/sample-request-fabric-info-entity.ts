@@ -29,13 +29,12 @@ export class SampleReqFabricinfoEntity{
 
       @Column('decimal',{
         name:'consumption',
-        precision: 4, 
-        scale: 2,
     })
       consumption : number;
 
       @Column('text',{
         name:'remarks',
+        nullable:true
     })
       remarks : string;
 
