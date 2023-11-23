@@ -14,6 +14,7 @@ import { GenericTransactionManager } from '../../typeorm-transactions';
 import { IndentRepository } from '../indent/dto/indent-repository';
 import { FabricIndentRepository } from '../indent/dto/fabric-indent-repository';
 import { TrimIndentRepository } from '../indent/dto/trim-indent-repository';
+let moment = require('moment');
 
 @Injectable()
 
@@ -123,10 +124,22 @@ export class GrnService{
     async createGrn(req:GrnDto):Promise<CommonResponseModel>{        
         const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
         try{
+
+            const currentYear = moment().format('YYYY')
+            let ToYear = currentYear.toString().substr(-2)
+            let FromYear = (currentYear - 1).toString().substr(-2)
+            let grnNumber
+            const data = 'select max(grn_id) as grnId from grn'
+            const maxId = await this.grnRepo.query(data)
+            if (maxId[0].grnId == null) {
+                grnNumber = 'GRN/' + FromYear + '-' + ToYear + '/' + '001' + ''
+            } else {
+                grnNumber = 'GRN/' + FromYear + '-' + ToYear + '/' + maxId[0].grnId.toString().padStart(3, 0) + ''
+            }
         await transactionalEntityManager.startTransaction();
             const itemInfo=[]
             const grnEntity = new GrnEntity()
-            grnEntity.grnNumber=req.grnNumber
+            grnEntity.grnNumber=grnNumber
             grnEntity.vendorId=req.vendorId
             grnEntity.styleId=req.styleId
             grnEntity.poId=req.poId
@@ -134,8 +147,10 @@ export class GrnService{
             grnEntity.contactPerson = req.contactPerson
             grnEntity.createdUser=req.createdUser
             grnEntity.updatedUser=req.updatedUser
+            grnEntity.itemType=req.materialtype
             console.log(req,'===========')
             for(const item of req.grnItemInfo){
+                console.log(item,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
                 // item.conversionQuantity=200
                 // item.conversionUomId=1
                 const itemEntity = new GrnItemsEntity()
@@ -227,10 +242,11 @@ export class GrnService{
     async getAllGrn():Promise<CommonResponseModel>{
         try{
             const manager = this.dataSource;
-            let query=`SELECT grn_id,grn.vendor_id,grn.grn_number,b.buyer_name,po_id,grn_date,grn.contact_person,grn.status,po.po_number,po.po_material_type,v.vendor_name FROM grn
-            LEFT JOIN purchase_order po ON po.purchase_order_id = grn.po_id
-            LEFT JOIN buyers b ON b.buyer_id = po.buyer_id
-            LEFT JOIN vendors v ON v.vendor_id = po.vendor_id
+            let query=`SELECT v.vendor_name AS vendorName,po_number AS poNumber,item_type AS materialTYpe,grn_id,grn.vendor_id,grn.grn_number,b.buyer_name,po_id,grn_date,grn.contact_person,
+            grn.status,po.po_number,po.po_material_type,v.vendor_name FROM grn
+                        LEFT JOIN purchase_order po ON po.purchase_order_id = grn.po_id
+                        LEFT JOIN buyers b ON b.buyer_id = po.buyer_id
+                        LEFT JOIN vendors v ON v.vendor_id = po.vendor_id
 
 `
             // if(materialType == 'Fabric'){
