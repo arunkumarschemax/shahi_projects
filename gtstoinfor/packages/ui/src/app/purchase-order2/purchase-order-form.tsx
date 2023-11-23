@@ -269,7 +269,7 @@ return(
                         </Select>
                         </Form.Item>
                     </Col>
-             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:'none'}}>
                     <Form.Item name='indentId' label='Indent Code' 
                     rules={[{required:true,message:'IndentCode is required'}]}>
                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Indent' mode="multiple"
