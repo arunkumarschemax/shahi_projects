@@ -325,7 +325,7 @@ import {
     };
   
     const HeaderRow = (props: any) => {
-      const { requestNo, style, buyerName, expectedDate, indentDate, status, lifeCycleStatus, location } =
+      const { requestNo, style, buyerName, expectedDate, indentDate, status, lifeCycleStatus, location, brandName,pch } =
         props;
       const formattedIndentDate = moment(indentDate).format("YYYY-MM-DD");
       const formattedExpectedDate = moment(expectedDate).format("YYYY-MM-DD");
@@ -336,17 +336,21 @@ import {
           <span style={{ width: "10px" }}></span>
           <span>Style : {<b>{style}</b>}</span>
           <span style={{ width: "10px" }}></span>
+          <span>Brand : {<b>{brandName}</b>}</span>
+          <span style={{ width: "10px" }}></span>
+          <span>PCH : {<b>{pch}</b>}</span>
+          <span style={{ width: "10px" }}></span>
           <span>Buyer : {<b>{buyerName}</b>}</span>
           <span style={{ width: "10px" }}></span>
           <span>Location : {<b>{location}</b>}</span>
           <span style={{ width: "10px" }}></span>
-          <span>
+          {/* <span>
             Indent Date: <b>{formattedIndentDate}</b>
-          </span>
+          </span> */}
           <span style={{ width: "10px" }}></span>
-          <span>
+          {/* <span>
             Expected Date: <b>{formattedExpectedDate}</b>
-          </span>
+          </span> */}
           <span style={{ width: "10px" }}></span>
           <span>Status : {<b>{status}</b>}</span>
           <span style={{ width: "10px" }}></span>
@@ -552,7 +556,11 @@ import {
                 <HeaderRow
                   requestNo={item.requestNo}
                   style={item.style}
-                  Buyer={item.buyerName}
+                  buyerName={item.buyerName}
+                  lifeCycleStatus={item.lifeCycleStatus}
+                  location={item.location}
+                  brandName={item.brandName}
+                  pch={item.pch}
                 //   expectedDate={item.expectedDate}
                 //   indentDate={item.indentDate}
                   status={item.status}
