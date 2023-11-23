@@ -277,7 +277,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
     // },
     {
       title: "Location",
-      dataIndex: "locationName",
+      dataIndex: "location_id",
       // responsive: ['lg'],
       sorter: (a, b) => a.locationName.localeCompare(b.locationName),
       sortDirections: ["descend", "ascend"],
