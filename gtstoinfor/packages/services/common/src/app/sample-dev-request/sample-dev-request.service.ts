@@ -366,39 +366,17 @@ export class SampleRequestService {
   async getSampleInventory(): Promise<CommonResponseModel> {
     const inventoryData = this.dataSource
     let rawDatas
-    rawDatas = `SELECT
-    st.fabric_code,
-    st.fabric_info_id,
-    m3t.trim_code,
-    m3t.trim_type,
-    m3t.trim_code AS m3t_trimcode,
-    m3.item_code AS m3_item_code
-  FROM
-    sample_request_fabric_info st
-  LEFT JOIN
-    m3_items m3 ON m3.item_code = st.fabric_code
-  LEFT JOIN
-    sample_request_trim_info sr ON sr.trim_code = st.fabric_code
-  LEFT JOIN
-    m3_trims m3t ON m3t.trim_code = st.fabric_code
-  
+    rawDatas = `SELECT  m3.trim_code AS item_code,m3.trim_type AS item_type,s.request_no,sf.colour_id,m3i.shrinkage,m3i.weight,m3i.weave,s.status FROM sample_request s
+    LEFT JOIN sample_request_fabric_info sf ON sf.sample_request_id = s.sample_request_id
+    LEFT JOIN sample_request_trim_info st ON st.sample_request_id = s.sample_request_id
+    LEFT JOIN  m3_trims m3 ON m3.m3_trim_Id = st.trim_code
+    LEFT JOIN  m3_items m3i ON m3i.m3_items_Id= sf.fabric_code
   UNION ALL
-  
-  SELECT
-    sr.trim_code,
-    sr.trim_type,
-    m3.trim_code AS m3t_trimcode,
-    m3.trim_type AS m3t_trim_type,
-    m3i.item_code AS m3i_item_code,
-    sa.fabric_code
-  FROM
-    sample_request_trim_info sr
-  LEFT JOIN
-    m3_trims m3 ON m3.trim_code = sr.trim_code
-  LEFT JOIN
-    m3_items m3i ON m3i.item_code = sr.trim_code
-  LEFT JOIN
-    sample_request_fabric_info sa ON sa.fabric_code = sr.trim_code`;
+  SELECT  m3i.item_code AS item_code,m3i.fabric_type AS item_type ,s.request_no,sf.colour_id,m3i.shrinkage,m3i.weight,m3i.weave,s.status FROM sample_request s
+    LEFT JOIN sample_request_fabric_info sf ON sf.sample_request_id = s.sample_request_id
+    LEFT JOIN sample_request_trim_info st ON st.sample_request_id = s.sample_request_id
+    LEFT JOIN  m3_trims m3 ON m3.m3_trim_Id = st.trim_code
+    LEFT JOIN  m3_items m3i ON m3i.m3_items_Id= sf.fabric_code`;
 
 
     const result = await inventoryData.query(rawDatas)
