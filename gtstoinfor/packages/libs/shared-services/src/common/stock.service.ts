@@ -1,11 +1,11 @@
-import { AllStocksResponseModel, SampleFilterRequest, StockFilterRequest, StocksDto } from "@project-management-system/shared-models";
+import { AllStocksResponseModel, M3ItemsDTO, SampleFilterRequest, StockFilterRequest, StocksDto } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class StockService extends CommonAxiosService {
    stocksController = "/stocks";
 
-  async getAllStocks(): Promise<AllStocksResponseModel> {
-    return this.axiosPostCall(this.stocksController + "/getAllStocks");
+  async getAllStocks(m3StyleDto?: M3ItemsDTO): Promise<AllStocksResponseModel> {
+    return this.axiosPostCall(this.stocksController + "/getAllStocks", m3StyleDto);
   }
 
   async getStockReport(): Promise<any> {        
@@ -29,7 +29,6 @@ async getAllPlant():Promise<AllStocksResponseModel>{
 }
 
 async getAllStockReportData(req? : StockFilterRequest): Promise<AllStocksResponseModel> {
-  console.log(req,'shared service')
   return this.axiosPostCall(this.stocksController + "/getAllStockReportData",req)
 }
 

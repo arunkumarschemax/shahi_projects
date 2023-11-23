@@ -5,27 +5,24 @@ export class StocksAdapter {
     public convertDtoToEntity(dto: StocksDTO): StocksEntity {
         const entity = new StocksEntity()
         entity.id = dto.id;
-        entity.m3_style_id = dto.m3_style_id;
-        entity.item_type_id = dto.item_type_id;
-        entity.item_id = dto.item_id;
-        entity.location_id = dto.location_id;
+        entity.itemType = dto.itemType;
+        entity.m3Item = dto.m3Item;
+        entity.buyerId = dto.buyerId;
+        entity.locationId = dto.locationId;
         entity.quantity = dto.quantity;
-        entity.style_id = dto.style_id;
-        entity.buyer_id = dto.buyer_id
+        entity.uomId = dto.uomId
         return entity;
     }
 
     public convertEntityToDto(entity: StocksEntity): StocksDTO {
         const dto = new StocksDTO;
         dto.id = entity.id;
-        dto.m3_style_id = entity.m3_style_id;
-        dto.item_type_id = entity.item_type_id;
-        dto.item_id = entity.item_id;
-        dto.location_id = entity.location_id;
+        dto.itemType = entity.itemType;
+        dto.m3Item = entity.m3Item;
+        dto.buyerId = entity.buyerId;
+        dto.locationId = entity.locationId;
         dto.quantity = entity.quantity;
-        dto.style_id = entity.style_id;
-        dto.style_id = entity.buyer_id
-
+        dto.uomId = entity.uomId
         return dto;
     }
 

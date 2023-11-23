@@ -19,9 +19,9 @@ export class StocksController {
     }
 
     @Post("/getAllStocks")
-    async getAllStocks(): Promise<AllStocksResponseModel> {
+    async getAllStocks(@Body() m3StyleDto?: any): Promise<AllStocksResponseModel> {
         try {
-            return await this.stocksService.getAllStocks();
+            return await this.stocksService.getAllStocks(m3StyleDto);
         } catch (error) {
             console.log(error);
             return this.applicationExceptionhandler.returnException(AllStocksResponseModel, error);

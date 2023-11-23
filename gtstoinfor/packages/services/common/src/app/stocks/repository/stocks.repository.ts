@@ -49,9 +49,11 @@ export class StocksRepository extends Repository<StocksEntity> {
 
     async getAllStockReportData(req: StockFilterRequest) {
         let query = this.createQueryBuilder('stocks')
-            .select(`
+            .select(`b.buyer_name AS buyerName, 
             m3_item_code AS m3ItemCode,item_type_id AS itemType,
-            location_id AS location, plant_id AS plant`)
+            location_id AS location, plant_id AS plant left join buyers b on b.buyer_id = stocks.buyer_id
+            left join m3_items it on it.buyer_id = stocks.buyer_id
+            `)
 
         if (req.m3ItemCode !== undefined) {
             query.andWhere(`m3_item_code ='${req.m3ItemCode}'`)

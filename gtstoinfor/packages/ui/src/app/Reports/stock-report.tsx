@@ -104,13 +104,18 @@ const StockReport = () => {
 
     const Columns:any=[
         {
-            title:"M3 Item Code",
-            dataIndex:"m3ItemCode"
+            title:"Buyer",
+            dataIndex:"buyer"
             
         },
         {
-            title:"Item Type",
-            dataIndex:"itemType"
+          title:"Material Type",
+          dataIndex:"MaterialType"
+          
+      },
+        {
+            title:"M3 Item",
+            dataIndex:"m3Item"
         },
         {
             title:"Location",
@@ -118,16 +123,17 @@ const StockReport = () => {
             
         },
         {
-            title:"Plant",
-            dataIndex:"plant"
-            
-        },
+          title:"Quantity",
+          dataIndex:"quantity"
+          
+      },
+        
     ]
 
 
   return (
     <div>
-        <Card  title={<span>STACK REPORT</span>} style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+        <Card  title={<span>STOCK REPORT</span>} style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
         >
         <Form form={form} 
         onFinish={onFinish}
@@ -222,7 +228,7 @@ const StockReport = () => {
           </Col>
           </Row>
           </Form>
- <Row gutter={40} justify={'space-evenly'}>
+ {/* <Row gutter={40} justify={'space-evenly'}>
             <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38, backgroundColor: '#A5F5D7'}}
              title={"Total Item Code:" +data.filter(el => el.m3ItemCode).length}>
               </Card> </Col>
@@ -235,7 +241,7 @@ const StockReport = () => {
               <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38,  backgroundColor: '#A4A3A4'}}
               title={"Plant:"+data.filter(el => el.plant_id).length}>
               </Card> </Col>
-          </Row><br></br>
+          </Row><br></br> */}
         <Card >
         <Table columns={Columns}  
         dataSource={filterData}
