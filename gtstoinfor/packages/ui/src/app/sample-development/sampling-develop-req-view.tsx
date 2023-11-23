@@ -109,6 +109,7 @@ import {
       // console.log(rowData)
       navigate('/purchase-order', { state: { data: rowData, type:'Indent' } })
     }
+    
   
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -203,8 +204,8 @@ import {
       },
       {
         title: "M3 Fabric Code",
-        dataIndex: "fabric_item_code",
-        ...getColumnSearchProps("fabric_item_code"),
+        dataIndex: "item_code",
+        ...getColumnSearchProps("item_code"),
       },
       {
         title: "Color",
@@ -253,7 +254,7 @@ import {
       <Button
       type="primary"
       disabled={rowData.availabeQuantity == null ? true : false}
-      onClick={() =>generatePoForFabric(rowData)}
+      onClick={() =>MarketIssueDetailView(rowData.sample_request_id)}
       >
                 Issue Material
       </Button>
@@ -324,7 +325,7 @@ import {
     };
   
     const HeaderRow = (props: any) => {
-      const { requestNo, style, buyerName, expectedDate, indentDate, status } =
+      const { requestNo, style, buyerName, expectedDate, indentDate, status, lifeCycleStatus, location } =
         props;
       const formattedIndentDate = moment(indentDate).format("YYYY-MM-DD");
       const formattedExpectedDate = moment(expectedDate).format("YYYY-MM-DD");
@@ -337,6 +338,8 @@ import {
           <span style={{ width: "10px" }}></span>
           <span>Buyer : {<b>{buyerName}</b>}</span>
           <span style={{ width: "10px" }}></span>
+          <span>Location : {<b>{location}</b>}</span>
+          <span style={{ width: "10px" }}></span>
           <span>
             Indent Date: <b>{formattedIndentDate}</b>
           </span>
@@ -346,6 +349,8 @@ import {
           </span>
           <span style={{ width: "10px" }}></span>
           <span>Status : {<b>{status}</b>}</span>
+          <span style={{ width: "10px" }}></span>
+          <span>Life Cycle Status : {<b>{lifeCycleStatus}</b>}</span>
           {/* <span style={{width:'10px'}}></span>
                 <span>{<Tag onClick={() => generateBarcode(requestNo)} style={{cursor:'pointer'}}>
                            <BarcodeOutlined />
@@ -402,7 +407,7 @@ import {
             columns={barcodeWithColumns} newWindow={false} barcodeInfo={barcode} /> : ''} */}
         <Form form={sourcingForm}>
           <Row gutter={8}>
-            {/* <Col
+            <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
               md={{ span: 4 }}
@@ -430,8 +435,8 @@ import {
                   })}
                 </Select>
               </Form.Item>
-            </Col> */}
-            {/* <Col
+            </Col>
+            <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
               md={{ span: 4 }}
@@ -455,8 +460,8 @@ import {
                   })}
                 </Select>
               </Form.Item>
-            </Col> */}
-            {/* <Col
+            </Col>
+            <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
               md={{ span: 4 }}
@@ -482,8 +487,24 @@ import {
                     ))}
                 </Select>
               </Form.Item>
-            </Col> */}
-            {/* <Col
+            </Col>
+            <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+            <Form.Item name="pch" label="PCH">
+              <Select
+                showSearch
+                placeholder="Select PCH"
+                optionFilterProp="children"
+                allowClear
+              >
+                {/* {pch.map((qc: any) => (
+                  <Select.Option key={qc.pch} value={qc.pch}>
+                    {qc.pch}
+                  </Select.Option>
+                ))} */}
+              </Select>
+            </Form.Item>
+          </Col>
+            <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
               md={{ span: 4 }}
@@ -495,13 +516,13 @@ import {
                   type="primary"
                   htmlType="submit"
                   icon={<SearchOutlined />}
-                  onClick={onSearch}
+                  // onClick={onSearch}
                 >
                   Search
                 </Button>
               </Form.Item>
-            </Col> */}
-            {/* <Col
+            </Col>
+            <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
               md={{ span: 4 }}
@@ -513,7 +534,7 @@ import {
                   Reset
                 </Button>
               </Form.Item>
-            </Col> */}
+            </Col>
           </Row>
         </Form>
   

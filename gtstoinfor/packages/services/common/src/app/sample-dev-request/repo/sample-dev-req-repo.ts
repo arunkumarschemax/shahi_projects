@@ -306,7 +306,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
     async getAllSampleDevData(req?: SampleFilterRequest): Promise<any[]> {
         console.log(req,"req")
         const query = this.createQueryBuilder('sr')
-            .select(`location_id as location,life_cycle_status as lifeCycleStatus,st.quantity,sr.sample_request_id,sr.description,sr.remarks,sr.user,sr.request_no AS requestNo,sr.cost_ref AS costRef,sr.contact,sr.extension,sr.sam_value AS samValue,sr.product,sr.type,sr.conversion,sr.made_in AS madeIn,sr.facility_id,sr.status,sr.location_id,sr.style_id,sr.profit_control_head_id,sr.buyer_id,sr.brand_id,sr.dmm_id,sr.technician_id,co.country_name,sr.life_cycle_status AS lifeCycleStatus`)
+            .select(`sr.location_id as location,life_cycle_status as lifeCycleStatus,st.quantity,sr.sample_request_id,sr.description,sr.remarks,sr.user,sr.request_no AS requestNo,sr.cost_ref AS costRef,sr.contact,sr.extension,sr.sam_value AS samValue,sr.product,sr.type,sr.conversion,sr.made_in AS madeIn,sr.facility_id,sr.status,sr.location_id,sr.style_id,sr.profit_control_head_id,sr.buyer_id,sr.brand_id,sr.dmm_id,sr.technician_id,co.country_name,sr.life_cycle_status AS lifeCycleStatus`)
             .addSelect(`l.location_name AS locationName,s.style,pch.profit_control_head AS pch,b.buyer_name AS buyerName,b.buyer_code AS buyerCode,br.brand_name AS brandName,ed1.first_name AS dmmName,ed2.first_name AS techName`)
             .leftJoin(Location, 'l', 'l.location_id = sr.location_id')
             .leftJoin(Style, 's', 's.style_id = sr.style_id')
