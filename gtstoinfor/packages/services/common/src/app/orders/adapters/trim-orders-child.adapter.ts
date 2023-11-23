@@ -8,7 +8,6 @@ export class TrimOrdersChildAdapter {
 
     public convertDtoToEntity(dto: TrimOrderDto , id :number, month:number): TrimOrdersChildEntity{
         const entity = new TrimOrdersChildEntity()
-        console.log(dto,'ooopdto')
         entity.year = dto.year
         entity.orderNo = dto.orderNo
         entity.revisionNo =dto.revisionNo

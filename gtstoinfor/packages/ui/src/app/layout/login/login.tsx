@@ -14,7 +14,7 @@ export default function Login() {
     const navigate = useNavigate();
 
     const onLogin = () => {
-        console.log("login called");
+        // console.log("login called");
         navigate("/");
     };
 

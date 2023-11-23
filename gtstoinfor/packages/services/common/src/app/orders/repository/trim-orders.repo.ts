@@ -32,7 +32,6 @@ export class TrimOrdersRepository extends Repository<TrimOrdersEntity> {
             }
             query.groupBy(`to.order_no`)
             query.orderBy(`to.order_no`, 'ASC')
-            console.log(await query.getRawMany())
         return await query.getRawMany();
     }
 

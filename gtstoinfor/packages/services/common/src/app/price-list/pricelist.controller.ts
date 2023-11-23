@@ -183,7 +183,6 @@ export class PriceListController {
     @Post('/getPriceHistory')
     @ApiBody({type: HistoryRequest})
     async getPriceHistory(@Body() req : any): Promise<CommonResponseModel> {
-        console.log(req,'controller')
         try {
             return this.priceService.getPriceHistory(req);
         } catch (err) {

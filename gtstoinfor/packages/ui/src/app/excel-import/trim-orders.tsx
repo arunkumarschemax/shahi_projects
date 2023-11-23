@@ -48,9 +48,7 @@ const {Text}=Typography
         if (form.getFieldValue('orderNo') !== undefined) {
             req.OrderNumber = (form.getFieldValue('orderNo'))
             }
-        service.getTrimOrdersData(req).then(res => {
-            console.log(req,'req');
-            
+        service.getTrimOrdersData(req).then(res => {            
             if (res.status) {
                 setGridData(res.data)
                 setFilteredData(res.data)
@@ -82,7 +80,6 @@ const {Text}=Typography
 
 
     const approveOrderStatus = (record) => {
-        console.log(record)
     const req = new COLineRequest(record.itemNumber,record.order_no,record.color_code,record.color,record.size_code,record.size,record.item_code,record.item,null,null,record.order_no,record.itemNumber,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,record.trim_order_id);
     // req.itemNumber = record.itemNumber
     // req.orderNumber = record.order_no
@@ -146,9 +143,7 @@ const {Text}=Typography
     }
 
     const handleItemNoChange = (value, record) => {
-        console.log(value)
         record.itemNumber = value
-        console.log(record)
         // setItemNoValues((prevValues) => ({
         //     ...prevValues,
         //     [record.key]: value,

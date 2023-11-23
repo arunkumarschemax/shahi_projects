@@ -57,7 +57,6 @@ export function FileRevert() {
     }
 
     const revertFileData = (value,fileType) => {
-        console.log(fileType)
         const req = new FileIdReq()
         req.fileId = value
         if(fileType == FileTypesEnum.PROJECTION_ORDERS){
@@ -252,9 +251,7 @@ export function FileRevert() {
     }
 
     const getTab = (val) => {
-        console.log(val)
         if(val == 1){
-            console.log('tabbbbba')
             setTotalVal(poData.length)
             setTotalSuccess(poData.filter(item => item.status == 'Success').length)
             setTotalFails(poData.filter(item => item.status == 'Failed').length)

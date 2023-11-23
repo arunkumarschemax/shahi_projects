@@ -448,7 +448,6 @@ export class OrdersController {
     async processEmails() :Promise<CommonResponseModel>{
         try {
             const test = await this.ordersService.processEmails();
-            console.log(test,'testttt')
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }

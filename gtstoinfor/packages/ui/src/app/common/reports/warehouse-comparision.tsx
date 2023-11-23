@@ -50,7 +50,6 @@ export const WareHouseComparision = () => {
     //   }
     // })
     service.getWareHouseComparisionData(req).then(res =>{
-      console.log(res,'res==========');
       if(res.status){
         setData(res.data)
         setFilteredData(res.data)
@@ -60,7 +59,6 @@ export const WareHouseComparision = () => {
       }
     })
     service.getWareHouseComparisionExcelData(req).then((res) => {
-      console.log(res, "res==========");
       if (res.status) {
         setExcelData(res.data);
       } else {
@@ -81,9 +79,7 @@ export const WareHouseComparision = () => {
   const getFilterdData = () => {
     let ItemName = form.getFieldValue('ItemName');
   
-    let filteredData = data;
-    console.log(filteredData,'--------');
-    
+    let filteredData = data;    
     if (ItemName) {
         filteredData = filteredData.filter(record => record.itemName === ItemName);
         if (filteredData.length === 0) {
@@ -1515,9 +1511,7 @@ render: (text: any, record: any) => <span >{record.pcsData[0].total_order_plan_q
 };
 const handleTabChange = (selectedYear: string) => {
   setTab(Number(selectedYear)); 
-  getData()
-  console.log(Number(selectedYear),'///////////');
-  
+  getData()  
 };
 const getTableSummary = (pageData) => {
   let janPre = 0;let janLat = 0;

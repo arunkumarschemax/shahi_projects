@@ -40,7 +40,6 @@ export class FactoriesController {
 
     @Post("/activateOrDeactivate")
   async activateOrDeactivate(@Body() activateDeactivateReq:any) : Promise<FactoryResponseModel>{
-    console.log(activateDeactivateReq, '[[[[[[[[[[[[[[[[[[[[[[[[[[[[[');
     try{
         await this.factoriesService.activateOrDeactivate(activateDeactivateReq)
     }catch(error){

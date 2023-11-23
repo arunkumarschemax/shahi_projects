@@ -57,7 +57,6 @@ export const MonthWiseComparisionReport = () => {
   };
 
   const handleChange = (val) => {
-    console.log('okkkkkkkkk')
     setSelected(val)
     getData(tab,val,file1,file2)
     // getPhase()
@@ -110,8 +109,6 @@ export const MonthWiseComparisionReport = () => {
 
   const getData = (val, tabName,file1,file2) => {
     
-    console.log(dates,'*******')
-    console.log(tabName,'------------')
     const req = new YearReq(val,tabName,file1,file2);
   
 

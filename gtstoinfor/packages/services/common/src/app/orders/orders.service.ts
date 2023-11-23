@@ -322,7 +322,6 @@ export class OrdersService {
                 return updatedObj;
             });
             const difference = columnArray.filter((element) => !TrimOrderColumns.includes(element));
-            console.log(difference,'==========')
             if(difference.length > 0){
                 await transactionManager.releaseTransaction()
                 return new CommonResponseModel(false,1110,'Please Upload Correct Excel')
@@ -1411,7 +1410,6 @@ async processEmails():Promise<CommonResponseModel> {
 
     const dns = require('dns');
     dns.lookup('zimbra.xmission.com', (err, addresses) => {
-        console.log(addresses,'---')
       if (err) {
         console.error(`DNS lookup error: ${err}`);
       } else {
@@ -1569,7 +1567,6 @@ async processEmails():Promise<CommonResponseModel> {
     imap.once('end', () => {
       const logMessage = 'IMAP Connection ended';
       this.logger.info(logMessage);
-      console.log();
     });
 
     imap.connect();
@@ -1602,7 +1599,6 @@ async processEmails():Promise<CommonResponseModel> {
         // resolve(attachments)
           return attachments;
     };
-    console.log(testt,'ooooo')
 
 
     // console.log(filesArray)
@@ -1624,7 +1620,6 @@ async processEmails():Promise<CommonResponseModel> {
         // const req = [{filePath:'./upload-files/pro_orders_1.xlsx',fileName:'pro_orders_1.xlsx'},{filePath:'./upload-files/projection_orders_1.xlsx',fileName:'projection_orders_1.xlsx'}]
        const uplodedFiles = await this.getUplodedFilesInfo()
        const difference = files.filter((element) => !uplodedFiles.data.includes(element))
-       console.log(difference,'****')
        if(difference.length == 0){
             // filesArray.push(new ordersMailFileStatusArrayReq(files,'Failed','Files with same name already exists!','-'))
             return new CommonResponseModel(false,0,'No new files identified in the mail')
@@ -1683,7 +1678,6 @@ async processEmails():Promise<CommonResponseModel> {
                                         xlsxFile(filepath,{sheet:finalSheetName},{transformData(data){
                                             // console.log(data)
                                             // data.slice(0,3)
-                                            console.log(data,'-----------data')
                                             return data
                                         }})
                                         
@@ -1765,7 +1759,7 @@ async processEmails():Promise<CommonResponseModel> {
                             }
                     }
                 
-                    const sendMail = this.sendMail('karthikeyan.nallamuthu@shahi.co.in','Uploded Files Status',filesArray)
+                    const sendMail = this.sendMail('karthikeyan.nallamuthu@shahi.co.in','Projection Order Uploded Files Status',filesArray)
                     if(sendMail){
                         return new CommonResponseModel(true,1,'',filesArray)
                     } else{
@@ -2698,7 +2692,6 @@ async sendMail(to: string, subject: string, message : any[]) {
         let filesArray = []
         const fs = require('fs');
         const files = fs.readdirSync('F:/trim-orders');
-        console.log(files,'filesssss')
        const uplodedFiles = await this.getUplodedFilesInfo()
        const difference = files.filter((element) => !uplodedFiles.data.includes(element))
        if(difference.length == 0){
@@ -2708,21 +2701,18 @@ async sendMail(to: string, subject: string, message : any[]) {
                     for(const filerec of difference){
                         const filename = filerec
                         const filepath = 'F:/trim-orders/'+filerec
-                        console.log(filepath,'--')
                             const promiseA = () => new Promise((resolve, reject) => {
                                 xlsxFile(filepath, { getSheets: true }).then((sheets:any[])=>{
                                     resolve(sheets)
                                 });
                             })
                             const sheets:any = await promiseA()
-                            console.log(sheets,'***sheet')
                             const promise = () => new Promise((resolve, reject) => {
                                 if(filename.split('.').pop() == 'csv'){
                                     resolve(null)
                                 }else if(filename.split('.').pop() == 'xlsx'){ 
                                     let finalSheetName = ''
                                      for(const sheetname of sheets){
-                                        console.log(sheetname,'**')
                                         if(sheetname.name == 'ExcelOut(Trim)'){
                                             finalSheetName = sheetname.name
                                             break
@@ -2734,7 +2724,6 @@ async sendMail(to: string, subject: string, message : any[]) {
                                         xlsxFile(filepath,{sheet:finalSheetName},{transformData(data){
                                             // console.log(data)
                                             // data.slice(0,3)
-                                            console.log(data,'-----------data')
                                             return data
                                         }})
                                         
@@ -2804,7 +2793,7 @@ async sendMail(to: string, subject: string, message : any[]) {
                             }
                     }
                 
-                    const sendMail = this.sendMail('karthikeyan.nallamuthu@shahi.co.in','Uploded Files Status',filesArray)
+                    const sendMail = this.sendMail('karthikeyan.nallamuthu@shahi.co.in','Trim Order Uploded Files Status',filesArray)
                     if(sendMail){
                         return new CommonResponseModel(true,1,'',filesArray)
                     } else{

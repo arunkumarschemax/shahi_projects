@@ -75,7 +75,6 @@ const getDestination = () => {
   priceService.getAllPriceListDestination().then(res => {
     setDestination(res.data)
     setDes(res.data?.length)
-    console.log(des, "all items");
 
   })
 
@@ -102,7 +101,6 @@ const getSeasonCode = () => {
 const getAllItems = () => {
   priceService.getAllPriceListItem().then(res => {
     setItem(res.data?.length)
-    console.log()
   });
 };
 
@@ -436,7 +434,6 @@ const getAllItems = () => {
                 onClick={() => {
                   if (rowData.isActive) {
                     openFormWithData(rowData);
-                    console.log(rowData,"rowdata")
                   } else {
                     AlertMessages.getErrorMessage('You Cannot Edit Deactivated PriceList');
                   }

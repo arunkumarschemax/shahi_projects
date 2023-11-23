@@ -72,7 +72,6 @@ const {Text}=Typography
             req.OrderNumber = (form.getFieldValue('orderNo'))
             }
         service.getUnacceptedTrimOrders(req).then(res => {
-            console.log(req,'req');
             
             if (res.status) {
                 setGridData(res.data)
@@ -106,14 +105,12 @@ const {Text}=Typography
       }
 
       const saveItemNuberDetails = (record) => {
-        console.log(record)
         const req = new OrderAcceptanceRequest()
         req.itemNo = record.itemNumber
         req.purchaseOrderNumber = record.order_no
         req.poLineItemNumber = null
         req.buyer = 'uniqlo-unit12'
         service.saveItemDetailsOfTrimOrder(req).then(res => {
-            console.log(res)
             if (res.status) {
             console.log(res)
 
@@ -194,9 +191,7 @@ const {Text}=Typography
     }
 
     const handleItemNoChange = (value, record) => {
-        console.log(value)
         record.itemNumber = value
-        console.log(record)
         // setItemNoValues((prevValues) => ({
         //     ...prevValues,
         //     [record.key]: value,
