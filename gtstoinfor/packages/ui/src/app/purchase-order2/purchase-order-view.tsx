@@ -283,15 +283,15 @@ export const PurchaseOrderView = () => {
       width: '100px',
 
     },
-    {
-      title: 'BuyerName',
-      dataIndex: 'buyername',
-      sorter: (a, b) => a.buyername.localeCompare(b.buyername),
-      sortDirections: ["descend", "ascend"],
-          ...getColumnSearchProps("buyername"),
-      width: '100px',
+    // {
+    //   title: 'BuyerName',
+    //   dataIndex: 'buyername',
+    //   sorter: (a, b) => a.buyername.localeCompare(b.buyername),
+    //   sortDirections: ["descend", "ascend"],
+    //       ...getColumnSearchProps("buyername"),
+    //   width: '100px',
 
-    },
+    // },
     {
       title: <div style={{ textAlign: 'center' }}>Po Date</div>,
       dataIndex: 'purchaseOrderDate',

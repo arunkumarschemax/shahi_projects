@@ -271,7 +271,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .leftJoin(SampleRequest, 'sr', ' sr.sample_request_id=srfi.sample_request_id ')
             .leftJoin(RmCreationEntity, 'rm', ' rm.rm_item_id=srfi.fabric_code ')
             .leftJoin(M3ItemsEntity,'m3items','m3items.m3_items_Id  = srfi.fabric_code')
-            .leftJoin(StocksEntity,'st','st.m3_item=srfi.fabric_code')
+            .leftJoin(StocksEntity,'st','st.m3_item=srfi.fabric_code and item_type in("fabric") ')
             .leftJoin(Colour,'c','c.colour_id=srfi.colour_id')
             .where(`srfi.sample_request_id = "${sampleId}"`)
             .getRawMany()
@@ -289,7 +289,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .addSelect(`stri.sample_request_id,mt.trim_type as trimType,st.quantity as availabeQuantity,stri.trim_info_id,stri.consumption AS trim_consumption,stri.sample_request_id AS trim_sample_request_id,stri.remarks AS tri_remarks,mt.trim_code AS trim_item_code,mt.trim_code AS m3trimcode`)
             .leftJoin(SampleRequest, 'sr', 'sr.sample_request_id= stri.sample_request_id ')
             .leftJoin(M3TrimsEntity, 'mt', 'mt.m3_trim_id=stri.trim_code ')
-            .leftJoin(StocksEntity,'st','st.m3_item=stri.trim_code')
+            .leftJoin(StocksEntity,'st','st.m3_item=stri.trim_code and item_type not in("fabric")')
             .where(`stri.sample_request_id = "${sampleId}"`)
             .getRawMany()
         return query.map((rec) => {
