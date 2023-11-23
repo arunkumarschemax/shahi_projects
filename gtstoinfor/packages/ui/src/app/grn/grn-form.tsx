@@ -43,6 +43,7 @@ const GRNForm = () => {
         grnService.createGrn(req).then((res) => {
             if (res.status) {
               AlertMessages.getSuccessMessage(res.internalMessage);
+              navigate('/grn-view')
             } else {
               AlertMessages.getErrorMessage(res.internalMessage);
             }

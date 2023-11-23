@@ -37,6 +37,8 @@ export class IndentDto{
   updatedUser?: string | null;
   @ApiProperty()
   versionFlag?: number;
+  @ApiProperty()
+  sampleRequestId?: number;
   constructor(
     indentId: number,
     requestNo: string,
@@ -53,6 +55,7 @@ export class IndentDto{
     updatedAt?: Date,
     updatedUser?: string | null,
     versionFlag?: number,
+    sampleRequestId?: number,
   ){
     this.indentId = indentId;
     this.requestNo = requestNo;
@@ -69,6 +72,7 @@ export class IndentDto{
     this.updatedAt = updatedAt;
     this.updatedUser = updatedUser;
     this.versionFlag = versionFlag;
+    this.sampleRequestId = sampleRequestId;
   }
 
 

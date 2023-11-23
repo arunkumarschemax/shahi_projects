@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, UploadResponse } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, CommonResponseModel, FabricInfoReq, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SourcingRequisitionReq, TrimInfoReq, UploadResponse } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -29,6 +29,7 @@ import { Size } from '../sizes/sizes-entity';
 import { OperationInventory } from '../operation-tracking/entity/operation-inventory-entity';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
+import { IndentService } from '@project-management-system/shared-services';
 
 
 
@@ -46,6 +47,7 @@ export class SampleRequestService {
     @InjectRepository(SamplingbomEntity)
     private bomRepo: Repository<SamplingbomEntity>,
     private logRepo: SampleInventoryLoqRepo,
+    private indentService: IndentService
   ) { }
 
 
@@ -178,27 +180,33 @@ export class SampleRequestService {
           sampleSizeInfo.push(sizeEntity)
         }
       }
-      sampleReqEntity.sampleReqSizeInfo = sampleSizeInfo
+      sampleReqEntity.sampleReqSizeInfo = sampleSizeInfo;
+      let indentFabInfo : FabricInfoReq[] = [];
       for (const fabricObj of req.fabricInfo) {
         console.log(fabricObj, '##############################################')
         const fabricEntity = new SampleReqFabricinfoEntity()
         fabricEntity.fabricCode = fabricObj.fabricCode
-        // fabricEntity.description = fabricObj.description
         fabricEntity.colourId = fabricObj.colourId
         fabricEntity.consumption = fabricObj.consumption
-        // fabricEntity.productGroupId = fabricObj.productGroupId
+        fabricEntity.uomId = fabricObj.uomId
         fabricEntity.remarks = fabricObj.remarks
         sampleFabricInfo.push(fabricEntity)
+        const fabricInfoReq = new FabricInfoReq(fabricObj.fabricCode,fabricObj.colourId,fabricObj.consumption,fabricObj.uomId,fabricObj.remarks)
+        indentFabInfo.push(fabricInfoReq);
       }
-      sampleReqEntity.sampleReqFabricInfo = sampleFabricInfo
+      sampleReqEntity.sampleReqFabricInfo = sampleFabricInfo;
+      let indentTrimInfo : TrimInfoReq[] = [];
       for (const trimObj of req.trimInfo) {
         const trimEntity = new SampleRequestTriminfoEntity()
-        // trimEntity.trimCode = trimObj.trimCode
-        // trimEntity.productGroupId = trimObj.productGroupId
+        trimEntity.trimCode = trimObj.trimCode
+        trimEntity.uomId = trimObj.uomId
         trimEntity.consumption = trimObj.consumption
-        // trimEntity.description = trimObj.description
+        trimEntity.trimType = trimObj.trimType
         trimEntity.remarks = trimObj.remarks
         sampleTrimInfo.push(trimEntity)
+        const trimInfoReq = new TrimInfoReq(trimObj.trimType,trimObj.trimCode,trimObj.consumption,trimObj.uomId,trimObj.remarks)
+        indentTrimInfo.push(trimInfoReq);
+        
       }
       sampleReqEntity.sampleTrimInfo = sampleTrimInfo
       for (const processObj of req.processInfo) {
@@ -220,8 +228,8 @@ export class SampleRequestService {
             bomEntity.rmItemId = fabricData.fabricCode //rm_item_id need to be added
             bomEntity.requiredQuantity = quantityWithWastage ? quantityWithWastage : 0
             bomEntity.wastage = '2'
-            bomEntity.productGroupId = fabricData.productGroupId
             saveBomDetails = await this.bomRepo.save(bomEntity)
+
           }
         }
         if (req.trimInfo) {
@@ -232,7 +240,6 @@ export class SampleRequestService {
             bomEntity.requiredQuantity = quantityWithWastage ? quantityWithWastage : 0
             bomEntity.wastage = '2'
             bomEntity.rmItemId = trimData.trimCode
-            bomEntity.productGroupId = trimData.productGroupId
             bomEntity.colourId = trimData.colourId
             saveBomDetails = await this.bomRepo.save(bomEntity)
           }
@@ -240,7 +247,15 @@ export class SampleRequestService {
 
       }
       if (save && saveBomDetails) {
-        return new AllSampleDevReqResponseModel(true, 1, 'SampleDevelopmentRequest created successfully', [save])
+
+        const req1 = new SourcingRequisitionReq(req.styleId,new Date(),"",new Date(),indentFabInfo,indentTrimInfo,save.sampleRequestId)
+        const raiseIndent = await this.indentService.createItems(req1);
+        if(raiseIndent.status){
+          return new AllSampleDevReqResponseModel(true, 1, 'SampleDevelopmentRequest created successfully', [save])
+        }
+        else {
+          return new AllSampleDevReqResponseModel(false, 0, 'SampleDevelopmentRequest creation Failed', [])
+        }
       }
       else {
         return new AllSampleDevReqResponseModel(false, 0, 'SampleDevelopmentRequest creation Failed', [])

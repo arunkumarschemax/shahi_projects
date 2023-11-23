@@ -282,7 +282,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
         const query = await this.dataSource.createQueryBuilder(SampleRequestTriminfoEntity, 'stri')
             .addSelect(`stri.trim_info_id,stri.consumption AS trim_consumption,stri.sample_request_id AS trim_sample_request_id,stri.remarks AS tri_remarks,rm.item_code AS trim_item_code`)
             .leftJoin(SampleRequest, 'sr', 'sr.sample_request_id= stri.sample_request_id ')
-            .leftJoin(RmCreationEntity, 'rm', 'rm.rm_item_id=stri.trim_code ')
+            .leftJoin(M3TrimsEntity, 'mt', 'mt.m3_trim_id=stri.trim_code ')
             .where(`stri.sample_request_id = "${sampleId}"`)
             .getRawMany()
         return query.map((rec) => {
@@ -299,8 +299,8 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
     async getAllSampleDevData(req?: SampleFilterRequest): Promise<any[]> {
         console.log(req,"req")
         const query = this.createQueryBuilder('sr')
-            .select(`sr.sample_request_id,sr.description,sr.remarks,sr.user,sr.request_no AS requestNo,sr.cost_ref AS costRef,sr.contact,sr.extension,sr.sam_value AS samValue,sr.product,sr.type,sr.conversion,sr.made_in AS madeIn,sr.facility_id,sr.status,sr.location_id,sr.style_id,sr.profit_control_head_id,sr.buyer_id,sr.brand_id,sr.dmm_id,sr.technician_id,co.country_name,s.style`)
-            .addSelect(`l.location_name AS locationName,s.style,pch.profit_control_head AS pch,b.buyer_name AS buyerName,b.buyer_code AS buyerCode,br.brand_name AS brandName,ed1.first_name AS dmmName,ed2.first_name AS techName,srfi.fabric_code ,srti.trim_code ,m3items.item_code as m3itemCode,m3trims.trim_code`)
+            .select(`sr.sample_request_id,sr.description,sr.remarks,sr.user,sr.request_no AS requestNo,sr.cost_ref AS costRef,sr.contact,sr.extension,sr.sam_value AS samValue,sr.product,sr.type,sr.conversion,sr.made_in AS madeIn,sr.facility_id,sr.status,sr.location_id,sr.style_id,sr.profit_control_head_id,sr.buyer_id,sr.brand_id,sr.dmm_id,sr.technician_id,co.country_name`)
+            .addSelect(`l.location_name AS locationName,s.style,pch.profit_control_head AS pch,b.buyer_name AS buyerName,b.buyer_code AS buyerCode,br.brand_name AS brandName,ed1.first_name AS dmmName,ed2.first_name AS techName`)
             .leftJoin(Location, 'l', 'l.location_id = sr.location_id')
             .leftJoin(Style, 's', 's.style_id = sr.style_id')
             .leftJoin(ProfitControlHead, 'pch', 'pch.profit_control_head_id = sr.profit_control_head_id')
@@ -310,7 +310,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .leftJoin(Brands, 'br', 'br.brand_id = sr.brand_id')
             .leftJoin(EmplyeeDetails, 'ed1', 'ed1.employee_id = sr.dmm_id')
             .leftJoin(EmplyeeDetails, 'ed2', 'ed2.employee_id = sr.technician_id')
-            // .leftJoin(M3StyleEntity, 'm3', 'm3.m3_style_Id = sr.style_no')
+            // .leftJoin(M3StyleEntity, 'm3', 'm3.m3_style_Id=sr.m3_style_no')
             .leftJoin(Countries, 'co', 'co.country_id= sr.made_in')
             .leftJoin(SampleReqFabricinfoEntity,'srfi','srfi.sample_request_id = sr.sample_request_id',)
             .leftJoin(SampleRequestTriminfoEntity,'srti','srti.sample_request_id = sr.sample_request_id')

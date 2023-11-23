@@ -14,6 +14,8 @@ import FabricsForm from "./fabrics";
 import TrimsForm from "./trims";
 import ProcessForm from "./process";
 import { useNavigate } from 'react-router-dom';
+import { Link } from "react-router-dom";
+
 
 const { Option } = Select;
 
@@ -313,7 +315,15 @@ export const SampleDevForm = () => {
   };
 
   return (
-    <Card title='Sample Development Request' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+    <Card title='Sample Development Request' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}  
+    extra={
+      <Link to="/sample-development/sample-requests">
+        <span style={{ color: "white" }}>
+          <Button type={"primary"}>View </Button>{" "}
+        </span>
+      </Link>
+    }
+    >
       <Form layout="vertical" form={form} onFinish={onFinish}>
         <Form.Item name="sampleRequestId" style={{ display: "none" }}>
           <Input hidden />

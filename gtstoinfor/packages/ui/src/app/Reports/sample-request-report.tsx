@@ -94,12 +94,12 @@ const SampleRequestReport = () => {
       sorter: (a, b) => a.sampleReqNo.localeCompare(b.sampleReqNo),
       sortDirections: ['descend', 'ascend'],
     },
-    {
-      title: "Indent Code",
-      dataIndex: "indentCode",
-      sorter: (a, b) => a.indentCode.localeCompare(b.indentCode),
-      sortDirections: ['descend', 'ascend'],
-    },
+    // {
+    //   title: "Indent Code",
+    //   dataIndex: "indentCode",
+    //   sorter: (a, b) => a.indentCode.localeCompare(b.indentCode),
+    //   sortDirections: ['descend', 'ascend'],
+    // },
     {
       title: "Style",
       dataIndex: "styleName",

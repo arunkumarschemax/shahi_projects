@@ -2,9 +2,9 @@ import { ApiProperty } from "@nestjs/swagger"
 
 export class SamplefabricReq{
     @ApiProperty()
-    fabricCode:string
+    fabricCode:number
     @ApiProperty()
-    description:string
+    uomId:number
     @ApiProperty()
     colourId:number
     @ApiProperty()
@@ -14,8 +14,8 @@ export class SamplefabricReq{
     @ApiProperty()
     fabricInfoId:number;
     constructor(
-        fabricCode:string,
-        description:String,
+        fabricCode:number,
+        uomId:number,
         colourId:number,
         consumption:number,
         remarks : string,
@@ -23,7 +23,7 @@ export class SamplefabricReq{
     ){
         this.fabricCode=fabricCode
         this.colourId=colourId
-        this,description=description
+        this,uomId=uomId
         this.consumption=consumption
         this.remarks=remarks
         this.fabricInfoId=fabricInfoId

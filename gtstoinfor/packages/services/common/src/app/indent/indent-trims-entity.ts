@@ -13,11 +13,11 @@ export class IndentTrimsEntity {
   @PrimaryGeneratedColumn("increment", { name: 'itrims_id' })
   itrimsId: number;
 
-  @Column("int", {
+  @Column("varchar", {
     nullable: false,
     name: "trim_type"
   })
-  trimType: number;
+  trimType: string;
 
   @Column('int',{
     name:'trim_code',
@@ -25,38 +25,34 @@ export class IndentTrimsEntity {
     })
     trimCode: number;
 
-@Column('int',{
-    name:'size',
-    nullable: false
-    })
-    size: number;
-    @Column('int',{
-        name:'color',
-        nullable: false
-        })
-        color: number;
+
+    // @Column('int',{
+    //     name:'color',
+    //     nullable: false
+    //     })
+    //     color: number;
         @Column('decimal', {
           name: 'quantity',
         })
         quantity: number
-    @Column('int',{
-        name:'quantity_unit',
-        nullable: false,
-        })
-        quantityUnit: number;
+    // @Column('int',{
+    //     name:'quantity_unit',
+    //     nullable: false,
+    //     })
+    //     quantityUnit: number;
    
-@Column("varchar", {
-    nullable: false,
-    length: 255,
-    name: "m3_trim_code"
-    })
-    m3TrimCode: string;
-    @Column("varchar", {
-        nullable: true,
-        length: 255,
-        name: "description"
-      })
-      description: string;
+// @Column("varchar", {
+//     nullable: false,
+//     length: 255,
+//     name: "m3_trim_code"
+//     })
+//     m3TrimCode: string;
+//     @Column("varchar", {
+//         nullable: true,
+//         length: 255,
+//         name: "description"
+//       })
+//       description: string;
       @Column("varchar", {
         nullable: true,
         length: 255,

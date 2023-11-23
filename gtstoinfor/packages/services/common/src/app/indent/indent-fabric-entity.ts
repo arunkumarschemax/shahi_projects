@@ -114,33 +114,33 @@ export class IndentFabricEntity {
         //                     })
         //                     moqPriceUnit: number;
     
-                    @Column("varchar", {
-                        nullable: false,
-                        length: 255,
-                        name: "season"
-                        })
-                        season: string;
-                        @Column('int',{
-                            name:'supplier_id',
-                            nullable: true
-                            })
-                            supplierId: number;
-                            @Column('int',{
-                                name:'buyer_id',
-                                nullable: true
-                                })
-                                buyerId: number;
-  @Column('datetime',{
-    name:'grn_date',
-    nullable: false
-  })
-  grnDate: Date;
-  @Column("varchar", {
-    nullable: false,
-    length: 255,
-    name: "xl_no"
-    })
-    xlNo: string;
+                    // @Column("varchar", {
+                    //     nullable: false,
+                    //     length: 255,
+                    //     name: "season"
+                    //     })
+                    //     season: string;
+                    //     @Column('int',{
+                    //         name:'supplier_id',
+                    //         nullable: true
+                    //         })
+                    //         supplierId: number;
+                    //         @Column('int',{
+                    //             name:'buyer_id',
+                    //             nullable: true
+                    //             })
+                    //             buyerId: number;
+  // @Column('datetime',{
+  //   name:'grn_date',
+  //   nullable: false
+  // })
+  // grnDate: Date;
+  // @Column("varchar", {
+  //   nullable: false,
+  //   length: 255,
+  //   name: "xl_no"
+  //   })
+  //   xlNo: string;
     @Column('decimal', {
       name: 'quantity',
     })

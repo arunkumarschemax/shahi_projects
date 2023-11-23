@@ -4,21 +4,21 @@ export class IndentTrimDto{
     @ApiProperty()
     itrimsId: number;
     @ApiProperty()
-    trimType: number;
+    trimType: string;
     @ApiProperty()
     trimCode: number;
-    @ApiProperty()
-    size: number;
-    @ApiProperty()
-    color: number;
+    // @ApiProperty()
+    // size: number;
+    // @ApiProperty()
+    // color: number;
     @ApiProperty()
     quantity: number;
-    @ApiProperty()
-    quantityUnit: number;
-    @ApiProperty()
-    m3TrimCode: string;
-    @ApiProperty()
-    description: string;
+    // @ApiProperty()
+    // quantityUnit: number;
+    // @ApiProperty()
+    // m3TrimCode: string;
+    // @ApiProperty()
+    // description: string;
     @ApiProperty()
     remarks: string;
     @ApiProperty()
@@ -39,14 +39,14 @@ export class IndentTrimDto{
     versionFlag?: number;
   constructor(
     itrimsId: number,
-    trimType: number,
+    trimType: string,
     trimCode: number,
-    size: number,
-    color: number,
+    // size: number,
+    // color: number,
     quantity: number,
-    quantityUnit: number,
-    m3TrimCode: string,
-    description: string,
+    // quantityUnit: number,
+    // m3TrimCode: string,
+    // description: string,
     remarks: string,
     filePath: string,
     isUploaded: boolean,
@@ -60,12 +60,12 @@ export class IndentTrimDto{
     this.itrimsId = itrimsId;
     this.trimType = trimType;
     this.trimCode = trimCode;
-    this.size = size;
-    this.color = color;
+    // this.size = size;
+    // this.color = color;
     this.quantity = quantity;
-    this.quantityUnit = quantityUnit;
-    this.m3TrimCode = m3TrimCode;
-    this.description = description;
+    // this.quantityUnit = quantityUnit;
+    // this.m3TrimCode = m3TrimCode;
+    // this.description = description;
     this.remarks = remarks;
     this.filePath = filePath;
     this.isUploaded = isUploaded;
