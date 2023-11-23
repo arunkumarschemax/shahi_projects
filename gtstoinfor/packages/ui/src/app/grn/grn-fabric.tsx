@@ -193,12 +193,12 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
     const columns:any = [
         {
           title: <div style={{textAlign:"center"}}>M3 Fabric Code</div>,
-          dataIndex: 'm3fabricCode',
+          dataIndex: 'itemCode',
         },
-        {
-          title: <div style={{textAlign:"center"}}>Fabric Type</div>,
-          dataIndex: 'fabricTypeName',
-        },
+        // {
+        //   title: <div style={{textAlign:"center"}}>Fabric Type</div>,
+        //   dataIndex: 'fabricTypeName',
+        // },
         {
           title: <div style={{textAlign:"center"}}>PO Qty</div>,
           dataIndex: 'poQuantity',
@@ -209,6 +209,11 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
           title: <div style={{textAlign:"center"}}>GRN Qty</div>,
           align:"right",
           dataIndex: 'grnQuantity',
+          render:(value,rowData) =>{
+            return(
+              rowData.grnQuantity? rowData.grnQuantity:0
+            )
+          }
         },
         {
           title: <div style={{textAlign:"center"}}>Received Qty</div>,

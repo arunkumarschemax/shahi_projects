@@ -203,8 +203,8 @@ import {
       },
       {
         title: "M3 Fabric Code",
-        dataIndex: "fabric_item_code",
-        ...getColumnSearchProps("fabric_item_code"),
+        dataIndex: "item_code",
+        ...getColumnSearchProps("item_code"),
       },
       {
         title: "Color",
