@@ -9,6 +9,7 @@ export class SampleDevDto {
   SampleRequestId:number;
   locationId : number;
   requestNo: string;
+  expectedCloseDate: Date;
   styleId : number;
   pchId : number;
   buyerId : number;
@@ -37,6 +38,7 @@ export class SampleDevDto {
   SampleRequestId:number,
   locationId : number,
   requestNo: string,
+  expectedCloseDate: Date,
   styleId : number,
   pchId : number,
   buyerId : number,
@@ -64,6 +66,7 @@ export class SampleDevDto {
     this.SampleRequestId=SampleRequestId
     this.locationId=locationId
     this.requestNo=requestNo
+    this.expectedCloseDate = expectedCloseDate
     this.styleId=styleId
     this.pchId=pchId
     this.buyerId=buyerId

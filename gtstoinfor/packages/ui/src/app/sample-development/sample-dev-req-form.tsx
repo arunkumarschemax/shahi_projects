@@ -2,7 +2,7 @@ import { PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
 import { DepartmentReq,SampleDevelopmentRequest } from "@project-management-system/shared-models";
 import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProfitControlHeadService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Modal, Row, Select, Tabs, message } from "antd";
+import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Tabs, message } from "antd";
 import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import Upload, { RcFile } from "antd/es/upload";
@@ -245,7 +245,7 @@ export const SampleDevForm = () => {
       console.log('hoii')
       if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
         console.log('TTTTT')
-        const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,'',val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData)
+        const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,val.expectedCloseDate,val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,'',val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData)
         console.log(req.sizeData)
        
           sampleService.createSampleDevelopmentRequest(req).then((res) => {
@@ -359,6 +359,7 @@ export const SampleDevForm = () => {
               // rules={[
               //   {
               //    required:true
+
               //   },
               // ]}
             >
@@ -576,6 +577,11 @@ export const SampleDevForm = () => {
               </Upload>
             </Form.Item>
           </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                    <Form.Item name='expectedCloseDate' label='Expected Close Date' rules={[{required:true,message:'expectedCloseDate is required'}]}>
+                    <DatePicker style={{ width: '93%', marginLeft: 5 }} />
+                    </Form.Item>
+              </Col>
         </Row>
         <Row gutter={16}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>

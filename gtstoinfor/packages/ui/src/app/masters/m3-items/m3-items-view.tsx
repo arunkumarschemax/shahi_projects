@@ -26,6 +26,10 @@ const M3ItemsView = () => {
 
     const Columns: any = [
         {
+            title: "Buyer",
+            dataIndex: "buyer",
+        },
+        {
             title: "Item Code",
             dataIndex: "itemCode",
         },
@@ -85,6 +89,10 @@ const M3ItemsView = () => {
         {
             title: "Shrinkage",
             dataIndex: "shrinkage",
+        },
+        {
+            title: "Description",
+            dataIndex: "description",
         },
     ]
 

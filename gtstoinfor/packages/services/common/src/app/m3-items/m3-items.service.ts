@@ -42,7 +42,7 @@ export class M3ItemsService {
   }
 
   async getM3Items(): Promise<CommonResponseModel> {
-    let query = `SELECT m3.description,m3.m3_items_Id as m3ItemsId,m3.item_code AS itemCode,m3.content,m3.fabric_type,m3.weave,m3.weight,m3.construction,m3.yarn_count,m3.finish,m3.shrinkage,ft.fabric_type_name,fw.fabric_weave_name, uom1.uom as weightUnit, uom2.uom as yarnUnit FROM m3_items m3 LEFT JOIN fabric_type ft ON ft.fabric_type_id=m3.fabric_type LEFT JOIN fabric_weave fw ON fw.fabric_weave_id=m3.weave LEFT JOIN uom uom1 ON uom1.id=m3.weight_unit LEFT JOIN uom uom2 ON uom2.id=m3.yarn_unit`
+    let query = `SELECT m3.description,m3.m3_items_Id as m3ItemsId,m3.item_code AS itemCode,m3.content,m3.fabric_type,m3.weave,m3.weight,m3.construction,m3.yarn_count,m3.finish,m3.shrinkage,ft.fabric_type_name,fw.fabric_weave_name, uom1.uom as weightUnit, uom2.uom as yarnUnit, b.buyer_name AS buyer FROM m3_items m3 LEFT JOIN fabric_type ft ON ft.fabric_type_id=m3.fabric_type LEFT JOIN fabric_weave fw ON fw.fabric_weave_id=m3.weave LEFT JOIN buyers b on b.buyer_id = m3.buyer_id LEFT JOIN uom uom1 ON uom1.id=m3.weight_unit LEFT JOIN uom uom2 ON uom2.id=m3.yarn_unit`
     const data = await this.datasource.query(query)
     if (data)
       return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", data)

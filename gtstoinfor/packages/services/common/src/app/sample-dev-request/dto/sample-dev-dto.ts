@@ -7,6 +7,8 @@ export class SampleDevReqDto {
 
   @ApiProperty()
   requestNo: string;
+  @ApiProperty()
+  expectedCloseDate: Date;
 
   @ApiProperty()
   locationId: number;

@@ -8,6 +8,7 @@ export class SampleDevelopmentRequest {
     sampleRequestId: number;
     locationId: string;
     requestNo: string;
+    expectedDeliveryDate:Date;
     pchId: number;
     user: string;
     buyerId: number;
@@ -42,6 +43,7 @@ export class SampleDevelopmentRequest {
         sampleRequestId: number,
         locationId: string,
         requestNo: string,
+        expectedDeliveryDate:Date,
         pchId: number,
         user: string,
         buyerId: number,
@@ -74,6 +76,7 @@ export class SampleDevelopmentRequest {
         this.sampleRequestId = sampleRequestId
         this.locationId = locationId
         this.requestNo = requestNo
+        this.expectedDeliveryDate = expectedDeliveryDate
         this.styleId = styleId
         this.pchId = pchId
         this.buyerId = buyerId

@@ -98,6 +98,13 @@ export class SampleRequest {
   })
   contact: string;
 
+  @Column('date',{
+    name:'expected_delivery_date',
+    nullable:false
+  })
+  expectedDeliveryDate:Date
+
+
   @Column("varchar", {
     nullable: true,
     name: "extension"
