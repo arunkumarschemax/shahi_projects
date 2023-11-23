@@ -162,10 +162,10 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
             responsive: ['sm'],
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
-        {
-            title:'Indent Code',
-            dataIndex:'indentCode',
-        },
+        // {
+        //     title:'Indent Code',
+        //     dataIndex:'indentCode',
+        // },
         {
             title:'M3 Fabric Code',
             dataIndex:'itemCode',

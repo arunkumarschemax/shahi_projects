@@ -141,11 +141,11 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
             responsive: ['sm'],
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
-        {
-            title:' Indent Code',
-            dataIndex:'indentCode',
-            width:'100px'
-        },
+        // {
+        //     title:' Indent Code',
+        //     dataIndex:'indentCode',
+        //     width:'100px'
+        // },
         {
             title:'M3 Trim Code',
             dataIndex:'m3TrimCodeName',

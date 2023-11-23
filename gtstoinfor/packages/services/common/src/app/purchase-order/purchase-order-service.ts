@@ -263,7 +263,7 @@ export class PurchaseOrderService {
                        grn_quantity AS grnQuantity 
                        FROM purchase_order_trim pt
                        LEFT JOIN product_group pg ON pg.product_group_id=pt.product_group_id
-                       LEFT JOIN m3_trims ri ON ri.m3_trim_Id =pt.trim_id
+                       LEFT JOIN m3_trims ri ON ri.m3_trim_Id =pt.m3_trim_code
                         where pt.purchase_order_id=`+ purchaseOrderId + ``
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
