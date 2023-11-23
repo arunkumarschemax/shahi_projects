@@ -4,7 +4,7 @@ import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,
 import Highlighter from "react-highlight-words";
 import { ColumnProps } from "antd/lib/table";
 import { Link } from "react-router-dom";
-import { SampleDevelopmentService } from "@project-management-system/shared-services";
+import { BuyersService, SampleDevelopmentService } from "@project-management-system/shared-services";
 import { useNavigate } from "react-router-dom";
 import form from "antd/es/form";
 import { SampleFilterRequest } from "@project-management-system/shared-models";
@@ -28,12 +28,25 @@ export const SampleRequests = (props: BuyingHouseProps) => {
   const [form] = Form.useForm();
   const { Option } = Select;
   const logInUser = localStorage.getItem('userName')
+  const [buyer, setBuyer] = useState<any[]>([]);
+  const buyerService = new BuyersService();
+
+
 
 
   useEffect(() => {
     getAllSampleDevelopment();
     // getReqNo();
+    getBuyers();
   }, []);
+
+  const getBuyers = () => {
+    buyerService.getAllActiveBuyers().then((res) => {
+      if (res.status) {
+        setBuyer(res.data);
+      }
+    });
+  };
 
   const getAllSampleDevelopment = () => {
     const req = new SampleFilterRequest()
@@ -228,6 +241,14 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
+      title: "Buyer",
+      dataIndex: "buyerName",
+      // responsive: ['lg'],
+      sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
+      sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("buyerName"),
+    },
+    {
       title: "Request No",
       dataIndex: "requestNo",
       // responsive: ['lg'],
@@ -242,6 +263,14 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       sorter: (a, b) => a.style.localeCompare(b.style),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("style"),
+    },
+    {
+      title: "Brand",
+      dataIndex: "brandName",
+      // responsive: ['lg'],
+      sorter: (a, b) => a.brandName.localeCompare(b.brandName),
+      sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("brandName"),
     },
     // {
     //   title: "Style Code",
@@ -300,14 +329,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
     //   sortDirections: ["descend", "ascend"],
     //   ...getColumnSearchProps("type"),
     // },
-    {
-      title: "Buyer",
-      dataIndex: "buyerName",
-      // responsive: ['lg'],
-      sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
-      sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("buyerName"),
-    },
+  
     {
       title: "Status",
       dataIndex: "status",
@@ -377,6 +399,28 @@ export const SampleRequests = (props: BuyingHouseProps) => {
     >
       <Form form={form} onFinish={onFinish}>
         <Row gutter={24}>
+        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+            <Form.Item
+              name="buyerId"
+              label="Buyer"
+              rules={[{ required: true, message: "Buyer is required" }]}
+            >
+              <Select
+                allowClear
+                showSearch
+                optionFilterProp="children"
+                placeholder="Select Buyer"
+              >
+                {buyer.map((e) => {
+                  return (
+                    <Option key={e.buyerId} value={e.buyerId}>
+                      {`${e.buyerCode} - ${e.buyerName}`}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col> */}
           <Col xs={24} sm={12} md={8} lg={6} xl={5}>
             <Form.Item name="reqNo" label="Request No">
               <Select

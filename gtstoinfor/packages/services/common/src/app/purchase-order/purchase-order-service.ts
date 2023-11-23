@@ -219,7 +219,7 @@ export class PurchaseOrderService {
             expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype,b.buyer_name as buyername
              FROM purchase_order  po 
             LEFT JOIN style s ON s.style_id=po.style_id
-            LEFT JOIN  vendors v ON v.vendor_name= po.vendor_id
+            LEFT JOIN  vendors v ON v.vendor_id= po.vendor_id
             LEFT JOIN buyers b ON  b.buyer_id = po.buyer_id
             `
             if (req?.id) {
@@ -303,6 +303,7 @@ export class PurchaseOrderService {
                     buyerId:po.buyerId,
                     buyername:po.buyername,
                     vendorId: po.vendorId,
+                    vendorName:po.vendorName,
                     expectedDeliverydate: po.expectedDeliverydate,
                     purchaseOrderDate: po.purchaseOrderDate,
                     poMaterialtype: po.poMaterialtype,
