@@ -228,6 +228,14 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
+      title: "Buyer",
+      dataIndex: "buyerName",
+      // responsive: ['lg'],
+      sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
+      sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("buyerName"),
+    },
+    {
       title: "Request No",
       dataIndex: "requestNo",
       // responsive: ['lg'],
@@ -242,6 +250,14 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       sorter: (a, b) => a.style.localeCompare(b.style),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("style"),
+    },
+    {
+      title: "Buyer",
+      dataIndex: "buyerName",
+      // responsive: ['lg'],
+      sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
+      sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("buyerName"),
     },
     // {
     //   title: "Style Code",
@@ -300,14 +316,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
     //   sortDirections: ["descend", "ascend"],
     //   ...getColumnSearchProps("type"),
     // },
-    {
-      title: "Buyer",
-      dataIndex: "buyerName",
-      // responsive: ['lg'],
-      sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
-      sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("buyerName"),
-    },
+  
     {
       title: "Status",
       dataIndex: "status",
