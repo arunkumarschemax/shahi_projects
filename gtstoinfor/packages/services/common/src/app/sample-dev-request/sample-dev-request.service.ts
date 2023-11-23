@@ -94,6 +94,16 @@ export class SampleRequestService {
     }
   }
 
+  async getAllSampleReqDropDown(): Promise<CommonResponseModel> {
+    const details = await this.sampleRepo.getAllSampleReqDropDown();
+    if (details.length > 0) {
+      return new CommonResponseModel(true, 1, 'data retrieved', details)
+    } else {
+      return new CommonResponseModel(false, 0, 'data not found')
+    }
+  }
+  
+
   async cancelSampleReqById(request: SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
     try {
       const sampleReq = await this.sampleRepo.findOne({ where: { SampleRequestId: request.sampleId } })

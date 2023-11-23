@@ -247,7 +247,7 @@ return(
                         </Select>
                     </Form.Item>
                     </Col> */}
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
                         <Form.Item
                         name="buyerId"
                         label="Buyer"
@@ -268,7 +268,7 @@ return(
                             })}
                         </Select>
                         </Form.Item>
-                    </Col>
+                    </Col> */}
              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:'none'}}>
                     <Form.Item name='indentId' label='Indent Code' 
                     rules={[{required:true,message:'IndentCode is required'}]}>
