@@ -65,6 +65,10 @@ export const extractcogoPort = async (pdf) => {
                 } else {
                     description = extractedData.slice(extractedData.indexOf(totalData) + 1, hsnId).map((item) => item.content).join('\n');
                 }
+                const mainMatchDesc = line.match(/(.*?)\s+\d+\s+\w+\s+([\d.]+)\s+([\d.]+)\s+(\w)\s+([\d.]+%)\s+([\d.]+)\s+\d+\s+\d+\s+([\d.]+)\s+([\d.]+)/);
+                if (mainMatchDesc) {
+                    description = mainMatchDesc[1] ? mainMatchDesc[1] : "";
+                }
 
                 let taxType, igst, cgst, sgst;
                 const unitQuantity = parseFloat(matchData[2]).toFixed(1);
@@ -188,7 +192,7 @@ export const extractcogoPort = async (pdf) => {
 
     let venName = '';
     const invoiceDateRegex = /[A-Z0-9]{2}\/[A-Z0-9]{2}\/[A-Z0-9]{4}/;
-    const invoiceNumberRegex = /COGO\/[A-Z0-9]{4}\/[A-Z0-9]{5}/;
+    const invoiceNumberRegex = /Tax\s+Invoice\s+No:\s+COGO\/[A-Z0-9]{4}\/[A-Z0-9]{5}|Tax\s+Invoice\s+No:\s+COGO[A-Z0-9]{9}/;
     const invoiceCurrency = 'INR';
     const currentYear = new Date().getFullYear();
     const nextYear = currentYear + 1;
@@ -207,7 +211,7 @@ export const extractcogoPort = async (pdf) => {
                 invoiceDate = invoiceDateData ? invoiceDateData.content.match(invoiceDateRegex) : '';
 
                 const invoiceNumberData = extractedData.find((item) => item.content.match(invoiceNumberRegex));
-                invoiceNumber = invoiceNumberData ? invoiceNumberData.content.match(invoiceNumberRegex) : '';
+                invoiceNumber = invoiceNumberData ? invoiceNumberData.content.replace(/Tax\s+Invoice\s+No:\s+/g,"").trim(): '';
 
                 const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
                     const amount = parseFloat(hsnLine.amount) || 0;
