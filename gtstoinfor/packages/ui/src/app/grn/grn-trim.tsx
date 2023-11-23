@@ -31,59 +31,137 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
     }
 
 
-    const handleSaveData = () => {
-      form.validateFields().then((values) => {
-        const updatedFormData = trimData
-          .filter((record) => {
-            const key = record.key;
-            return (
-              values[`receivedQuantity_${record.poTrimId}_${key}`] ||
-              values[`acceptedQuantity_${record.poTrimId}_${key}`] ||
-              values[`rejectedQuantity_${record.poTrimId}_${key}`]
-            );
-          })
-          .map((record) => ({
-            poTrimId: record.poTrimId,
-            receivedQuantity: values[`receivedQuantity_${record.poTrimId}_${record.key}`],
-            receivedUomId: values[`receivedUomId_${record.poTrimId}_${record.key}`],
-            acceptedQuantity: values[`acceptedQuantity_${record.poTrimId}_${record.key}`],
-            acceptedUomId: values[`acceptedUomId_${record.poTrimId}_${record.key}`],
-            rejectedQuantity: values[`rejectedQuantity_${record.poTrimId}_${record.key}`],
-            rejectedUomId: values[`rejectedUomId_${record.poTrimId}_${record.key}`],
-            conversionQuantity:quantity,
-            conversionUomId:values[`acceptedUomId_${record.poFabricId}_${record.key}`],
-            ...record,
-          }));
-  
-        setFormData(updatedFormData)
-        console.log("FormData:", updatedFormData)
-        trimForm()
-      });
-    };
+    // const handleSaveData = () => {
+    //   console.log('1st line')
+    //   form
+    //     .validateFields()
+    //     .then((values) => {
+    //       console.log('2nd line')
+    //       const updatedFormData = trimData
+    //         .filter((record) => {
+    //           console.log('3rd lin')
+    //           const key = record.key;
+    //           return (
+    //             values[`receivedQuantity_${record.poTrimId}_${key}`] ||
+    //             values[`acceptedQuantity_${record.poTrimId}_${key}`] ||
+    //             values[`rejectedQuantity_${record.poTrimId}_${key}`]
+    //           );
+    //         })
+    //         .map((record) => ({
+    //           poTrimId: record.poTrimId,
+    //           receivedQuantity: values[`receivedQuantity_${record.poTrimId}_${record.key}`],
+    //           receivedUomId: values[`receivedUomId_${record.poTrimId}_${record.key}`],
+    //           acceptedQuantity: values[`acceptedQuantity_${record.poTrimId}_${record.key}`],
+    //           acceptedUomId: values[`acceptedUomId_${record.poTrimId}_${record.key}`],
+    //           rejectedQuantity: values[`rejectedQuantity_${record.poTrimId}_${record.key}`],
+    //           rejectedUomId: values[`rejectedUomId_${record.poTrimId}_${record.key}`],
+    //           conversionQuantity: quantity,
+    //           conversionUomId: values[`acceptedUomId_${record.poFabricId}_${record.key}`],
+    //           ...record,
+    //         }));
+    //         console.log(updatedFormData,'last line')
+    //       setFormData(updatedFormData);
+    //       console.log("FormData:", updatedFormData);
+    //       trimForm();
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error validating fields:", error);
+    //     });
+    // };
+    
+    
+
+    // const trimForm = () => {
+    //   const grnItemsArray = [];
+    //   formData.forEach((record) => {
+    //     const grnItem = new GrnItemsDto()
+    //     grnItem.poTrimId = record.poTrimId
+    //     grnItem.m3ItemCodeId = record.m3TrimCode
+    //     grnItem.productGroupId = record.productGroupId
+    //     grnItem.receivedQuantity = record.receivedQuantity
+    //     grnItem.receivedUomId = record.receivedUomId
+    //     grnItem.acceptedQuantity = record.acceptedQuantity
+    //     grnItem.acceptedUomId = record.acceptedUomId
+    //     grnItem.rejectedQuantity = record.rejectedQuantity
+    //     grnItem.rejectedUomId = record.rejectedUomId
+    //     grnItem.indentTrimId = record.indentTrimId
+    //     grnItem.conversionQuantity = record.conversionQuantity
+    //     grnItem.conversionUomId = record.conversionUomId
+    //     grnItem.remarks = record.remarks
+    //     // grnItem.m3TrimCode = record.m3TrimCode
+    //     grnItemsArray.push(grnItem)
+    //   })
+    //   console.log(grnItemsArray,'------------------')
+    //   onSaveData(grnItemsArray)
+    //   console.log("GrnItemsArray:", grnItemsArray)
+    // };
+
 
     const trimForm = () => {
-      const grnItemsArray = [];
-      formData.forEach((record) => {
-        const grnItem = new GrnItemsDto()
-        grnItem.poTrimId = record.poTrimId
-        grnItem.m3ItemCodeId = record.m3TrimCode
-        grnItem.productGroupId = record.productGroupId
-        grnItem.receivedQuantity = record.receivedQuantity
-        grnItem.receivedUomId = record.receivedUomId
-        grnItem.acceptedQuantity = record.acceptedQuantity
-        grnItem.acceptedUomId = record.acceptedUomId
-        grnItem.rejectedQuantity = record.rejectedQuantity
-        grnItem.rejectedUomId = record.rejectedUomId
-        grnItem.indentTrimId = record.indentTrimId
-        grnItem.conversionQuantity = record.conversionQuantity
-        grnItem.conversionUomId = record.conversionUomId
-        grnItem.remarks = record.remarks
-        // grnItem.m3TrimCode = record.m3TrimCode
-        grnItemsArray.push(grnItem)
-      })
-      onSaveData(grnItemsArray)
-      console.log("GrnItemsArray:", grnItemsArray)
+      console.log('1st line');
+    
+      form
+        .validateFields()
+        .then((values) => {
+          console.log('2nd line');
+    
+          const updatedFormData = trimData
+            .filter((record) => {
+              const key = record.key;
+              return (
+                values[`receivedQuantity_${record.poTrimId}_${key}`] ||
+                values[`acceptedQuantity_${record.poTrimId}_${key}`] ||
+                values[`rejectedQuantity_${record.poTrimId}_${key}`]
+              );
+            })
+            .map((record) => ({
+              poTrimId: record.poTrimId,
+              receivedQuantity: values[`receivedQuantity_${record.poTrimId}_${record.key}`],
+              receivedUomId: values[`receivedUomId_${record.poTrimId}_${record.key}`],
+              acceptedQuantity: values[`acceptedQuantity_${record.poTrimId}_${record.key}`],
+              acceptedUomId: values[`acceptedUomId_${record.poTrimId}_${record.key}`],
+              rejectedQuantity: values[`rejectedQuantity_${record.poTrimId}_${record.key}`],
+              rejectedUomId: values[`rejectedUomId_${record.poTrimId}_${record.key}`],
+              conversionQuantity: quantity,
+              conversionUomId: values[`acceptedUomId_${record.poFabricId}_${record.key}`],
+              ...record,
+            }));
+    
+          console.log('updatedFormData:', updatedFormData);
+    
+          // Wait for the promise to resolve before creating the grnItemsArray
+          return updatedFormData;
+        })
+        .then((updatedFormData) => {
+          // Create the grnItemsArray and call onSaveData after the promise resolves
+          const grnItemsArray = [];
+          updatedFormData.forEach((record) => {
+            const grnItem = new GrnItemsDto();
+            grnItem.poTrimId = record.poTrimId;
+            grnItem.m3ItemCodeId = record.m3TrimCode;
+            grnItem.productGroupId = record.productGroupId;
+            grnItem.receivedQuantity = record.receivedQuantity;
+            grnItem.receivedUomId = record.receivedUomId;
+            grnItem.acceptedQuantity = record.acceptedQuantity;
+            grnItem.acceptedUomId = record.acceptedUomId;
+            grnItem.rejectedQuantity = record.rejectedQuantity;
+            grnItem.rejectedUomId = record.rejectedUomId;
+            grnItem.indentTrimId = record.indentTrimId;
+            grnItem.conversionQuantity = record.conversionQuantity;
+            grnItem.conversionUomId = record.conversionUomId;
+            grnItem.remarks = record.remarks;
+            grnItemsArray.push(grnItem);
+          });
+    
+          console.log(grnItemsArray, '------------------');
+          onSaveData(grnItemsArray);
+          console.log('GrnItemsArray:', grnItemsArray);
+        })
+        .catch((error) => {
+          console.error('Error validating fields:', error);
+        });
     };
+    
 
     const uomConversionFactors = {
       m: 1,          // 1 meter
@@ -204,7 +282,7 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
                 onChange={receiveuomOnChange}
                 >
                 {uomData?.map((e) => (
-                  <Option key={e.uomId} value={e.uomId}>
+                  <Option key={e.uomId} value={e.uomId} name={e.uom}>
                     {e.uom}
                   </Option>
                 ))}
@@ -261,9 +339,9 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
                 onChange={(option, value) => acceptUomOnchange(option, value, record)}
               >
                 {uomData?.map((e) => (
-                  <Option key={e.uomId} value={e.uomId} name={`${record.poTrimId}`+`${record.key}+'acceptedUomId'`}>
-                    {e.uom}
-                  </Option>
+                  <Option key={e.uomId} value={e.uomId} name={`${record.poTrimId}`+`${record.key}+'acceptedUomId'`} type={e.uom}>
+                  {e.uom}
+                </Option>
                 ))}
               </Select>
             </Form.Item>
@@ -336,7 +414,7 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
             <div style={{ overflowX: "auto", width: "100%" }}>
               <Card title={<div style={{ color: "blue", fontSize: "17px",textAlign:"left" }}>Trim Details</div>} style={{ textAlign: 'right' }}>
                 <Table columns={columns} dataSource={trimData} bordered scroll={{ x: "max-content" }} pagination={false} />
-                <Button type="primary" onClick={handleSaveData} style={{margin:"10px"}}>
+                <Button type="primary" onClick={trimForm} style={{margin:"10px"}}>
                   Save
                 </Button>
               </Card>

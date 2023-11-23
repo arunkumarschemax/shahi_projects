@@ -89,6 +89,7 @@ const GRNForm = () => {
     }
     
     const handleSaveData = (savedData) => {
+        console.log(savedData,)
         setFormData(savedData)
     }
 
