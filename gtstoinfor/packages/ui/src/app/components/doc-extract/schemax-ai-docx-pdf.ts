@@ -65,6 +65,10 @@ export const extractcogoPort = async (pdf) => {
                 } else {
                     description = extractedData.slice(extractedData.indexOf(totalData) + 1, hsnId).map((item) => item.content).join('\n');
                 }
+                const mainMatchDesc = line.match(/(.*?)\s+\d+\s+\w+\s+([\d.]+)\s+([\d.]+)\s+(\w)\s+([\d.]+%)\s+([\d.]+)\s+\d+\s+\d+\s+([\d.]+)\s+([\d.]+)/);
+                if (mainMatchDesc) {
+                    description = mainMatchDesc[1] ? mainMatchDesc[1] : "";
+                }
 
                 let taxType, igst, cgst, sgst;
                 const unitQuantity = parseFloat(matchData[2]).toFixed(1);
