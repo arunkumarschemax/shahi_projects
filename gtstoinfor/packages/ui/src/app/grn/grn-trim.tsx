@@ -73,6 +73,7 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
         grnItem.conversionQuantity = record.conversionQuantity
         grnItem.conversionUomId = record.conversionUomId
         grnItem.remarks = record.remarks
+        grnItem.m3TrimCode = record.m3TrimCode
         grnItemsArray.push(grnItem)
       })
       onSaveData(grnItemsArray)
