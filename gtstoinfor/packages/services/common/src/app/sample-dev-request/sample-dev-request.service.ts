@@ -142,7 +142,7 @@ export class SampleRequestService {
       // locationEntity.locationId = req.locationId
       sampleReqEntity.locationId = req.locationId
       sampleReqEntity.expectedDeliveryDate = req.expectedDeliveryDate
-      sampleReqEntity.requestNo = 'SAM' + '-' + (Number(maxId) + 1)
+      sampleReqEntity.requestNo = "SAM" + "/" + "23-24" + "/" + "00000" + Number(Number(maxId) + 1);
       const profitHead = new ProfitControlHead()
       profitHead.profitControlHeadId = req.pchId
       sampleReqEntity.pch = profitHead
