@@ -24,8 +24,7 @@ export class GrnItemsDto{
     poTrimId?: number;
     indentFabricId?:number
     indentTrimId?:number
-    m3FabricCode?: number
-    m3TrimCode?: number
+    // m3ItemCodeId?: number
 
   constructor(
     grnItemId?:number,
@@ -50,8 +49,7 @@ export class GrnItemsDto{
     poTrimId?: number,
     indentFabricId?:number,
     indentTrimId?:number,
-    m3FabricCode?: number,
-    m3TrimCOde?: number
+    // m3ItemCodeId?: number
 
   ){
     this.grnItemId = grnItemId
@@ -76,8 +74,7 @@ export class GrnItemsDto{
     this.poTrimId = poTrimId
     this.indentFabricId = indentFabricId
     this.indentTrimId = indentTrimId
-    this.m3FabricCode = m3FabricCode
-    this.m3TrimCode = m3TrimCOde
+    // this.m3ItemCodeId = m3ItemCodeId
   }
 
 
