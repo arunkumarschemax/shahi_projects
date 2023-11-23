@@ -73,15 +73,15 @@ const SampleRequestReport = () => {
       title: "Unit",
       dataIndex: "name",
     },
-    {
-      title: "Date",
-      dataIndex: "created_at",
-      render: (record) => {
-        return record ? moment(record).format("YYYY-MM-DD") : null;
-      },
-      sorter: (a, b) => a.created_at.localeCompare(b.created_at),
-      sortDirections: ['descend', 'ascend'],
-    },
+    // {
+    //   title: "Date",
+    //   dataIndex: "created_at",
+    //   render: (record) => {
+    //     return record ? moment(record).format("YYYY-MM-DD") : null;
+    //   },
+    //   sorter: (a, b) => a.created_at.localeCompare(b.created_at),
+    //   sortDirections: ['descend', 'ascend'],
+    // },
     {
       title: "Buyer",
       dataIndex: "buyerName",

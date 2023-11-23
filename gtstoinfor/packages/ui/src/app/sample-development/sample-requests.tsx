@@ -249,6 +249,14 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       ...getColumnSearchProps("buyerName"),
     },
     {
+      title: "Availabe Quantity",
+      dataIndex: "quantity",
+      // responsive: ['lg'],
+      sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+      sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("quantity"),
+    },
+    {
       title: "Request No",
       dataIndex: "requestNo",
       // responsive: ['lg'],
@@ -356,6 +364,10 @@ export const SampleRequests = (props: BuyingHouseProps) => {
     {
       title: `Action`,
       dataIndex: "action",
+      // render:(value,record) =>{
+      //   console.log(record)
+
+      // }
       render: (text, rowData, index) => (
         <span style={{ display: 'flex', justifyContent: 'center' }}>
           {" "}
@@ -371,7 +383,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
           </Tooltip>
           <Divider type="vertical"/>
           <Button onClick={() => MarketIssueDetailView(rowData.sample_request_id)} type='primary' 
-          // disabled={logInUser == 'marketUser' ? true:false}
+          disabled={rowData.quantity != null? false:true}
           >Issue Material</Button>
         </span>
       ),

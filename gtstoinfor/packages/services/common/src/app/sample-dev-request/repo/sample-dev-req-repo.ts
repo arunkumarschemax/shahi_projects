@@ -245,6 +245,7 @@ import { RmCreationEntity } from "../../m3-items/rm-items.entity";
 import { Countries } from "../../countries/countries.entity";
 import { M3ItemsEntity } from "../../m3-items/m3-items.entity";
 import { M3TrimsEntity } from "../../m3-trims/m3-trims.entity";
+import { StocksEntity } from "../../stocks/stocks.entity";
 
 
 
@@ -302,7 +303,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
     async getAllSampleDevData(req?: SampleFilterRequest): Promise<any[]> {
         console.log(req,"req")
         const query = this.createQueryBuilder('sr')
-            .select(`sr.sample_request_id,sr.description,sr.remarks,sr.user,sr.request_no AS requestNo,sr.cost_ref AS costRef,sr.contact,sr.extension,sr.sam_value AS samValue,sr.product,sr.type,sr.conversion,sr.made_in AS madeIn,sr.facility_id,sr.status,sr.location_id,sr.style_id,sr.profit_control_head_id,sr.buyer_id,sr.brand_id,sr.dmm_id,sr.technician_id,co.country_name,sr.life_cycle_status AS lifeCycleStatus`)
+            .select(`st.quantity,sr.sample_request_id,sr.description,sr.remarks,sr.user,sr.request_no AS requestNo,sr.cost_ref AS costRef,sr.contact,sr.extension,sr.sam_value AS samValue,sr.product,sr.type,sr.conversion,sr.made_in AS madeIn,sr.facility_id,sr.status,sr.location_id,sr.style_id,sr.profit_control_head_id,sr.buyer_id,sr.brand_id,sr.dmm_id,sr.technician_id,co.country_name,sr.life_cycle_status AS lifeCycleStatus`)
             .addSelect(`l.location_name AS locationName,s.style,pch.profit_control_head AS pch,b.buyer_name AS buyerName,b.buyer_code AS buyerCode,br.brand_name AS brandName,ed1.first_name AS dmmName,ed2.first_name AS techName`)
             .leftJoin(Location, 'l', 'l.location_id = sr.location_id')
             .leftJoin(Style, 's', 's.style_id = sr.style_id')
@@ -319,6 +320,10 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .leftJoin(SampleRequestTriminfoEntity,'srti','srti.sample_request_id = sr.sample_request_id')
             .leftJoin(M3ItemsEntity,'m3items','m3items.m3_items_Id  = srfi.fabric_code')
             .leftJoin(M3TrimsEntity,'m3trims','m3trims.m3_trim_Id = srti.trim_code')
+            .leftJoin(StocksEntity,'st','st.buyer_id=sr.buyer_id')
+            // .leftJoin(SampleReqFabricinfoEntity,'sf','sf.fabric_code=st.item_id')
+            // .leftJoin(SampleRequestTriminfoEntity,'srt','srt.trim_code=st.item_id')
+            // .where('st.quantity is not null')
 
         if (req.reqNo !== undefined) {
             query.andWhere(`sr.request_no ='${req.reqNo}'`)
