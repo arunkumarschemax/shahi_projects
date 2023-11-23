@@ -148,13 +148,13 @@ export class GrnService{
             grnEntity.createdUser=req.createdUser
             grnEntity.updatedUser=req.updatedUser
             grnEntity.itemType=req.materialtype
-            console.log(req,'===========')
+            // console.log(req,'===========')
             for(const item of req.grnItemInfo){
-                console.log(item,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
+                // console.log(item,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
                 // item.conversionQuantity=200
                 // item.conversionUomId=1
                 const itemEntity = new GrnItemsEntity()
-                // itemEntity.m3ItemCodeId=item.m3ItemCodeId
+                itemEntity.m3ItemCodeId=item.m3ItemCodeId
                 // itemEntity.productGroupId=item.productGroupId
                 itemEntity.receivedQuantity=item.receivedQuantity
                 itemEntity.receivedUomId=item.receivedUomId
@@ -165,10 +165,10 @@ export class GrnService{
                 itemEntity.conversionQuantity=item.conversionQuantity
                 itemEntity.conversionUomId=item.conversionUomId
                 itemEntity.remarks=item.remarks
-                itemEntity.m3ItemCodeId=item.m3ItemCodeId
                 itemInfo.push(itemEntity)
             }
             grnEntity.grnItemInfo=itemInfo
+            // let save
             const save = await this.grnRepo.save(grnEntity)  
             if(save){
                 for(const item of req.grnItemInfo){ 

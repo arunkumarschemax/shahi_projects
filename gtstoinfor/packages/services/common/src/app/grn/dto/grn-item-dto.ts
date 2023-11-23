@@ -46,8 +46,8 @@ export class GRNItemDto{
     indentFabricId?:number
     @ApiProperty()
     indentTrinId?:number
-    @ApiProperty()
-    m3FabricCode?: number
-    @ApiProperty()
-    m3TrimCode?: number
+    // @ApiProperty()
+    // m3FabricCode?: number
+    // @ApiProperty()
+    // m3TrimCode?: number
 }
