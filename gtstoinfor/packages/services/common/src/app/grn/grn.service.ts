@@ -121,8 +121,7 @@ export class GrnService{
         }
     }
 
-    async createGrn(req:GrnDto):Promise<CommonResponseModel>{       
-        // console.log 
+    async createGrn(req:GrnDto):Promise<CommonResponseModel>{        
         const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
         try{
 
@@ -151,11 +150,11 @@ export class GrnService{
             grnEntity.itemType=req.materialtype
             // console.log(req,'===========')
             for(const item of req.grnItemInfo){
-                console.log(item,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
+                // console.log(item,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
                 // item.conversionQuantity=200
                 // item.conversionUomId=1
                 const itemEntity = new GrnItemsEntity()
-                // itemEntity.m3ItemCodeId=item.m3ItemCodeId
+                itemEntity.m3ItemCodeId=item.m3ItemCodeId
                 // itemEntity.productGroupId=item.productGroupId
                 itemEntity.receivedQuantity=item.receivedQuantity
                 itemEntity.receivedUomId=item.receivedUomId
@@ -166,71 +165,70 @@ export class GrnService{
                 itemEntity.conversionQuantity=item.conversionQuantity
                 itemEntity.conversionUomId=item.conversionUomId
                 itemEntity.remarks=item.remarks
-                itemEntity.m3ItemCodeId=item.m3ItemCodeId
                 itemInfo.push(itemEntity)
             }
             grnEntity.grnItemInfo=itemInfo
-            let save
-            // const save = await this.grnRepo.save(grnEntity)  
+            // let save
+            const save = await this.grnRepo.save(grnEntity)  
             if(save){
-                // for(const item of req.grnItemInfo){ 
-                //   if(item.indentFabricId != null){
-                //    if(req.materialtype == 'Fabric'){
-                //     console.log('****************************')
-                //     const poQuantity = await this.poFabricRepo.find({where:{poFabricId:item.poFabricId}})
-                //     if(poQuantity[0].poQuantity == item.conversionQuantity){
-                //     await this.poFabricRepo.update({poFabricId:item.poFabricId},{grnQuantity:item.conversionQuantity,fabricItemStatus:PoItemEnum.RECEIVED})
-                //     }
-                //     else{
-                //         await this.poFabricRepo.update({poFabricId:item.poFabricId},{fabricItemStatus:PoItemEnum.PARTAILLY_RECEIVED,grnQuantity:item.conversionQuantity})
-                //     }
+                for(const item of req.grnItemInfo){ 
+                  if(item.indentFabricId != null){
+                   if(req.materialtype == 'Fabric'){
+                    console.log('****************************')
+                    const poQuantity = await this.poFabricRepo.find({where:{poFabricId:item.poFabricId}})
+                    if(poQuantity[0].poQuantity == item.conversionQuantity){
+                    await this.poFabricRepo.update({poFabricId:item.poFabricId},{grnQuantity:item.conversionQuantity,fabricItemStatus:PoItemEnum.RECEIVED})
+                    }
+                    else{
+                        await this.poFabricRepo.update({poFabricId:item.poFabricId},{fabricItemStatus:PoItemEnum.PARTAILLY_RECEIVED,grnQuantity:item.conversionQuantity})
+                    }
                  
-                //     await this.indentFabricRepo.update({ifabricId:item.indentFabricId},{recivedQuantity:item.conversionQuantity})
-                //     const indentId = await this.getIndentid(req.materialtype,item.indentFabricId) 
-                //     const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype,indentId.data[0].indentId)
-                //     if(indentData.data.length == 0){
-                //         await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.CLOSED})
-                //        }  else{
-                //         await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.IN_PROGRESS})
-                //        }
+                    await this.indentFabricRepo.update({ifabricId:item.indentFabricId},{recivedQuantity:item.conversionQuantity})
+                    const indentId = await this.getIndentid(req.materialtype,item.indentFabricId) 
+                    const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype,indentId.data[0].indentId)
+                    if(indentData.data.length == 0){
+                        await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.CLOSED})
+                       }  else{
+                        await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.IN_PROGRESS})
+                       }
 
-                //    }
-                // }
-                // if(item.indentFabricId == null){
-                //     await  this.poFabricRepo.update({poFabricId:item.poFabricId},{grnQuantity:item.conversionQuantity})
-                // }
-                // if(item.indentTrinId != null){
-                //     if(req.materialtype == 'Trim'){
-                //         const poQuantity = await this.poTrimRepo.find({where:{poTrimId:item.poTrimId}})
-                //         if(poQuantity[0].poQuantity == item.conversionQuantity){
-                //             await this.poTrimRepo.update({poTrimId:item.poTrimId},{grnQuantity:item.conversionQuantity,trimItemStatus:PoItemEnum.RECEIVED})
-                //         }else{
-                //             await this.poTrimRepo.update({poTrimId:item.poTrimId},{grnQuantity:item.conversionQuantity,trimItemStatus:PoItemEnum.PARTAILLY_RECEIVED})
-                //         }
-                //         await this.indentTrimRepo.update({itrimsId:item.indentTrinId},{recivedQuantity:item.conversionQuantity})
-                //         const indentId = await this.getIndentid(req.materialtype,item.indentTrinId) 
-                //         const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype,indentId.data[0].indentId)
-                //         if(indentData.data.length == 0){
-                //             await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.CLOSED})
-                //            }  else{
-                //             await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.IN_PROGRESS})
-                //            }
-                //        }
-                // }
-                // if(item.indentTrinId == null){
-                //     await this.poTrimRepo.update({poTrimId:item.poTrimId},{grnQuantity:item.conversionQuantity})
-                // }
+                   }
+                }
+                if(item.indentFabricId == null){
+                    await  this.poFabricRepo.update({poFabricId:item.poFabricId},{grnQuantity:item.conversionQuantity})
+                }
+                if(item.indentTrinId != null){
+                    if(req.materialtype == 'Trim'){
+                        const poQuantity = await this.poTrimRepo.find({where:{poTrimId:item.poTrimId}})
+                        if(poQuantity[0].poQuantity == item.conversionQuantity){
+                            await this.poTrimRepo.update({poTrimId:item.poTrimId},{grnQuantity:item.conversionQuantity,trimItemStatus:PoItemEnum.RECEIVED})
+                        }else{
+                            await this.poTrimRepo.update({poTrimId:item.poTrimId},{grnQuantity:item.conversionQuantity,trimItemStatus:PoItemEnum.PARTAILLY_RECEIVED})
+                        }
+                        await this.indentTrimRepo.update({itrimsId:item.indentTrinId},{recivedQuantity:item.conversionQuantity})
+                        const indentId = await this.getIndentid(req.materialtype,item.indentTrinId) 
+                        const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype,indentId.data[0].indentId)
+                        if(indentData.data.length == 0){
+                            await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.CLOSED})
+                           }  else{
+                            await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.IN_PROGRESS})
+                           }
+                       }
+                }
+                if(item.indentTrinId == null){
+                    await this.poTrimRepo.update({poTrimId:item.poTrimId},{grnQuantity:item.conversionQuantity})
+                }
                      
-                //  }
-                //     const poData = await this.getAllPoDataToUPdateStatus(req.poId,req.materialtype)
-                //     if(poData.data.length == 0){
-                //         await this.poRepo.update({purchaseOrderId:req.poId},{status:PurchaseOrderStatus.CLOSED})
-                //     }else{
-                //         await this.poRepo.update({purchaseOrderId:req.poId},{status:PurchaseOrderStatus.IN_PROGRESS})
-                //     }
+                 }
+                    const poData = await this.getAllPoDataToUPdateStatus(req.poId,req.materialtype)
+                    if(poData.data.length == 0){
+                        await this.poRepo.update({purchaseOrderId:req.poId},{status:PurchaseOrderStatus.CLOSED})
+                    }else{
+                        await this.poRepo.update({purchaseOrderId:req.poId},{status:PurchaseOrderStatus.IN_PROGRESS})
+                    }
                     
-                // await transactionalEntityManager.completeTransaction();
-                // return new CommonResponseModel(true,1,'Grn Created Sucessfully',save)
+                await transactionalEntityManager.completeTransaction();
+                return new CommonResponseModel(true,1,'Grn Created Sucessfully',save)
 
             }else{
                 await transactionalEntityManager.releaseTransaction();
@@ -271,7 +269,7 @@ export class GrnService{
             const manager = this.dataSource;
             let query=`SELECT grn_item_id , grn_items.item_id ,rm.item_code AS fabricCode,t.trim_code, grn_items.m3_item_id , grn_items.product_group_id , grn_items.received_quantity , grn_items.received_uom_id , grn_items.accepted_quantity , grn_items.accepted_uom_id , 
             grn_items.rejected_quantity , grn_items.rejected_uom_id ,grn_items.conversion_quantity,  grn_items.conversion_uom_id , grn_items.location_mapped_status , grn_items.grn_id , grn_items.m3_item_code_id,u.uom FROM grn_items
-            LEFT JOIN m3_items rm ON rm.m3_items_Id = grn_items.m3_item_code_id
+            LEFT JOIN m3_items rm ON rm.rm_item_id = grn_items.m3_item_code_id
             LEFT JOIN m3_trims t ON t.m3_trim_Id = grn_items.m3_item_code_id
             LEFT JOIN uom u ON u.id = grn_items.received_uom_id
             WHERE grn_items.grn_id = '${req.grnId}'`
