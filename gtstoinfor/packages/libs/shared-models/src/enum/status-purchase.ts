@@ -1,6 +1,6 @@
 export enum PurchaseStatusEnum {
     OPEN = 'OPEN',
-    'IN PROGRESS' = 'IN PROGRESS',
+    INPROGRESS = 'IN PROGRESS',
     CANCELLED = 'CANCELLED',
     CLOSED = 'CLOSED'
    

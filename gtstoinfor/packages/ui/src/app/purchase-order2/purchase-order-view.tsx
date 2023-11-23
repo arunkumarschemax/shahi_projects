@@ -419,7 +419,7 @@ export const PurchaseOrderView = () => {
           </Col>
         </Row> */}
 
-        <Tabs
+        {/* <Tabs
           defaultActiveKey="1"
           type="card"
           onChange={getPo}
@@ -436,7 +436,28 @@ export const PurchaseOrderView = () => {
               key: key,
             };
           })}
-        />
+        /> */}
+
+<Tabs
+  defaultActiveKey="1"
+  type="card"
+  onChange={getPo}
+  items={Object.keys(PurchaseStatusEnum).map((key, i) => {
+    const colours = ['#F5222D', '#52C41A', '#722ED1', '#663300'];
+    let counts: number;
+    if (count.length) {
+      counts = count[i] ? count[i][PurchaseStatusEnum[key]] : 0;
+      k.push(counts);
+    }
+
+    return {
+      label: <span style={{ color: colours[i] }}>{PurchaseStatusEnum[key] + ":" + " " + (counts ? counts : 0)}</span>,
+      key: key,
+    };
+  })}
+/>
+
+
       </Form>
       <Card>
         {/* <Table columns={columns} dataSource={data} bordered /> */}

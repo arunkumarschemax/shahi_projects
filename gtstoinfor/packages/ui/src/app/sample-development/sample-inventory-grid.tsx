@@ -136,84 +136,125 @@ const service=new SampleDevelopmentService
           },
           {
             title: 'Sample Request Number',
-            dataIndex: 'requestNumber',
-            key: 'requestNumber',
-            sorter: (a, b) => a.requestNumber.localeCompare(b.requestNumber),
+            dataIndex: 'request_no',
+            key: 'request_no',
+            width:"200px",
+            sorter: (a, b) => a.request_no.localeCompare(b.request_no),
       sortDirections: ["descend", "ascend"],
             ...getColumnSearchProps("requestNumber"),
          },
-         {
-          title: 'Product Group',
-          dataIndex: 'productGroup',
-          key: 'productGroup',
-          sorter: (a, b) => a.productGroup.localeCompare(b.productGroup),
-      sortDirections: ["descend", "ascend"],
-          ...getColumnSearchProps("productGroup"),
-        },
+      //    {
+      //     title: 'Product Group',
+      //     dataIndex: 'productGroup',
+      //     key: 'productGroup',
+      //     sorter: (a, b) => a.productGroup.localeCompare(b.productGroup),
+      // sortDirections: ["descend", "ascend"],
+      //     ...getColumnSearchProps("productGroup"),
+      //   },
         {
-        title: 'Item',
-        dataIndex: 'item',
-        key: 'item',
-        sorter: (a, b) => a.item.localeCompare(b.item),
+        title: 'M3 ItemCode',
+        dataIndex: 'item_code',
+        key: 'item_code',
+        sorter: (a, b) => a.item_code.localeCompare(b.item_code),
       sortDirections: ["descend", "ascend"],
-        ...getColumnSearchProps("item"),
+        ...getColumnSearchProps("item_code"),
 
         
        },
        {
-      title: 'Ordered  Quantity',
-      dataIndex: 'orderQuantity',
-      key: 'orderquantity',
-      sorter: (a, b) => a.orderQuantity.localeCompare(b.orderQuantity),
+        title: 'M3 ItemType',
+        dataIndex: 'item_type',
+        key: 'item_type',
+        sorter: (a, b) => a.item_type.localeCompare(b.item_type),
       sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("orderquantity"),
+        ...getColumnSearchProps("item_type"),
 
+        
        },
        {
-        title: 'Prepared  Quantity',
-        dataIndex: 'preparedQuantity',
-        key: 'preparedQuantity',
-        sorter: (a, b) => a.preparedQuantity.localeCompare(b.preparedQuantity),
+        title: 'shrinkage',
+        dataIndex: 'shrinkage',
+        key: 'shrinkage',
+        sorter: (a, b) => a.shrinkage.localeCompare(b.shrinkage),
       sortDirections: ["descend", "ascend"],
-        ...getColumnSearchProps("preparedQuantity"),
+        ...getColumnSearchProps("shrinkage"),
 
-         },
-       {
-          title: 'Style',
-          dataIndex: 'style',
-          key: 'style',
-          sorter: (a, b) => a.style.localeCompare(b.style),
-      sortDirections: ["descend", "ascend"],
-          ...getColumnSearchProps("style"),
-
+        
        },
        {
-            title: 'Buyer',
-            dataIndex: 'buyer_name',
-            key: 'buyer',
-            sorter: (a, b) => a.buyer.localeCompare(b.buyer),
+        title: 'weight',
+        dataIndex: 'weight',
+        key: 'weight',
+        sorter: (a, b) => a.weight.localeCompare(b.weight),
       sortDirections: ["descend", "ascend"],
-          ...getColumnSearchProps("buyer"),
+        ...getColumnSearchProps("weight"),
 
-        },
-        {
-            title: 'Billing Address',
-            dataIndex: 'billingAddress',
-            key: 'billingAddress',
-            sorter: (a, b) => a.billingAddress.localeCompare(b.billingAddress),
+        
+       },
+       {
+        title: 'weave',
+        dataIndex: 'weave',
+        key: 'weave',
+        sorter: (a, b) => a.weave.localeCompare(b.weave),
       sortDirections: ["descend", "ascend"],
-          ...getColumnSearchProps("billingAddress"),
+        ...getColumnSearchProps("weave"),
 
-        },
-        {
-            title: 'Location',
-            dataIndex: 'location',
-            key: 'location',
-            sorter: (a, b) => a.location.localeCompare(b.location),
-      sortDirections: ["descend", "ascend"],
-          ...getColumnSearchProps("location"),
+        
+       },
+      //  {
+      // title: 'Ordered  Quantity',
+      // dataIndex: 'orderQuantity',
+      // key: 'orderquantity',
+      // sorter: (a, b) => a.orderQuantity.localeCompare(b.orderQuantity),
+      // sortDirections: ["descend", "ascend"],
+      // ...getColumnSearchProps("orderquantity"),
 
-        },
+      //  },
+      //  {
+      //   title: 'Prepared  Quantity',
+      //   dataIndex: 'preparedQuantity',
+      //   key: 'preparedQuantity',
+      //   sorter: (a, b) => a.preparedQuantity.localeCompare(b.preparedQuantity),
+      // sortDirections: ["descend", "ascend"],
+      //   ...getColumnSearchProps("preparedQuantity"),
+
+      //    },
+      //  {
+      //     title: 'Style',
+      //     dataIndex: 'style',
+      //     key: 'style',
+      //     sorter: (a, b) => a.style.localeCompare(b.style),
+      // sortDirections: ["descend", "ascend"],
+      //     ...getColumnSearchProps("style"),
+
+      //  },
+      //  {
+      //       title: 'Buyer',
+      //       dataIndex: 'buyer_name',
+      //       key: 'buyer',
+      //       sorter: (a, b) => a.buyer.localeCompare(b.buyer),
+      // sortDirections: ["descend", "ascend"],
+      //     ...getColumnSearchProps("buyer"),
+
+      //   },
+      //   {
+      //       title: 'Billing Address',
+      //       dataIndex: 'billingAddress',
+      //       key: 'billingAddress',
+      //       sorter: (a, b) => a.billingAddress.localeCompare(b.billingAddress),
+      // sortDirections: ["descend", "ascend"],
+      //     ...getColumnSearchProps("billingAddress"),
+
+      //   },
+      //   {
+      //       title: 'Location',
+      //       dataIndex: 'location',
+      //       key: 'location',
+      //       sorter: (a, b) => a.location.localeCompare(b.location),
+      // sortDirections: ["descend", "ascend"],
+      //     ...getColumnSearchProps("location"),
+
+      //   },
         {
             title: 'Status',
             dataIndex: 'status',
