@@ -1,5 +1,5 @@
 import { StyleRequest, OperationReportingRequest, TabNameReq, MaterialIssueRequest, OperationTrackingDto } from "@project-management-system/shared-models";
-import { ItemsService, MaterialIssueService, OperationReportingService, OperationSequenceService, OperationsService, StyleService, UomService } from "@project-management-system/shared-services";
+import { ItemsService, MaterialIssueService, OperationReportingService, OperationSequenceService, OperationsService, SampleDevelopmentService, StyleService, UomService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Row, Segmented, Select, Space, Table, message } from "antd"
 import { ColumnProps } from "antd/es/table"
 import { useEffect, useState } from "react";
@@ -30,7 +30,11 @@ export const OperationReportingView = () => {
     const [currentSequence, setCurrentSequence] = useState(1);
     const [saveId, setSaveId] = useState<number>()
     const uomService = new UomService()
+    const sampleDevelopmentService = new SampleDevelopmentService()
+
     const [uomData, setUomData] = useState<any[]>([])
+    const [reqNo, setReqNo] = useState<any[]>([])
+
     const [currentSegment, setCurrentSegment] = useState(1);
     const navigate = useNavigate();
     const trackingService = new OperationReportingService()
@@ -44,6 +48,8 @@ export const OperationReportingView = () => {
         getItemCodes()
         getStyle()
         getUom()
+        getSampleReq()
+
         // getMaterialIssue()
     },[])
 
@@ -56,6 +62,12 @@ export const OperationReportingView = () => {
     //         }
     //     })
     // }
+
+    const getSampleReq = () => {
+        sampleDevelopmentService.getAllSampleReqDropDown().then(res => {
+            setReqNo(res.data)
+        })
+    }
 
     const getUom = () => {
         uomService.getAllActiveUoms().then(res => {
@@ -361,15 +373,29 @@ export const OperationReportingView = () => {
             <span style={{marginLeft: "60px"}}>{'Request No : ' +(data[0].requestNo)}</span>
             </>
         ):"Operation Reporting"}  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
-            <Form form={form}>
+            <Form form={form} layout="vertical">
                 <Row>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 6 }}>
+                {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 6 }}>
                     <Form.Item label='Style' name='styleId'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Style' onChange={onStyleChange}>
                             {
                                 style.map(e => {
                                     return(
                                         <Option key={e.styleId} value={e.styleId}>{e.style}-{e.description}</Option>
+                                    )
+                                })
+                            }
+
+                        </Select>
+                    </Form.Item>
+                </Col> */}
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 6 }}>
+                    <Form.Item label='Sample Request' name='sampleRequestId'>
+                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Style' onChange={onStyleChange}>
+                            {
+                                reqNo.map(e => {
+                                    return(
+                                        <Option key={e.sampleRequestId} value={e.sampleRequestId}>{e.reqNo}</Option>
                                     )
                                 })
                             }

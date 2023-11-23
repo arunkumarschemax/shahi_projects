@@ -346,6 +346,14 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
         return query.getRawMany()
     }
 
+    async getAllSampleReqDropDown(): Promise<any> {
+        const query = await this.createQueryBuilder()
+            .select(`sample_request_id AS sampleRequestId, request_no AS reqNo`)
+            .where(`request_no is not null`)
+            .orderBy(`request_no`)
+        return query.getRawMany()
+    }
+
     async getAllPCH(): Promise<any> {
         const query = await this.createQueryBuilder('sr')
             .select(`sr.profit_control_head_id,pch.profit_control_head AS pch`)
