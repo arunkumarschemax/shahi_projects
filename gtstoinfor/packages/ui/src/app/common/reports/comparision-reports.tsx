@@ -54,30 +54,23 @@ export const MonthWiseComparisionReport = () => {
         setYear(res.data);
       }
     });
+    
   };
 
   const handleChange = (val) => {
-    console.log('okkkkkkkkk')
     setSelected(val)
     getData(tab,val,file1,file2)
     // getPhase()
 
   }
   const getPhase = () => {
-    const req = new YearReq(tab, selected);
     
     service.getPhaseItems().then(res => {
       if (res.status) {
         setItems(res.data)
       }
     })
-    service.getExfactoryWithComparisionExcel(req).then((res) => {
-      if (res.status) {
-        setExcelData(res.data);
-      } else {
-        setData([]);
-      }
-    });
+    
     service.getLatestPreviousFilesData().then(res => {
       if(res.status){
           setDates(res.data)
@@ -110,8 +103,8 @@ export const MonthWiseComparisionReport = () => {
 
   const getData = (val, tabName,file1,file2) => {
     
-    console.log(dates,'*******')
-    console.log(tabName,'------------')
+    // console.log(dates,'*******')
+    // console.log(tabName,'------------')
     const req = new YearReq(val,tabName,file1,file2);
   
 
@@ -135,6 +128,15 @@ export const MonthWiseComparisionReport = () => {
         setPhaseExcel([]);
       }
     })
+    service.getExfactoryWithComparisionExcel(req).then((res) => {
+
+      if (res.status) {
+        setExcelData(res.data);
+        
+      } else {
+        setExcelData([]);
+      }
+    });
   };
 
   const colWidth = {
@@ -1052,32 +1054,30 @@ export const MonthWiseComparisionReport = () => {
       exportingColumns.push(
         { title: "Item Name", dataIndex: "item" },
         { title: "Production Plan Type ", dataIndex: "prod_plan_type", },
-        { title: `Jan Pre`, dataIndex: "janExfPre", },
         { title: `Jan Lat`, dataIndex: "janExfLat", },
-        { title: `Feb Pre`, dataIndex: "febExfPre", },
+        { title: `Jan Pre`, dataIndex: "janExfPre", },
         { title: `Feb Lat`, dataIndex: "febExfLat", },
-        { title: `Mar Pre`, dataIndex: "marExfPre", },
+        { title: `Feb Pre`, dataIndex: "febExfPre", },
         { title: `Mar Lat`, dataIndex: "marExfLat", },
-        { title: `Apr Pre`, dataIndex: "aprExfPre", },
+        { title: `Mar Pre`, dataIndex: "marExfPre", },
         { title: `Apr Lat`, dataIndex: "aprExfLat", },
-        { title: `May Pre`, dataIndex: "mayExfPre", },
+        { title: `Apr Pre`, dataIndex: "aprExfPre", },
         { title: `May Lat`, dataIndex: "mayExfLat", },
-        { title: `Jun Pre`, dataIndex: "junExfPre", },
-        { title: `Jun Lat`, dataIndex: "junExfLat", },
-        { title: `Jul Pre`, dataIndex: "julExfPre", },
+        { title: `May Pre`, dataIndex: "mayExfPre", },
         { title: `Jul Lat`, dataIndex: "julExfLat", },
-        { title: `Aug Pre`, dataIndex: "augExfPre", },
+        { title: `Jul Pre`, dataIndex: "julExfPre", },
         { title: `Aug Lat`, dataIndex: "augExfLat", },
-        { title: `Sep Pre`, dataIndex: "sepExfPre", },
+        { title: `Aug Pre`, dataIndex: "augExfPre", },
         { title: `Sep Lat`, dataIndex: "sepExfLat", },
-        { title: `Oct Pre`, dataIndex: "octExfPre", },
+        { title: `Sep Pre`, dataIndex: "sepExfPre", },
         { title: `Oct Lat`, dataIndex: "octExfLat", },
-        { title: `Nov Pre`, dataIndex: "novExfPre", },
+        { title: `Oct Pre`, dataIndex: "octExfPre", },
         { title: `Nov Lat`, dataIndex: "novExfLat", },
-        { title: `Dec Pre`, dataIndex: "decExfPre", },
+        { title: `Nov Pre`, dataIndex: "novExfPre", },
         { title: `Dec Lat`, dataIndex: "decExfLat", },
+        { title: `Dec Pre`, dataIndex: "decExfPre", },
+        { title: `Total Lat`, dataIndex: "totalExfLat", },
         { title: `Total Pre`, dataIndex: "totalExfPre", },
-        { title: `Total Lat`, dataIndex: "totalExfLat", }
 
       )
     }
@@ -1320,9 +1320,8 @@ export const MonthWiseComparisionReport = () => {
         { title: `Nov Lat`, dataIndex: "novExfLat", },
         { title: `Dec Pre`, dataIndex: "decExfPre", },
         { title: `Dec Lat`, dataIndex: "decExfLat", },
-
-        { title: `Total In Pcs`, dataIndex: "totalExfPre" },
-        { title: `Total In Coeff`, dataIndex: "totalExfLat" },
+        { title: `Total Pre`, dataIndex: "totalExfPre", },
+        { title: `Total Lat`, dataIndex: "totalExfLat", }
       )
     }
     if (selected === 'WareHouse') {
@@ -1654,10 +1653,11 @@ export const MonthWiseComparisionReport = () => {
         </Col>
         </Row>
       </Form>
-      {selected && data.length > 0 ? (
         <Tabs type="card" onChange={handleTabChange} aria-disabled>
           {year.map((e) => (
             <Tabs.TabPane tab={`${e.year}`} key={e.year}>
+                    {selected && data.length > 0 ? (
+<>
               <Form form={form} layout={"vertical"} onFinish={() => getData(tab, selected,file1,file2)}>
                 <Row gutter={24}>
                   <Col
@@ -1761,21 +1761,22 @@ export const MonthWiseComparisionReport = () => {
                 dataSource={phaseExcel}
                 size="small"
                 scroll={{ x: "max-content" }} />
-
+                </>
+                ) : (
+                  <>
+                    <Row>
+                      <Alert
+                        message="No data"
+                        type="info"
+                        style={{ margin: "auto", width: 500 }}
+                        showIcon
+                      />
+                    </Row>
+                  </>)}
             </Tabs.TabPane>
           ))}
         </Tabs>
-      ) : (
-        <>
-          <Row>
-            <Alert
-              message="No data"
-              type="info"
-              style={{ margin: "auto", width: 500 }}
-              showIcon
-            />
-          </Row>
-        </>)}
+      
     </Card>
   )
 }
