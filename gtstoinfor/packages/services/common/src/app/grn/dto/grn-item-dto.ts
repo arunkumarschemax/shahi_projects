@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { appConfig } from "packages/services/common/config";
 
 export class GRNItemDto{
     @ApiProperty()
@@ -49,5 +50,4 @@ export class GRNItemDto{
     m3FabricCode?: number
     @ApiProperty()
     m3TrimCode?: number
-
 }

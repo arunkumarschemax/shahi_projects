@@ -293,7 +293,7 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
                     <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'  onChange={m3FabricOnchange}>
                             {fabricM3Code.map(e => {
                                 return(
-                                    <Option key={e.m3ItemsId} value={e.m3ItemsId} name={e.itemCode}> {e.itemCode}</Option>
+                                    <Option key={e.m3ItemsId} value={e.m3ItemsId} name={e.itemCode}> {e.itemCode+ "-"+ e.description}</Option>
                                 )
                             })}
                         </Select>
