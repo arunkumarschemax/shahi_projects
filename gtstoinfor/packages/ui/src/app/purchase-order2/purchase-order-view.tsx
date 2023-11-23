@@ -186,16 +186,23 @@ export const PurchaseOrderView = () => {
     {
       title: 'PO Number',
       dataIndex: 'poNumber',
-      width: '150px',
+      width: '100px',
+      ...getColumnSearchProps("poNumber"),
+
       render: text => (text ? text : "-")
     },
     
-    // {
-    //   title: 'Material Type',
-    //   dataIndex: 'materialType',
-    //   width: '80px'
-    // },
+    {
+      title: 'Material Type',
+      dataIndex: 'poMaterialtype',
+      width: '80px',
+      sorter: (a, b) => a.poMaterialtype.localeCompare(b.poMaterialtype),
+      sortDirections: ["descend", "ascend"],
+          ...getColumnSearchProps("poMaterialtype"),
+    },
+   
 
+    
     // {
     //   title: <div style={{ textAlign: 'center' }}>M3 ItemCode</div>,
     //   dataIndex: 'fabInfo',
@@ -267,7 +274,24 @@ export const PurchaseOrderView = () => {
     //     );
     //   }
     // },
-   
+    {
+      title: 'VenderName',
+      dataIndex: 'vendorName',
+      sorter: (a, b) => a.vendorName.localeCompare(b.vendorName),
+      sortDirections: ["descend", "ascend"],
+          ...getColumnSearchProps("vendorName"),
+      width: '100px',
+
+    },
+    {
+      title: 'BuyerName',
+      dataIndex: 'buyername',
+      sorter: (a, b) => a.buyername.localeCompare(b.buyername),
+      sortDirections: ["descend", "ascend"],
+          ...getColumnSearchProps("buyername"),
+      width: '100px',
+
+    },
     {
       title: <div style={{ textAlign: 'center' }}>Po Date</div>,
       dataIndex: 'purchaseOrderDate',
@@ -279,13 +303,6 @@ export const PurchaseOrderView = () => {
           : "";
       },
     },
-    // {
-    //   title: 'VenderName',
-    //   dataIndex: 'vendorName',
-      
-    //   width: '100px',
-
-    // },
     
     {
       title: 'Expected Date',
@@ -296,6 +313,12 @@ export const PurchaseOrderView = () => {
           ? moment(record.expectedDeliverydate).format('YYYY-MM-DD')
           : "";
       },
+    },
+    {
+      title: 'Po Status',
+      dataIndex: 'poStatus',
+      width: '80px',
+      
     },
     {
       title: 'Aging(EPD)',
