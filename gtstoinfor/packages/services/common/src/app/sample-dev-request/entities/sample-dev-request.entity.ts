@@ -8,7 +8,7 @@ import { Buyers } from '../../buyers/buyers.entity';
 import { SampleTypes } from '../../sample Types/sample-types.entity';
 import { SampleSubTypes } from '../../sample-sub-types/sample-sub-types.entity';
 import { Brands } from '../../master-brands/master-brands.entity';
-import { SampleDevelopmentStatusEnum } from '@project-management-system/shared-models';
+import { SampleDevelopmentStatusEnum , LifeCycleStatusEnum} from '@project-management-system/shared-models';
 import { EmplyeeDetails } from '../../employee-details/dto/employee-details-entity';
 import { type } from 'os';
 import { SampleReqSizeEntity } from './sample-requset-size-info-entity';
@@ -161,6 +161,14 @@ export class SampleRequest {
     enum: SampleDevelopmentStatusEnum
   })
   status: SampleDevelopmentStatusEnum;
+
+  @Column('enum', {
+    name: 'life_cycle_status',
+    nullable: false,
+    default:LifeCycleStatusEnum.OPEN,
+    enum: LifeCycleStatusEnum
+  })
+  lifeCycleStatus: LifeCycleStatusEnum;
 
   @Column('varchar', {
     name: 'file_name',

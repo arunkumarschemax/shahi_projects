@@ -348,6 +348,11 @@ export const SampleRequests = (props: BuyingHouseProps) => {
         },
       ],
     },
+
+    {
+      title: "Life Cycle Status",
+      dataIndex: "lifeCycleStatus",
+    },
     {
       title: `Action`,
       dataIndex: "action",

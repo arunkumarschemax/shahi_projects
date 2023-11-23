@@ -88,8 +88,9 @@ export default function BasicLayout() {
     const menus = menuData.sort((a,b) => a.orderId - b.orderId);
     console.log(menus)
         const processedMenuData = menus.map(menuItem => {
-            
-          const processedSubMenuItems =  menuItem.subMenuData?.map(subMenuItem => (
+            const menuItems = menuItem.subMenuData.sort((a,b) => a.orderId - b.orderId);
+          const processedSubMenuItems =  menuItems?.map(subMenuItem => (
+
             {
                 path: subMenuItem.path,
                 label: subMenuItem.subMenuName,

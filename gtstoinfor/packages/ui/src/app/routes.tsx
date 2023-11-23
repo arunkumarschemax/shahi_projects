@@ -207,11 +207,11 @@ export const AppRoutes = () => {
                 <Route path='/user-management/users-from' element={<UserCreationForm />} />
                 <Route path='/user-management/users-view' element={<UsersView />} />
 
-                <Route path='/stack-report' element={<StockReport />} />
+                <Route path='/stock-report' element={<StockReport />} />
                 <Route path='/sample-request-report' element={<SampleRequestReport />} />
 
                 {/* <Route path='/stack-report' element={<StockReport/>}/> */}
-                <Route path='/stack-report' element={<StockReport />} />
+                {/* <Route path='/stack-report' element={<StockReport />} /> */}
                 <Route path='/material-requisition' element={<SampleRequestReport />} />
 
 
@@ -699,11 +699,11 @@ export const AppRoutes = () => {
 
 
                 </Route>
-                <Route path='/report'>
+                {/* <Route path='/report'> */}
                     <Route path='material-issue-report' element={<MaterialIssueReport />} />
                     <Route path='indent-report' element={<IndentReport />} />
 
-                </Route>
+                {/* </Route> */}
                 <Route path='/stock-view' element={<StockView />} />
                 <Route path="/grn-pending-info-grid" element={<GrnPendingInfoGrid />} />
                 <Route path="/location-mapping" element={<LocationMapping />} />

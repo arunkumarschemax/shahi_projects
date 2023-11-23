@@ -32,10 +32,10 @@ poFabricId:number
 fabricTypeId:number
 
 
-@Column('varchar',{
+@Column('int',{
     name:'m3_fabric_code'
 })
-m3FabricCode:string
+m3FabricCode:number
 
 @Column('varchar',{
     name:'shahi_fabric_code'

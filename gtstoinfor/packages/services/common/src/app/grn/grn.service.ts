@@ -148,14 +148,14 @@ export class GrnService{
             grnEntity.createdUser=req.createdUser
             grnEntity.updatedUser=req.updatedUser
             grnEntity.itemType=req.materialtype
-            console.log(req,'===========')
+            // console.log(req,'===========')
             for(const item of req.grnItemInfo){
-                console.log(item,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
+                // console.log(item,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
                 // item.conversionQuantity=200
                 // item.conversionUomId=1
                 const itemEntity = new GrnItemsEntity()
-                // itemEntity.m3ItemCodeId=item.m3ItemCodeId
-                itemEntity.productGroupId=item.productGroupId
+                itemEntity.m3ItemCodeId=item.m3ItemCodeId
+                // itemEntity.productGroupId=item.productGroupId
                 itemEntity.receivedQuantity=item.receivedQuantity
                 itemEntity.receivedUomId=item.receivedUomId
                 itemEntity.acceptedQuantity=item.acceptedQuantity
@@ -168,6 +168,7 @@ export class GrnService{
                 itemInfo.push(itemEntity)
             }
             grnEntity.grnItemInfo=itemInfo
+            // let save
             const save = await this.grnRepo.save(grnEntity)  
             if(save){
                 for(const item of req.grnItemInfo){ 
@@ -268,7 +269,7 @@ export class GrnService{
             const manager = this.dataSource;
             let query=`SELECT grn_item_id , grn_items.item_id ,rm.item_code AS fabricCode,t.trim_code, grn_items.m3_item_id , grn_items.product_group_id , grn_items.received_quantity , grn_items.received_uom_id , grn_items.accepted_quantity , grn_items.accepted_uom_id , 
             grn_items.rejected_quantity , grn_items.rejected_uom_id ,grn_items.conversion_quantity,  grn_items.conversion_uom_id , grn_items.location_mapped_status , grn_items.grn_id , grn_items.m3_item_code_id,u.uom FROM grn_items
-            LEFT JOIN m3_items rm ON rm.rm_item_id = grn_items.m3_item_code_id
+            LEFT JOIN m3_items rm ON rm.m3_items_Id = grn_items.m3_item_code_id
             LEFT JOIN m3_trims t ON t.m3_trim_Id = grn_items.m3_item_code_id
             LEFT JOIN uom u ON u.id = grn_items.received_uom_id
             WHERE grn_items.grn_id = '${req.grnId}'`
