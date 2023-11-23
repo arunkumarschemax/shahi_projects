@@ -240,7 +240,7 @@ export class GrnService{
             throw err
         }
     }
-    async getAllGrn():Promise<CommonResponseModel>{
+    async getAllGrn(req?:GrnReq):Promise<CommonResponseModel>{
         try{
             const manager = this.dataSource;
             let query=`SELECT v.vendor_name AS vendorName,po_number AS poNumber,item_type AS materialTYpe,grn_id,grn.vendor_id,grn.grn_number,b.buyer_name,po_id,grn_date,grn.contact_person,
@@ -253,9 +253,9 @@ export class GrnService{
             // if(materialType == 'Fabric'){
             //     query=query+' and ifabric_id ='+id+''
             // }
-            // if(materialType == 'Trim'){
-            //     query=query+' and itrims_id='+id+''
-            // }
+            if(req?.grnId ){
+                query=query+' where grn_id='+req?.grnId+''
+            }
             const result= await manager.query(query)
             if(result){
                 return new CommonResponseModel(true,1,'',result)
