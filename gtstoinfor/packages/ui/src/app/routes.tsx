@@ -171,6 +171,7 @@ import BomIndentView from "./sourcing-requisition/bom-indent-view"
 import GRNView from "./grn/grn-view"
 import GRNDetailView from "./grn/grn-detail-view"
 import { Reclassification } from "./sourcing-requisition/reclassification"
+import SampleDevNewView from "./sample-development/sampling-develop-req-view"
 
 
 
@@ -662,7 +663,9 @@ export const AppRoutes = () => {
 
                 <Route path='sample-development' >
                     <Route path="sample-development-form" element={<SampleDevForm />} />
-                    <Route path="sample-development-view" element={<SampleDevView />} />
+                    {/* <Route path="sample-development-view" element={<SampleDevView />} /> */}
+                    <Route path="sample-development-view" element={<SampleDevNewView />} />
+
                     <Route path="sample-development-detail" element={<SampleDevDetail />} />
                     <Route path="sample-requests" element={<SampleRequests />} />
                     <Route path="store-issue-detail" element={<StoreIssueDetailed />} />

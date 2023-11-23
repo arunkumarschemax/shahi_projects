@@ -165,7 +165,7 @@ export const StoreIssueDetailed = () => {
     },
     {
       title: "Fabric Code",
-      dataIndex: "fabric_code",
+      dataIndex: "item_code",
       width: "20%",
     },
     {

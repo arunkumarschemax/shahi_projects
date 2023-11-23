@@ -26,13 +26,13 @@ export class FabricIndentRepository extends Repository<IndentFabricEntity> {
     async getFabricIndentData(indentId: number) {
         const query = this.createQueryBuilder(`itf`)
             .select(`"Fabric" as materialType,itf.ifabric_id,itf.indent_id as indentId,
-        itf.m3_fabric_code,itf.color,itf.season,itf.supplier_id,itf.buyer_id,itf.grn_date,itf.xl_no,itf.quantity,itf.quantity_unit,
+        itf.m3_fabric_code,itf.color,itf.quantity,itf.quantity_unit,
         itf.created_at,itf.updated_at,itf.indent_id,m3.item_code,
-        co.colour,bu.buyer_name,it.status, uom.uom AS quantityUnit,ven.vendor_name `)
+        co.colour,it.status, uom.uom AS quantityUnit`)
             .leftJoin(M3ItemsEntity, 'm3', `m3.m3_items_Id = itf.m3_fabric_code`)
-            .leftJoin(Vendors, 'ven', `ven.vendor_id = itf.supplier_id`)
+            // .leftJoin(Vendors, 'ven', `ven.vendor_id = itf.supplier_id`)
             .leftJoin(Colour, 'co', 'co.colour_id=itf.color')
-            .leftJoin(Buyers, 'bu', 'bu.buyer_id=itf.buyer_id')
+            // .leftJoin(Buyers, 'bu', 'bu.buyer_id=itf.buyer_id')
             .leftJoin(Indent, 'it', 'it.indent_id=itf.indent_id')
             .leftJoin(UomEntity, 'uom', 'uom.id=itf.quantity_unit')
 
