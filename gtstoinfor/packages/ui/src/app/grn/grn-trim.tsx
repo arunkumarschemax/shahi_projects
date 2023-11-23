@@ -15,6 +15,9 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
     const uomService = new UomService()
     const [uomData, setUomData] = useState<any[]>([])
     const [formData, setFormData] = useState([]);
+    const [reciveUomName, setReciveUomName] = useState<any>('')
+    const [quantity, setQuantity]= useState<any>(undefined)
+
 
 
     useEffect(() =>{
@@ -47,6 +50,8 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
             acceptedUomId: values[`acceptedUomId_${record.poTrimId}_${record.key}`],
             rejectedQuantity: values[`rejectedQuantity_${record.poTrimId}_${record.key}`],
             rejectedUomId: values[`rejectedUomId_${record.poTrimId}_${record.key}`],
+            conversionQuantity:quantity,
+            conversionUomId:values[`acceptedUomId_${record.poFabricId}_${record.key}`],
             ...record,
           }));
   
@@ -78,6 +83,56 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
       })
       onSaveData(grnItemsArray)
       console.log("GrnItemsArray:", grnItemsArray)
+    };
+
+    const uomConversionFactors = {
+      m: 1,          // 1 meter
+      yd: 0.9144,    // 1 yard = 0.9144 meters
+      gsm: 1,        // 1 gram per square meter
+      'oz/yd²': 33.906, // 1 ounce per square yard = 33.906 grams per square meter
+      pc: 1,         // 1 piece
+      ly: 1,         // 1 length (assuming length is in meters)
+      mm: 0.001,     // 1 millimeter = 0.001 meters
+      in: 0.0254,    // 1 inch = 0.0254 meters
+      cm: 0.01,      // 1 centimeter = 0.01 meters
+      gr: 0.001      // 1 gram
+    };
+
+    let convertedQty
+
+    const acceptUomOnchange = (option, value, record) =>{
+      const acceptedQuantity = form.getFieldValue(`acceptedQuantity_${record.poTrimId}_${record.key}`);
+       convertedQty = convertQuantity(acceptedQuantity, reciveUomName, value?.type?value.type:undefined);
+    }
+   
+    const receiveuomOnChange = (value,option) =>{
+      console.log(option.name)
+      setReciveUomName(option.name)
+
+    }
+    const acceptedQuantityOnchange =(value) =>{
+    console.log(value)
+    }
+
+    const convertQuantity = (quantity, fromUom, toUom) => {
+      if(quantity != null && fromUom != undefined && toUom != undefined){
+        console.log(quantity,fromUom,toUom)
+        if (fromUom === toUom) {
+        console.log(quantity)
+        setQuantity(quantity)
+          return quantity;
+        }
+        if (!(fromUom in uomConversionFactors) || !(toUom in uomConversionFactors)) {
+          console.log(fromUom in uomConversionFactors)
+          throw new Error('Invalid units of measure');
+        }
+      
+        const baseQuantity = quantity * uomConversionFactors[fromUom];
+        const convertedQuantity = baseQuantity / uomConversionFactors[toUom];
+        console.log(convertedQuantity)
+        setQuantity(convertedQuantity)
+        return convertedQuantity;
+      }  
     };
 
     
@@ -146,6 +201,7 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select UOM"
+                onChange={receiveuomOnChange}
                 >
                 {uomData?.map((e) => (
                   <Option key={e.uomId} value={e.uomId}>
@@ -178,6 +234,7 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
                 <Input 
                 placeholder="Accepted Quantity" 
                 name={`${record.poTrimId}`+`${record.key}+'acceptedQuantity'`}
+                onChange={acceptedQuantityOnchange}
                 />
               </Form.Item>
           ),
@@ -201,6 +258,7 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select UOM"
+                onChange={(option, value) => acceptUomOnchange(option, value, record)}
               >
                 {uomData?.map((e) => (
                   <Option key={e.uomId} value={e.uomId} name={`${record.poTrimId}`+`${record.key}+'acceptedUomId'`}>
@@ -263,9 +321,13 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
           ),
         },
         {
-          title: 'Converted Qty',
+          title: <div style={{ textAlign: 'center' }}>Converted Qty</div>,
           dataIndex: 'convertedQty',
-        }
+          render: (_, record) => {
+            return   <Form.Item  name={`convertedQty_${record.poTrimId}_${record.key}`}>  
+              {<span>{Number(quantity)?Number(quantity):''}</span>}</Form.Item>
+          },
+        },
       ]
 
       return (
