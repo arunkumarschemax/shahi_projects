@@ -366,49 +366,39 @@ export class SampleRequestService {
   async getSampleInventory(): Promise<CommonResponseModel> {
     const inventoryData = this.dataSource
     let rawDatas
-    rawDatas = `SELECT  b.buyer_name,
-    s.style as style,
-    c.colour AS color,
-    sb.colour_id,
-    sr.request_no as requestNumber,
-    sr.location_id as location,
-    pg.product_group as productGroup,
-    sb.required_quantity AS orderQuantity,
-    sb.received_quantity AS preparedQuantity,
-    i.item_name AS item,
-    CONCAT(
-        a.state, 
-        '-',
-        IF(a.district IS NULL, '', a.district),
-        IF(a.district IS NULL OR a.city IS NULL, '', '-'),
-        IF(a.city IS NULL, '', a.city),
-        IF(a.landmark IS NULL OR a.city IS NULL, '', '-'),
-        IF(a.landmark IS NULL, '', a.landmark),
-        IF(a.lane1 IS NULL OR a.landmark IS NULL, '', '-'),
-        IF(a.lane1 IS NULL, '', a.lane1),
-        IF(a.lane2 IS NULL OR a.lane1 IS NULL, '', '-'),
-        IF(a.lane2 IS NULL, '', a.lane2),
-        IF(a.pincode IS NULL OR a.lane2 IS NULL, '', '-'),
-        IF(a.pincode IS NULL, '', a.pincode)
-    ) AS billingAddress
-FROM 
-    sampling_bom sb
-LEFT JOIN 
-    sample_request sre ON sb.sample_request_id = sre.sample_request_id
-LEFT JOIN 
-    colour c ON c.colour_id = sb.colour_id
-LEFT JOIN 
-    sample_request sr ON sr.sample_request_id = sb.sample_request_id
-LEFT JOIN 
-    product_group pg ON pg.product_group_id = sb.product_group_id
-LEFT JOIN 
-    items i ON i.item_id = sb.rm_item_id
-LEFT JOIN 
-    style s ON s.style_id = sre.style_id
-LEFT JOIN 
-    address a ON a.buyer_id = sre.buyer_id
-LEFT JOIN 
-    buyers b ON b.buyer_id = sre.buyer_id`;
+    rawDatas = `SELECT
+    st.fabric_code,
+    st.fabric_info_id,
+    m3t.trim_code,
+    m3t.trim_type,
+    m3t.trim_code AS m3t_trimcode,
+    m3.item_code AS m3_item_code
+  FROM
+    sample_request_fabric_info st
+  LEFT JOIN
+    m3_items m3 ON m3.item_code = st.fabric_code
+  LEFT JOIN
+    sample_request_trim_info sr ON sr.trim_code = st.fabric_code
+  LEFT JOIN
+    m3_trims m3t ON m3t.trim_code = st.fabric_code
+  
+  UNION ALL
+  
+  SELECT
+    sr.trim_code,
+    sr.trim_type,
+    m3.trim_code AS m3t_trimcode,
+    m3.trim_type AS m3t_trim_type,
+    m3i.item_code AS m3i_item_code,
+    sa.fabric_code
+  FROM
+    sample_request_trim_info sr
+  LEFT JOIN
+    m3_trims m3 ON m3.trim_code = sr.trim_code
+  LEFT JOIN
+    m3_items m3i ON m3i.item_code = sr.trim_code
+  LEFT JOIN
+    sample_request_fabric_info sa ON sa.fabric_code = sr.trim_code`;
 
 
     const result = await inventoryData.query(rawDatas)
