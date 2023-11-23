@@ -22,15 +22,15 @@ export class TrimIndentRepository extends Repository<IndentTrimsEntity> {
 
     async getTrimIndentData (indentId:number){
         const query = this.createQueryBuilder(`itt`)
-        .select (`itt.itrims_id,itt.trim_type,itt.trim_code,itt.size,itt.color,itt.quantity,itt.quantity_unit,itt.m3_trim_code,itt.description,
-        itt.created_at,itt.updated_at,itt.indent_id,itt.remarks,co.colour,si.sizes,it.status,ss.quantity,pg.product_group,rm.item_code, uom.uom AS quantityUnit`)
-        .leftJoin(Size,'si','si.size_id=itt.size')
-        .leftJoin(Colour,'co','co.colour_id=itt.color')
+        .select (`itt.itrims_id,itt.trim_type,itt.trim_code,itt.quantity,
+        itt.created_at,itt.updated_at,itt.indent_id,itt.remarks,it.status,ss.quantity`)
+        // .leftJoin(Size,'si','si.size_id=itt.size')
+        // .leftJoin(Colour,'co','co.colour_id=itt.color')
         .leftJoin(Indent,'it','it.indent_id=itt.indent_id')
-        .leftJoin(StocksEntity,'ss','ss.item_type_id=itt.trim_type')
-        .leftJoin(ProductGroup,'pg','pg.product_group_id=itt.trim_type')
-        .leftJoin(RmCreationEntity,'rm','rm.rm_item_id=itt.trim_code')
-        .leftJoin(UomEntity, 'uom', 'uom.id=itt.quantity_unit')
+        .leftJoin(StocksEntity,'ss','ss.m3_item=itt.trim_code')
+        // .leftJoin(ProductGroup,'pg','pg.product_group_id=itt.trim_type')
+        // .leftJoin(RmCreationEntity,'rm','rm.rm_item_id=itt.trim_code')
+        // .leftJoin(UomEntity, 'uom', 'uom.id=itt.quantity_unit')
         .where(`itt.indent_id=${indentId}`)
         const data = await query.getRawMany()
         console.log(data)
