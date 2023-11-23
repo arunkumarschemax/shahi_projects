@@ -247,8 +247,10 @@ export class SampleRequestService {
 
       }
       if (save && saveBomDetails) {
+        console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        console.log(save);
 
-        const req1 = new SourcingRequisitionReq(req.styleId,new Date(),"",new Date(),indentFabInfo,indentTrimInfo,save.sampleRequestId)
+        const req1 = new SourcingRequisitionReq(req.styleId,new Date(),"",new Date(),indentFabInfo,indentTrimInfo,save.SampleRequestId);
         const raiseIndent = await this.indentService.createItems(req1);
         if(raiseIndent.status){
           return new AllSampleDevReqResponseModel(true, 1, 'SampleDevelopmentRequest created successfully', [save])

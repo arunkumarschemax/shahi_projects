@@ -280,7 +280,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
 
     async sampleTrimData(sampleId: string) {
         const query = await this.dataSource.createQueryBuilder(SampleRequestTriminfoEntity, 'stri')
-            .addSelect(`stri.trim_info_id,stri.consumption AS trim_consumption,stri.sample_request_id AS trim_sample_request_id,stri.remarks AS tri_remarks,rm.item_code AS trim_item_code`)
+            .addSelect(`stri.trim_info_id,stri.consumption AS trim_consumption,stri.sample_request_id AS trim_sample_request_id,stri.remarks AS tri_remarks,mt.trim_code AS trim_item_code`)
             .leftJoin(SampleRequest, 'sr', 'sr.sample_request_id= stri.sample_request_id ')
             .leftJoin(M3TrimsEntity, 'mt', 'mt.m3_trim_id=stri.trim_code ')
             .where(`stri.sample_request_id = "${sampleId}"`)
