@@ -60,21 +60,21 @@ export class PurchaseOrderService {
                 for (const poFabric of req.poFabricInfo) {
                     const pofabricEntity = new PurchaseOrderFbricEntity()
                     pofabricEntity.colourId = poFabric.colourId
-                    pofabricEntity.productGroupId = poFabric.productGroupId
+                    // pofabricEntity.productGroupId = poFabric.productGroupId
                     pofabricEntity.remarks = poFabric.remarks
-                    pofabricEntity.fabricTypeId = poFabric.fabricTypeId
+                    // pofabricEntity.fabricTypeId = poFabric.fabricTypeId
                     pofabricEntity.shahiFabricCode = poFabric.shahiFabricCode
-                    pofabricEntity.weaveId = poFabric.weaveId
-                    pofabricEntity.weight = poFabric.weight
-                    pofabricEntity.width = poFabric.width
-                    pofabricEntity.construction = poFabric.construction
-                    pofabricEntity.yarnCount = poFabric.yarnCount
-                    pofabricEntity.finish = poFabric.finish
-                    pofabricEntity.shrinkage = poFabric.shrinkage
-                    pofabricEntity.pch = poFabric.pch
-                    pofabricEntity.moq = poFabric.moq
+                    // pofabricEntity.weaveId = poFabric.weaveId
+                    // pofabricEntity.weight = poFabric.weight
+                    // pofabricEntity.width = poFabric.width
+                    // pofabricEntity.construction = poFabric.construction
+                    // pofabricEntity.yarnCount = poFabric.yarnCount
+                    // pofabricEntity.finish = poFabric.finish
+                    // pofabricEntity.shrinkage = poFabric.shrinkage
+                    // pofabricEntity.pch = poFabric.pch
+                    // pofabricEntity.moq = poFabric.moq
                     pofabricEntity.m3FabricCode = poFabric.m3FabricCode
-                    pofabricEntity.content = poFabric.content
+                    // pofabricEntity.content = poFabric.content
                     pofabricEntity.indentFabricId = poFabric.indentFabricId
                     pofabricEntity.poQuantity = poFabric.poQuantity
                     pofabricEntity.quantityUomId = poFabric.quantityUomId
@@ -88,8 +88,8 @@ export class PurchaseOrderService {
                     console.log(trimInfo)
                     console.log('""""""""""""""""""""""""""""""""""""""""""""')
                     trimEntity.colourId = trimInfo.colourId
-                    trimEntity.productGroupId = trimInfo.productGroupId
-                    trimEntity.trimId = trimInfo.trimId
+                    // trimEntity.productGroupId = trimInfo.productGroupId
+                    // trimEntity.trimId = trimInfo.trimId
                     trimEntity.m3TrimCode = trimInfo.m3TrimCode
                     trimEntity.description = trimInfo.description
                     trimEntity.consumption = trimInfo.consumption

@@ -23,7 +23,7 @@ fabricCode:string
 
 
 @ApiProperty()
-m3FabricCode:string
+m3FabricCode:number
 
 @ApiProperty()
 shahiFabricCode:string

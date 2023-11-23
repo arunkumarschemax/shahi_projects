@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { appConfig } from "packages/services/common/config";
 
 export class GRNItemDto{
     @ApiProperty()
@@ -45,6 +46,5 @@ export class GRNItemDto{
     indentFabricId?:number
     @ApiProperty()
     indentTrinId?:number
-
 
 }
