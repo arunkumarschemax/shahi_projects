@@ -143,11 +143,16 @@ export const StockView = () => {
       title: "Buyer",
       dataIndex: "buyer_name",
       ...getColumnSearchProps("buyer_name"),
+      sorter: (a, b) => a.buyer_name.localeCompare(b.buyer_name),
+      sortDirections: ["descend", "ascend"],
+      
     },
     {
-      title: "Item Type",
+      title: "Material Type",
       dataIndex: "item_type",
       ...getColumnSearchProps("item_type"),
+      sorter: (a, b) => a.item_type.localeCompare(b.item_type),
+      sortDirections: ["descend", "ascend"],
     },
     // {
     //   title: "Item Code",
@@ -160,9 +165,11 @@ export const StockView = () => {
     //   ...getColumnSearchProps("item_code"),
     // },
     {
-      title: "Item",
+      title: "M3 Item",
       dataIndex: "item_name",
       ...getColumnSearchProps("item_name"),
+      sorter: (a, b) => a.item_name.localeCompare(b.item_name),
+      sortDirections: ["descend", "ascend"],
     },
     {
       title: "Style",
@@ -179,13 +186,14 @@ export const StockView = () => {
     {
       title: "Quantity",
       dataIndex: "total_quantity",
+      ...getColumnSearchProps("total_quantity"),
       // sorter: (a, b) => a.itemQuantity - b.itemQuantity,
       // sortDirections: ['descend', 'ascend'],
     },
   ];
 
   return (
-    <Card title="Stock" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+    <Card title="RM Inventory" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
       <Table
         className="custom-table-wrapper"
         dataSource={data}
