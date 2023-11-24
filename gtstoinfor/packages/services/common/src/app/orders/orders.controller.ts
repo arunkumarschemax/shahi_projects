@@ -11,7 +11,7 @@ import { extname } from 'path';
 import { FileIdReq } from './models/file-id.req';
 import { type } from 'os';
 import { TrimDetailsRequest } from './models/trim-details.req';
-import { multerOptions } from './models/upload-interceptor';
+// import { multerOptions } from './models/upload-interceptor';
 ''
 
 @Controller('orders')
@@ -635,6 +635,15 @@ export class OrdersController {
     async trimOrdersReadCell(@Body() req:any): Promise<CommonResponseModel> {
         try {
              return this.ordersService.trimOrdersReadCell();
+            } catch (err) {
+                return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+            }
+    }
+
+    @Post('/uniqloTrimOrdersBot')
+    async uniqloTrimOrdersBot(): Promise<CommonResponseModel> {
+        try {
+             return this.ordersService.uniqloTrimOrdersBot();
             } catch (err) {
                 return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
             }
