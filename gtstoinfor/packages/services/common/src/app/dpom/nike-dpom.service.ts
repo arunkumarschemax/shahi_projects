@@ -31,9 +31,12 @@ const path = require('path')
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
 const moment = require('moment');
 const qs = require('querystring');
+import * as nodemailer from 'nodemailer';
+import * as winston from 'winston';
 
 @Injectable()
 export class DpomService {
+    private transporter: nodemailer.Transporter;
     constructor(
         private dpomRepository: DpomRepository,
         private dpomChildRepo: DpomChildRepository,
@@ -44,7 +47,25 @@ export class DpomService {
         private coLineRepository: COLineRepository,
         @InjectDataSource()
         private dataSource: DataSource,
-    ) { }
+    ) {
+        this.transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'saiprakash.katiki@gmail.com',
+                pass: 'lvau qrhe mhzd ysnj',
+            },
+        });
+    }
+
+    //for email integration
+    private logger = winston.createLogger({
+        level: 'info',
+        format: winston.format.json(),
+        transports: [
+            new winston.transports.Console(),
+            new winston.transports.File({ filename: 'email-service.log' }),
+        ],
+    });
 
     async getOctaToken() {
         const payload = { 'grant_type': 'password', 'scope': 'iam.okta.factoryaffiliations.read iam.okta.factorygroups.read openid legacy_username email', 'username': 'aranganathan.muthukrishnan@shahi.co.in', 'password': 'Nike@12345' }
@@ -517,6 +538,11 @@ export class DpomService {
                     await driver.navigate().refresh();
                     await driver.sleep(10000)
                 } else {
+                    if (po.buyer == 'Uniqlo-U12') {
+                        await driver.wait(until.elementLocated(By.xpath('//*[@id="ViewOrderID"]')), 10000);
+                        await driver.findElement(By.xpath('//*[@id="ViewOrderID"]')).click();
+                        await driver.sleep(5000)
+                    }
                     await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[7]')), 10000);
                     const coDateElement = await driver.findElement(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr/td[6]'));
                     const coDate = await coDateElement.getAttribute('innerText');
@@ -592,6 +618,25 @@ export class DpomService {
     //         throw err
     //     }
     // }
+
+    async sendMail(to: string, subject: string, message: any[]) {
+        let content = message.reduce(function (a, b) {
+            return a + '<tr bgcolor="#ffffff"><td>' + b.fileName + '</a></td><td>' + b.status + '</td><td>' + b.reason + '</td><td>' + b.columns + '</td></tr>';
+        }, '');
+        const sendMail = await this.transporter.sendMail({
+            from: 'saiprakash.katiki@gmail.com',
+            to,
+            subject,
+            text: '',
+            html: '<div><table cellspacing="3" bgcolor="#000000"><thead><tr bgcolor="#ffffff"><th>File Name</th><th width="25%">Status</th><th>Reason</th><th>Columns</th></tr></thead><tbody>' +
+                content + '</tbody></table></div>',
+            context: {
+
+            }
+        });
+        console.log(sendMail, '---------------sendmail')
+        return sendMail
+    }
 
     @Cron('0 21 * * *')
     async saveDPOMApiDataToDataBase(): Promise<CommonResponseModel> {
