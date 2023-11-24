@@ -51,7 +51,7 @@ export const MaterialAllocationGrid = () => {
             title: 'Sample Request No',
             dataIndex: "sample_req",
             align: 'left',
-              sorter: (a, b) => a.sample_req.trim().localeCompare(b.sample_req.trim()),
+            sorter: (a, b) => a.sample_req.localeCompare(b.sample_req),
               sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
@@ -59,7 +59,7 @@ export const MaterialAllocationGrid = () => {
             title: 'Sample Type',
             dataIndex: "sample_type",
             align: 'left',
-              sorter: (a, b) => a.sample_type.trim().localeCompare(b.sample_type.trim()),
+            sorter: (a, b) => a.sample_type.localeCompare(b.sample_type),
               sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
@@ -67,7 +67,7 @@ export const MaterialAllocationGrid = () => {
             title: 'Buyer',
             dataIndex: "buyer_name",
             align: 'left',
-              sorter: (a, b) => a.buyer_name.trim().localeCompare(b.buyer_name.trim()),
+            sorter: (a, b) => a.buyer_name.localeCompare(b.buyer_name),
               sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
@@ -75,7 +75,7 @@ export const MaterialAllocationGrid = () => {
             title: 'Location',
             dataIndex: "location",
             align: 'left',
-              sorter: (a, b) => a.location.trim().localeCompare(b.location.trim()),
+            sorter: (a, b) => a.location.localeCompare(b.location),
               sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
@@ -83,7 +83,7 @@ export const MaterialAllocationGrid = () => {
             title: 'Quantity',
             dataIndex: "quantity",
             align: 'left',
-              sorter: (a, b) => a.quantity.trim().localeCompare(b.quantity.trim()),
+            sorter: (a, b) => a.quantity.localeCompare(b.quantity),
               sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
