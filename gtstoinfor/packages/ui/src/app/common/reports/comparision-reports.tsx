@@ -1059,30 +1059,42 @@ export const MonthWiseComparisionReport = () => {
       exportingColumns.push(
         { title: "Item Name", dataIndex: "planning_sum" },
         { title: "Production Plan Type ", dataIndex: "prod_plan_type", },
-        { title: `Jan Lat`, dataIndex: "janExfLat", },
         { title: `Jan Pre`, dataIndex: "janExfPre", },
-        { title: `Feb Lat`, dataIndex: "febExfLat", },
+        { title: `Jan Lat`, dataIndex: "janExfLat", },
+
         { title: `Feb Pre`, dataIndex: "febExfPre", },
-        { title: `Mar Lat`, dataIndex: "marExfLat", },
+        { title: `Feb Lat`, dataIndex: "febExfLat", },
+
         { title: `Mar Pre`, dataIndex: "marExfPre", },
-        { title: `Apr Lat`, dataIndex: "aprExfLat", },
+        { title: `Mar Lat`, dataIndex: "marExfLat", },
+
         { title: `Apr Pre`, dataIndex: "aprExfPre", },
-        { title: `May Lat`, dataIndex: "mayExfLat", },
+        { title: `Apr Lat`, dataIndex: "aprExfLat", },
+
         { title: `May Pre`, dataIndex: "mayExfPre", },
-        { title: `Jul Lat`, dataIndex: "julExfLat", },
+        { title: `May Lat`, dataIndex: "mayExfLat", },
+
         { title: `Jul Pre`, dataIndex: "julExfPre", },
-        { title: `Aug Lat`, dataIndex: "augExfLat", },
+        { title: `Jul Lat`, dataIndex: "julExfLat", },
+
         { title: `Aug Pre`, dataIndex: "augExfPre", },
-        { title: `Sep Lat`, dataIndex: "sepExfLat", },
+        { title: `Aug Lat`, dataIndex: "augExfLat", },
+
         { title: `Sep Pre`, dataIndex: "sepExfPre", },
-        { title: `Oct Lat`, dataIndex: "octExfLat", },
+        { title: `Sep Lat`, dataIndex: "sepExfLat", },
+
         { title: `Oct Pre`, dataIndex: "octExfPre", },
-        { title: `Nov Lat`, dataIndex: "novExfLat", },
+        { title: `Oct Lat`, dataIndex: "octExfLat", },
+
         { title: `Nov Pre`, dataIndex: "novExfPre", },
-        { title: `Dec Lat`, dataIndex: "decExfLat", },
+        { title: `Nov Lat`, dataIndex: "novExfLat", },
+
         { title: `Dec Pre`, dataIndex: "decExfPre", },
-        { title: `Total Lat`, dataIndex: "totalExfLat", },
+        { title: `Dec Lat`, dataIndex: "decExfLat", },
+
         { title: `Total Pre`, dataIndex: "totalExfPre", },
+        { title: `Total Lat`, dataIndex: "totalExfLat", },
+
 
       )
     }
@@ -1181,32 +1193,45 @@ export const MonthWiseComparisionReport = () => {
 
       secondTableColumns.push(
         { title: "Production Plan Type ", dataIndex: "prod_plan_type", },
-        { title: `Jan Pre`, dataIndex: "janExfPre", },
         { title: `Jan Lat`, dataIndex: "janExfLat", },
-        { title: `Feb Pre`, dataIndex: "febExfPre", },
+        { title: `Jan Pre`, dataIndex: "janExfPre", },
+
         { title: `Feb Lat`, dataIndex: "febExfLat", },
-        { title: `Mar Pre`, dataIndex: "marExfPre", },
+        { title: `Feb Pre`, dataIndex: "febExfPre", },
+
         { title: `Mar Lat`, dataIndex: "marExfLat", },
-        { title: `Apr Pre`, dataIndex: "aprExfPre", },
+        { title: `Mar Pre`, dataIndex: "marExfPre", },
+
         { title: `Apr Lat`, dataIndex: "aprExfLat", },
-        { title: `May Pre`, dataIndex: "mayExfPre", },
+        { title: `Apr Pre`, dataIndex: "aprExfPre", },
+
         { title: `May Lat`, dataIndex: "mayExfLat", },
-        { title: `Jun Pre`, dataIndex: "junExfPre", },
+        { title: `May Pre`, dataIndex: "mayExfPre", },
+
         { title: `Jun Lat`, dataIndex: "junExfLat", },
-        { title: `Jul Pre`, dataIndex: "julExfPre", },
+        { title: `Jun Pre`, dataIndex: "junExfPre", },
+
         { title: `Jul Lat`, dataIndex: "julExfLat", },
-        { title: `Aug Pre`, dataIndex: "augExfPre", },
+        { title: `Jul Pre`, dataIndex: "julExfPre", },
+
         { title: `Aug Lat`, dataIndex: "augExfLat", },
-        { title: `Sep Pre`, dataIndex: "sepExfPre", },
+        { title: `Aug Pre`, dataIndex: "augExfPre", },
+
         { title: `Sep Lat`, dataIndex: "sepExfLat", },
-        { title: `Oct Pre`, dataIndex: "octExfPre", },
+        { title: `Sep Pre`, dataIndex: "sepExfPre", },
+
         { title: `Oct Lat`, dataIndex: "octExfLat", },
-        { title: `Nov Pre`, dataIndex: "novExfPre", },
+        { title: `Oct Pre`, dataIndex: "octExfPre", },
+
         { title: `Nov Lat`, dataIndex: "novExfLat", },
-        { title: `Dec Pre`, dataIndex: "decExfPre", },
+        { title: `Nov Pre`, dataIndex: "novExfPre", },
+
         { title: `Dec Lat`, dataIndex: "decExfLat", },
+        { title: `Dec Pre`, dataIndex: "decExfPre", },
+
+        { title: `Total Lat`, dataIndex: "totalExfLat", },
         { title: `Total Pre`, dataIndex: "totalExfPre", },
-        { title: `Total Lat`, dataIndex: "totalExfLat", }
+
       )
     }
     if (selected === 'WareHouse') {
