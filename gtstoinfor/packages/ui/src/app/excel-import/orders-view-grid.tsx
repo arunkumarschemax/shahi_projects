@@ -58,9 +58,7 @@ const AllOrdersGridView = () => {
         req.OrderPlanNum=form.getFieldValue('OrderPlanNumber')
     }
         service.getOrdersData(req).then(res => {
-            
-            console.log( req.OrderPlanNum,'oooooooooooooooooo')
-            if (res.status) {
+                        if (res.status) {
                 setGridData(res.data)
                 setFilteredData(res.data)
             }
@@ -130,7 +128,6 @@ const Number=()=>{
 }
     const EstimatedETDDate = (value) => {
         if (value) {
-            console.log(value)
             const fromDate = value[0].format('YYYY-MM-DD');
             const toDate = value[1].format('YYYY-MM-DD');
             

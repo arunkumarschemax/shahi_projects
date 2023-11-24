@@ -248,7 +248,6 @@ import { OrdersService } from '@project-management-system/shared-services';
        const service= new OrdersService
       let location = useLocation();
        const stateData = location.state;
-console.log(stateData.VersionData[0].order_plan_number,'000000000000');
 
     useEffect(()=>{
           getversions()

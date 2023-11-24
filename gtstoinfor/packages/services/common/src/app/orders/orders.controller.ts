@@ -7,7 +7,7 @@ import { MulterFile } from 'multer';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
 import { Cron } from '@nestjs/schedule';
-import { extname } from 'path'; 
+import { extname } from 'path';
 import { FileIdReq } from './models/file-id.req';
 import { type } from 'os';
 import { TrimDetailsRequest } from './models/trim-details.req';
@@ -33,7 +33,7 @@ export class OrdersController {
     }
 
     @Post('/getOrdersData')
-    @ApiBody({type:orders})
+    @ApiBody({ type: orders })
     async getOrdersData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getOrdersData(req);
@@ -44,7 +44,7 @@ export class OrdersController {
     }
 
     @Post('/getQtyChangeData')
-    async getQtyChangeData(@Body() req :any): Promise<CommonResponseModel> {
+    async getQtyChangeData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getQtyChangeData(req);
         } catch (err) {
@@ -54,7 +54,7 @@ export class OrdersController {
     }
 
     @Post('/getQtyDifChangeData')
-    async getQtyDifChangeData(@Body() req :any): Promise<CommonResponseModel> {
+    async getQtyDifChangeData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getQtyDifChangeData(req);
         } catch (err) {
@@ -122,7 +122,7 @@ export class OrdersController {
         }
     }
 
-    
+
 
     @Post('/fileUpload/:month/:fileType/:uploadType')
     @ApiConsumes('multipart/form-data')
@@ -143,16 +143,16 @@ export class OrdersController {
         },
     }))
 
-    async fileUpload(@Param('month') month: number,@Param('fileType') fileType:string,@Param('uploadType') uploadType:string, @UploadedFile() file): Promise<CommonResponseModel> {
+    async fileUpload(@Param('month') month: number, @Param('fileType') fileType: string, @Param('uploadType') uploadType: string, @UploadedFile() file): Promise<CommonResponseModel> {
         try {
-            return await this.ordersService.updatePath(file.path, file.filename, month,fileType,uploadType)
+            return await this.ordersService.updatePath(file.path, file.filename, month, fileType, uploadType)
         } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
         }
     }
 
     @Post('/getUploadFilesData')
-    async getUploadFilesData(@Body() req:any): Promise<CommonResponseModel> {
+    async getUploadFilesData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getUploadFilesData(req);
         } catch (err) {
@@ -179,14 +179,14 @@ export class OrdersController {
     // }
 
     @Post('/getversion')
-    @ApiBody({type:ordersPlanNo})
-    async getversion(@Body() req:any):Promise<CommonResponseModel>{
-        try{
+    @ApiBody({ type: ordersPlanNo })
+    async getversion(@Body() req: any): Promise<CommonResponseModel> {
+        try {
             return this.ordersService.getversion(req);
 
-        }catch(err){
+        } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-    
+
         }
     }
     @Post('/getPhaseWiseData')
@@ -242,11 +242,11 @@ export class OrdersController {
 
         }
     }
-    
+
 
     @Post('/getTrimOrdersData')
-    @ApiBody({type:TrimOrdersReq})
-    async getTrimOrdersData(@Body() req:any): Promise<CommonResponseModel> {
+    @ApiBody({ type: TrimOrdersReq })
+    async getTrimOrdersData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getTrimOrdersData(req);
         } catch (err) {
@@ -255,8 +255,8 @@ export class OrdersController {
     }
 
     @Post('/getUnacceptedTrimOrders')
-    @ApiBody({type:TrimOrdersReq})
-    async getUnacceptedTrimOrders(@Body() req:any): Promise<CommonResponseModel> {
+    @ApiBody({ type: TrimOrdersReq })
+    async getUnacceptedTrimOrders(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getUnacceptedTrimOrders(req);
         } catch (err) {
@@ -272,6 +272,16 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/getTrimSampleCode')
+    async getTrimSampleCode(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getTrimSampleCode();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
     @Post('/revertTrimFileData')
     async revertTrimFileData(@Body() req: any): Promise<CommonResponseModel> {
         try {
@@ -289,8 +299,8 @@ export class OrdersController {
         }
     }
     @Post('/getMonthWiseReportData')
-    @ApiBody({type:YearReq})
-    async getMonthWiseReportData(@Body() req:any): Promise<CommonResponseModel> {
+    @ApiBody({ type: YearReq })
+    async getMonthWiseReportData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getMonthWiseReportData(req);
         } catch (err) {
@@ -299,15 +309,15 @@ export class OrdersController {
     }
 
     @Post('/seasonWiseReport')
-    @ApiBody({type: SeasonWiseRequest})
-    async seasonWiseReport(@Body() req?:any): Promise<CommonResponseModel> {
+    @ApiBody({ type: SeasonWiseRequest })
+    async seasonWiseReport(@Body() req?: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.seasonWiseReport(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
-    
+
     @Post('/createCOline')
     async createCOline(@Body() req: any) {
         try {
@@ -316,7 +326,7 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
-    
+
     @Post('/getSeasonWiseOrders')
     async getSeasonWiseOrders(): Promise<CommonResponseModel> {
         try {
@@ -343,7 +353,7 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
-    
+
     @Post('/getWareHouseYearData')
     async getWareHouseYear(): Promise<CommonResponseModel> {
         try {
@@ -353,8 +363,8 @@ export class OrdersController {
         }
     }
     @Post('/getWareHouseMonthData')
-    @ApiBody({type:YearReq})
-    async getWareHouseMonthData(@Body() req:any): Promise<CommonResponseModel> {
+    @ApiBody({ type: YearReq })
+    async getWareHouseMonthData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getWareHouseMonthData(req);
         } catch (err) {
@@ -362,8 +372,8 @@ export class OrdersController {
         }
     }
     @Post('/getMonthlyComparisionData')
-    @ApiBody({type:YearReq})
-    async getMonthlyComparisionData(@Body() req:any): Promise<CommonResponseModel> {
+    @ApiBody({ type: YearReq })
+    async getMonthlyComparisionData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getMonthlyComparisionData(req);
         } catch (err) {
@@ -379,18 +389,18 @@ export class OrdersController {
     //         return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     //     }
     // }
-    
+
     @Post('/getExfactoryComparisionExcelData')
-    @ApiBody({type:YearReq})
-    async getExfactoryComparisionExcelData(@Body() req:any): Promise<CommonResponseModel> {
+    @ApiBody({ type: YearReq })
+    async getExfactoryComparisionExcelData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getExfactoryComparisionExcelData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
-    }  @Post('/getExfactoryMonthExcelData')
-    @ApiBody({type:YearReq})
-    async getExfactoryMonthExcelData(@Body() req:any): Promise<CommonResponseModel> {
+    } @Post('/getExfactoryMonthExcelData')
+    @ApiBody({ type: YearReq })
+    async getExfactoryMonthExcelData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getExfactoryMonthExcelData(req);
         } catch (err) {
@@ -426,18 +436,18 @@ export class OrdersController {
         }
     }
     @Post('/getWareHouseComparisionExcelData')
-    @ApiBody({type:YearReq})
-    async getWareHouseComparisionExcelData(@Body() req:any): Promise<CommonResponseModel> {
+    @ApiBody({ type: YearReq })
+    async getWareHouseComparisionExcelData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getWareHouseComparisionExcelData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
-    } 
-    
+    }
+
     @Post('/getWareHouseMonthExcelData')
-    @ApiBody({type:YearReq})
-    async getWareHouseMonthExcelData(@Body() req:any): Promise<CommonResponseModel> {
+    @ApiBody({ type: YearReq })
+    async getWareHouseMonthExcelData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getWareHouseMonthExcelData(req);
         } catch (err) {
@@ -448,15 +458,14 @@ export class OrdersController {
     //cron job to fetch mails autmatically once per a day
     @Cron('0 1 * * *')
     @Post('/processEmails')
-    async processEmails() :Promise<CommonResponseModel>{
+    async processEmails(): Promise<CommonResponseModel> {
         try {
             const test = await this.ordersService.processEmails();
-            console.log(test,'testttt')
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
         // try {
-        
+
         // await this.ordersService.processEmails();
         // return { message: 'Email processing completed.' };
         // } catch (error) {
@@ -469,13 +478,13 @@ export class OrdersController {
 
     @Cron('0 2 * * *')
     @Post('/readCell')
-    async readCell(@Body() req:any): Promise<CommonResponseModel> {
+    async readCell(@Body() req: any): Promise<CommonResponseModel> {
         try {
             const pathval = './upload-files/pro_orders_1.xlsx'
-             return this.ordersService.readCell(pathval,pathval);
-            } catch (err) {
-                return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-            }
+            return this.ordersService.readCell(pathval, pathval);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
     }
     @Post('/getOrdersStatus')
     async getOrdersStatus(): Promise<CommonResponseModel> {
@@ -521,8 +530,8 @@ export class OrdersController {
         }
     }
     @Post('/getMonthlyComparisionDate')
-    @ApiBody({type:YearReq})
-    async getMonthlyComparisionDate(@Body() req:any): Promise<CommonResponseModel> {
+    @ApiBody({ type: YearReq })
+    async getMonthlyComparisionDate(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getMonthlyComparisionDate(req);
         } catch (err) {
@@ -530,8 +539,8 @@ export class OrdersController {
         }
     }
     @Post('/getPhaseMonthData')
-    @ApiBody({type:YearReq})
-    async getPhaseMonthData(@Body() req:any): Promise<CommonResponseModel> {
+    @ApiBody({ type: YearReq })
+    async getPhaseMonthData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getPhaseMonthData(req);
         } catch (err) {
@@ -539,8 +548,8 @@ export class OrdersController {
         }
     }
     @Post('/getComparisionphaseData')
-    @ApiBody({type:YearReq})
-    async getComparisionphaseData(@Body() req:any): Promise<CommonResponseModel> {
+    @ApiBody({ type: YearReq })
+    async getComparisionphaseData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getComparisionphaseData(req);
         } catch (err) {
@@ -548,8 +557,8 @@ export class OrdersController {
         }
     }
     @Post('/getComparisionphaseExcelData')
-    @ApiBody({type:YearReq})
-    async getComparisionphasExceleData(@Body() req:any): Promise<CommonResponseModel> {
+    @ApiBody({ type: YearReq })
+    async getComparisionphasExceleData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getComparisionphaseExcelData(req);
         } catch (err) {
@@ -557,8 +566,8 @@ export class OrdersController {
         }
     }
     @Post('/getPhaseMonthExcelData')
-    @ApiBody({type:YearReq})
-    async getPhaseMonthExcelData(@Body() req:any): Promise<CommonResponseModel> {
+    @ApiBody({ type: YearReq })
+    async getPhaseMonthExcelData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getPhaseMonthExcelData(req);
         } catch (err) {
@@ -601,8 +610,8 @@ export class OrdersController {
     }
 
     @Post('/getTrimOrderDetails')
-    @ApiBody({type:TrimDetailsRequest})
-    async getTrimOrderDetails(@Body() req:any): Promise<CommonResponseModel> {
+    @ApiBody({ type: TrimDetailsRequest })
+    async getTrimOrderDetails(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getTrimOrderDetails(req);
         } catch (err) {
@@ -612,32 +621,32 @@ export class OrdersController {
 
     @Post('/uploadTrimFiles')
     uploadFile() {
-    const sourceFilePath = 'C:/Users/admin/Downloads/RawMaterialOrderListReport_test.xlsx'; // Specify the local path of your file
-    const destinationServerFolder = './upload-files/';
-    const destinationFilePath = `${destinationServerFolder}RawMaterialOrderListReport_test.xlsx`;
+        const sourceFilePath = 'C:/Users/admin/Downloads/RawMaterialOrderListReport_test.xlsx'; // Specify the local path of your file
+        const destinationServerFolder = './upload-files/';
+        const destinationFilePath = `${destinationServerFolder}RawMaterialOrderListReport_test.xlsx`;
 
-    // Read the file from the local path
-    try {
-        const fs = require('fs');
+        // Read the file from the local path
+        try {
+            const fs = require('fs');
 
-        const fileData = fs.readFileSync(sourceFilePath);
+            const fileData = fs.readFileSync(sourceFilePath);
 
-        // Upload the file to the server folder
-        fs.writeFileSync(destinationFilePath, fileData);
+            // Upload the file to the server folder
+            fs.writeFileSync(destinationFilePath, fileData);
 
-        return { success: 'File uploaded successfully' };
-    } catch (error) {
-        return { error: 'Failed to upload file', details: error.message };
-    }
+            return { success: 'File uploaded successfully' };
+        } catch (error) {
+            return { error: 'Failed to upload file', details: error.message };
+        }
     }
     // @Cron('0 4 * * *')
     @Post('/trimOrdersReadCell')
-    async trimOrdersReadCell(@Body() req:any): Promise<CommonResponseModel> {
+    async trimOrdersReadCell(@Body() req: any): Promise<CommonResponseModel> {
         try {
-             return this.ordersService.trimOrdersReadCell();
-            } catch (err) {
-                return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-            }
+            return this.ordersService.trimOrdersReadCell();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
     }
 
     @Post('/uniqloTrimOrdersBot')

@@ -61,7 +61,6 @@ export const ExFactoryReportWithComparision = () => {
   const getData = () => {
     const name ='ExFactory'
     const req = new YearReq(tab,name);
-    console.log(name);
     
     service.getMonthlyComparisionData(req).then((res) => {
       // console.log(res.data, "res==========");

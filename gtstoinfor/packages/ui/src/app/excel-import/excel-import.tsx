@@ -61,7 +61,6 @@ export default function ExcelImport() {
   const handleFileChange = (e) => {
     if(form.getFieldsValue().fileType == FileTypesEnum.TRIM_ORDERS){
     const file = e.target.files[0];
-    console.log(file.type)
     if (file && file.type === 'text/csv') {
       setSelectedFile(e.target.files[0]);
 
@@ -83,7 +82,6 @@ export default function ExcelImport() {
 
         // Join the remaining lines back into CSV format
         const modifiedCsv = lines.join('\n');
-        console.log(modifiedCsv)
 
         // Now parse the modified CSV data using PapaParse with custom headers
         Papa.parse(modifiedCsv, {
@@ -92,7 +90,6 @@ export default function ExcelImport() {
           complete: (result) => {
             const columnArray = [];
             const valueArray = [];
-            console.log(result.data)
 
             result.data.map((d) => {
               columnArray.push(Object.keys(d))
@@ -110,7 +107,6 @@ export default function ExcelImport() {
       };
       reader.readAsText(file);
     } else if(file && file.type === 'application/vnd.ms-excel' || file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
-      console.log(file.type)
       setSelectedFile(e.target.files[0]);
       let csvData
       var reader = new FileReader()
@@ -119,7 +115,6 @@ export default function ExcelImport() {
         let csvData1: any = reader.result;
         csvData = importExcel(csvData1);
         // let headersRow = getHeaderArray(csvData[0][3]);
-        console.log(csvData)
         csvData[0].shift()
         const filteredNestedData = csvData.filter(innerData => innerData.some(row => row.length > 0));
 
@@ -145,7 +140,6 @@ export default function ExcelImport() {
   }
   if(form.getFieldsValue().fileType == FileTypesEnum.PROJECTION_ORDERS){
       const file = e.target.files[0];
-      console.log(file.type)
     if (file && file.type === 'text/csv') {
         setSelectedFile(e.target.files[0]);
         const reader = new FileReader();
@@ -308,19 +302,15 @@ export default function ExcelImport() {
           let integerPart
           //  console.log(selectedFile.name,'selectedFile') 
           const inputString = selectedFile.name
-          console.log(inputString)
           // const match = inputString.match(/(\d+)\.\d+/);
           const match = inputString.match(/_(\d{2})/)
-          console.log(match)
           if (match && match[1]) {
             integerPart = parseInt(match[1]);
-            console.log(integerPart)
           } else {
             console.log("No integer part found in the input string.");
           }
           const formData = new FormData();
           formData.append('file', selectedFile);
-          console.log(form.getFieldsValue().fileType)
           const d = new Date();
           // let month = d.getMonth();
           let month = 9;

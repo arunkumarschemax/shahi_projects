@@ -59,7 +59,6 @@ export const ExFactoryReport = () => {
   const getData = () => {
     const req = new YearReq(tab,'');
     service.getMonthWiseReportData(req).then((res) => {
-      console.log(res, "res==========");
       if (res.status) {
         setData(res.data);
         setFilteredData(res.data);
@@ -68,7 +67,6 @@ export const ExFactoryReport = () => {
       }
     });
     service.getExfactoryMonthExcel(req).then((res) => {
-      console.log(res, "res==========");
       if (res.status) {
         setExcelData(res.data);
       } else {
@@ -1431,7 +1429,6 @@ export const ExFactoryReport = () => {
   };
 
   const getTableSummary = (pageData) => {
-    console.log("okk");
     let janPre = 0;
     let janLat = 0;
     let febPre = 0;

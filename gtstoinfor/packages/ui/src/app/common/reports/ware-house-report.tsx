@@ -45,8 +45,6 @@ export const WarehouseReport = () => {
   };
   const getPhaseData=()=>{
     const req = new YearReq(tab,'')
-         console.log(tab,'222222222222222222');
-
     service.getPhaseMonthData(req).then(res=>{
       if(res.status){
         setPhase(res.data)
@@ -1305,7 +1303,6 @@ const onReset = () => {
 };
 
 const getTableSummary = (pageData) => {
-  console.log('okk')
   let janPre = 0;let janLat = 0;
   let febPre = 0;let febLat = 0;
   let marPre = 0;let marLat = 0;
@@ -1321,11 +1318,8 @@ const getTableSummary = (pageData) => {
   let totalPre = 0;let totalLat =0;
 
   pageData.forEach((e) => {
-    console.log(e)
     e.monthWiseData.forEach((rec) => {
-      console.log(rec)
    if(Number(rec.pcsData[0].janPcs)) {
-    console.log(rec.pcsData[0].janPcs)
     janPre += Number(rec.pcsData[0].janPcs)
   }
 })

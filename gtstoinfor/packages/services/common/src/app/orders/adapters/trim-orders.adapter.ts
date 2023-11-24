@@ -4,7 +4,6 @@ import { TrimOrdersEntity } from "../entities/trim-orders.entity";
 export class TrimOrdersAdapter {
 
     public convertDtoToEntity(dto: TrimOrderDto , id:number,month:number): TrimOrdersEntity {
-        console.log(dto,'llllll')
         const entity = new TrimOrdersEntity()
         entity.year = dto.year
         entity.orderNo = dto.orderNo
