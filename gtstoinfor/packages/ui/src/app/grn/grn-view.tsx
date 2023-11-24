@@ -323,15 +323,16 @@ import { GrnReq } from "@project-management-system/shared-models";
           return data.vendor_name ? data.vendor_name : "-";
         }
        
-      }, {
-        title: "Buyer",
-        dataIndex: "buyer_name",
-        ...getColumnSearchProps("buyer_name"),
-        render: (val,data) => {
-          return data.buyer_name ? data.buyer_name : "-";
-        }
+      }, 
+      // {
+      //   title: "Buyer",
+      //   dataIndex: "buyer_name",
+      //   ...getColumnSearchProps("buyer_name"),
+      //   render: (val,data) => {
+      //     return data.buyer_name ? data.buyer_name : "-";
+      //   }
        
-      },
+      // },
       {
         title: "Material Type",
         dataIndex: "po_material_type",

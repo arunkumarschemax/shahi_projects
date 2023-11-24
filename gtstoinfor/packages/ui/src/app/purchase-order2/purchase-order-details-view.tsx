@@ -112,12 +112,16 @@ const column1 : any =[
       fixed: 'left',
     },
     {
-      title: 'Indent Code',
-      dataIndex: 'indentFabricId',
+      title: 'Fabric Type',
+      dataIndex: 'trimtype',
+      render: text => (text ? text : "-")
+
     },
     {
       title: 'Fabric Code',
-      dataIndex: 'm3fabricCode',
+      dataIndex: 'itemCode',
+      render: text => (text ? text : "-")
+
     },
     // {
     //   title: 'M3 Code',
@@ -130,10 +134,14 @@ const column1 : any =[
     {
       title: 'Po Quantity',
       dataIndex: 'poQuantity',
+      render: text => (text ? text : "-")
+
     }, 
     {
       title: 'Grn Quantity',
       dataIndex: 'grn_quantity',
+      render: text => (text ? text : "-")
+
     },
     // {
     //   title: 'Indent Quantity',
@@ -142,6 +150,8 @@ const column1 : any =[
     {
       title: 'Status',
       dataIndex: 'fabItemStatus',
+      render: text => (text ? text : "-")
+
     },
     
   ]
