@@ -29,6 +29,7 @@ const TrimOrderAcceptance = () => {
   const searchInput = useRef<InputRef>(null);
   const [searchedColumn, setSearchedColumn] = useState("");
   const [item, setItem] = useState<any[]>([]);
+  const [style, setStyle] = useState<any[]>([]);
   const [orderNumberDetails, setOrderNumberDetails] = useState<any[]>([]);
   let navigate = useNavigate()
 
@@ -71,6 +72,9 @@ const TrimOrderAcceptance = () => {
     if (form.getFieldValue('orderNo') !== undefined) {
       req.OrderNumber = (form.getFieldValue('orderNo'))
     }
+    if (form.getFieldValue('sampleCode') !== undefined) {
+      req.sampleCode = (form.getFieldValue('sampleCode'))
+    }
     service.getUnacceptedTrimOrders(req).then(res => {
 
       if (res.status) {
@@ -84,9 +88,21 @@ const TrimOrderAcceptance = () => {
     }).catch(err => {
       console.log(err.message)
     })
+
     service.getTrimOrdersNo().then(res => {
       if (res.status) {
         setItem(res.data)
+      } else {
+        setFilteredData([])
+        setItem([])
+      }
+    }).catch(err => {
+      console.log(err.message)
+    })
+
+    service.getTrimSampleCode().then(res => {
+      if (res.status) {
+        setStyle(res.data)
       } else {
         setFilteredData([])
         setItem([])
@@ -695,6 +711,22 @@ const TrimOrderAcceptance = () => {
                     ))}
                     {/* <Option key='new' value="NEW">NEW</Option>
                                         <Option key='unaccepted' value="UNACCEPTED">UNACCEPTED</Option> */}
+                  </Select>
+                </Form.Item>
+              </div>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
+              <div>
+                <label>Style Code</label>
+                <Form.Item name="sampleCode">
+                  <Select
+                    showSearch
+                    placeholder="Select Style"
+                    optionFilterProp="children"
+                    allowClear>
+                    {style.map(e => (
+                      <Option key={e.sample_code} value={e.sample_code}>{e.sample_code}</Option>
+                    ))}
                   </Select>
                 </Form.Item>
               </div>

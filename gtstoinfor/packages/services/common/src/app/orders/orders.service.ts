@@ -35,7 +35,7 @@ import { resolve } from 'path';
 import { isNumberObject } from 'util/types';
 import { monthOrderDtoKeys, yearOrderDtoKeys } from '../../../../../libs/shared-models/src/enum';
 const xlsxFile = require('read-excel-file/node');
-import {readSheetNames} from 'read-excel-file'
+import { readSheetNames } from 'read-excel-file'
 const csv = require('csv-parser');
 const Excel = require('exceljs');
 import { CoLine } from './entities/co-line.entity';
@@ -45,6 +45,8 @@ moment().format();
 import * as nodemailer from 'nodemailer';
 import { PriceListService } from '@project-management-system/shared-services';
 import { TrimDetailsRequest } from './models/trim-details.req';
+const { Builder, Browser, By, Capabilities, until } = require('selenium-webdriver');
+const chrome = require('selenium-webdriver/chrome')
 
 
 @Injectable()
@@ -66,18 +68,18 @@ export class OrdersService {
         @InjectDataSource()
         private dataSource: DataSource,
         @InjectEntityManager() private readonly entityManager: EntityManager,
-        private priceListService : PriceListService
-        
+        private priceListService: PriceListService
 
-    ) { 
+
+    ) {
         this.transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-              user: 'uma.boddeda@schemaxtech.com',
-              pass: 'nizt qqgq lech eoyj',
+                user: 'uma.boddeda@schemaxtech.com',
+                pass: 'nizt qqgq lech eoyj',
             },
-          });
-      
+        });
+
     }
     //for email integration
     private logger = winston.createLogger({
@@ -87,7 +89,7 @@ export class OrdersService {
             new winston.transports.Console(),
             new winston.transports.File({ filename: 'email-service.log' }),
         ],
-        });
+    });
     // async saveOrdersData(formData: any, id: number, months: number): Promise<CommonResponseModel> {
     //     const currentDate = new Date();
     //     const month = currentDate.getMonth() + 1;
@@ -170,7 +172,7 @@ export class OrdersService {
     //         await transactionManager.completeTransaction();
     //         return new CommonResponseModel(true,1,'Saved succesfully');
 
-     
+
     //     } catch (error) {
     //         await transactionManager.releaseTransaction()
     //         return new CommonResponseModel(false, 0, error);
@@ -197,7 +199,7 @@ export class OrdersService {
     //             if (details) {
     //                 const updateOrder = await transactionManager.getRepository(OrdersEntity).update({ orderPlanNumber: dtoData.orderPlanNumber }, {
     //                 year:dtoData.year,planningSsnCd:dtoData.planningSsnCd,planningSsn:dtoData.planningSsn,tgtSsnCd:dtoData.tgtSsnCd,tgtSsn:dtoData.tgtSsn,bizCd:dtoData.bizCd,biz:dtoData.biz,planningRegionCode:dtoData.planningRegionCode,planningRegionName:dtoData.planningRegionName,channelCode:dtoData.channelCode,channelName:dtoData.channelName,department:dtoData.department,deptCd:dtoData.deptCd,Cls1_cd:dtoData.Cls1_cd,Cls2_cd:dtoData.Cls2_cd,gDept:dtoData.gDept,subCategory1:dtoData.subCategory1,coreCategory:dtoData.coreCategory,subCategory2:dtoData.subCategory2,subCategory3:dtoData.subCategory3,productionCategoryFabric:dtoData.productionCategoryFabric,productionCategoryFabricProcessing:dtoData.productionCategoryFabricProcessing,productionCategorySewing:dtoData.productionCategorySewing,productionCategorySewingProcessing:dtoData.productionCategorySewingProcessing,planningSumCode:dtoData.planningSumCode,planningSum:dtoData.planningSum,localNameGhq:dtoData.localNameGhq,itemCd:dtoData.itemCd,item:dtoData.item,origPrice:dtoData.origPrice,mainSampleCode:dtoData.mainSampleCode,frFabricCode:dtoData.frFabricCode,frFabric:dtoData.frFabric,supplierRawMaterialCode:dtoData.supplierRawMaterialCode,supplierRawMaterial:dtoData.supplierRawMaterial,rawMaterialSupplierCode:dtoData.rawMaterialSupplierCode,rawMaterialSupplier:dtoData.rawMaterialSupplier,vendorCoode:dtoData.vendorCoode,vendor:dtoData.vendor,sewingFactoryCode:dtoData.sewingFactoryCode,sewingFactory:dtoData.sewingFactory,branchFactoryCode:dtoData.branchFactoryCode,branchFactory:dtoData.branchFactory,coeff:dtoData.coeff,itemBranchNumber:dtoData.itemBranchNumber,officialPlanStdQty:dtoData.officialPlanStdQty,OfficialPlanFabPrpPlnQty:dtoData.OfficialPlanFabPrpPlnQty,OfficialPlanPoPrSlsQty:dtoData.OfficialPlanPoPrSlsQty,officalPlanCoQty:dtoData.officalPlanCoQty,officalPlanStockQty:dtoData.officalPlanStockQty,slsStartDy:dtoData.slsStartDy,publishFlagForFactory:dtoData.publishFlagForFactory,publishDate:dtoData.publishDate,allcEndDy:dtoData.allcEndDy,slsEndDy:dtoData.slsEndDy,GWH:dtoData.GWH,orderTiming:dtoData.orderTiming,swngPrdMonth:dtoData.swngPrdMonth,swngPrdWeek:dtoData.swngPrdWeek,orderPlanQty:dtoData.orderPlanQty,orderPlanQtyCoeff:dtoData.orderPlanQtyCoeff,trnspMthd:dtoData.trnspMthd,prodPlanType:dtoData.prodPlanType,ph1St:dtoData.ph1St,wh:dtoData.wh,whAct:dtoData.whAct,whAuto:dtoData.whAuto,yarnDlRequested:dtoData.yarnDlRequested,yarnDlAnswered:dtoData.yarnDlAnswered,yarnDlAuto:dtoData.yarnDlAuto,yarnProductionDueDateAuto:dtoData.yarnProductionDueDateAuto,yarnAutoReflectionDate:dtoData.yarnAutoReflectionDate,yarnActDy:dtoData.yarnActDy,yarnActQty:dtoData.yarnActQty,yarnOrderNumber:dtoData.yarnOrderNumber,yarnOrderStatus:dtoData.yarnOrderStatus,yarnDeliveryDate:dtoData.yarnDeliveryDate,fbrcDlRequested:dtoData.fbrcDlRequested,fbrcDlAnswered:dtoData.fbrcDlAnswered,fbrcDlAuto:dtoData.fbrcDlAuto,fbrcProductionDueDateAuto:dtoData.fbrcProductionDueDateAuto,fbrcAutoReflectionDate:dtoData.fbrcAutoReflectionDate,factoryCommentUpdateDate:dtoData.factoryCommentUpdateDate,fbrcActDy:dtoData.fbrcActDy,fbrcActQty:dtoData.fbrcActQty,fbrcOrderNumber:dtoData.fbrcOrderNumber,fbrcOrderStatus:dtoData.fbrcOrderStatus,fbrcDeliveryDate:dtoData.fbrcDeliveryDate,colorDlRequested:dtoData.colorDlRequested,colorDlAnswered:dtoData.colorDlAnswered,colorDlAuto:dtoData.colorDlAuto,colorProductionDueDateAuto:dtoData.colorProductionDueDateAuto,colorAutoReflectionDate:dtoData.colorAutoReflectionDate,colorActDy:dtoData.colorActDy,colorActQty:dtoData.colorActQty,colorOrderNumber:dtoData.colorOrderNumber,colorOrderStatus:dtoData.colorOrderStatus,colorDeliveryDate:dtoData.colorDeliveryDate,trimDlRequested:dtoData.trimDlRequested,trimDlAnswered:dtoData.trimDlAnswered,trimDlAuto:dtoData.trimDlAuto,trimProductionDueDateAuto:dtoData.trimProductionDueDateAuto,trimAutoReflectionDate:dtoData.trimAutoReflectionDate,trimActDy:dtoData.trimActDy,trimActQty:dtoData.trimActQty,trimOrderNumber:dtoData.trimOrderNumber,trimOrderStatus:dtoData.trimOrderStatus,trimDeliveryDate:dtoData.trimDeliveryDate,poDlRequested:dtoData.poDlRequested,poDlAnswered:dtoData.poDlAnswered,poDlAuto:dtoData.poDlAuto,poProductionDueDateAuto:dtoData.poProductionDueDateAuto,poAutoReflectionDate:dtoData.poAutoReflectionDate,poActDy:dtoData.poActDy,poActQty:dtoData.poActQty,poOrderNumber:dtoData.poOrderNumber,poOrderStatus:dtoData.poOrderStatus,assort1:dtoData.assort1,assort2:dtoData.assort2,nxAssort:dtoData.nxAssort,solid:dtoData.solid,orderPlanQtyStop:dtoData.orderPlanQtyStop,fixFlag:dtoData.fixFlag,alternativeFlag:dtoData.alternativeFlag,expressLineFlag:dtoData.expressLineFlag,factoryComment:dtoData.factoryComment,plannedEXF:dtoData.plannedEXF,exfEtd:dtoData.exfEtd,exfWh:dtoData.exfWh,sweingCountryRegion:dtoData.sweingCountryRegion,rewMaterialOriginal:dtoData.rewMaterialOriginal,itemDrop:dtoData.itemDrop,fileId:Number(dtoData.fileId),countY:dtoData.countY,sample:dtoData.sample,exf:dtoData.exf,bddl:dtoData.bddl,bddlPast:dtoData.bddlPast,ltBdExf:dtoData.ltBdExf,newBddl:dtoData.newBddl,newLtBdExf:dtoData.newLtBdExf,ltPoExf:dtoData.ltPoExf,qtyLtBdExf:dtoData.qtyLtBdExf,qtyLtPoExf:dtoData.qtyLtPoExf,country2Y:dtoData.country2Y,phase:dtoData.phase,version:dtoData.version,month:10,createDate: moment(dtoData.createDate).format('YYYY-MM-DD HH:mm'),updateDate:moment(dtoData.updateDate).format('YYYY-MM-DD HH:mm')
-    
+
     //                 })
     //                 if (!updateOrder.affected) {
     //                     await transactionManager.releaseTransaction();
@@ -213,7 +215,7 @@ export class OrdersService {
     //                         if (details[existingDataKey] != dtoData[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId' && existingDataKey != 'month' && existingDataKey != 'productionPlanId') {
     //                             const orderDiffObj = new OrdersDifferenceEntity();
     //                                     if(yearOrderDtoKeys.includes(existingDataKey)){
-    
+
     //                                 const oldValue = moment(details[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY','YYYY/MM/DD','YYYY-MM-DD HH:mm:ss']).format('YYYY-MM-DD');
     //                                 const newValue = moment(dtoData[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY','YYYY/MM/DD','YYYY-MM-DD']).format('YYYY-MM-DD');
     //                                 orderDiffObj.oldValue = oldValue
@@ -275,7 +277,7 @@ export class OrdersService {
     //             } else {
     //                 dtoData.version = 1
     //                 if(dtoData.publishFlagForFactory !== 'NotPub'){
-    
+
     //                     const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id, 10,dtoData.exf);
     //                     const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
     //                     const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData,id,saveExcelEntity.productionPlanId,10,dtoData.exf);
@@ -298,9 +300,9 @@ export class OrdersService {
             const updatedArray = formData.map((obj) => {
                 const updatedObj = {};
                 for (const key in obj) {
-                        const newKey = key.replace(/\s/g, '_').replace(/[\(\)\.]/g, '').replace(/-/g, '_');
-                        columnArray.push(newKey)
-                        updatedObj[newKey] = obj[key];
+                    const newKey = key.replace(/\s/g, '_').replace(/[\(\)\.]/g, '').replace(/-/g, '_');
+                    columnArray.push(newKey)
+                    updatedObj[newKey] = obj[key];
                 }
                 return updatedObj;
             });
@@ -322,20 +324,20 @@ export class OrdersService {
                 return updatedObj;
             });
             const difference = columnArray.filter((element) => !TrimOrderColumns.includes(element));
-            if(difference.length > 0){
+            if (difference.length > 0) {
                 await transactionManager.releaseTransaction()
-                return new CommonResponseModel(false,1110,'Please Upload Correct Excel')
+                return new CommonResponseModel(false, 1110, 'Please Upload Correct Excel')
             }
             for (const data of convertedData) {
                 let dtoData
-                if(data.Order_No != null){
-                    dtoData = new TrimOrderDto(null,data.Order_No,data.Year,data.Revision_No,data.Planning_Ssn,data.Global_Business_Unit,data.Business_Unit,data.Item_Brand,data.Department,moment(data.Revised_Date).format('YYYY-MM-DD'),data.Document_Status,data.Answered_Status,data.Vendor_Person_in_Charge,moment(data.Decision_Date).format('YYYY-MM-DD'),data.Payment_Terms,moment(data.Contracted_ETD).format('YYYY-MM-DD'),moment(data.ETA_WH).format('YYYY-MM-DD'),data.Approver,moment(data.Approval_Date).format('YYYY-MM-DD'),data.Order_Conditions,data.Remark,data.Raw_Material_CodeFR,data.Supplier_Raw_Material_Code,data.Supplier_Raw_Material,data.Vendor_Code,data.Vendor,data.Management_Factory_Code,data.Management_Factory,data.Branch_Factory_Code,data.Branch_Factory,data.Order_Plan_Number,data.Item_Code,data.Item,data.Representative_Sample_Code,data.Sample_Code,data.Color_Code,data.Color,data.Pattern_Dimension_Code,data.Size_Code,data.Size,(data.Order_Qtypcs).toString().replace(/,/g,''),data.Arrangement_By,data.Trim_Description,data.Trim_Item_No,data.Trim_Supplier,'bidhun',null,null,null,null,id,month)
-                }else{
+                if (data.Order_No != null) {
+                    dtoData = new TrimOrderDto(null, data.Order_No, data.Year, data.Revision_No, data.Planning_Ssn, data.Global_Business_Unit, data.Business_Unit, data.Item_Brand, data.Department, moment(data.Revised_Date).format('YYYY-MM-DD'), data.Document_Status, data.Answered_Status, data.Vendor_Person_in_Charge, moment(data.Decision_Date).format('YYYY-MM-DD'), data.Payment_Terms, moment(data.Contracted_ETD).format('YYYY-MM-DD'), moment(data.ETA_WH).format('YYYY-MM-DD'), data.Approver, moment(data.Approval_Date).format('YYYY-MM-DD'), data.Order_Conditions, data.Remark, data.Raw_Material_CodeFR, data.Supplier_Raw_Material_Code, data.Supplier_Raw_Material, data.Vendor_Code, data.Vendor, data.Management_Factory_Code, data.Management_Factory, data.Branch_Factory_Code, data.Branch_Factory, data.Order_Plan_Number, data.Item_Code, data.Item, data.Representative_Sample_Code, data.Sample_Code, data.Color_Code, data.Color, data.Pattern_Dimension_Code, data.Size_Code, data.Size, (data.Order_Qtypcs).toString().replace(/,/g, ''), data.Arrangement_By, data.Trim_Description, data.Trim_Item_No, data.Trim_Supplier, 'bidhun', null, null, null, null, id, month)
+                } else {
                     break;
                 }
                 if (dtoData.orderNo != null) {
-                    const details = await this.trimOrdersRepository.findOne({ where: { orderNo: dtoData.orderNo,sizeCode:dtoData.sizeCode,colorCode:dtoData.colorCode } })
-                    const versionDetails = await this.trimordersChildRepo.getVersion(dtoData.orderNo,dtoData.sizeCode,dtoData.colorCode)
+                    const details = await this.trimOrdersRepository.findOne({ where: { orderNo: dtoData.orderNo, sizeCode: dtoData.sizeCode, colorCode: dtoData.colorCode } })
+                    const versionDetails = await this.trimordersChildRepo.getVersion(dtoData.orderNo, dtoData.sizeCode, dtoData.colorCode)
                     let version = 1;
                     if (versionDetails.length > 0) {
                         version = Number(versionDetails.length) + 1
@@ -343,8 +345,8 @@ export class OrdersService {
                     dtoData.version = version
                     if (details) {
                         // const updatedData = this.ordersAdapter.convertDtoToEntity(data);
-                        const updateOrder = await transactionManager.getRepository(TrimOrdersEntity).update({ orderNo: dtoData.orderNo,sizeCode:dtoData.sizeCode,colorCode:dtoData.colorCode }, {
-                            year : dtoData.year,revisionNo : dtoData.revisionNo,planningSsn : dtoData.planningSsn,globalBusinessUnit : dtoData.globalBusinessUnit,businessUnit : dtoData.businessUnit,itemBrand : dtoData.itemBrand,Department : dtoData.Department,revisedDate : dtoData.revisedDate,DocumentStatus : dtoData.DocumentStatus,answeredStatus : dtoData.answeredStatus,vendorPersoninCharge : dtoData.vendorPersoninCharge,decisionDate : dtoData.decisionDate,paymentTerms : dtoData.paymentTerms,contractedETD : dtoData.contractedETD,ETAWH : dtoData.ETAWH,approver : dtoData.approver,approvalDate : dtoData.approvalDate,orderConditions : dtoData.orderConditions,remark : dtoData.remark,rawMaterialCode : dtoData.rawMaterialCode,supplierRawMaterialCode : dtoData.supplierRawMaterialCode,supplierRawMaterial : dtoData.supplierRawMaterial,vendorCode : dtoData.vendorCode,vendor : dtoData.vendor,managementFactoryCode : dtoData.managementFactoryCode,managementFactory : dtoData.managementFactory,branchFactoryCode : dtoData.branchFactoryCode,branchFactory : dtoData.branchFactory,orderPlanNumber : dtoData.orderPlanNumber,itemCode : dtoData.itemCode,item : dtoData.item,representativeSampleCode : dtoData.representativeSampleCode,sampleCode : dtoData.sampleCode,colorCode : dtoData.colorCode,color : dtoData.color,patternDimensionCode : dtoData.patternDimensionCode,sizeCode : dtoData.sizeCode,size : dtoData.size,arrangementBy : dtoData.arrangementBy,trimDescription : dtoData.trimDescription,trimItemNo : dtoData.trimItemNo,trimSupplier : dtoData.trimSupplier,createdUser : dtoData.createdUser,updatedUser : dtoData.updatedUser,version : dtoData.version,fileId : dtoData.fileId,month:dtoData.month,orderQtyPcs:dtoData.orderQtyPcs
+                        const updateOrder = await transactionManager.getRepository(TrimOrdersEntity).update({ orderNo: dtoData.orderNo, sizeCode: dtoData.sizeCode, colorCode: dtoData.colorCode }, {
+                            year: dtoData.year, revisionNo: dtoData.revisionNo, planningSsn: dtoData.planningSsn, globalBusinessUnit: dtoData.globalBusinessUnit, businessUnit: dtoData.businessUnit, itemBrand: dtoData.itemBrand, Department: dtoData.Department, revisedDate: dtoData.revisedDate, DocumentStatus: dtoData.DocumentStatus, answeredStatus: dtoData.answeredStatus, vendorPersoninCharge: dtoData.vendorPersoninCharge, decisionDate: dtoData.decisionDate, paymentTerms: dtoData.paymentTerms, contractedETD: dtoData.contractedETD, ETAWH: dtoData.ETAWH, approver: dtoData.approver, approvalDate: dtoData.approvalDate, orderConditions: dtoData.orderConditions, remark: dtoData.remark, rawMaterialCode: dtoData.rawMaterialCode, supplierRawMaterialCode: dtoData.supplierRawMaterialCode, supplierRawMaterial: dtoData.supplierRawMaterial, vendorCode: dtoData.vendorCode, vendor: dtoData.vendor, managementFactoryCode: dtoData.managementFactoryCode, managementFactory: dtoData.managementFactory, branchFactoryCode: dtoData.branchFactoryCode, branchFactory: dtoData.branchFactory, orderPlanNumber: dtoData.orderPlanNumber, itemCode: dtoData.itemCode, item: dtoData.item, representativeSampleCode: dtoData.representativeSampleCode, sampleCode: dtoData.sampleCode, colorCode: dtoData.colorCode, color: dtoData.color, patternDimensionCode: dtoData.patternDimensionCode, sizeCode: dtoData.sizeCode, size: dtoData.size, arrangementBy: dtoData.arrangementBy, trimDescription: dtoData.trimDescription, trimItemNo: dtoData.trimItemNo, trimSupplier: dtoData.trimSupplier, createdUser: dtoData.createdUser, updatedUser: dtoData.updatedUser, version: dtoData.version, fileId: dtoData.fileId, month: dtoData.month, orderQtyPcs: dtoData.orderQtyPcs
                         })
                         if (!updateOrder.affected) {
                             await transactionManager.releaseTransaction();
@@ -413,7 +415,7 @@ export class OrdersService {
                             break;
                         }
                     }
-                }else{
+                } else {
                     break;
                 }
             }
@@ -440,7 +442,7 @@ export class OrdersService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async getQtyChangeData(req:CompareOrdersFilterReq): Promise<CommonResponseModel> {
+    async getQtyChangeData(req: CompareOrdersFilterReq): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getQtyChangeData(req)
         if (data)
             return new CommonResponseModel(true, 1, 'data retrived', data)
@@ -448,7 +450,7 @@ export class OrdersService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async getQtyDifChangeData(req:CompareOrdersFilterReq): Promise<CommonResponseModel> {
+    async getQtyDifChangeData(req: CompareOrdersFilterReq): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getItemWiseQtyChangeData(req)
         if (data)
             return new CommonResponseModel(true, 1, 'data retrived', data)
@@ -458,7 +460,7 @@ export class OrdersService {
 
     // async getQtyDifChangeData(req:CompareOrdersFilterReq): Promise<CommonResponseModel> {
     //     const files = await this.fileUploadRepo.getFilesData()
-        
+
     //     let data;
     //     if (files.length == 0) {
     //         return new CommonResponseModel(false, 0, 'No data found');
@@ -518,69 +520,70 @@ export class OrdersService {
         await manager.startTransaction();
         if (req) {
             const latestFileId = await manager.getRepository(FileUploadEntity).update({ id: req.fileId }, { isActive: false })
-            if(!latestFileId.affected){
+            if (!latestFileId.affected) {
                 await manager.releaseTransaction();
                 return new CommonResponseModel(false, 0, 'Something went wrong in File update')
             }
         }
         if (req) {
-            const deleteChildData = await manager.getRepository(OrdersChildEntity).delete({fileId:req.fileId})
-            if(!deleteChildData.affected){
+            const deleteChildData = await manager.getRepository(OrdersChildEntity).delete({ fileId: req.fileId })
+            if (!deleteChildData.affected) {
                 await manager.releaseTransaction();
                 return new CommonResponseModel(false, 0, 'Something went wrong in Orders Delete')
-            } 
-            
+            }
+
         }
         if (req) {
-            const getOrderDiff = await this.orderDiffRepo.find({where:{fileId:req.fileId}})
-            if(getOrderDiff.length > 0){
-                const deleteDiffData = await manager.getRepository(OrdersDifferenceEntity).delete({fileId:req.fileId})
-                if(!deleteDiffData.affected){
+            const getOrderDiff = await this.orderDiffRepo.find({ where: { fileId: req.fileId } })
+            if (getOrderDiff.length > 0) {
+                const deleteDiffData = await manager.getRepository(OrdersDifferenceEntity).delete({ fileId: req.fileId })
+                if (!deleteDiffData.affected) {
                     await manager.releaseTransaction();
                     return new CommonResponseModel(false, 0, 'Something went wrong in Orders Delete')
                 }
             }
         }
         if (req) {
-            const deleteOrdersData = await manager.getRepository(OrdersEntity).delete({fileId:req.fileId,version:1})
+            const deleteOrdersData = await manager.getRepository(OrdersEntity).delete({ fileId: req.fileId, version: 1 })
             // if(!deleteOrdersData.affected){
             //     await manager.releaseTransaction();
             //     return new CommonResponseModel(false, 0, 'Something went wrong in Orders Delete')
             // }
         }
-        const updatedData = await manager.getRepository(OrdersChildEntity).find({select:['fileId'],
-        order: { id: 'DESC' },take:1
+        const updatedData = await manager.getRepository(OrdersChildEntity).find({
+            select: ['fileId'],
+            order: { id: 'DESC' }, take: 1
         })
         const flag = new Set()
         let data = []
-        if(updatedData.length > 0){
-            data = await manager.getRepository(OrdersChildEntity).find({where: { fileId: updatedData[0]?.fileId }})
+        if (updatedData.length > 0) {
+            data = await manager.getRepository(OrdersChildEntity).find({ where: { fileId: updatedData[0]?.fileId } })
             // this.ordersChildRepo.find({
             //     where: { fileId: updatedData[0]?.fileId },
             //     // relations: ['orders']
             // })
-        } else{
+        } else {
             flag.add(true)
         }
-       
-        if(data.length > 0){
+
+        if (data.length > 0) {
 
             for (const dtoData of data) {
                 // const prodPlanId = new OrdersEntity();
                 // prodPlanId.productionPlanId = dtoData.orders.productionPlanId
-                const updateOrder = await manager.getRepository(OrdersEntity).update({ orderPlanNumber: dtoData.orderPlanNumber },{ 
-                    year:dtoData.year,planningSsn:dtoData.planningSsn,biz:dtoData.biz,coreCategory:dtoData.coreCategory,planningSum:dtoData.planningSum,coeff:dtoData.coeff,publishFlagForFactory:dtoData.publishFlagForFactory,orderPlanQty:dtoData.orderPlanQty,orderPlanQtyCoeff:dtoData.orderPlanQtyCoeff,prodPlanType:dtoData.prodPlanType,wh:dtoData.wh,exfEtd:dtoData.exfEtd,etdWh:dtoData.etdWh,sample:dtoData.sample,version:dtoData.version,fileId: dtoData.fileId,updatedUser:dtoData.createdUser
+                const updateOrder = await manager.getRepository(OrdersEntity).update({ orderPlanNumber: dtoData.orderPlanNumber }, {
+                    year: dtoData.year, planningSsn: dtoData.planningSsn, biz: dtoData.biz, coreCategory: dtoData.coreCategory, planningSum: dtoData.planningSum, coeff: dtoData.coeff, publishFlagForFactory: dtoData.publishFlagForFactory, orderPlanQty: dtoData.orderPlanQty, orderPlanQtyCoeff: dtoData.orderPlanQtyCoeff, prodPlanType: dtoData.prodPlanType, wh: dtoData.wh, exfEtd: dtoData.exfEtd, etdWh: dtoData.etdWh, sample: dtoData.sample, version: dtoData.version, fileId: dtoData.fileId, updatedUser: dtoData.createdUser
                 })
-               
+
                 if (updateOrder.affected) {
                     flag.add(true)
-                }else {
+                } else {
                     flag.add(false)
                     await manager.releaseTransaction()
                     return new CommonResponseModel(false, 0, 'Something went wrong in order update', updateOrder)
                 }
             }
-        } else{
+        } else {
             flag.add(true)
         }
         if (flag.has(true)) {
@@ -598,14 +601,14 @@ export class OrdersService {
 
         if (req) {
             const latestFileId = await manager.getRepository(FileUploadEntity).update({ id: req.fileId }, { isActive: false })
-            if(!latestFileId.affected){
+            if (!latestFileId.affected) {
                 await manager.releaseTransaction();
                 return new CommonResponseModel(false, 0, 'Something went wrong in File update')
             }
         }
         if (req) {
-            const deleteChildData = await manager.getRepository(TrimOrdersChildEntity).delete({fileId:req.fileId})
-            if(!deleteChildData.affected){
+            const deleteChildData = await manager.getRepository(TrimOrdersChildEntity).delete({ fileId: req.fileId })
+            if (!deleteChildData.affected) {
                 await manager.releaseTransaction();
                 return new CommonResponseModel(false, 0, 'Something went wrong in Orders Delete')
             }
@@ -614,44 +617,45 @@ export class OrdersService {
         //     const deleteDiffData = await this.orderDiffRepo.deleteDiffData(req)
         // }
         if (req) {
-            const deleteOrdersData = await manager.getRepository(TrimOrdersEntity).delete({fileId:req.fileId,version:1})
+            const deleteOrdersData = await manager.getRepository(TrimOrdersEntity).delete({ fileId: req.fileId, version: 1 })
             // if(!deleteOrdersData.affected){
             //     await manager.releaseTransaction();
             //     return new CommonResponseModel(false, 0, 'Something went wrong in Orders Delete')
             // }
         }
-        const updatedData = await manager.getRepository(TrimOrdersChildEntity).find({select:['fileId'],
-        order: { id: 'DESC' },take:1
+        const updatedData = await manager.getRepository(TrimOrdersChildEntity).find({
+            select: ['fileId'],
+            order: { id: 'DESC' }, take: 1
         })
         const flag = new Set()
         let data = []
-        if(updatedData.length > 0){
+        if (updatedData.length > 0) {
 
-             data = await this.trimordersChildRepo.find({
+            data = await this.trimordersChildRepo.find({
                 where: { fileId: updatedData[0]?.fileId },
                 // relations: ['orders']
             })
-        } else{
+        } else {
             flag.add(true)
         }
-        if(data.length > 0){
+        if (data.length > 0) {
 
             for (const dtoData of data) {
                 // const prodPlanId = new OrdersEntity();
                 // prodPlanId.productionPlanId = dtoData.orders.productionPlanId
-                const updateOrder = await manager.getRepository(TrimOrdersEntity).update({ orderNo: dtoData.orderNo,sizeCode:dtoData.sizeCode,colorCode:dtoData.colorCode }, {
-                    year : dtoData.year,revisionNo : dtoData.revisionNo,planningSsn : dtoData.planningSsn,globalBusinessUnit : dtoData.globalBusinessUnit,businessUnit : dtoData.businessUnit,itemBrand : dtoData.itemBrand,Department : dtoData.Department,revisedDate : dtoData.revisedDate,DocumentStatus : dtoData.DocumentStatus,answeredStatus : dtoData.answeredStatus,vendorPersoninCharge : dtoData.vendorPersoninCharge,decisionDate : dtoData.decisionDate,paymentTerms : dtoData.paymentTerms,contractedETD : dtoData.contractedETD,ETAWH : dtoData.ETAWH,approver : dtoData.approver,approvalDate : dtoData.approvalDate,orderConditions : dtoData.orderConditions,remark : dtoData.remark,rawMaterialCode : dtoData.rawMaterialCode,supplierRawMaterialCode : dtoData.supplierRawMaterialCode,supplierRawMaterial : dtoData.supplierRawMaterial,vendorCode : dtoData.vendorCode,vendor : dtoData.vendor,managementFactoryCode : dtoData.managementFactoryCode,managementFactory : dtoData.managementFactory,branchFactoryCode : dtoData.branchFactoryCode,branchFactory : dtoData.branchFactory,orderPlanNumber : dtoData.orderPlanNumber,itemCode : dtoData.itemCode,item : dtoData.item,representativeSampleCode : dtoData.representativeSampleCode,sampleCode : dtoData.sampleCode,colorCode : dtoData.colorCode,color : dtoData.color,patternDimensionCode : dtoData.patternDimensionCode,sizeCode : dtoData.sizeCode,size : dtoData.size,arrangementBy : dtoData.arrangementBy,trimDescription : dtoData.trimDescription,trimItemNo : dtoData.trimItemNo,trimSupplier : dtoData.trimSupplier,createdUser : dtoData.createdUser,updatedUser : dtoData.updatedUser,version : dtoData.version,fileId : dtoData.fileId,month:dtoData.month,orderQtyPcs:dtoData.orderQtyPcs
+                const updateOrder = await manager.getRepository(TrimOrdersEntity).update({ orderNo: dtoData.orderNo, sizeCode: dtoData.sizeCode, colorCode: dtoData.colorCode }, {
+                    year: dtoData.year, revisionNo: dtoData.revisionNo, planningSsn: dtoData.planningSsn, globalBusinessUnit: dtoData.globalBusinessUnit, businessUnit: dtoData.businessUnit, itemBrand: dtoData.itemBrand, Department: dtoData.Department, revisedDate: dtoData.revisedDate, DocumentStatus: dtoData.DocumentStatus, answeredStatus: dtoData.answeredStatus, vendorPersoninCharge: dtoData.vendorPersoninCharge, decisionDate: dtoData.decisionDate, paymentTerms: dtoData.paymentTerms, contractedETD: dtoData.contractedETD, ETAWH: dtoData.ETAWH, approver: dtoData.approver, approvalDate: dtoData.approvalDate, orderConditions: dtoData.orderConditions, remark: dtoData.remark, rawMaterialCode: dtoData.rawMaterialCode, supplierRawMaterialCode: dtoData.supplierRawMaterialCode, supplierRawMaterial: dtoData.supplierRawMaterial, vendorCode: dtoData.vendorCode, vendor: dtoData.vendor, managementFactoryCode: dtoData.managementFactoryCode, managementFactory: dtoData.managementFactory, branchFactoryCode: dtoData.branchFactoryCode, branchFactory: dtoData.branchFactory, orderPlanNumber: dtoData.orderPlanNumber, itemCode: dtoData.itemCode, item: dtoData.item, representativeSampleCode: dtoData.representativeSampleCode, sampleCode: dtoData.sampleCode, colorCode: dtoData.colorCode, color: dtoData.color, patternDimensionCode: dtoData.patternDimensionCode, sizeCode: dtoData.sizeCode, size: dtoData.size, arrangementBy: dtoData.arrangementBy, trimDescription: dtoData.trimDescription, trimItemNo: dtoData.trimItemNo, trimSupplier: dtoData.trimSupplier, createdUser: dtoData.createdUser, updatedUser: dtoData.updatedUser, version: dtoData.version, fileId: dtoData.fileId, month: dtoData.month, orderQtyPcs: dtoData.orderQtyPcs
                 })
                 if (!updateOrder.affected) {
                     flag.add(false)
                     await manager.releaseTransaction()
                     return new CommonResponseModel(false, 0, 'Something went wrong in Trim order update', updateOrder)
                 }
-                 else {
+                else {
                     flag.add(true)
                 }
             }
-        }else{
+        } else {
             flag.add(true)
         }
         if (flag.has(true)) {
@@ -663,17 +667,17 @@ export class OrdersService {
         }
     }
 
-    async updatePath(filePath: string, filename: string, month: number,fileType:string,uploadType:string,msg?:string): Promise<CommonResponseModel> {
+    async updatePath(filePath: string, filename: string, month: number, fileType: string, uploadType: string, msg?: string): Promise<CommonResponseModel> {
         const entity = new FileUploadEntity()
         entity.fileName = filename;
         entity.filePath = filePath;
         entity.month = 9;
         entity.fileType = fileType;
         entity.uploadType = uploadType
-        if(msg){
+        if (msg) {
             entity.status = 'Failed';
             entity.failedReason = msg;
-        }else{
+        } else {
             entity.status = 'uploading';
         }
         const file = await this.fileUploadRepo.findOne({ where: { fileName: filename, isActive: true } })
@@ -693,7 +697,7 @@ export class OrdersService {
     async updateFileStatus(req: FileStatusReq): Promise<CommonResponseModel> {
         let update
         if (req.status === 'Failed') {
-            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, isActive: false, createdUser: req.userName,failedReason:req.failedReason,columns:req.columns });
+            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, isActive: false, createdUser: req.userName, failedReason: req.failedReason, columns: req.columns });
         } else {
             update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, createdUser: req.userName })
         }
@@ -705,12 +709,12 @@ export class OrdersService {
         }
     }
 
-    async getUploadFilesData(req:FileTypeDto): Promise<CommonResponseModel> {
+    async getUploadFilesData(req: FileTypeDto): Promise<CommonResponseModel> {
         let data
-        if(req.fileType !== undefined){
+        if (req.fileType !== undefined) {
 
             data = await this.fileUploadRepo.getFilesData(req)
-        } else{
+        } else {
             data = await this.fileUploadRepo.getFilesData()
         }
         if (data.length > 0) {
@@ -721,7 +725,7 @@ export class OrdersService {
         }
     }
 
-    async getVersionWiseData(req:VersionDataModel): Promise<CommonResponseModel> {
+    async getVersionWiseData(req: VersionDataModel): Promise<CommonResponseModel> {
         const records = await this.ordersChildRepo.getVersionWiseQty(req)
         const versionDataMap = new Map<number, VersionDataModel>();
         if (records.length == 0) {
@@ -853,8 +857,8 @@ export class OrdersService {
         }
         return new CommonResponseModel(true, 1, 'Data retrived successfully', monthWiseDataModelArray);
     }
-    
-    async getTrimOrdersData(req:TrimOrdersReq): Promise<CommonResponseModel> {
+
+    async getTrimOrdersData(req: TrimOrdersReq): Promise<CommonResponseModel> {
         const data = await this.trimOrderRepo.getTrimOders(req)
         if (data.length > 0) {
             return new CommonResponseModel(true, 1, 'uploaded files data retrived successfully', data);
@@ -863,7 +867,7 @@ export class OrdersService {
             return new CommonResponseModel(false, 0, 'No data found', data);
         }
     }
-    async getUnacceptedTrimOrders(req:TrimOrdersReq): Promise<CommonResponseModel> {
+    async getUnacceptedTrimOrders(req: TrimOrdersReq): Promise<CommonResponseModel> {
         const data = await this.trimOrderRepo.getUnacceptedTrimOrders(req)
         if (data.length > 0) {
             return new CommonResponseModel(true, 1, 'uploaded files data retrived successfully', data);
@@ -881,6 +885,17 @@ export class OrdersService {
             return new CommonResponseModel(false, 0, 'No data found', data);
         }
     }
+
+    async getTrimSampleCode(): Promise<CommonResponseModel> {
+        const data = await this.trimOrderRepo.getTrimSampleCode()
+        if (data.length > 0) {
+            return new CommonResponseModel(true, 1, 'uploaded files data retrived successfully', data);
+        }
+        else {
+            return new CommonResponseModel(false, 0, 'No data found', data);
+        }
+    }
+
     async getExfactoryYear(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getExfactoryYearData()
         if (data.length > 0) {
@@ -894,11 +909,11 @@ export class OrdersService {
     //     console.log('okkkkkkkkk')
 
     //     const data = await this.ordersRepository.getExfactoryMonthData(req.year);
-        
+
     //     if (data.length === 0) {
     //         return new CommonResponseModel(false, 0, 'data not found');
     //     }
-    
+
     //     const DateMap = new Map<string, ItemDataDto>();  
     //     const monthWiseInstances: MonthWiseDto[] = [];      
     //     for (const rec of data) {
@@ -953,78 +968,35 @@ export class OrdersService {
     //                 .filter(value => value !== 0) 
     //                 .reduce((sum, value) =>  value, 0);
     //         }, 0);
-            
+
     //         const totalCoeff = coeff.reduce((total, item) => {
     //             return  [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
     //                 .filter(value => value !== 0)
     //                 .reduce((sum, value) => value, 0);
     //         }, 0);
-           
+
     //             const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff,totalPcs,totalCoeff);
     //             monthData.push(monthWiseInstance); 
     //         }
-            
+
     //     }
-        
+
     //     const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
     //     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
     // }
-    async getMonthWiseReportData(req:YearReq): Promise<CommonResponseModel> {
+    async getMonthWiseReportData(req: YearReq): Promise<CommonResponseModel> {
 
         const data = await this.ordersRepository.getMonthWiseReportData(req);
-        
+
         if (data.length === 0) {
             return new CommonResponseModel(false, 0, 'data not found');
         }
-    
-        const DateMap = new Map<string, ItemDataDto>();  
-        const monthWiseInstances: MonthWiseDto[] = [];      
+
+        const DateMap = new Map<string, ItemDataDto>();
+        const monthWiseInstances: MonthWiseDto[] = [];
         for (const rec of data) {
-            
-                if(req.tabName === 'ExFactory'){
-                    if (!DateMap.has(rec.planning_sum)) {
-                        DateMap.set(
-                            rec.planning_sum,
-                            new ItemDataDto(rec.planning_sum, [])
-                        );
-                    }
-                    const monthData = DateMap.get(rec.planning_sum).monthWiseData;
-                        const pcs: PcsDataDto[] = [];
-                        const coeff: CoeffDataDto[] = [];
-             pcs.push(
-               { name: 'In Pcs',
-                janPcs: rec.janPcsExf,
-                febPcs: rec.febPcsExf,
-                marPcs: rec.marPcsExf,
-                aprPcs: rec.aprPcsExf,
-                mayPcs: rec.mayPcsExf,
-                junPcs: rec.junPcsExf,
-                julPcs: rec.julPcsExf,
-                augPcs: rec.augPcsExf,
-                sepPcs: rec.sepPcsExf,
-                octPcs: rec.octPcsExf,
-                novPcs: rec.novPcsExf,
-                decPcs: rec.decPcsExf,}
-            )
-              coeff.push({
-                name: 'In Coeff',
-                janCoeff: rec.janCoeffExf,
-                febCoeff: rec.febCoeffExf,
-                marCoeff: rec.marCoeffExf,
-                aprCoeff: rec.aprCoeffExf,
-                mayCoeff: rec.mayCoeffExf,
-                junCoeff: rec.junCoeffExf,
-                julCoeff: rec.julCoeffExf,
-                augCoeff: rec.augCoeffExf,
-                sepCoeff: rec.sepCoeffExf,
-                octCoeff: rec.octCoeffExf,
-                novCoeff: rec.novCoeffExf,
-                decCoeff: rec.decCoeffExf,
-              })
-        const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff,rec.ExfPcsTotal,rec.ExfCoeffTotal);
-                monthData.push(monthWiseInstance); 
-            }
-            if(req.tabName === 'WareHouse'){
+
+            if (req.tabName === 'ExFactory') {
                 if (!DateMap.has(rec.planning_sum)) {
                     DateMap.set(
                         rec.planning_sum,
@@ -1032,45 +1004,92 @@ export class OrdersService {
                     );
                 }
                 const monthData = DateMap.get(rec.planning_sum).monthWiseData;
-                    const pcs: PcsDataDto[] = [];
-                    const coeff: CoeffDataDto[] = [];
+                const pcs: PcsDataDto[] = [];
+                const coeff: CoeffDataDto[] = [];
                 pcs.push(
-                  { name: 'In Pcs',
-                   janPcs: rec.janPcsWh,
-                   febPcs: rec.febPcsWh,
-                   marPcs: rec.marPcsWh,
-                   aprPcs: rec.aprPcsWh,
-                   mayPcs: rec.mayPcsWh,
-                   junPcs: rec.junPcsWh,
-                   julPcs: rec.julPcsWh,
-                   augPcs: rec.augPcsWh,
-                   sepPcs: rec.sepPcsWh,
-                   octPcs: rec.octPcsWh,
-                   novPcs: rec.novPcsWh,
-                   decPcs: rec.decPcsWh,}
-               )
-                 coeff.push({
-                   name: 'In Coeff',
-                   janCoeff: rec.janCoeffWh,
-                   febCoeff: rec.febCoeffWh,
-                   marCoeff: rec.marCoeffWh,
-                   aprCoeff: rec.aprCoeffWh,
-                   mayCoeff: rec.mayCoeffWh,
-                   junCoeff: rec.junCoeffWh,
-                   julCoeff: rec.julCoeffWh,
-                   augCoeff: rec.augCoeffWh,
-                   sepCoeff: rec.sepCoeffWh,
-                   octCoeff: rec.octCoeffWh,
-                   novCoeff: rec.novCoeffWh,
-                   decCoeff: rec.decCoeffWh,
-                 })
-                  const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff,rec.WhPcsTotal,rec.WhCoeffTotal);
-                   monthData.push(monthWiseInstance); 
-               }
-            
+                    {
+                        name: 'In Pcs',
+                        janPcs: rec.janPcsExf,
+                        febPcs: rec.febPcsExf,
+                        marPcs: rec.marPcsExf,
+                        aprPcs: rec.aprPcsExf,
+                        mayPcs: rec.mayPcsExf,
+                        junPcs: rec.junPcsExf,
+                        julPcs: rec.julPcsExf,
+                        augPcs: rec.augPcsExf,
+                        sepPcs: rec.sepPcsExf,
+                        octPcs: rec.octPcsExf,
+                        novPcs: rec.novPcsExf,
+                        decPcs: rec.decPcsExf,
+                    }
+                )
+                coeff.push({
+                    name: 'In Coeff',
+                    janCoeff: rec.janCoeffExf,
+                    febCoeff: rec.febCoeffExf,
+                    marCoeff: rec.marCoeffExf,
+                    aprCoeff: rec.aprCoeffExf,
+                    mayCoeff: rec.mayCoeffExf,
+                    junCoeff: rec.junCoeffExf,
+                    julCoeff: rec.julCoeffExf,
+                    augCoeff: rec.augCoeffExf,
+                    sepCoeff: rec.sepCoeffExf,
+                    octCoeff: rec.octCoeffExf,
+                    novCoeff: rec.novCoeffExf,
+                    decCoeff: rec.decCoeffExf,
+                })
+                const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff, rec.ExfPcsTotal, rec.ExfCoeffTotal);
+                monthData.push(monthWiseInstance);
+            }
+            if (req.tabName === 'WareHouse') {
+                if (!DateMap.has(rec.planning_sum)) {
+                    DateMap.set(
+                        rec.planning_sum,
+                        new ItemDataDto(rec.planning_sum, [])
+                    );
+                }
+                const monthData = DateMap.get(rec.planning_sum).monthWiseData;
+                const pcs: PcsDataDto[] = [];
+                const coeff: CoeffDataDto[] = [];
+                pcs.push(
+                    {
+                        name: 'In Pcs',
+                        janPcs: rec.janPcsWh,
+                        febPcs: rec.febPcsWh,
+                        marPcs: rec.marPcsWh,
+                        aprPcs: rec.aprPcsWh,
+                        mayPcs: rec.mayPcsWh,
+                        junPcs: rec.junPcsWh,
+                        julPcs: rec.julPcsWh,
+                        augPcs: rec.augPcsWh,
+                        sepPcs: rec.sepPcsWh,
+                        octPcs: rec.octPcsWh,
+                        novPcs: rec.novPcsWh,
+                        decPcs: rec.decPcsWh,
+                    }
+                )
+                coeff.push({
+                    name: 'In Coeff',
+                    janCoeff: rec.janCoeffWh,
+                    febCoeff: rec.febCoeffWh,
+                    marCoeff: rec.marCoeffWh,
+                    aprCoeff: rec.aprCoeffWh,
+                    mayCoeff: rec.mayCoeffWh,
+                    junCoeff: rec.junCoeffWh,
+                    julCoeff: rec.julCoeffWh,
+                    augCoeff: rec.augCoeffWh,
+                    sepCoeff: rec.sepCoeffWh,
+                    octCoeff: rec.octCoeffWh,
+                    novCoeff: rec.novCoeffWh,
+                    decCoeff: rec.decCoeffWh,
+                })
+                const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff, rec.WhPcsTotal, rec.WhCoeffTotal);
+                monthData.push(monthWiseInstance);
+            }
+
         }
-        
-        const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
+
+        const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
     }
 
@@ -1089,7 +1108,7 @@ export class OrdersService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async seasonWiseReport(req?:SeasonWiseRequest): Promise<CommonResponseModel> {
+    async seasonWiseReport(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
         let query = `SELECT file_id,planning_ssn as plannedSeason,year,planning_sum as itemName,SUM(january) AS january,SUM(february) AS february,SUM(march) AS march,SUM(april) AS april,SUM(may) AS may,SUM(june) AS june,SUM(july) AS july,SUM(august) AS august,SUM(september) AS september,SUM(october) AS october,SUM(november) AS november,SUM(december) AS december,SUM(exfJan) AS exfJan,SUM(exfFeb) AS exfFeb,SUM(exfMarch) AS exfMarch,SUM(exfApril) AS exfApril,SUM(exfMay) AS exfMay,SUM(exfJune) AS exfJune,SUM(exfJuly) AS exfJuly,SUM(exfAug) AS exfAug,SUM(exfSep) AS exfSep,SUM(exfOct) AS exfOct,SUM(exfNov) AS exfNov,SUM(exfDec) AS exfDec,
         SUM(january + february + march + april + may + june + july + august + september + october + november + december) AS whTotal,
         SUM(exfJan + exfFeb + exfMarch + exfApril + exfMay + exfJune + exfJuly + exfAug + exfSep + exfOct + exfNov + exfDec) AS exfTotal,version
@@ -1124,27 +1143,27 @@ export class OrdersService {
         GROUP BY planning_ssn, planning_sum
       ) AS subquery
       WHERE 1 = 1 AND file_id = (SELECT MAX(file_id) FROM orders)`
-    // if (req.itemCode) {
-    //     query = query + ` AND item_cd = "${req.itemCode}"`
-    //     }
-    if (req.itemName) {
-        query = query + ` AND planning_sum = "${req.itemName}"`;
+        // if (req.itemCode) {
+        //     query = query + ` AND item_cd = "${req.itemCode}"`
+        //     }
+        if (req.itemName) {
+            query = query + ` AND planning_sum = "${req.itemName}"`;
+        }
+        query = query + ` GROUP BY planning_ssn, planning_sum HAVING whTotal != 0 AND exfTotal != 0 ORDER BY planning_sum`;
+        const reportData = await this.dataSource.query(query);
+
+        const season23SS = reportData.filter(data => data.year === "2023" && data.plannedSeason === "SS");
+        const season23FW = reportData.filter(data => data.year === "2023" && data.plannedSeason === "FW");
+        const season24SS = reportData.filter(data => data.year === "2024" && data.plannedSeason === "SS");
+        const season = [season23SS, season23FW, season24SS];
+        if (reportData.length > 0) {
+            return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', season);
+        } else {
+            return new CommonResponseModel(false, 0, 'No Data Found', []);
+        }
     }
-    query = query + ` GROUP BY planning_ssn, planning_sum HAVING whTotal != 0 AND exfTotal != 0 ORDER BY planning_sum`;
-      const reportData = await this.dataSource.query(query);
-      
-      const season23SS = reportData.filter(data => data.year === "2023" && data.plannedSeason === "SS");
-      const season23FW = reportData.filter(data => data.year === "2023" && data.plannedSeason === "FW");
-      const season24SS = reportData.filter(data => data.year === "2024" && data.plannedSeason === "SS");
-      const season = [season23SS, season23FW, season24SS];
-      if (reportData.length > 0) {
-        return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', season);
-    } else {
-        return new CommonResponseModel(false, 0, 'No Data Found', []);
-    }    
-    }
-   
-    
+
+
     async createCOline(req: any): Promise<CommonResponseModel> {
         // console.log(req)
         try {
@@ -1182,7 +1201,7 @@ export class OrdersService {
         const orderNo = req.orderNumber
         const sizeCode = req.sizeCode
         const colorCode = req.colorCode
-        const updateStatus = await this.trimOrderRepo.update({ orderNo: orderNo,sizeCode:sizeCode,colorCode:colorCode}, { answeredStatus: 'Accepted',buyerItemNumber:req.itemNumber })
+        const updateStatus = await this.trimOrderRepo.update({ orderNo: orderNo, sizeCode: sizeCode, colorCode: colorCode }, { answeredStatus: 'Accepted', buyerItemNumber: req.itemNumber })
         if (updateStatus.affected) {
             return new CommonResponseModel(true, 1, 'Status Updated')
         } else {
@@ -1190,167 +1209,169 @@ export class OrdersService {
         }
     }
 
-// }
+    // }
 
-//     async  getWareHouseMonthwiseData(): Promise<CommonResponseModel> {
-//         try {
-//           // Assuming you are fetching data from an API using a library like Axios
-//           const response = await getWareHouseMonthwiseData();
-//           const data = await response.data.map((item)=>({
-//             year:item.year,
-//             yearlyData:item.yearlyData.map((yearlyDataItem)=>({
-//                 itemName: yearlyDataItem.itemName,
-//                 monthWiseData: yearlyDataItem.monthWiseData.map((monthWiseItem)=>({
-//                     phaseType: monthWiseItem.phaseType,
-// data:monthWiseItem.data.map((dataItem)=>{})
-//                 }))
-//             }))
-//           });
-      
-//           // Assuming data is the result you want to send in the response
-//           if (data.length>0){
-//           return new CommonResponseModel (true,1,'Data fetched successfully',data);
-//         }
-//          else {
-//           return new CommonResponseModel (false,0,'No data found',[])
-//         }
-//     }
-//     catch (error){
-//         throw error
-//     }
+    //     async  getWareHouseMonthwiseData(): Promise<CommonResponseModel> {
+    //         try {
+    //           // Assuming you are fetching data from an API using a library like Axios
+    //           const response = await getWareHouseMonthwiseData();
+    //           const data = await response.data.map((item)=>({
+    //             year:item.year,
+    //             yearlyData:item.yearlyData.map((yearlyDataItem)=>({
+    //                 itemName: yearlyDataItem.itemName,
+    //                 monthWiseData: yearlyDataItem.monthWiseData.map((monthWiseItem)=>({
+    //                     phaseType: monthWiseItem.phaseType,
+    // data:monthWiseItem.data.map((dataItem)=>{})
+    //                 }))
+    //             }))
+    //           });
 
-async getProdPlanCount(): Promise<CommonResponseModel> {
-    const data = await this.ordersRepository.getProdPlanCount()
-    if (data)
-        return new CommonResponseModel(true, 1, 'data retrived', data)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
-      
-async getWareHouseYear(): Promise<CommonResponseModel> {
-    const data = await this.ordersRepository.getWareHouseYearData()
-    if (data.length > 0) {
-        return new CommonResponseModel(true, 1, 'uploaded files data retrived successfully', data);
-    }
-    else {
-        return new CommonResponseModel(false, 0, 'No data found', data);
-    }
-}
+    //           // Assuming data is the result you want to send in the response
+    //           if (data.length>0){
+    //           return new CommonResponseModel (true,1,'Data fetched successfully',data);
+    //         }
+    //          else {
+    //           return new CommonResponseModel (false,0,'No data found',[])
+    //         }
+    //     }
+    //     catch (error){
+    //         throw error
+    //     }
 
-async getWareHouseMonthData(req:YearReq): Promise<CommonResponseModel> {
-    const data = await this.ordersRepository.getWareHouseMonthData(req.year);
-    
-    if (data.length === 0) {
-        return new CommonResponseModel(false, 0, 'data not found');
+    async getProdPlanCount(): Promise<CommonResponseModel> {
+        const data = await this.ordersRepository.getProdPlanCount()
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    const DateMap = new Map<string, ItemDataDto>();
-    const monthWiseInstances: MonthWiseDto[] = []; // Use an array to store instances
-    
-    for (const rec of data) {
-        const orderQty = rec.order_plan_qty.replace(/,/g, '')
-            const coeffQty = rec.order_plan_qty_coeff.replace(/,/g,'')
-        if (!DateMap.has(rec.item_cd)) {
-            DateMap.set(
-                rec.item_cd,
-                new ItemDataDto(rec.item, [])
-            );
+    async getWareHouseYear(): Promise<CommonResponseModel> {
+        const data = await this.ordersRepository.getWareHouseYearData()
+        if (data.length > 0) {
+            return new CommonResponseModel(true, 1, 'uploaded files data retrived successfully', data);
         }
-        const monthData = DateMap.get(rec.item_cd).monthWiseData;
-        const phase = monthData.find(e => e.phasetype === rec.prod_plan_type)
+        else {
+            return new CommonResponseModel(false, 0, 'No data found', data);
+        }
+    }
 
-        if (!phase) {
-            const pcs: PcsDataDto[] = [];
-            const coeff: CoeffDataDto[] = [];
+    async getWareHouseMonthData(req: YearReq): Promise<CommonResponseModel> {
+        const data = await this.ordersRepository.getWareHouseMonthData(req.year);
 
-pcs.push(
-    { name: 'In Pcs',
-    janPcs: rec.whMonth === 1 ? Number(orderQty) :Number(0),
-    febPcs: rec.whMonth === 2 ? Number(orderQty) :Number(0),
-    marPcs: rec.whMonth === 3 ? Number(orderQty) :Number(0),
-    aprPcs: rec.whMonth === 4 ? Number(orderQty) :Number(0),
-    mayPcs: rec.whMonth === 5 ? Number(orderQty) :Number(0),
-    junPcs: rec.whMonth === 6 ? Number(orderQty) :Number(0),
-    julPcs: rec.whMonth === 7 ? Number(orderQty) :Number(0),
-    augPcs: rec.whMonth === 8 ? Number(orderQty) :Number(0),
-    sepPcs: rec.whMonth === 9 ? Number(orderQty) :Number(0),
-    octPcs: rec.whMonth === 10 ? Number(orderQty) :Number(0),
-    novPcs: rec.whMonth === 11 ? Number(orderQty) :Number(0),
-    decPcs: rec.whMonth === 12 ? Number(orderQty) :Number(0),}
-        )
-        coeff.push({
-            name: 'In Coeff',
-            janCoeff: rec.whMonth === 1 ? Number(coeffQty) :Number(0),
-            febCoeff: rec.whMonth === 2 ? Number(coeffQty) :Number(0),
-            marCoeff: rec.whMonth === 3 ? Number(coeffQty) :Number(0),
-            aprCoeff: rec.whMonth === 4 ? Number(coeffQty) :Number(0),
-            mayCoeff: rec.whMonth === 5 ? Number(coeffQty) :Number(0),
-            junCoeff: rec.whMonth === 6 ? Number(coeffQty) :Number(0),
-            julCoeff: rec.whMonth === 7 ? Number(coeffQty) :Number(0),
-            augCoeff: rec.whMonth === 8 ? Number(coeffQty) :Number(0),
-            sepCoeff: rec.whMonth === 9 ? Number(coeffQty) :Number(0),
-            octCoeff: rec.whMonth === 10 ? Number(coeffQty) :Number(0),
-            novCoeff: rec.whMonth === 11 ? Number(coeffQty) :Number(0),
-            decCoeff: rec.whMonth === 12 ? Number(coeffQty) :Number(0),
-          })
-//        
- const totalPcs = pcs.reduce((total, item) => {
-                return  [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
-                    .filter(value => value !== 0) // Filter out values equal to 0
-                    .reduce((sum, value) =>  value, 0);
-            }, 0);
-            
-            const totalCoeff = coeff.reduce((total, item) => {
-                return  [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
-                    .filter(value => value !== 0) // Filter out values equal to 0
-                    .reduce((sum, value) => value, 0);
-            }, 0);
-           
-              
-                const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff,totalPcs,totalCoeff);
-                monthData.push(monthWiseInstance); // Store each instance
-               
+        if (data.length === 0) {
+            return new CommonResponseModel(false, 0, 'data not found');
+        }
+
+        const DateMap = new Map<string, ItemDataDto>();
+        const monthWiseInstances: MonthWiseDto[] = []; // Use an array to store instances
+
+        for (const rec of data) {
+            const orderQty = rec.order_plan_qty.replace(/,/g, '')
+            const coeffQty = rec.order_plan_qty_coeff.replace(/,/g, '')
+            if (!DateMap.has(rec.item_cd)) {
+                DateMap.set(
+                    rec.item_cd,
+                    new ItemDataDto(rec.item, [])
+                );
             }
-            
+            const monthData = DateMap.get(rec.item_cd).monthWiseData;
+            const phase = monthData.find(e => e.phasetype === rec.prod_plan_type)
+
+            if (!phase) {
+                const pcs: PcsDataDto[] = [];
+                const coeff: CoeffDataDto[] = [];
+
+                pcs.push(
+                    {
+                        name: 'In Pcs',
+                        janPcs: rec.whMonth === 1 ? Number(orderQty) : Number(0),
+                        febPcs: rec.whMonth === 2 ? Number(orderQty) : Number(0),
+                        marPcs: rec.whMonth === 3 ? Number(orderQty) : Number(0),
+                        aprPcs: rec.whMonth === 4 ? Number(orderQty) : Number(0),
+                        mayPcs: rec.whMonth === 5 ? Number(orderQty) : Number(0),
+                        junPcs: rec.whMonth === 6 ? Number(orderQty) : Number(0),
+                        julPcs: rec.whMonth === 7 ? Number(orderQty) : Number(0),
+                        augPcs: rec.whMonth === 8 ? Number(orderQty) : Number(0),
+                        sepPcs: rec.whMonth === 9 ? Number(orderQty) : Number(0),
+                        octPcs: rec.whMonth === 10 ? Number(orderQty) : Number(0),
+                        novPcs: rec.whMonth === 11 ? Number(orderQty) : Number(0),
+                        decPcs: rec.whMonth === 12 ? Number(orderQty) : Number(0),
+                    }
+                )
+                coeff.push({
+                    name: 'In Coeff',
+                    janCoeff: rec.whMonth === 1 ? Number(coeffQty) : Number(0),
+                    febCoeff: rec.whMonth === 2 ? Number(coeffQty) : Number(0),
+                    marCoeff: rec.whMonth === 3 ? Number(coeffQty) : Number(0),
+                    aprCoeff: rec.whMonth === 4 ? Number(coeffQty) : Number(0),
+                    mayCoeff: rec.whMonth === 5 ? Number(coeffQty) : Number(0),
+                    junCoeff: rec.whMonth === 6 ? Number(coeffQty) : Number(0),
+                    julCoeff: rec.whMonth === 7 ? Number(coeffQty) : Number(0),
+                    augCoeff: rec.whMonth === 8 ? Number(coeffQty) : Number(0),
+                    sepCoeff: rec.whMonth === 9 ? Number(coeffQty) : Number(0),
+                    octCoeff: rec.whMonth === 10 ? Number(coeffQty) : Number(0),
+                    novCoeff: rec.whMonth === 11 ? Number(coeffQty) : Number(0),
+                    decCoeff: rec.whMonth === 12 ? Number(coeffQty) : Number(0),
+                })
+                //        
+                const totalPcs = pcs.reduce((total, item) => {
+                    return [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
+                        .filter(value => value !== 0) // Filter out values equal to 0
+                        .reduce((sum, value) => value, 0);
+                }, 0);
+
+                const totalCoeff = coeff.reduce((total, item) => {
+                    return [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
+                        .filter(value => value !== 0) // Filter out values equal to 0
+                        .reduce((sum, value) => value, 0);
+                }, 0);
+
+
+                const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff, totalPcs, totalCoeff);
+                monthData.push(monthWiseInstance); // Store each instance
+
+            }
+
         }
-    const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
-    return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
-}
+        const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());
+        return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+    }
 
 
-    
-async getSeasonWiseItemCode():Promise<CommonResponseModel>{
-    try{
-        const itemCode = await this.ordersRepository.getSeasonWiseItemCode()
-        if(itemCode.length > 0){
-            return new CommonResponseModel(true, 1, 'Data Retrieved Succesfully',itemCode)
-        }else {
-            return new CommonResponseModel(false,0,'No data found',[])
+
+    async getSeasonWiseItemCode(): Promise<CommonResponseModel> {
+        try {
+            const itemCode = await this.ordersRepository.getSeasonWiseItemCode()
+            if (itemCode.length > 0) {
+                return new CommonResponseModel(true, 1, 'Data Retrieved Succesfully', itemCode)
+            } else {
+                return new CommonResponseModel(false, 0, 'No data found', [])
+            }
+        } catch (err) {
+            throw (err)
         }
-    }catch(err){
-        throw(err)
     }
-}
 
-async getSeasonWiseItemName():Promise<CommonResponseModel>{
-    try{
-        const itemCode = await this.ordersRepository.getSeasonWiseItemName()
-        if(itemCode.length > 0){
-            return new CommonResponseModel(true, 1, 'Data Retrieved Succesfully',itemCode)
-        }else {
-            return new CommonResponseModel(false,0,'No data found',[])
+    async getSeasonWiseItemName(): Promise<CommonResponseModel> {
+        try {
+            const itemCode = await this.ordersRepository.getSeasonWiseItemName()
+            if (itemCode.length > 0) {
+                return new CommonResponseModel(true, 1, 'Data Retrieved Succesfully', itemCode)
+            } else {
+                return new CommonResponseModel(false, 0, 'No data found', [])
+            }
+        } catch (err) {
+            throw (err)
         }
-    }catch(err){
-        throw(err)
     }
-}
 
-async getExfactoryMonthExcelData(req:YearReq): Promise<CommonResponseModel> {
-    const data = await this.ordersRepository.getMonthWiseReportData(req);
-    
-    if (data.length === 0) {
-        return new CommonResponseModel(false, 0, 'data not found');
-    }
+    async getExfactoryMonthExcelData(req: YearReq): Promise<CommonResponseModel> {
+        const data = await this.ordersRepository.getMonthWiseReportData(req);
+
+        if (data.length === 0) {
+            return new CommonResponseModel(false, 0, 'data not found');
+        }
 
     return new CommonResponseModel(true, 1, 'data retrieved', data);
 }
@@ -1364,429 +1385,431 @@ async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel
     return new CommonResponseModel(true, 1, 'data retrieved', data);
 }
 
-async getQtyDifChangeItemCode(): Promise<CommonResponseModel> {
-    const files = await this.fileUploadRepo.getFilesData()
+    async getQtyDifChangeItemCode(): Promise<CommonResponseModel> {
+        const files = await this.fileUploadRepo.getFilesData()
 
-    let data;
-    if (files.length == 0) {
-        return new CommonResponseModel(false, 0, 'No data found');
-    } else if (files.length == 1) {
-        data = await this.ordersChildRepo.getItemQtyChangeData1ItemCode(files[0]?.fileId)
-    } else {
-        data = await this.ordersChildRepo.getItemQtyChangeDataItemCode(files[1]?.fileId, files[0]?.fileId)
-    }
-    if (data)
-        return new CommonResponseModel(true, 1, 'data retrived', data)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
-
-
-async getWareHouseMonthExcelData(req:YearReq): Promise<CommonResponseModel> {
-    const data = await this.ordersRepository.getWareHouseMonthData(req.year);
-    
-    if (data.length === 0) {
-        return new CommonResponseModel(false, 0, 'data not found');
-    }
-
-    return new CommonResponseModel(true, 1, 'data retrieved', data);
-}
-
-async getWareHouseComparisionExcelData(req:YearReq): Promise<CommonResponseModel> {
-    const data = await this.ordersChildRepo.getWareHouseComparisionData(req);
-    
-    if (data.length === 0) {
-        return new CommonResponseModel(false, 0, 'data not found');
-    }
-    return new CommonResponseModel(true, 1, 'data retrieved', data);
-}
-
-//cron job to fetch mails autmatically once per a day
-async processEmails():Promise<CommonResponseModel> {
-    const promiseA = () =>  new Promise((resolve, reject) => {
-    // Set the environment variable to allow TLS
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-    let filesArray = []
-
-    const dns = require('dns');
-    dns.lookup('zimbra.xmission.com', (err, addresses) => {
-      if (err) {
-        // console.error(`DNS lookup error: ${err}`);
-      } else {
-        // console.log(`Resolved addresses: ${addresses}`);
-      }
-    });
-
-    // Define your email configuration
-    const imap = new Imap({
-        user: 'karthikeyan.nallamuthu@shahi.co.in',
-        password: 'auao smhl wkmu uuht',
-      host: 'imap.gmail.com',
-      port: 993,
-      tls: true,
-      authTimeout: 30000,
-    });
-
-
-
-    const allowedExtensions = ['.xlsx', '.xls', '.csv'];
-    const savePath = './upload-files/'
-        function toUpper(thing) {
-      return thing && thing.toUpperCase ? thing.toUpperCase() : thing;
-    }
-
-
-    const buildAttMessageFunction = (attachment) => {
-      if (!attachment || !attachment.params || !attachment.params.name) {
-        const logMessage = 'No valid attachment found.';
-        this.logger.warn(logMessage);
-        return;
-        // console.log(logMessage);
-    }
-
-      const filename = attachment.params.name;
-      const encoding = attachment.encoding;
-      //   this.readCell(filesArray)
-    //   const test = getFilesArray(attachment)
-    //   filesArray.push(attachment.params.name)
-
-
-
-
-      return (msg, seqno) => {
-        const prefix = `(Message #${seqno}) `;
-        msg.on('body', (stream, info) => {
-          const logMessage = `${prefix}Streaming attachment to file: ${filename}, ${info}`;
-          this.logger.info(logMessage);
-        //   console.log(logMessage);
-
-          const writeStream = fs.createWriteStream(savePath + filename);
-          
-
-        //   console.log(writeStream,'www')
-        //   console.log(savePath + filename+'iiiiii')
-          writeStream.on('finish', () => {
-            const finishLogMessage = `${prefix}Done writing to file: ${filename}`;
-            this.logger.info(finishLogMessage);
-                        // console.log(finishLogMessage);
-            // console.log(finishLogMessage);
-            // './upload-files/007Q2_Shahi_0807.csv
-            // this.readCell(savePath + filename,filename)
-          });
-
-          if (toUpper(encoding) === 'BASE64') {
-            stream.pipe(new base64.Base64Decode()).pipe(writeStream);
-          } else {
-            stream.pipe(writeStream); 
-          }
-        });
-      };
-    };
-    // console.log('filesssssnwwggg',filesArray)
-
-    imap.once('ready', () => {
-      imap.openBox('INBOX', true, (err, box) => {
-        if (err) {
-          const logMessage = `Error opening mailbox: ${err}`;
-          this.logger.error(logMessage);
-        //   console.error(logMessage);
-          throw err;
-        }
-
-        // const searchCriteria = [['FROM', '']];
-        const searchCriteria = [['SUBJECT', 'UNIQLO ORDER MANAGEMENT'],['FROM', 'karthikeyan.nallamuthu@shahi.co.in']];
-        // const searchCriteria = [['SUBJECT', 'testing mail'],['FROM', 'uma.boddeda@schemaxtech.com']];
-
-        imap.search(searchCriteria,(err, results) => {
-          if (err) {
-            const logMessage = `Error searching emails: ${err}`;
-            this.logger.error(logMessage);
-            // console.error(logMessage);
-            throw err;
-          }
-
-          const fetch = imap.fetch(results, {
-            bodies: ['HEADER.FIELDS (FROM TO SUBJECT DATE)', 'TEXT'],
-            struct: true,
-          });
-
-          fetch.on('message', (msg, seqno) => {
-            const prefix = `(Message #${seqno}) `;
-            msg.once('attributes', (attrs) => {
-              const attachments = findAttachmentParts(attrs.struct);
-              const logMessage = `${prefix}Has attachments: ${attachments.length}`;
-              this.logger.info(logMessage);
-            //   console.log(logMessage);
-
-              attachments.forEach(async(attachment) => {
-                if (attachment.params && attachment.params.name) {
-                  const logMessage = `${prefix}Fetching attachment: ${attachment.params.name}`;
-                  this.logger.info(logMessage);
-                //   console.log(logMessage);
-                  const f = imap.fetch(attrs.uid, {
-                    bodies: [attachment.partID],
-                  });
-                  f.on('message', buildAttMessageFunction(attachment));
-                //   await this.readCell(savePath + attachment.params.name,attachment.params.name)
-                }
-              });
-              fetch.on('end', () => {
-                resolve(attachments);
-              });
-            });
-            msg.once('end', () => {
-              const logMessage = `${prefix}Finished email`;
-              this.logger.info(logMessage);
-            //   console.log(logMessage);
-            });
-            
-          });
-
-          fetch.once('error', (err) => {
-            const logMessage = `Fetch error: ${err}`;
-            this.logger.error(logMessage);
-            // console.error(logMessage);
-          });
-
-          fetch.once('end', () => {
-            const logMessage = 'Done fetching all messages!';
-            this.logger.info(logMessage);
-            // console.log(logMessage);
-            imap.end();
-          });
-        });
-      });
-    });
-
-    imap.once('error', (err) => {
-      const logMessage = `IMAP error: ${err}`;
-      this.logger.error(logMessage);
-    //   console.error(logMessage);
-    });
-
-    imap.once('end', () => {
-      const logMessage = 'IMAP Connection ended';
-      this.logger.info(logMessage);
-    });
-
-    imap.connect();
-    let testt = []
-    
-    const findAttachmentParts = (struct, attachments = []) => {
-      for (let i = 0; i < struct.length; ++i) {
-        if (Array.isArray(struct[i])) {
-          findAttachmentParts(struct[i], attachments);
+        let data;
+        if (files.length == 0) {
+            return new CommonResponseModel(false, 0, 'No data found');
+        } else if (files.length == 1) {
+            data = await this.ordersChildRepo.getItemQtyChangeData1ItemCode(files[0]?.fileId)
         } else {
-          if (
-            struct[i].disposition &&
-            ['INLINE', 'ATTACHMENT'].indexOf(
-              toUpper(struct[i].disposition.type)
-            ) > -1 &&
-            struct[i].params &&
-            struct[i].params.name &&
-            struct[i].params.name.startsWith('')
-          ) {
-            const filename = struct[i].params.name;
-            const fileExtension = filename.split('.').pop().toLowerCase();
-            if (allowedExtensions.includes('.' + fileExtension)) {
-              attachments.push(struct[i]);
-              testt.push(struct[i])
-              
-            }
-          }
+            data = await this.ordersChildRepo.getItemQtyChangeDataItemCode(files[1]?.fileId, files[0]?.fileId)
         }
-      }
-        // resolve(attachments)
-          return attachments;
-    };
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
 
 
-    // console.log(filesArray)
+    async getWareHouseMonthExcelData(req: YearReq): Promise<CommonResponseModel> {
+        const data = await this.ordersRepository.getWareHouseMonthData(req.year);
+
+        if (data.length === 0) {
+            return new CommonResponseModel(false, 0, 'data not found');
+        }
+
+        return new CommonResponseModel(true, 1, 'data retrieved', data);
+    }
+
+    async getWareHouseComparisionExcelData(req: YearReq): Promise<CommonResponseModel> {
+        const data = await this.ordersChildRepo.getWareHouseComparisionData(req);
+
+        if (data.length === 0) {
+            return new CommonResponseModel(false, 0, 'data not found');
+        }
+        return new CommonResponseModel(true, 1, 'data retrieved', data);
+    }
+
+    //cron job to fetch mails autmatically once per a day
+    async processEmails(): Promise<CommonResponseModel> {
+        const promiseA = () => new Promise((resolve, reject) => {
+            // Set the environment variable to allow TLS
+            process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+            let filesArray = []
+
+            const dns = require('dns');
+            dns.lookup('zimbra.xmission.com', (err, addresses) => {
+                if (err) {
+                    // console.error(`DNS lookup error: ${err}`);
+                } else {
+                    // console.log(`Resolved addresses: ${addresses}`);
+                }
+            });
+
+            // Define your email configuration
+            const imap = new Imap({
+                user: 'karthikeyan.nallamuthu@shahi.co.in',
+                password: 'auao smhl wkmu uuht',
+                host: 'imap.gmail.com',
+                port: 993,
+                tls: true,
+                authTimeout: 30000,
+            });
+
+
+
+            const allowedExtensions = ['.xlsx', '.xls', '.csv'];
+            const savePath = './upload-files/'
+            function toUpper(thing) {
+                return thing && thing.toUpperCase ? thing.toUpperCase() : thing;
+            }
+
+
+            const buildAttMessageFunction = (attachment) => {
+                if (!attachment || !attachment.params || !attachment.params.name) {
+                    const logMessage = 'No valid attachment found.';
+                    this.logger.warn(logMessage);
+                    return;
+                    // console.log(logMessage);
+                }
+
+                const filename = attachment.params.name;
+                const encoding = attachment.encoding;
+                //   this.readCell(filesArray)
+                //   const test = getFilesArray(attachment)
+                //   filesArray.push(attachment.params.name)
+
+
+
+
+                return (msg, seqno) => {
+                    const prefix = `(Message #${seqno}) `;
+                    msg.on('body', (stream, info) => {
+                        const logMessage = `${prefix}Streaming attachment to file: ${filename}, ${info}`;
+                        this.logger.info(logMessage);
+                        //   console.log(logMessage);
+
+                        const writeStream = fs.createWriteStream(savePath + filename);
+
+
+                        //   console.log(writeStream,'www')
+                        //   console.log(savePath + filename+'iiiiii')
+                        writeStream.on('finish', () => {
+                            const finishLogMessage = `${prefix}Done writing to file: ${filename}`;
+                            this.logger.info(finishLogMessage);
+                            // console.log(finishLogMessage);
+                            // console.log(finishLogMessage);
+                            // './upload-files/007Q2_Shahi_0807.csv
+                            // this.readCell(savePath + filename,filename)
+                        });
+
+                        if (toUpper(encoding) === 'BASE64') {
+                            stream.pipe(new base64.Base64Decode()).pipe(writeStream);
+                        } else {
+                            stream.pipe(writeStream);
+                        }
+                    });
+                };
+            };
+            // console.log('filesssssnwwggg',filesArray)
+
+            imap.once('ready', () => {
+                imap.openBox('INBOX', true, (err, box) => {
+                    if (err) {
+                        const logMessage = `Error opening mailbox: ${err}`;
+                        this.logger.error(logMessage);
+                        //   console.error(logMessage);
+                        throw err;
+                    }
+
+                    // const searchCriteria = [['FROM', '']];
+                    const searchCriteria = [['SUBJECT', 'UNIQLO ORDER MANAGEMENT'], ['FROM', 'karthikeyan.nallamuthu@shahi.co.in']];
+                    // const searchCriteria = [['SUBJECT', 'testing mail'],['FROM', 'uma.boddeda@schemaxtech.com']];
+
+                    imap.search(searchCriteria, (err, results) => {
+                        if (err) {
+                            const logMessage = `Error searching emails: ${err}`;
+                            this.logger.error(logMessage);
+                            // console.error(logMessage);
+                            throw err;
+                        }
+
+                        const fetch = imap.fetch(results, {
+                            bodies: ['HEADER.FIELDS (FROM TO SUBJECT DATE)', 'TEXT'],
+                            struct: true,
+                        });
+
+                        fetch.on('message', (msg, seqno) => {
+                            const prefix = `(Message #${seqno}) `;
+                            msg.once('attributes', (attrs) => {
+                                const attachments = findAttachmentParts(attrs.struct);
+                                const logMessage = `${prefix}Has attachments: ${attachments.length}`;
+                                this.logger.info(logMessage);
+                                //   console.log(logMessage);
+
+                                attachments.forEach(async (attachment) => {
+                                    if (attachment.params && attachment.params.name) {
+                                        const logMessage = `${prefix}Fetching attachment: ${attachment.params.name}`;
+                                        this.logger.info(logMessage);
+                                        //   console.log(logMessage);
+                                        const f = imap.fetch(attrs.uid, {
+                                            bodies: [attachment.partID],
+                                        });
+                                        f.on('message', buildAttMessageFunction(attachment));
+                                        //   await this.readCell(savePath + attachment.params.name,attachment.params.name)
+                                    }
+                                });
+                                fetch.on('end', () => {
+                                    resolve(attachments);
+                                });
+                            });
+                            msg.once('end', () => {
+                                const logMessage = `${prefix}Finished email`;
+                                this.logger.info(logMessage);
+                                //   console.log(logMessage);
+                            });
+
+                        });
+
+                        fetch.once('error', (err) => {
+                            const logMessage = `Fetch error: ${err}`;
+                            this.logger.error(logMessage);
+                            // console.error(logMessage);
+                        });
+
+                        fetch.once('end', () => {
+                            const logMessage = 'Done fetching all messages!';
+                            this.logger.info(logMessage);
+                            // console.log(logMessage);
+                            imap.end();
+                        });
+                    });
+                });
+            });
+
+            imap.once('error', (err) => {
+                const logMessage = `IMAP error: ${err}`;
+                this.logger.error(logMessage);
+                //   console.error(logMessage);
+            });
+
+            imap.once('end', () => {
+                const logMessage = 'IMAP Connection ended';
+                this.logger.info(logMessage);
+            });
+
+            imap.connect();
+            let testt = []
+
+            const findAttachmentParts = (struct, attachments = []) => {
+                for (let i = 0; i < struct.length; ++i) {
+                    if (Array.isArray(struct[i])) {
+                        findAttachmentParts(struct[i], attachments);
+                    } else {
+                        if (
+                            struct[i].disposition &&
+                            ['INLINE', 'ATTACHMENT'].indexOf(
+                                toUpper(struct[i].disposition.type)
+                            ) > -1 &&
+                            struct[i].params &&
+                            struct[i].params.name &&
+                            struct[i].params.name.startsWith('')
+                        ) {
+                            const filename = struct[i].params.name;
+                            const fileExtension = filename.split('.').pop().toLowerCase();
+                            if (allowedExtensions.includes('.' + fileExtension)) {
+                                attachments.push(struct[i]);
+                                testt.push(struct[i])
+
+                            }
+                        }
+                    }
+                }
+                // resolve(attachments)
+                return attachments;
+            };
+
+
+            // console.log(filesArray)
             // this.readCell(savePath + filename,filename)
         })
-        const getAttachments:any = await promiseA()
-        return new CommonResponseModel(true,2,'',getAttachments)
+        const getAttachments: any = await promiseA()
+        return new CommonResponseModel(true, 2, '', getAttachments)
 
-  }
+    }
 
-//   async getFiles 
-  async readCell(filepath,filename):Promise<CommonResponseModel> {
-    try{
-        let filesArray = []
-        // console.log(req,'filesdataaaa')
-        const fs = require('fs');
-        const files = fs.readdirSync('./upload-files/');
-        // console.log(files,'filesssss')
-        // const req = [{filePath:'./upload-files/pro_orders_1.xlsx',fileName:'pro_orders_1.xlsx'},{filePath:'./upload-files/projection_orders_1.xlsx',fileName:'projection_orders_1.xlsx'}]
-       const uplodedFiles = await this.getUplodedFilesInfo()
-       const difference = files.filter((element) => !uplodedFiles.data.includes(element))
-       if(difference.length == 0){
-            // filesArray.push(new ordersMailFileStatusArrayReq(files,'Failed','Files with same name already exists!','-'))
-            return new CommonResponseModel(false,0,'No new files identified in the mail')
-        } else{
-                    for(const filerec of difference){
-                        const filename = filerec
-                        const filepath = './upload-files/'+filerec
-                
-                        // // filename = 'pro_order_sep3.xlsx';
-                            // console.log(filename.split('.').pop(),'extension')
-                            // console.log(filename,'filename')
-                            const promiseA = () => new Promise((resolve, reject) => {
-                                xlsxFile(filepath, { getSheets: true }).then((sheets:any[])=>{
-                                    resolve(sheets)
-                                });
-                            })
-                            const sheets:any = await promiseA()
-                
-                
-                
-                            const promise = () => new Promise((resolve, reject) => {
-                                if(filename.split('.').pop() == 'csv'){
-                                    resolve(null)
-            
-                                    // const dataArray = []
-                                    // fs.createReadStream(filepath)
-                                    //     .on('error', () => {
-                                    //         // handle error
-                                    //     })
-                        
-                                    //     .pipe(csv())
-                                    //     .on('data', (row) => {
-                                    //         dataArray.push(Object(row))
-                                    //     })
-                        
-                                    //     .on('end', () => {
-                                    //         resolve(dataArray)
-                                    //     })
-                                }else if(filename.split('.').pop() == 'xlsx'){ 
-                                    // xlsxFile(filepath, { getSheets: true }).then((sheets)=>{
-                                    //     resolve(sheets)
-                                    // });
-                                    // const sheets = await promise()
-                                    // console.log('hhhhhoo',sheets)
-                                    let finalSheetName = ''
-                                     for(const sheetname of sheets){
-                                        if(sheetname.name == 'Production Plan Rawdata Export' || sheetname.name =='RawData' || sheetname.name =='Rawdata'){
-                                            finalSheetName = sheetname.name
-                                            break
-                                        } else{
-                                            continue
-                                        }
+    //   async getFiles 
+    async readCell(filepath, filename): Promise<CommonResponseModel> {
+        try {
+            let filesArray = []
+            // console.log(req,'filesdataaaa')
+            const fs = require('fs');
+            const files = fs.readdirSync('./upload-files/');
+            // console.log(files,'filesssss')
+            // const req = [{filePath:'./upload-files/pro_orders_1.xlsx',fileName:'pro_orders_1.xlsx'},{filePath:'./upload-files/projection_orders_1.xlsx',fileName:'projection_orders_1.xlsx'}]
+            const uplodedFiles = await this.getUplodedFilesInfo()
+            const difference = files.filter((element) => !uplodedFiles.data.includes(element))
+            if (difference.length == 0) {
+                // filesArray.push(new ordersMailFileStatusArrayReq(files,'Failed','Files with same name already exists!','-'))
+                return new CommonResponseModel(false, 0, 'No new files identified in the mail')
+            } else {
+                for (const filerec of difference) {
+                    const filename = filerec
+                    const filepath = './upload-files/' + filerec
+
+                    // // filename = 'pro_order_sep3.xlsx';
+                    // console.log(filename.split('.').pop(),'extension')
+                    // console.log(filename,'filename')
+                    const promiseA = () => new Promise((resolve, reject) => {
+                        xlsxFile(filepath, { getSheets: true }).then((sheets: any[]) => {
+                            resolve(sheets)
+                        });
+                    })
+                    const sheets: any = await promiseA()
+
+
+
+                    const promise = () => new Promise((resolve, reject) => {
+                        if (filename.split('.').pop() == 'csv') {
+                            resolve(null)
+
+                            // const dataArray = []
+                            // fs.createReadStream(filepath)
+                            //     .on('error', () => {
+                            //         // handle error
+                            //     })
+
+                            //     .pipe(csv())
+                            //     .on('data', (row) => {
+                            //         dataArray.push(Object(row))
+                            //     })
+
+                            //     .on('end', () => {
+                            //         resolve(dataArray)
+                            //     })
+                        } else if (filename.split('.').pop() == 'xlsx') {
+                            // xlsxFile(filepath, { getSheets: true }).then((sheets)=>{
+                            //     resolve(sheets)
+                            // });
+                            // const sheets = await promise()
+                            // console.log('hhhhhoo',sheets)
+                            let finalSheetName = ''
+                            for (const sheetname of sheets) {
+                                if (sheetname.name == 'Production Plan Rawdata Export' || sheetname.name == 'RawData' || sheetname.name == 'Rawdata') {
+                                    finalSheetName = sheetname.name
+                                    break
+                                } else {
+                                    continue
+                                }
+                            }
+                            if (finalSheetName) {
+
+                                xlsxFile(filepath, { sheet: finalSheetName }, {
+                                    transformData(data) {
+                                        // console.log(data)
+                                        // data.slice(0,3)
+                                        return data
                                     }
-                                    if(finalSheetName){
-                
-                                        xlsxFile(filepath,{sheet:finalSheetName},{transformData(data){
-                                            // console.log(data)
-                                            // data.slice(0,3)
-                                            return data
-                                        }})
-                                        
-                                          .then((rows) => {
-                                            let columnNames
-                                            const dataArray = []
-                                            while(rows.length){
-                                                columnNames = rows.shift(); // Separate first row with column names
-                                                if(columnNames[0] != null){
-                                                    break;
-                                                }
+                                })
+
+                                    .then((rows) => {
+                                        let columnNames
+                                        const dataArray = []
+                                        while (rows.length) {
+                                            columnNames = rows.shift(); // Separate first row with column names
+                                            if (columnNames[0] != null) {
+                                                break;
                                             }
-                                            // console.log(rows,'---------------')
-                                            // rows.shift(); // Separate first row with column names
-                                            // rows.shift(); // Separate first row with column names
-                                            // rows.shift(); // Separate first row with column name
-                                            // rows.shift(); // Separate first row with column name
-                                            // rows.shift(); // Separate first row with column name
-                                            // rows.shift(); // Separate first row with column name
-                                            // const columnNames = rows.shift(); // Separate first row with column names
-                                            rows.map((row) => { // Map the rest of the rows into objects
-                                              const obj = {}; // Create object literal for current row
-                                              row.forEach((cell, i) => {
-                                                    obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
-                                              });
+                                        }
+                                        // console.log(rows,'---------------')
+                                        // rows.shift(); // Separate first row with column names
+                                        // rows.shift(); // Separate first row with column names
+                                        // rows.shift(); // Separate first row with column name
+                                        // rows.shift(); // Separate first row with column name
+                                        // rows.shift(); // Separate first row with column name
+                                        // rows.shift(); // Separate first row with column name
+                                        // const columnNames = rows.shift(); // Separate first row with column names
+                                        rows.map((row) => { // Map the rest of the rows into objects
+                                            const obj = {}; // Create object literal for current row
+                                            row.forEach((cell, i) => {
+                                                obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
+                                            });
                                             //   console.log(obj)
-                                              dataArray.push(Object(obj));
-                                              resolve(dataArray)
+                                            dataArray.push(Object(obj));
+                                            resolve(dataArray)
                                             //   console.log(objs); // Display the array of objects on the console
                                             //   return obj;
-                                            });
-                                          });
-                                    }else{
-                                        const saveFilePath =  this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS,'Email','Sheet Name Does Not Match')
-                                        filesArray.push(new ordersMailFileStatusArrayReq(filename,'Failed',`Sheet name doesn't match`,'-'))
-                                       resolve(null)
-                                    }
-                                }else{
-                                    
-                                }
-                            })
-                            const dataArray = await promise();
-                        
-                            if(dataArray){
-                                
-                                const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS,'Email')
-                                // console.log(filepath,'jjjjj')
-                                // console.log(filename,'jjjjj')
-                                if(saveFilePath.status){
-                                    // console.log(dataArray,'------------------------------------')
-                                    const saveProjOrders = await this.saveOrdersData(dataArray,saveFilePath.data.id,9)
-                                    // console.log(saveProjOrders,'saveProjOrders')
-                                    let req = new FileStatusReq();
-                                    req.fileId = saveFilePath.data.id;
-                                    req.userName = 'Bidhun'
-                                    if(saveProjOrders.status){
-                                        req.status = 'Success';
-                                    }else{
-                                        req.failedReason = saveProjOrders.internalMessage
-                                        if(saveProjOrders?.data){
-                                            // console.log(saveProjOrders.data,'hhhhh')
-                                            req.columns = saveProjOrders.data
-                                            // const resData = saveProjOrders.data
-                                        }else{
-                                            req.columns = ''
-                                        }
-                                        req.status = 'Failed';
-                                    }
-                                    // console.log(req,'valuuuuu')
-                                    const updateFileStatus = await this.updateFileStatus(req)
-                                    filesArray.push(new ordersMailFileStatusArrayReq(filename,req.status,req.status === 'Failed' ? req.failedReason : '' , req.status === 'Failed' ? req.columns : ''))
-                                }else{
-                                    // return false
-                                    filesArray.push(new ordersMailFileStatusArrayReq(filename,'Failed',saveFilePath.internalMessage,'-'))
-                                }
-                                // return dataArray
-                            }else{
-                                // return dataArray
+                                        });
+                                    });
+                            } else {
+                                const saveFilePath = this.updatePath(filepath, filename, null, FileTypesEnum.PROJECTION_ORDERS, 'Email', 'Sheet Name Does Not Match')
+                                filesArray.push(new ordersMailFileStatusArrayReq(filename, 'Failed', `Sheet name doesn't match`, '-'))
+                                resolve(null)
                             }
-                    }
-                
-                    const sendMail = this.sendMail('karthikeyan.nallamuthu@shahi.co.in','Projection Order Uploded Files Status',filesArray)
-                    if(sendMail){
-                        return new CommonResponseModel(true,1,'',filesArray)
-                    } else{
-                        return new CommonResponseModel(true,1,'Something went wrong in sending mail',filesArray)
+                        } else {
+
+                        }
+                    })
+                    const dataArray = await promise();
+
+                    if (dataArray) {
+
+                        const saveFilePath = await this.updatePath(filepath, filename, null, FileTypesEnum.PROJECTION_ORDERS, 'Email')
+                        // console.log(filepath,'jjjjj')
+                        // console.log(filename,'jjjjj')
+                        if (saveFilePath.status) {
+                            // console.log(dataArray,'------------------------------------')
+                            const saveProjOrders = await this.saveOrdersData(dataArray, saveFilePath.data.id, 9)
+                            // console.log(saveProjOrders,'saveProjOrders')
+                            let req = new FileStatusReq();
+                            req.fileId = saveFilePath.data.id;
+                            req.userName = 'Bidhun'
+                            if (saveProjOrders.status) {
+                                req.status = 'Success';
+                            } else {
+                                req.failedReason = saveProjOrders.internalMessage
+                                if (saveProjOrders?.data) {
+                                    // console.log(saveProjOrders.data,'hhhhh')
+                                    req.columns = saveProjOrders.data
+                                    // const resData = saveProjOrders.data
+                                } else {
+                                    req.columns = ''
+                                }
+                                req.status = 'Failed';
+                            }
+                            // console.log(req,'valuuuuu')
+                            const updateFileStatus = await this.updateFileStatus(req)
+                            filesArray.push(new ordersMailFileStatusArrayReq(filename, req.status, req.status === 'Failed' ? req.failedReason : '', req.status === 'Failed' ? req.columns : ''))
+                        } else {
+                            // return false
+                            filesArray.push(new ordersMailFileStatusArrayReq(filename, 'Failed', saveFilePath.internalMessage, '-'))
+                        }
+                        // return dataArray
+                    } else {
+                        // return dataArray
                     }
                 }
 
-    } catch(err){
-        throw err
-    }
- 
-    
+                const sendMail = this.sendMail('karthikeyan.nallamuthu@shahi.co.in', 'Projection Order Uploded Files Status', filesArray)
+                if (sendMail) {
+                    return new CommonResponseModel(true, 1, '', filesArray)
+                } else {
+                    return new CommonResponseModel(true, 1, 'Something went wrong in sending mail', filesArray)
+                }
+            }
+
+        } catch (err) {
+            throw err
+        }
+
+
     }
 
 
-async getMonthlyComparisionData(req:YearReq): Promise<CommonResponseModel> {
-    // console.log(req,'-------')
-    const data = await this.ordersChildRepo.getMonthlyComparisionData(req);
-    
-    if (data.length === 0) {
-        return new CommonResponseModel(false, 0, 'data not found');
-    }
+    async getMonthlyComparisionData(req: YearReq): Promise<CommonResponseModel> {
+        // console.log(req,'-------')
+        const data = await this.ordersChildRepo.getMonthlyComparisionData(req);
 
-    const DateMap = new Map<string, ItemDataDto>();  
-    for (const rec of data) {
-        
-            if(req.tabName === 'ExFactory'){
+        if (data.length === 0) {
+            return new CommonResponseModel(false, 0, 'data not found');
+        }
+
+        const DateMap = new Map<string, ItemDataDto>();
+        for (const rec of data) {
+
+            if (req.tabName === 'ExFactory') {
                 if (!DateMap.has(rec.planning_sum)) {
                     DateMap.set(
                         rec.planning_sum,
@@ -1794,694 +1817,698 @@ async getMonthlyComparisionData(req:YearReq): Promise<CommonResponseModel> {
                     );
                 }
                 const monthData = DateMap.get(rec.planning_sum).monthWiseData;
-                    const pcs: PcsDataDto[] = [];
-                    const coeff: CoeffDataDto[] = [];
-         pcs.push(
-           { name: 'In Previous',
-            janPcs: rec.janExfPre,
-            febPcs: rec.febExfPre,
-            marPcs: rec.marExfPre,
-            aprPcs: rec.aprExfPre,
-            mayPcs: rec.mayExfPre,
-            junPcs: rec.junExfPre,
-            julPcs: rec.julExfPre,
-            augPcs: rec.augExfPre,
-            sepPcs: rec.sepExfPre,
-            octPcs: rec.octExfPre,
-            novPcs: rec.novExfPre,
-            decPcs: rec.decExfPre,}
-        )
-          coeff.push({
-            name: 'In Latest',
-            janCoeff: rec.janExfLat,
-            febCoeff: rec.febExfLat,
-            marCoeff: rec.marExfLat,
-            aprCoeff: rec.aprExfLat,
-            mayCoeff: rec.mayExfLat,
-            junCoeff: rec.junExfLat,
-            julCoeff: rec.julExfLat,
-            augCoeff: rec.augExfLat,
-            sepCoeff: rec.sepExfLat,
-            octCoeff: rec.octExfLat,
-            novCoeff: rec.novExfLat,
-            decCoeff: rec.decExfLat,
-          })
-        
-    const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff,rec.totalExfPre,rec.totalExfLat,rec.order_plan_number);
-            monthData.push(monthWiseInstance); 
-        }
-        if(req.tabName === 'WareHouse'){
-            if (!DateMap.has(rec.planning_sum)) {
-                DateMap.set(
-                    rec.planning_sum,
-                    new ItemDataDto(rec.planning_sum, [])
-                );
-            }
-            const monthData = DateMap.get(rec.planning_sum).monthWiseData;
                 const pcs: PcsDataDto[] = [];
                 const coeff: CoeffDataDto[] = [];
-            pcs.push(
-              { name: 'In Previous',
-               janPcs: rec.janWhPre,
-               febPcs: rec.febWhPre,
-               marPcs: rec.marWhPre,
-               aprPcs: rec.aprWhPre,
-               mayPcs: rec.mayWhPre,
-               junPcs: rec.junWhPre,
-               julPcs: rec.julWhPre,
-               augPcs: rec.augWhPre,
-               sepPcs: rec.sepWhPre,
-               octPcs: rec.octWhPre,
-               novPcs: rec.novWhPre,
-               decPcs: rec.decWhPre,}
-           )
-             coeff.push({
-               name: 'In Latest',
-               janCoeff: rec.janWhLat,
-               febCoeff: rec.febWhLat,
-               marCoeff: rec.marWhLat,
-               aprCoeff: rec.aprWhLat,
-               mayCoeff: rec.mayWhLat,
-               junCoeff: rec.junWhLat,
-               julCoeff: rec.julWhLat,
-               augCoeff: rec.augWhLat,
-               sepCoeff: rec.sepWhLat,
-               octCoeff: rec.octWhLat,
-               novCoeff: rec.novWhLat,
-               decCoeff: rec.decWhLat,
-             })
-              const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff,rec.totalWhPre,rec.totalWhLat,rec.order_plan_number);
-               monthData.push(monthWiseInstance); 
-           }
+                pcs.push(
+                    {
+                        name: 'In Previous',
+                        janPcs: rec.janExfPre,
+                        febPcs: rec.febExfPre,
+                        marPcs: rec.marExfPre,
+                        aprPcs: rec.aprExfPre,
+                        mayPcs: rec.mayExfPre,
+                        junPcs: rec.junExfPre,
+                        julPcs: rec.julExfPre,
+                        augPcs: rec.augExfPre,
+                        sepPcs: rec.sepExfPre,
+                        octPcs: rec.octExfPre,
+                        novPcs: rec.novExfPre,
+                        decPcs: rec.decExfPre,
+                    }
+                )
+                coeff.push({
+                    name: 'In Latest',
+                    janCoeff: rec.janExfLat,
+                    febCoeff: rec.febExfLat,
+                    marCoeff: rec.marExfLat,
+                    aprCoeff: rec.aprExfLat,
+                    mayCoeff: rec.mayExfLat,
+                    junCoeff: rec.junExfLat,
+                    julCoeff: rec.julExfLat,
+                    augCoeff: rec.augExfLat,
+                    sepCoeff: rec.sepExfLat,
+                    octCoeff: rec.octExfLat,
+                    novCoeff: rec.novExfLat,
+                    decCoeff: rec.decExfLat,
+                })
+
+                const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff, rec.totalExfPre, rec.totalExfLat, rec.order_plan_number);
+                monthData.push(monthWiseInstance);
+            }
+            if (req.tabName === 'WareHouse') {
+                if (!DateMap.has(rec.planning_sum)) {
+                    DateMap.set(
+                        rec.planning_sum,
+                        new ItemDataDto(rec.planning_sum, [])
+                    );
+                }
+                const monthData = DateMap.get(rec.planning_sum).monthWiseData;
+                const pcs: PcsDataDto[] = [];
+                const coeff: CoeffDataDto[] = [];
+                pcs.push(
+                    {
+                        name: 'In Previous',
+                        janPcs: rec.janWhPre,
+                        febPcs: rec.febWhPre,
+                        marPcs: rec.marWhPre,
+                        aprPcs: rec.aprWhPre,
+                        mayPcs: rec.mayWhPre,
+                        junPcs: rec.junWhPre,
+                        julPcs: rec.julWhPre,
+                        augPcs: rec.augWhPre,
+                        sepPcs: rec.sepWhPre,
+                        octPcs: rec.octWhPre,
+                        novPcs: rec.novWhPre,
+                        decPcs: rec.decWhPre,
+                    }
+                )
+                coeff.push({
+                    name: 'In Latest',
+                    janCoeff: rec.janWhLat,
+                    febCoeff: rec.febWhLat,
+                    marCoeff: rec.marWhLat,
+                    aprCoeff: rec.aprWhLat,
+                    mayCoeff: rec.mayWhLat,
+                    junCoeff: rec.junWhLat,
+                    julCoeff: rec.julWhLat,
+                    augCoeff: rec.augWhLat,
+                    sepCoeff: rec.sepWhLat,
+                    octCoeff: rec.octWhLat,
+                    novCoeff: rec.novWhLat,
+                    decCoeff: rec.decWhLat,
+                })
+                const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff, rec.totalWhPre, rec.totalWhLat, rec.order_plan_number);
+                monthData.push(monthWiseInstance);
+            }
         }
-        
-        const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
+
+        const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
     }
 
-// async getWareHouseComparisionData(req:YearReq): Promise<CommonResponseModel> {
-//     const data = await this.ordersChildRepo.getWareHouseComparisionData(req);
-    
-//     if (data.length === 0) {
-//         console.log(data.length,"00000000")
-//         return new CommonResponseModel(false, 0, 'data not found');
-//     }
+    // async getWareHouseComparisionData(req:YearReq): Promise<CommonResponseModel> {
+    //     const data = await this.ordersChildRepo.getWareHouseComparisionData(req);
 
-//     const DateMap = new Map<string, ItemDataDto>();
- 
-//     for (const rec of data) {
-//         const orderQty = rec.order_plan_qty.replace(/,/g, '')
+    //     if (data.length === 0) {
+    //         console.log(data.length,"00000000")
+    //         return new CommonResponseModel(false, 0, 'data not found');
+    //     }
 
-//         if (!DateMap.has(rec.item_cd)) {
-//             DateMap.set(
-//                 rec.item_cd,
-//                 new ItemDataDto(rec.item, [])
-//             );
-//         }
-//         const monthData = DateMap.get(rec.item_cd).monthWiseData;
-//         const phase = monthData.find(e => e.phasetype === rec.prod_plan_type)
-//             const pcs: PcsDataDto[] = [];
-//             const coeff: CoeffDataDto[] = [];
-           
-            
-// pcs.push(
-//     { name: 'In Pcs',
-//     janPcs: rec.whMonth === 1 ? Number(orderQty) :Number(0),
-//     febPcs: rec.whMonth === 2 ? Number(orderQty) :Number(0),
-//     marPcs: rec.whMonth === 3 ? Number(orderQty) :Number(0),
-//     aprPcs: rec.whMonth === 4 ? Number(orderQty) :Number(0),
-//     mayPcs: rec.whMonth === 5 ? Number(orderQty) :Number(0),
-//     junPcs: rec.whMonth === 6 ? Number(orderQty) :Number(0),
-//     julPcs: rec.whMonth === 7 ? Number(orderQty) :Number(0),
-//     augPcs: rec.whMonth === 8 ? Number(orderQty) :Number(0),
-//     sepPcs: rec.whMonth === 9 ? Number(orderQty) :Number(0),
-//     octPcs: rec.whMonth === 10 ? Number(orderQty) :Number(0),
-//     novPcs: rec.whMonth === 11 ? Number(orderQty) :Number(0),
-//     decPcs: rec.whMonth === 12 ? Number(orderQty) :Number(0),}
-//         )
-//     if (rec.status === "latest") {
-//         coeff.push({
-//             name: 'In Coeff',
-//             janCoeff: rec.whMonth === 1 ? Number(orderQty) :Number(0),
-//             febCoeff: rec.whMonth === 2 ? Number(orderQty) :Number(0),
-//             marCoeff: rec.whMonth === 3 ? Number(orderQty) :Number(0),
-//             aprCoeff: rec.whMonth === 4 ? Number(orderQty) :Number(0),
-//             mayCoeff: rec.whMonth === 5 ? Number(orderQty) :Number(0),
-//             junCoeff: rec.whMonth === 6 ? Number(orderQty) :Number(0),
-//             julCoeff: rec.whMonth === 7 ? Number(orderQty) :Number(0),
-//             augCoeff: rec.whMonth === 8 ? Number(orderQty) :Number(0),
-//             sepCoeff: rec.whMonth === 9 ? Number(orderQty) :Number(0),
-//             octCoeff: rec.whMonth === 10 ? Number(orderQty) :Number(0),
-//             novCoeff: rec.whMonth === 11 ? Number(orderQty) :Number(0),
-//             decCoeff: rec.whMonth === 12 ? Number(orderQty) :Number(0),
-//           })
-//         const totalPcs = pcs.reduce((total, item) => {
-//             return  + [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
-//                 .filter(value => value !== 0) 
-//                 .reduce((sum, value) => + value, 0);
-//         }, 0);
-        
-//         const totalCoeff = coeff.reduce((total, item) => {
-//             return + [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
-//                 .filter(value => value !== 0) 
-//                 .reduce((sum, value) =>  + value, 0);
-//         }, 0);
-        
-//             const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs,coeff,totalPcs,totalCoeff);
-//             monthData.push(monthWiseInstance); 
-        
-//     }
-    
-// }
-//     const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
+    //     const DateMap = new Map<string, ItemDataDto>();
 
-//     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+    //     for (const rec of data) {
+    //         const orderQty = rec.order_plan_qty.replace(/,/g, '')
+
+    //         if (!DateMap.has(rec.item_cd)) {
+    //             DateMap.set(
+    //                 rec.item_cd,
+    //                 new ItemDataDto(rec.item, [])
+    //             );
+    //         }
+    //         const monthData = DateMap.get(rec.item_cd).monthWiseData;
+    //         const phase = monthData.find(e => e.phasetype === rec.prod_plan_type)
+    //             const pcs: PcsDataDto[] = [];
+    //             const coeff: CoeffDataDto[] = [];
 
 
+    // pcs.push(
+    //     { name: 'In Pcs',
+    //     janPcs: rec.whMonth === 1 ? Number(orderQty) :Number(0),
+    //     febPcs: rec.whMonth === 2 ? Number(orderQty) :Number(0),
+    //     marPcs: rec.whMonth === 3 ? Number(orderQty) :Number(0),
+    //     aprPcs: rec.whMonth === 4 ? Number(orderQty) :Number(0),
+    //     mayPcs: rec.whMonth === 5 ? Number(orderQty) :Number(0),
+    //     junPcs: rec.whMonth === 6 ? Number(orderQty) :Number(0),
+    //     julPcs: rec.whMonth === 7 ? Number(orderQty) :Number(0),
+    //     augPcs: rec.whMonth === 8 ? Number(orderQty) :Number(0),
+    //     sepPcs: rec.whMonth === 9 ? Number(orderQty) :Number(0),
+    //     octPcs: rec.whMonth === 10 ? Number(orderQty) :Number(0),
+    //     novPcs: rec.whMonth === 11 ? Number(orderQty) :Number(0),
+    //     decPcs: rec.whMonth === 12 ? Number(orderQty) :Number(0),}
+    //         )
+    //     if (rec.status === "latest") {
+    //         coeff.push({
+    //             name: 'In Coeff',
+    //             janCoeff: rec.whMonth === 1 ? Number(orderQty) :Number(0),
+    //             febCoeff: rec.whMonth === 2 ? Number(orderQty) :Number(0),
+    //             marCoeff: rec.whMonth === 3 ? Number(orderQty) :Number(0),
+    //             aprCoeff: rec.whMonth === 4 ? Number(orderQty) :Number(0),
+    //             mayCoeff: rec.whMonth === 5 ? Number(orderQty) :Number(0),
+    //             junCoeff: rec.whMonth === 6 ? Number(orderQty) :Number(0),
+    //             julCoeff: rec.whMonth === 7 ? Number(orderQty) :Number(0),
+    //             augCoeff: rec.whMonth === 8 ? Number(orderQty) :Number(0),
+    //             sepCoeff: rec.whMonth === 9 ? Number(orderQty) :Number(0),
+    //             octCoeff: rec.whMonth === 10 ? Number(orderQty) :Number(0),
+    //             novCoeff: rec.whMonth === 11 ? Number(orderQty) :Number(0),
+    //             decCoeff: rec.whMonth === 12 ? Number(orderQty) :Number(0),
+    //           })
+    //         const totalPcs = pcs.reduce((total, item) => {
+    //             return  + [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
+    //                 .filter(value => value !== 0) 
+    //                 .reduce((sum, value) => + value, 0);
+    //         }, 0);
 
-// }
-async getOrdersStatus(): Promise<CommonResponseModel> {
-    const details = await this.ordersRepository.getOrdersStatus()
-    if (details)
-        return new CommonResponseModel(true, 1, 'data retrived', details)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
-async getOrderPlanNo(): Promise<CommonResponseModel> {
-    const details = await this.ordersRepository.getOrderPlanNO()
-    if (details)
-        return new CommonResponseModel(true, 1, 'data retrived', details)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
-async getOrderNumberDropDownInCompare():Promise<CommonResponseModel>{
-    try{
-        const data = await this.ordersChildRepo.getOrderNumbers()
-        if(data){
-            return new CommonResponseModel(true,1,'Data retrieved',data)
-        } else{
-            return new CommonResponseModel(false,1,'No data found')
+    //         const totalCoeff = coeff.reduce((total, item) => {
+    //             return + [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
+    //                 .filter(value => value !== 0) 
+    //                 .reduce((sum, value) =>  + value, 0);
+    //         }, 0);
+
+    //             const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs,coeff,totalPcs,totalCoeff);
+    //             monthData.push(monthWiseInstance); 
+
+    //     }
+
+    // }
+    //     const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
+
+    //     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+
+
+
+    // }
+    async getOrdersStatus(): Promise<CommonResponseModel> {
+        const details = await this.ordersRepository.getOrdersStatus()
+        if (details)
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getOrderPlanNo(): Promise<CommonResponseModel> {
+        const details = await this.ordersRepository.getOrderPlanNO()
+        if (details)
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getOrderNumberDropDownInCompare(): Promise<CommonResponseModel> {
+        try {
+            const data = await this.ordersChildRepo.getOrderNumbers()
+            if (data) {
+                return new CommonResponseModel(true, 1, 'Data retrieved', data)
+            } else {
+                return new CommonResponseModel(false, 1, 'No data found')
+            }
+
+        } catch (err) {
+            throw err
         }
-
-    } catch(err){
-        throw err
     }
-}
-async getMonthlyComparisionDate(req:YearReq):Promise<CommonResponseModel>{
-    try{
-        const data = await this.ordersChildRepo.getMonthlyComparisionDate(req)
-        if(data){
-            return new CommonResponseModel(true,1,'Data retrieved',data)
-        } else{
-            return new CommonResponseModel(false,1,'No data found')
+    async getMonthlyComparisionDate(req: YearReq): Promise<CommonResponseModel> {
+        try {
+            const data = await this.ordersChildRepo.getMonthlyComparisionDate(req)
+            if (data) {
+                return new CommonResponseModel(true, 1, 'Data retrieved', data)
+            } else {
+                return new CommonResponseModel(false, 1, 'No data found')
+            }
+
+        } catch (err) {
+            throw err
         }
-
-    } catch(err){
-        throw err
     }
-}
 
-async createCOLineInternal(req:COLineRequest):Promise<CommonResponseModel>{
-    try{
-        const entity = new CoLine()
-        entity.itemNumber = req.itemNumber;
-        entity.orderNumber = req.orderNumber;
-        entity.colorCode = req.colorCode;
-        entity.color = req.color;
-        entity.sizeCode = req.sizeCode;
-        entity.size = req.size;
-        entity.itemCode = req.itemCode;
-        entity.item = req.item;
-        entity.destination = req.destination;
-        entity.company_CONO = req.company_CONO;
-        entity.temporaryOrderNumber_ORNO = req.temporaryOrderNumber_ORNO;
-        entity.itemNumber_ITNO = req.itemNumber_ITNO;
-        entity.orderedQuantity_ORQT = req.orderedQuantity_ORQT;
-        entity.warehouse_WHLO = req.warehouse_WHLO;
-        entity.requestedDeliveryDate_DWDT = req.requestedDeliveryDate_DWDT;
-        entity.jointDeliveryDate_JDCD = req.jointDeliveryDate_JDCD;
-        entity.customersOrderNumber_CUPO = req.customersOrderNumber_CUPO;
-        entity.salesPrice_SAPR = req.salesPrice_SAPR;
-        entity.discountAmount1_DIA1 = req.discountAmount1_DIA1;
-        entity.discountAmount2_DIA2 = req.discountAmount2_DIA2;
-        entity.discountAmount3_DIA3 = req.discountAmount3_DIA3;
-        entity.discountAmount4_DIA4 = req.discountAmount4_DIA4;
-        entity.discountAmount5_DIA5 = req.discountAmount5_DIA5;
-        entity.discountAmount6_DIA6 = req.discountAmount6_DIA6;
-        entity.deliverySpecification_DLSP = req.deliverySpecification_DLSP;
-        entity.deliverySpecificationText_DLSX = req.deliverySpecificationText_DLSX;
-        entity.oldCFIN_CFXX = req.oldCFIN_CFXX;
-        entity.simulationsNumber_ECVS = req.simulationsNumber_ECVS;
-        entity.alternateUM_ALUN = req.alternateUM_ALUN;
-        entity.confirmedDateOfDelivery_CODT = req.confirmedDateOfDelivery_CODT;
-        entity.itemDescription_ITDS = req.itemDescription_ITDS;
-        entity.discountPercent1_DIP1 = req.discountPercent1_DIP1;
-        entity.discountPercent2_DIP2 = req.discountPercent2_DIP2;
-        entity.discountPercent3_DIP3 = req.discountPercent3_DIP3;
-        entity.discountPercent4_DIP4 = req.discountPercent4_DIP4;
-        entity.discountPercent5_DIP5 = req.discountPercent5_DIP5;
-        entity.discountPercent6_DIP6 = req.discountPercent6_DIP6;
-        entity.aliasQualifier_ALWT = req.aliasQualifier_ALWT;
-        entity.blanketAgreementNumber_AGNO = req.blanketAgreementNumber_AGNO;
-        entity.container_CAMU = req.container_CAMU;
-        entity.projectNumber_PROJ = req.projectNumber_PROJ;
-        entity.projectElement_ELON = req.projectElement_ELON;
-        entity.customerOrderNumber_CUOR = req.customerOrderNumber_CUOR;
-        entity.customersPackagingIdentity_CUPA = req.customersPackagingIdentity_CUPA;
-        entity.requestedDeliveryTime_DWHM = req.requestedDeliveryTime_DWHM;
-        entity.standardQuantity_D1QT = req.standardQuantity_D1QT;
-        entity.packaging_PACT = req.packaging_PACT;
-        entity.aliasNumber_POPN = req.aliasNumber_POPN;
-        entity.salesPriceQuantity_SACD = req.salesPriceQuantity_SACD;
-        entity.saledPriceUOM_SPUN = req.saledPriceUOM_SPUN;
-        entity.packagingTerms_TEPA = req.packagingTerms_TEPA;
-        entity.EDIFACTPrice_EDFP = req.EDIFACTPrice_EDFP;
-        entity.requestedDeliveryDate_DWDZ = req.requestedDeliveryDate_DWDZ;
-        entity.requestedDeliveryTime_DWHZ = req.requestedDeliveryTime_DWHZ;
-        entity.confirmedDeliveryTime_COHM = req.confirmedDeliveryTime_COHM;
-        entity.confirmedDeliveryDate_CODZ = req.confirmedDeliveryDate_CODZ;
-        entity.confirmedDeliveryTime_COHZ = req.confirmedDeliveryTime_COHZ;
-        entity.mainProduct_HDPR = req.mainProduct_HDPR;
-        entity.addressNumber_ADID = req.addressNumber_ADID;
-        entity.lineSuffix_CUSX = req.lineSuffix_CUSX;
-        entity.statusDiscount_DICI = req.statusDiscount_DICI;
-        entity.trimOrderId = req.trimOrderId;
-        const save = await this.colineRepo.save(entity)
-        if(save){
-            return new CommonResponseModel(true,1,'Created Successfully',save)
-        } else{
-            return new CommonResponseModel(false,0,'Something went wrong')
+    async createCOLineInternal(req: COLineRequest): Promise<CommonResponseModel> {
+        try {
+            const entity = new CoLine()
+            entity.itemNumber = req.itemNumber;
+            entity.orderNumber = req.orderNumber;
+            entity.colorCode = req.colorCode;
+            entity.color = req.color;
+            entity.sizeCode = req.sizeCode;
+            entity.size = req.size;
+            entity.itemCode = req.itemCode;
+            entity.item = req.item;
+            entity.destination = req.destination;
+            entity.company_CONO = req.company_CONO;
+            entity.temporaryOrderNumber_ORNO = req.temporaryOrderNumber_ORNO;
+            entity.itemNumber_ITNO = req.itemNumber_ITNO;
+            entity.orderedQuantity_ORQT = req.orderedQuantity_ORQT;
+            entity.warehouse_WHLO = req.warehouse_WHLO;
+            entity.requestedDeliveryDate_DWDT = req.requestedDeliveryDate_DWDT;
+            entity.jointDeliveryDate_JDCD = req.jointDeliveryDate_JDCD;
+            entity.customersOrderNumber_CUPO = req.customersOrderNumber_CUPO;
+            entity.salesPrice_SAPR = req.salesPrice_SAPR;
+            entity.discountAmount1_DIA1 = req.discountAmount1_DIA1;
+            entity.discountAmount2_DIA2 = req.discountAmount2_DIA2;
+            entity.discountAmount3_DIA3 = req.discountAmount3_DIA3;
+            entity.discountAmount4_DIA4 = req.discountAmount4_DIA4;
+            entity.discountAmount5_DIA5 = req.discountAmount5_DIA5;
+            entity.discountAmount6_DIA6 = req.discountAmount6_DIA6;
+            entity.deliverySpecification_DLSP = req.deliverySpecification_DLSP;
+            entity.deliverySpecificationText_DLSX = req.deliverySpecificationText_DLSX;
+            entity.oldCFIN_CFXX = req.oldCFIN_CFXX;
+            entity.simulationsNumber_ECVS = req.simulationsNumber_ECVS;
+            entity.alternateUM_ALUN = req.alternateUM_ALUN;
+            entity.confirmedDateOfDelivery_CODT = req.confirmedDateOfDelivery_CODT;
+            entity.itemDescription_ITDS = req.itemDescription_ITDS;
+            entity.discountPercent1_DIP1 = req.discountPercent1_DIP1;
+            entity.discountPercent2_DIP2 = req.discountPercent2_DIP2;
+            entity.discountPercent3_DIP3 = req.discountPercent3_DIP3;
+            entity.discountPercent4_DIP4 = req.discountPercent4_DIP4;
+            entity.discountPercent5_DIP5 = req.discountPercent5_DIP5;
+            entity.discountPercent6_DIP6 = req.discountPercent6_DIP6;
+            entity.aliasQualifier_ALWT = req.aliasQualifier_ALWT;
+            entity.blanketAgreementNumber_AGNO = req.blanketAgreementNumber_AGNO;
+            entity.container_CAMU = req.container_CAMU;
+            entity.projectNumber_PROJ = req.projectNumber_PROJ;
+            entity.projectElement_ELON = req.projectElement_ELON;
+            entity.customerOrderNumber_CUOR = req.customerOrderNumber_CUOR;
+            entity.customersPackagingIdentity_CUPA = req.customersPackagingIdentity_CUPA;
+            entity.requestedDeliveryTime_DWHM = req.requestedDeliveryTime_DWHM;
+            entity.standardQuantity_D1QT = req.standardQuantity_D1QT;
+            entity.packaging_PACT = req.packaging_PACT;
+            entity.aliasNumber_POPN = req.aliasNumber_POPN;
+            entity.salesPriceQuantity_SACD = req.salesPriceQuantity_SACD;
+            entity.saledPriceUOM_SPUN = req.saledPriceUOM_SPUN;
+            entity.packagingTerms_TEPA = req.packagingTerms_TEPA;
+            entity.EDIFACTPrice_EDFP = req.EDIFACTPrice_EDFP;
+            entity.requestedDeliveryDate_DWDZ = req.requestedDeliveryDate_DWDZ;
+            entity.requestedDeliveryTime_DWHZ = req.requestedDeliveryTime_DWHZ;
+            entity.confirmedDeliveryTime_COHM = req.confirmedDeliveryTime_COHM;
+            entity.confirmedDeliveryDate_CODZ = req.confirmedDeliveryDate_CODZ;
+            entity.confirmedDeliveryTime_COHZ = req.confirmedDeliveryTime_COHZ;
+            entity.mainProduct_HDPR = req.mainProduct_HDPR;
+            entity.addressNumber_ADID = req.addressNumber_ADID;
+            entity.lineSuffix_CUSX = req.lineSuffix_CUSX;
+            entity.statusDiscount_DICI = req.statusDiscount_DICI;
+            entity.trimOrderId = req.trimOrderId;
+            const save = await this.colineRepo.save(entity)
+            if (save) {
+                return new CommonResponseModel(true, 1, 'Created Successfully', save)
+            } else {
+                return new CommonResponseModel(false, 0, 'Something went wrong')
+            }
+
+        } catch (err) {
+            throw err
         }
-
-    } catch(err){
-        throw err
     }
-}
 
-async updateStatusAfterCoLineCreationInM3(req:CoLineStatusReq):Promise<CommonResponseModel>{
-    try{
-        const statusUpdate = await this.colineRepo.update({coLineId : req.coLineId},{status:req.status})
-        if(statusUpdate.affected){
-            return new CommonResponseModel(true,1,'Status Updated')
-        } else{
-            return new CommonResponseModel(false,0,'Something went erong in status update')
+    async updateStatusAfterCoLineCreationInM3(req: CoLineStatusReq): Promise<CommonResponseModel> {
+        try {
+            const statusUpdate = await this.colineRepo.update({ coLineId: req.coLineId }, { status: req.status })
+            if (statusUpdate.affected) {
+                return new CommonResponseModel(true, 1, 'Status Updated')
+            } else {
+                return new CommonResponseModel(false, 0, 'Something went erong in status update')
+            }
+
+        } catch (err) {
+            throw (err)
         }
-
-    } catch(err){
-        throw(err)
     }
-}
-async getPhaseMonthData(req): Promise<CommonResponseModel> {
-    try {
-    const data = await this.ordersRepository.getdata(req);
-    const DateMap = new Map<string, MonthWiseDto>();
-    
-    for (const rec of data) {
-        let monthWiseInstance;
+    async getPhaseMonthData(req): Promise<CommonResponseModel> {
+        try {
+            const data = await this.ordersRepository.getdata(req);
+            const DateMap = new Map<string, MonthWiseDto>();
 
-        if (DateMap.has(rec.prod_plan_type)) {
-            monthWiseInstance = DateMap.get(rec.prod_plan_type);
-        } else {
-            monthWiseInstance = new MonthWiseDto(
-                rec.prod_plan_type,
-                [],
-                [],
-                0,
-                0
-            );
-            DateMap.set(rec.prod_plan_type, monthWiseInstance);
+            for (const rec of data) {
+                let monthWiseInstance;
+
+                if (DateMap.has(rec.prod_plan_type)) {
+                    monthWiseInstance = DateMap.get(rec.prod_plan_type);
+                } else {
+                    monthWiseInstance = new MonthWiseDto(
+                        rec.prod_plan_type,
+                        [],
+                        [],
+                        0,
+                        0
+                    );
+                    DateMap.set(rec.prod_plan_type, monthWiseInstance);
+                }
+                if (req.tabName === 'ExFactory') {
+
+                    monthWiseInstance.pcsData.push({
+                        name: 'In Pcs',
+                        janPcs: rec.janPcsExf,
+                        febPcs: rec.febPcsExf,
+                        marPcs: rec.marPcsExf,
+                        aprPcs: rec.aprPcsExf,
+                        mayPcs: rec.mayPcsExf,
+                        junPcs: rec.junPcsExf,
+                        julPcs: rec.julPcsExf,
+                        augPcs: rec.augPcsExf,
+                        sepPcs: rec.sepPcsExf,
+                        octPcs: rec.octPcsExf,
+                        novPcs: rec.novPcsExf,
+                        decPcs: rec.decPcsExf,
+                    });
+
+                    monthWiseInstance.coeffData.push({
+                        name: 'In Coeff',
+                        janCoeff: rec.janExfCoeff,
+                        febCoeff: rec.febExfCoeff,
+                        marCoeff: rec.marExfCoeff,
+                        aprCoeff: rec.aprExfCoeff,
+                        mayCoeff: rec.mayExfCoeff,
+                        junCoeff: rec.julExfCoeff,
+                        julCoeff: rec.julExfCoeff,
+                        augCoeff: rec.augExfCoeff,
+                        sepCoeff: rec.sepExfCoeff,
+                        octCoeff: rec.octExfCoeff,
+                        novCoeff: rec.novExfCoeff,
+                        decCoeff: rec.decExfCoeff,
+                    });
+                    monthWiseInstance.totalPcs = rec.totalExfPre;
+                    monthWiseInstance.totalCoeff = rec.totalExfLat;
+                }
+                if (req.tabName === 'WareHouse') {
+
+                    monthWiseInstance.pcsData.push({
+                        name: 'In Pcs',
+                        janPcs: rec.janPcsWh,
+                        febPcs: rec.febPcsWh,
+                        marPcs: rec.marPcsWh,
+                        aprPcs: rec.aprPcsWh,
+                        mayPcs: rec.mayPcsWh,
+                        junPcs: rec.junPcsWh,
+                        julPcs: rec.julPcsWh,
+                        augPcs: rec.augPcsWh,
+                        sepPcs: rec.sepPcsWh,
+                        octPcs: rec.octPcsWh,
+                        novPcs: rec.novPcsWh,
+                        decPcs: rec.decPcsWh,
+                    });
+
+                    monthWiseInstance.coeffData.push({
+                        name: 'In Coeff',
+                        janCoeff: rec.janWhCoeff,
+                        febCoeff: rec.febWhCoeff,
+                        marCoeff: rec.marWhCoeff,
+                        aprCoeff: rec.aprWhCoeff,
+                        mayCoeff: rec.mayWhCoeff,
+                        junCoeff: rec.junWhCoeff,
+                        julCoeff: rec.julWhCoeff,
+                        augCoeff: rec.augWhCoeff,
+                        sepCoeff: rec.sepWhCoeff,
+                        octCoeff: rec.octWhCoeff,
+                        novCoeff: rec.novWhCoeff,
+                        decCoeff: rec.decWhCoeff,
+                    });
+
+                    monthWiseInstance.totalPcs = rec.totalWhPre;
+                    monthWiseInstance.totalCoeff = rec.totalWhLat;
+                }
+            }
+            const dataModelArray: MonthWiseDto[] = Array.from(DateMap.values());
+            return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+        } catch (error) {
+            // Handle errors appropriately
+            // console.error(error);
+            return new CommonResponseModel(false, 0, 'error occurred', null);
         }
-    if(req.tabName === 'ExFactory'){
-    
-    monthWiseInstance.pcsData.push({
-    name: 'In Pcs',
-    janPcs: rec.janPcsExf,
-    febPcs: rec.febPcsExf,
-    marPcs: rec.marPcsExf,
-    aprPcs: rec.aprPcsExf,
-    mayPcs: rec.mayPcsExf,
-    junPcs: rec.junPcsExf,
-    julPcs: rec.julPcsExf,
-    augPcs: rec.augPcsExf,
-    sepPcs: rec.sepPcsExf,
-    octPcs: rec.octPcsExf,
-    novPcs: rec.novPcsExf,
-    decPcs: rec.decPcsExf,
-    });
-    
-    monthWiseInstance.coeffData.push({
-    name: 'In Coeff',
-    janCoeff: rec.janExfCoeff,
-    febCoeff: rec.febExfCoeff,
-    marCoeff: rec.marExfCoeff,
-    aprCoeff: rec.aprExfCoeff,
-    mayCoeff: rec.mayExfCoeff,
-    junCoeff: rec.julExfCoeff,
-    julCoeff: rec.julExfCoeff,
-    augCoeff: rec.augExfCoeff,
-    sepCoeff: rec.sepExfCoeff,
-    octCoeff: rec.octExfCoeff,
-    novCoeff: rec.novExfCoeff,
-    decCoeff: rec.decExfCoeff,
-    });
-    monthWiseInstance.totalPcs = rec.totalExfPre;
-    monthWiseInstance.totalCoeff = rec.totalExfLat;
     }
-    if(req.tabName ==='WareHouse'){
-    
-    monthWiseInstance.pcsData.push({
-    name: 'In Pcs',
-    janPcs: rec.janPcsWh,
-    febPcs: rec.febPcsWh,
-    marPcs: rec.marPcsWh,
-    aprPcs: rec.aprPcsWh,
-    mayPcs: rec.mayPcsWh,
-    junPcs: rec.junPcsWh,
-    julPcs: rec.julPcsWh,
-    augPcs: rec.augPcsWh,
-    sepPcs: rec.sepPcsWh,
-    octPcs: rec.octPcsWh,
-    novPcs: rec.novPcsWh,
-    decPcs: rec.decPcsWh,
-    });
-    
-    monthWiseInstance.coeffData.push({
-    name: 'In Coeff',
-    janCoeff: rec.janWhCoeff,
-    febCoeff: rec.febWhCoeff,
-    marCoeff: rec.marWhCoeff,
-    aprCoeff: rec.aprWhCoeff,
-    mayCoeff: rec.mayWhCoeff,
-    junCoeff: rec.junWhCoeff,
-    julCoeff: rec.julWhCoeff,
-    augCoeff: rec.augWhCoeff,
-    sepCoeff: rec.sepWhCoeff,
-    octCoeff: rec.octWhCoeff,
-    novCoeff: rec.novWhCoeff,
-    decCoeff: rec.decWhCoeff,
-    });
-    
-    monthWiseInstance.totalPcs = rec.totalWhPre;
-    monthWiseInstance.totalCoeff = rec.totalWhLat;
-    }
-    }
-    const dataModelArray: MonthWiseDto[] = Array.from(DateMap.values());   
-    return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);  
-    } catch (error) {
-    // Handle errors appropriately
-    // console.error(error);
-    return new CommonResponseModel(false, 0, 'error occurred', null);
-    }
-    }
-async getComparisionphaseData(req:YearReq):Promise<CommonResponseModel>{
-    const data = await this.ordersChildRepo.getComparisionphaseData(req);
-    const DateMap = new Map<string, MonthWiseDto>();
-    for (const rec of data) {
-        if (!DateMap.has(rec.prod_plan_type)) {
-            DateMap.set(
-              rec.prod_plan_type,
-              new MonthWiseDto(rec.prod_plan_type, [], [], 0, 0)
-            );
-          }
-          const monthWiseInstance = DateMap.get(rec.prod_plan_type);
-        
-if(req.tabName === 'ExFactory'){
-   
-      monthWiseInstance.pcsData.push({
-        name: 'In Previous',
-        janPcs: rec.janExfPre,
-        febPcs: rec.febExfPre,
-        marPcs: rec.marExfPre,
-        aprPcs: rec.aprExfPre,
-        mayPcs: rec.mayExfPre,
-        junPcs: rec.junExfPre,
-        julPcs: rec.julExfPre,
-        augPcs: rec.augExfPre,
-        sepPcs: rec.sepExfPre,
-        octPcs: rec.octExfPre,
-        novPcs: rec.novExfPre,
-        decPcs: rec.decExfPre,
-      });
-
-      monthWiseInstance.coeffData.push({
-        name: 'In Latest',
-        janCoeff: rec.janExfLat,
-        febCoeff: rec.febExfLat,
-        marCoeff: rec.marExfLat,
-        aprCoeff: rec.aprExfLat,
-        mayCoeff: rec.mayExfLat,
-        junCoeff: rec.julExfLat,
-        julCoeff: rec.julExfLat,
-        augCoeff: rec.augExfLat,
-        sepCoeff: rec.sepExfLat,
-        octCoeff: rec.octExfLat,
-        novCoeff: rec.novExfLat,
-        decCoeff: rec.decExfLat,
-      });
-      monthWiseInstance.totalPcs = rec.totalExfPre;
-      monthWiseInstance.totalCoeff = rec.totalExfLat;
-}
-if(req.tabName ==='WareHouse'){
-   
-  monthWiseInstance.pcsData.push({
-    name: 'In Previous',
-    janPcs: rec.janWhPre,
-    febPcs: rec.febWhPre,
-    marPcs: rec.marWhPre,
-    aprPcs: rec.aprWhPre,
-    mayPcs: rec.mayWhPre,
-    junPcs: rec.junWhPre,
-    julPcs: rec.julWhPre,
-    augPcs: rec.augWhPre,
-    sepPcs: rec.sepWhPre,
-    octPcs: rec.octWhPre,
-    novPcs: rec.novWhPre,
-    decPcs: rec.decWhPre,
-  });
-
-  monthWiseInstance.coeffData.push({
-    name: 'In Latest',
-    janCoeff: rec.janWhLat,
-    febCoeff: rec.febWhLat,
-    marCoeff: rec.marWhLat,
-    aprCoeff: rec.aprWhLat,
-    mayCoeff: rec.mayWhLat,
-    junCoeff: rec.junWhLat,
-    julCoeff: rec.julWhLat,
-    augCoeff: rec.augWhLat,
-    sepCoeff: rec.sepWhLat,
-    octCoeff: rec.octWhLat,
-    novCoeff: rec.novWhLat,
-    decCoeff: rec.decWhLat,
-  });
-
-  monthWiseInstance.totalPcs = rec.totalWhPre;
-  monthWiseInstance.totalCoeff = rec.totalWhLat;
-}
- }
-    const dataModelArray: MonthWiseDto[] = Array.from(DateMap.values());   
-    return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);  
-}
-async getPhaseMonthExcelData(req:YearReq):Promise<CommonResponseModel>{
-    try{
-        const data = await this.ordersRepository.getdata(req);
-        const data1 = await this.ordersRepository.getdata1(req);
-        if (data && data1) {
-           
-            const mergedData = [...data, ...data1];
-
-              
-
-            // Log the merged data for debugging
-            // console.log('Merged Data:', mergedData);
-
-            return new CommonResponseModel(true, 1, 'Data retrieved', mergedData);
-        } else {
-            return new CommonResponseModel(false, 1, 'No data found');
-        }
-    } catch(err){
-        throw err
-    }
-}
-async getComparisionphaseExcelData(req: YearReq): Promise<CommonResponseModel> {
-    try {
+    async getComparisionphaseData(req: YearReq): Promise<CommonResponseModel> {
         const data = await this.ordersChildRepo.getComparisionphaseData(req);
-        const data1 = await this.ordersChildRepo.getComparisionphaseData1(req);
-    if (data && data1) {
-            const mergedData = [...data1, ...data];
-            return new CommonResponseModel(true, 1, 'Data retrieved', mergedData);
-        } else {
-            return new CommonResponseModel(false, 1, 'No data found');
+        const DateMap = new Map<string, MonthWiseDto>();
+        for (const rec of data) {
+            if (!DateMap.has(rec.prod_plan_type)) {
+                DateMap.set(
+                    rec.prod_plan_type,
+                    new MonthWiseDto(rec.prod_plan_type, [], [], 0, 0)
+                );
+            }
+            const monthWiseInstance = DateMap.get(rec.prod_plan_type);
+
+            if (req.tabName === 'ExFactory') {
+
+                monthWiseInstance.pcsData.push({
+                    name: 'In Previous',
+                    janPcs: rec.janExfPre,
+                    febPcs: rec.febExfPre,
+                    marPcs: rec.marExfPre,
+                    aprPcs: rec.aprExfPre,
+                    mayPcs: rec.mayExfPre,
+                    junPcs: rec.junExfPre,
+                    julPcs: rec.julExfPre,
+                    augPcs: rec.augExfPre,
+                    sepPcs: rec.sepExfPre,
+                    octPcs: rec.octExfPre,
+                    novPcs: rec.novExfPre,
+                    decPcs: rec.decExfPre,
+                });
+
+                monthWiseInstance.coeffData.push({
+                    name: 'In Latest',
+                    janCoeff: rec.janExfLat,
+                    febCoeff: rec.febExfLat,
+                    marCoeff: rec.marExfLat,
+                    aprCoeff: rec.aprExfLat,
+                    mayCoeff: rec.mayExfLat,
+                    junCoeff: rec.julExfLat,
+                    julCoeff: rec.julExfLat,
+                    augCoeff: rec.augExfLat,
+                    sepCoeff: rec.sepExfLat,
+                    octCoeff: rec.octExfLat,
+                    novCoeff: rec.novExfLat,
+                    decCoeff: rec.decExfLat,
+                });
+                monthWiseInstance.totalPcs = rec.totalExfPre;
+                monthWiseInstance.totalCoeff = rec.totalExfLat;
+            }
+            if (req.tabName === 'WareHouse') {
+
+                monthWiseInstance.pcsData.push({
+                    name: 'In Previous',
+                    janPcs: rec.janWhPre,
+                    febPcs: rec.febWhPre,
+                    marPcs: rec.marWhPre,
+                    aprPcs: rec.aprWhPre,
+                    mayPcs: rec.mayWhPre,
+                    junPcs: rec.junWhPre,
+                    julPcs: rec.julWhPre,
+                    augPcs: rec.augWhPre,
+                    sepPcs: rec.sepWhPre,
+                    octPcs: rec.octWhPre,
+                    novPcs: rec.novWhPre,
+                    decPcs: rec.decWhPre,
+                });
+
+                monthWiseInstance.coeffData.push({
+                    name: 'In Latest',
+                    janCoeff: rec.janWhLat,
+                    febCoeff: rec.febWhLat,
+                    marCoeff: rec.marWhLat,
+                    aprCoeff: rec.aprWhLat,
+                    mayCoeff: rec.mayWhLat,
+                    junCoeff: rec.junWhLat,
+                    julCoeff: rec.julWhLat,
+                    augCoeff: rec.augWhLat,
+                    sepCoeff: rec.sepWhLat,
+                    octCoeff: rec.octWhLat,
+                    novCoeff: rec.novWhLat,
+                    decCoeff: rec.decWhLat,
+                });
+
+                monthWiseInstance.totalPcs = rec.totalWhPre;
+                monthWiseInstance.totalCoeff = rec.totalWhLat;
+            }
         }
-    } catch (err) {
-        // console.error('Error in getComparisionphaseExcelData:', err);
-        throw err;
+        const dataModelArray: MonthWiseDto[] = Array.from(DateMap.values());
+        return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
     }
-}
-// async getversion():Promise<CommonResponseModel>{
-//     let query=`SELECT 
-//     order_plan_number, 
-//     old_val,
-//     created_at, 
-//     new_val,
-//     display_name,
-//     VERSION,
-//     new_column
-// FROM (
-//     SELECT 
-//         order_plan_number, 
-//         COLUMN_NAME,
-//         old_val,
-//         new_val,     
-//         display_name,
-//         created_at, 
-//         VERSION,
-//         ROW_NUMBER() OVER (PARTITION BY order_plan_number ORDER BY created_at DESC, VERSION DESC) AS new_column
-//     FROM order_diff
-// ) AS ranked
-// WHERE new_column <= 5;`
-// return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', query);
+    async getPhaseMonthExcelData(req: YearReq): Promise<CommonResponseModel> {
+        try {
+            const data = await this.ordersRepository.getdata(req);
+            const data1 = await this.ordersRepository.getdata1(req);
+            if (data && data1) {
 
-// }
-// async getversion(req:ordersPlanNo):Promise<CommonResponseModel>{
-//     try{
-//         const query = await this.orderDiffRepo.getversions(req);
-//         return new CommonResponseModel(true,1,'data retrieved', query)
-//     }catch(err){
-//         throw err
-//     }
-// }
-async getversion(req:ordersPlanNo):Promise<CommonResponseModel>{
-// console.log(req,'serviceeeeeeeeeeeeeee');
+                const mergedData = [...data, ...data1];
 
-    try{
-        const data = await this.orderDiffRepo.getversions(req)
-        if(data){
-            return new CommonResponseModel(true,1,'Data retrieved',data)
-        } else{
-            return new CommonResponseModel(false,1,'No data found')
+
+
+                // Log the merged data for debugging
+                // console.log('Merged Data:', mergedData);
+
+                return new CommonResponseModel(true, 1, 'Data retrieved', mergedData);
+            } else {
+                return new CommonResponseModel(false, 1, 'No data found');
+            }
+        } catch (err) {
+            throw err
         }
-
-    } catch(err){
-        throw err
     }
-}
-async getItemsMonthly(): Promise<CommonResponseModel> {
-    const details = await this.ordersRepository.getItemsMonthly()
-    if (details)
-        return new CommonResponseModel(true, 1, 'data retrived', details)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
-async getPhaseItems(): Promise<CommonResponseModel> {
-    const details = await this.ordersChildRepo.getPhaseItems()
-    if (details)
-        return new CommonResponseModel(true, 1, 'data retrived', details)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
-
-async getYearDropdown():Promise<CommonResponseModel>{
-    try{
-        const info = await this.ordersRepository.getYearDropdown()
-        if(info.length >0){
-            return new CommonResponseModel(true,1,'Data retrieved',info)
-        } else{
-            return new CommonResponseModel(false,0,'No dat found')
+    async getComparisionphaseExcelData(req: YearReq): Promise<CommonResponseModel> {
+        try {
+            const data = await this.ordersChildRepo.getComparisionphaseData(req);
+            const data1 = await this.ordersChildRepo.getComparisionphaseData1(req);
+            if (data && data1) {
+                const mergedData = [...data1, ...data];
+                return new CommonResponseModel(true, 1, 'Data retrieved', mergedData);
+            } else {
+                return new CommonResponseModel(false, 1, 'No data found');
+            }
+        } catch (err) {
+            // console.error('Error in getComparisionphaseExcelData:', err);
+            throw err;
         }
-
-    }catch(err){
-        throw err
     }
-}
+    // async getversion():Promise<CommonResponseModel>{
+    //     let query=`SELECT 
+    //     order_plan_number, 
+    //     old_val,
+    //     created_at, 
+    //     new_val,
+    //     display_name,
+    //     VERSION,
+    //     new_column
+    // FROM (
+    //     SELECT 
+    //         order_plan_number, 
+    //         COLUMN_NAME,
+    //         old_val,
+    //         new_val,     
+    //         display_name,
+    //         created_at, 
+    //         VERSION,
+    //         ROW_NUMBER() OVER (PARTITION BY order_plan_number ORDER BY created_at DESC, VERSION DESC) AS new_column
+    //     FROM order_diff
+    // ) AS ranked
+    // WHERE new_column <= 5;`
+    // return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', query);
 
-async getLatestPreviousFilesData():Promise<CommonResponseModel>{
-    try{
-        const info = await this.fileUploadRepo.getLatestPreviousFilesData()
-        if(info.length >0){
-            return new CommonResponseModel(true,1,'Data retrieved',info)
-        } else{
-            return new CommonResponseModel(false,0,'No dat found')
+    // }
+    // async getversion(req:ordersPlanNo):Promise<CommonResponseModel>{
+    //     try{
+    //         const query = await this.orderDiffRepo.getversions(req);
+    //         return new CommonResponseModel(true,1,'data retrieved', query)
+    //     }catch(err){
+    //         throw err
+    //     }
+    // }
+    async getversion(req: ordersPlanNo): Promise<CommonResponseModel> {
+        // console.log(req,'serviceeeeeeeeeeeeeee');
+
+        try {
+            const data = await this.orderDiffRepo.getversions(req)
+            if (data) {
+                return new CommonResponseModel(true, 1, 'Data retrieved', data)
+            } else {
+                return new CommonResponseModel(false, 1, 'No data found')
+            }
+
+        } catch (err) {
+            throw err
         }
-
-    } catch(err){
-        throw err
     }
-}
-
-async sendMail(to: string, subject: string, message : any[]) {
-    let content = message.reduce(function(a, b) {
-        return a + '<tr bgcolor="#ffffff"><td>' + b.fileName + '</a></td><td>' + b.status + '</td><td>' + b.reason + '</td><td>' + b.columns + '</td></tr>';
-    }, '');
-    const sendMail = await this.transporter.sendMail({
-      from: 'uma.boddeda@schemaxtech.com',
-      to,
-      subject,
-      text:'',
-      html: '<div><table cellspacing="3" bgcolor="#000000"><thead><tr bgcolor="#ffffff"><th>File Name</th><th width="25%">Status</th><th>Reason</th><th>Columns</th></tr></thead><tbody>' + 
-      content + '</tbody></table></div>',
-    context:{
-
+    async getItemsMonthly(): Promise<CommonResponseModel> {
+        const details = await this.ordersRepository.getItemsMonthly()
+        if (details)
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
-    });
-    // console.log(sendMail,'---------------sendmail')
-    return sendMail
-  }
+    async getPhaseItems(): Promise<CommonResponseModel> {
+        const details = await this.ordersChildRepo.getPhaseItems()
+        if (details)
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
 
-  async saveOrdersData(formData: any, id: number, months: number):Promise<CommonResponseModel>{
+    async getYearDropdown(): Promise<CommonResponseModel> {
+        try {
+            const info = await this.ordersRepository.getYearDropdown()
+            if (info.length > 0) {
+                return new CommonResponseModel(true, 1, 'Data retrieved', info)
+            } else {
+                return new CommonResponseModel(false, 0, 'No dat found')
+            }
+
+        } catch (err) {
+            throw err
+        }
+    }
+
+    async getLatestPreviousFilesData(): Promise<CommonResponseModel> {
+        try {
+            const info = await this.fileUploadRepo.getLatestPreviousFilesData()
+            if (info.length > 0) {
+                return new CommonResponseModel(true, 1, 'Data retrieved', info)
+            } else {
+                return new CommonResponseModel(false, 0, 'No dat found')
+            }
+
+        } catch (err) {
+            throw err
+        }
+    }
+
+    async sendMail(to: string, subject: string, message: any[]) {
+        let content = message.reduce(function (a, b) {
+            return a + '<tr bgcolor="#ffffff"><td>' + b.fileName + '</a></td><td>' + b.status + '</td><td>' + b.reason + '</td><td>' + b.columns + '</td></tr>';
+        }, '');
+        const sendMail = await this.transporter.sendMail({
+            from: 'uma.boddeda@schemaxtech.com',
+            to,
+            subject,
+            text: '',
+            html: '<div><table cellspacing="3" bgcolor="#000000"><thead><tr bgcolor="#ffffff"><th>File Name</th><th width="25%">Status</th><th>Reason</th><th>Columns</th></tr></thead><tbody>' +
+                content + '</tbody></table></div>',
+            context: {
+
+            }
+        });
+        // console.log(sendMail, '---------------sendmail')
+        return sendMail
+    }
+
+    async saveOrdersData(formData: any, id: number, months: number): Promise<CommonResponseModel> {
         const currentDate = new Date();
         const month = currentDate.getMonth() + 1;
         const transactionManager = new GenericTransactionManager(this.dataSource)
-        try{
+        try {
             await transactionManager.startTransaction()
             const flag = new Set()
-            const dtoArray:SaveOrderDto[]=[]
-            for(const obj of formData){
+            const dtoArray: SaveOrderDto[] = []
+            for (const obj of formData) {
                 const columnArray = [];
-                const updatedObj:any = {};
+                const updatedObj: any = {};
                 for (const key in obj) {
-                    const newKey = key.replace(/\s/g, '_').replace(/[\(\)]/g, '').replace(/-/g, '_').replace(/:/g,'_').replace(/[*]/g,'_').replace(/=/g,'_').replace(/”/g,'').replace(/~/g,'').replace(/[/]/g,'').replace(/“/g,'').replace(/�/g,'').replace(/'/g,'')
-                    const newKey1 = newKey.replace(/__/g,'_');
+                    const newKey = key.replace(/\s/g, '_').replace(/[\(\)]/g, '').replace(/-/g, '_').replace(/:/g, '_').replace(/[*]/g, '_').replace(/=/g, '_').replace(/”/g, '').replace(/~/g, '').replace(/[/]/g, '').replace(/“/g, '').replace(/�/g, '').replace(/'/g, '')
+                    const newKey1 = newKey.replace(/__/g, '_');
                     columnArray.push(newKey1)
                     const value = obj[key];
                     if (value === "") {
                         updatedObj[newKey1] = null;
                     } else {
-                        updatedObj[newKey1] = value;                        
+                        updatedObj[newKey1] = value;
                     }
                 }
                 const missedColumns = new Set<string>();
-                for(const requiredKey of RequiredColumns){
-                    if(!(columnArray.includes(requiredKey))){
+                for (const requiredKey of RequiredColumns) {
+                    if (!(columnArray.includes(requiredKey))) {
                         missedColumns.add(requiredKey)
                     }
                 }
-                if((missedColumns.size !==0 )){
+                if ((missedColumns.size !== 0)) {
                     await transactionManager.releaseTransaction()
-                    return new CommonResponseModel(false,24,'Required Columns missed',Array.from(missedColumns));
+                    return new CommonResponseModel(false, 24, 'Required Columns missed', Array.from(missedColumns));
                 }
                 let dtoData: SaveOrderDto;
-                if(updatedObj.Order_Plan_Number !== null){
-                    dtoData = new SaveOrderDto(null,updatedObj.Year,updatedObj.Planning_Ssn,updatedObj.Biz,updatedObj.Core_Category,updatedObj.Planning_Sum,updatedObj.Coeff,updatedObj.Publish_Flag_for_Factory,updatedObj.Order_Plan_Number,(updatedObj.Order_Plan_Qty).toString().replace(/,/g,''),(updatedObj.Order_Plan_QtyCoeff)?.toString().replace(/,/g,''),updatedObj.Prod_Plan_Type,updatedObj.WH ? moment(updatedObj.WH).format('MM-DD') : null,updatedObj.EXF_ETD,updatedObj.ETD_WH,updatedObj.Sample,updatedObj.EXF ? moment(updatedObj.EXF).format('MM-DD'): null,id,null,'bidhun')
+                if (updatedObj.Order_Plan_Number !== null) {
+                    dtoData = new SaveOrderDto(null, updatedObj.Year, updatedObj.Planning_Ssn, updatedObj.Biz, updatedObj.Core_Category, updatedObj.Planning_Sum, updatedObj.Coeff, updatedObj.Publish_Flag_for_Factory, updatedObj.Order_Plan_Number, (updatedObj.Order_Plan_Qty).toString().replace(/,/g, ''), (updatedObj.Order_Plan_QtyCoeff)?.toString().replace(/,/g, ''), updatedObj.Prod_Plan_Type, updatedObj.WH ? moment(updatedObj.WH).format('MM-DD') : null, updatedObj.EXF_ETD, updatedObj.ETD_WH, updatedObj.Sample, updatedObj.EXF ? moment(updatedObj.EXF).format('MM-DD') : null, id, null, 'bidhun')
                     let newDate
-                    if(dtoData.exf == null && dtoData.publishFlagForFactory !== 'NotPub'){
-                    let inputDate = dtoData.wh ? moment(dtoData.wh).format('MM-DD') : null;
-                    if(inputDate === null){
-                        await transactionManager.releaseTransaction()
-                        return new CommonResponseModel(false,101,'Null value in WH column')
-                    } else{
+                    if (dtoData.exf == null && dtoData.publishFlagForFactory !== 'NotPub') {
+                        let inputDate = dtoData.wh ? moment(dtoData.wh).format('MM-DD') : null;
+                        if (inputDate === null) {
+                            await transactionManager.releaseTransaction()
+                            return new CommonResponseModel(false, 101, 'Null value in WH column')
+                        } else {
 
-                        let parts = inputDate.split('-');
-                        let months = parseInt(parts[0], 10);
-                        let day = parseInt(parts[1], 10);
-                        let numberOfDays = Number(dtoData.exfEtd);
-                        let dateObject = new Date(2023, months - 1, day);
-                        dateObject.setDate(dateObject.getDate() - numberOfDays);
-                        newDate = moment(dateObject).format('MM-DD');
-                        dtoData.exf=newDate;
+                            let parts = inputDate.split('-');
+                            let months = parseInt(parts[0], 10);
+                            let day = parseInt(parts[1], 10);
+                            let numberOfDays = Number(dtoData.exfEtd);
+                            let dateObject = new Date(2023, months - 1, day);
+                            dateObject.setDate(dateObject.getDate() - numberOfDays);
+                            newDate = moment(dateObject).format('MM-DD');
+                            dtoData.exf = newDate;
+                        }
                     }
-                    }
-                } else{
+                } else {
                     break
                 }
                 dtoArray.push(dtoData);
@@ -2493,17 +2520,17 @@ async sendMail(to: string, subject: string, message : any[]) {
                         version = Number(versionDetails.length) + 1
                     }
                     dtoData.version = version
-                    if(details){
-                        const updateOrder = await transactionManager.getRepository(OrdersEntity).update({ orderPlanNumber: dtoData.orderPlanNumber },{
-                            year:dtoData.year,planningSsn:dtoData.planningSsn,biz:dtoData.biz,coreCategory:dtoData.coreCategory,planningSum:dtoData.planningSum,coeff:dtoData.coeff,publishFlagForFactory:dtoData.publishFlagForFactory,orderPlanQty:dtoData.orderPlanQty,orderPlanQtyCoeff:dtoData.orderPlanQtyCoeff,prodPlanType:dtoData.prodPlanType,wh:dtoData.wh,exfEtd:dtoData.exfEtd,etdWh:dtoData.etdWh,sample:dtoData.sample,version:dtoData.version,fileId: dtoData.fileId,updatedUser:dtoData.createdUser
+                    if (details) {
+                        const updateOrder = await transactionManager.getRepository(OrdersEntity).update({ orderPlanNumber: dtoData.orderPlanNumber }, {
+                            year: dtoData.year, planningSsn: dtoData.planningSsn, biz: dtoData.biz, coreCategory: dtoData.coreCategory, planningSum: dtoData.planningSum, coeff: dtoData.coeff, publishFlagForFactory: dtoData.publishFlagForFactory, orderPlanQty: dtoData.orderPlanQty, orderPlanQtyCoeff: dtoData.orderPlanQtyCoeff, prodPlanType: dtoData.prodPlanType, wh: dtoData.wh, exfEtd: dtoData.exfEtd, etdWh: dtoData.etdWh, sample: dtoData.sample, version: dtoData.version, fileId: dtoData.fileId, updatedUser: dtoData.createdUser
                         })
                         if (!updateOrder.affected) {
                             await transactionManager.releaseTransaction();
                             return new CommonResponseModel(false, 0, 'Something went wrong in order update')
-                        } else{
+                        } else {
                             flag.add(true)
                         }
-                        const convertedExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData,id,details.productionPlanId,10,dtoData.exf);
+                        const convertedExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id, details.productionPlanId, 10, dtoData.exf);
                         const saveExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedExcelEntity);
                         if (saveExcelEntity) {
                             //difference insertion to order diff table
@@ -2513,7 +2540,7 @@ async sendMail(to: string, subject: string, message : any[]) {
                                 if (details[existingDataKey] != dtoData[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId' && existingDataKey != 'month' && existingDataKey != 'productionPlanId') {
                                     const orderDiffObj = new OrdersDifferenceEntity();
                                     //         if(yearOrderDtoKeys.includes(existingDataKey)){
-        
+
                                     //     const oldValue = moment(details[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY','YYYY/MM/DD','YYYY-MM-DD HH:mm:ss']).format('YYYY-MM-DD');
                                     //     const newValue = moment(dtoData[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY','YYYY/MM/DD','YYYY-MM-DD']).format('YYYY-MM-DD');
                                     //     orderDiffObj.oldValue = oldValue
@@ -2534,7 +2561,7 @@ async sendMail(to: string, subject: string, message : any[]) {
                                     //         continue;
                                     //     }
                                     // }
-                                     if(monthOrderDtoKeys.includes(existingDataKey)){
+                                    if (monthOrderDtoKeys.includes(existingDataKey)) {
                                         const oldValue = moment(details[existingDataKey]).format('MM-DD');
                                         const newValue = moment(dtoData[existingDataKey]).format('MM-DD');
                                         orderDiffObj.oldValue = oldValue
@@ -2549,14 +2576,14 @@ async sendMail(to: string, subject: string, message : any[]) {
                                             const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
                                             if (!orderDiffSave) {
                                                 await transactionManager.releaseTransaction()
-                                                return new CommonResponseModel(false,0,'Error while saving projection orders difference')
-                                            } else{
+                                                return new CommonResponseModel(false, 0, 'Error while saving projection orders difference')
+                                            } else {
                                                 flag.add(true)
                                             }
                                         } else {
                                             continue;
                                         }
-                                    } 
+                                    }
                                     else {
                                         orderDiffObj.oldValue = details[existingDataKey]
                                         orderDiffObj.newValue = dtoData[existingDataKey]
@@ -2570,8 +2597,8 @@ async sendMail(to: string, subject: string, message : any[]) {
                                             const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
                                             if (!orderDiffSave) {
                                                 await transactionManager.releaseTransaction()
-                                                return new CommonResponseModel(false,0,'Error while saving projection orders difference')
-                                            } else{
+                                                return new CommonResponseModel(false, 0, 'Error while saving projection orders difference')
+                                            } else {
                                                 flag.add(true)
                                             }
                                         }
@@ -2579,235 +2606,280 @@ async sendMail(to: string, subject: string, message : any[]) {
                                 }
                             }
                         }
-                    } else{
+                    } else {
                         dtoData.version = 1
-                    if(dtoData.publishFlagForFactory !== 'NotPub'){
-    
-                        const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id, 10,dtoData.exf);
-                        const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
-                        const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData,id,saveExcelEntity.productionPlanId,10,dtoData.exf);
-                        const saveChildExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedChildExcelEntity);
-                        if (!saveExcelEntity || !saveChildExcelEntity) {
-                            await transactionManager.releaseTransaction()
-                            return new CommonResponseModel(false,0,'Error while saving projection orders')
-                        } else{
-                            flag.add(true)
+                        if (dtoData.publishFlagForFactory !== 'NotPub') {
+
+                            const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id, 10, dtoData.exf);
+                            const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
+                            const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id, saveExcelEntity.productionPlanId, 10, dtoData.exf);
+                            const saveChildExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedChildExcelEntity);
+                            if (!saveExcelEntity || !saveChildExcelEntity) {
+                                await transactionManager.releaseTransaction()
+                                return new CommonResponseModel(false, 0, 'Error while saving projection orders')
+                            } else {
+                                flag.add(true)
+                            }
                         }
-                    } 
                     }
                 }
 
             }
-            if(!(flag.has(false))){
+            if (!(flag.has(false))) {
                 await transactionManager.completeTransaction()
-                return new CommonResponseModel(true,1,'Created Successfully')
-            } else{
+                return new CommonResponseModel(true, 1, 'Created Successfully')
+            } else {
                 await transactionManager.completeTransaction()
-                return new CommonResponseModel(false,0,'Something went wrong in uploading')
+                return new CommonResponseModel(false, 0, 'Something went wrong in uploading')
             }
-        }catch(err){
+        } catch (err) {
             await transactionManager.releaseTransaction()
             return new CommonResponseModel(false, 0, err);
 
         }
-  }
-
-  async getUplodedFilesInfo():Promise<CommonResponseModel>{
-    try{
-        const data = await this.fileUploadRepo.find()
-        let filesArray = []
-        if(data){
-            for(const rec of data){
-                filesArray.push(rec.fileName)
-            }
-            return new CommonResponseModel(true,1,'Data retreived',filesArray)
-        } else{
-            return new CommonResponseModel(false,0,'No data found')
-        }
-
-    } catch(err){
-        throw err
     }
-  }
 
-  async getTrimOrderDetails(req:TrimDetailsRequest):Promise<CommonResponseModel>{
-    try{
-        const priceMap = new Map<string,Map<string,string>>()  //destination,itemcode,price
-        // const destinationsDataQry = `select distinct(business_unit) from trim_orders`;
-        // const destinationsData = await this.dataSource.query(destinationsDataQry)
-        // console.log(destinationsData,'bbbb')
+    async getUplodedFilesInfo(): Promise<CommonResponseModel> {
+        try {
+            const data = await this.fileUploadRepo.find()
+            let filesArray = []
+            if (data) {
+                for (const rec of data) {
+                    filesArray.push(rec.fileName)
+                }
+                return new CommonResponseModel(true, 1, 'Data retreived', filesArray)
+            } else {
+                return new CommonResponseModel(false, 0, 'No data found')
+            }
 
-        const priceListQry = `select sample_code as sampleCode,business,fob_local_currency as fobLocalCurrency,currency from price_list where business in(select distinct(business_unit) from trim_orders)`;
-        const priceListData = await this.dataSource.query(priceListQry)
+        } catch (err) {
+            throw err
+        }
+    }
 
-        for(const record of priceListData){
-            if(!(priceMap.has(record.business))){
-                 priceMap.set(record.business,new Map<string,string>)
-                if(!(priceMap.get(record.business).has(record.sampleCode))){
-                    priceMap.get(record.business).set(record.sampleCode,record.fobLocalCurrency)
-                }else{
-                    if(!(priceMap.get(record.business).has(record.sampleCode))){
-                        priceMap.get(record.business).set(record.sampleCode,record.fobLocalCurrency)
+    async getTrimOrderDetails(req: TrimDetailsRequest): Promise<CommonResponseModel> {
+        try {
+            const priceMap = new Map<string, Map<string, string>>()  //destination,itemcode,price
+            // const destinationsDataQry = `select distinct(business_unit) from trim_orders`;
+            // const destinationsData = await this.dataSource.query(destinationsDataQry)
+            // console.log(destinationsData,'bbbb')
+
+            const priceListQry = `select sample_code as sampleCode,business,fob_local_currency as fobLocalCurrency,currency from price_list where business in(select distinct(business_unit) from trim_orders)`;
+            const priceListData = await this.dataSource.query(priceListQry)
+
+            for (const record of priceListData) {
+                if (!(priceMap.has(record.business))) {
+                    priceMap.set(record.business, new Map<string, string>)
+                    if (!(priceMap.get(record.business).has(record.sampleCode))) {
+                        priceMap.get(record.business).set(record.sampleCode, record.fobLocalCurrency)
+                    } else {
+                        if (!(priceMap.get(record.business).has(record.sampleCode))) {
+                            priceMap.get(record.business).set(record.sampleCode, record.fobLocalCurrency)
+                        }
+                    }
+                } else {
+                    if (!(priceMap.get(record.business).has(record.sampleCode))) {
+                        priceMap.get(record.business).set(record.sampleCode, record.fobLocalCurrency)
                     }
                 }
-            }else{
-                if(!(priceMap.get(record.business).has(record.sampleCode))){
-                    priceMap.get(record.business).set(record.sampleCode,record.fobLocalCurrency)
-                }
             }
-        }
-        const data = await this.trimOrderRepo.find({where:{orderNo:req.orderNumber}})
-        let destinationMap = new Map<string,Destinations>()
-        if(data){
-            let colorMap = new Map<string,Colors>()
-            for(const rec of data){
-                if(!destinationMap.has(rec.businessUnit)){
-                    destinationMap.set(rec.businessUnit,new Destinations(rec.businessUnit,[])) 
+            const data = await this.trimOrderRepo.find({ where: { orderNo: req.orderNumber } })
+            let destinationMap = new Map<string, Destinations>()
+            if (data) {
+                let colorMap = new Map<string, Colors>()
+                for (const rec of data) {
+                    if (!destinationMap.has(rec.businessUnit)) {
+                        destinationMap.set(rec.businessUnit, new Destinations(rec.businessUnit, []))
+                    }
+                    if (!colorMap.has(rec.color)) {
+                        colorMap.set(rec.color, new Colors(`${rec.colorCode} ${rec.color}`, []))
+                    }
+                    colorMap.get(rec.color).sizes.push(new Sizes(rec.size, rec.orderQtyPcs, Number(priceMap.get(rec.businessUnit).get(rec.sampleCode.slice(2)))))
                 }
-                if(!colorMap.has(rec.color)){
-                    colorMap.set(rec.color,new Colors(`${rec.colorCode} ${rec.color}`,[]))
-                }
-                colorMap.get(rec.color).sizes.push(new Sizes(rec.size,rec.orderQtyPcs,Number(priceMap.get(rec.businessUnit).get(rec.sampleCode.slice(2))))) 
-            }
-            const destinations: Destinations[] = []
-            destinationMap.forEach((rec) => {
-            colorMap.forEach((e) => {
-                destinationMap.get(rec.name).colors.push(new Colors(e.name,e.sizes))
-            })
-            destinations.push(rec)  
-        })
-            
-            const info = new CoLineFormatModel(data[0].orderNo,data[0].trimItemNo,null,data[0].contractedETD,destinations)
-            return new CommonResponseModel(true,1,'Data retrieved successfully',info)
-        } else{
-            return new CommonResponseModel(false,0,'No data found') 
-        }
-    }catch(err){
-        throw err
-    }
-  }
+                const destinations: Destinations[] = []
+                destinationMap.forEach((rec) => {
+                    colorMap.forEach((e) => {
+                        destinationMap.get(rec.name).colors.push(new Colors(e.name, e.sizes))
+                    })
+                    destinations.push(rec)
+                })
 
-  async trimOrdersReadCell():Promise<CommonResponseModel> {
-    try{
-        let filesArray = []
-        const fs = require('fs');
-        const files = fs.readdirSync('F:/trim-orders');
-       const uplodedFiles = await this.getUplodedFilesInfo()
-       const difference = files.filter((element) => !uplodedFiles.data.includes(element))
-       if(difference.length == 0){
-            // filesArray.push(new ordersMailFileStatusArrayReq(files,'Failed','Files with same name already exists!','-'))
-            return new CommonResponseModel(false,0,'No new files identified in the folder')
-        } else{
-                    for(const filerec of difference){
-                        const filename = filerec
-                        const filepath = 'F:/trim-orders/'+filerec
-                            const promiseA = () => new Promise((resolve, reject) => {
-                                xlsxFile(filepath, { getSheets: true }).then((sheets:any[])=>{
-                                    resolve(sheets)
-                                });
-                            })
-                            const sheets:any = await promiseA()
-                            const promise = () => new Promise((resolve, reject) => {
-                                if(filename.split('.').pop() == 'csv'){
-                                    resolve(null)
-                                }else if(filename.split('.').pop() == 'xlsx'){ 
-                                    let finalSheetName = ''
-                                     for(const sheetname of sheets){
-                                        if(sheetname.name == 'ExcelOut(Trim)'){
-                                            finalSheetName = sheetname.name
-                                            break
-                                        } else{
-                                            continue
-                                        }
+                const info = new CoLineFormatModel(data[0].orderNo, data[0].trimItemNo, null, data[0].contractedETD, destinations)
+                return new CommonResponseModel(true, 1, 'Data retrieved successfully', info)
+            } else {
+                return new CommonResponseModel(false, 0, 'No data found')
+            }
+        } catch (err) {
+            throw err
+        }
+    }
+
+    async trimOrdersReadCell(): Promise<CommonResponseModel> {
+        try {
+            let filesArray = []
+            const fs = require('fs');
+            const files = fs.readdirSync('F:/trim-orders');
+            const uplodedFiles = await this.getUplodedFilesInfo()
+            const difference = files.filter((element) => !uplodedFiles.data.includes(element))
+            if (difference.length == 0) {
+                // filesArray.push(new ordersMailFileStatusArrayReq(files,'Failed','Files with same name already exists!','-'))
+                return new CommonResponseModel(false, 0, 'No new files identified in the folder')
+            } else {
+                for (const filerec of difference) {
+                    const filename = filerec
+                    const filepath = 'F:/trim-orders/' + filerec
+                    const promiseA = () => new Promise((resolve, reject) => {
+                        xlsxFile(filepath, { getSheets: true }).then((sheets: any[]) => {
+                            resolve(sheets)
+                        });
+                    })
+                    const sheets: any = await promiseA()
+                    const promise = () => new Promise((resolve, reject) => {
+                        if (filename.split('.').pop() == 'csv') {
+                            resolve(null)
+                        } else if (filename.split('.').pop() == 'xlsx') {
+                            let finalSheetName = ''
+                            for (const sheetname of sheets) {
+                                if (sheetname.name == 'ExcelOut(Trim)') {
+                                    finalSheetName = sheetname.name
+                                    break
+                                } else {
+                                    continue
+                                }
+                            }
+                            if (finalSheetName) {
+                                xlsxFile(filepath, { sheet: finalSheetName }, {
+                                    transformData(data) {
+                                        // console.log(data)
+                                        // data.slice(0,3)
+                                        return data
                                     }
-                                    if(finalSheetName){
-                                        xlsxFile(filepath,{sheet:finalSheetName},{transformData(data){
-                                            // console.log(data)
-                                            // data.slice(0,3)
-                                            return data
-                                        }})
-                                        
-                                          .then((rows) => {
-                                            let columnNames
-                                            const dataArray = []
-                                            while(rows.length){
-                                                columnNames = rows.shift(); // Separate first row with column names
-                                                if(columnNames[0] != null && columnNames[0] == 'Order No.'){
-                                                    break;
-                                                }
+                                })
+
+                                    .then((rows) => {
+                                        let columnNames
+                                        const dataArray = []
+                                        while (rows.length) {
+                                            columnNames = rows.shift(); // Separate first row with column names
+                                            if (columnNames[0] != null && columnNames[0] == 'Order No.') {
+                                                break;
                                             }
-                                            rows.map((row) => { // Map the rest of the rows into objects
-                                              const obj = {}; // Create object literal for current row
-                                              row.forEach((cell, i) => {
-                                                    obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
-                                              });
+                                        }
+                                        rows.map((row) => { // Map the rest of the rows into objects
+                                            const obj = {}; // Create object literal for current row
+                                            row.forEach((cell, i) => {
+                                                obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
+                                            });
                                             //   console.log(obj)
-                                              dataArray.push(Object(obj));
-                                              resolve(dataArray)
+                                            dataArray.push(Object(obj));
+                                            resolve(dataArray)
                                             //   console.log(objs); // Display the array of objects on the console
                                             //   return obj;
-                                            });
-                                          });
-                                    }else{
-                                        const saveFilePath =  this.updatePath(filepath,filename,null,FileTypesEnum.TRIM_ORDERS,'Email','Sheet Name Does Not Match')
-                                        filesArray.push(new ordersMailFileStatusArrayReq(filename,'Failed',`Sheet name doesn't match`,'-'))
-                                       resolve(null)
-                                    }
-                                }else{
-                                    
-                                }
-                            })
-                            const dataArray = await promise();
-                        
-                            if(dataArray){
-                                
-                                const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.TRIM_ORDERS,'Email')
-                                if(saveFilePath.status){
-                                    const saveTrimOrders = await this.saveTrimOrdersData(dataArray,saveFilePath.data.id,9)
-                                    let req = new FileStatusReq();
-                                    req.fileId = saveFilePath.data.id;
-                                    req.userName = 'Bidhun'
-                                    if(saveTrimOrders.status){
-                                        req.status = 'Success';
-                                    }else{
-                                        req.failedReason = saveTrimOrders.internalMessage
-                                        if(saveTrimOrders?.data){
-                                            // console.log(saveProjOrders.data,'hhhhh')
-                                            req.columns = saveTrimOrders.data
-                                            // const resData = saveProjOrders.data
-                                        }else{
-                                            req.columns = ''
-                                        }
-                                        req.status = 'Failed';
-                                    }
-                                    // console.log(req,'valuuuuu')
-                                    const updateFileStatus = await this.updateFileStatus(req)
-                                    filesArray.push(new ordersMailFileStatusArrayReq(filename,req.status,req.status === 'Failed' ? req.failedReason : '' , req.status === 'Failed' ? req.columns : ''))
-                                }else{
-                                    // return false
-                                    filesArray.push(new ordersMailFileStatusArrayReq(filename,'Failed',saveFilePath.internalMessage,'-'))
-                                }
-                                // return dataArray
-                            }else{
-                                // return dataArray
+                                        });
+                                    });
+                            } else {
+                                const saveFilePath = this.updatePath(filepath, filename, null, FileTypesEnum.TRIM_ORDERS, 'Email', 'Sheet Name Does Not Match')
+                                filesArray.push(new ordersMailFileStatusArrayReq(filename, 'Failed', `Sheet name doesn't match`, '-'))
+                                resolve(null)
                             }
-                    }
-                
-                    const sendMail = this.sendMail('karthikeyan.nallamuthu@shahi.co.in','Trim Order Uploded Files Status',filesArray)
-                    if(sendMail){
-                        return new CommonResponseModel(true,1,'',filesArray)
-                    } else{
-                        return new CommonResponseModel(true,1,'Something went wrong in sending mail',filesArray)
+                        } else {
+
+                        }
+                    })
+                    const dataArray = await promise();
+
+                    if (dataArray) {
+
+                        const saveFilePath = await this.updatePath(filepath, filename, null, FileTypesEnum.TRIM_ORDERS, 'Email')
+                        if (saveFilePath.status) {
+                            const saveTrimOrders = await this.saveTrimOrdersData(dataArray, saveFilePath.data.id, 9)
+                            let req = new FileStatusReq();
+                            req.fileId = saveFilePath.data.id;
+                            req.userName = 'Bidhun'
+                            if (saveTrimOrders.status) {
+                                req.status = 'Success';
+                            } else {
+                                req.failedReason = saveTrimOrders.internalMessage
+                                if (saveTrimOrders?.data) {
+                                    // console.log(saveProjOrders.data,'hhhhh')
+                                    req.columns = saveTrimOrders.data
+                                    // const resData = saveProjOrders.data
+                                } else {
+                                    req.columns = ''
+                                }
+                                req.status = 'Failed';
+                            }
+                            // console.log(req,'valuuuuu')
+                            const updateFileStatus = await this.updateFileStatus(req)
+                            filesArray.push(new ordersMailFileStatusArrayReq(filename, req.status, req.status === 'Failed' ? req.failedReason : '', req.status === 'Failed' ? req.columns : ''))
+                        } else {
+                            // return false
+                            filesArray.push(new ordersMailFileStatusArrayReq(filename, 'Failed', saveFilePath.internalMessage, '-'))
+                        }
+                        // return dataArray
+                    } else {
+                        // return dataArray
                     }
                 }
-        return 
-    } catch(err){
-        throw err
-    }
- 
-    
+
+                const sendMail = this.sendMail('karthikeyan.nallamuthu@shahi.co.in', 'Trim Order Uploded Files Status', filesArray)
+                if (sendMail) {
+                    return new CommonResponseModel(true, 1, '', filesArray)
+                } else {
+                    return new CommonResponseModel(true, 1, 'Something went wrong in sending mail', filesArray)
+                }
+            }
+            return
+        } catch (err) {
+            throw err
+        }
+
+
     }
 
+    async uniqloTrimOrdersBot(): Promise<any>{
+        const chromeOptions = new chrome.Options();
+        chromeOptions.addArguments('--auto-select-certificate-for-urls=https://spl.fastretailing.com');
+      
+        const driver = await new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
+            
+        try {
+            await driver.get('https://spl.fastretailing.com/app/spl/login');
+            // Switch to the alert and accept it (click "OK")
+            // const alert = await driver.switchTo().alert();
+            // await alert.accept()
+            await driver.findElement(By.id('a-textfield-0')).sendKeys('SwathiG');
+            await driver.findElement(By.id('a-textfield-1')).sendKeys('beyIMjX#');
+            await driver.findElement(By.xpath('/html/body/app-root/o-main/app-login/form/div/div[2]/div[1]/button')).click();
+            await driver.wait(until.elementLocated(By.xpath('/html/body/app-root/o-main/app-portal/div/o-header/o-menu/div/div')));
+            await driver.findElement(By.xpath('/html/body/app-root/o-main/app-portal/div/o-header/o-menu/div/div')).click();
+            await driver.wait(until.elementLocated(By.xpath('/html/body/app-root/o-main/app-portal/div/o-header/o-menu/div/form/table/tbody[2]/tr[1]/td[2]/a')));
+            await driver.findElement(By.xpath('/html/body/app-root/o-main/app-portal/div/o-header/o-menu/div/form/table/tbody[2]/tr[1]/td[2]/a')).click();
+            await driver.wait(until.elementLocated(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[1]/div[2]/div/a')));
+            await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[1]/div[2]/div/a')).click();
+            await driver.wait(until.elementLocated(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[1]/div/m-selectbox[3]')));
+            await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[1]/div/m-selectbox[3]')).click();
+            await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[1]/div/m-selectbox[4]')).click();
+            await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[2]/div/m-selectbox[1]')).click();
+            await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[2]/div/m-selectbox[2]')).click();
+            await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[2]/div/m-selectbox[3]')).click();
+            await driver.findElement(By.xpath('//*[@id="a-textfield-12"]')).sendKeys('2023/11/1');
+            await driver.findElement(By.xpath('//*[@id="a-textfield-13"]')).sendKeys('2023/11/22');
+            await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/m-buttongroup/button[2]')).click();
+            await driver.sleep(10000)
+            await driver.findElement(By.xpath('//*[@id="borderLayout_eGridPanel"]/div[1]/div/div[1]/div[1]/div[2]/div[1]/span/span[2]')).click();
+            await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/m-floatingarea/div[2]/div[1]/button[2]')).click();
+            await driver.wait(until.elementLocated(By.xpath('/html/body/o-component-host/o-dialog/div[2]/button[2]')));
+            await driver.findElement(By.xpath('/html/body/o-component-host/o-dialog/div[2]/button[2]')).click();
+            await driver.sleep(10000)
+            await driver.wait(until.elementLocated(By.xpath('/html/body/o-component-host/o-dialog/div[3]/button')));
+            await driver.findElement(By.xpath('/html/body/o-component-host/o-dialog/div[3]/button')).click();
+            await driver.quit();
+
+        } catch(err){
+            return new CommonResponseModel(false,0, err)
+        }
+    }
 
 }
-  
+

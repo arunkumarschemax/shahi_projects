@@ -23,7 +23,7 @@ export const MonthWiseComparisionReport = () => {
   const [phase, setPhase] = useState<any[]>([]);
   const [phaseExcel, setPhaseExcel] = useState<any[]>([]);
   const [year, setYear] = useState<any[]>([]);
-  const [tab, setTab] = useState<number>(2023);
+  const [tab, setTab] = useState<number | null>(null);
   const service = new OrdersService();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [excelsData, setExcelData] = useState<any[]>([]);
@@ -53,6 +53,9 @@ export const MonthWiseComparisionReport = () => {
     service.getExfactoryYearData().then((res) => {
       if (res.status) {
         setYear(res.data);
+        if (res.data.length > 0) {
+          setTab(res.data[0]);
+        }
       }
     });
     
