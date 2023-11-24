@@ -9085,25 +9085,30 @@ export const extractCeva = async (pdf) => {
     currency = currencyData ? currencyData.content : '';
 
     const roeRegex = /ROE:\s.+/;
-    const roeData = extractedData.find((item) => item.content.match(roeRegex));
-    roe = roeData ? roeData.content : '';
+    let roeIndex=0
+
 
     for (let hsnId = 0; hsnId < extractedData.length; hsnId++) {
         const line = extractedData[hsnId].content;
         const matchData = line.match(/(USD|INR)+\s+\d+(,|\d)+(\.|\d)+\s+\d+\s+\d+(.|\d)+\s/) || [];
-
+        if(roeIndex==0&&line.match(currencyRegex)){
+            roeIndex=hsnId;
+        }else if(line.match(roeRegex)){
+            roeIndex=hsnId;
+        }
         if (matchData.length > 0) {
-
-            const roeIndex = roeData ? extractedData.indexOf(roeData) : -1;
-            if (roeIndex !== -1 && hsnId < extractedData.length - 1) {
-                const nextRoeData = extractedData.slice(hsnId + 1).findIndex((item) => item.content.match(roeRegex));
-                const nextRoeIndex = nextRoeData !== -1 ? hsnId + 1 + nextRoeData : extractedData.length;
-
+            const chargeMatch = line.match(/(USD|INR)+\s+\d+(,|.|)(\d|\.\d)+/g, "");
+            const charge = chargeMatch && chargeMatch[0] ? chargeMatch[0].replace(/(USD|INR)+\s+/g, "").replace(/,/g, "") : null;
                 let description = '';
-                if (nextRoeIndex - roeIndex > 1) {
-                    description = extractedData.slice(roeIndex + 1, nextRoeIndex).map((item) => item.content).join('\n');
+                if (hsnId - roeIndex > 2) {
+                    description = extractedData.slice(roeIndex + 1, hsnId).map((item) => item.content).join('\n');
                 } else {
-                    description = extractedData.slice(extractedData.indexOf(currencyData) + 1, roeIndex).map((item) => item.content).join('\n').replace(/(INR|USD).+/g, "");;
+                    if (line.includes("INR") || line.includes("USD")) {
+                        const indexOfCurrency = line.indexOf("INR") !== -1 ? line.indexOf("INR") : line.indexOf("USD");
+                        if (indexOfCurrency !== -1) {
+                            description = line.substring(0, indexOfCurrency).trim();
+                        }
+                    }
                 }
                 const HSN = line.match(/(996|99\d)+\d+/g, "");
                  const unitQuantityMatch = line.match(/996+\d+\s+\d+(,|.)(\d|.\d)+\s+(\d|.\d)+/);
@@ -9111,9 +9116,6 @@ export const extractCeva = async (pdf) => {
 
     const unitPriceMatch = line.match(/996+\d+\s+\d+(,|.)(\d|.\d)+/);
     const unitPrice = unitPriceMatch ? unitPriceMatch[0].replace(/996+\d+\s+/g, "") : null;
-
-    const chargeMatch = line.match(/(USD|INR)+\s+\d+(,|.|)(\d|\.\d)+/g, "");
-    const charge = chargeMatch && chargeMatch[0] ? chargeMatch[0].replace(/(USD|INR)+\s+/g, "").replace(/,/g, "") : null;
 
     const taxPercentageMatch = line.match(/996+\d+\s+\d+(,|.)(\d|.\d)+\d+\s+\d+\s+\d+(,|\.\d)\d+\s+\d+(,|.)\d+\s+\d+(,|.)(\d|\.\d)+\s+\d+(\.\d|\d)+%/g, "");
     const taxPercentage = taxPercentageMatch && taxPercentageMatch[0] ? taxPercentageMatch[0].replace(/996+\d+\s+\d+(,|.)(\d|.\d)+\d+\s+\d+\s+\d+(,|\.\d)\d+\s+\d+(,|.)\d+\s+\d+(,|.)(\d|\.\d)+\s+/g, "").replace(/%/g, "") : null;
@@ -9158,10 +9160,7 @@ export const extractCeva = async (pdf) => {
                     amount:amount,
                     taxType:taxType,
                 };
-
-                structuredHSNLines.push(currentHSN);
-                hsnId = nextRoeIndex - 1;
-            }
+                structuredHSNLines.push(currentHSN);            
         }
     }
 
