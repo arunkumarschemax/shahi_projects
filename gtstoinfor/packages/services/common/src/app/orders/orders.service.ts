@@ -1357,7 +1357,6 @@ async getExfactoryMonthExcelData(req:YearReq): Promise<CommonResponseModel> {
 async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel> {
     // console.log(req,'-------')
     const data = await this.ordersChildRepo.getMonthlyComparisionData(req);
-  console.log(data,'backendddddddd');
     
     if (data.length === 0) {
         return new CommonResponseModel(false, 0, 'data not found');
@@ -1412,9 +1411,9 @@ async processEmails():Promise<CommonResponseModel> {
     const dns = require('dns');
     dns.lookup('zimbra.xmission.com', (err, addresses) => {
       if (err) {
-        console.error(`DNS lookup error: ${err}`);
+        // console.error(`DNS lookup error: ${err}`);
       } else {
-        console.log(`Resolved addresses: ${addresses}`);
+        // console.log(`Resolved addresses: ${addresses}`);
       }
     });
 
@@ -2425,7 +2424,7 @@ async sendMail(to: string, subject: string, message : any[]) {
 
     }
     });
-    console.log(sendMail,'---------------sendmail')
+    // console.log(sendMail,'---------------sendmail')
     return sendMail
   }
 
