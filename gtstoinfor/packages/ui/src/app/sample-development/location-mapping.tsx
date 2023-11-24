@@ -242,7 +242,7 @@ export const LocationMapping = () => {
                         </Col>
                     </Row>
                 </Form>
-                {tableData.length > 0 ? <Table
+                {tableData?.length > 0 ? <Table
                     columns={columnsSkelton}
                     dataSource={tableData}
                     // pagination={{
