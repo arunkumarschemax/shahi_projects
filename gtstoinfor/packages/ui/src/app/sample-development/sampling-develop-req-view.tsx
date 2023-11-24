@@ -34,7 +34,7 @@ import {
   import moment from "moment";
   import React, { useEffect, useRef } from "react";
   import { useState } from "react";
-  import { useNavigate } from "react-router-dom";
+  import { Link, useNavigate } from "react-router-dom";
   import Barcode from "react-barcode";
 //   import BarcodePrint from "./barcode-print";
   import {
@@ -402,9 +402,11 @@ import {
         headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
         title="Sample Requests"
         extra={
-          <span>
-            <Button onClick={() => navigate("/indent-form")}>New</Button>
-          </span>
+          <Link to="/sample-development/sample-development-form">
+            <span style={{ color: "white" }}>
+              <Button type={"primary"}>New </Button>{" "}
+            </span>
+          </Link>
         }
       >
         {/* {barcode.length > 0 ? <BarcodePrint key={Date.now() + barcode} printBarcodes={closeWindow} closeBarcodePopUp={closeWindow}
