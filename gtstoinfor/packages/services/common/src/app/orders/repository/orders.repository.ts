@@ -5,7 +5,7 @@ import { OrdersEntity } from "../entities/orders.entity";
 import { OrdersDifferenceEntity } from "../orders-difference-info.entity";
 import { AppDataSource } from "../../app-datasource";
 import { FileIdReq } from "../models/file-id.req";
-import { CompareOrdersFilterReq, YearReq, orders } from "@project-management-system/shared-models";
+import { CompareOrdersFilterReq, SeasonWiseRequest, YearReq, orders } from "@project-management-system/shared-models";
 import { groupBy } from "rxjs";
 
 @Injectable()
@@ -318,9 +318,10 @@ ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%Y-%m-%d')) = 3 OR MONTH(STR_TO_DATE
         return await query.getRawMany()
     }
 
-    async getSeasonWiseItemName():Promise<any[]>{
+    async getSeasonWiseItemName(req:SeasonWiseRequest):Promise<any[]>{
         const query = await this.createQueryBuilder('orders') 
-        .select(`planning_sum as itemName`)
+        .select(`planning_sum as itemName,year, planning_ssn AS plannedSeason, file_id`)
+        .where(`file_id = (SELECT MAX(file_id) FROM orders) and year = ${req.year} and planning_ssn = '${req.season}'`)
         .groupBy('planning_sum')
         .orderBy(`planning_sum`)
         return await query.getRawMany()

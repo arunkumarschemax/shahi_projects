@@ -318,6 +318,15 @@ export class OrdersController {
         }
     }
 
+    @Post('/seasonWiseTabs')
+    async seasonWiseTabs(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.seasonWiseTabs();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
     @Post('/createCOline')
     async createCOline(@Body() req: any) {
         try {
@@ -418,9 +427,10 @@ export class OrdersController {
     }
 
     @Post('/getSeasonWiseItemName')
-    async getSeasonWiseItemName(): Promise<CommonResponseModel> {
+    @ApiBody({type: SeasonWiseRequest})
+    async getSeasonWiseItemName(@Body() req: any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.getSeasonWiseItemName();
+            return this.ordersService.getSeasonWiseItemName(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }

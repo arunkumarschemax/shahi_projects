@@ -129,6 +129,9 @@ export class OrdersService extends CommonAxiosService {
     async seasonWiseReport(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/seasonWiseReport", req)
     }
+    async seasonWiseTabs(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/seasonWiseTabs")
+    }
 
     async getSeasonWiseOrders(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getSeasonWiseOrders")
@@ -169,8 +172,8 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.ordersController + "/getSeasonWiseItemCode")
     }
 
-    async getSeasonWiseItemName(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getSeasonWiseItemName")
+    async getSeasonWiseItemName(req:SeasonWiseRequest): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getSeasonWiseItemName",req)
     }
     async getQtyDifChangeItemCode(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getQtyDifChangeItemCode")
