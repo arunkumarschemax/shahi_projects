@@ -10449,7 +10449,7 @@ export const extractedJas = async (pdf) => {
         for (const line of extractedData) {
             const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
             if (gstMatch && !gstNumberExtracted) {
-                venName = 'Geodis India Private Limited';
+                venName = 'JAS FORWARDING WORLDWIDE PVT LTD';
                 const gstNumber = gstMatch[0];
                 let invoiceNumber = '';
                 let invoiceDate = '';
