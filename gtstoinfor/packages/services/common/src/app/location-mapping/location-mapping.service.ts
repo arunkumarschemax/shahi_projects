@@ -38,15 +38,20 @@ export class LocationMappingService {
             sty.style_id,
             sty.style,
             sty.description,
-            pro_grp.product_group,
+    
             it.item_name,
             it.item_code,
-            po.buyer_id,
-            buyer.buyer_name,
+            buyer.buyer_name AS trimBuyerName,
+            buyers.buyer_name AS fabBuyerName,
             m3items.m3_items_Id,
              m3items.item_code AS m3_item_code,
-            
-            
+             m3trims.trim_code AS m3_trim_code,
+             m3trims.m3_trim_Id,
+             sare.buyer_id AS fabricBuyerid,
+             saree.buyer_id AS trimBuyerId,
+             g.item_type,
+             m3items.description AS m3itemDescription,
+
             COALESCE(SUM(stk_log.quantity), 0) AS quantity
             
             FROM grn_items AS grn_it
@@ -54,13 +59,25 @@ export class LocationMappingService {
             LEFT JOIN grn AS g ON g.grn_id = grn_it.grn_id
             LEFT JOIN vendors AS ven ON ven.vendor_id = g.vendor_id
             LEFT JOIN style AS sty ON sty.style_id = g.style_id
-            LEFT JOIN product_group AS pro_grp ON pro_grp.product_group_id = grn_it.product_group_id
             LEFT JOIN items AS it ON it.item_id = grn_it.item_id
             LEFT JOIN stock_log AS stk_log ON stk_log.grn_item_id = grn_it.grn_item_id
             LEFT JOIN purchase_order AS po ON po.purchase_order_id = g.po_id
-            LEFT JOIN buyers AS buyer ON buyer.buyer_id = po.buyer_id
-            LEFT JOIN  m3_items AS m3items ON m3items.m3_items_Id = grn_it.m3_item_code_id 
+            LEFT JOIN purchase_order_fabric AS pofab ON pofab.po_fabric_id = po.purchase_order_id
+            LEFT JOIN purchase_order_trim AS potrim ON potrim.po_trim_id = po.purchase_order_id
+            LEFT JOIN indent_fabric AS indfab ON indfab.ifabric_id = pofab.indent_fabric_id
+            LEFT JOIN indent_trims AS indtrim ON indtrim.itrims_id = potrim.indent_trim_id
+            LEFT JOIN indent AS ind ON ind.indent_id = indfab.indent_id
+            LEFT JOIN indent AS indi ON indi.indent_id = indtrim.indent_id
+            LEFT JOIN sample_request AS sare ON sare.sample_request_id = ind.sample_request_id
+            LEFT JOIN sample_request AS saree ON saree.sample_request_id = indi.sample_request_id
             
+             
+            
+            
+            LEFT JOIN buyers AS buyer ON buyer.buyer_id = sare.buyer_id
+            LEFT JOIN buyers AS buyers ON buyers.buyer_id = saree.buyer_id
+            LEFT JOIN  m3_items AS m3items ON m3items.m3_items_Id = grn_it.m3_item_code_id AND g.item_type = "Fabric"
+            LEFT JOIN  m3_trims AS m3trims ON m3trims.m3_trim_Id = grn_it.m3_item_code_id AND g.item_type =!"Fabric"
             
             
             GROUP BY grn_item_id`
@@ -113,15 +130,17 @@ export class LocationMappingService {
         } catch (error) {
             return error;
         }
-    }
+    } 
+
+
 
     async postToStockLogs(req: LocationMappingReq) {
         try {
-            let dataquery = `INSERT INTO stocks (m3_style_id, item_type_id, item_id, quantity, location_id, style_id,buyer_id) VALUES (${req.m3_style_id},${req.item_type_id},${req.item_id},${req.quantity}, ${req.location_id}, ${req.style_id},${req.buyer_id})`
+            let dataquery = `INSERT INTO stocks (m3_item, quantity, style_id, uom_id, location_id, buyer_id, item_type, grn_item_id,stock_bar_code) VALUES (${req.m3_item}, ${req.quantity}, ${req.style_id}, ${req.uom_id}, ${req.location_id}, ${req.buyer_id}, '${req.item_type}' , ${req.grn_item_id} , "Fabric/10UU/Manufactured Fabrics/Blended Fabrics/dobby/1000 ton/300 PCS/50/20 Inch/234/20/0/00001") `
             const res = await AppDataSource.query(dataquery);
             if (res) {
                 if (res.affectedRows > 0) {
-                    const dataquery2 = `INSERT INTO stock_log (m3_item_code, shahi_item_code, item_type_id, location_id, plant_id, grn_item_id, quantity,buyer_id) VALUES (${req.m3_item_code}, ${req.shahi_item_code}, ${req.item_type_id}, ${req.location_id}, ${req.plant_id}, ${req.grn_item_id}, ${req.quantity},${req.buyer_id})`
+                    const dataquery2 = `INSERT INTO stock_log (m3_item, item_type, location_id, grn_item_id, quantity,buyer_id,uom_id) VALUES (${req.m3_item}, '${req.item_type}', ${req.location_id}, ${req.grn_item_id}, ${req.quantity},${req.buyer_id},${req.uom_id})`
 
                     const res2 = await AppDataSource.query(dataquery2);
 
