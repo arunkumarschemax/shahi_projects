@@ -79,7 +79,6 @@ import { M3StyleModule } from './m3-style-codes/m3-style.module';
 import { GrnModule } from './grn/grn.module';
 import { M3ItemsModule } from './m3-items/m3-items.module';
 import { M3TrimsModule } from './m3-trims/m3-trims.module';
-import { CommonModule } from './common/common.module';
 import { ColumnModule } from './cloumn/column.module';
 
 
