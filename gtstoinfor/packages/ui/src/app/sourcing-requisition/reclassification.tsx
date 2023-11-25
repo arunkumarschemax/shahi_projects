@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import DescriptionsItem from "antd/es/descriptions/Item";
 export interface ReclassificationProps {
   data:any,
+  buyer:any,
   type:string
 }
 
@@ -32,10 +33,17 @@ export const Reclassification = (props:ReclassificationProps) => {
     console.log(props.data)
     setStockData(props?.data)
     form.setFieldsValue({ 
-        buyerId: props?.data?.buyer,quantity:props?.data.qty
+        quantity:props?.data.qty
       });
       setVisible(true)
   }, [props?.data]);
+
+
+  useEffect(() => {
+    form.setFieldsValue({ 
+        buyerId: props?.buyer
+      });
+  }, [props?.buyer]);
   
 
   const getBuyers = () => {

@@ -73,6 +73,8 @@ export class StocksService {
             if(req.weightUnit != undefined){
                 query = query + " and it.weight_unit = "+req.weightUnit;
             }
+            query = query + " order by b.buyer_name ASC ";
+
             const res = await AppDataSource.query(query);
             if (res) {
                 return res;
