@@ -111,12 +111,12 @@ const column1 : any =[
       }),
       fixed: 'left',
     },
-    {
-      title: 'Fabric Type',
-      dataIndex: 'trimtype',
-      render: text => (text ? text : "-")
+    // {
+    //   title: 'Fabric Type',
+    //   dataIndex: 'trimtype',
+    //   render: text => (text ? text : "-")
 
-    },
+    // },
     {
       title: 'Fabric Code',
       dataIndex: 'itemCode',

@@ -79,6 +79,7 @@ import { M3StyleModule } from './m3-style-codes/m3-style.module';
 import { GrnModule } from './grn/grn.module';
 import { M3ItemsModule } from './m3-items/m3-items.module';
 import { M3TrimsModule } from './m3-trims/m3-trims.module';
+import { CommonModule } from './common/common.module';
 import { ColumnModule } from './cloumn/column.module';
 
 
@@ -87,11 +88,11 @@ import { ColumnModule } from './cloumn/column.module';
     TypeOrmModule.forRoot({
       type: "mysql",
       timezone: 'Z',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'crm_shahi',
+      host: appConfig.database.host,
+      port: appConfig.database.port,
+      username: appConfig.database.username,
+      password: appConfig.database.password,
+      database: appConfig.database.dbName,
       autoLoadEntities: true,
       synchronize: false,
       logging: true,
