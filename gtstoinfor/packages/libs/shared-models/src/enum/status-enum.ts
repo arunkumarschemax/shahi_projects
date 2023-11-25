@@ -17,4 +17,13 @@ export enum StatusEnum {
 
 
 
+
  ]
+
+
+ 
+ export enum MaterialStatusEnum {
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+
+}
