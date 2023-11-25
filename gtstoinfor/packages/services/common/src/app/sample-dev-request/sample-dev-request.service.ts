@@ -238,21 +238,18 @@ export class SampleRequestService {
             const bomEntity = new SamplingbomEntity()
             bomEntity.sampleRequestId = save.SampleRequestId
             bomEntity.colourId = fabricData.colourId
-            bomEntity.rmItemId = fabricData.fabricCode //rm_item_id need to be added
+            bomEntity.m3ItemId=fabricData.fabricCode
+            bomEntity.itemType='Fabric'
             bomEntity.requiredQuantity = quantityWithWastage ? quantityWithWastage : 0
-            bomEntity.wastage = '2'
             saveBomDetails = await this.bomRepo.save(bomEntity)
-
           }
         }
         if (req.trimInfo) {
           for (const trimData of req.trimInfo) {
-            const quantityWithWastage = Number(trimData.consumption) + Number((2 / 100) * trimData.consumption)
             const bomEntity = new SamplingbomEntity()
             bomEntity.sampleRequestId = save.SampleRequestId
-            bomEntity.requiredQuantity = quantityWithWastage ? quantityWithWastage : 0
-            bomEntity.wastage = '2'
-            bomEntity.rmItemId = trimData.trimCode
+            bomEntity.itemType=trimData.trimType
+            bomEntity.m3ItemId=trimData.trimCode
             bomEntity.colourId = trimData.colourId
             saveBomDetails = await this.bomRepo.save(bomEntity)
           }
@@ -539,7 +536,6 @@ export class SampleRequestService {
   async getSampleRequestReport(req?: any):Promise<CommonResponseModel>{
     try{
     const manager = this.dataSource;
-      // const query =' SELECT ss.quantity AS availabeQuantity,st.style AS styleName,b.buyer_name AS buyerName,"Fabric" AS fabricType,s.request_no AS sampleReqNo,mi.item_code AS itemCode, i.request_no AS indentCode,i.indent_id AS indentId,i.status,ifc.quantity FROM indent i LEFT JOIN indent_fabric ifc ON i.indent_id=ifc.indent_id LEFT JOIN m3_items mi ON mi.m3_items_Id=ifc.m3_fabric_code  LEFT JOIN sample_request s ON s.sample_request_id=i.sample_request_id  LEFT JOIN buyers b ON b.buyer_id=s.buyer_id  LEFT JOIN style st ON st.style_id=s.style_id LEFT JOIN stocks ss ON ss.buyer_id=s.buyer_id WHERE ss.quantity IS NULL        UNION ALL  SELECT ss.quantity AS availabeQuantity,st.style AS stylename,b.buyer_name AS buyername,mt.trim_type AS fabricType,s.request_no AS sampleReqNo, mt.trim_code AS itemCode,i.request_no AS indentCode,i.indent_id AS indentId,i.status,it.quantity  FROM indent i    LEFT JOIN indent_trims it ON it.indent_id =i.indent_id LEFT JOIN sample_request s ON s.sample_request_id=i.sample_request_id  LEFT JOIN m3_trims mt ON it.trim_code =mt.m3_trim_Id LEFT JOIN buyers b ON b.buyer_id=s.buyer_id LEFT JOIN style st ON st.style_id=s.style_id LEFT JOIN stocks ss ON ss.buyer_id=s.buyer_id WHERE ss.quantity IS NULL '
       const query='SELECT ss.quantity AS availabeQuantity,st.style AS styleName,b.buyer_name AS buyerName,"Fabric" AS fabricType,s.request_no AS sampleReqNo,mi.item_code AS itemCode, i.request_no AS indentCode,i.indent_id AS indentId,i.status,ifc.quantity FROM indent i LEFT JOIN indent_fabric ifc ON i.indent_id=ifc.indent_id LEFT JOIN m3_items mi ON mi.m3_items_Id=ifc.m3_fabric_code  LEFT JOIN sample_request s ON s.sample_request_id=i.sample_request_id  LEFT JOIN buyers b ON b.buyer_id=s.buyer_id LEFT JOIN style st ON st.style_id=s.style_id  LEFT JOIN stocks ss ON ss.m3_item = ifc.m3_fabric_code AND ss.item_type IN ("fabric") AND ss.buyer_id=s.buyer_id WHERE ss.quantity IS NULL UNION ALL  SELECT ss.quantity AS availabeQuantity,st.style AS stylename,b.buyer_name AS buyername,mt.trim_type AS fabricType,s.request_no AS sampleReqNo, mt.trim_code AS itemCode,i.request_no AS indentCode,i.indent_id AS indentId,i.status,it.quantity  FROM indent i  LEFT JOIN indent_trims it ON it.indent_id =i.indent_id LEFT JOIN sample_request s ON s.sample_request_id=i.sample_request_id  LEFT JOIN m3_trims mt ON it.trim_code =mt.m3_trim_Id      LEFT JOIN buyers b ON b.buyer_id=s.buyer_id  LEFT JOIN style st ON st.style_id=s.style_id  LEFT JOIN stocks ss ON ss.m3_item=it.trim_code AND ss.item_type NOT IN("fabric") AND ss.buyer_id=s.buyer_id    WHERE ss.quantity IS NULL '
       const rmData = await manager.query(query);
 
