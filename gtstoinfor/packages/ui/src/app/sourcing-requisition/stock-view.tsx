@@ -1,6 +1,6 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { BuyersService, FabricTypeService, FabricWeaveService, M3ItemsService, StockService, UomService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message } from "antd";
+import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal } from "antd";
 import { ColumnType, ColumnProps } from "antd/es/table";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
@@ -8,6 +8,7 @@ import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useNavigate } from "react-router-dom";
 import { M3ItemsDTO, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { Reclassification } from "./reclassification";
 const { TextArea } = Input;
 
 export const StockView = () => {
@@ -22,6 +23,8 @@ export const StockView = () => {
   const navigate = useNavigate();
   const [uom, setUom] = useState<any[]>([]);
   const [weightData, setWeightData] = useState<any[]>([]);
+  const [rowData, setRowData] = useState<any[]>([]);
+  const [visibleModel, setVisibleModel] = useState<boolean>(false);
   const [yarnData, setYarnData] = useState<any[]>([]);
   const [widthData, setWidthData] = useState<any[]>([]);
   const [buyer, setBuyer] = useState<any[]>([]);
@@ -112,6 +115,11 @@ export const StockView = () => {
       setData([]);
       AlertMessages.getInfoMessage("Something went wrong. ")
     })
+  }
+
+  const getRowData = async (m3StyleDto: any) => {
+    setRowData(m3StyleDto);
+    setVisibleModel(true);
   }
 
   const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
@@ -279,7 +287,7 @@ export const StockView = () => {
       dataIndex: 'action',
       render: (text, rowData) => (
         <span>  
-         <Button style={{backgroundColor:'#69c0ff'}} onClick={(e) => navigate('/reclassification', { state: { data: rowData, type:'stock'  } })}><b>Assign Reclassification</b></Button>
+         <Button style={{backgroundColor:'#69c0ff'}} onClick={ (e) => getRowData(rowData) }><b>Assign Reclassification</b></Button>
         </span>
       )
     }
@@ -288,7 +296,21 @@ export const StockView = () => {
     form.resetFields();
   };
 
+  const handleCancel = () => {
+    setVisibleModel(false);
+  };
+
+  const getItemsForOtherBuyers = () => {
+    console.log(form.getFieldsValue())
+    let formData: M3ItemsDTO = form.getFieldsValue();
+    console.log(formData)
+    console.log(formData.buyerId)
+    formData.buyerId = undefined;
+    console.log(formData)
+    getData(formData);
+  }
   const onFinish = (m3StyleDto: M3ItemsDTO) => {
+    console.log(form.getFieldsValue())
     console.log(m3StyleDto)
     getData(m3StyleDto);
     // service
@@ -575,11 +597,7 @@ export const StockView = () => {
               </Button> 
                 </Col>
             <Col span={6}  style={{paddingTop:'20px'}}>
-
-              <Button type="primary" htmlType="submit">
-                Check Other Buyers
-              </Button>
-             
+              <Button onClick={(e) => getItemsForOtherBuyers()}>Check Other Buyers</Button>
             </Col>
           </Row>
     </Form>
@@ -590,6 +608,20 @@ export const StockView = () => {
         columns={columns}
         size="small"
       />
+      <Modal
+            className='rm-'
+            key={'modal' + Date.now()}
+            width={'80%'}
+            style={{ top: 30, alignContent: 'right' }}
+            visible={visibleModel}
+            title={<React.Fragment>
+            </React.Fragment>}
+            onCancel={handleCancel}
+            footer={[]}
+        >
+            <Reclassification data = {rowData} type="stock" />
+
+            </Modal>
     </Card>
   );
 };
