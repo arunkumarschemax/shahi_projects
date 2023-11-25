@@ -52,7 +52,8 @@ export class LocationMappingService {
              g.item_type,
              m3items.description AS m3itemDescription,
 
-            COALESCE(SUM(stk_log.quantity), 0) AS quantity
+            COALESCE(SUM(stk_log.quantity), 0) AS quantity,
+            uom.uom AS acceptedUOM
             
             FROM grn_items AS grn_it
             
@@ -78,6 +79,7 @@ export class LocationMappingService {
             LEFT JOIN buyers AS buyers ON buyers.buyer_id = saree.buyer_id
             LEFT JOIN  m3_items AS m3items ON m3items.m3_items_Id = grn_it.m3_item_code_id AND g.item_type = "Fabric"
             LEFT JOIN  m3_trims AS m3trims ON m3trims.m3_trim_Id = grn_it.m3_item_code_id AND g.item_type =!"Fabric"
+            LEFT JOIN  uom AS uom ON uom.id = grn_it.received_uom_id
             
             
             GROUP BY grn_item_id`
@@ -132,11 +134,28 @@ export class LocationMappingService {
         }
     } 
 
+    async getAllCount(): Promise<any> {
+        const query =  `SELECT MAX(id) AS id
+        FROM stocks
+        ORDER BY created_at DESC`;
+        const res = await AppDataSource.query(query)
+        if (res) {
+            return new CommonResponseModel(true, 1111, "Data retrived Succesufully", res);
+        }
+    }
+
 
 
     async postToStockLogs(req: LocationMappingReq) {
+        const data = await this.getAllCount();
+        console.log(data,"data")
+        console.log(data.data[0].id,"data")
+
+         const maxId = data.data[0].id
         try {
-            let dataquery = `INSERT INTO stocks (m3_item, quantity, style_id, uom_id, location_id, buyer_id, item_type, grn_item_id,stock_bar_code) VALUES (${req.m3_item}, ${req.quantity}, ${req.style_id}, ${req.uom_id}, ${req.location_id}, ${req.buyer_id}, '${req.item_type}' , ${req.grn_item_id} , "Fabric/10UU/Manufactured Fabrics/Blended Fabrics/dobby/1000 ton/300 PCS/50/20 Inch/234/20/0/00001") `
+            const stock_bar_code = `${req.item_type}/${req.description}/${req.quantity}${req.uomName}/000${maxId+1}`;
+
+            let dataquery = `INSERT INTO stocks (m3_item, quantity, style_id, uom_id, location_id, buyer_id, item_type, grn_item_id,stock_bar_code) VALUES (${req.m3_item}, ${req.quantity}, ${req.style_id}, ${req.uom_id}, ${req.location_id}, ${req.buyer_id}, '${req.item_type}' , ${req.grn_item_id} , '${stock_bar_code}') `
             const res = await AppDataSource.query(dataquery);
             if (res) {
                 if (res.affectedRows > 0) {
@@ -158,6 +177,8 @@ export class LocationMappingService {
             return error;
         }
     }
+
+    
 
     async updateRackLocationStatus(req: RackLocationStatusReq) {
         try {

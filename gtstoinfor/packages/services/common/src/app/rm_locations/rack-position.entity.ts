@@ -1,5 +1,7 @@
 import { RackPositionStatusEnum } from "@project-management-system/shared-models";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Columns } from "../cloumn/column.entity";
+import { Levels } from "../level/level.entity";
 
 @Entity('rack_position')
 export class RackPositionEntity {
@@ -67,5 +69,14 @@ status: RackPositionStatusEnum;
     name: 'version_flag'
   })
   versionFlag: number;
+
+  @ManyToOne(type=>Columns, co=>co.Column,{  nullable:false, })
+  @JoinColumn({ name:"column_id"})
+  column: Columns;
+
+  @ManyToOne(type=>Levels, co=>co.Level,{  nullable:false, })
+  @JoinColumn({ name:"level_Id"})
+  level: Levels;
+
 
 }

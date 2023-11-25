@@ -5,9 +5,12 @@ import { RackPositionEntity } from "./rack-position.entity";
 import { RackPositionController } from "./rack-position.controller";
 import { RackPositionService } from "./rack-position.service";
 import { RackPositionAdapter } from "./rack-position.adaptor";
+import { Levels } from "../level/level.entity";
+import { Column } from "typeorm";
+import { Columns } from "../cloumn/column.entity";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([RackPositionEntity])],
+    imports: [TypeOrmModule.forFeature([RackPositionEntity,Levels,Columns])],
     controllers: [RackPositionController],
     providers: [RackPositionService, ApplicationExceptionHandler, RackPositionAdapter],
     exports: [TypeOrmModule, RackPositionService]

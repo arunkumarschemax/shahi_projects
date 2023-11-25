@@ -299,10 +299,10 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
                         </Select>
                     </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
-                       <Form.Item name='shahiFabricCode' label='Shahi Fabric Code'
+                    <Col >
+                       <Form.Item name='shahiFabricCode' label='Shahi Fabric Code' style={{display:'none'}}
                         >
-                        <Input/>
+                        <Input hidden/>
                        </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
