@@ -174,6 +174,7 @@ import { Reclassification } from "./sourcing-requisition/reclassification"
 import SampleDevNewView from "./sample-development/sampling-develop-req-view"
 import LevelForm from "./common/level/level.form"
 import LevelGrid from "./common/level/level.view"
+import { MaterialAllocationGrid } from "./sample-development/material-allocation"
 
 
 
@@ -228,7 +229,7 @@ export const AppRoutes = () => {
 
                 {/* <Route path='/masters'> */}
                 <Route path='quality-form' element={<QualityForm />} />
-                <Route path='reclassification' element={<Reclassification />} />
+                <Route path='reclassification' element={<Reclassification data={undefined} type=""/>} />
 
                 <Route path='quality-view' element={<QualityView />} />
                 <Route path='rack-form' element={<RackForm />} />
@@ -935,6 +936,7 @@ export const AppRoutes = () => {
                 <Route path="store-issue-detail" element={<StoreIssueDetailed />} />
                 <Route path="market-issue-detailview" element={<MarketIssueDetail />} />
                 <Route path="sample-inventory-grid" element={<SampleInventory />} />
+                <Route path = "material-allocation" element={<MaterialAllocationGrid />} />
 
             </Route>
 

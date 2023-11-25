@@ -33,9 +33,10 @@ export class GrnController {
     }
   }
   @Post('/getAllGrn')
-  async getAllGrn(@Body() dto: any): Promise<CommonResponseModel> {
+  @ApiBody({type:GrnReq})
+  async getAllGrn(@Body() dto?: any): Promise<CommonResponseModel> {
     try {
-      return await this.grnService.getAllGrn();
+      return await this.grnService.getAllGrn(dto);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }

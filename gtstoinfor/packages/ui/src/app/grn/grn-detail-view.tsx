@@ -13,6 +13,7 @@ import {
     Card,
     Col,
     Collapse,
+    Descriptions,
     Divider,
     Form,
     Input,
@@ -76,7 +77,7 @@ import { GrnReq } from "@project-management-system/shared-models";
     //     }
     //   });
     // };
-  
+   
   
   
   
@@ -86,6 +87,12 @@ import { GrnReq } from "@project-management-system/shared-models";
       grnService.getGrnItemById(req).then((res) => {
         if (res.status) {
           setGrn(res.data);
+        }
+      });
+      grnService.getAllGrn(req).then((res) => {
+        if (res.status) {
+          setData(res.data);
+          setFilterData(res.data);
         }
       });
     };
@@ -442,6 +449,13 @@ import { GrnReq } from "@project-management-system/shared-models";
           </span>
         }
       >
+        <Descriptions>
+        <Descriptions.Item label='GRN Number' labelStyle={{color:'black',fontWeight:'bolder'}}>{data?.[0]?.grn_number?data?.[0]?.grn_number:'-'}</Descriptions.Item>
+        <Descriptions.Item label='GRN Date' labelStyle={{color:'black',fontWeight:'bolder'}}>{data?.[0]?.grn_date? moment(data?.[0]?.grn_date).format('DD-MM-YYYY'):'-'}</Descriptions.Item>
+        <Descriptions.Item label='PO Number' labelStyle={{color:'black',fontWeight:'bolder'}}>{data?.[0]?.po_number?data?.[0]?.po_number:'-'}</Descriptions.Item>
+        {/* <Descriptions.Item label='Buyer' labelStyle={{color:'black',fontWeight:'bolder'}}>{data?.[0]?.buyer_name?data?.[0]?.buyer_name:'-'}</Descriptions.Item> */}
+          <Descriptions.Item label='Contact Person' labelStyle={{color:'black',fontWeight:'bolder'}}>{data?.[0]?.contact_person?data?.[0]?.contact_person:'-'}</Descriptions.Item>
+        </Descriptions>
         <>
         {type === "Fabric" ? (
                     <>

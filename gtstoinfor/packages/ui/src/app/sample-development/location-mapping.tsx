@@ -60,13 +60,10 @@ export const LocationMapping = () => {
     const saveLocation = (result) => {
         const locationId = form.getFieldValue("locationId");
         const qty = form.getFieldValue("quantity");
-        // const m3_item_code = 1
-        const shahi_item_code = 1;
-        const item_type_id = 11;
-        const plant_id = 1;
-        // const m3_style_id = 1;
-        const req = new LocationMappingReq(grnData.m3_items_Id
-            , locationId, qty, grnData.grn_item_id, shahi_item_code, item_type_id, plant_id,grnData.style_id, grnData.item_id, grnData.style_id,grnData.buyer_id );
+      
+        // const req = new LocationMappingReq(grnData.m3_items_Id
+        //     , locationId, qty, grnData.grn_item_id, shahi_item_code, item_type_id, plant_id,grnData.style_id, grnData.item_id, grnData.style_id,grnData.buyer_id );
+            const req = new LocationMappingReq(grnData.m3_items_Id,locationId,qty,grnData.grn_item_id,1,grnData.fabricBuyerid,grnData.received_uom_id,grnData.item_type,grnData.m3itemDescription,grnData.acceptedUOM);
         if (req) {
             locationService.postToStockLogs(req).then((res) => {
                 if (res.status === true) {
@@ -186,7 +183,7 @@ export const LocationMapping = () => {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 10 }}>
                             <Form.Item name="itemName" label="Item" rules={[{ required: true, message: 'Missed Item' }]}>
-                                <Input disabled={grnData} defaultValue={grnData.item_name} />
+                                <Input disabled={grnData} defaultValue={grnData.m3_item_code} />
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
@@ -242,7 +239,7 @@ export const LocationMapping = () => {
                         </Col>
                     </Row>
                 </Form>
-                {tableData.length > 0 ? <Table
+                {tableData?.length > 0 ? <Table
                     columns={columnsSkelton}
                     dataSource={tableData}
                     // pagination={{

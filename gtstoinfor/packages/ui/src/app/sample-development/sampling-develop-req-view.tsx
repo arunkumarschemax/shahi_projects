@@ -16,6 +16,7 @@ import {
   import {
     Button,
     Card,
+    Checkbox,
     Col,
     Collapse,
     Divider,
@@ -34,7 +35,7 @@ import {
   import moment from "moment";
   import React, { useEffect, useRef } from "react";
   import { useState } from "react";
-  import { useNavigate } from "react-router-dom";
+  import { Link, useNavigate } from "react-router-dom";
   import Barcode from "react-barcode";
 //   import BarcodePrint from "./barcode-print";
   import {
@@ -64,6 +65,8 @@ import {
     const [data, setData] = useState<any[]>([]);
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
+   const [btnEnable,setbtnEnable]=useState<boolean>(false)
+   const [expandedRowKeys, setExpandedRowKeys] = useState([])
     const searchInput = useRef(null);
   
     useEffect(() => {
@@ -96,20 +99,7 @@ import {
         }
       });
     };
-  
    
-  
-    const generateBarcode = (m3Code, info) => {
-      setBarcode(m3Code);
-      setBarcodeInfo(info);
-      setBarcodeModal(true);
-    };
-  
-    const generatePoForFabric = (rowData:any) =>{
-      // console.log(rowData)
-      navigate('/purchase-order', { state: { data: rowData, type:'Indent' } })
-    }
-    
   
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -245,23 +235,23 @@ import {
           );
         },
       },
-      {
-        title: "Action",
-      dataIndex: "action",
-      render: (text, rowData) => {
-      return (
-      <span>
-      <Button
-      type="primary"
-      disabled={rowData.availabeQuantity == null ? true : false}
-      onClick={() =>MarketIssueDetailView(rowData.sample_request_id)}
-      >
-                Issue Material
-      </Button>
-      </span>
-      );
-      },
-      },
+      // {
+      //   title: "Action",
+      // dataIndex: "action",
+      // render: (text, rowData) => {
+      // return (
+      // <span>
+      // <Button
+      // type="primary"
+      // disabled={rowData.availabeQuantity == null ? true : false}
+      // onClick={() =>MarketIssueDetailView(rowData.sample_request_id)}
+      // >
+      //           Issue Material
+      // </Button>
+      // </span>
+      // );
+      // },
+      // },
     ];
   
     const columnsSkelton: any = [
@@ -302,24 +292,76 @@ import {
             );
           },
       },
-      {
-        title: "Action",
-      dataIndex: "action",
-      render: (text, rowData) => {
-      return (
-      <span>
-         <Button onClick={() => MarketIssueDetailView(rowData.sample_request_id)} type='primary' 
-           disabled={rowData.availabeQuantity == null ? true : false}
-          >Issue Material</Button>
-      </span>
-      );
-      },
-      },
+      // {
+      //   title: "Action",
+      // dataIndex: "action",
+      // render: (text, rowData) => {
+      // return (
+      // <span>
+      //    <Button onClick={() => MarketIssueDetailView(rowData.sample_request_id)} type='primary' 
+      //      disabled={rowData.availabeQuantity == null ? true : false}
+      //     >Issue Material</Button>
+      // </span>
+      // );
+      // },
+      // },
     ];
-    const genereatePoForTrim = (rowData: any) => {
-      navigate("/purchase-order", { state: { data: rowData, type:'Indent'  } });
-    };
-  
+
+    const renderColumnForFabric: any =[
+      {
+        title: "S No",
+        key: "sno",
+        width: "100px",
+        responsive: ["sm"],
+        render: (text, object, index) => (page - 1) * 10 + (index + 1),
+      },
+      {
+        title: "Grn Number",
+        key:'grnNo',
+        dataIndex: "grnNo",
+        width: "150px",
+
+      },
+      {
+        title: "Location",
+        key:'location',
+        dataIndex: "location",
+        width:'80px',
+      },
+    
+      {
+        title: "Availble Quantity",
+        width: "150px",
+        dataIndex: "availableQuantity",
+      },
+      {
+        title: "Allocated Quantity",
+        width:'200px',
+        render:(value,record) =>{
+          return(
+            <Input>
+            </Input>
+          )
+        }
+      },
+      {
+        title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" 
+        // onClick={() =>generatePo()} 
+        >Allocate</Button>:'Allocate'}</div>,
+        dataIndex: "sm",
+        key: "sm",
+        align: "center",
+        render: (sm) => {
+          return (
+            <Checkbox onClick={onCheck}/>
+          );
+        },
+      },
+     
+    ]
+    const onCheck = () =>{
+      setbtnEnable(true)
+    }
     const onSegmentChange = (val) => {
       setTabName(val);
     };
@@ -344,13 +386,7 @@ import {
           <span style={{ width: "10px" }}></span>
           <span>Location : {<b>{location}</b>}</span>
           <span style={{ width: "10px" }}></span>
-          {/* <span>
-            Indent Date: <b>{formattedIndentDate}</b>
-          </span> */}
           <span style={{ width: "10px" }}></span>
-          {/* <span>
-            Expected Date: <b>{formattedExpectedDate}</b>
-          </span> */}
           <span style={{ width: "10px" }}></span>
           <span>Status : {<b>{status}</b>}</span>
           <span style={{ width: "10px" }}></span>
@@ -368,21 +404,6 @@ import {
       setTableData(data);
     };
   
-    // const onSearch = () => {
-    //   let filterData = [];
-    //   if (sourcingForm.getFieldValue("style") !== undefined) {
-    //     const style = sourcingForm.getFieldValue("style");
-    //     filterData = data.filter((e) => e.style === style);
-    //   } else if (sourcingForm.getFieldValue("requestNo") !== undefined) {
-    //     const reqno = sourcingForm.getFieldValue("requestNo");
-    //     filterData = data.filter((e) => e.requestNo === reqno);
-    //   } else if (sourcingForm.getFieldValue("status") !== undefined) {
-    //     const status = sourcingForm.getFieldValue("status");
-    //     filterData = data.filter((e) => e.status === status);
-    //   }
-    //   setTableData(filterData);
-    // };
-  
     const onBarcodeModalCancel = () => {
       setBarcode("");
       setBarcodeModal(false);
@@ -395,16 +416,52 @@ import {
         // return navigate(`/sample-development/store-issue-detail`, { state: { data: [rowData], cancelVisible : cancel } });
     
       };
-  
-  
+
+      const materailDta =[
+        
+          {  sample_request_id: '1',
+            location:'A1L1',
+            availableQuantity:'100',
+            grnNo:'GRN-23-24-001'
+          },
+          {
+            sample_request_id:'2',
+            location:'A2L2',
+            availableQuantity:'100',
+            grnNo:'GRN-23-24-002'
+
+          },
+          {
+            sample_request_id:'2',
+            location:'A2L2',
+            availableQuantity:'100',
+            grnNo:'GRN-23-24-003'
+
+          }
+      ]
+
+
+      const renderItems = (record:any) => {
+        return  <Table
+         dataSource={materailDta}
+          columns={renderColumnForFabric} 
+          pagination={false}
+           rowKey={record.sample_request_id}/>;
+      };
+      const onExpand = (expanded, record) => {
+        const keys = expanded ? [record.key] : [];
+        setExpandedRowKeys(keys);
+      };
     return (
       <Card
         headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
         title="Sample Requests"
         extra={
-          <span>
-            <Button onClick={() => navigate("/indent-form")}>New</Button>
-          </span>
+          <Link to="/sample-development/sample-development-form">
+            <span style={{ color: "white" }}>
+              <Button type={"primary"}>New </Button>{" "}
+            </span>
+          </Link>
         }
       >
         {/* {barcode.length > 0 ? <BarcodePrint key={Date.now() + barcode} printBarcodes={closeWindow} closeBarcodePopUp={closeWindow}
@@ -608,9 +665,15 @@ import {
                       <Table
                         columns={Columns}
                         dataSource={item.fabric}
+                        rowKey={record =>record.sample_request_id}
                         pagination={false}
+                        expandedRowRender={renderItems}
+                        expandIconColumnIndex={6}
                         scroll={{ x: "max-content" }}
                         className="custom-table-wrapper"
+                        // expandedRowKeys={expandedRowKeys}
+                       onExpand={onExpand}
+
                       />
                     </>
                   ) : (

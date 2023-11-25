@@ -1,32 +1,43 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ColumnProps, ColumnsType } from 'antd/lib/table';
 import { Button, Card, Table } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { GRNLocationPropsRequest } from '@project-management-system/shared-models';
 import { LocationMappingService } from '@project-management-system/shared-services';
 
-export const GrnPendingInfoGrid = () => {
+export const MaterialAllocationGrid = () => {
 
     const locationService = new LocationMappingService();
     const [page, setPage] = React.useState(1);
     const [pageSize, setPageSize] = React.useState<number>(null);
-    const [fabData, setFabData] = React.useState<any>()
     const [grndata, setGrndata] = React.useState<any[]>([]);
     const [locationData, setLocationData] = React.useState<GRNLocationPropsRequest>();
 
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        getAllData()
-    }, [])
+    const hardcoreData = [
+        {
+          sample_req: 'SAM/23-24/000001',
+          location: 'A1L1',
+          sample_type: 'Fabric',
+          buyer_name: 'Uniqlo',
+          product_group: 'Electronics',
+          quantity: 50,
+        },
+        {
+          sample_req: 'SAM/23-24/000002',
+          location: 'A1L2',
+          sample_type: 'Trim',
+          buyer_name: 'Nike',
+          product_group: 'Clothing',
+          quantity: 150,
+        },
+        // Add more data as needed
+      ];
+      
+      const [data, setData] = useState<any[]>(hardcoreData)
 
-    const getAllData = () => {
-        locationService.getAllFabrics().then((res) => {
-            setFabData(res.data);
-            console.log(res.data, "?????????????????????????????");
-        })
-    }
 
     const sampleTypeColumns: ColumnsType<any> = [
         {
@@ -37,70 +48,49 @@ export const GrnPendingInfoGrid = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1)
         },
         {
-            title: 'GRN number',
-            dataIndex: "grn_number",
+            title: 'Sample Request No',
+            dataIndex: "sample_req",
             align: 'left',
-            //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
-            //   sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.sample_req.localeCompare(b.sample_req),
+              sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
         {
-            title: 'Vendor',
-            dataIndex: "vendor_name",
+            title: 'Sample Type',
+            dataIndex: "sample_type",
             align: 'left',
-            //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
-            //   sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.sample_type.localeCompare(b.sample_type),
+              sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
         {
             title: 'Buyer',
-            dataIndex: "fabBuyerName",
+            dataIndex: "buyer_name",
             align: 'left',
-            //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
-            //   sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.buyer_name.localeCompare(b.buyer_name),
+              sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
         {
-            title: 'Material Type',
-            dataIndex: "item_type",
+            title: 'Location',
+            dataIndex: "location",
             align: 'left',
-            //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
-            //   sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.location.localeCompare(b.location),
+              sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
         {
-            title: 'Item',
-            dataIndex: "m3_item_code",
+            title: 'Quantity',
+            dataIndex: "quantity",
             align: 'left',
-            //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
-            //   sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+              sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
+       
+     
         {
-            title: 'Grn Quantity',
-            dataIndex: 'conversion_quantity',
-            align: 'left',
-            // sorter: (a, b) => a.receivedQuantity - b.receivedQuantity,
-            // sortDirections: ['descend', 'ascend'],
-        },
-        {
-            title: 'Location Mapped',
-            dataIndex: 'quantity',
-            align: 'left',
-            sorter: (a, b) => a.quantity - b.quantity,
-            sortDirections: ['descend', 'ascend'],
-        },
-        {
-            title: 'Balance',
-            align: 'left',
-            // sorter: (a, b) => a.balance - b.balance,
-            render: (record) => {
-                const balance = record.conversion_quantity - record.quantity
-                return balance
-            }
-        },
-        {
-            title: 'Allocate',
+            title: 'Action',
             // render:(record) =>{
             //     console.log(record,"rowdata")
             //     return('')
@@ -110,10 +100,11 @@ export const GrnPendingInfoGrid = () => {
                 <span>
                     <Button type="primary" shape="round" size="small"
                         disabled={(rowData.conversion_quantity - rowData.quantity) <= 0}
-                        onClick={() => {
-                            setData(rowData);
-                        }}>
-                        Allocate
+                        // onClick={() => {
+                        //     setData(rowData);
+                        // }}
+                        >
+                        Approve
                     </Button>
                 </span>
             )
@@ -125,23 +116,23 @@ export const GrnPendingInfoGrid = () => {
         console.log('params', pagination, filters, sorter, extra);
     }
 
-    const setData = (rowdata) => {
-        console.log(rowdata)
+    // const setData = (rowdata) => {
+    //     console.log(rowdata)
 
-        if (rowdata) {
-            navigate("/location-mapping", { state: { data: rowdata } });
-        }
-    }
+    //     if (rowdata) {
+    //         navigate("/location-mapping", { state: { data: rowdata } });
+    //     }
+    // }
 
     return (
         <div>
-            <Card title={<span style={{ color: 'white' }}>GRN Pending Details</span>}
+            <Card title={<span style={{ color: 'white' }}>Material Allocation</span>}
                 style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
                 <Table
                     rowKey={record => record.productId}
                     className="components-table-nested"
                     columns={sampleTypeColumns}
-                    dataSource={fabData}
+                    dataSource={data}
                     pagination={{
                         onChange(current, pageSize) {
                             setPage(current);

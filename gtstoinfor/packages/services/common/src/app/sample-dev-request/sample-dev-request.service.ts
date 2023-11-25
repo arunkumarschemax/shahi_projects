@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, CommonResponseModel, FabricInfoReq, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SourcingRequisitionReq, TrimInfoReq, UploadResponse } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, CommonResponseModel, FabricInfoReq, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -238,21 +238,18 @@ export class SampleRequestService {
             const bomEntity = new SamplingbomEntity()
             bomEntity.sampleRequestId = save.SampleRequestId
             bomEntity.colourId = fabricData.colourId
-            bomEntity.rmItemId = fabricData.fabricCode //rm_item_id need to be added
+            bomEntity.m3ItemId=fabricData.fabricCode
+            bomEntity.itemType='Fabric'
             bomEntity.requiredQuantity = quantityWithWastage ? quantityWithWastage : 0
-            bomEntity.wastage = '2'
             saveBomDetails = await this.bomRepo.save(bomEntity)
-
           }
         }
         if (req.trimInfo) {
           for (const trimData of req.trimInfo) {
-            const quantityWithWastage = Number(trimData.consumption) + Number((2 / 100) * trimData.consumption)
             const bomEntity = new SamplingbomEntity()
             bomEntity.sampleRequestId = save.SampleRequestId
-            bomEntity.requiredQuantity = quantityWithWastage ? quantityWithWastage : 0
-            bomEntity.wastage = '2'
-            bomEntity.rmItemId = trimData.trimCode
+            bomEntity.itemType=trimData.trimType
+            bomEntity.m3ItemId=trimData.trimCode
             bomEntity.colourId = trimData.colourId
             saveBomDetails = await this.bomRepo.save(bomEntity)
           }
@@ -536,48 +533,56 @@ export class SampleRequestService {
   }
 
 
-  async getSampleRequestReport(req?: any):Promise<CommonResponseModel>{
+  async getSampleRequestReport(req?: SamplerawmaterialStausReq):Promise<CommonResponseModel>{
     try{
+      console.log(req)
+      console.log('&&&&&&&&&&&&&&&&&&&&&&&77')
     const manager = this.dataSource;
-      const query =' SELECT ss.quantity AS availabeQuantity,st.style AS styleName,b.buyer_name AS buyerName,"Fabric" AS fabricType,s.request_no AS sampleReqNo,mi.item_code AS itemCode, i.request_no AS indentCode,i.indent_id AS indentId,i.status,ifc.quantity FROM indent i LEFT JOIN indent_fabric ifc ON i.indent_id=ifc.indent_id LEFT JOIN m3_items mi ON mi.m3_items_Id=ifc.m3_fabric_code  LEFT JOIN sample_request s ON s.sample_request_id=i.sample_request_id  LEFT JOIN buyers b ON b.buyer_id=s.buyer_id  LEFT JOIN style st ON st.style_id=s.style_id LEFT JOIN stocks ss ON ss.buyer_id=s.buyer_id WHERE ss.quantity IS NULL        UNION ALL  SELECT ss.quantity AS availabeQuantity,st.style AS stylename,b.buyer_name AS buyername,mt.trim_type AS fabricType,s.request_no AS sampleReqNo, mt.trim_code AS itemCode,i.request_no AS indentCode,i.indent_id AS indentId,i.status,it.quantity  FROM indent i    LEFT JOIN indent_trims it ON it.indent_id =i.indent_id LEFT JOIN sample_request s ON s.sample_request_id=i.sample_request_id  LEFT JOIN m3_trims mt ON it.trim_code =mt.m3_trim_Id LEFT JOIN buyers b ON b.buyer_id=s.buyer_id LEFT JOIN style st ON st.style_id=s.style_id LEFT JOIN stocks ss ON ss.buyer_id=s.buyer_id WHERE ss.quantity IS NULL '
+      // const query='SELECT ss.quantity AS availabeQuantity,st.style AS styleName,b.buyer_name AS buyerName,"Fabric" AS fabricType,s.request_no AS sampleReqNo,mi.item_code AS itemCode, i.request_no AS indentCode,i.indent_id AS indentId,i.status,ifc.quantity FROM indent i LEFT JOIN indent_fabric ifc ON i.indent_id=ifc.indent_id LEFT JOIN m3_items mi ON mi.m3_items_Id=ifc.m3_fabric_code  LEFT JOIN sample_request s ON s.sample_request_id=i.sample_request_id  LEFT JOIN buyers b ON b.buyer_id=s.buyer_id LEFT JOIN style st ON st.style_id=s.style_id  LEFT JOIN stocks ss ON ss.m3_item = ifc.m3_fabric_code AND ss.item_type IN ("fabric") AND ss.buyer_id=s.buyer_id WHERE ss.quantity IS NULL UNION ALL  SELECT ss.quantity AS availabeQuantity,st.style AS stylename,b.buyer_name AS buyername,mt.trim_type AS fabricType,s.request_no AS sampleReqNo, mt.trim_code AS itemCode,i.request_no AS indentCode,i.indent_id AS indentId,i.status,it.quantity  FROM indent i  LEFT JOIN indent_trims it ON it.indent_id =i.indent_id LEFT JOIN sample_request s ON s.sample_request_id=i.sample_request_id  LEFT JOIN m3_trims mt ON it.trim_code =mt.m3_trim_Id      LEFT JOIN buyers b ON b.buyer_id=s.buyer_id  LEFT JOIN style st ON st.style_id=s.style_id  LEFT JOIN stocks ss ON ss.m3_item=it.trim_code AND ss.item_type NOT IN("fabric") AND ss.buyer_id=s.buyer_id    WHERE ss.quantity IS NULL '
+      let query3
+      let query1='SELECT s.style AS styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,c.colour AS colourName, mi.item_code AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity, sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,st.quantity AS avilableQuantity FROM sampling_bom sb      LEFT JOIN  sample_request_fabric_info srf ON srf.fabric_code=sb.m3_item_id LEFT JOIN sample_request sr ON sr.sample_request_id=sb.sample_request_id   LEFT JOIN stocks st ON st.m3_item =sb.m3_item_id AND sr.buyer_id=st.buyer_id AND st.item_type IN("fabric")  LEFT JOIN m3_items mi ON mi.m3_items_Id=sb.m3_item_id  LEFT JOIN colour c ON c.colour_id=sb.colour_id LEFT JOIN buyers b ON b.buyer_id=sr.buyer_id LEFT JOIN style s ON s.style_id=sr.style_id  WHERE sb.item_type IN("Fabric")  AND st.quantity IS NULL '
+      let query2='SELECT s.style as styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,c.colour AS colourName,mi.trim_code AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity,sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,st.quantity AS avilableQuantity FROM sampling_bom sb LEFT JOIN sample_request_trim_info srt ON srt.trim_code=sb.m3_item_id LEFT JOIN sample_request sr ON sr.sample_request_id=sb.sample_request_id LEFT JOIN stocks st ON st.m3_item =sb.m3_item_id AND sr.buyer_id=st.buyer_id AND st.item_type IN("fabric") LEFT JOIN m3_trims mi ON mi.m3_trim_Id=sb.m3_item_id  LEFT JOIN colour c ON c.colour_id=sb.colour_id   LEFT JOIN buyers b ON b.buyer_id=sr.buyer_id LEFT JOIN style s ON s.style_id=sr.style_id WHERE sb.item_type NOT IN ("Fabric")  AND st.quantity IS NULL'
+      if (req.buyerId == undefined && req.sampleReqNo == undefined && req.styleId == undefined){
+        query3=query1+'   UNION ALL'+' '+query2
+      }
+      if(req.sampleReqNo != undefined){
+        query1=query1+' and sr.sample_request_id='+req.sampleReqNo+''
+        query2=query2+' and sr.sample_request_id='+req.sampleReqNo+''
+        query3=query1+'   UNION ALL '+query2
+      }
 
-      const rmData = await manager.query(query);
+      const rmData = await manager.query(query3);
 
       if (rmData.length > 0) {
         const groupedData = rmData.reduce((result, item) => {
-          console.log(item, "ittttteemmmm")
           const sampleReqNo = item.sampleReqNo;
-          const indentCode = item.indentCode;
-          const buyerName = item.buyerName;
-          const styleName = item.styleName;
-          const status = item.status;
+          const buyername = item.buyername;
+          const status = item.lifeCycleStatus;
+          const styleName=item.styleName
           if (!result[sampleReqNo]) {
             result[sampleReqNo] = {
               sampleReqNo: sampleReqNo,
-              indentCode: indentCode,
-              buyerName: buyerName,
-              styleName: styleName,
+              buyerName: buyername,
               status: status,
+              stylename:styleName,
               sm: [],
             };
           }
   
           result[sampleReqNo].sm.push(
             {
-              fabricType: item.fabricType,
-              itemCode: item.itemCode,
-              consumption: item.required_quantity,
-              quantity: item.quantity,
-              indentId:item.indentId
+              sampleRequestid:item.sampleRequestid,
+              colourName:item.colourName,
+              itemCode:item.itemCode,
+              fabricType: item.itemType,
+              quantity: item.requiredQuantity,
+              assignedQuantity:item.assigned_quantity
             }
-  
           );
           console.log(result)
-          console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$')
           return result;
         }, {});
         console.log(Object.values(groupedData))
-        console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
         return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
 
         }
