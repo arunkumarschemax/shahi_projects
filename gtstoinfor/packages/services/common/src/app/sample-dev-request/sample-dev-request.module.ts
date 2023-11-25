@@ -17,6 +17,7 @@ import { SamplingbomEntity } from './entities/sampling-bom-entity';
 import { SampleInventoryLogEntity } from './entities/sample-inventory-log-entity';
 import { SampleInventoryLoqRepo } from './repo/sample-inventory-loe-repo';
 import { IndentService } from '@project-management-system/shared-services';
+import { MaterialAllocationEntity } from './entities/material-allocation.entity';
 
 @Module({
   imports: [
@@ -27,7 +28,9 @@ import { IndentService } from '@project-management-system/shared-services';
     SampleRequestTriminfoEntity,
     SampleRequestProcessInfoEntity,
     SamplingbomEntity,
-    SampleInventoryLogEntity
+    SampleInventoryLogEntity,
+    MaterialAllocationEntity
+
   ]),
   ],
   controllers: [SampleDevReqController],

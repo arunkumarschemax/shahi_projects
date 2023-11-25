@@ -942,7 +942,7 @@ export const AppRoutes = () => {
                 <Route path="sample-development-form" element={<SampleDevForm />} />
                 <Route path="sample-development-view" element={<SampleDevView />} />
                 <Route path="sample-development-detail" element={<SampleDevDetail />} />
-                <Route path="sample-requests" element={<SampleRequests />} />
+                {/* <Route path="sample-requests" element={<SampleRequests />} /> */}
                 <Route path="store-issue-detail" element={<StoreIssueDetailed />} />
                 <Route path="market-issue-detailview" element={<MarketIssueDetail />} />
                 <Route path="sample-inventory-grid" element={<SampleInventory />} />
