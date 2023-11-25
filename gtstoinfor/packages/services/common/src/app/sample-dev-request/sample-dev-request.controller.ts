@@ -229,4 +229,14 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
+
+  @Post('/getAllMaterialAllocation')
+  async getAllMaterialAllocation(@Body() req:any): Promise<AllSampleDevReqResponseModel> {
+    try {
+      return await this.sampleService.getAllMaterialAllocation(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+    }
+  }
+
 }

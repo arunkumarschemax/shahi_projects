@@ -59,6 +59,12 @@ export class MaterialAllocationEntity {
       })
       allocateQuantity:number
 
+      @Column('int',{
+        name:'buyer_id',
+        nullable:false,
+      })
+      BuyerId:number
+
       
    @Column("enum", {
     name: "status",
