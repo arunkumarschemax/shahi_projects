@@ -13,22 +13,16 @@ export class SamplingbomEntity {
     sampleRequestId:number
 
     @Column('int',{
-        name:'product_group_id',
+        name:'m3_item_id',
         nullable:false
     })
-    productGroupId:number
+    m3ItemId:number
 
-    @Column('int',{
-        name:'rm_item_id',
+    @Column('varchar',{
+        name:'item_type',
         nullable:false
     })
-    rmItemId:number
-
-    @Column('int',{
-        name:'fabric_id',
-        nullable:false
-    })
-    fabricId:string
+    itemType:string
 
     @Column('int',{
         name:'colour_id',
@@ -91,9 +85,4 @@ export class SamplingbomEntity {
       })
       isActive: boolean;
 
-      @Column('varchar',{
-        name:'wastage',
-        nullable:false
-      })
-      wastage:string
 }

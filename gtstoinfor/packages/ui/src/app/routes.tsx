@@ -172,6 +172,7 @@ import GRNView from "./grn/grn-view"
 import GRNDetailView from "./grn/grn-detail-view"
 import { Reclassification } from "./sourcing-requisition/reclassification"
 import SampleDevNewView from "./sample-development/sampling-develop-req-view"
+import { MaterialAllocationGrid } from "./sample-development/material-allocation"
 
 
 
@@ -926,6 +927,7 @@ export const AppRoutes = () => {
                 <Route path="store-issue-detail" element={<StoreIssueDetailed />} />
                 <Route path="market-issue-detailview" element={<MarketIssueDetail />} />
                 <Route path="sample-inventory-grid" element={<SampleInventory />} />
+                <Route path = "material-allocation" element={<MaterialAllocationGrid />} />
 
             </Route>
 
