@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
+import { RackPositionEntity } from "../rm_locations/rack-position.entity";
 
 
 @Entity('levels')
@@ -56,4 +57,7 @@ export class Levels{
       })
       versionFlag: number;
     
+
+      @OneToMany(type=>RackPositionEntity, rack=>rack.level,{cascade: true})
+      Level:RackPositionEntity;
 }

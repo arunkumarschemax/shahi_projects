@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, Not } from "typeorm";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
 import { RackPositionEntity } from "./rack-position.entity";
-import { CommonResponseModel, RackPositionRequest } from "@project-management-system/shared-models";
+import { CommonResponseModel, RackPositionDropDownDto, RackPositionDropDownResponse, RackPositionRequest, RackpositionForIds } from "@project-management-system/shared-models";
 import { RackPositionAdapter } from "./rack-position.adaptor";
 import { RackPositionDTO } from "./rack-position.dto";
 
@@ -55,4 +55,43 @@ export class RackPositionService {
     }
   }
 
+  async getIRackPositionForLevelDropDown(req: RackpositionForIds): Promise<RackPositionDropDownResponse> {
+    try {
+        const itemSubCategoryEntities: RackPositionDropDownDto[] = await this.repository
+            .createQueryBuilder('rack_position')
+            .select('position_Id as positionId, rack_position_name as rackPositionName')
+            .where(`is_active=1 and level_Id='${req.levelId}'`)
+            .orderBy('rack_position_name')
+            .getRawMany();
+
+        if (itemSubCategoryEntities && itemSubCategoryEntities.length > 0) {
+            const response = new RackPositionDropDownResponse(true, 11108, "RackPosition retrieved successfully", itemSubCategoryEntities);
+            return response;
+        } else {
+            throw new RackPositionDropDownResponse(false,99998, 'Data not found');
+        }
+    } catch (err) {
+        return err;
+    }
+}
+
+async getIRackPositionForColumnDropDown(req: RackpositionForIds): Promise<RackPositionDropDownResponse> {
+  try {
+      const itemSubCategoryEntities: RackPositionDropDownDto[] = await this.repository
+          .createQueryBuilder('rack_position')
+          .select('position_Id as positionId, rack_position_name as rackPositionName')
+          .where(`is_active=1 and column_id='${req.column}'`)
+          .orderBy('rack_position_name')
+          .getRawMany();
+
+      if (itemSubCategoryEntities && itemSubCategoryEntities.length > 0) {
+          const response = new RackPositionDropDownResponse(true, 11108, "RackPosition retrieved successfully", itemSubCategoryEntities);
+          return response;
+      } else {
+          throw new RackPositionDropDownResponse(false,99998, 'Data not found');
+      }
+  } catch (err) {
+      return err;
+  }
+}
 }
