@@ -1395,18 +1395,17 @@ export class OrdersService {
             return new CommonResponseModel(false, 0, 'data not found');
         }
 
-        return new CommonResponseModel(true, 1, 'data retrieved', data);
+    return new CommonResponseModel(true, 1, 'data retrieved', data);
+}
+async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel> {
+    // console.log(req,'-------')
+    const data = await this.ordersChildRepo.getMonthlyComparisionData(req);
+    
+    if (data.length === 0) {
+        return new CommonResponseModel(false, 0, 'data not found');
     }
-    async getExfactoryComparisionExcelData(req: YearReq): Promise<CommonResponseModel> {
-        // console.log(req,'-------')
-        const data = await this.ordersChildRepo.getMonthlyComparisionData(req);
-        console.log(data, 'backendddddddd');
-
-        if (data.length === 0) {
-            return new CommonResponseModel(false, 0, 'data not found');
-        }
-        return new CommonResponseModel(true, 1, 'data retrieved', data);
-    }
+    return new CommonResponseModel(true, 1, 'data retrieved', data);
+}
 
     async getQtyDifChangeItemCode(): Promise<CommonResponseModel> {
         const files = await this.fileUploadRepo.getFilesData()
@@ -1455,9 +1454,9 @@ export class OrdersService {
             const dns = require('dns');
             dns.lookup('zimbra.xmission.com', (err, addresses) => {
                 if (err) {
-                    console.error(`DNS lookup error: ${err}`);
+                    // console.error(`DNS lookup error: ${err}`);
                 } else {
-                    console.log(`Resolved addresses: ${addresses}`);
+                    // console.log(`Resolved addresses: ${addresses}`);
                 }
             });
 
@@ -2474,7 +2473,7 @@ export class OrdersService {
 
             }
         });
-        console.log(sendMail, '---------------sendmail')
+        // console.log(sendMail, '---------------sendmail')
         return sendMail
     }
 
