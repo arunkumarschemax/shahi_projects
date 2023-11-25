@@ -10,6 +10,8 @@ export class RackPositionAdapter {
         const entity = new RackPositionEntity();
         entity.rackPositionName = dto.rackPositionName;
         entity.positionCode = dto.positionCode;
+        // entity.column=dto.Column;
+        // entity.level=dto.levelName
         entity.rackName = dto.rackName;
         entity.createdUser = dto.createdUser
         if (dto.positionId) {

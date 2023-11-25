@@ -1,6 +1,7 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { Settings } from "../settings/settings.entity";
 import { StyleOrder } from "../style-order/style-order.entity";
+import { RackPositionEntity } from "../rm_locations/rack-position.entity";
 
 @Entity('column')
 export class Columns {
@@ -55,5 +56,10 @@ export class Columns {
       name: "version_flag"
   })
   versionFlag: number;
+
+
+  @OneToMany(type=>RackPositionEntity, rack=>rack.column,{cascade: true})
+  column:RackPositionEntity;
+
 
 }
