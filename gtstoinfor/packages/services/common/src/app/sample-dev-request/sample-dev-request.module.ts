@@ -18,6 +18,7 @@ import { SampleInventoryLogEntity } from './entities/sample-inventory-log-entity
 import { SampleInventoryLoqRepo } from './repo/sample-inventory-loe-repo';
 import { IndentService } from '@project-management-system/shared-services';
 import { MaterialAllocationEntity } from './entities/material-allocation.entity';
+import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 
 @Module({
   imports: [
@@ -34,6 +35,6 @@ import { MaterialAllocationEntity } from './entities/material-allocation.entity'
   ]),
   ],
   controllers: [SampleDevReqController],
-  providers: [SampleRequestService,ApplicationExceptionHandler,SampleRequestRepository,SampleSizeRepo,SampleFabricRepo,SampleTrimRepo,SampleProcessRepo,SampleInventoryLoqRepo,IndentService]
+  providers: [SampleRequestService,ApplicationExceptionHandler,SampleRequestRepository,SampleSizeRepo,SampleFabricRepo,SampleTrimRepo,SampleProcessRepo,SampleInventoryLoqRepo,IndentService,MaterialAllocationRepo]
 })
 export class SampleDevReqModule {}
