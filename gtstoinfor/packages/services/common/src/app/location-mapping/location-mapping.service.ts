@@ -136,7 +136,7 @@ export class LocationMappingService {
 
     async postToStockLogs(req: LocationMappingReq) {
         try {
-            let dataquery = `INSERT INTO stocks (m3_item, quantity, style_id, uom_id, location_id, buyer_id, item_type, grn_item_id,stock_bar_code) VALUES (${req.m3_item}, ${req.quantity}, ${req.style_id}, ${req.uom_id}, ${req.location_id}, ${req.buyer_id}, '${req.item_type}' , ${req.grn_item_id} , "Fabric/UU/Manufactured Fabrics/Blended Fabrics/dobby/1000 ton/300 PCS/50/20 Inch/234/20/100/00001") `
+            let dataquery = `INSERT INTO stocks (m3_item, quantity, style_id, uom_id, location_id, buyer_id, item_type, grn_item_id,stock_bar_code) VALUES (${req.m3_item}, ${req.quantity}, ${req.style_id}, ${req.uom_id}, ${req.location_id}, ${req.buyer_id}, '${req.item_type}' , ${req.grn_item_id} , "Fabric/10UU/Manufactured Fabrics/Blended Fabrics/dobby/1000 ton/300 PCS/50/20 Inch/234/20/0/00001") `
             const res = await AppDataSource.query(dataquery);
             if (res) {
                 if (res.affectedRows > 0) {
