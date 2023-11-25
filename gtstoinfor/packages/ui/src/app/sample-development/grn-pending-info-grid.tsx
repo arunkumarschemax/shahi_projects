@@ -54,7 +54,7 @@ export const GrnPendingInfoGrid = () => {
         },
         {
             title: 'Buyer',
-            dataIndex: "buyer_name",
+            dataIndex: "fabBuyerName",
             align: 'left',
             //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
             //   sortDirections: ['descend', 'ascend'],
@@ -62,7 +62,7 @@ export const GrnPendingInfoGrid = () => {
         },
         {
             title: 'Material Type',
-            dataIndex: "product_group",
+            dataIndex: "item_type",
             align: 'left',
             //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
             //   sortDirections: ['descend', 'ascend'],
@@ -70,7 +70,7 @@ export const GrnPendingInfoGrid = () => {
         },
         {
             title: 'Item',
-            dataIndex: "item_name",
+            dataIndex: "m3_item_code",
             align: 'left',
             //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
             //   sortDirections: ['descend', 'ascend'],
