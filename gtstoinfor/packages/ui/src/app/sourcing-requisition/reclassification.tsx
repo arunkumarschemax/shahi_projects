@@ -7,7 +7,7 @@ import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useLocation, useNavigate } from "react-router-dom";
-import {StockDetailsInfo} from "./stock-details-info"
+// import {StockDetailsInfo} from "./stock-details-info"
 import DescriptionsItem from "antd/es/descriptions/Item";
 export interface ReclassificationProps {
   data:any,
