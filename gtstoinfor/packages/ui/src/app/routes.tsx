@@ -172,6 +172,8 @@ import GRNView from "./grn/grn-view"
 import GRNDetailView from "./grn/grn-detail-view"
 import { Reclassification } from "./sourcing-requisition/reclassification"
 import SampleDevNewView from "./sample-development/sampling-develop-req-view"
+import LevelForm from "./common/level/level.form"
+import LevelGrid from "./common/level/level.view"
 
 
 
@@ -274,6 +276,11 @@ export const AppRoutes = () => {
 
                     }} />} />
                     <Route path='company/company-grid' element={<CompanyGrid />} />
+                    <Route path='Level/Level-view' element={<LevelGrid />} />
+                <Route path='Level/Level-form' element={<LevelForm levelData={undefined}
+                    isUpdate={false}
+                    closeForm={() => { }}
+                    updateDetails={(undefined) => { }} />} />
                     <Route path='company/division-grid' element={<DivisionGrid />} />
                     <Route path='warehouse/warehouse-form' element={<WarehouseForm Data={undefined}
                         isUpdate={false}
@@ -745,6 +752,8 @@ export const AppRoutes = () => {
                     isUpdate={false}
                     closeForm={() => { }}
                     updateData={(undefined) => { }} />} />
+
+             
 
                 <Route path='fabricType/fabric-type-view' element={<FabricTypeGrid />} />
                 <Route path='fabricType/fabric-type-form' key='fabricType/fabric-type-form' element={<FabricTypeForm fabricTypeData={undefined}
