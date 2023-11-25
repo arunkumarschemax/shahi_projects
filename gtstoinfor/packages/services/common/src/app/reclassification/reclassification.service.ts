@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, Not, Raw } from "typeorm";
+import { Repository, Not, Raw, DataSource } from "typeorm";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
 import { CommonResponseModel, RacActiveDeactive, RackCreateRequest, StockTypeEnum } from "@project-management-system/shared-models";
 import { ReclassificationAdapter } from "./reclassification.adaptor";
@@ -8,6 +8,7 @@ import { ReclassificationEntity } from "./reclassification.entity";
 import { ReclassificationDTO } from "./reclassification.dto";
 import { StocksRepository } from "../stocks/repository/stocks.repository";
 import { StocksEntity } from "../stocks/stocks.entity";
+import { GenericTransactionManager } from "../../typeorm-transactions";
 
 @Injectable()
 export class ReclassificationService {
@@ -17,13 +18,16 @@ export class ReclassificationService {
     @InjectRepository(ReclassificationEntity)
     private repository: Repository<ReclassificationEntity>,
     private stocksRepository: StocksRepository,
+    private readonly dataSource: DataSource,
 
   ) { }
 
   async createReclassification(dto: ReclassificationDTO): Promise<CommonResponseModel> {
+    const manager = new GenericTransactionManager(this.dataSource)
     try {
+      await manager.startTransaction();
       const entity: ReclassificationEntity = this.adapter.convertDtoToEntity(dto);
-      const saveReclassification: ReclassificationEntity = await this.repository.save(entity);
+      const saveReclassification = await manager.getRepository(ReclassificationEntity).save(entity);
       if(saveReclassification.reclassificationId > 0){
           const stocksEntity = new StocksEntity()
           stocksEntity.buyerId = dto.buyer;
@@ -33,18 +37,26 @@ export class ReclassificationService {
           stocksEntity.quantity = dto.quantity;
           stocksEntity.uomId = dto.uomId;
           stocksEntity.stockType = StockTypeEnum.RECLASSIFICATION;
-          let saveStock = await this.stocksRepository.save(stocksEntity)
+          let saveStock = await manager.getRepository(StocksEntity).save(stocksEntity)
           if(saveStock.id > 0){
-            // let updateStockQty = await this.stocksRepository.update({id:dto.stockId},{ quantity: Raw(alias => `quantity = '${dto.quantity}'`)})
-
-            const saveDto: ReclassificationDTO = this.adapter.convertEntityToDto(saveReclassification);
-            return new CommonResponseModel(true, 1, 'Data saved successfully', saveDto);
+            let updateStockQty = await manager.getRepository(StocksEntity).update({id:dto.stockId},{ quantity: () => `quantity-${dto.quantity}`});
+            if(updateStockQty.affected > 0){
+              await manager.completeTransaction();
+              const saveDto: ReclassificationDTO = this.adapter.convertEntityToDto(saveReclassification);
+              return new CommonResponseModel(true, 1, 'Data saved successfully', saveDto);
+            }
+            else{
+              await manager.releaseTransaction();
+              return new CommonResponseModel(false, 0, "Something went wrong",);
+            }
           }
           else{
+            await manager.releaseTransaction();
             return new CommonResponseModel(false, 0, "Something went wrong",);
           }
       }
     } catch (error) {
+      await manager.releaseTransaction();
       return new CommonResponseModel(false, 0, error)
     }
   }

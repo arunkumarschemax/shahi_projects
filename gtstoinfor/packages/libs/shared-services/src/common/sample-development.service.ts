@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { DeliveryMethodDto, DeliveryMethodRequest } from 'packages/libs/shared-models/src/common/delivery-method';
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, SampleDevelopmentRequest, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SamplieMappingDto, UploadResponse, buyerReq, buyerandM3ItemIdReq } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, Allocatematerial, CommonResponseModel, ProductGroupReq, SampleDevelopmentRequest, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SamplieMappingDto, UploadResponse, buyerReq, buyerandM3ItemIdReq } from '@project-management-system/shared-models';
 import { create } from 'domain';
 
 
@@ -154,7 +154,12 @@ export class SampleDevelopmentService extends CommonAxiosService {
     return this.axiosPostCall(this.URL + "/getAvailbelQuantityAginstBuyerAnditem", req)
 
   }
+  async creatematerialAlloction(req: Allocatematerial[]): Promise<CommonResponseModel> {
+    console.log(req,'shared service')
+    return this.axiosPostCall(this.URL + "/creatematerialAlloction", req)
 
+  }
+  
   async getAllMaterialAllocation(req?:buyerReq): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getAllMaterialAllocation",req )
 

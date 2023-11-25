@@ -29,6 +29,7 @@ import {
     Space,
     Table,
     Tag,
+    message,
   } from "antd";
   import style from "antd/es/alert/style";
   import { ColumnProps } from "antd/es/table";
@@ -39,6 +40,7 @@ import {
   import Barcode from "react-barcode";
 //   import BarcodePrint from "./barcode-print";
   import {
+    Allocatematerial,
     CustomerOrderStatusEnum,
     IndentRequestFilter,
   } from "@project-management-system/shared-models";
@@ -184,6 +186,22 @@ import {
         ) : null,
     });
   
+
+    const createAllocation = (dto:any) =>{
+      console.log(dto)
+    let materailData :Allocatematerial[]=[]
+      for(const data of dto){
+        const req = new Allocatematerial(data.itemType,data.sampleRequestid,data.sampleItemId,data.m3ItemId,data.quantity,data.stockId,data.locationId,data.allocatedQuantity)
+        materailData.push(req)
+      }
+      service.creatematerialAlloction(materailData).then(res =>{
+        if(res.status){
+          message.success(res.internalMessage)
+          navigate('/sample-development/material-allocation')
+        }
+      })
+    }
+
     const Columns: any = [
   
       {
@@ -211,13 +229,13 @@ import {
       },
       {
         title: "Available Quantity",
-        dataIndex: "availabeQuantity",
-        sorter: (a, b) => a.availabeQuantity.localeCompare(b.availabeQuantity),
+        dataIndex: "availableQuantity",
+        sorter: (a, b) => a.availableQuantity.localeCompare(b.availableQuantity),
         sortDirections: ["descend", "ascend"],
         render: (text, record) => {
             return (
               <>
-                {record.availabeQuantity ? record.availabeQuantity : "Not Available"
+                {record.availableQuantity ? record.availableQuantity : "Not Available"
                   }
               </>
             );
@@ -370,7 +388,8 @@ import {
     ]
 
     const allocateQuantity = () =>{
-      console.log(avilableQuantity)
+      // console.log(avilableQuantity)
+      createAllocation(avilableQuantity)
 
     }
 
@@ -455,9 +474,6 @@ import {
     
       };
 
-   
-
-
       const renderItems = (record:any) => {
         return  <Table
          dataSource={avilableQuantity}
@@ -486,7 +502,6 @@ import {
           }
         })
       }
-console.log(avilableQuantity)
 
     return (
       <Card
