@@ -267,18 +267,17 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
 
     async sampleFabric(sampleId: string) {
         const query = await this.dataSource.createQueryBuilder(SampleReqFabricinfoEntity, 'srfi')
-            .select(`srfi.sample_request_id,c.colour,st.quantity as availabeQuantity,srfi.fabric_info_id,srfi.fabric_code,srfi.colour_id,srfi.remarks AS fab_remarks,srfi.consumption AS fabric_consumption,srfi.sample_request_id AS fabric_sample_request_id,rm.item_code AS fabric_item_code,m3items.item_code`)
+            .select(`fabric_info_id,srfi.sample_request_id,c.colour,srfi.fabric_info_id,srfi.fabric_code,srfi.colour_id,srfi.remarks AS fab_remarks,srfi.consumption AS fabric_consumption,srfi.sample_request_id AS fabric_sample_request_id,rm.item_code AS fabric_item_code,m3items.item_code`)
             .leftJoin(SampleRequest, 'sr', ' sr.sample_request_id=srfi.sample_request_id ')
             .leftJoin(RmCreationEntity, 'rm', ' rm.rm_item_id=srfi.fabric_code ')
             .leftJoin(M3ItemsEntity,'m3items','m3items.m3_items_Id  = srfi.fabric_code')
-            .leftJoin(StocksEntity,'st','st.m3_item=srfi.fabric_code and item_type in("fabric") ')
+            .leftJoin(StocksEntity,'st','st.m3_item=srfi.fabric_code and item_type in("fabric") and st.buyer_id=sr.buyer_id')
             .leftJoin(Colour,'c','c.colour_id=srfi.colour_id')
             .where(`srfi.sample_request_id = "${sampleId}"`)
             .getRawMany()
         return query.map((rec) => {
             return {
-                fabric_info_id: rec.fabric_info_id,fabric_item_code:rec.fabric_item_code, fabric_code: rec.fabric_code, fabric_description: rec.fabric_description, colour_id: rec.colour_id, fab_remarks: rec.fab_remarks, fabric_consumption: rec.fabric_consumption, fabric_sample_request_id: rec.fabric_sample_request_id,availabeQuantity:rec.availabeQuantity,
-                item_code:rec.item_code,colour:rec.colour,sample_request_id:rec.sample_request_id
+                fabric_info_id: rec.fabric_info_id,fabric_item_code:rec.fabric_item_code, fabric_code: rec.fabric_code, fabric_description: rec.fabric_description, colour_id: rec.colour_id, fab_remarks: rec.fab_remarks, fabric_consumption: rec.fabric_consumption, fabric_sample_request_id: rec.fabric_sample_request_id,
             }
         })
 
