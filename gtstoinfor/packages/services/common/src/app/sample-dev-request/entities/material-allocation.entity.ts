@@ -34,12 +34,12 @@ export class MaterialAllocationEntity {
       })
       m3ItemId:number
 
-      @Column("varchar", {
+      @Column("int", {
         nullable: false,
         name: "quantity",
         
     })
-     quantity: string;
+     quantity: number;
 
      @Column('int',{
         name:'stock_id',

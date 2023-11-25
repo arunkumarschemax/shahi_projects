@@ -24,7 +24,7 @@ export class MaterialAllocationDTO {
       m3ItemId: number
 
      @ApiProperty()
-     quantity: string;
+     quantity: number;
 
      @ApiProperty()
       stockId: number
