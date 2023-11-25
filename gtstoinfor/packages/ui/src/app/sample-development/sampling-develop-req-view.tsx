@@ -53,7 +53,6 @@ import {
     const styleService = new StyleService();
     const [style, setStyle] = useState<any[]>([]);
     const navigate = useNavigate();
-    // const service = new RequisitionService()
     const service = new SampleDevelopmentService();
     const logInUser = localStorage.getItem("userName");
     const [barcode, setBarcode] = useState<string>(null);
@@ -68,6 +67,8 @@ import {
    const [btnEnable,setbtnEnable]=useState<boolean>(false)
    const [expandedRowKeys, setExpandedRowKeys] = useState([])
     const searchInput = useRef(null);
+    const [avilableQuantity, setAvailableQuantity] = useState<any[]>([])
+    const [selectedRowsData, setSelectedRowsData] = useState([]);
   
     useEffect(() => {
       getAll();
@@ -317,51 +318,88 @@ import {
       },
       {
         title: "Grn Number",
-        key:'grnNo',
-        dataIndex: "grnNo",
+        key:'grnNumber',
+        dataIndex: "grnNumber",
         width: "150px",
 
       },
       {
         title: "Location",
-        key:'location',
-        dataIndex: "location",
+        key:'rack_position_name',
+        dataIndex: "rack_position_name",
         width:'80px',
       },
     
       {
         title: "Availble Quantity",
         width: "150px",
-        dataIndex: "availableQuantity",
+        dataIndex: "quantity",
       },
       {
         title: "Allocated Quantity",
         width:'200px',
         render:(value,record) =>{
           return(
-            <Input>
-            </Input>
+            <Form.Item name='allocatedQuantity'>
+                  <Input
+                  onChange={(e) => onCheck(record, e.target.value,true)} 
+                   >
+                </Input>
+            </Form.Item>
+           
           )
         }
       },
       {
         title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" 
-        // onClick={() =>generatePo()} 
+        onClick={() =>allocateQuantity()} 
         >Allocate</Button>:'Allocate'}</div>,
         dataIndex: "sm",
         key: "sm",
         align: "center",
-        render: (sm) => {
+        render: (value,rowData) => {
           return (
-            <Checkbox onClick={onCheck}/>
+            <Checkbox 
+            onChange={(e) => onCheck(rowData, undefined, e.target.checked)}
+            // onClick={(e) =>onCheck(rowData,undefined)}
+            />
           );
         },
       },
      
     ]
-    const onCheck = () =>{
-      setbtnEnable(true)
+
+    const allocateQuantity = () =>{
+      console.log(avilableQuantity)
+
     }
+
+    const onCheck = (rowData,allocatedQuantity,isChecked) =>{
+      console.log(rowData)
+    if (isChecked) {
+      setSelectedRowsData( [
+        {
+          buyerId:rowData.buyerId,
+          grnItemId:rowData.grnItemId,
+          locationId:rowData.locationId,
+          m3ItemId:rowData.m3ItemId,
+          stockId: rowData.stockId,
+          allocatedQuantity: allocatedQuantity !== undefined ? allocatedQuantity : '',
+          sampleRequestId:rowData.sampleRequestid,
+          sampleItemId:rowData.sampleItemId,
+          itemType:rowData.itemType
+        },
+      ]);
+      setbtnEnable(true)
+    } else {
+      setSelectedRowsData(prevData =>
+        prevData.filter(item => item.stockId !== rowData.stockId)
+      );
+    }
+    console.log(selectedRowsData)
+      
+    }
+
     const onSegmentChange = (val) => {
       setTabName(val);
     };
@@ -417,41 +455,39 @@ import {
     
       };
 
-      const materailDta =[
-        
-          {  sample_request_id: '1',
-            location:'A1L1',
-            availableQuantity:'100',
-            grnNo:'GRN-23-24-001'
-          },
-          {
-            sample_request_id:'2',
-            location:'A2L2',
-            availableQuantity:'100',
-            grnNo:'GRN-23-24-002'
-
-          },
-          {
-            sample_request_id:'2',
-            location:'A2L2',
-            availableQuantity:'100',
-            grnNo:'GRN-23-24-003'
-
-          }
-      ]
+   
 
 
       const renderItems = (record:any) => {
         return  <Table
-         dataSource={materailDta}
+         dataSource={avilableQuantity}
           columns={renderColumnForFabric} 
           pagination={false}
            rowKey={record.sample_request_id}/>;
       };
-      const onExpand = (expanded, record) => {
-        const keys = expanded ? [record.key] : [];
-        setExpandedRowKeys(keys);
+
+
+      const handleExpand = (expanded, record) => {
+       getAllAvailbaleQuantity(record)
       };
+
+      const getAllAvailbaleQuantity =(rowData) =>{
+        service.getAvailbelQuantityAginstBuyerAnditem({buyerId:rowData.buyerId,m3ItemId:rowData.m3ItemFabricId}).then(res =>{
+          if(res.status){
+            const dataWithRow = { rowData: rowData, responseData: res.data };
+            console.log(dataWithRow)
+            const updatedData = res.data.map(item => ({
+              ...item,
+              sampleRequestid:rowData.sampleRequestid,
+              sampleItemId:rowData.sampleRequestid,
+              itemType:rowData.itemType
+              }))
+              setAvailableQuantity(updatedData)           
+          }
+        })
+      }
+console.log(avilableQuantity)
+
     return (
       <Card
         headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
@@ -464,8 +500,6 @@ import {
           </Link>
         }
       >
-        {/* {barcode.length > 0 ? <BarcodePrint key={Date.now() + barcode} printBarcodes={closeWindow} closeBarcodePopUp={closeWindow}
-            columns={barcodeWithColumns} newWindow={false} barcodeInfo={barcode} /> : ''} */}
         <Form form={sourcingForm}>
           <Row gutter={8}>
             <Col
@@ -531,8 +565,6 @@ import {
             >
               <Form.Item name="status" label="Status">
                 <Select
-                  // showSearch
-                  // placeholder="Vendors"
                   optionFilterProp="children"
                   placeholder="Select Status"
                 >
@@ -618,20 +650,10 @@ import {
                   location={item.location}
                   brandName={item.brandName}
                   pch={item.pch}
-                //   expectedDate={item.expectedDate}
-                //   indentDate={item.indentDate}
                   status={item.status}
                 />
               }
               key={index}
-            //   extra={
-            //     <Tag
-            //       onClick={() => generateBarcode(item.requestNo, "requestNo")}
-            //       style={{ cursor: "pointer" }}
-            //     >
-            //       <BarcodeOutlined />
-            //     </Tag>
-            //   }
             >
               <Space
                 direction="vertical"
@@ -672,7 +694,8 @@ import {
                         scroll={{ x: "max-content" }}
                         className="custom-table-wrapper"
                         // expandedRowKeys={expandedRowKeys}
-                       onExpand={onExpand}
+                       onExpand={handleExpand}
+
 
                       />
                     </>

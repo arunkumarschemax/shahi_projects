@@ -219,4 +219,14 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
+
+  @Post('/getAvailbelQuantityAginstBuyerAnditem')
+  async getAvailbelQuantityAginstBuyerAnditem(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getAvailbelQuantityAginstBuyerAnditem(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
 }
