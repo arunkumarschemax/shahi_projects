@@ -1,5 +1,5 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { BuyersService, FabricTypeService, FabricWeaveService, M3ItemsService, StockService, UomService } from "@project-management-system/shared-services";
+import { BuyersService, FabricTypeService, FabricWeaveService, M3ItemsService, ReclassificationService, StockService, UomService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, FormInstance, Descriptions } from "antd";
 import { ColumnType, ColumnProps } from "antd/es/table";
 import React, { useEffect, useRef } from "react";
@@ -22,6 +22,7 @@ export const Reclassification = (props:ReclassificationProps) => {
   const [stockData, setStockData] = useState<any[]>([]);
   const [visible, setVisible] = useState<boolean>(false);
   const buyerService = new BuyersService();
+  const reclassificationService = new ReclassificationService();
   // const location = useLocation()
   // const stateData :any=location.state
   useEffect(() => {
@@ -47,6 +48,18 @@ export const Reclassification = (props:ReclassificationProps) => {
 
   const onFinish = (data: any) => {
     console.log(data)
+    data.buyer = form.getFieldValue("buyerId");
+    data.quantity = form.getFieldValue("quantity");
+    reclassificationService.createReclassification(data).then((res) => {
+      if(res.status){
+        AlertMessages.getSuccessMessage(res.internalMessage);
+      }
+      else{
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch(err => {
+      AlertMessages.getInfoMessage(err);
+    })
   };
   return (
     <Card title="Reclassification" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>

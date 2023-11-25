@@ -10,3 +10,4 @@ export const CustomerOrderStatusEnumDisplay = [
     { name:'IN PROGRESS', displayVal:'IN PROGRESS'},
     { name:'CLOSED', displayVal:'CLOSED'}
 ]
+

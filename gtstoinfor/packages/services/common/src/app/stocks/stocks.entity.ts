@@ -1,3 +1,4 @@
+import { StockTypeEnum } from "@project-management-system/shared-models";
 import { CommonColumns } from "packages/services/common/common-columns.entity";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
@@ -33,7 +34,7 @@ export class StocksEntity extends CommonColumns {
     })
     locationId: number;
 
-    @Column({
+    @Column('int',{
         name: "quantity",
     })
     quantity: number;
@@ -48,5 +49,12 @@ export class StocksEntity extends CommonColumns {
     })
     stockBarCode: string;
 
+    @Column('enum',{
+        name:'stock_type',
+        nullable: false,
+        enum:StockTypeEnum,
+        default:StockTypeEnum.STOCK
+      })
+      stockType: StockTypeEnum;
 
 }
