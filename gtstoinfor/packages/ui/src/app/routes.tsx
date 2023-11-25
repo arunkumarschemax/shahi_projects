@@ -173,6 +173,10 @@ import GRNDetailView from "./grn/grn-detail-view"
 import { Reclassification } from "./sourcing-requisition/reclassification"
 import SampleDevNewView from "./sample-development/sampling-develop-req-view"
 import { MaterialAllocationGrid } from "./sample-development/material-allocation"
+import CommonForm from "./masters/column/column-form"
+import CommonView from "./masters/column/column-view"
+import ColumnForm from "./masters/column/column-form"
+import ColumnView from "./masters/column/column-view"
 
 
 
@@ -555,6 +559,12 @@ export const AppRoutes = () => {
                     }} isUpdate={false} closeForm={function (): void {
                         throw new Error("Function not implemented.")
                     }} />} />
+                     <Route path='column/column-form' element={<ColumnForm 
+                        isUpdate={false}
+                        closeForm={() => { } }
+                        updateDetails={(undefined) => { } } columnData={undefined} />}/>   
+                   <Route path='column/column-view' element={<ColumnView/>}/>                      
+                       
                 </Route>
                 <Route path='/global'>
                     <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
