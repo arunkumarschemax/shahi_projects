@@ -226,7 +226,7 @@ export const AppRoutes = () => {
 
                 {/* <Route path='/masters'> */}
                 <Route path='quality-form' element={<QualityForm />} />
-                <Route path='reclassification' element={<Reclassification />} />
+                <Route path='reclassification' element={<Reclassification data={undefined} type=""/>} />
 
                 <Route path='quality-view' element={<QualityView />} />
                 <Route path='rack-form' element={<RackForm />} />
