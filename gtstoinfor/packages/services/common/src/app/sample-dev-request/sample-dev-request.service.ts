@@ -639,7 +639,8 @@ export class SampleRequestService {
     async getAllMaterialAllocation(req?:buyerReq):Promise<CommonResponseModel>{
       try{
         const manager = this.dataSource;
-        const query ='SELECT ma.material_allocation_id,ma.item_type,ma.m3_item_id, ma.quantity,ma.sample_order_id,ma.sample_item_id,ma.stock_id,ma.location_id,ma.buyer_id,ma.status, l.location_name, b.buyer_name FROM material_allocation ma LEFT JOIN location l ON l.location_id = ma.location_id LEFT JOIN buyers b ON b.buyer_id = ma.buyer_id WHERE ma.buyer_id = '+req.buyerId +''
+        const query ='SELECT ma.material_allocation_id,ma.item_type,ma.m3_item_id, ma.quantity,ma.sample_order_id,ma.sample_item_id,ma.stock_id,ma.location_id,ma.buyer_id,ma.status, l.location_name, b.buyer_name FROM material_allocation ma LEFT JOIN location l ON l.location_id = ma.location_id LEFT JOIN buyers b ON b.buyer_id = ma.buyer_id'
+        
         const Data = await manager.query(query);
         if(Data){
           return new CommonResponseModel(true,1,'data',Data)
