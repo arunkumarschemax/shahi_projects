@@ -39,7 +39,7 @@ export class ReclassificationService {
           stocksEntity.stockType = StockTypeEnum.RECLASSIFICATION;
           let saveStock = await manager.getRepository(StocksEntity).save(stocksEntity)
           if(saveStock.id > 0){
-            let updateStockQty = await manager.getRepository(StocksEntity).update({id:dto.stockId},{ quantity: () => `quantity+${dto.quantity}`});
+            let updateStockQty = await manager.getRepository(StocksEntity).update({id:dto.stockId},{ quantity: () => `quantity-${dto.quantity}`});
             if(updateStockQty.affected > 0){
               await manager.completeTransaction();
               const saveDto: ReclassificationDTO = this.adapter.convertEntityToDto(saveReclassification);

@@ -9,6 +9,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
 import { useLocation, useNavigate } from "react-router-dom";
 // import {StockDetailsInfo} from "./stock-details-info"
 import DescriptionsItem from "antd/es/descriptions/Item";
+import { ReclassificationDto } from "@project-management-system/shared-models";
 export interface ReclassificationProps {
   data:any,
   buyer:any,
@@ -56,9 +57,8 @@ export const Reclassification = (props:ReclassificationProps) => {
 
   const onFinish = (data: any) => {
     console.log(data)
-    data.buyer = form.getFieldValue("buyerId");
-    data.quantity = form.getFieldValue("quantity");
-    reclassificationService.createReclassification(data).then((res) => {
+    const req = new ReclassificationDto(0,data.stockId,form.getFieldValue("quantity"),data.m3Item,data.location,form.getFieldValue("buyerId"),undefined,"","",0,data.grnItemId,data.uomId);
+    reclassificationService.createReclassification(req).then((res) => {
       if(res.status){
         AlertMessages.getSuccessMessage(res.internalMessage);
       }

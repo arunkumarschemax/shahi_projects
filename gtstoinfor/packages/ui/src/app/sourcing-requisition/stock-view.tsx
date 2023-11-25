@@ -596,7 +596,7 @@ export const StockView = () => {
               </Button> 
                 </Col>
             <Col span={6}  style={{paddingTop:'20px'}}>
-              <Button onClick={(e) => getItemsForOtherBuyers()}>Check Other Buyers</Button>
+              <Button onClick={(e) => getItemsForOtherBuyers()} style={{backgroundColor:'#29397d', color:'white'}}>Check Other Buyers</Button>
             </Col>
           </Row>
     </Form>

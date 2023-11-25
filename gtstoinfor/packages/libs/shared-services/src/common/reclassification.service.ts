@@ -5,6 +5,7 @@ export class ReclassificationService  extends CommonAxiosService{
 URL ='/reclassification';
 
     async createReclassification(dto: ReclassificationDto): Promise<CommonResponseModel> {
+        console.log("dto")
         return this.axiosPostCall(this.URL + '/createReclassification',dto)   
     }
 }

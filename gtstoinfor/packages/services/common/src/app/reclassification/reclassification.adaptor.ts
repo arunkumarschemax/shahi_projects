@@ -9,6 +9,7 @@ import { StocksEntity } from "../stocks/stocks.entity";
 export class ReclassificationAdapter {
 
     convertDtoToEntity(dto: ReclassificationDTO): ReclassificationEntity {
+        console.log(dto);
         const entity = new ReclassificationEntity();
         entity.buyer = dto.buyer;
         entity.createdUser = dto.createdUser;
