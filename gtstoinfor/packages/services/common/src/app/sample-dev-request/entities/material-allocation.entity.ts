@@ -57,7 +57,7 @@ export class MaterialAllocationEntity {
         name:'allocate_quantity',
         nullable:false,
       })
-      allocatioQuantity:number
+      allocateQuantity:number
 
       
    @Column("enum", {

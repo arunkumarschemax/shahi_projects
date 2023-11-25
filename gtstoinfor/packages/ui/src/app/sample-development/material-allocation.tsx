@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { ColumnProps, ColumnsType } from 'antd/lib/table';
-import { Button, Card, Table } from 'antd';
+import { Button, Card, Divider, Row, Table, Tabs } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { GRNLocationPropsRequest } from '@project-management-system/shared-models';
 import { LocationMappingService } from '@project-management-system/shared-services';
+import TabPane from 'antd/es/tabs/TabPane';
 
 export const MaterialAllocationGrid = () => {
 
@@ -91,26 +92,85 @@ export const MaterialAllocationGrid = () => {
      
         {
             title: 'Action',
-            // render:(record) =>{
-            //     console.log(record,"rowdata")
-            //     return('')
-            // }
             render: (rowData) => (
-                
+              <Row>
                 <span>
-                    <Button type="primary" shape="round" size="small"
-                        disabled={(rowData.conversion_quantity - rowData.quantity) <= 0}
-                        // onClick={() => {
-                        //     setData(rowData);
-                        // }}
-                        >
-                        Approve
-                    </Button>
+                  <Button type="primary" shape="round" size="small" style={{background:"green"}}>
+                    Approve
+                  </Button>
+                  <Divider type="vertical" />
+                  <Button type="primary" shape="round" size="small" style={{background:"red"}}>
+                    Reject
+                  </Button>
                 </span>
+              </Row>
             )
-        },
+          }
+];
 
-    ];
+const sampleTypeColumns1: ColumnsType<any> = [
+    {
+        title: 'S No',
+        key: 'sno',
+        width: '70px',
+        responsive: ['sm'],
+        render: (text, object, index) => (page - 1) * pageSize + (index + 1)
+    },
+    {
+        title: 'Sample Request No',
+        dataIndex: "sample_req",
+        align: 'left',
+        sorter: (a, b) => a.sample_req.localeCompare(b.sample_req),
+          sortDirections: ['descend', 'ascend'],
+        //   ...getColumnSearchProps('vendorName')
+    },
+    {
+        title: 'Sample Type',
+        dataIndex: "sample_type",
+        align: 'left',
+        sorter: (a, b) => a.sample_type.localeCompare(b.sample_type),
+          sortDirections: ['descend', 'ascend'],
+        //   ...getColumnSearchProps('vendorName')
+    },
+    {
+        title: 'Buyer',
+        dataIndex: "buyer_name",
+        align: 'left',
+        sorter: (a, b) => a.buyer_name.localeCompare(b.buyer_name),
+          sortDirections: ['descend', 'ascend'],
+        //   ...getColumnSearchProps('vendorName')
+    },
+    {
+        title: 'Location',
+        dataIndex: "location",
+        align: 'left',
+        sorter: (a, b) => a.location.localeCompare(b.location),
+          sortDirections: ['descend', 'ascend'],
+        //   ...getColumnSearchProps('vendorName')
+    },
+    {
+        title: 'Quantity',
+        dataIndex: "quantity",
+        align: 'left',
+        sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+          sortDirections: ['descend', 'ascend'],
+        //   ...getColumnSearchProps('vendorName')
+    },
+   
+ 
+    {
+        title: 'Action',
+        render: (rowData) => (
+          <Row>
+            <span>
+              <Button type="primary" shape="round" size="small" >
+                Issue Material
+              </Button>
+            </span>
+          </Row>
+        )
+      }
+];
 
     const onChange = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);
@@ -126,7 +186,7 @@ export const MaterialAllocationGrid = () => {
 
     return (
         <div>
-            <Card title={<span style={{ color: 'white' }}>Material Allocation</span>}
+            {/* <Card title={<span style={{ color: 'white' }}>Material Allocation</span>}
                 style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
                 <Table
                     rowKey={record => record.productId}
@@ -144,7 +204,29 @@ export const MaterialAllocationGrid = () => {
                     // size='small'
                     bordered
                 />
-            </Card>
+            </Card> */}
+            <Tabs type={'card'} tabPosition={'top'}>
+                <TabPane key="1" tab={<span style={{fontSize:'15px'}}><b>{`OPEN`}</b></span>}>
+                <Table
+                size="small"
+                columns={sampleTypeColumns}
+                dataSource={data}
+                scroll={{ x: true }}
+                bordered
+                pagination ={false}
+            />
+                </TabPane>
+                <TabPane key="2" tab={<span style={{fontSize:'15px'}}><b>{`APPROVED`}</b></span>}>
+                <Table
+                size="small"
+                columns={sampleTypeColumns1}
+                dataSource={data}
+                scroll={{ x: true }}
+                bordered
+                pagination ={false}
+            />
+                </TabPane>
+            </Tabs>
         </div>
     )
 }
