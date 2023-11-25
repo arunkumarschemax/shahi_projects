@@ -6262,13 +6262,10 @@ export const extractedVelogicIndia = async (pdf) => {
         } else {
             hsnData.push(`${extractedData[rec].content}${extractedData[hsnIndexesArray[index] + 1].content}`);
         }
-
     })
     hsnData.forEach(rec => {
         const descriptionMatch = rec.match(/\b(996|998)\d+\s+[A-Z]+(?:\s+[A-Z]+)*\b/g, "");
         const description = descriptionMatch ? descriptionMatch[0].replace(/(996|998|99)\d+\s+/g, "") : null;
-        // /(996|998)\d+\s+\w+.+\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+(,|.)(\d|\.\d)+)\s+(\d+(,|.)(\d|\.\d)+)\s+(\d+(,|.)(\d|\.\d)+)/
-        // /(996|998)\d+\s+[A-Z]+.+((:+\s+(\d|\d+\.\d)+\s+\*+\s+(\d|\d+(,|.)(\d|\.\d))+)\d+\s+)/
         const HSN = rec.match(/(996|998)+\d+/g, "");
 
         const unitPriceMatch = rec.match(/:+\s+(\d|\d+\.\d)+\s+\*+\s+(\d|\d+\.\d)+\s+/g, "");
@@ -6276,27 +6273,20 @@ export const extractedVelogicIndia = async (pdf) => {
 
         const unitQuantityMatch = rec.match(/:+\s+(\d|\d+\.\d)+\s+\*+\s+(\d|\d+\.\d)+\s+/g, "");
         const unitQuantity = unitQuantityMatch ? unitQuantityMatch[0].replace(/:+\s+(\d|\d+\.\d)+\s+\*/g, "").replace(/:/g, "").replace(/\*/g, "") : null;
-        //1st pdf regex /(996|998|99)\d+\s+\w+\s+\w+\s+(\d+(\.\d))+\s+\d+(\.\d)+\s+\d+(\.\d)+\s+\d+(\.\d)\d+\s+\d+(,|.)(\.\d|\d)+\s+\d+(,|.)(\.\d|\d)+\s+\d+(,|.)(\.\d|\d)+/
-        // 2nd Pdf regex /(996|998|99)\d+\s+[A-Z]+.+\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+(,|.)(\.\d|\d)+)\s+(\d+(,|.)(\.\d|\d)+)+\s+(\d+(,|.)(\.\d|\d)+)/
 
-        // const chargeMatch = rec.match(/\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+([0-9,]+\.\d+)\s.+/);
-        // const charge = chargeMatch.length ? [chargeMatch.length - 2] : "";
+        const toMatchCharge = rec.match(/(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+(.|,)(\.\d|\d)+)+\s+((\d+(.|,)(\.\d|\d)+)+|(\d+(.|,)(\.\d|\d)+))+((\d+(.|,)(\.\d|\d)+))+.+/);
+        const taxAmount=toMatchCharge[4]?toMatchCharge[4].replace(/,/g,""):"";
+        console.log(toMatchCharge, "**toMatchCharge") 
 
-         const chargeMatch = rec.match(/\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+(,|.)(\.\d|\d)+)\s+(\d+(,|.)(\.\d|\d)+)+\s+(\d+(,|.)(\.\d|\d)+)+\s+|\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+(,|.)(\.\d|\d)+)\s+(\d+(,|.)(\.\d|\d)+)/);
-        const charge = chargeMatch ? chargeMatch[0].replace(/\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+(,|.)(\.\d|\d)+)\s+/g,"").replace(/\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+(,|.)(\.\d|\d)+)\s+/g,""): "";
+         // const chargeMatch = rec.match(/(\d+(?:,\d{3})*(?:\.\d+)?)/g,"");
+        // const charge = chargeMatch ? chargeMatch[chargeMatch.length - 2].replace(/,/g,"") : "";
+
+        const amountMatch=rec.match(/(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+(.|,)(\.\d|\d)+)+\s+((\d+(.|,)(\.\d|\d)+)+|(\d+(.|,)(\.\d|\d)+))+((\d+(.|,)(\.\d|\d)+))/);
+        const aa=amountMatch[0].split(' '); 
+        const charge = aa[aa.length - 1].replace(/,/g,"");
 
         const taxPercentageMatch = rec.match(/\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+\.\d)+\s+/);
         const taxPercentage = taxPercentageMatch ? (parseFloat(taxPercentageMatch[2]) + parseFloat(taxPercentageMatch[3])) : "";
-
-        // const taxAmountMatch = rec.match(/\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+\.\d)+\s+.+/g, "");
-        // const taxAmount = taxAmountMatch && taxAmountMatch[0] ? taxAmountMatch[0].replace(/,/g, "") : null;
-
-        const taxAmountMatch = rec.match(/\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+\.\d)+\s+([0-9,]+\.\d+)\s.+/);
-        const taxAmount = taxAmountMatch && taxAmountMatch.length > 4 ? taxAmountMatch[taxAmountMatch.length - 1].replace(/,/g, "") : "";
-        // const taxPercentageMatch = rec.match(/\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+\.\d)+\s+.+/g, "");
-        // const taxPercentageArra = taxPercentageMatch && taxPercentageMatch[0] ? taxPercentageMatch[0].replace(/,/g, "").split(taxPercentageMatch[0].match(/\s+(\d+\.\d)+\s+(\d+\.\d)+\s+(\d+\.\d)+/g, ""))[0].split(' ').filter(rec => rec != '') : [];
-        // console.log(taxPercentageArra, 'taxPercentageArra', '')
-        // const taxPercentage = taxPercentageArra[0] == 9 ? taxPercentageArra[2] : taxPercentageArra[1];
 
         let taxType, igst, cgst, sgst;
 
@@ -6329,11 +6319,9 @@ export const extractedVelogicIndia = async (pdf) => {
             unitPrice: unitPrice,
             unitQuantity: unitQuantity,
         };
-
         structuredHSNLines.push(currentHSN);
         console.log(rec);
     })
-
 
     console.log("Combined Data", structuredHSNLines);
     console.log("PDF JSON DATA", JSON.stringify(structuredHSNLines, null, 2));
@@ -6362,7 +6350,6 @@ export const extractedVelogicIndia = async (pdf) => {
                         continue;
                     }
                     const gstNumber = gstMatch[0];
-
                     venName = "VELOGIC INDIA PVT LTD";
 
                     const invoiceDateData = extractedData.find((item) => item.content.match(invoiceDateRegex));
@@ -6370,11 +6357,11 @@ export const extractedVelogicIndia = async (pdf) => {
 
                     const invoiceNumberData = extractedData.find((item) => item.content.match(invoiceNumberRegex));
                     invoiceNumber = invoiceNumberData ? invoiceNumberData.content.match(invoiceNumberRegex) : "";
+
                     const invoiceAmount = structuredHSNLines.reduce((total, hsnLine) => {
                         const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
                         const charge = parseFloat(hsnLine.charge) || 0;
                         const taxPercentage = parseFloat(hsnLine.taxPercentage) || 0;
-
                         if (taxPercentage == 18 || taxPercentage == 5) {
                             return total + taxAmount + charge;
                         } else if (taxPercentage == 9) {
@@ -6413,8 +6400,6 @@ export const extractedVelogicIndia = async (pdf) => {
                 }
             }
         }
-
-
         console.log("DART PDF DATA", JSON.stringify(extractedData, null, 2));
         console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
         console.log("PDF INVOICE Data", JSON.stringify(InvoiceLines, null, 2));
@@ -7399,7 +7384,6 @@ export const extractedWorldLine = async (pdf) => {
     const structuredHSNLines = [];
     let currentHSN = null;
     let currentTax = null;
-    let Total = '';
     let previousAmountIndex = 1;
     for (let hsnId = 0; hsnId < extractedData.length; hsnId++) {
         const line = extractedData[hsnId].content;
@@ -7408,17 +7392,7 @@ export const extractedWorldLine = async (pdf) => {
         // /(996|998)\d+\s+(\d+\.\d+)\s+(\d+(,|.)(\d|\.\d)+)\s+(\d+(,|.)(\d|\.\d)+)/ -- HSN line regex =  HSN  and Tax % & above = description charge , Tax Amount 
         // /(INR|USD)\s+(\d+(,|.)(\.\d|\d)+)+\s+(\d+(,|.)(\.\d|\d)+)+\s+((CBM|KGS)|(\d+(,|.)(\.\d|\d)+))\s+((\d+(,|.)(\.\d|\d)+\s+\w)|\w)/ -- INR line regex = Unit price and quantity 
         if (matchData) {
-            // let description="";
-            // const totalRegex = /INR\s+\d.+/;
-            //     const totalData = extractedData.find((item) => item.content.match(totalRegex));
-            //     Total = totalData ? totalData.content : '';
 
-            //     if (previousAmountIndex !== -1) {
-            //         const amountIndex = extractedData.slice(previousAmountIndex + 1, hsnId).map(data => data.content);
-            //         description = amountIndex.join(' ');
-            //     } else {
-            //         description = extractedData.slice(extractedData.indexOf(totalData) + 1, hsnId).map((item) => item.content).join('\n');
-            //     }
             const aaaa = matchData[0];
             const HSN = matchData[0].replace(/(\w|\d|\s)+\s+\d+(,|\.\d)+\d+\s+\d+(,|\.\d)(\.\d|\d)+\s+\d+(,|\.\d)(\d|\.\d)+\s+\d+(,|\.\d)(\d|\.\d)+\s+\d+(,|\.\d)(\d)+\s+\d+(,|\.\d)(\d|\.\d)+\s/g, "");
             const charge = matchData[0].replace(/T+\s+\d+(,|\.\d)+\d+\s+/g, "").replace(/\d+(,|\.\d)(\d|\.\d)+\s+\d+(,|\.\d)(\d|\.\d)+\s+\d+(,|\.\d)(\d)+\s+\d+(,|\.\d)(\d|\.\d)+\s+996\d+/g, "").replace(/,/g, "");
@@ -7516,10 +7490,17 @@ export const extractedWorldLine = async (pdf) => {
                 const invoiceNumberData = extractedData.find((item) => item.content.match(invoiceNumberRegex));
                 invoiceNumber = invoiceNumberData ? invoiceNumberData.content.match(invoiceNumberRegex) : '';
 
-                const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
-                    const charge = parseFloat(hsnLine.charge) || 0;
+                const invoiceAmount = structuredHSNLines.reduce((total, hsnLine) => {
                     const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
-                    return add + charge + taxAmount;
+                    const charge = parseFloat(hsnLine.charge) || 0;
+                    const taxPercentage = parseFloat(hsnLine.taxPercentage) || 0;
+
+                    if (taxPercentage == 18 || taxPercentage == 5) {
+                        return total + taxAmount + charge;
+                    } else if (taxPercentage == 9) {
+                        return total + ((taxAmount * 2) + charge);
+                    }
+                    return total;
                 }, 0).toFixed(2);
 
                 let igst = "0.00";
@@ -7554,7 +7535,7 @@ export const extractedWorldLine = async (pdf) => {
         }
     }
 
-    console.log("DART PDF DATA", JSON.stringify(allLines, null, 2))
+    console.log("WORLDLINE PDF DATA", JSON.stringify(allLines, null, 2))
     console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
     console.log("PDF INVOICE Data", JSON.stringify(InvoiceLines, null, 2));
     return {
