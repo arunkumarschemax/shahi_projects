@@ -38,4 +38,15 @@ export class StocksEntity extends CommonColumns {
     })
     quantity: number;
 
+    @Column({
+        name: "grn_item_id",
+    })
+    grnItemId: number;
+
+    @Column({
+        name: "stock_bar_code",
+    })
+    stockBarCode: string;
+
+
 }

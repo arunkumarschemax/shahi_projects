@@ -172,6 +172,8 @@ import GRNView from "./grn/grn-view"
 import GRNDetailView from "./grn/grn-detail-view"
 import { Reclassification } from "./sourcing-requisition/reclassification"
 import SampleDevNewView from "./sample-development/sampling-develop-req-view"
+import LevelForm from "./common/level/level.form"
+import LevelGrid from "./common/level/level.view"
 import { MaterialAllocationGrid } from "./sample-development/material-allocation"
 import CommonForm from "./masters/column/column-form"
 import CommonView from "./masters/column/column-view"
@@ -231,7 +233,7 @@ export const AppRoutes = () => {
 
                 {/* <Route path='/masters'> */}
                 <Route path='quality-form' element={<QualityForm />} />
-                <Route path='reclassification' element={<Reclassification />} />
+                <Route path='reclassification' element={<Reclassification data={undefined} type=""/>} />
 
                 <Route path='quality-view' element={<QualityView />} />
                 <Route path='rack-form' element={<RackForm />} />
@@ -279,6 +281,11 @@ export const AppRoutes = () => {
 
                     }} />} />
                     <Route path='company/company-grid' element={<CompanyGrid />} />
+                    <Route path='Level/Level-view' element={<LevelGrid />} />
+                <Route path='Level/Level-form' element={<LevelForm levelData={undefined}
+                    isUpdate={false}
+                    closeForm={() => { }}
+                    updateDetails={(undefined) => { }} />} />
                     <Route path='company/division-grid' element={<DivisionGrid />} />
                     <Route path='warehouse/warehouse-form' element={<WarehouseForm Data={undefined}
                         isUpdate={false}
@@ -756,6 +763,8 @@ export const AppRoutes = () => {
                     isUpdate={false}
                     closeForm={() => { }}
                     updateData={(undefined) => { }} />} />
+
+             
 
                 <Route path='fabricType/fabric-type-view' element={<FabricTypeGrid />} />
                 <Route path='fabricType/fabric-type-form' key='fabricType/fabric-type-form' element={<FabricTypeForm fabricTypeData={undefined}
