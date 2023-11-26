@@ -77,6 +77,18 @@ const SampleRequestReport = () => {
       sortDirections: ['descend', 'ascend'],
     },
     {
+      title: "Brand",
+      dataIndex: "brandName",
+      sorter: (a, b) => a.brandName.localeCompare(b.brandName),
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: "Location",
+      dataIndex: "locationName",
+      sorter: (a, b) => a.locationName.localeCompare(b.locationName),
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
       title: "Request No",
       dataIndex: "sampleReqNo",
       sorter: (a, b) => a.sampleReqNo.localeCompare(b.sampleReqNo),
