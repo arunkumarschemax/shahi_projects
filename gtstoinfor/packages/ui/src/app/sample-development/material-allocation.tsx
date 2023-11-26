@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { ColumnProps, ColumnsType } from 'antd/lib/table';
-import { Button, Card, Divider, Row, Table, Tabs } from 'antd';
+import { Button, Card, Col, Divider, Form, Row, Select, Table, Tabs, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { GRNLocationPropsRequest } from '@project-management-system/shared-models';
-import { LocationMappingService, SampleDevelopmentService } from '@project-management-system/shared-services';
+import { BuyersDto, GRNLocationPropsRequest, MaterialStatusEnum, buyerReq, statusReq } from '@project-management-system/shared-models';
+import { BuyersService, LocationMappingService, SampleDevelopmentService } from '@project-management-system/shared-services';
 import TabPane from 'antd/es/tabs/TabPane';
+import AlertMessages from '../common/common-functions/alert-messages';
 
 export const MaterialAllocationGrid = () => {
 
@@ -17,50 +18,63 @@ export const MaterialAllocationGrid = () => {
     const [data,setData] = useState<any[]>([])
     const navigate = useNavigate();
     const [openData, setOpenData] = useState<any[]>([]);
-    const [approvedData, setApprovedData] = useState<any[]>([]);
+      const [buyersData,setBuyersData] = useState<BuyersDto[]>([]);
+     const [approvedData, setApprovedData] = useState<any[]>([]);
+     const buyerService = new BuyersService()
+    const [form] = Form.useForm()
+
+
 
 
 
     useEffect(()=>{
         getData()
+        getBuyersData()
     },[])
 
     const getData = () =>{
-         service.getAllMaterialAllocation().then(res=>{
+        const req = new buyerReq()
+        
+        if(form.getFieldValue('buyerId') !== undefined){
+            req.buyerId = form.getFieldValue('buyerId')
+        }
+         service.getAllMaterialAllocation(req).then(res=>{
             if(res.status){
                 const openItems = res.data.filter(item => item.status === 'APPROVAL_PENDING');
                 const approvedItems = res.data.filter(item => item.status === 'APPROVED');
 
                 setOpenData(openItems);
                 setApprovedData(approvedItems);
+            } else {
+                setOpenData([])
+                setApprovedData([])
+                message.success("No Data Found")
+
             }
 
          })
     }
 
-    console.log(data,"dddd")
+     const onApprove =(rowData) =>{
+        console.log(rowData,"rrrrrrrr")
+        console.log(rowData.material_allocation_id,"rrrrrrrr")
 
-    // const hardcoreData = [
-    //     {
-    //       sample_req: 'SAM/23-24/000001',
-    //       location: 'A1L1',
-    //       sample_type: 'Fabric',
-    //       buyer_name: 'Uniqlo',
-    //       product_group: 'Electronics',
-    //       quantity: 50,
-    //     },
-    //     {
-    //       sample_req: 'SAM/23-24/000002',
-    //       location: 'A1L2',
-    //       sample_type: 'Trim',
-    //       buyer_name: 'Nike',
-    //       product_group: 'Clothing',
-    //       quantity: 150,
-    //     },
-    //     // Add more data as needed
-    //   ];
-      
-    //   const [data, setData] = useState<any[]>(hardcoreData)
+        
+
+        const req = new statusReq(rowData.material_allocation_id,MaterialStatusEnum.APPROVED)
+        service.updateStatus(req).then(res=>{
+            if (res.status){
+                AlertMessages.getSuccessMessage(res.internalMessage);
+                getData()
+
+            }else {
+                AlertMessages.getErrorMessage(res.internalMessage);
+            }
+
+        })
+
+        
+     }
 
 
     const sampleTypeColumns: ColumnsType<any> = [
@@ -80,6 +94,14 @@ export const MaterialAllocationGrid = () => {
             //   ...getColumnSearchProps('vendorName')
         },
         {
+            title: 'Sample Request No',
+            dataIndex: "request_no",
+            align: 'left',
+            sorter: (a, b) => a.request_no.localeCompare(b.request_no),
+              sortDirections: ['descend', 'ascend'],
+            //   ...getColumnSearchProps('vendorName')
+        },
+        {
             title: 'Sample Type',
             dataIndex: "item_type",
             align: 'left',
@@ -87,14 +109,7 @@ export const MaterialAllocationGrid = () => {
               sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
-        // {
-        //     title: 'Sample Request No',
-        //     dataIndex: "sample_req",
-        //     align: 'left',
-        //     sorter: (a, b) => a.sample_req.localeCompare(b.sample_req),
-        //       sortDirections: ['descend', 'ascend'],
-        //     //   ...getColumnSearchProps('vendorName')
-        // },
+       
         
         
         {
@@ -117,10 +132,11 @@ export const MaterialAllocationGrid = () => {
      
         {
             title: 'Action',
+            // align: 'center',
             render: (rowData) => (
               <Row>
-                <span>
-                  <Button type="primary" shape="round" size="small" style={{background:"green"}}>
+                <span style={{ textAlign: 'center' }}>
+                  <Button type="primary"  size="small" style={{background:"green"}} onClick={() => onApprove(rowData)}>
                     Approve
                   </Button>
                   <Divider type="vertical" />
@@ -150,6 +166,14 @@ const sampleTypeColumns1: ColumnsType<any> = [
         //   ...getColumnSearchProps('vendorName')
     },
     {
+        title: 'Sample Request No',
+        dataIndex: "request_no",
+        align: 'left',
+        sorter: (a, b) => a.request_no.localeCompare(b.request_no),
+          sortDirections: ['descend', 'ascend'],
+        //   ...getColumnSearchProps('vendorName')
+    },
+    {
         title: 'Sample Type',
         dataIndex: "item_type",
         align: 'left',
@@ -157,14 +181,7 @@ const sampleTypeColumns1: ColumnsType<any> = [
           sortDirections: ['descend', 'ascend'],
         //   ...getColumnSearchProps('vendorName')
     },
-    // {
-    //     title: 'Sample Request No',
-    //     dataIndex: "sample_req",
-    //     align: 'left',
-    //     sorter: (a, b) => a.sample_req.localeCompare(b.sample_req),
-    //       sortDirections: ['descend', 'ascend'],
-    //     //   ...getColumnSearchProps('vendorName')
-    // },
+   
     
     
     {
@@ -187,10 +204,11 @@ const sampleTypeColumns1: ColumnsType<any> = [
  
     {
         title: 'Action',
+        // align: 'center',
         render: (rowData) => (
           <Row>
             <span>
-              <Button type="primary" shape="round" size="small" >
+              <Button type="primary" size="small" >
                 Issue Material
               </Button>
             </span>
@@ -203,18 +221,78 @@ const sampleTypeColumns1: ColumnsType<any> = [
         console.log('params', pagination, filters, sorter, extra);
     }
 
-    // const setData = (rowdata) => {
-    //     console.log(rowdata)
 
-    //     if (rowdata) {
-    //         navigate("/location-mapping", { state: { data: rowdata } });
-    //     }
-    // }
+
+
+  const getBuyersData = () => {
+    buyerService.getAllActiveBuyers().then(res => {
+      if(res.status){
+        setBuyersData(res.data)
+      }
+    })
+  }
+
+  const OnReset = () => {
+    form.resetFields()
+      getData()
+
+}
+
+  
+
 
     return (
         <div>
              <Card title={<span style={{ color: 'white' }}>Material Allocation</span>}
                 style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
+                
+              
+                <Form  form={form} onFinish={getData} >
+                <Row gutter={8}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5}}>
+              <Form.Item
+                name="buyerId"
+                label="Buyer"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                 <Select
+                  placeholder="Select Buyer"
+                  allowClear
+                  showSearch
+                  optionFilterProp="children"
+                >
+                 
+                  {buyersData.map((e) => {
+                  return (
+                    <option
+                      key={e.buyerId}
+                      value={e.buyerId}
+                    >
+                      {e.buyerName}
+                    </option>
+                  );
+                })}
+                </Select>
+              </Form.Item>
+            </Col> 
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                <Form.Item >
+                    <Button  type="primary" htmlType="submit">Search</Button>
+                </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 2 }}>
+                <Form.Item>
+                    <Button  onClick={OnReset}>Reset</Button>
+                </Form.Item>
+                </Col>
+            </Row>
+
+                </Form>
+                  
                
             <Tabs type={'card'} tabPosition={'top'}>
                 <TabPane key="1" tab={<span style={{fontSize:'15px'}}><b>{`OPEN`}</b></span>}>
@@ -239,6 +317,8 @@ const sampleTypeColumns1: ColumnsType<any> = [
                 </TabPane>
             </Tabs>
             </Card> 
+           
+            
         </div>
     )
 }
