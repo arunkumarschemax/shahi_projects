@@ -9,8 +9,10 @@ import AlertMessages from "../common/common-functions/alert-messages";
 import { useLocation, useNavigate } from "react-router-dom";
 // import {StockDetailsInfo} from "./stock-details-info"
 import DescriptionsItem from "antd/es/descriptions/Item";
+import { ReclassificationDto } from "@project-management-system/shared-models";
 export interface ReclassificationProps {
   data:any,
+  buyer:any,
   type:string
 }
 
@@ -32,10 +34,17 @@ export const Reclassification = (props:ReclassificationProps) => {
     console.log(props.data)
     setStockData(props?.data)
     form.setFieldsValue({ 
-        buyerId: props?.data?.buyer,quantity:props?.data.qty
+        quantity:props?.data.qty
       });
       setVisible(true)
   }, [props?.data]);
+
+
+  useEffect(() => {
+    form.setFieldsValue({ 
+        buyerId: props?.buyer
+      });
+  }, [props?.buyer]);
   
 
   const getBuyers = () => {
@@ -48,9 +57,8 @@ export const Reclassification = (props:ReclassificationProps) => {
 
   const onFinish = (data: any) => {
     console.log(data)
-    data.buyer = form.getFieldValue("buyerId");
-    data.quantity = form.getFieldValue("quantity");
-    reclassificationService.createReclassification(data).then((res) => {
+    const req = new ReclassificationDto(0,data.stockId,form.getFieldValue("quantity"),data.m3Item,data.location,form.getFieldValue("buyerId"),undefined,"","",0,data.grnItemId,data.uomId);
+    reclassificationService.createReclassification(req).then((res) => {
       if(res.status){
         AlertMessages.getSuccessMessage(res.internalMessage);
       }

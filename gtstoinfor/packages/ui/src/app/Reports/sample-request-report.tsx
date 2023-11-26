@@ -1,16 +1,21 @@
 import { UndoOutlined } from "@ant-design/icons";
 import { SampleRequestFilter, SamplerawmaterialStausReq } from "@project-management-system/shared-models";
-import { SampleDevelopmentService } from "@project-management-system/shared-services";
+import { BuyersService, SampleDevelopmentService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Checkbox, Col, Form, Row, Select, Table } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import AlertMessages from "../common/common-functions/alert-messages";
 
 const SampleRequestReport = () => {
   const service = new SampleDevelopmentService();
+  const buyerservice= new BuyersService()
+  const styleservice = new StyleService();
   const [data, setData] = useState<any>([]);
   const [requestNo, setRequestNo] = useState<any>([]);
   const [buyers, setBuyers] = useState<any>([]);
+  const [style, setStyle] = useState<any>([]);
+
   const [form] = Form.useForm();
   const [sampleData, setSampleData] = useState<any[]>([]);
   const [filterData, setFilterData] = useState<any[]>([]);
@@ -18,11 +23,14 @@ const SampleRequestReport = () => {
   const [selectedIndentIds, setSelectedIndentIds] = useState([]);
   const [btnEnable,setbtnEnable]=useState<boolean>(false)
   const [selectedItems, setSelectedItems] = useState({});
+  const [type, setType] = useState({});
+
   const {Option} = Select
   useEffect(() => {
     getData();
     getAllRequestNo()
     getAllBuyers()
+    getAllStyles()
   }, []);
 
   const getData = () => {
@@ -33,11 +41,22 @@ const SampleRequestReport = () => {
     if (form.getFieldValue("buyerId") !== undefined) {
       req.buyerId = form.getFieldValue("buyerId");
     }
+    if (form.getFieldValue("style") !== undefined) {
+      req.styleId = form.getFieldValue("style");
+    }
+    
     service.getSampleRequestReport(req).then((res) => {
       if (res.status) {
         setData(res.data);
-      }
-    });
+      }else
+      {
+        setData([])
+         AlertMessages.getErrorMessage("NO DATA FOUND");
+     }
+    }).catch(err => {
+      AlertMessages.getErrorMessage(err.message);
+      setData([]);
+    })
   };
 
   const getAllRequestNo = () => {
@@ -49,12 +68,27 @@ const SampleRequestReport = () => {
   };
 
   const getAllBuyers = () => {
-    service.getAllBuyers().then((res) => {
+    buyerservice.getAllActiveBuyers().then((res) => {
       if (res.status) {
         setBuyers(res.data);
       }
     });
   };
+
+  const getAllStyles= () => {
+    styleservice.getAllActiveStyle().then(res => {
+      if (res.status) {
+        setStyle(res.data);
+      } else
+       {
+        setStyle([])
+          AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch(err => {
+      AlertMessages.getErrorMessage(err.message);
+      setStyle([]);
+    })
+  }
 
   const onFinish = () => {
     getData();
@@ -179,12 +213,12 @@ const SampleRequestReport = () => {
             columns={[
               {
                 render:(value,rowData) =>{
+                  console.log(rowData,"rowdata")
                   return(
                     <Checkbox 
                     onChange={() => onCheck(rowData.indentId,rowData.fabricType)}
-                    // checked={selectedIndentIds.includes(rowData.indentId)}
+                   
                   />
-                    // <Button  type="primary" onClick={() =>generatePo(rowdata)}>Generate Po</Button>
                   )
                 }
               },
@@ -202,6 +236,7 @@ const SampleRequestReport = () => {
   const dataa=[];
    const onCheck = (indentId,fabricType) => {
     console.log(fabricType)
+    setType(fabricType)
     const updatedIndentIds = selectedIndentIds.includes(indentId)
       ? selectedIndentIds.filter(id => id !== indentId)
       : [...selectedIndentIds, indentId];
@@ -215,7 +250,7 @@ const SampleRequestReport = () => {
   console.log(selectedItems)
 
   
-  // console.log(selectedIndentIds)
+  console.log(type,"type")
   return (
     <div>
       <Card
@@ -256,9 +291,9 @@ const SampleRequestReport = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {data.map((qc: any) => (
-                    <Select.Option key={qc.buyer_name} value={qc.buyer_name}>
-                      {qc.buyer_name}
+                  {buyers.map((qc: any) => (
+                    <Select.Option key={qc.buyerName} value={qc.buyerId}>
+                      {qc.buyerName}
                     </Select.Option>
                   ))}
                 </Select>
@@ -272,8 +307,8 @@ const SampleRequestReport = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {data.map((qc: any) => (
-                    <Select.Option key={qc.style} value={qc.style}>
+                  {style.map((qc: any) => (
+                    <Select.Option key={qc.style} value={qc.styleId}>
                       {qc.style}
                     </Select.Option>
                   ))}

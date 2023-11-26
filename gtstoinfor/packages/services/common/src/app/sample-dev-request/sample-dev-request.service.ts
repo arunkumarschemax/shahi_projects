@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, CommonResponseModel, FabricInfoReq, MaterialIssueDto, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, buyerandM3ItemIdReq } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, CommonResponseModel, FabricInfoReq, MaterialIssueDto, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, buyerReq, buyerandM3ItemIdReq } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -30,6 +30,7 @@ import { OperationInventory } from '../operation-tracking/entity/operation-inven
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { IndentService } from '@project-management-system/shared-services';
+import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 import { MaterialAllocationEntity } from './entities/material-allocation.entity';
 import { MaterialAllocationDTO } from './dto/material-allocation-dto';
 
@@ -50,6 +51,7 @@ export class SampleRequestService {
     private bomRepo: Repository<SamplingbomEntity>,
     private logRepo: SampleInventoryLoqRepo,
     private indentService: IndentService,
+    private matAllRepo:MaterialAllocationRepo,
     @InjectRepository(MaterialAllocationEntity)
     private allocateRepo: Repository<MaterialAllocationEntity>,
     
@@ -637,6 +639,29 @@ export class SampleRequestService {
         throw err
       }
     }
+
+    async getAllMaterialAllocation(req?:buyerReq):Promise<CommonResponseModel>{
+      try{
+        const manager = this.dataSource;
+        const query ='SELECT ma.material_allocation_id,ma.item_type,ma.m3_item_id, ma.quantity,ma.sample_order_id,ma.sample_item_id,ma.stock_id,ma.location_id,ma.buyer_id,ma.status, l.location_name, b.buyer_name FROM material_allocation ma LEFT JOIN location l ON l.location_id = ma.location_id LEFT JOIN buyers b ON b.buyer_id = ma.buyer_id'
+        
+        const Data = await manager.query(query);
+        if(Data){
+          return new CommonResponseModel(true,1,'data',Data)
+        }else{
+          return new CommonResponseModel(false,0,'no data',[])
+
+        }
+
+      }catch(err){
+        throw err
+      }
+    }
+
+  
+
+
+
 
 
     async creatematerialAlloction(req:MaterialAllocationDTO[]):Promise<CommonResponseModel>{

@@ -26,4 +26,19 @@ export class buyerandM3ItemIdReq{
             this.buyerId=buyerId
             this.m3ItemId=m3ItemId
     }
+
+    
 }
+
+
+export class buyerReq{
+    buyerId:number
+    constructor(    
+        buyerId:number){
+            this.buyerId=buyerId
+        
+    }
+
+    
+}
+
