@@ -1161,7 +1161,7 @@ export class OrdersService {
         const query2 = `SELECT year, planning_ssn as plannedSeason FROM orders
             WHERE 1 = 1 AND file_id = (SELECT MAX(file_id) FROM orders ) group by planning_ssn,year`
         const seasonTabs = await this.dataSource.query(query2)
-        console.log(seasonTabs,'----')
+        // console.log(seasonTabs,'----')
         const data =[]
         seasonTabs.forEach((rec)=>{
         data.push(

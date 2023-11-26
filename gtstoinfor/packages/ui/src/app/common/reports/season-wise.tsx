@@ -1031,7 +1031,7 @@ const SeasonWiseReport = () => {
               </Select>
                 </Form.Item>
               </Col> */}
-          <Col xs={24} sm={24} md={8} lg={8} xl={6}>
+          <Col xs={24} sm={24} md={8} lg={8} xl={7}>
             <Form.Item label="Item Name" name="itemName">
               <Select
                 showSearch
