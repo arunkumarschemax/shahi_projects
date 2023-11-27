@@ -65,7 +65,35 @@ const RackPosition = () => {
         <Form form={form} layout={'vertical'} name="control-hooks" onFinish={onFinish}>
           <Row gutter={12}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
-              <Form.Item label=" Rack Name" name="rackName"
+              <Form.Item label="Column" name="columnId"
+               rules={[
+                { required: true, message: 'Column is required' },]}
+              >
+                <Select placeholder=" Select Column" >
+                  {data.map((option) => (
+                    <option key={option.columnId} value={option.columnId}>
+                      {option.Column}
+                    </option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+              <Form.Item label="Level" name="levelId"
+               rules={[
+                { required: true, message: 'Level is required' },]}
+              >
+                <Select placeholder=" Select Level" >
+                  {data.map((option) => (
+                    <option key={option.levelId} value={option.levelId}>
+                      {option.levelName}
+                    </option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+              <Form.Item label=" Rack " name="rackName"
                rules={[
                 { required: true, message: 'Field is required' },]}
               >
@@ -79,7 +107,7 @@ const RackPosition = () => {
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
-              <Form.Item label=" Position Code" name="positionCode"
+              <Form.Item label=" Rack Position Code" name="positionCode"
                 rules={[
                   { required: true, message: 'Field is required' },
                   {

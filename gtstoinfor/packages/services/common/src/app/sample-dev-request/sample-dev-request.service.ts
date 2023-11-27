@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, CommonResponseModel, FabricInfoReq, MaterialIssueDto, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, buyerReq, buyerandM3ItemIdReq } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, CommonResponseModel, FabricInfoReq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, buyerReq, buyerandM3ItemIdReq, statusReq } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -640,31 +640,25 @@ export class SampleRequestService {
       }
     }
 
-    async getAllMaterialAllocation(req?:buyerReq):Promise<CommonResponseModel>{
+
+
+    async getAllMaterialAllocation(req?:buyerReq) : Promise<CommonResponseModel> {
       try{
-        const manager = this.dataSource;
-        const query ='SELECT ma.material_allocation_id,ma.item_type,ma.m3_item_id, ma.quantity,ma.sample_order_id,ma.sample_item_id,ma.stock_id,ma.location_id,ma.buyer_id,ma.status, l.location_name, b.buyer_name FROM material_allocation ma LEFT JOIN location l ON l.location_id = ma.location_id LEFT JOIN buyers b ON b.buyer_id = ma.buyer_id'
-        
-        const Data = await manager.query(query);
-        if(Data){
-          return new CommonResponseModel(true,1,'data',Data)
-        }else{
-          return new CommonResponseModel(false,0,'no data',[])
-
+        const data = await this.matAllRepo.getallMaterialAllocation(req)
+       
+        if(data){
+          return new CommonResponseModel(true,0,'Data retrived Successfully',data)
+        } else {
+          return new CommonResponseModel(false,1,'No Data Found',[])
         }
-
-      }catch(err){
+      } catch(err){
         throw err
       }
     }
 
   
 
-
-
-
-
-    async creatematerialAlloction(req:MaterialAllocationDTO[]):Promise<CommonResponseModel>{
+    async creatematerialAlloction(req:MaterialAllocationDTO[], isUpdate: boolean):Promise<CommonResponseModel>{
       try{
         let save
         for(const data of req){
@@ -680,6 +674,7 @@ export class SampleRequestService {
           entity.quantity=data.quantity
           entity.quantity=data.quantity
           entity.stockId=data.stockId
+          entity.status = MaterialStatusEnum.APPROVAL_PENDING
           entity.allocateQuantity=data.allocateQuantity
            save = await this.allocateRepo.save(entity)
         }
@@ -694,5 +689,27 @@ export class SampleRequestService {
         throw err
       }
     }
+
+
+    async updateStatus(req?:statusReq): Promise<CommonResponseModel> {
+      try {
+        const update = await this.matAllRepo.update(
+          { materialAllocationId: req.materialAllocationId },
+          { status: MaterialStatusEnum.APPROVED }
+        );
+    
+        if (update.affected && update.affected > 0) {
+          return new CommonResponseModel(true, 1, 'Approved Sucessfully');
+        } else {
+          return new CommonResponseModel(false, 1, 'some went wrong');
+        }
+      } catch (err) {
+        throw err;
+      }
+    }
+    
+    
+    
+
 
 }

@@ -243,10 +243,20 @@ export class SampleDevReqController {
   @Post('/creatematerialAlloction')
   async creatematerialAlloction(@Body() req:any): Promise<CommonResponseModel> {
     try {
-      return await this.sampleService.creatematerialAlloction(req)
+      return await this.sampleService.creatematerialAlloction(req,false)
     }
     catch (err) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+
+  @Post('/updateStatus')
+  async updateStatus(@Body() req: any): Promise<CommonResponseModel> {
+    console.log(req,"controll")
+    try {
+      return await this.sampleService.updateStatus(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
 }
