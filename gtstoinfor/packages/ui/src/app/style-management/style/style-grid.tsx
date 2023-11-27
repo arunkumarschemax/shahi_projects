@@ -103,12 +103,20 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
+      title: "Buyer",
+      dataIndex: "buyer",
+      width:'100px',
+      sorter: (a, b) => a.buyer.localeCompare(b.buyer),
+    ...getColumnSearchProps("buyer"),
+    },
+    {
         title: "Style",
         dataIndex: "style",
         width:'100px',
         sorter: (a, b) => a.style.localeCompare(b.style),
       ...getColumnSearchProps("style"),
       },
+      
       {
         title: "File Name",
         dataIndex: "styleFileName",

@@ -19,6 +19,7 @@ export class StyleService{
             style.locationId=req.locationId
             style.pch=req.pch
             style.description=req.description
+            style.buyerId=req.buyerId
             if(isUpdate){
                 style.styleId=req.styleId
                 style.updatedUser=req.updatedUser
@@ -57,7 +58,7 @@ export class StyleService{
     }
    
     async getAllStyle():Promise<AllStyleResponseModel>{
-        const style = await this.styleRepo.find({order:{createdAt:'ASC'}})
+        const style = await this.styleRepo.getAllStyleData()
         if(style.length >0){
             return new AllStyleResponseModel(true,1,'Styles Retrived Sucessfully',style)
         }else{

@@ -49,6 +49,11 @@ export class Style {
       nullable: true
   })
   styleFilePath: string;
+
+  @Column('int', {
+    name: 'buyer_id',
+})
+buyerId: number;
   
   @Column("boolean",{
     nullable:false,
