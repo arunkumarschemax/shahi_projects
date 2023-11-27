@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import { ColumnProps, ColumnsType } from 'antd/lib/table';
-import { Button, Card, Col, Divider, Form, Row, Select, Table, Tabs, message } from 'antd';
+import React, { useEffect, useRef, useState } from 'react'
+import { ColumnProps, ColumnType, ColumnsType } from 'antd/lib/table';
+import { Button, Card, Col, Divider, Form, Input, Row, Select, Space, Table, Tabs, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { BuyersDto, GRNLocationPropsRequest, MaterialStatusEnum, buyerReq, statusReq } from '@project-management-system/shared-models';
-import { BuyersService, LocationMappingService, SampleDevelopmentService } from '@project-management-system/shared-services';
+import { BuyersDto, GRNLocationPropsRequest, MaterialIssueLogrequest, MaterialStatusEnum, buyerReq, statusReq } from '@project-management-system/shared-models';
+import { BuyersService, LocationMappingService, MaterialIssueService, SampleDevelopmentService } from '@project-management-system/shared-services';
 import TabPane from 'antd/es/tabs/TabPane';
 import AlertMessages from '../common/common-functions/alert-messages';
+import { SearchOutlined } from '@ant-design/icons';
+import Highlighter from 'react-highlight-words';
 
 export const MaterialAllocationGrid = () => {
 
@@ -22,6 +24,11 @@ export const MaterialAllocationGrid = () => {
      const [approvedData, setApprovedData] = useState<any[]>([]);
      const buyerService = new BuyersService()
     const [form] = Form.useForm()
+    const [searchText, setSearchText] = useState(''); 
+   const [searchedColumn, setSearchedColumn] = useState('');
+   const searchInput = useRef(null);
+   const materialservice = new MaterialIssueService()
+   const [isButtonDisabled, setButtonDisabled] = useState(false)
 
 
 
@@ -56,11 +63,8 @@ export const MaterialAllocationGrid = () => {
     }
 
      const onApprove =(rowData) =>{
-        console.log(rowData,"rrrrrrrr")
-        console.log(rowData.material_allocation_id,"rrrrrrrr")
-
-        
-
+        // console.log(rowData,"rrrrrrrr")
+        // console.log(rowData.material_allocation_id,"rrrrrrrr")
         const req = new statusReq(rowData.material_allocation_id,MaterialStatusEnum.APPROVED)
         service.updateStatus(req).then(res=>{
             if (res.status){
@@ -72,9 +76,98 @@ export const MaterialAllocationGrid = () => {
             }
 
         })
-
-        
+   
      }
+
+     const onIssuematerial =(rowData) =>{
+         console.log(rowData,"issuematerial")
+         const req = new MaterialIssueLogrequest(null,rowData.material_allocation_id,rowData.item_type,rowData.sample_order_id,rowData.sample_item_id,rowData.m3_item_id,rowData.quantity,rowData.stock_id,rowData.location_id,rowData.location_name,rowData.allocate_quantity,rowData.buyer_id,rowData.buyer_name,rowData.request_no)
+         materialservice.createMaterialIssueLog(req).then(res=>{
+          if(res.status){
+            AlertMessages.getSuccessMessage(res.internalMessage)
+          
+          }
+
+         })
+         
+
+     }
+
+
+     const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+        <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+          <Input
+            ref={searchInput}
+            placeholder={`Search ${dataIndex}`}
+            value={selectedKeys[0]}
+            onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            style={{ marginBottom: 8, display: 'block' }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+              icon={<SearchOutlined />}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Search
+            </Button>
+            <Button
+              onClick={() =>{
+                handleReset(clearFilters)
+                setSearchedColumn(dataIndex)
+                confirm({closeDropdown:true})
+              }
+                 }
+              size="small"
+              style={{ width: 90 }}
+            >
+              Reset
+            </Button>
+           
+          </Space>
+        </div>
+      ),
+      filterIcon: (filtered: boolean) => (
+        <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+      ),
+      onFilter: (value, record) =>
+        record[dataIndex] ?record[dataIndex]     
+           .toString()
+          .toLowerCase()
+          .includes((value as string).toLowerCase()):false,
+      onFilterDropdownOpenChange: (visible) => {
+        if (visible) {
+          setTimeout(() => searchInput.current?.select(), 100);
+        }
+      },
+      render: (text) =>
+        searchedColumn === dataIndex ? (
+          <Highlighter
+            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+            searchWords={[searchText]}
+            autoEscape
+            textToHighlight={text ? text.toString() : ''}
+          />
+        ) : (
+          text
+        ),
+    });
+    
+    function handleSearch(selectedKeys, confirm, dataIndex) {
+      confirm();
+      setSearchText(selectedKeys[0]);
+      setSearchedColumn(dataIndex);
+    };
+  
+    function handleReset(clearFilters) {
+      clearFilters();
+      setSearchText('');
+    };
+  
 
 
     const sampleTypeColumns: ColumnsType<any> = [
@@ -91,7 +184,7 @@ export const MaterialAllocationGrid = () => {
             align: 'left',
             sorter: (a, b) => a.buyer_name.localeCompare(b.buyer_name),
               sortDirections: ['descend', 'ascend'],
-            //   ...getColumnSearchProps('vendorName')
+              ...getColumnSearchProps('buyer_name')
         },
         {
             title: 'Sample Request No',
@@ -99,15 +192,15 @@ export const MaterialAllocationGrid = () => {
             align: 'left',
             sorter: (a, b) => a.request_no.localeCompare(b.request_no),
               sortDirections: ['descend', 'ascend'],
-            //   ...getColumnSearchProps('vendorName')
+              ...getColumnSearchProps('request_no')
         },
         {
-            title: 'Sample Type',
+            title: 'Item Type',
             dataIndex: "item_type",
             align: 'left',
             sorter: (a, b) => a.item_type.localeCompare(b.item_type),
               sortDirections: ['descend', 'ascend'],
-            //   ...getColumnSearchProps('vendorName')
+              ...getColumnSearchProps('item_type')
         },
        
         
@@ -118,7 +211,7 @@ export const MaterialAllocationGrid = () => {
             align: 'left',
             sorter: (a, b) => a.location_name.localeCompare(b.location_name),
               sortDirections: ['descend', 'ascend'],
-            //   ...getColumnSearchProps('vendorName')
+              ...getColumnSearchProps('location_name')
         },
         {
             title: 'Quantity',
@@ -126,8 +219,16 @@ export const MaterialAllocationGrid = () => {
             align: 'left',
             sorter: (a, b) => a.quantity.localeCompare(b.quantity),
               sortDirections: ['descend', 'ascend'],
-            //   ...getColumnSearchProps('vendorName')
+              ...getColumnSearchProps('quantity')
         },
+        {
+          title: 'Allocate Quantity',
+          dataIndex: "allocate_quantity",
+          align: 'left',
+          sorter: (a, b) => a.allocate_quantity.localeCompare(b.allocate_quantity),
+            sortDirections: ['descend', 'ascend'],
+            ...getColumnSearchProps('allocate_quantity')
+      },
        
      
         {
@@ -163,7 +264,7 @@ const sampleTypeColumns1: ColumnsType<any> = [
         align: 'left',
         sorter: (a, b) => a.buyer_name.localeCompare(b.buyer_name),
           sortDirections: ['descend', 'ascend'],
-        //   ...getColumnSearchProps('vendorName')
+          ...getColumnSearchProps('buyer_name')
     },
     {
         title: 'Sample Request No',
@@ -171,15 +272,15 @@ const sampleTypeColumns1: ColumnsType<any> = [
         align: 'left',
         sorter: (a, b) => a.request_no.localeCompare(b.request_no),
           sortDirections: ['descend', 'ascend'],
-        //   ...getColumnSearchProps('vendorName')
+          ...getColumnSearchProps('request_no')
     },
     {
-        title: 'Sample Type',
+        title: 'Item Type',
         dataIndex: "item_type",
         align: 'left',
         sorter: (a, b) => a.item_type.localeCompare(b.item_type),
           sortDirections: ['descend', 'ascend'],
-        //   ...getColumnSearchProps('vendorName')
+          ...getColumnSearchProps('item_type')
     },
    
     
@@ -190,16 +291,25 @@ const sampleTypeColumns1: ColumnsType<any> = [
         align: 'left',
         sorter: (a, b) => a.location_name.localeCompare(b.location_name),
           sortDirections: ['descend', 'ascend'],
-        //   ...getColumnSearchProps('vendorName')
+          ...getColumnSearchProps('location_name')
     },
+    
     {
         title: 'Quantity',
         dataIndex: "quantity",
         align: 'left',
         sorter: (a, b) => a.quantity.localeCompare(b.quantity),
           sortDirections: ['descend', 'ascend'],
-        //   ...getColumnSearchProps('vendorName')
+          ...getColumnSearchProps('quantity')
     },
+    {
+      title: 'Allocate Quantity',
+      dataIndex: "allocate_quantity",
+      align: 'left',
+      sorter: (a, b) => a.allocate_quantity.localeCompare(b.allocate_quantity),
+        sortDirections: ['descend', 'ascend'],
+        ...getColumnSearchProps('allocate_quantity')
+  },
    
  
     {
@@ -208,8 +318,9 @@ const sampleTypeColumns1: ColumnsType<any> = [
         render: (rowData) => (
           <Row>
             <span>
-              <Button type="primary" size="small" >
-                Issue Material
+              <Button type="primary" size="small" onClick={() => onIssuematerial(rowData)}
+               >
+                 Material Issue
               </Button>
             </span>
           </Row>
@@ -244,7 +355,8 @@ const sampleTypeColumns1: ColumnsType<any> = [
     return (
         <div>
              <Card title={<span style={{ color: 'white' }}>Material Allocation</span>}
-                style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
+                style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+                extra={<span><Button onClick={() => navigate('/sample-development/material-allocation-view')} type={'primary'}>View</Button></span>} size='small' >
                 
               
                 <Form  form={form} onFinish={getData} >

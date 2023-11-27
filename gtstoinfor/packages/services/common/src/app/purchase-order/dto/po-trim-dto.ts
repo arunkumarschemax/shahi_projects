@@ -26,7 +26,7 @@ export class PurchaseOrderTrimDto{
     m3TrimCode: string
 
     @ApiProperty()
-    indentTrimId:number
+    poAgainstId:number
 
     @ApiProperty()
     poQuantity:number

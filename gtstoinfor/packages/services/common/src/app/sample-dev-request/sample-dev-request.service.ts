@@ -267,13 +267,13 @@ export class SampleRequestService {
         console.log(save);
 
         const req1 = new SourcingRequisitionReq(req.styleId,new Date(),"",new Date(),indentFabInfo,indentTrimInfo,save.SampleRequestId);
-        const raiseIndent = await this.indentService.createItems(req1);
-        if(raiseIndent.status){
+        // const raiseIndent = await this.indentService.createItems(req1);
+        // if(raiseIndent.status){
           return new AllSampleDevReqResponseModel(true, 1, 'SampleDevelopmentRequest created successfully', [save])
-        }
-        else {
-          return new AllSampleDevReqResponseModel(false, 0, 'SampleDevelopmentRequest creation Failed', [])
-        }
+        // }
+        // else {
+        //   return new AllSampleDevReqResponseModel(false, 0, 'SampleDevelopmentRequest creation Failed', [])
+        // }
       }
       else {
         return new AllSampleDevReqResponseModel(false, 0, 'SampleDevelopmentRequest creation Failed', [])
@@ -664,17 +664,17 @@ export class SampleRequestService {
           console.log(req)
           console.log('%%%%%%%%%%%%%%%%%%%%%%')
           const entity = new MaterialAllocationEntity()
-          entity.LocationId=data.LocationId
+          // entity.LocationId=data.LocationId
           entity.itemType=data.itemType
           entity.sampleOrderId=data.sampleOrderId
           entity.sampleItemId=data.sampleItemId
           entity.m3ItemId=data.m3ItemId
           entity.m3ItemId=data.m3ItemId
-          entity.quantity=data.quantity
-          entity.quantity=data.quantity
-          entity.stockId=data.stockId
+          // entity.quantity=data.quantity
+          // entity.quantity=data.quantity
+          // entity.stockId=data.stockId
           entity.status = MaterialStatusEnum.APPROVAL_PENDING
-          entity.allocateQuantity=data.allocateQuantity
+          // entity.allocateQuantity=data.allocateQuantity
            save = await this.matAllRepo.save(entity)
         }
         if(save){

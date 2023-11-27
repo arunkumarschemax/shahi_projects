@@ -27,7 +27,7 @@ export class FabricIndentRepository extends Repository<IndentFabricEntity> {
         const query = this.createQueryBuilder(`itf`)
             .select(`"Fabric" as materialType,itf.ifabric_id,itf.indent_id as indentId,
         itf.m3_fabric_code,itf.color,itf.quantity,itf.quantity_unit,
-        itf.created_at,itf.updated_at,itf.indent_id,m3.item_code,
+        itf.created_at,itf.updated_at,itf.indent_id,m3.item_code,m3.description,
         co.colour,it.status, uom.uom AS quantityUnit`)
             .leftJoin(M3ItemsEntity, 'm3', `m3.m3_items_Id = itf.m3_fabric_code`)
             // .leftJoin(Vendors, 'ven', `ven.vendor_id = itf.supplier_id`)

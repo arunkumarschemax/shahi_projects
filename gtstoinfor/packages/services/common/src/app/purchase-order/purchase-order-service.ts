@@ -56,6 +56,7 @@ export class PurchaseOrderService {
             poEntity.createdUser = req.createdUser
             poEntity.createdUser = req.createdUser
             poEntity.poMaterialType = req.poMaterialType
+            poEntity.poAgainst = req.poAgainst
             if (req.poFabricInfo) {
                 for (const poFabric of req.poFabricInfo) {
                     const pofabricEntity = new PurchaseOrderFbricEntity()
@@ -75,7 +76,7 @@ export class PurchaseOrderService {
                     // pofabricEntity.moq = poFabric.moq
                     pofabricEntity.m3FabricCode = poFabric.m3FabricCode
                     // pofabricEntity.content = poFabric.content
-                    pofabricEntity.indentFabricId = poFabric.indentFabricId
+                    pofabricEntity.poAgainstId = poFabric.poAgainstId
                     pofabricEntity.poQuantity = poFabric.poQuantity
                     pofabricEntity.quantityUomId = poFabric.quantityUomId
                     pofabricInfo.push(pofabricEntity)
@@ -94,7 +95,7 @@ export class PurchaseOrderService {
                     trimEntity.description = trimInfo.description
                     trimEntity.consumption = trimInfo.consumption
                     trimEntity.remarks = trimInfo.remarks
-                    trimEntity.indentTrimId = trimInfo.indentTrimId
+                    trimEntity.poAgainstId = trimInfo.poAgainstId
                     trimEntity.poQuantity = trimInfo.poQuantity
                     trimEntity.quantityUomId = trimInfo.quantityUomId
                     poTrimInfo.push(trimEntity)

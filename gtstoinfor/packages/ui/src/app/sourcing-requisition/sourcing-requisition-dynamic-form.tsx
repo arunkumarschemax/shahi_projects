@@ -2,12 +2,12 @@ import { Button, Card, Col, DatePicker, Divider, Form, Input, Popconfirm, Row, S
 import { ColumnProps } from "antd/es/table";
 import React, { useEffect } from "react";
 import { useState } from "react"
-import { BuyersService, ColourService, CurrencyService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, ProfitControlHeadService, SampleDevelopmentService, SizeService, StyleService, UomService, VendorsService } from "@project-management-system/shared-services";
+import { BuyersService, ColourService, CurrencyService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, M3TrimsService, ProfitControlHeadService, SampleDevelopmentService, SizeService, StyleService, UomService, VendorsService } from "@project-management-system/shared-services";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { EditOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
-import { M3MastersCategoryReq, SourcingRequisitionReq, UomCategoryEnum } from "@project-management-system/shared-models";
+import { BuyerIdReq, M3MastersCategoryReq, SourcingRequisitionReq, UomCategoryEnum } from "@project-management-system/shared-models";
 import FormItem from "antd/es/form/FormItem";
 import TextArea from "antd/es/input/TextArea";
 import AlertMessages from "../common/common-functions/alert-messages";
@@ -74,6 +74,8 @@ export const SourcingRequisitionDynamicForm = () => {
     const uomService =  new UomService()
     const currencyService = new CurrencyService()
     const sampleDevelopmentService =  new SampleDevelopmentService()
+    const m3Service = new M3TrimsService()
+    const [m3Trims, setM3Trims] = useState<any[]>([])
 
 
     let tableData: any[] = []
@@ -95,13 +97,24 @@ export const SourcingRequisitionDynamicForm = () => {
         getCurrencies()
         getFabricType()
         getFabricTypes()
-
+        // getM3TrimsTypes()
     },[])
 
     const getFabricTypes = () => {
         fabricTypeService.getTrimTypes().then(res => {
             if(res.status) {
                 setTrimTypes(res.data)
+            }
+        })
+    }
+
+    const getM3TrimsTypes = (option) => {
+        const req = new BuyerIdReq(option)
+        console.log(req,'---------')
+        m3Service.getM3TrimsByBuyer(req).then(res => {
+            if(res.status) {
+                setM3Trims(res.data)
+                console.log(res.data,'000000000000000000')
             }
         })
     }
@@ -774,10 +787,10 @@ export const SourcingRequisitionDynamicForm = () => {
                 <Row gutter={8}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                         <Form.Item name='style' label='Style' rules={[{ required: true, message: 'Style is required' }]}>
-                            <Select showSearch allowClear optionFilterProp="children" placeholder='Select Style'>
+                            <Select showSearch allowClear optionFilterProp="children" placeholder='Select Style' onChange={getM3TrimsTypes}>
                                 {style.map(e => {
                                     return (
-                                        <Option key={e.styleId} value={e.styleId} name={e.style}> {e.style}-{e.description}</Option>
+                                        <Option key={e.styleId} value={e.styleId} name={e.buyerId}> {e.style}-{e.description}</Option>
                                     );
                                 })}
                             </Select>
@@ -790,7 +803,7 @@ export const SourcingRequisitionDynamicForm = () => {
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                         <Form.Item name='expectedDate' label='Expected Date' rules={[{ required: true, message: 'Expected Date is required' }]}>
-                            <DatePicker style={{ width: '100%' }} onChange={validateExpectedDate} />
+                            <DatePicker style={{ width: '100%' }} onChange={validateExpectedDate} defaultValue={dayjs(dayjs(sourcingForm.getFieldValue('indentDate')).add(10, 'days'))}/>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
@@ -928,20 +941,20 @@ export const SourcingRequisitionDynamicForm = () => {
             <Input placeholder="Enter Shrinkage"/>
         </Form.Item>
         </Col> */}
-                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 7 }}>
                                             <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{ required: true, message: 'M3 Code is required' }]}>
                                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'>
                                                     {fabricM3Code.map(e => {
                                                         return (
-                                                            <Option key={e.m3ItemsId} value={e.m3ItemsId}> {e.itemCode}</Option>
+                                                            <Option key={e.m3ItemsId} value={e.m3ItemsId}>{e.itemCode} - {e.description}</Option>
                                                         );
                                                     })}
                                                 </Select>
                                             </Form.Item>
                                         </Col>
-                                        <Col span = {4} style={{paddingTop:'24px'}}>
+                                        {/* <Col span = {4} style={{paddingTop:'24px'}}>
                                             <Button onClick={(e) => setVisibleModel(true)}>Add M3 Fabric</Button>
-                                        </Col>
+                                        </Col> */}
                                     </Row>
                                     {/* <Row gutter={24}>
             <h1 style={{ color: '#6b54bf', fontSize: '20px', textAlign: 'left' }}>ITEM DETAILS</h1>
@@ -1126,10 +1139,10 @@ export const SourcingRequisitionDynamicForm = () => {
                                                     placeholder="Select Trim Type"
                                                     onChange={getTrimCodes}
                                                 >
-                                                    {trimTypes?.map((e) => {
+                                                    {m3Trims?.map((e) => {
                                                         return (
-                                                            <Option key={e.productGroupId} value={e.productGroupId} name={e.productGroup}>
-                                                                {e.productGroup}
+                                                            <Option key={e.m3TrimsId} value={e.m3TrimsId} >
+                                                                {e.trimType}
                                                             </Option>
                                                         );
                                                     })}
@@ -1156,10 +1169,10 @@ export const SourcingRequisitionDynamicForm = () => {
                                                     optionFilterProp="children"
                                                     placeholder="Select Trim Code"
                                                 >
-                                                    {trimCodes.map((e) => {
+                                                    {m3Trims.map((e) => {
                                                         return (
-                                                            <Option key={e.fabricId} value={e.fabricId} name={e.fabricCode}>
-                                                                {e.fabricCode}
+                                                            <Option key={e.m3TrimsId} value={e.m3TrimsId}>
+                                                                {e.trimCode}
                                                             </Option>
                                                         );
                                                     })}
@@ -1238,7 +1251,7 @@ export const SourcingRequisitionDynamicForm = () => {
                                                 </Select>
                                             </Form.Item>
                                         </Col>
-                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                                             <Form.Item name='m3TrimCode' label='M3 Trim Code' rules={[{ required: true, message: 'M3 code is required' }]}>
                                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'>
                                                     {trimM3Code.map(e => {
@@ -1248,7 +1261,7 @@ export const SourcingRequisitionDynamicForm = () => {
                                                     })}
                                                 </Select>
                                             </Form.Item>
-                                        </Col>
+                                        </Col> */}
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
                                             <Form.Item
                                                 name="description"
