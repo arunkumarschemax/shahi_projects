@@ -4,6 +4,7 @@ import { MaterialIssueService } from "./material-issue.service";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { CommonResponseModel, MaterialIssueRequest, MaterialIssueIdreq, MaterialIssueResponseModel, ResponesNoDropDownRes, RequestNoDto, MaterialReportsResponse } from "@project-management-system/shared-models";
 import { MaterialIssueDto } from "./dto/material-issue-dto";
+import { MaterialIssueLogDto } from "./dto/material-issue-log-dto";
 
 @ApiTags('material-issue')
 @Controller('/material-issue')
@@ -90,6 +91,17 @@ export class MaterialIssueController {
             return await this.issueService.getMaterialIssues(req)
         } catch (error) {
             return this.applicationExceptionHandler.returnException(ResponesNoDropDownRes, error);
+        }
+    }
+
+    @Post('/createMaterialIssueLog')
+    @ApiBody({ type: MaterialIssueLogDto })
+    async createMaterialIssueLog(@Body() req: any): Promise<CommonResponseModel> {
+        console.log(req,"contt")
+        try {
+            return await this.issueService.createMaterialIssueLog(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
 

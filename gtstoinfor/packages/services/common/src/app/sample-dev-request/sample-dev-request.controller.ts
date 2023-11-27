@@ -229,4 +229,34 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
+
+  @Post('/getAllMaterialAllocation')
+  async getAllMaterialAllocation(@Body() req:any): Promise<AllSampleDevReqResponseModel> {
+    try {
+      return await this.sampleService.getAllMaterialAllocation(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+    }
+  }
+
+
+  @Post('/creatematerialAlloction')
+  async creatematerialAlloction(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.creatematerialAlloction(req,false)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+
+  @Post('/updateStatus')
+  async updateStatus(@Body() req: any): Promise<CommonResponseModel> {
+    console.log(req,"controll")
+    try {
+      return await this.sampleService.updateStatus(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
 }

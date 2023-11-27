@@ -23,7 +23,7 @@ export const StockView = () => {
   const navigate = useNavigate();
   const [uom, setUom] = useState<any[]>([]);
   const [weightData, setWeightData] = useState<any[]>([]);
-  const [rowData, setRowData] = useState<any[]>([]);
+  const [rowData, setRowData] = useState<any>(undefined);
   const [visibleModel, setVisibleModel] = useState<boolean>(false);
   const [yarnData, setYarnData] = useState<any[]>([]);
   const [widthData, setWidthData] = useState<any[]>([]);
@@ -40,7 +40,6 @@ export const StockView = () => {
     getFabricTypedata();
     getWeaveData();
     getBuyers();
-    getData(undefined);
   }, []);
 
   const getBuyers = () => {
@@ -597,7 +596,7 @@ export const StockView = () => {
               </Button> 
                 </Col>
             <Col span={6}  style={{paddingTop:'20px'}}>
-              <Button onClick={(e) => getItemsForOtherBuyers()}>Check Other Buyers</Button>
+              <Button onClick={(e) => getItemsForOtherBuyers()} style={{backgroundColor:'#29397d', color:'white'}}>Check Other Buyers</Button>
             </Col>
           </Row>
     </Form>
@@ -619,7 +618,7 @@ export const StockView = () => {
             onCancel={handleCancel}
             footer={[]}
         >
-            <Reclassification data = {rowData} type="stock" />
+            <Reclassification data = {rowData} buyer= {form.getFieldValue("buyerId")} type="stock" />
 
             </Modal>
     </Card>

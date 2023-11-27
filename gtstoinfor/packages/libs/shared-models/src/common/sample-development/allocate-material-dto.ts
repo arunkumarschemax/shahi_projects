@@ -1,5 +1,4 @@
 export class Allocatematerial{
-    materialAllocationId: number;
     itemType: string;
     sampleOrderId:number
     sampleItemId:number 
@@ -12,7 +11,6 @@ export class Allocatematerial{
     createdUser: string | null;
     updatedUser: string | null;
     constructor(
-        materialAllocationId: number,
         itemType: string,
         sampleOrderId:number,
         sampleItemId:number ,
@@ -25,7 +23,6 @@ export class Allocatematerial{
         createdUser?: string ,
         updatedUser?: string ,
     ){
-        this.materialAllocationId=materialAllocationId
         this.itemType=itemType
         this.sampleOrderId=sampleOrderId
         this.sampleItemId=sampleItemId
