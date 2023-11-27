@@ -52,8 +52,7 @@ export class SampleRequestService {
     private logRepo: SampleInventoryLoqRepo,
     private indentService: IndentService,
     private matAllRepo:MaterialAllocationRepo,
-    @InjectRepository(MaterialAllocationEntity)
-    private allocateRepo: Repository<MaterialAllocationEntity>,
+
     
   ) { }
 
@@ -676,7 +675,7 @@ export class SampleRequestService {
           // entity.stockId=data.stockId
           entity.status = MaterialStatusEnum.APPROVAL_PENDING
           // entity.allocateQuantity=data.allocateQuantity
-           save = await this.allocateRepo.save(entity)
+           save = await this.matAllRepo.save(entity)
         }
         if(save){
           return new CommonResponseModel(true,1,'Material Allocation Request Raise')
