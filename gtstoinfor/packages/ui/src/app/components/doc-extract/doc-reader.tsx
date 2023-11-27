@@ -4,8 +4,8 @@ import { Button, Card, Col, Form, FormInstance, Radio, Row, Select, Spin, Upload
 import { useState } from 'react';
 import { pdfjs } from 'react-pdf';
 import loadingSymbol from '../../../assets/images/1_yE-S7HG0Rg-ACAcnjvKf5Q.gif';
-import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractEfl, extractMsn, extractExpeditors, extractMaersk, extractNagel, extractOocl, extractPDFDataToLinesData, extractFredexfrieght, extractFredexCourier, extractDhlCourierfrieght, extractDhlairduty, extractTotalTransport, extractSanjayForwarder, extractOneTime, extractTiger, extractOia, extractTextiles, extractedUnicorn, extractedUnique, extractedTvs, extractedVelogicIndia, extracteWiderlogistics, extractedWorldLine, extractedKwe, extractedUps, extractedCube, extractedAps, extractChRowbin, extractSavinoDell, extractLxpantos, extractMgh, extractDelmar, extractToll, extractnewBlobe, extractDBSCHENKAR, extractdachser, extractedJeena, extractedFederationofIndian, extractedGateway, extractedHellmann, extractedKerryIndev, extractedLogWin, extractmatrix, extractScanWell, extractCeva, extractcogoPort, extractedGeodis, extractedJas, extractedRahat, extractedGLOBELINK } from './schemax-ai-docx-pdf';
-import { extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractGlobelinkInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractOoclInvoiceDataFromScanned, extractRahatInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTollInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractTvsInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
+import { checkIsScannedPdf, extractApl, extractDart, extractDhl, extractEfl, extractMsn, extractExpeditors, extractMaersk, extractNagel, extractOocl, extractPDFDataToLinesData, extractFredexfrieght, extractFredexCourier, extractDhlCourierfrieght, extractDhlairduty, extractTotalTransport, extractSanjayForwarder, extractOneTime, extractTiger, extractOia, extractTextiles, extractedUnicorn, extractedUnique, extractedTvs, extractedVelogicIndia, extracteWiderlogistics, extractedWorldLine, extractedKwe, extractedUps, extractedCube, extractedAps, extractChRowbin, extractSavinoDell, extractLxpantos, extractMgh, extractDelmar, extractToll, extractnewBlobe, extractDBSCHENKAR, extractdachser, extractedJeena, extractedFederationofIndian, extractedGateway, extractedHellmann, extractedKerryIndev, extractedLogWin, extractmatrix, extractScanWell, extractCeva, extractcogoPort, extractedGeodis, extractedJas, extractedRahat, extractedunitedLiner, extractedwenParker, extractedGLOBELINK } from './schemax-ai-docx-pdf';
+import { extractDataFromScannedImages, extractDpInvoiceDataFromScanned, extractEflInvoiceDataFromScanned, extractGlobelinkInvoiceDataFromScanned, extractKrsnaInvoiceDataFromScanned, extractKsrInvoiceDataFromScanned, extractLigiInvoiceDataFromScanned, extractNikkouInvoiceDataFromScanned, extractNipponInvoiceDataFromScanned, extractOoclInvoiceDataFromScanned, extractRahatInvoiceDataFromScanned, extractRingoCargoInvoiceDataFromScanned, extractSrijiInvoiceDataFromScanned, extractSrivaruInvoiceDataFromScanned, extractTollInvoiceDataFromScanned, extractTriwayInvoiceDataFromScanned, extractTvsInvoiceDataFromScanned, extractVinayakaInvoiceDataFromScanned, extractWaymarknvoiceDataFromScanned, extractunitedLinertInvoiceDataFromScanned, extractwenParkertInvoiceDataFromScanned, getImagesFromPdf } from './schemax-ai-docx-scanned-pdf';
 ;
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 export interface DocReaderProps {
@@ -567,6 +567,26 @@ export const DocReader = (props: DocReaderProps) => {
                 //     processedData['extractedHsnData'] = nagelPDFData.extractedHsnData;
                 //     break;
                 // }
+                
+                case VendorNameEnum.extractedunitedLiner: {
+                    const unitedLinerPDFData = await extractedunitedLiner(pdfData);
+                    const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                    const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                    const scannedData = await extractunitedLinertInvoiceDataFromScanned(allLines);
+                    processedData['extractedHsnData'] = scannedData.extractedHsnData || {};
+                    processedData['extractedData'] = unitedLinerPDFData.extractedData;
+                    break;
+                }
+
+                case VendorNameEnum.extractedwenParker: {
+                    const wenParkerPDFData = await extractedwenParker(pdfData);
+                    const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                    const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                    const scannedData = await extractwenParkertInvoiceDataFromScanned(allLines);
+                    processedData['extractedHsnData'] = scannedData.extractedHsnData || {};
+                    processedData['extractedData'] = wenParkerPDFData.extractedData;
+                    break;
+                }
 
                    case VendorNameEnum.extractedToll: {
                     const tollPDFData = await extractToll(pdfData);
