@@ -30,6 +30,7 @@ export class IndentFabricModel{
     status:string;
     indentId?:number
     materialType?:string
+    description?: string
 
   constructor(
     ifabricId: number,
@@ -59,7 +60,8 @@ export class IndentFabricModel{
     quantityUnit: string,
     status:string,
     indentId?:number,
-    materialType?:string
+    materialType?:string,
+    description?: string
  
   ){
     this.ifabricId=ifabricId;
@@ -90,7 +92,7 @@ export class IndentFabricModel{
     this.status=status;
     this.indentId=indentId;
     this.materialType=materialType
-
+    this.description = description
   }
 
 
