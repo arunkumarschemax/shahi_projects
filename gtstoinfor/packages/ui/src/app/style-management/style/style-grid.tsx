@@ -135,7 +135,7 @@ const getBuyers = () => {
       },
     {
       title: "Location",
-      dataIndex: "location",
+      dataIndex: "locationId",
       width:'150px',
     },
     {
