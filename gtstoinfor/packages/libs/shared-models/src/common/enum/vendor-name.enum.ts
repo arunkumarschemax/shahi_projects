@@ -57,7 +57,8 @@ export enum VendorNameEnum {
     extractChRowbin="CH ROWBIN",
     extractDBSCHENKAR="DB SCHENKAR",
     extractCeva="CEVA",
-
+    extractedunitedLiner="UNITED LINER",
+    extractedwenParker="WEN PARKER",
     
     
 
