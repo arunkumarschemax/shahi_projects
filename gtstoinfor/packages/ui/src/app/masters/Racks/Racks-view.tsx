@@ -56,10 +56,10 @@ const RackView = () => {
       };
 
     const Columns: any = [
-        {
-            title: "Unit",
-            dataIndex: "unit"
-        },
+        // {
+        //     title: "Unit",
+        //     dataIndex: "unit"
+        // },
         {
             title: "Rack Type",
             dataIndex: "rackType",

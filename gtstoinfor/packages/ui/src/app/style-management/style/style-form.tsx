@@ -5,7 +5,7 @@ import { LoadingOutlined, MinusCircleOutlined, PlusOutlined, UploadOutlined } fr
 import { Link } from 'react-router-dom';
 import TextArea from 'antd/lib/input/TextArea';
 import { StyleDto } from '@project-management-system/shared-models';
-import { StyleService } from '@project-management-system/shared-services';
+import { BuyersService, ProfitControlHeadService, StyleService } from '@project-management-system/shared-services';
 import { useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
 
@@ -25,6 +25,10 @@ export function StyleForm(props: StyleFormProps) {
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
   const [isUpdateimg, setisUpdateImg]=useState('')
+  const buyerService = new BuyersService();
+  const [buyer, setBuyer] = useState<any[]>([]);
+  const [pch, setPch] = useState<any[]>([]);
+  const pchService = new ProfitControlHeadService();
 
   const [filelist, setfilelist] = useState<any>(props.isUpdate?[{
     name: props.styleData.styleFileName,
@@ -40,6 +44,8 @@ export function StyleForm(props: StyleFormProps) {
     // const updateImage ='http://165.22.220.143/crm/gtstoinfor/upload-files/'+props.styleData.styleFileName
     setisUpdateImg(updateImage)
    }
+   getBuyers()
+   getPCHData()
   }, [])
 
 const service = new StyleService()
@@ -49,6 +55,22 @@ const service = new StyleService()
       <div style={{ marginTop: 8 }}>Upload Style</div>
     </div>
   );
+
+  const getBuyers = () => {
+    buyerService.getAllActiveBuyers().then((res) => {
+      if (res.status) {
+        setBuyer(res.data);
+      }
+    });
+  };
+
+  const getPCHData = () => {
+    pchService.getAllActiveProfitControlHead().then((res) => {
+      if (res.status) {
+        setPch(res.data);
+      }
+    });
+  };
 
   const uploadFieldProps: UploadProps = {
     // alert();
@@ -156,6 +178,31 @@ const service = new StyleService()
             <Card>
             <Row gutter={24}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
+                  <Form.Item name='buyerId' label='Buyer'
+                    rules={[
+                      {
+                        required: true,
+                        message:'Buyer Is Required'
+                      }
+                    ]}
+                  >
+                    <Select
+                      allowClear
+                      showSearch
+                      optionFilterProp="children"
+                      placeholder="Select Buyer"
+                    >
+                      {buyer.map((e) => {
+                        return (
+                          <Option key={e.buyerId} value={e.buyerId}>
+                            {`${e.buyerCode} - ${e.buyerName}`}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
                         <Form.Item name='locationId' label='Location'
                           rules={[
                             {
@@ -164,7 +211,14 @@ const service = new StyleService()
                             }
                           ]}
                         >
-                            <Input/>
+                          <Select
+                            allowClear
+                            showSearch
+                            optionFilterProp="children"
+                            placeholder="Select Location"
+                          >
+                            <Option key={300} value={300}>{'300'}</Option>
+                          </Select>
                         </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
@@ -176,7 +230,20 @@ const service = new StyleService()
                           }
                         ]}
                         >
-                            <Input/>
+                        <Select
+                        allowClear
+                        showSearch
+                        optionFilterProp="children"
+                        placeholder="Select PCH"
+                      >
+                        {pch.map((e) => {
+                          return (
+                            <Option key={e.profitControlHeadId} value={e.profitControlHeadId}>
+                              {e.profitControlHead}
+                            </Option>
+                          );
+                        })}
+                      </Select>
                         </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
