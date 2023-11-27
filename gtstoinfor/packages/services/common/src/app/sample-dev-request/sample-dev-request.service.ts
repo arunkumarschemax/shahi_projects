@@ -665,17 +665,17 @@ export class SampleRequestService {
           console.log(req)
           console.log('%%%%%%%%%%%%%%%%%%%%%%')
           const entity = new MaterialAllocationEntity()
-          entity.LocationId=data.LocationId
+          // entity.LocationId=data.LocationId
           entity.itemType=data.itemType
           entity.sampleOrderId=data.sampleOrderId
           entity.sampleItemId=data.sampleItemId
           entity.m3ItemId=data.m3ItemId
           entity.m3ItemId=data.m3ItemId
-          entity.quantity=data.quantity
-          entity.quantity=data.quantity
-          entity.stockId=data.stockId
+          // entity.quantity=data.quantity
+          // entity.quantity=data.quantity
+          // entity.stockId=data.stockId
           entity.status = MaterialStatusEnum.APPROVAL_PENDING
-          entity.allocateQuantity=data.allocateQuantity
+          // entity.allocateQuantity=data.allocateQuantity
            save = await this.allocateRepo.save(entity)
         }
         if(save){
