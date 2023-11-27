@@ -473,6 +473,7 @@ import { faL } from "@fortawesome/free-solid-svg-icons";
         );
         setAllocatedQuantities(updated);
       }
+      setbtnEnable(true)
       console.log(allocatedQuantities)
     };
     
@@ -545,7 +546,8 @@ import { faL } from "@fortawesome/free-solid-svg-icons";
       };
 
       const getAllAvailbaleQuantity =(rowData) =>{
-        service.getAvailbelQuantityAginstBuyerAnditem({buyerId:rowData.buyerId,m3ItemId:rowData.m3ItemFabricId}).then(res =>{
+        console.log(rowData)
+        service.getAvailbelQuantityAginstBuyerAnditem({buyerId:rowData.buyerId,m3ItemId:rowData.m3ItemFabricId,itemType:rowData.itemType}).then(res =>{
           if(res.status){
             const dataWithRow = { rowData: rowData, responseData: res.data };
             console.log(dataWithRow)
