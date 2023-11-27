@@ -20,7 +20,7 @@ import { IndentService } from '@project-management-system/shared-services';
 import { MaterialAllocationEntity } from './entities/material-allocation.entity';
 import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 import { MaterialAllocationItemsEntity } from './entities/material-allocation-items';
-import { MaterialAllocationRepo } from './repo/material-allocation-repo';
+// import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 
 @Module({
   imports: [
