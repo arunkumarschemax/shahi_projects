@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { MaterialStatusEnum } from "@project-management-system/shared-models";
+import { MaterialAllocationItemsEntity } from "./material-allocation-items";
 
 @Entity('material_allocation')
 export class MaterialAllocationEntity {
@@ -39,38 +40,12 @@ export class MaterialAllocationEntity {
         name: "quantity",
         
     })
-     quantity: number;
-
-     @Column('int',{
-        name:'stock_id',
-        nullable:false,
-      })
-      stockId:number
-
-      @Column('int',{
-        name:'location_id',
-        nullable:false,
-      })
-      LocationId:number
-
-      @Column('int',{
-        name:'allocate_quantity',
-        nullable:false,
-      })
-      allocateQuantity:number
-
-      @Column('int',{
-        name:'buyer_id',
-        nullable:false,
-      })
-      BuyerId:number
-
       
-   @Column("enum", {
+     @Column("enum", {
     name: "status",
     enum: MaterialStatusEnum
-  })
-   status: MaterialStatusEnum;
+    })
+     status: MaterialStatusEnum;
 
 
     @CreateDateColumn({
@@ -109,5 +84,9 @@ export class MaterialAllocationEntity {
         default: 1
     })
     isActive: boolean;
+
+    
+    @OneToMany(type => MaterialAllocationItemsEntity, entity => entity.materialAllocationItemInfo,{cascade: true})
+    materialAllocationinfo : MaterialAllocationItemsEntity
 
 }
