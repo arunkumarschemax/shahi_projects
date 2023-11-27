@@ -40,7 +40,7 @@ export const MonthWiseReport = () => {
   const [phaseExcel, setPhaseExcel] = useState<any[]>([]);
   const [data, setData] = useState<any[]>([]);
   const [year, setYear] = useState<any[]>([]);
-  const [tab, setTab] = useState<number>(2023);
+  const [tab, setTab] = useState<number | null>(null);
   const service = new OrdersService();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [excelsData, setExcelData] = useState<any[]>([]);
@@ -63,9 +63,10 @@ export const MonthWiseReport = () => {
     service.getExfactoryYearData().then((res) => {
       if (res.status) {
         setYear(res.data);
-        setTab(res.data[0].year);
-        if (!selected && res.data.length > 0) {
-          setTab(res.data[0].year);
+        if (res.data.length > 0) {
+          setTab(res.data[0])
+          console.log(res.data[0]);
+          
         }
       }
     });
@@ -1836,10 +1837,12 @@ export const MonthWiseReport = () => {
             </Col>
           </Row>
         </Form>
-        {selected && data.length > 0 ? (
           <Tabs type="card" onChange={handleTabChange}>
             {year.map((item) => (
               <Tabs.TabPane key={item.year} tab={item.year}>
+                        {selected && data.length > 0 ? (
+                          <>
+
                 <Form form={form} layout={"vertical"}>
                   <Row gutter={24}>
                     <Col
@@ -1949,10 +1952,8 @@ export const MonthWiseReport = () => {
                   scroll={{ x: "max-content" }}
                   pagination={false}
                 />
-              </Tabs.TabPane>
-            ))}
-          </Tabs>
-        ) : (
+                </>
+               ) : (
           <>
             <Row>
               <Alert
@@ -1964,6 +1965,10 @@ export const MonthWiseReport = () => {
             </Row>
           </>
         )}
+              </Tabs.TabPane>
+            ))}
+          </Tabs>
+       
       </Card>
     </>
   );
