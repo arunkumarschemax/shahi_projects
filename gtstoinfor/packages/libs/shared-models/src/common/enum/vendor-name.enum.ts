@@ -40,6 +40,7 @@ export enum VendorNameEnum {
     extractedscanWell="SCANWELL",
     extractedMatrix="MATRIX",
     extractedRahat="RAHAT",
+    extractedSolitaire="SOLITAIRE",
 
 
 
