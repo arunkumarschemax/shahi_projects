@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { GrnEntity } from "./grn-entity";
-import { LocationMappedEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
+import { GRNTypeEnum, LocationMappedEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { PurchaseOrderFbricEntity } from "../../purchase-order/entities/purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "../../purchase-order/entities/purchase-order-trim-entity";
 
@@ -124,6 +124,25 @@ export class GrnItemsEntity{
         nullable:false
     })
     m3ItemCodeId:number
+
+    @Column('enum',{
+        name:'grn_type',
+        nullable:false,
+        enum: GRNTypeEnum
+    })
+    grnType: GRNTypeEnum
+
+    @Column('int',{
+        name:'indent_id',
+        nullable:false,
+    })
+    indentId: number
+
+    @Column('int',{
+        name:'sample_request_id',
+        nullable:false,
+    })
+    sampleRequestId: number
 
 
     @ManyToOne(type =>GrnEntity,grn =>grn.grnItemInfo)

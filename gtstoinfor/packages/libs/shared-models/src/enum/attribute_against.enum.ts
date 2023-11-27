@@ -17,3 +17,8 @@ export enum LocationMappedEnum{
   PARTIALLY_COMPLETED = 'PARTIALLY_COMPLETED',
   COMPLETED = 'COMPLETED'
 }
+
+export enum GRNTypeEnum{
+  INDENT = 'INDENT',
+  SAMPLE_ORDER = 'SAMPLE_ORDER'
+}

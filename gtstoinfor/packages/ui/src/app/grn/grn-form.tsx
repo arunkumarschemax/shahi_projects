@@ -30,6 +30,8 @@ const GRNForm = () => {
     const [formData,setFormData] = useState<any[]>([])
     const [trimFormData, setTrimFormData]=useState<any[]>([])
     const navigate = useNavigate();
+    const [selectedPoType, setSelectedPoType] = useState(null);
+
 
     useEffect(()=>{
         getVendorsData()
@@ -75,10 +77,16 @@ const GRNForm = () => {
     }
 
     const getPODataById = (val,option) =>{
+        if (!val) {
+            setSelectedPoType(null);
+            return;
+          }
       const req = new VendorIdReq(0,val,option?.name)
       poService.getPODataById(req).then((res)=>{
             if(res.status){
               setPoData(res.data)
+              const selectedPoType = res.data.poType
+              setSelectedPoType(selectedPoType);
             }
         })
     }
@@ -92,6 +100,7 @@ const GRNForm = () => {
         console.log(savedData,)
         setFormData(savedData)
     }
+
 
 
 
@@ -127,6 +136,19 @@ const GRNForm = () => {
                             </Select>
                         </Form.Item>
                   </Col>
+                  {selectedPoType !== null && (
+                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
+                        <Form.Item name='poType' label='PO Type' dependencies={['purchaseOrderId']}>
+                           <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor' disabled>
+                                {poNoData.map(e => {
+                                    return(
+                                        <Option key={e.purchaseOrderId} value={e.purchaseOrderId}> {e.poAgainst}</Option>
+                                    )
+                                })}
+                            </Select>
+                        </Form.Item>
+                  </Col>
+                  )}
                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                         <Form.Item name='grnDate' label='GRN Date' rules={[{required:true,message:'Date is required'}]}>
                         <DatePicker style={{ width: '93%', marginLeft: 5 }} showToday/>
