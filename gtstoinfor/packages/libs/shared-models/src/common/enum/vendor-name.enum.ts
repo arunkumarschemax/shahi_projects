@@ -58,7 +58,8 @@ export enum VendorNameEnum {
     extractChRowbin="CH ROWBIN",
     extractDBSCHENKAR="DB SCHENKAR",
     extractCeva="CEVA",
-
+    extractedunitedLiner="UNITED LINER",
+    extractedwenParker="WEN PARKER",
     
     
 
@@ -74,5 +75,6 @@ export enum VendorNameEnum {
     extractedHellmann="HELLMANN",
     extractedGeodis="GEODIS",
     extractedJas="JAS",
+    extractedGLOBELINK="GLOBELINK",
     
 }
