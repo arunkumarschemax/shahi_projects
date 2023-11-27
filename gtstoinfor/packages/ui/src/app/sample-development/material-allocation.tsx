@@ -356,7 +356,7 @@ const sampleTypeColumns1: ColumnsType<any> = [
         <div>
              <Card title={<span style={{ color: 'white' }}>Material Allocation</span>}
                 style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
-                extra={<span><Button onClick={() => navigate('')} type={'primary'}>View</Button></span>} size='small' >
+                extra={<span><Button onClick={() => navigate('/sample-development/material-allocation-view')} type={'primary'}>View</Button></span>} size='small' >
                 
               
                 <Form  form={form} onFinish={getData} >
