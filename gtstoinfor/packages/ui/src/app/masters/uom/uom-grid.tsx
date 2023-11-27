@@ -128,10 +128,10 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
 
       // width:200,    
       filters: [
-        // {
-        //   text: 'Area',
-        //   value: 'Area',
-        // },
+        {
+          text: 'Area',
+          value: 'Area',
+        },
         {
           text: 'Length',
           value: 'Length',
@@ -171,7 +171,7 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
       size="small"
       extra={<Button
         className="panel_button"
-        onClick={() => navigate('uom/uom-form')}
+        onClick={() => navigate('/uom-form')}
         type="primary"
         style={{ background: "white", color: "#3C085C" }}
     >Create</Button>

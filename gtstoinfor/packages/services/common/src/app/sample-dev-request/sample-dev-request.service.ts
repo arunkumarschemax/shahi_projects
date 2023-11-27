@@ -52,8 +52,7 @@ export class SampleRequestService {
     private logRepo: SampleInventoryLoqRepo,
     private indentService: IndentService,
     private matAllRepo:MaterialAllocationRepo,
-    @InjectRepository(MaterialAllocationEntity)
-    private allocateRepo: Repository<MaterialAllocationEntity>,
+
     
   ) { }
 
@@ -538,6 +537,69 @@ export class SampleRequestService {
 
     return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
   }
+  async creatematerialAlloction(req:MaterialAllocationDTO[]):Promise<CommonResponseModel>{
+    try{
+      let save
+      let finalData
+      // console.log(req)
+      // console.log('@@@@@@@@@@@@@@@@@')
+      if(req.length >0){
+         finalData = req.reduce((result, item) =>{
+          const sampleOrderId=item. sampleOrderId
+          const sampleItemId=item.sampleItemId
+          const buyerId=item.buyerId
+          const m3ItemId=item.m3ItemId
+          if (!result[sampleOrderId]) {
+           result[sampleOrderId] = {
+             sampleOrderId: sampleOrderId,
+             buyerId: buyerId,
+             sampleItemId:sampleItemId,
+             m3ItemId:m3ItemId,
+             itemDetails: [],
+           }
+           result[sampleOrderId].itemDetails.push(
+             {
+               locationId:item.locationId,
+               quantity:item.quantity,
+               allocatedQuantity:item.allocateQuantity,
+               stockId: item.stockId,
+             }
+           );
+         }
+           return result
+          },{})
+      }
+   console.log(Object.values(finalData))
+   console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
+
+   console.log(Object.values(finalData[0].sampleOrderId))
+   console.log('*****************')
+
+      const entity = new MaterialAllocationEntity()
+      entity.sampleOrderId=finalData.sa
+      // for(const data of req){
+      //   console.log(req)
+      //   const entity = new MaterialAllocationEntity()
+      //   entity.itemType=data.itemType
+      //   entity.sampleOrderId=data.sampleOrderId
+      //   entity.sampleItemId=data.sampleItemId
+      //   entity.m3ItemId=data.m3ItemId
+      //   entity.m3ItemId=data.m3ItemId
+      //   entity.status = MaterialStatusEnum.APPROVAL_PENDING
+      //    save = await this.matAllRepo.save(entity)
+      // }
+      if(save){
+        return new CommonResponseModel(true,1,'Material Allocation Request Raise')
+      }else{
+        return new CommonResponseModel(false,1,'Something Went Wrong',[])
+
+      }
+    }
+    catch(err){
+      throw err
+    }
+  }
+
 
 
   async getSampleRequestReport(req?: SamplerawmaterialStausReq):Promise<CommonResponseModel>{
@@ -622,11 +684,10 @@ export class SampleRequestService {
       }
     }
 
-
     async getAvailbelQuantityAginstBuyerAnditem(req:buyerandM3ItemIdReq):Promise<CommonResponseModel>{
       try{
         const manager = this.dataSource;
-        const query ='SELECT st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId,st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode FROM stocks st   LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id  WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+''
+        const query ='SELECT st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId,st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode FROM stocks st   LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id  WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' and st.item_type="'+req.itemType+'"'
         const rmData = await manager.query(query);
         if(rmData){
           return new CommonResponseModel(true,1,'data',rmData)
@@ -656,40 +717,7 @@ export class SampleRequestService {
       }
     }
 
-  
-
-    async creatematerialAlloction(req:MaterialAllocationDTO[], isUpdate: boolean):Promise<CommonResponseModel>{
-      try{
-        let save
-        for(const data of req){
-          console.log(req)
-          console.log('%%%%%%%%%%%%%%%%%%%%%%')
-          const entity = new MaterialAllocationEntity()
-          // entity.LocationId=data.LocationId
-          entity.itemType=data.itemType
-          entity.sampleOrderId=data.sampleOrderId
-          entity.sampleItemId=data.sampleItemId
-          entity.m3ItemId=data.m3ItemId
-          entity.m3ItemId=data.m3ItemId
-          // entity.quantity=data.quantity
-          // entity.quantity=data.quantity
-          // entity.stockId=data.stockId
-          entity.status = MaterialStatusEnum.APPROVAL_PENDING
-          // entity.allocateQuantity=data.allocateQuantity
-           save = await this.allocateRepo.save(entity)
-        }
-        if(save){
-          return new CommonResponseModel(true,1,'Material Allocation Request Raise')
-        }else{
-          return new CommonResponseModel(false,1,'Something Went Wrong',[])
-
-        }
-      }
-      catch(err){
-        throw err
-      }
-    }
-
+   
 
     async updateStatus(req?:statusReq): Promise<CommonResponseModel> {
       try {

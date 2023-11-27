@@ -3,7 +3,7 @@ import { ComponentMappingEntity } from "../../components-mapping/component-mappi
 import { OperationSequence } from "../../operation-sequence/operation-sequence.entity";
 import { SampleRequest } from "../../sample-dev-request/entities/sample-dev-request.entity";
 import { StyleOrder } from "../../style-order/style-order.entity";
-import { OperationTracking } from "../../operation-tracking/entity/operation-tracking-entity";
+// import { OperationTracking } from "../../operation-tracking/entity/operation-tracking-entity";
 
 @Entity('style')
 export class Style {
@@ -13,16 +13,16 @@ export class Style {
 
   @Column("int",{
     nullable:false,
-    name:"location_id"
+    name:"pch"
     })
-    locationId:number;
+    pch:number;
 
   @Column("varchar",{
     nullable:false,
     length:100,
-    name:"pch"
+    name:"location_id"
     })
-  pch:string;
+    locationId:string;
 
   @Column("varchar",{
     nullable:false,

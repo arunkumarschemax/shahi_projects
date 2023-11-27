@@ -1,11 +1,12 @@
 import { Body, Controller, Post, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
 import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
-import { AllStyleResponseModel, UploadResponse } from "@project-management-system/shared-models";
+import { AllStyleResponseModel, UploadResponse, buyerReq } from "@project-management-system/shared-models";
 import { StyleService } from "./style-service";
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { BuyerRequest } from "./dto/buyer.request";
 
 @ApiTags('style')
 @Controller('style')
@@ -68,9 +69,10 @@ export class StyleController{
 
     
     @Post('/getAllStyle')
-    async getAllStyle():Promise<AllStyleResponseModel>{
+    async getAllStyle(@Body() buyerReq:any):Promise<AllStyleResponseModel>{
       try{
-        return await this.styleService.getAllStyle()
+        console.log(buyerReq)
+        return await this.styleService.getAllStyle(buyerReq)
       }catch(error){
         return this.applicationExceptionHandler.returnException(AllStyleResponseModel,error)
       }

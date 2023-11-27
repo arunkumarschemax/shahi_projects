@@ -45,6 +45,7 @@ import {
     IndentRequestFilter,
   } from "@project-management-system/shared-models";
   import Highlighter from "react-highlight-words";
+import { faL } from "@fortawesome/free-solid-svg-icons";
   
   const { Option } = Select;
   
@@ -70,7 +71,7 @@ import {
    const [expandedRowKeys, setExpandedRowKeys] = useState([])
     const searchInput = useRef(null);
     const [avilableQuantity, setAvailableQuantity] = useState<any[]>([])
-    const [selectedRowsData, setSelectedRowsData] = useState([]);
+    const [checked, setChecked] = useState<boolean>(false)
   
     useEffect(() => {
       getAll();
@@ -378,6 +379,7 @@ import {
         render: (value,rowData) => {
           return (
             <Checkbox 
+            onClick={checkboxonclick}
             onChange={(e) => onCheck(rowData, undefined, e.target.checked)}
             // onClick={(e) =>onCheck(rowData,undefined)}
             />
@@ -392,33 +394,89 @@ import {
       createAllocation(avilableQuantity)
 
     }
-
-    const onCheck = (rowData,allocatedQuantity,isChecked) =>{
-      console.log(rowData)
-    if (isChecked) {
-      setSelectedRowsData( [
-        {
-          buyerId:rowData.buyerId,
-          grnItemId:rowData.grnItemId,
-          locationId:rowData.locationId,
-          m3ItemId:rowData.m3ItemId,
-          stockId: rowData.stockId,
-          allocatedQuantity: allocatedQuantity !== undefined ? allocatedQuantity : '',
-          sampleRequestId:rowData.sampleRequestid,
-          sampleItemId:rowData.sampleItemId,
-          itemType:rowData.itemType
-        },
-      ]);
-      setbtnEnable(true)
-    } else {
-      setSelectedRowsData(prevData =>
-        prevData.filter(item => item.stockId !== rowData.stockId)
-      );
+    const checkboxonclick =() =>{
+      setChecked(true)
     }
-    console.log(selectedRowsData)
+
+    // const onCheck = (rowData,allocatedQuantity,isChecked) =>{
+    //   console.log(rowData)
+    // if (isChecked) {
+    //   setSelectedRowsData( [
+    //     {
+    //       buyerId:rowData.buyerId,
+    //       grnItemId:rowData.grnItemId,
+    //       locationId:rowData.locationId,
+    //       m3ItemId:rowData.m3ItemId,
+    //       stockId: rowData.stockId,
+    //       allocatedQuantity: allocatedQuantity !== undefined ? allocatedQuantity : '',
+    //       sampleRequestId:rowData.sampleRequestid,
+    //       sampleItemId:rowData.sampleItemId,
+    //       itemType:rowData.itemType
+    //     },
+    //   ]);
+    //   setbtnEnable(true)
+    // } else {
+    //   setSelectedRowsData(prevData =>
+    //     prevData.filter(item => item.stockId !== rowData.stockId)
+    //   );
+    // }
+    // console.log(selectedRowsData)
       
-    }
+    // }
 
+    const [allocatedQuantities, setAllocatedQuantities] = useState([]);
+
+    const onCheck = (rowData, quantityValue, isChecked) => {
+      if (isChecked) {
+        const updatedAllocatedQuantities = [...allocatedQuantities];
+        const index = updatedAllocatedQuantities.findIndex(
+          (item) => item.rowData === rowData
+        );
+          console.log(index)
+        if (index !== -1) {
+          updatedAllocatedQuantities[index] = {
+            buyerId:rowData.buyerId,
+            grnItemId:rowData.grnItemId,
+            grnNumber:rowData.grnNumber,
+            itemType:rowData.itemType,
+            locationId:rowData.locationId,
+            m3ItemId:rowData.m3ItemId,
+            quantity:rowData.quantity,
+            sampleItemId:rowData.sampleItemId,
+            stockBarCode:rowData.stockBarCode,
+            sampleRequestid:rowData.sampleRequestid,
+            stockId:rowData.stockId,
+            allocatedQuantity: quantityValue,
+          };
+        } 
+        else {
+          updatedAllocatedQuantities.push({
+            buyerId:rowData.buyerId,
+            grnItemId:rowData.grnItemId,
+            grnNumber:rowData.grnNumber,
+            itemType:rowData.itemType,
+            locationId:rowData.locationId,
+            m3ItemId:rowData.m3ItemId,
+            quantity:rowData.quantity,
+            sampleItemId:rowData.sampleItemId,
+            stockBarCode:rowData.stockBarCode,
+            sampleRequestid:rowData.sampleRequestid,
+            stockId:rowData.stockId,
+            allocatedQuantity: quantityValue,
+          });
+        }
+        
+        setAllocatedQuantities(updatedAllocatedQuantities);
+      } else {
+        const updated = allocatedQuantities.filter(
+          (item) => item.rowData !== rowData
+        );
+        setAllocatedQuantities(updated);
+      }
+      setbtnEnable(true)
+      console.log(allocatedQuantities)
+    };
+    
     const onSegmentChange = (val) => {
       setTabName(val);
     };
@@ -488,7 +546,8 @@ import {
       };
 
       const getAllAvailbaleQuantity =(rowData) =>{
-        service.getAvailbelQuantityAginstBuyerAnditem({buyerId:rowData.buyerId,m3ItemId:rowData.m3ItemFabricId}).then(res =>{
+        console.log(rowData)
+        service.getAvailbelQuantityAginstBuyerAnditem({buyerId:rowData.buyerId,m3ItemId:rowData.m3ItemFabricId,itemType:rowData.itemType}).then(res =>{
           if(res.status){
             const dataWithRow = { rowData: rowData, responseData: res.data };
             console.log(dataWithRow)

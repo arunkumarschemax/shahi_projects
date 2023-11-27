@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Form, Select } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
-import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { EmployeeDetailsResponse, StyleDto, StyleIdReq, employeeIdReq } from '@project-management-system/shared-models';
-import {  StyleService } from '@project-management-system/shared-services';
+import {  BuyersService, StyleService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import moment from 'moment';
 import dayjs from 'dayjs';
@@ -24,8 +24,11 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
   const [page, setPage] = React.useState(1);
   const columns = useState('');
   const navigate = useNavigate()
-
+  const [form] = Form.useForm();
+  const { Option } = Select;
   const service = new StyleService();
+  const [buyer, setBuyer] = useState<any[]>([]);
+  const buyerService = new BuyersService();
 
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -83,7 +86,13 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
         )
             : null
 })
-
+const getBuyers = () => {
+  buyerService.getAllActiveBuyers().then((res) => {
+    if (res.status) {
+      setBuyer(res.data);
+    }
+  });
+};
   function handleSearch(selectedKeys, confirm, dataIndex) {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -126,7 +135,7 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
       },
     {
       title: "Location",
-      dataIndex: "location",
+      dataIndex: "locationId",
       width:'150px',
     },
     {
@@ -210,11 +219,15 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
   }
-  useEffect(() => {getAllStyles();}, [])
+  useEffect(() => {getAllStyles(undefined);getBuyers()}, [])
 
 
-  const getAllStyles= () => {
-    service.getAllStyle().then(res => {
+  const onFinish= () => {
+    getAllStyles(form.getFieldValue("buyerId"))
+  }
+  const getAllStyles= (buyerId) => {
+
+    service.getAllStyle({buyerId:buyerId}).then(res => {
       if (res.status) {
         setVariantData(res.data);
       } else
@@ -227,7 +240,10 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
       setVariantData([]);
     })
   }
-
+  const onReset = () => {
+    form.resetFields();
+    getAllStyles(undefined);
+  };
 
   //drawer related
   const closeDrawer = () => {
@@ -256,7 +272,7 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
           console.log(formData)
           service.fileUpload(formData).then(fileres => {
             res.data[0].styleFilePath = fileres.data;
-            getAllStyles();
+            getAllStyles(undefined);
 
           })
         }
@@ -275,7 +291,7 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
     service.ActivateOrDeactivateStyle(data).then(res => {
       console.log(res);
       if (res.status) {
-        getAllStyles();
+        getAllStyles(undefined);
         AlertMessages.getSuccessMessage(res.internalMessage);
       } else {
         
@@ -294,6 +310,57 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
       <>
             <Card title='Styles' extra={<span><Button onClick={() =>  navigate('/style-management/style/style-form')}
               type={'primary'}>New</Button></span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+
+<Form form={form} layout={"vertical"} onFinish={onFinish}>
+        <Row gutter={24}>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+            <Form.Item
+              name="buyerId"
+              label="Buyer"
+              rules={[{ required: true, message: "Buyer is required" }]}
+            >
+              <Select
+                allowClear
+                showSearch
+                optionFilterProp="children"
+                placeholder="Select Buyer"
+              >
+                {buyer.map((e) => {
+                  return (
+                    <Option key={e.buyerId} value={e.buyerId}>
+                      {`${e.buyerCode} - ${e.buyerName}`}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={12} sm={6} md={4} lg={3} xl={2} style={{paddingTop:'24px'}}>
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ background: "green", width: "100%" }}
+              >
+                Search
+              </Button>
+            </Form.Item>
+          </Col>
+          <Col xs={12} sm={6} md={4} lg={3} xl={2} style={{paddingTop:'24px'}}>
+            <Form.Item>
+              <Button
+                danger
+                icon={<UndoOutlined />}
+                onClick={onReset}
+                style={{ width: "100%" }}
+              >
+                Reset
+              </Button>
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
+      <br></br>
    <Row gutter={40}>
         <Col>
           <Card title={'Total Styles: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>

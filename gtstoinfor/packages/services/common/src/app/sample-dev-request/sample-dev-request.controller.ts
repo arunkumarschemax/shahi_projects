@@ -243,7 +243,7 @@ export class SampleDevReqController {
   @Post('/creatematerialAlloction')
   async creatematerialAlloction(@Body() req:any): Promise<CommonResponseModel> {
     try {
-      return await this.sampleService.creatematerialAlloction(req,false)
+      return await this.sampleService.creatematerialAlloction(req)
     }
     catch (err) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
