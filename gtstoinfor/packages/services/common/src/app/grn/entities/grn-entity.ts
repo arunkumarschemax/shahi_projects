@@ -109,6 +109,12 @@ export class GrnEntity{
       enum: GRNTypeEnum
   })
   grnType: GRNTypeEnum
+
+    @Column('varchar',{
+      name:'invoice_no',
+      nullable:false,
+  })
+  invoiceNo: string
   
   // @OneToMany(type => GrnFabricEntity, grnFab => grnFab.grnEntity, { cascade: true })
   // grnFabricInfo: GrnFabricEntity[]
