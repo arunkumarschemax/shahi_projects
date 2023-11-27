@@ -63,8 +63,12 @@ const PositionGrid = () => {
 
   const Columns: any = [
     {
-      title: "Rack Name",
-      dataIndex: "rackName"
+      title: "Column",
+      dataIndex: "column"
+    },
+    {
+      title: "Level",
+      dataIndex: "levelName"
     },
 
     {
