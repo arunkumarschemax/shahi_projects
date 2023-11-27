@@ -13,16 +13,16 @@ export class Style {
 
   @Column("int",{
     nullable:false,
-    name:"location_id"
+    name:"pch"
     })
-    locationId:number;
+    pch:number;
 
   @Column("varchar",{
     nullable:false,
     length:100,
-    name:"pch"
+    name:"location_id"
     })
-  pch:string;
+    locationId:string;
 
   @Column("varchar",{
     nullable:false,

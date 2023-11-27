@@ -33,7 +33,7 @@ export class BuyersService {
             // to check whether Customer exists with the passed  Customer  or not. if isUpdate is false, a check will be done whether a record with the passed Customer is existing or not. if a record exists then a return message wil be send with out saving the data.  if record is not existing with the passed Customer  then a new record will be created. if isUpdate is true, then no check will be performed and  record will be updated(if record exists with the passed cluster code) or created.
           let previousValue
             if (!isUpdate) {
-                const BuyerEntity = await this.getBuyerDetailsWithoutRelations(buyersDTO.buyerCode);
+                const BuyerEntity = await this.getBuyerDetailsWithoutRelations(buyersDTO.buyerCode,buyersDTO.shortCode);
                 if (BuyerEntity !== null) {
                     return new BuyersResponseModel(false,11104, 'Buyer already exists');
                 }
@@ -73,12 +73,17 @@ export class BuyersService {
      * @param buyerCode 
      */
     // @LogActions({isAsync: true})
-    async getBuyerDetailsWithoutRelations(buyerCode: string): Promise<Buyers> {
+    async getBuyerDetailsWithoutRelations(buyerCode: string, shortCode: string): Promise<Buyers> {
         // tslint:disable-next-line: typedef
         const BuyersResponse = await this.buyersRepository.findOne({
-            where: { buyerCode: Raw(alias => `buyer_code = '${buyerCode}'`) },
+            where: { buyerCode: Raw(alias => `buyer_code = '${buyerCode}'`)
+        },
         });
-        if (BuyersResponse) {
+        const BuyersCodeResponse = await this.buyersRepository.findOne({
+            where: {shortCode: Raw(alias => `short_code = '${shortCode}'`)
+        },
+        });
+        if (BuyersResponse && BuyersCodeResponse) {
             return BuyersResponse;
         } else {
             return null;

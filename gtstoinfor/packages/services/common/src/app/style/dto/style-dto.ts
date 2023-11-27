@@ -4,9 +4,9 @@ export class StyleReq {
  @ApiProperty()
   styleId:number;
   @ApiProperty()
- locationId:number;
+ locationId:string;
  @ApiProperty()
-  pch:string;
+  pch:number;
   @ApiProperty()
   style:string;
   @ApiProperty()
@@ -25,8 +25,8 @@ export class StyleReq {
   updatedUser: string | null;
   constructor(
     styleId:number,
-    locationId:number,
-    pch:string,
+    locationId:string,
+    pch:number,
     style:string,
     description:string,
     styleFileName: string,

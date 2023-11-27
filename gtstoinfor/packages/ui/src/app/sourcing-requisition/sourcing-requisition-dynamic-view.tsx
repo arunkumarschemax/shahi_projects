@@ -206,7 +206,13 @@ export const SourcingRequisitionDynamicView = () => {
         )
       ) : null,
   });
+  
 
+  const dataSource = tableData[0]?.indentFabricDetails?.map((fabricDetail) => ({
+    ...fabricDetail,
+    buyer: tableData[0].buyer,
+  }));
+  
   const Columns: any = [
 
     {

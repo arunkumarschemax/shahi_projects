@@ -29,6 +29,17 @@ export class MaterialAllocationDTO {
      @ApiProperty()
      createdUser: string | null;
 
+     @ApiProperty()
+     quantity: number;
+
+     @ApiProperty()
+      stockId: number
+
+     @ApiProperty()
+     locationId: number
+
+     @ApiProperty()
+     allocateQuantity: number
 
 
 

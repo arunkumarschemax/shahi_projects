@@ -159,7 +159,7 @@ export const PurchaseOrderForm =()=>{
             console.log(fabData)
             if(fabData.poQuantity != ""){
                 console.log('^^^^^^^^^')
-                const fabInfo = new PurchaseOrderFbricDto(fabData.colourId,fabData.remarks,fabData.fabricTypeId,fabData.m3FabricCode,fabData.shahiFabricCode,fabData.content,fabData.weaveId,fabData.weight,fabData.width,fabData.construction,fabData.yarnCount,fabData.finish,fabData.shrinkage,fabData.pch,fabData.moq,fabData.yarnUnit,fabData.indentFabricId,fabData.poQuantity,fabData.quantityUomId)
+                const fabInfo = new PurchaseOrderFbricDto(fabData.colourId,fabData.remarks,fabData.fabricTypeId,fabData.m3FabricCode,fabData.shahiFabricCode,fabData.content,fabData.weaveId,fabData.weight,fabData.width,fabData.construction,fabData.yarnCount,fabData.finish,fabData.shrinkage,fabData.pch,fabData.moq,fabData.yarnUnit,fabData.poAgainstId,fabData.poQuantity,fabData.quantityUomId)
                 fabricInfo.push(fabInfo)
             }else{
                 // message.error('Please Update Po Quantity')
@@ -167,7 +167,7 @@ export const PurchaseOrderForm =()=>{
         }
         for(const trim of trimData){
             if(trim.poQuantity != ""){
-                const triminfo = new PurchaseOrderTrimDto(trim.productGroupId,trim.trimId,trim.colourId,trim.m3TrimCode,trim.description,trim.consumption,trim.remarks,trim.indentTrmId,trim.poQuantity,trim.quantityUomId)
+                const triminfo = new PurchaseOrderTrimDto(trim.productGroupId,trim.trimId,trim.colourId,trim.m3TrimCode,trim.description,trim.consumption,trim.remarks,trim.poAgainstId,trim.poQuantity,trim.quantityUomId)
                 trimInfo.push(triminfo)
                 setSubmitDisable(true)
             }else{

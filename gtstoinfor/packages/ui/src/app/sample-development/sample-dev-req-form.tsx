@@ -252,7 +252,9 @@ export const SampleDevForm = () => {
   const onFinish = (val) =>{
     if(data != undefined){
       console.log('hoii')
-      if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
+      // if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
+      if(data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined){
+
         console.log('TTTTT')
         const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,'',val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData)
         console.log(req.sizeData)
@@ -796,9 +798,9 @@ export const SampleDevForm = () => {
              <TabPane key="3" tab={<span><b>{`Trims`}</b></span>}>
              <TrimsForm props = {handleTrimsDataUpdate} buyerId={selectedBuyerId}/>
              </TabPane>
-             <TabPane key="4" tab={<span><b>{`Process`}</b></span>}>
+             {/* <TabPane key="4" tab={<span><b>{`Process`}</b></span>}>
              <ProcessForm props={handleProcessDataUpdate}/>
-             </TabPane>
+             </TabPane> */}
              {/* <TabPane key="5" tab={<span><b>{`Remarks`}</b></span>}>
                  
              </TabPane> */}
