@@ -1,9 +1,10 @@
 import { MaterialIssueService } from '@project-management-system/shared-services';
 import { Button, Card, Col, Form, Row, Select, Table } from 'antd';
-import { RequestNoDto } from 'packages/libs/shared-models/src/common/material-issue/requestno.dto';
+// import { RequestNoDto } from 'packages/libs/shared-models/src/common/material-issue/requestno.dto';
 import { useEffect, useState } from 'react';
 import './marerial.css';
 import moment from 'moment';
+import { RequestNoDto } from '@project-management-system/shared-models';
 
 
 const { Option } = Select;
