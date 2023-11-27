@@ -1,4 +1,4 @@
-import { SampleDevelopmentStatusEnum } from "../../enum";
+import { MaterialStatusEnum, SampleDevelopmentStatusEnum } from "../../enum";
 
 export class SampleFilterRequest{
     reqNo?:string;
@@ -26,4 +26,36 @@ export class buyerandM3ItemIdReq{
             this.buyerId=buyerId
             this.m3ItemId=m3ItemId
     }
+
+    
 }
+
+
+export class buyerReq{
+    buyerId?:number
+    constructor(    
+        buyerId?:number){
+            this.buyerId=buyerId
+        
+    }
+
+    
+}
+
+
+export class statusReq{
+    materialAllocationId?:number
+    status?:MaterialStatusEnum
+
+    constructor(    
+        materialAllocationId?:number,
+        status?:MaterialStatusEnum
+        ){  
+            this.materialAllocationId = materialAllocationId
+            this.status=status
+        
+    }
+
+    
+}
+

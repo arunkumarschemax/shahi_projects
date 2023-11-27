@@ -1,19 +1,27 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
-import { MaterialStatusEnum } from "@project-management-system/shared-models";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn,ManyToOne, JoinColumn, OneToMany } from "typeorm";
+import { MaterialFabricEntity } from "./material-fabric-entity";
+import { MaterialTrimEntity } from "./material-trim-entity";
 
-@Entity('material_allocation')
-export class MaterialAllocationEntity {
-    @PrimaryGeneratedColumn("increment", {
-        name: 'material_allocation_id'
+@Entity('material_issue_log')
+export class MaterialIssueLogEntity{
+    
+    @PrimaryGeneratedColumn('increment',{
+        name:'material_issue_log_id'
     })
-    materialAllocationId: number;
+    materialIssueLogId:number;
 
-    @Column("varchar", {
-        nullable: false,
-        name: "item_type",
-        
+    
+    @Column('int',{
+        nullable:false,
+        name:'material_allocation_id'
     })
-    itemType: string;
+    materialAllocationId:number;
+
+    @Column('varchar',{
+        nullable:false,
+        name:'item_type'
+    })
+    itemType:string;
 
     @Column('int',{
         name:'sample_order_id',
@@ -51,7 +59,14 @@ export class MaterialAllocationEntity {
         name:'location_id',
         nullable:false,
       })
-      LocationId:number
+      locationId:number
+
+      @Column('varchar',{
+        nullable:false,
+        name:'location'
+    })
+      loction:string;
+
 
       @Column('int',{
         name:'allocate_quantity',
@@ -63,14 +78,21 @@ export class MaterialAllocationEntity {
         name:'buyer_id',
         nullable:false,
       })
-      BuyerId:number
+      buyerId:number
 
-      
-   @Column("enum", {
-    name: "status",
-    enum: MaterialStatusEnum
+
+      @Column('varchar',{
+        nullable:false,
+        name:'buyer'
+    })
+    buyer:string;
+
+    @Column('varchar',{
+      nullable:false,
+      name:'request_no'
   })
-   status: MaterialStatusEnum;
+  requestNo:string;
+
 
 
     @CreateDateColumn({
@@ -103,11 +125,5 @@ export class MaterialAllocationEntity {
     })
     versionFlag: number;
 
-    @Column({
-        nullable: false,
-        name: "is_active",
-        default: 1
-    })
-    isActive: boolean;
-
+    
 }

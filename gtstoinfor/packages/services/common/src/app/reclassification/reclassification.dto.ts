@@ -1,31 +1,25 @@
 import { IsInt, IsEmail, IsString, IsDateString, IsNumber, IsDate, IsAlphanumeric, MaxLength, Matches, IsOptional, IsNotEmpty, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { RackPositionStatusEnum } from '@project-management-system/shared-models';
-export class RackPositionDTO {
+import { RackEnum } from '@project-management-system/shared-models';
+export class ReclassificationDTO {
 
     @ApiProperty()
-    positionId: number;
+    reclassificationId: number;
 
     @ApiProperty()
-    rackPositionName: string;
+    stockId: number;
 
     @ApiProperty()
-    ColumnId: number;
-    Column:string;
+    quantity: number;
 
     @ApiProperty()
-    levelId: number;
-    levelName:string;
+    itemId: number;
 
     @ApiProperty()
-    positionCode: number;
+    location: number;
 
     @ApiProperty()
-    rackName: string;
-
-    @ApiProperty()
-    status: RackPositionStatusEnum;
-
+    buyer: number;
 
     @ApiProperty()
     isActive: boolean;
@@ -38,5 +32,11 @@ export class RackPositionDTO {
 
     @ApiProperty()
     versionFlag: number;
+
+    @ApiProperty()
+    grnItemId?: number;
+
+    @ApiProperty()
+    uomId?: number;
 }
 

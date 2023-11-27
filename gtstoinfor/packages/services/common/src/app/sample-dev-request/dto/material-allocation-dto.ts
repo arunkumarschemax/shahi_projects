@@ -33,11 +33,13 @@ export class MaterialAllocationDTO {
      LocationId: number
 
      @ApiProperty()
-     allocatioQuantity: number
+     allocateQuantity: number
+
+     @ApiProperty()  
+     BuyerId:number
 
      @ApiProperty()
      status: MaterialStatusEnum;
-
 
      @ApiProperty()
      createdUser: string | null;
