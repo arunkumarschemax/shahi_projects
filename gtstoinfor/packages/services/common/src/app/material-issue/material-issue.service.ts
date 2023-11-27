@@ -19,6 +19,9 @@ import { SampleTypes } from "../sample Types/sample-types.entity";
 import { Buyers } from "../buyers/buyers.entity";
 import { Colour } from "../colours/colour.entity";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
+import { MaterialIssueLogRepository } from "./repo/material-issue-log-repo";
+import { MaterialIssueLogDto } from "./dto/material-issue-log-dto";
+import { MaterialIssueLogEntity } from "./entity/material-issue-log-entity";
 
 
 @Injectable()
@@ -27,7 +30,9 @@ export class MaterialIssueService {
         private issueRepo: MaterialIssueRepository,
         private fabricRepo: MaterialFabricRepository,
         private trimRepo: MaterialTrimRepository,
+        private matisslogRepo: MaterialIssueLogRepository,
         private readonly dataSource: DataSource,
+        
 
         // private readonly dataSource: AppDataSource,
     ) { }
@@ -340,6 +345,40 @@ export class MaterialIssueService {
         }
 
     }
+
+    async createMaterialIssueLog(req: MaterialIssueLogDto): Promise<CommonResponseModel> {
+        try {
+                 console.log(req,"serviccc")
+           const entity = new MaterialIssueLogEntity()
+            entity.materialAllocationId = req.materialAllocationId
+            // entity.materialIssueLogId = req.materialIssueLogId
+            entity.buyerId = req.buyerId
+            entity.locationId = req.locationId
+            entity.allocateQuantity = req.allocateQuantity
+            entity.itemType = req.itemType
+            entity.sampleItemId = req.sampleItemId
+            entity.sampleOrderId = req.sampleOrderId
+            entity.m3ItemId = req.m3ItemId
+            entity.createdUser = req.createdUser
+            entity.stockId = req.stockId
+            entity.quantity = req.allocateQuantity
+            entity.buyer = req.buyer
+            entity.loction = req.location
+            entity.requestNo = req.requestNo
+        
+            
+            const save = await this.matisslogRepo.save(entity)
+            if (save) {
+                return new CommonResponseModel(true, 1, 'Material Issued successfully', [])
+            }
+            else {
+                return new CommonResponseModel(false, 0, 'Material Issuing Failed', [])
+            }
+        } catch (err) {
+            throw (err)
+        }
+    }
+
 }
 
 
