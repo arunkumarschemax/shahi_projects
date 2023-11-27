@@ -198,6 +198,28 @@ const FabricsForm = ({props, buyerId}) => {
         />
       ),
     },
+    // {
+    //   title: 'Fabric Requirment',
+    //   dataIndex: 'fabricRequirment',
+    //   width:"10%",
+    //   render: (_, record) => (
+    //     <Input
+    //     value={record.fabricRequirment}
+    //     onChange={(e) => handleInputChange(e.target.value, record.key, 'fabricRequirment',0)}
+    //     />
+    //   ),
+    // },
+    // {
+    //   title: 'Wastage',
+    //   dataIndex: 'wastage',
+    //   width:"10%",
+    //   render: (_, record) => (
+    //     <Input
+    //     value={record.wastage}
+    //     onChange={(e) => handleInputChange(e.target.value, record.key, 'wastage',0)}
+    //     />
+    //   ),
+    // },
     {
       title:"UOM",
       dataIndex: 'UomId',
