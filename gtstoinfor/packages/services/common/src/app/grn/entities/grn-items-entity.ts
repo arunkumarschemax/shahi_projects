@@ -125,13 +125,6 @@ export class GrnItemsEntity{
     })
     m3ItemCodeId:number
 
-    @Column('enum',{
-        name:'grn_type',
-        nullable:false,
-        enum: GRNTypeEnum
-    })
-    grnType: GRNTypeEnum
-
     @Column('int',{
         name:'indent_id',
         nullable:false,
