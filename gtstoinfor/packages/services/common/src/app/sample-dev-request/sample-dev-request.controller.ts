@@ -259,4 +259,22 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
+  @Post('/getfabricDetailsOfSample')
+  async getfabricDetailsOfSample(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getfabricDetailsOfSample(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+  @Post('/getTrimDetailsOfSample')
+  async getTrimDetailsOfSample(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getTrimDetailsOfSample(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
 }

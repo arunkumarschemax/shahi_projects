@@ -1,6 +1,6 @@
 import { EditOutlined, EnvironmentOutlined, MinusCircleOutlined, PlusOutlined, UndoOutlined } from "@ant-design/icons"
 import { M3MastersCategoryReq } from "@project-management-system/shared-models"
-import { ColourService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, ProfitControlHeadService, UomService } from "@project-management-system/shared-services"
+import { ColourService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, ProfitControlHeadService, SampleDevelopmentService, UomService } from "@project-management-system/shared-services"
 import { Button, Card, Col, Divider, Form, Input, Popconfirm, Row, Select, Space, Tag, Tooltip, message } from "antd"
 import Table, { ColumnProps } from "antd/es/table"
 import { table } from "console"
@@ -9,7 +9,7 @@ import React from "react"
 import { useEffect, useState } from "react"
 
 
-export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
+export const PurchaseOrderfabricForm =({props,indentId,data,sampleReqId}) =>{
     const [fabricForm]=Form.useForm()
     const [weave,setWeave] = useState<any[]>([])
     const [uom,setUom] = useState<any[]>([])
@@ -37,11 +37,13 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
     let tableData: any[] = []
     const m3StyleService = new M3StyleService()
     const m3ItemsService = new M3ItemsService()
+    const sampleservice = new SampleDevelopmentService()
 
 
 
     console.log(fabricTableVisible)
     console.log(data)
+    console.log(sampleReqId)
 
     useEffect(() =>{
         getweave()
@@ -59,6 +61,13 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
         }
     },[indentId])
 
+    useEffect(() =>{
+        if(sampleReqId != undefined){
+            getAllSampleDetails(sampleReqId)
+        }
+
+    },[sampleReqId])
+
     const getM3FabricStyleCodes = () => {
         m3ItemsService.getM3Items().then(res => {
             if(res.status){
@@ -73,6 +82,17 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
                 console.log(res.data)
                 message.info('Please Update Po Quantity')
                 props(res.data)
+                setFabricTableData(res.data)
+                setFabricTableVisible(true)
+            }else{
+                setFabricTableData([])
+            }
+        })
+    }
+
+    const getAllSampleDetails = (value) =>{
+        sampleservice.getfabricDetailsOfSample({sampleReqId:value}).then(res =>{
+            if(res.status){
                 setFabricTableData(res.data)
                 setFabricTableVisible(true)
             }else{
@@ -119,17 +139,20 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
         })
     }
 
-  
     const colorOnchange = (value,option) =>{
         console.log(option.type)
         fabricForm.setFieldsValue({colorName:option?.type?option.type:''})
     }
+
     const setEditForm = (rowData: any, index: any) => {
         console.log(rowData)
         setUpdate(true)
         if(rowData.indentFabricId != undefined){
             setInputDisable(true)
             fabricForm.setFieldsValue({poQuantity:rowData.indentQuantity})
+        }
+        if(rowData.samplereFabId != undefined){
+            fabricForm.setFieldsValue({poQuantity:rowData.sampleQuantity})
         }
         setDefaultFabricFormData(rowData)
         setFabricIndexVal(index)
@@ -149,7 +172,9 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
                 indentFabricId:defaultFabricFormData.indentFabricId,
                 itemCode:defaultFabricFormData.itemCode,
                 quantityUom:defaultFabricFormData.quantityUom,
-                indentCode:defaultFabricFormData.indentCode
+                indentCode:defaultFabricFormData.indentCode,
+                samplereFabId:defaultFabricFormData.samplereFabId,
+                sampleReqNo:defaultFabricFormData.sampleReqNo,
             })
         }
 
@@ -162,21 +187,19 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
             responsive: ['sm'],
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
-        // {
-        //     title:'Indent Code',
-        //     dataIndex:'indentCode',
-        // },
+        {
+            title:'Sample Code',
+            dataIndex:'indentCode',
+        },
+        {
+            title:'Indent Code',
+            dataIndex:'indentCode',
+        },
         {
             title:'M3 Fabric Code',
             dataIndex:'itemCode',
             width:'170px'
         },
-        {
-            title:'Shahi Fabric Code',
-            dataIndex:'shahiFabricCode',
-            width:'170px'
-        },
-        
         {
             title:'Color',
             dataIndex:'colorName',
@@ -226,6 +249,71 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
         }
     ]
     
+    const samplecolumns : ColumnProps<any>[] = [
+        {
+            title: 'S No',
+            key: 'sno',
+            responsive: ['sm'],
+            render: (text, object, index) => (page-1) * 10 +(index+1)
+        },
+        {
+            title:'Sample Request No',
+            dataIndex:'sampleReqNo',
+        },
+        {
+            title:'M3 Fabric Code',
+            dataIndex:'m3FabricCode',
+            width:'170px'
+        },
+        {
+            title:'Color',
+            dataIndex:'colorName',
+        },
+        {
+            title:'Sample Quantity',
+            dataIndex:'sampleQuantity',
+        },
+        {
+            title:'PO Quantity',
+            dataIndex:'poQuantity',
+        },
+        {
+            title:'UOM',
+            dataIndex:'quantityUom',
+        },
+        {
+            title: "Action",
+            dataIndex: 'action',
+            render: (text: any, rowData: any, index: any) => (
+                <span>
+                    <Tooltip placement="top" title='Edit'>
+                        <Tag >
+                            <EditOutlined className={'editSamplTypeIcon'} type="edit"
+                                onClick={() => {
+                                    setEditForm(rowData,index)
+                                }}
+                                style={{ color: '#1890ff', fontSize: '14px' }}
+                            />
+                        </Tag>
+                    </Tooltip>
+                    <Divider type="vertical" />
+                    
+                    <Tooltip placement="top" title='delete'>
+                    <Tag >
+                        <Popconfirm title='Sure to delete?' 
+                        onConfirm={e =>{deleteData(index);}}
+                        >
+                        <MinusCircleOutlined 
+
+                        style={{ color: '#1890ff', fontSize: '14px' }} />
+                        </Popconfirm>
+                    </Tag>
+                    </Tooltip>
+                </span>
+            )
+        }
+    ]
+
     const deleteData = (index:any) => {
         tableData = [...fabricTableData]
         tableData.splice(index,1)
@@ -286,6 +374,8 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
             <Form.Item name={'itemCode'} hidden><Input></Input></Form.Item>
             <Form.Item name={'quantityUom'} hidden><Input></Input></Form.Item>
             <Form.Item name={'indentCode'} hidden><Input></Input></Form.Item>
+            <Form.Item name={'samplereFabId'} hidden><Input></Input></Form.Item>
+            <Form.Item name={'sampleReqNo'} hidden><Input></Input></Form.Item>
 
 
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
@@ -342,7 +432,7 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
                     <Button type='primary' htmlType="submit">{update ?'Update':'Add'}</Button>
                 </Row>
                 <Row>
-                    {fabricTableVisible && <Table columns={columns} dataSource={fabricTableData}
+                    {fabricTableVisible && <Table columns={sampleReqId != undefined? samplecolumns:columns} dataSource={fabricTableData}
                      />
                    }
 

@@ -55,9 +55,6 @@ export class PurchaseOrderDto{
   @ApiProperty()
   poMaterialType:string
 
-  @ApiProperty()
-  indentId:number[]
-
 
   @ApiProperty()
   poFabricInfo: PurchaseOrderFbricDto[]

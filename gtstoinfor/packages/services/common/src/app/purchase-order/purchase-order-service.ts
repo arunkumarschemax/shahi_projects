@@ -61,23 +61,10 @@ export class PurchaseOrderService {
                 for (const poFabric of req.poFabricInfo) {
                     const pofabricEntity = new PurchaseOrderFbricEntity()
                     pofabricEntity.colourId = poFabric.colourId
-                    // pofabricEntity.productGroupId = poFabric.productGroupId
                     pofabricEntity.remarks = poFabric.remarks
-                    // pofabricEntity.fabricTypeId = poFabric.fabricTypeId
-                    pofabricEntity.shahiFabricCode = poFabric.shahiFabricCode
-                    // pofabricEntity.weaveId = poFabric.weaveId
-                    // pofabricEntity.weight = poFabric.weight
-                    // pofabricEntity.width = poFabric.width
-                    // pofabricEntity.construction = poFabric.construction
-                    // pofabricEntity.yarnCount = poFabric.yarnCount
-                    // pofabricEntity.finish = poFabric.finish
-                    // pofabricEntity.shrinkage = poFabric.shrinkage
-                    // pofabricEntity.pch = poFabric.pch
-                    // pofabricEntity.moq = poFabric.moq
                     pofabricEntity.m3FabricCode = poFabric.m3FabricCode
-                    // pofabricEntity.content = poFabric.content
-                    pofabricEntity.indentId = poFabric.indentId
-                    pofabricEntity.sampleRequestId = poFabric.sampleRequestId
+                    pofabricEntity.indentFabricId = poFabric.indentFabricId
+                    pofabricEntity.sampleReqFabricId = poFabric.sampleReqFabricId
                     pofabricEntity.poQuantity = poFabric.poQuantity
                     pofabricEntity.quantityUomId = poFabric.quantityUomId
                     pofabricInfo.push(pofabricEntity)
@@ -96,8 +83,8 @@ export class PurchaseOrderService {
                     trimEntity.description = trimInfo.description
                     trimEntity.consumption = trimInfo.consumption
                     trimEntity.remarks = trimInfo.remarks
-                    trimEntity.indentId = trimInfo.indentId
-                    trimEntity.sampleRequestId = trimInfo.sampleRequestId
+                    trimEntity.indentTrimId = trimInfo.indentTrimId
+                    trimEntity.sampleReqTrimId = trimInfo.sampleReqTrimId
                     trimEntity.poQuantity = trimInfo.poQuantity
                     trimEntity.quantityUomId = trimInfo.quantityUomId
                     poTrimInfo.push(trimEntity)

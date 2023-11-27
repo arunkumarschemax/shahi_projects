@@ -217,7 +217,7 @@ const SampleRequestReport = () => {
                   console.log(rowData,"rowdata")
                   return(
                     <Checkbox 
-                    onChange={(e) => onCheck(e, rowData.indentId, rowData.fabricType, value)}
+                    onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.fabricType, value)}
                    
                   />
                   )
@@ -235,30 +235,35 @@ const SampleRequestReport = () => {
     navigate("/purchase-order", { state: { data: selectedItems, type:'Sampling'  } });
   }
   const dataa=[];
-  const onCheck = (e, indentId, fabricType, value) => {
+  const onCheck = (e, sampleRequestid, fabricType, value) => {
     const checkboxValue = e.target.checked;
-    console.log(fabricType)
-    console.log(value)
-    console.log(checkboxValue)
+    console.log(sampleRequestid)
+    // console.log(value)
+    // console.log(checkboxValue)
 
     setType(fabricType)
-    const updatedIndentIds = selectedIndentIds.includes(indentId)
-      ? selectedIndentIds.filter(id => id !== indentId)
-      : [...selectedIndentIds, indentId];
+    const updatedIndentIds = selectedIndentIds.includes(sampleRequestid)
+      ? selectedIndentIds.filter(id => id !== sampleRequestid)
+      : [...selectedIndentIds, sampleRequestid];
+      console.log(updatedIndentIds)
     setSelectedIndentIds(updatedIndentIds);
+    console.log(selectedIndentIds)
+    setbtnEnable(true)
 
-    if(checkboxValue === true){
-      setbtnEnable(true)
-    } else {
-      setbtnEnable(false)
-    }
+    // if(checkboxValue === true){
+    //   setbtnEnable(true)
+    // } else {
+    //   setbtnEnable(false)
+    // }
+    // console.log(selectedIndentIds)
     
-    const resultArray = [{materialType:fabricType}, { indentIds: updatedIndentIds }];
-    // console.log(resultArray)
+    const resultArray = [{materialType:fabricType}, { sampleReqIds: updatedIndentIds }];
+    console.log(resultArray)
     setSelectedItems(resultArray)
+    console.log(selectedItems)
+
   };
-  // console.log(selectedIndentIds)
-  // console.log(selectedItems)
+  console.log(selectedIndentIds)
 
   
   // console.log(type,"type")

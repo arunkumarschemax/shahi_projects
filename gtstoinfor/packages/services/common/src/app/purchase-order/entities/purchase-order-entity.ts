@@ -102,11 +102,11 @@ export class PurchaseOrderEntity{
     })
     grnQuantity:string
 
-    @Column('int',{
-      name:'indent_id',
-      nullable:true
-    })
-    indentId:number
+    // @Column('int',{
+    //   name:'indent_id',
+    //   nullable:true
+    // })
+    // indentId:number
 
     @Column('varchar',{
       name:'po_material_type',
