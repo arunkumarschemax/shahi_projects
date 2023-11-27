@@ -27,6 +27,7 @@ import {
   Space,
   Table,
   Tag,
+  Tooltip,
 } from "antd";
 import style from "antd/es/alert/style";
 import { ColumnProps } from "antd/es/table";
@@ -216,31 +217,46 @@ export const SourcingRequisitionDynamicView = () => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
-      title: "M3 Fabric Code",
-      dataIndex: "m3FabricCode",
-      ...getColumnSearchProps("m3FabricCode"),
+      title: "Buyer",
+      dataIndex: "buyer",
+      ...getColumnSearchProps("buyer"),
+      render: (text, record) => {
+        return <>{record.buyer ? record.buyer : "-"}</>;
+      },
     },
     {
-      title: "Shahi Fabric Code",
-      dataIndex: "shahiFabricCode",
-      // ...getColumnSearchProps('shahiFabricCode'),
-      render: (text, record) => {
-        return (
+      title: <div style={{textAlign:"center"}}>M3 Fabric Code</div>,
+      dataIndex: "m3FabricCode",
+      ...getColumnSearchProps("m3FabricCode"),
+      render: (m3FabricCode, row) => (
+        <Tooltip title={row.description} placement="top" arrowPointAtCenter>
           <span>
-            {record.shahiFabricCode}
-            <Divider type="vertical" />
-            <Tag
-              onClick={() =>
-                generateBarcode(record.shahiFabricCode, "m3ItemCode")
-              }
-              style={{ cursor: "pointer" }}
-            >
-              <BarcodeOutlined />
-            </Tag>
+            {`${m3FabricCode} - ${row.description.length > 25 ? row.description.slice(0, 25) + '...' : row.description}`}
           </span>
-        );
-      },
-    }, 
+        </Tooltip>
+      ),
+    },
+    // {
+    //   title: "Shahi Fabric Code",
+    //   dataIndex: "shahiFabricCode",
+    //   // ...getColumnSearchProps('shahiFabricCode'),
+    //   render: (text, record) => {
+    //     return (
+    //       <span>
+    //         {record.shahiFabricCode}
+    //         <Divider type="vertical" />
+    //         <Tag
+    //           onClick={() =>
+    //             generateBarcode(record.shahiFabricCode, "m3ItemCode")
+    //           }
+    //           style={{ cursor: "pointer" }}
+    //         >
+    //           <BarcodeOutlined />
+    //         </Tag>
+    //       </span>
+    //     );
+    //   },
+    // }, 
     {
       title: "Color",
       dataIndex: "color",
@@ -274,14 +290,6 @@ export const SourcingRequisitionDynamicView = () => {
       },
     },
     {
-      title: "Buyer",
-      dataIndex: "buyer",
-      ...getColumnSearchProps("buyer"),
-      render: (text, record) => {
-        return <>{record.buyer ? record.buyer : "-"}</>;
-      },
-    },
-    {
       title: "XL No",
       dataIndex: "xlNo",
     },
@@ -300,32 +308,32 @@ export const SourcingRequisitionDynamicView = () => {
         );
       },
     },
-    {
-      title: "Available Quantity",
-      dataIndex: "quantity",
-      sorter: (a, b) => a.quantity.localeCompare(b.quantity),
-      sortDirections: ["descend", "ascend"],
-      // render: (text,record) => {
-      //     return(
-      //         <>
-      //         {record.quantity ? `${record.availableQuantity} ${record.quantityUnit}` : '-'}
-      //         </>
-      //     )
-      // }
-    },
-    {
-      title: "To Be Procured",
-      dataIndex: "tobeProcured",
-      render: (text, record) => {
-        return (
-          <>
-            {record.quantity - record.availableQuantity > 0
-              ? record.quantity - record.availableQuantity
-              : 0}
-          </>
-        );
-      },
-    },
+    // {
+    //   title: "Available Quantity",
+    //   dataIndex: "quantity",
+    //   sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+    //   sortDirections: ["descend", "ascend"],
+    //   // render: (text,record) => {
+    //   //     return(
+    //   //         <>
+    //   //         {record.quantity ? `${record.availableQuantity} ${record.quantityUnit}` : '-'}
+    //   //         </>
+    //   //     )
+    //   // }
+    // },
+    // {
+    //   title: "To Be Procured",
+    //   dataIndex: "tobeProcured",
+    //   render: (text, record) => {
+    //     return (
+    //       <>
+    //         {record.quantity - record.availableQuantity > 0
+    //           ? record.quantity - record.availableQuantity
+    //           : 0}
+    //       </>
+    //     );
+    //   },
+    // },
     {
       title: "Action",
     dataIndex: "action",

@@ -113,6 +113,12 @@ export class PurchaseOrderEntity{
       nullable:true
     })
     poMaterialType:string
+
+    @Column('varchar',{
+      name:'po_against',
+      nullable:true
+    })
+    poAgainst:string
     
     
   @OneToMany(type => PurchaseOrderFbricEntity, purchaseReqFabric => purchaseReqFabric.purchaseOrderEntity, { cascade: true })
