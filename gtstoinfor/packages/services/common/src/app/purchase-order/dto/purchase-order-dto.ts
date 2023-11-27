@@ -65,4 +65,7 @@ export class PurchaseOrderDto{
   @ApiProperty()
   poTrimInfo?:PurchaseOrderTrimDto[]
 
+  @ApiProperty()
+  poAgainst:string
+
 }

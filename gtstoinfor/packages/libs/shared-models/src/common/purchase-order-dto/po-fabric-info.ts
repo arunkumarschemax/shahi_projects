@@ -23,7 +23,7 @@
     versionFlag: number;
     isActive: boolean;
     yarnUom:number
-    indentFabricId:number
+    poAgainstId:number
     poQuantity:number
    quantityUomId:number
     constructor(
@@ -43,7 +43,7 @@
        pch:number,
        moq:string,
        yarnUom:number,
-       indentFabricId:number,
+       poAgainstId:number,
        poQuantity:number,
        quantityUomId:number
 
@@ -64,7 +64,7 @@
         this.pch=pch
         this.moq=moq
         this.yarnUom=yarnUom
-        this.indentFabricId=indentFabricId
+        this.poAgainstId=poAgainstId
         this.poQuantity=poQuantity
         this.quantityUomId=quantityUomId
      }

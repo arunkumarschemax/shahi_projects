@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { EditOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
-import { M3MastersCategoryReq, SourcingRequisitionReq, UomCategoryEnum } from "@project-management-system/shared-models";
+import { BuyerIdReq, M3MastersCategoryReq, SourcingRequisitionReq, UomCategoryEnum } from "@project-management-system/shared-models";
 import FormItem from "antd/es/form/FormItem";
 import TextArea from "antd/es/input/TextArea";
 import AlertMessages from "../common/common-functions/alert-messages";
@@ -97,7 +97,7 @@ export const SourcingRequisitionDynamicForm = () => {
         getCurrencies()
         getFabricType()
         getFabricTypes()
-        getM3TrimsTypes()
+        // getM3TrimsTypes()
     },[])
 
     const getFabricTypes = () => {
@@ -108,10 +108,13 @@ export const SourcingRequisitionDynamicForm = () => {
         })
     }
 
-    const getM3TrimsTypes = () => {
-        m3Service.getM3Trims().then(res => {
+    const getM3TrimsTypes = (option) => {
+        const req = new BuyerIdReq(option)
+        console.log(req,'---------')
+        m3Service.getM3TrimsByBuyer(req).then(res => {
             if(res.status) {
                 setM3Trims(res.data)
+                console.log(res.data,'000000000000000000')
             }
         })
     }
@@ -784,10 +787,10 @@ export const SourcingRequisitionDynamicForm = () => {
                 <Row gutter={8}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                         <Form.Item name='style' label='Style' rules={[{ required: true, message: 'Style is required' }]}>
-                            <Select showSearch allowClear optionFilterProp="children" placeholder='Select Style'>
+                            <Select showSearch allowClear optionFilterProp="children" placeholder='Select Style' onChange={getM3TrimsTypes}>
                                 {style.map(e => {
                                     return (
-                                        <Option key={e.styleId} value={e.styleId} name={e.style}> {e.style}-{e.description}</Option>
+                                        <Option key={e.styleId} value={e.styleId} name={e.buyerId}> {e.style}-{e.description}</Option>
                                     );
                                 })}
                             </Select>

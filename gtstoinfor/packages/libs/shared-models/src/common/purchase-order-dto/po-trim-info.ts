@@ -9,7 +9,7 @@ export class PurchaseOrderTrimDto{
     description: string
     consumption: number
     remarks: string
-    indentTrimId:number
+    poAgainstId:number
     poQuantity:number
     quantityUomId:number
 
@@ -21,7 +21,7 @@ export class PurchaseOrderTrimDto{
         description: string,
         consumption: number,
         remarks: string,
-        indentTrimId:number,
+        poAgainstId:number,
         poQuantity:number,
         quantityUomId:number
     ){
@@ -32,7 +32,7 @@ export class PurchaseOrderTrimDto{
         this.description=description
         this.consumption=consumption
         this.remarks=remarks
-        this.indentTrimId=indentTrimId
+        this.poAgainstId=poAgainstId
         this.poQuantity=poQuantity
         this.quantityUomId=quantityUomId
     }

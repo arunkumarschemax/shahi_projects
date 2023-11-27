@@ -136,10 +136,10 @@ moq:string
   yarnUom:number
 
   @Column('int',{
-    name:'indent_fabric_id',
+    name:'po_against_id',
     nullable:true
   })
-  indentFabricId:number
+  poAgainstId:number
 
   @Column('decimal',{
     name:'po_quantity',

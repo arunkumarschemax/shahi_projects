@@ -59,7 +59,7 @@ pch:number
 moq:string
 
 @ApiProperty()
-indentFabricId:number
+poAgainstId:number
 
 @ApiProperty()
 quantityUomId:number
