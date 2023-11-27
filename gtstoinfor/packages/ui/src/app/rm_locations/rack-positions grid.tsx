@@ -7,6 +7,8 @@ import { RackPositionService } from '@project-management-system/shared-services'
 import { RPositionActivateDeactivateDto, RackPositionDTO } from '@project-management-system/shared-models'
 import FormItem from 'antd/es/form/FormItem'
 
+export interface PositionGridProps{}
+
 const PositionGrid = () => {
 
   const navigate = useNavigate()

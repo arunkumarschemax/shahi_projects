@@ -2,7 +2,7 @@ import { Button, Card, Col, Form, Input, Row, Select, message } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AlertMessages from '../common/common-functions/alert-messages';
-import { RackPositionService, RacksService } from '@project-management-system/shared-services';
+import { ColumnService, LevelService, RackPositionService, RacksService } from '@project-management-system/shared-services';
 import { RackPositionDTO } from '@project-management-system/shared-models';
 
 
@@ -13,9 +13,15 @@ const RackPosition = () => {
   const services = new RacksService();
   const onlyNumbersAndCharactersPattern = /^[a-zA-Z0-9]+$/;
   const [data, setData] = useState<any[]>([]);
+  const [data2, setData2] = useState<any[]>([]);
+  const [data3, setData3] = useState<any[]>([]);
 
+const service2  = new LevelService()
+const service1= new ColumnService()
   useEffect(() => {
     getdata()
+    getdata1()
+    getdata2()
   },[])
 
   const getdata = () => {
@@ -32,7 +38,30 @@ const RackPosition = () => {
       });
   };
 
+  const getdata1=()=>{
+    service1.getAllColumnInfo()
+    .then((res)=>{
+      if (res.status) {
+        setData2(res.data);
+      } else {
+        setData2([]);
+      }
+ 
+    })
+  }
 
+
+  const getdata2=()=>{
+    service2.getAllLevel()
+    .then((res)=>{
+      if (res.status) {
+        setData3(res.data);
+      } else {
+        setData3([]);
+      }
+ 
+    })
+  }
   const onFinish = (liscenceTypeDto: RackPositionDTO) => {
     service.createPosition(liscenceTypeDto).then(res => {
       if (res.status) {
@@ -65,14 +94,14 @@ const RackPosition = () => {
         <Form form={form} layout={'vertical'} name="control-hooks" onFinish={onFinish}>
           <Row gutter={12}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
-              <Form.Item label="Column" name="columnId"
+              <Form.Item label="Column" name="column"
                rules={[
                 { required: true, message: 'Column is required' },]}
               >
                 <Select placeholder=" Select Column" >
-                  {data.map((option) => (
+                  {data2.map((option) => (
                     <option key={option.columnId} value={option.columnId}>
-                      {option.Column}
+                      {option.column}
                     </option>
                   ))}
                 </Select>
@@ -84,7 +113,7 @@ const RackPosition = () => {
                 { required: true, message: 'Level is required' },]}
               >
                 <Select placeholder=" Select Level" >
-                  {data.map((option) => (
+                  {data3.map((option) => (
                     <option key={option.levelId} value={option.levelId}>
                       {option.levelName}
                     </option>

@@ -1,8 +1,8 @@
 
 export class StyleDto {
   styleId:number;
- locationId:number;
-  pch:string;
+ locationId:string;
+  pch:number;
   style:string;
   description:string;
   styleFileName: string;
@@ -15,8 +15,8 @@ export class StyleDto {
 
   constructor(
     styleId:number,
-    locationId:number,
-    pch:string,
+    locationId:string,
+    pch:number,
     style:string,
     description:string,
     styleFileName: string,
