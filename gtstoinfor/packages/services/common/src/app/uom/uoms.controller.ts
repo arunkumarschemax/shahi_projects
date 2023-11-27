@@ -15,7 +15,7 @@ export class UomController {
 
 
 @Post('/createUom')
-async createUom(@Body() uomReq: UomRequest): Promise<UomResponse> {
+async createUom(@Body() uomReq: any): Promise<UomResponse> {
   try {
     return await this.uomService.createUom(uomReq);
   } catch (error) {

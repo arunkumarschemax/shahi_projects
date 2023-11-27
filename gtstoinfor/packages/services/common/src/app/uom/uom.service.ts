@@ -22,10 +22,10 @@ export class UomService {
     */
     async createUom(uomRequest: UomRequest): Promise<UomResponse> {
         try {
-
+            console.log(uomRequest)
             // all the pre required validations should coded at the function starting to avoid duplications etc..
             // validate here like uom already exists or not
-            const uom = await this.uomRepo.findOne({select: ['id'], where: {uom: uomRequest.uom}});
+            const uom = await this.uomRepo.findOne({select: ['id'], where: {uomCategory:uomRequest.uomCategory,uom: uomRequest.uom}});
             if(uom){
                 throw new ErrorResponse(0,'UOM already exists!!!');
             }

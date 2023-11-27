@@ -11,17 +11,23 @@ export class MaterialAllocationDTO {
      @ApiProperty()
      itemType: string;
 
-
      @ApiProperty()
      sampleOrderId: number
-
 
      @ApiProperty()
      sampleItemId: number
 
-
      @ApiProperty()
       m3ItemId: number
+
+     @ApiProperty()  
+     buyerId:number
+
+     @ApiProperty()
+     status: MaterialStatusEnum;
+
+     @ApiProperty()
+     createdUser: string | null;
 
      @ApiProperty()
      quantity: number;
@@ -30,20 +36,10 @@ export class MaterialAllocationDTO {
       stockId: number
 
      @ApiProperty()
-     LocationId: number
+     locationId: number
 
      @ApiProperty()
      allocateQuantity: number
-
-     @ApiProperty()  
-     BuyerId:number
-
-     @ApiProperty()
-     status: MaterialStatusEnum;
-
-     @ApiProperty()
-     createdUser: string | null;
-
 
 
 

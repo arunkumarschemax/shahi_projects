@@ -28,7 +28,7 @@ export class UomEntity {
 
     @Column('text',{
         name: 'description',
-        nullable:false
+        nullable:true
     })
     description:string;
 

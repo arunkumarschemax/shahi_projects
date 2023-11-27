@@ -26,7 +26,7 @@ export class MaterialAllocationItemsEntity {
         name:'location_id',
         nullable:false,
       })
-      LocationId:number
+      locationId:number
 
       @Column('int',{
         name:'allocate_quantity',
@@ -34,23 +34,16 @@ export class MaterialAllocationItemsEntity {
       })
       allocateQuantity:number
 
-      @Column('int',{
-        name:'buyer_id',
-        nullable:false,
-      })
-      BuyerId:number
-
-
-    @CreateDateColumn({
+      @CreateDateColumn({
         name: "created_at",
-    })
-    createdAt: string;
+      })
+      createdAt: string;
 
-    @Column("varchar", {
+      @Column("varchar", {
         nullable: true,
         length: 40,
         name: "created_user",
-    })
+      })
     createdUser: string | null;
 
     @UpdateDateColumn({

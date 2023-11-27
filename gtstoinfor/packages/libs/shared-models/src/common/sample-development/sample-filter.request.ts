@@ -20,11 +20,15 @@ export class SampleFilterRequest{
 export class buyerandM3ItemIdReq{
     buyerId:number
     m3ItemId:number
+    itemType?:string
     constructor(    
         buyerId:number,
-        m3ItemId:number){
+        m3ItemId:number,
+        itemType?:string
+        ){
             this.buyerId=buyerId
             this.m3ItemId=m3ItemId
+            this.itemType=itemType
     }
 
     
