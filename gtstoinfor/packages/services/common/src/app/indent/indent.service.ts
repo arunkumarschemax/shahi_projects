@@ -74,13 +74,13 @@ export class IndentService {
                 fabricModel.push(new IndentFabricModel(fabric.ifabric_id, fabric.content,
                     fabric.fabric_type_name, fabric.fabric_weave_name, fabric.weight, fabric.width, fabric.yarn_count, fabric.unit, fabric.construction, fabric.finish, fabric.shrinkage, fabric.item_code,fabric.colour,
                     fabric.pch, fabric.moq, fabric.moqUnit, fabric.moq_price, fabric.moqPriceUnit, fabric.season, fabric.vendor_name,
-                    fabric.buyer_name, fabric.grn_date, fabric.xl_no, fabric.quantity, fabric.quantityUnit, fabric.status,fabric.indentId,fabric.materialType,fabric.description))
+                    fabric.buyer, fabric.grn_date, fabric.xl_no, fabric.quantity, fabric.quantityUnit, fabric.status,fabric.indentId,fabric.materialType,fabric.description,fabric.buyerId))
             }
             const trimIndentData = await this.indentTrimRepo.getTrimIndentData(data.indent_id);
             for (const trim of trimIndentData) {
                 trimModel.push(new IndentTrimsModel(trim.itrims_id, trim.product_group, trim.item_code, trim.sizes, trim.colour,
                     trim.quantity, trim.m3_trim_code, trim.description,
-                    trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType))
+                    trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyer,trim.buyerId))
             }
             indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, fabricModel, trimModel, data.style, data.description, data.created_at))
         }
