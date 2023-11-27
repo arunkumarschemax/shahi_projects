@@ -6,7 +6,7 @@ import { CommonResponseModel, LocationMappingReq, MaterialIssueIdreq, RackLocati
 export class LocationMappingService {
     async getAllActiveRackPositions(): Promise<CommonResponseModel> {
         try {
-            let dataquery = `SELECT * FROM rack_position WHERE is_active = '1'`;
+            let dataquery = `SELECT * FROM rack_position WHERE status != 'OCCUPIED'`;
             const res = await AppDataSource.query(dataquery);
             if (res) {
                 return new CommonResponseModel(true, 1111, "Data retrived Succesufully", res);

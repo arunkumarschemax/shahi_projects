@@ -22,7 +22,7 @@ export const LocationMapping = () => {
     const [tableData, setTableData] = useState<any[]>([]);
     const [prevTransactionsInfo, sePrevTransactionsInfo] = useState<any[]>([]);
     const [btnDisable, setBtnDisable] = useState<boolean>(false);
-    const [locationStatusValue, setValue] = useState<string>('partially Occupied');
+    const [locationStatusValue, setValue] = useState<string>('Occupied');
     const [showQrSacn, setShowQrScan] = useState<boolean>(false);
     const [vendorName, setVendorName] = useState<string>("Hello")
 
@@ -52,14 +52,18 @@ export const LocationMapping = () => {
 
     const getLocationsData = () => {
         locationService.getAllActiveRackPositions().then(res => {
-            // console.log(res.data, "locataionsData")
+            console.log(res.data, "locataionsData")
             setLocations(res.data);
         });
     }
 
-    const saveLocation = (result) => {
+    const saveLocation = (result: any) => {
+        if(form.getFieldValue("locationId") === undefined || null){
+         AlertMessages.getErrorMessage('Please select the Location')
+        }
         const locationId = form.getFieldValue("locationId");
         const qty = form.getFieldValue("quantity");
+        console.log(qty)
       
         // const req = new LocationMappingReq(grnData.m3_items_Id
         //     , locationId, qty, grnData.grn_item_id, shahi_item_code, item_type_id, plant_id,grnData.style_id, grnData.item_id, grnData.style_id,grnData.buyer_id );
@@ -154,7 +158,7 @@ export const LocationMapping = () => {
                                 {grnData.grn_number}
                             </Descriptions.Item>
                             <Descriptions.Item label="Buyer" style={{ width: '33%' }}>
-                                {grnData.buyer_name}
+                                {grnData.fabBuyerName}
                             </Descriptions.Item>
                             <Descriptions.Item label="Received Quantity" style={{ width: '33%' }}>
                                 {Number(grnData.conversion_quantity)}
@@ -177,17 +181,17 @@ export const LocationMapping = () => {
                     </Form.Item>
                     <Row gutter={24}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                            <Form.Item name="vendorName" label="Vendor" rules={[{ required: true, message: 'Missed Vendor' }]}>
+                            <Form.Item name="vendorName" label="Vendor" rules={[{ required: true, message: 'Vendor is required' }]}>
                                 <Input disabled={grnData} defaultValue={grnData.vendor_name} />
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 10 }}>
-                            <Form.Item name="itemName" label="Item" rules={[{ required: true, message: 'Missed Item' }]}>
+                            <Form.Item name="itemName" label="Item" rules={[{ required: true, message: ' Item is required ' }]}>
                                 <Input disabled={grnData} defaultValue={grnData.m3_item_code} />
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                            <Form.Item name="locationId" label="Location" rules={[{ required: true, message: 'Missed Location' }]}>
+                            <Form.Item name="locationId" label="Location" rules={[{ required: true, message: ' Location is required' }]}>
                                 <Select
                                     // onChange={getPreviousTransactions}
                                     showSearch allowClear placeholder="Select Location" optionFilterProp="children"
@@ -195,15 +199,17 @@ export const LocationMapping = () => {
                                     dropdownMatchSelectWidth={false}
                                 >
                                     {locations.map((locationData) => {
-                                        return <Option style={{ backgroundColor: locationData.status === "NOT OCCUPIED" ? "green" : locationData.status === "PARTIALLY OCCUPIED" ? "orange" : "red", color: "white", marginTop: 5 }} value={locationData.position_Id}>{locationData.rack_position_name}</Option>
+                                        // return <Option style={{ backgroundColor: locationData.status === "NOT OCCUPIED" ? "green" : locationData.status === "PARTIALLY OCCUPIED" ? "orange" : "red", color: "white", marginTop: 5 }} value={locationData.position_Id}>{locationData.rack_position_name}</Option>
+                                        return <Option  value={locationData.position_Id}>{locationData.rack_position_name}</Option>
+
                                     })}
 
                                 </Select>
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                            <Form.Item name="quantity" label="Quantity" rules={[{ required: true, message: 'Missed Quantity' }]}>
-                                <InputNumber min={1} style={{ width: "100%" }}
+                            <Form.Item name="quantity" label="Quantity" rules={[{ required: true, message: 'Missed Quantity' }]} initialValue={Number((grnData.conversion_quantity) - (grnData.quantity))} >
+                                <InputNumber min={1} style={{ width: "100%" }} defaultValue={Number((grnData.conversion_quantity) - (grnData.quantity))}
                                 // onChange={e => validateQty(e)}
                                 />
                             </Form.Item>
