@@ -73,5 +73,6 @@ export enum VendorNameEnum {
     extractedHellmann="HELLMANN",
     extractedGeodis="GEODIS",
     extractedJas="JAS",
+    extractedGLOBELINK="GLOBELINK",
     
 }
