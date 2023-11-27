@@ -54,10 +54,16 @@ export class PurchaseOrderTrimEntity{
     m3TrimCode: string
     
     @Column('int',{
-        name:'po_against_id',
+        name:'indent_id',
         nullable:true
       })
-      poAgainstId:number
+      indentId:number
+      
+      @Column('int',{
+        name:'sample_request_id',
+        nullable:true
+      })
+      sampleRequestId:number
 
     @Column('decimal',{
         name:'po_quantity',

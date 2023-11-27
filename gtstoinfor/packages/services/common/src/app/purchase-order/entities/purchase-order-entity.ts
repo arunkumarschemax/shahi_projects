@@ -1,4 +1,4 @@
-import { PurchaseOrderStatus } from "@project-management-system/shared-models";
+import { GRNTypeEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { PurchaseOrderFbricEntity } from "./purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "./purchase-order-trim-entity";
@@ -114,11 +114,12 @@ export class PurchaseOrderEntity{
     })
     poMaterialType:string
 
-    @Column('varchar',{
+    @Column('enum',{
       name:'po_against',
-      nullable:true
+      nullable:true,
+      enum: GRNTypeEnum
     })
-    poAgainst:string
+    poAgainst:GRNTypeEnum
     
     
   @OneToMany(type => PurchaseOrderFbricEntity, purchaseReqFabric => purchaseReqFabric.purchaseOrderEntity, { cascade: true })

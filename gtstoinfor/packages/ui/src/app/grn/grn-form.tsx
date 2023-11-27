@@ -8,7 +8,7 @@ import { BuyersService, GRNService, PurchaseOrderservice, VendorsService } from 
 import TextArea from 'antd/es/input/TextArea'
 import GRNFabricForm from './grn-fabric'
 import GRNTrimForm from './grn-trim'
-import { GrnDto, PurchaseOrderStatus, VendorIdReq } from '@project-management-system/shared-models'
+import { GRNTypeEnum, GrnDto, PurchaseOrderStatus, VendorIdReq } from '@project-management-system/shared-models'
 import AlertMessages from '../common/common-functions/alert-messages'
 import dayjs, { Dayjs } from "dayjs";
 import { useNavigate } from 'react-router-dom'
@@ -50,19 +50,16 @@ const GRNForm = () => {
               AlertMessages.getErrorMessage(res.internalMessage);
             }
           })
-        //   .catch((error) => {
-        //     console.error('GRN creation failed:', error);
-        //     // Handle additional error handling or logging as needed.
-        //     AlertMessages.getErrorMessage('Failed to create GRN. Please check console for details.');
-        //   });
       };
       
 
     const getVendorsData = () =>{
+        // form.setFieldsValue({ purchaseOrderId: undefined });
+        // setPoData([])
         vendorService.getAllActiveVendors().then((res)=>{
             if(res.status){
                 setVendor(res.data)
-                setPoNoData([])
+                // setPoNoData([])
             }
         })
     }
@@ -139,12 +136,12 @@ const GRNForm = () => {
                   {selectedPoType !== null && (
                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                         <Form.Item name='poType' label='PO Type' dependencies={['purchaseOrderId']}>
-                           <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor' disabled>
-                                {poNoData.map(e => {
-                                    return(
-                                        <Option key={e.purchaseOrderId} value={e.purchaseOrderId}> {e.poAgainst}</Option>
-                                    )
-                                })}
+                           <Select showSearch allowClear optionFilterProp="children" disabled>
+                           {Object.values(GRNTypeEnum).map((value) => (
+                                <Option key={value} value={value}>
+                                {value}
+                                </Option>
+                            ))}
                             </Select>
                         </Form.Item>
                   </Col>
