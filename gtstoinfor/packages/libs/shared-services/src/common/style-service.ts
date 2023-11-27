@@ -1,4 +1,4 @@
-import { AllStyleResponseModel, StyleDto, StyleIdReq, UploadResponse } from "@project-management-system/shared-models";
+import { AllStyleResponseModel, StyleDto, StyleIdReq, UploadResponse, buyerReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class StyleService extends CommonAxiosService{
@@ -13,8 +13,8 @@ export class StyleService extends CommonAxiosService{
   async fileUpload(file: any): Promise<UploadResponse> {
     return await this.axiosPostCall(this.URL + '/fileUpload', file);
   }
-  async getAllStyle(): Promise<AllStyleResponseModel> {
-    return this.axiosPostCall(this.URL + "/getAllStyle")
+  async getAllStyle(req:buyerReq): Promise<AllStyleResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllStyle",req)
    }
  async getAllActiveStyle(): Promise<AllStyleResponseModel> {
    return this.axiosPostCall(this.URL + "/getAllActiveStyle")
