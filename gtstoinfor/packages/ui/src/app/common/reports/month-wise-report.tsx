@@ -904,11 +904,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell even-color">Jan In PCs</span>,
         dataIndex: "janExfPcs",
         align: "right",
+        render: (text, record, index) => (
+            <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+        )
       },
       {
         title: <span className="ant-table-cell even-color">Jan In Coeff</span>,
         dataIndex: "janExfCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -917,11 +923,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell odd-color">Feb In PCs</span>,
         dataIndex: "febExfPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell odd-color">Feb In Coeff</span>,
         dataIndex: "febExfCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -930,11 +942,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell even-color">Mar In PCs</span>,
         dataIndex: "marExfPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell even-color">Mar In Coeff</span>,
         dataIndex: "marExfCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -943,11 +961,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell odd-color">Apr In PCs</span>,
         dataIndex: "aprExfPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell odd-color">Apr In Coeff</span>,
         dataIndex: "aprExfCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -956,11 +980,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell even-color"> May In PCs</span>,
         dataIndex: "mayExfPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell even-color"> May In Coeff</span>,
         dataIndex: "mayExfCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -969,11 +999,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell odd-color">Jun In PCs</span>,
         dataIndex: "junExfPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell odd-color">Jun In Coeff</span>,
         dataIndex: "junExfCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -982,11 +1018,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell even-color"> Jul In PCs</span>,
         dataIndex: "julExfPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell even-color"> Jul In Coeff</span>,
         dataIndex: "julExfCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -995,11 +1037,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell odd-color">Aug In PCs</span>,
         dataIndex: "augExfPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell odd-color">Aug In Coeff</span>,
         dataIndex: "augExfCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -1008,11 +1056,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell even-color"> Sep In PCs</span>,
         dataIndex: "sepExfPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell even-color"> Sep In Coeff</span>,
         dataIndex: "sepExfCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -1021,11 +1075,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell odd-color">Oct In PCs</span>,
         dataIndex: "octExfPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell odd-color">Oct In Coeff</span>,
         dataIndex: "octExfCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -1034,11 +1094,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell even-color"> Nov In PCs</span>,
         dataIndex: "novExfPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell even-color"> Nov In Coeff</span>,
         dataIndex: "novExfCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -1047,22 +1113,34 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell odd-color"> Dec In PCs</span>,
         dataIndex: "decExfPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell odd-color"> Dec In Coeff</span>,
         dataIndex: "decExfCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       {
         title: <span> Total In Pcs</span>,
         dataIndex: "totalExfPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span> Total In Coeff</span>,
         dataIndex: "totalExfCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" }
@@ -1092,11 +1170,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell even-color"> Jan In PCs</span>,
         dataIndex: "janWhPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell even-color"> Jan In Coeff</span>,
         dataIndex: "janWhCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -1105,11 +1189,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell odd-color"> Feb In PCs</span>,
         dataIndex: "febWhPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell odd-color"> Feb In Coeff</span>,
         dataIndex: "febWhCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -1118,11 +1208,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell even-color"> Mar In PCs</span>,
         dataIndex: "marWhPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell even-color"> Mar In Coeff</span>,
         dataIndex: "marWhCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -1131,11 +1227,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell odd-color"> Apr In PCs</span>,
         dataIndex: "aprWhPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell odd-color"> Apr In Coeff</span>,
         dataIndex: "aprWhCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -1144,11 +1246,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell even-color"> May In PCs</span>,
         dataIndex: "mayWhPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell even-color"> May In Coeff</span>,
         dataIndex: "mayWhCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -1157,11 +1265,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell odd-color"> Jun In PCs</span>,
         dataIndex: "junWhPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell odd-color"> Jun In Coeff</span>,
         dataIndex: "junWhCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -1170,11 +1284,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell even-color"> Jul In PCs</span>,
         dataIndex: "julWhPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell even-color"> Jul In Coeff</span>,
         dataIndex: "julWhCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -1183,11 +1303,17 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell odd-color"> Aug In PCs</span>,
         dataIndex: "augWhPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell odd-color"> Aug In Coeff</span>,
         dataIndex: "augWhCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
@@ -1196,6 +1322,9 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell even-color"> Sep In PCs</span>,
         dataIndex: "sepWhPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell even-color"> Sep In Coeff</span>,
@@ -1220,27 +1349,43 @@ export const MonthWiseReport = () => {
         title: <span className="ant-table-cell even-color"> Nov In PCs</span>,
         dataIndex: "novWhPcs",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       {
         title: <span className="ant-table-cell even-color"> Nov In Coeff</span>,
         dataIndex: "novWhCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
 
       {title: <span className="ant-table-cell odd-color"> Dec In PCs</span>,dataIndex: "decWhPcs",align: "right",
+      render: (text, record, index) => (
+        <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+    )
       },
       {
         title: <span className="ant-table-cell odd-color"> Dec In Coeff</span>,
         dataIndex: "decWhCoeff",
         align: "right",
+        render: (text, record, index) => (
+          <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+      )
       },
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" },
 
-      {title: <span> Total In Pcs</span>,dataIndex: "totalWhPcs",align: "right",},
-      { title: <span> Total In Coeff</span>,dataIndex: "totalWhCoeff",align: "right",},
+      {title: <span> Total In Pcs</span>,dataIndex: "totalWhPcs",align: "right", render: (text, record, index) => (
+        <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+    )},
+      { title: <span> Total In Coeff</span>,dataIndex: "totalWhCoeff",align: "right", render: (text, record, index) => (
+        <span style={{ fontWeight: "normal" }}>{text.toLocaleString()}</span>
+    )},
       { title: ``, dataIndex: "" },
       { title: ``, dataIndex: "" }
     );
@@ -1772,7 +1917,7 @@ export const MonthWiseReport = () => {
         }
       });
     });
-    const totalValues = [janPre, janLat, febPre, febLat, marPre, marLat, aprPre, aprLat, mayPre, mayLat, junPre, junLat, julPre, julLat, augPre, augLat, sepPre, sepLat, octPre, octLat, novPre, novLat, decPre, decLat];
+    const totalValues = [janPre.toLocaleString(), janLat.toLocaleString(), febPre.toLocaleString(), febLat.toLocaleString(), marPre.toLocaleString(), marLat.toLocaleString(), aprPre.toLocaleString(), aprLat.toLocaleString(), mayPre.toLocaleString(), mayLat.toLocaleString(), junPre.toLocaleString(), junLat.toLocaleString(), julPre.toLocaleString(), julLat.toLocaleString(), augPre.toLocaleString(), augLat.toLocaleString(), sepPre.toLocaleString(), sepLat.toLocaleString(), octPre.toLocaleString(), octLat.toLocaleString(), novPre.toLocaleString(), novLat.toLocaleString(), decPre.toLocaleString(), decLat.toLocaleString()];
 
     return (
       <>
@@ -1790,8 +1935,8 @@ export const MonthWiseReport = () => {
     {val}
   </th>
 ))}
-<th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalPcs}px`, textAlign: 'right', paddingLeft: '20px' }}>{totalPre}</th>
-<th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalcoeff}px`, textAlign: 'right', paddingLeft: '20px' }}>{totalLat}</th>
+<th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalPcs}px`, textAlign: 'right', paddingLeft: '20px' }}>{totalPre.toLocaleString()}</th>
+<th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalcoeff}px`, textAlign: 'right', paddingLeft: '20px' }}>{totalLat.toLocaleString()}</th>
 
                     </tr>
                     </thead>
