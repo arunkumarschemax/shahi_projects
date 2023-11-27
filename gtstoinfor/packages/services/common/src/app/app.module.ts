@@ -81,6 +81,7 @@ import { M3ItemsModule } from './m3-items/m3-items.module';
 import { M3TrimsModule } from './m3-trims/m3-trims.module';
 import { ColumnModule } from './cloumn/column.module';
 import { ReclassificationModule } from './reclassification/reclassification.module';
+import { LevelModule } from './level/level.module';
 
 
 @Module({
@@ -143,6 +144,7 @@ import { ReclassificationModule } from './reclassification/reclassification.modu
     M3StyleModule,
     M3ItemsModule,
     ColumnModule,
+    LevelModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,M3MastersModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,OperationTrackingModule,MaterialIssueModule,IndentModule,RackPositionModule,StocksModule,GrnModule,LocationMappingModule,M3TrimsModule,ReclassificationModule],
   controllers: [AppController],
   providers: [AppService],
