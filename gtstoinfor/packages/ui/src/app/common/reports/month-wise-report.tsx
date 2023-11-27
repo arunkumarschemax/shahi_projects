@@ -109,22 +109,22 @@ export const MonthWiseReport = () => {
     });
   };
 
-  const pagination = {
-    current: page,
-    pageSize: filteredData.length,
-    total: filteredData.length,
-    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
-    onChange: (current, pageSize) => {
-      setPage(current);
-      setPageSize(pageSize);
-    },
+  // const pagination = {
+  //   current: page,
+  //   pageSize: filteredData.length,
+  //   total: filteredData.length,
+  //   showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+  //   onChange: (current, pageSize) => {
+  //     setPage(current);
+  //     setPageSize(pageSize);
+  //   },
 
-    showSizeChanger: true,
-    onShowSizeChange: (current, size) => {
-      setPage(1);
-      setPageSize(size);
-    },
-  };
+  //   showSizeChanger: true,
+  //   onShowSizeChange: (current, size) => {
+  //     setPage(1);
+  //     setPageSize(size);
+  //   },
+  // };
 
   const colWidth = {
     proPlanType: 80,
@@ -1943,7 +1943,7 @@ export const MonthWiseReport = () => {
                   size="small"
                   scroll={{ x: "max-content",y:500 }}
                   summary={getTableSummary}
-                  pagination={pagination}
+                  pagination={false}
                 />
                 <Table
                   columns={columns}
