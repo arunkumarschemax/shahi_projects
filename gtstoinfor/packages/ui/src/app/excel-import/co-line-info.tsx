@@ -65,9 +65,10 @@ const ColineView = () => {
             req.orderNo = form.getFieldValue('orderNo');
         }
         service.getCoLine(req).then(res => {
-            if (res) {
-                // const uniqloData = res.data.filter((record) => record.buyer === 'Uniqlo-U12');
-                setData(res.data)
+            if (res.data.status) {
+                const data1 = res.data.data
+                const uniqloData = data1.filter((record) => record.buyer === 'Uniqlo-U12');
+                setData(data1)
             }
             else {
                 setData([])
@@ -226,13 +227,10 @@ const ColineView = () => {
                                 allowClear
                             >
                                 {
-                                    Array.isArray(data) ? (
-                                        data.map((inc: any) => (
-                                            <Option key={inc.id} value={inc.buyer_po}>{inc.buyer_po}</Option>
-                                        ))
-                                    ) : (
-                                        <p>Invalid data format</p>
-                                    )
+
+                                    data.map((inc: any) => (
+                                        <Option key={inc.id} value={inc.buyer_po}>{inc.buyer_po}</Option>
+                                    ))
                                 }
 
                             </Select>
@@ -247,6 +245,7 @@ const ColineView = () => {
                                 allowClear
                             >
                                 {
+
                                     data.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.item_no}>{inc.item_no}</Option>
                                     })
@@ -263,6 +262,7 @@ const ColineView = () => {
                                 allowClear
                             >
                                 {
+
                                     data.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.order_no}>{inc.order_no}</Option>
                                     })
