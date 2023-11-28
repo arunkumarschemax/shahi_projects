@@ -6562,7 +6562,7 @@ export const extractedVelogicIndia = async (pdf) => {
     const hsnData = [];
     console.log(hsnIndexesArray);
 
-    console.log("DART PDF DATA", JSON.stringify(extractedData, null, 2));
+    console.log("UNITED LINER PDF DATA", JSON.stringify(extractedData, null, 2));
     hsnIndexesArray.forEach((rec, index) => {
         if (hsnIndexesArray[index + 1] - rec == 1) {
             hsnData.push(extractedData[rec].content);
@@ -9813,9 +9813,12 @@ export const extractedwenParker = async (pdf) => {
     const InvoiceLines = [];
     let gstNumberExtracted = false;
 
-    const invoiceDateRegex =/[0-9]{2}-[A-Z0-9]{3}-[0-9]{4}/;
-    const invoiceNumberRegex =/InvoiceNo+=+[A-Z0-9]+/;
-    // const invoiceAmountRegex =/\s+Total in INR\s:/;
+    const invoiceDateRegex =/\d+-+\w+-+\d+/;
+    const invoiceNumberRegex =/((IVB)+[A-Z0-9]+\-+[A-Z0-9]+)|((CRN)+[A-Z0-9]+\-+[A-Z0-9]+)|((TMP)+[A-Z0-9]+)/;
+    const invoiceAmountRegex =/Total+\s+amount+\s+\:+\s+(\d+(,|.)(\d|\.\d)+)/;
+    const igstRegex =  /IGST\s+\d+(,|.)(\d|\.\d)+/;
+     const cgstRegex =  /Sub\s+Total+.+:+\s+(\d+(,|.)(\d|\.\d)+)/;
+     const sgstRegex =  /SGST\s+\d+(,|.)(\d|\.\d)+/; 
     const invoiceCurrency = "INR";
     const currentYear = new Date().getFullYear();
     const nextYear = currentYear + 1;
@@ -9826,6 +9829,9 @@ export const extractedwenParker = async (pdf) => {
         let invoiceDate = "";
         let invoiceNumber = "";
         let invoiceAmount = "";
+        let igst='';
+        let cgst='';
+        let sgst=''; 
         // let isAlreadyClientMatched = false;
         if (extractedData && Array.isArray(extractedData)) {
             for (const line of extractedData) {
@@ -9837,29 +9843,30 @@ export const extractedwenParker = async (pdf) => {
                     // }
                     const gstNumber = gstMatch[0];
 
-                    venName = 'UNITED LINER SHIPPING SERVICES LLP';
+                    venName = 'WEN-PARKER LOGISTICS (INDIA) PVT. LTD';
 
                     const invoiceDateData = extractedData.find((item) => item.content.match(invoiceDateRegex));
                     invoiceDate = invoiceDateData ? invoiceDateData.content.match(invoiceDateRegex): "";
 
-                    const invoiceNumberData = extractedData.find((item) => item.content.match(invoiceNumberRegex));
-                    invoiceNumber = invoiceNumberData ? invoiceNumberData.content.match(invoiceNumberRegex)[0].replace(/InvoiceNo=+/g, "") : "";
+                     const invoiceNumberData = extractedData.find((item) => item.content.match(invoiceNumberRegex));
+                    invoiceNumber = invoiceNumberData ? invoiceNumberData.content: "";
                     
-                    // const invoiceAmountData = extractedData.find((item) => item.content.match(invoiceAmountRegex) );
-                    // invoiceAmount = invoiceAmountData ? invoiceAmountData.content.replace(/Total in INR :/g, ""): "";
+                    const invoiceAmountData = extractedData.find((item) => item.content.match(invoiceAmountRegex) );
+                    invoiceAmount = invoiceAmountData ? invoiceAmountData.content.replace(/Total+\s+amount+\s+\:+\s+/g, "").replace(/,/g,""): "";
 
-                    let igst = "0.00";
-                    let cgst = "0.00";
-                    let sgst = "0.00";
-
-                    for (const hsnLine of structuredHSNLines) {
-                        if (hsnLine.taxPercentage == 18) {
-                            igst = (parseFloat(igst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
-                        } else if (hsnLine.taxPercentage == 9) {
-                            cgst = (parseFloat(cgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
-                            sgst = (parseFloat(sgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
-                        }
+                    const igstData = extractedData.find((item) => item.content.match(igstRegex));
+                    igst = igstData ? igstData.content.replace(/IGST/g,""): '';
+                    // const cgstData = extractedData.find((item) => item.content.match(cgstRegex));
+                    // cgst = cgstData ? cgstData.content.replace(/CGST/g,"") : '';
+                    const cgstData = extractedData.find((item) => item.content.match(cgstRegex));
+                    if (cgstData) {
+                        cgst = cgstData[1]; // CGST value
+                        sgst = cgstData[3]; // SGST value
                     }
+                    else{
+                        cgst = cgstData[2]
+                    }
+                    
                     const currentInvoice = {
                         venName: venName,
                         gstNumber: gstNumber,
@@ -9867,7 +9874,7 @@ export const extractedwenParker = async (pdf) => {
                         invoiceNumber: invoiceNumber,
                         invoiceCurrency: invoiceCurrency,
                         financialYear: financialYear,
-                        // invoiceAmount: invoiceAmount,
+                        invoiceAmount: invoiceAmount,
                         igst: igst,
                         cgst: cgst,
                         sgst: sgst,
@@ -9880,7 +9887,7 @@ export const extractedwenParker = async (pdf) => {
         }
 
 
-        console.log("RAHAT PDF DATA", JSON.stringify(extractedData, null, 2));
+        console.log("WEN-PARKER PDF DATA", JSON.stringify(extractedData, null, 2));
         console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
         console.log("PDF INVOICE Data", JSON.stringify(InvoiceLines, null, 2));
     }
