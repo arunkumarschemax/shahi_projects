@@ -545,44 +545,58 @@ export class SampleRequestService {
   }
   async creatematerialAlloction(req:MaterialAllocationDTO[]):Promise<CommonResponseModel>{
     try{
-      let save
-      let finalData
       // console.log(req)
-      // console.log('@@@@@@@@@@@@@@@@@')
-      if(req.length >0){
-         finalData = req.reduce((result, item) =>{
-          const sampleOrderId=item. sampleOrderId
-          const sampleItemId=item.sampleItemId
-          const buyerId=item.buyerId
-          const m3ItemId=item.m3ItemId
-          if (!result[sampleOrderId]) {
-           result[sampleOrderId] = {
-             sampleOrderId: sampleOrderId,
-             buyerId: buyerId,
-             sampleItemId:sampleItemId,
-             m3ItemId:m3ItemId,
-             itemDetails: [],
-           }
-           result[sampleOrderId].itemDetails.push(
-             {
-               locationId:item.locationId,
-              //  quantity:item.quantity,
-               allocatedQuantity:item.allocateQuantity,
-               stockId: item.stockId,
-             }
-           );
-         }
-           return result
-          },{})
+      const filteredData = req.filter(item => item.checkedStatus === 1);
+      // console.log(filteredData)
+      // console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+
+      const transformedData = filteredData.reduce((acc, item) => {
+        console.log(item,'******************************')
+        const foundIndex = acc.findIndex(
+          (el) =>
+            el.sampleOrderId === item.sampleOrderId &&
+            el.sampleItemId === item.sampleItemId &&
+            el.m3ItemId === item.m3ItemId
+        );
+      
+        if (foundIndex !== -1) {
+          acc[foundIndex].itemData.push({
+            quantity: item.quantity,
+            stockId: item.stockId,
+            LocationId: item.LocationId,
+            checkedStatus: item.checkedStatus,
+            issuedQty: item.issuedQty
+          });
+        } else {
+          acc.push({
+            itemType: item.itemType,
+            sampleOrderId: item.sampleOrderId,
+            sampleItemId: item.sampleItemId,
+            m3ItemId: item.m3ItemId,
+            itemData: [
+              {
+                quantity: item.quantity,
+                stockId: item.stockId,
+                LocationId: item.LocationId,
+                checkedStatus: item.checkedStatus,
+                issuedQty: item.issuedQty
+              }
+            ]
+          });
+        }
+      
+        return acc;
+      }, []);
+      for(const dt of transformedData ){
+        // console.log(dt.itemData);
+        // console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+         const entity = new MaterialAllocationEntity()
+        
       }
-   console.log(Object.values(finalData))
-   console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
-
-   console.log(Object.values(finalData[0].sampleOrderId))
-   console.log('*****************')
-
-      const entity = new MaterialAllocationEntity()
-      entity.sampleOrderId=finalData.sa
+   
+      let save
+    
+      // entity.sampleOrderId=finalData.sa
       // for(const data of req){
       //   console.log(req)
       //   const entity = new MaterialAllocationEntity()
