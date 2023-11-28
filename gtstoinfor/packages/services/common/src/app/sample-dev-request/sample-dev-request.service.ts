@@ -564,7 +564,7 @@ export class SampleRequestService {
            result[sampleOrderId].itemDetails.push(
              {
                locationId:item.locationId,
-               quantity:item.quantity,
+              //  quantity:item.quantity,
                allocatedQuantity:item.allocateQuantity,
                stockId: item.stockId,
              }
