@@ -90,8 +90,9 @@ export class StyleService{
             where:{isActive:true},
             order:{style:'ASC'}
         })
+        console.log(style);
         if(style.length >0){
-            return new AllStyleResponseModel(true,1,'Active Styles Retrived Sucessfully',[])
+            return new AllStyleResponseModel(true,1,'Active Styles Retrived Sucessfully',style)
         }else{
             return new AllStyleResponseModel(false,0,'No  Employees Found ',[])
 
