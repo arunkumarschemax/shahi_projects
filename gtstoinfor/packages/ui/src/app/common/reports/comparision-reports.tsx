@@ -1295,7 +1295,7 @@ export const MonthWiseComparisionReport = () => {
       if (Array.isArray(data2) && data2.length > 0) {
         data2.forEach((row) => {
           // Log each row to inspect its structure and values
-          console.log('Row:', row.totalWhpre);
+          // console.log('Row:', row.totalWhpre);
       
           // Accumulate totals for the current row
           totalJanExfPre += Number(row.janExfPre) || 0;

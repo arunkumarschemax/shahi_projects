@@ -65,7 +65,7 @@ export const MonthWiseReport = () => {
         setYear(res.data);
         if (res.data.length > 0) {
           setTab(res.data[0])
-          console.log(res.data[0]);
+          // console.log(res.data[0]);
           
         }
       }
@@ -1669,7 +1669,7 @@ export const MonthWiseReport = () => {
     if (Array.isArray(data2) && data2.length > 0) {
       data2.forEach((row) => {
         // Log each row to inspect its structure and values
-        console.log('Row:', row.janPcsExf);
+        // console.log('Row:', row.janPcsExf);
     
         // Accumulate totals for the current row
         totalJanExfPre += Number(row.janPcsExf) || 0;
@@ -1726,8 +1726,7 @@ export const MonthWiseReport = () => {
         totalLatWh += Number(row.WhCoeffTotal) || 0;
         // ... Repeat for other months and types
       });
-    } else {
-    }      
+    }     
   
     const totalsPcsRow = {
       planning_sum: "Total",
