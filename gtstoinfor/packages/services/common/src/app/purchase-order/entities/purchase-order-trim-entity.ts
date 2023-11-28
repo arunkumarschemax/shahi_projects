@@ -25,12 +25,13 @@ export class PurchaseOrderTrimEntity{
     })
     description: string
 
-    @Column('decimal', {
-        name: 'consumption',
-        precision: 4,
-        scale: 2,
-    })
-    consumption: number
+    // @Column('decimal', {
+    //     name: 'consumption',
+    //     precision: 4,
+    //     scale: 2,
+    // })
+    // consumption: number
+
     @Column('text', {
         name: 'remarks',
         nullable: true
