@@ -172,7 +172,7 @@ const M3ItemsView = () => {
         {
             title: "Shrinkage",
             dataIndex: "shrinkage",
-            ...getColumnSearchProps('finish')
+            ...getColumnSearchProps('shrinkage')
         },
         {
             title: "Description",

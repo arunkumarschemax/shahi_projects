@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip, message, Form } from 'antd';
+import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { ColourService, M3ItemsService, SampleDevelopmentService, UomService } from '@project-management-system/shared-services';
 import { UomCategoryEnum } from '@project-management-system/shared-models';
+import { updateLocale } from 'moment';
 
-const FabricsForm = ({props, buyerId}) => {
+export interface FabricsFormProps {
+  data: any;
+  buyerId: number;
+  sizeDetails: any[]
+}
+
+const FabricsForm = (props:FabricsFormProps) => {
   const [data, setData] = useState([]);
   const [uom, setUom] = useState([]);
   const [count, setCount] = useState(0);
@@ -21,18 +28,33 @@ const FabricsForm = ({props, buyerId}) => {
   const [form] = Form.useForm();
 
   const handleAddRow = () => {
-    const newRow = {
-      key: count
-    };
-    setData([...data, newRow]);
-    setCount(count + 1);
+
+    if(props.sizeDetails.length > 0){
+      props.sizeDetails?.forEach(element => {
+        let qtyy = 0;
+        element.sizeInfo?.forEach(qty => {
+          console.log(qty.quantity);
+          qtyy = Number(qtyy)+Number(qty.quantity);
+        })
+        console.log(qtyy)
+        const newRow = {
+          key: count,
+          colourId:element.colour,
+          totalCount: qtyy
+        };
+        console.log(newRow)
+        setData([...data, newRow]);
+        setCount(count + 1);
+      });
+    }
+    
   };
 
   useEffect(() =>{
-    if(buyerId != null){
-      fabricCode(buyerId)
+    if(props.buyerId != null){
+      fabricCode(props.buyerId)
     }
-  },[buyerId])
+  },[props.buyerId])
   useEffect(() =>{
       getUom()
   },[])
@@ -67,7 +89,24 @@ const FabricsForm = ({props, buyerId}) => {
         }
         return record;
       });
-    } else {
+    } 
+
+    else if(field === 'consumption'){
+      updatedData = data.map((record) => {
+        if (record.key === key) {
+          console.log(e);
+      console.log(record.totalCount);
+          let consumptionCal = Number(record.totalCount) * Number(e);
+          let withPer = (Number(consumptionCal) * Number(2))/ 100;
+          console.log(consumptionCal);
+          console.log(withPer);
+
+          return { ...record, [field]: e, ["totalRequirement"]:Number(consumptionCal) + Number(withPer) };
+        }
+        return record;
+      });
+    }
+    else {
       updatedData = data.map((record) => {
         if (record.key === key) {
           return { ...record, [field]: e };
@@ -76,12 +115,15 @@ const FabricsForm = ({props, buyerId}) => {
       });
     }
     setData(updatedData);
-    props(updatedData);
+    props.data(updatedData);
   };
 
   useEffect(() =>{
     getColors()
   },[])
+  useEffect(() =>{
+    console.log(props.sizeDetails[0])
+  },[props.sizeDetails])
 
   const fabricCode = (buyerId) =>{
     console.log(buyerId)
@@ -107,7 +149,7 @@ const FabricsForm = ({props, buyerId}) => {
   const handleDelete = (key) => {
     const updatedData = data.filter((record) => record.key !== key);
     setData(updatedData);
-    props(updatedData)
+    props.data(updatedData)
   };
 
   const getSelectedProductGroupId = (selectedFabricId) => {
@@ -192,9 +234,9 @@ const FabricsForm = ({props, buyerId}) => {
       dataIndex: 'consumption',
       width:"10%",
       render: (_, record) => (
-        <Input
+        <InputNumber
         value={record.consumption}
-        onChange={(e) => handleInputChange(e.target.value, record.key, 'consumption',0)}
+        onChange={(e) => handleInputChange(e, record.key, 'consumption',0)}
         />
       ),
     },
@@ -249,9 +291,9 @@ const FabricsForm = ({props, buyerId}) => {
       dataIndex: 'wastage',
       width:"10%",
       render: (_, record) => (
-        <Input
+        <InputNumber
         defaultValue={2}
-        onChange={(e) => handleInputChange(e.target.value, record.key, 'wastage',0)}
+        onChange={(e) => handleInputChange(e, record.key, 'wastage',0)}
         />
       ),
     },
