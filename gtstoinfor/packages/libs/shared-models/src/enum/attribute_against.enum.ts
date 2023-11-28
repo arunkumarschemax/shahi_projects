@@ -20,5 +20,5 @@ export enum LocationMappedEnum{
 
 export enum GRNTypeEnum{
   INDENT = 'INDENT',
-  SAMPLE_ORDER = 'SAMPLE_ORDER'
+  SAMPLE_ORDER = 'SAMPLE ORDER'
 }

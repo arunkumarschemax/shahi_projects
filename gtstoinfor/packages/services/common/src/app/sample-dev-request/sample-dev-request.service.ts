@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, statusReq } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -764,7 +764,40 @@ export class SampleRequestService {
     }
     
     
-    
+    async getfabricDetailsOfSample(req:sampleReqIdReq):Promise<CommonResponseModel>{
+      try{
+        const manager = this.dataSource;
+        const query ='  SELECT srf.fabric_code as m3FabricCode, srf.colour_id as colourId,c.colour as colorName,request_no AS sampleReqNo, item_code AS itemCode,fabric_info_id AS samplereFabId,consumption AS sampleQuantity,srf.sample_request_id AS sampleReqId        FROM sample_request_fabric_info srf LEFT JOIN sample_request sr ON sr.sample_request_id=srf.sample_request_id LEFT JOIN m3_items mi ON mi.m3_items_Id =srf.fabric_code left join colour c on c.colour_id=srf.colour_id where srf.sample_request_id in ('+req.sampleReqId+')'
+        const rmData = await manager.query(query);
+        if(rmData){
+          return new CommonResponseModel(true,1,'data',rmData)
+        }else{
+          return new CommonResponseModel(false,0,'no data',[])
+
+        }
+
+      }catch(err){
+        throw err
+      }
+    }
+
+    async getTrimDetailsOfSample(req:sampleReqIdReq):Promise<CommonResponseModel>{
+      try{
+        const manager = this.dataSource;
+        const query ='SELECT mt.trim_code AS m3trimCode,t.trim_type AS trimTupe,request_no AS sampleReqNo,trim_info_id AS sampleTrimInfoId,uom_id AS uomId,consumption AS poQuantity,t.sample_request_id AS sampleReqId FROM sample_request_trim_info t LEFT JOIN sample_request sr ON sr.sample_request_id=t.sample_request_id LEFT JOIN m3_trims mt ON mt.m3_trim_Id=t.trim_code where t.sample_request_id in ('+req.sampleReqId+')'
+        const rmData = await manager.query(query);
+        if(rmData){
+          return new CommonResponseModel(true,1,'data',rmData)
+        }else{
+          return new CommonResponseModel(false,0,'no data',[])
+
+        }
+
+      }catch(err){
+        throw err
+      }
+    }
+
 
 
 }

@@ -21,8 +21,8 @@ export class StyleService{
             const style= new Style()
             
             style.style=req.style
-            style.locationId=req.locationId
-            style.pch=req.pch
+            // style.locationId=req.locationId
+            // style.pch=req.pch
             style.description=req.description
             style.buyerId=req.buyerId
             if(isUpdate){
@@ -33,7 +33,7 @@ export class StyleService{
             }
             const save = await this.styleRepo.save(style)
             if(save){
-                return new AllStyleResponseModel(true,1,'Style created Sucessfully..',[style])
+                return new AllStyleResponseModel(true,1,'Style created Sucessfully..',[])
             }
             
         }
@@ -91,7 +91,7 @@ export class StyleService{
             order:{style:'ASC'}
         })
         if(style.length >0){
-            return new AllStyleResponseModel(true,1,'Active Styles Retrived Sucessfully',style)
+            return new AllStyleResponseModel(true,1,'Active Styles Retrived Sucessfully',[])
         }else{
             return new AllStyleResponseModel(false,0,'No  Employees Found ',[])
 
