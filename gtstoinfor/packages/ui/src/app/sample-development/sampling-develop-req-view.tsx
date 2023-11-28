@@ -393,7 +393,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
     ]
 
     const allocateQuantity = () =>{
-      console.log(avilableQuantity)
+      // console.log(avilableQuantity)
       createAllocation(avilableQuantity)
 
     }
