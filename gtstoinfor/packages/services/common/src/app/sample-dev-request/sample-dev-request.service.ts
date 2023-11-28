@@ -784,7 +784,7 @@ export class SampleRequestService {
           { status: MaterialStatusEnum.MATERIAL_ISSUED }
         );
         if (update.affected && update.affected > 0) {
-          return new CommonResponseModel(true, 1, 'Approved Sucessfully');
+          return new CommonResponseModel(true, 1, 'Material Issued Sucessfully');
         } else {
           return new CommonResponseModel(false, 1, 'some went wrong');
         }
