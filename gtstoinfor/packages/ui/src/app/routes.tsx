@@ -172,7 +172,6 @@ import GRNView from "./grn/grn-view"
 import GRNDetailView from "./grn/grn-detail-view"
 import { Reclassification } from "./sourcing-requisition/reclassification"
 import SampleDevNewView from "./sample-development/sampling-develop-req-view"
-import { WarehouseDashboard } from "./common/dashboards/warehouse-dashboard"
 import LevelForm from "./common/level/level.form"
 import LevelGrid from "./common/level/level.view"
 import { MaterialAllocationGrid } from "./sample-development/material-allocation"
@@ -182,6 +181,7 @@ import ColumnForm from "./masters/column/column-form"
 import ColumnView from "./masters/column/column-view"
 import { MaterialAllocationView } from "./sample-development/material-allocation-view"
 import { MaterialAllocationDetailView } from "./sample-development/material-allocation-detail.view"
+import WarehouseDashboard from "./common/dashboards/warehouse-dashboard"
 
 
 
