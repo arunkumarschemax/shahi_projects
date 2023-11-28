@@ -35,6 +35,7 @@ import { MaterialAllocationEntity } from './entities/material-allocation.entity'
 import { MaterialAllocationDTO } from './dto/material-allocation-dto';
 import { MaterialAllocationItemsRepo } from './repo/material-allocation-items-repo';
 import { MaterialallitemsReq } from './dto/sample-req-size-req';
+import { MaterialAllocationItemsEntity } from './entities/material-allocation-items';
 
 
 
@@ -545,13 +546,9 @@ export class SampleRequestService {
   }
   async creatematerialAlloction(req:MaterialAllocationDTO[]):Promise<CommonResponseModel>{
     try{
-      // console.log(req)
+      let save
       const filteredData = req.filter(item => item.checkedStatus === 1);
-      // console.log(filteredData)
-      // console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-
       const transformedData = filteredData.reduce((acc, item) => {
-        console.log(item,'******************************')
         const foundIndex = acc.findIndex(
           (el) =>
             el.sampleOrderId === item.sampleOrderId &&
@@ -587,27 +584,31 @@ export class SampleRequestService {
       
         return acc;
       }, []);
-      for(const dt of transformedData ){
-        // console.log(dt.itemData);
-        // console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+
+      let materialitemdata =[];
+      for(const mainData of transformedData ){
          const entity = new MaterialAllocationEntity()
-        
+         entity.buyerId=mainData.buyerId
+         entity.itemType=mainData.itemType
+         entity.sampleOrderId=mainData.sampleOrderId
+         entity.sampleItemId=mainData.sampleItemId
+         entity.m3ItemId=mainData.m3ItemId
+         entity.totalIssueQty=100
+         entity.status=MaterialStatusEnum.MATERIAL_ALLOCATED
+         for(const itemData of mainData.itemData){
+          // console.log('&&&&&&&&&&&&&&&&&&')
+          const itemEntity = new MaterialAllocationItemsEntity()
+              itemEntity.locationId=itemData.LocationId
+              itemEntity.stockId=itemData.stockId
+              itemEntity.quantity=itemData.quantity
+              itemEntity.allocateQuantity=itemData.issuedQty
+              materialitemdata.push(itemEntity)
+         }
+         entity.materialAllocationinfo=materialitemdata
+        save = await this.matAllRepo.save(entity)
       }
-   
-      let save
-    
-      // entity.sampleOrderId=finalData.sa
-      // for(const data of req){
-      //   console.log(req)
-      //   const entity = new MaterialAllocationEntity()
-      //   entity.itemType=data.itemType
-      //   entity.sampleOrderId=data.sampleOrderId
-      //   entity.sampleItemId=data.sampleItemId
-      //   entity.m3ItemId=data.m3ItemId
-      //   entity.m3ItemId=data.m3ItemId
-      //   entity.status = MaterialStatusEnum.APPROVAL_PENDING
-      //    save = await this.matAllRepo.save(entity)
-      // }
+      console.log(save)
+      console.log('***********************************8')
       if(save){
         return new CommonResponseModel(true,1,'Material Allocation Request Raise')
       }else{
@@ -780,9 +781,8 @@ export class SampleRequestService {
       try {
         const update = await this.matAllRepo.update(
           { materialAllocationId: req.materialAllocationId },
-          { status: MaterialStatusEnum.APPROVED }
+          { status: MaterialStatusEnum.MATERIAL_ISSUED }
         );
-    
         if (update.affected && update.affected > 0) {
           return new CommonResponseModel(true, 1, 'Approved Sucessfully');
         } else {

@@ -95,7 +95,7 @@ export const MaterialAllocationGrid = () => {
     // console.log(rowData.material_allocation_id,"rrrrrrrr")
     const req = new statusReq(
       rowData.material_allocation_id,
-      MaterialStatusEnum.APPROVED
+      MaterialStatusEnum.MATERIAL_ISSUED
     );
     service.updateStatus(req).then((res) => {
       if (res.status) {
