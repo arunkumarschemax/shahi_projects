@@ -35,9 +35,8 @@ export class IndentTrimsModel{
     indentId?:number,
     materialType?:string,
     buyer?: string,
-    buyerId?: number
-  
-  
+    buyerId?: number  
+    
   ){
     this.itrimsId = itrimsId;
     this.trimType = trimType;

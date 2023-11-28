@@ -32,6 +32,11 @@ export class SampleReqFabricinfoEntity{
     })
       consumption : number;
 
+      @Column('decimal',{
+        name:'total_requirement',
+    })
+    totalRequirement : number;
+
       @Column('text',{
         name:'remarks',
         nullable:true
