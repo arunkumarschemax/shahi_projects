@@ -5,8 +5,10 @@ export class allocateMaterialItems{
     LocationId:number
     allocatioQuantity:number
     materialAllocationId:number
+    locationName?:string
     createdUser?: string | null;
     updatedUser?: string | null;
+    
     constructor(
         materialAllocationItemsId: number,
          quantity: number,
@@ -14,6 +16,7 @@ export class allocateMaterialItems{
         LocationId:number,
         allocatioQuantity:number,
         materialAllocationId:number,
+        locationName?:string,
         createdUser?: string ,
         updatedUser?: string ,
     ){
@@ -23,6 +26,7 @@ export class allocateMaterialItems{
         this.LocationId=LocationId
         this.allocatioQuantity=allocatioQuantity
         this.materialAllocationId = materialAllocationId
+        this.locationName = locationName
         this.createdUser=createdUser
         this.updatedUser=updatedUser
 

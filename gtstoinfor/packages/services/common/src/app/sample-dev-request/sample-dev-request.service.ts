@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, CommonResponseModel, FabricInfoReq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -33,6 +33,8 @@ import { IndentService } from '@project-management-system/shared-services';
 import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 import { MaterialAllocationEntity } from './entities/material-allocation.entity';
 import { MaterialAllocationDTO } from './dto/material-allocation-dto';
+import { MaterialAllocationItemsRepo } from './repo/material-allocation-items-repo';
+import { MaterialallitemsReq } from './dto/sample-req-size-req';
 
 
 
@@ -52,6 +54,8 @@ export class SampleRequestService {
     private logRepo: SampleInventoryLoqRepo,
     private indentService: IndentService,
     private matAllRepo:MaterialAllocationRepo,
+    private matAllitemRepo:MaterialAllocationItemsRepo,
+
 
     
   ) { }
@@ -560,7 +564,7 @@ export class SampleRequestService {
            result[sampleOrderId].itemDetails.push(
              {
                locationId:item.locationId,
-               quantity:item.quantity,
+              //  quantity:item.quantity,
                allocatedQuantity:item.allocateQuantity,
                stockId: item.stockId,
              }
@@ -687,7 +691,7 @@ export class SampleRequestService {
     async getAvailbelQuantityAginstBuyerAnditem(req:buyerandM3ItemIdReq):Promise<CommonResponseModel>{
       try{
         const manager = this.dataSource;
-        const query ='SELECT st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId,st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, false AS isChecked FROM stocks st   LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id  WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' and st.item_type="'+req.itemType+'"'
+        const query ='SELECT st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId,st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, false AS checkedStatus FROM stocks st   LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id  WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' and st.item_type="'+req.itemType+'"'
         const rmData = await manager.query(query);
         if(rmData){
           return new CommonResponseModel(true,1,'data',rmData)
@@ -703,6 +707,31 @@ export class SampleRequestService {
 
 
 
+    // async getAllMaterialAllocation(req?:buyerReq) : Promise<CommonResponseModel> {
+    //   try{
+    //     const data = await this.matAllRepo.getallMaterialAllocation(req)
+    //     const map = new Map<number,AllocateMaterial >()
+    //     if(data.length == 0){
+    //       return new AllocateMaterialResponseModel(false,0,'No data found',[])
+    //     } else {
+    //       for(const rec of data){
+    //         if(!map.has(rec.material_allocation_id)){
+    //           map.set(rec.material_allocation_id,new AllocateMaterial(rec.material_allocation_id,rec.item_type,rec.sample_order_id,rec.sample_item_id,rec.m3_item_id,rec.buyer_id,rec.status,[],rec.buyer_name,"admin") )
+    //         }
+
+    //         map.get(rec.material_allocation_id).materialAllocateIteminfo.push(new allocateMaterialItems(rec.material_allocation_items_id,rec.quantity,rec.stock_id,rec.location_id,rec.allocate_quantity,rec.material_allocation_id,rec.location_name,"admin") )
+    //     }
+    //     const allocateMaterial: AllocateMaterial[] = [];
+    //     map.forEach((e) => allocateMaterial.push(e))
+    //           return new AllocateMaterialResponseModel(true,1,'Data retrieved',allocateMaterial)
+    //   }
+
+      
+    //   } catch(err){
+    //     throw err
+    //   }
+    // }
+
     async getAllMaterialAllocation(req?:buyerReq) : Promise<CommonResponseModel> {
       try{
         const data = await this.matAllRepo.getallMaterialAllocation(req)
@@ -716,6 +745,22 @@ export class SampleRequestService {
         throw err
       }
     }
+
+    async getallMaterialAllocationItemsById(req:MaterialallitemsReq) : Promise<CommonResponseModel> {
+      try{
+        const data = await this.matAllitemRepo.getallMaterialAllocationItemsById(req)
+       
+        if(data){
+          return new CommonResponseModel(true,0,'Data retrived Successfully',data)
+        } else {
+          return new CommonResponseModel(false,1,'No Data Found',[])
+        }
+      } catch(err){
+        throw err
+      }
+    }
+
+
 
    
 
