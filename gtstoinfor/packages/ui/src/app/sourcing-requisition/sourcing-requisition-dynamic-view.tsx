@@ -399,7 +399,7 @@ export const SourcingRequisitionDynamicView = () => {
   };
 
   const HeaderRow = (props: any) => {
-    const { requestNo, style, description, expectedDate, indentDate, status } =
+    const { requestNo, style, description, expectedDate, indentDate, status, buyerName } =
       props;
     const formattedIndentDate = moment(indentDate).format("YYYY-MM-DD");
     const formattedExpectedDate = moment(expectedDate).format("YYYY-MM-DD");
@@ -407,6 +407,8 @@ export const SourcingRequisitionDynamicView = () => {
     return (
       <div style={{ display: "flex" }}>
         <span>Request Number : {<b>{requestNo}</b>}</span>
+        <span style={{ width: "10px" }}></span>
+        <span>Buyer : {<b>{buyerName}</b>}</span>
         <span style={{ width: "10px" }}></span>
         <span>Style : {<b>{style}</b>}</span>
         <span style={{ width: "10px" }}></span>
@@ -601,6 +603,7 @@ export const SourcingRequisitionDynamicView = () => {
             header={
               <HeaderRow
                 requestNo={item.requestNo}
+                buyer={item.buyerName}
                 style={item.style}
                 description={item.description}
                 expectedDate={item.expectedDate}

@@ -27,6 +27,8 @@ export class IndentAdapter
         indententity.updatedAt=indentDto.updatedAt;
         indententity.versionFlag=indentDto.versionFlag;
         indententity.status=indentDto.status;
+        indententity.buyerId=indentDto.buyerId;
+
         // let sampleId = new SampleRequest();
         // sampleId.SampleRequestId=indentDto.sampleRequestId;
         // indententity.sampleReq = sampleId;

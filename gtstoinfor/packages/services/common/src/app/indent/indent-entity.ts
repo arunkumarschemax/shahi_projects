@@ -21,6 +21,12 @@ export class Indent {
     })
     style: number;
 
+    @Column('int',{
+      name:'buyer_id',
+      nullable: false
+      })
+      buyerId: number;
+
   @Column("varchar", {
     nullable: false,
     length: 255,

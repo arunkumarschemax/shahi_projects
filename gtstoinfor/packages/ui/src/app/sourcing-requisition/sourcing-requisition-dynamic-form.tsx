@@ -708,7 +708,7 @@ const onTrimChange = (val, option) => {
 
     const onSubmit = () =>{
         sourcingForm.validateFields().then(() => {
-            const req = new SourcingRequisitionReq(sourcingForm.getFieldValue('style'),sourcingForm.getFieldValue('expectedDate'),sourcingForm.getFieldValue('requestNo'),sourcingForm.getFieldValue('indentDate'),fabricTableData,trimsTableData,0)
+            const req = new SourcingRequisitionReq(sourcingForm.getFieldValue('style'),sourcingForm.getFieldValue('expectedDate'),sourcingForm.getFieldValue('requestNo'),sourcingForm.getFieldValue('indentDate'),fabricTableData,trimsTableData,sourcingForm.getFieldValue('buyer'))
             console.log(req)
             indentService.createItems(req).then(res => {
                 if(res.status){
