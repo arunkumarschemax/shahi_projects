@@ -105,6 +105,12 @@ const SampleRequestReport = () => {
 
   const Columns: any = [
     {
+      title: "Request No",
+      dataIndex: "sampleReqNo",
+      sorter: (a, b) => a.sampleReqNo.localeCompare(b.sampleReqNo),
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
       title: "Buyer",
       dataIndex: "buyerName",
       sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
@@ -122,12 +128,7 @@ const SampleRequestReport = () => {
       sorter: (a, b) => a.locationName.localeCompare(b.locationName),
       sortDirections: ['descend', 'ascend'],
     },
-    {
-      title: "Request No",
-      dataIndex: "sampleReqNo",
-      sorter: (a, b) => a.sampleReqNo.localeCompare(b.sampleReqNo),
-      sortDirections: ['descend', 'ascend'],
-    },
+    
     {
       title: "Style",
       dataIndex: "stylename",
@@ -216,7 +217,7 @@ const SampleRequestReport = () => {
                   console.log(rowData,"rowdata")
                   return(
                     <Checkbox 
-                    onChange={() => onCheck(rowData.indentId,rowData.fabricType)}
+                    onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.fabricType, value)}
                    
                   />
                   )
@@ -234,23 +235,38 @@ const SampleRequestReport = () => {
     navigate("/purchase-order", { state: { data: selectedItems, type:'Sampling'  } });
   }
   const dataa=[];
-   const onCheck = (indentId,fabricType) => {
-    console.log(fabricType)
+  const onCheck = (e, sampleRequestid, fabricType, value) => {
+    const checkboxValue = e.target.checked;
+    console.log(sampleRequestid)
+    // console.log(value)
+    // console.log(checkboxValue)
+
     setType(fabricType)
-    const updatedIndentIds = selectedIndentIds.includes(indentId)
-      ? selectedIndentIds.filter(id => id !== indentId)
-      : [...selectedIndentIds, indentId];
+    const updatedIndentIds = selectedIndentIds.includes(sampleRequestid)
+      ? selectedIndentIds.filter(id => id !== sampleRequestid)
+      : [...selectedIndentIds, sampleRequestid];
+      console.log(updatedIndentIds)
     setSelectedIndentIds(updatedIndentIds);
+    console.log(selectedIndentIds)
     setbtnEnable(true)
-    const resultArray = [{materialType:fabricType}, { indentIds: updatedIndentIds }];
+
+    // if(checkboxValue === true){
+    //   setbtnEnable(true)
+    // } else {
+    //   setbtnEnable(false)
+    // }
+    // console.log(selectedIndentIds)
+    
+    const resultArray = [{materialType:fabricType}, { sampleReqIds: updatedIndentIds }];
     console.log(resultArray)
     setSelectedItems(resultArray)
+    console.log(selectedItems)
+
   };
   console.log(selectedIndentIds)
-  console.log(selectedItems)
 
   
-  console.log(type,"type")
+  // console.log(type,"type")
   return (
     <div>
       <Card

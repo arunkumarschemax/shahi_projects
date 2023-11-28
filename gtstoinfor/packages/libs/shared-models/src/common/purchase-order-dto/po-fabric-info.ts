@@ -1,70 +1,30 @@
     export class PurchaseOrderFbricDto{
+   indentFabricId:number
+  sampleReqFabricId:number
     poFabricId:number
     colourId:number
-    productGroupId:number
     remarks : string
-    fabricTypeId:number
     m3FabricCode:string
-    shahiFabricCode:string
-    content:string
-    weaveId:number
-    weight:number
-    width:number
-    construction:number
-    yarnCount:number
-    finish:string
-    shrinkage:string
-    pch:number
-    moq:string
     createdAt: string
     createdUser: string | null;
-    updatedAt: string;
-    updatedUser: string | null;
-    versionFlag: number;
-    isActive: boolean;
-    yarnUom:number
-    poAgainstId:number
+    poAgainstId:String
     poQuantity:number
-   quantityUomId:number
+    quantityUomId:number
     constructor(
-    colourId:number,
+      indentFabricId:number,
+      sampleReqFabricId:number,
+       colourId:number,
        remarks : string,
-       fabricTypeId:number,
-       m3FabricCode:string,
-       shahiFabricCode:string,
-       content:string,
-       weaveId:number,
-       weight:number,
-       width:number,
-       construction:number,
-       yarnCount:number,
-       finish:string,
-       shrinkage:string,
-       pch:number,
-       moq:string,
-       yarnUom:number,
-       poAgainstId:number,
+        m3FabricCode:string,
        poQuantity:number,
        quantityUomId:number
 
      ){
-        this.colourId=colourId
+        this.indentFabricId=indentFabricId
+        this.sampleReqFabricId=sampleReqFabricId
         this.remarks=remarks
-        this.fabricTypeId=fabricTypeId
         this.m3FabricCode=m3FabricCode
-        this.shahiFabricCode=shahiFabricCode
-        this.content=content
-        this.weaveId=weaveId
-        this.weight=weight
-        this.width=width
-        this.construction=construction
-        this.yarnCount=yarnCount
-        this.finish=finish
-        this.shrinkage=shrinkage
-        this.pch=pch
-        this.moq=moq
-        this.yarnUom=yarnUom
-        this.poAgainstId=poAgainstId
+         this.colourId=colourId
         this.poQuantity=poQuantity
         this.quantityUomId=quantityUomId
      }
