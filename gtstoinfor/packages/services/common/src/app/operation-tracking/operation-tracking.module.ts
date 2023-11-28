@@ -12,14 +12,16 @@ import { OperationTrackingRepository } from './repo/operation-tracking-repositor
 import { StyleRepository } from '../style/dto/style-repo';
 import { MaterialFabricRepository } from '../material-issue/repo/material-fabric-repository';
 import { MaterialFabricEntity } from '../material-issue/entity/material-fabric-entity';
+import { SampleRequestRepository } from '../sample-dev-request/repo/sample-dev-req-repo';
+import { SampleRequest } from '../sample-dev-request/entities/sample-dev-request.entity';
 @Module({
   imports: [
     
-    TypeOrmModule.forFeature([OperationTracking,OperationInventory,OperationSequence,Style,MaterialFabricEntity]),
+    TypeOrmModule.forFeature([OperationTracking,OperationInventory,OperationSequence,Style,MaterialFabricEntity,SampleRequest]),
     // forwardRef(() => ClusterModule),
   ],
   controllers: [OperationIssuingController],
-  providers: [OperationTrackingService,ApplicationExceptionHandler,OperationInventoryRepository,OperationTrackingRepository,StyleRepository,MaterialFabricRepository],
+  providers: [OperationTrackingService,ApplicationExceptionHandler,OperationInventoryRepository,OperationTrackingRepository,StyleRepository,MaterialFabricRepository,SampleRequestRepository],
   exports: [OperationTrackingService],
 })
 export class OperationTrackingModule {}

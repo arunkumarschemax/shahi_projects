@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, CommonResponseModel, FabricInfoReq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, buyerReq, buyerandM3ItemIdReq, statusReq } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, CommonResponseModel, FabricInfoReq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleIdRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, buyerReq, buyerandM3ItemIdReq, statusReq } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -735,6 +735,25 @@ export class SampleRequestService {
         throw err;
       }
     }
+    async getSampleOrderDetails(req:SampleIdRequest):Promise<CommonResponseModel>{
+      const sizeDta = `SELECT  GROUP_CONCAT(DISTINCT  CONCAT('sum(IF(s.size_id = ''',size_id,''', s.quantity, 0)) AS ',sizes)) AS size_name FROM size s WHERE sizes != '' 
+      AND size_id IN(SELECT DISTINCT size_id FROM sample_request_size_info WHERE sample_request_id=1) ORDER BY  sizes`;
+      const res = await this.dataSource.query(sizeDta)
+      const sizesStr = res[0].size_name
+      console.log(sizesStr,'kkkkk')
+
+      console.log(req,'rehhhh')
+      const sampleDataQry = `SELECT cl.colour,${sizesStr} FROM sample_request_size_info s 
+      left join colour cl on cl.colour_id = s.colour_id
+      WHERE s.sample_request_id=1 GROUP BY s.colour_id`
+      const finalres = await this.dataSource.query(sampleDataQry)
+      if(finalres.length > 0){
+        return new CommonResponseModel(true,1,'data retrived',finalres)
+      }else{
+        return new CommonResponseModel(false,0,'No data')
+      }
+    }
+    
     
     
     
