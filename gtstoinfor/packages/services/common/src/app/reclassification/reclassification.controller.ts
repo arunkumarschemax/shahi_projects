@@ -16,6 +16,7 @@ export class ReclassificationController {
   @Post('createReclassification')
   @ApiBody({type:ReclassificationDTO})
   async createReclassification(@Body() dto: ReclassificationDTO): Promise<CommonResponseModel> {
+    console.log(dto,"con")
     try {
       return await this.Service.createReclassification(dto);
     } catch (error) {

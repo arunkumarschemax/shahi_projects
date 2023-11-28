@@ -115,7 +115,7 @@ export const StockView = () => {
       // console.log(res, "???????????????????????????????????");
       if (res) {
         setData(res);
-        AlertMessages.getSuccessMessage("Stock retrived successfully. ")
+        AlertMessages.getSuccessMessage("Stock retrived successfully")
       } else {
         setData([]);
         AlertMessages.getErrorMessage("Something went wrong. ")
