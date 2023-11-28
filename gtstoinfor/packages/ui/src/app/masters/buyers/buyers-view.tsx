@@ -181,6 +181,14 @@ export const  BuyersView = () => {
         render: (text, object, index) => (page-1) * 10 +(index+1)
       },
       {
+        dataIndex:"shortCode",
+        title:"Short Code",
+        // responsive: ['lg'],
+        sorter: (a, b) => a.shortCode.localeCompare(b.shortCode),
+        sortDirections: ['descend', 'ascend'],
+        ...getColumnSearchProps('shortCode')
+      },
+      {
         dataIndex:"buyerCode",
         title:"Buyer Code",
         // responsive: ['lg'],

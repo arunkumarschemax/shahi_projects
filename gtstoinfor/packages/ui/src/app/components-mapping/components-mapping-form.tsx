@@ -38,7 +38,7 @@ export const ComponentsMappingForm = () => {
     },[])
 
     const getStyles = () => {
-        styleService.getAllStyle().then(res => {
+        styleService.getAllStyle({buyerId:undefined}).then(res => {
             if(res.status){
                 setStyleInfo(res.data)
             }

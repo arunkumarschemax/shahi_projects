@@ -219,4 +219,62 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
+
+  @Post('/getAvailbelQuantityAginstBuyerAnditem')
+  async getAvailbelQuantityAginstBuyerAnditem(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getAvailbelQuantityAginstBuyerAnditem(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+
+  @Post('/getAllMaterialAllocation')
+  async getAllMaterialAllocation(@Body() req:any): Promise<AllSampleDevReqResponseModel> {
+    try {
+      return await this.sampleService.getAllMaterialAllocation(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+    }
+  }
+
+
+  @Post('/creatematerialAlloction')
+  async creatematerialAlloction(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.creatematerialAlloction(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+
+  @Post('/updateStatus')
+  async updateStatus(@Body() req: any): Promise<CommonResponseModel> {
+    console.log(req,"controll")
+    try {
+      return await this.sampleService.updateStatus(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+  @Post('/getfabricDetailsOfSample')
+  async getfabricDetailsOfSample(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getfabricDetailsOfSample(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+  @Post('/getTrimDetailsOfSample')
+  async getTrimDetailsOfSample(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getTrimDetailsOfSample(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
 }

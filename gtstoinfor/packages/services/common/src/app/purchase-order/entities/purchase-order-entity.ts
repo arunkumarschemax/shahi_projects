@@ -1,4 +1,4 @@
-import { PurchaseOrderStatus } from "@project-management-system/shared-models";
+import { GRNTypeEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { PurchaseOrderFbricEntity } from "./purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "./purchase-order-trim-entity";
@@ -102,17 +102,24 @@ export class PurchaseOrderEntity{
     })
     grnQuantity:string
 
-    @Column('int',{
-      name:'indent_id',
-      nullable:true
-    })
-    indentId:number
+    // @Column('int',{
+    //   name:'indent_id',
+    //   nullable:true
+    // })
+    // indentId:number
 
     @Column('varchar',{
       name:'po_material_type',
       nullable:true
     })
     poMaterialType:string
+
+    @Column('enum',{
+      name:'po_against',
+      nullable:true,
+      enum: GRNTypeEnum
+    })
+    poAgainst:GRNTypeEnum
     
     
   @OneToMany(type => PurchaseOrderFbricEntity, purchaseReqFabric => purchaseReqFabric.purchaseOrderEntity, { cascade: true })

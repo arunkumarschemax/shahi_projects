@@ -31,9 +31,10 @@ import {
   import React, { useEffect, useRef } from "react";
   import { useState } from "react";
   import { useLocation, useNavigate } from "react-router-dom";
- import {GRNService} from '../../../../libs/shared-services/src/common/grn-service'
+//  import {GRNService} from '../../../../libs/shared-services/src/common/grn-service'
   import Highlighter from "react-highlight-words";
 import { GrnReq } from "@project-management-system/shared-models";
+import { GRNService } from "@project-management-system/shared-services";
   
   const { Option } = Select;
   

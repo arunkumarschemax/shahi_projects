@@ -7,59 +7,16 @@ poFabricId:number
 
 @ApiProperty()
   colourId:number
-
-  @ApiProperty()
-  productGroupId:number
-
   
   @ApiProperty()
   remarks : string;
-
-  @ApiProperty()
-fabricTypeId:number
-
-@ApiProperty()
-fabricCode:string
-
-
 @ApiProperty()
 m3FabricCode:number
-
-@ApiProperty()
-shahiFabricCode:string
-
-@ApiProperty()
-content:string
-
-@ApiProperty()
-weaveId:number
-
-@ApiProperty()
-weight:number
-
-@ApiProperty()
-width:number
-
-@ApiProperty()
-construction:number
-
-@ApiProperty()
-yarnCount:number
-
-@ApiProperty()
-finish:string
-
-@ApiProperty()
-shrinkage:string
-
-@ApiProperty()
-pch:number
-
-@ApiProperty()
-moq:string
-
 @ApiProperty()
 indentFabricId:number
+
+@ApiProperty()
+sampleReqFabricId:number
 
 @ApiProperty()
 quantityUomId:number

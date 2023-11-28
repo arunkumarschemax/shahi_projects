@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { PurchaseOrderStatus } from "@project-management-system/shared-models"
+import { GRNTypeEnum, PurchaseOrderStatus } from "@project-management-system/shared-models"
 import { PurchaseOrderFbricDto } from "./po-fabric-dto"
 import { PurchaseOrderTrimDto } from "./po-trim-dto"
 
@@ -55,14 +55,14 @@ export class PurchaseOrderDto{
   @ApiProperty()
   poMaterialType:string
 
-  @ApiProperty()
-  indentId:number[]
-
 
   @ApiProperty()
   poFabricInfo: PurchaseOrderFbricDto[]
 
   @ApiProperty()
   poTrimInfo?:PurchaseOrderTrimDto[]
+
+  @ApiProperty()
+  poAgainst:GRNTypeEnum
 
 }

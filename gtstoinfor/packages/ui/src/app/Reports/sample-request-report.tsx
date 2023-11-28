@@ -1,16 +1,21 @@
 import { UndoOutlined } from "@ant-design/icons";
-import { SampleRequestFilter } from "@project-management-system/shared-models";
-import { SampleDevelopmentService } from "@project-management-system/shared-services";
+import { SampleRequestFilter, SamplerawmaterialStausReq } from "@project-management-system/shared-models";
+import { BuyersService, SampleDevelopmentService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Checkbox, Col, Form, Row, Select, Table } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import AlertMessages from "../common/common-functions/alert-messages";
 
 const SampleRequestReport = () => {
   const service = new SampleDevelopmentService();
+  const buyerservice= new BuyersService()
+  const styleservice = new StyleService();
   const [data, setData] = useState<any>([]);
   const [requestNo, setRequestNo] = useState<any>([]);
   const [buyers, setBuyers] = useState<any>([]);
+  const [style, setStyle] = useState<any>([]);
+
   const [form] = Form.useForm();
   const [sampleData, setSampleData] = useState<any[]>([]);
   const [filterData, setFilterData] = useState<any[]>([]);
@@ -18,42 +23,72 @@ const SampleRequestReport = () => {
   const [selectedIndentIds, setSelectedIndentIds] = useState([]);
   const [btnEnable,setbtnEnable]=useState<boolean>(false)
   const [selectedItems, setSelectedItems] = useState({});
+  const [type, setType] = useState({});
 
+  const {Option} = Select
   useEffect(() => {
     getData();
+    getAllRequestNo()
+    getAllBuyers()
+    getAllStyles()
   }, []);
 
   const getData = () => {
-    const req = new SampleRequestFilter();
+    const req = new SamplerawmaterialStausReq();
     if (form.getFieldValue("requestNo") !== undefined) {
-      req.requestNo = form.getFieldValue("requestNo");
+      req.sampleReqNo = form.getFieldValue("requestNo");
     }
-    if (form.getFieldValue("buyerName") !== undefined) {
-      req.buyers = form.getFieldValue("buyerName");
+    if (form.getFieldValue("buyerId") !== undefined) {
+      req.buyerId = form.getFieldValue("buyerId");
     }
+    if (form.getFieldValue("style") !== undefined) {
+      req.styleId = form.getFieldValue("style");
+    }
+    
     service.getSampleRequestReport(req).then((res) => {
       if (res.status) {
         setData(res.data);
-        setFilterData(res.data);
+      }else
+      {
+        setData([])
+         AlertMessages.getErrorMessage("NO DATA FOUND");
+     }
+    }).catch(err => {
+      AlertMessages.getErrorMessage(err.message);
+      setData([]);
+    })
+  };
+
+  const getAllRequestNo = () => {
+    service.getAllRequestNo().then((res) => {
+      if (res.status) {
+        setRequestNo(res.data);
       }
     });
   };
 
-  // const getAllRequestNo = () => {
-  //   service.getAllRequestNo().then((res) => {
-  //     if (res.status) {
-  //       setRequestNo(res.data);
-  //     }
-  //   });
-  // };
+  const getAllBuyers = () => {
+    buyerservice.getAllActiveBuyers().then((res) => {
+      if (res.status) {
+        setBuyers(res.data);
+      }
+    });
+  };
 
-  // const getAllBuyers = () => {
-  //   service.getAllBuyers().then((res) => {
-  //     if (res.status) {
-  //       setBuyers(res.data);
-  //     }
-  //   });
-  // };
+  const getAllStyles= () => {
+    styleservice.getAllActiveStyle().then(res => {
+      if (res.status) {
+        setStyle(res.data);
+      } else
+       {
+        setStyle([])
+          AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch(err => {
+      AlertMessages.getErrorMessage(err.message);
+      setStyle([]);
+    })
+  }
 
   const onFinish = () => {
     getData();
@@ -70,18 +105,11 @@ const SampleRequestReport = () => {
 
   const Columns: any = [
     {
-      title: "Unit",
-      dataIndex: "name",
+      title: "Request No",
+      dataIndex: "sampleReqNo",
+      sorter: (a, b) => a.sampleReqNo.localeCompare(b.sampleReqNo),
+      sortDirections: ['descend', 'ascend'],
     },
-    // {
-    //   title: "Date",
-    //   dataIndex: "created_at",
-    //   render: (record) => {
-    //     return record ? moment(record).format("YYYY-MM-DD") : null;
-    //   },
-    //   sorter: (a, b) => a.created_at.localeCompare(b.created_at),
-    //   sortDirections: ['descend', 'ascend'],
-    // },
     {
       title: "Buyer",
       dataIndex: "buyerName",
@@ -89,21 +117,22 @@ const SampleRequestReport = () => {
       sortDirections: ['descend', 'ascend'],
     },
     {
-      title: "Request No",
-      dataIndex: "sampleReqNo",
-      sorter: (a, b) => a.sampleReqNo.localeCompare(b.sampleReqNo),
+      title: "Brand",
+      dataIndex: "brandName",
+      sorter: (a, b) => a.brandName.localeCompare(b.brandName),
       sortDirections: ['descend', 'ascend'],
     },
-    // {
-    //   title: "Indent Code",
-    //   dataIndex: "indentCode",
-    //   sorter: (a, b) => a.indentCode.localeCompare(b.indentCode),
-    //   sortDirections: ['descend', 'ascend'],
-    // },
+    {
+      title: "Location",
+      dataIndex: "locationName",
+      sorter: (a, b) => a.locationName.localeCompare(b.locationName),
+      sortDirections: ['descend', 'ascend'],
+    },
+    
     {
       title: "Style",
-      dataIndex: "styleName",
-      sorter: (a, b) => a.styleName.localeCompare(b.styleName),
+      dataIndex: "stylename",
+      sorter: (a, b) => a.stylename.localeCompare(b.stylename),
       sortDirections: ['descend', 'ascend'],
     },
    
@@ -173,27 +202,6 @@ const SampleRequestReport = () => {
         );
       },
     },
-    // {
-    //   title: <div style={{ textAlign: "center" }}>Available Qty</div>,
-    //   dataIndex: "sm",
-    //   key: "sm",
-    //   align: "center",
-    //   render: (sm) => {
-    //     return (
-    //       <Table
-    //         dataSource={sm}
-    //         columns={[
-    //           {
-    //             dataIndex: "",
-    //             key: "quantity",
-    //             align: "center",
-    //           },
-    //         ]}
-    //         pagination={false}
-    //       />
-    //     );
-    //   },
-    // },
     {
       title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" onClick={() =>generatePo()} >Generate Po</Button>:'Genereate PO'}</div>,
       dataIndex: "sm",
@@ -206,12 +214,12 @@ const SampleRequestReport = () => {
             columns={[
               {
                 render:(value,rowData) =>{
+                  console.log(rowData,"rowdata")
                   return(
                     <Checkbox 
-                    onChange={() => onCheck(rowData.indentId,rowData.fabricType)}
-                    // checked={selectedIndentIds.includes(rowData.indentId)}
+                    onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.fabricType, value)}
+                   
                   />
-                    // <Button  type="primary" onClick={() =>generatePo(rowdata)}>Generate Po</Button>
                   )
                 }
               },
@@ -227,22 +235,38 @@ const SampleRequestReport = () => {
     navigate("/purchase-order", { state: { data: selectedItems, type:'Sampling'  } });
   }
   const dataa=[];
-   const onCheck = (indentId,fabricType) => {
-    console.log(fabricType)
-    const updatedIndentIds = selectedIndentIds.includes(indentId)
-      ? selectedIndentIds.filter(id => id !== indentId)
-      : [...selectedIndentIds, indentId];
+  const onCheck = (e, sampleRequestid, fabricType, value) => {
+    const checkboxValue = e.target.checked;
+    console.log(sampleRequestid)
+    // console.log(value)
+    // console.log(checkboxValue)
+
+    setType(fabricType)
+    const updatedIndentIds = selectedIndentIds.includes(sampleRequestid)
+      ? selectedIndentIds.filter(id => id !== sampleRequestid)
+      : [...selectedIndentIds, sampleRequestid];
+      console.log(updatedIndentIds)
     setSelectedIndentIds(updatedIndentIds);
+    console.log(selectedIndentIds)
     setbtnEnable(true)
-    const resultArray = [{materialType:fabricType}, { indentIds: updatedIndentIds }];
+
+    // if(checkboxValue === true){
+    //   setbtnEnable(true)
+    // } else {
+    //   setbtnEnable(false)
+    // }
+    // console.log(selectedIndentIds)
+    
+    const resultArray = [{materialType:fabricType}, { sampleReqIds: updatedIndentIds }];
     console.log(resultArray)
     setSelectedItems(resultArray)
+    console.log(selectedItems)
+
   };
   console.log(selectedIndentIds)
-  console.log(selectedItems)
 
   
-  // console.log(selectedIndentIds)
+  // console.log(type,"type")
   return (
     <div>
       <Card
@@ -250,35 +274,42 @@ const SampleRequestReport = () => {
         style={{ textAlign: "center" }}
         headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       >
-        <Form form={form} onFinish={onFinish}>
+        <Form form={form} >
           <Row gutter={24}>
             <Col xs={24} sm={12} md={8} lg={6} xl={6}>
-              <Form.Item name="requestNo" label="Request No">
+            <Form.Item name="requestNo" label="Request Number">
                 <Select
                   showSearch
-                  placeholder="Select Request No"
-                  optionFilterProp="children"
                   allowClear
+                  optionFilterProp="children"
+                  placeholder="Select Request Number"
                 >
-                  {data.map((qc: any) => (
-                    <Select.Option key={qc.request_no} value={qc.request_no}>
-                      {qc.request_no}
-                    </Select.Option>
-                  ))}
+                  {requestNo.map((e) => {
+                    return (
+                      <Option
+                        key={e.SampleRequestId}
+                        value={e.SampleRequestId}
+                        name={e.requestNo}
+                      >
+                        {" "}
+                        {e.requestNo}
+                      </Option>
+                    );
+                  })}
                 </Select>
               </Form.Item>
             </Col>
             <Col xs={24} sm={12} md={8} lg={6} xl={6}>
-              <Form.Item name="buyerName" label="Buyers">
+              <Form.Item name="buyerId" label="Buyers">
                 <Select
                   showSearch
                   placeholder="Select Buyers"
                   optionFilterProp="children"
                   allowClear
                 >
-                  {data.map((qc: any) => (
-                    <Select.Option key={qc.buyer_name} value={qc.buyer_name}>
-                      {qc.buyer_name}
+                  {buyers.map((qc: any) => (
+                    <Select.Option key={qc.buyerName} value={qc.buyerId}>
+                      {qc.buyerName}
                     </Select.Option>
                   ))}
                 </Select>
@@ -292,8 +323,8 @@ const SampleRequestReport = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {data.map((qc: any) => (
-                    <Select.Option key={qc.style} value={qc.style}>
+                  {style.map((qc: any) => (
+                    <Select.Option key={qc.style} value={qc.styleId}>
                       {qc.style}
                     </Select.Option>
                   ))}
@@ -306,6 +337,7 @@ const SampleRequestReport = () => {
                   type="primary"
                   htmlType="submit"
                   style={{ background: "green", width: "100%" }}
+                  onClick={getData}
                 >
                   Search
                 </Button>
@@ -327,7 +359,7 @@ const SampleRequestReport = () => {
         </Form>
         <Table
           columns={Columns}
-          dataSource={filterData}
+          dataSource={data}
           className="custom-table-wrapper"
         />
       </Card>

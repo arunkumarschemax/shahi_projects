@@ -1,4 +1,4 @@
-import { PurchaseOrderStatus } from "@project-management-system/shared-models";
+import { GRNTypeEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { GrnFabricEntity } from "./grn-fabric-entity";
 import { GrnTrimsEntity } from "./grn-trims.entity";
@@ -102,6 +102,20 @@ export class GrnEntity{
       nullable:false
     })
     itemType:string
+
+    @Column('enum',{
+      name:'grn_type',
+      nullable:false,
+      enum: GRNTypeEnum
+  })
+  grnType: GRNTypeEnum
+
+    @Column('varchar',{
+      name:'invoice_no',
+      nullable:false,
+  })
+  invoiceNo: string
+  
   // @OneToMany(type => GrnFabricEntity, grnFab => grnFab.grnEntity, { cascade: true })
   // grnFabricInfo: GrnFabricEntity[]
 

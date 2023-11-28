@@ -1,14 +1,22 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { BuyersService, FabricTypeService, FabricWeaveService, M3ItemsService, StockService, UomService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Descriptions } from "antd";
+import { BuyersService, FabricTypeService, FabricWeaveService, M3ItemsService, ReclassificationService, StockService, UomService } from "@project-management-system/shared-services";
+import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, FormInstance, Descriptions } from "antd";
 import { ColumnType, ColumnProps } from "antd/es/table";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useLocation, useNavigate } from "react-router-dom";
+// import {StockDetailsInfo} from "./stock-details-info"
+import DescriptionsItem from "antd/es/descriptions/Item";
+import { ReclassificationDto } from "@project-management-system/shared-models";
+export interface ReclassificationProps {
+  data:any,
+  buyer:any,
+  type:string
+}
 
-export const Reclassification = () => {
+export const Reclassification = (props:ReclassificationProps) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [page, setPage] = React.useState(1);
@@ -16,19 +24,27 @@ export const Reclassification = () => {
   const [stockData, setStockData] = useState<any[]>([]);
   const [visible, setVisible] = useState<boolean>(false);
   const buyerService = new BuyersService();
-  const location = useLocation()
-  const stateData :any=location.state
+  const reclassificationService = new ReclassificationService();
+  // const location = useLocation()
+  // const stateData :any=location.state
   useEffect(() => {
     getBuyers();
   }, []);
   useEffect(() => {
-    console.log(stateData.data)
-    setStockData(stateData?.data)
+    console.log(props.data)
+    setStockData(props?.data)
     form.setFieldsValue({ 
-        buyerId: stateData?.data?.buyer,
+        quantity:props?.data.qty
       });
       setVisible(true)
-  }, [stateData?.data]);
+  }, [props?.data]);
+
+
+  useEffect(() => {
+    form.setFieldsValue({ 
+        buyerId: props?.buyer
+      });
+  }, [props?.buyer]);
   
 
   const getBuyers = () => {
@@ -39,93 +55,22 @@ export const Reclassification = () => {
     });
   };
 
-  const columns: ColumnProps<any>[] = [
-    {
-      title: "S No",
-      key: "sno",
-      responsive: ["sm"],
-      render: (text, object, index) => (page - 1) * 10 + (index + 1),
-    },
-    // {
-    //   title: "M3 Style",
-    //   dataIndex: "m3_style_code",
-    //   ...getColumnSearchProps("m3_style_code"),
-    //   // sorter: (a, b) => a.plant - b.plant,
-    //   // sortDirections: ['descend', 'ascend'],
-    // },
-    
-
-    {
-      title: "Buyer",
-      dataIndex: "buyer",
-    //   ...getColumnSearchProps("buyer"),
-      sorter: (a, b) => a.buyer.localeCompare(b.buyer),
-      sortDirections: ["descend", "ascend"],
-      
-    },
-    {
-      title: "Material Type",
-      dataIndex: "itemType",
-    //   ...getColumnSearchProps("itemType"),
-      sorter: (a, b) => a.itemType.localeCompare(b.itemType),
-      sortDirections: ["descend", "ascend"],
-    },
-    // {
-    //   title: "Item Code",
-    //   dataIndex: "code",
-    //   render: (text) => (
-    //     <span>
-    //       {text ? text : "Fab001"} {/* Display data if available, otherwise show "No Data" */}
-    //     </span>
-    //   ),
-    //   ...getColumnSearchProps("item_code"),
-    // },
-    {
-      title: "M3 Item",
-      dataIndex: "m3Item",
-    //   ...getColumnSearchProps("m3Item"),
-      sorter: (a, b) => a.m3Item.localeCompare(b.m3Item),
-      sortDirections: ["descend", "ascend"],
-    },
-    // {
-    //   title: "Style",
-    //   dataIndex: "style",
-    //   ...getColumnSearchProps("style"),
-    // },
-    {
-      title: "Location",
-      dataIndex: "location",
-    //   ...getColumnSearchProps("location"),
-
-    },
-
-    {
-      title: "Quantity",
-      dataIndex: "qty",
-      render: (record) => (
-        <span>
-          {record.qty} + " " + {record.uom} 
-        </span>
-      ),
-    //   ...getColumnSearchProps("qty"),
-      // sorter: (a, b) => a.itemQuantity - b.itemQuantity,
-      // sortDirections: ['descend', 'ascend'],
-    },
-    {
-      title:`Action`,
-      dataIndex: 'action',
-      render: (text, rowData) => (
-        <span>  
-         <Button style={{backgroundColor:'#69c0ff'}} onClick={(e) => navigate('/reclassification')}><b>Assign Reclassification</b></Button>
-        </span>
-      )
-    }
-  ];
   const onFinish = (data: any) => {
     console.log(data)
+    const req = new ReclassificationDto(0,data.stockId,form.getFieldValue("quantity"),data.m3Item,data.location,form.getFieldValue("buyerId"),undefined,"","",0,data.grnItemId,data.uomId);
+    reclassificationService.createReclassification(req).then((res) => {
+      if(res.status){
+        AlertMessages.getSuccessMessage(res.internalMessage);
+      }
+      else{
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch(err => {
+      AlertMessages.getInfoMessage(err);
+    })
   };
   return (
-    <Card title="RM Inventory" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+    <Card title="Reclassification" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
        <Form layout="vertical" form={form} onFinish={onFinish}>
        <Row gutter={24}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
@@ -180,13 +125,14 @@ export const Reclassification = () => {
     </Form>
     {
       visible ? 
-    <Table
-        className="custom-table-wrapper"
-        dataSource={stockData.length > 0 ? stockData : undefined}
-        columns={columns}
-        size="small"
-      />
-      :""
+      <><Descriptions size='small'>
+            <DescriptionsItem label='Buyer'>{props.data.buyer}</DescriptionsItem>
+            <DescriptionsItem label='Material Type'>{props.data.itemType}</DescriptionsItem>
+            <DescriptionsItem label='M3 Item'>{props.data.m3Item}</DescriptionsItem>
+            <DescriptionsItem label='Location'>{props.data.location}</DescriptionsItem>
+            <DescriptionsItem label='Quantity'>{props.data.qty}</DescriptionsItem>
+          </Descriptions></>
+          :""
     }
     </Card>
   );

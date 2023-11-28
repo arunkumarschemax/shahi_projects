@@ -1,4 +1,4 @@
-import { BuyersService, IndentService, PurchaseOrderservice, StyleService, VendorsService } from "@project-management-system/shared-services";
+import { BuyersService, IndentService, PurchaseOrderservice, SampleDevelopmentService, StyleService, VendorsService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, Row, Segmented, Select, Space, Tabs, message } from "antd"
 import TabPane from "antd/es/tabs/TabPane";
 import { useState, useEffect } from "react";
@@ -8,6 +8,7 @@ import { GlobalVariables, PurchaseOrderDto, PurchaseOrderFbricDto, PurchaseOrder
 import moment from "moment";
 import dayjs, { Dayjs } from "dayjs";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { faB } from "@fortawesome/free-solid-svg-icons";
 
 export const PurchaseOrderForm =()=>{
     const{Option} =Select
@@ -21,12 +22,16 @@ export const PurchaseOrderForm =()=>{
     const [indenData, setIndentData] = useState<any[]>([])
     const [vendordata, setVendorData]=useState<any[]>([])
     const [indentId,setIndentId]=useState<any>([])
+    const [sampleId,setSampleId]=useState<any>([])
+
     const [poType, setPoType]=useState<any>('')
     const [submitDisbale, setSubmitDisable]=useState<boolean>(true)
-    // const [styleVisible, setStyleVisible]= useState<boolean>(undefined)
-  const [buyer, setBuyer] = useState<any[]>([]);
-
+    const [buyer, setBuyer] = useState<any[]>([]);
+    const [samplereqNo,setSamplereqNo] = useState<any[]>([])
     const [navigateData,setnavigateData] = useState<any>([])
+    const [indentDropDownVisible, setIndentDropDownVisible] = useState<boolean>(false)
+    const [sampleDropDownVisible, setSampleDropDownVisible] = useState<boolean>(false)
+
     let fabricInfo:PurchaseOrderFbricDto[]=[];
     let trimInfo:PurchaseOrderTrimDto[]=[];
     const navigate = useNavigate()
@@ -40,6 +45,7 @@ export const PurchaseOrderForm =()=>{
     const stateData :any=location.state
     const vendorService = new VendorsService()
     const buyerService = new BuyersService();
+    const service = new SampleDevelopmentService();
 
 
 
@@ -51,6 +57,7 @@ export const PurchaseOrderForm =()=>{
         getVendors()
         poForm.setFieldsValue({purchaseOrderDate:dayjs()})
         poForm.setFieldsValue({expectedDeliveryDate:now})
+        sampleReqno()
     },[])
 
     const getBuyers = () => {
@@ -69,17 +76,28 @@ export const PurchaseOrderForm =()=>{
         })
     }
 
+    const sampleReqno = () =>{
+        service.getAllSampleDevData().then((res) => {
+            if (res.status) {
+                console.log(res.data)
+              setSamplereqNo(res.data);
+            }
+          });
+    }
     useEffect(() =>{
         if(stateData != undefined ){
-            // console.log(stateData)
-            // console.log(stateData.data)
-            // console.log(stateData.data[0].materialType)
-            // console.log(stateData.data[1].indentIds)
+            console.log(stateData)
+            console.log(stateData.type)
+
+            console.log(stateData)
+            console.log(stateData.data)
+            console.log(stateData.data[0].materialType)
+            console.log(stateData.data[1].indentIds)
 
             if(stateData.type == 'Indent'){
                 poForm.setFieldsValue({indentId:stateData.data.indentId})
                 // setIndentId(stateData)
-                // poForm.setFieldsValue({indentAgainst:'Indent'})
+                poForm.setFieldsValue({indentAgainst:'Indent'})
                 // setStyleVisible(false)
                 setIndentId(stateData.data.indentId)
                 if(stateData.data.materialType == "Fabric"){
@@ -94,10 +112,10 @@ export const PurchaseOrderForm =()=>{
             }
             if(stateData.type == 'Sampling'){
                 setnavigateData(stateData)
-                // poForm.setFieldsValue({indentAgainst:'Style'})
-                // setStyleVisible(true)
-                poForm.setFieldsValue({indentId:stateData.data[1].indentIds})
-                setIndentId(stateData.data[1].indentIds)
+                poForm.setFieldsValue({indentAgainst:'Sample Order'})
+                setSampleDropDownVisible(true)
+                poForm.setFieldsValue({requestNo:stateData.data[1].sampleReqIds})
+                setSampleId(stateData.data[1].sampleReqIds)
                 if(stateData.data[0].materialType == "Fabric"){
                     console.log('UUUUUUU')
                     setPoType('Fabric')
@@ -155,26 +173,27 @@ export const PurchaseOrderForm =()=>{
     }
     const onFinish = () =>{
         console.log(poForm.getFieldValue('styleId'))
+        console.log(fabricData)
         for(const fabData of fabricData){
             console.log(fabData)
             if(fabData.poQuantity != ""){
                 console.log('^^^^^^^^^')
-                const fabInfo = new PurchaseOrderFbricDto(fabData.colourId,fabData.remarks,fabData.fabricTypeId,fabData.m3FabricCode,fabData.shahiFabricCode,fabData.content,fabData.weaveId,fabData.weight,fabData.width,fabData.construction,fabData.yarnCount,fabData.finish,fabData.shrinkage,fabData.pch,fabData.moq,fabData.yarnUnit,fabData.indentFabricId,fabData.poQuantity,fabData.quantityUomId)
+                const fabInfo = new PurchaseOrderFbricDto(fabData.indentFabricId,fabData.samplereFabId,fabData.colourId,fabData.remarks,fabData.m3FabricCode,fabData.poQuantity,fabData.quantityUomId)
                 fabricInfo.push(fabInfo)
             }else{
-                // message.error('Please Update Po Quantity')
+                message.error('Please Update Po Quantity')
             }
         }
         for(const trim of trimData){
             if(trim.poQuantity != ""){
-                const triminfo = new PurchaseOrderTrimDto(trim.productGroupId,trim.trimId,trim.colourId,trim.m3TrimCode,trim.description,trim.consumption,trim.remarks,trim.indentTrmId,trim.poQuantity,trim.quantityUomId)
-                trimInfo.push(triminfo)
-                setSubmitDisable(true)
+                // const triminfo = new PurchaseOrderTrimDto(trim.productGroupId,trim.trimId,trim.colourId,trim.m3TrimCode,trim.description,trim.consumption,trim.remarks,trim.poAgainstId,trim.poQuantity,trim.quantityUomId)
+                // trimInfo.push(triminfo)
+                // setSubmitDisable(true)
             }else{
                 message.error('Please Update Po Quantity')
             }  
         }
-        const poDto = new PurchaseOrderDto('po11',poForm.getFieldValue('vendorId'),poForm.getFieldValue('styleId'),poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"),poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'),poForm.getFieldValue('remarks'),poForm.getFieldValue('poMaterialType'),poForm.getFieldValue('indentId'),poForm.getFieldValue('buyerId'),fabricInfo,trimInfo)
+        const poDto = new PurchaseOrderDto('po11',poForm.getFieldValue('vendorId'),poForm.getFieldValue('styleId'),poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"),poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'),poForm.getFieldValue('remarks'),poForm.getFieldValue('poMaterialType'),poForm.getFieldValue('indentId'),poForm.getFieldValue('buyerId'),fabricInfo,trimInfo,poForm.getFieldValue('indentAgainst'))
         console.log(poDto)
         if(poDto.poTrimInfo.length >0 || poDto.poFabricInfo.length >0){
             console.log('%%%%%%')
@@ -196,37 +215,80 @@ export const PurchaseOrderForm =()=>{
     const indentOnchange = (value) =>{
         setIndentId(value)
     }
-
+    const sampleOnchange = (value) =>{
+        setSampleId(value)
+    }
     const poTypeOnchange = (value) =>{
         setPoType(value)
     }
-    // const IndentAginstOnchange = (value) =>{
-    //     if(value == 'Indent'){
-    //         setStyleVisible(false)
-    //     }if(value  == 'Style'){
-    //         setStyleVisible(true)
-    //     }
-
-    // }
+    const IndentAginstOnchange = (value) =>{
+        if(value == 'Indent'){
+            setIndentDropDownVisible(true)
+            setSampleDropDownVisible(false)
+        }if(value  == 'Sample Order'){
+            setIndentDropDownVisible(false)
+            setSampleDropDownVisible(true)
+        }
+    }
 return(
     <>
     <Card title='Purchase Order' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to='/purchase-view' > <Button className='panel_button' >View </Button></Link>}>
         <Form form={poForm} layout="vertical">
             <Row gutter={8}>
-            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
-                    <Form.Item name='indentAgainst' label='Indent Against' rules={[{required:true,message:'PO Type is required'}]}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
+                    <Form.Item name='indentAgainst' label='PO Against' rules={[{required:true,message:'PO Type is required'}]}>
                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select PoType' 
                        onChange={IndentAginstOnchange}
+                       disabled
                        >
                         <Option name={'Indent'} value='Indent'>{'Indent'}</Option>
-                        <Option value={'Style'}>{'Style'}</Option>
+                        <Option value={'Sample Order'}>{'Sample Order'}</Option>
                         </Select>
                     </Form.Item>
-              </Col> */}
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
+              </Col>
+           
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{display:sampleDropDownVisible == true ? '':'none'}}> 
+              <Form.Item name="requestNo" label="Request Number" rules={[{required:sampleDropDownVisible,message:'PO Type is required'}]}>
+                <Select
+                mode="multiple"
+                  showSearch
+                  allowClear
+                  optionFilterProp="children"
+                  placeholder="Select Request Number"
+                  onChange={sampleOnchange}
+                >
+                  {samplereqNo.map((e) => {
+                    return (
+                      <Option
+                        key={e.sample_request_id}
+                        value={e.sample_request_id}
+                        name={e.requestNo}
+                      >
+                        {e.requestNo}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}  style={{display:indentDropDownVisible == true ? '':'none'}}>
+                    <Form.Item name='indentId' label='Indent Code' 
+                    rules={[{required:indentDropDownVisible,message:'IndentCode is required'}]}>
+                       <Select showSearch allowClear optionFilterProp="children" placeholder='Select Indent' mode="multiple"
+                       onChange={indentOnchange}
+                       >
+                            {indenData.map(e => {
+                                return(
+                                    <Option key={e.indentId} value={e.indentId} name={e.indentCode}> {e.indentCode}</Option>
+                                )
+                            })}
+                        </Select>
+                    </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
                     <Form.Item name='poMaterialType' label='PO Type' rules={[{required:true,message:'PO Type is required'}]}>
                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select PoType' 
-                       onChange={poTypeOnchange}
+                       onChange={poTypeOnchange} disabled
                        >
                         <Option name={'Fabric'} value='Fabric'>{'Fabric'}</Option>
                         <Option value={'Trim'}>{'Trim'}</Option>
@@ -269,20 +331,7 @@ return(
                         </Select>
                         </Form.Item>
                     </Col> */}
-             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:'none'}}>
-                    <Form.Item name='indentId' label='Indent Code' 
-                    rules={[{required:true,message:'IndentCode is required'}]}>
-                       <Select showSearch allowClear optionFilterProp="children" placeholder='Select Indent' mode="multiple"
-                       onChange={indentOnchange}
-                       >
-                            {indenData.map(e => {
-                                return(
-                                    <Option key={e.indentId} value={e.indentId} name={e.indentCode}> {e.indentCode}</Option>
-                                )
-                            })}
-                        </Select>
-                    </Form.Item>
-              </Col>
+           
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
                     <Form.Item name='vendorId' label='Vendor' rules={[{required:true,message:'vendor is required'}]}>
                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor'>
@@ -310,7 +359,7 @@ return(
         <Row gutter={24}>
             {/* <Card title={poType == 'Fabric'?<span style={{color:'blue', fontSize:'17px'}} >Fabric Details</span>:poType =='Trim'?<span style={{color:'blue', fontSize:'17px'}}>Trim Details</span>:''} style={{width:'200%'}}> */}
                 {poType == 'Fabric' ?
-                <Card style={{width:'200%'}}><PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={poType == 'Fabric' ?indentId:undefined} data={navigateData}/></Card>
+                <Card style={{width:'200%'}}><PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={poType == 'Fabric' ?indentId:undefined} data={navigateData} sampleReqId={poType == 'Fabric' ?sampleId:undefined}/></Card>
            :poType == 'Trim' ?
            <Card style={{width:'130%'}}> <PurchaseOrderTrim key='trim' props={handleTrim}  indentId={indentId} data={navigateData}/></Card>
             :<></>

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CustomerOrderStatusEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
+import { CustomerOrderStatusEnum, GRNTypeEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { GrnItemsDto } from "./grn-items-dto";
 
 export class GrnDto{
@@ -20,6 +20,7 @@ export class GrnDto{
   grnId?:number
   grnNumber?:string
   status:PurchaseOrderStatus
+  grnType:GRNTypeEnum
 
 
   constructor(
@@ -40,6 +41,7 @@ export class GrnDto{
     grnItemInfo?: GrnItemsDto[],
     grnId?:number,
     grnNumber?:string,
+    grnType?:GRNTypeEnum
   
   ){
     this.grnId = grnId
@@ -59,6 +61,7 @@ export class GrnDto{
     this.versionFlag = versionFlag
     this.styleId = styleId
     this.materialtype = materialtype
+    this.grnType = grnType
   }
 
 

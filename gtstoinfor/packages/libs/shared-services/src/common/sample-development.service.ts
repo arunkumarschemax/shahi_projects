@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { DeliveryMethodDto, DeliveryMethodRequest } from 'packages/libs/shared-models/src/common/delivery-method';
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, SampleDevelopmentRequest, SampleFilterRequest, SampleRequestFilter, SamplieMappingDto, UploadResponse } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, Allocatematerial, CommonResponseModel, ProductGroupReq, SampleDevelopmentRequest, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SamplieMappingDto, UploadResponse, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq } from '@project-management-system/shared-models';
 import { create } from 'domain';
 
 
@@ -42,7 +42,7 @@ export class SampleDevelopmentService extends CommonAxiosService {
     return await this.axiosPostCall(this.URL + '/fileUpload', file);
   }
 
-  async getSampleRequestReport(req: any): Promise<AllSampleDevReqResponseModel> {
+  async getSampleRequestReport(req: SamplerawmaterialStausReq): Promise<AllSampleDevReqResponseModel> {
     return this.axiosPostCall(this.URL + "/getSampleRequestReport", req)
   }
 
@@ -147,6 +147,33 @@ export class SampleDevelopmentService extends CommonAxiosService {
   async createMapping(req: any): Promise<AllSampleDevReqResponseModel> {
     console.log(req,'shared service')
     return this.axiosPostCall(this.URL + "/createSampling", req)
+
+  }
+  async getAvailbelQuantityAginstBuyerAnditem(req: buyerandM3ItemIdReq): Promise<CommonResponseModel> {
+    console.log(req,'shared service')
+    return this.axiosPostCall(this.URL + "/getAvailbelQuantityAginstBuyerAnditem", req)
+
+  }
+  async creatematerialAlloction(req: Allocatematerial[]): Promise<CommonResponseModel> {
+    console.log(req,'shared service')
+    return this.axiosPostCall(this.URL + "/creatematerialAlloction", req)
+
+  }
+  
+  async getAllMaterialAllocation(req?:buyerReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllMaterialAllocation",req )
+
+  }
+  async updateStatus(req?:statusReq  ): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/updateStatus",req )
+
+  }
+  async getTrimDetailsOfSample(req:sampleReqIdReq  ): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getTrimDetailsOfSample",req )
+
+  }
+  async getfabricDetailsOfSample(req:sampleReqIdReq  ): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getfabricDetailsOfSample",req )
 
   }
 

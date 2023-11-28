@@ -101,7 +101,7 @@ export function VendorsForm(
 
 
   return (
-    <Card size='small' title={props.isUpdate ? 'Update Vendor' : 'Add Vendor'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/global/vendors/vendors-view')} type={'primary'}>View</Button></span>}>
+      <Card size='small' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} title={props.isUpdate ? 'Update Vendor' : 'Add Vendor'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/global/vendors/vendors-view')} type={'primary'}>View</Button></span>}>
       <Form form={form} initialValues={props.vendorsData} name="control-hooks" onFinish={saveData}
         layout="vertical"
       >

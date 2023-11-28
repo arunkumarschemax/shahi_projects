@@ -8,7 +8,7 @@ import { BuyersService, GRNService, PurchaseOrderservice, VendorsService } from 
 import TextArea from 'antd/es/input/TextArea'
 import GRNFabricForm from './grn-fabric'
 import GRNTrimForm from './grn-trim'
-import { GrnDto, PurchaseOrderStatus, VendorIdReq } from '@project-management-system/shared-models'
+import { GRNTypeEnum, GrnDto, PurchaseOrderStatus, VendorIdReq } from '@project-management-system/shared-models'
 import AlertMessages from '../common/common-functions/alert-messages'
 import dayjs, { Dayjs } from "dayjs";
 import { useNavigate } from 'react-router-dom'
@@ -30,6 +30,8 @@ const GRNForm = () => {
     const [formData,setFormData] = useState<any[]>([])
     const [trimFormData, setTrimFormData]=useState<any[]>([])
     const navigate = useNavigate();
+    const [selectedPoType, setSelectedPoType] = useState(null);
+
 
     useEffect(()=>{
         getVendorsData()
@@ -48,19 +50,16 @@ const GRNForm = () => {
               AlertMessages.getErrorMessage(res.internalMessage);
             }
           })
-        //   .catch((error) => {
-        //     console.error('GRN creation failed:', error);
-        //     // Handle additional error handling or logging as needed.
-        //     AlertMessages.getErrorMessage('Failed to create GRN. Please check console for details.');
-        //   });
       };
       
 
     const getVendorsData = () =>{
+        // form.setFieldsValue({ purchaseOrderId: undefined });
+        // setPoData([])
         vendorService.getAllActiveVendors().then((res)=>{
             if(res.status){
                 setVendor(res.data)
-                setPoNoData([])
+                // setPoNoData([])
             }
         })
     }
@@ -75,10 +74,16 @@ const GRNForm = () => {
     }
 
     const getPODataById = (val,option) =>{
+        if (!val) {
+            setSelectedPoType(null);
+            return;
+          }
       const req = new VendorIdReq(0,val,option?.name)
       poService.getPODataById(req).then((res)=>{
             if(res.status){
               setPoData(res.data)
+              const selectedPoType = res.data.poType
+              setSelectedPoType(selectedPoType);
             }
         })
     }
@@ -92,6 +97,7 @@ const GRNForm = () => {
         console.log(savedData,)
         setFormData(savedData)
     }
+
 
 
 
@@ -127,6 +133,19 @@ const GRNForm = () => {
                             </Select>
                         </Form.Item>
                   </Col>
+                  {selectedPoType !== null && (
+                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
+                        <Form.Item name='poType' label='PO Type' dependencies={['purchaseOrderId']}>
+                           <Select showSearch allowClear optionFilterProp="children" disabled>
+                           {Object.values(GRNTypeEnum).map((value) => (
+                                <Option key={value} value={value}>
+                                {value}
+                                </Option>
+                            ))}
+                            </Select>
+                        </Form.Item>
+                  </Col>
+                  )}
                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                         <Form.Item name='grnDate' label='GRN Date' rules={[{required:true,message:'Date is required'}]}>
                         <DatePicker style={{ width: '93%', marginLeft: 5 }} showToday/>

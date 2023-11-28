@@ -4,9 +4,9 @@ export class StyleReq {
  @ApiProperty()
   styleId:number;
   @ApiProperty()
- locationId:number;
+ locationId:string;
  @ApiProperty()
-  pch:string;
+  pch:number;
   @ApiProperty()
   style:string;
   @ApiProperty()
@@ -16,6 +16,8 @@ export class StyleReq {
   @ApiProperty()
   styleFilePath: string;
   @ApiProperty()
+  buyerId: number;
+  @ApiProperty()
   isActive:boolean;
   @ApiProperty()
   createdUser: string | null;
@@ -23,12 +25,13 @@ export class StyleReq {
   updatedUser: string | null;
   constructor(
     styleId:number,
-    locationId:number,
-    pch:string,
+    locationId:string,
+    pch:number,
     style:string,
     description:string,
     styleFileName: string,
     styleFilePath:string,
+    buyerId: number,
     isActive:boolean,
     createdUser: string | null,
     updatedUser: string | null,
@@ -39,6 +42,7 @@ export class StyleReq {
     this.styleFileName=styleFileName
     this.styleFilePath=styleFilePath
     this.locationId=locationId
+    this.buyerId=buyerId
     this.isActive=isActive
     this.pch=pch
     this.createdUser=createdUser

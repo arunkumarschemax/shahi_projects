@@ -195,10 +195,14 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
           title: <div style={{textAlign:"center"}}>M3 Fabric Code</div>,
           dataIndex: 'itemCode',
         },
-        // {
-        //   title: <div style={{textAlign:"center"}}>Fabric Type</div>,
-        //   dataIndex: 'fabricTypeName',
-        // },
+        {
+          title: <div style={{textAlign:"center"}}>Style</div>,
+          dataIndex: 'fabricTypeName',
+        },
+        {
+          title: <div style={{textAlign:"center"}}>Buyer</div>,
+          dataIndex: 'fabricTypeName',
+        },
         {
           title: <div style={{textAlign:"center"}}>PO Qty</div>,
           dataIndex: 'poQuantity',
@@ -240,30 +244,30 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
             </Form.Item>
           ),
         },
-        {
-          title: <div style={{textAlign:"center"}}>UOM</div>,
-          dataIndex: 'receivedUomId',
-          render: (_, record) => (
-            <Form.Item
-            name={`receivedUomId_${record.poFabricId}_${record.key}`}
-            >
-              <Select
-                allowClear
-                style={{ width: "100%" }}
-                showSearch
-                optionFilterProp="children"
-                placeholder="Select UOM"
-                onChange={receiveuomOnChange}
-                >
-                {uomData?.map((e) => (
-                  <Option key={e.uomId} value={e.uomId} name={e.uom}>
-                    {e.uom}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          ),
-        },
+        // {
+        //   title: <div style={{textAlign:"center"}}>UOM</div>,
+        //   dataIndex: 'receivedUomId',
+        //   render: (_, record) => (
+        //     <Form.Item
+        //     name={`receivedUomId_${record.poFabricId}_${record.key}`}
+        //     >
+        //       <Select
+        //         allowClear
+        //         style={{ width: "100%" }}
+        //         showSearch
+        //         optionFilterProp="children"
+        //         placeholder="Select UOM"
+        //         onChange={receiveuomOnChange}
+        //         >
+        //         {uomData?.map((e) => (
+        //           <Option key={e.uomId} value={e.uomId} name={e.uom}>
+        //             {e.uom}
+        //           </Option>
+        //         ))}
+        //       </Select>
+        //     </Form.Item>
+        //   ),
+        // },
         {
           title: <div style={{textAlign:"center"}}>Accepted Qty</div>,
           dataIndex: 'acceptedQuantity',
@@ -290,37 +294,37 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
               </Form.Item>
           ),
         },
-        {
-          title: <div style={{textAlign:"center"}}>UOM</div>,
-          dataIndex: 'acceptedUomId',
-          render: (index, record) => (
-            <Form.Item
-            name={`acceptedUomId_${record.poFabricId}_${record.key}`}
-            // rules={[
-            //     {
-            //       required: true,
-            //       message: 'Please select UOM',
-            //     }
-            //   ]}
-            >
-              <Select
-                allowClear
-                style={{ width: "100%" }}
-                showSearch
-                optionFilterProp="children"
-                placeholder="Select UOM"
-                // onChange={acceptUomOnchange}
-                onChange={(option, value) => acceptUomOnchange(option, value, record)}
-              >
-                {uomData?.map((e) => (
-                  <Option key={e.uomId} value={e.uomId} name={`${record.poFabricId}`+`${record.key}+'acceptedUomId'`} type={e.uom}>
-                    {e.uom}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          ),
-        },
+        // {
+        //   title: <div style={{textAlign:"center"}}>UOM</div>,
+        //   dataIndex: 'acceptedUomId',
+        //   render: (index, record) => (
+        //     <Form.Item
+        //     name={`acceptedUomId_${record.poFabricId}_${record.key}`}
+        //     // rules={[
+        //     //     {
+        //     //       required: true,
+        //     //       message: 'Please select UOM',
+        //     //     }
+        //     //   ]}
+        //     >
+        //       <Select
+        //         allowClear
+        //         style={{ width: "100%" }}
+        //         showSearch
+        //         optionFilterProp="children"
+        //         placeholder="Select UOM"
+        //         // onChange={acceptUomOnchange}
+        //         onChange={(option, value) => acceptUomOnchange(option, value, record)}
+        //       >
+        //         {uomData?.map((e) => (
+        //           <Option key={e.uomId} value={e.uomId} name={`${record.poFabricId}`+`${record.key}+'acceptedUomId'`} type={e.uom}>
+        //             {e.uom}
+        //           </Option>
+        //         ))}
+        //       </Select>
+        //     </Form.Item>
+        //   ),
+        // },
         {
           title: <div style={{textAlign:"center"}}>Rejected Qty</div>,
           dataIndex: 'rejectedQuantity',

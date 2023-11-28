@@ -1,7 +1,7 @@
 import { PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
 import { DepartmentReq,SampleDevelopmentRequest } from "@project-management-system/shared-models";
-import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProfitControlHeadService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
+import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProfitControlHeadService,QualityService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Tabs, message } from "antd";
 import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
@@ -48,6 +48,7 @@ export const SampleDevForm = () => {
   const [trimsData, setTrimsData] = useState([]);
   const [data, setData] = useState<any>();
   const [fabricM3Code,setFabricM3Code] = useState<any[]>([])
+  const [qualities,setQualities] = useState<any[]>([])
 
   const pchService = new ProfitControlHeadService();
   const styleService = new StyleService();
@@ -64,7 +65,7 @@ export const SampleDevForm = () => {
   const fabricTypeService = new FabricTypeService()
   const fabSubTypeService = new FabricSubtypeservice()
   const m3ItemsService = new M3ItemsService()
-
+  const qualityService = new QualityService()
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -85,6 +86,7 @@ export const SampleDevForm = () => {
     getM3StyleCode()
     getfabricType()
     getM3FabricStyleCodes()
+    getQualities();
   }, []);
 
   const getM3FabricStyleCodes = () => {
@@ -235,6 +237,13 @@ export const SampleDevForm = () => {
     });
   };
 
+  const getQualities = () =>{
+    qualityService.getQuality().then((res) => {
+      if (res.status) {
+        setQualities(res.data);
+      }
+    });
+  }
   const onReset = () => {
     form.resetFields();
   };
@@ -243,7 +252,9 @@ export const SampleDevForm = () => {
   const onFinish = (val) =>{
     if(data != undefined){
       console.log('hoii')
-      if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
+      // if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
+      if(data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined){
+
         console.log('TTTTT')
         const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,'',val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData)
         console.log(req.sizeData)
@@ -582,6 +593,23 @@ export const SampleDevForm = () => {
                     <DatePicker style={{ width: '93%', marginLeft: 5 }} />
                     </Form.Item>
               </Col>
+              {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                    <Form.Item name='quality' label='Quality' >
+                    <Select
+                allowClear
+                showSearch
+                optionFilterProp="children"
+                placeholder="Select quality"
+              >
+                {qualities.map((e) => {
+                  return (
+                    <Option key={e.qualityId} value={e.quality}>
+                      {e.quality}
+                    </Option>
+                  );
+                })}
+              </Select>                    </Form.Item>
+              </Col> */}
         </Row>
         <Row gutter={16}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
@@ -770,9 +798,9 @@ export const SampleDevForm = () => {
              <TabPane key="3" tab={<span><b>{`Trims`}</b></span>}>
              <TrimsForm props = {handleTrimsDataUpdate} buyerId={selectedBuyerId}/>
              </TabPane>
-             <TabPane key="4" tab={<span><b>{`Process`}</b></span>}>
+             {/* <TabPane key="4" tab={<span><b>{`Process`}</b></span>}>
              <ProcessForm props={handleProcessDataUpdate}/>
-             </TabPane>
+             </TabPane> */}
              {/* <TabPane key="5" tab={<span><b>{`Remarks`}</b></span>}>
                  
              </TabPane> */}

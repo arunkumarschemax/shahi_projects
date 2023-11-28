@@ -56,26 +56,15 @@ export class PurchaseOrderService {
             poEntity.createdUser = req.createdUser
             poEntity.createdUser = req.createdUser
             poEntity.poMaterialType = req.poMaterialType
+            poEntity.poAgainst = req.poAgainst
             if (req.poFabricInfo) {
                 for (const poFabric of req.poFabricInfo) {
                     const pofabricEntity = new PurchaseOrderFbricEntity()
                     pofabricEntity.colourId = poFabric.colourId
-                    // pofabricEntity.productGroupId = poFabric.productGroupId
                     pofabricEntity.remarks = poFabric.remarks
-                    // pofabricEntity.fabricTypeId = poFabric.fabricTypeId
-                    pofabricEntity.shahiFabricCode = poFabric.shahiFabricCode
-                    // pofabricEntity.weaveId = poFabric.weaveId
-                    // pofabricEntity.weight = poFabric.weight
-                    // pofabricEntity.width = poFabric.width
-                    // pofabricEntity.construction = poFabric.construction
-                    // pofabricEntity.yarnCount = poFabric.yarnCount
-                    // pofabricEntity.finish = poFabric.finish
-                    // pofabricEntity.shrinkage = poFabric.shrinkage
-                    // pofabricEntity.pch = poFabric.pch
-                    // pofabricEntity.moq = poFabric.moq
                     pofabricEntity.m3FabricCode = poFabric.m3FabricCode
-                    // pofabricEntity.content = poFabric.content
                     pofabricEntity.indentFabricId = poFabric.indentFabricId
+                    pofabricEntity.sampleReqFabricId = poFabric.sampleReqFabricId
                     pofabricEntity.poQuantity = poFabric.poQuantity
                     pofabricEntity.quantityUomId = poFabric.quantityUomId
                     pofabricInfo.push(pofabricEntity)
@@ -95,6 +84,7 @@ export class PurchaseOrderService {
                     trimEntity.consumption = trimInfo.consumption
                     trimEntity.remarks = trimInfo.remarks
                     trimEntity.indentTrimId = trimInfo.indentTrimId
+                    trimEntity.sampleReqTrimId = trimInfo.sampleReqTrimId
                     trimEntity.poQuantity = trimInfo.poQuantity
                     trimEntity.quantityUomId = trimInfo.quantityUomId
                     poTrimInfo.push(trimEntity)
@@ -119,7 +109,7 @@ export class PurchaseOrderService {
 
     async getAllPONumbers(req: VendorIdReq): Promise<CommonResponseModel> {
         try {
-            let query = `SELECT purchase_order_id as purchaseOrderId,po_number AS poNumber,vendor_id as vendorId,po_material_type as materialType FROM purchase_order WHERE status NOT IN ('cancelled', 'closed')`
+            let query = `SELECT purchase_order_id as purchaseOrderId,po_number AS poNumber,vendor_id as vendorId,po_material_type as materialType,po_against as poAgainst FROM purchase_order WHERE status NOT IN ('cancelled', 'closed')`
             if (req.vendorId) {
                 query = query + ` AND vendor_id = '${req.vendorId}'`;
             }

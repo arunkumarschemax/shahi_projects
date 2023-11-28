@@ -13,6 +13,7 @@ import { UomEntity } from "../../uom/uom-entity";
 import { ProfitControlHead } from "../../profit-control-head/profit-control-head-entity";
 import { M3ItemsEntity } from "../../m3-items/m3-items.entity";
 import { Vendors } from "../../vendors/vendors.entity";
+import { Style } from "../../style/dto/style-entity";
 
 
 @Injectable()
@@ -27,14 +28,16 @@ export class FabricIndentRepository extends Repository<IndentFabricEntity> {
         const query = this.createQueryBuilder(`itf`)
             .select(`"Fabric" as materialType,itf.ifabric_id,itf.indent_id as indentId,
         itf.m3_fabric_code,itf.color,itf.quantity,itf.quantity_unit,
-        itf.created_at,itf.updated_at,itf.indent_id,m3.item_code,
-        co.colour,it.status, uom.uom AS quantityUnit`)
+        itf.created_at,itf.updated_at,itf.indent_id,m3.item_code,m3.description,
+        co.colour,it.status, uom.uom AS quantityUnit,CONCAT(b.buyer_code,'-',b.buyer_name)AS buyer,s.buyer_id AS buyerId`)
             .leftJoin(M3ItemsEntity, 'm3', `m3.m3_items_Id = itf.m3_fabric_code`)
             // .leftJoin(Vendors, 'ven', `ven.vendor_id = itf.supplier_id`)
             .leftJoin(Colour, 'co', 'co.colour_id=itf.color')
             // .leftJoin(Buyers, 'bu', 'bu.buyer_id=itf.buyer_id')
             .leftJoin(Indent, 'it', 'it.indent_id=itf.indent_id')
             .leftJoin(UomEntity, 'uom', 'uom.id=itf.quantity_unit')
+            .leftJoin(Style,'s','s.style_id = it.style')
+            .leftJoin(Buyers,'b','b.buyer_id = s.buyer_id')
 
             // .leftJoin(UomEntity,'uom1','uom1.id=itf.yarn_unit')
             // .leftJoin(UomEntity,'uom2','uom2.id=itf.weight_unit')

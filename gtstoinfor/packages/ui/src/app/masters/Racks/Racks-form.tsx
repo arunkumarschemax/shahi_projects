@@ -46,7 +46,7 @@ const onFinish = (rackDto: RackDTO) => {
         }>
         <Form form={form} layout={'vertical'} onFinish={onFinish}>
       <Row gutter={24}>
-      <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4}} lg={{ span: 8}} xl={{ span: 5}}>
+      {/* <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4}} lg={{ span: 8}} xl={{ span: 5}}>
               <Form.Item label="Unit" name="unit"
                rules={[
                 { required: true, message: 'Field is required' },
@@ -58,21 +58,8 @@ const onFinish = (rackDto: RackDTO) => {
               >
                 <Input placeholder=" Enter unit"/>
               </Form.Item>
-            </Col>
-            <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4}} lg={{ span: 8}} xl={{ span: 5}}>
-              <Form.Item label=" Rack Code" name="rackCode"
-               rules={[
-                { required: true, message: 'Field is required' },
-                {
-                  pattern: Rules,
-                  message: 'Only numbers and characters are allowed',
-                },
-              ]}
-              >
-                <Input placeholder=" Enter Rack Code"/>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4}} lg={{ span: 8}} xl={{ span: 5}}>
+            </Col> */}
+              <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4}} lg={{ span: 8}} xl={{ span: 5}}>
               <Form.Item label=" Rack Type" name="rackType"
                rules={[
                 { required: true, message: 'Field is required' },
@@ -93,6 +80,20 @@ const onFinish = (rackDto: RackDTO) => {
                                         </Select>
               </Form.Item>
             </Col>
+            <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4}} lg={{ span: 8}} xl={{ span: 5}}>
+              <Form.Item label=" Rack Code" name="rackCode"
+               rules={[
+                { required: true, message: 'Field is required' },
+                {
+                  pattern: Rules,
+                  message: 'Only numbers and characters are allowed',
+                },
+              ]}
+              >
+                <Input placeholder=" Enter Rack Code"/>
+              </Form.Item>
+            </Col>
+          
             <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4}} lg={{ span: 8}} xl={{ span: 5}}>
               <Form.Item label="Rack Name" name="rackName"
                rules={[

@@ -1,4 +1,4 @@
-import { PurchaseOrderStatus } from "@project-management-system/shared-models"
+import { GRNTypeEnum, PurchaseOrderStatus } from "@project-management-system/shared-models"
 import { PurchaseOrderFbricDto } from "./po-fabric-info"
 import { PurchaseOrderTrimDto } from "./po-trim-info"
 
@@ -22,6 +22,7 @@ export class PurchaseOrderDto{
   buyerId:number
   poFabricInfo: PurchaseOrderFbricDto[]
   poTrimInfo?:PurchaseOrderTrimDto[]
+  poAgainst?:GRNTypeEnum
   constructor(
     poNumber:string,
     vendorId:number,
@@ -33,7 +34,8 @@ export class PurchaseOrderDto{
     indentId:number[],
     buyerId:number,
     poFabricInfo: PurchaseOrderFbricDto[],
-  poTrimInfo?:PurchaseOrderTrimDto[]
+  poTrimInfo?:PurchaseOrderTrimDto[],
+  poAgainst?:GRNTypeEnum
   ){
     this.poNumber=poNumber
     this.vendorId=vendorId
@@ -46,6 +48,7 @@ export class PurchaseOrderDto{
     this.indentId=indentId
     this.poMaterialType=poMaterialType
     this.buyerId=buyerId
+    this.poAgainst = poAgainst
   }
 
 }

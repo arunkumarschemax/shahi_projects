@@ -15,21 +15,11 @@ poFabricId:number
   })
   colourId:number
 
-  @Column('int',{
-    name:'product_group_id',
-    nullable:false,
-  })
-  productGroupId:number
 
   @Column('text',{
     name:'remarks',
 })
   remarks : string;
-
-@Column('int',{
-    name:'fabric_type_id'
-})
-fabricTypeId:number
 
 
 @Column('int',{
@@ -42,55 +32,7 @@ m3FabricCode:number
 })
 shahiFabricCode:string
 
-@Column('varchar',{
-    name:'content'
-})
-content:string
 
-@Column('int',{
-    name:'weave_id'
-})
-weaveId:number
-
-@Column('int',{
-    name:'weight'
-})
-weight:number
-
-@Column('int',{
-    name:'width'
-})
-width:number
-
-@Column('int',{
-    name:'construction'
-})
-construction:number
-
-@Column('int',{
-    name:'yarn_count'
-})
-yarnCount:number
-
-@Column('varchar',{
-    name:'finish'
-})
-finish:string
-
-@Column('varchar',{
-    name:'shrinkage'
-})
-shrinkage:string
-
-@Column('int',{
-    name:'pch'
-})
-pch:number
-
-@Column('varchar',{
-    name:'moq'
-})
-moq:string
 
 @CreateDateColumn({
     name: "created_at",
@@ -130,16 +72,16 @@ moq:string
   isActive: boolean;
 
   @Column('int',{
-    name:'yarn_uom',
-    nullable:false
-  })
-  yarnUom:number
-
-  @Column('int',{
     name:'indent_fabric_id',
     nullable:true
   })
   indentFabricId:number
+  
+  @Column('int',{
+    name:'sample_req_fabric_id',
+    nullable:true
+  })
+  sampleReqFabricId:number
 
   @Column('decimal',{
     name:'po_quantity',

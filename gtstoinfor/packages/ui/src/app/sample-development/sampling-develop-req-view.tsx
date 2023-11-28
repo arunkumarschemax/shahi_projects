@@ -16,6 +16,7 @@ import {
   import {
     Button,
     Card,
+    Checkbox,
     Col,
     Collapse,
     Divider,
@@ -28,6 +29,7 @@ import {
     Space,
     Table,
     Tag,
+    message,
   } from "antd";
   import style from "antd/es/alert/style";
   import { ColumnProps } from "antd/es/table";
@@ -38,10 +40,12 @@ import {
   import Barcode from "react-barcode";
 //   import BarcodePrint from "./barcode-print";
   import {
+    Allocatematerial,
     CustomerOrderStatusEnum,
     IndentRequestFilter,
   } from "@project-management-system/shared-models";
   import Highlighter from "react-highlight-words";
+import { faL } from "@fortawesome/free-solid-svg-icons";
   
   const { Option } = Select;
   
@@ -52,7 +56,6 @@ import {
     const styleService = new StyleService();
     const [style, setStyle] = useState<any[]>([]);
     const navigate = useNavigate();
-    // const service = new RequisitionService()
     const service = new SampleDevelopmentService();
     const logInUser = localStorage.getItem("userName");
     const [barcode, setBarcode] = useState<string>(null);
@@ -64,7 +67,11 @@ import {
     const [data, setData] = useState<any[]>([]);
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
+   const [btnEnable,setbtnEnable]=useState<boolean>(false)
+   const [expandedRowKeys, setExpandedRowKeys] = useState([])
     const searchInput = useRef(null);
+    const [avilableQuantity, setAvailableQuantity] = useState<any[]>([])
+    const [checked, setChecked] = useState<boolean>(false)
   
     useEffect(() => {
       getAll();
@@ -96,20 +103,7 @@ import {
         }
       });
     };
-  
    
-  
-    const generateBarcode = (m3Code, info) => {
-      setBarcode(m3Code);
-      setBarcodeInfo(info);
-      setBarcodeModal(true);
-    };
-  
-    const generatePoForFabric = (rowData:any) =>{
-      // console.log(rowData)
-      navigate('/purchase-order', { state: { data: rowData, type:'Indent' } })
-    }
-    
   
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -193,6 +187,22 @@ import {
         ) : null,
     });
   
+
+    const createAllocation = (dto:any) =>{
+      console.log(dto)
+    let materailData :Allocatematerial[]=[]
+      for(const data of dto){
+        const req = new Allocatematerial(data.itemType,data.sampleRequestid,data.sampleItemId,data.m3ItemId,data.quantity,data.stockId,data.locationId,data.allocatedQuantity)
+        materailData.push(req)
+      }
+      service.creatematerialAlloction(materailData).then(res =>{
+        if(res.status){
+          message.success(res.internalMessage)
+          navigate('/sample-development/material-allocation')
+        }
+      })
+    }
+
     const Columns: any = [
   
       {
@@ -220,13 +230,13 @@ import {
       },
       {
         title: "Available Quantity",
-        dataIndex: "availabeQuantity",
-        sorter: (a, b) => a.availabeQuantity.localeCompare(b.availabeQuantity),
+        dataIndex: "availableQuantity",
+        sorter: (a, b) => a.availableQuantity.localeCompare(b.availableQuantity),
         sortDirections: ["descend", "ascend"],
         render: (text, record) => {
             return (
               <>
-                {record.availabeQuantity ? record.availabeQuantity : "Not Available"
+                {record.availableQuantity ? record.availableQuantity : "Not Available"
                   }
               </>
             );
@@ -245,23 +255,23 @@ import {
           );
         },
       },
-      {
-        title: "Action",
-      dataIndex: "action",
-      render: (text, rowData) => {
-      return (
-      <span>
-      <Button
-      type="primary"
-      disabled={rowData.availabeQuantity == null ? true : false}
-      onClick={() =>MarketIssueDetailView(rowData.sample_request_id)}
-      >
-                Issue Material
-      </Button>
-      </span>
-      );
-      },
-      },
+      // {
+      //   title: "Action",
+      // dataIndex: "action",
+      // render: (text, rowData) => {
+      // return (
+      // <span>
+      // <Button
+      // type="primary"
+      // disabled={rowData.availabeQuantity == null ? true : false}
+      // onClick={() =>MarketIssueDetailView(rowData.sample_request_id)}
+      // >
+      //           Issue Material
+      // </Button>
+      // </span>
+      // );
+      // },
+      // },
     ];
   
     const columnsSkelton: any = [
@@ -302,24 +312,171 @@ import {
             );
           },
       },
-      {
-        title: "Action",
-      dataIndex: "action",
-      render: (text, rowData) => {
-      return (
-      <span>
-         <Button onClick={() => MarketIssueDetailView(rowData.sample_request_id)} type='primary' 
-           disabled={rowData.availabeQuantity == null ? true : false}
-          >Issue Material</Button>
-      </span>
-      );
-      },
-      },
+      // {
+      //   title: "Action",
+      // dataIndex: "action",
+      // render: (text, rowData) => {
+      // return (
+      // <span>
+      //    <Button onClick={() => MarketIssueDetailView(rowData.sample_request_id)} type='primary' 
+      //      disabled={rowData.availabeQuantity == null ? true : false}
+      //     >Issue Material</Button>
+      // </span>
+      // );
+      // },
+      // },
     ];
-    const genereatePoForTrim = (rowData: any) => {
-      navigate("/purchase-order", { state: { data: rowData, type:'Indent'  } });
+
+    const renderColumnForFabric: any =[
+      {
+        title: "S No",
+        key: "sno",
+        width: "100px",
+        responsive: ["sm"],
+        render: (text, object, index) => (page - 1) * 10 + (index + 1),
+      },
+      {
+        title: "Grn Number",
+        key:'grnNumber',
+        dataIndex: "grnNumber",
+        width: "150px",
+
+      },
+      {
+        title: "Location",
+        key:'rack_position_name',
+        dataIndex: "rack_position_name",
+        width:'80px',
+      },
+    
+      {
+        title: "Availble Quantity",
+        width: "150px",
+        dataIndex: "quantity",
+      },
+      {
+        title: "Allocated Quantity",
+        width:'200px',
+        render:(value,record) =>{
+          return(
+            <Form.Item name='allocatedQuantity'>
+                  <Input
+                  onChange={(e) => onCheck(record, e.target.value,true)} 
+                   >
+                </Input>
+            </Form.Item>
+           
+          )
+        }
+      },
+      {
+        title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" 
+        onClick={() =>allocateQuantity()} 
+        >Allocate</Button>:'Allocate'}</div>,
+        dataIndex: "sm",
+        key: "sm",
+        align: "center",
+        render: (value,rowData) => {
+          return (
+            <Checkbox 
+            onClick={checkboxonclick}
+            onChange={(e) => onCheck(rowData, undefined, e.target.checked)}
+            // onClick={(e) =>onCheck(rowData,undefined)}
+            />
+          );
+        },
+      },
+     
+    ]
+
+    const allocateQuantity = () =>{
+      // console.log(avilableQuantity)
+      createAllocation(avilableQuantity)
+
+    }
+    const checkboxonclick =() =>{
+      setChecked(true)
+    }
+
+    // const onCheck = (rowData,allocatedQuantity,isChecked) =>{
+    //   console.log(rowData)
+    // if (isChecked) {
+    //   setSelectedRowsData( [
+    //     {
+    //       buyerId:rowData.buyerId,
+    //       grnItemId:rowData.grnItemId,
+    //       locationId:rowData.locationId,
+    //       m3ItemId:rowData.m3ItemId,
+    //       stockId: rowData.stockId,
+    //       allocatedQuantity: allocatedQuantity !== undefined ? allocatedQuantity : '',
+    //       sampleRequestId:rowData.sampleRequestid,
+    //       sampleItemId:rowData.sampleItemId,
+    //       itemType:rowData.itemType
+    //     },
+    //   ]);
+    //   setbtnEnable(true)
+    // } else {
+    //   setSelectedRowsData(prevData =>
+    //     prevData.filter(item => item.stockId !== rowData.stockId)
+    //   );
+    // }
+    // console.log(selectedRowsData)
+      
+    // }
+
+    const [allocatedQuantities, setAllocatedQuantities] = useState([]);
+
+    const onCheck = (rowData, quantityValue, isChecked) => {
+      if (isChecked) {
+        const updatedAllocatedQuantities = [...allocatedQuantities];
+        const index = updatedAllocatedQuantities.findIndex(
+          (item) => item.rowData === rowData
+        );
+          console.log(index)
+        if (index !== -1) {
+          updatedAllocatedQuantities[index] = {
+            buyerId:rowData.buyerId,
+            grnItemId:rowData.grnItemId,
+            grnNumber:rowData.grnNumber,
+            itemType:rowData.itemType,
+            locationId:rowData.locationId,
+            m3ItemId:rowData.m3ItemId,
+            quantity:rowData.quantity,
+            sampleItemId:rowData.sampleItemId,
+            stockBarCode:rowData.stockBarCode,
+            sampleRequestid:rowData.sampleRequestid,
+            stockId:rowData.stockId,
+            allocatedQuantity: quantityValue,
+          };
+        } 
+        else {
+          updatedAllocatedQuantities.push({
+            buyerId:rowData.buyerId,
+            grnItemId:rowData.grnItemId,
+            grnNumber:rowData.grnNumber,
+            itemType:rowData.itemType,
+            locationId:rowData.locationId,
+            m3ItemId:rowData.m3ItemId,
+            quantity:rowData.quantity,
+            sampleItemId:rowData.sampleItemId,
+            stockBarCode:rowData.stockBarCode,
+            sampleRequestid:rowData.sampleRequestid,
+            stockId:rowData.stockId,
+            allocatedQuantity: quantityValue,
+          });
+        }
+        
+        setAllocatedQuantities(updatedAllocatedQuantities);
+      } else {
+        const updated = allocatedQuantities.filter(
+          (item) => item.rowData !== rowData
+        );
+        setAllocatedQuantities(updated);
+      }
+      setbtnEnable(true)
+      console.log(allocatedQuantities)
     };
-  
+    
     const onSegmentChange = (val) => {
       setTabName(val);
     };
@@ -344,13 +501,7 @@ import {
           <span style={{ width: "10px" }}></span>
           <span>Location : {<b>{location}</b>}</span>
           <span style={{ width: "10px" }}></span>
-          {/* <span>
-            Indent Date: <b>{formattedIndentDate}</b>
-          </span> */}
           <span style={{ width: "10px" }}></span>
-          {/* <span>
-            Expected Date: <b>{formattedExpectedDate}</b>
-          </span> */}
           <span style={{ width: "10px" }}></span>
           <span>Status : {<b>{status}</b>}</span>
           <span style={{ width: "10px" }}></span>
@@ -368,21 +519,6 @@ import {
       setTableData(data);
     };
   
-    // const onSearch = () => {
-    //   let filterData = [];
-    //   if (sourcingForm.getFieldValue("style") !== undefined) {
-    //     const style = sourcingForm.getFieldValue("style");
-    //     filterData = data.filter((e) => e.style === style);
-    //   } else if (sourcingForm.getFieldValue("requestNo") !== undefined) {
-    //     const reqno = sourcingForm.getFieldValue("requestNo");
-    //     filterData = data.filter((e) => e.requestNo === reqno);
-    //   } else if (sourcingForm.getFieldValue("status") !== undefined) {
-    //     const status = sourcingForm.getFieldValue("status");
-    //     filterData = data.filter((e) => e.status === status);
-    //   }
-    //   setTableData(filterData);
-    // };
-  
     const onBarcodeModalCancel = () => {
       setBarcode("");
       setBarcodeModal(false);
@@ -395,8 +531,37 @@ import {
         // return navigate(`/sample-development/store-issue-detail`, { state: { data: [rowData], cancelVisible : cancel } });
     
       };
-  
-  
+
+      const renderItems = (record:any) => {
+        return  <Table
+         dataSource={avilableQuantity}
+          columns={renderColumnForFabric} 
+          pagination={false}
+           rowKey={record.sample_request_id}/>;
+      };
+
+
+      const handleExpand = (expanded, record) => {
+       getAllAvailbaleQuantity(record)
+      };
+
+      const getAllAvailbaleQuantity =(rowData) =>{
+        console.log(rowData)
+        service.getAvailbelQuantityAginstBuyerAnditem({buyerId:rowData.buyerId,m3ItemId:rowData.m3ItemFabricId,itemType:rowData.itemType}).then(res =>{
+          if(res.status){
+            const dataWithRow = { rowData: rowData, responseData: res.data };
+            console.log(dataWithRow)
+            const updatedData = res.data.map(item => ({
+              ...item,
+              sampleRequestid:rowData.sampleRequestid,
+              sampleItemId:rowData.sampleRequestid,
+              itemType:rowData.itemType
+              }))
+              setAvailableQuantity(updatedData)           
+          }
+        })
+      }
+
     return (
       <Card
         headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
@@ -409,8 +574,6 @@ import {
           </Link>
         }
       >
-        {/* {barcode.length > 0 ? <BarcodePrint key={Date.now() + barcode} printBarcodes={closeWindow} closeBarcodePopUp={closeWindow}
-            columns={barcodeWithColumns} newWindow={false} barcodeInfo={barcode} /> : ''} */}
         <Form form={sourcingForm}>
           <Row gutter={8}>
             <Col
@@ -476,8 +639,6 @@ import {
             >
               <Form.Item name="status" label="Status">
                 <Select
-                  // showSearch
-                  // placeholder="Vendors"
                   optionFilterProp="children"
                   placeholder="Select Status"
                 >
@@ -563,20 +724,10 @@ import {
                   location={item.location}
                   brandName={item.brandName}
                   pch={item.pch}
-                //   expectedDate={item.expectedDate}
-                //   indentDate={item.indentDate}
                   status={item.status}
                 />
               }
               key={index}
-            //   extra={
-            //     <Tag
-            //       onClick={() => generateBarcode(item.requestNo, "requestNo")}
-            //       style={{ cursor: "pointer" }}
-            //     >
-            //       <BarcodeOutlined />
-            //     </Tag>
-            //   }
             >
               <Space
                 direction="vertical"
@@ -610,9 +761,16 @@ import {
                       <Table
                         columns={Columns}
                         dataSource={item.fabric}
+                        rowKey={record =>record.sample_request_id}
                         pagination={false}
+                        expandedRowRender={renderItems}
+                        expandIconColumnIndex={6}
                         scroll={{ x: "max-content" }}
                         className="custom-table-wrapper"
+                        // expandedRowKeys={expandedRowKeys}
+                       onExpand={handleExpand}
+
+
                       />
                     </>
                   ) : (
