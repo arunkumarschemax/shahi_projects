@@ -29,8 +29,8 @@ export class PurchaseOrderService {
 
     async cretePurchaseOrder(req: PurchaseOrderDto): Promise<CommonResponseModel> {
         try {
-            console.log(req.poFabricInfo)
-            console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+            // console.log(req.poFabricInfo)
+            // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
             const currentYear = moment().format('YYYY')
             let ToYear = currentYear.toString().substr(-2)
             let FromYear = (currentYear - 1).toString().substr(-2)
@@ -42,8 +42,6 @@ export class PurchaseOrderService {
             } else {
                 poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + maxId[0].poId.toString().padStart(3, 0) + ''
             }
-            // const finalArray :PurchaseOrderEntity[]=[]
-            // for(const indent of req.indentId){
             let pofabricInfo = []
             let poTrimInfo = []
             const poEntity = new PurchaseOrderEntity()
@@ -78,8 +76,6 @@ export class PurchaseOrderService {
                     console.log('""""""""""""""""""""""""""""""""""""""""""""')
                     trimEntity.colourId = trimInfo.colourId
                     trimEntity.m3TrimCode = trimInfo.m3TrimCode
-                    // trimEntity.description = trimInfo.description
-                    // trimEntity.remarks = trimInfo.remarks
                     trimEntity.indentTrimId = trimInfo.indentTrimId
                     trimEntity.sampleReqTrimId = trimInfo.sampleReqTrimId
                     trimEntity.poQuantity = trimInfo.poQuantity
@@ -89,8 +85,7 @@ export class PurchaseOrderService {
                 poEntity.poTrimInfo = poTrimInfo
             }
 
-            // finalArray.push(poEntity)
-            // }
+           
 
             const save = await this.poRepo.save(poEntity)
             if (save) {
