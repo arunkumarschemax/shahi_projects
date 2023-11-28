@@ -50,22 +50,22 @@ export const MonthWiseReport = () => {
     getData(selected, tab);
     getTabs();
   }, []);
-  useEffect(() => {
-    if (year.length > 0) {
-      setTab(year[0].year);
-    }
-  }, [year]);
-  const handleChange = (val) => {
-    setSelected(val);
-    getData(val, tab);
+ 
+ 
+  const handleTabChange = (selectedYear: any) => {
+    setTab(Number(selectedYear));
+    // console.log(selectedYear,'year');
+
+    getData(selected, selectedYear);
   };
   const getTabs = () => {
     service.getExfactoryYearData().then((res) => {
       if (res.status) {
         setYear(res.data);
+        // handleChange(res.data[0])
         if (res.data.length > 0) {
           setTab(res.data[0])
-          // console.log(res.data[0]);
+          handleTabChange(res.data[0].year)
           
         }
       }
@@ -73,8 +73,8 @@ export const MonthWiseReport = () => {
   };
 
   const getData = (val, tabName) => {
-    const req = new YearReq(tabName, val);
-    service.getMonthWiseReportData(req).then((res) => {
+    const req = new YearReq( tabName,val);
+   service.getMonthWiseReportData(req).then((res) => {
       // console.log(res, "res==========");
       if (res.status) {
         setData(res.data);
@@ -109,23 +109,28 @@ export const MonthWiseReport = () => {
     });
   };
 
-  const pagination = {
-    current: page,
-    pageSize: filteredData.length,
-    total: filteredData.length,
-    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
-    onChange: (current, pageSize) => {
-      setPage(current);
-      setPageSize(pageSize);
-    },
+  // const pagination = {
+  //   current: page,
+  //   pageSize: filteredData.length,
+  //   total: filteredData.length,
+  //   showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+  //   onChange: (current, pageSize) => {
+  //     setPage(current);
+  //     setPageSize(pageSize);
+  //   },
 
-    showSizeChanger: true,
-    onShowSizeChange: (current, size) => {
-      setPage(1);
-      setPageSize(size);
-    },
+  //   showSizeChanger: true,
+  //   onShowSizeChange: (current, size) => {
+  //     setPage(1);
+  //     setPageSize(size);
+  //   },
+  // };
+  const handleChange = (val) => {
+    console.log(val,'[[[[[[[[[');
+    
+    setSelected(val);
+    getData(val, tab);
   };
-
   const colWidth = {
     proPlanType: 80,
     Pcs: 60,
@@ -137,11 +142,7 @@ export const MonthWiseReport = () => {
     const ths = [];
     for (let i = 0; i < noOfTh; i++) {
       const exCls = i % 2 ? "even-color" : "odd-color";
-      ths.push(
-        <th
-          className={`ant-table-cell ${exCls}`}
-          scope="col"
-          style={{ width: `${colWidth.Pcs}px` }}
+      ths.push(<th className={`ant-table-cell ${exCls}`}scope="col" style={{ width: `${colWidth.Pcs}px` }}
         >
           In Pcs
         </th>
@@ -233,12 +234,12 @@ export const MonthWiseReport = () => {
     {
       // title: "Production Plan Type Name",
       dataIndex: "phasetype",
-      width: 80,
+      width: colWidth.proPlanType,
     },
     {
       // title: `In PCs`,
       dataIndex: "janPcs",
-      width: 50,
+      width: colWidth.Pcs,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -249,7 +250,7 @@ export const MonthWiseReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "janCoeff",
-      width: 50,
+      width: colWidth.coeff,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -261,7 +262,7 @@ export const MonthWiseReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "febPcs",
-      width: 50,
+      width: colWidth.Pcs,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -272,7 +273,7 @@ export const MonthWiseReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "febCoeff",
-      width: 50,
+      width: colWidth.coeff,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -284,7 +285,7 @@ export const MonthWiseReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "marPcs",
-      width: 50,
+      width: colWidth.Pcs,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -295,7 +296,7 @@ export const MonthWiseReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "marCoeff",
-      width: 50,
+      width: colWidth.coeff,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -307,7 +308,7 @@ export const MonthWiseReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "aprPcs",
-      width: 50,
+      width: colWidth.Pcs,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -318,7 +319,7 @@ export const MonthWiseReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "aprCoeff",
-      width: 50,
+      width: colWidth.coeff,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -336,7 +337,7 @@ export const MonthWiseReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "mayPcs",
-      width: 50,
+      width: colWidth.Pcs,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -347,7 +348,7 @@ export const MonthWiseReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "mayCoeff",
-      width: 50,
+      width: colWidth.coeff,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -365,7 +366,7 @@ export const MonthWiseReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "junPcs",
-      width: 50,
+      width: colWidth.Pcs,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -376,7 +377,7 @@ export const MonthWiseReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "junCoeff",
-      width: 50,
+      width: colWidth.coeff,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -394,7 +395,7 @@ export const MonthWiseReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "julPcs",
-      width: 50,
+      width: colWidth.Pcs,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -405,7 +406,7 @@ export const MonthWiseReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "julCoeff",
-      width: 50,
+      width: colWidth.coeff,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -423,7 +424,7 @@ export const MonthWiseReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "augPcs",
-      width: 50,
+      width: colWidth.Pcs,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -434,7 +435,7 @@ export const MonthWiseReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "augCoeff",
-      width: 50,
+      width: colWidth.coeff,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -452,7 +453,7 @@ export const MonthWiseReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "sepPcs",
-      width: 50,
+      width: colWidth.Pcs,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -463,7 +464,7 @@ export const MonthWiseReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "sepCoeff",
-      width: 50,
+      width: colWidth.coeff,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -474,7 +475,7 @@ export const MonthWiseReport = () => {
 
     {
       dataIndex: "octPcs",
-      width: 50,
+      width: colWidth.Pcs,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -484,7 +485,7 @@ export const MonthWiseReport = () => {
     },
     {
       dataIndex: "octCoeff",
-      width: 50,
+      width: colWidth.coeff,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -495,7 +496,7 @@ export const MonthWiseReport = () => {
 
     {
       dataIndex: "novPcs",
-      width: 50,
+      width: colWidth.Pcs,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -505,7 +506,7 @@ export const MonthWiseReport = () => {
     },
     {
       dataIndex: "novCoeff",
-      width: 50,
+      width: colWidth.coeff,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -516,7 +517,7 @@ export const MonthWiseReport = () => {
 
     {
       dataIndex: "decPcs",
-      width: 50,
+      width: colWidth.Pcs,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -526,7 +527,7 @@ export const MonthWiseReport = () => {
     },
     {
       dataIndex: "decCoeff",
-      width: 50,
+      width: colWidth.coeff,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -538,7 +539,7 @@ export const MonthWiseReport = () => {
     {
       dataIndex: "totalPcs",
       align: "right",
-      width: 70,
+      width: colWidth.totalPcs,
       render: (text: any, record: any) => {
         return record.totalPcs ? record.totalPcs.toLocaleString() : 0;
       },
@@ -546,7 +547,7 @@ export const MonthWiseReport = () => {
     {
       dataIndex: "totalCoeff",
       align: "right",
-      width: 70,
+      width: colWidth.totalcoeff,
 
       render: (text: any, record: any) => {
         return record.totalCoeff ? record.totalCoeff.toLocaleString() : 0;
@@ -1815,12 +1816,7 @@ export const MonthWiseReport = () => {
       excel.saveAs(`Ware-House-report-${currentDate}.xlsx`);
     }
   };
-  const handleTabChange = (selectedYear: any) => {
-    setTab(Number(selectedYear));
-    // console.log(selectedYear,'year');
 
-    getData(selected, selectedYear);
-  };
   const getFilterdData = () => {
     let ItemName = form.getFieldValue("ItemName");
 
@@ -1992,12 +1988,12 @@ export const MonthWiseReport = () => {
                     <tr>
                     <th className="ant-table-cell" scope="col" style={{ width: `${colWidth.proPlanType}px` }}></th>
 {totalValues.map((val, index) => (
-  <th className="ant-table-cell" scope="col" style={{ width: `${(index % 3) ? colWidth.Pcs : colWidth.coeff}px`, textAlign: 'right', paddingLeft: '20px' }}>
+  <th className="ant-table-cell" scope="col" style={{ width: `${(index % 2) ? colWidth.Pcs : colWidth.coeff}px`, textAlign: 'right' }}>
     {val}
   </th>
 ))}
-<th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalPcs}px`, textAlign: 'right', paddingLeft: '20px' }}>{totalPre.toLocaleString()}</th>
-<th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalcoeff}px`, textAlign: 'right', paddingLeft: '20px' }}>{totalLat.toLocaleString()}</th>
+<th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalPcs}px`, textAlign: 'right' }}>{totalPre}</th>
+<th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalcoeff}px`, textAlign: 'right' }}>{totalLat}</th>
 
                     </tr>
                     </thead>
@@ -2149,7 +2145,7 @@ export const MonthWiseReport = () => {
                   size="small"
                   scroll={{ x: "max-content",y:500 }}
                   summary={getTableSummary}
-                  pagination={pagination}
+                  pagination={false}
                 />
                 <Table
                   columns={columns}

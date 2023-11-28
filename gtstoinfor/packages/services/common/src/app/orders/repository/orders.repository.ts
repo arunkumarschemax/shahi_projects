@@ -253,7 +253,7 @@ ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m-%d')) = 3 THEN REPLACE(order_plan
     async getExfactoryYearData(): Promise<any> {
         const query = this.createQueryBuilder('o')
             .select(`o.year as year`)
-            // .where(`o.order_plan_qty != '0'AND o.order_plan_qty_coeff != '0'`)
+            .where(`o.order_plan_qty != '0'AND o.order_plan_qty_coeff != '0'`)
             .groupBy(`o.year`)
         return await query.getRawMany();
     }

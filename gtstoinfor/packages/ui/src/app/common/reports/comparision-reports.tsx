@@ -28,8 +28,8 @@ export const MonthWiseComparisionReport = () => {
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [excelsData, setExcelData] = useState<any[]>([]);
   const [dates, setDates] = useState<any[]>([]);
-  const [file1, setfile1] = useState();
-  const [file2, setfile2] = useState();
+  const [file1, setfile1] = useState<number>();
+  const [file2, setfile2] = useState<number>();
   const { Text } = Typography;
   const [pageSize, setPageSize] = useState(10);
   const startIndex = (page - 1) * pageSize;
@@ -45,28 +45,25 @@ export const MonthWiseComparisionReport = () => {
 
  
   useEffect(() => {
-    //  getData(tab,selected,file1,file2);
     getTabs();
     getPhase()
+    // getData(tab,selected,file1,file2);
+
   }, []);
-  const getTabs = () => {
-    service.getExfactoryYearData().then((res) => {
-      if (res.status) {
-        setYear(res.data);
-        if (res.data.length > 0) {
-          setTab(res.data[0]);
-        }
+  const getFiles =(year:any) =>{
+    service.getLatestPreviousFilesData().then(res => {
+      if(res.status){
+          setDates(res.data)
+          setfile1(res.data[0]?.fileId)
+          setfile2(res.data[1]?.fileId)
+
       }
-    });
-    
-  };
+       getData(year,selected,res?.data?.[0]?.fileId,res?.data?.[1]?.fileId);
 
-  const handleChange = (val) => {
-    setSelected(val)
-    getData(tab,val,file1,file2)
-    // getPhase()
-
+  })
   }
+  // console.log(file1,'--------',file2,'========')
+  
   const getPhase = () => {
     
     service.getPhaseItems().then(res => {
@@ -75,40 +72,43 @@ export const MonthWiseComparisionReport = () => {
       }
     })
     
-    service.getLatestPreviousFilesData().then(res => {
-      if(res.status){
-          setDates(res.data)
-          setfile1(res?.data?.[0]?.fileId)
-          setfile2(res?.data?.[1]?.fileId)
-
-      }
-      getData(tab,selected,res?.data?.[0]?.fileId,res?.data?.[1]?.fileId);
-
-  })
-  // service.getMonthlyComparisionDate(req).then((res) => {
-    //   if (res.status) {
-    //     setDates(res.data);
-    //     // console.log(res.data[0].Date);
-
-
-    //   } else {
-    //     setDates([]);
-    //   }
-    // })
-    // service.getComparisionPhaseData(req).then((res) => {
-    //   if (res.status) {
-    //     setPhase(res.data)
-    //   } else {
-    //     setPhase([]);
-    //   }
-    // })
-   
+  
+  
   }
+  const handleTabChange = (selectedYear:any) => {
+    getFiles(Number(selectedYear))
+    setTab(Number(selectedYear));
+    // console.log(selected,'----------')
+    // console.log(file1,'-----file 1-----')
+    // console.log(file2,'-----file2-----')
+    // getData(Number(selectedYear) ,selected,file1,file2);
+  };
+ 
+  const getTabs = () => {
+    service.getExfactoryYearData().then((res) => {
+      if (res.status) {
+        setYear(res.data);
+        if (res.data.length > 0) {
+          // setTab(res.data[0]);
+          handleTabChange(res.data[0].year)
 
-  const getData = (val, tabName,file1,file2) => {
+        }
+      }
+    });
     
+  };
+ 
+  const handleChange = (val) => {
+    setSelected(val)
+     getData(tab,val,file1,file2)
+    // getPhase()
+
+  }
+  const getData = (val, tabName,file1,file2) => {
+    // getFiles()
     const req = new YearReq(val,tabName,file1,file2);
   
+  // console.log(req,'reqqqqq');
 
     if (form.getFieldValue('ItemName') !== undefined) {
       req.itemName = form.getFieldValue('ItemName')
@@ -140,6 +140,9 @@ export const MonthWiseComparisionReport = () => {
       }
     });
   };
+
+
+ 
 
   const colWidth = {
     proPlanType: 80,
@@ -909,55 +912,270 @@ export const MonthWiseComparisionReport = () => {
       
             { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell odd-color">Jan In Lat </span>, dataIndex: "janExfLat",align:"right" },
-     { title: <span className="ant-table-cell odd-color">Jan In Pre</span>, dataIndex: "janExfPre",align:"right"  },
+      {
+        title: <span className="ant-table-cell odd-color">Jan In Lat</span>,
+        dataIndex: "janExfLat",
+        align: "right",
+        render: (val) => {
+          const numericValue = Number(val);
+      
+          if (!isNaN(numericValue)) {
+            return numericValue.toLocaleString();
+          } else {
+            return val;
+          }
+        },
+      },
+      
+      
+           { title: <span className="ant-table-cell odd-color">Jan In Pre</span>, dataIndex: "janExfPre",align:"right" ,render: (val) => {
+            const numericValue = Number(val);
+        
+            if (!isNaN(numericValue)) {
+              return numericValue.toLocaleString();
+            } else {
+              return val;
+            }
+          },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title:   <span className="ant-table-cell even-color">Feb In Lat </span>, dataIndex: "febExfLat", align:"right" },
-      { title:  <span className="ant-table-cell even-color">Feb In Pre</span>, dataIndex: "febExfPre",align:"right"  },
+      { title:   <span className="ant-table-cell even-color">Feb In Lat </span>, dataIndex: "febExfLat", align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
+      { title:  <span className="ant-table-cell even-color">Feb In Pre</span>, dataIndex: "febExfPre",align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      }, },
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell odd-color">Mar In Lat </span>, dataIndex: "marExfLat", align:"right" },
-      { title: <span className="ant-table-cell odd-color">Mar In Pre</span>, dataIndex: "marExfPre",align:"right"  },
+      { title: <span className="ant-table-cell odd-color">Mar In Lat </span>, dataIndex: "marExfLat", align:"right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
+      { title: <span className="ant-table-cell odd-color">Mar In Pre</span>, dataIndex: "marExfPre",align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell even-color">Apr In Lat </span>, dataIndex: "aprExfLat",align:"right"  },
-      { title: <span className="ant-table-cell even-color">Apr In Pre</span>, dataIndex: "aprExfPre",align:"right"  },
+      { title: <span className="ant-table-cell even-color">Apr In Lat </span>, dataIndex: "aprExfLat",align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      }, },
+      { title: <span className="ant-table-cell even-color">Apr In Pre</span>, dataIndex: "aprExfPre",align:"right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      }, },
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell odd-color">May In Lat </span>, dataIndex: "mayExfLat", align:"right" },
-      { title: <span className="ant-table-cell odd-color">May In Pre</span>, dataIndex: "mayExfPre",align:"right"  },
+      { title: <span className="ant-table-cell odd-color">May In Lat </span>, dataIndex: "mayExfLat", align:"right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
+      { title: <span className="ant-table-cell odd-color">May In Pre</span>, dataIndex: "mayExfPre",align:"right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell even-color">Jun In Lat </span>, dataIndex: "junExfLat",align:"right"  },
-      { title: <span className="ant-table-cell even-color">Jun In Pre</span>, dataIndex: "junExfPre",align:"right"  },
+      { title: <span className="ant-table-cell even-color">Jun In Lat </span>, dataIndex: "junExfLat",align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      }, },
+      { title: <span className="ant-table-cell even-color">Jun In Pre</span>, dataIndex: "junExfPre",align:"right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell odd-color">Jul In Lat </span>, dataIndex: "julExfLat", align:"right" },
-      { title: <span className="ant-table-cell odd-color">Jul In Pre</span>, dataIndex: "julExfPre", align:"right" },
+      { title: <span className="ant-table-cell odd-color">Jul In Lat </span>, dataIndex: "julExfLat", align:"right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
+      { title: <span className="ant-table-cell odd-color">Jul In Pre</span>, dataIndex: "julExfPre", align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell even-color">Aug In Lat </span>, dataIndex: "augExfLat",align:"right"  },
-      { title: <span className="ant-table-cell even-color">Aug In Pre</span>, dataIndex: "augExfPre",align:"right"  },
+      { title: <span className="ant-table-cell even-color">Aug In Lat </span>, dataIndex: "augExfLat",align:"right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
+      { title: <span className="ant-table-cell even-color">Aug In Pre</span>, dataIndex: "augExfPre",align:"right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell odd-color">Sep In Lat </span>, dataIndex: "sepExfLat", align:"right" },
-      { title: <span className="ant-table-cell odd-color">Sep In Pre</span>, dataIndex: "sepExfPre", align:"right" },
+      { title: <span className="ant-table-cell odd-color">Sep In Lat </span>, dataIndex: "sepExfLat", align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      }, },
+      { title: <span className="ant-table-cell odd-color">Sep In Pre</span>, dataIndex: "sepExfPre", align:"right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell even-color">Oct In Lat </span>, dataIndex: "octExfLat", align:"right" },
-      { title: <span className="ant-table-cell even-color">Oct In Pre</span>, dataIndex: "octExfPre", align:"right" },
+      { title: <span className="ant-table-cell even-color">Oct In Lat </span>, dataIndex: "octExfLat", align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
+      { title: <span className="ant-table-cell even-color">Oct In Pre</span>, dataIndex: "octExfPre", align:"right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell odd-color">Nov In Lat </span>, dataIndex: "novExfLat", align:"right" },
-      { title: <span className="ant-table-cell odd-color">Nov In Pre</span>, dataIndex: "novExfPre", align:"right" },
+      { title: <span className="ant-table-cell odd-color">Nov In Lat </span>, dataIndex: "novExfLat", align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
+      { title: <span className="ant-table-cell odd-color">Nov In Pre</span>, dataIndex: "novExfPre", align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      }, },
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell even-color">Dec In Lat </span>, dataIndex: "decExfLat",align:"right"  },
-      { title: <span className="ant-table-cell even-color">Dec In Pre</span>, dataIndex: "decExfPre", align:"right" },
+      { title: <span className="ant-table-cell even-color">Dec In Lat </span>, dataIndex: "decExfLat",align:"right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      }, },
+      { title: <span className="ant-table-cell even-color">Dec In Pre</span>, dataIndex: "decExfPre", align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
 
-      { title: <span > Total In Lat </span>, dataIndex: "totalExfLat", align: "right" },
-      { title: <span > Total In Pre</span>, dataIndex: "totalExfPre", align: "right" },
+      { title: <span > Total In Lat </span>, dataIndex: "totalExfLat", align: "right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      }, },
+      { title: <span > Total In Pre</span>, dataIndex: "totalExfPre", align: "right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
     )
@@ -984,56 +1202,259 @@ export const MonthWiseComparisionReport = () => {
         )
       },
            { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell even-color">Jan In Lat </span>, dataIndex: "janWhLat",align:"right" },
-      { title: <span className="ant-table-cell even-color">Jan In Pre </span>, dataIndex: "janWhPre", align:"right" },
+      { title: <span className="ant-table-cell even-color">Jan In Lat </span>, dataIndex: "janWhLat",align:"right" ,
+      render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
+      { title: <span className="ant-table-cell even-color">Jan In Pre </span>, dataIndex: "janWhPre", align:"right" , render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell odd-color">Feb In Lat </span>, dataIndex: "febWhLat",align:"right"  },
-      { title: <span className="ant-table-cell odd-color">Feb In Pre</span>, dataIndex: "febWhPre",align:"right"  },
+      { title: <span className="ant-table-cell odd-color">Feb In Lat </span>, dataIndex: "febWhLat",align:"right"  ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
+      { title: <span className="ant-table-cell odd-color">Feb In Pre</span>, dataIndex: "febWhPre",align:"right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      }, },
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell even-color">Mar In Lat </span>, dataIndex: "marWhLat", align:"right" },
-      { title: <span className="ant-table-cell even-color">Mar In Pre</span>, dataIndex: "marWhPre", align:"right" },
+      { title: <span className="ant-table-cell even-color">Mar In Lat </span>, dataIndex: "marWhLat", align:"right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
+      { title: <span className="ant-table-cell even-color">Mar In Pre</span>, dataIndex: "marWhPre", align:"right",render:(text,record,index)=>(
+        <span style={{fontWeight:"normal"}}>{text.toLocaleString()}</span>
+            ) },
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell odd-color">APr In Lat </span>, dataIndex: "aprWhLat", align:"right" },
-      { title: <span className="ant-table-cell odd-color">APr In Pre</span>, dataIndex: "aprWhPre", align:"right" },
+      { title: <span className="ant-table-cell odd-color">APr In Lat </span>, dataIndex: "aprWhLat", align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      }, },
+      { title: <span className="ant-table-cell odd-color">APr In Pre</span>, dataIndex: "aprWhPre", align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell even-color">May In Lat </span>, dataIndex: "mayWhLat",align:"right"  },
-      { title: <span className="ant-table-cell even-color">May In Pre</span>, dataIndex: "mayWhPre", align:"right" },
+      { title: <span className="ant-table-cell even-color">May In Lat </span>, dataIndex: "mayWhLat",align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      }, },
+      { title: <span className="ant-table-cell even-color">May In Pre</span>, dataIndex: "mayWhPre", align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      }, },
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell odd-color">Jun In Lat </span>, dataIndex: "junWhLat", align:"right" },
-      { title: <span className="ant-table-cell odd-color">Jun In Pre</span>, dataIndex: "junWhPre", align:"right" },
+      { title: <span className="ant-table-cell odd-color">Jun In Lat </span>, dataIndex: "junWhLat", align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      }, },
+      { title: <span className="ant-table-cell odd-color">Jun In Pre</span>, dataIndex: "junWhPre", align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell even-color">Jul In Lat </span>, dataIndex: "julWhLat",align:"right"  },
-      { title: <span className="ant-table-cell even-color">Jul In Pre</span>, dataIndex: "julWhPre", align:"right" },
+      { title: <span className="ant-table-cell even-color">Jul In Lat </span>, dataIndex: "julWhLat",align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      }, },
+      { title: <span className="ant-table-cell even-color">Jul In Pre</span>, dataIndex: "julWhPre", align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell odd-color">Aug In Lat </span>, dataIndex: "augWhLat", align:"right" },
-      { title: <span className="ant-table-cell odd-color">Aug In Pre</span>, dataIndex: "augWhPre", align:"right" },
+      { title: <span className="ant-table-cell odd-color">Aug In Lat </span>, dataIndex: "augWhLat", align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      }, },
+      { title: <span className="ant-table-cell odd-color">Aug In Pre</span>, dataIndex: "augWhPre", align:"right",render: (val) => {
+              const numericValue = Number(val);
+          
+              if (!isNaN(numericValue)) {
+                return numericValue.toLocaleString();
+              } else {
+                return val;
+              }
+            },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell even-color">Sep In Lat </span>, dataIndex: "sepWhLat", align:"right" },
-      { title: <span className="ant-table-cell even-color">Sep In Pre</span>, dataIndex: "sepWhPre", align:"right" },
+      { title: <span className="ant-table-cell even-color">Sep In Lat </span>, dataIndex: "sepWhLat", align:"right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
+      { title: <span className="ant-table-cell even-color">Sep In Pre</span>, dataIndex: "sepWhPre", align:"right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell odd-color">Oct In Lat </span>, dataIndex: "octWhLat",align:"right"  },
-      { title: <span className="ant-table-cell odd-color">Oct In Pre</span>, dataIndex: "octWhPre", align:"right" },
+      { title: <span className="ant-table-cell odd-color">Oct In Lat </span>, dataIndex: "octWhLat",align:"right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      }, },
+      { title: <span className="ant-table-cell odd-color">Oct In Pre</span>, dataIndex: "octWhPre", align:"right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell even-color">Nov In Lat </span>, dataIndex: "novWhLat",align:"right" },
-      { title: <span className="ant-table-cell even-color">Nov In Pre</span>, dataIndex: "novWhPre",align:"right"  },
+      { title: <span className="ant-table-cell even-color">Nov In Lat </span>, dataIndex: "novWhLat",align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
+      { title: <span className="ant-table-cell even-color">Nov In Pre</span>, dataIndex: "novWhPre",align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell odd-color">Dec In Lat </span>, dataIndex: "decWhLat", align:"right" },
-      { title: <span className="ant-table-cell odd-color">Dec In Pre</span>, dataIndex: "decWhPre", align:"right" },
+      { title: <span className="ant-table-cell odd-color">Dec In Lat </span>, dataIndex: "decWhLat", align:"right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
+      { title: <span className="ant-table-cell odd-color">Dec In Pre</span>, dataIndex: "decWhPre", align:"right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
-      { title: <span className="ant-table-cell even-color"> Total In Lat </span>, dataIndex: "totalWhLat", align: "right" },
-      { title: <span className="ant-table-cell even-color"> Total In Pre</span>, dataIndex: "totalWhPre", align: "right" },
+      { title: <span className="ant-table-cell even-color"> Total In Lat </span>, dataIndex: "totalWhLat", align: "right",render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
+      { title: <span className="ant-table-cell even-color"> Total In Pre</span>, dataIndex: "totalWhPre", align: "right" ,render: (val) => {
+        const numericValue = Number(val);
+    
+        if (!isNaN(numericValue)) {
+          return numericValue.toLocaleString();
+        } else {
+          return val;
+        }
+      },},
       { title: ``, dataIndex: "", },
       { title: ``, dataIndex: "", },
 
@@ -1439,11 +1860,7 @@ export const MonthWiseComparisionReport = () => {
       excel.saveAs(`Ware-House-comparision-report-${currentDate}.xlsx`);
     }
   };
-  const handleTabChange = (selectedYear: string) => {
-    setTab(Number(selectedYear));
-    getData(selectedYear,selected,file1,file2);
-  };
- 
+  
   const onReset = () => {
     form.resetFields();
     getData(tab,selected,file1,file2);
@@ -1591,7 +2008,7 @@ export const MonthWiseComparisionReport = () => {
         }
       });
     });
-    const totalValues = [janLat, janPre, febLat, febPre, marLat, marPre, aprLat, aprPre, mayLat, mayPre, junLat, junPre, julLat, julPre, augLat, augPre, sepLat, sepPre, octLat, octPre, novLat, novPre, decLat, decPre];
+    const totalValues = [janLat.toLocaleString(), janPre.toLocaleString(), febLat.toLocaleString(), febPre.toLocaleString(), marLat.toLocaleString(), marPre.toLocaleString(), aprLat.toLocaleString(), aprPre.toLocaleString(), mayLat.toLocaleString(), mayPre.toLocaleString(), junLat.toLocaleString(), junPre.toLocaleString(), julLat.toLocaleString(), julPre.toLocaleString(), augLat.toLocaleString(), augPre.toLocaleString(), sepLat.toLocaleString(), sepPre.toLocaleString(), octLat.toLocaleString(), octPre.toLocaleString(), novLat.toLocaleString(), novPre.toLocaleString(), decLat.toLocaleString(), decPre.toLocaleString()];
     // const totalValuesWithCommas = totalValues.map((val) => val.toLocaleString());
 
     return (
@@ -1608,8 +2025,13 @@ export const MonthWiseComparisionReport = () => {
                   {totalValues.map((val, index) => {
                     return <th className="ant-table-cell" scope="col" style={{ width: `${(index % 2) ? colWidth.pre : colWidth.latest}px`, textAlign:'right' }}>{val}</th>
                   })}
-                  <th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalLatest}px`, textAlign:'right' }}>{totalPre}</th>
-                  <th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalPre}px`, textAlign:'right' }}>{totalLat}</th>
+                  <th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalLatest}px`, textAlign:'right' }}>
+  {totalPre}
+</th>
+<th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalPre}px`, textAlign:'right' }}>
+  {totalLat}
+</th>
+
 
                   </tr>
                 </thead>
