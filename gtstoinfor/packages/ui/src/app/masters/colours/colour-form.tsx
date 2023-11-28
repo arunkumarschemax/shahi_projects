@@ -33,7 +33,7 @@ export const ColourForm=(props:ColourFromProps)=>{
         service.createColour(colourData).then((res) => {
           setDisable(false)
             if (res.status) {
-              AlertMessages.getSuccessMessage('Colour Created Successfully');
+              AlertMessages.getSuccessMessage('Color Created Successfully');
             //   location.push("/Currencies-view");
               onReset();
             } else {
@@ -61,7 +61,7 @@ export const ColourForm=(props:ColourFromProps)=>{
       
 
       return(
-        <Card title={<span>Colour</span>} style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
+        <Card title={<span>Color</span>} style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
         extra={props.isUpdate==true?"":<Link to='/masters/colour/colour-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
        >
 <Form
@@ -71,7 +71,10 @@ initialValues={props.colourData}
 name="control-hooks"
 onFinish={saveData}>
 
-<FormItem name="colourId" style={{display:'none'}}>
+<FormItem name="colourId" style={{display:'none'}} wrapperCol={{
+          offset: 8,
+          span: 16,
+        }}>
     <Input hidden/>
 </FormItem>
 <FormItem name="createdUser"  initialValue={createdUser} style={{display:'none'}}>
@@ -80,15 +83,15 @@ onFinish={saveData}>
 <Row>
 <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}> <Form.Item
           name="colour"
-          label="Colour"
+          label="Color"
           rules={[
             {
               required: true,
-              message:' Colour Is Required'
+              message:' Color Is Required'
             },
             {
               pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
-              message: `Colour Should contain only alphabets.`
+              message: `Color Should contain only alphabets.`
             }
           ]}
         >

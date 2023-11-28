@@ -155,7 +155,7 @@ export const columnView = () => {
         },
         {
             dataIndex:'column',
-            title:<div style={{textAlign:'center'}}>column</div>,
+            title:<div style={{textAlign:'center'}}>Column</div>,
             sorter: (a, b) => a.column?.localeCompare(b.column),
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('column')
@@ -255,7 +255,7 @@ export const columnView = () => {
     return (
       
       <Card
-      title={<span>Column</span>}
+      title={<span>Columns</span>}
       style={{ textAlign: "center" }}
       headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       extra={
