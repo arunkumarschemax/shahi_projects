@@ -32,8 +32,6 @@ m3FabricCode:number
 })
 shahiFabricCode:string
 
-
-
 @CreateDateColumn({
     name: "created_at",
   })
@@ -107,8 +105,8 @@ shahiFabricCode:string
     })
     grnQuantity:number
     
-@ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poFabricInfo)
-@JoinColumn({name:'purchase_order_id'})
-purchaseOrderEntity:PurchaseOrderEntity
+// @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poFabricInfo)
+// @JoinColumn({name:'purchase_order_id'})
+// purchaseOrderEntity:PurchaseOrderEntity
 
 }
