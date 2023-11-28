@@ -23,6 +23,7 @@ export const PurchaseOrderfabricForm =({props,indentId,data,sampleReqId}) =>{
     const [update, setUpdate]=useState<boolean>(false)
     const [fabricType, setFabricType]= useState<any[]>([])
     const [inputDisbale, setInputDisable]= useState<boolean>(false)
+    const [tableColumns, setTableColumns] = useState([]);
 
     const [page, setPage] = React.useState(1);
     const {Option}=Select
@@ -40,7 +41,7 @@ export const PurchaseOrderfabricForm =({props,indentId,data,sampleReqId}) =>{
 
     // console.log(fabricTableVisible)
     // console.log(data)
-    // console.log(sampleReqId)
+    console.log(sampleReqId.length)
 
     useEffect(() =>{
         getweave()
@@ -53,15 +54,17 @@ export const PurchaseOrderfabricForm =({props,indentId,data,sampleReqId}) =>{
 
 
     useEffect(() =>{
-        if(indentId != undefined){
+        if(indentId.length != 0){
             console.log(indentId)
+            setTableColumns([...columns])
             AllIndnetDetails(indentId)
         }
     },[indentId])
 
     useEffect(() =>{
-        if(sampleReqId != undefined){
+        if(sampleReqId .length != 0){
             getAllSampleDetails(sampleReqId)
+            setTableColumns([...samplecolumns])
         }
 
     },[sampleReqId])
@@ -155,14 +158,8 @@ export const PurchaseOrderfabricForm =({props,indentId,data,sampleReqId}) =>{
         setDefaultFabricFormData(rowData)
         setFabricIndexVal(index)
     }
-    // let col
-    // useEffect(() =>{
-    //     if(indentId != undefined){
-    //     col=[...columns]
-    //     }if(sampleReqId != undefined){
-    //         col=[...samplecolumns]
-    //     }
-    // })
+
+
     useEffect(() => {
         if(defaultFabricFormData){
             console.log(defaultFabricFormData)
@@ -185,7 +182,7 @@ export const PurchaseOrderfabricForm =({props,indentId,data,sampleReqId}) =>{
 
     },[defaultFabricFormData])
 
-    const columns : ColumnProps<any>[] = [
+    const columns  = [
         {
             title: 'S No',
             key: 'sno',
@@ -253,7 +250,7 @@ export const PurchaseOrderfabricForm =({props,indentId,data,sampleReqId}) =>{
             )
         }
     ]
-    const dummyCOlumn: ColumnProps<any>[]=[
+    const dummyCOlumn=[
 
     ]
     
@@ -443,7 +440,7 @@ export const PurchaseOrderfabricForm =({props,indentId,data,sampleReqId}) =>{
                         }
                 </Row>
                 <Row>
-                    {fabricTableVisible && <Table columns={sampleReqId != undefined? samplecolumns:indentId != undefined ?columns:dummyCOlumn} dataSource={fabricTableData}
+                    {fabricTableVisible && <Table columns={tableColumns} dataSource={fabricTableData}
                      />
                    }
 
