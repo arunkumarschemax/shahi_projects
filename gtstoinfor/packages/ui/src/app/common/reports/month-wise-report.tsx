@@ -1611,7 +1611,67 @@ export const MonthWiseReport = () => {
           data2 = null
         }
       });
-      data2?.forEach((row) => {
+      let totalJanExfPre = 0;
+      let totalJanExfLat = 0;
+      let totalFebExfPre = 0;
+      let totalFebExfLat = 0; 
+      let totalMarExfPre = 0;
+      let totalMarExfLat = 0; 
+      let totalAprExfPre = 0;   
+      let totalAprExfLat = 0; 
+      let totalMayExfPre = 0;   
+      let totalMayExfLat = 0; 
+      let totalJunExfPre = 0;   
+      let totalJunExfLat = 0; 
+      let totalJulExfPre = 0;   
+      let totalJulExfLat = 0; 
+      let totalAugExfPre = 0;   
+      let totalAugExfLat = 0; 
+      let totalSepExfPre = 0;   
+      let totalSepExfLat = 0; 
+      let totalOctExfPre = 0;   
+      let totalOctExfLat = 0; 
+      let totalNovExfPre = 0;   
+      let totalNovExfLat = 0; 
+      let totalDecExfPre = 0;   
+      let totalDecExfLat = 0;
+      let totalPreExf = 0;
+      let totalLatExf = 0;
+
+      let totalJanWhPre = 0;
+      let totalJanWhLat = 0;
+      let totalFebWhPre = 0;
+      let totalFebWhLat = 0; 
+      let totalMarWhPre = 0;
+      let totalMarWhLat = 0; 
+      let totalAprWhPre = 0;   
+      let totalAprWhLat = 0; 
+      let totalMayWhPre = 0;   
+      let totalMayWhLat = 0; 
+      let totalJunWhPre = 0;   
+      let totalJunWhLat = 0; 
+      let totalJulWhPre = 0;   
+      let totalJulWhLat = 0; 
+      let totalAugWhPre = 0;   
+      let totalAugWhLat = 0; 
+      let totalSepWhPre = 0;   
+      let totalSepWhLat = 0; 
+      let totalOctWhPre = 0;   
+      let totalOctWhLat = 0; 
+      let totalNovWhPre = 0;   
+      let totalNovWhLat = 0; 
+      let totalDecWhPre = 0;   
+      let totalDecWhLat = 0;
+      let totalPreWh = 0;
+      let totalLatWh = 0;
+   
+    
+    if (Array.isArray(data2) && data2.length > 0) {
+      data2.forEach((row) => {
+        // Log each row to inspect its structure and values
+        console.log('Row:', row.janPcsExf);
+    
+        // Accumulate totals for the current row
         totalJanExfPre += Number(row.janPcsExf) || 0;
         totalJanExfLat += Number(row.janCoeffExf) || 0;
         totalFebExfPre += Number(row.febPcsExf) || 0;
@@ -1636,8 +1696,8 @@ export const MonthWiseReport = () => {
         totalNovExfLat += Number(row.novCoeffExf) || 0;
         totalDecExfPre += Number(row.decPcsExf) || 0;
         totalDecExfLat += Number(row.decCoeffExf) || 0;
-        totalExfPre += Number(row.ExfPcsTotal) || 0;
-        totalExfLat += Number(row.ExfCoeffTotal) || 0;
+         totalPreExf += Number(row.ExfPcsTotal) || 0;
+         totalLatExf += Number(row.ExfCoeffTotal) || 0;
         totalJanWhPre += Number(row.janPcsWh) || 0;
         totalJanWhLat += Number(row.janCoeffWh) || 0;
         totalFebWhPre += Number(row.febPcsWh) || 0;
@@ -1662,77 +1722,79 @@ export const MonthWiseReport = () => {
         totalNovWhLat += Number(row.novCoeffWh) || 0;
         totalDecWhPre += Number(row.decPcsWh) || 0;
         totalDecWhLat += Number(row.decCoeffWh) || 0;
-        totalWhPre += Number(row.WhPcsTotal) || 0;
-        totalWhLat += Number(row.WhCoeffTotal) || 0;
+        totalPreWh += Number(row.WhPcsTotal) || 0;
+        totalLatWh += Number(row.WhCoeffTotal) || 0;
+        // ... Repeat for other months and types
       });
+    } else {
+    }      
   
-      const totalsPcsRow = {
-        planning_sum: "Total",
-        prod_plan_type: "",
-        janPcsExf: totalJanExfPre,
-        janCoeffExf: totalJanExfLat,
-        febPcsExf: totalFebExfPre,
-        febCoeffExf: totalFebExfLat,
-        marPcsExf: totalMarExfPre,
-        marCoeffExf: totalMarExfLat,
-        aprPcsExf: totalAprExfPre,
-        aprCoeffExf: totalAprExfLat,
-        mayExfPre: totalMayExfPre,
-        mayExfLat: totalMayExfLat,
-        junPcsExf: totalJunExfPre,
-        junCoeffExf: totalJunExfLat,
-        julPcsExf: totalJulExfPre,
-        julCoeffExf: totalJulExfLat,
-        augPcsExf: totalAugExfPre,
-        augCoeffExf: totalAugExfLat,
-        sepPcsExf: totalSepExfPre,
-        sepCoeffExf: totalSepExfLat,
-        octPcsExf: totalOctExfPre,
-        octCoeffExf: totalOctExfLat,
-        novPcsExf: totalNovExfPre,
-        novCoeffExf: totalNovExfLat,
-        decPcsExf: totalDecExfPre,
-        decCoeffExf: totalDecExfLat,
-        ExfPcsTotal: totalExfPre,
-        ExfCoeffTotal: totalExfLat,
-      };
-      const totalsCoeffRow = {
-        planning_sum: "Total",
-        prod_plan_type: "",
-        janPcsWh: totalJanWhPre,
-        janCoeffWh: totalJanWhLat,
-        febPcsWh: totalFebWhPre,
-        febCoeffWh: totalFebWhLat,
-        marPcsWh: totalMarWhPre,
-        marCoeffWh: totalMarWhLat,
-        aprPcsWh: totalAprWhPre,
-        aprCoeffWh: totalAprWhLat,
-        mayPcsWh: totalMayWhPre,
-        mayCoeffWh: totalMayWhLat,
-        junPcsWh: totalJunWhPre,
-        junCoeffWh: totalJunWhLat,
-        julPcsWh: totalJulWhPre,
-        julCoeffWh: totalJulWhLat,
-        augPcsWh: totalAugWhPre,
-        augCoeffWh: totalAugWhLat,
-        sepPcsWh: totalSepWhPre,
-        sepCoeffWh: totalSepWhLat,
-        octPcsWh: totalOctWhPre,
-        octCoeffWh: totalOctWhLat,
-        novPcsWh: totalNovWhPre,
-        novCoeffWh: totalNovWhLat,
-        decPcsWh: totalDecWhPre,
-        decCoeffWh: totalDecWhLat,
-        totalPcsWh: totalWhPre,
-        totalCoeffWh: totalWhLat,
-      };
-      if (selected === "ExFactory") {
-        data2?.push(totalsPcsRow);
-      }
-      if (selected === "WareHouse") {
-  
-        data2?.push(totalsCoeffRow);
-      }
+    const totalsPcsRow = {
+      planning_sum: "Total",
+      prod_plan_type: "",
+      janPcsExf: totalJanExfPre,
+      janCoeffExf: totalJanExfLat,
+      febPcsExf: totalFebExfPre,
+      febCoeffExf: totalFebExfLat,
+      marPcsExf: totalMarExfPre,
+      marCoeffExf: totalMarExfLat,
+      aprPcsExf: totalAprExfPre,
+      aprCoeffExf: totalAprExfLat,
+      mayPcsExf: totalMayExfPre,
+      mayCoeffExf: totalMayExfLat,
+      junPcsExf: totalJunExfPre,
+      junCoeffExf: totalJunExfLat,
+      julPcsExf: totalJulExfPre,
+      julCoeffExf: totalJulExfLat,
+      augPcsExf: totalAugExfPre,
+      augCoeffExf: totalAugExfLat,
+      sepPcsExf: totalSepExfPre,
+      sepCoeffExf: totalSepExfLat,
+      octPcsExf: totalOctExfPre,
+      octCoeffExf: totalOctExfLat,
+      novPcsExf: totalNovExfPre,
+      novCoeffExf: totalNovExfLat,
+      decPcsExf: totalDecExfPre,
+      decCoeffExf: totalDecExfLat,
+      ExfPcsTotal: totalPreExf,
+      ExfCoeffTotal: totalLatExf,
+    }
+    const totalsCoeffRow = {
+      planning_sum: "Total",
+      prod_plan_type: "",
+      janPcsWh: totalJanWhPre,
+      janCoeffWh: totalJanWhLat,
+      febPcsWh: totalFebWhPre,
+      febCoeffWh: totalFebWhLat,
+      marPcsWh: totalMarWhPre,
+      marCoeffWh: totalMarWhLat,
+      aprPcsWh: totalAprWhPre,
+      aprCoeffWh: totalAprWhLat,
+      mayPcsWh: totalMayWhPre,
+      mayCoeffWh: totalMayWhLat,
+      junPcsWh: totalJunWhPre,
+      junCoeffWh: totalJunWhLat,
+      julPcsWh: totalJulWhPre,
+      julCoeffWh: totalJulWhLat,
+      augPcsWh: totalAugWhPre,
+      augCoeffWh: totalAugWhLat,
+      sepPcsWh: totalSepWhPre,
+      sepCoeffWh: totalSepWhLat,
+      octPcsWh: totalOctWhPre,
+      octCoeffWh: totalOctWhLat,
+      novPcsWh: totalNovWhPre,
+      novCoeffWh: totalNovWhLat,
+      decPcsWh: totalDecWhPre,
+      decCoeffWh: totalDecWhLat,
+      WhPcsTotal: totalPreWh,
+      WhCoeffTotal: totalLatWh,
+    }
+    if (selected == 'ExFactory') {
+      data2?.push(totalsPcsRow);
+    }
+    if (selected == 'WareHouse') {
+      data2?.push(totalsCoeffRow)
+    }
       if (data1 != undefined && data2 != undefined) {
         const sheetName = res.year.toString(); // Convert res to a string
         excel
