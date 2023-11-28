@@ -86,28 +86,18 @@ export const PurchaseOrderForm =()=>{
     }
     useEffect(() =>{
         if(stateData != undefined ){
-            console.log(stateData)
-            console.log(stateData.type)
-
-            console.log(stateData)
-            console.log(stateData.data)
-            console.log(stateData.data[0].materialType)
-            console.log(stateData.data[1].indentIds)
-
             if(stateData.type == 'Indent'){
+                setIndentDropDownVisible(true)
                 poForm.setFieldsValue({indentId:stateData.data.indentId})
-                // setIndentId(stateData)
                 poForm.setFieldsValue({indentAgainst:'Indent'})
-                // setStyleVisible(false)
                 setIndentId(stateData.data.indentId)
                 if(stateData.data.materialType == "Fabric"){
                     poForm.setFieldsValue({poMaterialType:"Fabric"})
                     setPoType('Fabric')
                 }
-                if(stateData.data.materialType == 'Trim'){
+                if(stateData.data.materialType != 'Fabric'){
                     setPoType('Trim')
                     poForm.setFieldsValue({poMaterialType:"Trim"})
-    
                 }
             }
             if(stateData.type == 'Sampling'){

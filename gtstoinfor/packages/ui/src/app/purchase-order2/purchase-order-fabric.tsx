@@ -28,22 +28,19 @@ export const PurchaseOrderfabricForm =({props,indentId,data,sampleReqId}) =>{
     const {Option}=Select
     const weaveService = new FabricWeaveService()
     const uomService =  new UomService()
-    const m3MasterService = new M3MastersService()
     const colorService = new ColourService();
     const pchService = new ProfitControlHeadService()
     const fabricTypeService = new FabricTypeService()
     const indentService = new IndentService()
-    const [indentData, setIndentData]=useState<any[]>([])
     let tableData: any[] = []
-    const m3StyleService = new M3StyleService()
     const m3ItemsService = new M3ItemsService()
     const sampleservice = new SampleDevelopmentService()
 
 
 
-    console.log(fabricTableVisible)
-    console.log(data)
-    console.log(sampleReqId)
+    // console.log(fabricTableVisible)
+    // console.log(data)
+    // console.log(sampleReqId)
 
     useEffect(() =>{
         getweave()
@@ -57,6 +54,7 @@ export const PurchaseOrderfabricForm =({props,indentId,data,sampleReqId}) =>{
 
     useEffect(() =>{
         if(indentId != undefined){
+            console.log(indentId)
             AllIndnetDetails(indentId)
         }
     },[indentId])
@@ -157,7 +155,14 @@ export const PurchaseOrderfabricForm =({props,indentId,data,sampleReqId}) =>{
         setDefaultFabricFormData(rowData)
         setFabricIndexVal(index)
     }
-
+    // let col
+    // useEffect(() =>{
+    //     if(indentId != undefined){
+    //     col=[...columns]
+    //     }if(sampleReqId != undefined){
+    //         col=[...samplecolumns]
+    //     }
+    // })
     useEffect(() => {
         if(defaultFabricFormData){
             console.log(defaultFabricFormData)
@@ -247,6 +252,9 @@ export const PurchaseOrderfabricForm =({props,indentId,data,sampleReqId}) =>{
                 </span>
             )
         }
+    ]
+    const dummyCOlumn: ColumnProps<any>[]=[
+
     ]
     
     const samplecolumns : ColumnProps<any>[] = [
@@ -364,6 +372,7 @@ export const PurchaseOrderfabricForm =({props,indentId,data,sampleReqId}) =>{
         console.log(value)
 
     }
+
     return (
     <Card title={<span style={{color:'blue', fontSize:'17px'}} >Fabric Details</span>}>
        <Form form={fabricForm} layout="vertical" onFinish={onFabricAdd}>
@@ -434,7 +443,7 @@ export const PurchaseOrderfabricForm =({props,indentId,data,sampleReqId}) =>{
                         }
                 </Row>
                 <Row>
-                    {fabricTableVisible && <Table columns={sampleReqId != undefined? samplecolumns:columns} dataSource={fabricTableData}
+                    {fabricTableVisible && <Table columns={sampleReqId != undefined? samplecolumns:indentId != undefined ?columns:dummyCOlumn} dataSource={fabricTableData}
                      />
                    }
 
