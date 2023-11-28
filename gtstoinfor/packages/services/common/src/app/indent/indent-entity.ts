@@ -108,8 +108,8 @@ export class Indent {
   @OneToMany(type => IndentTrimsEntity, trim => trim.indentInfo, { cascade: true })
   iTrimsInfo: IndentTrimsEntity[];
 
-  @ManyToOne(type =>SampleRequest,sampleReq =>sampleReq.indentInfo)
-  @JoinColumn({name:'sample_request_id'})
-  sampleReq:SampleRequest
+  // @ManyToOne(type =>SampleRequest,sampleReq =>sampleReq.indentInfo)
+  // @JoinColumn({name:'sample_request_id'})
+  // sampleReq:SampleRequest
 
 }
