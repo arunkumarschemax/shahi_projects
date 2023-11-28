@@ -247,19 +247,19 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
       ];
 
       return (
-        <Card title={<span>Profit Control Head</span>}
+        <Card title={<span>Profit Control Heads</span>}
         style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/masters/profit-control-head/profit-control-head-form"  ><span><Button type={'primary'} >New </Button> </span></Link>}>
 <br></br>
 <>
 <Row gutter={40}>
     <Col>
-<Card title={'Total ProfitControlHead: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+<Card title={'Total Profit Control Heads: ' + variantData.length} style={{ textAlign: 'center', width: 220, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
         <Col>
-          <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+          <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'center', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
         </Col>
         <Col>
-          <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+          <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'center', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
 </Row>
        
