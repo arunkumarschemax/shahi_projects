@@ -62,7 +62,7 @@ export const MonthWiseComparisionReport = () => {
 
   })
   }
-  console.log(file1,'--------',file2,'========')
+  // console.log(file1,'--------',file2,'========')
   
   const getPhase = () => {
     
@@ -78,9 +78,9 @@ export const MonthWiseComparisionReport = () => {
   const handleTabChange = (selectedYear:any) => {
     getFiles(Number(selectedYear))
     setTab(Number(selectedYear));
-    console.log(selected,'----------')
-    console.log(file1,'-----file 1-----')
-    console.log(file2,'-----file2-----')
+    // console.log(selected,'----------')
+    // console.log(file1,'-----file 1-----')
+    // console.log(file2,'-----file2-----')
     // getData(Number(selectedYear) ,selected,file1,file2);
   };
  
@@ -108,7 +108,7 @@ export const MonthWiseComparisionReport = () => {
     // getFiles()
     const req = new YearReq(val,tabName,file1,file2);
   
-  console.log(req,'reqqqqq');
+  // console.log(req,'reqqqqq');
 
     if (form.getFieldValue('ItemName') !== undefined) {
       req.itemName = form.getFieldValue('ItemName')
