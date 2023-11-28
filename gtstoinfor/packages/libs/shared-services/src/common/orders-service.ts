@@ -172,8 +172,8 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.ordersController + "/getSeasonWiseItemCode")
     }
 
-    async getSeasonWiseItemName(req:SeasonWiseRequest): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getSeasonWiseItemName",req)
+    async getSeasonWiseItemName(req: SeasonWiseRequest): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getSeasonWiseItemName", req)
     }
     async getQtyDifChangeItemCode(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getQtyDifChangeItemCode")
@@ -251,8 +251,11 @@ export class OrdersService extends CommonAxiosService {
     async saveItemDetailsOfTrimOrder(req: OrderAcceptanceRequest): Promise<CommonResponseModel> {
         return await AxiosInstance.post('https://nike-backend.shahiapps.in/api/nike-dpom/coLineCreationReq', req)
         // console.log()
-
         // return this.axiosPostCall(this.ordersController + "/saveItemDetailsOfTrimOrder")
+    }
+
+    async getCoLine(req: any): Promise<CommonResponseModel> {
+        return await AxiosInstance.post('https://nike-backend.shahiapps.in/api/nike-dpom/getCoLine', req)
     }
 
 }
