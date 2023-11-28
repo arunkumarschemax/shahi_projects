@@ -234,7 +234,9 @@ const SampleRequestReport = () => {
   const generatePo =()=>{
     navigate("/purchase-order", { state: { data: selectedItems, type:'Sampling'  } });
   }
+  
   const dataa=[];
+
   const onCheck = (e, sampleRequestid, fabricType, value) => {
     const checkboxValue = e.target.checked;
     console.log(sampleRequestid)

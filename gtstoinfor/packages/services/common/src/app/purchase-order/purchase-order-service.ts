@@ -77,12 +77,9 @@ export class PurchaseOrderService {
                     console.log(trimInfo)
                     console.log('""""""""""""""""""""""""""""""""""""""""""""')
                     trimEntity.colourId = trimInfo.colourId
-                    // trimEntity.productGroupId = trimInfo.productGroupId
-                    // trimEntity.trimId = trimInfo.trimId
                     trimEntity.m3TrimCode = trimInfo.m3TrimCode
-                    trimEntity.description = trimInfo.description
-                    trimEntity.consumption = trimInfo.consumption
-                    trimEntity.remarks = trimInfo.remarks
+                    // trimEntity.description = trimInfo.description
+                    // trimEntity.remarks = trimInfo.remarks
                     trimEntity.indentTrimId = trimInfo.indentTrimId
                     trimEntity.sampleReqTrimId = trimInfo.sampleReqTrimId
                     trimEntity.poQuantity = trimInfo.poQuantity
