@@ -172,9 +172,11 @@ const SampleRequestReport = () => {
       sorter: (a, b) => a.stylename.localeCompare(b.stylename),
       sortDirections: ['descend', 'ascend'],
     },
+
+    
    
     {
-      title: <div style={{ textAlign: "center" }}>Fabric Name</div>,
+      title: <div style={{ textAlign: "center" }}>Material Type</div>,
       dataIndex: "sm",
       key: "sm",
       align: "center",
@@ -183,82 +185,86 @@ const SampleRequestReport = () => {
         return (
           <Table
             dataSource={sm}
-            columns={ItemColumns}
+            columns={[{
+              dataIndex: "fabricType",
+              key: "fabricType",
+              align: "center",
+            }]}
             pagination={false}
           />
         );
       },
     },
  
-    // {
-    //   title: <div style={{ textAlign: "center" }}>Item</div>,
-    //   dataIndex: "sm",
-    //   key: "sm",
-    //   align: "center",
-    //   render: (sm, text) => {
-    //     renderCellData(text);
-    //     return (
-    //       <Table
-    //         dataSource={sm}
-    //         columns={[
-    //           {
-    //             dataIndex: "itemCode",
-    //             key: "itemCode",
-    //             align: "center",
-    //           },
-    //         ]}
-    //         pagination={false}
-    //       />
-    //     );
-    //   },
-    // },
-    // {
-    //   title: <div style={{ textAlign: "center" }}>Required Qty</div>,
-    //   dataIndex: "sm",
-    //   key: "sm",
-    //   align: "center",
-    //   render: (sm) => {
-    //     return (
-    //       <Table
-    //         dataSource={sm}
-    //         columns={[
-    //           {
-    //             dataIndex: "quantity",
-    //             key: "quantity",
-    //             align: "center",
-    //           },
-    //         ]}
-    //         pagination={false}
-    //       />
-    //     );
-    //   },
-    // },
-    // {
-    //   title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" onClick={() =>generatePo()} >Generate Po</Button>:'Genereate PO'}</div>,
-    //   dataIndex: "sm",
-    //   key: "sm",
-    //   align: "center",
-    //   // render: (sm) => {
-    //     // return (
-    //       // <Table
-    //       //   dataSource={sm}
-    //       //   columns={[
-    //       //     {
-    //             render: (text, rowData, index) => { 
-    //               return(
-    //                 <Checkbox 
-    //                 onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.fabricType, text, rowData)}
+    {
+      title: <div style={{ textAlign: "center" }}>Item</div>,
+      dataIndex: "sm",
+      key: "sm",
+      align: "center",
+      render: (sm, text) => {
+        renderCellData(text);
+        return (
+          <Table
+            dataSource={sm}
+            columns={[
+              {
+                dataIndex: "itemCode",
+                key: "itemCode",
+                align: "center",
+              },
+            ]}
+            pagination={false}
+          />
+        );
+      },
+    },
+    {
+      title: <div style={{ textAlign: "center" }}>Required Qty</div>,
+      dataIndex: "sm",
+      key: "sm",
+      align: "center",
+      render: (sm) => {
+        return (
+          <Table
+            dataSource={sm}
+            columns={[
+              {
+                dataIndex: "quantity",
+                key: "quantity",
+                align: "center",
+              },
+            ]}
+            pagination={false}
+          />
+        );
+      },
+    },
+    {
+      title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" onClick={() =>generatePo()} >Generate Po</Button>:'Genereate PO'}</div>,
+      dataIndex: "sm",
+      key: "sm",
+      align: "center",
+      render: (sm) => {
+        return (
+          <Table
+            dataSource={sm}
+            columns={[
+              {
+                render: (text, rowData, index) => { 
+                  return(
+                    <Checkbox 
+                    onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.fabricType, text, rowData)}
                    
-    //               />
-    //               )
-    //             }
-    //       //     },
-    //       //   ]}
-    //       //   pagination={false}
-    //       // />
-    //     // );
-    //   // },
-    // },
+                  />
+                  )
+                }
+              },
+            ]}
+            pagination={false}
+          />
+        );
+      },
+    },
   ];
 
   const generatePo =()=>{
@@ -268,22 +274,31 @@ const SampleRequestReport = () => {
   const dataa=[];
 
   const onCheck = (e, sampleRequestid, fabricType, value, rowData) => {
-    console.log(e);
+    console.log(e.target.checked);
     console.log(sampleRequestid);
     console.log(fabricType);
     console.log(rowData);
 
-    console.log(data);
-    console.log(data.find((rec) => rec.fabricType != fabricType));
+    console.log(selectedRowData);
+    console.log(selectedRowData.find((rec) => rec.fabricType != fabricType));
 
-    if(e.target.value){
+    if(e.target.checked){
+      
+      let rowsData = [...selectedRowData,rowData]
+      setSelectedRowData(rowsData)
       let checkItemType:boolean = true;
-      checkItemType = (data.find((rec) => rec.fabricType != fabricType) != undefined) ? false: true;
+      checkItemType = (selectedRowData.find((rec) => rec.fabricType != fabricType) != undefined) ? false: true;
       console.log(checkItemType)
       if(!checkItemType){
         AlertMessages.getErrorMessage('Generate PO for single Material Type. ')
       }
       setbtnEnable(true)
+      console.log(data)
+    }
+    else{
+      console.log(rowData)
+      console.log(selectedRowData)
+
     }
     
     const checkboxValue = e.target.checked;
