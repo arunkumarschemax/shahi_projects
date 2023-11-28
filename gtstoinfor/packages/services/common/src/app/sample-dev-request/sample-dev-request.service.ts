@@ -757,7 +757,7 @@ export class SampleRequestService {
     async getTrimDetailsOfSample(req:sampleReqIdReq):Promise<CommonResponseModel>{
       try{
         const manager = this.dataSource;
-        const query ='SELECT mt.trim_code AS m3trimCode,t.trim_type AS trimTupe,request_no AS sampleReqNo,trim_info_id AS sampleTrimInfoId,uom_id AS uomId,consumption AS poQuantity,t.sample_request_id AS sampleReqId FROM sample_request_trim_info t LEFT JOIN sample_request sr ON sr.sample_request_id=t.sample_request_id LEFT JOIN m3_trims mt ON mt.m3_trim_Id=t.trim_code where t.sample_request_id in ('+req.sampleReqId+')'
+        const query ='SELECT t.trim_code as m3TrimCode,mt.trim_code AS m3TrimCodeName,t.trim_type AS trimTupe,request_no AS sampleReqNo,trim_info_id AS sampleTrimInfoId,uom_id AS uomId,consumption AS sampleOrderQuantity,t.sample_request_id AS sampleReqId FROM sample_request_trim_info t LEFT JOIN sample_request sr ON sr.sample_request_id=t.sample_request_id LEFT JOIN m3_trims mt ON mt.m3_trim_Id=t.trim_code where t.sample_request_id in ('+req.sampleReqId+')'
         const rmData = await manager.query(query);
         if(rmData){
           return new CommonResponseModel(true,1,'data',rmData)
