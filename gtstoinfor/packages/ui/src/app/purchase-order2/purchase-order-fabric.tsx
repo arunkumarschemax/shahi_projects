@@ -429,7 +429,9 @@ export const PurchaseOrderfabricForm =({props,indentId,data,sampleReqId}) =>{
                     </Col>
                     </Row>
                     <Row justify={'end'}>
-                    <Button type='primary' htmlType="submit">{update ?'Update':'Add'}</Button>
+                        {update?
+                         <Button type='primary' htmlType="submit">{update ?'Update':'Add'}</Button>:<></>
+                        }
                 </Row>
                 <Row>
                     {fabricTableVisible && <Table columns={sampleReqId != undefined? samplecolumns:columns} dataSource={fabricTableData}

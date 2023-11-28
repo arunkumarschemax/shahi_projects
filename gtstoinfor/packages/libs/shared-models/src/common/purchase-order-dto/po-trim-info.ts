@@ -13,13 +13,10 @@ export class PurchaseOrderTrimDto{
     quantityUomId:number
 
     constructor(
-      sampleReqTrimId:number,
-       indentTrimId:number,
+         sampleReqTrimId:number,
+        indentTrimId:number,
         colourId:number,
         m3TrimCode:string,
-        description: string,
-        consumption: number,
-        remarks: string,
         poQuantity:number,
         quantityUomId:number
     ){
@@ -27,9 +24,6 @@ export class PurchaseOrderTrimDto{
         this.indentTrimId=indentTrimId
         this.colourId=colourId
         this.m3TrimCode=m3TrimCode
-        this.description=description
-        this.consumption=consumption
-        this.remarks=remarks
         this.poQuantity=poQuantity
         this.quantityUomId=quantityUomId
     }

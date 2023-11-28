@@ -7,6 +7,7 @@ import {
   Divider,
   Form,
   Input,
+  Modal,
   Row,
   Select,
   Space,
@@ -34,6 +35,7 @@ import TabPane from "antd/es/tabs/TabPane";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
+import MaterialAllocationPrint from "./material-allocation.print";
 
 export const MaterialAllocationGrid = () => {
   const locationService = new LocationMappingService();
@@ -55,6 +57,8 @@ export const MaterialAllocationGrid = () => {
   const searchInput = useRef(null);
   const materialservice = new MaterialIssueService();
   const [isButtonDisabled, setButtonDisabled] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
 
   useEffect(() => {
     getData();
@@ -212,6 +216,19 @@ export const MaterialAllocationGrid = () => {
     clearFilters();
     setSearchText("");
   }
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
 
   const sampleTypeColumns: ColumnsType<any> = [
     {
@@ -431,7 +448,7 @@ export const MaterialAllocationGrid = () => {
           </span>
           <Divider type="vertical" />
           <span>
-            <Button type="primary" size="small">
+            <Button type="primary" size="small" onClick={showModal}>
               Print
             </Button>
           </span>
@@ -465,14 +482,14 @@ export const MaterialAllocationGrid = () => {
         headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
         extra={
           <span>
-            <Button
+            {/* <Button
               onClick={() =>
                 navigate("/sample-development/material-allocation-view")
               }
               type={"primary"}
             >
               View
-            </Button>
+            </Button> */}
           </span>
         }
         size="small"
@@ -538,11 +555,25 @@ export const MaterialAllocationGrid = () => {
           </Row>
         </Form>
 
+        
+        <Modal className='print-docket-modal'
+                //  key={'modal'}
+                 width={'60%'}
+                 style={{ top: 30, alignContent: 'right' }}
+                visible={isModalOpen}
+                title={<React.Fragment>
+               </React.Fragment>}
+                onCancel={handleCancel}
+                
+                >
+             < MaterialAllocationPrint data={approvedData}  />         
+            </Modal>
+
         <Tabs type={"card"} tabPosition={"top"}>
           <TabPane
             key="1"
             tab={
-              <span style={{ fontSize: "15px" }}>
+              <span style={{ fontSize: "12px" }}>
                 <b>{`OPEN`}</b>
               </span>
             }
@@ -559,7 +590,7 @@ export const MaterialAllocationGrid = () => {
           <TabPane
             key="2"
             tab={
-              <span style={{ fontSize: "15px" }}>
+              <span style={{ fontSize: "12px" }}>
                 <b>{`APPROVED`}</b>
               </span>
             }

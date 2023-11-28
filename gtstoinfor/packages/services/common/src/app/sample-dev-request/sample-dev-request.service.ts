@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -33,6 +33,8 @@ import { IndentService } from '@project-management-system/shared-services';
 import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 import { MaterialAllocationEntity } from './entities/material-allocation.entity';
 import { MaterialAllocationDTO } from './dto/material-allocation-dto';
+import { MaterialAllocationItemsRepo } from './repo/material-allocation-items-repo';
+import { MaterialallitemsReq } from './dto/sample-req-size-req';
 
 
 
@@ -52,6 +54,8 @@ export class SampleRequestService {
     private logRepo: SampleInventoryLoqRepo,
     private indentService: IndentService,
     private matAllRepo:MaterialAllocationRepo,
+    private matAllitemRepo:MaterialAllocationItemsRepo,
+
 
     
   ) { }
@@ -560,7 +564,7 @@ export class SampleRequestService {
            result[sampleOrderId].itemDetails.push(
              {
                locationId:item.locationId,
-               quantity:item.quantity,
+              //  quantity:item.quantity,
                allocatedQuantity:item.allocateQuantity,
                stockId: item.stockId,
              }
@@ -687,7 +691,7 @@ export class SampleRequestService {
     async getAvailbelQuantityAginstBuyerAnditem(req:buyerandM3ItemIdReq):Promise<CommonResponseModel>{
       try{
         const manager = this.dataSource;
-        const query ='SELECT st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId,st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, false AS isChecked FROM stocks st   LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id  WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' and st.item_type="'+req.itemType+'"'
+        const query ='SELECT st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId,st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, false AS checkedStatus FROM stocks st   LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id  WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' and st.item_type="'+req.itemType+'"'
         const rmData = await manager.query(query);
         if(rmData){
           return new CommonResponseModel(true,1,'data',rmData)
@@ -742,6 +746,20 @@ export class SampleRequestService {
       }
     }
 
+    async getallMaterialAllocationItemsById(req:MaterialallitemsReq) : Promise<CommonResponseModel> {
+      try{
+        const data = await this.matAllitemRepo.getallMaterialAllocationItemsById(req)
+       
+        if(data){
+          return new CommonResponseModel(true,0,'Data retrived Successfully',data)
+        } else {
+          return new CommonResponseModel(false,1,'No Data Found',[])
+        }
+      } catch(err){
+        throw err
+      }
+    }
+
 
 
    
@@ -784,7 +802,7 @@ export class SampleRequestService {
     async getTrimDetailsOfSample(req:sampleReqIdReq):Promise<CommonResponseModel>{
       try{
         const manager = this.dataSource;
-        const query ='SELECT mt.trim_code AS m3trimCode,t.trim_type AS trimTupe,request_no AS sampleReqNo,trim_info_id AS sampleTrimInfoId,uom_id AS uomId,consumption AS poQuantity,t.sample_request_id AS sampleReqId FROM sample_request_trim_info t LEFT JOIN sample_request sr ON sr.sample_request_id=t.sample_request_id LEFT JOIN m3_trims mt ON mt.m3_trim_Id=t.trim_code where t.sample_request_id in ('+req.sampleReqId+')'
+        const query ='SELECT t.trim_code as m3TrimCode,mt.trim_code AS m3TrimCodeName,t.trim_type AS trimTupe,request_no AS sampleReqNo,trim_info_id AS sampleTrimInfoId,uom_id AS uomId,consumption AS sampleOrderQuantity,t.sample_request_id AS sampleReqId FROM sample_request_trim_info t LEFT JOIN sample_request sr ON sr.sample_request_id=t.sample_request_id LEFT JOIN m3_trims mt ON mt.m3_trim_Id=t.trim_code where t.sample_request_id in ('+req.sampleReqId+')'
         const rmData = await manager.query(query);
         if(rmData){
           return new CommonResponseModel(true,1,'data',rmData)

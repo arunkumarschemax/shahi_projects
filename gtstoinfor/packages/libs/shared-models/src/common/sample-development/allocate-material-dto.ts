@@ -7,9 +7,13 @@ export class Allocatematerial{
     stockId:number
     LocationId:number
     allocatioQuantity:number
+    checkedStatus?:boolean
+    issuedQty?:number
+
 //    status: MaterialStatusEnum;
     createdUser: string | null;
     updatedUser: string | null;
+    
     constructor(
         itemType: string,
         sampleOrderId:number,
@@ -19,6 +23,8 @@ export class Allocatematerial{
         stockId:number,
         LocationId:number,
         allocatioQuantity:number,
+        checkedStatus?:boolean,
+        issuedQty?:number,
     //    status: MaterialStatusEnumnumber,
         createdUser?: string ,
         updatedUser?: string ,
@@ -31,6 +37,8 @@ export class Allocatematerial{
         this.stockId=stockId
         this.LocationId=LocationId
         this.allocatioQuantity=allocatioQuantity
+        this.checkedStatus=checkedStatus
+        this.issuedQty=issuedQty
         this.createdUser=createdUser
         this.updatedUser=updatedUser
 
