@@ -9,6 +9,7 @@ import { Body, Controller, Post, Req, UploadedFile, UseInterceptors } from "@nes
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { SampleInventoryLog } from './dto/sample-inventory-log-dto';
+import { MaterialallitemsReq } from './dto/sample-req-size-req';
 
 @ApiTags('sample-request')
 @Controller('sample-request')
@@ -244,6 +245,18 @@ export class SampleDevReqController {
   async creatematerialAlloction(@Body() req:any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.creatematerialAlloction(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+
+  @Post('/getallMaterialAllocationItemsById')
+  @ApiBody({ type: MaterialallitemsReq })
+  
+  async getallMaterialAllocationItemsById(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getallMaterialAllocationItemsById(req)
     }
     catch (err) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);

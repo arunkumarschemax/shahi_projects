@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ColumnProps, ColumnsType } from 'antd/lib/table';
-import { Button, Card, Table } from 'antd';
+import { Button, Card, Descriptions, Table } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { GRNLocationPropsRequest } from '@project-management-system/shared-models';
-import { LocationMappingService } from '@project-management-system/shared-services';
+import { GRNLocationPropsRequest, MaterialAllocationitemsIdreq } from '@project-management-system/shared-models';
+import { LocationMappingService, SampleDevelopmentService } from '@project-management-system/shared-services';
+import DescriptionsItem from 'antd/es/descriptions/Item';
 
 export const MaterialAllocationDetailView = () => {
 
@@ -11,13 +12,16 @@ export const MaterialAllocationDetailView = () => {
     const [page, setPage] = React.useState(1);
     const [pageSize, setPageSize] = React.useState<number>(null);
     const [fabData, setFabData] = React.useState<any>()
-    const [grndata, setGrndata] = React.useState<any[]>([]);
+    const [data, setData] = useState<any[]>([]);
     const [locationData, setLocationData] = React.useState<GRNLocationPropsRequest>();
 
 
     const navigate = useNavigate();
     const location = useLocation()
     console.log(location.state,"loo")
+     const service = new SampleDevelopmentService();
+     console.log(data,data)
+
 
   
 
@@ -29,47 +33,33 @@ export const MaterialAllocationDetailView = () => {
             responsive: ['sm'],
             render: (text, object, index) => (page - 1) * pageSize + (index + 1)
         },
+       
         {
-            title: 'Buyer',
-            dataIndex: "grn_number",
+            title: 'Location',
+            dataIndex: "rack_position_name",
             align: 'left',
-            //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
-            //   sortDirections: ['descend', 'ascend'],
-            //   ...getColumnSearchProps('vendorName')
-        },
-        {
-            title: 'Sample Request No',
-            dataIndex: "vendor_name",
-            align: 'left',
-            //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
-            //   sortDirections: ['descend', 'ascend'],
+            width:130,
+            sorter: (a, b) => a.rack_position_name - b.rack_position_name,
+             sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
        
-        {
-            title: 'Material Type',
-            dataIndex: "item_type",
-            align: 'left',
-            //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
-            //   sortDirections: ['descend', 'ascend'],
-            //   ...getColumnSearchProps('vendorName')
-        },
-        {
-            title: 'Item',
-            dataIndex: "m3_item_code",
-            align: 'left',
-            //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
-            //   sortDirections: ['descend', 'ascend'],
-            //   ...getColumnSearchProps('vendorName')
-        },
         {
             title: 'Quantity',
-            dataIndex: 'conversion_quantity',
+            dataIndex: 'quantity',
             align: 'left',
-            // sorter: (a, b) => a.receivedQuantity - b.receivedQuantity,
-            // sortDirections: ['descend', 'ascend'],
+            width:130,
+            sorter: (a, b) => a.quantity - b.quantity,
+            sortDirections: ['descend', 'ascend'],
         },
-       
+        {
+            title: 'Allocate Quantity',
+            dataIndex: 'allocate_quantity',
+            align: 'left',
+            width:130,
+            sorter: (a, b) => a.allocate_quantity - b.allocate_quantity,
+            sortDirections: ['descend', 'ascend'],
+        }
        
         
 
@@ -78,17 +68,46 @@ export const MaterialAllocationDetailView = () => {
     const onChange = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);
     }
+    
+  
+  useEffect(() => {
+    getallMaterialAllocationItemsById();
+  }, []);
+
+  const getallMaterialAllocationItemsById = () => {
+    const req = new MaterialAllocationitemsIdreq(location?.state?.material_allocation_id);
+
+    service.getallMaterialAllocationItemsById(req).then((res) => {
+      if (res.status) {
+        setData(res.data)
+       
+      } else {
+      
+       
+      }
+    });
+  };
+
 
 
     return (
         <div>
             <Card title={<span style={{ color: 'white' }}>Material Allocation Detail View</span>}
                 style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
+
+                <Descriptions size='small'>
+                <DescriptionsItem label='Sample Request No'>{location?.state?.request_no}</DescriptionsItem>
+                 <DescriptionsItem label='Buyer'>{location?.state?.buyer_name}</DescriptionsItem>
+                <DescriptionsItem label='Item Type'>{location?.state?.item_type}</DescriptionsItem>
+                <DescriptionsItem label='Quantity'>{location?.state?.quantity}</DescriptionsItem>
+                <DescriptionsItem label='Total Allocated Quantity'>{location?.state?.total_allocated_quantity}</DescriptionsItem>
+               
+            </Descriptions>
                 <Table
                     rowKey={record => record.productId}
                     className="components-table-nested"
                     columns={sampleTypeColumns}
-                    dataSource={fabData}
+                    dataSource={data}
                     pagination={{
                         onChange(current, pageSize) {
                             setPage(current);
@@ -97,7 +116,7 @@ export const MaterialAllocationDetailView = () => {
                     }}
                     onChange={onChange}
                     scroll={{ x: 500 }}
-                    // size='small'
+                    size='small'
                     bordered
                 />
             </Card>

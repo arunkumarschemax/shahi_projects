@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -33,6 +33,8 @@ import { IndentService } from '@project-management-system/shared-services';
 import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 import { MaterialAllocationEntity } from './entities/material-allocation.entity';
 import { MaterialAllocationDTO } from './dto/material-allocation-dto';
+import { MaterialAllocationItemsRepo } from './repo/material-allocation-items-repo';
+import { MaterialallitemsReq } from './dto/sample-req-size-req';
 
 
 
@@ -52,6 +54,8 @@ export class SampleRequestService {
     private logRepo: SampleInventoryLoqRepo,
     private indentService: IndentService,
     private matAllRepo:MaterialAllocationRepo,
+    private matAllitemRepo:MaterialAllocationItemsRepo,
+
 
     
   ) { }
@@ -731,6 +735,20 @@ export class SampleRequestService {
     async getAllMaterialAllocation(req?:buyerReq) : Promise<CommonResponseModel> {
       try{
         const data = await this.matAllRepo.getallMaterialAllocation(req)
+       
+        if(data){
+          return new CommonResponseModel(true,0,'Data retrived Successfully',data)
+        } else {
+          return new CommonResponseModel(false,1,'No Data Found',[])
+        }
+      } catch(err){
+        throw err
+      }
+    }
+
+    async getallMaterialAllocationItemsById(req:MaterialallitemsReq) : Promise<CommonResponseModel> {
+      try{
+        const data = await this.matAllitemRepo.getallMaterialAllocationItemsById(req)
        
         if(data){
           return new CommonResponseModel(true,0,'Data retrived Successfully',data)
