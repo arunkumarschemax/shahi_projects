@@ -9,13 +9,15 @@ import { PurchaseOrderTrimEntity } from "./entities/purchase-order-trim-entity";
 import { PurchaseOrderRepository } from "./repo/purchase-order-repository";
 import { PurchaseOrderFabricRepository } from "./repo/purchase-order-fabric-repository";
 import { PurchaseOrderTrimRepository } from "./repo/purchase-order-trim-repository";
+import { PurchaseOrderItemsEntity } from "./entities/purchase-order-items-entity";
 
 @Module({
     imports: [
     TypeOrmModule.forFeature([
         PurchaseOrderEntity,
         PurchaseOrderFbricEntity,
-        PurchaseOrderTrimEntity
+        PurchaseOrderTrimEntity,
+        PurchaseOrderItemsEntity
     ]),
     ],
     controllers: [PurchaseOrderController],
