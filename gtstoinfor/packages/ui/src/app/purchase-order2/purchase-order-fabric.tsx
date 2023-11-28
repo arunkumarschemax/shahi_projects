@@ -189,10 +189,10 @@ export const PurchaseOrderfabricForm =({props,indentId,data,sampleReqId}) =>{
             responsive: ['sm'],
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
-        {
-            title:'Sample Code',
-            dataIndex:'indentCode',
-        },
+        // {
+        //     title:'Sample Code',
+        //     dataIndex:'indentCode',
+        // },
         {
             title:'Indent Code',
             dataIndex:'indentCode',
@@ -250,9 +250,7 @@ export const PurchaseOrderfabricForm =({props,indentId,data,sampleReqId}) =>{
             )
         }
     ]
-    const dummyCOlumn=[
-
-    ]
+    
     
     const samplecolumns : ColumnProps<any>[] = [
         {

@@ -596,7 +596,6 @@ export class SampleRequestService {
          entity.totalIssueQty=100
          entity.status=MaterialStatusEnum.MATERIAL_ALLOCATED
          for(const itemData of mainData.itemData){
-          // console.log('&&&&&&&&&&&&&&&&&&')
           const itemEntity = new MaterialAllocationItemsEntity()
               itemEntity.locationId=itemData.LocationId
               itemEntity.stockId=itemData.stockId
