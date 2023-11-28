@@ -511,20 +511,20 @@ export const DocReader = (props: DocReaderProps) => {
                 //     break;
                 // }
 
-                case VendorNameEnum.extractedEfl: {
-                    const eflPDFData = await extractEfl(pdfData);
-                    // const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
-                    // const allLines = await extractDataFromScannedImages(pageImages, [0]);
-                    // const scannedData = await extractEflInvoiceDataFromScanned(allLines);
-                    // processedData['extractedData'] = scannedData.extractedData||{};
-                    // processedData['extractedData']['invoiceAmount']=eflPDFData.extractedData.invoiceAmount;
-                    // processedData['extractedData']['igst']=eflPDFData.extractedData.igst;
-                    // processedData['extractedData']['cgst']=eflPDFData.extractedData.cgst;
-                    // processedData['extractedData']['sgst']=eflPDFData.extractedData.sgst;
-                    // processedData['extractedHsnData'] = eflPDFData.extractedHsnData;
-                    processedData = eflPDFData;
-                    break;
-                }
+                // case VendorNameEnum.extractedEfl: {
+                //     const eflPDFData = await extractEfl(pdfData);
+                //     // const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                //     // const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                //     // const scannedData = await extractEflInvoiceDataFromScanned(allLines);
+                //     // processedData['extractedData'] = scannedData.extractedData||{};
+                //     // processedData['extractedData']['invoiceAmount']=eflPDFData.extractedData.invoiceAmount;
+                //     // processedData['extractedData']['igst']=eflPDFData.extractedData.igst;
+                //     // processedData['extractedData']['cgst']=eflPDFData.extractedData.cgst;
+                //     // processedData['extractedData']['sgst']=eflPDFData.extractedData.sgst;
+                //     // processedData['extractedHsnData'] = eflPDFData.extractedHsnData;
+                //     processedData = eflPDFData;
+                //     break;
+                // }
 
                 // case VendorNameEnum.extractedExpeditors: {
                 //     const expeditorsPDFData = await extractExpeditors(pdfData);
@@ -615,6 +615,18 @@ export const DocReader = (props: DocReaderProps) => {
                     processedData['extractedHsnData'] = tvsPDFData.extractedHsnData;
                     break;
                 }
+
+                // case VendorNameEnum.extractedEfl: {
+                //     const eflPDFData = await extractEfl(pdfData);
+                //     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                //     const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                //     const scannedData = await extractEflInvoiceDataFromScanned(allLines);
+                //     processedData['extractedData'] = scannedData.extractedData || {};
+                //     processedData['extractedHsnData'] = eflPDFData.extractedHsnData;
+                //     break;
+                // }
+
+                
                 case VendorNameEnum.extractedRahat: {
                     const rahatPDFData = await extractedRahat(pdfData);
                     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
@@ -622,21 +634,33 @@ export const DocReader = (props: DocReaderProps) => {
                     const scannedData = await extractRahatInvoiceDataFromScanned(allLines);
                     processedData['extractedHsnData'] = scannedData.extractedHsnData || {};
                     processedData['extractedData'] = rahatPDFData.extractedData;
+                    processedData['extractedData']['invoiceAmount'] = rahatPDFData.extractedData.invoiceAmount;
                     break;
                 }
 
+                case VendorNameEnum.extractedEfl: {
+                    const eflPDFData = await extractEfl(pdfData); 
+                    const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                    const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                    const scannedGstNumber = await extractEflInvoiceDataFromScanned(allLines); 
+                    const bothData = {
+                        ...eflPDFData.extractedData, 
+                        gstNumber: scannedGstNumber
+                    };
+                    processedData['extractedData'] = bothData;
+                    processedData['extractedHsnData'] = eflPDFData.extractedHsnData;
+                    break;
+                }
 
                  case VendorNameEnum.extractedSolitaire: {
                     const solitairePDFData = await extractedSolitaire(pdfData);
                     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
                     const allLines = await extractDataFromScannedImages(pageImages, [0]);
                     const scannedData = await extractSolitaireInvoiceDataFromScanned(allLines);
+                    const invoiceAmount = scannedData.extractedData; 
                     processedData['extractedHsnData'] = scannedData.extractedHsnData || {};
                     processedData['extractedData'] = solitairePDFData.extractedData;
-                    processedData['extractedData']['igst'] = solitairePDFData.extractedData.igst;
-                    processedData['extractedData']['cgst'] = solitairePDFData.extractedData.cgst;
-                    processedData['extractedData']['sgst'] = solitairePDFData.extractedData.sgst;
-                    processedData['extractedData']['invoiceAmount'] = solitairePDFData.extractedData.invoiceAmount;
+                    processedData['invoiceAmount'] = invoiceAmount;
                     break;
                 }
 
