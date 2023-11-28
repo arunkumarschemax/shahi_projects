@@ -22,6 +22,7 @@ import {
     Divider,
     Form,
     Input,
+    InputNumber,
     Modal,
     Row,
     Segmented,
@@ -46,6 +47,7 @@ import {
   } from "@project-management-system/shared-models";
   import Highlighter from "react-highlight-words";
 import { faL } from "@fortawesome/free-solid-svg-icons";
+import AlertMessages from "../common/common-functions/alert-messages";
   
   const { Option } = Select;
   
@@ -72,6 +74,7 @@ import { faL } from "@fortawesome/free-solid-svg-icons";
     const searchInput = useRef(null);
     const [avilableQuantity, setAvailableQuantity] = useState<any[]>([])
     const [checked, setChecked] = useState<boolean>(false)
+    const [keyUpdate, setKeyUpdate] = useState<number>(1);
   
     useEffect(() => {
       getAll();
@@ -192,7 +195,7 @@ import { faL } from "@fortawesome/free-solid-svg-icons";
       console.log(dto)
     let materailData :Allocatematerial[]=[]
       for(const data of dto){
-        const req = new Allocatematerial(data.itemType,data.sampleRequestid,data.sampleItemId,data.m3ItemId,data.quantity,data.stockId,data.locationId,data.allocatedQuantity)
+        const req = new Allocatematerial(data.itemType,data.sampleRequestid,data.sampleItemId,data.m3ItemId,data.quantity,data.stockId,data.locationId,data.allocatedQuantity, data.checkedStatus, data.issuedQty)
         materailData.push(req)
       }
       service.creatematerialAlloction(materailData).then(res =>{
@@ -248,8 +251,8 @@ import { faL } from "@fortawesome/free-solid-svg-icons";
         render: (text, record) => {
           return (
             <>
-              {record.quantity - record.availableQuantity > 0
-                ? record.quantity - record.availableQuantity
+              {Number(record.fabric_consumption) - Number(record.availableQuantity) > 0
+                ? Number(record.fabric_consumption) - Number(record.availableQuantity)
                 : 0}
             </>
           );
@@ -357,13 +360,13 @@ import { faL } from "@fortawesome/free-solid-svg-icons";
       {
         title: "Allocated Quantity",
         width:'200px',
-        render:(value,record) =>{
+        render: (text, rowData, index) => { 
           return(
+            
             <Form.Item name='allocatedQuantity'>
-                  <Input
-                  onChange={(e) => onCheck(record, e.target.value,true)} 
-                   >
-                </Input>
+                  <InputNumber
+                      onChange={(e) => setAllocatedQty(index,rowData, e)} 
+                   />
             </Form.Item>
            
           )
@@ -376,11 +379,11 @@ import { faL } from "@fortawesome/free-solid-svg-icons";
         dataIndex: "sm",
         key: "sm",
         align: "center",
-        render: (value,rowData) => {
+        render: (text, rowData, index) => { 
           return (
             <Checkbox 
             onClick={checkboxonclick}
-            onChange={(e) => onCheck(rowData, undefined, e.target.checked)}
+            onChange={(e) => onCheck(rowData, index, e.target.checked)}
             // onClick={(e) =>onCheck(rowData,undefined)}
             />
           );
@@ -424,57 +427,121 @@ import { faL } from "@fortawesome/free-solid-svg-icons";
       
     // }
 
-    const [allocatedQuantities, setAllocatedQuantities] = useState([]);
+    const [allocatedQuantities, setAllocatedQuantities] = useState<any[]>([]);
 
-    const onCheck = (rowData, quantityValue, isChecked) => {
-      if (isChecked) {
-        const updatedAllocatedQuantities = [...allocatedQuantities];
-        const index = updatedAllocatedQuantities.findIndex(
-          (item) => item.rowData === rowData
-        );
-          console.log(index)
-        if (index !== -1) {
-          updatedAllocatedQuantities[index] = {
-            buyerId:rowData.buyerId,
-            grnItemId:rowData.grnItemId,
-            grnNumber:rowData.grnNumber,
-            itemType:rowData.itemType,
-            locationId:rowData.locationId,
-            m3ItemId:rowData.m3ItemId,
-            quantity:rowData.quantity,
-            sampleItemId:rowData.sampleItemId,
-            stockBarCode:rowData.stockBarCode,
-            sampleRequestid:rowData.sampleRequestid,
-            stockId:rowData.stockId,
-            allocatedQuantity: quantityValue,
-          };
-        } 
-        else {
-          updatedAllocatedQuantities.push({
-            buyerId:rowData.buyerId,
-            grnItemId:rowData.grnItemId,
-            grnNumber:rowData.grnNumber,
-            itemType:rowData.itemType,
-            locationId:rowData.locationId,
-            m3ItemId:rowData.m3ItemId,
-            quantity:rowData.quantity,
-            sampleItemId:rowData.sampleItemId,
-            stockBarCode:rowData.stockBarCode,
-            sampleRequestid:rowData.sampleRequestid,
-            stockId:rowData.stockId,
-            allocatedQuantity: quantityValue,
-          });
-        }
-        
-        setAllocatedQuantities(updatedAllocatedQuantities);
-      } else {
-        const updated = allocatedQuantities.filter(
-          (item) => item.rowData !== rowData
-        );
-        setAllocatedQuantities(updated);
+
+    
+    const setAllocatedQty = (index, rowData, value) => {
+      console.log(index);
+      console.log(rowData);
+      console.log(value);
+
+      rowData.issuedQty = value
+      const newData = [...avilableQuantity];
+      newData[index].issuedQty = value;
+      console.log(newData)
+      setAvailableQuantity(newData);
+      if (value === 0 || value === null || value < 0 || value === undefined) {
+        AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
+        sourcingForm.setFieldsValue({["allocatedQuantity"]:(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity)});
       }
-      setbtnEnable(true)
-      console.log(allocatedQuantities)
+      if (Number(value) > Number(rowData.quantity)) {
+        sourcingForm.setFieldsValue({["allocatedQuantity"]:(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty)});
+        AlertMessages.getErrorMessage('Issued Quantity should be less than Avaialble Quantity--')
+      }
+    }
+
+    const onCheck = (rowData, index, isChecked) => {
+
+      console.log(rowData);
+      console.log(index);
+      console.log(isChecked);
+
+      if(isChecked){
+        if(Number(rowData.issuedQty) > 0){
+
+          rowData.issuedQty = rowData.issuedQty
+          rowData.checkedStatus = 1;
+          const newData = [...avilableQuantity];
+          console.log(newData)
+          setAvailableQuantity(newData);
+
+          // const updatedAllocatedQuantities = [...allocatedQuantities];
+          // updatedAllocatedQuantities[index] = {
+          //   buyerId:rowData.buyerId,
+          //   grnItemId:rowData.grnItemId,
+          //   grnNumber:rowData.grnNumber,
+          //   itemType:rowData.itemType,
+          //   locationId:rowData.locationId,
+          //   m3ItemId:rowData.m3ItemId,
+          //   quantity:rowData.quantity,
+          //   sampleItemId:rowData.sampleItemId,
+          //   stockBarCode:rowData.stockBarCode,
+          //   sampleRequestid:rowData.sampleRequestid,
+          //   stockId:rowData.stockId,
+          //   allocatedQuantity: rowData.issuedQty,
+          //   checkedStatus: 1,
+          // };
+          // setAllocatedQuantities(updatedAllocatedQuantities);
+          // setAllocatedQuantities(updatedAllocatedQuantities);
+
+          setbtnEnable(true)
+        }
+        else{
+          AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
+        }
+      }
+      else{
+        console.log("")
+      }
+      // if (isChecked) {
+      //   const updatedAllocatedQuantities = [...allocatedQuantities];
+      //   const index = updatedAllocatedQuantities.findIndex(
+      //     (item) => item.rowData === rowData
+      //   );
+      //     console.log(index)
+      //   if (index !== -1) {
+      //     updatedAllocatedQuantities[index] = {
+      //       buyerId:rowData.buyerId,
+      //       grnItemId:rowData.grnItemId,
+      //       grnNumber:rowData.grnNumber,
+      //       itemType:rowData.itemType,
+      //       locationId:rowData.locationId,
+      //       m3ItemId:rowData.m3ItemId,
+      //       quantity:rowData.quantity,
+      //       sampleItemId:rowData.sampleItemId,
+      //       stockBarCode:rowData.stockBarCode,
+      //       sampleRequestid:rowData.sampleRequestid,
+      //       stockId:rowData.stockId,
+      //       allocatedQuantity: quantityValue,
+      //     };
+      //   } 
+      //   else {
+      //     updatedAllocatedQuantities.push({
+      //       buyerId:rowData.buyerId,
+      //       grnItemId:rowData.grnItemId,
+      //       grnNumber:rowData.grnNumber,
+      //       itemType:rowData.itemType,
+      //       locationId:rowData.locationId,
+      //       m3ItemId:rowData.m3ItemId,
+      //       quantity:rowData.quantity,
+      //       sampleItemId:rowData.sampleItemId,
+      //       stockBarCode:rowData.stockBarCode,
+      //       sampleRequestid:rowData.sampleRequestid,
+      //       stockId:rowData.stockId,
+      //       allocatedQuantity: quantityValue,
+      //     });
+      //   }
+        
+      //   setAllocatedQuantities(updatedAllocatedQuantities);
+      // } else {
+      //   const updated = allocatedQuantities.filter(
+      //     (item) => item.rowData !== rowData
+      //   );
+      //   setAllocatedQuantities(updated);
+      // }
+      // setbtnEnable(true)
+      // console.log(allocatedQuantities)
     };
     
     const onSegmentChange = (val) => {
@@ -546,16 +613,15 @@ import { faL } from "@fortawesome/free-solid-svg-icons";
       };
 
       const getAllAvailbaleQuantity =(rowData) =>{
-        console.log(rowData)
         service.getAvailbelQuantityAginstBuyerAnditem({buyerId:rowData.buyerId,m3ItemId:rowData.m3ItemFabricId,itemType:rowData.itemType}).then(res =>{
           if(res.status){
             const dataWithRow = { rowData: rowData, responseData: res.data };
-            console.log(dataWithRow)
             const updatedData = res.data.map(item => ({
               ...item,
               sampleRequestid:rowData.sampleRequestid,
               sampleItemId:rowData.sampleRequestid,
-              itemType:rowData.itemType
+              itemType:rowData.itemType,
+              issuedQty:0
               }))
               setAvailableQuantity(updatedData)           
           }
@@ -757,23 +823,43 @@ import { faL } from "@fortawesome/free-solid-svg-icons";
                 />
                 <div>
                   {tabName === "Fabric" ? (
-                    <>
-                      <Table
-                        columns={Columns}
-                        dataSource={item.fabric}
-                        rowKey={record =>record.sample_request_id}
-                        pagination={false}
-                        expandedRowRender={renderItems}
-                        expandIconColumnIndex={6}
-                        scroll={{ x: "max-content" }}
-                        className="custom-table-wrapper"
-                        // expandedRowKeys={expandedRowKeys}
-                       onExpand={handleExpand}
+
+                    <Table
+                    key={keyUpdate}
+                    rowKey={record => record.sample_request_id}
+                    columns={Columns}
+                    dataSource={item.fabric}
+                    expandedRowRender={renderItems}
+                    expandable = {{
+                      defaultExpandAllRows : false
+                      }}
+                    // expandedRowRender={renderItems}
+                    // expandedRowKeys={expandedIndex}
+                    onExpand={handleExpand}
+                    // expandIconColumnIndex={7}
+                    // bordered
+                    pagination={false}
+                    style={{ width: '100%' }} />
+                    
+                    // <>
+                    //   <Table
+                    //     columns={Columns}
+                    //     dataSource={item.fabric}
+                    //     rowKey={record =>record.sample_request_id}
+                    //     pagination={false}
+                    //     expandedRowRender={renderItems}
+                    //     expandIconColumnIndex={6}
+                    //     scroll={{ x: "max-content" }}
+                    //     className="custom-table-wrapper"
+                    //     // expandedRowKeys={expandedRowKeys}
+                    //    onExpand={handleExpand}
 
 
-                      />
-                    </>
-                  ) : (
+                    //   />
+                    // </>
+                  )
+                  
+                  : (
                     <></>
                   )}
                 </div>

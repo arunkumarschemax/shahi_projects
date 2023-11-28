@@ -124,7 +124,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
     variantData.colourId=0;
     service.createColour(variantData).then(res=>{
         if(res.status){
-            AlertMessages.getSuccessMessage('Colour Created Successfully');
+            AlertMessages.getSuccessMessage('Color Created Successfully');
     
         }
     }).catch(err => {
@@ -175,7 +175,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
             render: (text, object, index) => (page - 1) * 10 + (index + 1) 
         },
         {
-            title: 'Colour',
+            title: 'Color',
             dataIndex: 'colour',
             sorter: (a, b) => a.colour.localeCompare(b.colour),
             sortDirections: ['descend', 'ascend'],
@@ -228,8 +228,8 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
                   <Popconfirm onConfirm={e =>{deleteColour(rowData);}}
                   title={
                     rowData.isActive
-                      ? 'Are you sure to Deactivate colour ?'
-                      :  'Are you sure to Activate colour ?'
+                      ? 'Are you sure to Deactivate color ?'
+                      :  'Are you sure to Activate color ?'
                   }
                 >
                   <Switch  size="default"
@@ -246,13 +246,13 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
       ];
 
       return (
-        <Card title={<span>Colours</span>}
+        <Card title={<span>Colors</span>}
         style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/masters/colour/colour-form"  ><span><Button type={'primary'} >New </Button> </span></Link>}>
 <br></br>
 <>
 <Row gutter={40}>
     <Col>
-<Card title={'Total Colours: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+<Card title={'Total Colors: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
         <Col>
           <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>

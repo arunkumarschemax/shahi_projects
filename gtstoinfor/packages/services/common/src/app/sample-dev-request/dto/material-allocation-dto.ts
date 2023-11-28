@@ -3,8 +3,6 @@ import { ApiProperty } from "@nestjs/swagger";
 
 
 export class MaterialAllocationDTO {
-
-
      @ApiProperty()
      materialAllocationId: number;
 
@@ -31,18 +29,21 @@ export class MaterialAllocationDTO {
 
      @ApiProperty()
      quantity: number;
+     
+     @ApiProperty()
+     issuedQty:number;
 
      @ApiProperty()
       stockId: number
 
      @ApiProperty()
-     locationId: number
+     LocationId: number
 
      @ApiProperty()
      allocateQuantity: number
 
-
-
+     @ApiProperty()
+     checkedStatus:number
 
 
 }

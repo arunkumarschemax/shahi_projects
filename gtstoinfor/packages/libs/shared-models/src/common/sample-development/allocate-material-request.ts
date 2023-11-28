@@ -10,6 +10,7 @@ export class AllocateMaterial{
     buyerId:number
     status: MaterialStatusEnum;
     materialAllocateIteminfo:allocateMaterialItems[];
+    buyerName:string
     createdUser?: string | null;
     updatedUser?: string | null;
     constructor(
@@ -21,6 +22,7 @@ export class AllocateMaterial{
         buyerId:number,
          status: MaterialStatusEnum,
          materialAllocateIteminfo:allocateMaterialItems[],
+         buyerName:string,
         createdUser?: string ,
         updatedUser?: string ,
     ){
@@ -32,6 +34,7 @@ export class AllocateMaterial{
         this.buyerId = buyerId
         this.status = status
         this.materialAllocateIteminfo = materialAllocateIteminfo
+        this.buyerName = buyerName
         this.createdUser=createdUser
         this.updatedUser=updatedUser
 

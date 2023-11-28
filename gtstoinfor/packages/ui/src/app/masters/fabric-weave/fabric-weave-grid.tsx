@@ -201,19 +201,18 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
       title: 'Fabric Weave Image',
       dataIndex: 'fabricWeaveImageName',
       // responsive: ['lg'],
-      sorter: (a, b) => a.fabricWeaveImageName.localeCompare(b.fabricWeaveImageName),
-      sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('fabricWeaveImageName'),
+      // sorter: (a, b) => a.fabricWeaveImageName.localeCompare(b.fabricWeaveImageName),
+      // sortDirections: ['descend', 'ascend'],
+      // ...getColumnSearchProps('fabricWeaveImageName'),
       render: (fabricWeaveImageName,rowData) => {
         const updateImage ='http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/'+rowData.fabricWeaveImageName
         return(
         <div>
-          <img
-          src={updateImage} 
+          <img src={updateImage} 
           // alt={fabricWeaveImageName}
-          style={{ maxWidth: '100px', maxHeight: '100px' }} 
+          style={{ maxWidth: '50px', maxHeight: '50px' }} 
           />
-          <div>{fabricWeaveImageName}</div>
+          {/* <div>{fabricWeaveImageName}</div> */}
         </div>
         )
       }

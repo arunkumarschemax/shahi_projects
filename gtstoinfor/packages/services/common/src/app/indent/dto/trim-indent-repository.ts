@@ -11,6 +11,7 @@ import { RmCreationEntity } from "../../m3-items/rm-items.entity";
 import { UomEntity } from "../../uom/uom-entity";
 import { Buyers } from "../../buyers/buyers.entity";
 import { Style } from "../../style/dto/style-entity";
+import { M3TrimsEntity } from "../../m3-trims/m3-trims.entity";
 
 
 
@@ -24,18 +25,13 @@ export class TrimIndentRepository extends Repository<IndentTrimsEntity> {
 
     async getTrimIndentData (indentId:number){
         const query = this.createQueryBuilder(`itt`)
-        .select (`itt.itrims_id,itt.trim_type,itt.trim_code,itt.quantity,
-        itt.created_at,itt.updated_at,itt.indent_id,itt.remarks,it.status,ss.quantity,CONCAT(b.buyer_code,'-',b.buyer_name)AS buyer,s.buyer_id AS buyerId`)
-        // .leftJoin(Size,'si','si.size_id=itt.size')
-        // .leftJoin(Colour,'co','co.colour_id=itt.color')
+        .select (`b.buyer_name as buyerName,itt.trim_type as materialType,mt.trim_code as m3TrimCode,itt.itrims_id,itt.trim_type,itt.trim_code,itt.quantity,itt.indent_id as indentId,
+        itt.created_at,itt.updated_at,itt.indent_id,itt.remarks,it.status,CONCAT(b.buyer_code,'-',b.buyer_name)AS buyer,s.buyer_id AS buyerId`)
         .leftJoin(Indent,'it','it.indent_id=itt.indent_id')
-        .leftJoin(StocksEntity,'ss','ss.m3_item=itt.trim_code')
         .leftJoin(Style,'s','s.style_id = it.style')
         .leftJoin(Buyers,'b','b.buyer_id = s.buyer_id')
-        // .leftJoin(ProductGroup,'pg','pg.product_group_id=itt.trim_type')
-        // .leftJoin(RmCreationEntity,'rm','rm.rm_item_id=itt.trim_code')
-        // .leftJoin(UomEntity, 'uom', 'uom.id=itt.quantity_unit')
-        .where(`itt.indent_id=${indentId}`)
+        .leftJoin(M3TrimsEntity,'mt','itt.trim_code=mt.m3_trim_Id')
+        .where(`itt.indent_id=${indentId} and (itt.quantity-itt.received_quantity) >0`)
         const data = await query.getRawMany()
         console.log(data)
         return data 

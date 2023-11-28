@@ -21,8 +21,8 @@ export class StyleService{
             const style= new Style()
             
             style.style=req.style
-            style.locationId=req.locationId
-            style.pch=req.pch
+            // style.locationId=req.locationId
+            // style.pch=req.pch
             style.description=req.description
             style.buyerId=req.buyerId
             if(isUpdate){
@@ -33,7 +33,7 @@ export class StyleService{
             }
             const save = await this.styleRepo.save(style)
             if(save){
-                return new AllStyleResponseModel(true,1,'Style created Sucessfully..',[style])
+                return new AllStyleResponseModel(true,1,'Style created Sucessfully..',[])
             }
             
         }
@@ -90,6 +90,7 @@ export class StyleService{
             where:{isActive:true},
             order:{style:'ASC'}
         })
+        console.log(style);
         if(style.length >0){
             return new AllStyleResponseModel(true,1,'Active Styles Retrived Sucessfully',style)
         }else{

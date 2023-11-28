@@ -35,11 +35,18 @@ export class MaterialAllocationEntity {
       })
       m3ItemId:number
 
-      @Column("int", {
+      @Column('int',{
+        name:'buyer_id',
+        nullable:false,
+      })
+      buyerId:number
+
+    @Column("int", {
         nullable: false,
-        name: "quantity",
+        name: "total_issue_qty",
         
     })
+    totalIssueQty:number
       
      @Column("enum", {
     name: "status",
@@ -87,6 +94,6 @@ export class MaterialAllocationEntity {
 
     
     @OneToMany(type => MaterialAllocationItemsEntity, entity => entity.materialAllocationItemInfo,{cascade: true})
-    materialAllocationinfo : MaterialAllocationItemsEntity
+    materialAllocationinfo : MaterialAllocationItemsEntity[]
 
 }

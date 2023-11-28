@@ -8,7 +8,7 @@ import { VALUE_SPLIT } from "rc-cascader/lib/utils/commonUtil";
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-export const PurchaseOrderTrim = ({props,indentId,data}) =>{
+export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
     let tableData: any[] = []
     const [trimForm] = Form.useForm()
     const {Option} = Select
@@ -23,6 +23,7 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
     const [trimType, setTrimType]=useState<any[]>([])
     const [uom,setUom] = useState<any[]>([])
     const [inputDisable, setInputDisable] = useState<boolean>(false)
+    const [tableColumns, setTableColumns] = useState([]);
 
     const [color,setColor] = useState<any[]>([])
     const colorService = new ColourService();
@@ -32,6 +33,7 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
     const uomService =  new UomService()
     const m3TrimService = new M3TrimsService()
 
+
     useEffect(() =>{
         getColor()
         getM3TrimCodes()
@@ -40,10 +42,19 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
     },[])
 
     useEffect(() =>{
-        if(indentId != undefined){
+        console.log(indentId)
+        if(indentId.length != 0){
+            setTableColumns([...columns])
             indentTrimData(indentId)
         }
     },[indentId])
+
+    useEffect(() =>{
+        if(sampleReqId.length != 0){
+            setTableColumns([...sampleColumns])
+            sampleTrimData(sampleReqId)
+        }
+    },[sampleReqId])
 
     useEffect(() =>{
         if(data.length != 0){
@@ -75,7 +86,15 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
             }
         })
     }
-
+    const sampleTrimData = (value) =>{
+        sampleService.getTrimDetailsOfSample({sampleReqId:value}).then(res =>{
+            if(res.status){
+                setTrimtableVisible(true)
+                props(res.data)
+                setTrimTableData(res.data);
+            }
+        })
+    }
     const getColor = () => {
         colorService.getAllActiveColour().then(res =>{
             if(res.status) {
@@ -119,6 +138,11 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
         if(rowData.indentTrmId != undefined){
         setInputDisable(true)
         }
+        if(rowData.sampleTrimInfoId != undefined){
+            trimForm.setFieldsValue({poQuantity:rowData.sampleOrderQuantity})
+        setInputDisable(true)
+            
+        }
         setUpdate(true)
         setDefaultTrimFormData(rowData)
         setTrimIndexVal(index)
@@ -134,34 +158,28 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
         }
         }
 
-    const columns : ColumnProps<any>[] =[
+    const columns  =[
         {
             title: 'S No',
             key: 'sno',
             responsive: ['sm'],
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
-        // {
-        //     title:' Indent Code',
-        //     dataIndex:'indentCode',
-        //     width:'100px'
-        // },
+        {
+            title:' Indent Code',
+            dataIndex:'indentCode',
+            width:'100px'
+        },
         {
             title:'M3 Trim Code',
             dataIndex:'m3TrimCodeName',
             width:'100px'
         },
         // {
-        //     title:'Trim Code',
-        //     dataIndex:'trimCodeName',
+        //     title:'Color',
+        //     dataIndex:'colourName',
         //     width:'100px'
-            
         // },
-        {
-            title:'Color',
-            dataIndex:'colourName',
-            width:'100px'
-        },
         {
             title:'Indent Quantity',
             dataIndex:'indentQuantity',
@@ -169,6 +187,74 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
         {
             title:'Po Quantity',
             dataIndex:'poQuantity',
+            
+        },
+        {
+            title: "Action",
+            dataIndex: 'action',
+            render: (text: any, rowData: any, index: any) => (
+                <span>
+                    <Tooltip placement="top" title='Edit'>
+                        <Tag >
+                            <EditOutlined className={'editSamplTypeIcon'} type="edit"
+                                onClick={() => {
+                                    setEditForm(rowData,index)
+                                }}
+                                style={{ color: '#1890ff', fontSize: '14px' }}
+                            />
+                        </Tag>
+                    </Tooltip>
+                    <Divider type="vertical" />
+                    
+                    <Tooltip placement="top" title='delete'>
+                    <Tag >
+                        <Popconfirm title='Sure to delete?' 
+                        onConfirm={e =>{deleteData(index);}}
+                        >
+                        <MinusCircleOutlined 
+
+                        style={{ color: '#1890ff', fontSize: '14px' }} />
+                        </Popconfirm>
+                    </Tag>
+                    </Tooltip>
+                </span>
+            )
+        }
+    ]
+    const sampleColumns  =[
+        {
+            title: 'S No',
+            key: 'sno',
+            responsive: ['sm'],
+            render: (text, object, index) => (page-1) * 10 +(index+1)
+        },
+        {
+            title:' Sample Request Number',
+            dataIndex:'sampleReqNo',
+            width:'190px'
+        },
+        {
+            title:'M3 Trim Code',
+            dataIndex:'m3TrimCodeName',
+            width:'100px'
+        },
+        // {
+        //     title:'Color',
+        //     dataIndex:'colourName',
+        //     width:'100px'
+        // },
+        {
+            title:'Sample Order Quantity',
+            dataIndex:'sampleOrderQuantity',
+        },
+        {
+            title:'Po Quantity',
+            dataIndex:'poQuantity',
+            
+        },
+        {
+            title:'Quantity UOM',
+            dataIndex:'quantityUomName',
             
         },
         {
@@ -237,22 +323,21 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
             console.log(defaultTrimFormData)
             trimForm.setFieldsValue({
                 colourName: defaultTrimFormData.colourName,
-                productGroup: defaultTrimFormData.productGroup,
-                trimId: defaultTrimFormData.trimId,
                 colourId : defaultTrimFormData.colourId,
                 consumption : defaultTrimFormData.consumption,
                 m3TrimCode: defaultTrimFormData.m3TrimCode,
-                description: defaultTrimFormData.description,
-                remarks: defaultTrimFormData.remarks,
                 trimCodeName: defaultTrimFormData.trimCodeName,
-                productGroupId: defaultTrimFormData.productGroupId,
                 indentTrmId:defaultTrimFormData.indentTrmId,
                 indentQuantity:defaultTrimFormData.indentQuantity,
                 indentQuantityUnit:defaultTrimFormData.indentQuantityUnit,
                 quantityUomId:defaultTrimFormData.quantityUomId,
                 poQuantity:defaultTrimFormData.indentQuantity,
                 m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
-                indentCode:defaultTrimFormData.indentCode
+                indentCode:defaultTrimFormData.indentCode,
+                sampleTrimInfoId:defaultTrimFormData.sampleTrimInfoId,
+                sampleReqNo:defaultTrimFormData.sampleReqNo,
+                sampleOrderQuantity:defaultTrimFormData.sampleOrderQuantity,
+                quantityUomName:defaultTrimFormData.quantityUomName
             })
         }
 
@@ -262,6 +347,10 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
         trimForm.setFieldsValue({m3TrimCodeName:option.name})
 
     }
+    const quantityUomOnchange = (value,option) =>{
+        console.log(option.name)
+        trimForm.setFieldsValue({quantityUomName:option.name?option.name:''})
+    }
     return(
         <Card title={<span style={{color:'blue', fontSize:'17px'}} >Trim Details</span>}>
             <Form form={trimForm} layout="vertical" onFinish={OnTrimAdd} style={{width:'100%'}}>
@@ -270,10 +359,17 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
                     <Form.Item name={'trimCodeName'} hidden><Input></Input></Form.Item> */}
                     <Form.Item name={'colourName'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'indentTrmId'} hidden><Input></Input></Form.Item>
+                    <Form.Item name={'sampleTrimInfoId'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'indentQuantity'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'indentQuantityUnit'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'m3TrimCodeName'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'indentCode'} hidden><Input></Input></Form.Item>
+                    <Form.Item name={'sampleReqNo'} hidden><Input></Input></Form.Item>
+                    <Form.Item name={'sampleOrderQuantity'} hidden><Input></Input></Form.Item>
+                    <Form.Item name={'quantityUomName'} hidden><Input></Input></Form.Item>
+
+
+                    
 
                      {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:'none'}}>
                         <Form.Item name={'productGroupId'} label={'Trim type'}
@@ -374,10 +470,12 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
                     <Form.Item name='quantityUomId'  rules={[{required:true,message:'Quantity unit is required'}]}>
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
+                        <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'
+                        onChange={quantityUomOnchange}
+                        >
                             {uom.map(e => {
                                 return(
-                                    <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
+                                    <Option key={e.uomId} value={e.uomId} name={e.uom}>{e.uom}</Option>
                                 )
                             })}
                         </Select>
@@ -391,10 +489,13 @@ export const PurchaseOrderTrim = ({props,indentId,data}) =>{
                    
                 </Row>
                 <Row justify={'end'}>
-                <Button type='primary' htmlType="submit">{update ?'Update':'Add'}</Button>
+                    {update?
+                    <Button type='primary' htmlType="submit">{update ?'Update':'Add'}</Button>:<></>
+                    }
+                
                 </Row>
                 <Row>
-                {trimtableVisible ? <Table columns={columns} dataSource={trimTableData}
+                {trimtableVisible ? <Table columns={tableColumns} dataSource={trimTableData}
                  pagination={{
                     onChange(current) {
                       setPage(current);

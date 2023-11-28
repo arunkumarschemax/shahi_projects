@@ -29,8 +29,8 @@ export class PurchaseOrderService {
 
     async cretePurchaseOrder(req: PurchaseOrderDto): Promise<CommonResponseModel> {
         try {
-            console.log(req.poFabricInfo)
-            console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+            // console.log(req.poFabricInfo)
+            // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
             const currentYear = moment().format('YYYY')
             let ToYear = currentYear.toString().substr(-2)
             let FromYear = (currentYear - 1).toString().substr(-2)
@@ -42,8 +42,6 @@ export class PurchaseOrderService {
             } else {
                 poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + maxId[0].poId.toString().padStart(3, 0) + ''
             }
-            // const finalArray :PurchaseOrderEntity[]=[]
-            // for(const indent of req.indentId){
             let pofabricInfo = []
             let poTrimInfo = []
             const poEntity = new PurchaseOrderEntity()
@@ -61,23 +59,10 @@ export class PurchaseOrderService {
                 for (const poFabric of req.poFabricInfo) {
                     const pofabricEntity = new PurchaseOrderFbricEntity()
                     pofabricEntity.colourId = poFabric.colourId
-                    // pofabricEntity.productGroupId = poFabric.productGroupId
                     pofabricEntity.remarks = poFabric.remarks
-                    // pofabricEntity.fabricTypeId = poFabric.fabricTypeId
-                    pofabricEntity.shahiFabricCode = poFabric.shahiFabricCode
-                    // pofabricEntity.weaveId = poFabric.weaveId
-                    // pofabricEntity.weight = poFabric.weight
-                    // pofabricEntity.width = poFabric.width
-                    // pofabricEntity.construction = poFabric.construction
-                    // pofabricEntity.yarnCount = poFabric.yarnCount
-                    // pofabricEntity.finish = poFabric.finish
-                    // pofabricEntity.shrinkage = poFabric.shrinkage
-                    // pofabricEntity.pch = poFabric.pch
-                    // pofabricEntity.moq = poFabric.moq
                     pofabricEntity.m3FabricCode = poFabric.m3FabricCode
-                    // pofabricEntity.content = poFabric.content
-                    pofabricEntity.indentId = poFabric.indentId
-                    pofabricEntity.sampleRequestId = poFabric.sampleRequestId
+                    pofabricEntity.indentFabricId = poFabric.indentFabricId
+                    pofabricEntity.sampleReqFabricId = poFabric.sampleReqFabricId
                     pofabricEntity.poQuantity = poFabric.poQuantity
                     pofabricEntity.quantityUomId = poFabric.quantityUomId
                     pofabricInfo.push(pofabricEntity)
@@ -90,14 +75,9 @@ export class PurchaseOrderService {
                     console.log(trimInfo)
                     console.log('""""""""""""""""""""""""""""""""""""""""""""')
                     trimEntity.colourId = trimInfo.colourId
-                    // trimEntity.productGroupId = trimInfo.productGroupId
-                    // trimEntity.trimId = trimInfo.trimId
                     trimEntity.m3TrimCode = trimInfo.m3TrimCode
-                    trimEntity.description = trimInfo.description
-                    trimEntity.consumption = trimInfo.consumption
-                    trimEntity.remarks = trimInfo.remarks
-                    trimEntity.indentId = trimInfo.indentId
-                    trimEntity.sampleRequestId = trimInfo.sampleRequestId
+                    trimEntity.indentTrimId = trimInfo.indentTrimId
+                    trimEntity.sampleReqTrimId = trimInfo.sampleReqTrimId
                     trimEntity.poQuantity = trimInfo.poQuantity
                     trimEntity.quantityUomId = trimInfo.quantityUomId
                     poTrimInfo.push(trimEntity)
@@ -105,8 +85,7 @@ export class PurchaseOrderService {
                 poEntity.poTrimInfo = poTrimInfo
             }
 
-            // finalArray.push(poEntity)
-            // }
+           
 
             const save = await this.poRepo.save(poEntity)
             if (save) {

@@ -63,3 +63,10 @@ export class statusReq{
     
 }
 
+export class sampleReqIdReq{
+    sampleReqId:number
+    constructor(sampleReqId:number){
+        this.sampleReqId=sampleReqId
+    }
+}
+

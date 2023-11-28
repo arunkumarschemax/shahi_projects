@@ -32,7 +32,7 @@ const QualityForm = () => {
 
     return (
         <div>
-            <Card title={<span>QUALITY</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+            <Card title={<span>Fabric Quality</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
                 extra={<Button
                     onClick={() => navigate('/masters/quality-view')}
                     type="primary"
@@ -42,7 +42,18 @@ const QualityForm = () => {
                 <Form form={form} onFinish={onFinish}>
                     <Row>
                         <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4 }} lg={{ span: 8 }} xl={{ span: 5 }}>
-                            <Form.Item label="Fabric Quality" name="quality">
+                            <Form.Item label="Fabric Quality" name="quality"
+                            rules={[
+                                {
+                                  required: true,
+                                  message: "Quality Name Required",
+                                },
+                                // {
+                                //     pattern:
+                                //       /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+                                //     message: `Should contain only alphabets.`,
+                                //   },
+                              ]}>
                                 <Input placeholder=" Enter Quality " />
                             </Form.Item>
                         </Col>
