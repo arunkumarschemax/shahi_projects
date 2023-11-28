@@ -6,16 +6,16 @@ export class GRNItemDto{
     grnItemId:number
     @ApiProperty()
     m3ItemCodeId:number
-    @ApiProperty()
-    productGroupId:number
+    // @ApiProperty()
+    // productGroupId:number
     @ApiProperty()
     receivedQuantity:number
-    @ApiProperty()
-    receivedUomId:number
+    // @ApiProperty()
+    // receivedUomId:number
     @ApiProperty()
     acceptedQuantity:number
-    @ApiProperty()
-    acceptedUomId:number
+    // @ApiProperty()
+    // acceptedUomId:number
     @ApiProperty()
     rejectedQuantity:number
     @ApiProperty()

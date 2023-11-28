@@ -139,14 +139,40 @@ export class PurchaseOrderService {
 
     async getPODataById(req: VendorIdReq): Promise<CommonResponseModel> {
         try {
-            // console.log(req, 'f3-=-=-=-=-=-=-=-=-=3333333333333333')
+            // console.log(req,'================')
             let responseData
             if (req.materialType === 'Fabric') {
-                const fabricData = await this.poFabricRepo.getPOFabricData(req)
+                let query=`SELECT m.item_code AS itemCode,pof.po_fabric_id AS poFabricId,pof.m3_fabric_code AS m3fabricCode,pof.po_quantity AS poQuantity,pof.quantity_uom_id AS quantityUomId,u.uom,
+                pof.purchase_order_id AS purchaseOrderId,pof.fabric_type_id AS fabricTypeId,ft.fabric_type_name AS fabricTypeName,po.po_material_type AS materialType,po.po_against AS  poAgainst,
+                pof.grn_quantity AS grnQuantity,pof.indent_id AS indentId,pof.sample_request_id AS sampleRequestId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style
+                FROM purchase_order_fabric pof
+                LEFT JOIN purchase_order po ON po.purchase_order_id = pof.purchase_order_id
+                LEFT JOIN fabric_type ft ON ft.fabric_type_id = pof.fabric_type_id
+                LEFT JOIN uom u ON u.id = pof.quantity_uom_id
+                LEFT JOIN m3_items m ON m.m3_items_Id = pof.m3_fabric_code`
+                if(req.poAgainst === 'INDENT'){
+                    query = query + ` LEFT JOIN indent i ON i.indent_id = pof.indent_id LEFT JOIN style s ON s.style_id = i.style LEFT JOIN buyers b ON b.buyer_id = s.buyer_id WHERE pof.purchase_order_id = ${req.poId}`
+                }
+                if(req.poAgainst === 'SAMPLE ORDER'){
+                    query = query + ` LEFT JOIN sample_request sr ON sr.sample_request_id  = pof.sample_request_id LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id LEFT JOIN style s ON s.style_id = sr.style_id WHERE pof.purchase_order_id = ${req.poId}`
+                }
+                const fabricData = await this.dataSource.query(query)
                 responseData = fabricData
             }
             if (req.materialType === 'Trim') {
-                const trimData = await this.poTrimRepo.getPOTrimData(req)
+                let query = `SELECT mt.trim_code as m3TrimCode,pot.po_trim_id AS poTrimId,pot.trim_id AS trimId, pot.m3_trim_code AS m3TrimCode,pot.purchase_order_id AS purchaseOrderId, pot.po_quantity AS poQuantity,
+                pot.quantity_uom_id AS quantityUomId,u.uom,po.po_material_type AS materialType,pot.grn_quantity AS grnQuantity,pot.indent_id as indentId, pot.sample_request_id as sampleRequestId,po.po_against AS poAgainst,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style
+                FROM purchase_order_trim pot
+                LEFT JOIN purchase_order po ON po.purchase_order_id = pot.purchase_order_id
+                LEFT JOIN uom u ON u.id = pot.quantity_uom_id
+                LEFT JOIN m3_trims mt ON mt.m3_trim_Id=pot.m3_trim_code`
+                if(req.poAgainst === 'INDENT'){
+                    query = query + ` LEFT JOIN indent i ON i.indent_id = pot.indent_id LEFT JOIN style s ON s.style_id = i.style LEFT JOIN buyers b ON b.buyer_id = s.buyer_id WHERE pot.purchase_order_id = ${req.poId}`
+                }
+                if(req.poAgainst === 'SAMPLE ORDER'){
+                    query = query + ` LEFT JOIN sample_request sr ON sr.sample_request_id  = pot.sample_request_id LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id LEFT JOIN style s ON s.style_id = sr.style_id WHERE pot.purchase_order_id = ${req.poId}`
+                }
+                const trimData = await this.poTrimRepo.query(query)
                 responseData = trimData
             }
             if (responseData.length > 0) {

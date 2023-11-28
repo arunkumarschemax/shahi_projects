@@ -29,63 +29,6 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
       })
     }
 
-
-    // const handleSaveData = () => {
-    //   form.validateFields().then((values) => {
-    //     const updatedFormData = fabricData
-    //       .filter((record) => {
-    //         const key = record.key;
-    //         return (
-    //           values[`receivedQuantity_${record.poFabricId}_${key}`] ||
-    //           values[`acceptedQuantity_${record.poFabricId}_${key}`] ||
-    //           values[`rejectedQuantity_${record.poFabricId}_${key}`]
-    //         );
-    //       })
-    //       .map((record) => ({
-    //         poFabricId: record.poFabricId,
-    //         receivedQuantity: values[`receivedQuantity_${record.poFabricId}_${record.key}`],
-    //         receivedUomId: values[`receivedUomId_${record.poFabricId}_${record.key}`],
-    //         acceptedQuantity: values[`acceptedQuantity_${record.poFabricId}_${record.key}`],
-    //         acceptedUomId: values[`acceptedUomId_${record.poFabricId}_${record.key}`],
-    //         rejectedQuantity: values[`rejectedQuantity_${record.poFabricId}_${record.key}`],
-    //         rejectedUomId: values[`rejectedUomId_${record.poFabricId}_${record.key}`],
-    //         conversionQuantity:quantity,
-    //         conversionUomId:values[`acceptedUomId_${record.poFabricId}_${record.key}`],
-    //         ...record,
-    //       }));
-  
-    //     setFormData(updatedFormData);
-    //             console.log("FormData:", updatedFormData);
-    //     fabricForm()
-    //   });
-    // };
-
-    // const fabricForm = () => {
-    //   const grnItemsArray = [];
-    //   console.log(formData)
-    //   formData.forEach((record) => {
-    //     console.log(record)
-    //     const grnItem = new GrnItemsDto()
-    //     grnItem.poFabricId = record.poFabricId
-    //     grnItem.m3ItemCodeId = record.m3fabricCode
-    //     grnItem.productGroupId = record.productGroupId
-    //     grnItem.receivedQuantity = record.receivedQuantity
-    //     grnItem.receivedUomId = record.receivedUomId
-    //     grnItem.acceptedQuantity = record.acceptedQuantity
-    //     grnItem.acceptedUomId = record.acceptedUomId
-    //     grnItem.rejectedQuantity = record.rejectedQuantity
-    //     grnItem.rejectedUomId = record.rejectedUomId
-    //     grnItem.indentFabricId = record.indentFabricId
-    //     grnItem.conversionQuantity = record.conversionQuantity 
-    //     grnItem.conversionUomId = record.conversionUomId
-    //     grnItem.remarks = record.remarks
-    //     // grnItem.m3FabricCode = record.m3FabricCode
-    //     grnItemsArray.push(grnItem)
-    //   });
-    //   onSaveData(grnItemsArray)
-    //   console.log("GrnItemsArray:", grnItemsArray);
-    // };
-
     const fabricForm =()=>{
       form.validateFields().then((values) => {
         const updatedFormData = fabricData
@@ -118,11 +61,11 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
         const grnItem = new GrnItemsDto()
         grnItem.poFabricId = record.poFabricId
         grnItem.m3ItemCodeId = record.m3fabricCode
-        grnItem.productGroupId = record.productGroupId
+        // grnItem.productGroupId = record.productGroupId
         grnItem.receivedQuantity = record.receivedQuantity
-        grnItem.receivedUomId = record.receivedUomId
+        // grnItem.receivedUomId = record.receivedUomId
         grnItem.acceptedQuantity = record.acceptedQuantity
-        grnItem.acceptedUomId = record.acceptedUomId
+        // grnItem.acceptedUomId = record.acceptedUomId
         grnItem.rejectedQuantity = record.rejectedQuantity
         grnItem.rejectedUomId = record.rejectedUomId
         grnItem.indentFabricId = record.indentFabricId
@@ -133,7 +76,6 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
         grnItemsArray.push(grnItem)
       });
       onSaveData(grnItemsArray)
-      console.log(grnItemsArray,'==============')
       }).catch((error) => {
         console.error('Error validating fields:', error);
       });
@@ -197,11 +139,11 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
         },
         {
           title: <div style={{textAlign:"center"}}>Style</div>,
-          dataIndex: 'fabricTypeName',
+          dataIndex: 'style',
         },
         {
           title: <div style={{textAlign:"center"}}>Buyer</div>,
-          dataIndex: 'fabricTypeName',
+          dataIndex: 'buyer',
         },
         {
           title: <div style={{textAlign:"center"}}>PO Qty</div>,
@@ -210,7 +152,7 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
           render: (poQuantity, row) => `${poQuantity} ${row.uom}`,
         },
         {
-          title: <div style={{textAlign:"center"}}>GRN Qty</div>,
+          title: <div style={{textAlign:"center"}}>Previous Qty</div>,
           align:"right",
           dataIndex: 'grnQuantity',
           render:(value,rowData) =>{
@@ -367,7 +309,7 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
           title: <div style={{ textAlign: 'center' }}>Converted Qty</div>,
           dataIndex: 'convertedQty',
           render: (_, record) => {
-            return   <Form.Item  name={`convertedQty_${record.poFabricId}_${record.key}`}>  
+            return   <Form.Item  name={`convertedQty_${record.poFabricId}_${record.key}`} initialValue={0}>  
               {<span>{Number(quantity)?Number(quantity):''}</span>}</Form.Item>
           },
         },
@@ -379,9 +321,9 @@ export const GRNFabricForm =({fabricData, onSaveData }) =>{
             <div style={{ overflowX: "auto", width: "100%" }}>
               <Card title={<div style={{ color: "blue", fontSize: "17px",textAlign:"left"  }}>Fabric Details</div>} style={{textAlign:"right"}}>
                 <Table columns={columns} dataSource={fabricData} bordered scroll={{ x: "max-content" }} pagination={false} />
-                <Button type="primary" onClick={fabricForm} style={{margin:"10px"}}>
+                {/* <Button type="primary" onClick={fabricForm} style={{margin:"10px"}}>
                   Save
-                </Button>
+                </Button> */}
               </Card>
             </div>
           </Row>

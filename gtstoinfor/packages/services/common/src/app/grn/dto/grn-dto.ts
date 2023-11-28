@@ -32,15 +32,16 @@ export class GrnDto{
   updatedUser?: string | null;
   @ApiProperty()
   versionFlag?: number;
-  @ApiProperty()
-  styleId:number
+  // @ApiProperty()
+  // styleId:number
   @ApiProperty()
   materialtype:string
   @ApiProperty()
   itemType:string
   @ApiProperty({ type: [GRNItemDto] })
   grnItemInfo: GRNItemDto[];
-
+  @ApiProperty()
+  invoiceNo: string
 
 }
 
