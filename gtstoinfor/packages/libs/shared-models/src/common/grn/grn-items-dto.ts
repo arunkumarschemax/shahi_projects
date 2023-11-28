@@ -4,11 +4,11 @@ import { CustomerOrderStatusEnum, PurchaseOrderStatus } from "@project-managemen
 export class GrnItemsDto{
     grnItemId?:number
     m3ItemCodeId?:number
-    productGroupId?:number
+    // productGroupId?:number
     receivedQuantity?:number
-    receivedUomId?:number
+    // receivedUomId?:number
     acceptedQuantity?:number
-    acceptedUomId?:number
+    // acceptedUomId?:number
     rejectedQuantity?:number
     rejectedUomId?:number
     conversionQuantity?:number
@@ -24,16 +24,15 @@ export class GrnItemsDto{
     poTrimId?: number;
     indentFabricId?:number
     indentTrimId?:number
-    // m3ItemCodeId?: number
 
   constructor(
     grnItemId?:number,
     m3ItemCodeId?:number,
-    productGroupId?:number,
+    // productGroupId?:number,
     receivedQuantity?:number,
-    receivedUomId?:number,
+    // receivedUomId?:number,
     acceptedQuantity?:number,
-    acceptedUomId?:number,
+    // acceptedUomId?:number,
     rejectedQuantity?:number,
     rejectedUomId?:number,
     conversionQuantity?:number,
@@ -48,17 +47,16 @@ export class GrnItemsDto{
     poFabricId?: number,
     poTrimId?: number,
     indentFabricId?:number,
-    indentTrimId?:number,
-    // m3ItemCodeId?: number
+    indentTrimId?:number
 
   ){
     this.grnItemId = grnItemId
     this.m3ItemCodeId = m3ItemCodeId
-    this.productGroupId = productGroupId
+    // this.productGroupId = productGroupId
     this.receivedQuantity = receivedQuantity
-    this.receivedUomId = receivedUomId
+    // this.receivedUomId = receivedUomId
     this.acceptedQuantity = acceptedQuantity
-    this.acceptedUomId = acceptedUomId
+    // this.acceptedUomId = acceptedUomId
     this.rejectedQuantity = rejectedQuantity
     this.rejectedUomId = rejectedUomId
     this.conversionQuantity = conversionQuantity

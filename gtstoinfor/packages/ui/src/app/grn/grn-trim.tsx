@@ -31,72 +31,6 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
     }
 
 
-    // const handleSaveData = () => {
-    //   console.log('1st line')
-    //   form
-    //     .validateFields()
-    //     .then((values) => {
-    //       console.log('2nd line')
-    //       const updatedFormData = trimData
-    //         .filter((record) => {
-    //           console.log('3rd lin')
-    //           const key = record.key;
-    //           return (
-    //             values[`receivedQuantity_${record.poTrimId}_${key}`] ||
-    //             values[`acceptedQuantity_${record.poTrimId}_${key}`] ||
-    //             values[`rejectedQuantity_${record.poTrimId}_${key}`]
-    //           );
-    //         })
-    //         .map((record) => ({
-    //           poTrimId: record.poTrimId,
-    //           receivedQuantity: values[`receivedQuantity_${record.poTrimId}_${record.key}`],
-    //           receivedUomId: values[`receivedUomId_${record.poTrimId}_${record.key}`],
-    //           acceptedQuantity: values[`acceptedQuantity_${record.poTrimId}_${record.key}`],
-    //           acceptedUomId: values[`acceptedUomId_${record.poTrimId}_${record.key}`],
-    //           rejectedQuantity: values[`rejectedQuantity_${record.poTrimId}_${record.key}`],
-    //           rejectedUomId: values[`rejectedUomId_${record.poTrimId}_${record.key}`],
-    //           conversionQuantity: quantity,
-    //           conversionUomId: values[`acceptedUomId_${record.poFabricId}_${record.key}`],
-    //           ...record,
-    //         }));
-    //         console.log(updatedFormData,'last line')
-    //       setFormData(updatedFormData);
-    //       console.log("FormData:", updatedFormData);
-    //       trimForm();
-    //     })
-    //     .catch((error) => {
-    //       console.error("Error validating fields:", error);
-    //     });
-    // };
-    
-    
-
-    // const trimForm = () => {
-    //   const grnItemsArray = [];
-    //   formData.forEach((record) => {
-    //     const grnItem = new GrnItemsDto()
-    //     grnItem.poTrimId = record.poTrimId
-    //     grnItem.m3ItemCodeId = record.m3TrimCode
-    //     grnItem.productGroupId = record.productGroupId
-    //     grnItem.receivedQuantity = record.receivedQuantity
-    //     grnItem.receivedUomId = record.receivedUomId
-    //     grnItem.acceptedQuantity = record.acceptedQuantity
-    //     grnItem.acceptedUomId = record.acceptedUomId
-    //     grnItem.rejectedQuantity = record.rejectedQuantity
-    //     grnItem.rejectedUomId = record.rejectedUomId
-    //     grnItem.indentTrimId = record.indentTrimId
-    //     grnItem.conversionQuantity = record.conversionQuantity
-    //     grnItem.conversionUomId = record.conversionUomId
-    //     grnItem.remarks = record.remarks
-    //     // grnItem.m3TrimCode = record.m3TrimCode
-    //     grnItemsArray.push(grnItem)
-    //   })
-    //   console.log(grnItemsArray,'------------------')
-    //   onSaveData(grnItemsArray)
-    //   console.log("GrnItemsArray:", grnItemsArray)
-    // };
-
-
     const trimForm = () => {
       console.log('1st line');
     
@@ -139,11 +73,11 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
             const grnItem = new GrnItemsDto();
             grnItem.poTrimId = record.poTrimId;
             grnItem.m3ItemCodeId = record.m3TrimCode;
-            grnItem.productGroupId = record.productGroupId;
+            // grnItem.productGroupId = record.productGroupId;
             grnItem.receivedQuantity = record.receivedQuantity;
-            grnItem.receivedUomId = record.receivedUomId;
+            // grnItem.receivedUomId = record.receivedUomId;
             grnItem.acceptedQuantity = record.acceptedQuantity;
-            grnItem.acceptedUomId = record.acceptedUomId;
+            // grnItem.acceptedUomId = record.acceptedUomId;
             grnItem.rejectedQuantity = record.rejectedQuantity;
             grnItem.rejectedUomId = record.rejectedUomId;
             grnItem.indentTrimId = record.indentTrimId;
@@ -219,10 +153,14 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
           title: <div style={{textAlign:"center"}}>M3 Trim Code</div>,
           dataIndex: 'm3TrimCode',
         },
-        // {
-        //   title: <div style={{textAlign:"center"}}>Fabric Type</div>,
-        //   dataIndex: 'fabricTypeName',
-        // },
+        {
+          title: <div style={{textAlign:"center"}}>Style</div>,
+          dataIndex: 'style',
+        },
+        {
+          title: <div style={{textAlign:"center"}}>Buyer</div>,
+          dataIndex: 'buyer',
+        },
         {
           title: <div style={{textAlign:"center"}}>PO Qty</div>,
           dataIndex: 'poQuantity',
@@ -230,7 +168,7 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
           render: (poQuantity, row) => `${poQuantity} ${row.uom}`,
         },
         {
-          title: <div style={{textAlign:"center"}}>GRN Qty</div>,
+          title: <div style={{textAlign:"center"}}>Previous Qty</div>,
           align:"right",
           dataIndex: 'grnQuantity',
         },
@@ -260,36 +198,36 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
             </Form.Item>
           ),
         },
-        {
-          title: <div style={{textAlign:"center"}}>UOM</div>,
-          dataIndex: 'receivedUomId',
-          render: (_, record) => (
-            <Form.Item
-            name={`receivedUomId_${record.poTrimId}_${record.key}`}
-            // rules={[
-            //     {
-            //       required: true,
-            //       message: 'Please select UOM',
-            //     }
-            //   ]}
-            >
-              <Select
-                allowClear
-                style={{ width: "100%" }}
-                showSearch
-                optionFilterProp="children"
-                placeholder="Select UOM"
-                onChange={receiveuomOnChange}
-                >
-                {uomData?.map((e) => (
-                  <Option key={e.uomId} value={e.uomId} name={e.uom}>
-                    {e.uom}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          ),
-        },
+        // {
+        //   title: <div style={{textAlign:"center"}}>UOM</div>,
+        //   dataIndex: 'receivedUomId',
+        //   render: (_, record) => (
+        //     <Form.Item
+        //     name={`receivedUomId_${record.poTrimId}_${record.key}`}
+        //     // rules={[
+        //     //     {
+        //     //       required: true,
+        //     //       message: 'Please select UOM',
+        //     //     }
+        //     //   ]}
+        //     >
+        //       <Select
+        //         allowClear
+        //         style={{ width: "100%" }}
+        //         showSearch
+        //         optionFilterProp="children"
+        //         placeholder="Select UOM"
+        //         onChange={receiveuomOnChange}
+        //         >
+        //         {uomData?.map((e) => (
+        //           <Option key={e.uomId} value={e.uomId} name={e.uom}>
+        //             {e.uom}
+        //           </Option>
+        //         ))}
+        //       </Select>
+        //     </Form.Item>
+        //   ),
+        // },
         {
           title: <div style={{textAlign:"center"}}>Accepted Qty</div>,
           dataIndex: 'acceptedQuantity',
@@ -317,36 +255,36 @@ export const GRNTrimForm =({trimData, onSaveData }) =>{
               </Form.Item>
           ),
         },
-        {
-          title: <div style={{textAlign:"center"}}>UOM</div>,
-          dataIndex: 'acceptedUomId',
-          render: (index, record) => (
-            <Form.Item
-            name={`acceptedUomId_${record.poTrimId}_${record.key}`}
-            // rules={[
-            //     {
-            //       required: true,
-            //       message: 'Please select UOM',
-            //     }
-            //   ]}
-            >
-              <Select
-                allowClear
-                style={{ width: "100%" }}
-                showSearch
-                optionFilterProp="children"
-                placeholder="Select UOM"
-                onChange={(option, value) => acceptUomOnchange(option, value, record)}
-              >
-                {uomData?.map((e) => (
-                  <Option key={e.uomId} value={e.uomId} name={`${record.poTrimId}`+`${record.key}+'acceptedUomId'`} type={e.uom}>
-                  {e.uom}
-                </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          ),
-        },
+        // {
+        //   title: <div style={{textAlign:"center"}}>UOM</div>,
+        //   dataIndex: 'acceptedUomId',
+        //   render: (index, record) => (
+        //     <Form.Item
+        //     name={`acceptedUomId_${record.poTrimId}_${record.key}`}
+        //     // rules={[
+        //     //     {
+        //     //       required: true,
+        //     //       message: 'Please select UOM',
+        //     //     }
+        //     //   ]}
+        //     >
+        //       <Select
+        //         allowClear
+        //         style={{ width: "100%" }}
+        //         showSearch
+        //         optionFilterProp="children"
+        //         placeholder="Select UOM"
+        //         onChange={(option, value) => acceptUomOnchange(option, value, record)}
+        //       >
+        //         {uomData?.map((e) => (
+        //           <Option key={e.uomId} value={e.uomId} name={`${record.poTrimId}`+`${record.key}+'acceptedUomId'`} type={e.uom}>
+        //           {e.uom}
+        //         </Option>
+        //         ))}
+        //       </Select>
+        //     </Form.Item>
+        //   ),
+        // },
         {
           title: <div style={{textAlign:"center"}}>Rejected Qty</div>,
           dataIndex: 'rejectedQuantity',
