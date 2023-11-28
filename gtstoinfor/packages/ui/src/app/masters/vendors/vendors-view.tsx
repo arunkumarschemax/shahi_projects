@@ -235,14 +235,6 @@ export function VendorsView(
           render: (text, object, index) => (page-1) * 10 +(index+1)
         },
         {
-          dataIndex:"vendorCode",
-          title:"VendorCode",
-          // responsive: ['lg'],
-          sorter: (a, b) => a.deptName.length - b.deptName.length,
-          sortDirections: ['descend', 'ascend'],
-          ...getColumnSearchProps('vendorCode')
-        },
-        {
           dataIndex:"vendorName",
           title:"Vendor Name",
           // responsive: ['lg'],
@@ -250,6 +242,15 @@ export function VendorsView(
           sortDirections: ['descend', 'ascend'],
           ...getColumnSearchProps('vendorName')
         },
+        {
+          dataIndex:"vendorCode",
+          title:"Vendor Code",
+          // responsive: ['lg'],
+          // sorter: (a, b) => a.deptName.length - b.deptName.length,
+          // sortDirections: ['descend', 'ascend'],
+          // ...getColumnSearchProps('vendorCode')
+        },
+       
         // {
         //   dataIndex:"priceNeeded",
         //   title:"Price Needed",
@@ -293,16 +294,16 @@ export function VendorsView(
           dataIndex:"contactNumber",
           title:"Contact Number",
           // responsive: ['lg'],
-          sorter: (a, b) => a.contactNumber.localeCompare(b.contactNumber),
-          sortDirections: ['descend', 'ascend'],
+          // sorter: (a, b) => a.contactNumber.localeCompare(b.contactNumber),
+          // sortDirections: ['descend', 'ascend'],
           ...getColumnSearchProps('contactNumber')
         },
         {
           dataIndex:"gstNumber",
           title:"GST Number",
           // responsive: ['lg'],
-          sorter: (a, b) => a.gstNumber.localeCompare(b.gstNumber),
-          sortDirections: ['descend', 'ascend'],
+          // sorter: (a, b) => a.gstNumber.localeCompare(b.gstNumber),
+          // sortDirections: ['descend', 'ascend'],
           ...getColumnSearchProps('gstNumber')
         },
         // {
