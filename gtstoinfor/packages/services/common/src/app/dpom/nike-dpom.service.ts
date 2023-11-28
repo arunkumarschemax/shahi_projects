@@ -460,8 +460,12 @@ export class DpomService {
                                         let tabIndex;
                                         if (dest.name == 'UQAU') {
                                             tabIndex = 4 //colorsTabs.indexOf(tab); // Adjust index to start from 1
-                                        } else if (dest.name = 'UQJP') {
+                                        } else if (dest.name == 'UQEU') {
+                                            tabIndex = 5
+                                        } else if (dest.name == 'UQJP') {
                                             tabIndex = 2
+                                        } else if (dest.name == 'UQIN') {
+                                            tabIndex = 6
                                         } else {
                                             tabIndex = 1
                                         }
@@ -533,10 +537,11 @@ export class DpomService {
                 if (await this.isAlertPresent(driver)) {
                     const alert = await driver.switchTo().alert();
                     const alertText = await alert.getText();
-                    const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'failed', errorMsg: alertText });
+                    const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: alertText });
                     await alert.accept();
+                    await driver.sleep(5000)
                     await driver.navigate().refresh();
-                    await driver.sleep(10000)
+                    await driver.quit();
                 } else {
                     if (po.buyer == 'Uniqlo-U12') {
                         await driver.wait(until.elementLocated(By.xpath('//*[@id="ViewOrderID"]')), 10000);
@@ -550,11 +555,11 @@ export class DpomService {
                     const coNo = await coNoElement.getAttribute('innerText');
                     if (coNo) {
                         const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { coNumber: coNo, status: 'Success', coDate: coDate });
-                        await driver.navigate().refresh();
+                        // await driver.navigate().refresh();
                         await driver.sleep(10000)
                     } else {
                         const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed' });
-                        await driver.navigate().refresh();
+                        // await driver.navigate().refresh();
                         await driver.sleep(10000)
                     }
                 }
