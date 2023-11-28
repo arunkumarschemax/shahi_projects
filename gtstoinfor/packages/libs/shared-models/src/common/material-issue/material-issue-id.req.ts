@@ -6,3 +6,14 @@ export class MaterialIssueIdreq{
         this.id = id
     }
 }
+
+
+
+export class MaterialAllocationitemsIdreq{
+    materialAllocationId:number;
+    constructor(
+        materialAllocationId:number
+    ){
+        this.materialAllocationId = materialAllocationId
+    }
+}

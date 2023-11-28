@@ -11,17 +11,7 @@ export class PurchaseOrderTrimEntity{
     })
     poTrimId:number
 
-    @Column('int',{
-        name:'product_group_id',
-        nullable:false
-    })
-    productGroupId:number
-
-    @Column('int',{
-        name:'trim_id',
-        nullable:false
-    })
-    trimId:number
+ 
 
     @Column('int',{
         name:'colour_id',
@@ -35,12 +25,13 @@ export class PurchaseOrderTrimEntity{
     })
     description: string
 
-    @Column('decimal', {
-        name: 'consumption',
-        precision: 4,
-        scale: 2,
-    })
-    consumption: number
+    // @Column('decimal', {
+    //     name: 'consumption',
+    //     precision: 4,
+    //     scale: 2,
+    // })
+    // consumption: number
+
     @Column('text', {
         name: 'remarks',
         nullable: true
@@ -54,16 +45,16 @@ export class PurchaseOrderTrimEntity{
     m3TrimCode: string
     
     @Column('int',{
-        name:'indent_id',
+        name:'indent_trim_id',
         nullable:true
       })
-      indentId:number
+      indentTrimId:number
       
       @Column('int',{
-        name:'sample_request_id',
+        name:'sample_req_trim_id',
         nullable:true
       })
-      sampleRequestId:number
+      sampleReqTrimId:number
 
     @Column('decimal',{
         name:'po_quantity',
@@ -90,8 +81,8 @@ export class PurchaseOrderTrimEntity{
       })
       grnQuantity:number
       
-    @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poTrimInfo)
-    @JoinColumn({name:'purchase_order_id'})
-    purchaseOrderEntity:PurchaseOrderEntity
+    // @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poTrimInfo)
+    // @JoinColumn({name:'purchase_order_id'})
+    // purchaseOrderEntity:PurchaseOrderEntity
 
 }

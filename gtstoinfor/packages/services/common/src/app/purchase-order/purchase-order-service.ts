@@ -29,8 +29,8 @@ export class PurchaseOrderService {
 
     async cretePurchaseOrder(req: PurchaseOrderDto): Promise<CommonResponseModel> {
         try {
-            console.log(req.poFabricInfo)
-            console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+            // console.log(req.poFabricInfo)
+            // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
             const currentYear = moment().format('YYYY')
             let ToYear = currentYear.toString().substr(-2)
             let FromYear = (currentYear - 1).toString().substr(-2)
@@ -42,8 +42,6 @@ export class PurchaseOrderService {
             } else {
                 poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + maxId[0].poId.toString().padStart(3, 0) + ''
             }
-            // const finalArray :PurchaseOrderEntity[]=[]
-            // for(const indent of req.indentId){
             let pofabricInfo = []
             let poTrimInfo = []
             const poEntity = new PurchaseOrderEntity()
@@ -57,55 +55,34 @@ export class PurchaseOrderService {
             poEntity.createdUser = req.createdUser
             poEntity.poMaterialType = req.poMaterialType
             poEntity.poAgainst = req.poAgainst
-            if (req.poFabricInfo) {
-                for (const poFabric of req.poFabricInfo) {
-                    const pofabricEntity = new PurchaseOrderFbricEntity()
-                    pofabricEntity.colourId = poFabric.colourId
-                    // pofabricEntity.productGroupId = poFabric.productGroupId
-                    pofabricEntity.remarks = poFabric.remarks
-                    // pofabricEntity.fabricTypeId = poFabric.fabricTypeId
-                    pofabricEntity.shahiFabricCode = poFabric.shahiFabricCode
-                    // pofabricEntity.weaveId = poFabric.weaveId
-                    // pofabricEntity.weight = poFabric.weight
-                    // pofabricEntity.width = poFabric.width
-                    // pofabricEntity.construction = poFabric.construction
-                    // pofabricEntity.yarnCount = poFabric.yarnCount
-                    // pofabricEntity.finish = poFabric.finish
-                    // pofabricEntity.shrinkage = poFabric.shrinkage
-                    // pofabricEntity.pch = poFabric.pch
-                    // pofabricEntity.moq = poFabric.moq
-                    pofabricEntity.m3FabricCode = poFabric.m3FabricCode
-                    // pofabricEntity.content = poFabric.content
-                    pofabricEntity.indentId = poFabric.indentId
-                    pofabricEntity.sampleRequestId = poFabric.sampleRequestId
-                    pofabricEntity.poQuantity = poFabric.poQuantity
-                    pofabricEntity.quantityUomId = poFabric.quantityUomId
-                    pofabricInfo.push(pofabricEntity)
-                }
-                poEntity.poFabricInfo = pofabricInfo
-            }
-            if (req.poTrimInfo) {
-                for (const trimInfo of req.poTrimInfo) {
-                    const trimEntity = new PurchaseOrderTrimEntity()
-                    console.log(trimInfo)
-                    console.log('""""""""""""""""""""""""""""""""""""""""""""')
-                    trimEntity.colourId = trimInfo.colourId
-                    // trimEntity.productGroupId = trimInfo.productGroupId
-                    // trimEntity.trimId = trimInfo.trimId
-                    trimEntity.m3TrimCode = trimInfo.m3TrimCode
-                    trimEntity.description = trimInfo.description
-                    trimEntity.consumption = trimInfo.consumption
-                    trimEntity.remarks = trimInfo.remarks
-                    trimEntity.indentId = trimInfo.indentId
-                    trimEntity.sampleRequestId = trimInfo.sampleRequestId
-                    trimEntity.poQuantity = trimInfo.poQuantity
-                    trimEntity.quantityUomId = trimInfo.quantityUomId
-                    poTrimInfo.push(trimEntity)
-                }
-                poEntity.poTrimInfo = poTrimInfo
-            }
-
-            // finalArray.push(poEntity)
+            // if (req.poFabricInfo) {
+            //     for (const poFabric of req.poFabricInfo) {
+            //         const pofabricEntity = new PurchaseOrderFbricEntity()
+            //         pofabricEntity.colourId = poFabric.colourId
+            //         pofabricEntity.remarks = poFabric.remarks
+            //         pofabricEntity.m3FabricCode = poFabric.m3FabricCode
+            //         pofabricEntity.indentFabricId = poFabric.indentFabricId
+            //         pofabricEntity.sampleReqFabricId = poFabric.sampleReqFabricId
+            //         pofabricEntity.poQuantity = poFabric.poQuantity
+            //         pofabricEntity.quantityUomId = poFabric.quantityUomId
+            //         pofabricInfo.push(pofabricEntity)
+            //     }
+            //     poEntity.poFabricInfo = pofabricInfo
+            // }
+            // if (req.poTrimInfo) {
+            //     for (const trimInfo of req.poTrimInfo) {
+            //         const trimEntity = new PurchaseOrderTrimEntity()
+            //         console.log(trimInfo)
+            //         console.log('""""""""""""""""""""""""""""""""""""""""""""')
+            //         trimEntity.colourId = trimInfo.colourId
+            //         trimEntity.m3TrimCode = trimInfo.m3TrimCode
+            //         trimEntity.indentTrimId = trimInfo.indentTrimId
+            //         trimEntity.sampleReqTrimId = trimInfo.sampleReqTrimId
+            //         trimEntity.poQuantity = trimInfo.poQuantity
+            //         trimEntity.quantityUomId = trimInfo.quantityUomId
+            //         poTrimInfo.push(trimEntity)
+            //     }
+            //     poEntity.poTrimInfo = poTrimInfo
             // }
 
             const save = await this.poRepo.save(poEntity)
@@ -139,14 +116,53 @@ export class PurchaseOrderService {
 
     async getPODataById(req: VendorIdReq): Promise<CommonResponseModel> {
         try {
-            // console.log(req, 'f3-=-=-=-=-=-=-=-=-=3333333333333333')
+            // console.log(req,'================')
             let responseData
             if (req.materialType === 'Fabric') {
-                const fabricData = await this.poFabricRepo.getPOFabricData(req)
+                let query=`SELECT m.item_code AS itemCode,pof.po_fabric_id AS poFabricId,pof.m3_fabric_code AS m3fabricCode,pof.po_quantity AS poQuantity,pof.quantity_uom_id AS quantityUomId,u.uom,
+                pof.purchase_order_id AS purchaseOrderId,pof.fabric_type_id AS fabricTypeId,ft.fabric_type_name AS fabricTypeName,po.po_material_type AS materialType,po.po_against AS  poAgainst,
+                pof.grn_quantity AS grnQuantity,if.ifabric_id AS indentFabricId,pof.sample_request_id AS sampleRequestId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style
+                FROM purchase_order_fabric pof
+                LEFT JOIN purchase_order po ON po.purchase_order_id = pof.purchase_order_id
+                LEFT JOIN fabric_type ft ON ft.fabric_type_id = pof.fabric_type_id
+                LEFT JOIN uom u ON u.id = pof.quantity_uom_id
+                LEFT JOIN m3_items m ON m.m3_items_Id = pof.m3_fabric_code`
+                if(req.poAgainst === 'INDENT'){
+                    query = query + ` 
+                    LEFT JOIN indent i ON i.indent_id = pof.indent_id 
+                    LEFT JOIN style s ON s.style_id = i.style 
+                    LEFT JOIN buyers b ON b.buyer_id = s.buyer_id
+                    LEFT JOIN indent_fabric if ON if.indent_id = i.indent_id
+                    WHERE pof.purchase_order_id = ${req.poId}`
+                }
+                if(req.poAgainst === 'SAMPLE ORDER'){
+                    query = query + ` 
+                    LEFT JOIN sample_request sr ON sr.sample_request_id  = pof.sample_request_id 
+                    LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id 
+                    LEFT JOIN style s ON s.style_id = sr.style_id
+                    WHERE pof.purchase_order_id = ${req.poId}`
+                }
+                const fabricData = await this.dataSource.query(query)
                 responseData = fabricData
             }
             if (req.materialType === 'Trim') {
-                const trimData = await this.poTrimRepo.getPOTrimData(req)
+                let query = `SELECT mt.trim_code as m3TrimCode,pot.po_trim_id AS poTrimId,pot.trim_id AS trimId, pot.m3_trim_code AS m3TrimCode,pot.purchase_order_id AS purchaseOrderId, pot.po_quantity AS poQuantity,
+                pot.quantity_uom_id AS quantityUomId,u.uom,po.po_material_type AS materialType,pot.grn_quantity AS grnQuantity,pot.indent_id as indentId, pot.sample_request_id as sampleRequestId,po.po_against AS poAgainst,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style
+                FROM purchase_order_trim pot
+                LEFT JOIN purchase_order po ON po.purchase_order_id = pot.purchase_order_id
+                LEFT JOIN uom u ON u.id = pot.quantity_uom_id
+                LEFT JOIN m3_trims mt ON mt.m3_trim_Id=pot.m3_trim_code`
+                if(req.poAgainst === 'INDENT'){
+                    query = query + ` 
+                    LEFT JOIN indent i ON i.indent_id = pot.indent_id 
+                    LEFT JOIN style s ON s.style_id = i.style 
+                    LEFT JOIN buyers b ON b.buyer_id = s.buyer_id 
+                    WHERE pot.purchase_order_id = ${req.poId}`
+                }
+                if(req.poAgainst === 'SAMPLE ORDER'){
+                    query = query + ` LEFT JOIN sample_request sr ON sr.sample_request_id  = pot.sample_request_id LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id LEFT JOIN style s ON s.style_id = sr.style_id WHERE pot.purchase_order_id = ${req.poId}`
+                }
+                const trimData = await this.poTrimRepo.query(query)
                 responseData = trimData
             }
             if (responseData.length > 0) {

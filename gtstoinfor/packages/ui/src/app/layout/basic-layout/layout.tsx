@@ -86,7 +86,7 @@ export default function BasicLayout() {
         const menuData = IAMClientAuthContext.menuAccessObject ? IAMClientAuthContext.menuAccessObject : [];
     //   console.log(menuData)
     const menus = menuData.sort((a,b) => a.orderId - b.orderId);
-    console.log(menus)
+    // console.log(menus)
         const processedMenuData = menus.map(menuItem => {
             const menuItems = menuItem.subMenuData.sort((a,b) => a.orderId - b.orderId);
           const processedSubMenuItems =  menuItems?.map(subMenuItem => (

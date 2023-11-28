@@ -172,7 +172,7 @@ service.createFabricType(variantData).then(res=>{
             key: 'sno',
             width: '70px',
             responsive: ['sm'],
-            render: (text, object, index) => (page - 1) * 10 + (index + 1)
+            render: (text, object, index) => (page - 1) * 50 + (index + 1)
           },
 
           {
@@ -247,13 +247,13 @@ service.createFabricType(variantData).then(res=>{
     ];
 
 return (
-  <Card title={<span>Fabric Type</span>}
+  <Card title={<span>Fabric Types</span>}
   style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/masters/fabrictype/fabric-type-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
   <br></br>
     <>
     <Row gutter={40}>
     <Col>
-          <Card title={'Total FabricType: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+          <Card title={'Total Fabric Types: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
         <Col>
           <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
@@ -275,10 +275,11 @@ return (
           pagination={{
             onChange(current) {
               setPage(current);
-            }
+            }, pageSize: 50,
           }}
-          scroll={{x:true}}
+          scroll={{ x: 'calc(1020px + 50%)', y: 540 }}
           onChange={onChange}
+         
           bordered />
     </Card>
     <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}

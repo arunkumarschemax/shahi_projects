@@ -181,22 +181,6 @@ export const  BuyersView = () => {
         render: (text, object, index) => (page-1) * 10 +(index+1)
       },
       {
-        dataIndex:"shortCode",
-        title:"Short Code",
-        // responsive: ['lg'],
-        sorter: (a, b) => a.shortCode.localeCompare(b.shortCode),
-        sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('shortCode')
-      },
-      {
-        dataIndex:"buyerCode",
-        title:"Buyer Code",
-        // responsive: ['lg'],
-        sorter: (a, b) => a.buyerCode.localeCompare(b.buyerCode),
-        sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('buyerCode')
-      },
-      {
         dataIndex:"buyerName",
         title:"Buyer Name",
         // responsive: ['lg'],
@@ -204,6 +188,23 @@ export const  BuyersView = () => {
         sortDirections: ['descend', 'ascend'],
         ...getColumnSearchProps('buyerName')
       },
+      {
+        dataIndex:"shortCode",
+        title:"Buyer Short Code",
+        // responsive: ['lg'],
+        // sorter: (a, b) => a.shortCode.localeCompare(b.shortCode),
+        // sortDirections: ['descend', 'ascend'],
+        // ...getColumnSearchProps('shortCode')
+      },
+      {
+        dataIndex:"buyerCode",
+        title:"Buyer Code",
+        // responsive: ['lg'],
+        // sorter: (a, b) => a.buyerCode.localeCompare(b.buyerCode),
+        // sortDirections: ['descend', 'ascend'],
+        // ...getColumnSearchProps('buyerCode')
+      },
+      
       {
         dataIndex:"contactPerson",
         title:"Contact Person",
@@ -216,8 +217,8 @@ export const  BuyersView = () => {
         dataIndex:"phoneNo",
         title:"Contact Number",
         // responsive: ['lg'],
-        sorter: (a, b) => a.phoneNo.localeCompare(b.phoneNo),
-        sortDirections: ['descend', 'ascend'],
+        // sorter: (a, b) => a.phoneNo.localeCompare(b.phoneNo),
+        // sortDirections: ['descend', 'ascend'],
         ...getColumnSearchProps('phoneNo')
       },
       // {
@@ -298,17 +299,17 @@ export const  BuyersView = () => {
           </span>
         )
       },
-      {
-        title:'Attributes',
-        dataIndex:'attributes',
-        render:(text,rowData) => (
-          <span>
-            <Button onClick={() => navigate('/global/buyers/buyers-general-attributes-form',{state:{id:rowData.buyerId}})}>General</Button>
-            <Divider type="vertical"/>
-            <Button onClick={() => navigate('/global/buyers/buyers-order-attributes-form',{state:{id:rowData.buyerId}})}>Order</Button>
-          </span>
-        )
-      }
+      // {
+      //   title:'Attributes',
+      //   dataIndex:'attributes',
+      //   render:(text,rowData) => (
+      //     <span>
+      //       <Button onClick={() => navigate('/global/buyers/buyers-general-attributes-form',{state:{id:rowData.buyerId}})}>General</Button>
+      //       <Divider type="vertical"/>
+      //       <Button onClick={() => navigate('/global/buyers/buyers-order-attributes-form',{state:{id:rowData.buyerId}})}>Order</Button>
+      //     </span>
+      //   )
+      // }
     ];
   
 
@@ -330,7 +331,7 @@ export const  BuyersView = () => {
           <br></br>
           <div style={{overflowX :'auto' }}>
 
-    <Table columns={columnsSkelton} dataSource={buyersData} size='small' bordered/>
+    <Table columns={columnsSkelton} dataSource={buyersData} pagination={{ pageSize: 50 }} size='small' bordered/>
           </div>
     <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>

@@ -12,21 +12,21 @@ export class GrnItemsEntity{
     })
     grnItemId:number
 
-    @Column('int',{
-        name:'item_id'
-    })
-    itemId:number
+    // @Column('int',{
+    //     name:'item_id'
+    // })
+    // itemId:number
 
-    @Column('int',{
-        name:'m3_item_id'
-    })
-    m3ItemId:number
+    // @Column('int',{
+    //     name:'m3_item_id'
+    // })
+    // m3ItemId:number
 
-    @Column('int',{
-        name:'product_group_id',
-        nullable:false,
-    })
-    productGroupId:number
+    // @Column('int',{
+    //     name:'product_group_id',
+    //     nullable:false,
+    // })
+    // productGroupId:number
 
     @Column('varchar',{
         name:'received_quantity',
@@ -34,11 +34,11 @@ export class GrnItemsEntity{
     })
     receivedQuantity:number
 
-    @Column('int',{
-        name:'received_uom_id',
-        nullable:false
-    })
-    receivedUomId:number
+    // @Column('int',{
+    //     name:'received_uom_id',
+    //     nullable:false
+    // })
+    // receivedUomId:number
 
     @Column('varchar',{
         name:'accepted_quantity',
@@ -46,11 +46,11 @@ export class GrnItemsEntity{
     })
     acceptedQuantity:number
 
-    @Column('int',{
-        name:'accepted_uom_id',
-        nullable:false
-    })
-    acceptedUomId:number
+    // @Column('int',{
+    //     name:'accepted_uom_id',
+    //     nullable:false
+    // })
+    // acceptedUomId:number
 
     @Column('varchar',{
         name:'rejected_quantity',

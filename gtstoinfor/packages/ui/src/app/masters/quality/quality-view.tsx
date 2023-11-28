@@ -13,6 +13,7 @@ const QualityView = () => {
   const service = new QualityService();
   const [itemGroup, setItemGroup] = useState([]);
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [page, setPage] = useState<number>(1);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
       setSearchText(selectedKeys[0]);
@@ -56,6 +57,13 @@ const active = (rowData: any) => {
 };
 
   const Columns: any = [
+    {
+      title: 'S No',
+      key: 'sno',
+      width: '70px',
+      responsive: ['sm'],
+      render: (text, object, index) => (page-1) * 10 +(index+1)
+    },
     {
         title: "Fabric Quality",
         dataIndex: "quality",
@@ -162,7 +170,7 @@ const active = (rowData: any) => {
 
   return (
     <div>
-    <Card title={<span>QUALITY</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+    <Card title={<span>Fabric Quality</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
         extra={<Button
             onClick={() => navigate('/masters/quality-form')}
             type="primary"
@@ -170,7 +178,8 @@ const active = (rowData: any) => {
         >Create</Button>
         }>
           <Table columns={Columns}
-          dataSource={itemGroup}/>
+          dataSource={itemGroup}
+          pagination={{ pageSize: 50 }} size='small' bordered/>
     </Card>
 </div>
   )

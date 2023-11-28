@@ -242,38 +242,10 @@ export const SourcingRequisitionDynamicView = () => {
         </Tooltip>
       ),
     },
-    // {
-    //   title: "Shahi Fabric Code",
-    //   dataIndex: "shahiFabricCode",
-    //   // ...getColumnSearchProps('shahiFabricCode'),
-    //   render: (text, record) => {
-    //     return (
-    //       <span>
-    //         {record.shahiFabricCode}
-    //         <Divider type="vertical" />
-    //         <Tag
-    //           onClick={() =>
-    //             generateBarcode(record.shahiFabricCode, "m3ItemCode")
-    //           }
-    //           style={{ cursor: "pointer" }}
-    //         >
-    //           <BarcodeOutlined />
-    //         </Tag>
-    //       </span>
-    //     );
-    //   },
-    // }, 
     {
       title: "Color",
       dataIndex: "color",
       ...getColumnSearchProps("color"),
-      // render: (text,record) => {
-      //     return(
-      //         <>
-      //         {record.color ? record.colorName : '-'}
-      //         </>
-      //     )
-      // }
     },
     {
       title: "Season",
@@ -372,27 +344,27 @@ export const SourcingRequisitionDynamicView = () => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
+      title: "Trim Type",
+      dataIndex: "materialType",
+      ...getColumnSearchProps("materialType"),
+    },
+    {
       title: "M3 Trim Code",
       dataIndex: "m3TrimCode",
       ...getColumnSearchProps("m3TrimCode"),
     },
     {
-      title: "Shahi Trim Code",
-      dataIndex: "shahiTrimCode",
+      title: "To Be Procured Quantity",
+      dataIndex: "quantity",
+      sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+      sortDirections: ["descend", "ascend"],
       render: (text, record) => {
         return (
-          <span>
-            {record.shahiTrimCode}
-            <Divider type="vertical" />
-            <Tag
-              onClick={() =>
-                generateBarcode(record.shahiTrimCode, "m3ItemCode")
-              }
-              style={{ cursor: "pointer" }}
-            >
-              <BarcodeOutlined />
-            </Tag>
-          </span>
+          <>
+            {record.quantity
+              ? `${record.quantity}`
+              : "-"}
+          </>
         );
       },
     },
@@ -401,97 +373,11 @@ export const SourcingRequisitionDynamicView = () => {
       dataIndex: "description",
     },
     {
-      title: "Trim Type",
-      dataIndex: "trimType",
-      ...getColumnSearchProps("trimType"),
-    },
-    {
-      title: "Trim Code",
-      dataIndex: "trimCode",
-      ...getColumnSearchProps("trimCode"),
-    },
-    {
-      title: "Size",
-      dataIndex: "size",
-      ...getColumnSearchProps("size"),
-      //   render: (text,record) => {
-      //     return(
-      //         <>
-      //         {record.size ? record.sizeName : '-'}
-      //         </>
-      //     )
-      // }
-    },
-    {
-      title: "Color",
-      dataIndex: "color",
-      ...getColumnSearchProps("color"),
-      //     render: (text,record) => {
-      //       return(
-      //           <>
-      //           {record.color ? record.colorName : '-'}
-      //           </>
-      //       )
-      //   }
-    },
-    {
-      title: "Quantity",
-      dataIndex: "quantity",
-      sorter: (a, b) => a.quantity.localeCompare(b.quantity),
-      sortDirections: ["descend", "ascend"],
-      render: (text, record) => {
-        return (
-          <>
-            {record.quantity
-              ? `${record.quantity} ${record.quantityUnit}`
-              : "-"}
-          </>
-        );
-      },
-    },
-
-    // {
-    //   title: "Remarks",
-    //   dataIndex: "remarks",
-    // },
-    {
-      title: "Available Quantity",
-      dataIndex: "availableQuantity",
-      sorter: (a, b) => a.quantity.localeCompare(b.quantity),
-      sortDirections: ["descend", "ascend"],
-      render: (text, record) => {
-        return (
-          <>
-            {record.availableQuantity
-              ? `${record.availableQuantity} ${record.quantityUnit}`
-              : "-"}
-          </>
-        );
-      },
-    },
-    {
-      title: "To Be Procured",
-      dataIndex: "tobeProcured",
-      render: (text, record) => {
-        return (
-          <>
-            {record.quantity - record.availableQuantity > 0
-              ? record.quantity - record.availableQuantity
-              : 0}
-          </>
-        );
-      },
-    },
-    {
       title: "Action",
     dataIndex: "action",
     render: (text, rowData) => {
     return (
     <span>
-    {/* <Button type='primary' shape='round' onClick={() => generateBarcode(record.m3TrimCode)}>
-    <PrinterOutlined />
-    </Button>
-    <Divider type='vertical'/> */}
     <Button
     type="primary"
     disabled={logInUser == "marketUser" ? true : false}

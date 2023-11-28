@@ -21,6 +21,9 @@ const SampleRequestReport = () => {
   const [filterData, setFilterData] = useState<any[]>([]);
   const navigate = useNavigate();
   const [selectedIndentIds, setSelectedIndentIds] = useState([]);
+  const [selectedRowData, setSelectedRowData] = useState([]);
+  const [selectItemIds, setSelectItemIds] = useState([]);
+
   const [btnEnable,setbtnEnable]=useState<boolean>(false)
   const [selectedItems, setSelectedItems] = useState({});
   const [type, setType] = useState({});
@@ -103,6 +106,40 @@ const SampleRequestReport = () => {
     return data ? data : "-";
   };
 
+  const ItemColumns: any = [
+    {
+      title: "Material Type",
+      dataIndex: "fabricType",
+      key: "fabricType",
+      align: "center",
+    },
+    {
+      title: "Item Name",
+      dataIndex: "itemCode",
+      key: "itemCode",
+      align: "center",
+    },
+    {
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
+      align: "center",
+    },
+    {
+      title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" onClick={() =>generatePo()} >Generate Po</Button>:'Genereate PO'}</div>,
+      dataIndex: "sm",
+      key: "sm",
+      align: "center",
+      render: (text, rowData, index) => { 
+        return(
+          <Checkbox 
+          onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.fabricType, text, rowData)}
+         
+        />
+        )
+      }
+    }
+  ]
   const Columns: any = [
     {
       title: "Request No",
@@ -135,9 +172,11 @@ const SampleRequestReport = () => {
       sorter: (a, b) => a.stylename.localeCompare(b.stylename),
       sortDirections: ['descend', 'ascend'],
     },
+
+    
    
     {
-      title: <div style={{ textAlign: "center" }}>Fabric Name</div>,
+      title: <div style={{ textAlign: "center" }}>Material Type</div>,
       dataIndex: "sm",
       key: "sm",
       align: "center",
@@ -146,13 +185,11 @@ const SampleRequestReport = () => {
         return (
           <Table
             dataSource={sm}
-            columns={[
-              {
-                dataIndex: "fabricType",
-                key: "fabricType",
-                align: "center",
-              },
-            ]}
+            columns={[{
+              dataIndex: "fabricType",
+              key: "fabricType",
+              align: "center",
+            }]}
             pagination={false}
           />
         );
@@ -213,11 +250,10 @@ const SampleRequestReport = () => {
             dataSource={sm}
             columns={[
               {
-                render:(value,rowData) =>{
-                  console.log(rowData,"rowdata")
+                render: (text, rowData, index) => { 
                   return(
                     <Checkbox 
-                    onChange={(e) => onCheck(e, rowData.indentId, rowData.fabricType, value)}
+                    onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.fabricType, text, rowData)}
                    
                   />
                   )
@@ -234,34 +270,63 @@ const SampleRequestReport = () => {
   const generatePo =()=>{
     navigate("/purchase-order", { state: { data: selectedItems, type:'Sampling'  } });
   }
+  
   const dataa=[];
-  const onCheck = (e, indentId, fabricType, value) => {
-    const checkboxValue = e.target.checked;
-    console.log(fabricType)
-    console.log(value)
-    console.log(checkboxValue)
 
-    setType(fabricType)
-    const updatedIndentIds = selectedIndentIds.includes(indentId)
-      ? selectedIndentIds.filter(id => id !== indentId)
-      : [...selectedIndentIds, indentId];
-    setSelectedIndentIds(updatedIndentIds);
+  const onCheck = (e, sampleRequestid, fabricType, value, rowData) => {
+    console.log(e.target.checked);
+    console.log(sampleRequestid);
+    console.log(fabricType);
+    console.log(rowData);
 
-    if(checkboxValue === true){
+    console.log(selectedRowData);
+    console.log(selectedRowData.find((rec) => rec.fabricType != fabricType));
+
+    if(e.target.checked){
+      
+      let rowsData = [...selectedRowData,rowData]
+      setSelectedRowData(rowsData)
+      let checkItemType:boolean = true;
+      checkItemType = (selectedRowData.find((rec) => rec.fabricType != fabricType) != undefined) ? false: true;
+      console.log(checkItemType)
+      if(!checkItemType){
+        AlertMessages.getErrorMessage('Generate PO for single Material Type. ')
+      }
       setbtnEnable(true)
-    } else {
-      setbtnEnable(false)
+      console.log(data)
+    }
+    else{
+      console.log(rowData)
+      console.log(selectedRowData)
+
     }
     
-    const resultArray = [{materialType:fabricType}, { indentIds: updatedIndentIds }];
-    // console.log(resultArray)
+    const checkboxValue = e.target.checked;
+    console.log(rowData)
+
+
+    setType(fabricType)
+    const updatedIndentIds = selectedIndentIds.includes(sampleRequestid)
+      ? selectedIndentIds.filter(id => id !== sampleRequestid)
+      : [...selectedIndentIds, sampleRequestid];
+    setSelectedIndentIds(updatedIndentIds);
+    console.log(selectedIndentIds)
+    // setbtnEnable(true)
+
+    const updated1 = selectItemIds.push(rowData.m3ItemId)
+  ? selectItemIds
+  : [...selectItemIds, rowData.m3ItemId];
+  // console.log(updated1);
+    setSelectItemIds(updated1);
+
+    
+    const resultArray = [{materialType:fabricType}, { sampleReqIds: updatedIndentIds },{m3itemid:updated1}];
+    console.log(resultArray)
     setSelectedItems(resultArray)
+
   };
-  // console.log(selectedIndentIds)
-  // console.log(selectedItems)
 
   
-  // console.log(type,"type")
   return (
     <div>
       <Card

@@ -22,4 +22,20 @@ export class SampleSizeReq{
         this.SampleRequestSizeId=SampleRequestSizeId
       }
       
+      
+}
+
+export class MaterialallitemsReq{
+  @ApiProperty()
+  materialAllocationId:number
+ 
+  constructor(
+    materialAllocationId:number,
+  
+  )
+  {
+    this.materialAllocationId=materialAllocationId
+   
+  }
+  
 }

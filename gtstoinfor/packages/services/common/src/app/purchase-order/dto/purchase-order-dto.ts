@@ -2,6 +2,7 @@ import { ApiProperty } from "@nestjs/swagger"
 import { GRNTypeEnum, PurchaseOrderStatus } from "@project-management-system/shared-models"
 import { PurchaseOrderFbricDto } from "./po-fabric-dto"
 import { PurchaseOrderTrimDto } from "./po-trim-dto"
+import { PoItemdetails } from "./po-items-dto"
 
 export class PurchaseOrderDto{
     @ApiProperty()
@@ -56,16 +57,22 @@ export class PurchaseOrderDto{
   poMaterialType:string
 
   @ApiProperty()
-  indentId:number[]
-
-
-  @ApiProperty()
-  poFabricInfo: PurchaseOrderFbricDto[]
-
-  @ApiProperty()
-  poTrimInfo?:PurchaseOrderTrimDto[]
-
-  @ApiProperty()
   poAgainst:GRNTypeEnum
+
+  @ApiProperty()
+  currencyId:number
+
+  @ApiProperty()
+  exchangeRate:number
+
+  @ApiProperty()
+  deliveryAddress:string
+
+  @ApiProperty()
+  totalAmount:string
+  
+  @ApiProperty()
+  poItemInfo:PoItemdetails[]
+
 
 }

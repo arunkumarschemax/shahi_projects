@@ -84,11 +84,11 @@ onFinish={saveData}>
           rules={[
             {
               required: true,
-              message:' profitControlHead Is Required'
+              message:' Profit Control Head is Required'
             },
             {
               pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
-              message: `profitControlHead Should contain only alphabets.`
+              message: `Profit Control Head Should contain only alphabets.`
             }
           ]}
         >

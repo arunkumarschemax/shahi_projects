@@ -1,6 +1,6 @@
 import { EditOutlined, EnvironmentOutlined, MinusCircleOutlined, PlusOutlined, UndoOutlined } from "@ant-design/icons"
 import { M3MastersCategoryReq } from "@project-management-system/shared-models"
-import { ColourService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, ProfitControlHeadService, UomService } from "@project-management-system/shared-services"
+import { ColourService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, ProfitControlHeadService, SampleDevelopmentService, UomService } from "@project-management-system/shared-services"
 import { Button, Card, Col, Divider, Form, Input, Popconfirm, Row, Select, Space, Tag, Tooltip, message } from "antd"
 import Table, { ColumnProps } from "antd/es/table"
 import { table } from "console"
@@ -9,7 +9,7 @@ import React from "react"
 import { useEffect, useState } from "react"
 
 
-export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
+export const PurchaseOrderfabricForm =({props,indentId,data,sampleReqId}) =>{
     const [fabricForm]=Form.useForm()
     const [weave,setWeave] = useState<any[]>([])
     const [uom,setUom] = useState<any[]>([])
@@ -23,25 +23,25 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
     const [update, setUpdate]=useState<boolean>(false)
     const [fabricType, setFabricType]= useState<any[]>([])
     const [inputDisbale, setInputDisable]= useState<boolean>(false)
+    const [tableColumns, setTableColumns] = useState([]);
 
     const [page, setPage] = React.useState(1);
     const {Option}=Select
     const weaveService = new FabricWeaveService()
     const uomService =  new UomService()
-    const m3MasterService = new M3MastersService()
     const colorService = new ColourService();
     const pchService = new ProfitControlHeadService()
     const fabricTypeService = new FabricTypeService()
     const indentService = new IndentService()
-    const [indentData, setIndentData]=useState<any[]>([])
     let tableData: any[] = []
-    const m3StyleService = new M3StyleService()
     const m3ItemsService = new M3ItemsService()
+    const sampleservice = new SampleDevelopmentService()
 
 
 
-    console.log(fabricTableVisible)
-    console.log(data)
+    // console.log(fabricTableVisible)
+    // console.log(data)
+    console.log(sampleReqId.length)
 
     useEffect(() =>{
         getweave()
@@ -54,10 +54,20 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
 
 
     useEffect(() =>{
-        if(indentId != undefined){
+        if(indentId.length != 0){
+            console.log(indentId)
+            setTableColumns([...columns])
             AllIndnetDetails(indentId)
         }
     },[indentId])
+
+    useEffect(() =>{
+        if(sampleReqId .length != 0){
+            getAllSampleDetails(sampleReqId)
+            setTableColumns([...samplecolumns])
+        }
+
+    },[sampleReqId])
 
     const getM3FabricStyleCodes = () => {
         m3ItemsService.getM3Items().then(res => {
@@ -73,6 +83,17 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
                 console.log(res.data)
                 message.info('Please Update Po Quantity')
                 props(res.data)
+                setFabricTableData(res.data)
+                setFabricTableVisible(true)
+            }else{
+                setFabricTableData([])
+            }
+        })
+    }
+
+    const getAllSampleDetails = (value) =>{
+        sampleservice.getfabricDetailsOfSample({sampleReqId:value}).then(res =>{
+            if(res.status){
                 setFabricTableData(res.data)
                 setFabricTableVisible(true)
             }else{
@@ -119,11 +140,11 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
         })
     }
 
-  
     const colorOnchange = (value,option) =>{
         console.log(option.type)
         fabricForm.setFieldsValue({colorName:option?.type?option.type:''})
     }
+
     const setEditForm = (rowData: any, index: any) => {
         console.log(rowData)
         setUpdate(true)
@@ -131,9 +152,13 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
             setInputDisable(true)
             fabricForm.setFieldsValue({poQuantity:rowData.indentQuantity})
         }
+        if(rowData.samplereFabId != undefined){
+            fabricForm.setFieldsValue({poQuantity:rowData.sampleQuantity})
+        }
         setDefaultFabricFormData(rowData)
         setFabricIndexVal(index)
     }
+
 
     useEffect(() => {
         if(defaultFabricFormData){
@@ -149,13 +174,15 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
                 indentFabricId:defaultFabricFormData.indentFabricId,
                 itemCode:defaultFabricFormData.itemCode,
                 quantityUom:defaultFabricFormData.quantityUom,
-                indentCode:defaultFabricFormData.indentCode
+                indentCode:defaultFabricFormData.indentCode,
+                samplereFabId:defaultFabricFormData.samplereFabId,
+                sampleReqNo:defaultFabricFormData.sampleReqNo,
             })
         }
 
     },[defaultFabricFormData])
 
-    const columns : ColumnProps<any>[] = [
+    const columns  = [
         {
             title: 'S No',
             key: 'sno',
@@ -163,20 +190,18 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
         // {
-        //     title:'Indent Code',
+        //     title:'Sample Code',
         //     dataIndex:'indentCode',
         // },
+        {
+            title:'Indent Code',
+            dataIndex:'indentCode',
+        },
         {
             title:'M3 Fabric Code',
             dataIndex:'itemCode',
             width:'170px'
         },
-        {
-            title:'Shahi Fabric Code',
-            dataIndex:'shahiFabricCode',
-            width:'170px'
-        },
-        
         {
             title:'Color',
             dataIndex:'colorName',
@@ -226,6 +251,72 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
         }
     ]
     
+    
+    const samplecolumns : ColumnProps<any>[] = [
+        {
+            title: 'S No',
+            key: 'sno',
+            responsive: ['sm'],
+            render: (text, object, index) => (page-1) * 10 +(index+1)
+        },
+        {
+            title:'Sample Request No',
+            dataIndex:'sampleReqNo',
+        },
+        {
+            title:'M3 Fabric Code',
+            dataIndex:'m3FabricCode',
+            width:'170px'
+        },
+        {
+            title:'Color',
+            dataIndex:'colorName',
+        },
+        {
+            title:'Sample Quantity',
+            dataIndex:'sampleQuantity',
+        },
+        {
+            title:'PO Quantity',
+            dataIndex:'poQuantity',
+        },
+        {
+            title:'UOM',
+            dataIndex:'quantityUom',
+        },
+        {
+            title: "Action",
+            dataIndex: 'action',
+            render: (text: any, rowData: any, index: any) => (
+                <span>
+                    <Tooltip placement="top" title='Edit'>
+                        <Tag >
+                            <EditOutlined className={'editSamplTypeIcon'} type="edit"
+                                onClick={() => {
+                                    setEditForm(rowData,index)
+                                }}
+                                style={{ color: '#1890ff', fontSize: '14px' }}
+                            />
+                        </Tag>
+                    </Tooltip>
+                    <Divider type="vertical" />
+                    
+                    <Tooltip placement="top" title='delete'>
+                    <Tag >
+                        <Popconfirm title='Sure to delete?' 
+                        onConfirm={e =>{deleteData(index);}}
+                        >
+                        <MinusCircleOutlined 
+
+                        style={{ color: '#1890ff', fontSize: '14px' }} />
+                        </Popconfirm>
+                    </Tag>
+                    </Tooltip>
+                </span>
+            )
+        }
+    ]
+
     const deleteData = (index:any) => {
         tableData = [...fabricTableData]
         tableData.splice(index,1)
@@ -276,6 +367,7 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
         console.log(value)
 
     }
+
     return (
     <Card title={<span style={{color:'blue', fontSize:'17px'}} >Fabric Details</span>}>
        <Form form={fabricForm} layout="vertical" onFinish={onFabricAdd}>
@@ -286,6 +378,8 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
             <Form.Item name={'itemCode'} hidden><Input></Input></Form.Item>
             <Form.Item name={'quantityUom'} hidden><Input></Input></Form.Item>
             <Form.Item name={'indentCode'} hidden><Input></Input></Form.Item>
+            <Form.Item name={'samplereFabId'} hidden><Input></Input></Form.Item>
+            <Form.Item name={'sampleReqNo'} hidden><Input></Input></Form.Item>
 
 
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
@@ -339,10 +433,12 @@ export const PurchaseOrderfabricForm =({props,indentId,data}) =>{
                     </Col>
                     </Row>
                     <Row justify={'end'}>
-                    <Button type='primary' htmlType="submit">{update ?'Update':'Add'}</Button>
+                        {update?
+                         <Button type='primary' htmlType="submit">{update ?'Update':'Add'}</Button>:<></>
+                        }
                 </Row>
                 <Row>
-                    {fabricTableVisible && <Table columns={columns} dataSource={fabricTableData}
+                    {fabricTableVisible && <Table columns={tableColumns} dataSource={fabricTableData}
                      />
                    }
 

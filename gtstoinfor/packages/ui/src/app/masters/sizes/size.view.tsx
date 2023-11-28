@@ -173,7 +173,7 @@ service.createsize(variantData).then(res=>{
             key: 'sno',
             width: '70px',
             responsive: ['sm'],
-            render: (text, object, index) => (page - 1) * 10 + (index + 1)
+            render: (text, object, index) => (page - 1) * 50 + (index + 1)
           },
 
           {
@@ -248,19 +248,19 @@ service.createsize(variantData).then(res=>{
     ];
 
 return (
-  <Card title={<span>Size</span>}
+  <Card title={<span>Sizes</span>}
   style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/masters/size/size-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
   <br></br>
     <>
     <Row gutter={40}>
     <Col>
-          <Card title={'Total Sizes: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+          <Card title={'Total Sizes: ' + variantData.length} style={{ textAlign: 'center', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
         <Col>
-          <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+          <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'center', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
         </Col>
         <Col>
-          <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+          <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'center', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
         {/* <Col>
         <span><Button onClick={() => navigate('/masters/paymentmethod/paymentmethod-form')}
@@ -276,11 +276,13 @@ return (
           pagination={{
             onChange(current) {
               setPage(current);
-            }
+            },
+            pageSize:50,
           }}
           scroll={{x:true}}
           onChange={onChange}
           bordered />
+
     </Card>
     <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>

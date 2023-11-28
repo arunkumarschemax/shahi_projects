@@ -20,6 +20,7 @@ import { IndentService } from '@project-management-system/shared-services';
 import { MaterialAllocationEntity } from './entities/material-allocation.entity';
 import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 import { MaterialAllocationItemsEntity } from './entities/material-allocation-items';
+import { MaterialAllocationItemsRepo } from './repo/material-allocation-items-repo';
 // import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 
 @Module({
@@ -38,6 +39,6 @@ import { MaterialAllocationItemsEntity } from './entities/material-allocation-it
   ]),
   ],
   controllers: [SampleDevReqController],
-  providers: [SampleRequestService,ApplicationExceptionHandler,SampleRequestRepository,SampleSizeRepo,SampleFabricRepo,SampleTrimRepo,SampleProcessRepo,SampleInventoryLoqRepo,IndentService,MaterialAllocationRepo]
+  providers: [SampleRequestService,ApplicationExceptionHandler,SampleRequestRepository,SampleSizeRepo,SampleFabricRepo,SampleTrimRepo,SampleProcessRepo,SampleInventoryLoqRepo,IndentService,MaterialAllocationRepo,MaterialAllocationItemsRepo]
 })
 export class SampleDevReqModule {}

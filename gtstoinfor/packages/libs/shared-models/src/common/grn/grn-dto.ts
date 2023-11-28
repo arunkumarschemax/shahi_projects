@@ -21,6 +21,7 @@ export class GrnDto{
   grnNumber?:string
   status:PurchaseOrderStatus
   grnType:GRNTypeEnum
+  invoiceNo?: string
 
 
   constructor(
@@ -41,7 +42,8 @@ export class GrnDto{
     grnItemInfo?: GrnItemsDto[],
     grnId?:number,
     grnNumber?:string,
-    grnType?:GRNTypeEnum
+    grnType?:GRNTypeEnum,
+    invoiceNo?: string,
   
   ){
     this.grnId = grnId
@@ -62,6 +64,7 @@ export class GrnDto{
     this.styleId = styleId
     this.materialtype = materialtype
     this.grnType = grnType
+    this.invoiceNo = invoiceNo
   }
 
 

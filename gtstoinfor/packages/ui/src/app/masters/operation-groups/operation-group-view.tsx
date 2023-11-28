@@ -279,17 +279,17 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
 
   return (
 
-    <Card title='Operation Groups' extra={<span><Button onClick={() => navigate('/masters/operationgroups/operationgroups-form')} type={'primary'}>New</Button></span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+    <Card title='Operation Groups'  style={{ textAlign: 'center' }} extra={<span><Button onClick={() => navigate('/masters/operationgroups/operationgroups-form')} type={'primary'}>New</Button></span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
         <br/>
       <Row gutter={40}>
         <Col>
-          <Card title={'Total Operation Groups: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+          <Card title={'Total Operation Groups: ' + variantData.length} style={{ textAlign: 'center', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
         <Col>
-          <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+          <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'center', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
         </Col>
         <Col>
-          <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+          <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'center', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
       </Row><br></br>
         <Table

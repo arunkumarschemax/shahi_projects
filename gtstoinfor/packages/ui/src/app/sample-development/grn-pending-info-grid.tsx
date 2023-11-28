@@ -40,48 +40,52 @@ export const GrnPendingInfoGrid = () => {
             title: 'GRN number',
             dataIndex: "grn_number",
             align: 'left',
-            //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
-            //   sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.grn_number - b.grn_number,
+
+              sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
         {
             title: 'Vendor',
             dataIndex: "vendor_name",
             align: 'left',
-            //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
-            //   sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.vendor_name - b.vendor_name,
+
+              sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
         {
             title: 'Buyer',
             dataIndex: "fabBuyerName",
             align: 'left',
-            //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
-            //   sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.fabBuyerName - b.fabBuyerName,
+
+              sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
         {
             title: 'Material Type',
             dataIndex: "item_type",
             align: 'left',
-            //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
-            //   sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.item_type - b.item_type,
+
+              sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
         {
             title: 'Item',
             dataIndex: "m3_item_code",
             align: 'left',
-            //   sorter: (a, b) => a.vendorName.trim().localeCompare(b.vendorName.trim()),
-            //   sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.m3_item_code - b.m3_item_code,
+              sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
         {
             title: 'Grn Quantity',
             dataIndex: 'conversion_quantity',
             align: 'left',
-            // sorter: (a, b) => a.receivedQuantity - b.receivedQuantity,
-            // sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.conversion_quantity - b.conversion_quantity,
+            sortDirections: ['descend', 'ascend'],
         },
         {
             title: 'Location Mapped',

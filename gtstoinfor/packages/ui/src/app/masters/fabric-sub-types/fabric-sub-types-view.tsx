@@ -174,7 +174,7 @@ export function FabricSubTypeGrid(
       key: 'sno',
       width: '70px',
       responsive: ['sm'],
-       render: (text, object, index) => (page-1) * 10 +(index+1)
+       render: (text, object, index) => (page-1) * 50 +(index+1)
     },
     {
       title: 'Fabric Type',
@@ -263,12 +263,12 @@ export function FabricSubTypeGrid(
   ];
 
   return (
-    <Card title={<span >Fabric Sub-Type</span>}
+    <Card title={<span >Fabric Sub-Types</span>}
     style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/masters/fabric-sub-type-form/fabric-sub-type-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
      <br></br>
       <Row gutter={40}>
       <Col>
-          <Card title={'Total Fabric Sub Type : ' + FabricSubTypeData.length} style={{textAlign: 'left', width: 290, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+          <Card title={'Total Fabric Sub Types : ' + FabricSubTypeData.length} style={{textAlign: 'left', width: 290, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
            <Card title={'Active: ' + FabricSubTypeData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 150, height: 41,backgroundColor:'#52c41a'}}></Card>
@@ -285,10 +285,11 @@ export function FabricSubTypeGrid(
           pagination={{
             onChange(current) {
               setPage(current);
-            }
+            },
+            pageSize:50
           }}
           onChange={onChange}
-          scroll={{x:true}}
+          scroll={{ x: 'calc(1020px + 50%)', y: 540 }}
           bordered />
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>
