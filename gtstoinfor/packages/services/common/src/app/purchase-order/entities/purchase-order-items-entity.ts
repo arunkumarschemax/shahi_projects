@@ -1,5 +1,5 @@
 import { PoItemEnum } from "@project-management-system/shared-models";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { PurchaseOrderEntity } from "./purchase-order-entity";
 
 @Entity('purchae_order_items')
@@ -18,8 +18,8 @@ export class PurchaseOrderItemsEntity{
       @Column('int',{
         name:'m3_item_id',
         nullable:false,
-      })
-      m3ItemId:number
+    })
+  m3ItemId:number
 
   @Column('decimal',{
     name:'po_quantity',
@@ -88,6 +88,43 @@ export class PurchaseOrderItemsEntity{
   })
   subjectiveAmount:number
 
+  @CreateDateColumn({
+    name: "created_at",
+  })
+  createdAt: string;
+
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
+    name: "created_user",
+  })
+  createdUser: string | null;
+
+  @UpdateDateColumn({
+    name: "updated_at",
+  })
+  updatedAt: string;
+
+  @Column("varchar", {
+    nullable: true,
+    length: 40,
+    name: "updated_user",
+  })
+  updatedUser: string | null;
+
+  @VersionColumn({
+    default: 1,
+    name: "version_flag",
+  })
+  versionFlag: number;
+
+  @Column({
+    nullable: false,
+    name: "is_active",
+    default:1
+  })
+  isActive: boolean;
+  
   @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poItemInfo)
   @JoinColumn({name:'purchase_order_id'})
   purchaseOrderEntity:PurchaseOrderEntity
