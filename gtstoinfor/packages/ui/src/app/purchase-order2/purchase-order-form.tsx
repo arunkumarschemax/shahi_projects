@@ -31,7 +31,6 @@ export const PurchaseOrderForm =()=>{
     const [navigateData,setnavigateData] = useState<any>([])
     const [indentDropDownVisible, setIndentDropDownVisible] = useState<boolean>(false)
     const [sampleDropDownVisible, setSampleDropDownVisible] = useState<boolean>(false)
-
     let fabricInfo:PurchaseOrderFbricDto[]=[];
     let trimInfo:PurchaseOrderTrimDto[]=[];
     const navigate = useNavigate()
@@ -86,28 +85,18 @@ export const PurchaseOrderForm =()=>{
     }
     useEffect(() =>{
         if(stateData != undefined ){
-            console.log(stateData)
-            console.log(stateData.type)
-
-            console.log(stateData)
-            console.log(stateData.data)
-            console.log(stateData.data[0].materialType)
-            console.log(stateData.data[1].indentIds)
-
             if(stateData.type == 'Indent'){
+                setIndentDropDownVisible(true)
                 poForm.setFieldsValue({indentId:stateData.data.indentId})
-                // setIndentId(stateData)
                 poForm.setFieldsValue({indentAgainst:'Indent'})
-                // setStyleVisible(false)
                 setIndentId(stateData.data.indentId)
                 if(stateData.data.materialType == "Fabric"){
                     poForm.setFieldsValue({poMaterialType:"Fabric"})
                     setPoType('Fabric')
                 }
-                if(stateData.data.materialType == 'Trim'){
+                if(stateData.data.materialType != 'Fabric'){
                     setPoType('Trim')
-                    poForm.setFieldsValue({poMaterialType:"Trim"})
-    
+                    poForm.setFieldsValue({poMaterialType:stateData.data.materialType})
                 }
             }
             if(stateData.type == 'Sampling'){
@@ -124,7 +113,7 @@ export const PurchaseOrderForm =()=>{
                 if(stateData.data[0].materialType != 'Fabric'){
                     console.log('xxxxxx')
                     setPoType('Trim')
-                    poForm.setFieldsValue({poMaterialType:"Trim"})
+                    poForm.setFieldsValue({poMaterialType:stateData.data[0].materialType})
                 }
             }  
         }
@@ -288,12 +277,13 @@ return(
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
                     <Form.Item name='poMaterialType' label='PO Type' rules={[{required:true,message:'PO Type is required'}]}>
-                       <Select showSearch allowClear optionFilterProp="children" placeholder='Select PoType' 
+                       {/* <Select showSearch allowClear optionFilterProp="children" placeholder='Select PoType' 
                        onChange={poTypeOnchange} disabled
                        >
                         <Option name={'Fabric'} value='Fabric'>{'Fabric'}</Option>
                         <Option value={'Trim'}>{'Trim'}</Option>
-                        </Select>
+                        </Select> */}
+                        <Input disabled></Input>
                     </Form.Item>
               </Col>
               {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:styleVisible == true ? '':'none'}}>

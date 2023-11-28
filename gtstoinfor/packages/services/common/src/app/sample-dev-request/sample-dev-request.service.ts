@@ -213,6 +213,7 @@ export class SampleRequestService {
         fabricEntity.consumption = fabricObj.consumption
         fabricEntity.uomId = fabricObj.uomId
         fabricEntity.remarks = fabricObj.remarks
+        fabricEntity.totalRequirement = fabricObj.totalRequirement
         sampleFabricInfo.push(fabricEntity)
         const fabricInfoReq = new FabricInfoReq(fabricObj.fabricCode,fabricObj.colourId,fabricObj.consumption,fabricObj.uomId,fabricObj.remarks)
         indentFabInfo.push(fabricInfoReq);
@@ -250,7 +251,7 @@ export class SampleRequestService {
             bomEntity.colourId = fabricData.colourId
             bomEntity.m3ItemId=fabricData.fabricCode
             bomEntity.itemType='Fabric'
-            bomEntity.requiredQuantity = quantityWithWastage ? quantityWithWastage : 0
+            bomEntity.requiredQuantity = fabricData.totalRequirement
             saveBomDetails = await this.bomRepo.save(bomEntity)
           }
         }
@@ -261,6 +262,7 @@ export class SampleRequestService {
             bomEntity.itemType=trimData.trimType
             bomEntity.m3ItemId=trimData.trimCode
             bomEntity.colourId = trimData.colourId
+            bomEntity.requiredQuantity = trimData.consumption
             saveBomDetails = await this.bomRepo.save(bomEntity)
           }
         }
