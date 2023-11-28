@@ -55,37 +55,35 @@ export class PurchaseOrderService {
             poEntity.createdUser = req.createdUser
             poEntity.poMaterialType = req.poMaterialType
             poEntity.poAgainst = req.poAgainst
-            if (req.poFabricInfo) {
-                for (const poFabric of req.poFabricInfo) {
-                    const pofabricEntity = new PurchaseOrderFbricEntity()
-                    pofabricEntity.colourId = poFabric.colourId
-                    pofabricEntity.remarks = poFabric.remarks
-                    pofabricEntity.m3FabricCode = poFabric.m3FabricCode
-                    pofabricEntity.indentFabricId = poFabric.indentFabricId
-                    pofabricEntity.sampleReqFabricId = poFabric.sampleReqFabricId
-                    pofabricEntity.poQuantity = poFabric.poQuantity
-                    pofabricEntity.quantityUomId = poFabric.quantityUomId
-                    pofabricInfo.push(pofabricEntity)
-                }
-                poEntity.poFabricInfo = pofabricInfo
-            }
-            if (req.poTrimInfo) {
-                for (const trimInfo of req.poTrimInfo) {
-                    const trimEntity = new PurchaseOrderTrimEntity()
-                    console.log(trimInfo)
-                    console.log('""""""""""""""""""""""""""""""""""""""""""""')
-                    trimEntity.colourId = trimInfo.colourId
-                    trimEntity.m3TrimCode = trimInfo.m3TrimCode
-                    trimEntity.indentTrimId = trimInfo.indentTrimId
-                    trimEntity.sampleReqTrimId = trimInfo.sampleReqTrimId
-                    trimEntity.poQuantity = trimInfo.poQuantity
-                    trimEntity.quantityUomId = trimInfo.quantityUomId
-                    poTrimInfo.push(trimEntity)
-                }
-                poEntity.poTrimInfo = poTrimInfo
-            }
-
-           
+            // if (req.poFabricInfo) {
+            //     for (const poFabric of req.poFabricInfo) {
+            //         const pofabricEntity = new PurchaseOrderFbricEntity()
+            //         pofabricEntity.colourId = poFabric.colourId
+            //         pofabricEntity.remarks = poFabric.remarks
+            //         pofabricEntity.m3FabricCode = poFabric.m3FabricCode
+            //         pofabricEntity.indentFabricId = poFabric.indentFabricId
+            //         pofabricEntity.sampleReqFabricId = poFabric.sampleReqFabricId
+            //         pofabricEntity.poQuantity = poFabric.poQuantity
+            //         pofabricEntity.quantityUomId = poFabric.quantityUomId
+            //         pofabricInfo.push(pofabricEntity)
+            //     }
+            //     poEntity.poFabricInfo = pofabricInfo
+            // }
+            // if (req.poTrimInfo) {
+            //     for (const trimInfo of req.poTrimInfo) {
+            //         const trimEntity = new PurchaseOrderTrimEntity()
+            //         console.log(trimInfo)
+            //         console.log('""""""""""""""""""""""""""""""""""""""""""""')
+            //         trimEntity.colourId = trimInfo.colourId
+            //         trimEntity.m3TrimCode = trimInfo.m3TrimCode
+            //         trimEntity.indentTrimId = trimInfo.indentTrimId
+            //         trimEntity.sampleReqTrimId = trimInfo.sampleReqTrimId
+            //         trimEntity.poQuantity = trimInfo.poQuantity
+            //         trimEntity.quantityUomId = trimInfo.quantityUomId
+            //         poTrimInfo.push(trimEntity)
+            //     }
+            //     poEntity.poTrimInfo = poTrimInfo
+            // }
 
             const save = await this.poRepo.save(poEntity)
             if (save) {
