@@ -2,6 +2,7 @@ import { GRNTypeEnum, PurchaseOrderStatus } from "@project-management-system/sha
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { PurchaseOrderFbricEntity } from "./purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "./purchase-order-trim-entity";
+import { PurchaseOrderItemsEntity } from "./purchase-order-items-entity";
 
 @Entity('purchase_order')
 export class PurchaseOrderEntity{
@@ -120,13 +121,37 @@ export class PurchaseOrderEntity{
       enum: GRNTypeEnum
     })
     poAgainst:GRNTypeEnum
+
+    @Column('int',{
+      name:'currency_id',
+      nullable:true
+    })
+    currencyId:number
     
+    @Column('int',{
+      name:'exchange_rate',
+      nullable:true
+    })
+    exchangeRate:number
+
+    @Column('varchar',{
+      name:'delivery_address',
+      nullable:true
+    })
+    deliveryAddress:string
+
+    @Column('varchar',{
+      name:'total_amount',
+      nullable:true
+    })
+    totalAmount:string
     
-  @OneToMany(type => PurchaseOrderFbricEntity, purchaseReqFabric => purchaseReqFabric.purchaseOrderEntity, { cascade: true })
-  poFabricInfo: PurchaseOrderFbricEntity[]
+  // @OneToMany(type => PurchaseOrderFbricEntity, purchaseReqFabric => purchaseReqFabric.purchaseOrderEntity, { cascade: true })
+  // poFabricInfo: PurchaseOrderFbricEntity[]
 
-  @OneToMany(type => PurchaseOrderTrimEntity, poTrimReq => poTrimReq.purchaseOrderEntity, { cascade: true })
-  poTrimInfo: PurchaseOrderTrimEntity[]
+  // @OneToMany(type => PurchaseOrderTrimEntity, poTrimReq => poTrimReq.purchaseOrderEntity, { cascade: true })
+  // poTrimInfo: PurchaseOrderTrimEntity[]
 
-
+@OneToMany(type => PurchaseOrderItemsEntity, poItem => poItem.purchaseOrderEntity, { cascade: true })
+  poItemInfo: PurchaseOrderItemsEntity[]
 }

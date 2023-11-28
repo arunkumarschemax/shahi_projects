@@ -81,8 +81,8 @@ export class PurchaseOrderTrimEntity{
       })
       grnQuantity:number
       
-    @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poTrimInfo)
-    @JoinColumn({name:'purchase_order_id'})
-    purchaseOrderEntity:PurchaseOrderEntity
+    // @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poTrimInfo)
+    // @JoinColumn({name:'purchase_order_id'})
+    // purchaseOrderEntity:PurchaseOrderEntity
 
 }
