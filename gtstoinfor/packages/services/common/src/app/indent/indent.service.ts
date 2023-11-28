@@ -78,9 +78,9 @@ export class IndentService {
             }
             const trimIndentData = await this.indentTrimRepo.getTrimIndentData(data.indent_id);
             for (const trim of trimIndentData) {
-                trimModel.push(new IndentTrimsModel(trim.itrims_id, trim.product_group, trim.item_code, trim.sizes, trim.colour,
-                    trim.quantity, trim.m3_trim_code, trim.description,
-                    trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyer,trim.buyerId))
+                trimModel.push(new IndentTrimsModel(trim.itrims_id, trim.trimType, trim.item_code, trim.sizes, trim.colour,
+                    trim.quantity, trim.m3TrimCode, trim.description,
+                    trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId))
             }
             indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, fabricModel, trimModel, data.style, data.description, data.created_at))
         }

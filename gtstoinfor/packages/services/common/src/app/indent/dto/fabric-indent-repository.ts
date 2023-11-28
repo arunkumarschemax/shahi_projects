@@ -31,23 +31,12 @@ export class FabricIndentRepository extends Repository<IndentFabricEntity> {
         itf.created_at,itf.updated_at,itf.indent_id,m3.item_code,m3.description,
         co.colour,it.status, uom.uom AS quantityUnit,CONCAT(b.buyer_code,'-',b.buyer_name)AS buyer,s.buyer_id AS buyerId`)
             .leftJoin(M3ItemsEntity, 'm3', `m3.m3_items_Id = itf.m3_fabric_code`)
-            // .leftJoin(Vendors, 'ven', `ven.vendor_id = itf.supplier_id`)
             .leftJoin(Colour, 'co', 'co.colour_id=itf.color')
-            // .leftJoin(Buyers, 'bu', 'bu.buyer_id=itf.buyer_id')
             .leftJoin(Indent, 'it', 'it.indent_id=itf.indent_id')
             .leftJoin(UomEntity, 'uom', 'uom.id=itf.quantity_unit')
             .leftJoin(Style,'s','s.style_id = it.style')
             .leftJoin(Buyers,'b','b.buyer_id = s.buyer_id')
-
-            // .leftJoin(UomEntity,'uom1','uom1.id=itf.yarn_unit')
-            // .leftJoin(UomEntity,'uom2','uom2.id=itf.weight_unit')
-            // .leftJoin(UomEntity,'uom3','uom3.id=itf.moq_unit')
-            // .leftJoin(UomEntity,'uom4','uom4.id=itf.moq_price_unit')
-            // .leftJoin(ProfitControlHead,'pch','pch.profit_control_head_id=itf.pch')
-            // .leftJoin(StocksEntity,'ss','ss.item_type_id=itf.fabric_type')
-            // .leftJoin(FabricType,'fti','fti.fabric_type_id=itf.fabric_type')
-            // .leftJoin(FabricWeave,'fw','fw.fabric_weave_id=itf.weave_id')
-            .where(`itf.indent_id=${indentId}`)
+            .where(`itf.indent_id=${indentId} and (itf.quantity-itf.received_quantity) >0`)
         const data = await query.getRawMany()
         return data
     }

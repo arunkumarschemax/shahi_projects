@@ -22,6 +22,8 @@ const SampleRequestReport = () => {
   const navigate = useNavigate();
   const [selectedIndentIds, setSelectedIndentIds] = useState([]);
   const [selectedRowData, setSelectedRowData] = useState([]);
+  const [selectItemIds, setSelectItemIds] = useState([]);
+
   const [btnEnable,setbtnEnable]=useState<boolean>(false)
   const [selectedItems, setSelectedItems] = useState({});
   const [type, setType] = useState({});
@@ -285,36 +287,31 @@ const SampleRequestReport = () => {
     }
     
     const checkboxValue = e.target.checked;
-    console.log(sampleRequestid)
-    // console.log(value)
-    // console.log(checkboxValue)
+    console.log(rowData)
+
 
     setType(fabricType)
     const updatedIndentIds = selectedIndentIds.includes(sampleRequestid)
       ? selectedIndentIds.filter(id => id !== sampleRequestid)
       : [...selectedIndentIds, sampleRequestid];
-      console.log(updatedIndentIds)
     setSelectedIndentIds(updatedIndentIds);
     console.log(selectedIndentIds)
     // setbtnEnable(true)
 
-    // if(checkboxValue === true){
-    //   setbtnEnable(true)
-    // } else {
-    //   setbtnEnable(false)
-    // }
-    // console.log(selectedIndentIds)
+    const updated1 = selectItemIds.push(rowData.m3ItemId)
+  ? selectItemIds
+  : [...selectItemIds, rowData.m3ItemId];
+  // console.log(updated1);
+    setSelectItemIds(updated1);
+
     
-    const resultArray = [{materialType:fabricType}, { sampleReqIds: updatedIndentIds }];
+    const resultArray = [{materialType:fabricType}, { sampleReqIds: updatedIndentIds },{m3itemid:updated1}];
     console.log(resultArray)
     setSelectedItems(resultArray)
-    console.log(selectedItems)
 
   };
-  console.log(selectedIndentIds)
 
   
-  // console.log(type,"type")
   return (
     <div>
       <Card

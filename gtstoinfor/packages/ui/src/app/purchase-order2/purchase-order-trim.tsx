@@ -23,6 +23,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
     const [trimType, setTrimType]=useState<any[]>([])
     const [uom,setUom] = useState<any[]>([])
     const [inputDisable, setInputDisable] = useState<boolean>(false)
+    const [tableColumns, setTableColumns] = useState([]);
 
     const [color,setColor] = useState<any[]>([])
     const colorService = new ColourService();
@@ -41,13 +42,16 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
     },[])
 
     useEffect(() =>{
-        if(indentId != undefined){
+        console.log(indentId)
+        if(indentId.length != 0){
+            setTableColumns([...columns])
             indentTrimData(indentId)
         }
     },[indentId])
 
     useEffect(() =>{
-        if(sampleReqId != undefined){
+        if(sampleReqId.length != 0){
+            setTableColumns([...sampleColumns])
             sampleTrimData(sampleReqId)
         }
     },[sampleReqId])
@@ -154,7 +158,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
         }
         }
 
-    const columns : ColumnProps<any>[] =[
+    const columns  =[
         {
             title: 'S No',
             key: 'sno',
@@ -171,11 +175,11 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
             dataIndex:'m3TrimCodeName',
             width:'100px'
         },
-        {
-            title:'Color',
-            dataIndex:'colourName',
-            width:'100px'
-        },
+        // {
+        //     title:'Color',
+        //     dataIndex:'colourName',
+        //     width:'100px'
+        // },
         {
             title:'Indent Quantity',
             dataIndex:'indentQuantity',
@@ -217,7 +221,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
             )
         }
     ]
-    const sampleColumns : ColumnProps<any>[] =[
+    const sampleColumns  =[
         {
             title: 'S No',
             key: 'sno',
@@ -227,7 +231,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
         {
             title:' Sample Request Number',
             dataIndex:'sampleReqNo',
-            width:'100px'
+            width:'190px'
         },
         {
             title:'M3 Trim Code',
@@ -491,7 +495,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
                 
                 </Row>
                 <Row>
-                {trimtableVisible ? <Table columns={sampleReqId != undefined ?sampleColumns:columns} dataSource={trimTableData}
+                {trimtableVisible ? <Table columns={tableColumns} dataSource={trimTableData}
                  pagination={{
                     onChange(current) {
                       setPage(current);
