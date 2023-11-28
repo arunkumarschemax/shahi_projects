@@ -73,7 +73,7 @@ export const MaterialAllocationPrint = (props:Props) => {
       <div className="invoice" id="print">
         <div >
           <div style={{marginLeft:250,color: 'var(--secondary-clr)',marginTop:20}}>
-            <h2>Material Allocation</h2>
+            <h2>Material Issue</h2>
 
            
           </div>
@@ -86,7 +86,7 @@ export const MaterialAllocationPrint = (props:Props) => {
             <div>
             <Descriptions size='small'>
                 <DescriptionsItem label='Sample Request No' style={{marginLeft:20}}>{props?.data[0]?.request_no}</DescriptionsItem>
-                 <DescriptionsItem label='Buyer'  style={{marginRight:200}}>{props?.data[0]?.buyer_name}</DescriptionsItem>
+                 <DescriptionsItem label='Buyer'>{props?.data[0]?.buyer_name}</DescriptionsItem>
                 <DescriptionsItem label='Item Type'>{props?.data[0]?.item_type}</DescriptionsItem>
                 {/* <DescriptionsItem label='Quantity'>{props?.data?.quantity}</DescriptionsItem>
                 <DescriptionsItem label='Total Allocated Quantity'>{props?.data?.total_allocated_quantity}</DescriptionsItem> */}
