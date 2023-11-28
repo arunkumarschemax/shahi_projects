@@ -195,7 +195,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
       console.log(dto)
     let materailData :Allocatematerial[]=[]
       for(const data of dto){
-        const req = new Allocatematerial(data.itemType,data.sampleRequestid,data.sampleItemId,data.m3ItemId,data.quantity,data.stockId,data.locationId,data.allocatedQuantity)
+        const req = new Allocatematerial(data.itemType,data.sampleRequestid,data.sampleItemId,data.m3ItemId,data.quantity,data.stockId,data.locationId,data.allocatedQuantity, data.checkedStatus, data.issuedQty)
         materailData.push(req)
       }
       service.creatematerialAlloction(materailData).then(res =>{
@@ -393,7 +393,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
     ]
 
     const allocateQuantity = () =>{
-      // console.log(avilableQuantity)
+      console.log(avilableQuantity)
       createAllocation(avilableQuantity)
 
     }
@@ -427,7 +427,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
       
     // }
 
-    const [allocatedQuantities, setAllocatedQuantities] = useState([]);
+    const [allocatedQuantities, setAllocatedQuantities] = useState<any[]>([]);
 
 
     
@@ -459,23 +459,32 @@ import AlertMessages from "../common/common-functions/alert-messages";
 
       if(isChecked){
         if(Number(rowData.issuedQty) > 0){
-          const updatedAllocatedQuantities = [...allocatedQuantities];
-          updatedAllocatedQuantities[index] = {
-            buyerId:rowData.buyerId,
-            grnItemId:rowData.grnItemId,
-            grnNumber:rowData.grnNumber,
-            itemType:rowData.itemType,
-            locationId:rowData.locationId,
-            m3ItemId:rowData.m3ItemId,
-            quantity:rowData.quantity,
-            sampleItemId:rowData.sampleItemId,
-            stockBarCode:rowData.stockBarCode,
-            sampleRequestid:rowData.sampleRequestid,
-            stockId:rowData.stockId,
-            allocatedQuantity: rowData.issuedQty,
-            isChecked: true,
-          };
-          setAllocatedQuantities(updatedAllocatedQuantities);
+
+          rowData.issuedQty = rowData.issuedQty
+          rowData.checkedStatus = 1;
+          const newData = [...avilableQuantity];
+          console.log(newData)
+          setAvailableQuantity(newData);
+
+          // const updatedAllocatedQuantities = [...allocatedQuantities];
+          // updatedAllocatedQuantities[index] = {
+          //   buyerId:rowData.buyerId,
+          //   grnItemId:rowData.grnItemId,
+          //   grnNumber:rowData.grnNumber,
+          //   itemType:rowData.itemType,
+          //   locationId:rowData.locationId,
+          //   m3ItemId:rowData.m3ItemId,
+          //   quantity:rowData.quantity,
+          //   sampleItemId:rowData.sampleItemId,
+          //   stockBarCode:rowData.stockBarCode,
+          //   sampleRequestid:rowData.sampleRequestid,
+          //   stockId:rowData.stockId,
+          //   allocatedQuantity: rowData.issuedQty,
+          //   checkedStatus: 1,
+          // };
+          // setAllocatedQuantities(updatedAllocatedQuantities);
+          // setAllocatedQuantities(updatedAllocatedQuantities);
+
           setbtnEnable(true)
         }
         else{
