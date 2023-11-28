@@ -549,11 +549,13 @@ export class SampleRequestService {
       let save
       const filteredData = req.filter(item => item.checkedStatus === 1);
       const transformedData = filteredData.reduce((acc, item) => {
+        // console.log(transformedData,'transformedData')
         const foundIndex = acc.findIndex(
           (el) =>
             el.sampleOrderId === item.sampleOrderId &&
             el.sampleItemId === item.sampleItemId &&
-            el.m3ItemId === item.m3ItemId
+            el.m3ItemId === item.m3ItemId &&
+            el.buyerId ===item.buyerId
         );
       
         if (foundIndex !== -1) {
@@ -570,6 +572,7 @@ export class SampleRequestService {
             sampleOrderId: item.sampleOrderId,
             sampleItemId: item.sampleItemId,
             m3ItemId: item.m3ItemId,
+            buyerId:item.buyerId,
             itemData: [
               {
                 quantity: item.quantity,
@@ -703,7 +706,7 @@ export class SampleRequestService {
     async getAvailbelQuantityAginstBuyerAnditem(req:buyerandM3ItemIdReq):Promise<CommonResponseModel>{
       try{
         const manager = this.dataSource;
-        const query ='SELECT st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId,st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, false AS checkedStatus FROM stocks st   LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id  WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' and st.item_type="'+req.itemType+'"'
+        const query ='SELECT st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId,st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, false AS checkedStatus FROM stocks st LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id  WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' and st.item_type="'+req.itemType+'"'
         const rmData = await manager.query(query);
         if(rmData){
           return new CommonResponseModel(true,1,'data',rmData)
