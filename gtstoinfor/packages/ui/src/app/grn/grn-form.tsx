@@ -53,9 +53,9 @@ const GRNForm = () => {
         })
       }
 
-    const createGrn = (value:any, createChildData) => {
-        console.log(createChildData,'slalalal')
-        const req = new GrnDto(value.vendorId,poData[0]?.purchaseOrderId,form.getFieldValue('grnDate').format('YYYY-MM-DD'),value.contactPerson,PurchaseOrderStatus.OPEN,value.remarks,undefined,undefined,'',undefined,'',0,0,poData[0]?.materialType,createChildData,0,'',value.grnType,value.invoiceNo);
+    const createGrn = (value:any, grnItemsArray) => {
+        console.log(grnItemsArray,'slalalal')
+        const req = new GrnDto(value.vendorId,poData[0]?.purchaseOrderId,form.getFieldValue('grnDate').format('YYYY-MM-DD'),value.contactPerson,PurchaseOrderStatus.OPEN,value.remarks,undefined,undefined,'',undefined,'',0,0,poData[0]?.materialType,grnItemsArray,0,'',value.grnType,value.invoiceNo);
         console.log(req,'[][][][][][][]')
         grnService.createGrn(req).then((res) => {
             if (res.status) {
@@ -108,36 +108,39 @@ const GRNForm = () => {
     }
 
     const validateFabricForm = async (value) => {
-        let createChildData;
+        // let createChildData;
     
         if (poData[0]?.materialType === 'Fabric') {
             try {
                 const values = await form.validateFields();
-    
-                const updatedFormData = poData
-                    .filter((record) => {
-                        const key = record.key;
-                        return (
-                            values[`receivedQuantity_${record.poFabricId}_${key}`] ||
-                            values[`acceptedQuantity_${record.poFabricId}_${key}`] ||
-                            values[`rejectedQuantity_${record.poFabricId}_${key}`]
-                        );
-                    })
-                    .map((record) => ({
-                        poFabricId: record.poFabricId,
-                        receivedQuantity: values[`receivedQuantity_${record.poFabricId}_${record.key}`],
-                        acceptedQuantity: values[`acceptedQuantity_${record.poFabricId}_${record.key}`],
-                        rejectedQuantity: values[`rejectedQuantity_${record.poFabricId}_${record.key}`],
-                        rejectedUomId: values[`rejectedUomId_${record.poFabricId}_${record.key}`],
-                        conversionQuantity: quantity,
-                        conversionUomId: values[`acceptedUomId_${record.poFabricId}_${record.key}`],
-                        ...record,
-                    }));
-    
-                console.log(updatedFormData, 'fabric');
-                createChildData = updatedFormData;
+                form.validateFields().then((values) => {
+                    const updatedFormData = poData.filter((record) => {
+                            const key = record.key;
+                            return (
+                                values[`receivedQuantity_${record.poFabricId}_${key}`] ||
+                                values[`acceptedQuantity_${record.poFabricId}_${key}`] ||
+                                values[`rejectedQuantity_${record.poFabricId}_${key}`]
+                            );
+                        }).map((record) => ({
+                            poFabricId: record.poFabricId,
+                            receivedQuantity: values[`receivedQuantity_${record.poFabricId}_${record.key}`],
+                            acceptedQuantity: values[`acceptedQuantity_${record.poFabricId}_${record.key}`],
+                            rejectedQuantity: values[`rejectedQuantity_${record.poFabricId}_${record.key}`],
+                            rejectedUomId: values[`rejectedUomId_${record.poFabricId}_${record.key}`],
+                            conversionQuantity: quantity,
+                            conversionUomId: values[`acceptedUomId_${record.poFabricId}_${record.key}`],
+                            ...record,
+                        }));
+                    const grnItemsArray = [];
+                    updatedFormData.forEach((record) => {
+                        const grnItem = new GrnItemsDto(0,record.m3fabricCode,record.receivedQuantity,record.acceptedQuantity,record.rejectedQuantity,record.rejectedUomId,record.conversionQuantity,record.conversionUomId,record.remarks,undefined,'',undefined,'',0,0,record.poFabricId,null,record.indentFabricId,null)
+                        grnItemsArray.push(grnItem)
+                    });
+                    createGrn(value, grnItemsArray)
+                    console.log(value, grnItemsArray,'=hhhhhhhhhhhhhhhhh')
+                });
             } catch (error) {
-                console.error('Error validating fields:', error);
+                console.error('Error validating fabric fields:', error);
                 return;
             }
         }
@@ -145,17 +148,14 @@ const GRNForm = () => {
         if (poData[0]?.materialType === 'Trim') {
             try {
                 const values = await form.validateFields();
-    
-                const updatedFormData = poData
-                    .filter((record) => {
+                const updatedFormData = poData.filter((record) => {
                         const key = record.key;
                         return (
                             values[`receivedQuantity_${record.poTrimId}_${key}`] ||
                             values[`acceptedQuantity_${record.poTrimId}_${key}`] ||
                             values[`rejectedQuantity_${record.poTrimId}_${key}`]
                         );
-                    })
-                    .map((record) => ({
+                    }).map((record) => ({
                         poTrimId: record.poTrimId,
                         receivedQuantity: values[`receivedQuantity_${record.poTrimId}_${record.key}`],
                         receivedUomId: values[`receivedUomId_${record.poTrimId}_${record.key}`],
@@ -166,21 +166,27 @@ const GRNForm = () => {
                         conversionQuantity: quantity,
                         conversionUomId: values[`acceptedUomId_${record.poFabricId}_${record.key}`],
                         ...record,
-                    }));
+                    }))
     
-                console.log(updatedFormData, 'trim');
-                createChildData = updatedFormData;
+                const grnItemsArray = [];
+                updatedFormData.forEach((record) => {
+                    const grnItem = new GrnItemsDto(0,record.m3TrimCode,record.receivedQuantity,record.acceptedQuantity,record.rejectedQuantity,record.rejectedUomId,record.conversionQuantity,record.conversionUomId,record.remarks,undefined,'',undefined,'',0,0,0,record.poTrimId,null,record.indentTrimId);
+                    grnItemsArray.push(grnItem);
+                });
+    
+                // Call createGrn here if needed
+                createGrn(value, grnItemsArray)
             } catch (error) {
-                console.error('Error validating fields:', error);
+                console.error('Error validating trim fields:', error);
                 return;
             }
         }
     
-        console.log(createChildData, 'final createChildData');
-    
-        // Now call createGrn with the validated data
-        createGrn(value, createChildData);
+        // You might want to move the call to createGrn outside the if blocks, depending on your logic.
+        // createGrn(value, createChildData);
     };
+    
+    
     
 
   

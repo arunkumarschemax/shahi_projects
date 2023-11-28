@@ -180,6 +180,7 @@ import CommonView from "./masters/column/column-view"
 import ColumnForm from "./masters/column/column-form"
 import ColumnView from "./masters/column/column-view"
 import { MaterialAllocationView } from "./sample-development/material-allocation-view"
+import SampleOperationReporting from "./orders/sample-operation-reporting"
 import { MaterialAllocationDetailView } from "./sample-development/material-allocation-detail.view"
 import WarehouseDashboard from "./common/dashboards/warehouse-dashboard"
 
@@ -715,7 +716,7 @@ export const AppRoutes = () => {
                 </Route>
                 <Route path='/operation-tracking'>
                     <Route path='operation-tracking/issuing' element={<IssueScreen />} />
-                    <Route path='operation-reporting' element={<OperationReportingView />} />
+                    <Route path='operation-reporting' element={<SampleOperationReporting />} />
                     <Route path='operation-sequence' element={<OperationSequenceForm />} />
                     <Route path='inventory' element={<InventoryView />} />
                     <Route path='operation-inventory-view' element={<OperationInventoryView />} />
@@ -973,6 +974,13 @@ export const AppRoutes = () => {
                     <Route path='style-order-creation' element={<StyleOrderCreation />} />
 
 
+            </Route>
+            <Route path='/operation-tracking'>
+                <Route path='operation-tracking/issuing' element={<IssueScreen />} />
+                {/* <Route path='operation-reporting' element={<OperationReportingView />} /> */}
+                <Route path='operation-reporting' element={<SampleOperationReporting />} />
+                <Route path='operation-sequence' element={<OperationSequenceForm />} />
+                <Route path='inventory' element={<InventoryView />} />
                 </Route>
                 <Route path='/operation-tracking'>
                     <Route path='operation-tracking/issuing' element={<IssueScreen />} />

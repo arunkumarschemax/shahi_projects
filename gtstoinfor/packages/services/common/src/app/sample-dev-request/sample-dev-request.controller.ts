@@ -272,6 +272,17 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
+  @Post('/getSampleOrderDetails')
+  async getSampleOrderDetails(@Body() req: any): Promise<CommonResponseModel> {
+    console.log(req,"controll")
+    try {
+      return await this.sampleService.getSampleOrderDetails(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+
+  
   @Post('/getfabricDetailsOfSample')
   async getfabricDetailsOfSample(@Body() req:any): Promise<CommonResponseModel> {
     try {
