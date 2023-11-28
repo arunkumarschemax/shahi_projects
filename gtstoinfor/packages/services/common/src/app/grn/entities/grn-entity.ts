@@ -17,17 +17,23 @@ export class GrnEntity{
     })
     grnNumber:string
 
+    @Column('varchar',{
+        name:'mrn_number',
+        nullable:false
+    })
+    mrnNumber:string
+
     @Column('int',{
         name:'vendor_id',
         nullable:false
     })
     vendorId:number
 
-    @Column('int',{
-        name:'style_id',
-        nullable:false
-    })
-    styleId:number
+    // @Column('int',{
+    //     name:'style_id',
+    //     nullable:false
+    // })
+    // styleId:number
 
     @Column('int',{
         name:'po_id',

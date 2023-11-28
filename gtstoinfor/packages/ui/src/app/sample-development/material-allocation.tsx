@@ -74,10 +74,10 @@ export const MaterialAllocationGrid = () => {
     service.getAllMaterialAllocation(req).then((res) => {
       if (res.status) {
         const openItems = res.data.filter(
-          (item) => item.status === "APPROVAL_PENDING"
+          (item) => item.status === "MATERIAL ALLOCATED"
         );
         const approvedItems = res.data.filter(
-          (item) => item.status === "APPROVED"
+          (item) => item.status === "MATERIAL ISSUED"
         );
 
         setOpenData(openItems);
@@ -95,7 +95,7 @@ export const MaterialAllocationGrid = () => {
     // console.log(rowData.material_allocation_id,"rrrrrrrr")
     const req = new statusReq(
       rowData.material_allocation_id,
-      MaterialStatusEnum.APPROVED
+      MaterialStatusEnum.MATERIAL_ISSUED
     );
     service.updateStatus(req).then((res) => {
       if (res.status) {
@@ -326,7 +326,7 @@ export const MaterialAllocationGrid = () => {
     // },
     {
       title: "Action",
-      width: 130,
+      width: 190,
       // align: 'center',
       render: (rowData) => (
         <Row>
@@ -353,7 +353,7 @@ export const MaterialAllocationGrid = () => {
               style={{ background: "green" }}
               onClick={() => onApprove(rowData)}
              >
-               Approve
+               MATERIAL ISSUE
             </Button>
           </span>
         </Row>
@@ -574,7 +574,7 @@ export const MaterialAllocationGrid = () => {
             key="1"
             tab={
               <span style={{ fontSize: "12px" }}>
-                <b>{`OPEN`}</b>
+                <b>{`Allocated`}</b>
               </span>
             }
           >
@@ -591,7 +591,7 @@ export const MaterialAllocationGrid = () => {
             key="2"
             tab={
               <span style={{ fontSize: "12px" }}>
-                <b>{`APPROVED`}</b>
+                <b>{`Issued`}</b>
               </span>
             }
           >

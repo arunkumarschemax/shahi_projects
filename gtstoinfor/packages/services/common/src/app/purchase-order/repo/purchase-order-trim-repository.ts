@@ -20,10 +20,10 @@ export class PurchaseOrderTrimRepository extends Repository<PurchaseOrderTrimEnt
     async getPOTrimData(req:VendorIdReq):Promise<any>{
         const query = await this.createQueryBuilder('pot')
         .select(`mt.trim_code as m3TrimCode,pot.po_trim_id AS poTrimId,pot.trim_id AS trimId, pot.m3_trim_code AS m3TrimCode,pot.purchase_order_id AS purchaseOrderId, pot.po_quantity AS poQuantity,
-        pot.quantity_uom_id AS quantityUomId,u.uom,it.itrims_id AS indentTrimId,po.po_material_type AS materialType,pot.grn_quantity AS grnQuantity`)
+        pot.quantity_uom_id AS quantityUomId,u.uom,po.po_material_type AS materialType,pot.grn_quantity AS grnQuantity,pot.indent_id as indentId, pot.sample_request_id as sampleRequestId,po.po_against AS  poAgainst`)
         .leftJoin(PurchaseOrderEntity,'po','po.purchase_order_id = pot.purchase_order_id')
         .leftJoin(UomEntity,'u','u.id = pot.quantity_uom_id')
-        .leftJoin(IndentTrimsEntity,'it','it.itrims_id = pot.indent_trim_id')
+        // .leftJoin(IndentTrimsEntity,'it','it.itrims_id = pot.indent_trim_id')
         .leftJoin(M3TrimsEntity,'mt','mt.m3_trim_Id=pot.m3_trim_code')
         .where(`1=1`)
         if (req.poId !== undefined) {

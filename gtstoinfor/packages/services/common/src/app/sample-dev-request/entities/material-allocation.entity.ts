@@ -94,6 +94,6 @@ export class MaterialAllocationEntity {
 
     
     @OneToMany(type => MaterialAllocationItemsEntity, entity => entity.materialAllocationItemInfo,{cascade: true})
-    materialAllocationinfo : MaterialAllocationItemsEntity
+    materialAllocationinfo : MaterialAllocationItemsEntity[]
 
 }

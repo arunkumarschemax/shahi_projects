@@ -20,13 +20,13 @@ export class PurchaseOrderFabricRepository extends Repository<PurchaseOrderFbric
     async getPOFabricData(req:VendorIdReq):Promise<any>{
         const query = await this.createQueryBuilder('pof')
         .select(`m.item_code as itemCode,pof.po_fabric_id AS poFabricId,pof.m3_fabric_code AS m3fabricCode,pof.po_quantity AS poQuantity,pof.quantity_uom_id AS quantityUomId,u.uom,pof.purchase_order_id AS purchaseOrderId,
-        pof.fabric_type_id AS fabricTypeId,ft.fabric_type_name AS fabricTypeName,iff.ifabric_id AS indentFabricId,po.po_material_type AS materialType,
-        pof.grn_quantity AS grnQuantity`)
+        pof.fabric_type_id AS fabricTypeId,ft.fabric_type_name AS fabricTypeName,po.po_material_type AS materialType,
+        pof.grn_quantity AS grnQuantity,pof.indent_id as indentId, pof.sample_request_id as sampleRequestId,po.po_against AS  poAgainst`)
         .leftJoin(PurchaseOrderEntity,'po','po.purchase_order_id = pof.purchase_order_id')
         .leftJoin(FabricType,'ft','ft.fabric_type_id = pof.fabric_type_id')
         .leftJoin(UomEntity,'u','u.id = pof.quantity_uom_id')
         .leftJoin(M3ItemsEntity,'m','m.m3_items_Id=pof.m3_fabric_code')
-        .leftJoin(IndentFabricEntity,'iff','iff.ifabric_id = pof.indent_fabric_id')
+        // .leftJoin(IndentFabricEntity,'iff','iff.ifabric_id = pof.indent_fabric_id')
         // .leftJoin(ProductGroup,'pg', 'pg.product_group_id = pof.product_group_id')
         .where(`1=1`)
         if (req.poId !== undefined) {
