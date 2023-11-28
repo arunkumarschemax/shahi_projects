@@ -180,6 +180,7 @@ import CommonView from "./masters/column/column-view"
 import ColumnForm from "./masters/column/column-form"
 import ColumnView from "./masters/column/column-view"
 import { MaterialAllocationView } from "./sample-development/material-allocation-view"
+import { MaterialAllocationDetailView } from "./sample-development/material-allocation-detail.view"
 
 
 
@@ -949,6 +950,8 @@ export const AppRoutes = () => {
                 <Route path="sample-inventory-grid" element={<SampleInventory />} />
                 <Route path = "material-allocation" element={<MaterialAllocationGrid />} />
                 <Route path = "material-allocation-view" element={<MaterialAllocationView />} />
+                <Route path = "material-allocation-detail-view" element={<MaterialAllocationDetailView />} />
+
 
 
             </Route>

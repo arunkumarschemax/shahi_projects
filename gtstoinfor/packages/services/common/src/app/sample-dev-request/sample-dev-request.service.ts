@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, CommonResponseModel, FabricInfoReq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, buyerReq, buyerandM3ItemIdReq, statusReq } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, statusReq } from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -703,6 +703,31 @@ export class SampleRequestService {
 
 
 
+    // async getAllMaterialAllocation(req?:buyerReq) : Promise<CommonResponseModel> {
+    //   try{
+    //     const data = await this.matAllRepo.getallMaterialAllocation(req)
+    //     const map = new Map<number,AllocateMaterial >()
+    //     if(data.length == 0){
+    //       return new AllocateMaterialResponseModel(false,0,'No data found',[])
+    //     } else {
+    //       for(const rec of data){
+    //         if(!map.has(rec.material_allocation_id)){
+    //           map.set(rec.material_allocation_id,new AllocateMaterial(rec.material_allocation_id,rec.item_type,rec.sample_order_id,rec.sample_item_id,rec.m3_item_id,rec.buyer_id,rec.status,[],rec.buyer_name,"admin") )
+    //         }
+
+    //         map.get(rec.material_allocation_id).materialAllocateIteminfo.push(new allocateMaterialItems(rec.material_allocation_items_id,rec.quantity,rec.stock_id,rec.location_id,rec.allocate_quantity,rec.material_allocation_id,rec.location_name,"admin") )
+    //     }
+    //     const allocateMaterial: AllocateMaterial[] = [];
+    //     map.forEach((e) => allocateMaterial.push(e))
+    //           return new AllocateMaterialResponseModel(true,1,'Data retrieved',allocateMaterial)
+    //   }
+
+      
+    //   } catch(err){
+    //     throw err
+    //   }
+    // }
+
     async getAllMaterialAllocation(req?:buyerReq) : Promise<CommonResponseModel> {
       try{
         const data = await this.matAllRepo.getallMaterialAllocation(req)
@@ -716,6 +741,8 @@ export class SampleRequestService {
         throw err
       }
     }
+
+
 
    
 
