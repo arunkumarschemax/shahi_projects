@@ -50,31 +50,30 @@ export const MonthWiseReport = () => {
     getData(selected, tab);
     getTabs();
   }, []);
-  useEffect(() => {
-    if (year.length > 0) {
-      setTab(year[0].year);
-    }
-  }, [year]);
-  const handleChange = (val) => {
-    setSelected(val);
-    getData(val, tab);
+ 
+ 
+  const handleTabChange = (selectedYear: any) => {
+    setTab(Number(selectedYear));
+    // console.log(selectedYear,'year');
+
+    getData(selected, selectedYear);
   };
   const getTabs = () => {
     service.getExfactoryYearData().then((res) => {
       if (res.status) {
         setYear(res.data);
+        // handleChange(res.data[0])
         if (res.data.length > 0) {
-          setTab(res.data[0])
-          console.log(res.data[0]);
-          
+          // setTab(res.data[0])
+          handleTabChange(res.data[0].year)
         }
       }
     });
   };
 
   const getData = (val, tabName) => {
-    const req = new YearReq(tabName, val);
-    service.getMonthWiseReportData(req).then((res) => {
+    const req = new YearReq( tabName,val);
+   service.getMonthWiseReportData(req).then((res) => {
       // console.log(res, "res==========");
       if (res.status) {
         setData(res.data);
@@ -125,7 +124,12 @@ export const MonthWiseReport = () => {
   //     setPageSize(size);
   //   },
   // };
-
+  const handleChange = (val) => {
+    console.log(val,'[[[[[[[[[');
+    
+    setSelected(val);
+    getData(val, tab);
+  };
   const colWidth = {
     proPlanType: 80,
     Pcs: 60,
@@ -1754,12 +1758,7 @@ export const MonthWiseReport = () => {
       excel.saveAs(`Ware-House-report-${currentDate}.xlsx`);
     }
   };
-  const handleTabChange = (selectedYear: any) => {
-    setTab(Number(selectedYear));
-    // console.log(selectedYear,'year');
 
-    getData(selected, selectedYear);
-  };
   const getFilterdData = () => {
     let ItemName = form.getFieldValue("ItemName");
 

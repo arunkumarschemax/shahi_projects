@@ -28,8 +28,8 @@ export const MonthWiseComparisionReport = () => {
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [excelsData, setExcelData] = useState<any[]>([]);
   const [dates, setDates] = useState<any[]>([]);
-  const [file1, setfile1] = useState();
-  const [file2, setfile2] = useState();
+  const [file1, setfile1] = useState<number>();
+  const [file2, setfile2] = useState<number>();
   const { Text } = Typography;
   const [pageSize, setPageSize] = useState(10);
   const startIndex = (page - 1) * pageSize;
@@ -45,28 +45,25 @@ export const MonthWiseComparisionReport = () => {
 
  
   useEffect(() => {
-    //  getData(tab,selected,file1,file2);
     getTabs();
     getPhase()
+    // getData(tab,selected,file1,file2);
+
   }, []);
-  const getTabs = () => {
-    service.getExfactoryYearData().then((res) => {
-      if (res.status) {
-        setYear(res.data);
-        if (res.data.length > 0) {
-          setTab(res.data[0]);
-        }
+  const getFiles =(year:any) =>{
+    service.getLatestPreviousFilesData().then(res => {
+      if(res.status){
+          setDates(res.data)
+          setfile1(res.data[0]?.fileId)
+          setfile2(res.data[1]?.fileId)
+
       }
-    });
-    
-  };
+       getData(year,selected,res?.data?.[0]?.fileId,res?.data?.[1]?.fileId);
 
-  const handleChange = (val) => {
-    setSelected(val)
-    getData(tab,val,file1,file2)
-    // getPhase()
-
+  })
   }
+  console.log(file1,'--------',file2,'========')
+  
   const getPhase = () => {
     
     service.getPhaseItems().then(res => {
@@ -75,40 +72,43 @@ export const MonthWiseComparisionReport = () => {
       }
     })
     
-    service.getLatestPreviousFilesData().then(res => {
-      if(res.status){
-          setDates(res.data)
-          setfile1(res?.data?.[0]?.fileId)
-          setfile2(res?.data?.[1]?.fileId)
-
-      }
-      getData(tab,selected,res?.data?.[0]?.fileId,res?.data?.[1]?.fileId);
-
-  })
-  // service.getMonthlyComparisionDate(req).then((res) => {
-    //   if (res.status) {
-    //     setDates(res.data);
-    //     // console.log(res.data[0].Date);
-
-
-    //   } else {
-    //     setDates([]);
-    //   }
-    // })
-    // service.getComparisionPhaseData(req).then((res) => {
-    //   if (res.status) {
-    //     setPhase(res.data)
-    //   } else {
-    //     setPhase([]);
-    //   }
-    // })
-   
+  
+  
   }
+  const handleTabChange = (selectedYear:any) => {
+    getFiles(Number(selectedYear))
+    setTab(Number(selectedYear));
+    console.log(selected,'----------')
+    console.log(file1,'-----file 1-----')
+    console.log(file2,'-----file2-----')
+    // getData(Number(selectedYear) ,selected,file1,file2);
+  };
+ 
+  const getTabs = () => {
+    service.getExfactoryYearData().then((res) => {
+      if (res.status) {
+        setYear(res.data);
+        if (res.data.length > 0) {
+          // setTab(res.data[0]);
+          handleTabChange(res.data[0].year)
 
-  const getData = (val, tabName,file1,file2) => {
+        }
+      }
+    });
     
+  };
+ 
+  const handleChange = (val) => {
+    setSelected(val)
+     getData(tab,val,file1,file2)
+    // getPhase()
+
+  }
+  const getData = (val, tabName,file1,file2) => {
+    // getFiles()
     const req = new YearReq(val,tabName,file1,file2);
   
+  console.log(req,'reqqqqq');
 
     if (form.getFieldValue('ItemName') !== undefined) {
       req.itemName = form.getFieldValue('ItemName')
@@ -140,6 +140,9 @@ export const MonthWiseComparisionReport = () => {
       }
     });
   };
+
+
+ 
 
   const colWidth = {
     proPlanType: 80,
@@ -1846,11 +1849,7 @@ export const MonthWiseComparisionReport = () => {
       excel.saveAs(`Ware-House-comparision-report-${currentDate}.xlsx`);
     }
   };
-  const handleTabChange = (selectedYear: string) => {
-    setTab(Number(selectedYear));
-    getData(selectedYear,selected,file1,file2);
-  };
- 
+  
   const onReset = () => {
     form.resetFields();
     getData(tab,selected,file1,file2);
