@@ -114,7 +114,7 @@ const TrimOrderAcceptance = () => {
   }
 
   const DetailedView = (orderNumber) => {
-    getTrimOrderNumberData(orderNumber)
+        getTrimOrderNumberData(orderNumber)
     // showModal();
     // const poFilterData = filteredData.filter(order_no => order_no.trim_order_id == record)
     // navigate('/excel-import/order-details', { state: { data: poFilterData } })
@@ -372,7 +372,7 @@ const TrimOrderAcceptance = () => {
             <Button type="link" onClick={() => DetailedView(record.order_no)}>
               {record.order_no}
             </Button>
-            <Modal title={`Order No : ${record.order_no}`} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title={`Order No : ${orderNumberDetails[0]?.order_no}`} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
               <Table columns={modalcolumns} dataSource={orderNumberDetails} className="custom-table-wrapper"
                 bordered
                 pagination={false}
@@ -463,10 +463,25 @@ const TrimOrderAcceptance = () => {
       // sortDirections: ["descend", "ascend"],
     },
     {
+      title: 'Total Quantity',
+      dataIndex: 'totalqty',
+      width:60,
+      align:'right',
+      // ...getColumnSearchProps("size"),
+      // sorter: (a, b) => a.size.localeCompare(b.size),
+      // sortDirections: ["descend", "ascend"],
+      render:(text,record) => {
+        return(
+          <>
+          {record.totalqty ? record.totalqty.toLocaleString('en-IN') : '-'}
+          </>
+        )
+      }
+    },
+    {
       title: 'Trim Item No',
       dataIndex: 'trim_item_no',
       align: 'right',
-
       ...getColumnSearchProps("trim_item_no"),
       // sorter: (a, b) => a.trim_item_no.localeCompare(b.trim_item_no),
       // sortDirections: ["descend", "ascend"],
