@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Query } from '@nestjs/common';
 import { CommonResponseModel, CustomerOrderStatusEnum, GrnReq, PoItemEnum, PurchaseOrderStatus } from '@project-management-system/shared-models';
 import { GrnRepository } from './dto/grn-repository';
 import { GrnAdapter } from './dto/grn-adapter';
@@ -124,7 +124,7 @@ export class GrnService{
     async createGrn(req:GrnDto):Promise<CommonResponseModel>{       
         const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
         try{
-
+            console.log(req,'========')
             const currentYear = moment().format('YYYY')
             let ToYear = currentYear.toString().substr(-2)
             let FromYear = (currentYear - 1).toString().substr(-2)
@@ -252,16 +252,13 @@ export class GrnService{
     async getAllGrn(req?:GrnReq):Promise<CommonResponseModel>{
         try{
             const manager = this.dataSource;
-            let query=`SELECT g.grn_id AS grnId,g.grn_number AS grnNo,g.po_id,po_number AS poNumber,g.vendor_id,v.vendor_name AS vendorName,
-            grn_date,g.contact_person,g.status,po.po_material_type AS materialType
+            let query=`SELECT g.grn_id AS grnId,g.grn_number AS grnNo,DATE(g.grn_date) AS grnDate,g.contact_person AS contactPerson,g.status,g.item_type AS itemType,g.grn_type AS grnType,g.invoice_no AS invoiceNo,
+            g.vendor_id AS vendorId, CONCAT(v.vendor_name,'-',v.vendor_code) AS vendor,g.po_id AS poId,po.po_number AS poNumber
             FROM grn g
             LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
-            LEFT JOIN vendors v ON v.vendor_id = po.vendor_id`
-            // if(materialType == 'Fabric'){
-            //     query=query+' and ifabric_id ='+id+''
-            // }
+            LEFT JOIN vendors v ON v.vendor_id = g.vendor_id`
             if(req?.grnId ){
-                query=query+' where grn_id='+req?.grnId+''
+                query=query+`where g.grn_id=${req.grnId}`
             }
             const result= await manager.query(query)
             if(result){
@@ -271,27 +268,61 @@ export class GrnService{
             throw err
         }
     }
-    async getGrnItemById(req:GrnReq):Promise<CommonResponseModel>{
+    // async getGrnItemById(req:GrnReq):Promise<CommonResponseModel>{
+    //     try{
+    //         const manager = this.dataSource;
+    //         let query=`SELECT grn_item_id , grn_items.item_id ,rm.item_code AS fabricCode,t.trim_code, grn_items.m3_item_id , grn_items.product_group_id , grn_items.received_quantity , grn_items.received_uom_id , grn_items.accepted_quantity , grn_items.accepted_uom_id , 
+    //         grn_items.rejected_quantity , grn_items.rejected_uom_id ,grn_items.conversion_quantity,  grn_items.conversion_uom_id , grn_items.location_mapped_status , grn_items.grn_id , grn_items.m3_item_code_id,u.uom FROM grn_items
+    //         LEFT JOIN m3_items rm ON rm.m3_items_Id = grn_items.m3_item_code_id
+    //         LEFT JOIN m3_trims t ON t.m3_trim_Id = grn_items.m3_item_code_id
+    //         LEFT JOIN uom u ON u.id = grn_items.received_uom_id
+    //         WHERE grn_items.grn_id = '${req.grnId}'`
+    //         // if(materialType == 'Fabric'){
+    //         //     query=query+' and ifabric_id ='+id+''
+    //         // }
+    //         // if(materialType == 'Trim'){
+    //         //     query=query+' and itrims_id='+id+''
+    //         // }
+    //         const result= await manager.query(query)
+    //         if(result){
+    //             return new CommonResponseModel(true,1,'',result)
+    //         }
+    //     }catch(err){
+    //         throw err
+    //     }
+    // }
+
+    async getGRNItemsData(req?:GrnReq):Promise<CommonResponseModel>{
         try{
-            const manager = this.dataSource;
-            let query=`SELECT grn_item_id , grn_items.item_id ,rm.item_code AS fabricCode,t.trim_code, grn_items.m3_item_id , grn_items.product_group_id , grn_items.received_quantity , grn_items.received_uom_id , grn_items.accepted_quantity , grn_items.accepted_uom_id , 
-            grn_items.rejected_quantity , grn_items.rejected_uom_id ,grn_items.conversion_quantity,  grn_items.conversion_uom_id , grn_items.location_mapped_status , grn_items.grn_id , grn_items.m3_item_code_id,u.uom FROM grn_items
-            LEFT JOIN m3_items rm ON rm.m3_items_Id = grn_items.m3_item_code_id
-            LEFT JOIN m3_trims t ON t.m3_trim_Id = grn_items.m3_item_code_id
-            LEFT JOIN uom u ON u.id = grn_items.received_uom_id
-            WHERE grn_items.grn_id = '${req.grnId}'`
-            // if(materialType == 'Fabric'){
-            //     query=query+' and ifabric_id ='+id+''
-            // }
-            // if(materialType == 'Trim'){
-            //     query=query+' and itrims_id='+id+''
-            // }
-            const result= await manager.query(query)
-            if(result){
-                return new CommonResponseModel(true,1,'',result)
+            let query = `SELECT CONCAT(gi.received_quantity,u.uom) AS receivedQty,CONCAT(gi.accepted_quantity,u.uom) AS acceptedQty,CONCAT(gi.rejected_quantity,u.uom) AS rejectedQty,
+            CONCAT(gi.conversion_quantity,uom.uom) AS conversionQty,gi.location_mapped_status AS locMapStatus,gi.remarks,`
+            if(req.itemType === 'FABRIC'){
+                query = query + `gi.m3_item_code_id AS m3ItemCodeId,m3.item_code AS itemCode
+                FROM grn_items gi
+                LEFT JOIN m3_items m3 ON m3.m3_items_id = gi.m3_item_code_id`
             }
+            if(req.itemType === 'TRIM'){
+                query = query + `m3.trim_code AS itemCode,m3.m3_trim_Id AS m3ItemId
+                FROM grn_items gi
+                LEFT JOIN m3_trims m3 ON m3.m3_trim_Id = gi.m3_item_code_id`
+            }
+            query = query +` LEFT JOIN grn g ON g.grn_id = gi.grn_id
+            LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
+            LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
+            LEFT JOIN uom u ON u.id = gi.uom_id
+            LEFT JOIN uom uom ON uom.id = gi.conversion_uom_id`
+            if(req?.grnId){
+                query=query+` where g.grn_id=${req.grnId}`
+            }
+            const data = await this.dataSource.query(query)
+            if (data.length > 0) {
+                return new CommonResponseModel(true, 0, "GRN's retrieved successfully", data)
+            } else {
+                return new CommonResponseModel(false, 1, "No data found", [])
+            }
+            return 
         }catch(err){
-            throw err
+            throw(err)
         }
     }
 }
