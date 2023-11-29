@@ -35,7 +35,7 @@ export class StyleService{
             const save = await this.styleRepo.save(style)
             if(save){
             const style= new Style()
-            return new AllStyleResponseModel(true,1,'Style created Sucessfully..',[style])
+            return new AllStyleResponseModel(true,1,'Style created Sucessfully..',[save])
             }
             
         }

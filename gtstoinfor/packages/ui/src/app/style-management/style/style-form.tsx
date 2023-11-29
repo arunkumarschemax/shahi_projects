@@ -128,7 +128,7 @@ const service = new StyleService()
           console.log(data,"dd")
           AlertMessages.getSuccessMessage('Style Created Successfully');
           if(filelist.length >0){
-            console.log(res.data[0]?.styleId)
+            console.log(res)
             const formData = new FormData();
             filelist.forEach((file: any) => {
                 formData.append('file', file);
