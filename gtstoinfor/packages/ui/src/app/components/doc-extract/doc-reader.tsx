@@ -69,19 +69,19 @@ export const DocReader = (props: DocReaderProps) => {
                     break;
                 case VendorNameEnum.extractedMatrix:
                     processedData = await extractmatrix(pdfData);
-                    console.log('PDF DATA NEW MATRIX:', processedData);
+                    console.log('PDF DATA  MATRIX:', processedData);
                     break;
                 case VendorNameEnum.extractedscanWell:
                     processedData = await extractScanWell(pdfData);
-                    console.log('PDF DATA NEW SCANWELL:', processedData);
+                    console.log('PDF DATA  SCANWELL:', processedData);
                     break;
                 case VendorNameEnum.extracteddachser:
                     processedData = await extractdachser(pdfData);
-                    console.log('PDF DATA NEW DACHSER:', processedData);
+                    console.log('PDF DATA  DACHSER:', processedData);
                     break;
                 case VendorNameEnum.extractedNewblobe:
                     processedData = await extractnewBlobe(pdfData);
-                    console.log('PDF DATA NEW BLOBW:', processedData);
+                    console.log('PDF DATA NEW BLOBE:', processedData);
                     break;
                 case VendorNameEnum.extractedSavinoDell:
                     processedData = await extractSavinoDell(pdfData);
@@ -89,7 +89,7 @@ export const DocReader = (props: DocReaderProps) => {
                     break;
                 case VendorNameEnum.extractedLxpantos:
                     processedData = await extractLxpantos(pdfData);
-                    console.log('PDF DATA Lxpantos:', processedData);
+                    console.log('PDF DATA LXPANTOS:', processedData);
                     break;
                 case VendorNameEnum.extractedMgh:
                     processedData = await extractMgh(pdfData);
@@ -133,11 +133,11 @@ export const DocReader = (props: DocReaderProps) => {
                     break;
                 case VendorNameEnum.extractedApl:
                     processedData = await extractApl(pdfData);
-                    console.log('PDF DATA Fredexfrieght:', processedData);
+                    console.log('PDF DATA APL:', processedData);
                     break;
                 case VendorNameEnum.extractedFredexFrieght:
                     processedData = await extractFredexfrieght(pdfData);
-                    console.log('PDF DATA Fredexfrieght:', processedData);
+                    console.log('PDF DATA FREDEX FRIEGHT:', processedData);
                     break;
                 case VendorNameEnum.extractedFredexCourier:
                     processedData = await extractFredexCourier(pdfData);
@@ -153,15 +153,15 @@ export const DocReader = (props: DocReaderProps) => {
                     break;
                 case VendorNameEnum.extractedSanjayForwarder:
                     processedData = await extractSanjayForwarder(pdfData);
-                    console.log('PDF DATA SanjayForwarder:', processedData);
+                    console.log('PDF DATA SANJAY FORWARDER:', processedData);
                     break;
                 case VendorNameEnum.extractedOneTime:
                     processedData = await extractOneTime(pdfData);
-                    console.log('PDF DATA OneTime:', processedData);
+                    console.log('PDF DATA ONETIME:', processedData);
                     break;
                 case VendorNameEnum.extractedTiger:
                     processedData = await extractTiger(pdfData);
-                    console.log('PDF DATA TIger:', processedData);
+                    console.log('PDF DATA TIGER:', processedData);
                     break;
                 case VendorNameEnum.extractedOia:
                     processedData = await extractOia(pdfData);
@@ -169,15 +169,15 @@ export const DocReader = (props: DocReaderProps) => {
                     break;
                 case VendorNameEnum.extractedTextiles:
                     processedData = await extractTextiles(pdfData);
-                    console.log('PDF DATA TEXTILES:', processedData);
+                    console.log('PDF DATA TEXTILES COMMITEE:', processedData);
                     break;
                 case VendorNameEnum.extractedUnicorn:
                     processedData = await extractedUnicorn(pdfData);
-                    console.log('UNICORN:', processedData);
+                    console.log('PDF DATA UNICORN:', processedData);
                     break;
                 case VendorNameEnum.extractedUnique:
                     processedData = await extractedUnique(pdfData);
-                    console.log('UNIQUE:', processedData);
+                    console.log('PDF DATA UNIQUE:', processedData);
                     break;
                 // case VendorNameEnum.extractedTvs:
                 //     processedData = await extractedTvs(pdfData);
@@ -185,31 +185,31 @@ export const DocReader = (props: DocReaderProps) => {
                 //     break;
                 case VendorNameEnum.extractedVelogicIndia:
                     processedData = await extractedVelogicIndia(pdfData);
-                    console.log('VELOGIC INDIA:', processedData);
+                    console.log('PDF DATA VELOGIC INDIA:', processedData);
                     break;
                 case VendorNameEnum.extracteWiderlogistics:
                     processedData = await extracteWiderlogistics(pdfData);
-                    console.log('WIDER LOGISTICS:', processedData);
+                    console.log('PDF DATA WIDER LOGISTICS:', processedData);
                     break;
                 case VendorNameEnum.extractedWorldLine:
                     processedData = await extractedWorldLine(pdfData);
-                    console.log('WORLD LINE:', processedData);
+                    console.log('PDF DATA WORLD LINE:', processedData);
                     break;
                 case VendorNameEnum.extractedKwe:
                     processedData = await extractedKwe(pdfData);
-                    console.log('KWE:', processedData);
+                    console.log('PDF DATA KWE:', processedData);
                     break;
                 case VendorNameEnum.extractedUps:
                     processedData = await extractedUps(pdfData);
-                    console.log('UPS:', processedData);
+                    console.log('PDF DATA UPS:', processedData);
                     break;
                 case VendorNameEnum.extractedCube:
                     processedData = await extractedCube(pdfData);
-                    console.log('20 CUBE:', processedData);
+                    console.log('PDF DATA 20 CUBE:', processedData);
                     break;
                 case VendorNameEnum.extractedAps:
                     processedData = await extractedAps(pdfData);
-                    console.log('20 CUBE:', processedData);
+                    console.log('PDF DATA APS:', processedData);
                     break;
                 case VendorNameEnum.extractChRowbin:
                     processedData = await extractChRowbin(pdfData);
@@ -217,11 +217,11 @@ export const DocReader = (props: DocReaderProps) => {
                     break;
                 case VendorNameEnum.extractDBSCHENKAR:
                     processedData = await extractDBSCHENKAR(pdfData);
-                    console.log('20 CUBE:', processedData);
+                    console.log('PDF DATA DBSCHENKAR:', processedData);
                     break;
                 case VendorNameEnum.extractCeva:
                     processedData = await extractCeva(pdfData);
-                    console.log('20 CUBE:', processedData);
+                    console.log('PDF DATA CEVA:', processedData);
                     break;
 
 
@@ -241,37 +241,37 @@ export const DocReader = (props: DocReaderProps) => {
 
                 case VendorNameEnum.extractedJeena:
                     processedData = await extractedJeena(pdfData);
-                    console.log('JEENA & COMPANY:', processedData);
+                    console.log('PDF DATA JEENA & COMPANY:', processedData);
                     break;
 
                 case VendorNameEnum.extractedKerryIndev:
                     processedData = await extractedKerryIndev(pdfData);
-                    console.log('KERRY INDEV:', processedData);
+                    console.log('PDF DATA KERRY INDEV:', processedData);
                     break;
 
                 case VendorNameEnum.extractedGateway:
                     processedData = await extractedGateway(pdfData);
-                    console.log('GATEWAY:', processedData);
+                    console.log('PDF DATA GATEWAY:', processedData);
                     break;
                 case VendorNameEnum.extractedFederationofIndian:
                     processedData = await extractedFederationofIndian(pdfData);
-                    console.log('FEDERATION OF INDIA:', processedData);
+                    console.log('PDF DATA FEDERATION OF INDIA:', processedData);
                     break;
                 case VendorNameEnum.extractedLogWin:
                     processedData = await extractedLogWin(pdfData);
-                    console.log('LOGWIN:', processedData);
+                    console.log('PDF DATA LOGWIN:', processedData);
                     break;
                 case VendorNameEnum.extractedHellmann:
                     processedData = await extractedHellmann(pdfData);
-                    console.log('HELLMANN:', processedData);
+                    console.log('PDF DATA HELLMANN:', processedData);
                     break;
                 case VendorNameEnum.extractedGeodis:
                     processedData = await extractedGeodis(pdfData);
-                    console.log('GEODIS:', processedData);
+                    console.log('PDF DATA GEODIS:', processedData);
                     break;
                 case VendorNameEnum.extractedJas:
                     processedData = await extractedJas(pdfData);
-                    console.log('JAS:', processedData);
+                    console.log('PDF DATA JAS:', processedData);
                     break;
                     case VendorNameEnum.extractedGLOBELINK: {
                         const globeLinkPDFData = await extractedGLOBELINK(pdfData);
@@ -666,7 +666,7 @@ export const DocReader = (props: DocReaderProps) => {
 
                 case VendorNameEnum.extractedMaersk:
                     processedData = await extractMaersk(pdfData);
-                    console.log('PDF DATA Maersk:', processedData);
+                    console.log('PDF DATA MAERSK:', processedData);
                     break;
 
                 default:

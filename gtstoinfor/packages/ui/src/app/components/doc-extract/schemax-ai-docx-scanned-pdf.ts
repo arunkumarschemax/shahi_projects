@@ -29,13 +29,13 @@ const cleanOcrDate = (dateString) => {
     // Return null for invalid dates or non-matching formats
     return null;
 }
+
 const loadImage = (url) => new Promise((resolve, reject) => {
     const img = new Image();
     img.addEventListener('load', () => resolve(img));
     img.addEventListener('error', (err) => reject(err));
     img.src = url;
 });
-
 
 export const getImagesFromPdf = async (pdf, setImageDownloadLinks) => {
     const pagePromises = [];
@@ -108,7 +108,6 @@ export const parseExtractedText = (text, indexStart: number) => {
     return data;
 };
 
-
 export const extractDataFromScannedImages = async (pageImages: any[], invoicePageNos: number[]) => {
     const worker = createWorker({
         logger: (m) => console.log(m), // Optional: Enable logging
@@ -138,7 +137,7 @@ export const extractDataFromScannedImages = async (pageImages: any[], invoicePag
     }
     await worker.terminate();
     return allPageLines;
-}
+};
 
 export const convertScannedPdfToSelectablePdf = async (scannedPdfDoc, selectablePdf, images: any[]) => {
     const worker = createWorker({
@@ -176,7 +175,8 @@ export const convertScannedPdfToSelectablePdf = async (scannedPdfDoc, selectable
     const blob = new Blob([modifiedPdfBytes], { type: 'application/pdf' });
     const objectURL = URL.createObjectURL(blob);
     return objectURL;
-}
+};
+
 export const extractGlobelinkInvoiceDataFromScanned = async (extractedData: any[]) => {
 
     const structuredHSNLines = [];
@@ -592,7 +592,7 @@ if (/\d/.test(lastPart)) {
 //         };
 //     }
 
-// }
+// };
 
 export const extractKrsnaInvoiceDataFromScanned = async (allLines: any[]) => {
     const structuredHSNLines = [];
@@ -749,7 +749,7 @@ export const extractKrsnaInvoiceDataFromScanned = async (allLines: any[]) => {
         extractedData: InvoiceLines[0],
         extractedHsnData: structuredHSNLines
     }
-}
+};
 
 export const extractKsrInvoiceDataFromScanned = async (allLines: any[]) => {
     // const structuredHSNLines = [];
@@ -957,7 +957,7 @@ export const extractKsrInvoiceDataFromScanned = async (allLines: any[]) => {
         extractedData: InvoiceLines[0],
         extractedHsnData: structuredHSNLines
     }
-}
+};
 
 export const extractDpInvoiceDataFromScanned = async (allLines: any[]) => {
     const structuredHSNLines = [];
@@ -1127,7 +1127,7 @@ export const extractDpInvoiceDataFromScanned = async (allLines: any[]) => {
         extractedHsnData: structuredHSNLines
     };
 
-}
+};
 
 export const extractSrijiInvoiceDataFromScanned = async (allLines: any[]) => {
     const structuredHSNLines = [];
@@ -1475,7 +1475,7 @@ export const extractSrivaruInvoiceDataFromScanned = async (allLines: any[]) => {
         extractedHsnData: structuredHSNLines
     };
 
-}
+};
 
 export const extractWaymarknvoiceDataFromScanned = async (allLines: any[]) => {
 
@@ -1655,7 +1655,7 @@ export const extractWaymarknvoiceDataFromScanned = async (allLines: any[]) => {
         extractedHsnData: structuredHSNLines
     };
 
-}
+};
 
 export const extractVinayakaInvoiceDataFromScanned = async (allLines: any[]) => {
     const structuredHSNLines = [];
@@ -1829,7 +1829,7 @@ export const extractVinayakaInvoiceDataFromScanned = async (allLines: any[]) => 
         extractedHsnData: structuredHSNLines
     };
 
-}
+};
 
 export const extractNipponInvoiceDataFromScanned = async (allLines: any[]) => {
     const structuredHSNLines = [];
@@ -1995,7 +1995,7 @@ export const extractNipponInvoiceDataFromScanned = async (allLines: any[]) => {
         extractedHsnData: structuredHSNLines
     };
 
-}
+};
 
 export const extractLigiInvoiceDataFromScanned = async (allLines: any[]) => {
     const structuredHSNLines = [];
@@ -2173,7 +2173,7 @@ export const extractLigiInvoiceDataFromScanned = async (allLines: any[]) => {
         extractedHsnData: structuredHSNLines
     };
 
-}
+};
 
 export const extractNikkouInvoiceDataFromScanned = async (allLines: any[]) => {
     const structuredHSNLines = [];
@@ -2353,7 +2353,7 @@ export const extractNikkouInvoiceDataFromScanned = async (allLines: any[]) => {
         extractedHsnData: structuredHSNLines
     };
 
-}
+};
 
 export const extractRingoCargoInvoiceDataFromScanned = async (allLines: any[]) => {
 
@@ -2527,7 +2527,7 @@ export const extractRingoCargoInvoiceDataFromScanned = async (allLines: any[]) =
         extractedHsnData: structuredHSNLines
     };
 
-}
+};
 
 // export const extractAplInvoiceDataFromScanned = async (allLines: any[]) => {
 //     const structuredHSNLines = [];
@@ -2711,7 +2711,7 @@ export const extractRingoCargoInvoiceDataFromScanned = async (allLines: any[]) =
 //         extractedData: InvoiceLines[0],
 //         extractedHsnData: structuredHSNLines
 //     };
-// }
+// };
 
 export const extractTriwayInvoiceDataFromScanned = async (allLines: any[]): Promise<any> => {
     const structuredHSNLines = [];
@@ -3014,7 +3014,7 @@ export const extractTriwayInvoiceDataFromScanned = async (allLines: any[]): Prom
         };
     }
 
-}
+};
 
 // export const extractDartInvoiceDataFromScanned = async (allLines: any[]): Promise<any> => {
 
@@ -3187,7 +3187,7 @@ export const extractTriwayInvoiceDataFromScanned = async (allLines: any[]): Prom
 //             extractedHsnData: structuredHSNLines
 //         };
 //     }
-// }
+// };
 
 export const extractOoclInvoiceDataFromScanned = async (allLines: any[]): Promise<any> => {
 
@@ -3361,7 +3361,7 @@ export const extractOoclInvoiceDataFromScanned = async (allLines: any[]): Promis
             extractedHsnData: structuredHSNLines
         };
     }
-}
+};
 
 // export const extractExpeditorsInvoiceDataFromScanned = async (allLines: any[]): Promise<any> => {
 
@@ -4006,7 +4006,7 @@ export const extractOoclInvoiceDataFromScanned = async (allLines: any[]): Promis
 //             extractedHsnData: structuredHSNLines
 //         };
 //     }
-// }
+// };
 
 export const extractTollInvoiceDataFromScanned = async (extractedData: any[]) => {
     const structuredHSNLines = [];
@@ -4698,6 +4698,7 @@ export const extractwenParkertInvoiceDataFromScanned = async (extractedData: any
 // /(.*?)\d+\s+(\d|\w|\s)+(.|,|\d)\d+(\/|\s|\))+(.\d|%)+(\d+)(,|.|\d)\d+(,|.|\d)\d+(\s|\d)\d+.+/
 // /(.*?)\d+\s+(\d|\w.)+(,|\.)\d*\s*[/\s]+(\d+%)\s+\d+(\.|,|\d)\d+\s+\d+(,|\.|\d)\d+/
 // /(.*?)\d+\s+(USD|\d+(,|.)(\d|\.\d)+).+(\s|\/|\))+\d+%+\s+(\d+(,|.)(\d|\.\d)+)+\s+(\d+(,|.)(\d|\.\d)+)/
+
 export const extractRahatInvoiceDataFromScanned = async (extractedData: any[]) => {
     // const lineParts = line.split(' ');
     // const charge = lineParts.pop().trim();
