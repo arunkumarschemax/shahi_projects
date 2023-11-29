@@ -4,7 +4,7 @@ import TabPane from "antd/es/tabs/TabPane";
 import { useState, useEffect } from "react";
 import PurchaseOrderfabricForm from "./purchase-order-fabric";
 import PurchaseOrderTrim from "./purchase-order-trim";
-import { GlobalVariables, PurchaseOrderDto, PurchaseOrderFbricDto, PurchaseOrderTrimDto } from "@project-management-system/shared-models";
+import { GlobalVariables, PoItemDetailsDto, PoItemEnum, PurchaseOrderDto, PurchaseOrderFbricDto, PurchaseOrderTrimDto } from "@project-management-system/shared-models";
 import moment from "moment";
 import dayjs, { Dayjs } from "dayjs";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -215,9 +215,17 @@ export const PurchaseOrderForm = () => {
                 message.error('Please Update Po Quantity')
             }
         }
-        const poDto = new PurchaseOrderDto('po11', poForm.getFieldValue('vendorId'), poForm.getFieldValue('styleId'), poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"), poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'), poForm.getFieldValue('remarks'), poForm.getFieldValue('poMaterialType'), poForm.getFieldValue('indentId'), poForm.getFieldValue('buyerId'), [],0,0,'','', fabricInfo, trimInfo, poForm.getFieldValue('indentAgainst'))
+        let poItemDetails ;
+        if(fabricData !== null){
+            poItemDetails = new PoItemDetailsDto(0,fabricData[0].colourId,fabricData[0].m3FabricCode,fabricData[0].poQuantity,fabricData[0].quantityUomId,PoItemEnum.OPEN,0,fabricData[0].samplereFabId,fabricData[0].indentFabricId,fabricData[0].unitPrice,fabricData[0].discount,fabricData[0].tax,fabricData[0].transportation,fabricData[0].subjectiveAmount)
+        }
+        if(trimData !== null){
+            poItemDetails = new PoItemDetailsDto(0,trimData[0].colourId,trimData[0].m3TrimCode,trimData[0].poQuantity,trimData[0].quantityUomId,PoItemEnum.OPEN,0,trimData[0].samplereFabId,trimData[0].indentTrimId,trimData[0].unitPrice,trimData[0].discount,trimData[0].tax,trimData[0].transportation,trimData[0].subjectiveAmount)
+        }
+       console.log(poItemDetails)
+        const poDto = new PurchaseOrderDto('po11', poForm.getFieldValue('vendorId'), poForm.getFieldValue('styleId'), poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"), poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'), poForm.getFieldValue('remarks'), poForm.getFieldValue('poMaterialType'), poForm.getFieldValue('indentId'), poForm.getFieldValue('buyerId'), poItemDetails,poForm.getFieldValue('currencyId'),poForm.getFieldValue('exchangeRate'),poForm.getFieldValue('totalAmount'),poForm.getFieldValue('deliveryAddress'), poForm.getFieldValue('indentAgainst'))
         console.log(poDto)
-        if (poDto.poTrimInfo.length > 0 || poDto.poFabricInfo.length > 0) {
+        if (poDto.poItemInfo.length > 0) {
             // console.log('%%%%%%')
             purchaseOrderService.cretePurchaseOrder(poDto).then(res => {
                 // console.log(poDto)
