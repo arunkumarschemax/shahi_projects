@@ -59,15 +59,16 @@ const active = (rowData: any) => {
   const Columns: any = [
     {
       title: 'S No',
+      align: "center",
       key: 'sno',
-      width: 90,
+      width: 120,
       responsive: ['sm'],
       render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
         title: "Fabric Quality",
         dataIndex: "quality",
-     width: 190,
+     width: 300,
 
     },
     {

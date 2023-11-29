@@ -516,11 +516,11 @@ export function BuyersForm(props: BuyersFormProps) {
               </Col>
             </Row>
             <Row  gutter={24} justify={'end'}>
-            { props.isUpdate === false && 
-            
-              <Col xs={{ span: 6 }} sm={{ span: 6}} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button onClick={onReset}>Reset</Button></Col>
-            }
+           
               <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span:2  }}><Button type='primary' htmlType='submit'>Submit</Button></Col>
+               
+              <Col xs={{ span: 6 }} sm={{ span: 6}} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button onClick={onReset}>Reset</Button></Col>
+            
             </Row>
         </Form>
       </Card>

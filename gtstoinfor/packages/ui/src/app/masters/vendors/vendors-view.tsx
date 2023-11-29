@@ -231,6 +231,8 @@ export function VendorsView(
           title: 'S No',
           key: 'sno',
           width: '70px',
+         align: "center",
+ 
           responsive: ['sm'],
           render: (text, object, index) => (page-1) * 10 +(index+1)
         },
@@ -457,8 +459,8 @@ export function VendorsView(
                 <Popconfirm onConfirm={e =>{deleteVendor(rowData);}}
                 title={
                   rowData.isActive
-                    ? 'Are you sure to Deactivate vendor ?'
-                    :  'Are you sure to Activate vendor ?'
+                    ? 'Are you sure to Deactivate this vendor ?'
+                    :  'Are you sure to Activate this vendor ?'
                 }
               >
                 <Switch  size="default"

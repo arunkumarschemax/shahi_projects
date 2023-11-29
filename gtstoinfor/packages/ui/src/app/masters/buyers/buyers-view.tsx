@@ -176,6 +176,8 @@ export const  BuyersView = () => {
       {
         title: 'S No',
         key: 'sno',
+      align: "center",
+
         width: '70px',
         responsive: ['sm'],
         render: (text, object, index) => (page-1) * 10 +(index+1)
@@ -289,8 +291,8 @@ export const  BuyersView = () => {
               <Popconfirm onConfirm={e =>{deleteBuyer(rowData);}}
               title={
                 rowData.isActive
-                  ? 'Are you sure to Deactivate Buyer ?'
-                  :  'Are you sure to Activate Buyer ?'
+                  ? 'Are you sure to Deactivate this Buyer ?'
+                  :  'Are you sure to Activate  this Buyer ?'
               }
             >
               <Switch  size="default"
