@@ -1474,61 +1474,7 @@ export const MonthWiseReport = () => {
 
       );
     }
-    let totalJanExfPre = 0;
-    let totalJanExfLat = 0;
-    let totalFebExfPre = 0;
-    let totalFebExfLat = 0;
-    let totalMarExfPre = 0;
-    let totalMarExfLat = 0;
-    let totalAprExfPre = 0;
-    let totalAprExfLat = 0;
-    let totalMayExfPre = 0;
-    let totalMayExfLat = 0;
-    let totalJunExfPre = 0;
-    let totalJunExfLat = 0;
-    let totalJulExfPre = 0;
-    let totalJulExfLat = 0;
-    let totalAugExfPre = 0;
-    let totalAugExfLat = 0;
-    let totalSepExfPre = 0;
-    let totalSepExfLat = 0;
-    let totalOctExfPre = 0;
-    let totalOctExfLat = 0;
-    let totalNovExfPre = 0;
-    let totalNovExfLat = 0;
-    let totalDecExfPre = 0;
-    let totalDecExfLat = 0;
-    let totalExfPre = 0;
-    let totalExfLat = 0;
-    let totalJanWhPre = 0;
-    let totalJanWhLat = 0;
-    let totalFebWhPre = 0;
-    let totalFebWhLat = 0;
-    let totalMarWhPre = 0;
-    let totalMarWhLat = 0;
-    let totalAprWhPre = 0;
-    let totalAprWhLat = 0;
-    let totalMayWhPre = 0;
-    let totalMayWhLat = 0;
-    let totalJunWhPre = 0;
-    let totalJunWhLat = 0;
-    let totalJulWhPre = 0;
-    let totalJulWhLat = 0;
-    let totalAugWhPre = 0;
-    let totalAugWhLat = 0;
-    let totalSepWhPre = 0;
-    let totalSepWhLat = 0;
-    let totalOctWhPre = 0;
-    let totalOctWhLat = 0;
-    let totalNovWhPre = 0;
-    let totalNovWhLat = 0;
-    let totalDecWhPre = 0;
-    let totalDecWhLat = 0;
-    let totalWhPre = 0;
-    let totalWhLat = 0;
    
-    
-
     let secondTableColumns: IExcelColumn[] = [];
     if (selected == "ExFactory") {
       secondTableColumns.push(
@@ -1669,10 +1615,8 @@ export const MonthWiseReport = () => {
     
     if (Array.isArray(data2) && data2.length > 0) {
       data2.forEach((row) => {
-        // Log each row to inspect its structure and values
-        // console.log('Row:', row.janPcsExf);
+      //  console.log('Row:', row.janPcsExf);
     
-        // Accumulate totals for the current row
         totalJanExfPre += Number(row.janPcsExf) || 0;
         totalJanExfLat += Number(row.janCoeffExf) || 0;
         totalFebExfPre += Number(row.febPcsExf) || 0;
@@ -1992,8 +1936,8 @@ export const MonthWiseReport = () => {
     {val}
   </th>
 ))}
-<th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalPcs}px`, textAlign: 'right' }}>{totalPre}</th>
-<th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalcoeff}px`, textAlign: 'right' }}>{totalLat}</th>
+<th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalPcs}px`, textAlign: 'right' }}>{totalPre.toLocaleString()}</th>
+<th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalcoeff}px`, textAlign: 'right' }}>{totalLat.toLocaleString()}</th>
 
                     </tr>
                     </thead>
