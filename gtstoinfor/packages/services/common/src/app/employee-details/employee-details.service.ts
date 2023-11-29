@@ -65,7 +65,7 @@ export class EmployeeDetailsService {
     async getAllActiveEmploee():Promise<AllEmployeeDetailsResponseModel>{
         const employee = await this.employeeDetailsRepo.find({
             where:{isActive:true},
-            order:{firstName:'ASC'}})
+            order:{lastName:'ASC',firstName:'ASC'}})
         if(employee.length >0){
             return new AllEmployeeDetailsResponseModel(true,1,'Employees Retrived Sucessfully',employee)
         }else{
@@ -111,7 +111,7 @@ export class EmployeeDetailsService {
         // const getDeparmentId = await this.departmentRepo.find({where:{department:req.department}})
         const employee = await this.employeeDetailsRepo.find({
             // where:{isActive:true,deparmentInfo:{departmentId:req.departmentId}},
-            order:{firstName:'ASC'}})
+            order:{lastName:'ASC',firstName:'ASC'}})
         if(employee.length >0){
             return new AllEmployeeDetailsResponseModel(true,1,'Employees Retrived Sucessfully',employee)
         }else{
