@@ -117,6 +117,7 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
       title: "S.No",
       key: "sno",
       responsive: ["sm"],
+      align:"center",
       width:10,
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
