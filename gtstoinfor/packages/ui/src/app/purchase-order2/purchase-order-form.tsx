@@ -1,5 +1,5 @@
 import { BuyersService, CurrencyService, FactoryService, IndentService, PurchaseOrderservice, SampleDevelopmentService, StyleService, VendorsService } from "@project-management-system/shared-services";
-import { Button, Card, Col, DatePicker, Form, Input, Row, Segmented, Select, Space, Tabs, message } from "antd"
+import { Button, Card, Col, DatePicker, Form, Input, Row, Segmented, Select, Space, Tabs, message, notification } from "antd"
 import TabPane from "antd/es/tabs/TabPane";
 import { useState, useEffect } from "react";
 import PurchaseOrderfabricForm from "./purchase-order-fabric";
@@ -24,12 +24,12 @@ export const PurchaseOrderForm = () => {
     const [vendordata, setVendorData] = useState<any[]>([])
     const [indentId, setIndentId] = useState<any>([])
     const [sampleId, setSampleId] = useState<any>([])
-
     const [poType, setPoType] = useState<any>('')
     const [submitDisbale, setSubmitDisable] = useState<boolean>(true)
     const [buyer, setBuyer] = useState<any[]>([]);
     const [samplereqNo, setSamplereqNo] = useState<any[]>([])
     const [navigateData, setnavigateData] = useState<any>([])
+    const [totalAmount ,setTotalAmount] = useState('')
     const [indentDropDownVisible, setIndentDropDownVisible] = useState<boolean>(false)
     const [sampleDropDownVisible, setSampleDropDownVisible] = useState<boolean>(false)
     const [currencydata, setCurrencyData] = useState([])
@@ -63,6 +63,9 @@ export const PurchaseOrderForm = () => {
         getAllCurrencies()
         getActiveFactories()
     }, [])
+
+    console.log(stateData.props)
+    
 
     function getActiveFactories (){
         try {
@@ -118,6 +121,7 @@ export const PurchaseOrderForm = () => {
     useEffect(() => {
         if (stateData != undefined) {
             if (stateData.type == 'Indent') {
+                console.log(stateData.props)
                 setIndentDropDownVisible(true)
                 poForm.setFieldsValue({ indentId: stateData.data.indentId })
                 poForm.setFieldsValue({ indentAgainst: 'Indent' })
@@ -138,12 +142,10 @@ export const PurchaseOrderForm = () => {
                 poForm.setFieldsValue({ requestNo: stateData.data[1].sampleReqIds })
                 setSampleId(stateData.data[1].sampleReqIds)
                 if (stateData.data[0].materialType == "Fabric") {
-                    console.log('UUUUUUU')
                     setPoType('Fabric')
                     poForm.setFieldsValue({ poMaterialType: "Fabric" })
                 }
                 if (stateData.data[0].materialType != 'Fabric') {
-                    console.log('xxxxxx')
                     setPoType('Trim')
                     poForm.setFieldsValue({ poMaterialType: stateData.data[0].materialType })
                 }
@@ -151,10 +153,25 @@ export const PurchaseOrderForm = () => {
         }
     }, [stateData])
 
+    useEffect(()=>{
+        if(fabricData.length){
+            poForm.setFieldsValue({totalAmount : fabricData[0]?.subjectiveAmount})
+        }
+    },[fabricData]);
+
+    useEffect(()=>{
+        if(trimData){
+            poForm.setFieldsValue({totalAmount : trimData[0]?.subjectiveAmount})
+        }
+    },[trimData]);
+
+
     const handleFabricOnchange = (fabricdata) => {
         console.log(fabricdata)
+        
         setFabricData(fabricdata)
     }
+    
     const handleTrim = (trimData) => {
         console.log(trimData)
         setTrimData(trimData)
@@ -162,16 +179,6 @@ export const PurchaseOrderForm = () => {
     const onReset = () => {
         poForm.resetFields()
     }
-
-    // const getAllvendors =() =>{
-    //     purchaseOrderService.getAllVendors().then(res =>{
-    //         if(res.status){
-    //             setVendorData(res.data)
-    //         }else{
-    //             setVendorData([])
-    //         }
-    //     })
-    // }
 
     const getVendors = () => {
         vendorService.getAllActiveVendors().then((res) => {
@@ -193,7 +200,10 @@ export const PurchaseOrderForm = () => {
         })
     }
     const onFinish = () => {
-        let poItemDetails :PoItemDetailsDto[]=[]
+        if(poForm.getFieldValue('currencyId') === undefined || poForm.getFieldValue('exchangeRate') === undefined || poForm.getFieldValue('totalAmount') === undefined){
+            return notification.info({message:'Some input fields are missing in purchase order'})
+        }
+        let poItemDetails :PoItemDetailsDto[]=[];
         console.log(fabricData)
         console.log(trimData)
         if(fabricData.length != 0){
@@ -212,15 +222,13 @@ export const PurchaseOrderForm = () => {
         const poDto = new PurchaseOrderDto('po11', poForm.getFieldValue('vendorId'), poForm.getFieldValue('styleId'), poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"), poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'), poForm.getFieldValue('remarks'), poForm.getFieldValue('poMaterialType'), poForm.getFieldValue('indentId'), poForm.getFieldValue('buyerId'), poItemDetails,poForm.getFieldValue('currencyId'),poForm.getFieldValue('exchangeRate'),poForm.getFieldValue('totalAmount'),poForm.getFieldValue('deliveryAddress'), poForm.getFieldValue('indentAgainst'))
         console.log(poDto)
         if (poDto.poItemInfo.length > 0) {
-            console.log('%%%%%%')
-            purchaseOrderService.cretePurchaseOrder(poDto).then(res => {
-                // console.log(poDto)
-                if (res.status) {
-                    message.success(res.internalMessage)
-                    navigate('/purchase-view')
-                }
-
-            })
+            // purchaseOrderService.cretePurchaseOrder(poDto).then(res => {
+            //     // console.log(poDto)
+            //     if (res.status) {
+            //         message.success(res.internalMessage)
+            //         navigate('/purchase-view')
+            //     }
+            // })
         }
         else {
             message.error('Please Update Po Quantity')
@@ -372,7 +380,7 @@ export const PurchaseOrderForm = () => {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                             <Form.Item name='currencyId' label='Currency' rules={[{ required: true, message: 'Currency is required' }]}>
-                                <Select placeholder='Select Currency'>
+                                <Select allowClear showSearch placeholder='Select Currency'>
                                     {currencydata.map(e => {
                                         return (<Option value={e.currencyId} key={e.currencyId}>{e.currencyName}</Option>)
                                     }
@@ -406,7 +414,7 @@ export const PurchaseOrderForm = () => {
                 <Row gutter={24}>
                     {/* <Card title={poType == 'Fabric'?<span style={{color:'blue', fontSize:'17px'}} >Fabric Details</span>:poType =='Trim'?<span style={{color:'blue', fontSize:'17px'}}>Trim Details</span>:''} style={{width:'200%'}}> */}
                     {poType == 'Fabric' ?
-                        <Card style={{ width: '200%' }}><PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={poType == 'Fabric' ? indentId : undefined} data={navigateData} sampleReqId={poType == 'Fabric' ? sampleId : undefined} /></Card>
+                        <Card style={{ width: '200%' }}><PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={poType == 'Fabric' ? indentId : undefined} data={navigateData} sampleReqId={poType == 'Fabric' ? sampleId : undefined}  /></Card>
                         : poType == 'Trim' ?
                             <Card style={{ width: '130%' }}> <PurchaseOrderTrim key='trim' props={handleTrim} indentId={indentId} data={navigateData} sampleReqId={poType != 'Fabric' ? sampleId : undefined} /></Card>
                             : <></>
