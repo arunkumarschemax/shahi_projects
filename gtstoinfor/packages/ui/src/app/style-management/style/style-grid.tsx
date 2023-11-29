@@ -149,6 +149,7 @@ const getBuyers = () => {
     {
       title: 'Status',
       dataIndex: 'isActive',
+      align:"center",
     //   width:'80px',
       render: (isActive, rowData) => (
         <>
@@ -175,6 +176,7 @@ const getBuyers = () => {
     {
       title: `Action`,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"
@@ -312,8 +314,26 @@ const getBuyers = () => {
               type={'primary'}>New</Button></span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
 
 <Form form={form} layout={"vertical"} onFinish={onFinish}>
+
+<Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+
+           <Alert type='success' message={'Total Styles: ' + variantData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
         <Row gutter={24}>
-        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
             <Form.Item
               name="buyerId"
               label="Buyer"
@@ -372,23 +392,7 @@ const getBuyers = () => {
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
       </Row><br></br> */}
-      <Row gutter={24}>
-      <Col span={4}></Col>
-     <Col span={5}>
-
-           <Alert type='success' message={'Total Styles: ' + variantData.length} style={{fontSize:'15px'}} />
-        </Col>
-        <Col span={5}>
-          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
-        </Col>
-        <Col span={5}>
-          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
-        
-           
-           
-        </Col>
-          </Row> 
-          <br></br>
+     
       <Card>
         <Table
         size='small'
@@ -399,7 +403,7 @@ const getBuyers = () => {
               setPage(current);
             }
           }}
-          scroll={{x:true}}
+          scroll={{x:true,y:500}}
           onChange={onChange}
           bordered />
       </Card>
