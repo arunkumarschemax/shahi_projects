@@ -161,9 +161,23 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId }) 
         if (rowData.indentFabricId != undefined) {
             setInputDisable(true)
             fabricForm.setFieldsValue({ poQuantity: rowData.indentQuantity })
+            fabricForm.setFieldsValue({ unitPrice: rowData.unitPrice })
+            fabricForm.setFieldsValue({ discount: rowData.discount })
+            fabricForm.setFieldsValue({ discountAmount: rowData.discountAmount })
+            fabricForm.setFieldsValue({ tax: rowData.tax })
+            fabricForm.setFieldsValue({ taxAmount: rowData.taxAmount })
+            fabricForm.setFieldsValue({ subjectiveAmount: rowData.subjectiveAmount })
+            fabricForm.setFieldsValue({ transportation: rowData.transportation })
         }
         if (rowData.samplereFabId != undefined) {
             fabricForm.setFieldsValue({ poQuantity: rowData.sampleQuantity })
+            fabricForm.setFieldsValue({ unitPrice: rowData.unitPrice })
+            fabricForm.setFieldsValue({ discount: rowData.discount })
+            fabricForm.setFieldsValue({ discountAmount: rowData.discountAmount })
+            fabricForm.setFieldsValue({ tax: rowData.tax })
+            fabricForm.setFieldsValue({ taxAmount: rowData.taxAmount })
+            fabricForm.setFieldsValue({ subjectiveAmount: rowData.subjectiveAmount })
+            fabricForm.setFieldsValue({ transportation: rowData.transportation })
         }
         setDefaultFabricFormData(rowData)
         setFabricIndexVal(index)
@@ -313,6 +327,26 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId }) 
         {
             title: 'UOM',
             dataIndex: 'quantityUom',
+        },
+        {
+            title: 'Unit Price',
+            dataIndex: 'unitPrice',
+        },
+        {
+            title: 'Discount',
+            dataIndex: 'discount',
+        },
+        {
+            title: 'Tax Percentage',
+            dataIndex: 'tax',
+        },
+        {
+            title: 'Transportation',
+            dataIndex: 'transportation',
+        },
+        {
+            title: 'Subjective Amount',
+            dataIndex: 'subjectiveAmount',
         },
         {
             title: "Action",

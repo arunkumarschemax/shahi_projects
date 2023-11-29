@@ -20,8 +20,6 @@ export class PurchaseOrderDto {
   poMaterialType: string
   indentId: number[]
   buyerId: number
-  poFabricInfo: PurchaseOrderFbricDto[]
-  poTrimInfo?: PurchaseOrderTrimDto[]
   poAgainst?: GRNTypeEnum
   currencyId: number
   exchangeRate: number
@@ -43,8 +41,6 @@ export class PurchaseOrderDto {
     exchangeRate: number,
     totalAmount: string,
     deliveryAddress: string,
-    poFabricInfo: PurchaseOrderFbricDto[],
-    poTrimInfo?: PurchaseOrderTrimDto[],
     poAgainst?: GRNTypeEnum,
 
   ) {
@@ -54,8 +50,6 @@ export class PurchaseOrderDto {
     this.expectedDeliveryDate = expectedDeliveryDate
     this.purchaseOrderDate = purchaseOrderDate
     this.remarks = remarks
-    this.poFabricInfo = poFabricInfo
-    this.poTrimInfo = poTrimInfo
     this.indentId = indentId
     this.poMaterialType = poMaterialType
     this.buyerId = buyerId
