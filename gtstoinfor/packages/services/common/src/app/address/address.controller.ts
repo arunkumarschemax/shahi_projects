@@ -13,7 +13,7 @@ export class AddressController {
         private readonly applicationExceptionhandler: ApplicationExceptionHandler,
         private addressService: AddressService
 
-    ){}
+    ) { }
 
 
 
@@ -31,6 +31,16 @@ export class AddressController {
     async getAddressInfo(): Promise<AddressResponseModel> {
         try {
             return this.addressService.getAddressInfo();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(AddressResponseModel, err);
+
+        }
+    }
+
+    @Post('/getAddressInfoByCountry')
+    async getAddressInfoByCountry(@Body() req: any): Promise<AddressResponseModel> {
+        try {
+            return this.addressService.getAddressInfoByCountry(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(AddressResponseModel, err);
 
