@@ -25,8 +25,8 @@ export class buyerColorsMappingRepository extends Repository<BuyersColor> {
         .leftJoin(Buyers,'b','b.buyer_id = bc.buyer_id')
         .leftJoin(Colour,'c','c.colour_id = bc.colour_id')
         // .groupBy(`c.colour_id`)
-        if(req.buyerId !== undefined) {
-            query.where(`b.buyer_id = '${req.buyerId}'`)
+        if(req?.buyerId !== undefined) {
+            query.where(`b.buyer_id = '${req?.buyerId}'`)
         }
         query.orderBy(`b.buyer_id`)
         return await query.getRawMany()
