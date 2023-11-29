@@ -222,13 +222,13 @@ export const PurchaseOrderForm = () => {
         const poDto = new PurchaseOrderDto('po11', poForm.getFieldValue('vendorId'), poForm.getFieldValue('styleId'), poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"), poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'), poForm.getFieldValue('remarks'), poForm.getFieldValue('poMaterialType'), poForm.getFieldValue('indentId'), poForm.getFieldValue('buyerId'), poItemDetails,poForm.getFieldValue('currencyId'),poForm.getFieldValue('exchangeRate'),poForm.getFieldValue('totalAmount'),poForm.getFieldValue('deliveryAddress'), poForm.getFieldValue('indentAgainst'))
         console.log(poDto)
         if (poDto.poItemInfo.length > 0) {
-            // purchaseOrderService.cretePurchaseOrder(poDto).then(res => {
-            //     // console.log(poDto)
-            //     if (res.status) {
-            //         message.success(res.internalMessage)
-            //         navigate('/purchase-view')
-            //     }
-            // })
+            purchaseOrderService.cretePurchaseOrder(poDto).then(res => {
+                // console.log(poDto)
+                if (res.status) {
+                    message.success(res.internalMessage)
+                    navigate('/purchase-view')
+                }
+            })
         }
         else {
             message.error('Please Update Po Quantity')
