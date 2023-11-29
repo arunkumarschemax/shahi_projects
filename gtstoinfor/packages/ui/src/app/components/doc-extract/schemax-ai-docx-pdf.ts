@@ -10029,7 +10029,6 @@ export const extractedFederationofIndian = async (pdf) => {
 
     const structuredHSNLines = [];
     let currentHSN = null;
-    // let currentTax = null;
     let withOutDuplicates = [];
     const currentTax = []
     for (let hsnId = 0; hsnId < extractedData.length; hsnId++) {
@@ -10040,7 +10039,7 @@ export const extractedFederationofIndian = async (pdf) => {
             const taxAmount = matchData[2] || 0;
             const charge = matchData[7] || 0;
             const taxPercentage = matchData[6] || 0;
-            console.log('gggggggggggggggggggggggg', matchData)
+           
 
             let taxType, igst, cgst, sgst;
 
@@ -10158,7 +10157,7 @@ export const extractedFederationofIndian = async (pdf) => {
             }
         }
     }
-    console.log("APL PDF DATA", JSON.stringify(allLines, null, 2))
+    console.log("FEDERATION OF INDIA", JSON.stringify(allLines, null, 2))
     return {
         extractedData: InvoiceLines[0],
         extractedHsnData: structuredHSNLines
@@ -10169,8 +10168,7 @@ export const extractedGateway = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
 
-    // /(.+)996\d+/
-    // /(.+?)\s+([\d.,]+)\s+(.*?)\s+996(\d+)/
+    
     const structuredHSNLines = [];
     let currentHSN = null;
     let currentTax = null;
@@ -10180,9 +10178,9 @@ export const extractedGateway = async (pdf) => {
     for (let hsnId = 0; hsnId < extractedData.length; hsnId++) {
         const line = extractedData[hsnId].content;
 
-        //const matchData = line.match(/\d+\s+\w+\s+\w+\s+(\d|\w)+(,|\d|\s)+(,|.||\d|\s)\d+\s+\d+/);
+       
         const matchData = line.match(/(\d+)\s+([^\d]+)\s+([\d,]+\.\d+)\s+(\d+)/);
-        console.log("[[[[[[[]]]]]]]]]]", matchData)
+        
 
 
         if (matchData) {
@@ -10316,7 +10314,7 @@ export const extractedGateway = async (pdf) => {
         }
     }
 
-    console.log("DART PDF DATA", JSON.stringify(allLines, null, 2))
+    console.log("GATEWAY PDF DATA", JSON.stringify(allLines, null, 2))
     console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
     console.log("PDF INVOICE Data", JSON.stringify(InvoiceLines, null, 2));
     return {
@@ -10487,7 +10485,7 @@ export const extractedHellmann = async (pdf) => {
             }
         }
     }
-    console.log("APL PDF DATA", JSON.stringify(allLines, null, 2))
+    console.log("HELLMANN PDF DATA", JSON.stringify(allLines, null, 2))
     return {
         extractedData: InvoiceLines[0],
         extractedHsnData: structuredHSNLines
@@ -10498,9 +10496,7 @@ export const extractedJeena = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
 
-    // /.\b(SAC:\s\d+).*[\d]/;
-
-    // /.\b(\s(\d+)).\b\s+(\d+%)[=]([\d,]+\.\d+)\s+([\d,]+\.\d+)/
+  
 
     const structuredHSNLines = [];
 
@@ -10508,16 +10504,14 @@ export const extractedJeena = async (pdf) => {
         const line = extractedData[hsnId].content;
 
         const matchData = line.match(/(\d.+)\s+(\d+)\s+([\d,.]+)\s+([\d,.]+)\s+(\d+\.\d+%)?\s+([\d,.]+)\s+(\d+\.\d+%.)?\s+([\d,.]+(\d.+))?/) || [];
-        //console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>",matchData)
-        //console.log("************************",matchData[8]?.replace(/0.00\s+18.0%/, '').trim()||'')
+       
         if (matchData.length > 0) {
             const description = matchData[1]?.trim().replace(/\d/g, "");
             const HSN = matchData[2]?.trim();
             const unitPrice = (matchData[4] || '').replace(/,/g, "").trim();
             const charge = matchData[4]?.replace(/,/g, "").trim();
             const taxPercentage = (matchData[7] || matchData[8]?.split(" ")[3]).replace(/.0%/g, "");
-            //console.log("++++++++++++++++++++++",taxPercentage)
-            // const taxAmount = matchData[6]?.trim();
+           
             const taxAmount = (matchData[8]?.replace(/0.00\s+18.0%/, '').trim() || '')
 
             let taxType, igst, cgst, sgst;
@@ -10609,12 +10603,11 @@ export const extractedJeena = async (pdf) => {
 
                 const cgstData = extractedData.find((item) => item.content.match(cgstRegex));
                 cgst = cgstData ? cgstData.content.match(cgstRegex)[4] : "0.00"
-                //replace(/ADD CGST /g, "") : '' || 0.00;
+               
 
                 const sgstData = extractedData.find((item) => item.content.match(sgstRegex));
                 sgst = sgstData ? sgstData.content.match(sgstRegex)[4] : "0.00"
-                //replace(/ADD SGST /g, "") : '' || 0.00;
-
+               
 
                 currentInvoice = {
                     "venName": venName,
@@ -10633,7 +10626,7 @@ export const extractedJeena = async (pdf) => {
             }
         }
     }
-    console.log("APL PDF DATA", JSON.stringify(allLines, null, 2))
+    console.log("JEENA & COMPANY PDF DATA", JSON.stringify(allLines, null, 2))
     return {
         extractedData: InvoiceLines[0],
         extractedHsnData: structuredHSNLines
@@ -10644,12 +10637,7 @@ export const extractedKerryIndev = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
 
-    // /.*\b(SAC:\s*\d+).*[\d]/;
-
-    // /.*\b(\s*(\d+)).*\b\s+(\d+%)[=]*([\d,]+\.\d+)\s+([\d,]+\.\d+)/
-
-    //   /\d+(,|\d|.)\d+(.|\d|\s)\d+\s+\d+%\s+\d+(,|.)\d+(.|\d|\s)\d+\s+\d+.\d+\s+\d+(,|.|\d|\s)\d+(,|.|\d|\s)\d+\s+\d+(,|.|\d|\s)\d+\s+\d+(,|.|\d|\s)\d+(,|.|\d|\s)(\d|\s)+\w+\s+\d+\s+\w*\s+(,|&|)(\s|\w|\d)*(,|.|\d)\d+(,|.|\d|s)\d*(\s|\d)*/ main index
-    // /\s*([\d,.]+)\s*([\d.]+%)\s*([\d,.]+)\s*([\d.]+)\s*([\d,.]+)\s*([\d.]+)\s*([\d,.]+)\s*(\w+)\s*(\d+)\s*([^\d]+)\s*([\d,.]+)/
+   
     const structuredHSNLines = [];
     let currentHSN = null;
 
@@ -10657,9 +10645,9 @@ export const extractedKerryIndev = async (pdf) => {
         const line = extractedData[hsnId].content;
 
         const matchData = line.match(/\d+(,|\d|.)\d+(.|\d|\s)\d+\s+\d+%\s+\d+(,|.)\d+(.|\d|\s)\d+\s+\d+.\d+\s+\d+(,|.|\d|\s)\d+(,|.|\d|\s)\d+\s+\d+(,|.|\d|\s)\d+\s+\d+(,|.|\d|\s)\d+(,|.|\d|\s)(\d|\s)+\w+\s+\d+\s+\w*\s+(,|&|)(\s|\w|\d)*(,|.|\d)\d+(,|.|\d|s)\d*(\s|\d)*/) || [];
-        console.log("matchdata***************************", matchData[0]?.split(" "))
+        
         const a = matchData[0]?.split(" ").length - 2
-        console.log("matchdata++++++++++++++++++++++", matchData[0])
+        
         if (matchData.length > 0) {
             const splitData = matchData[0]?.split(" ");
             const description = `${splitData[9] || ''} ${splitData[10] || ''} ${splitData[11] || ''}`;
@@ -10721,9 +10709,6 @@ export const extractedKerryIndev = async (pdf) => {
     const invoiceDateRegex = /(\d+-+\w+-+\d+)/;
     const invoiceNumberRegex = /(\d{3}\s*-\s*\d{12})/;
     const invoiceAmountRegex = /Total\s+in\s+INR\s+(\d{1,3}(?:,\d{3})*(?:\.\d{2})\s+\d{1,3}(?:,\d{3})*(?:\.\d{2}))/
-    //   const igstRegex =/(\d+\,\d+\.\d+)\s+Total in INR/
-    //   const cgstRegex = /ADD CGST\s+(\d+|.)+([\d])/
-    //   const sgstRegex = /ADD SGST\s+(\d+|.)+([\d])/
     const invoiceCurrency = 'INR';
     const currentYear = new Date().getFullYear();
     const nextYear = currentYear + 1;
@@ -10779,7 +10764,7 @@ export const extractedKerryIndev = async (pdf) => {
             }
         }
     }
-    console.log("APL PDF DATA", JSON.stringify(allLines, null, 2))
+    console.log("KERRY INDEV PDF DATA", JSON.stringify(allLines, null, 2))
     return {
         extractedData: InvoiceLines[0],
         extractedHsnData: structuredHSNLines
@@ -10790,13 +10775,9 @@ export const extractedLogWin = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
 
-    // /.*\b(SAC:\s*\d+).*[\d]/;
-
-    // /.*\b(\s*(\d+)).*\b\s+(\d+%)[=]*([\d,]+\.\d+)\s+([\d,]+\.\d+)/
-
     const structuredHSNLines = [];
     let currentHSN = null;
-    // /.*\b(SAC:\s*(\d+)).*\bIGST\s+(\d+%)[=]*([\d,]+\.\d+)\s+([\d,]+\.\d+).*\n(.*).*\n(.*).*\n(.*).*\n(.*)/
+
     for (let hsnId = 0; hsnId < extractedData.length; hsnId++) {
         const line = extractedData[hsnId].content;
         if (line.includes("Continued Over…")) {
@@ -10808,7 +10789,7 @@ export const extractedLogWin = async (pdf) => {
         console.log("matchdata", matchData[0]?.split(" "))
 
         if (matchData.length > 0) {
-            // .replace(/(IGST|CGST|SGST|GST)\s+\d+%=\d+(.|\d)\d+\s+\d+(.|\d+)\d*/g,"");
+           
             const description = (matchData[0] || '').split('[')[1].trim().split(']')[1].trim().replace(/(IGST|CGST|SGST|GST)\s+\d+%=\d+(.|\d)\d+(.|\s)(\s+)\d.+/g, "")
             const HSN = matchData[2] || '';
             const taxPercentage = matchData[4].replace(/%/g, "");
@@ -10924,7 +10905,7 @@ export const extractedLogWin = async (pdf) => {
             }
         }
     }
-    console.log("APL PDF DATA", JSON.stringify(allLines, null, 2))
+    console.log("LOGWIN PDF DATA", JSON.stringify(allLines, null, 2))
     return {
         extractedData: InvoiceLines[0],
         extractedHsnData: structuredHSNLines
@@ -10935,9 +10916,7 @@ export const extractedGeodis = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
 
-    // /.*\b(SAC:\s*\d+).*[\d]/;
-
-    // /.*\b(\s*(\d+)).*\b\s+(\d+%)[=]*([\d,]+\.\d+)\s+([\d,]+\.\d+)/
+  
 
     const structuredHSNLines = [];
     let currentHSN = null;
@@ -11060,7 +11039,7 @@ export const extractedGeodis = async (pdf) => {
             }
         }
     }
-    console.log("APL PDF DATA", JSON.stringify(allLines, null, 2))
+    console.log("GEODIS PDF DATA", JSON.stringify(allLines, null, 2))
     return {
         extractedData: InvoiceLines[0],
         extractedHsnData: structuredHSNLines
@@ -11069,10 +11048,6 @@ export const extractedGeodis = async (pdf) => {
 export const extractedJas = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
-
-    // /.*\b(SAC:\s*\d+).*[\d]/;
-
-    // /.*\b(\s*(\d+)).*\b\s+(\d+%)[=]*([\d,]+\.\d+)\s+([\d,]+\.\d+)/
 
     const structuredHSNLines = [];
     let currentHSN = null;
@@ -11084,8 +11059,7 @@ export const extractedJas = async (pdf) => {
         const line = extractedData[hsnId].content;
 
         const matchData = line.match(/(.+)\s+(IGST|CGST|SGST)\s+(\d+)\%\s+((,|.|\d|\s)\d+(,|.|\d)\d.+)/) || [];
-        console.log("++++++++++++++++++++++++", matchData);
-
+      
         if (matchData.length > 0) {
             const mainDataMatch = matchData[0] || '';
             const description = matchData[1].replace(/\[+SAC:\s+\d+\]/g, '');
@@ -11198,7 +11172,7 @@ export const extractedJas = async (pdf) => {
             }
         }
     }
-    console.log("APL PDF DATA", JSON.stringify(allLines, null, 2))
+    console.log("JAS PDF DATA", JSON.stringify(allLines, null, 2))
     return {
         extractedData: InvoiceLines[0],
         extractedHsnData: structuredHSNLines
@@ -11354,7 +11328,7 @@ export const extractedGLOBELINK = async (pdf) => {
         }
 
 
-        console.log("RAHAT PDF DATA", JSON.stringify(extractedData, null, 2));
+        console.log("GLOBELINK PDF DATA", JSON.stringify(extractedData, null, 2));
         console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
         console.log("PDF INVOICE Data", JSON.stringify(InvoiceLines, null, 2));
     }
