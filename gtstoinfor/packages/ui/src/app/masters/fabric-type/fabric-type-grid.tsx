@@ -249,7 +249,7 @@ service.createFabricType(variantData).then(res=>{
 return (
   <Card title={<span>Fabric Types</span>}
  headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/masters/fabrictype/fabric-type-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
-  <br></br>
+ 
     <>
     {/* <Row gutter={40}>
     <Col>
@@ -270,7 +270,7 @@ return (
       <Col span={4}></Col>
      <Col span={5}>
 
-           <Alert type='success' message={'Total Fabric Sub-Types: ' + variantData.length} style={{fontSize:'15px'}} />
+           <Alert type='success' message={'Total Fabric Types: ' + variantData.length} style={{fontSize:'15px'}} />
         </Col>
         <Col span={5}>
           <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
