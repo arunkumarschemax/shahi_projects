@@ -1115,26 +1115,25 @@ export class OrdersService {
               const format = '%'
               let total =``
               monthsList.forEach((rec,index)=>{
-              qtyQuery.push(`SUM(CASE WHEN MONTH(STR_TO_DATE(${req.qtyLocation}, '${format}m/${format}d')) = ${index+1} OR MONTH(STR_TO_DATE(${req.qtyLocation}, '%m-%d')) = ${index+1} OR MONTH(${req.qtyLocation})= 1 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS ${rec}`)
+              qtyQuery.push(`SUM(CASE WHEN MONTH(STR_TO_DATE(${req.qtyLocation}, '%m-%d')) = ${index+1} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS ${rec}`)
               total += `SUM(${rec}) AS ${rec},`
-
             })
               let query = `SELECT file_id,planning_ssn as plannedSeason,year,planning_sum as itemName ,${total}
               SUM(january + february + march + april + may + june + july + august + september + october + november + december) AS total
-            FROM (
-              SELECT planning_ssn, year, planning_sum,version,file_id,created_at,${qtyQuery}
-              FROM orders
-              WHERE file_id = (SELECT MAX(file_id) FROM orders)
-              GROUP BY planning_ssn, planning_sum
+              FROM (
+                SELECT planning_ssn, year, planning_sum,version,file_id,created_at,${qtyQuery}
+                FROM orders
+                WHERE file_id = (SELECT MAX(file_id) FROM orders) AND year = ${req.year} and planning_ssn = '${req.season}'
+                GROUP BY planning_sum
             ) AS subquery
-            WHERE 1 = 1 AND file_id = (SELECT MAX(file_id) FROM orders) and year = ${req.year} and planning_ssn = '${req.season}'`
+            WHERE 1=1`
               // if (req.itemCode) {
               //     query = query + ` AND item_cd = "${req.itemCode}"`
               //     }
               if (req.itemName) {
                   query = query + ` AND planning_sum = "${req.itemName}"`;
               }
-              query = query + ` GROUP BY planning_ssn, planning_sum HAVING total != 0 ORDER BY created_at DESC`;
+              query = query + ` GROUP BY planning_sum HAVING total != 0 ORDER BY created_at DESC`;
               const reportData = await this.dataSource.query(query);
       
           // const years = [...new Set(reportData.map(data => data.year))];
@@ -1159,7 +1158,7 @@ export class OrdersService {
 
     async seasonWiseTabs(): Promise<CommonResponseModel>{
         const query2 = `SELECT year, planning_ssn as plannedSeason FROM orders
-            WHERE 1 = 1 AND file_id = (SELECT MAX(file_id) FROM orders ) group by planning_ssn,year`
+            WHERE 1 = 1 AND file_id = (SELECT MAX(file_id) FROM orders ) group by planning_ssn,year ORDER BY year`
         const seasonTabs = await this.dataSource.query(query2)
         // console.log(seasonTabs,'----')
         const data =[]
