@@ -151,6 +151,13 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
         }
         if(rowData.sampleTrimInfoId != undefined){
             trimForm.setFieldsValue({poQuantity:rowData.sampleOrderQuantity})
+            trimForm.setFieldsValue({ unitPrice: rowData.unitPrice })
+            trimForm.setFieldsValue({ discount: rowData.discount })
+            trimForm.setFieldsValue({ discountAmount: rowData.discountAmount })
+            trimForm.setFieldsValue({ tax: rowData.tax })
+            trimForm.setFieldsValue({ taxAmount: rowData.taxAmount })
+            trimForm.setFieldsValue({ subjectiveAmount: rowData.subjectiveAmount })
+            trimForm.setFieldsValue({ transportation: rowData.transportation })
         setInputDisable(true)
             
         }
