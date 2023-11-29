@@ -106,6 +106,9 @@ export const extractedRahat = async (pdf) => {
     const invoiceDateRegex = /[0-9]{2}-[A-Z0-9]{3}-[0-9]{4}/;
     const invoiceNumberRegex = /160-[A-Z0-9]{12}/;
     const invoiceAmountRegex = /\s+Total in INR\s:/;
+    const igstRegex = /\d+\s+\d+(,|\.\d)\d\s+\d+(,|\.\d)\d/;
+    const cgstRegex = /\d+\s+\d+(,|\.\d)\d\s+\d+(,|\.\d)\d/;
+    const sgstRegex = /\d+\s+\d+(,|\.\d)\d\s+\d+(,|\.\d)\d/;
     const invoiceCurrency = "INR";
     const currentYear = new Date().getFullYear();
     const nextYear = currentYear + 1;
@@ -116,6 +119,9 @@ export const extractedRahat = async (pdf) => {
         let invoiceDate = "";
         let invoiceNumber = "";
         let invoiceAmount = "";
+        let igst = 0;
+        // let cgst=0;
+        // let sgst=0;
         let isAlreadyClientMatched = false;
         if (extractedData && Array.isArray(extractedData)) {
             for (const line of extractedData) {
@@ -138,18 +144,33 @@ export const extractedRahat = async (pdf) => {
                     const invoiceAmountData = extractedData.find((item) => item.content.match(invoiceAmountRegex));
                     invoiceAmount = invoiceAmountData ? invoiceAmountData.content.replace(/Total in INR :/g, "") : "";
 
-                    let igst = "0.00";
-                    let cgst = "0.00";
-                    let sgst = "0.00";
+                    // const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
+                    //     const charge = parseFloat(hsnLine.charge) || 0;
+                    //     const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
+                    //     return add + charge+taxAmount;
+                    // }, 0).toFixed(2);
+                    // console.log(invoiceAmount, "innnv")
 
-                    for (const hsnLine of structuredHSNLines) {
-                        if (hsnLine.taxPercentage == 18) {
-                            igst = (parseFloat(igst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
-                        } else if (hsnLine.taxPercentage == 9) {
-                            cgst = (parseFloat(cgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
-                            sgst = (parseFloat(sgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
-                        }
-                    }
+                    const igstData = extractedData.find((item) => item.content.match(igstRegex));
+                    igst = igstData ? igstData.content.match(/\d+\s+\d+(,|\.\d)\d\s+\d+(,|\.\d)\d/)[0].replace(/\d+\s+\d+(,|\.\d)\d\s/g, "").trim() : "";
+
+                    // const cgstData = extractedData.find((item) => item.content.match(cgstRegex));
+                    // cgst = cgstData ? cgstData.content.match(/\d+\s+\d+(,|\.\d)\d\s+\d+(,|\.\d)\d/)[0].replace(/\d+\s+\d+(,|\.\d)\d\s/g,""): 0.00;
+
+                    // const sgstData = extractedData.find((item) => item.content.match(sgstRegex));
+                    // sgst = sgstData ? sgstData.content.match(/\d+\s+\d+(,|\.\d)\d\s+\d+(,|\.\d)\d/)[0].replace(/\d+\s+\d+(,|\.\d)\d\s/g,""): 0.00;
+                    // let igst = "0.00";
+                    // let cgst = "0.00";
+                    // let sgst = "0.00";
+
+                    // for (const hsnLine of structuredHSNLines) {
+                    //     if (hsnLine.taxPercentage == 18) {
+                    //         igst = (parseFloat(igst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+                    //     } else if (hsnLine.taxPercentage == 9) {
+                    //         cgst = (parseFloat(cgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+                    //         sgst = (parseFloat(sgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+                    //     }
+                    // }
                     const currentInvoice = {
                         venName: venName,
                         gstNumber: gstNumber,
@@ -159,8 +180,8 @@ export const extractedRahat = async (pdf) => {
                         financialYear: financialYear,
                         invoiceAmount: invoiceAmount,
                         igst: igst,
-                        cgst: cgst,
-                        sgst: sgst,
+                        // cgst: cgst,
+                        // sgst: sgst,
                     };
 
                     InvoiceLines.push(currentInvoice);
@@ -179,6 +200,160 @@ export const extractedRahat = async (pdf) => {
         extractedHsnData: structuredHSNLines,
     };
 };
+// export const extractedRahat = async (pdf) => {
+//     const allLines = await extractPDFDataToLinesData(pdf);
+//     const extractedData = allLines;
+
+//     const structuredHSNLines = [];
+//     let currentHSN = null;
+
+//     for (let hsnId = 0; hsnId < extractedData.length; hsnId++) {
+//         const line = extractedData[hsnId].content;
+
+//         const matchData = line.match(/\s+[A-Z].+\s+-+.(\d|\w)+.(\d|\w)+.(\d|\w)+.(\d|\w)+(\(|\.)+.+/) || [];
+
+//         if (matchData.length > 0) {
+//             // const description = matchData[0].match(/\s+[A-Z].+\s+-/g, "").replace(/(\-)/g,"");
+//             const descriptionMatch = line.match(/\s+[A-Z].+\s+-/g);
+//             const description = descriptionMatch ? descriptionMatch[0].replace(/(\-)/g, "") : null;
+
+//             const HSN = line.match(/(996|99\d)+\d+/g, "");
+
+//             const unitQuantityMatch = line.match(/(\d+)\s+([A-Za-z]+)/);
+//             const unitQuantity = unitQuantityMatch ? unitQuantityMatch[1].replace(/(996|99\d)+\d+/g, "") : null;
+
+//             const unitPriceMatch = line.match(/(\d+\.\d+)/);
+//             const unitPrice = unitPriceMatch ? unitPriceMatch[1] : null;
+
+//             const chargeMatch = line.match(/\d+\.\d+\s+\d+\s+(IGST|CGST|SGST|Exempt)/g, "");
+//             const charge = chargeMatch && chargeMatch[0] ? chargeMatch[0].replace(/\s+\d+\s+(IGST|CGST|SGST|Exempt)/g, "").replace(/,/g, "") : null;
+
+//             const taxPercentageMatch = line.match(/(CGST|IGST|SGST)\s+\d+%+(\s|=)+(\d|,)+\.\d+/g, "");
+//             const taxPercentage = taxPercentageMatch && taxPercentageMatch[0] ? taxPercentageMatch[0].replace(/(CGST|IGST|SGST)\s+/g, "").replace(/=+\d+.\d+/g, "").replace(/%/g, "") : null;
+
+//             const taxAmountMatch = line.match(/(CGST|IGST|SGST)\s+\d+%+(\s|=)+(\d|,)+\.\d+(,|\s)+\d+\.\d+/g, "");
+//             const taxAmount = taxAmountMatch && taxAmountMatch[0] ? taxAmountMatch[0].replace(/(CGST|IGST|SGST)\s+\d+%+(\s|=)/g, "").replace(/,/g, "") : "";
+
+
+//             let taxType, igst, cgst, sgst;
+
+//             if (taxPercentage == 9) {
+//                 taxType = 'CGST & SGST';
+//                 igst = 0;
+//                 cgst = taxAmount;
+//                 sgst = taxAmount;
+//             } else if (taxPercentage == 18 || taxPercentage == 5) {
+//                 taxType = 'IGST';
+//                 igst = taxAmount;
+//                 cgst = 0;
+//                 sgst = 0;
+//             } else {
+//                 taxType = 'No Tax';
+//                 igst = 0;
+//                 cgst = taxAmount;
+//                 sgst = taxAmount;
+//             }
+
+//             currentHSN = {
+//                 description: description,
+//                 HSN: HSN,
+//                 taxPercentage: taxPercentage,
+//                 taxAmount: taxAmount,
+//                 igst: igst,
+//                 cgst: cgst,
+//                 sgst: sgst,
+//                 taxType: taxType,
+//                 charge: charge,
+//                 unitPrice: unitPrice,
+//                 unitQuantity: unitQuantity,
+//             };
+
+//             structuredHSNLines.push(currentHSN);
+//         }
+//     }
+
+//     console.log("Combined Data", structuredHSNLines);
+//     console.log("PDF JSON DATA", JSON.stringify(structuredHSNLines, null, 2));
+
+//     const InvoiceLines = [];
+//     let gstNumberExtracted = false;
+
+//     const invoiceDateRegex = /[0-9]{2}-[A-Z0-9]{3}-[0-9]{4}/;
+//     const invoiceNumberRegex = /160-[A-Z0-9]{12}/;
+//     const invoiceAmountRegex = /\s+Total in INR\s:/;
+//     const invoiceCurrency = "INR";
+//     const currentYear = new Date().getFullYear();
+//     const nextYear = currentYear + 1;
+//     const financialYear = `${currentYear}-${nextYear}`;
+
+//     if (extractedData && Array.isArray(extractedData)) {
+//         let venName = "";
+//         let invoiceDate = "";
+//         let invoiceNumber = "";
+//         let invoiceAmount = "";
+//         let isAlreadyClientMatched = false;
+//         if (extractedData && Array.isArray(extractedData)) {
+//             for (const line of extractedData) {
+//                 const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
+//                 if (gstMatch && !gstNumberExtracted) {
+//                     if (!isAlreadyClientMatched) {
+//                         isAlreadyClientMatched = true;
+//                         continue;
+//                     }
+//                     const gstNumber = gstMatch[0];
+
+//                     venName = 'RAHAT CONTINENTAL PVT LTD';
+
+//                     const invoiceDateData = extractedData.find((item) => item.content.match(invoiceDateRegex));
+//                     invoiceDate = invoiceDateData ? invoiceDateData.content.match(invoiceDateRegex) : "";
+
+//                     const invoiceNumberData = extractedData.find((item) => item.content.match(invoiceNumberRegex));
+//                     invoiceNumber = invoiceNumberData ? invoiceNumberData.content.match(invoiceNumberRegex) : "";
+
+//                     const invoiceAmountData = extractedData.find((item) => item.content.match(invoiceAmountRegex));
+//                     invoiceAmount = invoiceAmountData ? invoiceAmountData.content.replace(/Total in INR :/g, "") : "";
+
+//                     let igst = "0.00";
+//                     let cgst = "0.00";
+//                     let sgst = "0.00";
+
+//                     for (const hsnLine of structuredHSNLines) {
+//                         if (hsnLine.taxPercentage == 18) {
+//                             igst = (parseFloat(igst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+//                         } else if (hsnLine.taxPercentage == 9) {
+//                             cgst = (parseFloat(cgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+//                             sgst = (parseFloat(sgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+//                         }
+//                     }
+//                     const currentInvoice = {
+//                         venName: venName,
+//                         gstNumber: gstNumber,
+//                         invoiceDate: invoiceDate,
+//                         invoiceNumber: invoiceNumber,
+//                         invoiceCurrency: invoiceCurrency,
+//                         financialYear: financialYear,
+//                         invoiceAmount: invoiceAmount,
+//                         igst: igst,
+//                         cgst: cgst,
+//                         sgst: sgst,
+//                     };
+
+//                     InvoiceLines.push(currentInvoice);
+//                     gstNumberExtracted = true;
+//                 }
+//             }
+//         }
+
+
+//         console.log("RAHAT PDF DATA", JSON.stringify(extractedData, null, 2));
+//         console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
+//         console.log("PDF INVOICE Data", JSON.stringify(InvoiceLines, null, 2));
+//     }
+//     return {
+//         extractedData: InvoiceLines[0],
+//         extractedHsnData: structuredHSNLines,
+//     };
+// };
 export const extractedSolitaire = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
@@ -867,7 +1042,7 @@ export const extractScanWell = async (pdf) => {
         extractedHsnData: structuredHSNLines
     }
 }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
 export const extractdachser = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
@@ -886,9 +1061,21 @@ export const extractdachser = async (pdf) => {
         const matchData = line.match(/(.*?)\s+(\d{1,},?\d{1,}\.\d{2})\s+(.*?)\s+(\w+)\s+([\d+].+)/);
 
         if (matchData) {
-            const description = matchData[1].replace(/\d+/g, "");
-            const charge = matchData[2].trim().replace(/,/g, "");
             let HSN = matchData[5];
+            let description = matchData[1].replace(/\d+/g, "");
+            const lastPart = HSN;
+            if (/\d/.test(lastPart)) {
+                const nextId = hsnId + 1;
+                if (extractedData[nextId] && extractedData[nextId].content) {
+                    const nextLine = extractedData[nextId].content;
+                    const nextMatch = nextLine.match(/\w+/);
+                    if (nextMatch) {
+                        const nextDescription = nextMatch[0];
+                        description += ` ${nextDescription}`.replace(/\d+/g,"");
+                    }
+                }
+            }
+            const charge = matchData[2].trim().replace(/,/g, "");
 
             const kgIndex = HSN.toLowerCase().indexOf('kg');
             if (kgIndex !== -1) {
@@ -1025,6 +1212,164 @@ export const extractdachser = async (pdf) => {
     }
 
 }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+// export const extractdachser = async (pdf) => {
+//     const allLines = await extractPDFDataToLinesData(pdf);
+//     const extractedData = allLines;
+
+//     // /(.+)996\d+/
+//     // /(.+?)\s+([\d.,]+)\s+(.*?)\s+996(\d+)/
+//     const structuredHSNLines = [];
+//     let currentHSN = null;
+//     let currentTax = null;
+//     const taxRegMatch = /(\w+)\s+(\d{1,3}(?:,\d{3})*\.\d+)\s+(\d{1,3}(?:,\d{3})*\.\d+)\s+(\d+\.\d+)\s+(\d{1,3}(?:,\d{3})*\.\d+)/;
+//     const taxMatchElement = extractedData.find((item) => item.content.match(taxRegMatch));
+//     const matchTax = taxMatchElement?.content?.match(taxRegMatch);
+//     for (let hsnId = 0; hsnId < extractedData.length; hsnId++) {
+//         const line = extractedData[hsnId].content;
+
+//         const matchData = line.match(/(.*?)\s+(\d{1,},?\d{1,}\.\d{2})\s+(.*?)\s+(\w+)\s+([\d+].+)/);
+
+//         if (matchData) {
+//             const description = matchData[1].replace(/\d+/g, "");
+//             const charge = matchData[2].trim().replace(/,/g, "");
+//             let HSN = matchData[5];
+
+//             const kgIndex = HSN.toLowerCase().indexOf('kg');
+//             if (kgIndex !== -1) {
+//                 HSN = HSN.substring(kgIndex + 2).trim();
+//             }
+
+//             currentHSN = {
+//                 description: description,
+//                 HSN: HSN,
+//                 charge: charge,
+//             };
+
+//             if (matchTax) {
+//                 const taxPercentage = parseFloat(matchTax[4]);
+//                 const chargeValue = currentHSN.charge.replace(/,/g, "");
+//                 const taxAmount = Number(chargeValue) * (taxPercentage / 100);
+
+//                 let taxType, igst, cgst, sgst;
+
+//                 if (taxPercentage === 9) {
+//                     taxType = 'CGST & SGST';
+//                     igst = 0;
+//                     cgst = taxAmount;
+//                     sgst = taxAmount;
+//                 } else if (taxPercentage === 18) {
+//                     taxType = 'IGST';
+//                     igst = taxAmount;
+//                     cgst = 0;
+//                     sgst = 0;
+//                 } else {
+//                     taxType = 'No Tax';
+//                     igst = 0;
+//                     cgst = 0;
+//                     sgst = 0;
+//                 }
+
+//                 currentTax = {
+//                     taxPercentage: taxPercentage,
+//                     taxAmount: taxAmount,
+//                     taxType: taxType,
+//                     igst: igst,
+//                     cgst: cgst,
+//                     sgst: sgst
+//                 };
+//             }
+
+//             if (currentHSN && currentTax) {
+//                 structuredHSNLines.push({
+//                     ...currentHSN,
+//                     ...currentTax
+//                 });
+//                 currentHSN = null;
+//                 currentTax = null;
+//             }
+//         }
+//     }
+
+//     console.log("Combined Data", structuredHSNLines);
+//     console.log("PDF JSON DATA", JSON.stringify(structuredHSNLines, null, 2));
+
+//     const InvoiceLines = [];
+//     let currentInvoice = null;
+//     let gstNumberExtracted = false;
+
+//     const invoiceDateRegex = /[0-9]{2}\/[0-9]{2}\/[0-9]{4}/;
+//     const invoiceNumberRegex = /BLR-[A-Z0-9]{8}/;
+//     const invoiceCurrency = 'INR';
+//     const currentYear = new Date().getFullYear();
+//     const nextYear = currentYear + 1;
+//     const financialYear = `${currentYear}-${nextYear}`;
+
+//     if (extractedData && Array.isArray(extractedData)) {
+//         let venName = '';
+//         let invoiceDate = '';
+//         let invoiceNumber = '';
+
+//         for (const line of extractedData) {
+//             const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
+//             if (gstMatch && !gstNumberExtracted) {
+//                 const gstNumber = gstMatch[0];
+
+//                 venName = ' DACHSER INDIA PVT. LTD';
+
+//                 const invoiceDateData = extractedData.find((item) => item.content.match(invoiceDateRegex));
+//                 invoiceDate = invoiceDateData ? invoiceDateData.content.match(invoiceDateRegex) : '';
+
+//                 const invoiceNumberData = extractedData.find((item) => item.content.match(invoiceNumberRegex));
+//                 invoiceNumber = invoiceNumberData ? invoiceNumberData.content.trim() : "";
+
+//                 const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
+//                     const charge = parseFloat(hsnLine.charge) || 0;
+//                     const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
+//                     return add + charge + taxAmount;
+//                 }, 0).toFixed(2);
+
+//                 let igst = "0.00";
+//                 let cgst = "0.00";
+//                 let sgst = "0.00";
+
+//                 for (const hsnLine of structuredHSNLines) {
+//                     if (hsnLine.taxPercentage == 18) {
+//                         igst = (parseFloat(igst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+//                     } else if (hsnLine.taxPercentage == 9) {
+//                         cgst = (parseFloat(cgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+//                         sgst = (parseFloat(sgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+//                     }
+//                 }
+
+//                 currentInvoice = {
+//                     "venName": venName,
+//                     "gstNumber": gstNumber,
+//                     "invoiceDate": invoiceDate,
+//                     "invoiceNumber": invoiceNumber,
+//                     "invoiceCurrency": invoiceCurrency,
+//                     "financialYear": financialYear,
+//                     "invoiceAmount": invoiceAmount,
+//                     "igst": igst,
+//                     "cgst": cgst,
+//                     "sgst": sgst,
+//                 };
+
+//                 InvoiceLines.push(currentInvoice);
+//                 gstNumberExtracted = true;
+//             }
+//         }
+//     }
+
+//     console.log("DART PDF DATA", JSON.stringify(allLines, null, 2))
+//     console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
+//     console.log("PDF INVOICE Data", JSON.stringify(InvoiceLines, null, 2));
+//     return {
+//         extractedData: InvoiceLines[0],
+//         extractedHsnData: structuredHSNLines
+//     }
+
+// }
 
 export const extractnewBlobe = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
@@ -2474,6 +2819,7 @@ export const extractDhlairduty = async (pdf) => {
     const currentYear = new Date().getFullYear();
     const nextYear = currentYear + 1;
     const financialYear = `${currentYear}-${nextYear}`;
+    let isAlreadyClientMatched
 
     if (extractedData && Array.isArray(extractedData)) {
         let venName = '';
@@ -2484,6 +2830,10 @@ export const extractDhlairduty = async (pdf) => {
         for (const line of extractedData) {
             const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
             if (gstMatch && !gstNumberExtracted) {
+                if (!isAlreadyClientMatched) {
+                    isAlreadyClientMatched = true;
+                    continue;
+                }
                 const gstNumber = gstMatch[0];
 
                 venName = 'DHL Express (India) Pvt Ltd';
@@ -2562,6 +2912,194 @@ export const extractDhlairduty = async (pdf) => {
         extractedHsnData: structuredHSNLines
     };
 }
+
+// export const extractDhlairduty = async (pdf) => {
+//     const allLines = await extractPDFDataToLinesData(pdf);
+//     const extractedData = allLines;
+
+//     const structuredHSNLines = [];
+//     let currentDescription = null;
+//     for (let hsnId = 0; hsnId < extractedData.length; hsnId++) {
+//         const line = extractedData[hsnId].content;
+
+//         if (line.match(/^.*?(\(+\w+\s+\w+\s+\w+\)+\s+(\d.+\d+))/)) {
+
+//             const descriptionData = line.match(/^.*?(\(+\w+\s+\w+\s+\w+\)+\s+(\d.+\d+))/) || [];
+//             const description = descriptionData[0] ? descriptionData[0].replace(/\([^)]*\)|\d+.+\d+/g, "") : '';
+
+//             const chargeRegex = line.match(/^.*?(\(+\w+\s+\w+\s+\w+\)+\s+(\d.+\d+))/);
+//             const charge = chargeRegex ? chargeRegex[2] : '';
+//             const unitPrice = chargeRegex ? chargeRegex[2] : '';
+
+//             const taxTypeRegex = line.match(/IGST\s+\(\w+\s+\w+\s+\w+\)/) || [];
+//             const taxType = taxTypeRegex ? taxTypeRegex[0]?.replace(/\([^)]*\)/g, "").replace(/,/g, "") : '';
+
+//             currentDescription = {
+//                 description: description || '',
+//                 taxType: taxType || '-',
+//                 charge: charge || '-',
+//                 unitQuantity: unitPrice || '-',
+//             };
+//             if (currentDescription) {
+//                 structuredHSNLines.push(currentDescription);
+//             }
+//         }
+
+//         if (line.match(/996(\d{3})/)) {
+
+//             const taxPercentageRegex = /(\w+)\s+@+\s+(\d+)%\s+(\d+\.\d+)/;
+
+//             const taxPercentageMatch = extractedData[hsnId + 1].content.match(taxPercentageRegex);
+//             const taxPercentage = taxPercentageMatch ? parseFloat(taxPercentageMatch[2]) : 0;
+//             const taxAmount = taxPercentageMatch ? parseFloat(taxPercentageMatch[3]) : 0;
+
+//             const descriptionMatch = line.match(/996\d+-(\D+)/);
+//             const description = descriptionMatch ? descriptionMatch[1].trim() : '';
+//             const hsnWithoutDescription = line.match(/\d+/) || [];
+
+//             let taxType, igst, cgst, sgst;
+//             if (taxPercentage === 9) {
+//                 taxType = 'CGST & SGST';
+//                 igst = 0;
+//                 cgst = taxAmount;
+//                 sgst = taxAmount;
+//             } else if (taxPercentage === 18) {
+//                 taxType = 'IGST';
+//                 igst = taxAmount;
+//                 cgst = 0;
+//                 sgst = 0;
+//             } else {
+//                 taxType = 'No Tax';
+//                 igst = 0;
+//                 cgst = 0;
+//                 sgst = 0;
+//             }
+
+//             const chargeMatch = line.match(/(\d+-\w+)\s+(\w+)\s+(.+)/);
+//             const chargeValue = chargeMatch ? chargeMatch[3].trim().replace(/,/g, "") : '';
+//             const charge = parseFloat(chargeValue.match(/[\d.]+/)).toFixed(2) || 0;
+//             const unitPrice = parseFloat(chargeValue.match(/[\d.]+/)).toFixed(2) || 0;
+
+
+//             structuredHSNLines.push({
+//                 description: description,
+//                 HSN: hsnWithoutDescription[0] || '',
+//                 unitQuantity: "1",
+//                 unitPrice: unitPrice,
+//                 mainTax: extractedData[hsnId + 1].content,
+//                 taxType: taxType,
+//                 charge: charge,
+//                 taxPercentage: taxPercentage,
+//                 taxAmount: taxAmount,
+//                 igst: igst,
+//                 cgst: cgst,
+//                 sgst: sgst,
+//                 tax: extractedData[hsnId - 6].content,
+//                 roe: extractedData[hsnId - 9].content,
+//                 amount: extractedData[hsnId - 10].content,
+//             });
+//         }
+
+//     }
+
+//     const InvoiceLines = [];
+//     let gstNumberExtracted = false;
+
+//     const invoiceDateRegex = /\d{1,2}-[A-Z][a-z]{2}-\d{2}/;
+//     const invoiceNumberRegex = /BLR[A-Z0-9]{6}/;
+//     const invoiceAmountRegex = /([\d,]+(?:\.\d+)?)(?:\s+)?(INR)/;
+//     const invoiceCurrency = 'INR';
+//     const currentYear = new Date().getFullYear();
+//     const nextYear = currentYear + 1;
+//     const financialYear = `${currentYear}-${nextYear}`;
+
+//     if (extractedData && Array.isArray(extractedData)) {
+//         let venName = '';
+//         let invoiceDate = '';
+//         let invoiceNumber = '';
+//         let taxableAmount = '';
+
+//         for (const line of extractedData) {
+//             const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
+//             if (gstMatch && !gstNumberExtracted) {
+//                 const gstNumber = gstMatch[0];
+
+//                 venName = 'DHL Express (India) Pvt Ltd';
+
+//                 const invoiceDateData = extractedData.find((item) => item.content.match(invoiceDateRegex));
+//                 invoiceDate = invoiceDateData ? invoiceDateData.content : '';
+
+//                 const invoiceNumberData = extractedData.find((item) => item.content.match(invoiceNumberRegex));
+//                 invoiceNumber = invoiceNumberData ? invoiceNumberData.content : '';
+
+//                 const invoiceAmountData = extractedData.find((item) => item.content.match(invoiceAmountRegex));
+//                 let invoiceAmount = invoiceAmountData ? invoiceAmountData.content : '';
+
+//                 invoiceAmount = invoiceAmount.replace(/INR/g, "");
+
+//                 const taxableAmountData = extractedData.find((item) => item.content.includes("Taxable Amount (INR) :"));
+//                 if (taxableAmountData) {
+//                     const match = taxableAmountData.content.match(/Taxable Amount \(INR\) : ([\d.]+)/);
+//                     if (match) {
+//                         taxableAmount = match[1];
+//                     }
+//                 }
+
+//                 // const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
+//                 //     const amount = parseFloat(hsnLine.amount) || 0;
+//                 //     return add + amount;
+//                 // }, 0).toFixed(2);
+
+//                 let igst = "0.00";
+//                 let cgst = "0.00";
+//                 let sgst = "0.00";
+
+//                 if (parseFloat(igst) > 0) {
+//                     cgst = "0.00";
+//                     sgst = "0.00";
+//                 } else {
+//                     for (const hsnLine of structuredHSNLines) {
+//                         if (hsnLine.taxPercentage === 18) {
+//                             igst = (parseFloat(igst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+//                         } else if (hsnLine.taxPercentage === 9) {
+//                             cgst = (parseFloat(cgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+//                             sgst = (parseFloat(sgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+//                         }
+//                     }
+//                 }
+
+//                 const result = igst;
+
+//                 const currentInvoice = {
+//                     "venName": venName,
+//                     "gstNumber": gstNumber,
+//                     "invoiceDate": invoiceDate,
+//                     "taxableAmount": taxableAmount,
+//                     "invoiceNumber": invoiceNumber,
+//                     "invoiceCurrency": invoiceCurrency,
+//                     "financialYear": financialYear,
+//                     "invoiceAmount": invoiceAmount,
+//                     "igst": igst,
+//                     "cgst": cgst,
+//                     "sgst": sgst,
+//                     "result": result
+//                 };
+
+//                 InvoiceLines.push(currentInvoice);
+//                 gstNumberExtracted = true;
+//             }
+//         }
+//     }
+
+//     console.log("DART PDF DATA", JSON.stringify(extractedData, null, 2));
+//     console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
+//     console.log("PDF INVOICE Data", JSON.stringify(InvoiceLines, null, 2));
+
+//     return {
+//         extractedData: InvoiceLines[0],
+//         extractedHsnData: structuredHSNLines
+//     };
+// }
 
 export const extractDart = async (pdf) => {
     const allLines = await extractPDFData(pdf);
@@ -3193,6 +3731,9 @@ export const extractEfl = async (pdf: PDFDocumentProxy) => {
                 unitPrice: null,
                 unitQuantity: null,
                 amount: null,
+                igst:null,
+                cgst:null,
+                sgst:null,
                 description: '',
             };
         } else if (currentHSN && !currentHSN.taxType) {
@@ -3214,13 +3755,20 @@ export const extractEfl = async (pdf: PDFDocumentProxy) => {
                         currentHSN.unitQuantity = parseInt(wholeNumberMatch[1]);
                     }
                 }
-                currentHSN.description += ' ' + line.content.trim();
-                currentHSN.description = currentHSN.description.replace(/(\d+).*/, '$1');
+                if (currentHSN && line && line.content) {
+                    if (currentHSN.descriptionDataMatch !== null && currentHSN.descriptionDataMatch !== undefined) {
+                        currentHSN.descriptionDataMatch += ' ' + line.content.trim();
+                        currentHSN.description = currentHSN.descriptionDataMatch.replace(/\d.+/g, "").replace(/-/g,"").replace(/\d/g,"");
+                    } else {
+                        currentHSN.descriptionDataMatch = line.content.trim();
+                        currentHSN.description = "";
+                    }
+                }
             }
         }
-        if (currentHSN?.description?.includes('-')) {
-            currentHSN.description = currentHSN.description.split('-')[0].replace(/\d+/g, "");
-        }
+        // if (currentHSN?.description?.includes('-')) {
+        //     currentHSN.description = currentHSN.description.split('-')[0].replace(/\d+/g, "");
+        // }
 
         const calculateChargeForItem = (item) => {
             const taxAmountFloat = parseFloat(item.taxAmount);
@@ -3257,9 +3805,23 @@ export const extractEfl = async (pdf: PDFDocumentProxy) => {
             if (taxAmountMatch) {
                 const taxAmountString = taxAmountMatch[1].replace(/,/g, '');
                 currentHSN.taxAmount = parseFloat(taxAmountString);
+                let igst = 0.00,
+                    cgst = 0.00,
+                    sgst = 0.00;
+                if (currentHSN.taxPercentage === 18) {
+                    igst = currentHSN.taxAmount;
+                    cgst = 0.00;
+                    sgst = 0.00;
+                } else if (currentHSN.taxPercentage === 9) {
+                    igst = 0.00;
+                    cgst = currentHSN.taxAmount;
+                    sgst = currentHSN.taxAmount;
+                }
+                currentHSN.igst = igst.toFixed(2);
+                currentHSN.cgst = cgst.toFixed(2);
+                currentHSN.sgst = sgst.toFixed(2);
             }
         }
-
         if (currentHSN) {
             const { charge, amount } = calculateChargeAndAmountForItem(currentHSN);
             currentHSN.charge = charge;
@@ -3351,6 +3913,213 @@ export const extractEfl = async (pdf: PDFDocumentProxy) => {
     };
 
 }
+
+// export const extractEfl = async (pdf: PDFDocumentProxy) => {
+//     const allLines = await extractPDFData(pdf);
+//     const extractedData = allLines;
+
+//     const structuredHSNLines = [];
+//     let currentHSN = null;
+
+//     const calculateChargeAndAmountForItem = (item) => {
+//         const taxAmountFloat = parseFloat(item.taxAmount);
+//         const taxPercentageFloat = parseFloat(item.taxPercentage);
+//         if (!isNaN(taxAmountFloat) && !isNaN(taxPercentageFloat) && taxPercentageFloat !== 0) {
+//             const equivalentFor100Percent = (taxAmountFloat * 100) / taxPercentageFloat;
+//             const charge = equivalentFor100Percent.toFixed(2);
+//             const amount = calculateAmountForItem(charge, item.unitQuantity);
+//             return { charge, amount };
+//         } else {
+//             return { charge: "0.00", amount: "0.00" };
+//         }
+//     };
+
+//     const calculateAmountForItem = (charge, unitQuantity) => {
+//         if (!isNaN(charge) && !isNaN(unitQuantity) && unitQuantity !== 0) {
+//             const unitPrice = (charge / unitQuantity).toFixed(2);
+//             const amount = (unitQuantity * parseFloat(unitPrice)).toFixed(2);
+//             return amount;
+//         } else {
+//             return "0.00";
+//         }
+//     };
+
+//     for (const line of allLines) {
+//         if (line.content.includes("996") || line.content.match(/^\d{6}$/)) {
+//             if (currentHSN) {
+//                 structuredHSNLines.push(currentHSN);
+//             }
+
+//             currentHSN = {
+//                 HSN: line.content.includes("HSN")
+//                     ? line.content.match(/\d+/)
+//                     : line.content.replace(/\]/g, '').trim(),
+//                 taxType: null,
+//                 taxAmount: null,
+//                 taxPercentage: null,
+//                 charge: null,
+//                 quotation: null,
+//                 unitPrice: null,
+//                 unitQuantity: null,
+//                 amount: null,
+//                 description: '',
+//             };
+//         } else if (currentHSN && !currentHSN.taxType) {
+//             const taxtypeMatch = line.content.match(/IGST|CGST|SGST|GST/);
+//             if (taxtypeMatch) {
+//                 if (taxtypeMatch[0] === "CGST" || taxtypeMatch[0] === "SGST") {
+//                     currentHSN.taxType = "CGST & SGST";
+//                 } else {
+//                     currentHSN.taxType = taxtypeMatch[0];
+//                 }
+//             }
+//         }
+
+//         if (currentHSN && currentHSN.HSN && !currentHSN.taxType) {
+//             if (!line.content.includes("996")) {
+//                 const wholeNumberMatch = line.content.match(/\b(\d+)\b/);
+//                 if (wholeNumberMatch) {
+//                     if (!currentHSN.unitQuantity) {
+//                         currentHSN.unitQuantity = parseInt(wholeNumberMatch[1]);
+//                     }
+//                 }
+//                 currentHSN.description += ' ' + line.content.trim();
+//                 currentHSN.description = currentHSN.description.replace(/(\d+).*/, '$1');
+//             }
+//         }
+//         if (currentHSN?.description?.includes('-')) {
+//             currentHSN.description = currentHSN.description.split('-')[0].replace(/\d+/g, "");
+//         }
+
+//         const calculateChargeForItem = (item) => {
+//             const taxAmountFloat = parseFloat(item.taxAmount);
+//             const taxPercentageFloat = parseFloat(item.taxPercentage);
+//             if (!isNaN(taxAmountFloat) && !isNaN(taxPercentageFloat) && taxPercentageFloat !== 0) {
+//                 const equivalentFor100Percent = (taxAmountFloat * 100) / taxPercentageFloat;
+//                 return equivalentFor100Percent.toFixed(2);
+//             } else {
+//                 return "0";
+//             }
+//         };
+
+//         for (const hsnLine of structuredHSNLines) {
+//             hsnLine.charge = calculateChargeForItem(hsnLine);
+
+//             if (!isNaN(hsnLine.charge) && !isNaN(hsnLine.unitQuantity) && hsnLine.unitQuantity !== 0) {
+//                 hsnLine.unitPrice = (hsnLine.charge / hsnLine.unitQuantity).toFixed(2);
+//             }
+//         }
+
+//         if (line.content.includes("quotation")) {
+//             const quotationValueMatch = line.content.match(/^\d{1,3}(,\d{3})*(\.\d{2})?$/);
+//             if (quotationValueMatch) {
+//                 currentHSN.quotation = parseFloat(quotationValueMatch[0].replace(/,/g, ""));
+//             }
+//         }
+
+//         const percentageMatch = line.content.match(/(\d+(\.\d+)?)%/);
+//         if (percentageMatch && currentHSN) {
+//             currentHSN.taxPercentage = parseFloat(percentageMatch[1]);
+//         }
+//         if (line.content.includes("=") && currentHSN) {
+//             const taxAmountMatch = line.content.match(/=(\d+(,\d+)?(\.\d+)?)/);
+//             if (taxAmountMatch) {
+//                 const taxAmountString = taxAmountMatch[1].replace(/,/g, '');
+//                 currentHSN.taxAmount = parseFloat(taxAmountString);
+//             }
+//         }
+
+//         if (currentHSN) {
+//             const { charge, amount } = calculateChargeAndAmountForItem(currentHSN);
+//             currentHSN.charge = charge;
+//             currentHSN.amount = amount;
+//         }
+//     }
+
+//     const InvoiceLines = [];
+//     let currentInvoice = null;
+//     let gstNumberExtracted = false;
+//     const invoiceDateId = /\b\d{1,2}-(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)-\d{2}\b/g;
+//     const invoiceNumberId = /EFL-[A-Z]{3}-\d{8}/;
+//     const invoiceCurrency = 'INR';
+//     const currentYear = new Date().getFullYear();
+//     const nextYear = currentYear + 1;
+//     const financialYear = `${currentYear}-${nextYear}`;
+
+//     if (extractedData && Array.isArray(extractedData)) {
+//         for (const line of extractedData) {
+//             const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
+
+//             if (gstMatch && !gstNumberExtracted) {
+//                 const gstNumber = gstMatch[0];
+//                 const venName = 'EXPO FREIGHT PVT LTD';
+
+//                 const invoiceDateData = extractedData.find((item) => item.content.match(invoiceDateId));
+//                 const invoiceDate = invoiceDateData ? invoiceDateData.content.match(invoiceDateId) : '';
+
+//                 const invoiceNumberData = extractedData.find((item) => item.content.match(invoiceNumberId));
+//                 const invoiceNumberNew = invoiceNumberData ? invoiceNumberData.content.split('|')[1] : '';
+
+//                 // const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
+//                 //     const amount = parseFloat(hsnLine.amount) || 0;
+//                 //     const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
+//                 //     return add + amount + taxAmount * 2;
+//                 // }, 0).toFixed(2);
+
+//                 const invoiceAmount = structuredHSNLines.reduce((total, hsnLine) => {
+//                     const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
+//                     const amount = parseFloat(hsnLine.amount) || 0;
+//                     const taxPercentage = parseFloat(hsnLine.taxPercentage) || 0;
+
+//                     if (taxPercentage === 18) {
+//                         return total + taxAmount + amount;
+//                     } else if (taxPercentage === 9) {
+//                         return total + ((taxAmount * 2) + amount);
+//                     }
+//                     return total;
+//                 }, 0).toFixed(2);
+
+//                 let igst = "0.00";
+//                 let cgst = "0.00";
+//                 let sgst = "0.00";
+
+//                 for (const hsnLine of structuredHSNLines) {
+//                     if (hsnLine.taxPercentage === 18) {
+//                         igst = (parseFloat(igst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+//                     } else if (hsnLine.taxPercentage === 9) {
+//                         cgst = (parseFloat(cgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+//                         sgst = (parseFloat(sgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+//                     }
+//                 }
+
+//                 currentInvoice = {
+//                     "venName": venName,
+//                     "gstNumber": gstNumber,
+//                     "invoiceDate": invoiceDate,
+//                     "invoiceNumber": invoiceNumberNew,
+//                     "invoiceCurrency": invoiceCurrency,
+//                     "financialYear": financialYear,
+//                     "invoiceAmount": invoiceAmount,
+//                     "cgst": cgst,
+//                     "sgst": sgst,
+//                     "igst": igst,
+//                 };
+
+//                 InvoiceLines.push(currentInvoice);
+//                 gstNumberExtracted = true;
+//             }
+//         }
+//     }
+
+//     console.log("EFL PDF DATA", JSON.stringify(allLines, null, 2))
+//     console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
+//     console.log("PDF INVOICE Data", JSON.stringify(InvoiceLines, null, 2));
+//     return {
+//         extractedData: InvoiceLines[0],
+//         extractedHsnData: structuredHSNLines
+//     };
+
+// }
 
 export const extractOocl = async (pdf) => {
     const allLines = await extractPDFData(pdf);
@@ -5260,6 +6029,7 @@ export const extractOneTime = async (pdf) => {
 }
 
 // /(\d.+)\s+([^\d]+)\s+(\d+)\s+(\d.+)\s(\d+)\s+(\d+)|(\d+)\s+([^\d]+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/
+
 export const extractTextiles = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
@@ -5371,7 +6141,7 @@ export const extractTextiles = async (pdf) => {
     const InvoiceLines = [];
     let gstNumberExtracted = false;
     const invoiceDateRegex = /[0-9]{2}-[0-9]{2}-[0-9]{4}/;
-    const invoiceNumberRegex = /TCB+[A-Z0-9]{12}|FIO[A-Z0-9]{13}/;
+    const invoiceNumberRegex = /TCB+[A-Z0-9]+|FIO+[A-Z0-9]+/;
     const invoiceAmountRegex = /Amount Received :/;
     // const invoiceAmountRegex = ['Total   '];
     const invoiceCurrency = 'INR';
@@ -5390,28 +6160,17 @@ export const extractTextiles = async (pdf) => {
             if (gstMatch && !gstNumberExtracted) {
                 const gstNumber = gstMatch[0];
 
-                // if (gstNumber === '29AABCD3611Q1ZE') {
                 venName = 'TEXTILES COMMITTEE';
-                // }
 
                 const invoiceDateData = extractedData.find((item) => item.content.match(invoiceDateRegex));
                 const dateMatch = invoiceDateData ? invoiceDateData.content.match(/Invoice Date:\s*([0-9]{2}-[0-9]{2}-[0-9]{4})/) : null;
                 invoiceDate = dateMatch ? dateMatch[1] : '';
 
                 const invoiceNumberData = extractedData.find((item) => item.content.match(invoiceNumberRegex));
-                const numberMatch = invoiceNumberData ? invoiceNumberData.content.match(/Invoice No:\s*([A-Z0-9]{15})/) : null;
-                invoiceNumber = numberMatch ? numberMatch[1] : '';
-
-                // const invoiceAmountData = extractedData.find((item) => item.content.match(invoiceAmountRegex));
-                // if (invoiceAmountData) {
-                //     const amounts = invoiceAmountData.content.split(/\s+/).filter(val => val !== '');
-                //     invoiceAmount = amounts.length > 0 ? amounts[amounts.length - 1] : '';
-                // } else {
-                //     invoiceAmount = '';
-                // }
+                invoiceNumber = invoiceNumberData ? invoiceNumberData.content.match(invoiceNumberRegex) : "";
 
                 const invoiceAmountData = extractedData.find((item) => item.content.match(invoiceAmountRegex));
-                invoiceAmount = invoiceAmountData ? invoiceAmountData.content.replace( /Amount Received :/g,"").trim() : '';
+                invoiceAmount = invoiceAmountData ? invoiceAmountData.content.replace(/Amount Received :/g, "").trim() : '';
 
                 let igst = "0.00";
                 let cgst = "0.00";
@@ -5456,6 +6215,202 @@ export const extractTextiles = async (pdf) => {
 
 
 }
+// export const extractTextiles = async (pdf) => {
+//     const allLines = await extractPDFDataToLinesData(pdf);
+//     const extractedData = allLines;
+//     // const structuredHSNLines = [];
+//     // let currentHSN = null;
+
+//     // for (let hsnId = 0; hsnId < extractedData.length; hsnId++) {
+//     //     const line = extractedData[hsnId].content;
+
+//     //     const matchData = line.match(/(\d.+)\s+([^\d]+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/) || [];
+
+//     //     if (matchData.length > 0) {
+//     //         const description = matchData[1].trim();
+//     //         const HSN = matchData[3] || '';
+//     //         const unitPrice = matchData[3].replace(/,/g, "");
+//     //         const charge = matchData[4].replace(/,/g, "") || '';
+//     //         const taxPercentage = Number(matchData[9]) + Number(matchData[7]) || 0;
+//     //         const taxAmount = Number(matchData[8]) + Number(matchData[10]) || 0;
+
+//     //         let taxType, igst, cgst, sgst;
+//     //         if (taxPercentage === 9|| taxPercentage === 6) {
+//     //             taxType = 'CGST & SGST';
+//     //             igst = 0;
+//     //             cgst = taxAmount;
+//     //             sgst = taxAmount;
+//     //         } else if (taxPercentage === 18 || taxPercentage === 12) {
+//     //             taxType = 'IGST';
+//     //             igst = taxAmount;
+//     //             cgst = 0;
+//     //             sgst = 0;
+//     //         } else {
+//     //             taxType = 'No Tax';
+//     //             igst = 0;
+//     //             cgst = 0;
+//     //             sgst = 0;
+//     //         }
+
+//     //         currentHSN = {
+//     //             description: description,
+//     //             HSN: HSN,
+//     //             charge: charge,
+//     //             unitPrice: unitPrice,
+//     //             taxPercentage: taxPercentage,
+//     //             taxType: taxType,
+//     //             taxAmount: taxAmount,
+//     //             igst: igst,
+//     //             cgst: cgst,
+//     //             sgst: sgst,
+//     //         };
+
+//     //         structuredHSNLines.push(currentHSN);
+//     //     }
+//     // }
+
+//     const structuredHSNLines = [];
+//     let currentHSN = null;
+
+//     for (let hsnId = 0; hsnId < extractedData.length; hsnId++) {
+//         const line = extractedData[hsnId].content;
+
+//         const matchData = line.match(/(\d.+)\s+([^\d]+)\s+(\d+)\s+(\d+)\s+(\d+(\.\d+)?)\s+(\d+)\s+(\d+(\.\d+)?)\s+(\d+)\s+(\d+)\s+(\d+)/) || [];
+
+//         if (matchData.length > 0) {
+//             let description = matchData[1].trim();
+//             const charge = parseInt(matchData[3]);
+//             const taxPercentage = Number(matchData[4]) + Number(matchData[10]);
+//             const taxAmount = Number(matchData[5]) + Number(matchData[11]);
+//             const hsnMatch = description.match(/\b(998|996)\d+\b/);
+//             const HSN = hsnMatch ? hsnMatch[0] : '';
+
+//             if (HSN) {
+//                 description = description.replace(HSN, '').replace(/\d+/g, "").trim();
+//             }
+
+//             let taxType, igst, cgst, sgst;
+//             if (taxPercentage === 9 || taxPercentage === 6) {
+//                 taxType = 'CGST & SGST';
+//                 igst = 0;
+//                 cgst = taxAmount;
+//                 sgst = taxAmount;
+//             } else if (taxPercentage === 18 || taxPercentage === 12) {
+//                 taxType = 'IGST';
+//                 igst = taxAmount;
+//                 cgst = 0;
+//                 sgst = 0;
+//             } else {
+//                 taxType = 'No Tax';
+//                 igst = 0;
+//                 cgst = 0;
+//                 sgst = 0;
+//             }
+
+//             currentHSN = {
+//                 description: description,
+//                 HSN: HSN,
+//                 charge: charge,
+//                 taxPercentage: taxPercentage,
+//                 taxType: taxType,
+//                 taxAmount: taxAmount,
+//                 igst: igst,
+//                 cgst: cgst,
+//                 sgst: sgst,
+//             };
+
+//             structuredHSNLines.push(currentHSN);
+//         }
+//     }
+
+//     const InvoiceLines = [];
+//     let gstNumberExtracted = false;
+//     const invoiceDateRegex = /[0-9]{2}-[0-9]{2}-[0-9]{4}/;
+//     const invoiceNumberRegex = /TCB+[A-Z0-9]{12}|FIO[A-Z0-9]{13}/;
+//     const invoiceAmountRegex = /Amount Received :/;
+//     // const invoiceAmountRegex = ['Total   '];
+//     const invoiceCurrency = 'INR';
+//     const currentYear = new Date().getFullYear();
+//     const nextYear = currentYear + 1;
+//     const financialYear = `${currentYear}-${nextYear}`;
+
+//     if (extractedData && Array.isArray(extractedData)) {
+//         let venName = '';
+//         let invoiceDate = '';
+//         let invoiceNumber = '';
+//         let invoiceAmount = '';
+
+//         for (const line of extractedData) {
+//             const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
+//             if (gstMatch && !gstNumberExtracted) {
+//                 const gstNumber = gstMatch[0];
+
+//                 // if (gstNumber === '29AABCD3611Q1ZE') {
+//                 venName = 'TEXTILES COMMITTEE';
+//                 // }
+
+//                 const invoiceDateData = extractedData.find((item) => item.content.match(invoiceDateRegex));
+//                 const dateMatch = invoiceDateData ? invoiceDateData.content.match(/Invoice Date:\s*([0-9]{2}-[0-9]{2}-[0-9]{4})/) : null;
+//                 invoiceDate = dateMatch ? dateMatch[1] : '';
+
+//                 const invoiceNumberData = extractedData.find((item) => item.content.match(invoiceNumberRegex));
+//                 const numberMatch = invoiceNumberData ? invoiceNumberData.content.match(/Invoice No:\s*([A-Z0-9]{15})/) : null;
+//                 invoiceNumber = numberMatch ? numberMatch[1] : '';
+
+//                 // const invoiceAmountData = extractedData.find((item) => item.content.match(invoiceAmountRegex));
+//                 // if (invoiceAmountData) {
+//                 //     const amounts = invoiceAmountData.content.split(/\s+/).filter(val => val !== '');
+//                 //     invoiceAmount = amounts.length > 0 ? amounts[amounts.length - 1] : '';
+//                 // } else {
+//                 //     invoiceAmount = '';
+//                 // }
+
+//                 const invoiceAmountData = extractedData.find((item) => item.content.match(invoiceAmountRegex));
+//                 invoiceAmount = invoiceAmountData ? invoiceAmountData.content.replace( /Amount Received :/g,"").trim() : '';
+
+//                 let igst = "0.00";
+//                 let cgst = "0.00";
+//                 let sgst = "0.00";
+
+//                 for (const hsnLine of structuredHSNLines) {
+//                     if (hsnLine.taxPercentage === 18 || hsnLine.taxPercentage === 12) {
+//                         igst = (parseFloat(igst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+//                     } else if (hsnLine.taxPercentage === 9 || hsnLine.taxPercentage === 6) {
+//                         cgst = (parseFloat(cgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+//                         sgst = (parseFloat(sgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+//                     }
+//                 }
+
+//                 const currentInvoice = {
+//                     "venName": venName,
+//                     "gstNumber": gstNumber,
+//                     "invoiceDate": invoiceDate,
+//                     "invoiceNumber": invoiceNumber,
+//                     "invoiceCurrency": invoiceCurrency,
+//                     "financialYear": financialYear,
+//                     "invoiceAmount": invoiceAmount,
+//                     "igst": igst,
+//                     "cgst": cgst,
+//                     "sgst": sgst,
+//                 };
+
+//                 InvoiceLines.push(currentInvoice);
+//                 gstNumberExtracted = true;
+//             }
+//         }
+//     }
+
+//     console.log("DhlCourier PDF DATA", JSON.stringify(extractedData, null, 2));
+//     console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
+//     console.log("PDF INVOICE Data", JSON.stringify(InvoiceLines, null, 2));
+
+//     return {
+//         extractedData: InvoiceLines[0],
+//         extractedHsnData: structuredHSNLines
+//     };
+
+
+// }
 
 export const checkIsScannedPdf = async (pdf) => {
     // Analyze each page for text or images
@@ -9389,7 +10344,6 @@ export const extractDBSCHENKAR = async (pdf) => {
 
 
 }
-
 export const extractCeva = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
@@ -9421,12 +10375,12 @@ export const extractCeva = async (pdf) => {
             const charge = chargeMatch && chargeMatch[0] ? chargeMatch[0].replace(/(USD|INR)+\s+/g, "").replace(/,/g, "") : null;
                 let description = '';
                 if (hsnId - roeIndex > 2) {
-                    description = extractedData.slice(roeIndex + 1, hsnId).map((item) => item.content).join('\n');
+                    description = extractedData.slice(roeIndex + 1, hsnId).map((item) => item.content).join('\n').replace(/\d+/g,"");
                 } else {
                     if (line.includes("INR") || line.includes("USD")) {
                         const indexOfCurrency = line.indexOf("INR") !== -1 ? line.indexOf("INR") : line.indexOf("USD");
                         if (indexOfCurrency !== -1) {
-                            description = line.substring(0, indexOfCurrency).trim();
+                            description = line.substring(0, indexOfCurrency).trim().replace(/\d+/g,"");
                         }
                     }
                 }
@@ -9568,6 +10522,185 @@ export const extractCeva = async (pdf) => {
         extractedHsnData: structuredHSNLines,
     };
 };
+
+// export const extractCeva = async (pdf) => {
+//     const allLines = await extractPDFDataToLinesData(pdf);
+//     const extractedData = allLines;
+
+//     // /((USD|INR)+\s+\d+(,|\.\d)(\d|\.\d)+\s+996+\d+\s+\d+(,|.)(\d|.\d)+\d+\s+\d+\s+\d+(,|\.\d)\d+\s+\d+(,|.)\d+\s+\d+(,|.)(\d|\.\d)+\s+\d+(\.\d|\d)+%+\s+\d+(\.\d|\d)+%+\s+)|(((USD|INR)+\s+\d+(,|\.\d)(\d|\.\d)+\s+996+\d+\s+\d+(,|.)(\d|.\d)+\d+)\s+((\d|\.\d)|(\d+\.\d))+\s+\d+(,|\.\d)\d+\s+)/
+//     const structuredHSNLines = [];
+//     let currentHSN = null;
+//     let currency = '';
+//     let roe = '';
+
+//     const currencyRegex = /SAC\s+Code\s+Curr.+/;
+//     const currencyData = extractedData.find((item) => item.content.match(currencyRegex));
+//     currency = currencyData ? currencyData.content : '';
+
+//     const roeRegex = /ROE:\s.+/;
+//     let roeIndex=0
+
+
+//     for (let hsnId = 0; hsnId < extractedData.length; hsnId++) {
+//         const line = extractedData[hsnId].content;
+//         const matchData = line.match(/(USD|INR)+\s+\d+(,|\d)+(\.|\d)+\s+\d+\s+\d+(.|\d)+\s/) || [];
+//         if(roeIndex==0&&line.match(currencyRegex)){
+//             roeIndex=hsnId;
+//         }else if(line.match(roeRegex)){
+//             roeIndex=hsnId;
+//         }
+//         if (matchData.length > 0) {
+//             const chargeMatch = line.match(/(USD|INR)+\s+\d+(,|.|)(\d|\.\d)+/g, "");
+//             const charge = chargeMatch && chargeMatch[0] ? chargeMatch[0].replace(/(USD|INR)+\s+/g, "").replace(/,/g, "") : null;
+//                 let description = '';
+//                 if (hsnId - roeIndex > 2) {
+//                     description = extractedData.slice(roeIndex + 1, hsnId).map((item) => item.content).join('\n');
+//                 } else {
+//                     if (line.includes("INR") || line.includes("USD")) {
+//                         const indexOfCurrency = line.indexOf("INR") !== -1 ? line.indexOf("INR") : line.indexOf("USD");
+//                         if (indexOfCurrency !== -1) {
+//                             description = line.substring(0, indexOfCurrency).trim();
+//                         }
+//                     }
+//                 }
+//                 const HSN = line.match(/(996|99\d)+\d+/g, "");
+//                  const unitQuantityMatch = line.match(/996+\d+\s+\d+(,|.)(\d|.\d)+\s+(\d|.\d)+/);
+//     const unitQuantity = unitQuantityMatch ? unitQuantityMatch[0].replace(/996+\d+\s+\d+(,|.)(\d|.\d)+\s+/g, "") : null;
+
+//     const unitPriceMatch = line.match(/996+\d+\s+\d+(,|.)(\d|.\d)+/);
+//     const unitPrice = unitPriceMatch ? unitPriceMatch[0].replace(/996+\d+\s+/g, "") : null;
+
+//     const taxPercentageMatch = line.match(/996+\d+\s+\d+(,|.)(\d|.\d)+\d+\s+\d+\s+\d+(,|\.\d)\d+\s+\d+(,|.)\d+\s+\d+(,|.)(\d|\.\d)+\s+\d+(\.\d|\d)+%/g, "");
+//     const taxPercentage = taxPercentageMatch && taxPercentageMatch[0] ? taxPercentageMatch[0].replace(/996+\d+\s+\d+(,|.)(\d|.\d)+\d+\s+\d+\s+\d+(,|\.\d)\d+\s+\d+(,|.)\d+\s+\d+(,|.)(\d|\.\d)+\s+/g, "").replace(/%/g, "") : null;
+
+//     const taxAmountMatch = line.match(/996+\d+\s+\d+(,|.)(\d|.\d)+\d+\s+\d+\s+\d+(,|\.\d)\d+\s+\d+(,|.)\d+\s+/g, "");
+//     const taxAmount = taxAmountMatch && taxAmountMatch[0] ? taxAmountMatch[0].replace(/996+\d+\s+\d+(,|.)(\d|.\d)+\d+\s+\d+\s+/g, "").replace(/,/g, "") : "";
+
+
+//     const invoiceMatch = line.match(/((USD|INR)+\s+\d+(,|\.\d)(\d|\.\d)+\s+996+\d+\s+\d+(,|.)(\d|.\d)+\d+\s+\d+\s+\d+(,|\.\d)\d+\s+\d+(,|.)\d+\s+\d+(,|.)(\d|\.\d)+\s+\d+(\.\d|\d)+%+\s+\d+(\.\d|\d)+%+\s+\d+(,|\.\d)(\d|\.\d)+)|(((USD|INR)+\s+\d+(,|\.\d)(\d|\.\d)+\s+996+\d+\s+\d+(,|.)(\d|.\d)+\d+)\s+((\d|\.\d)|(\d+\.\d))+\s+\d+(,|\.\d)\d+\s+\d+(,|\.)(\d|\.\d)+)/g, "");
+//     const amount = invoiceMatch && invoiceMatch[0] ? invoiceMatch[0].replace(/((USD|INR)+\s+\d+(,|\.\d)(\d|\.\d)+\s+996+\d+\s+\d+(,|.)(\d|.\d)+\d+\s+\d+\s+\d+(,|\.\d)\d+\s+\d+(,|.)\d+\s+\d+(,|.)(\d|\.\d)+\s+\d+(\.\d|\d)+%+\s+\d+(\.\d|\d)+%+\s+)|(((USD|INR)+\s+\d+(,|\.\d)(\d|\.\d)+\s+996+\d+\s+\d+(,|.)(\d|.\d)+\d+)\s+((\d|\.\d)|(\d+\.\d))+\s+\d+(,|\.\d)\d+\s+)/g, "").replace(/,/g, "") : "";
+//     let taxType, igst, cgst, sgst;
+
+//     if (taxPercentage == 9) {
+//         taxType = 'CGST & SGST';
+//         igst = 0;
+//         cgst = taxAmount;
+//         sgst = taxAmount;
+//     } else if (taxPercentage == 18 || taxPercentage == 5) {
+//         taxType = 'IGST';
+//         igst = taxAmount;
+//         cgst = 0;
+//         sgst = 0;
+//     } else {
+//         taxType = 'No Tax';
+//         igst = 0;
+//         cgst = taxAmount;
+//         sgst = taxAmount;
+//     }
+//                 currentHSN = {
+//                     HSN: HSN,
+//                     currency: currency,
+//                     roe: roe,
+//                     description: description,
+//                     unitPrice:unitPrice,
+//                     unitQuantity:unitQuantity,
+//                     charge:charge,
+//                     taxAmount:taxAmount,
+//                     taxPercentage:taxPercentage,
+//                     igst:igst,
+//                     cgst:cgst,
+//                     sgst:sgst,
+//                     amount:amount,
+//                     taxType:taxType,
+//                 };
+//                 structuredHSNLines.push(currentHSN);            
+//         }
+//     }
+
+//     console.log("Combined Data", structuredHSNLines);
+//     console.log("PDF JSON DATA", JSON.stringify(structuredHSNLines, null, 2));
+
+   
+//     const InvoiceLines = [];
+//     let gstNumberExtracted = false;
+
+//     const invoiceDateRegex = /\d{1,2}-[A-Z][a-z]{2}-\d{2}/;
+//     const invoiceNumberRegex = /KA+\d{10}/;
+//     const invoiceCurrency = "INR";
+//     const currentYear = new Date().getFullYear();
+//     const nextYear = currentYear + 1;
+//     const financialYear = `${currentYear}-${nextYear}`;
+
+//     if (extractedData && Array.isArray(extractedData)) {
+//         let venName = "";
+//         let invoiceDate = "";
+//         let invoiceNumber = "";
+//         // let invoiceAmount = "";
+//         let isAlreadyClientMatched = false;
+//         if (extractedData && Array.isArray(extractedData)) {
+//             for (const line of extractedData) {
+//                 const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
+//                 if (gstMatch && !gstNumberExtracted) {
+//                     if (!isAlreadyClientMatched) {
+//                         isAlreadyClientMatched = true;
+//                         continue;
+//                     }
+//                     const gstNumber = gstMatch[0];
+
+//                     venName = "CEVA LOGISTICS INDIA PVT LTD";
+
+//                     const invoiceDateData = extractedData.find((item) => item.content.match(invoiceDateRegex));
+//                     invoiceDate = invoiceDateData ? invoiceDateData.content.replace(/\w+\s+\w+:+\s/g, "") : "";
+
+//                     const invoiceNumberData = extractedData.find((item) => item.content.match(invoiceNumberRegex));
+//                     invoiceNumber = invoiceNumberData ? invoiceNumberData.content.match(invoiceNumberRegex) : "";
+
+//                     const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
+//                         const amount = parseFloat(hsnLine.amount) || 0;
+//                         return add + amount;
+//                     }, 0).toFixed(2);
+
+//                     let igst = "0.00";
+//                     let cgst = "0.00";
+//                     let sgst = "0.00";
+
+//                     for (const hsnLine of structuredHSNLines) {
+//                         if (hsnLine.taxPercentage == 18) {
+//                             igst = (parseFloat(igst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+//                         } else if (hsnLine.taxPercentage == 9) {
+//                             cgst = (parseFloat(cgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+//                             sgst = (parseFloat(sgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
+//                         }
+//                     }
+//                     const currentInvoice = {
+//                         venName: venName,
+//                         gstNumber: gstNumber,
+//                         invoiceDate: invoiceDate,
+//                         invoiceNumber: invoiceNumber,
+//                         invoiceCurrency: invoiceCurrency,
+//                         financialYear: financialYear,
+//                         invoiceAmount: invoiceAmount,
+//                         igst: igst,
+//                         cgst: cgst,
+//                         sgst: sgst
+//                     };
+
+//                     InvoiceLines.push(currentInvoice);
+//                     gstNumberExtracted = true;
+//                 }
+//             }
+//         }
+
+
+//         console.log("DART PDF DATA", JSON.stringify(extractedData, null, 2));
+//         console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
+//         console.log("PDF INVOICE Data", JSON.stringify(InvoiceLines, null, 2));
+//     }
+//     return {
+//         extractedData: InvoiceLines[0],
+//         extractedHsnData: structuredHSNLines,
+//     };
+// };
 
 export const extractedunitedLiner = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
