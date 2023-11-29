@@ -1,7 +1,7 @@
 import { ProColumns, ProTable } from '@ant-design/pro-components'
 import { BuyerIdReq, BuyerRequest, BuyersDto, FactoryActivateDeactivateDto, FactoryDto, OperationGroupsDto } from '@project-management-system/shared-models'
 import { BuyersService, FactoryService } from '@project-management-system/shared-services'
-import { Button, Card, Col, Divider, Drawer, Form, Input, Modal, Popconfirm, Radio, Row, Space, Switch, Table, Tag, Tooltip, message } from 'antd'
+import { Alert, Button, Card, Col, Divider, Drawer, Form, Input, Modal, Popconfirm, Radio, Row, Space, Switch, Table, Tag, Tooltip, message } from 'antd'
 import { forEachObject } from 'for-each'
 import { useNavigate } from 'react-router-dom'
 import TableActions from '../../common/table-actions/table-actions'
@@ -191,6 +191,8 @@ export const  BuyersView = () => {
       {
         dataIndex:"shortCode",
         title:"Buyer Short Code",
+        width:150
+
         // responsive: ['lg'],
         // sorter: (a, b) => a.shortCode.localeCompare(b.shortCode),
         // sortDirections: ['descend', 'ascend'],
@@ -199,6 +201,7 @@ export const  BuyersView = () => {
       {
         dataIndex:"buyerCode",
         title:"Buyer Code",
+        width:150
         // responsive: ['lg'],
         // sorter: (a, b) => a.buyerCode.localeCompare(b.buyerCode),
         // sortDirections: ['descend', 'ascend'],
@@ -316,8 +319,8 @@ export const  BuyersView = () => {
 
 
   return (
-    <Card title='Buyers'  headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/global/buyers/buyers-form')} type={'primary'}>New</Button></span>} size='small'>
-     <Row gutter={40} >
+    <Card title='Buyers'  headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/global/buyers/buyers-form')} type={'primary'}>New</Button></span>} >
+     {/* <Row gutter={40} >
       <Col>
           <Card title={'Total Buyers : ' + buyersData.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
@@ -327,12 +330,40 @@ export const  BuyersView = () => {
           <Col>
            <Card title={'In-Active :' + buyersData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
           </Col>
-          </Row>
-          <br></br>
-          <div style={{overflowX :'auto' }}>
+          </Row> */}
 
-    <Table columns={columnsSkelton} dataSource={buyersData} pagination={{ pageSize: 50 }} size='small' bordered/>
-          </div>
+<Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+    
+           <Alert type='success' message={'Total Buyers: ' + buyersData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + buyersData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + buyersData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
+         
+          
+     <Card>
+    <Table columns={columnsSkelton} 
+    dataSource={buyersData} 
+    scroll={{x:true,y:500}}
+           pagination={{
+            pageSize:50,
+            onChange(current) {
+              setPage(current);
+            }
+          }}
+     size='small' bordered/>
+     </Card>
+
     <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
         <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
