@@ -32,14 +32,14 @@ const QualityForm = () => {
 
     return (
         <div>
-            <Card title={<span>Fabric Quality</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+            <Card title={<span>Fabric Quality</span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
                 extra={<Button
                     onClick={() => navigate('/masters/quality-view')}
                     type="primary"
                     style={{ background: "white", color: "#3C085C" }}
                 >View</Button>
                 }>
-                <Form form={form} onFinish={onFinish}>
+                <Form form={form} onFinish={onFinish} layout='vertical'>
                     <Row>
                         <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4 }} lg={{ span: 8 }} xl={{ span: 5 }}>
                             <Form.Item label="Fabric Quality" name="quality"
@@ -54,7 +54,7 @@ const QualityForm = () => {
                                 //     message: `Should contain only alphabets.`,
                                 //   },
                               ]}>
-                                <Input placeholder=" Enter Quality " />
+                                <Input placeholder=" Enter Fabric Quality " />
                             </Form.Item>
                         </Col>
                     </Row>

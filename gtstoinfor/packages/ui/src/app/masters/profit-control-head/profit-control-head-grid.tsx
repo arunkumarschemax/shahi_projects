@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -248,10 +248,10 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
 
       return (
         <Card title={<span>Profit Control Heads</span>}
-        style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/masters/profit-control-head/profit-control-head-form"  ><span><Button type={'primary'} >New </Button> </span></Link>}>
-<br></br>
+        headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/masters/profit-control-head/profit-control-head-form"  ><span><Button type={'primary'} >New </Button> </span></Link>}>
+
 <>
-<Row gutter={40}>
+{/* <Row gutter={40}>
     <Col>
 <Card title={'Total Profit Control Heads: ' + variantData.length} style={{ textAlign: 'center', width: 220, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
@@ -261,7 +261,24 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
         <Col>
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'center', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
-</Row>
+</Row> */}
+<Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+
+           <Alert type='success' message={'Total Profit Control Heads: ' + variantData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
        
         <Card>
         <Table

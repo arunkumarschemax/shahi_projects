@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Card, Col, Divider, Form, Input, Popconfirm, Radio, Row, Switch, Table, Tag, message } from 'antd'
+import { Alert, Button, Card, Col, Divider, Form, Input, Popconfirm, Radio, Row, Switch, Table, Tag, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import AlertMessages from '../../common/common-functions/alert-messages';
 import { RacksService } from '@project-management-system/shared-services';
@@ -200,14 +200,30 @@ const RackView = () => {
 
     return (
         <div>
-            <Card title={<span>RACKS</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+            <Card title={<span>Racks</span>}  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
                 extra={<Button
                     onClick={() => navigate('/masters/rack-form')}
                     type="primary"
-                    style={{ background: "white", color: "#3C085C" }}
                 >New</Button>
                 }>
-                    
+                    <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+
+           <Alert type='success' message={'Total Racks: ' + itemGroup.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + itemGroup.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + itemGroup.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
+                    <Card>
                 <Table columns={Columns}
                     dataSource={itemGroup}
                     pagination={{
@@ -218,7 +234,9 @@ const RackView = () => {
                       }}
                       scroll={{x:true}}
                      bordered
+                     size='small'
                 />
+                </Card>
 
             </Card>
         </div>

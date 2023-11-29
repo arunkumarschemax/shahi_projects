@@ -33,15 +33,15 @@ const M3StyleCode = () => {
 
   return (
     <div>
-            <Card title={<span>M3 STYLE CODES</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+            <Card title={<span>M3 Style</span>}  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
                 extra={<Button
                     onClick={() => navigate('/masters/m3-styleCodes-view')}
                     type="primary"
-                    style={{ background: "white", color: "#3C085C" }}
+                    // style={{ background: "white", color: "#3C085C" }}
                 >View</Button>
                 }>
                 <Form
-                 form={form} onFinish={onFinish}
+                 form={form} onFinish={onFinish} layout='vertical'
                  >
                     <Row>
                         <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 4 }} lg={{ span: 8 }} xl={{ span: 5 }}>
