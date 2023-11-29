@@ -921,9 +921,21 @@ export const extractdachser = async (pdf) => {
         const matchData = line.match(/(.*?)\s+(\d{1,},?\d{1,}\.\d{2})\s+(.*?)\s+(\w+)\s+([\d+].+)/);
 
         if (matchData) {
-            const description = matchData[1].replace(/\d+/g, "");
-            const charge = matchData[2].trim().replace(/,/g, "");
             let HSN = matchData[5];
+            let description = matchData[1].replace(/\d+/g, "");
+            const lastPart = HSN;
+            if (/\d/.test(lastPart)) {
+                const nextId = hsnId + 1;
+                if (extractedData[nextId] && extractedData[nextId].content) {
+                    const nextLine = extractedData[nextId].content;
+                    const nextMatch = nextLine.match(/\w+/);
+                    if (nextMatch) {
+                        const nextDescription = nextMatch[0];
+                        description += ` ${nextDescription}`.replace(/\d+/g,"");
+                    }
+                }
+            }
+            const charge = matchData[2].trim().replace(/,/g, "");
 
             const kgIndex = HSN.toLowerCase().indexOf('kg');
             if (kgIndex !== -1) {
@@ -9474,12 +9486,12 @@ export const extractCeva = async (pdf) => {
             const charge = chargeMatch && chargeMatch[0] ? chargeMatch[0].replace(/(USD|INR)+\s+/g, "").replace(/,/g, "") : null;
                 let description = '';
                 if (hsnId - roeIndex > 2) {
-                    description = extractedData.slice(roeIndex + 1, hsnId).map((item) => item.content).join('\n');
+                    description = extractedData.slice(roeIndex + 1, hsnId).map((item) => item.content).join('\n').replace(/\d+/g,"");
                 } else {
                     if (line.includes("INR") || line.includes("USD")) {
                         const indexOfCurrency = line.indexOf("INR") !== -1 ? line.indexOf("INR") : line.indexOf("USD");
                         if (indexOfCurrency !== -1) {
-                            description = line.substring(0, indexOfCurrency).trim();
+                            description = line.substring(0, indexOfCurrency).trim().replace(/\d+/g,"");
                         }
                     }
                 }
