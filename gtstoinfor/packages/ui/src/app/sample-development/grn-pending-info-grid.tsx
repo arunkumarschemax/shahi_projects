@@ -139,7 +139,8 @@ export const GrnPendingInfoGrid = () => {
 
     return (
         <div>
-            <Card title={<span style={{ color: 'white' }}>GRN Pending Details</span>}
+            <Card 
+            title={<span >GRN Pending Details</span>}
                 // style={{ textAlign: 'center' }}
                  headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
                 <Table
