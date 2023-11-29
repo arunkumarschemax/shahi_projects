@@ -239,6 +239,7 @@ export const  BuyersView = () => {
       {
         title: 'Status',
         dataIndex: 'isActive',
+        align:"center",
         render: (isActive, rowData) => (
           <>
             {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -266,6 +267,7 @@ export const  BuyersView = () => {
       {
         title:`Action`,
         dataIndex: 'action',
+        align:"center",
         render: (text, rowData) => (
           <span>   
                 <Tooltip title='Address Info'>

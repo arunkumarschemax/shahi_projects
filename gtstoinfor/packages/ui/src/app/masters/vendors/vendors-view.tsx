@@ -410,6 +410,7 @@ export function VendorsView(
         {
           title: 'Status',
           dataIndex: 'isActive',
+          align:"center",
           render: (isActive, rowData) => (
             <>
               {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -437,6 +438,7 @@ export function VendorsView(
         {
           title:`Action`,
           dataIndex: 'action',
+          align:"center",
           render: (text, rowData) => (
             <span>   
                  

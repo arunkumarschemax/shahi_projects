@@ -1,7 +1,7 @@
 import { BgColorsOutlined, EnvironmentOutlined, SearchOutlined, SkinOutlined, UndoOutlined } from "@ant-design/icons"
 import { BuyersDestinationRequest } from "@project-management-system/shared-models"
 import { BuyerDestinationService, BuyersService, DestinationService, SizeService } from "@project-management-system/shared-services"
-import { Button, Row, Col, Select, Table,Form, Modal, Divider } from "antd"
+import { Button, Row, Col, Select, Table,Form, Modal, Divider, Alert } from "antd"
 import Card from "antd/es/card/Card"
 import form from "antd/es/form"
 import { ColumnProps } from "antd/es/table"
@@ -111,6 +111,7 @@ const columns: ColumnProps<any>[]  = [
     {
         title:'Buyers',
         dataIndex:'buyerName',
+  
         // render:(text,val) =>{
         //     return (val.buyerInfo.buyerName)
         // }
@@ -143,8 +144,15 @@ const onReset = () => {
 
 
     return(
-        <Card size='small' title='Buyers Destination' extra={<span><Button onClick={() => navigate('/global/buyers-destination/buyers-destination-form')} type="primary">New</Button></span>}>
+        <Card title='Buyers Destination' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/global/buyers-destination/buyers-destination-form')} type="primary">New</Button></span>}>
             <Form form={form} onFinish={onSearch}>
+            {/* <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+           <Alert type='success' message={'Total Buyer: ' + data.length} style={{fontSize:'15px'}} />
+        </Col>
+          </Row> 
+          <br></br> */}
                 <Row gutter={24}>
                 {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 5 }}>
                       <Form.Item label='Size' name='sizeId'>
@@ -234,7 +242,19 @@ const onReset = () => {
                 </Row>
 
             </Form>
-            <Table columns={columns} dataSource={data} size="small" bordered />
+            <Card>
+            <Table columns={columns} dataSource={data} 
+                  scroll={{x:true,y:500}}
+                  pagination={{
+                   pageSize:50,
+                   onChange(current) {
+                     setPage(current);
+                   }
+                 }}
+            
+            size="small" bordered 
+             />
+             </Card>
             <Modal
       visible={sizeModalVisible}
       title="Sizes"

@@ -213,6 +213,7 @@ export function OperationsGrid(
       {
         title: 'Status',
         dataIndex: 'isActive',
+        align:"center",
         ...getColumnSearchProps('isActive'),
         sorter: (a, b) => a.operationCode.localeCompare(b.operationCode),
         sortDirections: ["ascend", "descend"],
@@ -244,6 +245,7 @@ export function OperationsGrid(
       {
         title:`Action`,
         dataIndex: 'action',
+        align:"center",
         render: (text, rowData) => (
           <span>         
               <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 

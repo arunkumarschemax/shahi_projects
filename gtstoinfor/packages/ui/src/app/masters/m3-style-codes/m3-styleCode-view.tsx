@@ -1,5 +1,5 @@
 import { M3StyleService } from '@project-management-system/shared-services'
-import { Button, Card, Divider, Popconfirm, Radio, Switch, Table, Tag, message } from 'antd'
+import { Alert, Button, Card, Col, Divider, Popconfirm, Radio, Row, Switch, Table, Tag, message } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AlertMessages from '../../common/common-functions/alert-messages'
@@ -14,6 +14,8 @@ const M3StyleCodeView = () => {
     const navigate=useNavigate()
     const service = new M3StyleService();
     const [itemGroup, setItemGroup] = useState([]);
+  const [page, setPage] = React.useState(1);
+
   const [searchedColumn, setSearchedColumn] = useState("");
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -58,9 +60,18 @@ const active = (rowData: any) => {
 };
 
     const Columns: any = [
+      {
+        title: 'S No',
+        key: 'sno',
+        width: '70px',
+        responsive: ['sm'],
+         render: (text, object, index) => (page-1) * 10 +(index+1)
+      },
         {
             title: "M3 Style Code",
             dataIndex: "m3StyleCode",
+           width: 220,
+
         },
         {
           title: "Status",
@@ -164,17 +175,42 @@ const active = (rowData: any) => {
     
   return (
     <div>
-    <Card title={<span>M3 STYLE CODES</span>} style={{ textAlign: 'center' }} 
+    <Card title={<span>M3 Styles</span>} 
         headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
         extra={<Button
             onClick={() => navigate('/masters/m3-styleCodes-form')}
             type="primary"
-            style={{ background: "white", color: "#3C085C" }}
+           
         >Create</Button>
-        }>
+        }> 
+            <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+
+           <Alert type='success' message={'Total M3 Styles: ' + itemGroup.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + itemGroup.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + itemGroup.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br><Card>
           <Table columns={Columns}
           dataSource={itemGroup}
+          scroll={{x:true}}
+          pagination={{
+            onChange(current) {
+              setPage(current);
+            }
+          }}
+          size='small'
           />
+          </Card>
     </Card>
 </div>
   )

@@ -36,11 +36,11 @@ const onFinish = (rackDto: RackDTO) => {
 
   return (
     <div>
-      <Card title={<span>RACKS</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+      <Card title={<span>Racks</span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
         extra={<Button
           onClick={() => navigate('/masters/rack-view')}
           type="primary"
-          style={{ background: "white", color: "#3C085C" }}
+          // style={{ background: "white", color: "#3C085C" }}
         >View</Button>
         
         }>
@@ -69,6 +69,7 @@ const onFinish = (rackDto: RackDTO) => {
                                             // showSearch
                                             // placeholder="Vendors"
                                             optionFilterProp="children"
+                                            placeholder=" Enter Rack Type"
                                         >
                                             {Object.keys(RackEnum)
                                                 .sort()

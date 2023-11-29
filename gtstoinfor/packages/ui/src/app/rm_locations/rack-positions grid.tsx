@@ -1,5 +1,5 @@
 import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined } from '@ant-design/icons'
-import { Button, Card, Divider, Popconfirm, Radio, Switch, Table, Tag, Tooltip, message } from 'antd'
+import { Alert, Button, Card, Col, Divider, Popconfirm, Radio, Row, Switch, Table, Tag, Tooltip, message } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AlertMessages from '../common/common-functions/alert-messages'
@@ -15,6 +15,8 @@ const PositionGrid = () => {
 
   const service = new RackPositionService();
   const [itemGroup, setItemGroup] = useState([]);
+  const [page, setPage] = React.useState(1);
+
 
 
 
@@ -64,6 +66,13 @@ const PositionGrid = () => {
   };
 
   const Columns: any = [
+    {
+      title: 'S No',
+      key: 'sno',
+      width: '70px',
+      responsive: ['sm'],
+      render: (text, object, index) => (page - 1) * 50 + (index + 1)
+    },
     {
       title: "Column",
       dataIndex: "column"
@@ -203,15 +212,41 @@ const PositionGrid = () => {
 
   return (
     <div>
-      <Card title={<span>WARE HOUSE LOCATIONS</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+      <Card title={<span>Warehouse Locations</span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
         extra={<Button
           onClick={() => navigate('/masters/rack-position-form')}
           type="primary"
-          style={{ background: "white", color: "#3C085C" }}
+          // style={{ background: "white", color: "#3C085C" }}
         >Create</Button>
         }>
-        <Table columns={Columns} dataSource={itemGroup}
+               <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+
+           <Alert type='success' message={'Total Warehouse Locations: ' + itemGroup.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + itemGroup.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + itemGroup.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
+       <Card>
+        <Table columns={Columns} dataSource={itemGroup} size ="small"
+        pagination={{
+          onChange(current) {
+            setPage(current);
+          },
+          pageSize:50,
+        }}
+        scroll={{x:true}}
         />
+         </Card>
       </Card>
     </div>
   )

@@ -92,7 +92,8 @@ export const MaterialAllocationDetailView = () => {
     return (
         <div>
             <Card title={<span style={{ color: 'white' }}>Material Allocation Detail View</span>}
-                style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
+                // style={{ textAlign: 'center' }} 
+                headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
                 extra={
                     <span>
                       <Button

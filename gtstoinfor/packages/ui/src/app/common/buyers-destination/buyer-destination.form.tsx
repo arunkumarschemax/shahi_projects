@@ -310,6 +310,7 @@ let mappingData:MappedDetails[] = [];
     return (
         <Card
             title="Buyers Destination"
+            headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
             extra={
                 <span>
                     <Button

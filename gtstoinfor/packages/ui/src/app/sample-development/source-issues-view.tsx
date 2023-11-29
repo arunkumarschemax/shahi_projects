@@ -236,7 +236,7 @@ import { SourceIssuesService } from "@project-management-system/shared-services"
         <Card 
         title={<span>Material Issues</span>}
         headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
-        style={{ textAlign:"center" ,color:'#00ffff'}}
+        // style={{ textAlign:"center" ,color:'#00ffff'}}
     >
 <Row gutter={24}>
 <Col xs={24} sm={12} md={8} lg={6} xl={6}>

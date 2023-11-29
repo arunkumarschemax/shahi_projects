@@ -14,6 +14,8 @@ const M3ItemsView = () => {
     const searchInput = useRef(null);
     const [searchText, setSearchText] = useState(''); 
     const [searchedColumn, setSearchedColumn] = useState('');
+  const [page, setPage] = useState<number>(1);
+
     useEffect(() => {
         getM3ItemsData();
     }, []);
@@ -99,6 +101,13 @@ const M3ItemsView = () => {
         setSearchText('');
       };
     const Columns: any = [
+      {
+        title: 'S No',
+        key: 'sno',
+        width: 50,
+        responsive: ['sm'],
+        render: (text, object, index) => (page - 1) * 50 + (index + 1)
+      },
         {
             title: "Buyer",
             dataIndex: "buyer",
@@ -182,17 +191,25 @@ const M3ItemsView = () => {
 
   return (
     <div>
-         <Card title={<span>M3 ITEMS</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+         <Card title={<span>M3 Items</span>}  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
         extra={<Button
             onClick={() => navigate('/m3-items')}
             type="primary"
-            style={{ background: "white", color: "#3C085C" }}
+            // style={{ background: "white", color: "#3C085C" }}
         >Create</Button>
         }>
+          <Card>
           <Table columns={Columns}
           dataSource={itemGroup}
-          pagination={{ pageSize: 50 }} size='small' bordered
+          // scroll={{x:true,y:500}}
+           pagination={{
+            pageSize:50,
+            onChange(current) {
+              setPage(current);
+            }
+          }} bordered
           />
+          </Card>
     </Card>
     </div>
   )
