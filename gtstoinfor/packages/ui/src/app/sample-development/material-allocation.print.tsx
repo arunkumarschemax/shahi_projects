@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react'
 import "./print.css";
 import { Button, Descriptions } from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
+import { MaterialAllocationitemsIdreq } from '@project-management-system/shared-models';
+import { SampleDevelopmentService } from '@project-management-system/shared-services';
 
 export interface Props {
     data:any
+    id:any
    
 }
 
@@ -25,6 +28,9 @@ export const MaterialAllocationPrint = (props:Props) => {
 
     const [currentDateTime, setCurrentDateTime] = useState("");
   const [transferInfo, setTransferInfo] = useState<any>([]);
+  const [data, setData] = useState<any[]>([]);
+  const service = new SampleDevelopmentService();
+
 
   
 
@@ -44,6 +50,27 @@ export const MaterialAllocationPrint = (props:Props) => {
 
 
  console.log(props.data,"lll")
+ console.log(props.id,"id")
+
+  
+ useEffect(() => {
+  if(props?.id)
+  getallMaterialAllocationItemsById();
+}, []);
+
+const getallMaterialAllocationItemsById = () => {
+  const req = new MaterialAllocationitemsIdreq(props?.id);
+
+  service.getallMaterialAllocationItemsById(req).then((res) => {
+    if (res.status) {
+      setData(res.data)
+     
+    } 
+
+      });
+};
+ console.log(data,"f")
+
 
   const handlePrint = () => {
     const invoiceContent = document.getElementById("print");
@@ -72,7 +99,7 @@ export const MaterialAllocationPrint = (props:Props) => {
      
       <div className="invoice" id="print">
         <div >
-          <div style={{marginLeft:250,color: 'var(--secondary-clr)',marginTop:20}}>
+          <div style={{marginLeft:350,color: 'var(--secondary-clr)',marginTop:20}}>
             <h2>Material Issue</h2>
 
            
@@ -86,7 +113,7 @@ export const MaterialAllocationPrint = (props:Props) => {
             <div>
             <Descriptions size='small'>
                 <DescriptionsItem label='Sample Request No' style={{marginLeft:20}}>{props?.data[0]?.request_no}</DescriptionsItem>
-                 <DescriptionsItem label='Buyer'>{props?.data[0]?.buyer_name}</DescriptionsItem>
+                 <DescriptionsItem label='Buyer'style={{marginRight:20}}>{props?.data[0]?.buyer_name}</DescriptionsItem>
                 <DescriptionsItem label='Item Type'>{props?.data[0]?.item_type}</DescriptionsItem>
                 {/* <DescriptionsItem label='Quantity'>{props?.data?.quantity}</DescriptionsItem>
                 <DescriptionsItem label='Total Allocated Quantity'>{props?.data?.total_allocated_quantity}</DescriptionsItem> */}
@@ -105,10 +132,10 @@ export const MaterialAllocationPrint = (props:Props) => {
                   <p className="p-title" >Location</p>
                 </div>
                 <div className="i-col" style={{width:"25%"}}>
-                  <p className="p-title">Quantity </p>
+                  <p className="p-title">Quantity(m) </p>
                 </div>
                 <div className="i-col" style={{width:"25%"}}>
-                  <p className="p-title"> Allocate Quantity</p>
+                  <p className="p-title"> Allocate Quantity(m)</p>
                 </div> 
                 {/* <div className="i-col" style={{width:"25%"}}>
                   <p className="p-title"> RM Sku Code </p>
@@ -127,65 +154,57 @@ export const MaterialAllocationPrint = (props:Props) => {
             </div>
             
             <div className="i-table-body">
-            
-              { transferInfo.map((item, index) => (
-                <div className="i-row" key={index}>
-                  <div className="i-col w-20">
-                    <p style={{textAlign:"center"}}>{item.coNumber}</p>
-                  </div>
-                  <div className="i-col">
-                    <p style={{textAlign:"left",marginRight:60}}>{item.coLineNumber}</p>
-                  </div>
-                  <div className="i-col">
-                  <p style={{marginRight:20,textAlign:'center'}}>{item.rmitemCode}</p>
-                 </div>
-                  <div className="i-col">
-                    <p style={{textAlign:"right"}}>{item.rmSkuCode}</p>
-                  </div>
-                  <div className="i-col">
-                    <p style={{textAlign:"right",marginLeft:60}}>{item.fgItemCode}</p>
-                  </div>
-                  <div className="i-col w-15" >
-                    <p style={{textAlign:"right"}}>{item.fgSkuCode}</p>
-                  </div>
-                  <div className="i-col w-15">
-                    <p>{item.quantity}</p>
-                  </div>
-                  {/* <div className="i-col w-15">
-                    <p>₹ {item.invAmount}</p>
-                  </div> */}
-                </div>
-              ))
-            //   : transferInfo.map((item, index) => (
-            //     <div className="i-row" key={index}>
-            //     <div className="i-col w-20">
-            //       <p style={{textAlign:"center"}}>{item.coNumber}</p>
-            //     </div>
-            //     <div className="i-col">
-            //       <p style={{textAlign:"left",marginRight:60}}>{item.coLineNumber}</p>
-            //     </div>
-            //     <div className="i-col">
-            //     <p style={{marginRight:20,textAlign:'center'}}>{item.rmitemCode}</p>
-            //    </div>
-            //     <div className="i-col">
-            //       <p style={{textAlign:"right"}}>{item.rmSkuCode}</p>
-            //     </div>
-            //     <div className="i-col">
-            //       <p style={{textAlign:"right",marginLeft:60}}>{item.fgItemCode}</p>
-            //     </div>
-            //     <div className="i-col w-15" >
-            //       <p style={{textAlign:"right"}}>{item.fgSkuCode}</p>
-            //     </div>
-            //     <div className="i-col w-15">
-            //       <p>{item.quantity}</p>
-            //     </div>
-            //     {/* <div className="i-col w-15">
-            //       <p>₹ {item.invAmount}</p>
-            //     </div> */}
-            //   </div>
-            //   ))
-              }
-            </div>
+  {data?.map((item, index) => (
+    <div className="i-row" key={index}>
+      <div className="i-col">
+        <p style={{ textAlign: "center", marginLeft: 80 }}>{item.rack_position_name}</p>
+      </div>
+      <div className="i-col">
+        <p style={{ marginRight: 40, textAlign: 'center' }}>{item.quantity}</p>
+      </div>
+      <div className="i-col">
+        <p style={{ marginRight: 80,textAlign: "right" }}>{item.allocate_quantity}</p>
+      </div>
+      {/* <div className="i-col">
+        <p style={{ textAlign: "right", marginLeft: 60 }}>{item.fgItemCode}</p>
+      </div>
+      <div className="i-col w-15" >
+        <p style={{ textAlign: "right" }}>{item.fgSkuCode}</p>
+      </div>
+      <div className="i-col w-15">
+        <p>{item.quantity}</p>
+      </div> */}
+    </div>
+  ))}
+</div>
+
+{/* <div className="i-table-body">
+  {data?.map((item, index) => (
+    <div className="i-row" key={index}>
+      <div className="i-col w-20">
+        <p style={{ textAlign: "center" }}>{item.coNumber}</p>
+      </div>
+      <div className="i-col">
+        <p style={{ textAlign: "left", marginRight: 60 }}>{item.coLineNumber}</p>
+      </div>
+      <div className="i-col">
+        <p style={{ marginRight: 20, textAlign: 'center' }}>{item.rmitemCode}</p>
+      </div>
+      <div className="i-col">
+        <p style={{ textAlign: "right" }}>{item.rmSkuCode}</p>
+      </div>
+      <div className="i-col">
+        <p style={{ textAlign: "right", marginLeft: 60 }}>{item.fgItemCode}</p>
+      </div>
+      <div className="i-col w-15" >
+        <p style={{ textAlign: "right" }}>{item.fgSkuCode}</p>
+      </div>
+      <div className="i-col w-15">
+        <p>{item.quantity}</p>
+      </div>
+    </div>
+  ))}
+</div> */}
             
             <div className="i-table-foot">
               <div className="i-row">
