@@ -400,7 +400,7 @@ export const DocView = () => {
           </Row>
         </Row>
       </Form>
-      <Table size="small" dataSource={formdata} columns={columns} pagination={false} />
+      <Table size="small" dataSource={formdata} columns={columns} pagination={false} className="custom-table"/>
     </Card>
   );
 }
