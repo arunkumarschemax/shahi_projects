@@ -18,6 +18,7 @@ export class RackPositionController {
   @Post('createPosition')
   @ApiBody({type:RackPositionDTO})
   async createPosition(@Body() createDto: any): Promise<CommonResponseModel> {
+    console.log(createDto,"req")
     try {
       return await this.Service.createPosition(createDto);
     } catch (error) {
