@@ -1,13 +1,13 @@
 import { ProColumns, ProTable } from '@ant-design/pro-components'
 import { FactoryActivateDeactivateDto, FactoryDto } from '@project-management-system/shared-models'
 import { FactoryService } from '@project-management-system/shared-services'
-import { Alert, Button, Card, Col, Drawer, Row, Tag, message } from 'antd'
+import { Alert, Button, Card, Checkbox, Col, Drawer, Row, Table, Tag, message } from 'antd'
 import { forEachObject } from 'for-each'
 import { useNavigate } from 'react-router-dom'
 import TableActions from '../../common/table-actions/table-actions'
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons'
 import FactoriesForm from './factories-form'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function FactoriesView() {
   const navigate = useNavigate()
@@ -20,7 +20,9 @@ export default function FactoriesView() {
   const [pageSize, setPageSize] = useState<number>(1);
 
 
-
+  useEffect(() => {
+    getData();
+  }, []);
 
 
   function onEditClick(data:any) {
@@ -40,16 +42,28 @@ export default function FactoriesView() {
   }
 
 
-  const getData = async (params = {}, sort, filter) => {
-    const res = await factoryService.getFactories()
-    if (res.status) {
-      console.log(res.data,"dd")
-      setData(res.data)
-      return { data: res.data, sucess: true, total: res.data.length }
-    } else {
-      return { data: [], sucess: false, total: 0 }
-    }
-  }
+  // const getData = async (params = {}, sort, filter) => {
+  //   const res = await factoryService.getFactories()
+  //   if (res.status) {
+  //     console.log(res.data,"dd")
+  //     setData(res.data)
+  //     return { data: res.data, sucess: true, total: res.data.length }
+  //   } else {
+  //     return { data: [], sucess: false, total: 0 }
+  //   }
+  // }
+
+  const getData = () => {
+    factoryService.getFactories().then((res) => {
+      if (res.status) {
+        setData(res.data);
+      }
+     
+    });
+  };
+  
+  console.log(data,"kkkk")
+
 
   const closeDrawer = () => {
     setDrawerVisible(false);
@@ -73,36 +87,35 @@ export default function FactoriesView() {
     })
   }
 
-  const columns: ProColumns<FactoryDto>[] = [
-    {  title: 'S.No',
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 48,
-      align: 'center'
+  const columns: any = [
+   {
+      title: "S.No",
+      key: "sno",
+      align:"center",
+      width:50,
+      render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
-    { title: 'Factory Name', dataIndex: 'name', align: 'center',sorter: (a, b) => a.name.localeCompare(b.name),
-    sortDirections: ['descend', 'ascend'], },
-    { title: 'Address', dataIndex: "address", align: 'center' },
+    { title: 'Factory Name',
+     dataIndex: 'name',
+      align: 'center',
+     sorter: (a, b) => a.name.localeCompare(b.name),
+     sortDirections: ['descend', 'ascend'], 
+   },
+    { title: 'Address', 
+     dataIndex: "address",
+    //  align: 'center',
+     sorter: (a, b) => a.address.localeCompare(b.address),
+     sortDirections: ['descend', 'ascend'], 
+    },
     {
       title: 'Status',
-      // filters: true,
-      // onFilter: true,
-      // ellipsis: true,
-      // valueType: 'select',
-      // valueEnum: {
-      //   open: {
-      //     text: 'Active',
-      //     status: 'Error',
-      //   },
-      //   closed: {
-      //     text: 'Inactive',
-      //     status: 'Success',
-      //   },
-      // },
-
-      align: 'center',
-      render: (dom, entity) => { return <Tag color={entity.isActive ? 'green' : 'red'}>{entity.isActive ? 'Active' : 'Inactive'}</Tag> },
-     
+      dataIndex: 'isActive',
+      align:"center",
+       render: (isActive, rowData) => (
+        <>
+          {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+        </>
+      ),
       filters: [
         {
           text: 'Active',
@@ -113,14 +126,45 @@ export default function FactoriesView() {
           value: false,
         },
       ],
+      // filterMultiple: false,
+      // onFilter: (value, record) => 
+      // {
+      //   // === is not work
+      //   return record.isActive === value;
+      // },
       filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-        // === is not work
-        return record.isActive === value;
-      },
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{color:'green'}}>Active</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{color:'red'}}>Inactive</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns" >
+          <Button  onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          
+          </div>
+        </div>
+      ),
+
+      
     },
-    { title: 'Action', align: 'center', render: (dom, entity) => { return <TableActions isActive={entity.isActive} onEditClick={() => onEditClick(entity)} onSwitchClick={() => onSwitchClick(entity)} /> } }
+    { title: 'Action',
+     align: 'center', 
+     render: (dom, entity) => { return <TableActions isActive={entity.isActive} onEditClick={() => onEditClick(entity)} onSwitchClick={() => onSwitchClick(entity)} /> } }
   ]
   forEachObject
   return (
@@ -142,27 +186,23 @@ export default function FactoriesView() {
            
         </Col>
           </Row> 
-    <ProTable<FactoryDto, any>
-      request={getData}
-      bordered size='small'
-      // style={{ backgroundColor: '#69c0ff', border: 0 }}
-      // cardBordered
-      // editable={{
-      //   type: 'multiple',
-      // }}
-      search={false}
+          <br></br>
+          <Card>
+    <Table
+    
+       size='small'
+       dataSource={data}
       columns={columns}
       scroll={{x:true,y:500}}
-    //   pagination={{
-    //    pageSize:50,
-    //    onChange(current) {
-    //      setPage(current);
-    //    }
-    //  }}
-    pagination={false}
-      
-
+      pagination={{
+       pageSize:50,
+       onChange(current) {
+         setPage(current);
+       }
+     }}
+    
     />
+    </Card>
 
 <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
               onClose={closeDrawer} visible={drawerVisible} closable={true}>
