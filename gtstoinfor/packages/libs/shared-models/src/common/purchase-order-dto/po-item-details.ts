@@ -16,12 +16,12 @@ export class PoItemDetailsDto {
     transportation: number;
     subjectiveAmount: number;
     constructor(
-        purchaseOrderItemId: number,
+        // purchaseOrderItemId: number,
         colourId: number,
         m3ItemId: number,
         poQuantity: number,
         quantityUomId: number,
-        poitemStatus: PoItemEnum,
+        // poitemStatus: PoItemEnum,
         grnQuantity: number,
         sampleItemId: number,
         indentItemId: number,
@@ -31,12 +31,12 @@ export class PoItemDetailsDto {
         transportation: number,
         subjectiveAmount: number
     ){
-   this.purchaseOrderItemId = purchaseOrderItemId
+//    this.purchaseOrderItemId = purchaseOrderItemId
    this.colourId = colourId
    this.m3ItemId = m3ItemId
    this.poQuantity = poQuantity
    this.quantityUomId = quantityUomId
-   this.poitemStatus = poitemStatus
+//    this.poitemStatus = poitemStatus
    this.grnQuantity = grnQuantity
    this.sampleItemId = sampleItemId
    this.indentItemId = indentItemId

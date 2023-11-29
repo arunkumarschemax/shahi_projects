@@ -193,40 +193,26 @@ export const PurchaseOrderForm = () => {
         })
     }
     const onFinish = () => {
-        // console.log(poForm.getFieldValue('styleId'))
-        // console.log(fabricData)
-        // console.log(trimData)
-        for (const fabData of fabricData) {
-            // console.log(fabData)
-            if (fabData.poQuantity != "") {
-                console.log('^^^^^^^^^')
-                const fabInfo = new PurchaseOrderFbricDto(fabData.indentFabricId, fabData.samplereFabId, fabData.colourId, fabData.remarks, fabData.m3FabricCode, fabData.poQuantity, fabData.quantityUomId)
-                fabricInfo.push(fabInfo)
-            } else {
-                message.error('Please Update Po Quantity')
+        let poItemDetails :PoItemDetailsDto[]=[]
+        console.log(fabricData)
+        console.log(trimData)
+        if(fabricData.length != 0){
+            for(const fabdata of fabricData){
+                const fab  = new PoItemDetailsDto(fabdata.colourId,fabdata.m3FabricCode,fabdata.poQuantity,fabdata.quantityUomId,undefined,fabdata.samplereFabId,fabdata.indentFabricId,fabdata.unitPrice,fabdata.discount,fabdata.tax,fabdata.transportation,fabdata.subjectiveAmount)
+                poItemDetails.push(fab)
             }
         }
-        for (const trim of trimData) {
-            if (trim.poQuantity != "") {
-                const triminfo = new PurchaseOrderTrimDto(trim.sampleTrimInfoId, trim.indentTrmId, trim.colourId, trim.m3TrimCode, trim.poQuantity, trim.quantityUomId)
-                trimInfo.push(triminfo)
-                setSubmitDisable(true)
-            } else {
-                message.error('Please Update Po Quantity')
+        if(trimData.length != 0){
+            for (const trimdata of trimData) {
+                const trim  = new PoItemDetailsDto(trimdata.colourId,trimdata.m3TrimCode,trimdata.poQuantity,trimdata.quantityUomId,undefined,trimdata.sampleItemId,trimdata.indentTrmId,trimdata.unitPrice,trimdata.discount,trimdata.tax,trimdata.transportation,trimdata.subjectiveAmount)
+                poItemDetails.push(trim)
             }
         }
-        let poItemDetails ;
-        if(fabricData !== null){
-            poItemDetails = new PoItemDetailsDto(0,fabricData[0].colourId,fabricData[0].m3FabricCode,fabricData[0].poQuantity,fabricData[0].quantityUomId,PoItemEnum.OPEN,0,fabricData[0].samplereFabId,fabricData[0].indentFabricId,fabricData[0].unitPrice,fabricData[0].discount,fabricData[0].tax,fabricData[0].transportation,fabricData[0].subjectiveAmount)
-        }
-        if(trimData !== null){
-            poItemDetails = new PoItemDetailsDto(0,trimData[0].colourId,trimData[0].m3TrimCode,trimData[0].poQuantity,trimData[0].quantityUomId,PoItemEnum.OPEN,0,trimData[0].samplereFabId,trimData[0].indentTrimId,trimData[0].unitPrice,trimData[0].discount,trimData[0].tax,trimData[0].transportation,trimData[0].subjectiveAmount)
-        }
-       console.log(poItemDetails)
+        console.log(poItemDetails)
         const poDto = new PurchaseOrderDto('po11', poForm.getFieldValue('vendorId'), poForm.getFieldValue('styleId'), poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"), poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'), poForm.getFieldValue('remarks'), poForm.getFieldValue('poMaterialType'), poForm.getFieldValue('indentId'), poForm.getFieldValue('buyerId'), poItemDetails,poForm.getFieldValue('currencyId'),poForm.getFieldValue('exchangeRate'),poForm.getFieldValue('totalAmount'),poForm.getFieldValue('deliveryAddress'), poForm.getFieldValue('indentAgainst'))
         console.log(poDto)
         if (poDto.poItemInfo.length > 0) {
-            // console.log('%%%%%%')
+            console.log('%%%%%%')
             purchaseOrderService.cretePurchaseOrder(poDto).then(res => {
                 // console.log(poDto)
                 if (res.status) {

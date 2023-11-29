@@ -534,15 +534,15 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId }) 
                         <Form.Item name='tax' label='Tax Percentage(%)'
                             rules={[{ required: true, message: 'tax of Fabric is required' }]}
                         >
-                            <Select
+                             <Select
                                 placeholder="Select Tax"
                                 onChange={handleTaxChange}
                                 allowClear
                             >
                                 {tax.map((e) => {
                                     return (
-                                        <Option key={e.taxId} value={e.taxPercentage}>
-                                            {e.taxPercentage}
+                                        <Option key={e.taxId} value={e.taxId} name={e.taxPercentage} type={e.taxCategory}>
+                                           {e.taxCategory}-{e.taxPercentage}
                                         </Option>
                                     )
                                 })}
@@ -553,7 +553,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId }) 
                         <Form.Item name='taxAmount' label='Tax Amount'
                             rules={[{ required: true, message: 'Tax of Fabric is required' }]}
                         >
-                            <Input disabled placeholder="Tax amount" />
+                            <Input  placeholder="Tax amount" />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
@@ -567,7 +567,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId }) 
                         <Form.Item name='subjectiveAmount' label='Subjective Amount'
                             rules={[{ required: true, message: 'Subjective Amount of Fabric is required' }]}
                         >
-                            <Input disabled placeholder="Subjective amount" />
+                            <Input  placeholder="Subjective amount" />
                         </Form.Item>
                     </Col>
                 </Row>
