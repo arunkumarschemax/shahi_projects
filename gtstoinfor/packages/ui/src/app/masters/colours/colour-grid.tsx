@@ -184,6 +184,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
         {
             title: 'Status',
             dataIndex: 'isActive',
+            align:"center",
             render: (isActive, rowData) => (
               <>
                 {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -210,6 +211,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
           {
             title:`Action`,
             dataIndex: 'action',
+            align:"center",
             render: (text, rowData) => (
               <span>  
                <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 

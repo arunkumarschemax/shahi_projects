@@ -111,6 +111,7 @@ const columns: ColumnProps<any>[]  = [
     {
         title:'Buyers',
         dataIndex:'buyerName',
+  
         // render:(text,val) =>{
         //     return (val.buyerInfo.buyerName)
         // }

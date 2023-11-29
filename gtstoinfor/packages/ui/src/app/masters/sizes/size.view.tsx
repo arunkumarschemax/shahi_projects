@@ -186,6 +186,7 @@ service.createsize(variantData).then(res=>{
           {
             title: 'Status',
             dataIndex: 'isActive',
+            align:"center",
             render: (isActive, rowData) => (
               <>
                 {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -212,6 +213,7 @@ service.createsize(variantData).then(res=>{
     {
         title:`Action`,
         dataIndex: 'action',
+        align:"center",
         render: (text, rowData) => (
           <span>  
            <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 

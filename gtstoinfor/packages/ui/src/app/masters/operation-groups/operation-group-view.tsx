@@ -131,6 +131,7 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
     {
       title: 'Status',
       dataIndex: 'isActive',
+      align:"center",
       // ...getColumnSearchProps("isActive"),
       render: (isActive, rowData) => (
         <>
@@ -159,6 +160,7 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
     {
       title: `Action`,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"

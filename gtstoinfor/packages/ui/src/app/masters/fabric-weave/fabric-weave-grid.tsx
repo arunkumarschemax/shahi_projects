@@ -220,6 +220,7 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
     {
       title: 'Status',
       dataIndex: 'isActive',
+      align:"center",
       render: (isActive, rowData) => (
         <>
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -246,6 +247,7 @@ export function FabricWeaveGrid(props: FabricWeaveFormProps) {
     {
       title:`Action`,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         <span>         
             <EditOutlined  className={'editSampleTypeIcon'}  type="edit" 

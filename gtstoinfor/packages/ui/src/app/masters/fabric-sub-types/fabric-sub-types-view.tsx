@@ -197,6 +197,7 @@ export function FabricSubTypeGrid(
     {
       title: 'Status',
       dataIndex: 'isActive',
+      align:"center",
        render: (isActive, rowData) => (
         <>
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -223,6 +224,7 @@ export function FabricSubTypeGrid(
     {
       title:`Action`,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         // rowData.fabricSubTypeName.trim()=='Packing Material' || rowData.fabricSubTypeName.trim()=='Raw Material' ? <span> </span>:
         <span>         

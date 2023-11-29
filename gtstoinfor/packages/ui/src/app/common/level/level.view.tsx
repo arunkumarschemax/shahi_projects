@@ -125,6 +125,7 @@ export const LevelGrid = (props: LevelgridProps) => {
     {
       title: 'Status',
       dataIndex: 'isActive',
+      align:"center",
       // ...getColumnSearchProps("isActive"),
       render: (isActive, rowData) => (
         <>
@@ -153,6 +154,7 @@ export const LevelGrid = (props: LevelgridProps) => {
     {
       title: `Action`,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"

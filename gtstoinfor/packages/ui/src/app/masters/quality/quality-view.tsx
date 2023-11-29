@@ -140,6 +140,7 @@ const active = (rowData: any) => {
   {
     title: `Action`,
     dataIndex: "action",
+    
     // width: 190,
     align: "center",
     render: (text, rowData, record: any) => (
