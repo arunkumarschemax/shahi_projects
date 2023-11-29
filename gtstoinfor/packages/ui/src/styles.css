@@ -1,1 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+.custom-table th{
+    border: 1px solid #000000;
+}
+.custom-table td{
+    border: 1px solid #000000;
+
+}

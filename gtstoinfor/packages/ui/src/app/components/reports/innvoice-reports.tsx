@@ -56,7 +56,7 @@ export const InvoiceReport = () => {
             title: 'S.No',
             dataIndex: 'sno',
             key: 'sno',
-            align: 'center' as const,
+            align: 'left',
             render: (text: any, record: any, index: number) => {
                 return <span>{index + 1}</span>;
             },
@@ -65,7 +65,8 @@ export const InvoiceReport = () => {
             title: 'Vendor Name',
             dataIndex: 'venName',
             key: 'venName',
-            align: 'center' as const,
+            align: 'left' ,
+            width:"400px",
             sorter: (a, b) => a.venName.localeCompare(b.venName),
             render: (text: any, record: { venName: any }) => {
                 return <>{record.venName ? record.venName : '-'}</>;
@@ -76,7 +77,8 @@ export const InvoiceReport = () => {
             dataIndex: 'gstNumber',
             key: 'gstNumber',
             sorter: (a, b) => a.gstNumber.localeCompare(b.gstNumber),
-            align: 'center',
+            align: 'left',
+            width:"400px",
             render: (text: any, record: { gstNumber: any }) => {
                 return <>{record.gstNumber ? record.gstNumber : '-'}</>;
             },
@@ -85,8 +87,9 @@ export const InvoiceReport = () => {
             title: 'Invoice Number',
             dataIndex: 'invoiceNumber',
             key: 'invoiceNumber',
+            width:"400px",
             sorter: (a, b) => a.invoiceNumber.localeCompare(b.invoiceNumber),
-            align: 'center',
+            align: 'left',
             render: (text: any, record: { invoiceNumber: any }) => {
                 return <>{record.invoiceNumber ? record.invoiceNumber : '-'}</>;
             },
@@ -260,6 +263,7 @@ export const InvoiceReport = () => {
                         pagination={false}
                         bordered
                         style={{ marginTop: 20 }}
+                        className='custom-table'
                     />
                 )}
             </Card>
