@@ -1,13 +1,14 @@
 import { ProColumns, ProTable } from '@ant-design/pro-components'
 import { FactoryActivateDeactivateDto, FactoryDto } from '@project-management-system/shared-models'
 import { FactoryService } from '@project-management-system/shared-services'
-import { Alert, Button, Card, Checkbox, Col, Drawer, Row, Table, Tag, message } from 'antd'
+import { Alert, Button, Card, Checkbox, Col, Drawer, Input, Row, Table, Tag, message } from 'antd'
 import { forEachObject } from 'for-each'
 import { useNavigate } from 'react-router-dom'
 import TableActions from '../../common/table-actions/table-actions'
-import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons'
+import { CheckCircleOutlined, CloseCircleOutlined, SearchOutlined } from '@ant-design/icons'
 import FactoriesForm from './factories-form'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import Highlighter from 'react-highlight-words'
 
 export default function FactoriesView() {
   const navigate = useNavigate()
@@ -15,6 +16,10 @@ export default function FactoriesView() {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedData, setSelectedData] = useState<any>(undefined);
   const [data, setData] = useState<any>([]);
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInput = useRef(null);
+
 
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(1);
@@ -23,6 +28,73 @@ export default function FactoriesView() {
   useEffect(() => {
     getData();
   }, []);
+
+  const getColumnSearchProps = (dataIndex: string) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div style={{ padding: 8 }}>
+            <Input
+                ref={searchInput}
+                placeholder={`Search ${dataIndex}`}
+                value={selectedKeys[0]}
+                onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                style={{ width: 188, marginBottom: 8, display: 'block' }}
+            />
+            <Button
+                type="primary"
+                onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                icon={<SearchOutlined />}
+                size="small"
+                style={{ width: 90, marginRight: 8 }}
+            >
+                Search
+            </Button>
+            <Button size="small" style={{ width: 90 }}
+                onClick={() => {
+                    handleReset(clearFilters)
+                    setSearchedColumn(dataIndex);
+                    confirm({ closeDropdown: true });
+                }}>
+                Reset
+            </Button>
+        </div>
+    ),
+    filterIcon: filtered => (
+        <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+    onFilter: (value, record) =>
+        record[dataIndex]
+            ? record[dataIndex]
+                .toString()
+                .toLowerCase()
+                .includes(value.toLowerCase())
+            : false,
+    onFilterDropdownVisibleChange: visible => {
+        if (visible) { setTimeout(() => searchInput.current.select()); }
+    },
+    render: text =>
+        text ? (
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text.toString()}
+                />
+            ) : text
+        )
+            : null
+})
+function handleSearch(selectedKeys, confirm, dataIndex) {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  function handleReset(clearFilters) {
+    clearFilters();
+    setSearchText('');
+  };
 
 
   function onEditClick(data:any) {
@@ -100,12 +172,14 @@ export default function FactoriesView() {
       align: 'center',
      sorter: (a, b) => a.name.localeCompare(b.name),
      sortDirections: ['descend', 'ascend'], 
+     ...getColumnSearchProps('name')
    },
     { title: 'Address', 
      dataIndex: "address",
     //  align: 'center',
      sorter: (a, b) => a.address.localeCompare(b.address),
      sortDirections: ['descend', 'ascend'], 
+     ...getColumnSearchProps('address')
     },
     {
       title: 'Status',
