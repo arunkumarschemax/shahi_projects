@@ -203,6 +203,6 @@ export class SampleRequest {
 
   @OneToMany(type => SampleRequestProcessInfoEntity, sampleReqTrim => sampleReqTrim.sampleReq, { cascade: true })
   sampleProcessInfo: SampleRequestProcessInfoEntity[]
-  @OneToMany(type => Indent, indent => indent.sampleReq, { cascade: true })
-  indentInfo: Indent[]
+  // @OneToMany(type => Indent, indent => indent.sampleReq, { cascade: true })
+  // indentInfo: Indent[]
 }

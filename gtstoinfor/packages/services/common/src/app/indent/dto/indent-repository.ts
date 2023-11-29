@@ -56,8 +56,9 @@ export class IndentRepository extends Repository<Indent> {
     }
     async getAllIndentData() {
         const query = this.createQueryBuilder(`it`)
-            .select(`it.indent_id,it.request_no,it.indent_date,it.expected_date,it.status,it.created_at,it.updated_at,it.style,st.style,st.description `)
+            .select(`b.buyer_name AS buyerName,it.indent_id,it.request_no,it.indent_date,it.expected_date,it.status,it.created_at,it.updated_at,it.style,st.style,st.description `)
             .leftJoin(Style, 'st', 'st.style_id=it.style')
+            .leftJoin(Buyers, 'b', 'b.buyer_id=it.buyer_id')
             .orderBy(' it.expected_date','ASC')
         const data = await query.getRawMany()
         return data

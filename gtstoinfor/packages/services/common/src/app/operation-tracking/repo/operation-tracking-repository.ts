@@ -7,9 +7,9 @@ import { Style } from "../../style/dto/style-entity";
 import { OperationInvRequest } from "../dto/operation-inventory-req";
 
 @Injectable()
-export class OperationTrackingRepository extends Repository<OperationInventory> {
+export class OperationTrackingRepository extends Repository<OperationTracking> {
 
-    constructor(@InjectRepository(OperationInventory) private operationSequence: Repository<OperationInventory>
+    constructor(@InjectRepository(OperationTracking) private operationSequence: Repository<OperationTracking>
     ) {
         super(operationSequence.target, operationSequence.manager, operationSequence.queryRunner);
     }

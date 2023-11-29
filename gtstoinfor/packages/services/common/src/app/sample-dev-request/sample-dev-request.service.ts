@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest} from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -549,11 +549,13 @@ export class SampleRequestService {
       let save
       const filteredData = req.filter(item => item.checkedStatus === 1);
       const transformedData = filteredData.reduce((acc, item) => {
+        // console.log(transformedData,'transformedData')
         const foundIndex = acc.findIndex(
           (el) =>
             el.sampleOrderId === item.sampleOrderId &&
             el.sampleItemId === item.sampleItemId &&
-            el.m3ItemId === item.m3ItemId
+            el.m3ItemId === item.m3ItemId &&
+            el.buyerId ===item.buyerId
         );
       
         if (foundIndex !== -1) {
@@ -570,6 +572,7 @@ export class SampleRequestService {
             sampleOrderId: item.sampleOrderId,
             sampleItemId: item.sampleItemId,
             m3ItemId: item.m3ItemId,
+            buyerId:item.buyerId,
             itemData: [
               {
                 quantity: item.quantity,
@@ -703,7 +706,7 @@ export class SampleRequestService {
     async getAvailbelQuantityAginstBuyerAnditem(req:buyerandM3ItemIdReq):Promise<CommonResponseModel>{
       try{
         const manager = this.dataSource;
-        const query ='SELECT st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId,st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, false AS checkedStatus FROM stocks st   LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id  WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' and st.item_type="'+req.itemType+'"'
+        const query ='SELECT st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId,st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, false AS checkedStatus FROM stocks st LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id  WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' and st.item_type="'+req.itemType+'"'
         const rmData = await manager.query(query);
         if(rmData){
           return new CommonResponseModel(true,1,'data',rmData)
@@ -791,6 +794,25 @@ export class SampleRequestService {
         throw err;
       }
     }
+    async getSampleOrderDetails(req:SampleIdRequest):Promise<CommonResponseModel>{
+      const sizeDta = `SELECT  GROUP_CONCAT(DISTINCT  CONCAT('sum(IF(s.size_id = ''',size_id,''', s.quantity, 0)) AS ',sizes)) AS size_name FROM size s WHERE sizes != '' 
+      AND size_id IN(SELECT DISTINCT size_id FROM sample_request_size_info WHERE sample_request_id=1) ORDER BY  sizes`;
+      const res = await this.dataSource.query(sizeDta)
+      const sizesStr = res[0].size_name
+      console.log(sizesStr,'kkkkk')
+
+      console.log(req,'rehhhh')
+      const sampleDataQry = `SELECT cl.colour,${sizesStr} FROM sample_request_size_info s 
+      left join colour cl on cl.colour_id = s.colour_id
+      WHERE s.sample_request_id=1 GROUP BY s.colour_id`
+      const finalres = await this.dataSource.query(sampleDataQry)
+      if(finalres.length > 0){
+        return new CommonResponseModel(true,1,'data retrived',finalres)
+      }else{
+        return new CommonResponseModel(false,0,'No data')
+      }
+    }
+    
     
     
     async getfabricDetailsOfSample(req:sampleReqIdReq):Promise<CommonResponseModel>{

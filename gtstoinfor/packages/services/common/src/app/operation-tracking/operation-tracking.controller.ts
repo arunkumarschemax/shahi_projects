@@ -2,7 +2,7 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { OperationTrackingService } from "./operation-tracking.service";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { CommonResponseModel, OperationInventoryResponseModel, OperationInventoryDto, OperationSequenceResponse, OperationTrackingResponseModel, OperationsRequest, TabNameReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, OperationInventoryResponseModel, OperationInventoryDto, OperationSequenceResponse, OperationTrackingResponseModel, OperationsRequest, TabNameReq, SampleIdRequest } from "@project-management-system/shared-models";
 import { OperationTrackingDto } from "./dto/operation-tracking-dto";
 import { OperationInvRequest } from "./dto/operation-inventory-req";
 import { OperationInventoryRepository } from "./repo/operation-inventory-repository";
@@ -56,4 +56,26 @@ export class OperationIssuingController{
             return this.applicationExceptionHandler.returnException(OperationInventoryResponseModel, error);
         }
     }
+
+    @Post('/reportOperation')
+    @ApiBody({type: OperationTrackingDto})
+    async reportOperation(@Body() req:any): Promise<OperationInventoryResponseModel> {
+    try {
+        return await this.operationGroupsService.reportOperation(req);
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(OperationInventoryResponseModel, error);
+      }
+    }
+    
+    @Post('/getReportedOperations')
+    @ApiBody({type: TabNameReq})
+    async getReportedOperations(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      console.log(req,'hhhh')
+        return await this.operationGroupsService.getReportedOperations(req);
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+      }
+    }
+    
 }
