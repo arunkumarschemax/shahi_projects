@@ -25,6 +25,7 @@ const currency_list = ["AED", "AFA", "ALL", "AMD", "ANG", "AOA", "ARS", "AUD", "
 // } else if (taxPercentage === 9) {
 //     taxType = "CGST & SGST";
 // }
+
 export const extractedRahat = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
@@ -200,6 +201,7 @@ export const extractedRahat = async (pdf) => {
         extractedHsnData: structuredHSNLines,
     };
 };
+
 // export const extractedRahat = async (pdf) => {
 //     const allLines = await extractPDFDataToLinesData(pdf);
 //     const extractedData = allLines;
@@ -354,6 +356,7 @@ export const extractedRahat = async (pdf) => {
 //         extractedHsnData: structuredHSNLines,
 //     };
 // };
+
 export const extractedSolitaire = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
@@ -8981,7 +8984,6 @@ export const extractedWorldLine = async (pdf) => {
 //     };
 // };
 
-
 export const extractedUps = async (pdf) => {
     const allLines = await extractPDFData(pdf);
     const extractedData = allLines;
@@ -10344,6 +10346,7 @@ export const extractDBSCHENKAR = async (pdf) => {
 
 
 }
+
 export const extractCeva = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
@@ -11134,7 +11137,6 @@ const extractPDFData = async (pdf: PDFDocumentProxy) => {
     return extractedData;
 }
 
-
 // /([\:]).*\[(\w+):(\d+)\]\s+(|.)+\s+(\w+)\s+(|.)+/
 
 // /(\d+\.+\d+)\s+(%)/
@@ -11151,38 +11153,38 @@ export const extractedFederationofIndian = async (pdf) => {
     const currentTax = []
     for (let hsnId = 0; hsnId < extractedData.length; hsnId++) {
         const line = extractedData[hsnId].content;
-        if (line.match(/(\d+)\s+(\d+(\.\d+)?)\s+(\d+(\.\d+)?)\s+(\d+)%\s+(\d+(\.\d+)?)/)) {
-            const matchData = line.match(/(\d+)\s+(\d+(\.\d+)?)\s+(\d+(\.\d+)?)\s+(\d+)%\s+(\d+(\.\d+)?)/) || [];
-            const HSN = matchData[1] || " ";
-            const taxAmount = matchData[2] || 0;
-            const charge = matchData[7] || 0;
-            const taxPercentage = matchData[6] || 0;
+        if (line.match(/(\d+)\s+(\d+(\.\d+)?)\s+(\d+(\.\d+)?)\s+(\d+)%\s+(\d+(\.\d+)?)/)) {  
+            const matchData = line.match(/(\d+)\s+(\d+(\.\d+)?)\s+(\d+(\.\d+)?)\s+(\d+)%\s+(\d+(\.\d+)?)/) || [];  
+            const HSN = matchData[1] || " ";  
+            const taxAmount = matchData[2] || 0;  
+            const charge = matchData[7] || 0;  
+            const taxPercentage = matchData[6] || 0;  
            
 
-            let taxType, igst, cgst, sgst;
+            let taxType, igst, cgst, sgst; 
 
-            if (taxPercentage == 9 || taxPercentage == 6) {
+            if (taxPercentage == 9 || taxPercentage == 6) {  
                 taxType = 'CGST & SGST';
                 igst = 0;
                 cgst = taxAmount;
                 sgst = taxAmount;
-            } else if (taxPercentage == 18 || taxPercentage == 12) {
-                taxType = 'IGST';
-                igst = taxAmount;
-                cgst = 0;
-                sgst = 0;
+            } else if (taxPercentage == 18 || taxPercentage == 12) {  
+                taxType = 'IGST';  
+                igst = taxAmount;  
+                cgst = 0;  
+                sgst = 0;  
             } else {
-                taxType = 'No Tax';
-                igst = 0;
-                cgst = 0;
-                sgst = 0;
-            }
-
-            currentHSN = {
-                HSN: HSN,
-                taxAmount: taxAmount,
-                taxType: taxType,
-                taxPercentage: taxPercentage,
+                taxType = 'No Tax';  
+                igst = 0;  
+                cgst = 0;  
+                sgst = 0;  
+            }  
+  
+            currentHSN = {  
+                HSN: HSN,  
+                taxAmount: taxAmount,  
+                taxType: taxType,  
+                taxPercentage: taxPercentage, 
                 charge: charge,
                 igst: igst,
                 cgst: cgst,
@@ -11191,9 +11193,9 @@ export const extractedFederationofIndian = async (pdf) => {
             };
             withOutDuplicates.push(currentHSN)
         }
-        if (line.match(/\d+\s+\w+(\s|.)(-|.|\w|\s)(\s|.|\w)(\w+)(.|\s)(\s|\w+)\s+\d+(,|.|\d|\s)\d+/)) {
-            const taxMatch = line.match(/\d+\s+\w+(\s|.)(-|.|\w|\s)(\s|.|\w)(\w+)(.|\s)(\s|\w+)\s+\d+(,|.|\d|\s)\d+/) || [];
-            const description = taxMatch[0] ? taxMatch[0].trim().replace(/\d/g, "") : " ";
+        if (line.match(/\d+\s+\w+(\s|.)(-|.|\w|\s)(\s|.|\w)(\w+)(.|\s)(\s|\w+)\s+\d+(,|.|\d|\s)\d+/)) { 
+            const taxMatch = line.match(/\d+\s+\w+(\s|.)(-|.|\w|\s)(\s|.|\w)(\w+)(.|\s)(\s|\w+)\s+\d+(,|.|\d|\s)\d+/) || []; 
+            const description = taxMatch[0] ? taxMatch[0].trim().replace(/\d/g, "") : " "; 
             currentTax.push(description)
 
         }
@@ -11218,7 +11220,7 @@ export const extractedFederationofIndian = async (pdf) => {
 
     let venName = '';
     const invoiceDateRegex = /\d+-\w+-\d+/;
-    const invoiceNumberRegex = /(FIO)[A-Z0-9]{13}/;
+    const invoiceNumberRegex = /(FIO)[A-Z0-9]{13}/; 
     const invoiceCurrency = 'INR';
     const currentYear = new Date().getFullYear();
     const nextYear = currentYear + 1;
@@ -11227,30 +11229,30 @@ export const extractedFederationofIndian = async (pdf) => {
     if (extractedData && Array.isArray(extractedData)) {
         for (const line of extractedData) {
             const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
-            if (gstMatch && !gstNumberExtracted) {
-                venName = 'Federation of Indian Export Organisations';
-                const gstNumber = gstMatch[0];
-                let invoiceNumber = '';
-                let invoiceDate = '';
+            if (gstMatch && !gstNumberExtracted) { 
+                venName = 'Federation of Indian Export Organisations'; 
+                const gstNumber = gstMatch[0]; 
+                let invoiceNumber = ''; 
+                let invoiceDate = ''; 
                 const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
-                    const charge = parseFloat(hsnLine.charge) || 0;
-                    const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
+                    const charge = parseFloat(hsnLine.charge) || 0; 
+                    const taxAmount = parseFloat(hsnLine.taxAmount) || 0; 
                     return add + charge + taxAmount;
                 }, 0).toFixed(2);
 
 
-                const invoiceDateData = extractedData.filter((item) => item.content.match(invoiceDateRegex));
+                const invoiceDateData = extractedData.filter((item) => item.content.match(invoiceDateRegex)); 
                 invoiceDate = invoiceDateData ? invoiceDateData[1].content.replace(/FIO\w{13}\s+dt+.\s+/g, "").trim() : '';
 
                 const invoiceNumberData = extractedData.find((item) => item.content.match(invoiceNumberRegex));
-                invoiceNumber = invoiceNumberData ? invoiceNumberData.content.trim() : '';
+                invoiceNumber = invoiceNumberData ? invoiceNumberData.content.trim() : ''; 
 
-                let igst = "0.00";
-                let cgst = "0.00";
-                let sgst = "0.00";
+                let igst = "0.00";  
+                let cgst = "0.00"; 
+                let sgst = "0.00"; 
 
-                for (const hsnLine of structuredHSNLines) {
-                    if (hsnLine.taxPercentage == 18 || hsnLine.taxPercentage == 12) {
+                for (const hsnLine of structuredHSNLines) { 
+                    if (hsnLine.taxPercentage == 18 || hsnLine.taxPercentage == 12) { 
                         igst = (parseFloat(igst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
                     } else if (hsnLine.taxPercentage == 9 || hsnLine.taxPercentage == 6) {
                         cgst = (parseFloat(cgst) + parseFloat(hsnLine.taxAmount || 0)).toFixed(2);
@@ -12045,37 +12047,37 @@ export const extractedGeodis = async (pdf) => {
     for (let hsnId = 0; hsnId < extractedData.length; hsnId++) {
         const line = extractedData[hsnId].content;
 
-        const matchData = line.match(/(\s.+)(IGST|CGST|SGST)\s+(\d+)%=([\d,.]+)\s+([\d,.]+)\s*(.*)/) || [];
+        const matchData = line.match(/(\s.+)(IGST|CGST|SGST)\s+(\d+)%=([\d,.]+)\s+([\d,.]+)\s*(.*)/) || []; 
 
         if (matchData.length > 0) {
-            const mainDataMatch = matchData[0] || '';
-            const description = matchData[1].replace(/996[0-9]{3}/g, '') || '';
-            const taxPercentage = parseInt(matchData[3]);
-            const taxAmount = parseFloat(matchData[4].replace(/,/g, ''));
-            const charge = matchData[5].replace(/,/g, '') || '';
+            const mainDataMatch = matchData[0] || ''; 
+            const description = matchData[1].replace(/996[0-9]{3}/g, '') || ''; 
+            const taxPercentage = parseInt(matchData[3]); 
+            const taxAmount = parseFloat(matchData[4].replace(/,/g, '')); 
+            const charge = matchData[5].replace(/,/g, '') || ''; 
 
             let taxType, igst, cgst, sgst;
-            if (taxPercentage == 9) {
-                taxType = 'CGST & SGST';
+            if (taxPercentage == 9) { 
+                taxType = 'CGST & SGST'; 
                 igst = 0;
-                cgst = taxAmount;
+                cgst = taxAmount; 
                 sgst = taxAmount;
-            } else if (taxPercentage == 18) {
+            } else if (taxPercentage == 18) { 
                 taxType = 'IGST';
                 igst = taxAmount;
-                cgst = 0;
+                cgst = 0; 
                 sgst = 0;
             } else {
                 taxType = 'No Tax';
                 igst = 0;
-                cgst = taxAmount;
+                cgst = taxAmount; 
                 sgst = taxAmount;
             }
             currentHSN = {
-                mainDataMatch: mainDataMatch,
-                description: description,
-                HSN: HSN,
-                taxPercentage: taxPercentage,
+                mainDataMatch: mainDataMatch, 
+                description: description, 
+                HSN: HSN, 
+                taxPercentage: taxPercentage, 
                 taxAmount: taxAmount,
                 igst: igst,
                 cgst: cgst,
@@ -12097,44 +12099,44 @@ export const extractedGeodis = async (pdf) => {
     let gstNumberExtracted = false;
 
     let venName = '';
-    const invoiceDateRegex = /(\d+-+\w+-+\d+)/;
-    const invoiceNumberRegex = /GIN[A-Z0-9]{11}/;
-    const invoiceAmountRegex = /TOTAL\s+INR\s+(\d+|.)+([\d])/
-    const igstRegex = /ADD IGST\s+(\d+|.)+([\d])/
-    const cgstRegex = /ADD CGST\s+(\d+|.)+([\d])/
-    const sgstRegex = /ADD SGST\s+(\d+|.)+([\d])/
-    const invoiceCurrency = 'INR';
-    const currentYear = new Date().getFullYear();
-    const nextYear = currentYear + 1;
+    const invoiceDateRegex = /(\d+-+\w+-+\d+)/; 
+    const invoiceNumberRegex = /GIN[A-Z0-9]{11}/; 
+    const invoiceAmountRegex = /TOTAL\s+INR\s+(\d+|.)+([\d])/ 
+    const igstRegex = /ADD IGST\s+(\d+|.)+([\d])/ 
+    const cgstRegex = /ADD CGST\s+(\d+|.)+([\d])/ 
+    const sgstRegex = /ADD SGST\s+(\d+|.)+([\d])/ 
+    const invoiceCurrency = 'INR'; 
+    const currentYear = new Date().getFullYear(); 
+    const nextYear = currentYear + 1;   
     const financialYear = `${currentYear}-${nextYear}`;
-
-    if (extractedData && Array.isArray(extractedData)) {
-        for (const line of extractedData) {
-            const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
-            if (gstMatch && !gstNumberExtracted) {
-                venName = 'Geodis India Private Limited';
-                const gstNumber = gstMatch[0];
-                let invoiceNumber = '';
-                let invoiceDate = '';
-                let invoiceAmount = '';
-                let igst = '';
-                let cgst = '';
-                let sgst = '';
+ 
+    if (extractedData && Array.isArray(extractedData)) { 
+        for (const line of extractedData) { 
+            const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g); 
+            if (gstMatch && !gstNumberExtracted) { 
+                venName = 'Geodis India Private Limited'; 
+                const gstNumber = gstMatch[0]; 
+                let invoiceNumber = ''; 
+                let invoiceDate = ''; 
+                let invoiceAmount = ''; 
+                let igst = '';  
+                let cgst = ''; 
+                let sgst = ''; 
 
                 const invoiceAmountData = extractedData.find((item) => item.content.match(invoiceAmountRegex));
-                invoiceAmount = invoiceAmountData ? invoiceAmountData.content.replace(/ TOTAL INR /g, "").trim() : '';
+                invoiceAmount = invoiceAmountData ? invoiceAmountData.content.replace(/ TOTAL INR /g, "").trim() : ''; 
 
                 const invoiceDateData = extractedData.find((item) => item.content.match(invoiceDateRegex));
-                invoiceDate = invoiceDateData ? invoiceDateData.content.replace(/ INVOICE DATE /g, "").trim() : '';
+                invoiceDate = invoiceDateData ? invoiceDateData.content.replace(/ INVOICE DATE /g, "").trim() : ''; 
 
                 const invoiceNumberData = extractedData.find((item) => item.content.match(invoiceNumberRegex));
-                invoiceNumber = invoiceNumberData ? invoiceNumberData.content.match(invoiceNumberRegex)[0].trim() : '';
-
+                invoiceNumber = invoiceNumberData ? invoiceNumberData.content.match(invoiceNumberRegex)[0].trim() : ''; 
+ 
                 const igstData = extractedData.find((item) => item.content.match(igstRegex));
-                igst = igstData ? igstData.content.replace(/ADD IGST /g, "").trim() : '' || 0.00;
+                igst = igstData ? igstData.content.replace(/ADD IGST /g, "").trim() : '' || 0.00; 
 
                 const cgstData = extractedData.find((item) => item.content.match(cgstRegex));
-                cgst = cgstData ? cgstData.content.replace(/ADD CGST /g, "").trim() : '' || 0.00;
+                cgst = cgstData ? cgstData.content.replace(/ADD CGST /g, "").trim() : '' || 0.00; 
 
                 const sgstData = extractedData.find((item) => item.content.match(sgstRegex));
                 sgst = sgstData ? sgstData.content.replace(/ADD SGST /g, "").trim() : '' || 0.00;
@@ -12163,6 +12165,7 @@ export const extractedGeodis = async (pdf) => {
         extractedHsnData: structuredHSNLines
     }
 }
+
 export const extractedJas = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
@@ -12296,6 +12299,7 @@ export const extractedJas = async (pdf) => {
         extractedHsnData: structuredHSNLines
     }
 }
+
 export const extractedGLOBELINK = async (pdf) => {
     const allLines = await extractPDFDataToLinesData(pdf);
     const extractedData = allLines;
