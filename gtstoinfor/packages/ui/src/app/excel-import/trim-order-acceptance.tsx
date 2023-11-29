@@ -126,6 +126,7 @@ const TrimOrderAcceptance = () => {
     req.purchaseOrderNumber = record.order_no
     req.poLineItemNumber = null
     req.buyer = 'uniqlo-unit12'
+    req.orderPlanNumber = record.order_plan_number
     service.saveItemDetailsOfTrimOrder(req).then(res => {
       if (res.status) {
         console.log(res)

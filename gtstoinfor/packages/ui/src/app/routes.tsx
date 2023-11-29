@@ -18,6 +18,7 @@ import WarehouseReport from "./common/reports/ware-house-report"
 import PriceListView from "./masters/pricelist/price-list-view"
 import PriceListForm from "./masters/pricelist/price-list-form"
 import { PriceListDto } from "@project-management-system/shared-models"
+import AddressUpload from "./masters/address/address-excel-upload"
 
 
 
@@ -81,6 +82,7 @@ export const AppRoutes = () => {
                         } } isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
                         } } />} />
+                        <Route path='address-upload' element={<AddressUpload />} />
                     </Route>
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />
