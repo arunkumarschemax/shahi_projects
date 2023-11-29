@@ -38,10 +38,9 @@ const UomForm = () => {
     <Card  title="UOM "
     headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
     extra={<Button
-        className="panel_button"
+        
         onClick={() => navigate('/global/uom/uom-grid')}
         type="primary"
-        style={{ background: "white", color: "#3C085C" }}
     >View</Button>
     }>
          <Form  layout={'vertical'} form={form} onFinish={onFinish}>

@@ -58,6 +58,6 @@ export class Levels{
       versionFlag: number;
     
 
-      @OneToMany(type=>RackPositionEntity, rack=>rack.level,{cascade: true})
-      Level:RackPositionEntity;
+    //   @OneToMany(type=>RackPositionEntity, rack=>rack.level,{cascade: true})
+    //   Level:RackPositionEntity;
 }

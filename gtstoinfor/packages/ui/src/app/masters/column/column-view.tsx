@@ -150,6 +150,7 @@ export const columnView = () => {
             title: <div style={{textAlign:'center'}}>S No</div>,
             key: 'sno',
             width: '70px',
+            align:"center",
             responsive: ['sm'],
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
@@ -256,18 +257,20 @@ export const columnView = () => {
       
       <Card
       title={<span>Columns</span>}
-      style={{ textAlign: "center" }}
+      // style={{ textAlign: "center" }}
       headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       extra={
         <Link to="/masters/column/column-form">
-          <span style={{ color: "white" }}>
+          <span 
+          // style={{ color: "white" }}
+          >
             <Button type={"primary"}>New </Button>{" "}
           </span>
         </Link>
       }
     >
-      <br></br>
-      <Row gutter={40}>
+
+      {/* <Row gutter={40}>
         <Col>
           <Card
             title={"Total Columns: " + data.length}
@@ -306,11 +309,27 @@ export const columnView = () => {
             }}
           ></Card>
         </Col>
-      </Row>
-      <br></br>
-            <br></br>
-            <div style={{overflowX :'auto' }}>
+      </Row> */}
+      <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
 
+           <Alert type='success' message={'Total Columns: ' + data.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + data.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
+  
+            {/* <div style={{overflowX :'auto' }}> */}
+            <Card>
             <Table columns={columns} pagination={{
             pageSize: 50,
             onChange(current, pageSize) {
@@ -319,7 +338,8 @@ export const columnView = () => {
             }
         }}
                     dataSource={data} size='small' bordered/>
-            </div>
+                    </Card>
+            {/* </div> */}
             <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
         {/* <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'> */}

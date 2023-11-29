@@ -179,6 +179,7 @@ export function OperationsGrid(
         title: 'S No',
       key: 'sno',
       width: '70px',
+      align:"center",
       responsive: ['sm'],
       render: (text, object, index) => (page-1) * 10 +(index+1)
       },
@@ -213,6 +214,7 @@ export function OperationsGrid(
       {
         title: 'Status',
         dataIndex: 'isActive',
+        align:"center",
         ...getColumnSearchProps('isActive'),
         sorter: (a, b) => a.operationCode.localeCompare(b.operationCode),
         sortDirections: ["ascend", "descend"],
@@ -244,6 +246,7 @@ export function OperationsGrid(
       {
         title:`Action`,
         dataIndex: 'action',
+        align:"center",
         render: (text, rowData) => (
           <span>         
               <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
@@ -294,37 +297,52 @@ export function OperationsGrid(
     // extra={<span><Button onClick={() => navigate('/masters/operations/operation-form')} type={'primary'}>New</Button></span>}
     >
 
-     <br></br>
-     <Row gutter={24} >
+     
+     {/* <Row gutter={24} >
       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
 
           <Card title={'Total Operations: ' + operationsData.length} style={{textAlign: 'left', height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
-          
-          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
-        <span><Button onClick={() => navigate('/masters/operations/operation-form')}
-              type={'primary'}>New</Button></span>
-        </Col> */}
+
           <Col>
            <Card title={'Active: ' + operationsData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
           </Col>
           <Col>
            <Card title={'In-Active :' + operationsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
           </Col>
-          </Row>
+          </Row> */}
+            <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+
+           <Alert type='success' message={'Total Operations: ' + operationsData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + operationsData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + operationsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
           <br></br>
+          <Card>
           <Table
           rowKey={record => record.operationId}
           columns={columnsSkelton}
           dataSource={operationsData}
+          scroll={{x:true}}
           pagination={{
             onChange(current) {
               setPage(current);
             }
           }}
-          scroll={{x:true}}
           onChange={onChange}
-          bordered />
+          bordered 
+          size='small'/>
+          </Card>
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>
             <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>

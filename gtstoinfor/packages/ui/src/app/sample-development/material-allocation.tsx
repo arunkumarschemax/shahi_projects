@@ -58,6 +58,8 @@ export const MaterialAllocationGrid = () => {
   const materialservice = new MaterialIssueService();
   const [isButtonDisabled, setButtonDisabled] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [row, setRow] = useState({});
+
 
 
   useEffect(() => {
@@ -217,16 +219,21 @@ export const MaterialAllocationGrid = () => {
     setSearchText("");
   }
 
-  const showModal = () => {
+  const showModal = (rowData) => {
     setIsModalOpen(true);
+    console.log(rowData.material_allocation_id,"rr")
+    setRow(rowData.material_allocation_id)
   };
 
   const handleOk = () => {
     setIsModalOpen(false);
+    getData()
+
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    getData()
   };
 
 
@@ -448,7 +455,7 @@ export const MaterialAllocationGrid = () => {
           </span>
           <Divider type="vertical" />
           <span>
-            <Button type="primary" size="small" onClick={showModal}>
+            <Button type="primary" size="small" onClick={()=>showModal(rowData)}>
               Print
             </Button>
           </span>
@@ -478,7 +485,7 @@ export const MaterialAllocationGrid = () => {
     <div>
       <Card
         title={<span style={{ color: "white" }}>Material Allocation</span>}
-        style={{ textAlign: "center" }}
+        // style={{ textAlign: "center" }}
         headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
         extra={
           <span>
@@ -492,7 +499,7 @@ export const MaterialAllocationGrid = () => {
             </Button> */}
           </span>
         }
-        size="small"
+     
       >
         <Form form={form} onFinish={getData}>
           <Row gutter={8}>
@@ -564,9 +571,10 @@ export const MaterialAllocationGrid = () => {
                 title={<React.Fragment>
                </React.Fragment>}
                 onCancel={handleCancel}
+                onOk={handleOk}
                 
                 >
-             < MaterialAllocationPrint data={approvedData}  />         
+             < MaterialAllocationPrint data={approvedData} id ={row}  />         
             </Modal>
 
         <Tabs type={"card"} tabPosition={"top"}>

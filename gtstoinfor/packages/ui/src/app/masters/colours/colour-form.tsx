@@ -61,7 +61,7 @@ export const ColourForm=(props:ColourFromProps)=>{
       
 
       return(
-        <Card title={<span>Color</span>} style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
+        <Card title={<span>Colour</span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
         extra={props.isUpdate==true?"":<Link to='/masters/colour/colour-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
        >
 <Form
@@ -83,7 +83,7 @@ onFinish={saveData}>
 <Row>
 <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}> <Form.Item
           name="colour"
-          label="Color"
+          label="Colour"
           rules={[
             {
               required: true,
@@ -95,7 +95,7 @@ onFinish={saveData}>
             }
           ]}
         >
-          <Input />
+          <Input placeholder='Enter Colour'/>
         </Form.Item>
         </Col>
 </Row>

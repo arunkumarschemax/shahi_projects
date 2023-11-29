@@ -24,7 +24,7 @@ export class IndentDto{
   @ApiProperty({type:IndentTrimDto})
   indentTrimDetails:IndentTrimDto[];
   @ApiProperty()
-  sampleRequestId?: number;
+  buyerId?: number;
   @ApiProperty()
   remarks?: string;
   @ApiProperty()
@@ -49,7 +49,7 @@ export class IndentDto{
     status: CustomerOrderStatusEnum,
     indentFabricDetails:IndentFabricDto[],
     indentTrimDetails:IndentTrimDto[],
-    sampleRequestId?: number,
+    buyerId?: number,
     remarks?: string,
     isActive?: boolean,
     createdAt?: Date,
@@ -73,7 +73,7 @@ export class IndentDto{
     this.updatedAt = updatedAt;
     this.updatedUser = updatedUser;
     this.versionFlag = versionFlag;
-    this.sampleRequestId = sampleRequestId;
+    this.buyerId = buyerId;
   }
 
 

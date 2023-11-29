@@ -1,8 +1,8 @@
 import { EditOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import { faDisplay } from "@fortawesome/free-solid-svg-icons";
 import { M3MastersCategoryReq } from "@project-management-system/shared-models";
-import { ColourService, IndentService, M3MastersService, M3TrimsService, SampleDevelopmentService, UomService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Divider, Form, Input, Popconfirm, Row, Select, Table, Tag, Tooltip } from "antd";
+import { ColourService, IndentService, M3MastersService, M3TrimsService, SampleDevelopmentService, TaxesService, UomService } from "@project-management-system/shared-services";
+import { Button, Card, Col, Divider, Form, Input, InputNumber, Popconfirm, Row, Select, Table, Tag, Tooltip } from "antd";
 import { ColumnProps } from "antd/lib/table";
 import { VALUE_SPLIT } from "rc-cascader/lib/utils/commonUtil";
 import React, { useEffect } from "react";
@@ -24,6 +24,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
     const [uom,setUom] = useState<any[]>([])
     const [inputDisable, setInputDisable] = useState<boolean>(false)
     const [tableColumns, setTableColumns] = useState([]);
+    const [tax, setTax] = useState([])
 
     const [color,setColor] = useState<any[]>([])
     const colorService = new ColourService();
@@ -32,6 +33,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
     const indentservice = new IndentService()
     const uomService =  new UomService()
     const m3TrimService = new M3TrimsService()
+    const taxService = new TaxesService();
 
 
     useEffect(() =>{
@@ -39,6 +41,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
         getM3TrimCodes()
         getTrimType()
         getUom()
+        getTax()
     },[])
 
     useEffect(() =>{
@@ -68,6 +71,14 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
             trimForm.setFieldsValue({m3TrimCode:data.data.m3TrimCode})
         }
     },[data])
+
+    const getTax = () => {
+        taxService.getAllActiveTaxes().then((res) => {
+            if (res.status) {
+                setTax(res.data)
+            }
+        })
+    }
 
     const getUom = () => {
         uomService.getAllUoms().then(res => {
@@ -140,6 +151,13 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
         }
         if(rowData.sampleTrimInfoId != undefined){
             trimForm.setFieldsValue({poQuantity:rowData.sampleOrderQuantity})
+            trimForm.setFieldsValue({ unitPrice: rowData.unitPrice })
+            trimForm.setFieldsValue({ discount: rowData.discount })
+            trimForm.setFieldsValue({ discountAmount: rowData.discountAmount })
+            trimForm.setFieldsValue({ tax: rowData.tax })
+            trimForm.setFieldsValue({ taxAmount: rowData.taxAmount })
+            trimForm.setFieldsValue({ subjectiveAmount: rowData.subjectiveAmount })
+            trimForm.setFieldsValue({ transportation: rowData.transportation })
         setInputDisable(true)
             
         }
@@ -168,7 +186,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
         {
             title:' Indent Code',
             dataIndex:'indentCode',
-            width:'100px'
+            width:'100px' 
         },
         {
             title:'M3 Trim Code',
@@ -187,7 +205,30 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
         {
             title:'Po Quantity',
             dataIndex:'poQuantity',
+            width:'100px'
             
+        },
+        {
+            title: 'Unit Price',
+            dataIndex: 'unitPrice',
+            width:'100px'
+        },
+        {
+            title: 'Discount',
+            dataIndex: 'discount',
+            width:'100px'
+        },
+        {
+            title: 'Tax Percentage',
+            dataIndex: 'tax',
+        },
+        {
+            title: 'Transportation',
+            dataIndex: 'transportation',
+        },
+        {
+            title: 'Subjective Amount',
+            dataIndex: 'subjectiveAmount',
         },
         {
             title: "Action",
@@ -256,6 +297,26 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
             title:'Quantity UOM',
             dataIndex:'quantityUomName',
             
+        },
+        {
+            title: 'Unit Price',
+            dataIndex: 'unitPrice',
+        },
+        {
+            title: 'Discount',
+            dataIndex: 'discount',
+        },
+        {
+            title: 'Tax Percentage',
+            dataIndex: 'tax',
+        },
+        {
+            title: 'Transportation',
+            dataIndex: 'transportation',
+        },
+        {
+            title: 'Subjective Amount',
+            dataIndex: 'subjectiveAmount',
         },
         {
             title: "Action",
@@ -337,7 +398,9 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
                 sampleTrimInfoId:defaultTrimFormData.sampleTrimInfoId,
                 sampleReqNo:defaultTrimFormData.sampleReqNo,
                 sampleOrderQuantity:defaultTrimFormData.sampleOrderQuantity,
-                quantityUomName:defaultTrimFormData.quantityUomName
+                quantityUomName:defaultTrimFormData.quantityUomName,
+                // unitPrice:defaultTrimFormData.unitPrice,
+                // discount:defaultTrimFormData.discount,
             })
         }
 
@@ -351,12 +414,38 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
         console.log(option.name)
         trimForm.setFieldsValue({quantityUomName:option.name?option.name:''})
     }
+
+    let totalUniPrice
+    const unitPriceOnchange = (value) => {
+        const unitPrice=trimForm.getFieldValue('poQuantity')
+        totalUniPrice=Number(unitPrice)*Number(value)
+    }
+
+    let disAmount
+    let totalValueAfterDiscount
+    function discountOnChange(value) {
+       const percent=(Number(value/100))
+        console.log(totalUniPrice)
+        const disAmount=(percent*totalUniPrice)
+        trimForm.setFieldsValue({discountAmount:disAmount})
+        totalValueAfterDiscount=totalUniPrice-disAmount
+        console.log(totalValueAfterDiscount)
+    }
+
+    let taxAmount
+    const handleTaxChange = (value, option) => {
+        const percent=Number(option.name/100)
+        taxAmount=(totalValueAfterDiscount*percent)
+        const totalAmount=taxAmount+totalValueAfterDiscount
+        trimForm.setFieldsValue({taxAmount:Number(taxAmount).toFixed(2)})
+        trimForm.setFieldsValue({subjectiveAmount:Number(totalAmount).toFixed(2)})
+        trimForm.setFieldsValue({ tax: option.name })
+    }
+
     return(
         <Card title={<span style={{color:'blue', fontSize:'17px'}} >Trim Details</span>}>
             <Form form={trimForm} layout="vertical" onFinish={OnTrimAdd} style={{width:'100%'}}>
                 <Row gutter={24}>
-                {/* <Form.Item name={'productGroup'} hidden><Input></Input></Form.Item>
-                    <Form.Item name={'trimCodeName'} hidden><Input></Input></Form.Item> */}
                     <Form.Item name={'colourName'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'indentTrmId'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'sampleTrimInfoId'} hidden><Input></Input></Form.Item>
@@ -367,59 +456,6 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
                     <Form.Item name={'sampleReqNo'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'sampleOrderQuantity'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'quantityUomName'} hidden><Input></Input></Form.Item>
-
-
-                    
-
-                     {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{display:'none'}}>
-                        <Form.Item name={'productGroupId'} label={'Trim type'}
-                        >
-                            <Select
-                             allowClear
-                             showSearch
-                             optionFilterProp="children"
-                             placeholder="Select TrimType"
-                             onChange={TrimTypeOnchange}
-                             disabled={inputDisable}
-                            >
-                            {trimType.map((item) =>{
-                                return (<Option name={item.productGroup} key={item.productGroupId} value
-                                ={item.productGroupId}>{item.productGroup}</Option>)
-                            }) }
-                            </Select>
-                            <Input></Input>
-                        </Form.Item>
-                    </Col> */}
-                    
-                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
-                        <Form.Item
-                        name="trimId"
-                        label="Trim"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Trim Is Required",
-                            },
-                            {
-                                pattern:/^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                                message: `Should contain only alphabets.`,
-                            },
-                        ]}>
-                            <Select
-                             allowClear
-                             showSearch
-                             optionFilterProp="children"
-                             placeholder="Select Trim"
-                             onChange={trimCodeOnchange}
-                             disabled={inputDisable}
-                            >
-                            {trimCode.map((item) =>{
-                                return (<Option type={item.trimCode} name={item.trimCode} key={item.trimId} value
-                                ={item.trimId}>{item.trimCode}</Option>)
-                            }) }
-                            </Select>
-                        </Form.Item>
-                    </Col> */}
                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='m3TrimCode' label='M3 Trim Code' rules={[{required:true,message:'M3 code is required'}]}>
                     <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'
@@ -484,6 +520,67 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{display:'none'}}>
                         <Form.Item name={'indentQuantity'} label={'Indent Quantity'}>
                             <Input disabled={inputDisable}></Input>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
+                        <Form.Item name='unitPrice' label='Unit Price'
+                            rules={[{ required: true, message: 'unit price of Fabric is required' }]}
+                        >
+                            <InputNumber style={{ width: '90px' }} placeholder="unit price" onChange={(e) => unitPriceOnchange(e)} />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Form.Item name='discount' label='Discount'
+                            rules={[{ required: false, message: 'Discount of Fabric is required' }]}
+                        >
+                            <InputNumber style={{ width: '90px' }} placeholder="discount" onChange={(e) => discountOnChange(e)} />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Form.Item name='discountAmount' label='Discount Amount'
+                            rules={[{ required: false, message: 'Discount of Fabric is required' }]}
+                        >
+                            <Input disabled placeholder="discount amount" />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Form.Item name='tax' label='Tax Percentage(%)'
+                            rules={[{ required: true, message: 'tax of Fabric is required' }]}
+                        >
+                            <Select
+                                placeholder="Select Tax"
+                                onChange={handleTaxChange}
+                                allowClear
+                            >
+                                {tax.map((e) => {
+                                    return (
+                                        <Option key={e.taxId} value={e.taxId} name={e.taxPercentage} type={e.taxCategory}>
+                                           {e.taxCategory}-{e.taxPercentage}
+                                        </Option>
+                                    )
+                                })}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Form.Item name='taxAmount' label='Tax Amount'
+                            rules={[{ required: true, message: 'Tax of Fabric is required' }]}
+                        >
+                            <Input disabled placeholder="Tax amount" />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Form.Item name='transportation' label='Transportation'
+                            rules={[{ required: false, message: 'Transportation of Fabric is required' }]}
+                        >
+                            <Input placeholder="Transportation" />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Form.Item name='subjectiveAmount' label='Subjective Amount'
+                            rules={[{ required: true, message: 'Subjective Amount of Fabric is required' }]}
+                        >
+                            <Input disabled placeholder="Subjective amount" />
                         </Form.Item>
                     </Col>
                    

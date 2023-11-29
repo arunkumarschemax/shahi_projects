@@ -5,6 +5,7 @@ export class StyleService extends CommonAxiosService{
   URL = "/style";
 
   async creteStyle(dto: StyleDto): Promise<AllStyleResponseModel> {
+    console.log(dto,"sharser")
     return this.axiosPostCall(this.URL + "/creteStyle", dto)
 }
   async updateStyle(dto: StyleDto): Promise<AllStyleResponseModel> {
