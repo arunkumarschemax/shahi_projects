@@ -241,37 +241,37 @@ export const DocReader = (props: DocReaderProps) => {
 
                 case VendorNameEnum.extractedJeena:
                     processedData = await extractedJeena(pdfData);
-                    console.log('UNITED LINER:', processedData);
+                    console.log('JEENA & COMPANY:', processedData);
                     break;
 
                 case VendorNameEnum.extractedKerryIndev:
                     processedData = await extractedKerryIndev(pdfData);
-                    console.log('UNITED LINER:', processedData);
+                    console.log('KERRY INDEV:', processedData);
                     break;
 
                 case VendorNameEnum.extractedGateway:
                     processedData = await extractedGateway(pdfData);
-                    console.log('UNITED LINER:', processedData);
+                    console.log('GATEWAY:', processedData);
                     break;
                 case VendorNameEnum.extractedFederationofIndian:
                     processedData = await extractedFederationofIndian(pdfData);
-                    console.log('UNITED LINER:', processedData);
+                    console.log('FEDERATION OF INDIA:', processedData);
                     break;
                 case VendorNameEnum.extractedLogWin:
                     processedData = await extractedLogWin(pdfData);
-                    console.log('UNITED LINER:', processedData);
+                    console.log('LOGWIN:', processedData);
                     break;
                 case VendorNameEnum.extractedHellmann:
                     processedData = await extractedHellmann(pdfData);
-                    console.log('UNITED LINER:', processedData);
+                    console.log('HELLMANN:', processedData);
                     break;
                 case VendorNameEnum.extractedGeodis:
                     processedData = await extractedGeodis(pdfData);
-                    console.log('UNITED LINER:', processedData);
+                    console.log('GEODIS:', processedData);
                     break;
                 case VendorNameEnum.extractedJas:
                     processedData = await extractedJas(pdfData);
-                    console.log('UNITED LINER:', processedData);
+                    console.log('JAS:', processedData);
                     break;
                     case VendorNameEnum.extractedGLOBELINK: {
                         const globeLinkPDFData = await extractedGLOBELINK(pdfData);

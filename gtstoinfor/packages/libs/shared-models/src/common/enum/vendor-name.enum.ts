@@ -67,10 +67,10 @@ export enum VendorNameEnum {
 
     
 
-    extractedJeena="Jeena & Company",
+    extractedJeena="JEENA & COMPANY",
     extractedKerryIndev="KERRY INDEV",
-    extractedGateway='Gateway',
-    extractedFederationofIndian='Federation of Indian',
+    extractedGateway='GATEWAY',
+    extractedFederationofIndian='FEDERATION OF INDIA',
     extractedLogWin='LOGWIN',
     extractedHellmann="HELLMANN",
     extractedGeodis="GEODIS",
