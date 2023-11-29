@@ -9303,9 +9303,9 @@ export const extractedCube = async (pdf) => {
         let venName = '';
         let invoiceDate = '';
         let invoiceNumber = '';
-        let igst = '';
-        let sgst = '';
-        let cgst = '';
+        let igst = "0.00";
+        let sgst = "0.00";
+        let cgst = "0.00";
 
         for (const line of extractedData) {
             const gstMatch = line.content.match(/[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g);
@@ -9321,13 +9321,13 @@ export const extractedCube = async (pdf) => {
                 invoiceNumber = invoiceNumberData ? invoiceNumberData.content.replace(/AH+\w+\s+\w+\d\s+/g, "") : '';
 
                 const igstData = extractedData.find((item) => item.content.match(igstRegex));
-                igst = igstData ? igstData.content.replace(/IGST\s+/g, "").replace(/\,/g,"") : '';
+                igst = igstData ? igstData.content.replace(/IGST\s+/g, "").replace(/\,/g,"") : 0.00 ;
 
                 const cgstData = extractedData.find((item) => item.content.match(cgstRegex));
-                cgst = cgstData ? cgstData.content.replace(/CGST\s+/g, "").replace(/\,/g,"") : '';
+                cgst = cgstData ? cgstData.content.replace(/CGST\s+/g, "").replace(/\,/g,"") : 0.00;
 
                 const sgstData = extractedData.find((item) => item.content.match(sgstRegex));
-                sgst = sgstData ? sgstData.content.replace(/SGST\s+/g, "").replace(/\,/g,"") : '';
+                sgst = sgstData ? sgstData.content.replace(/SGST\s+/g, "").replace(/\,/g,"") : 0.00;
            
                 const invoiceAmount = structuredHSNLines.reduce((total, hsnLine) => {
                     const taxAmount = parseFloat(hsnLine.taxAmount) || 0;

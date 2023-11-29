@@ -4,4 +4,9 @@
 }
 .custom-table td{
     border: 1px solid #000000;
+
+}
+.ant-table-thead .ant-table-cell{
+    background-color: rgb(127, 232, 255) !important;
+    box-shadow: 0px 4px 8px 0px #00000033 !important;
 }
