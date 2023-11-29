@@ -274,12 +274,12 @@ export class DpomService {
 
     async coLineCreationReq(req: any): Promise<CommonResponseModel> {
         let buyer;
+        const entity = new COLineEntity()
         if (req.poLineItemNumber) {
             buyer = 'Nike-U12'
         } else {
             buyer = 'Uniqlo-U12'
         }
-        const entity = new COLineEntity()
         entity.buyer = buyer
         entity.buyerPo = req.purchaseOrderNumber;
         entity.lineItemNo = req.poLineItemNumber;
@@ -544,23 +544,40 @@ export class DpomService {
                     await driver.quit();
                 } else {
                     if (po.buyer == 'Uniqlo-U12') {
-                        await driver.wait(until.elementLocated(By.xpath('//*[@id="ViewOrderID"]')), 10000);
-                        await driver.findElement(By.xpath('//*[@id="ViewOrderID"]')).click();
+                        await driver.sleep(10000)
+                        await driver.wait(until.elementLocated(By.xpath('//*[@id="orno"]')), 10000);
+                        const coNoElement = await driver.findElement(By.xpath('//*[@id="orno"]'));
+                        const coNo = await coNoElement.getAttribute('value');
                         await driver.sleep(5000)
-                    }
-                    await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[7]')), 10000);
-                    const coDateElement = await driver.findElement(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr/td[6]'));
-                    const coDate = await coDateElement.getAttribute('innerText');
-                    const coNoElement = await driver.findElement(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr/td[7]'));
-                    const coNo = await coNoElement.getAttribute('innerText');
-                    if (coNo) {
-                        const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { coNumber: coNo, status: 'Success', coDate: coDate });
-                        // await driver.navigate().refresh();
-                        await driver.sleep(10000)
+                        const currentDate = new Date();
+                        const day = currentDate.getDate().toString().padStart(2, '0');
+                        const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(currentDate);
+                        const year = currentDate.getFullYear().toString().slice(-2);
+                        const currentDateFormatted = `${day}-${month}-${year}`;
+                        if (coNo) {
+                            const update = await this.coLineRepository.update({ buyerPo: po.buyer_po }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
+                            // await driver.navigate().refresh();
+                            await driver.sleep(10000)
+                        } else {
+                            const update = await this.coLineRepository.update({ buyerPo: po.buyer_po }, { status: 'Failed' });
+                            // await driver.navigate().refresh();
+                            await driver.sleep(10000)
+                        }
                     } else {
-                        const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed' });
-                        // await driver.navigate().refresh();
-                        await driver.sleep(10000)
+                        await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[7]')), 10000);
+                        const coDateElement = await driver.findElement(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr/td[6]'));
+                        const coDate = await coDateElement.getAttribute('innerText');
+                        const coNoElement = await driver.findElement(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr/td[7]'));
+                        const coNo = await coNoElement.getAttribute('innerText');
+                        if (coNo) {
+                            const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { coNumber: coNo, status: 'Success', coDate: coDate });
+                            // await driver.navigate().refresh();
+                            await driver.sleep(10000)
+                        } else {
+                            const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed' });
+                            // await driver.navigate().refresh();
+                            await driver.sleep(10000)
+                        }
                     }
                 }
             }
@@ -579,50 +596,6 @@ export class DpomService {
             return false;
         }
     }
-
-    // async createCOline(req: any): Promise<CommonResponseModel> {
-    //     const transactionManager = new GenericTransactionManager(this.dataSource)
-    //     try {
-    //         await transactionManager.startTransaction()
-    //         const coLineEntity = new COLineEntity()
-    //         coLineEntity.buyerPo = req.purchaseOrderNumber
-    //         coLineEntity.division = 100
-    //         coLineEntity.PCH = 'KNT'
-    //         coLineEntity.facility = 100
-    //         coLineEntity.orderNo = ''
-    //         coLineEntity.customerCode = 'NIK00001'
-    //         coLineEntity.itemNo = req.itemNo
-    //         coLineEntity.itemDesc = req.itemDesc
-    //         coLineEntity.orderQty = req.orderQty
-    //         coLineEntity.UOM = 'Pcs'
-    //         coLineEntity.size = req.size
-    //         coLineEntity.price = req.price
-    //         coLineEntity.currency = req.currency
-    //         coLineEntity.coFinalAppDate = ''
-    //         coLineEntity.PCD = ''
-    //         coLineEntity.commision = ''
-    //         coLineEntity.planNo = ''
-    //         coLineEntity.planUnit = ''
-    //         coLineEntity.payTerms = ''
-    //         coLineEntity.payTermsDesc = ''
-    //         coLineEntity.createdUser = 'nike'
-    //         const saveEntity: COLineEntity = await transactionManager.getRepository(COLineEntity).save(coLineEntity);
-    //         const data = await this.coLineRepository.find()
-    //         if (!saveEntity) {
-    //             await transactionManager.releaseTransaction()
-    //             return new CommonResponseModel(false, 0, 'something went wrong')
-    //         }
-    //         const statusUpdate = await this.approveDpomLineItemStatus(req);
-    //         if (!statusUpdate.status) {
-    //             await transactionManager.releaseTransaction()
-    //             return new CommonResponseModel(false, 0, 'something went wrong')
-    //         }
-    //         await transactionManager.completeTransaction();
-    //         return new CommonResponseModel(true, 1, 'CO-line created successfully')
-    //     } catch (err) {
-    //         throw err
-    //     }
-    // }
 
     async sendMail(to: string, subject: string, message: any[]) {
         let content = message.reduce(function (a, b) {
@@ -900,7 +873,7 @@ export class DpomService {
                         const poDetails = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: req.poNumber, poLineItemNumber: parseInt(item.itemNo, 10), sizeDescription: size.size } })
                         if (poDetails) {
                             const updateOrder = await transactionManager.getRepository(DpomEntity).update({ purchaseOrderNumber: req.poNumber, poLineItemNumber: parseInt(item.itemNo, 10), sizeDescription: size.size }, {
-                                shipToAddressLegalPO: req.shipToAddress, legalPoQty: Number(size.qunatity), legalPoPrice: price, legalPoCurrency: req.currency, itemVasPDF: req.itemVasText, divertedToPos: matches.join(',')
+                                shipToAddressLegalPO: req.shipToAddress, legalPoQty: Number(size.qunatity), legalPoPrice: price, legalPoCurrency: req.currency, itemVasPDF: itemText, divertedToPos: matches.join(',')
                             })
                             if (!updateOrder.affected) {
                                 await transactionManager.releaseTransaction();
