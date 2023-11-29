@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -175,7 +175,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
             render: (text, object, index) => (page - 1) * 10 + (index + 1) 
         },
         {
-            title: 'Color',
+            title: 'Colour',
             dataIndex: 'colour',
             sorter: (a, b) => a.colour.localeCompare(b.colour),
             sortDirections: ['descend', 'ascend'],
@@ -246,21 +246,26 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
       ];
 
       return (
-        <Card title={<span>Colors</span>}
-        style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/masters/colour/colour-form"  ><span><Button type={'primary'} >New </Button> </span></Link>}>
+        <Card title={<span>Colours</span>}
+      headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/masters/colour/colour-form"  ><span><Button type={'primary'} >New </Button> </span></Link>}>
 <br></br>
 <>
-<Row gutter={40}>
-    <Col>
-<Card title={'Total Colors: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+      <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+           <Alert type='success' message={'Total Colours: ' + variantData.length} style={{fontSize:'15px'}} />
         </Col>
-        <Col>
-          <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
         </Col>
-        <Col>
-          <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
         </Col>
-</Row>
+          </Row> 
+          <br></br>
        
         <Card>
         <Table
@@ -268,12 +273,13 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
                 // rowKey={record => record.variantId}
                 columns={columnsSkelton}
                 dataSource={variantData}
-                pagination={{
-                  onChange(current) {
-                    setPage(current);
-                  }
-                }}
-                scroll={{x:true}}
+                scroll={{x:true,y:500}}
+           pagination={{
+            pageSize:50,
+            onChange(current) {
+              setPage(current);
+            }
+          }}
                 onChange={onChange}
                 bordered />
           </Card>

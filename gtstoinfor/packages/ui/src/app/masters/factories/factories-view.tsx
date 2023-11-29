@@ -126,7 +126,6 @@ export default function FactoriesView() {
   return (
 <>
 <Card title='Sample Locations'  headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/global/factories/factories-form')} type={'primary'}>New</Button></span>} >
-    <br></br>
 <Row gutter={24}>
       <Col span={4}></Col>
      <Col span={5}>
@@ -154,12 +153,13 @@ export default function FactoriesView() {
       search={false}
       columns={columns}
       scroll={{x:true,y:500}}
-      pagination={{
-       pageSize:50,
-       onChange(current) {
-         setPage(current);
-       }
-     }}
+    //   pagination={{
+    //    pageSize:50,
+    //    onChange(current) {
+    //      setPage(current);
+    //    }
+    //  }}
+    pagination={false}
       
 
     />
