@@ -39,18 +39,14 @@ import Barcode from "react-barcode";
   const { Option } = Select;
   
   export const GRNView = () => {
-    const [tabName, setTabName] = useState<string>("Fabric");
     const [page, setPage] = React.useState(1);
-    const [sourcingForm] = Form.useForm();
     const grnService = new GRNService();
     const [grn, setGrn] = useState<any[]>([]);
     const navigate = useNavigate();
-    // const service = new RequisitionService()
     const logInUser = localStorage.getItem("userName");
     const [barcodeModal, setBarcodeModal] = useState<boolean>(false);
     const [barcode, setBarcode] = useState<string>(null);
     const [tableData, setTableData] = useState<any[]>([]);
-    const [barcodeInfo, setBarcodeInfo] = useState<string>("");
     const [form] = Form.useForm();
     const [filterData, setFilterData] = useState<any[]>([]);
     const [data, setData] = useState<any[]>([]);
@@ -80,35 +76,19 @@ import Barcode from "react-barcode";
   
   
     const getAll = () => {
-     
-      grnService.getAllGrn().then((res) => {
+      const req = new GrnReq()
+      grnService.getAllGrn(req).then((res) => {
         if (res.status) {
           setData(res.data);
           setFilterData(res.data);
         }
       });
     };
-  
-    const getStyle = (val:number) => {
-      console.log(val,'valllllll');
-      
-      const req = new GrnReq(val)
-      grnService.getGrnItemById(req).then((res) => {
-        if (res.status) {
-          setGrn(res.data);
-        }
-      });
-    };
-  
-   const details =(id:number,type:string) =>{
-    navigate('/grn-detail-view',{state:{id:id,type:type}})
+
+   const details =(rowData) =>{
+    const navigateData = filterData.filter(req => req.grnId === rowData)
+    return navigate(`/grn-detail-view`, { state: { data: navigateData } });
    }
-  
-    // const generatePoForFabric = (rowData:any) =>{
-    //   // console.log(rowData)
-    //   navigate('/purchase-order', { state: { data: rowData, type:'Indent' } })
-    // }
-  
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
       setSearchText(selectedKeys[0]);
@@ -218,34 +198,42 @@ import Barcode from "react-barcode";
       },
       {
         title: <div style={{textAlign:"center"}}>Vendor</div>,
-        dataIndex: "vendorName",
-        ...getColumnSearchProps("vendorName"),
+        dataIndex: "vendor",
+        ...getColumnSearchProps("vendor"),
         render: (val,data) => {
-          return data.vendorName ? data.vendorName : "-";
+          return data.vendor ? data.vendor : "-";
         }
       }, 
       {
-        title: <div style={{textAlign:"center"}}>Material Type</div>,
-        dataIndex: 'materialType',
-        ...getColumnSearchProps("materialType"),
+        title: <div style={{textAlign:"center"}}>Invoice No</div>,
+        dataIndex: "invoiceNo",
+        ...getColumnSearchProps("invoiceNo"),
         render: (val,data) => {
-          return data.materialType ? data.materialType : "-";
+          return data.invoiceNo ? data.invoiceNo : "-";
+        }
+      }, 
+      {
+        title: <div style={{textAlign:"center"}}>Item Type</div>,
+        dataIndex: 'itemType',
+        ...getColumnSearchProps("itemType"),
+        render: (val,data) => {
+          return data.itemType ? data.itemType : "-";
         }
        
       }, {
-        title: <div style={{textAlign:"center"}}>Contact Person</div>,
-        dataIndex: "contact_person",
-        ...getColumnSearchProps("contact_person"),
+        title: <div style={{textAlign:"center"}}>GRN Type</div>,
+        dataIndex: "grnType",
+        ...getColumnSearchProps("grnType"),
         render: (val,data) => {
-          return data.contact_person ? data.contact_person : "-";
+          return data.grnType ? data.grnType : "-";
         }
       },
       {
         title: <div style={{textAlign:"center"}}>GRN Date</div>,
         align:'center',
-        dataIndex: "grn_date",
+        dataIndex: "grnDate",
         render: (val,data) => {
-          return data.grn_date ?moment( data.grn_date).format('YYYY-MM-DD') : "-";
+          return data.grnDate ?moment( data.grnDate).format('YYYY-MM-DD') : "-";
         }
       },
       {
@@ -263,7 +251,7 @@ import Barcode from "react-barcode";
           
           return(
           <><span>
-           <Button title={"Detail View"} onClick={() => details(rowData.grn_id,rowData.po_material_type)}>
+           <Button title={"Detail View"} onClick={() => details(rowData.grnId)}>
               <EyeOutlined />
             </Button>
           </span>
@@ -282,6 +270,10 @@ import Barcode from "react-barcode";
       setBarcode("");
       window.close();
     };
+
+    const onReset = ()=>{
+      form.resetFields()
+    }
   
     return (
       <Card
@@ -293,18 +285,105 @@ import Barcode from "react-barcode";
           </span>
         }
       >
-        {/* {barcode.length > 0 ? <BarcodePrint key={Date.now() + barcode} printBarcodes={closeWindow} closeBarcodePopUp={closeWindow}
-            columns={barcodeWithColumns} newWindow={false} barcodeInfo={barcode} /> : ''} */}
+        <Form form={form}>
+          <Row gutter={8}>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
+            <Form.Item name="grnNo" label="GRN No">
+              <Select
+                showSearch
+                allowClear
+                optionFilterProp="children"
+                placeholder="Select GRB No"
+              >
+                {data.map((e) => {
+                  return (
+                    <Option key={e.grnId}value={e.grnNo}>
+                      {e.grnNo}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
 
-        <Modal
-          open={barcodeModal}
-          footer={[]}
-          title={barcodeInfo === "m3ItemCode" ? "M3 Item Code" : "Request Number"}
-        >
-          <div style={{ textAlign: "center" }}>
-            <Barcode value={barcode} height={30} />
-          </div>
-        </Modal>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
+            <Form.Item name="itemType" label="Style">
+              <Select
+                showSearch
+                allowClear
+                optionFilterProp="children"
+                placeholder="Select Item Type"
+              >
+                {data.map((e) => {
+                  return (
+                    <Option key={e.style} value={e.style} name={e.style}>
+                      {e.style}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 4 }}
+            lg={{ span: 4 }}
+            xl={{ span: 6 }}
+          >
+            <Form.Item name="status" label="Status">
+              {/* <Select
+                // showSearch
+                // placeholder="Vendors"
+                optionFilterProp="children"
+                placeholder="Select Status"
+              >
+                {Object.keys(CustomerOrderStatusEnum)
+                  .sort()
+                  .map((status) => (
+                    <Select.Option
+                      key={CustomerOrderStatusEnum[status]}
+                      value={CustomerOrderStatusEnum[status]}
+                    >
+                      {CustomerOrderStatusEnum[status]}
+                    </Select.Option>
+                  ))}
+              </Select> */}
+            </Form.Item>
+          </Col>
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 4 }}
+            lg={{ span: 4 }}
+            xl={{ span: 2 }}
+          >
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                icon={<SearchOutlined />}
+                // onClick={onSearch}
+              >
+                Search
+              </Button>
+            </Form.Item>
+          </Col>
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 4 }}
+            lg={{ span: 4 }}
+            xl={{ span: 2 }}
+          >
+            <Form.Item>
+              <Button danger icon={<UndoOutlined />} onClick={onReset}>
+                Reset
+              </Button>
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
         <Table
         columns={tableColumns}
         dataSource={filterData}

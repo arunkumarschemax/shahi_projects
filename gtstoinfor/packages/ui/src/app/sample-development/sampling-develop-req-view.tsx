@@ -237,9 +237,13 @@ import AlertMessages from "../common/common-functions/alert-messages";
         sorter: (a, b) => a.availableQuantity.localeCompare(b.availableQuantity),
         sortDirections: ["descend", "ascend"],
         render: (text, record) => {
+          let consumedQty = 0
+          if(record.fabric_consumption > 0){
+            consumedQty = record.fabric_consumption
+          }
             return (
               <>
-                {record.availableQuantity ? record.availableQuantity : "Not Available"
+                {record.availableQuantity ? (record.availableQuantity-consumedQty) : "Not Available"
                   }
               </>
             );
@@ -307,9 +311,13 @@ import AlertMessages from "../common/common-functions/alert-messages";
         sorter: (a, b) => a.availabeQuantity.localeCompare(b.availabeQuantity),
         sortDirections: ["descend", "ascend"],
         render: (text, record) => {
+          let consumedQty = 0
+          if(record.trim_consumption > 0){
+            consumedQty = record.trim_consumption
+          }
             return (
               <>
-                {record.availabeQuantity ? record.availabeQuantity : "Not Available"
+                {record.availabeQuantity ? (record.availabeQuantity-consumedQty) : "Not Available"
                   }
               </>
             );
@@ -353,7 +361,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
       },
     
       {
-        title: "Availble Quantity",
+        title: "Available Quantity",
         width: "150px",
         dataIndex: "quantity",
       },

@@ -1,5 +1,5 @@
 export class BuyersDestinationRequest{
-    buyerId:number
+    buyerId?:number
     BsId?:number;
     destinationId?:number;
     sizeId?:number;
@@ -7,7 +7,7 @@ export class BuyersDestinationRequest{
 
 
     
-    constructor(buyerId:number, BsId?:number,destinationId?:number,sizeId?:number,colourId?:number){
+    constructor(buyerId?:number, BsId?:number,destinationId?:number,sizeId?:number,colourId?:number){
         this.BsId = BsId;
         this.destinationId = destinationId
         this.sizeId = sizeId

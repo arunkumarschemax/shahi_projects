@@ -18,6 +18,10 @@ export class GRNService extends CommonAxiosService {
     return this.axiosPostCall(this.URL + "/getAllGrn",req)
   }
 
+  async getGRNItemsData(req?:GrnReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getGRNItemsData",req)
+  }
+
   async getGrnItemById(req:GrnReq): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getGrnItemById",req)
   }

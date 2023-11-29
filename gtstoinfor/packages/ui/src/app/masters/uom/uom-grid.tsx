@@ -122,14 +122,13 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
-      title: "UOM Category",
+      title: <div style={{textAlign:"center"}}>UOM Category</div>,
       dataIndex: "uomCategory",
-      // sorter: (a, b) => a.uom.localeCompare(b.model),
-      // sortDirections: ["ascend", "descend"],
-      onFilter: (value, record) => record.name.indexOf(value) === 0,
-      sorter: (a, b) => a.uom.length - b.name.length,
-      sortDirections: ['descend'],
-      width:10,    
+      width:70,
+      sorter: (a, b) => a.uom.localeCompare(b.model),
+      sortDirections: ["ascend", "descend"],
+      
+
       filters: [
         {
           text: 'Area',
@@ -148,9 +147,8 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
           value: 'Volume',
         },
       ],
-      // onFilter: (value,record) =>{ return record.uomCategory === value}
-      // onFilter: (value: string, record) => record.uomCategory.indexOf(value) === 0,
-      // sorter: (a, b) => a.name.length - b.name.length,
+      onFilter: (value,record) =>{ return record.uomCategory === value}
+      
     },
     {
       title: "UOM",

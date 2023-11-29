@@ -95,7 +95,7 @@ const service1= new ColumnService()
         <Form form={form} layout={'vertical'} name="control-hooks" onFinish={onFinish}>
           <Row gutter={12}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
-              <Form.Item label="Column" name="column"
+              <Form.Item label="Column" name="columnId"
                rules={[
                 { required: true, message: 'Column is required' },]}
               >

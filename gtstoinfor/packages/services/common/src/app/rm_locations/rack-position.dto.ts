@@ -10,12 +10,10 @@ export class RackPositionDTO {
     rackPositionName: string;
 
     @ApiProperty()
-    ColumnId: number;
-    Column:string;
+    columnId: number;
 
     @ApiProperty()
     levelId: number;
-    levelName:string;
 
     @ApiProperty()
     positionCode: number;
