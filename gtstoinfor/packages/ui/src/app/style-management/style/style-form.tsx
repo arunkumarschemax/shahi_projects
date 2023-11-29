@@ -125,15 +125,16 @@ const service = new StyleService()
   const saveEmployee = (data: StyleDto) => {
     service.creteStyle(data).then((res) => {
         if (res.status) {
+          console.log(data,"dd")
           AlertMessages.getSuccessMessage('Style Created Successfully');
           if(filelist.length >0){
-            console.log(res.data[0].styleId)
+            console.log(res.data[0]?.styleId)
             const formData = new FormData();
             filelist.forEach((file: any) => {
                 formData.append('file', file);
             });
 
-            formData.append('styleId', `${res.data[0].styleId}`)
+            formData.append('styleId', `${res.data[0]?.styleId}`)
             service.fileUpload(formData).then(fileres => {
                 res.data[0].styleFilePath = fileres.data
             })
@@ -291,8 +292,8 @@ const service = new StyleService()
         </Row>
             </Card>  
          </Col>
-         {/* {imageUrl &&
-         (  */}
+         {imageUrl &&
+         ( 
          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 10 }} >
             <Card style={{height:'331px'}}>
                     <Form.Item >
@@ -304,8 +305,8 @@ const service = new StyleService()
                     </Form.Item>        
             </Card>
          </Col>
-        {/* //  )
-        //  } */}
+           )
+          } 
         
          </Row>
         </Form>

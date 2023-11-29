@@ -7,6 +7,8 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { BuyerRequest } from "./dto/buyer.request";
+import { type } from "os";
+import { StyleReq } from "./dto/style-dto";
 
 @ApiTags('style')
 @Controller('style')
@@ -17,7 +19,9 @@ export class StyleController{
 
     ){}
     @Post('/creteStyle')
+    @ApiBody({ type: StyleReq })
     async creteStyle(@Body() dto:any,isUpdate:boolean=false): Promise<AllStyleResponseModel> {
+      console.log(dto,"cont")
     try {
         return await this.styleService.creteStyle(dto, false);
       } catch (error) {

@@ -17,12 +17,13 @@ export class StyleService{
     ){}
 
     async creteStyle(req:StyleReq ,isUpdate: boolean):Promise<AllStyleResponseModel>{
+        console.log(req,'serve')
         try{
             const style= new Style()
             
             style.style=req.style
-            // style.locationId=req.locationId
-            // style.pch=req.pch
+            style.locationId=req.locationId
+            style.pch=req.pch
             style.description=req.description
             style.buyerId=req.buyerId
             if(isUpdate){
@@ -33,7 +34,8 @@ export class StyleService{
             }
             const save = await this.styleRepo.save(style)
             if(save){
-                return new AllStyleResponseModel(true,1,'Style created Sucessfully..',[])
+            const style= new Style()
+            return new AllStyleResponseModel(true,1,'Style created Sucessfully..',[style])
             }
             
         }
@@ -66,11 +68,11 @@ export class StyleService{
         try{
             console.log(buyerReq)
             const manager=this.datasource;
-            let query1 = "SELECT s.style_id AS styleId,s.location_id AS locationId,pf.profit_control_head AS pch, s.style, b.buyer_name AS buyer, s.is_active AS isActive, s.style_file_name AS styleFileName, s.style_file_path AS styleFilePath, s.description AS description, s.created_user AS createdUser, s.version_flag AS versionFlag, s.updated_user AS updatedUser, s.updated_at AS updatedAt, s.created_at AS createdAt from style s left join profit_control_head pf on pf.profit_control_head_id = s.pch left join buyers b on b.buyer_id = s.buyer_id where style_id > 0 ";
+            let query1 = "SELECT s.style_id AS styleId,s.location_id AS locationId,pf.profit_control_head AS pch, s.style, b.buyer_name AS buyer, s.is_active AS isActive, s.style_file_name AS styleFileName, s.style_file_path AS styleFilePath, s.description AS description, s.created_user AS createdUser, s.version_flag AS versionFlag, s.updated_user AS updatedUser, s.updated_at AS updatedAt, s.created_at AS createdAt from style s left join profit_control_head pf on pf.profit_control_head_id = s.pch left join buyers b on b.buyer_id = s.buyer_id where style_id > 0  ";
             if(buyerReq.buyerId != undefined){
                 query1 = query1 + " and s.buyer_id ="+buyerReq.buyerId;
             }
-            query1 = query1 + " order by b.buyer_name,s.style ASC";
+            query1 = query1 + " order by s.created_at DESC";
             let style = await manager.query(query1);
         console.log(style);
         if(style.length >0){
