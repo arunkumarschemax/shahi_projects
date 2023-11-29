@@ -1565,44 +1565,32 @@ export const MonthWiseComparisionReport = () => {
 
       secondTableColumns.push(
         { title: "Production Plan Type ", dataIndex: "prod_plan_type", },
-        { title: `Jan Lat`, dataIndex: "janExfLat", },
         { title: `Jan Pre`, dataIndex: "janExfPre", },
-
-        { title: `Feb Lat`, dataIndex: "febExfLat", },
+        { title: `Jan Lat`, dataIndex: "janExfLat", },
         { title: `Feb Pre`, dataIndex: "febExfPre", },
-
-        { title: `Mar Lat`, dataIndex: "marExfLat", },
+        { title: `Feb Lat`, dataIndex: "febExfLat", },
         { title: `Mar Pre`, dataIndex: "marExfPre", },
-
-        { title: `Apr Lat`, dataIndex: "aprExfLat", },
+        { title: `Mar Lat`, dataIndex: "marExfLat", },
         { title: `Apr Pre`, dataIndex: "aprExfPre", },
-
-        { title: `May Lat`, dataIndex: "mayExfLat", },
+        { title: `Apr Lat`, dataIndex: "aprExfLat", },
         { title: `May Pre`, dataIndex: "mayExfPre", },
-
-        { title: `Jun Lat`, dataIndex: "junExfLat", },
+        { title: `May Lat`, dataIndex: "mayExfLat", },
         { title: `Jun Pre`, dataIndex: "junExfPre", },
-
-        { title: `Jul Lat`, dataIndex: "julExfLat", },
+        { title: `Jun Lat`, dataIndex: "junExfLat", },
         { title: `Jul Pre`, dataIndex: "julExfPre", },
-
-        { title: `Aug Lat`, dataIndex: "augExfLat", },
+        { title: `Jul Lat`, dataIndex: "julExfLat", },
         { title: `Aug Pre`, dataIndex: "augExfPre", },
-
-        { title: `Sep Lat`, dataIndex: "sepExfLat", },
+        { title: `Aug Lat`, dataIndex: "augExfLat", },
         { title: `Sep Pre`, dataIndex: "sepExfPre", },
-
-        { title: `Oct Lat`, dataIndex: "octExfLat", },
+        { title: `Sep Lat`, dataIndex: "sepExfLat", },
         { title: `Oct Pre`, dataIndex: "octExfPre", },
-
-        { title: `Nov Lat`, dataIndex: "novExfLat", },
+        { title: `Oct Lat`, dataIndex: "octExfLat", },
         { title: `Nov Pre`, dataIndex: "novExfPre", },
-
-        { title: `Dec Lat`, dataIndex: "decExfLat", },
+        { title: `Nov Lat`, dataIndex: "novExfLat", },
         { title: `Dec Pre`, dataIndex: "decExfPre", },
-
-        { title: `Total Lat`, dataIndex: "totalExfLat", },
+        { title: `Dec Lat`, dataIndex: "decExfLat", },
         { title: `Total Pre`, dataIndex: "totalExfPre", },
+        { title: `Total Lat`, dataIndex: "totalExfLat", },
 
       )
     }
@@ -1633,8 +1621,8 @@ export const MonthWiseComparisionReport = () => {
         { title: `Nov Lat`, dataIndex: "novWhLat", },
         { title: `Dec Pre`, dataIndex: "decWhPre", },
         { title: `Dec Lat`, dataIndex: "decWhLat", },
-        { title: `Total In Pcs`, dataIndex: "totalWhPre" },
-        { title: `Total In Coeff`, dataIndex: "totalWhLat" },
+        { title: `Total Pre`, dataIndex: "totalWhPre" },
+        { title: `Total Lat`, dataIndex: "totalWhLat" },
       )
     }
 

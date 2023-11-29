@@ -102,7 +102,7 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         SUM(janExfCoeff) AS janCoeffExf,SUM(febExfCoeff) AS febCoeffExf,SUM(marExfCoeff) AS marCoeffExf,SUM(aprExfCoeff) AS aprCoeffExf,SUM(mayExfCoeff) AS mayCoeffExf,SUM(junExfCoeff) AS junCoeffExf,SUM(julExfCoeff) AS julCoeffExf,SUM(augExfCoeff) AS augCoeffExf,SUM(sepExfCoeff) AS sepCoeffExf,SUM(octExfCoeff) AS octCoeffExf,SUM(novExfCoeff) AS novCoeffExf,SUM(decExfCoeff) AS decCoeffExf,
         SUM(janWhCoeff) AS janCoeffWh,SUM(febWhCoeff) AS febCoeffWh,SUM(marWhCoeff) AS marCoeffWh,SUM(aprWhCoeff) AS aprCoeffWh,SUM(mayWhCoeff) AS mayCoeffWh,SUM(junWhCoeff) AS junCoeffWh,SUM(julWhCoeff) AS julCoeffWh,SUM(augWhCoeff) AS augCoeffWh,SUM(sepWhCoeff) AS sepCoeffWh,SUM(octWhCoeff) AS octCoeffWh,SUM(novWhCoeff) AS novCoeffWh,SUM(decWhCoeff) AS decCoeffWh,
         SUM(janExfPcs + febExfPcs + aprExfPcs + marExfPcs + mayExfPcs + junExfPcs + julExfPcs + augExfPcs + sepExfPcs + octExfPcs + novExfPcs + decExfPcs) AS ExfPcsTotal,
-        SUM(janWhPcs + febWhPcs + aprWhPcs + marWhPcs + mayWhPcs + junWhPcs + julWhPcs + augWhPcs + sepWhPcs + octWhPcs + novWhPcs + decWhCoeff) AS WhPcsTotal,
+        SUM(janWhPcs + febWhPcs + aprWhPcs + marWhPcs + mayWhPcs + junWhPcs + julWhPcs + augWhPcs + sepWhPcs + octWhPcs + novWhPcs + decWhPcs) AS WhPcsTotal,
         SUM(janExfCoeff + febExfCoeff + aprExfCoeff + marExfCoeff + mayExfCoeff + junExfCoeff + julExfCoeff + augExfCoeff + sepExfCoeff + octExfCoeff + novExfCoeff + decExfCoeff) AS ExfCoeffTotal,
         SUM(janWhCoeff + febWhCoeff + aprWhCoeff + marWhCoeff + mayWhCoeff + junWhCoeff + julWhCoeff + augWhCoeff + sepWhCoeff + octWhCoeff + novWhCoeff + decWhCoeff) AS WhCoeffTotal
         ,file_id FROM (        
