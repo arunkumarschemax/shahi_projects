@@ -485,7 +485,7 @@ export const MaterialAllocationGrid = () => {
     <div>
       <Card
         title={<span style={{ color: "white" }}>Material Allocation</span>}
-        style={{ textAlign: "center" }}
+        // style={{ textAlign: "center" }}
         headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
         extra={
           <span>
@@ -499,7 +499,7 @@ export const MaterialAllocationGrid = () => {
             </Button> */}
           </span>
         }
-        size="small"
+     
       >
         <Form form={form} onFinish={getData}>
           <Row gutter={8}>

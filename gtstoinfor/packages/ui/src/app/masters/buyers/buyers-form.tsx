@@ -145,7 +145,7 @@ export function BuyersForm(props: BuyersFormProps) {
  // props.customersData.currency=Number(props.customersData.currency);
   return (
     <>
-    <Card title={props.isUpdate ? 'Update Buyer' : 'Add Buyer'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/global/buyers/buyers-view')} type={'primary'}>View</Button></span>} size='small'>
+    <Card title={props.isUpdate ? 'Update Buyer' : 'Add Buyer'} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/global/buyers/buyers-view')} type={'primary'}>View</Button></span>}>
         <Form form={form} onFinish={saveData} initialValues={props.buyersData} layout="vertical">
           <Form.Item name="buyerId" style={{ display: "none" }} >
             <Input hidden />
