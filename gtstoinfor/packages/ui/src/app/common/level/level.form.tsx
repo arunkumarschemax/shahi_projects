@@ -83,7 +83,8 @@ export const LevelForm = (props:LevelFormProps) => {
 
     return (
       <Card title={props.isUpdate ? 
-        'Update Level' : 'Add Level'}
+        'Update Level' : 'Level'}
+        headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
          extra={(props.isUpdate === false) && <span><Button 
           onClick={() => navigate('/masters/Level/Level-view')} 
       type={'primary'}>View</Button></span>}>

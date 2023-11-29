@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Form, Select } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Form, Select, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
@@ -361,7 +361,7 @@ const getBuyers = () => {
         </Row>
       </Form>
       <br></br>
-   <Row gutter={40}>
+   {/* <Row gutter={40}>
         <Col>
           <Card title={'Total Styles: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
@@ -371,8 +371,25 @@ const getBuyers = () => {
         <Col>
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
-      </Row><br></br>
-      <Card size='small'>
+      </Row><br></br> */}
+      <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+
+           <Alert type='success' message={'Total Styles: ' + variantData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
+      <Card>
         <Table
         size='small'
           columns={columnsSkelton}

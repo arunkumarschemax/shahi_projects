@@ -331,7 +331,7 @@ const SampleRequestReport = () => {
     <div>
       <Card
         title={<span>Sample Raw Material </span>}
-        style={{ textAlign: "center" }}
+        // style={{ textAlign: "center" }}
         headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       >
         <Form form={form} >

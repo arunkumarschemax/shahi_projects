@@ -250,7 +250,7 @@ export const MaterialIssueView = () => {
   return (
     <Card
       title={<span>Material Issues</span>}
-      style={{ textAlign: "center", color: '#00ffff' }}
+      // style={{ textAlign: "center", color: '#00ffff' }}
       headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
     >
       <Row gutter={24}>

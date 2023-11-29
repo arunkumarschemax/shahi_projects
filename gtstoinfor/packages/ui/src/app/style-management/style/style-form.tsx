@@ -163,7 +163,7 @@ const service = new StyleService()
   
   return (
     
-    <Card title={props.isUpdate ? 'Update Style' : 'Add Style'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/style-management/style/style-grid')} type={'primary'}>View</Button></span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+    <Card title={props.isUpdate ? 'Update Style' : 'Style'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/style-management/style/style-grid')} type={'primary'}>View</Button></span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
         <Form form={form}
          onFinish={saveData}
           initialValues={props.styleData} layout="vertical">
@@ -255,12 +255,12 @@ const service = new StyleService()
                           }
                         ]}
                         >
-                            <Input/>
+                            <Input placeholder="Select Style"/>
                         </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:12 }}>
                         <Form.Item name='description' label='Description'>
-                            <Input.TextArea rows={1}/>
+                            <Input.TextArea rows={1}  placeholder="Enter Description"/>
                         </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:12 }}>
