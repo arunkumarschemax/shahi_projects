@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Alert, Checkbox } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps } from 'antd/lib/table';
 import { Link, useNavigate } from 'react-router-dom';
@@ -72,9 +72,19 @@ export function PaymentTermsGrid(
         >
           Search
         </Button>
-        <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-          Reset
-        </Button>
+        <Button
+            onClick={() =>{
+              handleReset(clearFilters)
+              setSearchedColumn(dataIndex)
+              confirm({closeDropdown:true})
+            }
+               }
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
+         
       </div>
     ),
     filterIcon: filtered => (
@@ -140,50 +150,54 @@ export function PaymentTermsGrid(
       title: 'S No',
       key: 'sno',
       width: '70px',
+      align:"center",
       responsive: ['sm'],
        render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-      title: 'Category',
-      dataIndex:'paymentTermsCategory',
+      title: <div style={{ textAlign: "center" }}>Category</div>,
+      dataIndex: 'paymentTermsCategory',
       responsive: ['sm'],
       filters: [
         {
           text: 'Customer',
-          value: PaymentTermsCategory.Customer,
+          value: PaymentTermsCategory
         },
         {
           text: 'Vendor',
-          value: PaymentTermsCategory.Vendor,
+          value: PaymentTermsCategory
         },
       ],
       filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-        return record.paymentTermsCategory == value;
-      },
+      onFilter: (value, record) => record.paymentTermsCategory === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+          <Checkbox
+            checked={selectedKeys.includes(PaymentTermsCategory.Vendor)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(PaymentTermsCategory.Vendor) ? [] : [PaymentTermsCategory.Vendor])}
+          >
+            <span>Vendor</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(PaymentTermsCategory)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(PaymentTermsCategory) ? [] : [PaymentTermsCategory])}
+          >
+            <span >Buyer</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns">
+            <Button onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          </div>
+        </div>
+      ),
     },
-    // {
-    //   title: 'Category',
-    //   dataIndex: 'paymentTermsCategory',
-    //   responsive: ['sm'],
-    //   filters: [
-    //     {
-    //       text: 'Customer',
-    //       value: PaymentTermsCategory.Customer, // Assuming PaymentTermsCategory.Customer is a string
-    //     },
-    //     {
-    //       text: 'Vendor',
-    //       value: PaymentTermsCategory.Vendor , // Assuming PaymentTermsCategory.Vendor is a string
-    //     },
-    //   ],
-    //   filterMultiple: false,
-    //   onFilter: (value, record) => {
-    //     return record['paymentTermsCategory'] === value; // Use === for strict equality
-    //   },
-    //       },
+    
     {
-      title: 'Payment Term Name',
+      title: <div style={{textAlign:"center"}}>Payment Term </div>,
       dataIndex: 'paymentTermsName',
       //  responsive: ['lg'],
        sorter: (a, b) => a.paymentTermsName.length - b.paymentTermsName.length,
@@ -193,6 +207,7 @@ export function PaymentTermsGrid(
        {
       title: 'Status',
       dataIndex: 'isActive',
+      align:"center",
        render: (isActive, rowData) => (
         <>
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -208,17 +223,46 @@ export function PaymentTermsGrid(
           value: false,
         },
       ],
+      // filterMultiple: false,
+      // onFilter: (value, record) => 
+      // {
+      //   // === is not work
+      //   return record.isActive === value;
+      // },
       filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-        // === is not work
-        return record.isActive === value;
-      },
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{color:'green'}}>Active</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{color:'red'}}>Inactive</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns" >
+          <Button  onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          
+          </div>
+        </div>
+      ),
+
       
     },
     {
       title:`Action`,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         rowData.paymentTermsName.trim()=="N/A"?<span></span>:
         <span>
@@ -240,8 +284,8 @@ export function PaymentTermsGrid(
               <Popconfirm onConfirm={e =>{deleteTerm(rowData);}}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate '
-                :  'Are you sure to Activate '
+                ? 'Are you sure to Deactivate this Payment Term ?'
+                :  'Are you sure to Activate this Payment Term ? '
             }
           >  
              <Switch  size="default"
@@ -262,7 +306,7 @@ export function PaymentTermsGrid(
     Data.updatedUser= JSON.parse(localStorage.getItem('username'))
     service.updatePaymentTerms(Data).then(res => { console.log(res);
       if (res.status) {
-        AlertMessages.getSuccessMessage('Updated Successfully');
+        AlertMessages.getSuccessMessage('Payment Term Updated Successfully');
         getAll();
         setDrawerVisible(false);
       } else {
@@ -286,12 +330,14 @@ export function PaymentTermsGrid(
 
   return (
     <Card title ="Payment Terms"
-    style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/global/payment-terms/payment-terms-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} 
+     headStyle={{ border: 0 }} extra={<Link to = "/global/payment-terms/payment-terms-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} 
 
     >
      <br></br>
-      <Row gutter={40}>
-         <Col>
+      <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+         {/* <Col>
          <Card title={'Total Payment Terms: ' + paymentTermsData.length} style={{textAlign: 'left', width: 230, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
@@ -300,21 +346,36 @@ export function PaymentTermsGrid(
            <Col>
            <Card title={'In-Active: ' + paymentTermsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
            </Col>
-           <Col>
+           <Col> */}
+           <Alert type='success' message={'Total Payment Terms: ' + paymentTermsData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + paymentTermsData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + paymentTermsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
         </Col>
           </Row> 
           <br></br>
+          <Card>
           <Table
+          size="small"
           columns={columnsSkelton}
           dataSource={paymentTermsData}
-          scroll={{x:true}}
-          pagination={{
+
+          scroll={{x:true,y:500}}
+           pagination={{
+            pageSize:50,
             onChange(current) {
               setPage(current);
             }
           }}
           onChange={onChange}
           bordered />
+          </Card>
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>
              <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>

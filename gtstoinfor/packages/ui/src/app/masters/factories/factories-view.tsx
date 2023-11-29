@@ -1,7 +1,7 @@
 import { ProColumns, ProTable } from '@ant-design/pro-components'
 import { FactoryActivateDeactivateDto, FactoryDto } from '@project-management-system/shared-models'
 import { FactoryService } from '@project-management-system/shared-services'
-import { Button, Card, Drawer, Tag, message } from 'antd'
+import { Alert, Button, Card, Col, Drawer, Row, Tag, message } from 'antd'
 import { forEachObject } from 'for-each'
 import { useNavigate } from 'react-router-dom'
 import TableActions from '../../common/table-actions/table-actions'
@@ -14,6 +14,10 @@ export default function FactoriesView() {
   const factoryService = new FactoryService()
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedData, setSelectedData] = useState<any>(undefined);
+  const [data, setData] = useState<any>([]);
+
+  const [page, setPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(1);
 
 
 
@@ -39,6 +43,8 @@ export default function FactoriesView() {
   const getData = async (params = {}, sort, filter) => {
     const res = await factoryService.getFactories()
     if (res.status) {
+      console.log(res.data,"dd")
+      setData(res.data)
       return { data: res.data, sucess: true, total: res.data.length }
     } else {
       return { data: [], sucess: false, total: 0 }
@@ -68,7 +74,7 @@ export default function FactoriesView() {
   }
 
   const columns: ProColumns<FactoryDto>[] = [
-    {
+    {  title: 'S.No',
       dataIndex: 'index',
       valueType: 'indexBorder',
       width: 48,
@@ -119,20 +125,42 @@ export default function FactoriesView() {
   forEachObject
   return (
 <>
+<Card title='Sample Locations'  headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/global/factories/factories-form')} type={'primary'}>New</Button></span>} >
+    <br></br>
+<Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+        
+           <Alert type='success' message={'Total Sample Locations: ' + data.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + data.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
     <ProTable<FactoryDto, any>
       request={getData}
       bordered size='small'
-      style={{ backgroundColor: '#69c0ff', border: 0 }}
-      cardBordered
-      editable={{
-        type: 'multiple',
-      }}
-      cardProps={{
-        extra: <span><Button onClick={() => navigate('/global/factories/factories-form')}
-          type={'primary'}>New</Button></span>
-      }}
-      search={false} headerTitle={'Factories'}
+      // style={{ backgroundColor: '#69c0ff', border: 0 }}
+      // cardBordered
+      // editable={{
+      //   type: 'multiple',
+      // }}
+      search={false}
       columns={columns}
+      scroll={{x:true,y:500}}
+      pagination={{
+       pageSize:50,
+       onChange(current) {
+         setPage(current);
+       }
+     }}
+      
 
     />
 
@@ -147,6 +175,7 @@ export default function FactoriesView() {
                   closeForm={closeDrawer} />
               </Card>
             </Drawer>
+            </Card>
     </>
 
     

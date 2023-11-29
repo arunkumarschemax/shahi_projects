@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Form, Select } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Form, Select, Alert } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined, CheckOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
@@ -285,6 +285,7 @@ export function VendorsView(
         {
           dataIndex:"contactPerson",
           title:"Contact Person",
+          width:150,
           // responsive: ['lg'],
           sorter: (a, b) => a.contactPerson.localeCompare(b.contactPerson),
           sortDirections: ['descend', 'ascend'],
@@ -490,8 +491,8 @@ export function VendorsView(
     style={{textAlign:'center'}} headStyle={{backgroundColor: '#69c0ff', border: 0 }} extra={<Link to='/vendors-form' ><Button className='panel_button' >Create </Button></Link>}
     
     > */}
-    <Card size='small' title='Vendors' extra={<span><Button onClick={() => navigate('/masters/vendors/vendors-form')} type={'primary'}>New</Button></span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
-     <Row gutter={40}>
+    <Card  title='Vendors' extra={<span><Button onClick={() => navigate('/masters/vendors/vendors-form')} type={'primary'}>New</Button></span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+     {/* <Row gutter={40}>
       <Col>
           <Card title={'Total Vendors : ' + vendorsData.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
@@ -502,6 +503,23 @@ export function VendorsView(
            <Card title={'In-Active :' + vendorsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
           </Col>
           </Row>
+          <br></br> */}
+          <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+        
+           <Alert type='success' message={'Total Vendors: ' + vendorsData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + vendorsData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + vendorsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
           <br></br>
           {/* <Form form={form} layout='vertical' onFinish={getAllVendors}>
             <Row gutter={24}>
@@ -590,19 +608,22 @@ export function VendorsView(
           </Col>
             </Row>
           </Form> */}
+          <Card>
           <Table
           rowKey={record => record.deptId}
           columns={columnsSkelton}
           dataSource={vendorsData}
-          scroll={{ x:500 }}
+          scroll={{x:true,y:500}}
           pagination={{
-            onChange(current) {
-              setPage(current);
-            }
-          }}
+           pageSize:50,
+           onChange(current) {
+             setPage(current);
+           }
+         }}
           onChange={onChange}
           bordered
           size='small' />
+          </Card>
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>
             <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
