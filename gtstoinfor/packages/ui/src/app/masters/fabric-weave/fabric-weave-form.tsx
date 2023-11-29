@@ -23,6 +23,7 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
   const [imageUrl,setImageUrl] = useState('')
   const [loading, setLoading] = useState<boolean>(false);
   const [isUpdateImg, setIsUpdateImg]=useState('')
+  const [disable, setDisable] = useState<boolean>(false);
 
   const Service = new FabricWeaveService();
 
@@ -35,8 +36,7 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
 
   useEffect(() => {
     if(props.data){
-     console.log(props.data.fabricWeaveImageName)
-     const updateImage ='http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/'+props.data.fabricWeaveImageName
+     const updateImage ='http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files'+props.data.fabricWeaveImageName
      // const updateImage ='http://165.22.220.143/crm/gtstoinfor/upload-files/'+props.styleData.styleFileName
      setIsUpdateImg(updateImage)
     }
@@ -49,6 +49,12 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
       <div style={{ marginTop: 8 }}>Upload Style</div>
     </div>
   );
+  let createdUser = "";
+
+  if (!props.isUpdate) {
+    // createdUser= localStorage.getItem("createdUser");
+    createdUser = "admin";
+  }
 
   const onReset = () => {
     form.resetFields();
@@ -63,7 +69,14 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
   }
 
   const saveFabricWeave = (data: FabricWeaveDto) => {
-    Service.createFabricWeave(data).then((res) => {
+    setDisable(true);
+    // const file:any = data.fabricWeaveImageName
+    // const abc:string =file.file.name
+    const req = new FabricWeaveDto(data.fabricWeaveId,data.fabricWeaveName,data.fabricWeaveCode,null,null,data.isActive,data.createdAt,data.createdUser,data.updatedAt,data.updatedUser,data.versionFlag)
+    Service.createFabricWeave(req).then((res) => {
+      // console.log(req,'req');
+      setDisable(false);
+
         if (res.status) {
           AlertMessages.getSuccessMessage('Fabric Weave Created Successfully');
           if(fileList.length > 0){
@@ -74,7 +87,7 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
 
             formData.append('fabricWeaveId', `${res.data[0].fabricWeaveId}`)
             Service.fabricWeaveImageUpload(formData).then(fileRes => {
-                res.data[0].fabricWeaveImageName = fileRes.data
+                res.data[0].fabricWeaveImagePath = fileRes.data
             })
           }
           navigate("/masters/fabric-weave/fabric-weave-view")
@@ -84,7 +97,7 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
         }
       })
       .catch((err) => {
-        // setDisable(false)
+         setDisable(false)
         message.success(err.message,2);
       });
    
@@ -94,6 +107,7 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
     if (props.isUpdate) {
       props.updateFabricWeave(values, fileList);
     } else {
+      setDisable(false);
       saveFabricWeave(values);
     }
   };
@@ -121,7 +135,9 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
           setFileList([file]);
           getBase64(file, imageUrl =>
             setImageUrl(imageUrl)
+          
           );
+      
           return false;
         }
       }
@@ -141,7 +157,7 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
 
 return (
     
-  <Card title={props.isUpdate ? 'Update Fabric' : 'Fabric Weave'}headStyle={{ backgroundColor: '#69c0ff', border: 0 }}  extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/fabric-weave/fabric-weave-view')} type={'primary'}>View</Button></span>}>
+  <Card title={props.isUpdate ? 'Update Fabric' : 'Fabric Weave'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/fabric-weave/fabric-weave-view')} type={'primary'}>View</Button></span>}>
     <Form form={form}
     onFinish={saveData}
     initialValues={props.data} layout="vertical">
@@ -175,12 +191,15 @@ return (
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:12 }}>
               <Form.Item name="fabricWeaveImageName" label='Fabric Weave Image'
-              rules={[{required:true,message:'Upload Fabric Weave'}]}  
+              // rules={[{required:true,message:'Upload Fabric Weave'}]}  
               initialValue={props.isUpdate ? props.data.fabricWeaveImageName:''}
+            
               >
-                <Upload  {...weaveUploadFieldProps} style={{  width:'100%' }} listType="picture-card">
+               { !imageUrl ? (
+                <Upload  {...weaveUploadFieldProps} style={{  width:'100%' }} listType="picture-card"  >
                   {uploadButton}
                 </Upload>
+                   ):"" }
               </Form.Item>
             </Col>
           </Row> 
