@@ -171,6 +171,7 @@ service.createFabricType(variantData).then(res=>{
             title: 'S No',
             key: 'sno',
             width: '70px',
+            align:"center",
             responsive: ['sm'],
             render: (text, object, index) => (page - 1) * 50 + (index + 1)
           },

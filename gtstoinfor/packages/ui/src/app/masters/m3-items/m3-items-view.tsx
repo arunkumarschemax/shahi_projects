@@ -105,6 +105,7 @@ const M3ItemsView = () => {
         title: 'S No',
         key: 'sno',
         width: 50,
+        align:"center",
         responsive: ['sm'],
         render: (text, object, index) => (page - 1) * 50 + (index + 1)
       },
