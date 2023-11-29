@@ -178,31 +178,74 @@ export const convertScannedPdfToSelectablePdf = async (scannedPdfDoc, selectable
     return objectURL;
 }
 export const extractGlobelinkInvoiceDataFromScanned = async (extractedData: any[]) => {
+
     const structuredHSNLines = [];
     let currentHSN = null;
     let currentTax = null;
+    let Total = "";
     const taxRegMatch = /Others\s+@\s+(\d+%)/;
     const taxMatchElement = extractedData.find((item) => item.content.match(taxRegMatch));
     const taxMatch = taxMatchElement?.content?.match(taxRegMatch);
-    console.log("%%%%%%%%%%%%%%%%%%%%%%", taxMatch)
 
     for (let hsnId = 0; hsnId < extractedData.length; hsnId++) {
         const line = extractedData[hsnId].content;
 
         const matchData = line.match(/(.+?)(INR|USD)\s+(\d+\.\d{2})\s+(\d+\.\d{3})\s+(\d+\.\d{4})\s+(\d+\.\d{2})\s+(\d+\.\d{2})\s+(\d+)/);
-console.log("bbbbbbbbbbbbbbbbbbb",matchData);
 
         if (matchData) {
-            const description = matchData[1];
             const unitPrice = matchData[3];
             const unitQuantity = matchData[4];
             const charge = matchData[6];
             const taxAmount = matchData[7];
             const HSN = matchData[8];
 
+            const totalRegex = / TOTAL INR /;
+            const totalData = extractedData.find((item) => item.content.match(totalRegex));
+            Total = totalData ? totalData.content : '';
+
+            // let description = matchData[1];
+            // const lastPart = HSN;
+            
+
+            // if (/\d/.test(lastPart)) {
+            //     let nextId = hsnId + 1;
+            //     while (extractedData[nextId] && extractedData[nextId].content && !extractedData[nextId].content.match(/^\d+\s/) && !extractedData[nextId].content.includes("TOTAL INR FIVE THOUSAND TWO HUNDRED THREE RUPEES AND Sub Total 4409.50")) {
+            //         const nextLine = extractedData[nextId].content;
+
+                   
+            //         if (!nextLine.includes("Total INR")) {
+            //             description += ` ${nextLine}`;
+            //         }
+
+            //         nextId++;
+            //     }
+                
+            // }
+            const a = /Total INR\s\w+\w+\s+\w+\s+\w+\s+\w+\w+\s+\w+\s+\w+\s+\w+\w+\s+\w+\s+\w+\s+\d+(.|,)\d+/i;
+
+
+let description = matchData[1];
+const lastPart = HSN;
+
+if (/\d/.test(lastPart)) {
+    let nextId = hsnId + 1;
+
+    while (extractedData[nextId] && extractedData[nextId].content && !extractedData[nextId].content.match(/^\d+\s/) && !a.test(extractedData[nextId].content)) {
+        const nextLine = extractedData[nextId].content;
+
+        // Exclude lines containing "Total INR" from the description
+        if (!a.test(nextLine)) {
+            description += ` ${nextLine}`;
+        }
+
+        nextId++;
+    }
+}
+
+
             currentHSN = {
                 HSN: HSN,
-                description:description,
+                description: description,
                 unitPrice: unitPrice,
                 unitQuantity: unitQuantity,
                 charge: charge,
@@ -229,19 +272,19 @@ console.log("bbbbbbbbbbbbbbbbbbb",matchData);
                 }
                 currentTax = {
                     taxPercentage: taxPercentage,
-                    taxAmount:taxAmount,
-                    taxType:taxType,
-                    igst:igst,
-                    cgst:cgst,
-                    sgst:sgst,
+                    taxAmount: taxAmount,
+                    taxType: taxType,
+                    igst: igst,
+                    cgst: cgst,
+                    sgst: sgst,
+                    Total: Total,
                 };
-
             }
             if (currentHSN && currentTax) {
                 structuredHSNLines.push({
                     ...currentHSN,
                     ...currentTax
-                })
+                });
             }
         }
     }
