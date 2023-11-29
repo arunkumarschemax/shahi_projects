@@ -248,9 +248,11 @@ export const SampleOperationReporting = () => {
             dataIndex:'jobCompleted',
             render:(text,record) => {
                 return(
-                    !selOpReportingStatus?<>
+                    // !selOpReportingStatus?
+                    <>
                     <Button onClick={() => onJobCompleted(record)} type='primary' shape="round">Yes</Button>
-                    </>:<> <Alert message="Reported" type="success" showIcon style={{width:'100px'}}/></>
+                    </>
+                    // :<> <Alert message="Reported" type="success" showIcon style={{width:'100px'}}/></>
                 )
             }
           },
