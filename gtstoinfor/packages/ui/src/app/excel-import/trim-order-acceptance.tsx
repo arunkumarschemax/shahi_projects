@@ -114,7 +114,7 @@ const TrimOrderAcceptance = () => {
   }
 
   const DetailedView = (orderNumber) => {
-        getTrimOrderNumberData(orderNumber)
+    getTrimOrderNumberData(orderNumber)
     // showModal();
     // const poFilterData = filteredData.filter(order_no => order_no.trim_order_id == record)
     // navigate('/excel-import/order-details', { state: { data: poFilterData } })
@@ -124,13 +124,11 @@ const TrimOrderAcceptance = () => {
     const req = new OrderAcceptanceRequest()
     req.itemNo = record.itemNumber
     req.purchaseOrderNumber = record.order_no
-    req.poLineItemNumber = null
-    req.buyer = 'uniqlo-unit12'
-    req.orderPlanNumber = record.order_plan_number
+    req.poLineItemNumber = record.order_plan_number
+    req.buyer = 'Uniqlo-U12'
     service.saveItemDetailsOfTrimOrder(req).then(res => {
       if (res.status) {
         console.log(res)
-
         // setItem(res.data)
       } else {
         // setFilteredData([])
@@ -465,15 +463,15 @@ const TrimOrderAcceptance = () => {
     {
       title: 'Total Quantity',
       dataIndex: 'totalqty',
-      width:60,
-      align:'right',
+      width: 60,
+      align: 'right',
       // ...getColumnSearchProps("size"),
       // sorter: (a, b) => a.size.localeCompare(b.size),
       // sortDirections: ["descend", "ascend"],
-      render:(text,record) => {
-        return(
+      render: (text, record) => {
+        return (
           <>
-          {record.totalqty ? record.totalqty.toLocaleString('en-IN') : '-'}
+            {record.totalqty ? record.totalqty.toLocaleString('en-IN') : '-'}
           </>
         )
       }
