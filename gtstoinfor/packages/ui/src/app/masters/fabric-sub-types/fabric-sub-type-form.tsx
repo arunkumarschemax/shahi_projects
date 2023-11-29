@@ -77,7 +77,7 @@ export function FabricSubTypeForm(
   };
 
   return (
-    <Card title={<span >Fabric Sub-Type</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={props.isUpdate == true ? "" : <Link to='/masters/fabric-sub-type-view/fabric-sub-type-view' ><Button type={'primary'} >View </Button></Link>}
+    <Card title={<span >Fabric Sub-Type</span>}  headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={props.isUpdate == true ? "" : <Link to='/masters/fabric-sub-type-view/fabric-sub-type-view' ><Button type={'primary'} >View </Button></Link>}
     >
       <Form layout="vertical" form={form} initialValues={props.fabricsubtypeData} name="control-hooks" onFinish={saveData}>
         <Form.Item name="fabricSubTypeId" style={{ display: "none" }} >

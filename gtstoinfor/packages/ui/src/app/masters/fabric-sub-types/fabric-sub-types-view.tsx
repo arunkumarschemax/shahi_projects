@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Alert } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps } from 'antd/lib/table';
 import Highlighter from 'react-highlight-words';
@@ -264,9 +264,9 @@ export function FabricSubTypeGrid(
 
   return (
     <Card title={<span >Fabric Sub-Types</span>}
-    style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/masters/fabric-sub-type-form/fabric-sub-type-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
-     <br></br>
-      <Row gutter={40}>
+     headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/masters/fabric-sub-type-form/fabric-sub-type-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
+    
+      {/* <Row gutter={40}>
       <Col>
           <Card title={'Total Fabric Sub Types : ' + FabricSubTypeData.length} style={{textAlign: 'left', width: 290, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
@@ -276,21 +276,41 @@ export function FabricSubTypeGrid(
           <Col>
            <Card title={'In-Active :' + FabricSubTypeData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 150, height: 41,backgroundColor:'#f5222d'}}></Card>
           </Col>
+          </Row>  */}
+          <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+
+           <Alert type='success' message={'Total Fabric Sub-Types: ' + FabricSubTypeData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + FabricSubTypeData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + FabricSubTypeData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
           </Row> 
           <br></br>
+          <Card>
           <Table
           // rowKey={record => record.productId}
           columns={columnsSkelton}
           dataSource={FabricSubTypeData}
+          scroll={{x:true,y:500}}
           pagination={{
-            onChange(current) {
-              setPage(current);
-            },
-            pageSize:50
-          }}
+           pageSize:50,
+           onChange(current) {
+             setPage(current);
+           }
+         }}
           onChange={onChange}
-          scroll={{ x: 'calc(1020px + 50%)', y: 540 }}
+          size="small"
+          // scroll={{ x: 'calc(1020px + 50%)', y: 540 }}
           bordered />
+          </Card>
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>
              <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>

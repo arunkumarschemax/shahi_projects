@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -248,10 +248,10 @@ service.createFabricType(variantData).then(res=>{
 
 return (
   <Card title={<span>Fabric Types</span>}
-  style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/masters/fabrictype/fabric-type-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
-  <br></br>
+ headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/masters/fabrictype/fabric-type-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
+ 
     <>
-    <Row gutter={40}>
+    {/* <Row gutter={40}>
     <Col>
           <Card title={'Total Fabric Types: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
@@ -265,19 +265,37 @@ return (
         <span><Button onClick={() => navigate('/masters/fabrictype/fabrictype-form')}
               type={'primary'}>New</Button></span>
         </Col> */}
-    </Row>
+    {/* </Row> */} 
+    <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+
+           <Alert type='success' message={'Total Fabric Types: ' + variantData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
     <Card>
   <Table
         size='small'
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}
+          scroll={{x:true,y:500}}
           pagination={{
-            onChange(current) {
-              setPage(current);
-            }, pageSize: 50,
-          }}
-          scroll={{ x: 'calc(1020px + 50%)', y: 540 }}
+           pageSize:50,
+           onChange(current) {
+             setPage(current);
+           }
+         }}
           onChange={onChange}
          
           bordered />
