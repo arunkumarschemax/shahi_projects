@@ -3,9 +3,10 @@ export class Allocatematerial{
     sampleOrderId:number
     sampleItemId:number 
     m3ItemId:number
-     quantity: number;
+    quantity: number;
     stockId:number
-    LocationId:number
+    LocationId:number;
+    buyerId:number;
     allocatioQuantity:number
     checkedStatus?:boolean
     issuedQty?:number
@@ -22,6 +23,7 @@ export class Allocatematerial{
          quantity: number,
         stockId:number,
         LocationId:number,
+        buyerId:number,
         allocatioQuantity:number,
         checkedStatus?:boolean,
         issuedQty?:number,
@@ -36,6 +38,7 @@ export class Allocatematerial{
         this.quantity=quantity
         this.stockId=stockId
         this.LocationId=LocationId
+        this.buyerId = buyerId
         this.allocatioQuantity=allocatioQuantity
         this.checkedStatus=checkedStatus
         this.issuedQty=issuedQty

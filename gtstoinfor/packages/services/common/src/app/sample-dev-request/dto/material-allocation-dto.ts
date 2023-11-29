@@ -18,9 +18,6 @@ export class MaterialAllocationDTO {
      @ApiProperty()
       m3ItemId: number
 
-     @ApiProperty()  
-     buyerId:number
-
      @ApiProperty()
      status: MaterialStatusEnum;
 
@@ -38,6 +35,9 @@ export class MaterialAllocationDTO {
 
      @ApiProperty()
      LocationId: number
+     
+     @ApiProperty()  
+     buyerId:number
 
      @ApiProperty()
      allocateQuantity: number

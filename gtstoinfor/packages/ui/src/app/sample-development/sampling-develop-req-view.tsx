@@ -195,7 +195,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
       console.log(dto)
     let materailData :Allocatematerial[]=[]
       for(const data of dto){
-        const req = new Allocatematerial(data.itemType,data.sampleRequestid,data.sampleItemId,data.m3ItemId,data.quantity,data.stockId,data.locationId,data.allocatedQuantity, data.checkedStatus, data.issuedQty)
+        const req = new Allocatematerial(data.itemType,data.sampleRequestid,data.sampleItemId,data.m3ItemId,data.quantity,data.stockId,data.locationId,data.buyerId,data.allocatedQuantity, data.checkedStatus, data.issuedQty)
         materailData.push(req)
       }
       service.creatematerialAlloction(materailData).then(res =>{
@@ -211,7 +211,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
       {
         title: "S No",
         key: "sno",
-        // width: '70px',
+        // width: '70px',buyerId:rowData.buyerId
         responsive: ["sm"],
         render: (text, object, index) => (page - 1) * 10 + (index + 1),
       },
@@ -357,6 +357,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
         width: "150px",
         dataIndex: "quantity",
       },
+     
       {
         title: "Allocated Quantity",
         width:'200px',
