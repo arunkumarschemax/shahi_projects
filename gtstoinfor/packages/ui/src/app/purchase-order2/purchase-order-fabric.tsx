@@ -1,9 +1,9 @@
 import { EditOutlined, EnvironmentOutlined, MinusCircleOutlined, PlusOutlined, UndoOutlined } from "@ant-design/icons"
+import { faL } from "@fortawesome/free-solid-svg-icons"
 import { M3MastersCategoryReq } from "@project-management-system/shared-models"
 import { ColourService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, ProfitControlHeadService, SampleDevelopmentService, TaxesService, UomService } from "@project-management-system/shared-services"
 import { Button, Card, Col, Divider, Form, Input, InputNumber, Popconfirm, Row, Select, Space, Tag, Tooltip, message } from "antd"
 import Table, { ColumnProps } from "antd/es/table"
-import { table } from "console"
 import moment from "moment"
 import React from "react"
 import { useEffect, useState } from "react"
@@ -26,6 +26,9 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     const [tableColumns, setTableColumns] = useState([]);
     const [tax, setTax] = useState([])
     const [page, setPage] = React.useState(1);
+    const [taxVisible ,setTaxVisible] = useState(true)
+    const [taxAmountVisible, setTaxAmountVisible] = useState(true)
+    const [dicountVisible,setDiscountVisible] = useState(true)
     const { Option } = Select
     const weaveService = new FabricWeaveService()
     const uomService = new UomService()
@@ -37,12 +40,6 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     const m3ItemsService = new M3ItemsService()
     const sampleservice = new SampleDevelopmentService()
     const taxService = new TaxesService();
-
-
-
-    // console.log(fabricTableVisible)
-    // console.log(data)
-    console.log(sampleReqId.length)
 
     useEffect(() => {
         getweave()
@@ -57,7 +54,6 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
 
     useEffect(() => {
         if (indentId.length != 0) {
-            console.log(indentId)
             setTableColumns([...columns])
             AllIndnetDetails(indentId)
         }
@@ -90,7 +86,6 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     const AllIndnetDetails = (value) => {
         indentService.getAllIndentItemDetailsAgainstIndent({ indentId: value }).then(res => {
             if (res.status) {
-                console.log(res.data)
                 message.info('Please Update Po Quantity')
                 props(res.data)
                 setFabricTableData(res.data)
@@ -184,7 +179,6 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
 
     useEffect(() => {
         if (defaultFabricFormData) {
-            console.log(defaultFabricFormData)
             fabricForm.setFieldsValue({
                 m3FabricCode: defaultFabricFormData.m3FabricCode,
                 colourId: defaultFabricFormData.colourId,
@@ -388,7 +382,6 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     }
 
     const onFabricAdd = (values) => {
-        console.log(values)
         fabricForm.validateFields().then(() => {
             if (fabricIndexVal !== undefined) {
                 fabricTableData[fabricIndexVal] = values;
@@ -397,7 +390,6 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
             } else {
                 tableData = [...fabricTableData, values]
             }
-            console.log(values)
             setFabricTableData(tableData)
             props(tableData)
             fabricForm.resetFields()
@@ -415,22 +407,21 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     }, [data])
 
     const m3FabricOnchange = (value, option) => {
-        fabricForm.setFieldsValue({ itemCode: option.name })
+        fabricForm.setFieldsValue({ itemCode: option?.name })
     }
 
     const quantityUomOnchange = (value, option) => {
-        fabricForm.setFieldsValue({ quantityUom: option.name })
+        fabricForm.setFieldsValue({ quantityUom: option?.name })
     }
 
     const quantiyOnchange = (value) => {
-        console.log(value)
-
     }
 
     let totalUniPrice
     const unitPriceOnchange = (value) => {
         const unitPrice=fabricForm.getFieldValue('poQuantity')
         totalUniPrice=Number(unitPrice)*Number(value)
+        setDiscountVisible(false)
     }
 
     let disAmount
@@ -440,18 +431,19 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
         const disAmount=(percent*totalUniPrice)
         fabricForm.setFieldsValue({discountAmount:disAmount})
         totalValueAfterDiscount=totalUniPrice-disAmount
+        setTaxVisible(false)
     }
 
     let taxAmount
     const handleTaxChange = (value, option) => {
-        console.log(value,option)
-        const percent=Number(option.name/100)
+        const percent=Number(option?.name/100)
         taxAmount=(totalValueAfterDiscount*percent)
         const totalAmount=taxAmount+totalValueAfterDiscount
         fabricForm.setFieldsValue({taxAmount:Number(taxAmount).toFixed(2)})
         fabricForm.setFieldsValue({subjectiveAmount:Number(totalAmount).toFixed(2)})
         fabricForm.setFieldsValue({ tax: value })
-        fabricForm.setFieldsValue({ taxPercentage: option?.type ? option.type : '' })
+        fabricForm.setFieldsValue({ taxPercentage: option?.name ? option.type + '- ' + option?.name : '' })
+        setTaxAmountVisible(false)
     }
 
     return (
@@ -528,7 +520,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                         <Form.Item name='discount' label='Discount'
                             rules={[{ required: false, message: 'Discount of Fabric is required' }]}
                         >
-                            <InputNumber style={{ width: '90px' }} placeholder="discount" onChange={(e) => discountOnChange(e)} />
+                            <InputNumber disabled={dicountVisible} style={{ width: '90px' }} placeholder="discount" onChange={(e) => discountOnChange(e)} />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
@@ -547,6 +539,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                                 onChange={handleTaxChange}
                                 allowClear
                                 optionFilterProp="children"
+                                disabled={taxVisible}
                             >
                                 {tax.map((e) => {
                                     return (
@@ -562,7 +555,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                         <Form.Item name='taxAmount' label='Tax Amount'
                             rules={[{ required: true, message: 'Tax of Fabric is required' }]}
                         >
-                            <Input  placeholder="Tax amount" />
+                            <Input disabled placeholder="Tax amount" />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
@@ -576,7 +569,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                         <Form.Item name='subjectiveAmount' label='Subjective Amount'
                             rules={[{ required: true, message: 'Subjective Amount of Fabric is required' }]}
                         >
-                            <Input  placeholder="Subjective amount" />
+                            <Input disabled placeholder="Subjective amount" />
                         </Form.Item>
                     </Col>
                 </Row>

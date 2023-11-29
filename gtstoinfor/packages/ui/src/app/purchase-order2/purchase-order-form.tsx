@@ -64,9 +64,6 @@ export const PurchaseOrderForm = () => {
         getActiveFactories()
     }, [])
 
-    console.log(stateData.props)
-    
-
     function getActiveFactories (){
         try {
            factoryServices.getActiveFactories().then(res => {
@@ -77,7 +74,6 @@ export const PurchaseOrderForm = () => {
             }
           })
         } catch (error) {
-          console.log(error.message);
         }
       }
 
@@ -113,7 +109,6 @@ export const PurchaseOrderForm = () => {
     const sampleReqno = () => {
         service.getAllSampleDevData().then((res) => {
             if (res.status) {
-                console.log(res.data)
                 setSamplereqNo(res.data);
             }
         });
@@ -121,7 +116,6 @@ export const PurchaseOrderForm = () => {
     useEffect(() => {
         if (stateData != undefined) {
             if (stateData.type == 'Indent') {
-                console.log(stateData.props)
                 setIndentDropDownVisible(true)
                 poForm.setFieldsValue({ indentId: stateData.data.indentId })
                 poForm.setFieldsValue({ indentAgainst: 'Indent' })
@@ -168,7 +162,6 @@ export const PurchaseOrderForm = () => {
 
     const handleFabricOnchange = (fabricdata) => {
         console.log(fabricdata)
-        
         setFabricData(fabricdata)
     }
     
@@ -204,8 +197,6 @@ export const PurchaseOrderForm = () => {
             return notification.info({message:'Some input fields are missing in purchase order'})
         }
         let poItemDetails :PoItemDetailsDto[]=[];
-        console.log(fabricData)
-        console.log(trimData)
         if(fabricData.length != 0){
             for(const fabdata of fabricData){
                 const fab  = new PoItemDetailsDto(fabdata.colourId,fabdata.m3FabricCode,fabdata.poQuantity,fabdata.quantityUomId,undefined,fabdata.samplereFabId,fabdata.indentFabricId,fabdata.unitPrice,fabdata.discount,fabdata.tax,fabdata.transportation,fabdata.subjectiveAmount)
@@ -214,16 +205,13 @@ export const PurchaseOrderForm = () => {
         }
         if(trimData.length != 0){
             for (const trimdata of trimData) {
-                const trim  = new PoItemDetailsDto(trimdata.colourId,trimdata.m3TrimCode,trimdata.poQuantity,trimdata.quantityUomId,undefined,trimdata.sampleItemId,trimdata.indentTrmId,trimdata.unitPrice,trimdata.discount,trimdata.tax,trimdata.transportation,trimdata.subjectiveAmount)
+                const trim  = new PoItemDetailsDto(null,trimdata.m3TrimCode,trimdata.poQuantity,trimdata.quantityUomId,undefined,trimdata.sampleItemId,trimdata.indentTrmId,trimdata.unitPrice,trimdata.discount,trimdata.tax,trimdata.transportation,trimdata.subjectiveAmount)
                 poItemDetails.push(trim)
             }
         }
-        console.log(poItemDetails)
         const poDto = new PurchaseOrderDto('po11', poForm.getFieldValue('vendorId'), poForm.getFieldValue('styleId'), poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"), poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'), poForm.getFieldValue('remarks'), poForm.getFieldValue('poMaterialType'), poForm.getFieldValue('indentId'), poForm.getFieldValue('buyerId'), poItemDetails,poForm.getFieldValue('currencyId'),poForm.getFieldValue('exchangeRate'),poForm.getFieldValue('totalAmount'),poForm.getFieldValue('deliveryAddress'), poForm.getFieldValue('indentAgainst'))
-        console.log(poDto)
         if (poDto.poItemInfo.length > 0) {
             purchaseOrderService.cretePurchaseOrder(poDto).then(res => {
-                // console.log(poDto)
                 if (res.status) {
                     message.success(res.internalMessage)
                     navigate('/purchase-view')
@@ -405,7 +393,7 @@ export const PurchaseOrderForm = () => {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                             <Form.Item name='totalAmount' label='Total Amount' rules={[{ required: false, message: 'Total Amount is required' }]}>
-                                <Input />
+                                <Input disabled />
                             </Form.Item>
                         </Col>
                     </Row>

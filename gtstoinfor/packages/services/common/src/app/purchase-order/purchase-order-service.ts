@@ -30,6 +30,7 @@ export class PurchaseOrderService {
 
     async cretePurchaseOrder(req: PurchaseOrderDto): Promise<CommonResponseModel> {
         try {
+            console.log('-----------',req)
             // console.log(req.poFabricInfo)
             // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
             const currentYear = moment().format('YYYY')
