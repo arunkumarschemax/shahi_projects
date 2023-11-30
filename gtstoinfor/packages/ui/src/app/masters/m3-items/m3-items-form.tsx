@@ -169,7 +169,8 @@ const M3Items = () => {
           AlertMessages.getSuccessMessage(res.internalMessage);
           setTimeout(() => {
             message.success("Submitted successfully");
-            window.location.reload();
+            // window.location.reload();
+            navigate('/m3-items-view')
           }, 500);
         }
         else{
@@ -188,14 +189,14 @@ const M3Items = () => {
   return (
     <div>
       <Card
-        title={<span>M3 Fabric</span>}
-        style={{ textAlign: "center" }}
+        title={<span>M3 Items</span>}
+        // style={{ textAlign: "center" }}
         headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
         extra={
           <Button
             onClick={() => navigate("/m3-items-view")}
             type="primary"
-            style={{ background: "white", color: "#3C085C" }}
+            // style={{ background: "white", color: "#3C085C" }}
           >
             View
           </Button>
@@ -261,7 +262,7 @@ const M3Items = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
 
               <Form.Item
                 label=" Fabric Type"

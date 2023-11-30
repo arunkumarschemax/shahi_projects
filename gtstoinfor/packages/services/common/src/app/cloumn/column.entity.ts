@@ -58,8 +58,8 @@ export class Columns {
   versionFlag: number;
 
 
-  @OneToMany(type=>RackPositionEntity, rack=>rack.column,{cascade: true})
-  column:RackPositionEntity;
+  // @OneToMany(type=>RackPositionEntity, rack=>rack.column,{cascade: true})
+  // column:RackPositionEntity;
 
 
 }

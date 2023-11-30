@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -172,6 +172,7 @@ service.createsize(variantData).then(res=>{
             title: 'S No',
             key: 'sno',
             width: '70px',
+            align:"center",
             responsive: ['sm'],
             render: (text, object, index) => (page - 1) * 50 + (index + 1)
           },
@@ -186,6 +187,7 @@ service.createsize(variantData).then(res=>{
           {
             title: 'Status',
             dataIndex: 'isActive',
+            align:"center",
             render: (isActive, rowData) => (
               <>
                 {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -212,6 +214,7 @@ service.createsize(variantData).then(res=>{
     {
         title:`Action`,
         dataIndex: 'action',
+        align:"center",
         render: (text, rowData) => (
           <span>  
            <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
@@ -249,10 +252,10 @@ service.createsize(variantData).then(res=>{
 
 return (
   <Card title={<span>Sizes</span>}
-  style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/masters/size/size-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
-  <br></br>
+ headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/masters/size/size-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
+
     <>
-    <Row gutter={40}>
+    {/* <Row gutter={40}>
     <Col>
           <Card title={'Total Sizes: ' + variantData.length} style={{ textAlign: 'center', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
@@ -262,11 +265,25 @@ return (
         <Col>
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'center', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
-        {/* <Col>
-        <span><Button onClick={() => navigate('/masters/paymentmethod/paymentmethod-form')}
-              type={'primary'}>New</Button></span>
-        </Col> */}
-    </Row>
+      
+    </Row> */}
+    <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+
+           <Alert type='success' message={'Total Sizes: ' + variantData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
     <Card>
   <Table
         size='small'
@@ -276,8 +293,7 @@ return (
           pagination={{
             onChange(current) {
               setPage(current);
-            },
-            pageSize:50,
+            }
           }}
           scroll={{x:true}}
           onChange={onChange}

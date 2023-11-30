@@ -41,11 +41,37 @@ export class GrnController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
-  @Post('/getGrnItemById')
+  // @Post('/getGrnItemById')
+  // @ApiBody({type:GrnReq})
+  // async getGrnItemById(@Body()  request: any): Promise<CommonResponseModel> {
+  //   try {
+  //     return await this.grnService.getGrnItemById(request);
+  //   } catch (error) {
+  //     return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+  //   }
+  // }
+
+  @Post('/getGRNItemsData')
   @ApiBody({type:GrnReq})
-  async getGrnItemById(@Body()  request: any): Promise<CommonResponseModel> {
+  async getGRNItemsData(@Body()  request: any): Promise<CommonResponseModel> {
     try {
-      return await this.grnService.getGrnItemById(request);
+      return await this.grnService.getGRNItemsData(request);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+  @Post('/getGRNNoData')
+  async getGRNNoData(): Promise<CommonResponseModel> {
+    try {
+      return await this.grnService.getGRNNoData();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+  @Post('/getPONoData')
+  async getPONoData(): Promise<CommonResponseModel> {
+    try {
+      return await this.grnService.getPONoData();
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }

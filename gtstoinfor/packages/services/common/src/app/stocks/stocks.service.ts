@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { AllStocksResponseModel, CommonResponseModel, M3ItemsDTO, StockFilterRequest, StocksDto } from "@project-management-system/shared-models";
+import { AllStocksResponseModel, CommonResponseModel, M3ItemsDTO, StockFilterRequest, StocksDto, statusReq } from "@project-management-system/shared-models";
 import { StocksRepository } from "./repository/stocks.repository";
 import { StocksAdapter } from "./adapters/stocks.adatpters";
 import { AppDataSource } from "../app-datasource";
@@ -35,7 +35,7 @@ export class StocksService {
         // }
         try {
             console.log(req);
-            let query = "SELECT if(s.item_type != 'fabric' , itt.trim_code, concat(it.item_code,'-',it.description)) AS m3Item, s.item_type AS itemType, quantity AS qty, u.uom AS uom, b.buyer_name AS buyer,r.rack_position_name AS location, s.uom_id AS uomId, s.grn_item_id AS grnItemId,  s.id AS stockId  from stocks s left join buyers b on b.buyer_id = s.buyer_id left join m3_items it on it.m3_items_Id = s.m3_item and s.item_type = 'Fabric' left join m3_trims itt on itt.m3_trim_id = s.m3_item and s.item_type != 'fabric' left join rack_position r on r.position_Id = s.location_id left join uom u on u.id = s.uom_id where s.id > 0";
+            let query = "SELECT if(s.item_type != 'fabric' , itt.trim_code, concat(it.item_code,'-',it.description)) AS m3Item, s.item_type AS itemType, quantity AS qty, u.uom AS uom, b.buyer_name AS buyer,r.rack_position_name AS location, s.uom_id AS uomId, s.grn_item_id AS grnItemId,  s.id AS stockId,s.buyer_id  from stocks s left join buyers b on b.buyer_id = s.buyer_id left join m3_items it on it.m3_items_Id = s.m3_item and s.item_type = 'Fabric' left join m3_trims itt on itt.m3_trim_id = s.m3_item and s.item_type != 'fabric' left join rack_position r on r.position_Id = s.location_id left join uom u on u.id = s.uom_id where s.id > 0";
             if(req.buyerId != undefined){
                 query = query + " and b.buyer_id = "+req.buyerId;
             }
@@ -149,6 +149,24 @@ export class StocksService {
             throw err
         }
     }
+
+
+    async update(req?:statusReq): Promise<CommonResponseModel> {
+        try {
+            console.log(req,"stock-ser")
+          const update = await this.stocksRepository.update(
+            { Id: req.stockId },
+            { allocateQuanty:req.allocateQuanty }
+          );
+          if (update.affected && update.affected > 0) {
+            return new CommonResponseModel(true, 1, 'stockUpdate Sucessfully');
+          } else {
+            return new CommonResponseModel(false, 1, 'some went wrong');
+          }
+        } catch (err) {
+          throw err;
+        }
+      }
 
 
 

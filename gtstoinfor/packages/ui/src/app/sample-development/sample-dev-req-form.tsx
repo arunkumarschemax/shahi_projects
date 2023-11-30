@@ -75,7 +75,6 @@ export const SampleDevForm = () => {
     getLocations();
     getPCHData();
     getBuyers();
-    getStyles();
     getBrands();
     getTechnicians();
     getCurrency();
@@ -188,8 +187,8 @@ export const SampleDevForm = () => {
     });
   };
 
-  const getStyles = () => {
-    styleService.getAllActiveStyle().then((res) => {
+  const getStyles = (buyer) => {
+    styleService.getAllStyle({buyerId:buyer}).then((res) => {
       if (res.status) {
         setStyles(res.data);
       }
@@ -301,6 +300,7 @@ export const SampleDevForm = () => {
   }
   const buyerOnchange =(value) =>{
     setSelectedBuyerId(value)
+    getStyles(value);
   }
 
     const handleSizeDataUpdate = (updatedData) => {
@@ -405,6 +405,7 @@ export const SampleDevForm = () => {
               label="User"
               rules={[
                 {
+                  required:true,
                   pattern: /^[0-9a-zA-Z]*$/,
                   message: `Only numbers are accepted`,
                 },
@@ -510,23 +511,6 @@ export const SampleDevForm = () => {
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
-              name="description"
-              label="Description"
-              rules={[
-                {
-                  required: false,
-                },
-                {
-                  pattern: /^[^-\s][a-zA-Z0-9_\s-]*$/,
-                  message: `Don't Allow Spaces`,
-                },
-              ]}
-            >
-              <TextArea rows={1} placeholder="Enter Description" />
-            </Form.Item>
-          </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
-            <Form.Item
               name="brandId"
               label="Brand"
               rules={[{ required: true, message: "Brand is required" }]}
@@ -547,6 +531,13 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                    <Form.Item name='expectedCloseDate' label='Expected Close Date' rules={[{required:true,message:'expectedCloseDate is required'}]}>
+                    <DatePicker style={{ width: '93%', marginLeft: 5 }} />
+                    </Form.Item>
+              </Col>
+          
+          
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="costRef"
@@ -559,6 +550,23 @@ export const SampleDevForm = () => {
               ]}
             >
               <Input />
+            </Form.Item>
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+            <Form.Item
+              name="description"
+              label="Description"
+              rules={[
+                {
+                  required: false,
+                },
+                {
+                  pattern: /^[^-\s][a-zA-Z0-9_\s-]*$/,
+                  message: `Don't Allow Spaces`,
+                },
+              ]}
+            >
+              <TextArea rows={1} placeholder="Enter Description" />
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}
@@ -588,11 +596,7 @@ export const SampleDevForm = () => {
               </Upload>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='expectedCloseDate' label='Expected Close Date' rules={[{required:true,message:'expectedCloseDate is required'}]}>
-                    <DatePicker style={{ width: '93%', marginLeft: 5 }} />
-                    </Form.Item>
-              </Col>
+          
               {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='quality' label='Quality' >
                     <Select
@@ -673,7 +677,7 @@ export const SampleDevForm = () => {
                 {dmm.map((e) => {
                   return (
                     <Option key={e.employeeId} value={e.employeeId}>
-                      {`${e.employeeCode} - ${e.lastName}`}
+                      {`${e.employeeCode} - ${e.lastName}  ${e.firstName}`}
                     </Option>
                   );
                 })}
@@ -695,7 +699,7 @@ export const SampleDevForm = () => {
                 {technicians.map((e) => {
                   return (
                     <Option key={e.employeeId} value={e.employeeId}>
-                      {`${e.employeeCode} - ${e.lastName}`}
+                      {`${e.employeeCode} - ${e.lastName}  ${e.firstName}`}
                     </Option>
                   );
                 })}

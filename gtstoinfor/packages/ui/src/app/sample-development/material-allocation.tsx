@@ -22,6 +22,7 @@ import {
   GRNLocationPropsRequest,
   MaterialIssueLogrequest,
   MaterialStatusEnum,
+  StockupdateRequest,
   buyerReq,
   statusReq,
 } from "@project-management-system/shared-models";
@@ -30,6 +31,7 @@ import {
   LocationMappingService,
   MaterialIssueService,
   SampleDevelopmentService,
+  StockService,
 } from "@project-management-system/shared-services";
 import TabPane from "antd/es/tabs/TabPane";
 import AlertMessages from "../common/common-functions/alert-messages";
@@ -58,6 +60,9 @@ export const MaterialAllocationGrid = () => {
   const materialservice = new MaterialIssueService();
   const [isButtonDisabled, setButtonDisabled] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [row, setRow] = useState({});
+  const Stockservice = new StockService()
+
 
 
   useEffect(() => {
@@ -91,21 +96,31 @@ export const MaterialAllocationGrid = () => {
   };
 
   const onApprove = (rowData) => {
-    // console.log(rowData,"rrrrrrrr")
+    console.log(rowData,"rrrrrrrr")
     // console.log(rowData.material_allocation_id,"rrrrrrrr")
     const req = new statusReq(
-      rowData.material_allocation_id,
-      MaterialStatusEnum.MATERIAL_ISSUED
+      rowData?.material_allocation_id,
+      MaterialStatusEnum.MATERIAL_ISSUED,
+      rowData?.stock_id,
+      rowData?.total_allocated_quantity
+      
     );
+
     service.updateStatus(req).then((res) => {
       if (res.status) {
         AlertMessages.getSuccessMessage(res.internalMessage);
+        Stockservice.update(req).then(res=>{
+           if(res.status){
+            AlertMessages.getSuccessMessage(res.internalMessage);
+           }
+        })
         getData();
       } else {
         AlertMessages.getErrorMessage(res.internalMessage);
       }
     });
   };
+  
 
   const onIssuematerial = (rowData) => {
     console.log(rowData, "issuematerial");
@@ -217,16 +232,21 @@ export const MaterialAllocationGrid = () => {
     setSearchText("");
   }
 
-  const showModal = () => {
+  const showModal = (rowData) => {
     setIsModalOpen(true);
+    console.log(rowData.material_allocation_id,"rr")
+    setRow(rowData.material_allocation_id)
   };
 
   const handleOk = () => {
     setIsModalOpen(false);
+    getData()
+
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    getData()
   };
 
 
@@ -347,14 +367,16 @@ export const MaterialAllocationGrid = () => {
           </span>
           <Divider type="vertical" />
           <span>
-          <Button
-              type="primary"
-               size="small"
-              style={{ background: "green" }}
-              onClick={() => onApprove(rowData)}
-             >
-               MATERIAL ISSUE
-            </Button>
+                    <Button
+            type="primary"
+            size="small"
+            style={{ background: "green" }}
+            onClick={() => {
+              onApprove(rowData);
+            }}
+          >
+            MATERIAL ISSUE
+          </Button>
           </span>
         </Row>
       ),
@@ -448,7 +470,7 @@ export const MaterialAllocationGrid = () => {
           </span>
           <Divider type="vertical" />
           <span>
-            <Button type="primary" size="small" onClick={showModal}>
+            <Button type="primary" size="small" onClick={()=>showModal(rowData)}>
               Print
             </Button>
           </span>
@@ -478,7 +500,7 @@ export const MaterialAllocationGrid = () => {
     <div>
       <Card
         title={<span style={{ color: "white" }}>Material Allocation</span>}
-        style={{ textAlign: "center" }}
+        // style={{ textAlign: "center" }}
         headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
         extra={
           <span>
@@ -492,7 +514,7 @@ export const MaterialAllocationGrid = () => {
             </Button> */}
           </span>
         }
-        size="small"
+     
       >
         <Form form={form} onFinish={getData}>
           <Row gutter={8}>
@@ -564,9 +586,10 @@ export const MaterialAllocationGrid = () => {
                 title={<React.Fragment>
                </React.Fragment>}
                 onCancel={handleCancel}
+                onOk={handleOk}
                 
                 >
-             < MaterialAllocationPrint data={approvedData}  />         
+             < MaterialAllocationPrint data={approvedData} id ={row}  />         
             </Modal>
 
         <Tabs type={"card"} tabPosition={"top"}>

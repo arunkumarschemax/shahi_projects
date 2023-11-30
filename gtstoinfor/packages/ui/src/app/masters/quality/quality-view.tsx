@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Card, Divider, Popconfirm, Radio, Switch, Table, Tag, message } from 'antd'
+import { Alert, Button, Card, Col, Divider, Popconfirm, Radio, Row, Switch, Table, Tag, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { QualityService } from '@project-management-system/shared-services'
 import AlertMessages from '../../common/common-functions/alert-messages'
@@ -59,14 +59,17 @@ const active = (rowData: any) => {
   const Columns: any = [
     {
       title: 'S No',
+      align: "center",
       key: 'sno',
-      width: '70px',
+      width: 120,
       responsive: ['sm'],
       render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
         title: "Fabric Quality",
         dataIndex: "quality",
+     width: 300,
+
     },
     {
       title: "Status",
@@ -138,6 +141,7 @@ const active = (rowData: any) => {
   {
     title: `Action`,
     dataIndex: "action",
+    
     // width: 190,
     align: "center",
     render: (text, rowData, record: any) => (
@@ -170,16 +174,43 @@ const active = (rowData: any) => {
 
   return (
     <div>
-    <Card title={<span>Fabric Quality</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+    <Card title={<span>Fabric Quality</span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
         extra={<Button
             onClick={() => navigate('/masters/quality-form')}
             type="primary"
-            style={{ background: "white", color: "#3C085C" }}
+            // style={{ background: "white", color: "#3C085C" }}
         >Create</Button>
         }>
+          <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+
+           <Alert type='success' message={'Total Fabric Quality: ' + itemGroup.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + itemGroup.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + itemGroup.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
+          <Card>
           <Table columns={Columns}
           dataSource={itemGroup}
-          pagination={{ pageSize: 50 }} size='small' bordered/>
+          pagination={{
+            onChange(current) {
+              setPage(current);
+            },
+            pageSize:50,
+          }}
+          scroll={{x:true}}
+          size='small'
+          />
+          </Card>
     </Card>
 </div>
   )

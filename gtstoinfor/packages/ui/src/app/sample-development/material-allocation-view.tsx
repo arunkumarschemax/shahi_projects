@@ -90,7 +90,8 @@ export const MaterialAllocationView = () => {
     return (
         <div>
             <Card title={<span style={{ color: 'white' }}>Material Allocation View</span>}
-                style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
+                // style={{ textAlign: 'center' }} 
+                headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
                 <Table
                     rowKey={record => record.productId}
                     className="components-table-nested"

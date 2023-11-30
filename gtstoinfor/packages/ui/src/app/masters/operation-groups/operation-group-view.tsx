@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
@@ -111,6 +111,7 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
       title: 'S No',
       key: 'sno',
       width: '70px',
+      align:"center",
       responsive: ['sm'],
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
@@ -131,6 +132,7 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
     {
       title: 'Status',
       dataIndex: 'isActive',
+      align:"center",
       // ...getColumnSearchProps("isActive"),
       render: (isActive, rowData) => (
         <>
@@ -159,6 +161,7 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
     {
       title: `Action`,
       dataIndex: 'action',
+      align:"center",
       render: (text, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"
@@ -279,9 +282,9 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
 
   return (
 
-    <Card title='Operation Groups'  style={{ textAlign: 'center' }} extra={<span><Button onClick={() => navigate('/masters/operationgroups/operationgroups-form')} type={'primary'}>New</Button></span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
-        <br/>
-      <Row gutter={40}>
+    <Card title='Operation Groups'  extra={<span><Button onClick={() => navigate('/masters/operationgroups/operationgroups-form')} type={'primary'}>New</Button></span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+        {/* <br/> */}
+      {/* <Row gutter={40}>
         <Col>
           <Card title={'Total Operation Groups: ' + variantData.length} style={{ textAlign: 'center', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
@@ -291,20 +294,39 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
         <Col>
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'center', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
-      </Row><br></br>
+      </Row><br></br> */}
+      <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+
+           <Alert type='success' message={'Total Operation Groups: ' + variantData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
+          <Card>
         <Table
         size='small'
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}
+          scroll={{x:true}}
           pagination={{
             onChange(current) {
               setPage(current);
             }
           }}
-          scroll={{x:true}}
           onChange={onChange}
           bordered />
+          </Card>
       <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
         <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>

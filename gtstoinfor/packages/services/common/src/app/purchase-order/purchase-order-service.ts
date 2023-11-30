@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { PurchaseOrderEntity } from "./entities/purchase-order-entity";
-import { CommonResponseModel, GrnItemsFormDto, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
+import { CommonResponseModel,GrnItemsFormDto, LifeCycleStatusEnum, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
 import { PurchaseOrderDto } from "./dto/purchase-order-dto";
 import { PurchaseOrderFbricEntity } from "./entities/purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "./entities/purchase-order-trim-entity";
@@ -12,6 +12,8 @@ import { FabriCWeaveDto } from "../fabric weave/dto/fabric-weave.dto";
 import { PurchaseOrderRepository } from "./repo/purchase-order-repository";
 import { PurchaseOrderFabricRepository } from "./repo/purchase-order-fabric-repository";
 import { PurchaseOrderTrimRepository } from "./repo/purchase-order-trim-repository";
+import { PurchaseOrderItemsEntity } from "./entities/purchase-order-items-entity";
+import { SampleRequestRepository } from "../sample-dev-request/repo/sample-dev-req-repo";
 let moment = require('moment');
 
 @Injectable()
@@ -23,17 +25,21 @@ export class PurchaseOrderService {
         private poTrimRepo: PurchaseOrderTrimRepository,
         @InjectDataSource()
         private dataSource: DataSource,
+        private sampleReqRepo:SampleRequestRepository
     ) { }
 
 
 
     async cretePurchaseOrder(req: PurchaseOrderDto): Promise<CommonResponseModel> {
         try {
-            // console.log(req.poFabricInfo)
-            // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
             const currentYear = moment().format('YYYY')
-            let ToYear = currentYear.toString().substr(-2)
-            let FromYear = (currentYear - 1).toString().substr(-2)
+            const currentDate = moment();
+            const netyaer = currentDate.year();
+            const nextYear = netyaer + 1;
+            let FromYear = currentYear.toString().substr(-2)
+            let ToYear = (nextYear).toString().substr(-2)
+            console.log(ToYear)
+            console.log('$$$$')
             let poNumber
             const data = 'select max(purchase_order_id) as poId from purchase_order'
             const maxId = await this.poRepo.query(data)
@@ -42,8 +48,7 @@ export class PurchaseOrderService {
             } else {
                 poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + maxId[0].poId.toString().padStart(3, 0) + ''
             }
-            let pofabricInfo = []
-            let poTrimInfo = []
+            let poItemInfo = []
             const poEntity = new PurchaseOrderEntity()
             poEntity.poNumber = poNumber
             poEntity.vendorId = req.vendorId
@@ -55,38 +60,50 @@ export class PurchaseOrderService {
             poEntity.createdUser = req.createdUser
             poEntity.poMaterialType = req.poMaterialType
             poEntity.poAgainst = req.poAgainst
-            // if (req.poFabricInfo) {
-            //     for (const poFabric of req.poFabricInfo) {
-            //         const pofabricEntity = new PurchaseOrderFbricEntity()
-            //         pofabricEntity.colourId = poFabric.colourId
-            //         pofabricEntity.remarks = poFabric.remarks
-            //         pofabricEntity.m3FabricCode = poFabric.m3FabricCode
-            //         pofabricEntity.indentFabricId = poFabric.indentFabricId
-            //         pofabricEntity.sampleReqFabricId = poFabric.sampleReqFabricId
-            //         pofabricEntity.poQuantity = poFabric.poQuantity
-            //         pofabricEntity.quantityUomId = poFabric.quantityUomId
-            //         pofabricInfo.push(pofabricEntity)
-            //     }
-            //     poEntity.poFabricInfo = pofabricInfo
-            // }
-            // if (req.poTrimInfo) {
-            //     for (const trimInfo of req.poTrimInfo) {
-            //         const trimEntity = new PurchaseOrderTrimEntity()
-            //         console.log(trimInfo)
-            //         console.log('""""""""""""""""""""""""""""""""""""""""""""')
-            //         trimEntity.colourId = trimInfo.colourId
-            //         trimEntity.m3TrimCode = trimInfo.m3TrimCode
-            //         trimEntity.indentTrimId = trimInfo.indentTrimId
-            //         trimEntity.sampleReqTrimId = trimInfo.sampleReqTrimId
-            //         trimEntity.poQuantity = trimInfo.poQuantity
-            //         trimEntity.quantityUomId = trimInfo.quantityUomId
-            //         poTrimInfo.push(trimEntity)
-            //     }
-            //     poEntity.poTrimInfo = poTrimInfo
-            // }
-
+            poEntity.currencyId=req.currencyId
+            poEntity.exchangeRate=req.exchangeRate
+            poEntity.deliveryAddress=req.deliveryAddress
+            poEntity.totalAmount=req.totalAmount
+            for(const item of req.poItemInfo){
+                console.log(item,'$$$$')
+                const pofabricEntity = new PurchaseOrderItemsEntity()
+                        pofabricEntity.colourId = item.colourId
+                        pofabricEntity.m3ItemId = item.m3ItemId
+                        pofabricEntity.poQuantity = item.poQuantity
+                        pofabricEntity.grnQuantity = item.grnQuantity
+                        pofabricEntity.quantityUomId = item.quantityUomId
+                        pofabricEntity.poQuantity = item.poQuantity
+                        pofabricEntity.quantityUomId = item.quantityUomId
+                        pofabricEntity.sampleItemId = item.sampleItemId
+                        pofabricEntity.indentItemId = item.indentItemId
+                        pofabricEntity.unitPrice = item.unitPrice
+                        pofabricEntity.discount = item.discount
+                        pofabricEntity.transportation = item.transportation
+                        pofabricEntity.tax = item.tax
+                        pofabricEntity.subjectiveAmount = item.subjectiveAmount
+                        poItemInfo.push(pofabricEntity)
+            }
+            poEntity.poItemInfo=poItemInfo
+            // let save
             const save = await this.poRepo.save(poEntity)
+            
             if (save) {
+                if(req.poAgainst == 'INDENT'){
+                    for(const update of req.poItemInfo){
+                        if(update.indentId != undefined){
+
+                        }
+                    }
+                }
+                if(req.poAgainst == 'SAMPLE ORDER'){
+                    for(const update of req.poItemInfo){
+                        if(update.sampleReqId != undefined){
+                           const  dat = await this.sampleReqRepo.update({SampleRequestId:update.sampleReqId},{lifeCycleStatus:LifeCycleStatusEnum.PO_RAISED})
+                        }
+                    }
+                }
+                
+
                 return new CommonResponseModel(true, 1, 'purchased Order Created Sucessfully')
             } else {
                 return new CommonResponseModel(false, 0, 'Something went Wrong')
@@ -325,16 +342,16 @@ export class PurchaseOrderService {
                 console.log(po, '^^^^^^^^^^^^^^^^^^^')
                 const fabData = await this.GetPurchaseFabricData(po.purchaseOrderId)
                 const fabricInfo = []
-                for (const fabrData of fabData.data) {
-                    //     console.log(fabrData)
-                    //     console.log('**************************8')
-                    fabricInfo.push(fabrData)
-                }
-                const trimData = await this.GetPurchaseTrimData(po.purchaseOrderId)
-                const triminfo = []
-                for (const trim of trimData.data) {
-                    triminfo.push(trim)
-                }
+                // for (const fabrData of fabData.data) {
+                // //     console.log(fabrData)
+                // //     console.log('**************************8')
+                //     fabricInfo.push(fabrData)
+                // }
+                // const trimData = await this.GetPurchaseTrimData(po.purchaseOrderId)
+                // const triminfo = []
+                // for (const trim of trimData.data) {
+                //     triminfo.push(trim)
+                // }
                 data.push({
                     styleName: po.styleName,
                     purchaseOrderId: po.purchaseOrderId,
@@ -347,8 +364,9 @@ export class PurchaseOrderService {
                     purchaseOrderDate: po.purchaseOrderDate,
                     poMaterialtype: po.poMaterialtype,
                     poStatus: po.poStatus,
-                    fabInfo: fabricInfo,
-                    triminfo: triminfo
+                    poId:po.purchaseOrderId
+                    // fabInfo: fabricInfo,
+                    // triminfo: triminfo
 
                 })
             }

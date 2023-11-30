@@ -47,11 +47,11 @@ operationInventoryId:number;
 })
 operation:string;
 
-// @Column('varchar',{
-//     nullable:false,
-//     name:'next_operation'
-// })
-// nextOperation:string;
+@Column('varchar',{
+    nullable:false,
+    name:'next_operation'
+})
+nextOperation:string;
 
   @Column('int',{
     nullable:false,
@@ -64,6 +64,11 @@ issuedQuantity:number;
     name:'issued_uom_id'
 })
 issuedUomId:number;
+@Column('int',{
+  nullable:false,
+  name:'sample_req_id'
+})
+sampleReqId:number;
 
 //   @Column('int',{
 //     nullable:false,

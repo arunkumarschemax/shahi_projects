@@ -70,13 +70,19 @@ status: RackPositionStatusEnum;
   })
   versionFlag: number;
 
-  @ManyToOne(type=>Columns, co=>co.Column,{  nullable:false, })
-  @JoinColumn({ name:"column_id"})
-  column: Columns;
+  @Column('int', {
+    nullable: false,
+    name: 'column_id',
+  })
+  columnId: number;
 
-  @ManyToOne(type=>Levels, co=>co.Level,{  nullable:false, })
-  @JoinColumn({ name:"level_Id"})
-  level: Levels;
+  @Column('int', {
+    nullable: false,
+    name: 'level_Id',
+  })
+  levelId: number;
+
+
 
 
 }

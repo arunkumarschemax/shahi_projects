@@ -58,4 +58,13 @@ export class PoItemdetails{
   @ApiProperty()
   isActive: boolean;
 
+  @ApiProperty()
+  indentId:number
+
+  @ApiProperty()
+  sampleRequestId:number
+
+  @ApiProperty()  
+  sampleReqId:number
+
 }

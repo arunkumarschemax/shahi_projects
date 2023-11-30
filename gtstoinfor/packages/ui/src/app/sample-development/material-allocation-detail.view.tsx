@@ -81,11 +81,10 @@ export const MaterialAllocationDetailView = () => {
       if (res.status) {
         setData(res.data)
        
-      } else {
+      } 
       
        
-      }
-    });
+        });
   };
 
 
@@ -93,7 +92,21 @@ export const MaterialAllocationDetailView = () => {
     return (
         <div>
             <Card title={<span style={{ color: 'white' }}>Material Allocation Detail View</span>}
-                style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
+                // style={{ textAlign: 'center' }} 
+                headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
+                extra={
+                    <span>
+                      <Button
+                        onClick={() =>
+                          navigate("/sample-development/material-allocation")
+                        }
+                        type={"primary"}
+                      >
+                        View
+                      </Button>
+                    </span>
+                  }
+                >
 
                 <Descriptions size='small'>
                 <DescriptionsItem label='Sample Request No'>{location?.state?.request_no}</DescriptionsItem>

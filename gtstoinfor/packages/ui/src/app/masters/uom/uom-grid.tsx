@@ -117,18 +117,18 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
       title: "S.No",
       key: "sno",
       responsive: ["sm"],
-      // width:100,
+      align:"center",
+      width:10,
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
-      title: "UOM Category",
+      title: <div style={{textAlign:"center"}}>UOM Category</div>,
       dataIndex: "uomCategory",
-      // sorter: (a, b) => a.uom.localeCompare(b.model),
-      // sortDirections: ["ascend", "descend"],
-      onFilter: (value, record) => record.name.indexOf(value) === 0,
-      sorter: (a, b) => a.uom.length - b.name.length,
-      sortDirections: ['descend'],
-      // width:200,    
+      width:70,
+      sorter: (a, b) => a.uom.localeCompare(b.model),
+      sortDirections: ["ascend", "descend"],
+      
+
       filters: [
         {
           text: 'Area',
@@ -147,9 +147,8 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
           value: 'Volume',
         },
       ],
-      // onFilter: (value,record) =>{ return record.uomCategory === value}
-      // onFilter: (value: string, record) => record.uomCategory.indexOf(value) === 0,
-      // sorter: (a, b) => a.name.length - b.name.length,
+      onFilter: (value,record) =>{ return record.uomCategory === value}
+      
     },
     {
       title: "UOM",
@@ -157,12 +156,12 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
       sorter: (a, b) => a.uom.localeCompare(b.model),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("uom"),
-      // width:130,
+      width:10,
     },
     {
       title: "Description",
       dataIndex: "description",
-      // width:130,
+       width:130,
     },
   ];
 
@@ -172,12 +171,10 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
       // style={{ textAlign: "center" }}
       headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       
-      size="small"
+      
       extra={<Button
-        className="panel_button"
         onClick={() => navigate('/uom-form')}
         type="primary"
-        style={{ background: "white", color: "#3C085C" }}
     >Create</Button>
     }
     //   extra={
@@ -194,13 +191,13 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
       dataSource={data}
       className="custom-table-wrapper"
       size="small"
-      pagination={{
-        onChange(current, pageSize) {
-          setPage(current);
-          setPageSize(pageSize);
-        },
-        pageSize:50,
-      }}
+      scroll={{x:true,y:500}}
+           pagination={{
+            pageSize:50,
+            onChange(current) {
+              setPage(current);
+            }
+          }}
       rowKey={(rec) => rec.id}
     />
   ) : (

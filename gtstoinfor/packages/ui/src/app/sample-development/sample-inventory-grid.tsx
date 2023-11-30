@@ -268,7 +268,7 @@ const service=new SampleDevelopmentService
     return (
         <Card
         title={<span>Sample Inventory</span>}
-        style={{ textAlign: "center" }}
+        // style={{ textAlign: "center" }}
         headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
             <Table columns={Columns} 
              dataSource={data}

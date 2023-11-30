@@ -54,8 +54,9 @@ export const columnForm = (props:columnProps) => {
     
     return(
         <>
-                    <Card title={<span >Column</span>} style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
-            extra={props.isUpdate==true?"":<Link to='/masters/column/column-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
+                    <Card title={<span >Column</span>}  headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
+            extra={props.isUpdate==true?"":<Link to='/masters/column/column-view' ><span style={{color:'white'}}>
+                <Button  type={'primary'} >View </Button> </span></Link>}
 >
         {/* <Card
         //    title={<span>Commission</span>}

@@ -82,7 +82,7 @@ export class IndentService {
                     trim.quantity, trim.m3TrimCode, trim.description,
                     trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId))
             }
-            indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, fabricModel, trimModel, data.style, data.description, data.created_at))
+            indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, fabricModel, trimModel, data.style, data.description, data.created_at,data.buyerName ))
         }
         
         return new CommonResponseModel(true, 1235, 'Data retrieved Successfully', indentModel);
@@ -113,7 +113,7 @@ export class IndentService {
     async getAllIndentTrimDetailsAgainstIndent(req: indentIdReq): Promise<CommonResponseModel> {
         console.log(req)
         // const data = 'SELECT "" as poQuantity,item_code as trimCodeName,it.trim_type as productGroupId,trim_code as trimId, pg.product_group as trimType,c.colour AS colourName,item_code AS trimCodeName,product_group AS productGroup,itrims_id AS indentTrmId,trim_code AS trimId ,size AS sizeId,color AS colourId, quantity as indentQuantity,quantity_unit AS indentQuantityUnit,m3_trim_code AS m3TrimCode FROM indent_trims it LEFT JOIN indent i ON it.indent_id=i.indent_id LEFT JOIN product_group pg ON pg.product_group_id=it.trim_type LEFT JOIN rm_items ri ON ri.rm_item_id=it.trim_code LEFT JOIN colour c ON c.colour_id=it.color where it.indent_id in(' + req.indentId + ') '
-        const data ='SELECT m3_trim_Id AS m3TrimCode,request_no AS indentCode,"" AS poQuantity,ms.trim_type AS trimtype,ms.trim_code AS m3TrimCodeName,it.trim_type AS productGroupId,it.trim_code AS trimId, itrims_id AS indentTrmId, it.trim_code AS trimId ,quantity AS indentQuantity FROM indent_trims it LEFT JOIN indent i ON it.indent_id=i.indent_id  LEFT JOIN m3_trims ms ON ms.m3_trim_Id=it.trim_code  WHERE it.indent_id in(' + req.indentId + ') '
+        const data ='SELECT it.indent_id as indentId,m3_trim_Id AS m3TrimCode,request_no AS indentCode,"" AS poQuantity,ms.trim_type AS trimtype,ms.trim_code AS m3TrimCodeName,it.trim_type AS productGroupId,it.trim_code AS trimId, itrims_id AS indentTrmId, it.trim_code AS trimId ,quantity AS indentQuantity FROM indent_trims it LEFT JOIN indent i ON it.indent_id=i.indent_id  LEFT JOIN m3_trims ms ON ms.m3_trim_Id=it.trim_code  WHERE it.indent_id in(' + req.indentId + ') '
         const result = await this.indentRepo.query(data)
         if (result) {
             return new CommonResponseModel(true, 1, 'data retived sucessfully', result)

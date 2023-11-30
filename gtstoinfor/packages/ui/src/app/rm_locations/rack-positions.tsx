@@ -1,4 +1,4 @@
-import { Button, Card, Col, Form, Input, Row, Select, message } from 'antd'
+import { Alert, Button, Card, Col, Form, Input, Row, Select, message } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AlertMessages from '../common/common-functions/alert-messages';
@@ -84,17 +84,18 @@ const service1= new ColumnService()
 
   return (
     <div>
-      <Card title={<span>WARE HOUSE LOCATIONS</span>} style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+      <Card title={<span>Warehouse Location</span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
         extra={<Button
           onClick={() => navigate('/masters/rackPosition-view')}
           type="primary"
-          style={{ background: "white", color: "#3C085C" }}
+          // style={{ background: "white", color: "#3C085C" }}
         >View</Button>
         }>
+      
         <Form form={form} layout={'vertical'} name="control-hooks" onFinish={onFinish}>
           <Row gutter={12}>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
-              <Form.Item label="Column" name="column"
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
+              <Form.Item label="Column" name="columnId"
                rules={[
                 { required: true, message: 'Column is required' },]}
               >
@@ -107,7 +108,7 @@ const service1= new ColumnService()
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
               <Form.Item label="Level" name="levelId"
                rules={[
                 { required: true, message: 'Level is required' },]}
@@ -121,7 +122,7 @@ const service1= new ColumnService()
                 </Select>
               </Form.Item>
             </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
               <Form.Item label=" Rack " name="rackName"
                rules={[
                 { required: true, message: 'Field is required' },]}
@@ -135,7 +136,7 @@ const service1= new ColumnService()
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
               <Form.Item label=" Rack Position Code" name="positionCode"
                 rules={[
                   { required: true, message: 'Field is required' },
@@ -148,7 +149,7 @@ const service1= new ColumnService()
                 <Input placeholder=" Enter Position Code"/>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
               <Form.Item label="Rack Position Name" name="rackPositionName"
                 rules={[
                   { required: true, message: 'Field is required' },

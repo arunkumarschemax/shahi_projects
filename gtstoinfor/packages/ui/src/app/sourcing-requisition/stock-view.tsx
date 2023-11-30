@@ -34,6 +34,17 @@ export const StockView = () => {
   const [weave, setWeave] = useState<any[]>([]);
   const buyerService = new BuyersService();
   const [fabricType, setFabricType] = useState<any[]>([]);
+  const [weightValue, setWeightValue] = useState<any>();
+  const [weightUnitValue, setWeightUnitValue] = useState<any>();
+  const [widthValue, setWidthValue] = useState<any>();
+  const [widthUnitValue, setWidthUnitValue] = useState<any>();
+  const [countValue, setCountValue] = useState<any>();
+  const [countUnitValue, setCountUnitValue] = useState<any>();
+  const [buttonEnable,setButtonEnable] = useState<boolean>(true)
+  const [buyervalue,setBuyervalue] = useState<any>()
+
+
+
 
   useEffect(() => {
     getUom();
@@ -104,7 +115,7 @@ export const StockView = () => {
       // console.log(res, "???????????????????????????????????");
       if (res) {
         setData(res);
-        AlertMessages.getSuccessMessage("Stock retrived successfully. ")
+        AlertMessages.getSuccessMessage("Stock retrived successfully")
       } else {
         setData([]);
         AlertMessages.getErrorMessage("Something went wrong. ")
@@ -118,6 +129,7 @@ export const StockView = () => {
 
   const getRowData = async (m3StyleDto: any) => {
     setRowData(m3StyleDto);
+    console.log(m3StyleDto,"kk")
     setVisibleModel(true);
   }
 
@@ -286,13 +298,17 @@ export const StockView = () => {
       dataIndex: 'action',
       render: (text, rowData) => (
         <span>  
-         <Button style={{backgroundColor:'#69c0ff'}} onClick={ (e) => getRowData(rowData) }><b>Assign Reclassification</b></Button>
+         <Button style={{backgroundColor:'#69c0ff'}} onClick={ (e) => getRowData(rowData) }
+          // disabled={rowData.buyer_id === buyervalue ? true : false}
+          ><b>Assign Reclassification</b></Button>
         </span>
       )
     }
   ];
   const clearData = () => {
     form.resetFields();
+    
+
   };
 
   const handleCancel = () => {
@@ -301,19 +317,34 @@ export const StockView = () => {
 
   const getItemsForOtherBuyers = () => {
     console.log(form.getFieldsValue())
-    let formData: M3ItemsDTO = form.getFieldsValue();
+    // console.log()
+    const data = new M3ItemsDTO(null,'',form.getFieldValue("content"),form.getFieldValue("fabricType"),form.getFieldValue("weave"),weightValue,weightUnitValue,form.getFieldValue("construction"),countValue,countUnitValue,widthValue,widthUnitValue,form.getFieldValue("finish"),form.getFieldValue("shrinkage"),form.getFieldValue("buyerId"),"",form.getFieldValue("buyerCode"))
+
+    let formData: M3ItemsDTO = data;
     console.log(formData)
     console.log(formData.buyerId)
     formData.buyerId = undefined;
     console.log(formData)
     getData(formData);
   }
-  const onFinish = (m3StyleDto: M3ItemsDTO) => {
+
+  const onChange =(value) =>{
+    if(value === null || undefined) {
+      setButtonEnable(true)
+     }else {
+      setButtonEnable(false)
+     }
+  }
+  const onFinish = () => {
+    if(form.getFieldValue("content")) {
+      setButtonEnable(false)
+     }
     console.log(form.getFieldsValue())
-    console.log(m3StyleDto)
-    getData(m3StyleDto);
+    const data = new M3ItemsDTO(null,'',form.getFieldValue("content"),form.getFieldValue("fabricType"),form.getFieldValue("weave"),weightValue,weightUnitValue,form.getFieldValue("construction"),countValue,countUnitValue,widthValue,widthUnitValue,form.getFieldValue("finish"),form.getFieldValue("shrinkage"),form.getFieldValue("buyerId"),"",form.getFieldValue("buyerCode"))
+    console.log(data)
+    getData(data);
     // service
-    //   .createM3Items(m3StyleDto)
+    //   .createM3Items(m3StyleDto)f
     //   .then((res) => {
     //     if (res.status) {
     //       AlertMessages.getSuccessMessage(res.internalMessage);
@@ -330,6 +361,12 @@ export const StockView = () => {
     //     AlertMessages.getErrorMessage(err.message);
     //   });
   };
+   const onBuyerChange = (value) =>{
+    console.log(value)
+    setBuyervalue(value)
+   }
+
+ 
 
   return (
     <Card title="RM Inventory" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
@@ -346,6 +383,7 @@ export const StockView = () => {
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select Buyer"
+                onChange={onBuyerChange}
               >
                 {buyer.map((e) => {
                   return (
@@ -377,6 +415,8 @@ export const StockView = () => {
                 <Select
                   optionFilterProp="children"
                   placeholder=" Select Content"
+                  allowClear
+                  onChange={onChange}
                 >
                   {Object.keys(m3ItemsContentEnum)
                     .sort()
@@ -391,7 +431,7 @@ export const StockView = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
 
               <Form.Item
                 label=" Fabric Type"
@@ -416,8 +456,9 @@ export const StockView = () => {
                 label=" Weave"
                 name="weave"
                 rules={[{ required: false, message: "Field is required" }]}
+                
               >
-                <Select placeholder=" Select Weave" 
+                <Select placeholder=" Select Weave"  allowClear
                 >
                   {weave.map((option) => (
                     <option
@@ -432,15 +473,29 @@ export const StockView = () => {
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
 
-              <Form.Item
+               <Form.Item
                 label="Weight"
-                name="weight"
                 rules={[{ required: false, message: "Field is required" }]}
+                // style={{marginTop:25}}
               >
-                <Input placeholder=" Enter Weight" />
-              </Form.Item>
+                <Space.Compact>
+             <Input placeholder="Enter Weight" allowClear onChange={(e) => setWeightValue(e.target.value)}/>
+
+              <Select style={{width:80}} allowClear placeholder="Unit" onChange={(value) => setWeightUnitValue(value)}>
+              {weightData.map((e) => {
+                          return (
+                            <option key={e.uomId} value={e.uomId}>
+                              {e.uom}
+                            </option>
+                          );
+                        })}
+         </Select>
+          </Space.Compact>
+               </Form.Item> 
+
+         
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 2 }} style={{ marginTop: "2%" }}>
+            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 2 }} style={{ marginTop: "2%" }}>
 
               <Form.Item name="weightUnit" 
                 rules={[{ required: false, message: "Field is required" }]}
@@ -460,34 +515,27 @@ export const StockView = () => {
                   })}
                 </Select>
               </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 2 }}>
+            </Col> */}
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
 
               <Form.Item
                 label="Width"
-                name="width"
                 rules={[{ required: false, message: "Field is required" }]}
               >
-                <Input placeholder=" Enter Width"/>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 2 }} style={{ marginTop: "2%" }}>
+              <Space.Compact>
+             <Input placeholder="Enter Width" allowClear onChange={(e) => setWidthValue(e.target.value)}/>
 
-              <Form.Item name="widthUnit">
-                <Select
-                  showSearch
-                  allowClear
-                  optionFilterProp="children"
-                  placeholder="Unit"
-                >
-                  {widthData.map((e) => {
+              <Select style={{width:80}} allowClear placeholder="Unit" onChange={(value) => setWidthUnitValue(value)}>
+              {widthData.map((e) => {
                     return (
                       <option key={e.uomId} value={e.uomId}>
                         {e.uom}
                       </option>
                     );
                   })}
-                </Select>
+         </Select>
+          </Space.Compact>
+
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
@@ -499,7 +547,7 @@ export const StockView = () => {
                   { required: false, message: 'Field is required' },
                 ]}
               >
-                <Input placeholder=" Enter  Construction"/>
+                <Input placeholder=" Enter  Construction" allowClear/>
               </Form.Item>
             </Col>
             <Col
@@ -507,7 +555,7 @@ export const StockView = () => {
               sm={{ span: 12 }}
               md={{ span: 4 }}
               lg={{ span: 8 }}
-              xl={{ span: 3 }}
+              xl={{ span: 4 }}
             >
               <Form.Item
                 label=" Yarn Count"
@@ -516,36 +564,19 @@ export const StockView = () => {
                   { required: false, message: 'Field is required' },
                 ]}
               >
-                <Input placeholder=" Enter  Yarn Count" />
-              </Form.Item>
-            </Col>
-            <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 2 }}
-              style={{ marginTop: "2%" }}
-            >
-              <Form.Item name="yarnUnit"
-              rules={[
-                { required: false, message: 'Field is required' },
-              ]}
-              >
-                <Select
-                  showSearch
-                  allowClear
-                  optionFilterProp="children"
-                  placeholder="Unit"
-                >
-                  {yarnData.map((e) => {
+                <Space.Compact>
+             <Input placeholder="EnterYarn Count" allowClear onChange={(e) => setCountValue(e.target.value)}/>
+
+              <Select style={{width:80}} allowClear placeholder="Unit" onChange={(value) => setCountUnitValue(value)}>
+              {yarnData.map((e) => {
                     return (
                       <option key={e.uomId} value={e.uomId}>
                         {e.uom}
                       </option>
                     );
                   })}
-                </Select>
+         </Select>
+          </Space.Compact>
               </Form.Item>
             </Col>
 
@@ -554,7 +585,7 @@ export const StockView = () => {
               sm={{ span: 12 }}
               md={{ span: 4 }}
               lg={{ span: 8 }}
-              xl={{ span: 3 }}
+              xl={{ span: 4 }}
             >
               <Form.Item
                 label=" Finish"
@@ -563,7 +594,7 @@ export const StockView = () => {
                   { required: false, message: 'Field is required' },
                 ]}
               >
-                <Input placeholder=" Enter  Finish" />
+                <Input placeholder=" Enter  Finish"  allowClear/>
               </Form.Item>
             </Col>
             <Col
@@ -571,7 +602,7 @@ export const StockView = () => {
               sm={{ span: 12 }}
               md={{ span: 4 }}
               lg={{ span: 8 }}
-              xl={{ span: 3 }}
+              xl={{ span: 4 }}
             >
               <Form.Item
                 label=" Shrinkage"
@@ -580,24 +611,33 @@ export const StockView = () => {
                   { required: false, message: 'Field is required' },
                 ]}
               >
-                <Input placeholder=" Enter  Shrinkage" />
+                <Input placeholder=" Enter  Shrinkage" allowClear />
               </Form.Item>
             </Col>
-            <Col span={4}  style={{paddingTop:'20px'}}>
-              <Button type="primary" htmlType="submit">
+            <Row gutter={8}>
+            <Col span={24} >
+              <Button type="primary" htmlType="submit"
+              style={{marginTop:20,marginLeft:40}}
+              >
                 Get Items
               </Button>
+              &nbsp;&nbsp;&nbsp;&nbsp;
               <Button
                 htmlType="button"
-                style={{ margin: "0 14px" }}
                 onClick={clearData}
+                
               >
                 Reset
-              </Button> 
-                </Col>
-            <Col span={6}  style={{paddingTop:'20px'}}>
-              <Button onClick={(e) => getItemsForOtherBuyers()} style={{backgroundColor:'#29397d', color:'white'}}>Check Other Buyers</Button>
-            </Col>
+              </Button>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <Button type="primary" onClick={(e) => getItemsForOtherBuyers()} disabled={buttonEnable}
+            //  style={{marginRight:300}}
+
+              >Check Other Buyers
+              </Button>
+              </Col>
+              </Row>
+             
           </Row>
     </Form>
         
