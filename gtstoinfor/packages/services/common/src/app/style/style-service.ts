@@ -50,7 +50,7 @@ export class StyleService{
         await manager.query(cutting_qry);
         let sewing_qry=`INSERT INTO operation_sequence( operation_group_name, operation_name, sequence, operation_group_id, operation_id, style, style_id) VALUES ('Sewing','Sewing',2,2,5,'`+styleName+`',`+styleId+`)`;
         await manager.query(sewing_qry);
-         let finishing_qry=`INSERT INTO operation_sequence( operation_group_name, operation_name, sequence, operation_group_id, operation_id, style, style_id) VALUES ('Finishing','Finishing',3,4,11,'`+styleName+`',`+styleId+`)`;
+         let finishing_qry=`INSERT INTO operation_sequence( operation_group_name, operation_name, sequence, operation_group_id, operation_id, style, style_id) VALUES ('Finishing','Finishing',3,9,11,'`+styleName+`',`+styleId+`)`;
         await manager.query(finishing_qry);
     }
     async updateStylePath(filePath: string, filename: string, styleId: number): Promise<UploadResponse> {
