@@ -227,8 +227,8 @@ import AlertMessages from "../common/common-functions/alert-messages";
       },
       {
         title: "Required Quantity",
-        dataIndex: "fabric_consumption",
-        sorter: (a, b) => a.fabric_consumption.localeCompare(b.fabric_consumption),
+        dataIndex: "totalRequirement",
+        sorter: (a, b) => a.totalRequirement.localeCompare(b.totalRequirement),
         sortDirections: ["descend", "ascend"],
       },
       {
@@ -257,8 +257,8 @@ import AlertMessages from "../common/common-functions/alert-messages";
         render: (text, record) => {
           return (
             <>
-              {Number(record.fabric_consumption) - Number(record.availableQuantity) > 0
-                ? Number(record.fabric_consumption) - Number(record.availableQuantity)
+              {Number(record.totalRequirement) - Number(record.availableQuantity) > 0
+                ? Number(record.totalRequirement) - Number(record.availableQuantity)
                 : 0}
             </>
           );
@@ -326,6 +326,14 @@ import AlertMessages from "../common/common-functions/alert-messages";
 
       },
       {
+        title: "Grn Date",
+        key:'grnDate',
+        dataIndex:"grnDate",
+        render:(grnDate)=>moment(grnDate).format("YYYY-MM-DD"),
+        width: "150px",
+
+      },
+      {
         title: "Location",
         key:'rack_position_name',
         dataIndex: "rack_position_name",
@@ -335,7 +343,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
       {
         title: "Available Quantity",
         width: "150px",
-        dataIndex: "resultAvailableQuantity",
+        dataIndex: "totalAvailablequntity",
       },
      
       {
@@ -550,10 +558,10 @@ import AlertMessages from "../common/common-functions/alert-messages";
           <span>Location : {<b>{location}</b>}</span>
           <span style={{ width: "10px" }}></span>
           <span style={{ width: "10px" }}></span>
+          {/* <span style={{ width: "10px" }}></span>
+          <span>Status : {<b>{status}</b>}</span> */}
           <span style={{ width: "10px" }}></span>
-          <span>Status : {<b>{status}</b>}</span>
-          <span style={{ width: "10px" }}></span>
-          <span>Life Cycle Status : {<b>{lifeCycleStatus}</b>}</span>
+          <span> Status : {<b>{lifeCycleStatus}</b>}</span>
           {/* <span style={{width:'10px'}}></span>
                 <span>{<Tag onClick={() => generateBarcode(requestNo)} style={{cursor:'pointer'}}>
                            <BarcodeOutlined />

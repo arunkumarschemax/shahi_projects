@@ -90,7 +90,7 @@ import Barcode from "react-barcode";
         render: (text, record) => {
           const uom = record.uom || '';
       
-          return text !== 0 ? `${text} ${uom}` : '-';
+          return text !== 0 && text !== null ? `${text} ${uom}` : '-';
         },      },
       {
         title: <div style={{textAlign:"center"}}>Accepted Qty</div>,
@@ -111,7 +111,7 @@ import Barcode from "react-barcode";
         render: (text, record) => {
           const uom = record.uom || '';
       
-          return text !== 0 ? `${text} ${uom}` : '-';
+          return text !== 0 && text !== null ? `${text} ${uom}` : '-';
         },
       },
       {
@@ -143,8 +143,8 @@ import Barcode from "react-barcode";
         headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
         title={
           <div style={{textAlign:"center"}}>
-            <span style={{marginRight:"20px"}}>GRN Number: {stateData.data[0]?.grnNo}</span>
-            <span style={{ marginLeft: '20px'}}>PO Number: {stateData.data[0]?.poNumber}</span>
+            <span style={{marginRight:"20px"}}>GRN Number: {stateData?.data[0]?.grnNo}</span>
+            <span style={{ marginLeft: '20px'}}>PO Number: {stateData?.data[0]?.poNumber}</span>
           </div>
         }
         extra={
@@ -155,14 +155,14 @@ import Barcode from "react-barcode";
       >
         <Descriptions>
           {/* <Descriptions.Item label='GRN Number' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data[0]?.grnNo?stateData.data?.[0]?.grnNo:'-'}</Descriptions.Item> */}
-          <Descriptions.Item label='GRN Date' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.grnDate? moment(stateData.data?.[0]?.grnDate).format('DD-MM-YYYY'):'-'}</Descriptions.Item>
-          <Descriptions.Item label='Vendor' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.vendor?stateData.data?.[0]?.vendor:'-'}</Descriptions.Item>
-          {/* <Descriptions.Item label='PO Number' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.poNumber?stateData.data?.[0]?.poNumber:'-'}</Descriptions.Item> */}
-          {/* <Descriptions.Item label='Contact Person' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.contactPerson?stateData.data?.[0]?.contactPerson:'-'}</Descriptions.Item> */}
-          <Descriptions.Item label='Invoice No' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.invoiceNo?stateData.data?.[0]?.invoiceNo:'-'}</Descriptions.Item>
-          <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.itemType?stateData.data?.[0]?.itemType:'-'}</Descriptions.Item>
-          <Descriptions.Item label='GRN Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.grnType?stateData.data?.[0]?.grnType:'-'}</Descriptions.Item>
-          <Descriptions.Item label='Status' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.status?stateData.data?.[0]?.status:'-'}</Descriptions.Item>
+          <Descriptions.Item label='GRN Date' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.grnDate? moment(stateData?.data?.[0]?.grnDate).format('DD-MM-YYYY'):'-'}</Descriptions.Item>
+          <Descriptions.Item label='Vendor' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.vendor?stateData?.data?.[0]?.vendor:'-'}</Descriptions.Item>
+          {/* <Descriptions.Item label='PO Number' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.poNumber?stateData?.data?.[0]?.poNumber:'-'}</Descriptions.Item> */}
+          {/* <Descriptions.Item label='Contact Person' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.contactPerson?stateData?.data?.[0]?.contactPerson:'-'}</Descriptions.Item> */}
+          <Descriptions.Item label='Invoice No' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.invoiceNo?stateData?.data?.[0]?.invoiceNo:'-'}</Descriptions.Item>
+          <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.itemType?stateData?.data?.[0]?.itemType:'-'}</Descriptions.Item>
+          <Descriptions.Item label='GRN Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.grnType?stateData?.data?.[0]?.grnType:'-'}</Descriptions.Item>
+          <Descriptions.Item label='Status' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.status?stateData?.data?.[0]?.status:'-'}</Descriptions.Item>
         </Descriptions>
         <br/>
         <br/>
@@ -183,7 +183,7 @@ import Barcode from "react-barcode";
         style={{ maxWidth: "100%" }}
       >
         <div style={{ textAlign: "center" }}>
-          <Barcode value={barcode} height={30} width={1.3}/>
+          <Barcode value={barcode} height={30} width={0.8}/>
           {/* <PrinterOutlined onClick={handlePrint}/> */}
         </div>
       </Modal>

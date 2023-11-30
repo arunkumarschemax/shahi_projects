@@ -472,7 +472,7 @@ const GRNForm = () => {
                     message: 'Only alphanumeric characters are allowed',
                   },
                   {
-                    min: 12,
+                    min: 4,
                     max: 20,
                     message: 'Invoice number must be between 12 and 20 characters',
                   },

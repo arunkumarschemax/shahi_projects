@@ -6,7 +6,7 @@ import AlertMessages from '../../common/common-functions/alert-messages';
 import { ColumnProps, ColumnType } from 'antd/es/table'
 import { SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-import { M3ItemsDTO, UomCategoryEnum, m3ItemsContentEnum } from '@project-management-system/shared-models';
+import { M3ItemsDTO, M3Itemsfilter, UomCategoryEnum, m3ItemsContentEnum } from '@project-management-system/shared-models';
 const M3ItemsView = () => {
 
     const navigate=useNavigate()
@@ -53,12 +53,54 @@ const stockService = new StockService();
        
     }, []);
    
-    const data = new M3ItemsDTO(null,'',form.getFieldValue("content"),form.getFieldValue("fabricType"),form.getFieldValue("weave"),weightValue,weightUnitValue,form.getFieldValue("construction"),countValue,countUnitValue,widthValue,widthUnitValue,form.getFieldValue("finish"),form.getFieldValue("shrinkage"),form.getFieldValue("buyerId"),"",form.getFieldValue("buyerCode"))
+    // const data = new M3ItemsDTO(null,'',form.getFieldValue("content"),form.getFieldValue("fabricType"),form.getFieldValue("weave"),weightValue,weightUnitValue,form.getFieldValue("construction"),countValue,countUnitValue,widthValue,widthUnitValue,form.getFieldValue("finish"),form.getFieldValue("shrinkage"),form.getFieldValue("buyerId"),"",form.getFieldValue("buyerCode"))
 
-    console.log(data,"req")
+    // console.log(data,"req")
     
     const getM3ItemsData = () => {
-        service.getM3Items().then(res => {
+      const req = new M3Itemsfilter()
+      if(form.getFieldValue("buyerId")!== undefined){
+        req.buyerId = form.getFieldValue("buyerId")
+      }
+      if(form.getFieldValue("content")!== undefined){
+        req.content = form.getFieldValue("content")
+      }
+
+      if(form.getFieldValue("fabricType")!== undefined){
+        req.fabricType = form.getFieldValue("fabricType")
+      }
+
+      
+      if(form.getFieldValue("weave")!== undefined){
+        req.weave = form.getFieldValue("weave")
+      }
+       
+      if(form.getFieldValue("construction")!== undefined){
+        req.construction = form.getFieldValue("construction")
+      }
+       
+      if(form.getFieldValue("finish")!== undefined){
+        req.finish = form.getFieldValue("finish")
+      }
+       
+      if(form.getFieldValue("shrinkage")!== undefined){
+        req.shrinkage = form.getFieldValue("shrinkage")
+      }
+
+      if(form.getFieldValue("weight")!== undefined){
+        req.weight = form.getFieldValue("weight")
+      }
+      if(form.getFieldValue("width")!== undefined){
+        req.width = form.getFieldValue("weight")
+      }
+      if(form.getFieldValue("yarnCount")!== undefined){
+        req.yarnCount = form.getFieldValue("yarnCount")
+      }
+
+      console.log(form.getFieldValue("weight"),"req")
+      // console.log(weightUnitValue,"req")
+
+        service.getM3Items(req).then(res => {
             if (res.status) {
                 setItemGroup(res.data);
             } else {
@@ -213,40 +255,42 @@ const stockService = new StockService();
         {
             title: "Buyer",
             dataIndex: "buyer",
-            ...getColumnSearchProps('buyer')
+            ...getColumnSearchProps('buyer'),
+            sorter: (a, b) => a.buyer.length - b.buyer.length,
+           sortDirections: ['descend', 'ascend'],
         },
         {
             title: "Item Code",
             dataIndex: "itemCode",
-            ...getColumnSearchProps('itemCode')
+            ...getColumnSearchProps('itemCode'),
+            sorter: (a, b) => a.itemCode.length - b.itemCode.length,
+           sortDirections: ['descend', 'ascend'],
+            
+
         },
         {
             title: "Content",
             dataIndex: "content",
-            ...getColumnSearchProps('content')
+            ...getColumnSearchProps('content'),
+            sorter: (a, b) => a.content.length - b.content.length,
+           sortDirections: ['descend', 'ascend'],
         },
         {
             title: "Fabric Type",
             dataIndex: "fabric_type_name",
-            ...getColumnSearchProps('fabric_type_name')
+            ...getColumnSearchProps('fabric_type_name'),
+            sorter: (a, b) => a.fabric_type_name.length - b.fabric_type_name.length,
+           sortDirections: ['descend', 'ascend'],
+           ...getColumnSearchProps('itemCode')
         },
         {
             title: "Weave",
             dataIndex: "fabric_weave_name",
-            ...getColumnSearchProps('fabric_weave_name')
+            ...getColumnSearchProps('fabric_weave_name'),
+            sorter: (a, b) => a.fabric_weave_name.length - b.fabric_weave_name.length,
+           sortDirections: ['descend', 'ascend'],
         },
-        // {
-        //     title: "Weight",
-        //     dataIndex: "weight",
-        //     render: (text,record) => {
-        //         return(
-        //             <>
-        //             {record.weight ? `${record.weight} ${record.weightUnit}` : '-'}
-        //             </>
-        //         )
-        //     },
-        //     ...getColumnSearchProps('weight')
-        // },
+  
         {
           title: "Weight",
           dataIndex: "weight-uom",
@@ -257,21 +301,10 @@ const stockService = new StockService();
                   </span>
               )
           },
+          sorter: (a, b) => a.weight - b.weight,
+          sortDirections: ['descend', 'ascend'],
       },
 
-        // {
-        //     title: "Width",
-        //     dataIndex: "width",
-        //     render: (text,record) => {
-        //       console.log(record,"ll")
-        //         return(
-                    
-        //             {record.width ? `${record.width} ${record.widthUnit}` : '-'}
-                    
-        //         )
-        //     },
-        //     ...getColumnSearchProps('width')
-        // },
         {
           title: "Width",
           dataIndex: "width-uom",
@@ -281,25 +314,19 @@ const stockService = new StockService();
                       {record.width ? `${record.width}${record.widthUnit}`: '-'}
                   </span>
               )
-          }
+          },
+          sorter: (a, b) => a.width - b.width,
+          sortDirections: ['descend', 'ascend'],
+
       },
         {
             title: "Construction",
             dataIndex: "construction",
-            ...getColumnSearchProps('construction')
+            ...getColumnSearchProps('construction'),
+            sorter: (a, b) => a.construction.length - b.construction.length,
+            sortDirections: ['descend', 'ascend'],
         },
-        // {
-        //     title: " Yarn Count",
-        //     dataIndex: "yarn_count",
-        //     render: (text,record) => {
-        //         return(
-        //             <>
-        //             {record.yarn_count ? `${record.yarn_count} ${record.yarnUnit}` : '-'}
-        //             </>
-        //         )
-        //     },
-        //     ...getColumnSearchProps('yarn_count')
-        // },
+     
         {
           title: "Yarn Count",
           dataIndex: "yarn_count-uom",
@@ -309,26 +336,37 @@ const stockService = new StockService();
                       {record.yarn_count ? `${record.yarn_count}${record.yarnUnit}`: '-'}
                   </span>
               )
-          }
+          },
+          sorter: (a, b) => a.yarn_count - b.yarn_count,
+          sortDirections: ['descend', 'ascend'],
+
       },
         {
             title: "Finish",
             dataIndex: "finish",
+            sorter: (a, b) => a.finish.length - b.finish.length,
+            sortDirections: ['descend', 'ascend'],
+            
         },
         {
             title: "Shrinkage",
             dataIndex: "shrinkage",
-            ...getColumnSearchProps('shrinkage')
+            ...getColumnSearchProps('shrinkage'),
+            sorter: (a, b) => a.shrinkage.length - b.shrinkage.length,
+            sortDirections: ['descend', 'ascend'],
         },
         {
             title: "Description",
             dataIndex: "description",
+            sorter: (a, b) => a.description.length - b.description.length,
+            sortDirections: ['descend', 'ascend'],
         },
     ]
 
     const onReset = () => {
-    
+  
         form.resetFields()
+        getM3ItemsData()
        
     }
     
@@ -343,7 +381,7 @@ const stockService = new StockService();
         >Create</Button>
         }>
           
-          <Form layout="vertical" form={form}>
+          <Form layout="vertical" form={form} onFinish={getM3ItemsData}>
        <Row gutter={24}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
@@ -356,7 +394,6 @@ const stockService = new StockService();
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select Buyer"
-                // onChange={onBuyerChange}
               >
                 {buyer.map((e) => {
                   return (
@@ -411,12 +448,12 @@ const stockService = new StockService();
                 name="fabricType"
                 rules={[{ required: false, message: "Field is required" }]}
               >
-                <Select placeholder=" Select Fabric Type" >
+                <Select placeholder=" Select Fabric Type" allowClear>
                   {fabricType.map((option) => (
                     <option
                       key={option.fabricTypeId}
                       value={option.fabricTypeId}
-                    >
+                    >width
                       {option.fabricTypeName}
                     </option>
                   ))}
@@ -448,6 +485,7 @@ const stockService = new StockService();
 
                <Form.Item
                 label="Weight"
+                name="weight"
                 rules={[{ required: false, message: "Field is required" }]}
                 // style={{marginTop:25}}
               >
@@ -493,6 +531,7 @@ const stockService = new StockService();
 
               <Form.Item
                 label="Width"
+                name="width"
                 rules={[{ required: false, message: "Field is required" }]}
               >
               <Space.Compact>
@@ -597,7 +636,7 @@ const stockService = new StockService();
               &nbsp;&nbsp;&nbsp;&nbsp;
               <Button
                 htmlType="button"
-                // onClick={clearData}
+                onClick={onReset}
                 
               >
                 Reset

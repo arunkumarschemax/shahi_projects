@@ -24,6 +24,8 @@ export const PurchaseOrderForm = () => {
     const [vendordata, setVendorData] = useState<any[]>([])
     const [indentId, setIndentId] = useState<any>([])
     const [sampleId, setSampleId] = useState<any>([])
+    const [sampleItemId, setSampleItemId] = useState<any>([])
+
     const [poType, setPoType] = useState<any>('')
     const [submitDisbale, setSubmitDisable] = useState<boolean>(true)
     const [buyer, setBuyer] = useState<any[]>([]);
@@ -115,6 +117,7 @@ export const PurchaseOrderForm = () => {
     }
     useEffect(() => {
         if (stateData != undefined) {
+
             if (stateData.type == 'Indent') {
                 setIndentDropDownVisible(true)
                 poForm.setFieldsValue({ indentId: stateData.data.indentId })
@@ -130,11 +133,14 @@ export const PurchaseOrderForm = () => {
                 }
             }
             if (stateData.type == 'Sampling') {
+                // console.log(stateData)
+                // console.log(stateData.data[2].m3itemid)
                 setnavigateData(stateData)
+                // setSampleItemId(stateData.data[2].m3itemid)
                 poForm.setFieldsValue({ indentAgainst: 'Sample Order' })
                 setSampleDropDownVisible(true)
                 poForm.setFieldsValue({ requestNo: stateData.data[1].sampleReqIds })
-                setSampleId(stateData.data[1].sampleReqIds)
+                setSampleId(stateData)
                 if (stateData.data[0].materialType == "Fabric") {
                     setPoType('Fabric')
                     poForm.setFieldsValue({ poMaterialType: "Fabric" })

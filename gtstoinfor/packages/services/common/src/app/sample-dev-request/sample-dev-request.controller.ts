@@ -47,6 +47,17 @@ export class SampleDevReqController {
     }
   }
 
+  @Post('/getIssuedSampleRequests')
+  async getIssuedSampleRequests(): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getIssuedSampleRequests();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+    }
+  }
+
+  
+
   @Post('/getAllSampleData')
   async getAllSampleData(): Promise<AllSampleDevReqResponseModel> {
     try {
@@ -301,4 +312,26 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
+
+  @Post('/getAllocatedBomInfo')
+  async getAllocatedBomInfo(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getAllocatedBomInfo()
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+
+  // @Post('/ApprovaAllocatedStock')
+  // async ApprovaAllocatedStock(@Body() req:samp): Promise<CommonResponseModel> {
+  //   try {
+  //     return await this.sampleService.ApprovaAllocatedStock()
+  //   }
+  //   catch (err) {
+  //     return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+  //   }
+  // }
+
+  
 }

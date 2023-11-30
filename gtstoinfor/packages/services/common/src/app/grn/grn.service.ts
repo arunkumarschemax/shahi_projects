@@ -280,15 +280,15 @@ export class GrnService {
 
     async getGRNItemsData(req?:GrnReq):Promise<CommonResponseModel>{
         try{
-            console.log(req,'--------------')
+            // console.log(req,'--------------')
             let query = `SELECT g.grn_number AS grnNumber,gi.received_quantity AS receivedQty,gi.accepted_quantity AS acceptedQty,gi.rejected_quantity  AS rejectedQty,u.uom,
             gi.conversion_quantity  AS conversionQty,uom.uom AS convertedUom,gi.location_mapped_status AS locMapStatus,gi.remarks,`
-            if(req.itemType === 'FABRIC'){
+            if(req.itemType === 'FABRIC' || req.itemType === 'Fabric'){
                 query = query + `gi.m3_item_code_id AS m3ItemCodeId,m3.item_code AS itemCode
                 FROM grn_items gi
                 LEFT JOIN m3_items m3 ON m3.m3_items_id = gi.m3_item_code_id`
             }
-            if(req.itemType === 'TRIM'){
+            if(req.itemType.includes('TRIM') || req.itemType.includes('Trim') ){
                 query = query + `m3.trim_code AS itemCode,m3.m3_trim_Id AS m3ItemId
                 FROM grn_items gi
                 LEFT JOIN m3_trims m3 ON m3.m3_trim_Id = gi.m3_item_code_id`

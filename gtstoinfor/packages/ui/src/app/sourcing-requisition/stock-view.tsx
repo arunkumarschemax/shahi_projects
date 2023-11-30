@@ -293,16 +293,37 @@ export const StockView = () => {
       // sorter: (a, b) => a.itemQuantity - b.itemQuantity,
       // sortDirections: ['descend', 'ascend'],
     },
+    // {
+    //   title:`Action`,
+    //   dataIndex: 'action',
+    //   render: (text, rowData) => (
+        
+    //     <span>  
+    //      <Button style={{backgroundColor:'#69c0ff'}} onClick={ (e) => getRowData(rowData) }
+    //       disabled={rowData.buyer_id === buyervalue ? true : false}
+    //       ><b>Assign Reclassification</b></Button>
+    //     </span>
+    //   )
+    // }
     {
-      title:`Action`,
+      title: 'Action',
       dataIndex: 'action',
-      render: (text, rowData) => (
-        <span>  
-         <Button style={{backgroundColor:'#69c0ff'}} onClick={ (e) => getRowData(rowData) }
-          // disabled={rowData.buyer_id === buyervalue ? true : false}
-          ><b>Assign Reclassification</b></Button>
-        </span>
-      )
+      render: (text, rowData) => {
+        if (rowData.buyer_id === buyervalue) {
+          return "-";
+        }
+    
+        return (
+          <span>
+            <Button
+              style={{ backgroundColor: '#69c0ff' }}
+              onClick={(e) => getRowData(rowData)}
+            >
+              <b>Assign Reclassification</b>
+            </Button>
+          </span>
+        );
+      }
     }
   ];
   const clearData = () => {

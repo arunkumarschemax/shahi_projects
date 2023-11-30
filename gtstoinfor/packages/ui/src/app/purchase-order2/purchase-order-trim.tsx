@@ -8,7 +8,7 @@ import { VALUE_SPLIT } from "rc-cascader/lib/utils/commonUtil";
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
+export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
     let tableData: any[] = []
     const [trimForm] = Form.useForm()
     const {Option} = Select
@@ -53,9 +53,12 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
     },[indentId])
 
     useEffect(() =>{
+        console.log(sampleReqId.data[1].sampleReqIds)
+        console.log(sampleReqId.data[2].m3itemid)
+
         if(sampleReqId.length != 0){
             setTableColumns([...sampleColumns])
-            sampleTrimData(sampleReqId)
+            sampleTrimData(sampleReqId.data[1].sampleReqIds,sampleReqId.data[2].m3itemid)
         }
     },[sampleReqId])
 
@@ -96,8 +99,8 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
             }
         })
     }
-    const sampleTrimData = (value) =>{
-        sampleService.getTrimDetailsOfSample({sampleReqId:value}).then(res =>{
+    const sampleTrimData = (sampleReqId,sampleItemId) =>{
+        sampleService.getTrimDetailsOfSample({sampleReqId:sampleReqId,sampleItemId:sampleItemId}).then(res =>{
             if(res.status){
                 setTrimtableVisible(true)
                 props(res.data)
@@ -391,6 +394,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
                 trimCodeName: defaultTrimFormData.trimCodeName,
                 quantityUomName:defaultTrimFormData.quantityUomName,
                 quantityUomId:defaultTrimFormData.quantityUomId,
+                m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
 
             })
 

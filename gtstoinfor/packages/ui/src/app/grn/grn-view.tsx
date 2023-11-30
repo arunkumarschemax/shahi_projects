@@ -41,7 +41,7 @@ import Barcode from "react-barcode";
   
     useEffect(() => {
       if (data) {
-      console.log(tableData)
+      // console.log(tableData)
         setTableData(data);
       }
     }, [data]);
@@ -64,7 +64,7 @@ import Barcode from "react-barcode";
       if (form.getFieldValue('grnDate') !== undefined) {
       req.toDate = (form.getFieldValue('grnDate')[1]).format('YYYY-MM-DD')
       }
-      console.log(req,'------------')
+      // console.log(req,'------------')
       grnService.getAllGrn(req).then((res) => {
         if (res.status) {
           setData(res.data);
