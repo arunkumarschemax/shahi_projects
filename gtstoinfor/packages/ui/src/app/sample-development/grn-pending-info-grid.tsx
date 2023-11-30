@@ -38,9 +38,9 @@ export const GrnPendingInfoGrid = () => {
         },
         {
             title: 'GRN number',
-            dataIndex: "grn_number",
+            dataIndex: "grnNumber",
             align: 'left',
-            sorter: (a, b) => a.grn_number - b.grn_number,
+            sorter: (a, b) => a.grnNumber - b.grnNumber,
 
               sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
@@ -65,43 +65,41 @@ export const GrnPendingInfoGrid = () => {
         },
         {
             title: 'Material Type',
-            dataIndex: "item_type",
+            dataIndex: "materialType",
             align: 'left',
-            sorter: (a, b) => a.item_type - b.item_type,
+            sorter: (a, b) => a.materialType - b.materialType,
 
               sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
         {
             title: 'Item',
-            dataIndex: "m3_item_code",
+            dataIndex: "itemCode",
             align: 'left',
-            sorter: (a, b) => a.m3_item_code - b.m3_item_code,
+            sorter: (a, b) => a.itemCode - b.itemCode,
               sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
         {
             title: 'Grn Quantity',
-            dataIndex: 'conversion_quantity',
+            dataIndex: 'acceptedQuantity',
             align: 'left',
-            sorter: (a, b) => a.conversion_quantity - b.conversion_quantity,
+            sorter: (a, b) => a.acceptedQuantity - b.acceptedQuantity,
             sortDirections: ['descend', 'ascend'],
         },
         {
             title: 'Location Mapped',
-            dataIndex: 'quantity',
+            dataIndex: 'allocatedQty',
             align: 'left',
-            sorter: (a, b) => a.quantity - b.quantity,
+            sorter: (a, b) => a.allocatedQty - b.allocatedQty,
             sortDirections: ['descend', 'ascend'],
         },
         {
             title: 'Balance',
+            dataIndex: 'balance',
             align: 'left',
-            // sorter: (a, b) => a.balance - b.balance,
-            render: (record) => {
-                const balance = record.conversion_quantity - record.quantity
-                return balance
-            }
+            sorter: (a, b) => a.balance - b.balance,
+            sortDirections: ['descend', 'ascend'],
         },
         {
             title: 'Allocate',
