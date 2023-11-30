@@ -353,30 +353,30 @@ export const PurchaseOrderView = () => {
         return age;
       },
     },
-    // {
-    //   title: 'Action',
-    //   dataIndex: 'requestNumber',
-    //   align: "center",
-    //   width: '30px',
-    //   render: (text, rowData, index) => (
-    //     <span>
-    //       <Tooltip placement="top" title="Detail View">
-    //         <EyeOutlined
-    //           onClick={() => {
-    //             console.log(rowData.purchaseOrderId);
+    {
+      title: 'Action',
+      dataIndex: 'requestNumber',
+      align: "center",
+      width: '30px',
+      render: (text, rowData, index) => (
+        <span>
+          <Tooltip placement="top" title="Detail View">
+            <EyeOutlined
+              onClick={() => {
+                console.log(rowData.purchaseOrderId);
 
-    //             navigate('/purchase-detali-view', { state: rowData.purchaseOrderId })
+                navigate('/purchase-detali-view', { state: rowData.purchaseOrderId })
 
-    //             // setHideCancelButton(false);
-    //             // DetailView(rowData.SampleRequestId, false);
-    //           }}
-    //           style={{ color: "blue", fontSize: 20 }}
-    //         />
-    //       </Tooltip>
-    //     </span>
-    //   ),
+                // setHideCancelButton(false);
+                // DetailView(rowData.SampleRequestId, false);
+              }}
+              style={{ color: "blue", fontSize: 20 }}
+            />
+          </Tooltip>
+        </span>
+      ),
 
-    // },
+    },
 
 
   ];

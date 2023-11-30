@@ -28,8 +28,9 @@ export const LocationMapping = () => {
 
     useEffect(() => {
         if (grnData) {
-            if (grnData.grn_item_id) {
-                const id = grnData.grn_item_id;
+            form.setFieldsValue({quantity : grnData.balance, itemName:grnData.itemCode, itemId:grnData.itemId})
+            if (grnData.grnItemId) {
+                const id = grnData.grnItemId;
                 getOneItemAllocateDetailsData(id);
             } else {
                 AlertMessages.getInfoMessage("GRN Item Id not found");
@@ -66,8 +67,8 @@ export const LocationMapping = () => {
         console.log(qty)
       
         // const req = new LocationMappingReq(grnData.m3_items_Id
-        //     , locationId, qty, grnData.grn_item_id, shahi_item_code, item_type_id, plant_id,grnData.style_id, grnData.item_id, grnData.style_id,grnData.buyer_id );
-            const req = new LocationMappingReq(grnData.m3_items_Id,locationId,qty,grnData.grn_item_id,1,grnData.fabricBuyerid,grnData.received_uom_id,grnData.item_type,grnData.m3itemDescription,grnData.acceptedUOM);
+        //     , locationId, qty, grnData.grnItemId, shahi_item_code, item_type_id, plant_id,grnData.style_id, grnData.item_id, grnData.style_id,grnData.buyer_id );
+            const req = new LocationMappingReq(grnData.itemId,locationId,qty,grnData.grnItemId,1,grnData.buyerId,grnData.uomId,grnData.itemType,grnData.m3itemDescription,grnData.uom);
         if (req) {
             locationService.postToStockLogs(req).then((res) => {
                 if (res.status === true) {
@@ -155,19 +156,19 @@ export const LocationMapping = () => {
                     <Col span={12}>
                         <Descriptions column={2}>
                             <Descriptions.Item label="GRN Number" style={{ width: '33%' }}>
-                                {grnData.grn_number}
+                                {grnData.grnNumber}
                             </Descriptions.Item>
                             <Descriptions.Item label="Buyer" style={{ width: '33%' }}>
-                                {grnData.fabBuyerName}
+                                {grnData.buyerName}
                             </Descriptions.Item>
                             <Descriptions.Item label="Received Quantity" style={{ width: '33%' }}>
-                                {Number(grnData.conversion_quantity)}
+                                {Number(grnData.acceptedQuantity)}
                             </Descriptions.Item>
-                            <Descriptions.Item label="Stock" style={{ width: '33%' }}>
+                            {/* <Descriptions.Item label="Stock" style={{ width: '33%' }}>
                                 {grnData.quantity > 0 ? Number(grnData.quantity) : 0}
-                            </Descriptions.Item>
+                            </Descriptions.Item> */}
                             <Descriptions.Item label="Location Pending Quantity" style={{ width: '33%' }}>
-                                {Number((grnData.conversion_quantity) - (grnData.quantity))}
+                                {grnData.balance}
                             </Descriptions.Item>
                         </Descriptions>
                     </Col>
@@ -187,7 +188,7 @@ export const LocationMapping = () => {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 10 }}>
                             <Form.Item name="itemName" label="Item" rules={[{ required: true, message: ' Item is required ' }]}>
-                                <Input disabled={grnData} defaultValue={grnData.m3_item_code} />
+                                <Input disabled={grnData} />
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
@@ -208,8 +209,8 @@ export const LocationMapping = () => {
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                            <Form.Item name="quantity" label="Quantity" rules={[{ required: true, message: 'Missed Quantity' }]} initialValue={Number((grnData.conversion_quantity) - (grnData.quantity))} >
-                                <InputNumber min={1} style={{ width: "100%" }} defaultValue={Number((grnData.conversion_quantity) - (grnData.quantity))}
+                            <Form.Item name="quantity" label="Quantity" rules={[{ required: true, message: 'Missed Quantity' }]}  >
+                                <InputNumber min={1} style={{ width: "100%" }}
                                 // onChange={e => validateQty(e)}
                                 />
                             </Form.Item>
