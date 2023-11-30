@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { AllStocksResponseModel, CommonResponseModel, M3ItemsDTO, StockFilterRequest, StocksDto } from "@project-management-system/shared-models";
+import { AllStocksResponseModel, CommonResponseModel, M3ItemsDTO, StockFilterRequest, StocksDto, statusReq } from "@project-management-system/shared-models";
 import { StocksRepository } from "./repository/stocks.repository";
 import { StocksAdapter } from "./adapters/stocks.adatpters";
 import { AppDataSource } from "../app-datasource";
@@ -149,6 +149,24 @@ export class StocksService {
             throw err
         }
     }
+
+
+    async update(req?:statusReq): Promise<CommonResponseModel> {
+        try {
+            console.log(req,"stock-ser")
+          const update = await this.stocksRepository.update(
+            { Id: req.stockId },
+            { allocateQuanty:req.allocateQuanty }
+          );
+          if (update.affected && update.affected > 0) {
+            return new CommonResponseModel(true, 1, 'stockUpdate Sucessfully');
+          } else {
+            return new CommonResponseModel(false, 1, 'some went wrong');
+          }
+        } catch (err) {
+          throw err;
+        }
+      }
 
 
 

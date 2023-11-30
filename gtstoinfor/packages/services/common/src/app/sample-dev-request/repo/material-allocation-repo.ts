@@ -23,7 +23,7 @@ export class MaterialAllocationRepo extends Repository<MaterialAllocationEntity>
     async getallMaterialAllocation(req?:buyerReq): Promise<any[]> {
         const query = this.createQueryBuilder('ma')
             .select(`ma.material_allocation_id,ma.item_type,ma.m3_item_id,ma.sample_order_id,ma.sample_item_id,ma.buyer_id,ma.status, b.buyer_name,sr.request_no,m3item.description,m3item.item_code,m3trim.trim_code,maallitem.quantity,
-            SUM(maallitem.allocate_quantity) AS total_allocated_quantity`)
+            SUM(maallitem.allocate_quantity) AS total_allocated_quantity,maallitem.stock_id`)
             
             .leftJoin(MaterialAllocationItemsEntity,'maallitem',`maallitem.material_allocation_id = ma.material_allocation_id`)
             .leftJoin(Buyers, 'b', `b.buyer_id = ma.buyer_id`)

@@ -4,6 +4,12 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("stocks")
 export class StocksEntity extends CommonColumns {
+    @Column('int',{
+        name:'id',
+        nullable:false
+    })
+    Id:number
+    
       @Column('int',{
         name:'m3_item',
         nullable:false
