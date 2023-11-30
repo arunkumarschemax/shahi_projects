@@ -18,10 +18,11 @@ import { FabricIndentRepository } from '../indent/dto/fabric-indent-repository';
 import { IndentFabricEntity } from '../indent/indent-fabric-entity';
 import { TrimIndentRepository } from '../indent/dto/trim-indent-repository';
 import { IndentTrimsEntity } from '../indent/indent-trims-entity';
+import { PurchaseOrderItemsEntity } from '../purchase-order/entities/purchase-order-items-entity';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([GrnEntity,GrnFabricEntity,GrnTrimsEntity,GrnItemsEntity,PurchaseOrderFbricEntity,PurchaseOrderTrimEntity,PurchaseOrderEntity,Indent,IndentFabricEntity,IndentTrimsEntity]),
+        TypeOrmModule.forFeature([GrnEntity,GrnFabricEntity,GrnTrimsEntity,GrnItemsEntity,PurchaseOrderFbricEntity,PurchaseOrderTrimEntity,PurchaseOrderEntity,Indent,IndentFabricEntity,IndentTrimsEntity,PurchaseOrderItemsEntity]),
       ],
       providers: [ApplicationExceptionHandler,GrnRepository,GrnService,GrnAdapter,IndentRepository,FabricIndentRepository,TrimIndentRepository],
       controllers: [GrnController],

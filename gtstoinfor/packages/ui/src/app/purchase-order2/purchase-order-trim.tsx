@@ -25,8 +25,9 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
     const [inputDisable, setInputDisable] = useState<boolean>(false)
     const [tableColumns, setTableColumns] = useState([]);
     const [tax, setTax] = useState([])
-
+    const [totalUnit,setTotalUnit] = useState(Number)
     const [color,setColor] = useState<any[]>([])
+    const [subAmount,setSubAmount] = useState(Number)
     const colorService = new ColourService();
     const m3MasterService = new M3MastersService()
     const sampleService = new SampleDevelopmentService()
@@ -432,15 +433,16 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
     const unitPriceOnchange = (value) => {
         const unitPrice=trimForm.getFieldValue('poQuantity')
         totalUniPrice=Number(unitPrice)*Number(value)
+        setTotalUnit(totalUniPrice)
     }
 
     let disAmount
     let totalValueAfterDiscount
     function discountOnChange(value) {
        const percent=(Number(value/100))
-        const disAmount=(percent*totalUniPrice)
+        const disAmount=(percent*totalUnit)
         trimForm.setFieldsValue({discountAmount:disAmount})
-        totalValueAfterDiscount=totalUniPrice-disAmount
+        totalValueAfterDiscount=totalUnit-disAmount
     }
 
     let taxAmount
@@ -452,6 +454,14 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
         trimForm.setFieldsValue({subjectiveAmount:Number(totalAmount).toFixed(2)})
         trimForm.setFieldsValue({ tax: value })
         trimForm.setFieldsValue({ taxPercentage: option?.name ? option?.type + '- ' + option?.name : '' })
+        setSubAmount(Number(totalAmount))
+    }
+
+    function transportationOnChange(value){
+        console.log(Number(subAmount).toFixed(2))
+        const amount = Number(subAmount).toFixed(2) ;
+        const subjecAmout = Number(amount) + Number(value)
+        trimForm.setFieldsValue({subjectiveAmount:subjecAmout})
     }
 
     return(
@@ -588,7 +598,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                         <Form.Item name='transportation' label='Transportation'
                             rules={[{ required: false, message: 'Transportation of Fabric is required' }]}
                         >
-                            <Input placeholder="Transportation" />
+                            <Input onChange={e=>transportationOnChange(e.target.value)} placeholder="Transportation" />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>

@@ -1,42 +1,18 @@
-import {
-    BarcodeOutlined,
-    CaretDownOutlined,
-    CaretRightOutlined,
-    EyeOutlined,
-    InfoCircleOutlined,
-    PrinterOutlined,
-    SearchOutlined,
-    UndoOutlined,
-  } from "@ant-design/icons";
-   import {
-    Button,
-    Card,
-    Col,
-    Collapse,
-    Divider,
-    Form,
-    Input,
-    Modal,
-    Row,
-    Segmented,
-    Select,
-    Space,
-    Table,
-    Tag,
-  } from "antd";
+import {BarcodeOutlined,CaretDownOutlined,CaretRightOutlined,EyeOutlined,InfoCircleOutlined,PrinterOutlined,SearchOutlined,UndoOutlined,} from "@ant-design/icons";
+import {Button,Card,Col,Collapse,DatePicker,Divider,Form,Input,Modal,Row,Segmented,Select,Space,Table,Tag,} from "antd";
   import style from "antd/es/alert/style";
   import { ColumnProps } from "antd/es/table";
   import moment from "moment";
   import React, { useEffect, useRef } from "react";
   import { useState } from "react";
   import { useNavigate } from "react-router-dom";
-//  import {GRNService} from '../../../../libs/shared-services/src/common/grn-service'
   import Highlighter from "react-highlight-words";
-import { GrnReq } from "@project-management-system/shared-models";
+import { GRNTypeEnum, GRNTypeEnumDisplay, GrnReq, PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { GRNService } from "@project-management-system/shared-services";
 import Barcode from "react-barcode";
   
   const { Option } = Select;
+  const { RangePicker } = DatePicker;
   
   export const GRNView = () => {
     const [page, setPage] = React.useState(1);
@@ -53,10 +29,14 @@ import Barcode from "react-barcode";
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
     const searchInput = useRef(null);
+    const [grnNoFilter, setGrnNoFilter] = useState<any[]>([])
+    const [poNoFilter, setPONoFilter] = useState<any[]>([])
   
     useEffect(() => {
       // getStyle();
-      getAll(undefined);
+      getAll();
+      grnNoData()
+      poNoData()
     }, []);
   
     useEffect(() => {
@@ -66,17 +46,25 @@ import Barcode from "react-barcode";
       }
     }, [data]);
   
-    // const getAll = () => {
-    //   service.getAllIndentData().then((res) => {
-    //     if (res.status) {
-    //       setData(res.data);
-    //     }
-    //   });
-    // };
   
-  
-    const getAll = (value) => {
-      const req = new GrnReq(value)
+    const getAll = () => {
+      const req = new GrnReq()
+      if (form.getFieldValue('grnNo') !== undefined) {
+        req.grnNo = form.getFieldValue('grnNo')
+      }
+      if (form.getFieldValue('poNumber') !== undefined) {
+        req.poNumber = form.getFieldValue('poNumber')
+      }
+      if (form.getFieldValue('status') !== undefined) {
+        req.status = form.getFieldValue('status')
+      }
+      if (form.getFieldValue('grnDate') !== undefined) {
+        req.fromDate = (form.getFieldValue('grnDate')[0]).format('YYYY-MM-DD')
+      }
+      if (form.getFieldValue('grnDate') !== undefined) {
+      req.toDate = (form.getFieldValue('grnDate')[1]).format('YYYY-MM-DD')
+      }
+      console.log(req,'------------')
       grnService.getAllGrn(req).then((res) => {
         if (res.status) {
           setData(res.data);
@@ -85,91 +73,107 @@ import Barcode from "react-barcode";
       });
     };
 
+    const grnNoData =()=>{
+      grnService.getGRNNoData().then((res)=>{
+        if(res.status){
+          setGrnNoFilter(res.data)
+        }
+      })
+    }
+
+    const poNoData =()=>{
+      grnService.getPONoData().then((res)=>{
+        if(res.status){
+          setPONoFilter(res.data)
+        }
+      })
+    }
+
    const details =(rowData) =>{
     const navigateData = filterData.filter(req => req.grnId === rowData)
     return navigate(`/grn-detail-view`, { state: { data: navigateData } });
-   }
-    const handleSearch = (selectedKeys, confirm, dataIndex) => {
-      confirm();
-      setSearchText(selectedKeys[0]);
-      setSearchedColumn(dataIndex);
-    };
-    const handleReset = (clearFilters) => {
-      clearFilters();
-      setSearchText("");
-    };
-    const getColumnSearchProps = (dataIndex: string) => ({
-        filterDropdown: ({
-          setSelectedKeys,
-          selectedKeys,
-          confirm,
-          clearFilters,
-        }) => (
-          <div style={{ padding: 8 }}>
-            <Input
-              ref={searchInput}
-              placeholder={`Search ${dataIndex}`}
-              value={selectedKeys[0]}
-              onChange={(e) =>
-                setSelectedKeys(e.target.value ? [e.target.value] : [])
-              }
-              onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-              style={{ width: 188, marginBottom: 8, display: "block" }}
-            />
-            <Button
-              type="primary"
-              onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-              icon={<SearchOutlined />}
-              size="small"
-              style={{ width: 90, marginRight: 8 }}
-            >
-              Search
-            </Button>
-            <Button
-              size="small"
-              style={{ width: 90 }}
-              onClick={() => {
-                handleReset(clearFilters);
-                setSearchedColumn(dataIndex);
-                confirm({ closeDropdown: true });
-              }}
-            >
-              Reset
-            </Button>
-          </div>
-        ),
-        filterIcon: (filtered) => (
-          <SearchOutlined
-            type="search"
-            style={{ color: filtered ? "#1890ff" : undefined }}
-          />
-        ),
-        onFilter: (value, record) =>
-          record[dataIndex]
-            ? record[dataIndex]
-                .toString()
-                .toLowerCase()
-                .includes(value.toLowerCase())
-            : false,
-        onFilterDropdownVisibleChange: (visible) => {
-          if (visible) {
-            setTimeout(() => searchInput.current.select());
+  }
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
+  const getColumnSearchProps = (dataIndex: string) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
-        },
-        render: (text) =>
-          text ? (
-            searchedColumn === dataIndex ? (
-              <Highlighter
-                highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-                searchWords={[searchText]}
-                autoEscape
-                textToHighlight={text.toString()}
-              />
-            ) : (
-              text
-            )
-          ) : null,
-      });
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: "block" }}
+        />
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button
+          size="small"
+          style={{ width: 90 }}
+          onClick={() => {
+            handleReset(clearFilters);
+            setSearchedColumn(dataIndex);
+            confirm({ closeDropdown: true });
+          }}
+        >
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        type="search"
+        style={{ color: filtered ? "#1890ff" : undefined }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ? record[dataIndex]
+          .toString()
+          .toLowerCase()
+          .includes(value.toLowerCase())
+        : false,
+    onFilterDropdownVisibleChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current.select());
+      }
+    },
+    render: (text) =>
+      text ? (
+        searchedColumn === dataIndex ? (
+          <Highlighter
+            highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+            searchWords={[searchText]}
+            autoEscape
+            textToHighlight={text.toString()}
+          />
+        ) : (
+          text
+        )
+      ) : null,
+  });
 
     const tableColumns: any = [
   
@@ -184,6 +188,8 @@ import Barcode from "react-barcode";
         title: <div style={{textAlign:"center"}}>PO Number</div>,
         dataIndex: "poNumber",
         ...getColumnSearchProps("poNumber"),
+        sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
+        sortDirections: ["descend", "ascend"],
         render: (val,data) => {
           return data.poNumber ? data.poNumber : "-";
         }
@@ -192,6 +198,8 @@ import Barcode from "react-barcode";
         title: <div style={{textAlign:"center"}}>GRN Number</div>,
         dataIndex: "grnNo",
         ...getColumnSearchProps("grnNo"),
+        sorter: (a, b) => a.grnNo.localeCompare(b.grnNo),
+        sortDirections: ["descend", "ascend"],
         render: (val,data) => {
           return data.grnNo ? data.grnNo : "-";
         }
@@ -200,6 +208,8 @@ import Barcode from "react-barcode";
         title: <div style={{textAlign:"center"}}>Vendor</div>,
         dataIndex: "vendor",
         ...getColumnSearchProps("vendor"),
+        sorter: (a, b) => a.vendor.localeCompare(b.vendor),
+        sortDirections: ["descend", "ascend"],
         render: (val,data) => {
           return data.vendor ? data.vendor : "-";
         }
@@ -208,6 +218,8 @@ import Barcode from "react-barcode";
         title: <div style={{textAlign:"center"}}>Invoice No</div>,
         dataIndex: "invoiceNo",
         ...getColumnSearchProps("invoiceNo"),
+        sorter: (a, b) => a.invoiceNo.localeCompare(b.invoiceNo),
+        sortDirections: ["descend", "ascend"],
         render: (val,data) => {
           return data.invoiceNo ? data.invoiceNo : "-";
         }
@@ -215,18 +227,30 @@ import Barcode from "react-barcode";
       {
         title: <div style={{textAlign:"center"}}>Item Type</div>,
         dataIndex: 'itemType',
-        ...getColumnSearchProps("itemType"),
+        // ...getColumnSearchProps("itemType"),
         render: (val,data) => {
           return data.itemType ? data.itemType : "-";
-        }
-       
-      }, {
+        },
+        // filters: [
+        //   {
+        //     text: 'FABRIC',
+        //     value: 'FABRIC',
+        //   },
+        //   {
+        //     text: 'TRIM',
+        //     value: 'TRIM',
+        //   }
+        // ],
+        // onFilter: (value,record) =>{ return record.itemType === value}  
+      },
+       {
         title: <div style={{textAlign:"center"}}>GRN Type</div>,
         dataIndex: "grnType",
         ...getColumnSearchProps("grnType"),
-        render: (val,data) => {
-          return data.grnType ? data.grnType : "-";
-        }
+        render: (text) => {
+          const EnumObj = GRNTypeEnumDisplay.find((item) => item.name === text);
+          return EnumObj ? EnumObj.displayVal : text;
+        },
       },
       {
         title: <div style={{textAlign:"center"}}>GRN Date</div>,
@@ -251,7 +275,7 @@ import Barcode from "react-barcode";
           
           return(
           <><span>
-           <Button title={"Detail View"} onClick={() => details(rowData.grnId)}>
+            <Button title={"Detail View"} onClick={() => details(rowData.grnId)}>
               <EyeOutlined />
             </Button>
           </span>
@@ -260,136 +284,66 @@ import Barcode from "react-barcode";
         }
       },
     ];
-  
-    const onBarcodeModalCancel = () => {
-      setBarcode("");
-      setBarcodeModal(false);
-    };
-  
-    const closeWindow = () => {
-      setBarcode("");
-      window.close();
-    };
 
     const onReset = ()=>{
       form.resetFields()
+      getAll()
     }
   
     return (
-      <Card
-        headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
-        title="GRN List"
-        extra={
-          <span>
-            <Button onClick={() => navigate("/grn-form")}>New</Button>
-          </span>
-        }
+      <Card headStyle={{ backgroundColor: "#69c0ff", border: 0 }} title="GRN List" 
+            extra={<span><Button onClick={() => navigate("/grn-form")}>New</Button></span>}
       >
-        <Form form={form}>
-          <Row gutter={8}>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
-            <Form.Item name="grnNo" label="GRN No">
-              <Select
-                showSearch
-                allowClear
-                optionFilterProp="children"
-                placeholder="Select GRB No"
-              >
-                {data.map((e) => {
-                  return (
-                    <Option key={e.grnId}value={e.grnNo}>
+        <Form form={form} layout="vertical" onFinish={getAll}>
+          <Row gutter={16}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+              <Form.Item name="poNumber" label="PO Number">
+                <Select showSearch allowClear optionFilterProp="children" placeholder="Select PO Number">
+                  {poNoFilter.map((e) => (
+                    <Option key={e.poNumber} value={e.poNumber}>
+                      {e.poNumber}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+              <Form.Item name="grnNo" label="GRN No">
+                <Select showSearch allowClear optionFilterProp="children" placeholder="Select GRB No">
+                  {grnNoFilter.map((e) => (
+                    <Option key={e.grnId} value={e.grnNo}>
                       {e.grnNo}
                     </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          </Col>
-
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
-            <Form.Item name="itemType" label="Style">
-              <Select
-                showSearch
-                allowClear
-                optionFilterProp="children"
-                placeholder="Select Item Type"
-              >
-                {data.map((e) => {
-                  return (
-                    <Option key={e.style} value={e.style} name={e.style}>
-                      {e.style}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 4 }}
-            lg={{ span: 4 }}
-            xl={{ span: 6 }}
-          >
-            <Form.Item name="status" label="Status">
-              {/* <Select
-                // showSearch
-                // placeholder="Vendors"
-                optionFilterProp="children"
-                placeholder="Select Status"
-              >
-                {Object.keys(CustomerOrderStatusEnum)
-                  .sort()
-                  .map((status) => (
-                    <Select.Option
-                      key={CustomerOrderStatusEnum[status]}
-                      value={CustomerOrderStatusEnum[status]}
-                    >
-                      {CustomerOrderStatusEnum[status]}
-                    </Select.Option>
                   ))}
-              </Select> */}
-            </Form.Item>
-          </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 4 }}
-            lg={{ span: 4 }}
-            xl={{ span: 2 }}
-          >
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                icon={<SearchOutlined />}
-                // onClick={onSearch}
-              >
-                Search
-              </Button>
-            </Form.Item>
-          </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 4 }}
-            lg={{ span: 4 }}
-            xl={{ span: 2 }}
-          >
-            <Form.Item>
-              <Button danger icon={<UndoOutlined />} onClick={onReset}>
-                Reset
-              </Button>
-            </Form.Item>
-          </Col>
-        </Row>
-      </Form>
-        <Table
-        columns={tableColumns}
-        dataSource={filterData}
-        />
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+              <Form.Item label='GRN Date' name='grnDate'>
+                <RangePicker />
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+              <Form.Item name="status" label="Status">
+                <Select showSearch allowClear placeholder="Select Status" optionFilterProp="children">
+                  {Object.values(PurchaseOrderStatus).map(e => (
+                    <Option key={e} value={e}>{e}</Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }} style={{marginTop:"18px"}}>
+              <Form.Item>
+                <Button icon={<SearchOutlined />} htmlType="submit" type="primary" style={{ marginLeft: 50,marginTop:5 }}>Submit</Button>
+                <Button danger icon={<UndoOutlined />} onClick={onReset} style={{ marginLeft: 30 }}>Reset</Button>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+        <Table columns={tableColumns} dataSource={filterData} />
       </Card>
     );
+    
   };
   
   export default GRNView;
