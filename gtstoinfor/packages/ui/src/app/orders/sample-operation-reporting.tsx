@@ -69,7 +69,7 @@ export const SampleOperationReporting = () => {
     // }
 
     const getSampleReq = () => {
-        sampleDevelopmentService.getAllSampleReqDropDown().then(res => {
+        sampleDevelopmentService.getIssuedSampleRequests().then(res => {
             setReqNo(res.data)
         })
     }
@@ -365,7 +365,7 @@ export const SampleOperationReporting = () => {
                     <Form.Item label='Sample Request' name='sampleRequestId'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Style' onChange={onStyleChange}>
                             {
-                                reqNo.map(e => {
+                                reqNo?.map(e => {
                                     return(
                                         <Option key={e.sampleRequestId} styleId ={e.styleId} value={e.sampleRequestId}>{e.reqNo}</Option>
                                     )

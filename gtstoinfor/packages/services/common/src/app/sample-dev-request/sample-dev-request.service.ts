@@ -115,6 +115,16 @@ export class SampleRequestService {
       return new CommonResponseModel(false, 0, 'data not found')
     }
   }
+
+  async getIssuedSampleRequests(): Promise<CommonResponseModel> {
+    const details = await this.sampleRepo.getIssuedSampleRequests();
+    if (details.length > 0) {
+      return new CommonResponseModel(true, 1, 'data retrieved', details)
+    } else {
+      return new CommonResponseModel(false, 0, 'data not found')
+    }
+  }
+  
   
 
   async cancelSampleReqById(request: SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
