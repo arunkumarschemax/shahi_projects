@@ -382,7 +382,6 @@ export class DpomService {
                     console.log(coData.destinations[0]?.name)
                     const request = { country: coData.destinations[0]?.name }
                     const address = await axios.post(`https://uniqlov2-backend.xpparel.com/api/address/getAddressInfoByCountry`, request);
-                    console.log(address.data.data)
                     const addressData = address.data.data[0];
                     buyerAddress = addressData?.buyerAddress ? addressData?.buyerAddress : 71;
                     deliveryAddress = addressData?.deliveryAddress
