@@ -40,6 +40,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     const m3ItemsService = new M3ItemsService()
     const sampleservice = new SampleDevelopmentService()
     const taxService = new TaxesService();
+    const [taxPer, setTaxPer] = useState(0);
 
     useEffect(() => {
         getweave()
@@ -73,6 +74,12 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
             }
         })
     }
+
+    useEffect(()=> {
+        if(taxPer){
+           finalCalculation();
+        }    
+    },[taxPer])
 
     const getM3FabricStyleCodes = () => {
         m3ItemsService.getM3Items().then(res => {
@@ -151,6 +158,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     const setEditForm = (rowData: any, index: any) => {
         setUpdate(true)
         setDefaultFabricFormData(rowData)
+        console.log(rowData)
         if (rowData.indentFabricId != undefined) {
             setInputDisable(true)
             fabricForm.setFieldsValue({ poQuantity: rowData.indentQuantity })
@@ -190,6 +198,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                   colourId: defaultFabricFormData.colourId,
                  colorName: defaultFabricFormData.colorName,
                 shahiFabricCode: defaultFabricFormData.shahiFabricCode,
+                itemCode:defaultFabricFormData.itemCode,
                 quantityUomId: defaultFabricFormData.quantityUomId,
                 quantityUom: defaultFabricFormData.quantityUom,
                 })
@@ -400,6 +409,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     }
 
     const onFabricAdd = (values) => {
+        console.log(values);
         fabricForm.validateFields().then(() => {
             if (fabricIndexVal !== undefined) {
                 fabricTableData[fabricIndexVal] = values;
@@ -456,19 +466,52 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
         setTaxVisible(false)
     }
 
-    let taxAmount
-    const handleTaxChange = (value, option) => {
-        const percent=Number(option?.name/100)
-        console.log(percent)
-        console.log(totalValueAfterDiscount)
-        taxAmount=(totalValueAfterDiscount*percent)
-        console.log(taxAmount)
-        const totalAmount=taxAmount+totalValueAfterDiscount
+    const finalCalculation=()=>{
+        let taxAmount=0;
+        let discAmnt=0;
+        const unitPrice=fabricForm.getFieldValue('unitPrice');
+        const quantity=fabricForm.getFieldValue('poQuantity')
+        let transportation=fabricForm.getFieldValue('transportation')
+        if(transportation==undefined ||transportation==0){
+            transportation=0;
+        }
+        console.log('Transportation')
+        console.log(transportation)
+        let baseValue=Number(unitPrice)*Number(quantity);
+        const disc_per=fabricForm.getFieldValue('discount')
+        if(disc_per!==''&&disc_per>0){
+            discAmnt=Math.round(baseValue*disc_per/100);
+            baseValue=Number(baseValue)-Number(discAmnt);
+        }
+        console.log('Tax Percentage')
+        console.log(taxPer)
+        console.log(baseValue)
+        if(taxPer!=0){
+            taxAmount=(baseValue*taxPer/100)
+        }else{
+            taxAmount=0
+        }
+        
+        console.log('TaxAmount + base+transport');
+        console.log(taxAmount+' B '+baseValue+' T '+transportation)
+       
+        const totalAmount=Number(taxAmount)+Number(baseValue)+Number(transportation)
         fabricForm.setFieldsValue({taxAmount:Number(taxAmount).toFixed(2)})
+        fabricForm.setFieldsValue({discountAmount:Number(discAmnt).toFixed(2)})
         fabricForm.setFieldsValue({subjectiveAmount:Number(totalAmount).toFixed(2)})
-        fabricForm.setFieldsValue({ tax: value })
-        fabricForm.setFieldsValue({ taxPercentage: option?.name ? option.type + '- ' + option?.name : '' })
+        fabricForm.setFieldsValue({ taxAmount: taxAmount })
+       
         setTaxAmountVisible(false)
+        
+    }
+    const priceCalculation = async (value, option) => {        
+        console.log(option.name)
+        const percent=Number(option.name)
+        
+        let status= await setTaxPer(Number(option.name));
+        fabricForm.setFieldsValue({ taxPercentage: option?.name ? option.type + '- ' + option?.name : '' })
+        // console.log(taxPer)
+        // finalCalculation();
     }
 
     return (
@@ -487,9 +530,6 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                     <Form.Item name='sampleQuantity' hidden ><Input/></Form.Item>
                     <Form.Item name='sampleReqId' hidden ><Input/></Form.Item>
                     <Form.Item name='indentId' hidden ><Input/></Form.Item>
-
-
-
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 8 }}>
                         <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{ required: true, message: 'M3 Code is required' }]}>
                             <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code' onChange={m3FabricOnchange}>
@@ -530,7 +570,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{ marginTop: '2%' }}>
                         <Form.Item name='quantityUomId' rules={[{ required: true, message: 'Quantity unit is required' }]}>
-                            <Select showSearch allowClear optionFilterProp="children" placeholder='Unit' onChange={quantityUomOnchange}>
+                            <Select showSearch allowClear optionFilterProp="children" placeholder='Unit' onChange={finalCalculation}>
                                 {uom.map(e => {
                                     return (
                                         <Option key={e.uomId} value={e.uomId} name={e.uom}>{e.uom}</Option>
@@ -543,14 +583,14 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                         <Form.Item name='unitPrice' label='Unit Price'
                             rules={[{ required: true, message: 'unit price of Fabric is required' }]}
                         >
-                            <InputNumber style={{ width: '90px' }} placeholder="unit price" onChange={(e) => unitPriceOnchange(e)} min={1}/>
+                            <InputNumber style={{ width: '90px' }} placeholder="unit price" onChange={(e) => finalCalculation()} min={0}/>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{paddingLeft:'41px'}}>
                         <Form.Item name='discount' label='Discount'
                             rules={[{ required: false, message: 'Discount of Fabric is required' }]}
                         >
-                            <InputNumber  placeholder="discount" onChange={(e) => discountOnChange(e)} min={1}/>
+                            <InputNumber  placeholder="discount" onChange={(e) => finalCalculation()} min={0}/>
                         </Form.Item>
                     </Col>
                     
@@ -567,10 +607,10 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                         >
                              <Select
                                 placeholder="Select Tax"
-                                onChange={handleTaxChange}
+                                onChange={priceCalculation}
                                 allowClear
                                 optionFilterProp="children"
-                                disabled={taxVisible}
+                                // disabled={taxVisible}
                             >
                                 {tax.map((e) => {
                                     return (
@@ -593,7 +633,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                         <Form.Item name='transportation' label='Transportation'
                             rules={[{ required: false, message: 'Transportation of Fabric is required' }]}
                         >
-                            <Input placeholder="Transportation" />
+                            <Input placeholder="Transportation" onChange={(e) => finalCalculation()} min={0} />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
