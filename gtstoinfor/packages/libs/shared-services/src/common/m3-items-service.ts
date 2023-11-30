@@ -9,9 +9,9 @@ export class M3ItemsService extends CommonAxiosService {
         return this.axiosPostCall(this.URL + '/createM3Items', payload)
     }
 
-    async getM3Items(): Promise<CommonResponseModel> {   
+    async getM3Items(req?:any): Promise<CommonResponseModel> {   
         console.log("hi")     
-        return this.axiosPostCall(this.URL + "/getM3Items")
+        return this.axiosPostCall(this.URL + "/getM3Items",req)
     }
 
     async getM3FabricsByBuyer(req: BuyerIdReq): Promise<CommonResponseModel> {
