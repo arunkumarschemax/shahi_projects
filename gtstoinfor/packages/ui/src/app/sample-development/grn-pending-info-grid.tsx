@@ -56,9 +56,9 @@ export const GrnPendingInfoGrid = () => {
         },
         {
             title: 'Buyer',
-            dataIndex: "fabBuyerName",
+            dataIndex: "buyerName",
             align: 'left',
-            sorter: (a, b) => a.fabBuyerName - b.fabBuyerName,
+            sorter: (a, b) => a.buyerName - b.buyerName,
 
               sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
@@ -111,7 +111,7 @@ export const GrnPendingInfoGrid = () => {
                 
                 <span>
                     <Button type="primary" shape="round" size="small"
-                        disabled={(rowData.conversion_quantity - rowData.quantity) <= 0}
+                        disabled={Number(Number(rowData.quantity) - Number(rowData.allocatedQty)) > 0}
                         onClick={() => {
                             setData(rowData);
                         }}>

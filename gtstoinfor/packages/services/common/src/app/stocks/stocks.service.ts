@@ -155,7 +155,7 @@ export class StocksService {
         try {
             console.log(req,"stock-ser")
           const update = await this.stocksRepository.update(
-            { Id: req.stockId },
+            { id: req.stockId },
             { allocateQuanty:req.allocateQuanty }
           );
           if (update.affected && update.affected > 0) {
