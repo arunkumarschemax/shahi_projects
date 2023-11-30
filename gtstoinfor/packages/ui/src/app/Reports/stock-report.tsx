@@ -1,8 +1,10 @@
-import { UndoOutlined } from '@ant-design/icons';
+import { DownloadOutlined, FilePdfOutlined, UndoOutlined } from '@ant-design/icons';
 import { SampleFilterRequest, StockFilterRequest, StocksDto } from '@project-management-system/shared-models';
 import { StockService } from '@project-management-system/shared-services';
 import { Button, Card, Col, Form, Row, Select, Statistic, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
+import { Excel } from 'antd-table-saveas-excel';
+
 
 const StockReport = () => {
 
@@ -15,6 +17,8 @@ const StockReport = () => {
     const [plant, setPlant] = useState<any>([]);
     const [stockData, setStockData] = useState<any[]>([]);
     const [filterData, setFilterData] = useState<any[]>([]);
+    const [key, setKey] = useState();
+
 
 
     
@@ -105,17 +109,17 @@ const StockReport = () => {
     const Columns:any=[
         {
             title:"Buyer",
-            dataIndex:"buyer"
+            dataIndex:"buyerName"
             
         },
         {
           title:"Material Type",
-          dataIndex:"MaterialType"
+          dataIndex:"itemType"
           
       },
         {
             title:"M3 Item",
-            dataIndex:"m3Item"
+            dataIndex:"m3ItemCode"
         },
         {
             title:"Location",
@@ -129,13 +133,94 @@ const StockReport = () => {
       },
         
     ]
+    const onChange =(key)=>{
+      setKey(key)
+      
+    }
+  
+    const exportExcel = () => {
+      const currentDate = new Date()
+      .toISOString()
+      .slice(0, 10)
+      .split("-")
+      .join("/");
+
+  if (key === 'pop'){
+    const excel = new Excel();
+  excel
+    .addSheet('Stock-report')
+    .addColumns(Columns)
+    .addDataSource(filterData, { str2num: true })
+    .saveAs(`Stock-report-${currentDate}.xlsx`);
+  } else {
+    const excel = new Excel();
+    excel
+      .addSheet('Stock-report')
+      .addColumns(Columns)
+      .addDataSource(filterData, { str2num: true })
+      .saveAs(`Stock-report-${currentDate}.xlsx`);
+  }
+  
+}
+
+// const handleExportPDF = async () => {
+//   const currentDate = new Date()
+//   .toISOString()
+//   .slice(0, 10)
+//   .split("-")
+//   .join("/");
+
+//   const tableId = (key === 'pop' ? 'popTable' : 'mopTable');
+//  console.log(key,"key")
+//   const element = document.getElementById(tableId);
+//   const canvas = await html2canvas(element, { scale: 2 });
+//   const data = canvas.toDataURL('image/png');
+//   const imgWidth = 210;
+//   const pageHeight = 297;
+//   const pdf = new jsPDF('p', 'mm', 'a4');const addHeading = () => {
+//     pdf.setFontSize(14);
+//     pdf.text("Material Order Proposal", imgWidth / 2, 15, { align: "center" });
+//   };
+
+//   addHeading(); 
+//   let position = 25;
+
+//   const imgProperties = pdf.getImageProperties(data);
+//   const pdfHeight = (imgProperties.height * imgWidth) / imgProperties.width;
+//   let heightLeft = pdfHeight;
+  
+
+//   pdf.addImage(data, 'PNG', 0, position, imgWidth, pdfHeight);
+//   heightLeft -= pageHeight;
+
+//   while (heightLeft >= 0) {
+//       position = heightLeft - pdfHeight;
+//       pdf.addPage();
+//       pdf.addImage(data, 'PNG', 0, position, imgWidth, pdfHeight);
+//       heightLeft -= pageHeight;
+//   }
+
+//   pdf.save(`Mop-report-${currentDate}.pdf`);
+// };
+
 
 
   return (
     <div>
         <Card  title={<span>STOCK REPORT</span>} style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+        extra={
+          <div>
+            <Button icon={<DownloadOutlined />} onClick={() => { exportExcel(); }} style={{marginRight:30}}>
+              GET EXCEL
+            </Button>
+            {/* <Button icon={<FilePdfOutlined  />} onClick={() => { handleExportPDF(); }}>
+              Download PDF
+            </Button> */}
+          </div>
+        }
+  
         >
-        <Form form={form} 
+        {/* <Form form={form} 
         onFinish={onFinish}
         >
         <Row gutter={24}>
@@ -227,7 +312,7 @@ const StockReport = () => {
             </Form.Item>
           </Col>
           </Row>
-          </Form>
+          </Form> */}
  {/* <Row gutter={40} justify={'space-evenly'}>
             <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38, backgroundColor: '#A5F5D7'}}
              title={"Total Item Code:" +data.filter(el => el.m3ItemCode).length}>
@@ -243,7 +328,7 @@ const StockReport = () => {
               </Card> </Col>
           </Row><br></br> */}
         <Card >
-        <Table columns={Columns}  
+        <Table columns={Columns}  pagination={{pageSize:50}}
         dataSource={filterData}
         className="custom-table-wrapper"
             /> 

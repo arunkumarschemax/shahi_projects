@@ -42,6 +42,14 @@ export class PurchaseOrderservice extends CommonAxiosService{
         return this.axiosPostCall(this.URL + '/getAllPurchaseOrderData',req)
       }
 
+      async getPodetailsById(req?:PurchaseViewDto): Promise<CommonResponseModel> {
+        console.log(req,"'''''''''''''");
+        
+        return this.axiosPostCall(this.URL + '/getPodetailsById',req)
+      }
+
+      
+
 }
 
 

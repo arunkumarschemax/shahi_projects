@@ -386,4 +386,33 @@ export class PurchaseOrderService {
         }
     }
 
+    async getPodetailsById(req:PurchaseViewDto):Promise<CommonResponseModel>{
+        // const PoType = `select po_material_type from purchase_order where purchase_order_id = ${req.id}`
+        // const poTypeRes = await this.dataSource.query(PoType)
+        // console.log(poTypeRes,'poTypeRes')
+        // let poData = `select * from purchase_order po `
+        // if(poTypeRes == 'Fabric'){
+        //     poData = poData+` left join purchase_order_fabric pof on pof.purchase_order_id = po.purchase_order_id `
+        // }else{
+        //     poData = poData+` left join purchase_order_trim pot on pot.purchase_order_id = po.purchase_order_id`
+        // }
+        // poData = poData+` where po.purchase_order_id = ${req.id}`
+        // const podatares = await this.dataSource.query(poData)
+        const poTrimData = `select po.*,poi.*,mi.item_code,v.vendor_name,f.address from purchase_order po left join purchae_order_items poi on poi.purchase_order_id = po.purchase_order_id left join m3_items mi on mi.m3_items_Id = poi.m3_item_id left join factory f on f.id = po.delivery_address left join vendors v on v.vendor_id = po.vendor_id where po.purchase_order_id = ${req.id}`
+        const poTrimdatares = await this.dataSource.query(poTrimData)
+        // console.log(podatares)
+        // const PoDetails = {
+        //     fabricInfo:[],
+        //     trimInfo:[]
+        // }
+        if(poTrimdatares.length > 0){
+            // PoDetails.fabricInfo = podatares
+            // PoDetails.trimInfo = poTrimdatares
+            return new CommonResponseModel(true,1,'data retreived',poTrimdatares)
+        }else{
+            return new CommonResponseModel(false,0,'No data')
+        }
+        return 
+    }
+
 }
