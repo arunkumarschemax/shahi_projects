@@ -1108,17 +1108,17 @@ export class OrdersService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
-    
+
     async seasonWiseReport(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
-              const monthsList = ["january","february","march","april","may","june","july","august","september","october","november","december"];
-              const qtyQuery = [];
-              const format = '%'
-              let total =``
-              monthsList.forEach((rec,index)=>{
-              qtyQuery.push(`SUM(CASE WHEN MONTH(STR_TO_DATE(${req.qtyLocation}, '%m-%d')) = ${index+1} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS ${rec}`)
-              total += `SUM(${rec}) AS ${rec},`
-            })
-              let query = `SELECT file_id,planning_ssn as plannedSeason,year,planning_sum as itemName ,${total}
+        const monthsList = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+        const qtyQuery = [];
+        const format = '%'
+        let total = ``
+        monthsList.forEach((rec, index) => {
+            qtyQuery.push(`SUM(CASE WHEN MONTH(STR_TO_DATE(${req.qtyLocation}, '%m-%d')) = ${index + 1} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS ${rec}`)
+            total += `SUM(${rec}) AS ${rec},`
+        })
+        let query = `SELECT file_id,planning_ssn as plannedSeason,year,planning_sum as itemName ,${total}
               SUM(january + february + march + april + may + june + july + august + september + october + november + december) AS total
               FROM (
                 SELECT planning_ssn, year, planning_sum,version,file_id,created_at,${qtyQuery}
@@ -1127,52 +1127,52 @@ export class OrdersService {
                 GROUP BY planning_sum
             ) AS subquery
             WHERE 1=1`
-              // if (req.itemCode) {
-              //     query = query + ` AND item_cd = "${req.itemCode}"`
-              //     }
-              if (req.itemName) {
-                  query = query + ` AND planning_sum = "${req.itemName}"`;
-              }
-              query = query + ` GROUP BY planning_sum HAVING total != 0 ORDER BY created_at DESC`;
-              const reportData = await this.dataSource.query(query);
-      
-          // const years = [...new Set(reportData.map(data => data.year))];
-      
-          // const seasons = years.map(year => {
-          //     const seasons = [...new Set(reportData.filter(data => data.year === year).map(data => data.plannedSeason))];
-              
-          //     const seasonData = seasons.map(season => {
-          //         const seasonData = reportData.filter(data => data.year === year && data.plannedSeason === season);
-          //         return { season, data: seasonData };
-          //     })
-      
-          //     return { year, seasons: seasonData };
-          // })
+        // if (req.itemCode) {
+        //     query = query + ` AND item_cd = "${req.itemCode}"`
+        //     }
+        if (req.itemName) {
+            query = query + ` AND planning_sum = "${req.itemName}"`;
+        }
+        query = query + ` GROUP BY planning_sum HAVING total != 0 ORDER BY created_at DESC`;
+        const reportData = await this.dataSource.query(query);
 
-      if (reportData.length > 0) {
-        return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', reportData);
-    } else {
-        return new CommonResponseModel(false, 0, 'No Data Found', []);
-    }
-}
+        // const years = [...new Set(reportData.map(data => data.year))];
 
-    async seasonWiseTabs(): Promise<CommonResponseModel>{
+        // const seasons = years.map(year => {
+        //     const seasons = [...new Set(reportData.filter(data => data.year === year).map(data => data.plannedSeason))];
+
+        //     const seasonData = seasons.map(season => {
+        //         const seasonData = reportData.filter(data => data.year === year && data.plannedSeason === season);
+        //         return { season, data: seasonData };
+        //     })
+
+        //     return { year, seasons: seasonData };
+        // })
+
+        if (reportData.length > 0) {
+            return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', reportData);
+        } else {
+            return new CommonResponseModel(false, 0, 'No Data Found', []);
+        }
+    }
+
+    async seasonWiseTabs(): Promise<CommonResponseModel> {
         const query2 = `SELECT year, planning_ssn as plannedSeason FROM orders
             WHERE 1 = 1 AND file_id = (SELECT MAX(file_id) FROM orders ) group by planning_ssn,year ORDER BY year`
         const seasonTabs = await this.dataSource.query(query2)
         // console.log(seasonTabs,'----')
-        const data =[]
-        seasonTabs.forEach((rec)=>{
-        data.push(
-            rec.year.slice(-2) + rec.plannedSeason+"-WH" + "," + Number(rec.year) + ","+ rec.plannedSeason,
-            rec.year.slice(-2) + rec.plannedSeason+'-EXF'+ "," + Number(rec.year) + ","+ rec.plannedSeason,
-        )
-    })
-    if (seasonTabs.length > 0) {
-        return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', data);
-    } else {
-        return new CommonResponseModel(false, 0, 'No Data Found', []);
-    }
+        const data = []
+        seasonTabs.forEach((rec) => {
+            data.push(
+                rec.year.slice(-2) + rec.plannedSeason + "-WH" + "," + Number(rec.year) + "," + rec.plannedSeason,
+                rec.year.slice(-2) + rec.plannedSeason + '-EXF' + "," + Number(rec.year) + "," + rec.plannedSeason,
+            )
+        })
+        if (seasonTabs.length > 0) {
+            return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', data);
+        } else {
+            return new CommonResponseModel(false, 0, 'No Data Found', []);
+        }
     }
 
 
@@ -1373,9 +1373,9 @@ export class OrdersService {
             if (itemCode.status) {
                 // console.log(itemCode,'---------')
                 const empty = [];
-                itemCode.data.forEach((ele)=>{
+                itemCode.data.forEach((ele) => {
                     empty.push({
-                        itemName: ele.itemName   
+                        itemName: ele.itemName
                     })
                 })
                 return new CommonResponseModel(true, 1, 'Data Retrieved Succesfully', empty)
@@ -1394,17 +1394,17 @@ export class OrdersService {
             return new CommonResponseModel(false, 0, 'data not found');
         }
 
-    return new CommonResponseModel(true, 1, 'data retrieved', data);
-}
-async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel> {
-    // console.log(req,'-------')
-    const data = await this.ordersChildRepo.getMonthlyComparisionData(req);
-    
-    if (data.length === 0) {
-        return new CommonResponseModel(false, 0, 'data not found');
+        return new CommonResponseModel(true, 1, 'data retrieved', data);
     }
-    return new CommonResponseModel(true, 1, 'data retrieved', data);
-}
+    async getExfactoryComparisionExcelData(req: YearReq): Promise<CommonResponseModel> {
+        // console.log(req,'-------')
+        const data = await this.ordersChildRepo.getMonthlyComparisionData(req);
+
+        if (data.length === 0) {
+            return new CommonResponseModel(false, 0, 'data not found');
+        }
+        return new CommonResponseModel(true, 1, 'data retrieved', data);
+    }
 
     async getQtyDifChangeItemCode(): Promise<CommonResponseModel> {
         const files = await this.fileUploadRepo.getFilesData()
@@ -2337,9 +2337,6 @@ async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel
             if (data && data1) {
 
                 const mergedData = [...data, ...data1];
-
-
-
                 // Log the merged data for debugging
                 // console.log('Merged Data:', mergedData);
 
@@ -2351,12 +2348,187 @@ async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel
             throw err
         }
     }
+
     async getComparisionphaseExcelData(req: YearReq): Promise<CommonResponseModel> {
         try {
-            const data = await this.ordersChildRepo.getComparisionphaseData(req);
-            const data1 = await this.ordersChildRepo.getComparisionphaseData1(req);
-            if (data && data1) {
-                const mergedData = [...data1, ...data];
+            let perData: any[] = [];
+            const records = await this.ordersChildRepo.getComparisionphaseData1(req);
+            const data1 = await this.ordersChildRepo.getComparisionphaseData(req);
+            let totaljanExfPre = 0;
+            let totalfebExfPre = 0;
+            let totalmarExfPre = 0;
+            let totalaprExfPre = 0;
+            let totalmayExfPre = 0;
+            let totaljunExfPre = 0;
+            let totaljulExfPre = 0;
+            let totalaugExfPre = 0;
+            let totalsepExfPre = 0;
+            let totaloctExfPre = 0;
+            let totalnovExfPre = 0;
+            let totaldecExfPre = 0;
+            let sumExfPre = 0;
+            let totaljanExfLat = 0;
+            let totalfebExfLat = 0;
+            let totalmarExfLat = 0;
+            let totalaprExfLat = 0;
+            let totalmayExfLat = 0;
+            let totaljunExfLat = 0;
+            let totaljulExfLat = 0;
+            let totalaugExfLat = 0;
+            let totalsepExfLat = 0;
+            let totaloctExfLat = 0;
+            let totalnovExfLat = 0;
+            let totaldecExfLat = 0;
+            let sumExfLat = 0;
+            let totaljanWhPre = 0;
+            let totalfebWhPre = 0;
+            let totalmarWhPre = 0;
+            let totalaprWhPre = 0;
+            let totalmayWhPre = 0;
+            let totaljunWhPre = 0;
+            let totaljulWhPre = 0;
+            let totalaugWhPre = 0;
+            let totalsepWhPre = 0;
+            let totaloctWhPre = 0;
+            let totalnovWhPre = 0;
+            let totaldecWhPre = 0;
+            let sumWhPre = 0;
+            let totaljanWhLat = 0;
+            let totalfebWhLat = 0;
+            let totalmarWhLat = 0;
+            let totalaprWhLat = 0;
+            let totalmayWhLat = 0;
+            let totaljunWhLat = 0;
+            let totaljulWhLat = 0;
+            let totalaugWhLat = 0;
+            let totalsepWhLat = 0;
+            let totaloctWhLat = 0;
+            let totalnovWhLat = 0;
+            let totaldecWhLat = 0;
+            let sumWhLat = 0;
+            for (const record of records) {
+                totaljanExfPre += record.janExfPre;
+                totalfebExfPre += record.febExfPre
+                totalmarExfPre += record.marExfPre
+                totalaprExfPre += record.aprExfPre
+                totalmayExfPre += record.mayExfPre
+                totaljunExfPre += record.junExfPre
+                totaljulExfPre += record.julExfPre
+                totalaugExfPre += record.augExfPre
+                totalsepExfPre += record.sepExfPre
+                totaloctExfPre += record.octExfPre
+                totalnovExfPre += record.novExfPre
+                totaldecExfPre += record.decExfPre
+                sumExfPre += record.totalExfPre
+                totaljanExfLat += record.janExfLat;
+                totalfebExfLat += record.febExfLat;
+                totalmarExfLat += record.marExfLat;
+                totalaprExfLat += record.aprExfLat;
+                totalmayExfLat += record.mayExfLat;
+                totaljunExfLat += record.junExfLat;
+                totaljulExfLat += record.julExfLat;
+                totalaugExfLat += record.augExfLat;
+                totalsepExfLat += record.sepExfLat;
+                totaloctExfLat += record.octExfLat;
+                totalnovExfLat += record.novExfLat;
+                totaldecExfLat += record.decExfLat;
+                sumExfLat += record.totalExfLat;
+                totaljanWhPre += record.janWhPre;
+                totalfebWhPre += record.febWhPre;
+                totalmarWhPre += record.marWhPre;
+                totalaprWhPre += record.aprWhPre;
+                totalmayWhPre += record.mayWhPre;
+                totaljunWhPre += record.junWhPre;
+                totaljulWhPre += record.julWhPre;
+                totalaugWhPre += record.augWhPre;
+                totalsepWhPre += record.sepWhPre;
+                totaloctWhPre += record.octWhPre;
+                totalnovWhPre += record.novWhPre;
+                totaldecWhPre += record.decWhPre;
+                sumWhPre += record.totalWhPre;
+                totaljanWhLat += record.janWhLat;
+                totalfebWhLat += record.febWhLat;
+                totalmarWhLat += record.marWhLat;
+                totalaprWhLat += record.aprWhLat;
+                totalmayWhLat += record.mayWhLat;
+                totaljunWhLat += record.junWhLat;
+                totaljulWhLat += record.julWhLat;
+                totalaugWhLat += record.augWhLat;
+                totalsepWhLat += record.sepWhLat;
+                totaloctWhLat += record.octWhLat;
+                totalnovWhLat += record.novWhLat;
+                totaldecWhLat += record.decWhLat;
+                sumWhLat += record.totalWhLat;
+            }
+            for (const record of records) {
+                const YEAR = record.YEAR;
+                const file_id = record.file_id;
+                const exf = record.exf;
+                const wh = record.wh;
+                const planning_sum = record.planning_sum;
+                const STATUS = record.STATUS;
+                const prod_plan_type = record.prod_plan_type;
+                const janExfPre = Number((record.janExfPre / totaljanExfPre) * 100).toFixed(2);
+                const febExfPre = Number((record.febExfPre / totalfebExfPre) * 100).toFixed(2)
+                const marExfPre = Number((record.marExfPre / totalmarExfPre) * 100).toFixed(2)
+                const aprExfPre = Number((record.aprExfPre / totalaprExfPre) * 100).toFixed(2)
+                const mayExfPre = Number((record.mayExfPre / totalmayExfPre) * 100).toFixed(2)
+                const junExfPre = Number((record.junExfPre / totaljunExfPre) * 100).toFixed(2)
+                const julExfPre = Number((record.julExfPre / totaljulExfPre) * 100).toFixed(2)
+                const augExfPre = Number((record.augExfPre / totalaugExfPre) * 100).toFixed(2)
+                const sepExfPre = Number((record.sepExfPre / totalsepExfPre) * 100).toFixed(2)
+                const octExfPre = Number((record.octExfPre / totaloctExfPre) * 100).toFixed(2)
+                const novExfPre = Number((record.novExfPre / totalnovExfPre) * 100).toFixed(2)
+                const decExfPre = Number((record.decExfPre / totaldecExfPre) * 100).toFixed(2)
+                const totalExfPre = Number((record.totalExfPre / sumExfPre) * 100).toFixed(2)
+                const janExfLat = Number((record.janExfLat / totaljanExfLat) * 100).toFixed(2);
+                const febExfLat = Number((record.febExfLat / totalfebExfLat) * 100).toFixed(2);
+                const marExfLat = Number((record.marExfLat / totalmarExfLat) * 100).toFixed(2);
+                const aprExfLat = Number((record.aprExfLat / totalaprExfLat) * 100).toFixed(2);
+                const mayExfLat = Number((record.mayExfLat / totalmayExfLat) * 100).toFixed(2);
+                const junExfLat = Number((record.junExfLat / totaljunExfLat) * 100).toFixed(2);
+                const julExfLat = Number((record.julExfLat / totaljulExfLat) * 100).toFixed(2);
+                const augExfLat = Number((record.augExfLat / totalaugExfLat) * 100).toFixed(2);
+                const sepExfLat = Number((record.sepExfLat / totalsepExfLat) * 100).toFixed(2);
+                const octExfLat = Number((record.octExfLat / totaloctExfLat) * 100).toFixed(2);
+                const novExfLat = Number((record.novExfLat / totalnovExfLat) * 100).toFixed(2);
+                const decExfLat = Number((record.decExfLat / totaldecExfLat) * 100).toFixed(2);
+                const totalExfLat = Number((record.totalExfLat / sumExfLat) * 100).toFixed(2);
+                const janWhPre = Number((record.janWhPre / totaljanWhPre) * 100).toFixed(2);
+                const febWhPre = Number((record.febWhPre / totalfebWhPre) * 100).toFixed(2);
+                const marWhPre = Number((record.marWhPre / totalmarWhPre) * 100).toFixed(2);
+                const aprWhPre = Number((record.aprWhPre / totalaprWhPre) * 100).toFixed(2);
+                const mayWhPre = Number((record.mayWhPre / totalmayWhPre) * 100).toFixed(2);
+                const junWhPre = Number((record.junWhPre / totaljunWhPre) * 100).toFixed(2);
+                const julWhPre = Number((record.julWhPre / totaljulWhPre) * 100).toFixed(2);
+                const augWhPre = Number((record.augWhPre / totalaugWhPre) * 100).toFixed(2);
+                const sepWhPre = Number((record.sepWhPre / totalsepWhPre) * 100).toFixed(2);
+                const octWhPre = Number((record.octWhPre / totaloctWhPre) * 100).toFixed(2);
+                const novWhPre = Number((record.novWhPre / totalnovWhPre) * 100).toFixed(2);
+                const decWhPre = Number((record.decWhPre / totaldecWhPre) * 100).toFixed(2);
+                const totalWhPre = Number((record.totalWhPre / sumWhPre) * 100).toFixed(2)
+                const janWhLat = Number((record.janWhLat / totaljanWhLat) * 100).toFixed(2);
+                const febWhLat = Number((record.febWhLat / totalfebWhLat) * 100).toFixed(2);
+                const marWhLat = Number((record.marWhLat / totalmarWhLat) * 100).toFixed(2);
+                const aprWhLat = Number((record.aprWhLat / totalaprWhLat) * 100).toFixed(2);
+                const mayWhLat = Number((record.mayWhLat / totalmayWhLat) * 100).toFixed(2);
+                const junWhLat = Number((record.junWhLat / totaljunWhLat) * 100).toFixed(2);
+                const julWhLat = Number((record.julWhLat / totaljulWhLat) * 100).toFixed(2);
+                const augWhLat = Number((record.augWhLat / totalaugWhLat) * 100).toFixed(2);
+                const sepWhLat = Number((record.sepWhLat / totalsepWhLat) * 100).toFixed(2);
+                const octWhLat = Number((record.octWhLat / totaloctWhLat) * 100).toFixed(2);
+                const novWhLat = Number((record.novWhLat / totalnovWhLat) * 100).toFixed(2);
+                const decWhLat = Number((record.decWhLat / totaldecWhLat) * 100).toFixed(2);
+                const totalWhLat = Number((record.totalWhLat / sumWhLat) * 100).toFixed(2)
+                perData.push({
+                    YEAR, file_id, exf, wh, planning_sum, STATUS, prod_plan_type, janExfPre, febExfPre, marExfPre, aprExfPre, mayExfPre, junExfPre, julExfPre, augExfPre, sepExfPre, octExfPre, novExfPre, decExfPre, totalExfPre,
+                    janExfLat, febExfLat, marExfLat, aprExfLat, mayExfLat, junExfLat, julExfLat, augExfLat, sepExfLat, octExfLat, novExfLat, decExfLat, totalExfLat, janWhPre, febWhPre, marWhPre, aprWhPre, mayWhPre,
+                    junWhPre, julWhPre, augWhPre, sepWhPre, octWhPre, novWhPre, decWhPre, totalWhPre, janWhLat, febWhLat, marWhLat, aprWhLat, mayWhLat, junWhLat, julWhLat, augWhLat, sepWhLat, octWhLat, novWhLat,
+                    decWhLat, totalWhLat
+                })
+            }
+            if (records && data1) {
+                const mergedData = [...records, ...perData]
                 return new CommonResponseModel(true, 1, 'Data retrieved', mergedData);
             } else {
                 return new CommonResponseModel(false, 1, 'No data found');
@@ -2858,12 +3030,12 @@ async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel
 
     }
 
-    async uniqloTrimOrdersBot(): Promise<any>{
+    async uniqloTrimOrdersBot(): Promise<any> {
         const chromeOptions = new chrome.Options();
         chromeOptions.addArguments('--auto-select-certificate-for-urls=https://spl.fastretailing.com');
-      
+
         const driver = await new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
-            
+
         try {
             await driver.get('https://spl.fastretailing.com/app/spl/login');
             // Switch to the alert and accept it (click "OK")
@@ -2897,8 +3069,8 @@ async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel
             await driver.findElement(By.xpath('/html/body/o-component-host/o-dialog/div[3]/button')).click();
             await driver.quit();
 
-        } catch(err){
-            return new CommonResponseModel(false,0, err)
+        } catch (err) {
+            return new CommonResponseModel(false, 0, err)
         }
     }
 
