@@ -19,69 +19,76 @@ export class LocationMappingService {
     async getAllFabrics(): Promise<CommonResponseModel> {
         try {
 
-            let dataquery = `SELECT 
-            grn_it.grn_item_id,
-            grn_it.grn_id,
-            grn_it.m3_item_code_id,
-            grn_it.received_quantity,
-            grn_it.accepted_quantity,
-            grn_it.rejected_quantity,
-            grn_it.conversion_quantity,
-            grn_it.uom_id,
-            grn_it.location_mapped_status,
-            g.grn_number,
-            ven.vendor_code,
-            ven.vendor_name,
-            sty.style_id,
-            sty.style,
-            sty.description,
+            // let dataquery = `SELECT 
+            // grn_it.grn_item_id,
+            // grn_it.grn_id,
+            // grn_it.m3_item_code_id,
+            // grn_it.received_quantity,
+            // grn_it.accepted_quantity,
+            // grn_it.rejected_quantity,
+            // grn_it.conversion_quantity,
+            // grn_it.uom_id,
+            // grn_it.location_mapped_status,
+            // g.grn_number,
+            // ven.vendor_code,
+            // ven.vendor_name,
+            // sty.style_id,
+            // sty.style,
+            // sty.description,
     
-            it.item_name,
-            it.item_code,
-            buyer.buyer_name AS trimBuyerName,
-            buyers.buyer_name AS fabBuyerName,
-            m3items.m3_items_Id,
-             m3items.item_code AS m3_item_code,
-             m3trims.trim_code AS m3_trim_code,
-             m3trims.m3_trim_Id,
-             sare.buyer_id AS fabricBuyerid,
-             saree.buyer_id AS trimBuyerId,
-             g.item_type,
-             m3items.description AS m3itemDescription,
+            // it.item_name,
+            // it.item_code,
+            // buyer.buyer_name AS trimBuyerName,
+            // buyers.buyer_name AS fabBuyerName,
+            // m3items.m3_items_Id,
+            //  m3items.item_code AS m3_item_code,
+            //  m3trims.trim_code AS m3_trim_code,
+            //  m3trims.m3_trim_Id,
+            //  sare.buyer_id AS fabricBuyerid,
+            //  saree.buyer_id AS trimBuyerId,
+            //  g.item_type,
+            //  m3items.description AS m3itemDescription,
 
-            COALESCE(SUM(stk_log.quantity), 0) AS quantity,
-            uom.uom AS acceptedUOM
+            // COALESCE(SUM(stk_log.quantity), 0) AS quantity,
+            // uom.uom AS acceptedUOM
             
-            FROM grn_items AS grn_it
+            // FROM grn_items AS grn_it
             
-            LEFT JOIN grn AS g ON g.grn_id = grn_it.grn_id
-            LEFT JOIN vendors AS ven ON ven.vendor_id = g.vendor_id
-            LEFT JOIN style AS sty ON sty.style_id = g.style_id
-            LEFT JOIN items AS it ON it.item_id = grn_it.item_id
-            LEFT JOIN stock_log AS stk_log ON stk_log.grn_item_id = grn_it.grn_item_id
-            LEFT JOIN purchase_order AS po ON po.purchase_order_id = g.po_id
-            LEFT JOIN purchase_order_fabric AS pofab ON pofab.po_fabric_id = po.purchase_order_id
-            LEFT JOIN purchase_order_trim AS potrim ON potrim.po_trim_id = po.purchase_order_id
-            LEFT JOIN indent_fabric AS indfab ON indfab.ifabric_id = pofab.indent_fabric_id
-            LEFT JOIN indent_trims AS indtrim ON indtrim.itrims_id = potrim.indent_trim_id
-            LEFT JOIN indent AS ind ON ind.indent_id = indfab.indent_id
-            LEFT JOIN indent AS indi ON indi.indent_id = indtrim.indent_id
-            LEFT JOIN sample_request AS sare ON sare.sample_request_id = ind.sample_request_id
-            LEFT JOIN sample_request AS saree ON saree.sample_request_id = indi.sample_request_id
+            // LEFT JOIN grn AS g ON g.grn_id = grn_it.grn_id
+            // LEFT JOIN vendors AS ven ON ven.vendor_id = g.vendor_id
+            // LEFT JOIN style AS sty ON sty.style_id = g.style_id
+            // LEFT JOIN items AS it ON it.item_id = grn_it.item_id
+            // LEFT JOIN stock_log AS stk_log ON stk_log.grn_item_id = grn_it.grn_item_id
+            // LEFT JOIN purchase_order AS po ON po.purchase_order_id = g.po_id
+            // LEFT JOIN purchase_order_fabric AS pofab ON pofab.po_fabric_id = po.purchase_order_id
+            // LEFT JOIN purchase_order_trim AS potrim ON potrim.po_trim_id = po.purchase_order_id
+            // LEFT JOIN indent_fabric AS indfab ON indfab.ifabric_id = pofab.indent_fabric_id
+            // LEFT JOIN indent_trims AS indtrim ON indtrim.itrims_id = potrim.indent_trim_id
+            // LEFT JOIN indent AS ind ON ind.indent_id = indfab.indent_id
+            // LEFT JOIN indent AS indi ON indi.indent_id = indtrim.indent_id
+            // LEFT JOIN sample_request AS sare ON sare.sample_request_id = ind.sample_request_id
+            // LEFT JOIN sample_request AS saree ON saree.sample_request_id = indi.sample_request_id
             
              
             
             
-            LEFT JOIN buyers AS buyer ON buyer.buyer_id = sare.buyer_id
-            LEFT JOIN buyers AS buyers ON buyers.buyer_id = saree.buyer_id
-            LEFT JOIN  m3_items AS m3items ON m3items.m3_items_Id = grn_it.m3_item_code_id AND g.item_type = "Fabric"
-            LEFT JOIN  m3_trims AS m3trims ON m3trims.m3_trim_Id = grn_it.m3_item_code_id AND g.item_type =!"Fabric"
-            LEFT JOIN  uom AS uom ON uom.id = grn_it.received_uom_id
+            // LEFT JOIN buyers AS buyer ON buyer.buyer_id = sare.buyer_id
+            // LEFT JOIN buyers AS buyers ON buyers.buyer_id = saree.buyer_id
+            // LEFT JOIN  m3_items AS m3items ON m3items.m3_items_Id = grn_it.m3_item_code_id AND g.item_type = "Fabric"
+            // LEFT JOIN  m3_trims AS m3trims ON m3trims.m3_trim_Id = grn_it.m3_item_code_id AND g.item_type =!"Fabric"
+            // LEFT JOIN  uom AS uom ON uom.id = grn_it.received_uom_id
             
             
-            GROUP BY grn_item_id`
+            // GROUP BY grn_item_id`
 
-            const res = await AppDataSource.query(dataquery);
+            let query = `SELECT g.item_type AS materialType, (gi.accepted_quantity-SUM(quantity)) AS balance, SUM(quantity) AS allocatedQty, IF(g.item_type = "FABRIC", mit.item_code, mtr.trim_code) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity FROM grn_items gi LEFT JOIN grn g ON g.grn_id = gi.grn_id 
+            LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
+            LEFT JOIN m3_items mit ON mit.m3_items_id AND g.item_type = "FABRIC"
+            LEFT JOIN m3_trims mtr ON mtr.m3_trim_Id AND g.item_type != "FABRIC"
+            LEFT JOIN stock_log st ON st.grn_item_id = gi.grn_item_id
+            GROUP BY gi.grn_item_id`
+
+            const res = await AppDataSource.query(query);
             if (res) {
                 return new CommonResponseModel(true, 1111, "Data retrived Succesufully", res);
             }

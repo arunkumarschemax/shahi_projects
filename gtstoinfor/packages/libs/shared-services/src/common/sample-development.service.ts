@@ -49,6 +49,11 @@ export class SampleDevelopmentService extends CommonAxiosService {
   async getAllSampleReqDropDown(): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getAllSampleReqDropDown")
   }
+
+  async getIssuedSampleRequests(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getIssuedSampleRequests")
+  }
+
   async getSampleOrderDetails(req:SampleIdRequest): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getSampleOrderDetails",req)
   }
