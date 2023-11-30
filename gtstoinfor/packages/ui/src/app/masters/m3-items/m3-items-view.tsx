@@ -6,7 +6,7 @@ import AlertMessages from '../../common/common-functions/alert-messages';
 import { ColumnProps, ColumnType } from 'antd/es/table'
 import { SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-import { M3ItemsDTO, UomCategoryEnum, m3ItemsContentEnum } from '@project-management-system/shared-models';
+import { M3ItemsDTO, M3Itemsfilter, UomCategoryEnum, m3ItemsContentEnum } from '@project-management-system/shared-models';
 const M3ItemsView = () => {
 
     const navigate=useNavigate()
@@ -53,12 +53,42 @@ const stockService = new StockService();
        
     }, []);
    
-    const data = new M3ItemsDTO(null,'',form.getFieldValue("content"),form.getFieldValue("fabricType"),form.getFieldValue("weave"),weightValue,weightUnitValue,form.getFieldValue("construction"),countValue,countUnitValue,widthValue,widthUnitValue,form.getFieldValue("finish"),form.getFieldValue("shrinkage"),form.getFieldValue("buyerId"),"",form.getFieldValue("buyerCode"))
+    // const data = new M3ItemsDTO(null,'',form.getFieldValue("content"),form.getFieldValue("fabricType"),form.getFieldValue("weave"),weightValue,weightUnitValue,form.getFieldValue("construction"),countValue,countUnitValue,widthValue,widthUnitValue,form.getFieldValue("finish"),form.getFieldValue("shrinkage"),form.getFieldValue("buyerId"),"",form.getFieldValue("buyerCode"))
 
-    console.log(data,"req")
+    // console.log(data,"req")
     
     const getM3ItemsData = () => {
-        service.getM3Items().then(res => {
+      const req = new M3Itemsfilter()
+      if(form.getFieldValue("buyerId")!== undefined){
+        req.buyerId = form.getFieldValue("buyerId")
+      }
+      if(form.getFieldValue("content")!== undefined){
+        req.content = form.getFieldValue("content")
+      }
+
+      if(form.getFieldValue("fabricType")!== undefined){
+        req.fabricType = form.getFieldValue("fabricType")
+      }
+
+      
+      if(form.getFieldValue("weave")!== undefined){
+        req.weave = form.getFieldValue("weave")
+      }
+       
+      if(form.getFieldValue("construction")!== undefined){
+        req.construction = form.getFieldValue("construction")
+      }
+       
+      if(form.getFieldValue("finish")!== undefined){
+        req.finish = form.getFieldValue("finish")
+      }
+       
+      if(form.getFieldValue("shrinkage")!== undefined){
+        req.shrinkage = form.getFieldValue("shrinkage")
+      }
+
+      console.log(form.getFieldValue("buyerId"),"req")
+        service.getM3Items(req).then(res => {
             if (res.status) {
                 setItemGroup(res.data);
             } else {
@@ -235,18 +265,7 @@ const stockService = new StockService();
             dataIndex: "fabric_weave_name",
             ...getColumnSearchProps('fabric_weave_name')
         },
-        // {
-        //     title: "Weight",
-        //     dataIndex: "weight",
-        //     render: (text,record) => {
-        //         return(
-        //             <>
-        //             {record.weight ? `${record.weight} ${record.weightUnit}` : '-'}
-        //             </>
-        //         )
-        //     },
-        //     ...getColumnSearchProps('weight')
-        // },
+  
         {
           title: "Weight",
           dataIndex: "weight-uom",
@@ -259,19 +278,6 @@ const stockService = new StockService();
           },
       },
 
-        // {
-        //     title: "Width",
-        //     dataIndex: "width",
-        //     render: (text,record) => {
-        //       console.log(record,"ll")
-        //         return(
-                    
-        //             {record.width ? `${record.width} ${record.widthUnit}` : '-'}
-                    
-        //         )
-        //     },
-        //     ...getColumnSearchProps('width')
-        // },
         {
           title: "Width",
           dataIndex: "width-uom",
@@ -288,18 +294,7 @@ const stockService = new StockService();
             dataIndex: "construction",
             ...getColumnSearchProps('construction')
         },
-        // {
-        //     title: " Yarn Count",
-        //     dataIndex: "yarn_count",
-        //     render: (text,record) => {
-        //         return(
-        //             <>
-        //             {record.yarn_count ? `${record.yarn_count} ${record.yarnUnit}` : '-'}
-        //             </>
-        //         )
-        //     },
-        //     ...getColumnSearchProps('yarn_count')
-        // },
+     
         {
           title: "Yarn Count",
           dataIndex: "yarn_count-uom",
@@ -327,8 +322,9 @@ const stockService = new StockService();
     ]
 
     const onReset = () => {
-    
+  
         form.resetFields()
+        getM3ItemsData()
        
     }
     
@@ -343,7 +339,7 @@ const stockService = new StockService();
         >Create</Button>
         }>
           
-          <Form layout="vertical" form={form}>
+          <Form layout="vertical" form={form} onFinish={getM3ItemsData}>
        <Row gutter={24}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
@@ -356,7 +352,6 @@ const stockService = new StockService();
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select Buyer"
-                // onChange={onBuyerChange}
               >
                 {buyer.map((e) => {
                   return (
@@ -411,7 +406,7 @@ const stockService = new StockService();
                 name="fabricType"
                 rules={[{ required: false, message: "Field is required" }]}
               >
-                <Select placeholder=" Select Fabric Type" >
+                <Select placeholder=" Select Fabric Type" allowClear>
                   {fabricType.map((option) => (
                     <option
                       key={option.fabricTypeId}
@@ -597,7 +592,7 @@ const stockService = new StockService();
               &nbsp;&nbsp;&nbsp;&nbsp;
               <Button
                 htmlType="button"
-                // onClick={clearData}
+                onClick={onReset}
                 
               >
                 Reset
