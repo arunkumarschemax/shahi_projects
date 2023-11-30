@@ -299,16 +299,16 @@ export class PurchaseOrderService {
                 console.log(po,'^^^^^^^^^^^^^^^^^^^')
                 const fabData = await this.GetPurchaseFabricData(po.purchaseOrderId)
                 const fabricInfo = []
-                for (const fabrData of fabData.data) {
-                //     console.log(fabrData)
-                //     console.log('**************************8')
-                    fabricInfo.push(fabrData)
-                }
-                const trimData = await this.GetPurchaseTrimData(po.purchaseOrderId)
-                const triminfo = []
-                for (const trim of trimData.data) {
-                    triminfo.push(trim)
-                }
+                // for (const fabrData of fabData.data) {
+                // //     console.log(fabrData)
+                // //     console.log('**************************8')
+                //     fabricInfo.push(fabrData)
+                // }
+                // const trimData = await this.GetPurchaseTrimData(po.purchaseOrderId)
+                // const triminfo = []
+                // for (const trim of trimData.data) {
+                //     triminfo.push(trim)
+                // }
                 data.push({
                     styleName: po.styleName,
                     purchaseOrderId: po.purchaseOrderId,
@@ -321,8 +321,8 @@ export class PurchaseOrderService {
                     purchaseOrderDate: po.purchaseOrderDate,
                     poMaterialtype: po.poMaterialtype,
                     poStatus: po.poStatus,
-                    fabInfo: fabricInfo,
-                    triminfo: triminfo
+                    // fabInfo: fabricInfo,
+                    // triminfo: triminfo
 
                 })
             }
