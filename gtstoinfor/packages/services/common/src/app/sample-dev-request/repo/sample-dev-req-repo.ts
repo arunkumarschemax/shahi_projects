@@ -267,7 +267,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
 
     async sampleFabric(sampleId: string) {
         const query = await this.dataSource.createQueryBuilder(SampleReqFabricinfoEntity, 'srfi')
-            .select(`(sum(st.quantity)-sum(st.allocatd_quantity)) AS resltantavaliblequantity,sum(st.allocatd_quantity) as consumedQty,sum(st.quantity) AS availableQuantity,"fabric" as itemType,sr.sample_request_id as sampleRequestid,st.m3_item as stockM3ItemId,sr.buyer_id as buyerId,fabric_info_id,srfi.sample_request_id,c.colour,srfi.fabric_info_id,srfi.fabric_code as m3ItemFabricId,srfi.colour_id,srfi.remarks AS fab_remarks,srfi.consumption AS fabric_consumption,srfi.sample_request_id AS fabric_sample_request_id,rm.item_code AS fabric_item_code,m3items.item_code,Group_concat(st.id) AS stockIds`)
+            .select(`(sum(st.quantity)-sum(st.allocatd_quantity)) AS resltantavaliblequantity,sum(st.allocatd_quantity) as consumedQty,sum(st.quantity) AS availableQuantity,"fabric" as itemType,sr.sample_request_id as sampleRequestid,st.m3_item as stockM3ItemId,sr.buyer_id as buyerId,fabric_info_id,srfi.sample_request_id,c.colour,srfi.fabric_info_id,srfi.fabric_code as m3ItemFabricId,srfi.colour_id,srfi.remarks AS fab_remarks,srfi.consumption AS fabric_consumption,srfi.sample_request_id AS fabric_sample_request_id,rm.item_code AS fabric_item_code,m3items.item_code,Group_concat(st.id) AS stockIds,srfi.total_requirement`)
             .leftJoin(SampleRequest, 'sr', ' sr.sample_request_id=srfi.sample_request_id ')
             .leftJoin(RmCreationEntity, 'rm', ' rm.rm_item_id=srfi.fabric_code ')
             .leftJoin(M3ItemsEntity,'m3items','m3items.m3_items_Id  = srfi.fabric_code')
@@ -278,7 +278,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .getRawMany()
         return query.map((rec) => {
             return {
-                fabric_info_id: rec.fabric_info_id,fabric_item_code:rec.fabric_item_code, m3ItemFabricId: rec.m3ItemFabricId, fabric_description: rec.fabric_description, colour_id: rec.colour_id, fab_remarks: rec.fab_remarks, fabric_consumption: rec.fabric_consumption, fabric_sample_request_id: rec.fabric_sample_request_id,colour :rec.colour,item_code:rec.item_code,stockM3ItemId:rec.stockM3ItemId,buyerId:rec.buyerId,sampleRequestid:rec.sampleRequestid,itemType:rec.itemType,availableQuantity:rec.availableQuantity,stockIds:rec.stockIds,resltantavaliblequantity:rec.resltantavaliblequantity,consumedQty:rec.consumedQty
+                fabric_info_id: rec.fabric_info_id,fabric_item_code:rec.fabric_item_code, m3ItemFabricId: rec.m3ItemFabricId, fabric_description: rec.fabric_description, colour_id: rec.colour_id, fab_remarks: rec.fab_remarks, fabric_consumption: rec.fabric_consumption, fabric_sample_request_id: rec.fabric_sample_request_id,colour :rec.colour,item_code:rec.item_code,stockM3ItemId:rec.stockM3ItemId,buyerId:rec.buyerId,sampleRequestid:rec.sampleRequestid,itemType:rec.itemType,availableQuantity:rec.availableQuantity,stockIds:rec.stockIds,resltantavaliblequantity:rec.resltantavaliblequantity,consumedQty:rec.consumedQty,totalRequirement:rec.total_requirement
             }
         })
 
@@ -344,6 +344,8 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
         }
         // query.groupBy(`sr.sample_request_id`)
         query.groupBy(`sr.sample_request_id`)
+        console.log('query-----------------')
+        console.log(query)
         return await query.getRawMany();
 
     }

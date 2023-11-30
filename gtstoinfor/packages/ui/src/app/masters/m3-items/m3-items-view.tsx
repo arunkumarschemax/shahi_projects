@@ -87,7 +87,19 @@ const stockService = new StockService();
         req.shrinkage = form.getFieldValue("shrinkage")
       }
 
-      console.log(form.getFieldValue("buyerId"),"req")
+      if(form.getFieldValue("weight")!== undefined){
+        req.weight = form.getFieldValue("weight")
+      }
+      if(form.getFieldValue("width")!== undefined){
+        req.width = form.getFieldValue("weight")
+      }
+      if(form.getFieldValue("yarnCount")!== undefined){
+        req.yarnCount = form.getFieldValue("yarnCount")
+      }
+
+      console.log(form.getFieldValue("weight"),"req")
+      // console.log(weightUnitValue,"req")
+
         service.getM3Items(req).then(res => {
             if (res.status) {
                 setItemGroup(res.data);
@@ -243,27 +255,40 @@ const stockService = new StockService();
         {
             title: "Buyer",
             dataIndex: "buyer",
-            ...getColumnSearchProps('buyer')
+            ...getColumnSearchProps('buyer'),
+            sorter: (a, b) => a.buyer.length - b.buyer.length,
+           sortDirections: ['descend', 'ascend'],
         },
         {
             title: "Item Code",
             dataIndex: "itemCode",
-            ...getColumnSearchProps('itemCode')
+            ...getColumnSearchProps('itemCode'),
+            sorter: (a, b) => a.itemCode.length - b.itemCode.length,
+           sortDirections: ['descend', 'ascend'],
+            
+
         },
         {
             title: "Content",
             dataIndex: "content",
-            ...getColumnSearchProps('content')
+            ...getColumnSearchProps('content'),
+            sorter: (a, b) => a.content.length - b.content.length,
+           sortDirections: ['descend', 'ascend'],
         },
         {
             title: "Fabric Type",
             dataIndex: "fabric_type_name",
-            ...getColumnSearchProps('fabric_type_name')
+            ...getColumnSearchProps('fabric_type_name'),
+            sorter: (a, b) => a.fabric_type_name.length - b.fabric_type_name.length,
+           sortDirections: ['descend', 'ascend'],
+           ...getColumnSearchProps('itemCode')
         },
         {
             title: "Weave",
             dataIndex: "fabric_weave_name",
-            ...getColumnSearchProps('fabric_weave_name')
+            ...getColumnSearchProps('fabric_weave_name'),
+            sorter: (a, b) => a.fabric_weave_name.length - b.fabric_weave_name.length,
+           sortDirections: ['descend', 'ascend'],
         },
   
         {
@@ -276,6 +301,8 @@ const stockService = new StockService();
                   </span>
               )
           },
+          sorter: (a, b) => a.weight - b.weight,
+          sortDirections: ['descend', 'ascend'],
       },
 
         {
@@ -287,12 +314,17 @@ const stockService = new StockService();
                       {record.width ? `${record.width}${record.widthUnit}`: '-'}
                   </span>
               )
-          }
+          },
+          sorter: (a, b) => a.width - b.width,
+          sortDirections: ['descend', 'ascend'],
+
       },
         {
             title: "Construction",
             dataIndex: "construction",
-            ...getColumnSearchProps('construction')
+            ...getColumnSearchProps('construction'),
+            sorter: (a, b) => a.construction.length - b.construction.length,
+            sortDirections: ['descend', 'ascend'],
         },
      
         {
@@ -304,20 +336,30 @@ const stockService = new StockService();
                       {record.yarn_count ? `${record.yarn_count}${record.yarnUnit}`: '-'}
                   </span>
               )
-          }
+          },
+          sorter: (a, b) => a.yarn_count - b.yarn_count,
+          sortDirections: ['descend', 'ascend'],
+
       },
         {
             title: "Finish",
             dataIndex: "finish",
+            sorter: (a, b) => a.finish.length - b.finish.length,
+            sortDirections: ['descend', 'ascend'],
+            
         },
         {
             title: "Shrinkage",
             dataIndex: "shrinkage",
-            ...getColumnSearchProps('shrinkage')
+            ...getColumnSearchProps('shrinkage'),
+            sorter: (a, b) => a.shrinkage.length - b.shrinkage.length,
+            sortDirections: ['descend', 'ascend'],
         },
         {
             title: "Description",
             dataIndex: "description",
+            sorter: (a, b) => a.description.length - b.description.length,
+            sortDirections: ['descend', 'ascend'],
         },
     ]
 
@@ -411,7 +453,7 @@ const stockService = new StockService();
                     <option
                       key={option.fabricTypeId}
                       value={option.fabricTypeId}
-                    >
+                    >width
                       {option.fabricTypeName}
                     </option>
                   ))}
@@ -443,6 +485,7 @@ const stockService = new StockService();
 
                <Form.Item
                 label="Weight"
+                name="weight"
                 rules={[{ required: false, message: "Field is required" }]}
                 // style={{marginTop:25}}
               >
@@ -488,6 +531,7 @@ const stockService = new StockService();
 
               <Form.Item
                 label="Width"
+                name="width"
                 rules={[{ required: false, message: "Field is required" }]}
               >
               <Space.Compact>
