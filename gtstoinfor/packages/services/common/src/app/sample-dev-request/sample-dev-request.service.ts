@@ -871,6 +871,22 @@ export class SampleRequestService {
       }
     }
 
+    async getAllocatedBomInfo():Promise<CommonResponseModel>{
+      const data = `SELECT sr.request_no,rp.rack_position_name FROM sample_request sr 
+      LEFT JOIN sample_request_fabric_info sf ON sf.sample_request_id = sr.sample_request_id
+      LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_request_id
+      LEFT JOIN material_allocation ma ON ma.sample_order_id = sr.sample_request_id
+      LEFT JOIN  material_allocation_items mai ON mai.material_allocation_id = ma.material_allocation_id
+      LEFT JOIN rack_position rp ON rp.position_Id = mai.location_id
+      WHERE sr.life_cycle_status = 'MATERIAL_ISSUED'`;
+      const datares = await this.dataSource.query(data)
+      if(datares.length > 0){
+        return new CommonResponseModel(true,1,'data retreived',datares)
+      }else{
+        return new CommonResponseModel(false,0,'No data')
+      }
+    }
+
 
 
 }
