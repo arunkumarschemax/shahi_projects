@@ -92,88 +92,88 @@ import Barcode from "react-barcode";
    const details =(rowData) =>{
     const navigateData = filterData.filter(req => req.grnId === rowData)
     return navigate(`/grn-detail-view`, { state: { data: navigateData } });
-   }
-    const handleSearch = (selectedKeys, confirm, dataIndex) => {
-      confirm();
-      setSearchText(selectedKeys[0]);
-      setSearchedColumn(dataIndex);
-    };
-    const handleReset = (clearFilters) => {
-      clearFilters();
-      setSearchText("");
-    };
-    const getColumnSearchProps = (dataIndex: string) => ({
-        filterDropdown: ({
-          setSelectedKeys,
-          selectedKeys,
-          confirm,
-          clearFilters,
-        }) => (
-          <div style={{ padding: 8 }}>
-            <Input
-              ref={searchInput}
-              placeholder={`Search ${dataIndex}`}
-              value={selectedKeys[0]}
-              onChange={(e) =>
-                setSelectedKeys(e.target.value ? [e.target.value] : [])
-              }
-              onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-              style={{ width: 188, marginBottom: 8, display: "block" }}
-            />
-            <Button
-              type="primary"
-              onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-              icon={<SearchOutlined />}
-              size="small"
-              style={{ width: 90, marginRight: 8 }}
-            >
-              Search
-            </Button>
-            <Button
-              size="small"
-              style={{ width: 90 }}
-              onClick={() => {
-                handleReset(clearFilters);
-                setSearchedColumn(dataIndex);
-                confirm({ closeDropdown: true });
-              }}
-            >
-              Reset
-            </Button>
-          </div>
-        ),
-        filterIcon: (filtered) => (
-          <SearchOutlined
-            type="search"
-            style={{ color: filtered ? "#1890ff" : undefined }}
-          />
-        ),
-        onFilter: (value, record) =>
-          record[dataIndex]
-            ? record[dataIndex]
-                .toString()
-                .toLowerCase()
-                .includes(value.toLowerCase())
-            : false,
-        onFilterDropdownVisibleChange: (visible) => {
-          if (visible) {
-            setTimeout(() => searchInput.current.select());
+  }
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
+  const getColumnSearchProps = (dataIndex: string) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
-        },
-        render: (text) =>
-          text ? (
-            searchedColumn === dataIndex ? (
-              <Highlighter
-                highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-                searchWords={[searchText]}
-                autoEscape
-                textToHighlight={text.toString()}
-              />
-            ) : (
-              text
-            )
-          ) : null,
-      });
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: "block" }}
+        />
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button
+          size="small"
+          style={{ width: 90 }}
+          onClick={() => {
+            handleReset(clearFilters);
+            setSearchedColumn(dataIndex);
+            confirm({ closeDropdown: true });
+          }}
+        >
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        type="search"
+        style={{ color: filtered ? "#1890ff" : undefined }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ? record[dataIndex]
+          .toString()
+          .toLowerCase()
+          .includes(value.toLowerCase())
+        : false,
+    onFilterDropdownVisibleChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current.select());
+      }
+    },
+    render: (text) =>
+      text ? (
+        searchedColumn === dataIndex ? (
+          <Highlighter
+            highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+            searchWords={[searchText]}
+            autoEscape
+            textToHighlight={text.toString()}
+          />
+        ) : (
+          text
+        )
+      ) : null,
+  });
 
     const tableColumns: any = [
   
@@ -275,7 +275,7 @@ import Barcode from "react-barcode";
           
           return(
           <><span>
-           <Button title={"Detail View"} onClick={() => details(rowData.grnId)}>
+            <Button title={"Detail View"} onClick={() => details(rowData.grnId)}>
               <EyeOutlined />
             </Button>
           </span>

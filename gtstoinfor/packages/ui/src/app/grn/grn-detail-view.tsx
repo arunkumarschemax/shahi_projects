@@ -34,7 +34,7 @@ import Barcode from "react-barcode";
       const itemType = stateData?.data?.[0]?.itemType;
     
       if (grnId && itemType) {
-        const req = new GrnReq(grnId, itemType);
+        const req = new GrnReq(grnId,itemType);
     
         grnService.getGRNItemsData(req).then((res) => {
           if (res.status) {
@@ -158,7 +158,7 @@ import Barcode from "react-barcode";
           <Descriptions.Item label='GRN Date' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.grnDate? moment(stateData.data?.[0]?.grnDate).format('DD-MM-YYYY'):'-'}</Descriptions.Item>
           <Descriptions.Item label='Vendor' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.vendor?stateData.data?.[0]?.vendor:'-'}</Descriptions.Item>
           {/* <Descriptions.Item label='PO Number' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.poNumber?stateData.data?.[0]?.poNumber:'-'}</Descriptions.Item> */}
-          <Descriptions.Item label='Contact Person' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.contactPerson?stateData.data?.[0]?.contactPerson:'-'}</Descriptions.Item>
+          {/* <Descriptions.Item label='Contact Person' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.contactPerson?stateData.data?.[0]?.contactPerson:'-'}</Descriptions.Item> */}
           <Descriptions.Item label='Invoice No' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.invoiceNo?stateData.data?.[0]?.invoiceNo:'-'}</Descriptions.Item>
           <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.itemType?stateData.data?.[0]?.itemType:'-'}</Descriptions.Item>
           <Descriptions.Item label='GRN Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.grnType?stateData.data?.[0]?.grnType:'-'}</Descriptions.Item>

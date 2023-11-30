@@ -252,7 +252,7 @@ export class GrnService{
     async getAllGrn(req?:GrnReq):Promise<CommonResponseModel>{
         try{
             const manager = this.dataSource;
-            let query=`SELECT g.grn_id AS grnId,g.grn_number AS grnNo,DATE(g.grn_date) AS grnDate,g.contact_person AS contactPerson,g.status,g.item_type AS itemType,g.grn_type AS grnType,g.invoice_no AS invoiceNo,
+            let query=`SELECT g.grn_id AS grnId,g.grn_number AS grnNo,DATE(g.grn_date) AS grnDate,g.status,g.item_type AS itemType,g.grn_type AS grnType,g.invoice_no AS invoiceNo,
             g.vendor_id AS vendorId, CONCAT(v.vendor_name,'-',v.vendor_code) AS vendor,g.po_id AS poId,po.po_number AS poNumber
             FROM grn g
             LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
@@ -307,6 +307,7 @@ export class GrnService{
 
     async getGRNItemsData(req?:GrnReq):Promise<CommonResponseModel>{
         try{
+            console.log(req,'--------------')
             let query = `SELECT g.grn_number AS grnNumber,gi.received_quantity AS receivedQty,gi.accepted_quantity AS acceptedQty,gi.rejected_quantity  AS rejectedQty,u.uom,
             gi.conversion_quantity  AS conversionQty,uom.uom AS convertedUom,gi.location_mapped_status AS locMapStatus,gi.remarks,`
             if(req.itemType === 'FABRIC'){
