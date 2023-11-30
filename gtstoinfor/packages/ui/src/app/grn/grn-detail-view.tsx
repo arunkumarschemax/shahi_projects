@@ -30,7 +30,7 @@ import { GRNService } from "@project-management-system/shared-services";
       const itemType = stateData?.data?.[0]?.itemType;
     
       if (grnId && itemType) {
-        const req = new GrnReq(grnId, itemType);
+        const req = new GrnReq(grnId);
     
         grnService.getGRNItemsData(req).then((res) => {
           if (res.status) {

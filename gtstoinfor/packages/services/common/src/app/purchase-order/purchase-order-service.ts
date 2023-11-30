@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { PurchaseOrderEntity } from "./entities/purchase-order-entity";
-import { CommonResponseModel, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, LifeCycleStatusEnum, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
 import { PurchaseOrderDto } from "./dto/purchase-order-dto";
 import { PurchaseOrderFbricEntity } from "./entities/purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "./entities/purchase-order-trim-entity";
@@ -13,6 +13,7 @@ import { PurchaseOrderRepository } from "./repo/purchase-order-repository";
 import { PurchaseOrderFabricRepository } from "./repo/purchase-order-fabric-repository";
 import { PurchaseOrderTrimRepository } from "./repo/purchase-order-trim-repository";
 import { PurchaseOrderItemsEntity } from "./entities/purchase-order-items-entity";
+import { SampleRequestRepository } from "../sample-dev-request/repo/sample-dev-req-repo";
 let moment = require('moment');
 
 @Injectable()
@@ -24,18 +25,21 @@ export class PurchaseOrderService {
         private poTrimRepo: PurchaseOrderTrimRepository,
         @InjectDataSource()
         private dataSource: DataSource,
+        private sampleReqRepo:SampleRequestRepository
     ) { }
 
 
 
     async cretePurchaseOrder(req: PurchaseOrderDto): Promise<CommonResponseModel> {
         try {
-            console.log('-----------',req)
-            // console.log(req.poFabricInfo)
-            // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
             const currentYear = moment().format('YYYY')
+            const currentDate = moment();
+            const netyaer = currentDate.year();
+            const nextYear = netyaer + 1;
             let FromYear = currentYear.toString().substr(-2)
-            let ToYear = (currentYear + 1).toString().substr(-2)
+            let ToYear = (nextYear).toString().substr(-2)
+            console.log(ToYear)
+            console.log('$$$$')
             let poNumber
             const data = 'select max(purchase_order_id) as poId from purchase_order'
             const maxId = await this.poRepo.query(data)
@@ -61,6 +65,7 @@ export class PurchaseOrderService {
             poEntity.deliveryAddress=req.deliveryAddress
             poEntity.totalAmount=req.totalAmount
             for(const item of req.poItemInfo){
+                console.log(item,'$$$$')
                 const pofabricEntity = new PurchaseOrderItemsEntity()
                         pofabricEntity.colourId = item.colourId
                         pofabricEntity.m3ItemId = item.m3ItemId
@@ -79,9 +84,26 @@ export class PurchaseOrderService {
                         poItemInfo.push(pofabricEntity)
             }
             poEntity.poItemInfo=poItemInfo
+            // let save
             const save = await this.poRepo.save(poEntity)
             
             if (save) {
+                if(req.poAgainst == 'INDENT'){
+                    for(const update of req.poItemInfo){
+                        if(update.indentId != undefined){
+
+                        }
+                    }
+                }
+                if(req.poAgainst == 'SAMPLE ORDER'){
+                    for(const update of req.poItemInfo){
+                        if(update.sampleReqId != undefined){
+                           const  dat = await this.sampleReqRepo.update({SampleRequestId:update.sampleReqId},{lifeCycleStatus:LifeCycleStatusEnum.PO_RAISED})
+                        }
+                    }
+                }
+                
+
                 return new CommonResponseModel(true, 1, 'purchased Order Created Sucessfully')
             } else {
                 return new CommonResponseModel(false, 0, 'Something went Wrong')

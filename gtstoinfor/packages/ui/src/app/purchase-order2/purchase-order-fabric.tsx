@@ -51,7 +51,6 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
         getTax()
     }, [])
 
-
     useEffect(() => {
         if (indentId.length != 0) {
             setTableColumns([...columns])
@@ -151,6 +150,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
 
     const setEditForm = (rowData: any, index: any) => {
         setUpdate(true)
+        setDefaultFabricFormData(rowData)
         if (rowData.indentFabricId != undefined) {
             setInputDisable(true)
             fabricForm.setFieldsValue({ poQuantity: rowData.indentQuantity })
@@ -172,28 +172,46 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
             fabricForm.setFieldsValue({ subjectiveAmount: rowData.subjectiveAmount })
             fabricForm.setFieldsValue({ transportation: rowData.transportation })
         }
-        setDefaultFabricFormData(rowData)
         setFabricIndexVal(index)
     }
 
 
     useEffect(() => {
         if (defaultFabricFormData) {
-            fabricForm.setFieldsValue({
-                m3FabricCode: defaultFabricFormData.m3FabricCode,
-                colourId: defaultFabricFormData.colourId,
-                colorName: defaultFabricFormData.colorName,
+            console.log(defaultFabricFormData)
+            if(defaultFabricFormData.sampleReqId != undefined){
+                fabricForm.setFieldsValue({
+                    poQuantity: defaultFabricFormData.sampleQuantity,
+                    sampleReqId:defaultFabricFormData.sampleReqId,
+                    samplereFabId: defaultFabricFormData.samplereFabId,
+                    sampleReqNo: defaultFabricFormData.sampleReqNo,
+                    sampleQuantity:defaultFabricFormData.sampleQuantity,
+                    m3FabricCode: defaultFabricFormData.m3FabricCode,
+                  colourId: defaultFabricFormData.colourId,
+                 colorName: defaultFabricFormData.colorName,
                 shahiFabricCode: defaultFabricFormData.shahiFabricCode,
-                poQuantity: defaultFabricFormData.indentQuantity,
                 quantityUomId: defaultFabricFormData.quantityUomId,
-                indentQuantity: defaultFabricFormData.indentQuantity,
-                indentFabricId: defaultFabricFormData.indentFabricId,
-                itemCode: defaultFabricFormData.itemCode,
                 quantityUom: defaultFabricFormData.quantityUom,
-                indentCode: defaultFabricFormData.indentCode,
-                samplereFabId: defaultFabricFormData.samplereFabId,
-                sampleReqNo: defaultFabricFormData.sampleReqNo,
-            })
+                })
+            }
+            if(defaultFabricFormData.indentId != undefined){
+                fabricForm.setFieldsValue({
+                    poQuantity: defaultFabricFormData.indentQuantity,
+                    m3FabricCode: defaultFabricFormData.m3FabricCode,
+                    colourId: defaultFabricFormData.colourId,
+                    colorName: defaultFabricFormData.colorName,
+                    shahiFabricCode: defaultFabricFormData.shahiFabricCode,
+                    quantityUomId: defaultFabricFormData.quantityUomId,
+                    indentQuantity: defaultFabricFormData.indentQuantity,
+                    indentFabricId: defaultFabricFormData.indentFabricId,
+                    itemCode: defaultFabricFormData.itemCode,
+                    quantityUom: defaultFabricFormData.quantityUom,
+                    indentCode: defaultFabricFormData.indentCode,
+                    indentId:defaultFabricFormData.indentId
+                })
+            }
+       
+           
         }
 
     }, [defaultFabricFormData])
@@ -301,7 +319,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
         },
         {
             title: 'M3 Fabric Code',
-            dataIndex: 'm3FabricCode',
+            dataIndex: 'itemCode',
             width: '170px'
         },
         {
@@ -420,13 +438,17 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     let totalUniPrice
     const unitPriceOnchange = (value) => {
         const unitPrice=fabricForm.getFieldValue('poQuantity')
+        console.log(unitPrice)
         totalUniPrice=Number(unitPrice)*Number(value)
         setDiscountVisible(false)
     }
 
     let disAmount
     let totalValueAfterDiscount
+
     function discountOnChange(value) {
+    console.log(totalUniPrice)
+
        const percent=(Number(value/100))
         const disAmount=(percent*totalUniPrice)
         fabricForm.setFieldsValue({discountAmount:disAmount})
@@ -437,7 +459,10 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     let taxAmount
     const handleTaxChange = (value, option) => {
         const percent=Number(option?.name/100)
+        console.log(percent)
+        console.log(totalValueAfterDiscount)
         taxAmount=(totalValueAfterDiscount*percent)
+        console.log(taxAmount)
         const totalAmount=taxAmount+totalValueAfterDiscount
         fabricForm.setFieldsValue({taxAmount:Number(taxAmount).toFixed(2)})
         fabricForm.setFieldsValue({subjectiveAmount:Number(totalAmount).toFixed(2)})
@@ -459,8 +484,13 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                     <Form.Item name={'samplereFabId'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'sampleReqNo'} hidden><Input></Input></Form.Item>
                     <Form.Item name='taxPercentage' hidden ><Input/></Form.Item>
+                    <Form.Item name='sampleQuantity' hidden ><Input/></Form.Item>
+                    <Form.Item name='sampleReqId' hidden ><Input/></Form.Item>
+                    <Form.Item name='indentId' hidden ><Input/></Form.Item>
 
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+
+
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 8 }}>
                         <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{ required: true, message: 'M3 Code is required' }]}>
                             <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code' onChange={m3FabricOnchange}>
                                 {fabricM3Code.map(e => {
@@ -513,16 +543,17 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                         <Form.Item name='unitPrice' label='Unit Price'
                             rules={[{ required: true, message: 'unit price of Fabric is required' }]}
                         >
-                            <InputNumber style={{ width: '90px' }} placeholder="unit price" onChange={(e) => unitPriceOnchange(e)} />
+                            <InputNumber style={{ width: '90px' }} placeholder="unit price" onChange={(e) => unitPriceOnchange(e)} min={1}/>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{paddingLeft:'41px'}}>
                         <Form.Item name='discount' label='Discount'
                             rules={[{ required: false, message: 'Discount of Fabric is required' }]}
                         >
-                            <InputNumber disabled={dicountVisible} style={{ width: '90px' }} placeholder="discount" onChange={(e) => discountOnChange(e)} />
+                            <InputNumber  placeholder="discount" onChange={(e) => discountOnChange(e)} min={1}/>
                         </Form.Item>
                     </Col>
+                    
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='discountAmount' label='Discount Amount'
                             rules={[{ required: false, message: 'Discount of Fabric is required' }]}
