@@ -281,6 +281,7 @@ export class PurchaseOrderService {
             if (req?.id) {
                 query += ` where po.purchase_order_id = ${req?.id}`
             }
+            query+=` order by po.expected_delivery_date`
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)

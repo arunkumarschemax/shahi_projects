@@ -312,4 +312,26 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
+
+  @Post('/getAllocatedBomInfo')
+  async getAllocatedBomInfo(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getAllocatedBomInfo()
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+
+  // @Post('/ApprovaAllocatedStock')
+  // async ApprovaAllocatedStock(@Body() req:samp): Promise<CommonResponseModel> {
+  //   try {
+  //     return await this.sampleService.ApprovaAllocatedStock()
+  //   }
+  //   catch (err) {
+  //     return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+  //   }
+  // }
+
+  
 }
