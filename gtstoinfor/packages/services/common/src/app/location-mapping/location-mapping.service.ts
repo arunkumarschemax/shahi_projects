@@ -81,7 +81,7 @@ export class LocationMappingService {
             
             // GROUP BY grn_item_id`
 
-            let query = `SELECT g.item_type AS materialType, (SUM(quantity) - gi.accepted_quantity) AS balance, SUM(quantity) AS allocatedQty, IF(g.item_type = "FABRIC", mit.item_code, mtr.trim_code) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity FROM grn_items gi LEFT JOIN grn g ON g.grn_id = gi.grn_id 
+            let query = `SELECT g.item_type AS materialType, (gi.accepted_quantity-SUM(quantity)) AS balance, SUM(quantity) AS allocatedQty, IF(g.item_type = "FABRIC", mit.item_code, mtr.trim_code) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity FROM grn_items gi LEFT JOIN grn g ON g.grn_id = gi.grn_id 
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
             LEFT JOIN m3_items mit ON mit.m3_items_id AND g.item_type = "FABRIC"
             LEFT JOIN m3_trims mtr ON mtr.m3_trim_Id AND g.item_type != "FABRIC"
