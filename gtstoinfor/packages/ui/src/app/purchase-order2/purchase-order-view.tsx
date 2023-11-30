@@ -188,7 +188,7 @@ export const PurchaseOrderView = () => {
       key: 'sno',
       width: '50px',
       responsive: ['sm'],
-      render: (text, object, index) => (page - 1) * 10 + (index + 1),
+      render: (text, object, index) => (page - 1) * 20 + (index + 1),
       onCell: (record: any) => ({
         rowSpan: record.rowSpan,
       }),
@@ -334,7 +334,7 @@ export const PurchaseOrderView = () => {
           ...getColumnSearchProps("poStatus"),
     },
     {
-      title: 'Aging(EPD)',
+      title: 'Aging(EDD)',
       dataIndex: 'expectedDeliverydate',
       width: '20px',
       fixed: 'right',
@@ -353,30 +353,30 @@ export const PurchaseOrderView = () => {
         return age;
       },
     },
-    {
-      title: 'Action',
-      dataIndex: 'requestNumber',
-      align: "center",
-      width: '30px',
-      render: (text, rowData, index) => (
-        <span>
-          <Tooltip placement="top" title="Detail View">
-            <EyeOutlined
-              onClick={() => {
-                console.log(rowData.id);
+    // {
+    //   title: 'Action',
+    //   dataIndex: 'requestNumber',
+    //   align: "center",
+    //   width: '30px',
+    //   render: (text, rowData, index) => (
+    //     <span>
+    //       <Tooltip placement="top" title="Detail View">
+    //         <EyeOutlined
+    //           onClick={() => {
+    //             console.log(rowData.purchaseOrderId);
 
-                navigate('/purchase-detali-view', { state: rowData.id })
+    //             navigate('/purchase-detali-view', { state: rowData.purchaseOrderId })
 
-                // setHideCancelButton(false);
-                // DetailView(rowData.SampleRequestId, false);
-              }}
-              style={{ color: "blue", fontSize: 20 }}
-            />
-          </Tooltip>
-        </span>
-      ),
+    //             // setHideCancelButton(false);
+    //             // DetailView(rowData.SampleRequestId, false);
+    //           }}
+    //           style={{ color: "blue", fontSize: 20 }}
+    //         />
+    //       </Tooltip>
+    //     </span>
+    //   ),
 
-    },
+    // },
 
 
   ];
@@ -504,7 +504,7 @@ export const PurchaseOrderView = () => {
       <Card>
         {/* <Table columns={columns} dataSource={data} bordered /> */}
 
-        <Table columns={columns} dataSource={data} bordered size='small' />
+        <Table columns={columns} dataSource={data} pagination={{pageSize:20}} bordered size='small' />
 
       </Card>
     </Card>
