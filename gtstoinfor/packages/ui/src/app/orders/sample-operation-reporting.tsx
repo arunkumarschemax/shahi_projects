@@ -31,6 +31,8 @@ export const SampleOperationReporting = () => {
     const [selectedOperationName, setSelectedOperationName] = useState(null);
     const [currentSequence, setCurrentSequence] = useState(1);
     const [saveId, setSaveId] = useState<number>()
+    const [actionVisible, setActionVisible] = useState<boolean>(false)
+    const [opStatusMsg, setOpStatusMsg] = useState<string>('')
     const [selStyleId, setSelStyleId] = useState<number>()
     const uomService = new UomService()
     const sampleDevelopmentService = new SampleDevelopmentService()
@@ -39,7 +41,6 @@ export const SampleOperationReporting = () => {
     const [reqNo, setReqNo] = useState<any[]>([])
 
     const [currentSegment, setCurrentSegment] = useState(1);
-    const [selOpReportingStatus, setSelOpReportingStatus] = useState(false);
     const navigate = useNavigate();
     const trackingService = new OperationReportingService()
     const [trackData, setTrackData] = useState<any[]>([])
@@ -103,15 +104,35 @@ export const SampleOperationReporting = () => {
         });
       };
 
-      const getSampleDevelopmentData = () => {
+      const getSampleDevelopmentData = (val) => {
         const sampleReqId = form.getFieldValue('sampleRequestId')
-        console.log(sampleReqId)
         sampleDevelopmentService.getSampleOrderDetails(new SampleIdRequest(sampleReqId)).then((res)=>{
-            console.log(res.data)
             setData(res.data)
         })
+        getOpStatus(val);
 
 
+      }
+      const getOpStatus = (val) => {
+        service.getReportedOperations(new TabNameReq(val,selStyleId,null,saveId)).then(res => {
+            // if(res.data){
+                if(res.data.isReported == 'No' && res.data.isNextOpeartion == 'Yes'){
+                    setActionVisible(true)
+                }
+                if(res.data.isReported == 'Yes' && res.data.isNextOpeartion == 'No'){
+                    setActionVisible(false)
+                    setOpStatusMsg('Reported')
+
+                }
+                if(res.data.isReported == 'No' && res.data.isNextOpeartion == 'No'){
+                    setActionVisible(false)
+                    setOpStatusMsg('Previous Opeartion Not Yet Reported')
+
+                }
+
+
+            // }
+        })
       }
       
 
@@ -216,12 +237,13 @@ export const SampleOperationReporting = () => {
     const sizeColumns = data[0]?Object.keys(data[0]).map(param => ({
         title: param,
         dataIndex: param,
+        key:param,
         render:(text,record) =>{
             
             // console.log(Object.keys(record).filter(item => item === param)[0])
             const test = Object.keys(record).filter(item => item === param)[0]
-            console.log(test)
-            console.log(record[test])
+            // console.log(test)
+            // console.log(record[test])
                 return (<>{param != 'colour'?Number(record[test]):record[test]}</>)
             // console.log(record.keys.filter(item => item == param))
         }
@@ -238,21 +260,24 @@ export const SampleOperationReporting = () => {
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
         {
-            title: 'Quantity by Size',
+            title: 'Size Wise Quantity',
             dataIndex: 'size',
             width:"10%",
             children :sizeColumns,
+            key:'size'
           },
           {
             title:'Job Completed',
             dataIndex:'jobCompleted',
+            key:'action',
             render:(text,record) => {
                 return(
-                    // !selOpReportingStatus?
+                    (actionVisible)?
                     <>
                     <Button onClick={() => onJobCompleted(record)} type='primary' shape="round">Yes</Button>
                     </>
-                    // :<> <Alert message="Reported" type="success" showIcon style={{width:'100px'}}/></>
+                    :
+                    <> <Alert message={opStatusMsg} type="info" showIcon/></>
                 )
             }
           },
@@ -272,39 +297,31 @@ export const SampleOperationReporting = () => {
     //   };
 
       const onSegmentChange = (selectedValue) => {
-        console.log(selectedValue)
         const selectedOption = segmentedOptions.find((option) => option.value === selectedValue);
         setSelectedOperationName(selectedOption.value);
-        console.log(selectedOption)
     
         // Find the current segment index
         const segmentIndex = segmentedOptions.findIndex((option) => option.value === selectedValue);
         setCurrentSegment(segmentIndex);
-        console.log(segmentIndex)
-        service.getReportedOperations(new TabNameReq(selectedOption.value,selStyleId,null,saveId)).then(res => {
-            // if(res.data){
-                console.log(res.data)
-                if(res.data > 0){
-                    setSelOpReportingStatus(true)
-                }else{
-                    setSelOpReportingStatus(false)
-                }
-                // if (selectedOption.sequence === 1 && selectedOption.value !== 'COMPLETED') {
-                //     getMaterialIssue();
-                // } else {
-                //     getSampleDevelopmentData()
-                //     // getOperationInventoryData(selectedValue);
-                //     // setData([]);
-                // }
+        // service.getReportedOperations(new TabNameReq(selectedOption.value,selStyleId,null,saveId)).then(res => {
+        //     // if(res.data){
+        //         console.log(res.data)
+        //         if(res.data && res.data.nextOperation != selectedOption.value){
+        //             setIsOperationReported(true)
+        //         }else{
 
-            // }
-            console.log(res.data)
-        })
+        //             setIsOperationReported(false)
+        //         }
+
+        //     // }
+        //     console.log(res.data)
+        // })
     
         if (selectedOption.sequence === 1 && selectedOption.value !== 'COMPLETED') {
             getMaterialIssue();
+            // getSampleDevelopmentData(selectedOption.value)
         } else {
-            getSampleDevelopmentData()
+            getSampleDevelopmentData(selectedOption.value)
             // getOperationInventoryData(selectedValue);
             // setData([]);
         }
@@ -313,7 +330,6 @@ export const SampleOperationReporting = () => {
 
 
     const onStyleChange = (val,record) => {
-        console.log(record)
         if(val){
             getSegmentLabel(record.styleId)
             setSaveId(val)

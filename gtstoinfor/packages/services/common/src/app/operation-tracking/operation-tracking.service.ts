@@ -240,12 +240,23 @@ export class OperationTrackingService {
   }
 
   async getReportedOperations(req:TabNameReq):Promise<CommonResponseModel>{
-    const data = await this.repo.count({where:{sampleReqId:req.sampleRequestId,operation:req.tabName}})
+    const data = await this.repo.findOne({where:{sampleReqId:req.sampleRequestId,operation:req.tabName}})
     console.log(data,'data')
-    if(data > 0){
-      return new CommonResponseModel(true,1,'retrived',data)
+    const nxtOpData = await this.repo.findOne({where:{sampleReqId:req.sampleRequestId,nextOperation:req.tabName}})
+    let opStatus = {
+      isReported:'No',
+      isNextOpeartion:'No'
+    }
+    if(data){
+      opStatus.isReported = 'Yes'
+    }
+    if(nxtOpData){
+      opStatus.isNextOpeartion = 'Yes'
+    }
+    if(data || nxtOpData){
+      return new CommonResponseModel(true,1,'retrived',opStatus)
     }else{
-      return new CommonResponseModel(false,0,'no reportings',0)
+      return new CommonResponseModel(false,0,'no reportings',opStatus)
     }
     return
   }
