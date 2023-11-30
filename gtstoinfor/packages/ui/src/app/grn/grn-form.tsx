@@ -60,11 +60,9 @@ const GRNForm = () => {
     })
   }
 
-  console.log(poData)
 
   const createGrn = () => {
     const values = form.getFieldsValue()
-    console.log(poData[0]?.poMaterialType)
     const req = new GrnDto(values.vendorId, values.purchaseOrderId, form.getFieldValue('grnDate').format('YYYY-MM-DD'), PurchaseOrderStatus.OPEN, values.remarks, undefined, undefined, '', undefined, '', 0, 0, poData[0]?.poMaterialType, poItemData, 0, '', values.grnType, values.invoiceNo,poData?.poMaterialType);
     grnService.createGrn(req).then((res) => {
       if (res.status) {
@@ -98,23 +96,15 @@ const GRNForm = () => {
   }
 
   const getPODataById = (val, option) => {
-    console.log('po data called')
     itemsForm.resetFields()
     setPoData([])
     setPoItemData([])
-    if (!val) {
-      setSelectedPoType(null);
-      return;
-    }
-
     const req = new VendorIdReq(0, val, option?.name, option.val);
     poService.getPODataById(req).then((res) => {
-      if (res.status) {
-        
+      if (res.status) {  
         setPoData(res.data[0]);
         setPoItemData(res.data[0].grnItems)
         form.setFieldsValue({ grnType: res.data[0].poAgainst });
-        setSelectedPoType(res.data[0].poAgainst);
       }
     });
   };
@@ -125,84 +115,7 @@ const GRNForm = () => {
     setPoData([])
   }
 
-  // const validateFabricForm = async (value) => {
-  //   // let createChildData;
-
-  //   if (poData[0]?.materialType === 'Fabric') {
-  //     try {
-  //       const values = await form.validateFields();
-  //       form.validateFields().then((values) => {
-  //         const updatedFormData = poData.filter((record) => {
-  //           const key = record.key;
-  //           return (
-  //             values[`receivedQuantity_${record.poFabricId}_${key}`] ||
-  //             values[`acceptedQuantity_${record.poFabricId}_${key}`] ||
-  //             values[`rejectedQuantity_${record.poFabricId}_${key}`]
-  //           );
-  //         }).map((record) => ({
-  //           poFabricId: record.poFabricId,
-  //           receivedQuantity: values[`receivedQuantity_${record.poFabricId}_${record.key}`],
-  //           acceptedQuantity: values[`acceptedQuantity_${record.poFabricId}_${record.key}`],
-  //           rejectedQuantity: values[`rejectedQuantity_${record.poFabricId}_${record.key}`],
-  //           rejectedUomId: values[`rejectedUomId_${record.poFabricId}_${record.key}`],
-  //           conversionQuantity: quantity,
-  //           conversionUomId: values[`acceptedUomId_${record.poFabricId}_${record.key}`],
-  //           ...record,
-  //         }));
-  //         const grnItemsArray = [];
-  //         updatedFormData.forEach((record) => {
-  //           const grnItem = new GrnItemsDto(0, record.m3fabricCode, record.receivedQuantity, record.acceptedQuantity, record.rejectedQuantity, record.rejectedUomId, record.conversionQuantity, record.conversionUomId, record.remarks, undefined, '', undefined, '', 0, 0, record.poFabricId, null, record.indentFabricId, null)
-  //           grnItemsArray.push(grnItem)
-  //         });
-  //         createGrn(value, grnItemsArray)
-  //         console.log(value, grnItemsArray, '=hhhhhhhhhhhhhhhhh')
-  //       });
-  //     } catch (error) {
-  //       console.error('Error validating fabric fields:', error);
-  //       return;
-  //     }
-  //   }
-
-  //   if (poData[0]?.materialType === 'Trim') {
-  //     try {
-  //       const values = await form.validateFields();
-  //       const updatedFormData = poData.filter((record) => {
-  //         const key = record.key;
-  //         return (
-  //           values[`receivedQuantity_${record.poTrimId}_${key}`] ||
-  //           values[`acceptedQuantity_${record.poTrimId}_${key}`] ||
-  //           values[`rejectedQuantity_${record.poTrimId}_${key}`]
-  //         );
-  //       }).map((record) => ({
-  //         poTrimId: record.poTrimId,
-  //         receivedQuantity: values[`receivedQuantity_${record.poTrimId}_${record.key}`],
-  //         receivedUomId: values[`receivedUomId_${record.poTrimId}_${record.key}`],
-  //         acceptedQuantity: values[`acceptedQuantity_${record.poTrimId}_${record.key}`],
-  //         acceptedUomId: values[`acceptedUomId_${record.poTrimId}_${record.key}`],
-  //         rejectedQuantity: values[`rejectedQuantity_${record.poTrimId}_${record.key}`],
-  //         rejectedUomId: values[`rejectedUomId_${record.poTrimId}_${record.key}`],
-  //         conversionQuantity: quantity,
-  //         conversionUomId: values[`acceptedUomId_${record.poFabricId}_${record.key}`],
-  //         ...record,
-  //       }))
-
-  //       const grnItemsArray = [];
-  //       updatedFormData.forEach((record) => {
-  //         const grnItem = new GrnItemsDto(0, record.m3TrimCode, record.receivedQuantity, record.acceptedQuantity, record.rejectedQuantity, record.rejectedUomId, record.conversionQuantity, record.conversionUomId, record.remarks, undefined, '', undefined, '', 0, 0, 0, record.poTrimId, null, record.indentTrimId);
-  //         grnItemsArray.push(grnItem);
-  //       });
-
-  //       // Call createGrn here if needed
-  //       createGrn(value, grnItemsArray)
-  //     } catch (error) {
-  //       console.error('Error validating trim fields:', error);
-  //       return;
-  //     }
-  //   }
-
-  //   // You might want to move the call to createGrn outside the if blocks, depending on your logic.
-  //   // createGrn(value, createChildData);
-  // };
+  
 
 
 
@@ -477,15 +390,11 @@ const GRNForm = () => {
       calculatePrices(e);
   }
 
+  function itemsFormReset(){
+      itemsForm.resetFields()
+  }
 
-const saveData = () => {
-  const formValues = form.getFieldsValue()
-  const grnDto = new GrnDto(formValues.vendorId,formValues.purchaseOrderId,new Date(),PurchaseOrderStatus.OPEN,"")
-  const grnItemsFormDto :GrnItemsFormDto[] = poItemData
   
-}
-
-
   return (
     <>
       <Card title='GRN' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={
@@ -679,7 +588,7 @@ const saveData = () => {
                 </Form.Item>
               </Col>
               <Col>
-                <Button style={{ marginTop: '25px' }} type='primary'>Update</Button>
+                <Button style={{ marginTop: '25px' }} onClick={itemsFormReset} >Reset</Button>
               </Col>
             </Row>
           </Form>
