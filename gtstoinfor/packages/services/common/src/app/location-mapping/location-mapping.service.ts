@@ -22,6 +22,7 @@ export class LocationMappingService {
             let dataquery = `SELECT 
             grn_it.grn_item_id,
             grn_it.grn_id,
+            grn_it.m3_item_code_id,
             grn_it.received_quantity,
             grn_it.received_uom_id,
             grn_it.accepted_quantity,
