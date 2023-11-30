@@ -51,8 +51,8 @@ export class buyersDestionationMappingRepository extends Repository<BuyersDestio
         .select(`d.destination_id,d.destination,b.buyer_id,b.buyer_name`)
         .leftJoin(Buyers,'b','b.buyer_id = bd.buyer_id')
         .leftJoin(Destination,`d`,`d.destination_id = bd.destination_id`)
-        if(req.buyerId !== undefined) {
-            query.where(`b.buyer_id = '${req.buyerId}'`)
+        if(req?.buyerId !== undefined) {
+            query.where(`b.buyer_id = '${req?.buyerId}'`)
         }
         query.orderBy(`b.buyer_id`)
         return await query.getRawMany()

@@ -11,7 +11,7 @@ export class PurchaseOrderItemsEntity{
 
     @Column('int',{
         name:'colour_id',
-        nullable:false,
+        nullable:true,
       })
       colourId:number
 

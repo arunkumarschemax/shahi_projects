@@ -26,8 +26,8 @@ export class buyersSizesMappingRepository extends Repository<BuyersSize> {
         .leftJoin(Buyers,'b','b.buyer_id = bs.buyer_id')
         .leftJoin(Size,'s','s.size_id = bs.size_id')
         // .groupBy(`s.size_id`)
-        if(req.buyerId !== undefined) {
-            query.where(`b.buyer_id = '${req.buyerId}'`)
+        if(req?.buyerId !== undefined) {
+            query.where(`b.buyer_id = '${req?.buyerId}'`)
         }
         query.orderBy(`b.buyer_id`)
         return await query.getRawMany()
