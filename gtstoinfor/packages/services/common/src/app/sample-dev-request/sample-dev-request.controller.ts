@@ -47,6 +47,17 @@ export class SampleDevReqController {
     }
   }
 
+  @Post('/getIssuedSampleRequests')
+  async getIssuedSampleRequests(): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getIssuedSampleRequests();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+    }
+  }
+
+  
+
   @Post('/getAllSampleData')
   async getAllSampleData(): Promise<AllSampleDevReqResponseModel> {
     try {

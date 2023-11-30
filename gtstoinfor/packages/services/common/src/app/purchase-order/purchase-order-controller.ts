@@ -71,6 +71,19 @@ export class PurchaseOrderController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
+  @Post('/getPodetailsById')
+  @ApiBody({type:PurchaseViewDto})
+  async getPodetailsById(@Body() req?: any ): Promise<CommonResponseModel> {
+    try {
+      console.log(">>>>>>>>>>>>>>>>>>");
+      
+      return await this.purchasseOrdrSerivice.getPodetailsById(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+
+  
 
 
 
