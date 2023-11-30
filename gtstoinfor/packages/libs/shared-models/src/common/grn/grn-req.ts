@@ -1,9 +1,12 @@
-export class GrnReq{
-    grnId:number;
+export class GrnReq {
+    grnId: number;
+    itemType: string
     constructor(
-        grnId:number ,
-    ){
+        grnId: number,
+        itemType: string
+    ) {
         this.grnId = grnId;
+        this.itemType = itemType
     }
 }
 

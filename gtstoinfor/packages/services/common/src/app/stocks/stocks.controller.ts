@@ -80,4 +80,14 @@ async getAllStockReportData(@Body() req?:any): Promise<CommonResponseModel> {
   }
 }
 
+@Post('/update')
+async update(@Body() req: any): Promise<CommonResponseModel> {
+  console.log(req,"stock-controll")
+  try {
+    return await this.stocksService.update(req);
+  } catch (error) {
+    return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
+  }
+}
+
 }

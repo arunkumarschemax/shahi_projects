@@ -169,7 +169,8 @@ const M3Items = () => {
           AlertMessages.getSuccessMessage(res.internalMessage);
           setTimeout(() => {
             message.success("Submitted successfully");
-            window.location.reload();
+            // window.location.reload();
+            navigate('/m3-items-view')
           }, 500);
         }
         else{

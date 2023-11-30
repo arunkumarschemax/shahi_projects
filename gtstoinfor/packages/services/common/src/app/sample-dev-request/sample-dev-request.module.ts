@@ -21,6 +21,8 @@ import { MaterialAllocationEntity } from './entities/material-allocation.entity'
 import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 import { MaterialAllocationItemsEntity } from './entities/material-allocation-items';
 import { MaterialAllocationItemsRepo } from './repo/material-allocation-items-repo';
+import { StocksRepository } from '../stocks/repository/stocks.repository';
+import { StocksEntity } from '../stocks/stocks.entity';
 // import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 
 @Module({
@@ -34,11 +36,12 @@ import { MaterialAllocationItemsRepo } from './repo/material-allocation-items-re
     SamplingbomEntity,
     SampleInventoryLogEntity,
     MaterialAllocationEntity,
-    MaterialAllocationItemsEntity
+    MaterialAllocationItemsEntity,
+    StocksEntity
 
   ]),
   ],
   controllers: [SampleDevReqController],
-  providers: [SampleRequestService,ApplicationExceptionHandler,SampleRequestRepository,SampleSizeRepo,SampleFabricRepo,SampleTrimRepo,SampleProcessRepo,SampleInventoryLoqRepo,IndentService,MaterialAllocationRepo,MaterialAllocationItemsRepo]
+  providers: [SampleRequestService,ApplicationExceptionHandler,SampleRequestRepository,SampleSizeRepo,SampleFabricRepo,SampleTrimRepo,SampleProcessRepo,SampleInventoryLoqRepo,IndentService,MaterialAllocationRepo,MaterialAllocationItemsRepo,StocksRepository]
 })
 export class SampleDevReqModule {}

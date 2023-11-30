@@ -40,10 +40,10 @@ export const PurchaseOrderDetailsView = () => {
   }
 const getMaterialTypeDate=(()=>{
   const req = new PurchaseViewDto(location.state)
-  console.log(req,'5555555555555555555555555')
+  // console.log(req,'5555555555555555555555555')
   Service.getPAllPurchaseOrderData(req).then(res=>{
     if (res.status) {
-      console.log(res.data,'44444444444444444444444444')
+      // console.log(res.data,'44444444444444444444444444')
       setMaterial(res.data)
     }
   })
@@ -52,7 +52,7 @@ const getMaterialTypeDate=(()=>{
 
  const onChange =((value)=>{
   setDrop(value)
-  console.log(value,'[[[[[[[[[[[[[[')
+  // console.log(value,'[[[[[[[[[[[[[[')
  })
 
 const column1 : any =[
