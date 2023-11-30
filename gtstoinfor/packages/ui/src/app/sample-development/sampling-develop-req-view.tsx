@@ -233,18 +233,20 @@ import AlertMessages from "../common/common-functions/alert-messages";
       },
       {
         title: "Available Quantity",
-        dataIndex: "availableQuantity",
-        sorter: (a, b) => a.availableQuantity.localeCompare(b.availableQuantity),
+        dataIndex: "resltantavaliblequantity",
+        sorter: (a, b) => a.resltantavaliblequantity.localeCompare(b.resltantavaliblequantity),
         sortDirections: ["descend", "ascend"],
         render: (text, record) => {
-          let consumedQty = 0
-          if(record.fabric_consumption > 0){
-            consumedQty = record.fabric_consumption
-          }
+          // let consumedQty = 0
+          // if(record.fabric_consumption > 0){
+          //   consumedQty = record.fabric_consumption
+          // }
             return (
               <>
-                {record.availableQuantity ? (record.availableQuantity-consumedQty) : "Not Available"
+               {record.resltantavaliblequantity ? (record.resltantavaliblequantity) : "Not Available"
                   }
+                {/* {record.availableQuantity ? (record.availableQuantity-consumedQty) : "Not Available"
+                  } */}
               </>
             );
           },
@@ -262,23 +264,6 @@ import AlertMessages from "../common/common-functions/alert-messages";
           );
         },
       },
-      // {
-      //   title: "Action",
-      // dataIndex: "action",
-      // render: (text, rowData) => {
-      // return (
-      // <span>
-      // <Button
-      // type="primary"
-      // disabled={rowData.availabeQuantity == null ? true : false}
-      // onClick={() =>MarketIssueDetailView(rowData.sample_request_id)}
-      // >
-      //           Issue Material
-      // </Button>
-      // </span>
-      // );
-      // },
-      // },
     ];
   
     const columnsSkelton: any = [
@@ -307,35 +292,22 @@ import AlertMessages from "../common/common-functions/alert-messages";
       },
       {
         title: "Available Quantity",
-        dataIndex: "availabeQuantity",
-        sorter: (a, b) => a.availabeQuantity.localeCompare(b.availabeQuantity),
+        dataIndex: "resltantavaliblequantity",
+        sorter: (a, b) => a.resltantavaliblequantity.localeCompare(b.resltantavaliblequantity),
         sortDirections: ["descend", "ascend"],
         render: (text, record) => {
           let consumedQty = 0
-          if(record.trim_consumption > 0){
-            consumedQty = record.trim_consumption
-          }
+          // if(record.trim_consumption > 0){
+          //   consumedQty = record.trim_consumption
+          // }
             return (
               <>
-                {record.availabeQuantity ? (record.availabeQuantity-consumedQty) : "Not Available"
+                {record.resltantavaliblequantity ? (record.resltantavaliblequantity) : "Not Available"
                   }
               </>
             );
           },
       },
-      // {
-      //   title: "Action",
-      // dataIndex: "action",
-      // render: (text, rowData) => {
-      // return (
-      // <span>
-      //    <Button onClick={() => MarketIssueDetailView(rowData.sample_request_id)} type='primary' 
-      //      disabled={rowData.availabeQuantity == null ? true : false}
-      //     >Issue Material</Button>
-      // </span>
-      // );
-      // },
-      // },
     ];
 
     const renderColumnForFabric: any =[
@@ -363,7 +335,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
       {
         title: "Available Quantity",
         width: "150px",
-        dataIndex: "quantity",
+        dataIndex: "resultAvailableQuantity",
       },
      
       {

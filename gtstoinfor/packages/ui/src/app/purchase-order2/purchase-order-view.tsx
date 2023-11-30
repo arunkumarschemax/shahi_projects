@@ -1,13 +1,13 @@
 import { CloseOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
 import { PurchaseStatusEnum, PurchaseViewDto } from '@project-management-system/shared-models';
 import { PurchaseOrderservice } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, Tabs, Tooltip } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, Tabs, Tooltip,Tag } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { log } from 'console';
 import Highlighter from 'react-highlight-words';
-
+import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 export const PurchaseOrderView = () => {
   const page = 1;
   const [hideCancelButton, setHideCancelButton] = useState(false);
@@ -22,6 +22,7 @@ export const PurchaseOrderView = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
+  const options = [{ value: 'OPEN' }, { value: 'INPROGRESS' }, { value: 'CLOSED' }, { value: 'CANCELED' }];
 
   // let Location = useLocation()
   // const stateData = Location.state.data
@@ -169,7 +170,17 @@ export const PurchaseOrderView = () => {
   const renderCellData = (data) => {
     return data ? data : "-";
   }
-
+  const onChange = (value: string) => {
+    console.log(`selected ${value}`);
+  };
+  
+  // const onSearch = (value: string) => {
+  //   console.log('search:', value);
+  // };
+  
+  // Filter `option.label` match the user type `input`
+  const filterOption = (input: string, option?: { label: string; value: string }) =>
+    (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
   const columns: any = [
     {
@@ -177,7 +188,7 @@ export const PurchaseOrderView = () => {
       key: 'sno',
       width: '50px',
       responsive: ['sm'],
-      render: (text, object, index) => (page - 1) * 10 + (index + 1),
+      render: (text, object, index) => (page - 1) * 20 + (index + 1),
       onCell: (record: any) => ({
         rowSpan: record.rowSpan,
       }),
@@ -275,7 +286,7 @@ export const PurchaseOrderView = () => {
     //   }
     // },
     {
-      title: 'VenderName',
+      title: 'Vender Name',
       dataIndex: 'vendorName',
       sorter: (a, b) => a.vendorName.localeCompare(b.vendorName),
       sortDirections: ["descend", "ascend"],
@@ -318,10 +329,12 @@ export const PurchaseOrderView = () => {
       title: 'Po Status',
       dataIndex: 'poStatus',
       width: '80px',
-      
+      sorter: (a, b) => a.poStatus.localeCompare(b.poStatus),
+      sortDirections: ["descend", "ascend"],
+          ...getColumnSearchProps("poStatus"),
     },
     {
-      title: 'Aging(EPD)',
+      title: 'Aging(EDD)',
       dataIndex: 'expectedDeliverydate',
       width: '20px',
       fixed: 'right',
@@ -340,30 +353,30 @@ export const PurchaseOrderView = () => {
         return age;
       },
     },
-    {
-      title: 'Action',
-      dataIndex: 'requestNumber',
-      align: "center",
-      width: '30px',
-      render: (text, rowData, index) => (
-        <span>
-          <Tooltip placement="top" title="Detail View">
-            <EyeOutlined
-              onClick={() => {
-                console.log(rowData.id);
+    // {
+    //   title: 'Action',
+    //   dataIndex: 'requestNumber',
+    //   align: "center",
+    //   width: '30px',
+    //   render: (text, rowData, index) => (
+    //     <span>
+    //       <Tooltip placement="top" title="Detail View">
+    //         <EyeOutlined
+    //           onClick={() => {
+    //             console.log(rowData.purchaseOrderId);
 
-                navigate('/purchase-detali-view', { state: rowData.id })
+    //             navigate('/purchase-detali-view', { state: rowData.purchaseOrderId })
 
-                // setHideCancelButton(false);
-                // DetailView(rowData.SampleRequestId, false);
-              }}
-              style={{ color: "blue", fontSize: 20 }}
-            />
-          </Tooltip>
-        </span>
-      ),
+    //             // setHideCancelButton(false);
+    //             // DetailView(rowData.SampleRequestId, false);
+    //           }}
+    //           style={{ color: "blue", fontSize: 20 }}
+    //         />
+    //       </Tooltip>
+    //     </span>
+    //   ),
 
-    },
+    // },
 
 
   ];
@@ -379,6 +392,24 @@ export const PurchaseOrderView = () => {
       </div>
     )
   }
+  const tagRender = (props: CustomTagProps) => {
+    const { label, value, closable, onClose } = props;
+    const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
+    };
+    return (
+      <Tag
+        color={value}
+        onMouseDown={onPreventMouseDown}
+        closable={closable}
+        onClose={onClose}
+        style={{ marginRight: 3 }}
+      >
+        {label}
+      </Tag>
+    );
+  };
   return (
     <div><Card title="Purchase Orders" headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to={'/purchase-order'}><Button className='panel_button'>Create</Button></Link>}>
       <Form form={form}>
@@ -393,7 +424,18 @@ export const PurchaseOrderView = () => {
               <RangePicker />
             </Form.Item>
           </Col>
-
+          {/* <Col span={6}>
+            <Form.Item label="PO Status	" name="po_status">
+            
+            <Select
+                mode="multiple"
+                tagRender={tagRender}
+                defaultValue={['OPEN', 'INPROGRESS']}
+                style={{ width: '100%' }}
+                options={options}
+              />
+            </Form.Item>
+          </Col> */}
           <Col span={2}>
             <Button htmlType='submit' type="primary" onClick={onSearch}> Get Detail </Button>
           </Col>
@@ -401,7 +443,7 @@ export const PurchaseOrderView = () => {
             <Button htmlType='reset' danger onClick={resetHandler}>Reset</Button>
           </Col>
         </Row>
-        {/* <Row gutter={24}>
+        <Row gutter={24}>
           <Col className="gutter-row" xs={24} sm={24} md={5} lg={5} xl={{ span: 2 }}>
             <Card size="small" title={'OPEN :' + data.filter(r => r.status === 'OPEN').length} style={{ height: '35px', width: 100, backgroundColor: '#FFFFFF', borderRadius: 3 }}></Card>
           </Col>
@@ -417,7 +459,7 @@ export const PurchaseOrderView = () => {
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }}>
             <Card size="small" title={'TOTAL : ' + data.length} style={{ height: '35px', backgroundColor: '#FFFFFF', marginBottom: '2px', borderRadius: 3 }}></Card>
           </Col>
-        </Row> */}
+        </Row> 
 
         {/* <Tabs
           defaultActiveKey="1"
@@ -436,9 +478,9 @@ export const PurchaseOrderView = () => {
               key: key,
             };
           })}
-        /> */}
+        />
 
-<Tabs
+{/* <Tabs
   defaultActiveKey="1"
   type="card"
   onChange={getPo}
@@ -455,14 +497,14 @@ export const PurchaseOrderView = () => {
       key: key,
     };
   })}
-/>
+/> */}
 
 
       </Form>
       <Card>
         {/* <Table columns={columns} dataSource={data} bordered /> */}
 
-        <Table columns={columns} dataSource={data} bordered size='small' />
+        <Table columns={columns} dataSource={data} pagination={{pageSize:20}} bordered size='small' />
 
       </Card>
     </Card>

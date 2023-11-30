@@ -105,6 +105,8 @@ export const SourcingRequisitionDynamicView = () => {
       }
     });
   };
+  console.log(data)
+  console.log(tableData)
 
   const getStyle = () => {
     styleService.getAllActiveStyle().then((res) => {
