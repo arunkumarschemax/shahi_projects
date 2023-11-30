@@ -322,6 +322,7 @@ export class DpomService {
                 let buyerValue2;
                 let agent;
                 let buyerAddress;
+                let deliveryAddress;
                 let pkgTerms;
                 let paymentTerms;
                 if (po.buyer === 'Nike-U12') {
@@ -378,10 +379,16 @@ export class DpomService {
                     coLine.deliveryDate = moment(coData.deliveryDate).format('DD/MM/YYYY')
                     coLine.exFactoryDate = exFactoryDate
                     coLine.destinations = coData.destinations
+                    console.log(coData.destinations[0]?.name)
+                    const request = { country: coData.destinations[0]?.name }
+                    const address = await axios.post(`https://uniqlov2-backend.xpparel.com/api/address/getAddressInfoByCountry`, request);
+                    console.log(address.data.data)
+                    const addressData = address.data.data[0];
+                    buyerAddress = addressData?.buyerAddress ? addressData?.buyerAddress : 71;
+                    deliveryAddress = addressData?.deliveryAddress
                     buyerValue1 = "UNQ-UNIQLO"
                     buyerValue2 = "UNI0003-UNIQLO CO LTD"
                     agent = "-NA"
-                    buyerAddress = '10'
                     pkgTerms = "STD-STD PACK"
                     paymentTerms = "048-TT 15 DAYS"
                 }
@@ -470,6 +477,17 @@ export class DpomService {
                                             tabIndex = 1
                                         }
                                         const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
+                                        const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
+                                        await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
+                                        const dropdown = await driver.findElement(By.id(`bydline/${string}`));
+                                        const options = await dropdown.findElements(By.tagName('option'));
+                                        const optionValues = [];
+                                        for (const option of options) {
+                                            const value = await option.getAttribute('value');
+                                            optionValues.push(value);
+                                        }
+                                        const number = optionValues.find(value => value.includes(deliveryAddress)); // give the dynamic value here
+                                        await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
                                         // Find all the input fields in the first row.
                                         const inputElements = await driver.findElements(By.xpath(inputElementsXPath));
                                         // Create a map of size labels to input fields.
@@ -529,7 +547,7 @@ export class DpomService {
                     }
                 }
                 await driver.sleep(10000)
-                const element = await driver.findElement(By.id('OrderCreateID')).click();
+                // const element = await driver.findElement(By.id('OrderCreateID')).click();
                 await driver.wait(until.alertIsPresent(), 10000);
                 // Switch to the alert and accept it (click "OK")
                 const alert = await driver.switchTo().alert();
