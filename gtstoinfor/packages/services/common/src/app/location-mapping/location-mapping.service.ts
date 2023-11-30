@@ -139,12 +139,14 @@ export class LocationMappingService {
         try {
             let dataquery = `SELECT 
             stk_lg.stock_log_id,
-            stk_lg.m3_item_code,
-            stk_lg.shahi_item_code,
-            stk_lg.item_type_id,
+            stk_lg.m3_item,
+            stk_lg.buyer_id,
+            stk_lg.uom_id,
+            stk_lg.item_type,
             stk_lg.location_id,
-            stk_lg.plant_id,
+            stk_lg.quantity,
             stk_lg.grn_item_id,
+            stk_lg.stock_id,
             SUM(stk_lg.quantity) AS total_quantity,
             m3_it.item_code,
             m3_it.content,
@@ -155,7 +157,7 @@ export class LocationMappingService {
         LEFT JOIN 
             rack_position AS rk_po ON rk_po.position_id = stk_lg.location_id
             LEFT JOIN 
-            m3_items AS m3_it ON m3_it.m3_items_id = stk_lg.m3_item_code
+            m3_items AS m3_it ON m3_it.m3_items_id = stk_lg.m3_item
         WHERE 
             stk_lg.grn_item_id = '${req.id}'
         GROUP BY 
