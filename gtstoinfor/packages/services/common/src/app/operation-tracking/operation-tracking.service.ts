@@ -196,6 +196,9 @@ export class OperationTrackingService {
             }else if(dto.operation == 'Sewing In'){
               sampleReqStatus = LifeCycleStatusEnum.SEWING
 
+            }else if(dto.operation == 'Sewing'){
+              sampleReqStatus = LifeCycleStatusEnum.SEWING
+
             }else if(dto.operation == 'Sewing Out'){
               sampleReqStatus = LifeCycleStatusEnum.SEWING
 
