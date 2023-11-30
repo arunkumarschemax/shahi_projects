@@ -44,6 +44,17 @@ export class StocksEntity extends CommonColumns {
     })
     grnItemId: number;
 
+
+    @Column({
+        name: "allocatd_quantity",
+    })
+    allocateQuanty: number;
+
+    @Column({
+        name: "issued_quantity",
+    })
+    issuedQuantity: number;
+
     @Column({
         name: "stock_bar_code",
     })
