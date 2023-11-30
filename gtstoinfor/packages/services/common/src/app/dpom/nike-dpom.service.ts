@@ -275,10 +275,10 @@ export class DpomService {
     async coLineCreationReq(req: any): Promise<CommonResponseModel> {
         let buyer;
         const entity = new COLineEntity()
-        if (req.poLineItemNumber) {
-            buyer = 'Nike-U12'
+        if (req.buyer) {
+            buyer = req.buyer
         } else {
-            buyer = 'Uniqlo-U12'
+            buyer = 'Nike-U12'
         }
         entity.buyer = buyer
         entity.buyerPo = req.purchaseOrderNumber;
@@ -294,7 +294,7 @@ export class DpomService {
         }
     }
 
-    // @Cron('*/10 * * * *')
+    @Cron('*/10 * * * *')
     async createCOline(req: any): Promise<CommonResponseModel> {
         const poDetails = await this.coLineRepository.getDataforCOLineCreation();
         if (!poDetails.length) {
