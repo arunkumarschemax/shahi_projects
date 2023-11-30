@@ -261,7 +261,7 @@ export const InvoiceReport = () => {
                         columns={columns}
                         dataSource={filteredData}
                         pagination={false}
-                        bordered
+                        // bordered 
                         style={{ marginTop: 20 }}
                         className='custom-table'
                     />
