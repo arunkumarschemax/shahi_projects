@@ -299,7 +299,7 @@ export const StockView = () => {
       render: (text, rowData) => (
         <span>  
          <Button style={{backgroundColor:'#69c0ff'}} onClick={ (e) => getRowData(rowData) }
-          // disabled={rowData.buyer_id === buyervalue ? true : false}
+          disabled={rowData.buyer_id === buyervalue ? true : false}
           ><b>Assign Reclassification</b></Button>
         </span>
       )

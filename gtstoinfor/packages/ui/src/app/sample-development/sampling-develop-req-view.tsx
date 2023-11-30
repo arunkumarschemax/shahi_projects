@@ -335,7 +335,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
       {
         title: "Available Quantity",
         width: "150px",
-        dataIndex: "resultAvailableQuantity",
+        dataIndex: "totalAvailablequntity",
       },
      
       {
