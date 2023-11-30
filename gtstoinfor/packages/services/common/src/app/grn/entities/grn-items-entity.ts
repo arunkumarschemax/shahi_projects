@@ -5,142 +5,122 @@ import { PurchaseOrderFbricEntity } from "../../purchase-order/entities/purchase
 import { PurchaseOrderTrimEntity } from "../../purchase-order/entities/purchase-order-trim-entity";
 
 @Entity('grn_items')
-export class GrnItemsEntity{
+export class GrnItemsEntity {
 
-    @PrimaryGeneratedColumn('increment',{
-        name:'grn_item_id'
+    @PrimaryGeneratedColumn('increment', {
+        name: 'grn_item_id'
     })
-    grnItemId:number
+    grnItemId: number;
 
-    // @Column('int',{
-    //     name:'item_id'
-    // })
-    // itemId:number
-
-    // @Column('int',{
-    //     name:'m3_item_id'
-    // })
-    // m3ItemId:number
-
-    // @Column('int',{
-    //     name:'product_group_id',
-    //     nullable:false,
-    // })
-    // productGroupId:number
-
-    @Column('varchar',{
-        name:'received_quantity',
-        nullable:false
+    @Column('int', {
+        name: 'po_item_id'
     })
-    receivedQuantity:number
+    poItemId: number
 
-    // @Column('int',{
-    //     name:'received_uom_id',
-    //     nullable:false
-    // })
-    // receivedUomId:number
 
-    @Column('varchar',{
-        name:'accepted_quantity',
-        nullable:false
+    @Column('varchar', {
+        name: 'received_quantity',
+        nullable: false
     })
-    acceptedQuantity:number
+    receivedQuantity: number
 
-    // @Column('int',{
-    //     name:'accepted_uom_id',
-    //     nullable:false
-    // })
-    // acceptedUomId:number
-
-    @Column('varchar',{
-        name:'rejected_quantity',
-        nullable:false
+    @Column('varchar', {
+        name: 'accepted_quantity',
+        nullable: false
     })
-    rejectedQuantity:number
+    acceptedQuantity: number
 
-    @Column('int',{
-        name:'rejected_uom_id',
-        nullable:false
-    })
-    rejectedUomId:number
 
-    @Column('decimal',{
-        name:'conversion_quantity',
-        nullable:false
+    @Column('varchar', {
+        name: 'rejected_quantity',
+        nullable: false
     })
-    conversionQuantity:number
+    rejectedQuantity: number
 
-    @Column('int',{
-        name:'conversion_uom_id',
-        nullable:false
-    })
-    conversionUomId:number
 
-    @Column('enum',{
-        name:'location_mapped_status',
-        enum:LocationMappedEnum
+    @Column('decimal', {
+        name: 'conversion_quantity',
+        nullable: false
     })
-    status:LocationMappedEnum
+    conversionQuantity: number
 
-    @Column('text',{
-        name:'remarks',
-        nullable:true
+    @Column('int', {
+        name: 'conversion_uom_id',
+        nullable: false
     })
-    remarks:string
+    conversionUomId: number
+
+
+    @Column('enum', {
+        name: 'location_mapped_status',
+        enum: LocationMappedEnum
+    })
+    status: LocationMappedEnum
+
+    @Column('text', {
+        name: 'remarks',
+        nullable: true
+    })
+    remarks: string
 
     @CreateDateColumn({
         name: "created_at",
     })
     createdAt: string;
-    
+
     @Column("varchar", {
         nullable: true,
         length: 40,
         name: "created_user",
     })
     createdUser: string | null;
-    
+
     @UpdateDateColumn({
         name: "updated_at",
     })
     updatedAt: string;
-    
+
     @Column("varchar", {
         nullable: true,
         length: 40,
         name: "updated_user",
     })
     updatedUser: string | null;
-    
+
     @VersionColumn({
         default: 1,
         name: "version_flag",
     })
     versionFlag: number;
 
-    
-    @Column('int',{
-        name:'m3_item_code_id',
-        nullable:false
+
+    @Column('int', {
+        name: 'm3_item_code_id',
+        nullable: false
     })
-    m3ItemCodeId:number
+    m3ItemCodeId: number
 
-    @Column('int',{
-        name:'indent_id',
-        nullable:false,
+    @Column('int', {
+        name: 'indent_item_id',
+        nullable: false,
     })
-    indentId: number
+    indentItemId: number
 
-    @Column('int',{
-        name:'sample_request_id',
-        nullable:false,
+    @Column('int', {
+        name: 'sample_item_id',
+        nullable: false,
     })
-    sampleRequestId: number
+    sampleItemId: number
 
+    @Column('int', {
+        name: 'subjective_amount',
+        nullable: false,
+    })
+    subjectiveAmount: number
 
-    @ManyToOne(type =>GrnEntity,grn =>grn.grnItemInfo)
-    @JoinColumn({name:'grn_id'})
-    grnEntity:GrnEntity
+    @ManyToOne(type => GrnEntity, grn => grn.grnItemInfo)
+    @JoinColumn({ name: 'grn_id' })
+    grnEntity: GrnEntity
 
 
 

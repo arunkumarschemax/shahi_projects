@@ -1,3 +1,4 @@
+import { sample } from "rxjs";
 import { MaterialStatusEnum, SampleDevelopmentStatusEnum } from "../../enum";
 
 export class SampleFilterRequest{
@@ -50,13 +51,19 @@ export class buyerReq{
 export class statusReq{
     materialAllocationId?:number
     status?:MaterialStatusEnum
+    stockId?:number
+    allocateQuanty?:number
 
     constructor(    
         materialAllocationId?:number,
-        status?:MaterialStatusEnum
+        status?:MaterialStatusEnum,
+        stockId?:number,
+        allocateQuanty?:number
         ){  
             this.materialAllocationId = materialAllocationId
             this.status=status
+            this.stockId = stockId
+            this.allocateQuanty =  allocateQuanty
         
     }
 
@@ -65,8 +72,14 @@ export class statusReq{
 
 export class sampleReqIdReq{
     sampleReqId:number
-    constructor(sampleReqId:number){
+    sampleItemId:number
+    constructor(sampleReqId:number,
+    sampleItemId:number
+        ){
         this.sampleReqId=sampleReqId
+        this.sampleItemId=sampleItemId
     }
 }
+
+
 

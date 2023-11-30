@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { PurchaseOrderEntity } from "./entities/purchase-order-entity";
-import { CommonResponseModel, LifeCycleStatusEnum, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
+import { CommonResponseModel,GrnItemsFormDto, LifeCycleStatusEnum, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
 import { PurchaseOrderDto } from "./dto/purchase-order-dto";
 import { PurchaseOrderFbricEntity } from "./entities/purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "./entities/purchase-order-trim-entity";
@@ -133,61 +133,81 @@ export class PurchaseOrderService {
 
     async getPODataById(req: VendorIdReq): Promise<CommonResponseModel> {
         try {
-            // console.log(req,'================')
-            let responseData
+            // ,if.ifabric_id AS indentFabricId
+            console.log(req)
+            req.materialType = req.materialType.toLowerCase().includes('trim') ? 'Trim' : 'Fabric' 
+            let query
             if (req.materialType === 'Fabric') {
-                let query=`SELECT m.item_code AS itemCode,pof.po_fabric_id AS poFabricId,pof.m3_fabric_code AS m3fabricCode,pof.po_quantity AS poQuantity,pof.quantity_uom_id AS quantityUomId,u.uom,
-                pof.purchase_order_id AS purchaseOrderId,pof.fabric_type_id AS fabricTypeId,ft.fabric_type_name AS fabricTypeName,po.po_material_type AS materialType,po.po_against AS  poAgainst,
-                pof.grn_quantity AS grnQuantity,if.ifabric_id AS indentFabricId,pof.sample_request_id AS sampleRequestId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style
-                FROM purchase_order_fabric pof
-                LEFT JOIN purchase_order po ON po.purchase_order_id = pof.purchase_order_id
-                LEFT JOIN fabric_type ft ON ft.fabric_type_id = pof.fabric_type_id
-                LEFT JOIN uom u ON u.id = pof.quantity_uom_id
-                LEFT JOIN m3_items m ON m.m3_items_Id = pof.m3_fabric_code`
-                if(req.poAgainst === 'INDENT'){
+                query = `SELECT m.item_code AS m3itemCode,poi.m3_item_id as m3ItemCodeId,poi.po_quantity AS poQuantity,poi.quantity_uom_id AS quantityUomId,u.uom,poi.purchase_order_item_id as poItemId,
+                poi.purchase_order_id AS purchaseOrderId,m.fabric_type AS m3ItemTypeId,ft.fabric_type_name AS m3ItemType,
+                poi.grn_quantity AS grnQuantity,poi.sample_item_id AS sampleItemId,poi.indent_item_id as indentItemId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style,poi.unit_price as unitPrice,poi.discount,poi.tax,poi.transportation,poi.subjective_amount as subjectiveAmount,poi.po_item_status as poItemStatus,poi.colour_id as colourId,c.colour as colour
+                FROM purchae_order_items poi
+                LEFT JOIN uom u ON u.id = poi.quantity_uom_id
+                LEFT JOIN m3_items m ON m.m3_items_Id = poi.m3_item_id
+                LEFT JOIN fabric_type ft ON ft.fabric_type_id = m.fabric_type
+                LEFT JOIN colour c ON c.colour_id = poi.colour_id
+                `
+                if (req.poAgainst =='Indent') {
                     query = query + ` 
-                    LEFT JOIN indent i ON i.indent_id = pof.indent_id 
+                    LEFT JOIN indent_fabric inf ON inf.ifabric_id = poi.indent_item_id
+                    LEFT JOIN indent i ON i.indent_id = inf.indent_id 
                     LEFT JOIN style s ON s.style_id = i.style 
                     LEFT JOIN buyers b ON b.buyer_id = s.buyer_id
-                    LEFT JOIN indent_fabric if ON if.indent_id = i.indent_id
-                    WHERE pof.purchase_order_id = ${req.poId}`
+                    WHERE poi.purchase_order_id = ${req.poId}`
                 }
-                if(req.poAgainst === 'SAMPLE ORDER'){
+                if (req.poAgainst === 'Sample Order') {
                     query = query + ` 
-                    LEFT JOIN sample_request sr ON sr.sample_request_id  = pof.sample_request_id 
+                    LEFT JOIN sample_request_fabric_info srf ON srf.fabric_info_id  = poi.sample_item_id   
+                    LEFT JOIN sample_request sr ON sr.sample_request_id  = srf.sample_request_id                  
                     LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id 
                     LEFT JOIN style s ON s.style_id = sr.style_id
-                    WHERE pof.purchase_order_id = ${req.poId}`
+                    WHERE poi.purchase_order_id = ${req.poId}`
                 }
-                const fabricData = await this.dataSource.query(query)
-                responseData = fabricData
             }
             if (req.materialType === 'Trim') {
-                let query = `SELECT mt.trim_code as m3TrimCode,pot.po_trim_id AS poTrimId,pot.trim_id AS trimId, pot.m3_trim_code AS m3TrimCode,pot.purchase_order_id AS purchaseOrderId, pot.po_quantity AS poQuantity,
-                pot.quantity_uom_id AS quantityUomId,u.uom,po.po_material_type AS materialType,pot.grn_quantity AS grnQuantity,pot.indent_id as indentId, pot.sample_request_id as sampleRequestId,po.po_against AS poAgainst,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style
-                FROM purchase_order_trim pot
-                LEFT JOIN purchase_order po ON po.purchase_order_id = pot.purchase_order_id
-                LEFT JOIN uom u ON u.id = pot.quantity_uom_id
-                LEFT JOIN m3_trims mt ON mt.m3_trim_Id=pot.m3_trim_code`
-                if(req.poAgainst === 'INDENT'){
+                query = `SELECT mt.trim_code as m3itemCode,poi.m3_item_id AS m3ItemCodeId,mt.trim_type as m3ItemType,poi.purchase_order_id AS purchaseOrderId, poi.po_quantity AS poQuantity,
+                poi.quantity_uom_id AS quantityUomId,u.uom,poi.grn_quantity AS grnQuantity,poi.indent_item_id as indentItemId, poi.sample_item_id as sampleItemId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style,poi.unit_price as unitPrice,poi.discount,poi.tax,poi.transportation,poi.subjective_amount as subjectiveAmount,poi.po_item_status as poItemStatus,poi.colour_id as colourId,c.colour as colour
+                FROM purchae_order_items poi
+                LEFT JOIN uom u ON u.id = poi.quantity_uom_id
+                LEFT JOIN m3_trims mt ON mt.m3_trim_Id=poi.m3_item_id
+                LEFT JOIN colour c ON c.colour_id = poi.colour_id
+                `
+                if (req.poAgainst == 'Indent') {
                     query = query + ` 
-                    LEFT JOIN indent i ON i.indent_id = pot.indent_id 
+                    LEFT JOIN indent_trims it ON it.itrims_id = poi.indent_item_id
+                    LEFT JOIN indent i ON i.indent_id = it.indent_id 
                     LEFT JOIN style s ON s.style_id = i.style 
-                    LEFT JOIN buyers b ON b.buyer_id = s.buyer_id 
-                    WHERE pot.purchase_order_id = ${req.poId}`
+                    LEFT JOIN buyers b ON b.buyer_id = i.buyer_id 
+                    WHERE poi.purchase_order_id = ${req.poId}`
                 }
-                if(req.poAgainst === 'SAMPLE ORDER'){
-                    query = query + ` LEFT JOIN sample_request sr ON sr.sample_request_id  = pot.sample_request_id LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id LEFT JOIN style s ON s.style_id = sr.style_id WHERE pot.purchase_order_id = ${req.poId}`
+                if (req.poAgainst == 'Sample Order') {
+                    query = query + `
+                     LEFT JOIN sample_request_fabric_info srf ON srf.fabric_info_id  = poi.sample_item_id   
+                     LEFT JOIN sample_request sr ON sr.sample_request_id  = srf.sample_request_id 
+                     LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id 
+                     LEFT JOIN style s ON s.style_id = sr.style_id
+                     WHERE poi.purchase_order_id = ${req.poId}`
                 }
-                const trimData = await this.poTrimRepo.query(query)
-                responseData = trimData
+
             }
-            if (responseData.length > 0) {
-                return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", responseData)
+            console.log(query)
+            const itemData = await this.poTrimRepo.query(query)
+            const grnItemsArr: GrnItemsFormDto[] = []
+            for (const rec of itemData) {
+                const grnItemsDto = new GrnItemsFormDto(rec.poItemId, rec.m3ItemCodeId, rec.m3itemCode, rec.m3ItemType, rec.m3ItemTypeId, rec.poItemStatus, rec.quantityUomId, rec.uom, rec.unitPrice, rec.discount, rec.tax, rec.transportation, rec.subjectiveAmount, rec.grnQuantity, rec.poQuantity, rec.colourId, rec.colour, rec.sampleItemId, rec.indentItemId,rec.buyerId,rec.buyer)
+                grnItemsArr.push(grnItemsDto)
+            }
+            const poQuery = `select p.purchase_order_id as poId,p.style_id as styleId,p.po_material_type as poMaterialType,p.po_against as poAgainst from purchase_order p where p.purchase_order_id = ${req.poId}`
+            const poData = await this.poTrimRepo.query(poQuery)
+             poData[0].grnItems = itemData 
+
+            if (grnItemsArr.length > 0) {
+                return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", poData)
             } else {
                 return new CommonResponseModel(false, 1, "No data found", [])
             }
         } catch (err) {
+            console.log(err)
             throw (err)
         }
     }
@@ -213,7 +233,7 @@ export class PurchaseOrderService {
             let query2 = `Select po.status as status  FROM purchase_order po LEFT JOIN vendors v ON v.vendor_id = po.vendor_id `
             const statuses = await this.dataSource.query(query2);
             const count = Object.keys(PurchaseStatusEnum).map((key) => {
-                
+
                 return {
                     [PurchaseStatusEnum[key]]: statuses.filter((rec => rec.status === PurchaseStatusEnum[key])).length
                 }
@@ -233,7 +253,7 @@ export class PurchaseOrderService {
                     query += `WHERE ${req?.poconfirmStartDate ? `Date(purchase_order_date) BETWEEN '${req?.poconfirmStartDate}' AND '${req?.poconfirmEndDate}'` : '1=1'}`
                 }
                 if (req?.status) {
-                    
+
                     query += `Where po.status = "${req.status}"`
                 }
             }
@@ -261,6 +281,7 @@ export class PurchaseOrderService {
             if (req?.id) {
                 query += ` where po.purchase_order_id = ${req?.id}`
             }
+            query+=` order by po.expected_delivery_date`
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)
@@ -319,7 +340,7 @@ export class PurchaseOrderService {
             const data = []
             const podata = await this.GetPurchaseData(req)
             for (const po of podata.data) {
-                console.log(po,'^^^^^^^^^^^^^^^^^^^')
+                console.log(po, '^^^^^^^^^^^^^^^^^^^')
                 const fabData = await this.GetPurchaseFabricData(po.purchaseOrderId)
                 const fabricInfo = []
                 // for (const fabrData of fabData.data) {
@@ -336,24 +357,25 @@ export class PurchaseOrderService {
                     styleName: po.styleName,
                     purchaseOrderId: po.purchaseOrderId,
                     poNumber: po.poNumber,
-                    buyerId:po.buyerId,
-                    buyername:po.buyername,
+                    buyerId: po.buyerId,
+                    buyername: po.buyername,
                     vendorId: po.vendorId,
-                    vendorName:po.vendorName,
+                    vendorName: po.vendorName,
                     expectedDeliverydate: po.expectedDeliverydate,
                     purchaseOrderDate: po.purchaseOrderDate,
                     poMaterialtype: po.poMaterialtype,
                     poStatus: po.poStatus,
+                    poId:po.purchaseOrderId
                     // fabInfo: fabricInfo,
                     // triminfo: triminfo
 
                 })
             }
             if (data) {
-                console.log(data,"kkkkkkkkkkkk");
-                
+                console.log(data, "kkkkkkkkkkkk");
+
                 return new CommonResponseModel(true, 1, 'data retrived sucessfully', data)
-                
+
             } else {
                 return new CommonResponseModel(false, 0, 'no data found', [])
 
@@ -363,6 +385,35 @@ export class PurchaseOrderService {
         catch (err) {
             throw err
         }
+    }
+
+    async getPodetailsById(req:PurchaseViewDto):Promise<CommonResponseModel>{
+        // const PoType = `select po_material_type from purchase_order where purchase_order_id = ${req.id}`
+        // const poTypeRes = await this.dataSource.query(PoType)
+        // console.log(poTypeRes,'poTypeRes')
+        // let poData = `select * from purchase_order po `
+        // if(poTypeRes == 'Fabric'){
+        //     poData = poData+` left join purchase_order_fabric pof on pof.purchase_order_id = po.purchase_order_id `
+        // }else{
+        //     poData = poData+` left join purchase_order_trim pot on pot.purchase_order_id = po.purchase_order_id`
+        // }
+        // poData = poData+` where po.purchase_order_id = ${req.id}`
+        // const podatares = await this.dataSource.query(poData)
+        const poTrimData = `select po.*,poi.*,mi.item_code,v.vendor_name,f.address from purchase_order po left join purchae_order_items poi on poi.purchase_order_id = po.purchase_order_id left join m3_items mi on mi.m3_items_Id = poi.m3_item_id left join factory f on f.id = po.delivery_address left join vendors v on v.vendor_id = po.vendor_id where po.purchase_order_id = ${req.id}`
+        const poTrimdatares = await this.dataSource.query(poTrimData)
+        // console.log(podatares)
+        // const PoDetails = {
+        //     fabricInfo:[],
+        //     trimInfo:[]
+        // }
+        if(poTrimdatares.length > 0){
+            // PoDetails.fabricInfo = podatares
+            // PoDetails.trimInfo = poTrimdatares
+            return new CommonResponseModel(true,1,'data retreived',poTrimdatares)
+        }else{
+            return new CommonResponseModel(false,0,'No data')
+        }
+        return 
     }
 
 }

@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, M3Itemsfilter } from "@project-management-system/shared-models";
 import { M3ItemsService } from "./m3-items.service";
 import { M3ItemsDTO } from "./m3-items.dto";
 
@@ -27,8 +27,11 @@ export class M3ItemsController {
   }
 
   @Post('/getM3Items')
-  async getM3Items(): Promise<CommonResponseModel> {
-    const data=await this.Service.getM3Items()
+  @ApiBody({type:M3Itemsfilter})
+  async getM3Items(@Body()req:any): Promise<CommonResponseModel> {
+    console.log(req,"req controller");
+    
+    const data=await this.Service.getM3Items(req)
     return  data
 }
 

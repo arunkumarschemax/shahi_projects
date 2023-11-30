@@ -8,7 +8,7 @@ import { VALUE_SPLIT } from "rc-cascader/lib/utils/commonUtil";
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
+export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
     let tableData: any[] = []
     const [trimForm] = Form.useForm()
     const {Option} = Select
@@ -25,8 +25,9 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
     const [inputDisable, setInputDisable] = useState<boolean>(false)
     const [tableColumns, setTableColumns] = useState([]);
     const [tax, setTax] = useState([])
-
+    const [totalUnit,setTotalUnit] = useState(Number)
     const [color,setColor] = useState<any[]>([])
+    const [subAmount,setSubAmount] = useState(Number)
     const colorService = new ColourService();
     const m3MasterService = new M3MastersService()
     const sampleService = new SampleDevelopmentService()
@@ -52,9 +53,12 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
     },[indentId])
 
     useEffect(() =>{
+        console.log(sampleReqId.data[1].sampleReqIds)
+        console.log(sampleReqId.data[2].m3itemid)
+
         if(sampleReqId.length != 0){
             setTableColumns([...sampleColumns])
-            sampleTrimData(sampleReqId)
+            sampleTrimData(sampleReqId.data[1].sampleReqIds,sampleReqId.data[2].m3itemid)
         }
     },[sampleReqId])
 
@@ -95,8 +99,8 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
             }
         })
     }
-    const sampleTrimData = (value) =>{
-        sampleService.getTrimDetailsOfSample({sampleReqId:value}).then(res =>{
+    const sampleTrimData = (sampleReqId,sampleItemId) =>{
+        sampleService.getTrimDetailsOfSample({sampleReqId:sampleReqId,sampleItemId:sampleItemId}).then(res =>{
             if(res.status){
                 setTrimtableVisible(true)
                 props(res.data)
@@ -390,6 +394,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
                 trimCodeName: defaultTrimFormData.trimCodeName,
                 quantityUomName:defaultTrimFormData.quantityUomName,
                 quantityUomId:defaultTrimFormData.quantityUomId,
+                m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
 
             })
 
@@ -429,15 +434,16 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
     const unitPriceOnchange = (value) => {
         const unitPrice=trimForm.getFieldValue('poQuantity')
         totalUniPrice=Number(unitPrice)*Number(value)
+        setTotalUnit(totalUniPrice)
     }
 
     let disAmount
     let totalValueAfterDiscount
     function discountOnChange(value) {
        const percent=(Number(value/100))
-        const disAmount=(percent*totalUniPrice)
+        const disAmount=(percent*totalUnit)
         trimForm.setFieldsValue({discountAmount:disAmount})
-        totalValueAfterDiscount=totalUniPrice-disAmount
+        totalValueAfterDiscount=totalUnit-disAmount
     }
 
     let taxAmount
@@ -449,6 +455,14 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
         trimForm.setFieldsValue({subjectiveAmount:Number(totalAmount).toFixed(2)})
         trimForm.setFieldsValue({ tax: value })
         trimForm.setFieldsValue({ taxPercentage: option?.name ? option?.type + '- ' + option?.name : '' })
+        setSubAmount(Number(totalAmount))
+    }
+
+    function transportationOnChange(value){
+        console.log(Number(subAmount).toFixed(2))
+        const amount = Number(subAmount).toFixed(2) ;
+        const subjecAmout = Number(amount) + Number(value)
+        trimForm.setFieldsValue({subjectiveAmount:subjecAmout})
     }
 
     return(
@@ -585,7 +599,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
                         <Form.Item name='transportation' label='Transportation'
                             rules={[{ required: false, message: 'Transportation of Fabric is required' }]}
                         >
-                            <Input placeholder="Transportation" />
+                            <Input onChange={e=>transportationOnChange(e.target.value)} placeholder="Transportation" />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>

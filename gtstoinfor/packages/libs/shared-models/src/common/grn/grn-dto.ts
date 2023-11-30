@@ -1,12 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CustomerOrderStatusEnum, GRNTypeEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
+import { CustomerOrderStatusEnum, GRNTypeEnum, GrnItemsFormDto, PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { GrnItemsDto } from "./grn-items-dto";
 
 export class GrnDto{
   vendorId:number
   poId:number
   grnDate:Date
-  contactPerson:string
   remarks:string
   isActive?: boolean;
   createdAt?: Date;
@@ -16,19 +15,19 @@ export class GrnDto{
   versionFlag?: number;
   styleId?:number
   materialtype?:string
-  grnItemInfo?: GrnItemsDto[];
+  grnItemInfo?: GrnItemsFormDto[];
   grnId?:number
   grnNumber?:string
   status:PurchaseOrderStatus
   grnType:GRNTypeEnum
   invoiceNo?: string
+  itemType?:string
 
 
   constructor(
     vendorId:number,
     poId:number,
     grnDate:Date,
-    contactPerson:string,
     status:PurchaseOrderStatus,
     remarks:string,
     isActive?: boolean,
@@ -39,11 +38,12 @@ export class GrnDto{
     versionFlag?: number,
     styleId?:number,
     materialtype?:string,
-    grnItemInfo?: GrnItemsDto[],
+    grnItemInfo?: GrnItemsFormDto[],
     grnId?:number,
     grnNumber?:string,
     grnType?:GRNTypeEnum,
     invoiceNo?: string,
+    itemType? :string
   
   ){
     this.grnId = grnId
@@ -51,7 +51,6 @@ export class GrnDto{
     this.vendorId = vendorId
     this.poId = poId
     this.grnDate = grnDate
-    this.contactPerson = contactPerson
     this.status = status
     this.remarks = remarks
     this.grnItemInfo = grnItemInfo
@@ -65,6 +64,7 @@ export class GrnDto{
     this.materialtype = materialtype
     this.grnType = grnType
     this.invoiceNo = invoiceNo
+    this.itemType = itemType
   }
 
 

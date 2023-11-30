@@ -14,34 +14,38 @@ import { GenericTransactionManager } from '../../typeorm-transactions';
 import { IndentRepository } from '../indent/dto/indent-repository';
 import { FabricIndentRepository } from '../indent/dto/fabric-indent-repository';
 import { TrimIndentRepository } from '../indent/dto/trim-indent-repository';
+import { PurchaseOrderItemsEntity } from '../purchase-order/entities/purchase-order-items-entity';
+
 let moment = require('moment');
 
 @Injectable()
 
-export class GrnService{
+export class GrnService {
     constructor(
-        private grnRepo:GrnRepository,
-        private grnAdapter:GrnAdapter,
+        private grnRepo: GrnRepository,
+        private grnAdapter: GrnAdapter,
         @InjectRepository(PurchaseOrderFbricEntity)
-        private poFabricRepo:Repository<PurchaseOrderFbricEntity>,
+        private poFabricRepo: Repository<PurchaseOrderFbricEntity>,
         @InjectRepository(PurchaseOrderTrimEntity)
-        private poTrimRepo:Repository<PurchaseOrderTrimEntity>,
+        private poTrimRepo: Repository<PurchaseOrderTrimEntity>,
         private readonly dataSource: DataSource,
         @InjectRepository(PurchaseOrderEntity)
-        private readonly poRepo:Repository<PurchaseOrderEntity>,
-        private readonly indentRepo:IndentRepository,
-        private readonly indentFabricRepo:FabricIndentRepository,
-        private readonly indentTrimRepo:TrimIndentRepository
+        private readonly poRepo: Repository<PurchaseOrderEntity>,
+        private readonly indentRepo: IndentRepository,
+        private readonly indentFabricRepo: FabricIndentRepository,
+        private readonly indentTrimRepo: TrimIndentRepository,
+        @InjectRepository(PurchaseOrderItemsEntity)
+        private poItemRepo: Repository<PurchaseOrderItemsEntity>,
 
 
-      
-    ){}
 
-    async createGrne(req: any, isUpdate: boolean):Promise<CommonResponseModel>{
+    ) { }
+
+    async createGrne(req: any, isUpdate: boolean): Promise<CommonResponseModel> {
         try {
             const slNo = await this.grnRepo.count()
             // console.log(slNo);
-            const indentnum ="IND" + "/" + "22-23" + "/"+"00"+Number(Number(slNo) + 1)
+            const indentnum = "IND" + "/" + "22-23" + "/" + "00" + Number(Number(slNo) + 1)
             req.requestNo = indentnum;
             //  console.log(req);
             //   const convertedindentEntity: Indent = this.indentAdapter.convertDtoToEntity(req, isUpdate);
@@ -55,76 +59,76 @@ export class GrnService{
             //   } else {
             //       throw new ErrorResponse(11106, 'indent saved but issue while transforming into DTO');
             //   }
-          } catch (error) {
-              return error;
-          }
+        } catch (error) {
+            return error;
+        }
     }
 
     async getAllIndentData(): Promise<CommonResponseModel> {
-        const data = await this.grnRepo.find({relations: ['iFabricInfo', 'iTrimsInfo']});
-        return new CommonResponseModel(true, 1235, 'Data retrieved Successfully',data);
+        const data = await this.grnRepo.find({ relations: ['iFabricInfo', 'iTrimsInfo'] });
+        return new CommonResponseModel(true, 1235, 'Data retrieved Successfully', data);
     }
 
-    async getAllPoDataToUPdateStatus(purchaseOrderId:number,materialType:string):Promise<CommonResponseModel>{
-        try{
+    async getAllPoDataToUPdateStatus(purchaseOrderId: number, materialType: string): Promise<CommonResponseModel> {
+        try {
             const manager = this.dataSource;
-            let query='SELECT pt.grn_quantity AS ptGrnQuantity,pf.grn_quantity AS pfGrnQuantity,po_fabric_id AS poFabricId,po_trim_id AS poTrimId,po.purchase_order_id AS purchaseOrderId,po_number AS poNumber,po.status AS poStatus,fab_item_status AS fabItemStatus,trim_item_status AS trimItemStatus FROM purchase_order po LEFT JOIN purchase_order_fabric pf ON pf.purchase_order_id=po.purchase_order_id LEFT JOIN purchase_order_trim pt ON pt.purchase_order_id=po.purchase_order_id WHERE po.purchase_order_id='+purchaseOrderId+''
-            if(materialType == 'Fabric'){
-                query=query+' and fab_item_status in ("OPEN","PARTAILLY RECEIVED")'
+            let query = 'SELECT pt.grn_quantity AS ptGrnQuantity,pf.grn_quantity AS pfGrnQuantity,po_fabric_id AS poFabricId,po_trim_id AS poTrimId,po.purchase_order_id AS purchaseOrderId,po_number AS poNumber,po.status AS poStatus,fab_item_status AS fabItemStatus,trim_item_status AS trimItemStatus FROM purchase_order po LEFT JOIN purchase_order_fabric pf ON pf.purchase_order_id=po.purchase_order_id LEFT JOIN purchase_order_trim pt ON pt.purchase_order_id=po.purchase_order_id WHERE po.purchase_order_id=' + purchaseOrderId + ''
+            if (materialType == 'Fabric') {
+                query = query + ' and fab_item_status in ("OPEN","PARTAILLY RECEIVED")'
             }
-            if(materialType == 'Trim'){
-                query=query+' and trim_item_status in ("OPEN","PARTAILLY RECEIVED")'
+            if (materialType == 'Trim') {
+                query = query + ' and trim_item_status in ("OPEN","PARTAILLY RECEIVED")'
             }
-            const result= await manager.query(query)
-            if(result){
-                return new CommonResponseModel(true,1,'',result)
+            const result = await manager.query(query)
+            if (result) {
+                return new CommonResponseModel(true, 1, '', result)
             }
-        }catch(err){
+        } catch (err) {
             throw err
         }
     }
-    async getAllIndentDataUPdateStatus(materialType:string,id:number):Promise<CommonResponseModel>{
-        try{
+    async getAllIndentDataUPdateStatus(materialType: string, id: number): Promise<CommonResponseModel> {
+        try {
             const manager = this.dataSource;
-            let query=' SELECT it.quantity AS trimQuantity,ifc.quantity AS fabQuantity,ifc.received_quantity,it.received_quantity,i.indent_id AS indentId,ifabric_id AS indenFabricId,itrims_id AS indentTrimId FROM indent i LEFT JOIN indent_fabric ifc ON i.indent_id=ifc.indent_id LEFT JOIN indent_trims it ON it.indent_id=i.indent_id WHERE i.indent_id>0 '
-            if(materialType == 'Fabric'){
-                query=query+' and i.indent_id ='+id+' and ifc.quantity != ifc.received_quantity'
+            let query = ' SELECT it.quantity AS trimQuantity,ifc.quantity AS fabQuantity,ifc.received_quantity,it.received_quantity,i.indent_id AS indentId,ifabric_id AS indenFabricId,itrims_id AS indentTrimId FROM indent i LEFT JOIN indent_fabric ifc ON i.indent_id=ifc.indent_id LEFT JOIN indent_trims it ON it.indent_id=i.indent_id WHERE i.indent_id>0 '
+            if (materialType == 'Fabric') {
+                query = query + ' and i.indent_id =' + id + ' and ifc.quantity != ifc.received_quantity'
             }
-            if(materialType == 'Trim'){
-                query=query+' and i.indent_id='+id+'  and it.quantity != it.received_quantity'
+            if (materialType == 'Trim') {
+                query = query + ' and i.indent_id=' + id + '  and it.quantity != it.received_quantity'
             }
-            const result= await manager.query(query)
-            if(result){
-                return new CommonResponseModel(true,1,'',result)
+            const result = await manager.query(query)
+            if (result) {
+                return new CommonResponseModel(true, 1, '', result)
             }
-        }catch(err){
-            throw err
-        }
-    }
-
-    async getIndentid(materialType:string,id:number):Promise<CommonResponseModel>{
-        try{
-            const manager = this.dataSource;
-            let query=' SELECT i.indent_id as indentId FROM indent i LEFT JOIN indent_fabric ifc ON i.indent_id=ifc.indent_id LEFT JOIN indent_trims it ON it.indent_id=i.indent_id WHERE i.indent_id>0 '
-            if(materialType == 'Fabric'){
-                query=query+' and ifabric_id ='+id+''
-            }
-            if(materialType == 'Trim'){
-                query=query+' and itrims_id='+id+''
-            }
-            const result= await manager.query(query)
-            if(result){
-                return new CommonResponseModel(true,1,'',result)
-            }
-        }catch(err){
+        } catch (err) {
             throw err
         }
     }
 
-    async createGrn(req:GrnDto):Promise<CommonResponseModel>{       
+    async getIndentid(materialType: string, id: number): Promise<CommonResponseModel> {
+        try {
+            const manager = this.dataSource;
+            let query = ' SELECT i.indent_id as indentId FROM indent i LEFT JOIN indent_fabric ifc ON i.indent_id=ifc.indent_id LEFT JOIN indent_trims it ON it.indent_id=i.indent_id WHERE i.indent_id>0 '
+            if (materialType == 'Fabric') {
+                query = query + ' and ifabric_id =' + id + ''
+            }
+            if (materialType == 'Trim') {
+                query = query + ' and itrims_id=' + id + ''
+            }
+            const result = await manager.query(query)
+            if (result) {
+                return new CommonResponseModel(true, 1, '', result)
+            }
+        } catch (err) {
+            throw err
+        }
+    }
+
+    async createGrn(req: GrnDto): Promise<CommonResponseModel> {
         const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
-        try{
-            console.log(req,'========')
+        try {
+
             const currentYear = moment().format('YYYY')
             let ToYear = currentYear.toString().substr(-2)
             let FromYear = (currentYear - 1).toString().substr(-2)
@@ -143,128 +147,110 @@ export class GrnService{
             } else {
                 mrnNumber = 'MRN/' + FromYear + '-' + ToYear + '/' + maxId[0].grnId.toString().padStart(3, 0) + ''
             }
-        await transactionalEntityManager.startTransaction();
-            const itemInfo=[]
+            await transactionalEntityManager.startTransaction();
+            const itemInfo = []
             const grnEntity = new GrnEntity()
-            grnEntity.grnNumber=grnNumber
-            grnEntity.mrnNumber = mrnNumber
-            grnEntity.vendorId=req.vendorId
+            grnEntity.grnNumber = grnNumber
+            grnEntity.vendorId = req.vendorId
             // grnEntity.styleId=req.styleId
-            grnEntity.poId=req.poId
-            grnEntity.grnDate=req.grnDate
-            grnEntity.contactPerson = req.contactPerson
-            grnEntity.createdUser=req.createdUser
-            grnEntity.updatedUser=req.updatedUser
-            grnEntity.itemType=req.materialtype
+            grnEntity.poId = req.poId
+            grnEntity.grnDate = req.grnDate
+            grnEntity.createdUser = req.createdUser
+            grnEntity.updatedUser = req.updatedUser
+            grnEntity.itemType = req.itemType
             grnEntity.invoiceNo = req.invoiceNo
+            
             // console.log(req,'===========')
-            for(const item of req.grnItemInfo){
-                // console.log(item,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-                // item.conversionQuantity=200
-                // item.conversionUomId=1
+            for (const item of req.grnItemInfo) {
                 const itemEntity = new GrnItemsEntity()
-                itemEntity.m3ItemCodeId=item.m3ItemCodeId
-                // itemEntity.productGroupId=item.productGroupId
-                itemEntity.receivedQuantity=item.receivedQuantity
-                // itemEntity.receivedUomId=item.receivedUomId
-                itemEntity.acceptedQuantity=item.acceptedQuantity
-                // itemEntity.acceptedUomId=item.acceptedUomId
-                itemEntity.rejectedQuantity=item.rejectedQuantity
-                itemEntity.rejectedUomId=item.rejectedUomId
-                itemEntity.conversionQuantity=item.conversionQuantity
-                itemEntity.conversionUomId=item.conversionUomId
-                itemEntity.remarks=item.remarks
+                itemEntity.m3ItemCodeId = item.m3ItemCodeId
+                itemEntity.receivedQuantity = item.receivedQuantity
+                itemEntity.acceptedQuantity = item.acceptedQuantity
+                itemEntity.rejectedQuantity = item.rejectedQuantity
+                itemEntity.conversionQuantity = item.conversionQuantity
+                itemEntity.conversionUomId = item.conversionUomId
+                itemEntity.remarks = item.remarks
+                itemEntity.m3ItemCodeId = item.m3ItemCodeId
+                itemEntity.sampleItemId = item.sampleItemId
+                itemEntity.indentItemId = item.indentItemId
+                itemEntity.subjectiveAmount = item.revisedSubjectivePrice
+                itemEntity.remarks = item.remarks
+                itemEntity.poItemId = item.poItemId
+
                 itemInfo.push(itemEntity)
             }
-            grnEntity.grnItemInfo=itemInfo
+            grnEntity.grnItemInfo = itemInfo
             // let save
-            const save = await this.grnRepo.save(grnEntity)  
-            if(save){
-                for(const item of req.grnItemInfo){ 
-                  if(item.indentFabricId != null){
-                   if(req.materialtype == 'Fabric'){
-                    console.log('****************************')
-                    const poQuantity = await this.poFabricRepo.find({where:{poFabricId:item.poFabricId}})
-                    if(poQuantity[0].poQuantity == item.conversionQuantity){
-                    await this.poFabricRepo.update({poFabricId:item.poFabricId},{grnQuantity:item.conversionQuantity,fabricItemStatus:PoItemEnum.RECEIVED})
-                    }
-                    else{
-                        await this.poFabricRepo.update({poFabricId:item.poFabricId},{fabricItemStatus:PoItemEnum.PARTAILLY_RECEIVED,grnQuantity:item.conversionQuantity})
-                    }
-                 
-                    await this.indentFabricRepo.update({ifabricId:item.indentFabricId},{recivedQuantity:item.conversionQuantity})
-                    const indentId = await this.getIndentid(req.materialtype,item.indentFabricId) 
-                    const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype,indentId.data[0].indentId)
-                    if(indentData.data.length == 0){
-                        await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.CLOSED})
-                       }  else{
-                        await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.IN_PROGRESS})
-                       }
+            const save = await this.grnRepo.save(grnEntity)
+            if (save) {
+                for (const item of req.grnItemInfo) {
+                    if (item.m3ItemCode != null) {
 
-                   }
-                }
-                if(item.indentFabricId == null){
-                    await  this.poFabricRepo.update({poFabricId:item.poFabricId},{grnQuantity:item.conversionQuantity})
-                }
-                if(item.indentTrinId != null){
-                    if(req.materialtype == 'Trim'){
-                        const poQuantity = await this.poTrimRepo.find({where:{poTrimId:item.poTrimId}})
-                        if(poQuantity[0].poQuantity == item.conversionQuantity){
-                            await this.poTrimRepo.update({poTrimId:item.poTrimId},{grnQuantity:item.conversionQuantity,trimItemStatus:PoItemEnum.RECEIVED})
-                        }else{
-                            await this.poTrimRepo.update({poTrimId:item.poTrimId},{grnQuantity:item.conversionQuantity,trimItemStatus:PoItemEnum.PARTAILLY_RECEIVED})
+                        const poQuantity = await this.poItemRepo.find({ where: { purchaseOrderItemId: item.poItemId } })
+                        if (poQuantity[0].poQuantity == item.conversionQuantity) {
+                            await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, { grnQuantity: item.acceptedQuantity, poitemStatus: PoItemEnum.RECEIVED })
                         }
-                        await this.indentTrimRepo.update({itrimsId:item.indentTrinId},{recivedQuantity:item.conversionQuantity})
-                        const indentId = await this.getIndentid(req.materialtype,item.indentTrinId) 
-                        const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype,indentId.data[0].indentId)
-                        if(indentData.data.length == 0){
-                            await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.CLOSED})
-                           }  else{
-                            await this.indentRepo.update({indentId:indentId.data[0].indentId},{status:CustomerOrderStatusEnum.IN_PROGRESS})
-                           }
-                       }
-                }
-                if(item.indentTrinId == null){
-                    await this.poTrimRepo.update({poTrimId:item.poTrimId},{grnQuantity:item.conversionQuantity})
-                }
-                     
-                 }
-                    const poData = await this.getAllPoDataToUPdateStatus(req.poId,req.materialtype)
-                    if(poData.data.length == 0){
-                        await this.poRepo.update({purchaseOrderId:req.poId},{status:PurchaseOrderStatus.CLOSED})
-                    }else{
-                        await this.poRepo.update({purchaseOrderId:req.poId},{status:PurchaseOrderStatus.IN_PROGRESS})
+                        else {
+                            await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, { poitemStatus: PoItemEnum.PARTAILLY_RECEIVED, grnQuantity: item.acceptedQuantity })
+                        }
+                        const indentId = await this.getIndentid(req.materialtype, item.indentItemId)
+                        const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype, indentId.data[0].indentId)
+                        if (indentData.data.length == 0) {
+                            await this.indentRepo.update({ indentId: indentId.data[0].indentId }, { status: CustomerOrderStatusEnum.CLOSED })
+                        } else {
+                            await this.indentRepo.update({ indentId: indentId.data[0].indentId }, { status: CustomerOrderStatusEnum.IN_PROGRESS })
+                        }
                     }
-                    
-                await transactionalEntityManager.completeTransaction();
-                return new CommonResponseModel(true,1,'Grn Created Sucessfully',save)
+                }
+                const poData = await this.getAllPoDataToUPdateStatus(req.poId, req.materialtype)
+                if (poData.data.length == 0) {
+                    await this.poRepo.update({ purchaseOrderId: req.poId }, { status: PurchaseOrderStatus.CLOSED })
+                } else {
+                    await this.poRepo.update({ purchaseOrderId: req.poId }, { status: PurchaseOrderStatus.IN_PROGRESS })
+                }
 
-            }else{
+                await transactionalEntityManager.completeTransaction();
+                return new CommonResponseModel(true, 1, 'Grn Created Sucessfully', save)
+
+            } else {
                 await transactionalEntityManager.releaseTransaction();
-                return new CommonResponseModel(false,0,'Something went wrong',[])
+                return new CommonResponseModel(false, 0, 'Something went wrong', [])
             }
-            
+
         }
-        catch(err){
+        catch (err) {
             throw err
         }
     }
-    async getAllGrn(req?:GrnReq):Promise<CommonResponseModel>{
-        try{
+    async getAllGrn(req?: GrnReq): Promise<CommonResponseModel> {
+        try {
             const manager = this.dataSource;
-            let query=`SELECT g.grn_id AS grnId,g.grn_number AS grnNo,DATE(g.grn_date) AS grnDate,g.contact_person AS contactPerson,g.status,g.item_type AS itemType,g.grn_type AS grnType,g.invoice_no AS invoiceNo,
+            let query=`SELECT g.grn_id AS grnId,g.grn_number AS grnNo,DATE(g.grn_date) AS grnDate,g.status,g.item_type AS itemType,g.grn_type AS grnType,g.invoice_no AS invoiceNo,
             g.vendor_id AS vendorId, CONCAT(v.vendor_name,'-',v.vendor_code) AS vendor,g.po_id AS poId,po.po_number AS poNumber
             FROM grn g
             LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
-            LEFT JOIN vendors v ON v.vendor_id = g.vendor_id`
-            if(req?.grnId ){
-                query=query+`where g.grn_id=${req.grnId}`
+            LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
+            where 1=1`
+            if(req?.grnId){
+                query=query+` AND g.grn_id=${req.grnId}`
             }
-            const result= await manager.query(query)
-            if(result){
-                return new CommonResponseModel(true,1,'',result)
+            if(req?.grnNo){
+                query=query+` AND g.grn_number='${req.grnNo}'`
             }
-        }catch(err){
+            if(req?.poNumber){
+                query=query+` AND po.po_number='${req.poNumber}'`
+            }
+            if(req?.status){
+                query=query+` AND g.status='${req.status}'`
+            }
+            if (req.fromDate) {
+                query = query +` AND Date(g.grn_date) BETWEEN '${req.fromDate}' AND '${req.toDate}'`
+            }
+            const result = await manager.query(query)
+            if (result) {
+                return new CommonResponseModel(true, 1, '', result)
+            }
+        } catch (err) {
             throw err
         }
     }
@@ -294,18 +280,19 @@ export class GrnService{
 
     async getGRNItemsData(req?:GrnReq):Promise<CommonResponseModel>{
         try{
-            let query = `SELECT CONCAT(gi.received_quantity,u.uom) AS receivedQty,CONCAT(gi.accepted_quantity,u.uom) AS acceptedQty,CONCAT(gi.rejected_quantity,u.uom) AS rejectedQty,
-            CONCAT(gi.conversion_quantity,uom.uom) AS conversionQty,gi.location_mapped_status AS locMapStatus,gi.remarks,`
-            // if(req. === 'FABRIC'){
-            //     query = query + `gi.m3_item_code_id AS m3ItemCodeId,m3.item_code AS itemCode
-            //     FROM grn_items gi
-            //     LEFT JOIN m3_items m3 ON m3.m3_items_id = gi.m3_item_code_id`
-            // }
-            // if(req.itemType === 'TRIM'){
-            //     query = query + `m3.trim_code AS itemCode,m3.m3_trim_Id AS m3ItemId
-            //     FROM grn_items gi
-            //     LEFT JOIN m3_trims m3 ON m3.m3_trim_Id = gi.m3_item_code_id`
-            // }
+            // console.log(req,'--------------')
+            let query = `SELECT g.grn_number AS grnNumber,gi.received_quantity AS receivedQty,gi.accepted_quantity AS acceptedQty,gi.rejected_quantity  AS rejectedQty,u.uom,
+            gi.conversion_quantity  AS conversionQty,uom.uom AS convertedUom,gi.location_mapped_status AS locMapStatus,gi.remarks,`
+            if(req.itemType === 'FABRIC' || req.itemType === 'Fabric'){
+                query = query + `gi.m3_item_code_id AS m3ItemCodeId,m3.item_code AS itemCode
+                FROM grn_items gi
+                LEFT JOIN m3_items m3 ON m3.m3_items_id = gi.m3_item_code_id`
+            }
+            if(req.itemType.includes('TRIM') || req.itemType.includes('Trim') ){
+                query = query + `m3.trim_code AS itemCode,m3.m3_trim_Id AS m3ItemId
+                FROM grn_items gi
+                LEFT JOIN m3_trims m3 ON m3.m3_trim_Id = gi.m3_item_code_id`
+            }
             query = query +` LEFT JOIN grn g ON g.grn_id = gi.grn_id
             LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
@@ -320,7 +307,38 @@ export class GrnService{
             } else {
                 return new CommonResponseModel(false, 1, "No data found", [])
             }
-            return 
+        }catch(err){
+            throw(err)
+        }
+    }
+
+    async getGRNNoData():Promise<CommonResponseModel>{
+        try{
+            let query = `SELECT grn_number as grnNo FROM grn ORDER BY grn_number`
+            const data = await this.dataSource.query(query)
+            if (data.length > 0) {
+                return new CommonResponseModel(true, 0, "GRN's retrieved successfully", data)
+            } else {
+                return new CommonResponseModel(false, 1, "No data found", [])
+            }
+        }catch(err){
+            throw(err)
+        }
+    }
+    async getPONoData():Promise<CommonResponseModel>{
+        try{
+            let query = `
+            SELECT po.po_number as poNumber, g.po_id as poId 
+            FROM grn g
+            LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
+            GROUP BY po.po_number
+            ORDER BY po_number`
+            const data = await this.dataSource.query(query)
+            if (data.length > 0) {
+                return new CommonResponseModel(true, 0, "PO Number retrieved successfully", data)
+            } else {
+                return new CommonResponseModel(false, 1, "No data found", [])
+            }
         }catch(err){
             throw(err)
         }

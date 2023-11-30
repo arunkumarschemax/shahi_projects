@@ -6,8 +6,9 @@ import {Button,Card,Col,Collapse,Descriptions,Divider,Form,Input,Modal,Row,Segme
   import React, { useEffect, useRef } from "react";
   import { useState } from "react";
   import { useLocation, useNavigate } from "react-router-dom";
-import { GrnReq } from "@project-management-system/shared-models";
+import { GrnReq, LocationMappedEnumDisplay } from "@project-management-system/shared-models";
 import { GRNService } from "@project-management-system/shared-services";
+import Barcode from "react-barcode";
   
   const { Option } = Select;
   
@@ -19,7 +20,10 @@ import { GRNService } from "@project-management-system/shared-services";
     const logInUser = localStorage.getItem("userName");
   const location = useLocation()
   const stateData = location.state
-  console.log(stateData,'================') 
+  const [barcode, setBarcode] = useState<string>(null);
+  const [barcodeModal, setBarcodeModal] = useState<boolean>(false);
+  const [barcodeInfo, setBarcodeInfo] = useState<string>("");
+
 
   useEffect(() => {
     getAllData();
@@ -30,18 +34,43 @@ import { GRNService } from "@project-management-system/shared-services";
       const itemType = stateData?.data?.[0]?.itemType;
     
       if (grnId && itemType) {
-        const req = new GrnReq(grnId);
+        const req = new GrnReq(grnId,itemType);
     
         grnService.getGRNItemsData(req).then((res) => {
           if (res.status) {
             setGrn(res.data);
-            console.log(res.data,'0000000000000000')
           }
         });
       } else {
         console.error('grnId or itemType is not available');
       }
     };
+
+    const generateBarcode = (m3Code, info) => {
+      setBarcode(m3Code);
+      setBarcodeInfo(info);
+      setBarcodeModal(true);
+    };
+
+    const onBarcodeModalCancel = () => {
+      setBarcode("");
+      setBarcodeModal(false);
+    };
+  
+    const handlePrint = () => {
+      const invoiceContent = document.getElementById("print");
+      if (invoiceContent) {
+        const devContent = invoiceContent.innerHTML;
+        const printWindow = window.open("", "PRINT", "height=900,width=1600");
+        printWindow.document.write(devContent);
+        // getCssFromComponent(document, printWindow.document);
+  
+        printWindow.document.close();
+        printWindow.print();
+        printWindow.close();
+      }
+    };
+    
     
   
     const Columns: any = [
@@ -58,41 +87,66 @@ import { GRNService } from "@project-management-system/shared-services";
         title: <div style={{textAlign:"center"}}>Received Qty</div>,
         dataIndex: "receivedQty",
         align:"right",
-      },
+        render: (text, record) => {
+          const uom = record.uom || '';
+      
+          return text !== 0 && text !== null ? `${text} ${uom}` : '-';
+        },      },
       {
         title: <div style={{textAlign:"center"}}>Accepted Qty</div>,
         dataIndex: "acceptedQty",
         align:"right",
+        render: (text, record) => (text !== 0 ? `${text} ${record.uom || ''}` : '-')
       },
       {
         title: <div style={{textAlign:"center"}}>Rejected Qty</div>,
         dataIndex: "rejectedQty",
         align:"right",
-        render: (val, data) => {
-          return data.rejectedQty !== undefined && data.rejectedQty !== null && data.rejectedQty !== 0
-            ? data.rejectedQty
-            : "-";
-        }
+        render: (text, record) => (text !== 0 ? `${text} ${record.uom || ''}` : '-')
       },
       {
         title: <div style={{textAlign:"center"}}>Conversion Qty</div>,
         dataIndex: "conversionQty",
         align:"right",
-        render: (val,data) => {
-          return data.conversionQty ? data.conversionQty : "-";
-        }
+        render: (text, record) => {
+          const uom = record.uom || '';
+      
+          return text !== 0 && text !== null ? `${text} ${uom}` : '-';
+        },
       },
       {
         title: <div style={{textAlign:"center"}}>Location Mapped</div>,
         dataIndex: "locMapStatus",
-        align:"center"
+        align:"center",
+        render: (text) => {
+          const EnumObj = LocationMappedEnumDisplay.find((item) => item.name === text);
+          return EnumObj ? EnumObj.displayVal : text;
+        },
+      },
+      {
+        title: <div style={{textAlign:"center"}}>Barcode</div>,
+        dataIndex: "action",
+        align:"center",
+        render: (text, record) => {
+          const value = `${record.grnNumber}/${record.itemCode}/${record.receivedQty}${record.uom}`;
+          return (
+            <Tag onClick={() => generateBarcode(value, "GRN")} style={{ cursor: "pointer" }}>
+              <BarcodeOutlined />
+            </Tag>
+          );
+        },
       },
     ];
   
     return (
       <Card
         headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
-        title="GRN Details"
+        title={
+          <div style={{textAlign:"center"}}>
+            <span style={{marginRight:"20px"}}>GRN Number: {stateData?.data[0]?.grnNo}</span>
+            <span style={{ marginLeft: '20px'}}>PO Number: {stateData?.data[0]?.poNumber}</span>
+          </div>
+        }
         extra={
           <span>
             <Button onClick={() => navigate("/grn-view")}>Back</Button>
@@ -100,15 +154,15 @@ import { GRNService } from "@project-management-system/shared-services";
         }
       >
         <Descriptions>
-          <Descriptions.Item label='GRN Number' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data[0]?.grnNo?stateData.data?.[0]?.grnNo:'-'}</Descriptions.Item>
-          <Descriptions.Item label='GRN Date' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.grnDate? moment(stateData.data?.[0]?.grnDate).format('DD-MM-YYYY'):'-'}</Descriptions.Item>
-          <Descriptions.Item label='Vendor' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.vendor?stateData.data?.[0]?.vendor:'-'}</Descriptions.Item>
-          <Descriptions.Item label='PO Number' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.poNumber?stateData.data?.[0]?.poNumber:'-'}</Descriptions.Item>
-          <Descriptions.Item label='Contact Person' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.contactPerson?stateData.data?.[0]?.contactPerson:'-'}</Descriptions.Item>
-          <Descriptions.Item label='Invoice No' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.invoiceNo?stateData.data?.[0]?.invoiceNo:'-'}</Descriptions.Item>
-          <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.itemType?stateData.data?.[0]?.itemType:'-'}</Descriptions.Item>
-          <Descriptions.Item label='GRN Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.grnType?stateData.data?.[0]?.grnType:'-'}</Descriptions.Item>
-          <Descriptions.Item label='Status' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data?.[0]?.status?stateData.data?.[0]?.status:'-'}</Descriptions.Item>
+          {/* <Descriptions.Item label='GRN Number' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData.data[0]?.grnNo?stateData.data?.[0]?.grnNo:'-'}</Descriptions.Item> */}
+          <Descriptions.Item label='GRN Date' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.grnDate? moment(stateData?.data?.[0]?.grnDate).format('DD-MM-YYYY'):'-'}</Descriptions.Item>
+          <Descriptions.Item label='Vendor' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.vendor?stateData?.data?.[0]?.vendor:'-'}</Descriptions.Item>
+          {/* <Descriptions.Item label='PO Number' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.poNumber?stateData?.data?.[0]?.poNumber:'-'}</Descriptions.Item> */}
+          {/* <Descriptions.Item label='Contact Person' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.contactPerson?stateData?.data?.[0]?.contactPerson:'-'}</Descriptions.Item> */}
+          <Descriptions.Item label='Invoice No' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.invoiceNo?stateData?.data?.[0]?.invoiceNo:'-'}</Descriptions.Item>
+          <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.itemType?stateData?.data?.[0]?.itemType:'-'}</Descriptions.Item>
+          <Descriptions.Item label='GRN Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.grnType?stateData?.data?.[0]?.grnType:'-'}</Descriptions.Item>
+          <Descriptions.Item label='Status' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.status?stateData?.data?.[0]?.status:'-'}</Descriptions.Item>
         </Descriptions>
         <br/>
         <br/>
@@ -121,7 +175,18 @@ import { GRNService } from "@project-management-system/shared-services";
         scroll={{ x: "max-content" }}
         className="custom-table-wrapper"
         />
-                 
+        <Modal
+        open={barcodeModal}
+        onCancel={onBarcodeModalCancel}
+        footer={[]}
+        // title="GRN"
+        style={{ maxWidth: "100%" }}
+      >
+        <div style={{ textAlign: "center" }}>
+          <Barcode value={barcode} height={30} width={0.8}/>
+          {/* <PrinterOutlined onClick={handlePrint}/> */}
+        </div>
+      </Modal>
       </Card>
     );
   };
