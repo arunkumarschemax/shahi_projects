@@ -344,6 +344,7 @@ export class PurchaseOrderService {
                     purchaseOrderDate: po.purchaseOrderDate,
                     poMaterialtype: po.poMaterialtype,
                     poStatus: po.poStatus,
+                    poId:po.purchaseOrderId
                     // fabInfo: fabricInfo,
                     // triminfo: triminfo
 

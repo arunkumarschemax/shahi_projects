@@ -13,3 +13,16 @@ export class StockFilterRequest{
         this.plant = plant
     }
 }
+
+export class StockupdateRequest{
+    stockId?:string;
+    allocateQuantity?: number
+   
+    
+    constructor( stockId?:string, allocateQuantity?: number){
+        this.stockId = stockId;
+        this.allocateQuantity = allocateQuantity
+      
+}
+
+}
