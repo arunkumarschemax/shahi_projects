@@ -2332,21 +2332,209 @@ export class OrdersService {
     }
     async getPhaseMonthExcelData(req: YearReq): Promise<CommonResponseModel> {
         try {
-            const data = await this.ordersRepository.getdata(req);
+            let perData: any[] = [];
+            const records = await this.ordersRepository.getdata(req);
             const data1 = await this.ordersRepository.getdata1(req);
-            if (data && data1) {
-
-                const mergedData = [...data, ...data1];
-                // Log the merged data for debugging
-                // console.log('Merged Data:', mergedData);
+            
+            let totaljanExfPre = 0;
+            let totalfebExfPre = 0;
+            let totalmarExfPre = 0;
+            let totalaprExfPre = 0;
+            let totalmayExfPre = 0;
+            let totaljunExfPre = 0;
+            let totaljulExfPre = 0;
+            let totalaugExfPre = 0;
+            let totalsepExfPre = 0;
+            let totaloctExfPre = 0;
+            let totalnovExfPre = 0;
+            let totaldecExfPre = 0;
+            let sumExfPre = 0;
+            let totaljanExfLat = 0;
+            let totalfebExfLat = 0;
+            let totalmarExfLat = 0;
+            let totalaprExfLat = 0;
+            let totalmayExfLat = 0;
+            let totaljunExfLat = 0;
+            let totaljulExfLat = 0;
+            let totalaugExfLat = 0;
+            let totalsepExfLat = 0;
+            let totaloctExfLat = 0;
+            let totalnovExfLat = 0;
+            let totaldecExfLat = 0;
+            let sumExfLat = 0;
+            let totaljanWhPre = 0;
+            let totalfebWhPre = 0;
+            let totalmarWhPre = 0;
+            let totalaprWhPre = 0;
+            let totalmayWhPre = 0;
+            let totaljunWhPre = 0;
+            let totaljulWhPre = 0;
+            let totalaugWhPre = 0;
+            let totalsepWhPre = 0;
+            let totaloctWhPre = 0;
+            let totalnovWhPre = 0;
+            let totaldecWhPre = 0;
+            let sumWhPre = 0;
+            let totaljanWhLat = 0;
+            let totalfebWhLat = 0;
+            let totalmarWhLat = 0;
+            let totalaprWhLat = 0;
+            let totalmayWhLat = 0;
+            let totaljunWhLat = 0;
+            let totaljulWhLat = 0;
+            let totalaugWhLat = 0;
+            let totalsepWhLat = 0;
+            let totaloctWhLat = 0;
+            let totalnovWhLat = 0;
+            let totaldecWhLat = 0;
+            let sumWhLat = 0;
+            for (const record of records) {
+                
+                totaljanExfPre += record.janExfPcs;
+                totalfebExfPre += record.febExfPcs;
+                totalmarExfPre += record.marExfPcs;
+                totalaprExfPre += record.aprExfPcs;
+                totalmayExfPre += record.mayExfPcs;
+                totaljunExfPre += record.junExfPcs;
+                totaljulExfPre += record.julExfPcs;
+                totalaugExfPre += record.augExfPcs;
+                totalsepExfPre += record.sepExfPcs;
+                totaloctExfPre += record.octExfPcs;
+                totalnovExfPre += record.novExfPcs;
+                totaldecExfPre += record.decExfPcs;
+                sumExfPre += record.totalExfPcs;
+                totaljanExfLat += record.janExfCoeff;
+                totalfebExfLat += record.febExfCoeff;
+                totalmarExfLat += record.marExfCoeff;
+                totalaprExfLat += record.aprExfCoeff;
+                totalmayExfLat += record.mayExfCoeff;
+                totaljunExfLat += record.junExfCoeff;
+                totaljulExfLat += record.julExfCoeff;
+                totalaugExfLat += record.augExfCoeff;
+                totalsepExfLat += record.sepExfCoeff;
+                totaloctExfLat += record.octExfCoeff;
+                totalnovExfLat += record.novExfCoeff;
+                totaldecExfLat += record.decExfCoeff;
+                sumExfLat += record.totalExfCoeff;
+                totaljanWhPre += record.janWhPcs;
+                totalfebWhPre += record.febWhPcs;
+                totalmarWhPre += record.marWhPcs;
+                totalaprWhPre += record.aprWhPcs;
+                totalmayWhPre += record.mayWhPcs;
+                totaljunWhPre += record.junWhPcs;
+                totaljulWhPre += record.julWhPcs;
+                totalaugWhPre += record.augWhPcs;
+                totalsepWhPre += record.sepWhPcs;
+                totaloctWhPre += record.octWhPcs;
+                totalnovWhPre += record.novWhPcs;
+                totaldecWhPre += record.decWhPcs;
+                sumWhPre += record.totalWhPcs;
+                totaljanWhLat += record.janWhCoeff;
+                totalfebWhLat += record.febWhCoeff;
+                totalmarWhLat += record.marWhCoeff;
+                totalaprWhLat += record.aprWhCoeff;
+                totalmayWhLat += record.mayWhCoeff;
+                totaljunWhLat += record.junWhCoeff;
+                totaljulWhLat += record.julWhCoeff;
+                totalaugWhLat += record.augWhCoeff;
+                totalsepWhLat += record.sepWhCoeff;
+                totaloctWhLat += record.octWhCoeff;
+                totalnovWhLat += record.novWhCoeff;
+                totaldecWhLat += record.decWhCoeff;
+                sumWhLat += record.totalWhCoeff;
+            }
+            for (const record of records) {
+                const YEAR = record.YEAR;
+                const file_id = record.file_id;
+                const prod_plan_type = record.prod_plan_type;
+                const janExfPcs = Number((record.janExfPcs / totaljanExfPre) * 100).toFixed(0)+'%';
+                const febExfPcs = Number((record.febExfPcs / totalfebExfPre) * 100).toFixed(0)+'%'
+                const marExfPcs = Number((record.marExfPcs / totalmarExfPre) * 100).toFixed(0)+'%'
+                const aprExfPcs = Number((record.aprExfPcs / totalaprExfPre) * 100).toFixed(0)+'%'
+                const mayExfPcs = Number((record.mayExfPcs / totalmayExfPre) * 100).toFixed(0)+'%'
+                const junExfPcs = Number((record.junExfPcs / totaljunExfPre) * 100).toFixed(0)+'%'
+                const julExfPcs = Number((record.julExfPcs / totaljulExfPre) * 100).toFixed(0)+'%'
+                const augExfPcs = Number((record.augExfPcs / totalaugExfPre) * 100).toFixed(0)+'%'
+                const sepExfPcs = Number((record.sepExfPcs / totalsepExfPre) * 100).toFixed(0)+'%'
+                const octExfPcs = Number((record.octExfPcs / totaloctExfPre) * 100).toFixed(0)+'%'
+                const novExfPcs = Number((record.novExfPcs / totalnovExfPre) * 100).toFixed(0)+'%'
+                const decExfPcs = Number((record.decExfPcs / totaldecExfPre) * 100).toFixed(0)+'%'
+                const totalExfPcs = Number((record.totalExfPcs / sumExfPre) * 100).toFixed(0)+'%'
+                const janExfCoeff = Number((record.janExfCoeff / totaljanExfLat) * 100).toFixed(0)+'%';
+                const febExfCoeff = Number((record.febExfCoeff / totalfebExfLat) * 100).toFixed(0)+'%';
+                const marExfCoeff = Number((record.marExfCoeff / totalmarExfLat) * 100).toFixed(0)+'%';
+                const aprExfCoeff = Number((record.aprExfCoeff / totalaprExfLat) * 100).toFixed(0)+'%';
+                const mayExfCoeff = Number((record.mayExfCoeff / totalmayExfLat) * 100).toFixed(0)+'%';
+                const junExfCoeff = Number((record.junExfCoeff / totaljunExfLat) * 100).toFixed(0)+'%';
+                const julExfCoeff = Number((record.julExfCoeff / totaljulExfLat) * 100).toFixed(0)+'%';
+                const augExfCoeff = Number((record.augExfCoeff / totalaugExfLat) * 100).toFixed(0)+'%';
+                const sepExfCoeff = Number((record.sepExfCoeff / totalsepExfLat) * 100).toFixed(0)+'%';
+                const octExfCoeff = Number((record.octExfCoeff / totaloctExfLat) * 100).toFixed(0)+'%';
+                const novExfCoeff = Number((record.novExfCoeff / totalnovExfLat) * 100).toFixed(0)+'%';
+                const decExfCoeff = Number((record.decExfCoeff / totaldecExfLat) * 100).toFixed(0)+'%';
+                const totalExfCoeff = Number((record.totalExfCoeff / sumExfLat) * 100).toFixed(0)+'%';
+                const janWhPcs = Number((record.janWhPcs / totaljanWhPre) * 100).toFixed(0)+'%';
+                const febWhPcs = Number((record.febWhPcs / totalfebWhPre) * 100).toFixed(0)+'%';
+                const marWhPcs = Number((record.marWhPcs / totalmarWhPre) * 100).toFixed(0)+'%';
+                const aprWhPcs = Number((record.aprWhPcs / totalaprWhPre) * 100).toFixed(0)+'%';
+                const mayWhPcs = Number((record.mayWhPcs / totalmayWhPre) * 100).toFixed(0)+'%';
+                const junWhPcs = Number((record.junWhPcs / totaljunWhPre) * 100).toFixed(0)+'%';
+                const julWhPcs = Number((record.julWhPcs / totaljulWhPre) * 100).toFixed(0)+'%';
+                const augWhPcs = Number((record.augWhPcs / totalaugWhPre) * 100).toFixed(0)+'%';
+                const sepWhPcs = Number((record.sepWhPcs / totalsepWhPre) * 100).toFixed(0)+'%';
+                const octWhPcs = Number((record.octWhPcs / totaloctWhPre) * 100).toFixed(0)+'%';
+                const novWhPcs = Number((record.novWhPcs / totalnovWhPre) * 100).toFixed(0)+'%';
+                const decWhPcs = Number((record.decWhPcs / totaldecWhPre) * 100).toFixed(0)+'%';
+                const totalWhPcs = Number((record.totalWhPcs / sumWhPre) * 100).toFixed(0)+'%'
+                const janWhCoeff = Number((record.janWhCoeff / totaljanWhLat) * 100).toFixed(0)+'%';
+                const febWhCoeff = Number((record.febWhCoeff / totalfebWhLat) * 100).toFixed(0)+'%';
+                const marWhCoeff = Number((record.marWhCoeff / totalmarWhLat) * 100).toFixed(0)+'%';
+                const aprWhCoeff = Number((record.aprWhCoeff / totalaprWhLat) * 100).toFixed(0)+'%';
+                const mayWhCoeff = Number((record.mayWhCoeff / totalmayWhLat) * 100).toFixed(0)+'%';
+                const junWhCoeff = Number((record.junWhCoeff / totaljunWhLat) * 100).toFixed(0)+'%';
+                const julWhCoeff = Number((record.julWhCoeff / totaljulWhLat) * 100).toFixed(0)+'%';
+                const augWhCoeff = Number((record.augWhCoeff / totalaugWhLat) * 100).toFixed(0)+'%';
+                const sepWhCoeff = Number((record.sepWhCoeff / totalsepWhLat) * 100).toFixed(0)+'%';
+                const octWhCoeff = Number((record.octWhCoeff / totaloctWhLat) * 100).toFixed(0)+'%';
+                const novWhCoeff = Number((record.novWhCoeff / totalnovWhLat) * 100).toFixed(0)+'%';
+                const decWhCoeff = Number((record.decWhCoeff / totaldecWhLat) * 100).toFixed(0)+'%';
+                const totalWhCoeff = Number((record.totalWhCoeff / sumWhLat) * 100).toFixed(0)+'%'
+                perData.push({
+                    YEAR, file_id, prod_plan_type, janExfPcs, febExfPcs, marExfPcs, aprExfPcs, mayExfPcs, junExfPcs, julExfPcs, augExfPcs, sepExfPcs, octExfPcs, novExfPcs, decExfPcs, totalExfPcs,
+                    janExfCoeff, febExfCoeff, marExfCoeff, aprExfCoeff, mayExfCoeff, junExfCoeff, julExfCoeff, augExfCoeff, sepExfCoeff, octExfCoeff, novExfCoeff, decExfCoeff, totalExfCoeff, janWhPcs, febWhPcs, marWhPcs, aprWhPcs, mayWhPcs,
+                    junWhPcs, julWhPcs, augWhPcs, sepWhPcs, octWhPcs, novWhPcs, decWhPcs, totalWhPcs, janWhCoeff, febWhCoeff, marWhCoeff, aprWhCoeff, mayWhCoeff, junWhCoeff, julWhCoeff, augWhCoeff, sepWhCoeff, octWhCoeff, novWhCoeff,
+                    decWhCoeff, totalWhCoeff
+                })
+            }
+            if (records && data1) {
+                const mergedData = [...records, ...perData]
+                // console.log(mergedData,'ppppppppppppppp');
 
                 return new CommonResponseModel(true, 1, 'Data retrieved', mergedData);
             } else {
                 return new CommonResponseModel(false, 1, 'No data found');
             }
         } catch (err) {
-            throw err
+            // console.error('Error in getComparisionphaseExcelData:', err);
+            throw err;
         }
+        // try {
+        //     const data = await this.ordersRepository.getdata(req);
+        //     const data1 = await this.ordersRepository.getdata1(req);
+            
+        //     if (data && data1) {
+
+        //         const mergedData = [...data, ...data1];
+        //         // Log the merged data for debugging
+        //         // console.log('Merged Data:', mergedData);
+
+        //         return new CommonResponseModel(true, 1, 'Data retrieved', mergedData);
+        //     } else {
+        //         return new CommonResponseModel(false, 1, 'No data found');
+        //     }
+        // } catch (err) {
+        //     throw err
+        // }
     }
 
     async getComparisionphaseExcelData(req: YearReq): Promise<CommonResponseModel> {
@@ -2468,64 +2656,65 @@ export class OrdersService {
                 const planning_sum = record.planning_sum;
                 const STATUS = record.STATUS;
                 const prod_plan_type = record.prod_plan_type;
-                const janExfPre = Math.floor((record.janExfPre / totaljanExfPre) * 100)+'%';
-                const febExfPre = Math.floor((record.febExfPre / totalfebExfPre) * 100)+'%';
-                const marExfPre = Math.floor((record.marExfPre / totalmarExfPre) * 100)+'%';
-                const aprExfPre = Math.floor((record.aprExfPre / totalaprExfPre) * 100)+'%';
-                const mayExfPre = Math.floor((record.mayExfPre / totalmayExfPre) * 100)+'%';
-                const junExfPre = Math.floor((record.junExfPre / totaljunExfPre) * 100)+'%';
-                const julExfPre = Math.floor((record.julExfPre / totaljulExfPre) * 100)+'%';
-                const augExfPre = Math.floor((record.augExfPre / totalaugExfPre) * 100)+'%';
-                const sepExfPre = Math.floor((record.sepExfPre / totalsepExfPre) * 100)+'%';
-                const octExfPre = Math.floor((record.octExfPre / totaloctExfPre) * 100)+'%';
-                const novExfPre = Math.floor((record.novExfPre / totalnovExfPre) * 100)+'%';
-                const decExfPre = Math.floor((record.decExfPre / totaldecExfPre) * 100)+'%';
-                const totalExfPre = Math.floor((record.totalExfPre / sumExfPre) * 100)+'%';
-                const janExfLat = Math.floor((record.janExfLat / totaljanExfLat) * 100)+'%';
-                const febExfLat = Math.floor((record.febExfLat / totalfebExfLat) * 100)+'%';
-                const marExfLat = Math.floor((record.marExfLat / totalmarExfLat) * 100)+'%';
-                const aprExfLat = Math.floor((record.aprExfLat / totalaprExfLat) * 100)+'%';
-                const mayExfLat = Math.floor((record.mayExfLat / totalmayExfLat) * 100)+'%';
-                const junExfLat = Math.floor((record.junExfLat / totaljunExfLat) * 100)+'%';
-                const julExfLat = Math.floor((record.julExfLat / totaljulExfLat) * 100)+'%';
-                const augExfLat = Math.floor((record.augExfLat / totalaugExfLat) * 100)+'%';
-                const sepExfLat = Math.floor((record.sepExfLat / totalsepExfLat) * 100)+'%';
-                const octExfLat = Math.floor((record.octExfLat / totaloctExfLat) * 100)+'%';
-                const novExfLat = Math.floor((record.novExfLat / totalnovExfLat) * 100)+'%';
-                const decExfLat = Math.floor((record.decExfLat / totaldecExfLat) * 100)+'%';
-                const totalExfLat = Math.floor((record.totalExfLat / sumExfLat) * 100)+'%';
-                const janWhPre = Math.floor((record.janWhPre / totaljanWhPre) * 100)+'%';
-                const febWhPre = Math.floor((record.febWhPre / totalfebWhPre) * 100)+'%';
-                const marWhPre = Math.floor((record.marWhPre / totalmarWhPre) * 100)+'%';
-                const aprWhPre = Math.floor((record.aprWhPre / totalaprWhPre) * 100)+'%';
-                const mayWhPre = Math.floor((record.mayWhPre / totalmayWhPre) * 100)+'%';
-                const junWhPre = Math.floor((record.junWhPre / totaljunWhPre) * 100)+'%';
-                const julWhPre = Math.floor((record.julWhPre / totaljulWhPre) * 100)+'%';
-                const augWhPre = Math.floor((record.augWhPre / totalaugWhPre) * 100)+'%';
-                const sepWhPre = Math.floor((record.sepWhPre / totalsepWhPre) * 100)+'%';
-                const octWhPre = Math.floor((record.octWhPre / totaloctWhPre) * 100)+'%';
-                const novWhPre = Math.floor((record.novWhPre / totalnovWhPre) * 100)+'%';
-                const decWhPre = Math.floor((record.decWhPre / totaldecWhPre) * 100)+'%';
-                const totalWhPre = Math.floor((record.totalWhPre / sumWhPre) * 100)+'%'
-                const janWhLat = Math.floor((record.janWhLat / totaljanWhLat) * 100)+'%';
-                const febWhLat = Math.floor((record.febWhLat / totalfebWhLat) * 100)+'%';
-                const marWhLat = Math.floor((record.marWhLat / totalmarWhLat) * 100)+'%';
-                const aprWhLat = Math.floor((record.aprWhLat / totalaprWhLat) * 100)+'%';
-                const mayWhLat = Math.floor((record.mayWhLat / totalmayWhLat) * 100)+'%';
-                const junWhLat = Math.floor((record.junWhLat / totaljunWhLat) * 100)+'%';
-                const julWhLat = Math.floor((record.julWhLat / totaljulWhLat) * 100)+'%';
-                const augWhLat = Math.floor((record.augWhLat / totalaugWhLat) * 100)+'%';
-                const sepWhLat = Math.floor((record.sepWhLat / totalsepWhLat) * 100)+'%';
-                const octWhLat = Math.floor((record.octWhLat / totaloctWhLat) * 100)+'%';
-                const novWhLat = Math.floor((record.novWhLat / totalnovWhLat) * 100)+'%';
-                const decWhLat = Math.floor((record.decWhLat / totaldecWhLat) * 100)+'%';
-                const totalWhLat = Math.floor((record.totalWhLat / sumWhLat) * 100)+'%'
+                const janExfPre = Number((record.janExfPre / totaljanExfPre) * 100).toFixed(0)+'%';
+                const febExfPre = Number((record.febExfPre / totalfebExfPre) * 100).toFixed(0)+'%'
+                const marExfPre = Number((record.marExfPre / totalmarExfPre) * 100).toFixed(0)+'%'
+                const aprExfPre = Number((record.aprExfPre / totalaprExfPre) * 100).toFixed(0)+'%'
+                const mayExfPre = Number((record.mayExfPre / totalmayExfPre) * 100).toFixed(0)+'%'
+                const junExfPre = Number((record.junExfPre / totaljunExfPre) * 100).toFixed(0)+'%'
+                const julExfPre = Number((record.julExfPre / totaljulExfPre) * 100).toFixed(0)+'%'
+                const augExfPre = Number((record.augExfPre / totalaugExfPre) * 100).toFixed(0)+'%'
+                const sepExfPre = Number((record.sepExfPre / totalsepExfPre) * 100).toFixed(0)+'%'
+                const octExfPre = Number((record.octExfPre / totaloctExfPre) * 100).toFixed(0)+'%'
+                const novExfPre = Number((record.novExfPre / totalnovExfPre) * 100).toFixed(0)+'%'
+                const decExfPre = Number((record.decExfPre / totaldecExfPre) * 100).toFixed(0)+'%'
+                const totalExfPre = Number((record.totalExfPre / sumExfPre) * 100).toFixed(0)+'%'
+                const janExfLat = Number((record.janExfLat / totaljanExfLat) * 100).toFixed(0)+'%';
+                const febExfLat = Number((record.febExfLat / totalfebExfLat) * 100).toFixed(0)+'%';
+                const marExfLat = Number((record.marExfLat / totalmarExfLat) * 100).toFixed(0)+'%';
+                const aprExfLat = Number((record.aprExfLat / totalaprExfLat) * 100).toFixed(0)+'%';
+                const mayExfLat = Number((record.mayExfLat / totalmayExfLat) * 100).toFixed(0)+'%';
+                const junExfLat = Number((record.junExfLat / totaljunExfLat) * 100).toFixed(0)+'%';
+                const julExfLat = Number((record.julExfLat / totaljulExfLat) * 100).toFixed(0)+'%';
+                const augExfLat = Number((record.augExfLat / totalaugExfLat) * 100).toFixed(0)+'%';
+                const sepExfLat = Number((record.sepExfLat / totalsepExfLat) * 100).toFixed(0)+'%';
+                const octExfLat = Number((record.octExfLat / totaloctExfLat) * 100).toFixed(0)+'%';
+                const novExfLat = Number((record.novExfLat / totalnovExfLat) * 100).toFixed(0)+'%';
+                const decExfLat = Number((record.decExfLat / totaldecExfLat) * 100).toFixed(0)+'%';
+                const totalExfLat = Number((record.totalExfLat / sumExfLat) * 100).toFixed(0)+'%';
+                const janWhPre = Number((record.janWhPre / totaljanWhPre) * 100).toFixed(0)+'%';
+                const febWhPre = Number((record.febWhPre / totalfebWhPre) * 100).toFixed(0)+'%';
+                const marWhPre = Number((record.marWhPre / totalmarWhPre) * 100).toFixed(0)+'%';
+                const aprWhPre = Number((record.aprWhPre / totalaprWhPre) * 100).toFixed(0)+'%';
+                const mayWhPre = Number((record.mayWhPre / totalmayWhPre) * 100).toFixed(0)+'%';
+                const junWhPre = Number((record.junWhPre / totaljunWhPre) * 100).toFixed(0)+'%';
+                const julWhPre = Number((record.julWhPre / totaljulWhPre) * 100).toFixed(0)+'%';
+                const augWhPre = Number((record.augWhPre / totalaugWhPre) * 100).toFixed(0)+'%';
+                const sepWhPre = Number((record.sepWhPre / totalsepWhPre) * 100).toFixed(0)+'%';
+                const octWhPre = Number((record.octWhPre / totaloctWhPre) * 100).toFixed(0)+'%';
+                const novWhPre = Number((record.novWhPre / totalnovWhPre) * 100).toFixed(0)+'%';
+                const decWhPre = Number((record.decWhPre / totaldecWhPre) * 100).toFixed(0)+'%';
+                const totalWhPre = Number((record.totalWhPre / sumWhPre) * 100).toFixed(0)+'%'
+                const janWhLat = Number((record.janWhLat / totaljanWhLat) * 100).toFixed(0)+'%';
+                const febWhLat = Number((record.febWhLat / totalfebWhLat) * 100).toFixed(0)+'%';
+                const marWhLat = Number((record.marWhLat / totalmarWhLat) * 100).toFixed(0)+'%';
+                const aprWhLat = Number((record.aprWhLat / totalaprWhLat) * 100).toFixed(0)+'%';
+                const mayWhLat = Number((record.mayWhLat / totalmayWhLat) * 100).toFixed(0)+'%';
+                const junWhLat = Number((record.junWhLat / totaljunWhLat) * 100).toFixed(0)+'%';
+                const julWhLat = Number((record.julWhLat / totaljulWhLat) * 100).toFixed(0)+'%';
+                const augWhLat = Number((record.augWhLat / totalaugWhLat) * 100).toFixed(0)+'%';
+                const sepWhLat = Number((record.sepWhLat / totalsepWhLat) * 100).toFixed(0)+'%';
+                const octWhLat = Number((record.octWhLat / totaloctWhLat) * 100).toFixed(0)+'%';
+                const novWhLat = Number((record.novWhLat / totalnovWhLat) * 100).toFixed(0)+'%';
+                const decWhLat = Number((record.decWhLat / totaldecWhLat) * 100).toFixed(0)+'%';
+                const totalWhLat = Number((record.totalWhLat / sumWhLat) * 100).toFixed(0)+'%'
                 perData.push({
                     YEAR, file_id, exf, wh, planning_sum, STATUS, prod_plan_type, janExfPre, febExfPre, marExfPre, aprExfPre, mayExfPre, junExfPre, julExfPre, augExfPre, sepExfPre, octExfPre, novExfPre, decExfPre, totalExfPre,
                     janExfLat, febExfLat, marExfLat, aprExfLat, mayExfLat, junExfLat, julExfLat, augExfLat, sepExfLat, octExfLat, novExfLat, decExfLat, totalExfLat, janWhPre, febWhPre, marWhPre, aprWhPre, mayWhPre,
                     junWhPre, julWhPre, augWhPre, sepWhPre, octWhPre, novWhPre, decWhPre, totalWhPre, janWhLat, febWhLat, marWhLat, aprWhLat, mayWhLat, junWhLat, julWhLat, augWhLat, sepWhLat, octWhLat, novWhLat,
                     decWhLat, totalWhLat
                 })
+
             }
             if (records && data1) {
                 const mergedData = [...records, ...perData]
