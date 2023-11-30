@@ -1,6 +1,6 @@
 import { IsInt, IsEmail, IsString, IsDateString, IsNumber, IsDate, IsAlphanumeric, MaxLength, Matches, IsOptional, IsNotEmpty, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { RackEnum } from '@project-management-system/shared-models';
+import { RackEnum, ReclassificationStatusEnum } from '@project-management-system/shared-models';
 export class ReclassificationDTO {
 
     @ApiProperty()
@@ -20,6 +20,12 @@ export class ReclassificationDTO {
 
     @ApiProperty()
     buyer: number;
+
+    @ApiProperty()
+    fromBuyer:number;
+
+    @ApiProperty()
+    status: ReclassificationStatusEnum;
 
     @ApiProperty()
     isActive: boolean;

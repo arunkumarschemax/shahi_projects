@@ -6,6 +6,7 @@ export class ReclassificationDto {
     itemId: number;
     location: number;
     buyer: number;
+    fromBuyer:number;
     isActive: boolean;
     createdUser: string;
     updatedUser: string;
@@ -14,7 +15,7 @@ export class ReclassificationDto {
     uomId?: number;
 
     constructor(
-        reclassificationId: number,stockId: number,quantity: number,itemId: number,location: number,buyer: number,isActive: boolean,createdUser: string,updatedUser: string,versionFlag: number, grnItemId?: number,uomId?: number){
+        reclassificationId: number,stockId: number,quantity: number,itemId: number,location: number,buyer: number,fromBuyer:number,isActive: boolean,createdUser: string,updatedUser: string,versionFlag: number, grnItemId?: number,uomId?: number){
             this.reclassificationId = reclassificationId;
             this.stockId = stockId;
             this.quantity = quantity;
@@ -25,6 +26,7 @@ export class ReclassificationDto {
             this.updatedUser = updatedUser;
             this.versionFlag = versionFlag;
             this.buyer = buyer;
+            this.fromBuyer = fromBuyer;
             this.grnItemId = grnItemId;
             this.uomId = uomId;
         }
