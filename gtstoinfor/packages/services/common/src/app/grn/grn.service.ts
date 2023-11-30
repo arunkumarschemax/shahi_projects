@@ -256,9 +256,22 @@ export class GrnService{
             g.vendor_id AS vendorId, CONCAT(v.vendor_name,'-',v.vendor_code) AS vendor,g.po_id AS poId,po.po_number AS poNumber
             FROM grn g
             LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
-            LEFT JOIN vendors v ON v.vendor_id = g.vendor_id`
-            if(req?.grnId ){
-                query=query+`where g.grn_id=${req.grnId}`
+            LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
+            where 1=1`
+            if(req?.grnId){
+                query=query+` AND g.grn_id=${req.grnId}`
+            }
+            if(req?.grnNo){
+                query=query+` AND g.grn_number='${req.grnNo}'`
+            }
+            if(req?.poNumber){
+                query=query+` AND po.po_number='${req.poNumber}'`
+            }
+            if(req?.status){
+                query=query+` AND g.status='${req.status}'`
+            }
+            if (req.fromDate) {
+                query = query +` AND Date(g.grn_date) BETWEEN '${req.fromDate}' AND '${req.toDate}'`
             }
             const result= await manager.query(query)
             if(result){
@@ -294,8 +307,8 @@ export class GrnService{
 
     async getGRNItemsData(req?:GrnReq):Promise<CommonResponseModel>{
         try{
-            let query = `SELECT CONCAT(gi.received_quantity,u.uom) AS receivedQty,CONCAT(gi.accepted_quantity,u.uom) AS acceptedQty,CONCAT(gi.rejected_quantity,u.uom) AS rejectedQty,
-            CONCAT(gi.conversion_quantity,uom.uom) AS conversionQty,gi.location_mapped_status AS locMapStatus,gi.remarks,`
+            let query = `SELECT g.grn_number AS grnNumber,gi.received_quantity AS receivedQty,gi.accepted_quantity AS acceptedQty,gi.rejected_quantity  AS rejectedQty,u.uom,
+            gi.conversion_quantity  AS conversionQty,uom.uom AS convertedUom,gi.location_mapped_status AS locMapStatus,gi.remarks,`
             if(req.itemType === 'FABRIC'){
                 query = query + `gi.m3_item_code_id AS m3ItemCodeId,m3.item_code AS itemCode
                 FROM grn_items gi
@@ -320,7 +333,38 @@ export class GrnService{
             } else {
                 return new CommonResponseModel(false, 1, "No data found", [])
             }
-            return 
+        }catch(err){
+            throw(err)
+        }
+    }
+
+    async getGRNNoData():Promise<CommonResponseModel>{
+        try{
+            let query = `SELECT grn_number as grnNo FROM grn ORDER BY grn_number`
+            const data = await this.dataSource.query(query)
+            if (data.length > 0) {
+                return new CommonResponseModel(true, 0, "GRN's retrieved successfully", data)
+            } else {
+                return new CommonResponseModel(false, 1, "No data found", [])
+            }
+        }catch(err){
+            throw(err)
+        }
+    }
+    async getPONoData():Promise<CommonResponseModel>{
+        try{
+            let query = `
+            SELECT po.po_number as poNumber, g.po_id as poId 
+            FROM grn g
+            LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
+            GROUP BY po.po_number
+            ORDER BY po_number`
+            const data = await this.dataSource.query(query)
+            if (data.length > 0) {
+                return new CommonResponseModel(true, 0, "PO Number retrieved successfully", data)
+            } else {
+                return new CommonResponseModel(false, 1, "No data found", [])
+            }
         }catch(err){
             throw(err)
         }
