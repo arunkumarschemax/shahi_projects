@@ -394,6 +394,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                 trimCodeName: defaultTrimFormData.trimCodeName,
                 quantityUomName:defaultTrimFormData.quantityUomName,
                 quantityUomId:defaultTrimFormData.quantityUomId,
+                m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
 
             })
 
