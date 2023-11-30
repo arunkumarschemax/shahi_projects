@@ -14,6 +14,7 @@ export interface ReclassificationProps {
   data:any,
   buyer:any,
   type:string
+  status: (boolean) => void;
 }
 
 export const Reclassification = (props:ReclassificationProps) => {
@@ -34,7 +35,7 @@ export const Reclassification = (props:ReclassificationProps) => {
     console.log(props.data)
     setStockData(props?.data)
     form.setFieldsValue({ 
-        quantity:props?.data.qty
+        quantity:props?.data.qty, m3Item:props?.data.m3itemId, locationId:props?.data.locationId, stockId:props?.data.stockId, grnItemId:props?.data.grnItemId,uomId:props?.data.uomId,fromBuyer:props?.data.buyer_id
       });
       setVisible(true)
   }, [props?.data]);
@@ -57,10 +58,11 @@ export const Reclassification = (props:ReclassificationProps) => {
 
   const onFinish = (data: any) => {
     console.log(data)
-    const req = new ReclassificationDto(0,data.stockId,form.getFieldValue("quantity"),data.m3Item,data.location,form.getFieldValue("buyerId"),undefined,"","",0,data.grnItemId,data.uomId);
+    const req = new ReclassificationDto(0,data.stockId,form.getFieldValue("quantity"),data.m3Item,data.locationId,form.getFieldValue("buyerId"),data.fromBuyer,undefined,"","",0,data.grnItemId,data.uomId);
     reclassificationService.createReclassification(req).then((res) => {
       if(res.status){
         AlertMessages.getSuccessMessage(res.internalMessage);
+        props.status(false)
       }
       else{
         AlertMessages.getErrorMessage(res.internalMessage);
@@ -98,6 +100,42 @@ export const Reclassification = (props:ReclassificationProps) => {
               </Select>
             </Form.Item>
           </Col>
+          <Form.Item
+                label="m3Item"
+                name="m3Item" style={{display:'none'}}
+              >
+                <Input placeholder=" Enter  m3Item" />
+              </Form.Item>
+              <Form.Item
+                label="locationId"
+                name="locationId" style={{display:'none'}}
+              >
+                <Input placeholder=" Enter  locationId" />
+              </Form.Item>
+              <Form.Item
+                label="stockId"
+                name="stockId" style={{display:'none'}}
+              >
+                <Input placeholder=" Enter  stockId" />
+              </Form.Item>
+              <Form.Item
+                label="grnItemId"
+                name="grnItemId" style={{display:'none'}}
+              >
+                <Input placeholder=" Enter  grnItemId" />
+              </Form.Item>
+              <Form.Item
+                label="fromBuyer"
+                name="fromBuyer"
+              >
+                <Input placeholder=" Enter  fromBuyer" />
+              </Form.Item>
+              <Form.Item
+                label="uomId"
+                name="uomId" style={{display:'none'}}
+              >
+                <Input placeholder=" Enter  uomId" />
+              </Form.Item>
             <Col
               xs={{ span: 12 }}
               sm={{ span: 12 }}

@@ -1,4 +1,4 @@
-import { RackEnum } from "@project-management-system/shared-models";
+import { RackEnum, ReclassificationStatusEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
 @Entity('reclassification')
@@ -36,6 +36,19 @@ export class ReclassificationEntity {
   })
   buyer: number;
 
+  @Column('int', {
+    nullable: false,
+    name: 'from_buyer',
+  })
+  fromBuyer: number;
+
+  @Column('enum', {
+    name: 'status',
+    nullable: false,
+    enum: ReclassificationStatusEnum
+  })
+  status: ReclassificationStatusEnum;
+  
   @Column("boolean", {
     nullable: false,
     default: true,

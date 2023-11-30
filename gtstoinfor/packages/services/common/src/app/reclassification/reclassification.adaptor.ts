@@ -12,12 +12,14 @@ export class ReclassificationAdapter {
         console.log(dto);
         const entity = new ReclassificationEntity();
         entity.buyer = dto.buyer;
+        entity.fromBuyer = dto.fromBuyer;
         entity.createdUser = dto.createdUser;
         entity.isActive = dto.isActive;
         entity.itemId = dto.itemId
         entity.location = dto.location
         entity.quantity = dto.quantity
         entity.stockId = dto.stockId
+        entity.status = dto.status
         if (dto.reclassificationId) {
             entity.reclassificationId = dto.reclassificationId;
             entity.updatedUser = dto.updatedUser
@@ -28,6 +30,7 @@ export class ReclassificationAdapter {
     convertEntityToDto(entity: ReclassificationEntity): ReclassificationDTO {
         const dto = new ReclassificationDTO();
         dto.buyer = entity.buyer
+        dto.fromBuyer = entity.fromBuyer
         dto.createdUser = entity.createdUser
         dto.isActive = entity.isActive
         dto.itemId = entity.itemId

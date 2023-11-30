@@ -183,6 +183,7 @@ import { MaterialAllocationView } from "./sample-development/material-allocation
 import SampleOperationReporting from "./orders/sample-operation-reporting"
 import { MaterialAllocationDetailView } from "./sample-development/material-allocation-detail.view"
 import WarehouseDashboard from "./common/dashboards/warehouse-dashboard"
+import { ReclassificationApprovalGrid } from "./sourcing-requisition/reclassification-approval-grid"
 
 
 
@@ -237,7 +238,7 @@ export const AppRoutes = () => {
                 <Route path='/wh-dashboard' element={<WarehouseDashboard />} />
                 {/* <Route path='/masters'> */}
                 <Route path='quality-form' element={<QualityForm />} />
-                <Route path='reclassification' element={<Reclassification data={undefined} buyer={undefined} type="" />} />
+                <Route path='reclassification' element={<Reclassification data={undefined} buyer={undefined} type="" status={undefined} />} />
 
                 <Route path='quality-view' element={<QualityView />} />
                 <Route path='rack-form' element={<RackForm />} />
@@ -999,6 +1000,8 @@ export const AppRoutes = () => {
 
                 </Route>
                 <Route path='/stock-view' element={<StockView />} />
+                <Route path='/reclassification-approval-grid' element={<ReclassificationApprovalGrid />} />
+
                 <Route path="/grn-pending-info-grid" element={<GrnPendingInfoGrid />} />
                 <Route path="/location-mapping" element={<LocationMapping />} />
 
