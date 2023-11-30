@@ -2038,6 +2038,10 @@ export const MonthWiseReport = () => {
         const sheetName = res.year.toString(); // Convert res to a string
         excel
           .addSheet(sheetName)
+          .setTBodyStyle({
+            fontName: "calibri",
+            fontSize: 12
+          })
           .addColumns(exportingColumns)
           .addDataSource(data2, { str2num: true });
           excel.addRow();
