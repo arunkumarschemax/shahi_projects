@@ -124,7 +124,7 @@ import Barcode from "react-barcode";
         },
       },
       {
-        title: <div style={{textAlign:"center"}}>Action</div>,
+        title: <div style={{textAlign:"center"}}>Barcode</div>,
         dataIndex: "action",
         align:"center",
         render: (text, record) => {
