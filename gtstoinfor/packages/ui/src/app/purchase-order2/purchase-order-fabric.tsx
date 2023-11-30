@@ -1,4 +1,4 @@
-import { EditOutlined, EnvironmentOutlined, MinusCircleOutlined, PlusOutlined, UndoOutlined } from "@ant-design/icons"
+import { ConsoleSqlOutlined, EditOutlined, EnvironmentOutlined, MinusCircleOutlined, PlusOutlined, UndoOutlined } from "@ant-design/icons"
 import { faL } from "@fortawesome/free-solid-svg-icons"
 import { M3MastersCategoryReq } from "@project-management-system/shared-models"
 import { ColourService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, ProfitControlHeadService, SampleDevelopmentService, TaxesService, UomService } from "@project-management-system/shared-services"
@@ -29,6 +29,8 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     const [taxVisible ,setTaxVisible] = useState(true)
     const [taxAmountVisible, setTaxAmountVisible] = useState(true)
     const [dicountVisible,setDiscountVisible] = useState(true)
+    const [totalUnit,setTotalUnit] = useState(Number)
+    const [subAmount,setSubAmount] = useState(Number)
     const { Option } = Select
     const weaveService = new FabricWeaveService()
     const uomService = new UomService()
@@ -149,6 +151,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     }
 
     const setEditForm = (rowData: any, index: any) => {
+        console.log(rowData)
         setUpdate(true)
         setDefaultFabricFormData(rowData)
         if (rowData.indentFabricId != undefined) {
@@ -435,42 +438,45 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     const quantiyOnchange = (value) => {
     }
 
-    let totalUniPrice
+    let totalUniPrice ;
     const unitPriceOnchange = (value) => {
+        console.log(fabricForm.getFieldValue('poQuantity'))
         const unitPrice=fabricForm.getFieldValue('poQuantity')
-        console.log(unitPrice)
         totalUniPrice=Number(unitPrice)*Number(value)
         setDiscountVisible(false)
+        setTotalUnit(totalUniPrice)
     }
 
     let disAmount
     let totalValueAfterDiscount
-
     function discountOnChange(value) {
-    console.log(totalUniPrice)
-
        const percent=(Number(value/100))
-        const disAmount=(percent*totalUniPrice)
+        const disAmount=(percent*totalUnit)
         fabricForm.setFieldsValue({discountAmount:disAmount})
-        totalValueAfterDiscount=totalUniPrice-disAmount
+        totalValueAfterDiscount=totalUnit-disAmount
         setTaxVisible(false)
     }
 
     let taxAmount
     const handleTaxChange = (value, option) => {
         const percent=Number(option?.name/100)
-        console.log(percent)
-        console.log(totalValueAfterDiscount)
         taxAmount=(totalValueAfterDiscount*percent)
-        console.log(taxAmount)
         const totalAmount=taxAmount+totalValueAfterDiscount
         fabricForm.setFieldsValue({taxAmount:Number(taxAmount).toFixed(2)})
         fabricForm.setFieldsValue({subjectiveAmount:Number(totalAmount).toFixed(2)})
         fabricForm.setFieldsValue({ tax: value })
         fabricForm.setFieldsValue({ taxPercentage: option?.name ? option.type + '- ' + option?.name : '' })
         setTaxAmountVisible(false)
+        setSubAmount(Number(totalAmount))
     }
 
+    function transportationOnChange(value){
+        console.log(Number(subAmount).toFixed(2))
+        const amount = Number(subAmount).toFixed(2) ;
+        const subjecAmout = Number(amount) + Number(value)
+        fabricForm.setFieldsValue({subjectiveAmount:subjecAmout})
+    }
+    
     return (
         <Card title={<span style={{ color: 'blue', fontSize: '17px' }} >Fabric Details</span>}>
             <Form form={fabricForm} layout="vertical" onFinish={onFabricAdd}>
@@ -593,7 +599,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                         <Form.Item name='transportation' label='Transportation'
                             rules={[{ required: false, message: 'Transportation of Fabric is required' }]}
                         >
-                            <Input placeholder="Transportation" />
+                            <Input onChange={e=>transportationOnChange(e.target.value)} placeholder="Transportation" />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
