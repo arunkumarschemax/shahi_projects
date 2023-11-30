@@ -56,7 +56,7 @@ import Barcode from "react-barcode";
   
     useEffect(() => {
       // getStyle();
-      getAll();
+      getAll(undefined);
     }, []);
   
     useEffect(() => {
@@ -75,8 +75,8 @@ import Barcode from "react-barcode";
     // };
   
   
-    const getAll = () => {
-      const req = new GrnReq()
+    const getAll = (value) => {
+      const req = new GrnReq(value)
       grnService.getAllGrn(req).then((res) => {
         if (res.status) {
           setData(res.data);

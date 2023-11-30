@@ -22,6 +22,7 @@ import {
   GRNLocationPropsRequest,
   MaterialIssueLogrequest,
   MaterialStatusEnum,
+  StockupdateRequest,
   buyerReq,
   statusReq,
 } from "@project-management-system/shared-models";
@@ -30,6 +31,7 @@ import {
   LocationMappingService,
   MaterialIssueService,
   SampleDevelopmentService,
+  StockService,
 } from "@project-management-system/shared-services";
 import TabPane from "antd/es/tabs/TabPane";
 import AlertMessages from "../common/common-functions/alert-messages";
@@ -59,6 +61,7 @@ export const MaterialAllocationGrid = () => {
   const [isButtonDisabled, setButtonDisabled] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [row, setRow] = useState({});
+  const Stockservice = new StockService()
 
 
 
@@ -93,21 +96,31 @@ export const MaterialAllocationGrid = () => {
   };
 
   const onApprove = (rowData) => {
-    // console.log(rowData,"rrrrrrrr")
+    console.log(rowData,"rrrrrrrr")
     // console.log(rowData.material_allocation_id,"rrrrrrrr")
     const req = new statusReq(
-      rowData.material_allocation_id,
-      MaterialStatusEnum.MATERIAL_ISSUED
+      rowData?.material_allocation_id,
+      MaterialStatusEnum.MATERIAL_ISSUED,
+      rowData?.stock_id,
+      rowData?.total_allocated_quantity
+      
     );
+
     service.updateStatus(req).then((res) => {
       if (res.status) {
         AlertMessages.getSuccessMessage(res.internalMessage);
+        Stockservice.update(req).then(res=>{
+           if(res.status){
+            AlertMessages.getSuccessMessage(res.internalMessage);
+           }
+        })
         getData();
       } else {
         AlertMessages.getErrorMessage(res.internalMessage);
       }
     });
   };
+  
 
   const onIssuematerial = (rowData) => {
     console.log(rowData, "issuematerial");
@@ -354,14 +367,16 @@ export const MaterialAllocationGrid = () => {
           </span>
           <Divider type="vertical" />
           <span>
-          <Button
-              type="primary"
-               size="small"
-              style={{ background: "green" }}
-              onClick={() => onApprove(rowData)}
-             >
-               MATERIAL ISSUE
-            </Button>
+                    <Button
+            type="primary"
+            size="small"
+            style={{ background: "green" }}
+            onClick={() => {
+              onApprove(rowData);
+            }}
+          >
+            MATERIAL ISSUE
+          </Button>
           </span>
         </Row>
       ),

@@ -142,8 +142,13 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
     }
 
     const setEditForm = (rowData: any, index: any) => {
+        setUpdate(true)
+        setDefaultTrimFormData(rowData)
+        setTrimIndexVal(index)
         if(rowData.indentTrmId != undefined){
         setInputDisable(true)
+        trimForm.setFieldsValue({poQuantity:rowData.indentQuantity})
+        trimForm.setFieldsValue({indentId:rowData.indentId})
         }
         if(rowData.sampleTrimInfoId != undefined){
             trimForm.setFieldsValue({poQuantity:rowData.sampleOrderQuantity})
@@ -156,9 +161,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
             trimForm.setFieldsValue({ transportation: rowData.transportation })
         setInputDisable(true)
         }
-        setUpdate(true)
-        setDefaultTrimFormData(rowData)
-        setTrimIndexVal(index)
+   
     }
 
     const deleteData = (index:any) => {
@@ -374,26 +377,42 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
 
     useEffect(() =>{
         if(defaultTrimFormData){
-            trimForm.setFieldsValue({
+            console.log(defaultTrimFormData)
+           if (defaultTrimFormData.sampleReqId != undefined){
+                trimForm.setFieldsValue({sampleReqId:defaultTrimFormData.sampleReqId,
+                poQuantity:defaultTrimFormData.sampleOrderQuantity,
+                sampleTrimInfoId:defaultTrimFormData.sampleTrimInfoId,
+                sampleReqNo:defaultTrimFormData.sampleReqNo,
                 colourName: defaultTrimFormData.colourName,
                 colourId : defaultTrimFormData.colourId,
                 consumption : defaultTrimFormData.consumption,
                 m3TrimCode: defaultTrimFormData.m3TrimCode,
                 trimCodeName: defaultTrimFormData.trimCodeName,
-                indentTrmId:defaultTrimFormData.indentTrmId,
-                indentQuantity:defaultTrimFormData.indentQuantity,
-                indentQuantityUnit:defaultTrimFormData.indentQuantityUnit,
-                quantityUomId:defaultTrimFormData.quantityUomId,
-                poQuantity:defaultTrimFormData.indentQuantity,
-                m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
-                indentCode:defaultTrimFormData.indentCode,
-                sampleTrimInfoId:defaultTrimFormData.sampleTrimInfoId,
-                sampleReqNo:defaultTrimFormData.sampleReqNo,
-                sampleOrderQuantity:defaultTrimFormData.sampleOrderQuantity,
                 quantityUomName:defaultTrimFormData.quantityUomName,
-                // unitPrice:defaultTrimFormData.unitPrice,
-                // discount:defaultTrimFormData.discount,
+                quantityUomId:defaultTrimFormData.quantityUomId,
+
             })
+
+            }
+            if(defaultTrimFormData.indentId != undefined){
+                trimForm.setFieldsValue({
+                    colourName: defaultTrimFormData.colourName,
+                    colourId : defaultTrimFormData.colourId,
+                    consumption : defaultTrimFormData.consumption,
+                    m3TrimCode: defaultTrimFormData.m3TrimCode,
+                    trimCodeName: defaultTrimFormData.trimCodeName,
+                    indentTrmId:defaultTrimFormData.indentTrmId,
+                    indentQuantity:defaultTrimFormData.indentQuantity,
+                    indentQuantityUnit:defaultTrimFormData.indentQuantityUnit,
+                    quantityUomId:defaultTrimFormData.quantityUomId,
+                    poQuantity:defaultTrimFormData.indentQuantity,
+                    m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
+                    indentCode:defaultTrimFormData.indentCode,
+                    quantityUomName:defaultTrimFormData.quantityUomName,
+                    indentId:defaultTrimFormData.indentId
+                })
+            }
+           
         }
 
     },[defaultTrimFormData])
@@ -436,6 +455,8 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId}) =>{
         <Card title={<span style={{color:'blue', fontSize:'17px'}} >Trim Details</span>}>
             <Form form={trimForm} layout="vertical" onFinish={OnTrimAdd} style={{width:'100%'}}>
                 <Row gutter={24}>
+                   <Form.Item name='sampleReqId' hidden ><Input/></Form.Item>
+                    <Form.Item name='indentId' hidden ><Input/></Form.Item>
                     <Form.Item name={'colourName'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'indentTrmId'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'sampleTrimInfoId'} hidden><Input></Input></Form.Item>

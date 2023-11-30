@@ -296,16 +296,16 @@ export class GrnService{
         try{
             let query = `SELECT CONCAT(gi.received_quantity,u.uom) AS receivedQty,CONCAT(gi.accepted_quantity,u.uom) AS acceptedQty,CONCAT(gi.rejected_quantity,u.uom) AS rejectedQty,
             CONCAT(gi.conversion_quantity,uom.uom) AS conversionQty,gi.location_mapped_status AS locMapStatus,gi.remarks,`
-            if(req.itemType === 'FABRIC'){
-                query = query + `gi.m3_item_code_id AS m3ItemCodeId,m3.item_code AS itemCode
-                FROM grn_items gi
-                LEFT JOIN m3_items m3 ON m3.m3_items_id = gi.m3_item_code_id`
-            }
-            if(req.itemType === 'TRIM'){
-                query = query + `m3.trim_code AS itemCode,m3.m3_trim_Id AS m3ItemId
-                FROM grn_items gi
-                LEFT JOIN m3_trims m3 ON m3.m3_trim_Id = gi.m3_item_code_id`
-            }
+            // if(req. === 'FABRIC'){
+            //     query = query + `gi.m3_item_code_id AS m3ItemCodeId,m3.item_code AS itemCode
+            //     FROM grn_items gi
+            //     LEFT JOIN m3_items m3 ON m3.m3_items_id = gi.m3_item_code_id`
+            // }
+            // if(req.itemType === 'TRIM'){
+            //     query = query + `m3.trim_code AS itemCode,m3.m3_trim_Id AS m3ItemId
+            //     FROM grn_items gi
+            //     LEFT JOIN m3_trims m3 ON m3.m3_trim_Id = gi.m3_item_code_id`
+            // }
             query = query +` LEFT JOIN grn g ON g.grn_id = gi.grn_id
             LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id

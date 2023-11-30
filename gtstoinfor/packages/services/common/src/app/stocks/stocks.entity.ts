@@ -4,6 +4,12 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("stocks")
 export class StocksEntity extends CommonColumns {
+    @Column('int',{
+        name:'id',
+        nullable:false
+    })
+    Id:number
+    
       @Column('int',{
         name:'m3_item',
         nullable:false
@@ -43,6 +49,17 @@ export class StocksEntity extends CommonColumns {
         name: "grn_item_id",
     })
     grnItemId: number;
+
+
+    @Column({
+        name: "allocatd_quantity",
+    })
+    allocateQuanty: number;
+
+    @Column({
+        name: "issued_quantity",
+    })
+    issuedQuantity: number;
 
     @Column({
         name: "stock_bar_code",
