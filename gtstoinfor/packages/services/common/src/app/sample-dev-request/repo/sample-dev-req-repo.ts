@@ -227,7 +227,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { groupBy } from "rxjs";
 import { SampleRequest } from "../entities/sample-dev-request.entity";
-import { SampleFilterRequest, SampleRequestFilter } from "@project-management-system/shared-models";
+import { LifeCycleStatusEnum, SampleFilterRequest, SampleRequestFilter } from "@project-management-system/shared-models";
 import { Location } from "../../locations/location.entity";
 import { Style } from "../../style/dto/style-entity";
 import { ProfitControlHead } from '../../profit-control-head/profit-control-head-entity';
@@ -360,6 +360,14 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
         const query = await this.createQueryBuilder()
             .select(`sample_request_id AS sampleRequestId, request_no AS reqNo,style_id as styleId`)
             .where(`request_no is not null`)
+            .orderBy(`request_no`)
+        return query.getRawMany()
+    }
+
+    async getIssuedSampleRequests(): Promise<any> {
+        const query = await this.createQueryBuilder()
+            .select(`sample_request_id AS sampleRequestId, request_no AS reqNo,style_id as styleId`)
+            .where(`request_no is not null and life_cycle_status = '${LifeCycleStatusEnum.MATERIAL_ISSUED}'`)
             .orderBy(`request_no`)
         return query.getRawMany()
     }
