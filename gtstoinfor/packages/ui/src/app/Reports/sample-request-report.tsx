@@ -27,6 +27,7 @@ const SampleRequestReport = () => {
   const [btnEnable,setbtnEnable]=useState<boolean>(false)
   const [selectedItems, setSelectedItems] = useState({});
   const [type, setType] = useState({});
+  const [samplingPO] = Form.useForm()
 
   const {Option} = Select
   useEffect(() => {
@@ -252,10 +253,13 @@ const SampleRequestReport = () => {
               {
                 render: (text, rowData, index) => { 
                   return(
-                    <Checkbox 
-                    onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.fabricType, text, rowData)}
-                   
-                  />
+                    <Form form={samplingPO} layout="vertical">
+                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
+                        <Form.Item name={rowData.samplingBomId} >
+                            <Checkbox  name={rowData.samplingBomId} onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.fabricType, text, rowData)}/>
+                        </Form.Item>
+                      </Col>
+                    </Form>
                   )
                 }
               },
@@ -291,6 +295,7 @@ const SampleRequestReport = () => {
       console.log(checkItemType)
       if(!checkItemType){
         AlertMessages.getErrorMessage('Generate PO for single Material Type. ')
+        setbtnEnable(false)
       }
       setbtnEnable(true)
       console.log(data)
@@ -298,7 +303,16 @@ const SampleRequestReport = () => {
     else{
       console.log(rowData)
       console.log(selectedRowData)
-
+      let itemsArray = [...selectedRowData];
+      console.log(itemsArray.findIndex((e) => e.samplingBomId === rowData.samplingBomId));
+      let index = itemsArray.findIndex((e) => e.samplingBomId === rowData.samplingBomId);
+      itemsArray.splice(index, 1);
+      let newArray = [...itemsArray]
+      setSelectedRowData(newArray);
+      console.log(selectedRowData)
+      samplingPO.setFieldValue([rowData.samplingBomId],"false")
+      console.log(selectedRowData.length)
+      selectedRowData.length - Number(1) > 0 ? setbtnEnable(true) : setbtnEnable(false)
     }
     
     const checkboxValue = e.target.checked;

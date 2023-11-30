@@ -60,4 +60,20 @@ export class GrnController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
+  @Post('/getGRNNoData')
+  async getGRNNoData(): Promise<CommonResponseModel> {
+    try {
+      return await this.grnService.getGRNNoData();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+  @Post('/getPONoData')
+  async getPONoData(): Promise<CommonResponseModel> {
+    try {
+      return await this.grnService.getPONoData();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
 }

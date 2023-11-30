@@ -1,4 +1,4 @@
-import { EditOutlined, EnvironmentOutlined, MinusCircleOutlined, PlusOutlined, UndoOutlined } from "@ant-design/icons"
+import { ConsoleSqlOutlined, EditOutlined, EnvironmentOutlined, MinusCircleOutlined, PlusOutlined, UndoOutlined } from "@ant-design/icons"
 import { faL } from "@fortawesome/free-solid-svg-icons"
 import { M3MastersCategoryReq } from "@project-management-system/shared-models"
 import { ColourService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, ProfitControlHeadService, SampleDevelopmentService, TaxesService, UomService } from "@project-management-system/shared-services"
@@ -29,6 +29,8 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     const [taxVisible ,setTaxVisible] = useState(true)
     const [taxAmountVisible, setTaxAmountVisible] = useState(true)
     const [dicountVisible,setDiscountVisible] = useState(true)
+    const [totalUnit,setTotalUnit] = useState(Number)
+    const [subAmount,setSubAmount] = useState(Number)
     const { Option } = Select
     const weaveService = new FabricWeaveService()
     const uomService = new UomService()
@@ -156,6 +158,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     }
 
     const setEditForm = (rowData: any, index: any) => {
+        console.log(rowData)
         setUpdate(true)
         setDefaultFabricFormData(rowData)
         console.log(rowData)
@@ -445,24 +448,22 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     const quantiyOnchange = (value) => {
     }
 
-    let totalUniPrice
+    let totalUniPrice ;
     const unitPriceOnchange = (value) => {
+        console.log(fabricForm.getFieldValue('poQuantity'))
         const unitPrice=fabricForm.getFieldValue('poQuantity')
-        console.log(unitPrice)
         totalUniPrice=Number(unitPrice)*Number(value)
         setDiscountVisible(false)
+        setTotalUnit(totalUniPrice)
     }
 
     let disAmount
     let totalValueAfterDiscount
-
     function discountOnChange(value) {
-    console.log(totalUniPrice)
-
        const percent=(Number(value/100))
-        const disAmount=(percent*totalUniPrice)
+        const disAmount=(percent*totalUnit)
         fabricForm.setFieldsValue({discountAmount:disAmount})
-        totalValueAfterDiscount=totalUniPrice-disAmount
+        totalValueAfterDiscount=totalUnit-disAmount
         setTaxVisible(false)
     }
 
@@ -501,8 +502,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
         fabricForm.setFieldsValue({subjectiveAmount:Number(totalAmount).toFixed(2)})
         fabricForm.setFieldsValue({ taxAmount: taxAmount })
        
-        setTaxAmountVisible(false)
-        
+        setTaxAmountVisible(false)        
     }
     const priceCalculation = async (value, option) => {        
         console.log(option.name)
@@ -513,7 +513,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
         // console.log(taxPer)
         // finalCalculation();
     }
-
+    
     return (
         <Card title={<span style={{ color: 'blue', fontSize: '17px' }} >Fabric Details</span>}>
             <Form form={fabricForm} layout="vertical" onFinish={onFabricAdd}>
