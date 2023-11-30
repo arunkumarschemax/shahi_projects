@@ -60,8 +60,11 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     }, [indentId])
 
     useEffect(() => {
+        // console.log(sampleReqId)
+        // console.log(sampleReqId.data[1].sampleReqIds)
+        // console.log(sampleReqId.data[2].m3itemid)
         if (sampleReqId.length != 0) {
-            getAllSampleDetails(sampleReqId)
+            getAllSampleDetails(sampleReqId.data[1].sampleReqIds,sampleReqId.data[2].m3itemid)
             setTableColumns([...samplecolumns])
         }
 
@@ -102,8 +105,8 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
         })
     }
 
-    const getAllSampleDetails = (value) => {
-        sampleservice.getfabricDetailsOfSample({ sampleReqId: value }).then(res => {
+    const getAllSampleDetails = (sampleReqId,sampleItemId) => {
+        sampleservice.getfabricDetailsOfSample({ sampleReqId: sampleReqId,sampleItemId:sampleItemId }).then(res => {
             if (res.status) {
                 setFabricTableData(res.data)
                 setFabricTableVisible(true)
