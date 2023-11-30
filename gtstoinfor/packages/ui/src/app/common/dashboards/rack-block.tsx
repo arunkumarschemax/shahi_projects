@@ -43,7 +43,7 @@ const RackBlock = (props: RackBlockProps) => {
                 return <BinBlock rackId={rackId} rackLevel={rackLevel} column={column} binInfo={binObj} />
             })} */}
 
-            {binInfo && <BinBlock rackId={rackId} rackLevel={rackLevel} column={column} binInfo={binInfo} filterVal={filterVal} />}
+            {<BinBlock rackId={rackId} rackLevel={rackLevel} column={column} binInfo={binInfo} filterVal={filterVal} />}
 
         </Card>
     )
