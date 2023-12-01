@@ -61,7 +61,8 @@ const GRNForm = () => {
   }
 
 
-  const createGrn = () => {
+  const createGrn = async () => {
+    await form.validateFields()
     const values = form.getFieldsValue()
     const req = new GrnDto(values.vendorId, values.purchaseOrderId, form.getFieldValue('grnDate').format('YYYY-MM-DD'), PurchaseOrderStatus.OPEN, values.remarks, undefined, undefined, '', undefined, '', 0, 0, poData[0]?.poMaterialType, poItemData, 0, '', values.grnType, values.invoiceNo, poData?.poMaterialType,values.grnAmount);
     grnService.createGrn(req).then((res) => {
@@ -121,9 +122,8 @@ const GRNForm = () => {
 
   const setDataToForm = (record) => {
     itemsForm.setFieldsValue({
-      m3itemCode: record.m3itemCode,
+      m3itemCode: record.m3ItemCode,
       uom: record.uom,
-
       poQuantity: record.poQuantity,
       m3ItemType: record.m3ItemType,
       grnQuantity: record.grnQuantity,
@@ -151,7 +151,7 @@ const GRNForm = () => {
     {
       title: <div style={{ textAlign: "center" }}> Item Code</div>,
       fixed: 'left',
-      dataIndex: 'm3itemCode',
+      dataIndex: 'm3ItemCode',
 
     },
     {
@@ -306,7 +306,6 @@ const GRNForm = () => {
 
   function acceptedQuantityOnChange(e) {
     const poItemId = itemsForm.getFieldValue('poItemId')
-    const receivedQunatity = itemsForm.getFieldValue('receivedQuantity')
 
     setPoItemData(prevData =>
       prevData.map(item => {
@@ -314,12 +313,12 @@ const GRNForm = () => {
           return {
             ...item,
             acceptedQuantity: e.target.value,
-            rejectedQuantity: Number(receivedQunatity) - Number(e.target.value)
-
+            rejectedQuantity: item.poQuantity - Number(e.target.value)
           };
         }
         return item;
       }))
+      console.log(poItemData)
   }
 
 
@@ -330,8 +329,6 @@ const GRNForm = () => {
     const poQty = Number(itemsForm.getFieldValue('poQuantity'))
     const unitPrice = Number((subjectivePrice) / poQty)
     const totalSubjectivePrice = (Number(acceptedQty) * Number(unitPrice))
-    console.log(totalSubjectivePrice)
-    console.log(poItemData)
     setPoItemData(prevData =>
       prevData.map(item => {
         if (item.poItemId == poItemId) {

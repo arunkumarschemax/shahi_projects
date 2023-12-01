@@ -205,16 +205,17 @@ export class PurchaseOrderService {
                 }
 
             }
-            console.log(query)
             const itemData = await this.poTrimRepo.query(query)
+           
             const grnItemsArr: GrnItemsFormDto[] = []
             for (const rec of itemData) {
+                console.log(rec)
                 const grnItemsDto = new GrnItemsFormDto(rec.poItemId, rec.m3ItemCodeId, rec.m3itemCode, rec.m3ItemType, rec.m3ItemTypeId, rec.poItemStatus, rec.quantityUomId, rec.uom, rec.unitPrice, rec.discount, rec.tax, rec.transportation, rec.subjectiveAmount, rec.grnQuantity, rec.poQuantity, rec.colourId, rec.colour, rec.sampleItemId, rec.indentItemId,rec.buyerId,rec.buyer,rec?.sampleRequestId,rec?.indentId)
                 grnItemsArr.push(grnItemsDto)
             }
             const poQuery = `select p.purchase_order_id as poId,p.style_id as styleId,p.po_material_type as poMaterialType,p.po_against as poAgainst from purchase_order p where p.purchase_order_id = ${req.poId}`
             const poData = await this.poTrimRepo.query(poQuery)
-             poData[0].grnItems = itemData 
+             poData[0].grnItems = grnItemsArr 
 
             if (grnItemsArr.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", poData)
