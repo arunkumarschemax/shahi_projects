@@ -46,6 +46,7 @@ export const ReclassificationApprovalGrid = () => {
     reclassificationService.getApproveStockReclassification(req).then((res) => {
       if(res.status){
         AlertMessages.getSuccessMessage(res.internalMessage)
+        navigate('/reclassification-approval-grid')
       }
       else{
           AlertMessages.getInfoMessage(res.internalMessage)
