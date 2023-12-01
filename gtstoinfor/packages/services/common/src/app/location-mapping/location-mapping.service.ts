@@ -208,7 +208,7 @@ export class LocationMappingService {
             stockEntity.stockType = StockTypeEnum.STOCK;
             stockEntity.uomId = req.uom_id;
             stockEntity.stockBarCode = stock_bar_code;
-            stockEntity.uuid = '';
+            // stockEntity.uuid = '';
             saveStock = await this.stocksRepository.save(stockEntity)
             if(saveStock){
                 let stockLogEntity = new StockLogEntity();

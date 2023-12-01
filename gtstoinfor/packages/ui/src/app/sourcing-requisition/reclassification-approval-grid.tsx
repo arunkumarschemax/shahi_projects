@@ -7,7 +7,7 @@ import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useNavigate } from "react-router-dom";
-import { M3ItemsDTO, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { M3ItemsDTO, ReclassificationApproveRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
 import { Reclassification } from "./reclassification";
 const { TextArea } = Input;
 
@@ -40,6 +40,21 @@ export const ReclassificationApprovalGrid = () => {
   }
   
 
+  const assignStock = (rowData) => {
+    console.log(rowData)
+    let req = new ReclassificationApproveRequestDto(rowData.reclassificationId,rowData.stockId,rowData.quantity,rowData.m3Item,rowData.locationId,1,rowData.toBuyerId,rowData.fromBuyerId,rowData.itemType,rowData.grnItemId,rowData.uomId)
+    reclassificationService.getApproveStockReclassification(req).then((res) => {
+      if(res.status){
+        AlertMessages.getSuccessMessage(res.internalMessage)
+      }
+      else{
+          AlertMessages.getInfoMessage(res.internalMessage)
+      }
+    }).catch((err) => {
+        console.log(err.message);
+        AlertMessages.getWarningMessage(err)
+      });
+  }
   const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -188,7 +203,7 @@ export const ReclassificationApprovalGrid = () => {
           <span>
             <Button
               style={{ backgroundColor: '#69c0ff' }}
-              // onClick={(e) => getRowData(rowData)}
+              onClick={(e) => assignStock(rowData)}
             >
               <b>Assign Stock</b>
             </Button>
