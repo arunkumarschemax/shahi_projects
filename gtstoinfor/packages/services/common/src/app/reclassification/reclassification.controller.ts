@@ -33,4 +33,16 @@ export class ReclassificationController {
     }
   }
 
+
+  @Post('getApproveStockReclassification')
+  async getApproveStockReclassification(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.Service.getApproveStockReclassification(req);
+    } catch (error) {
+      return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
+    }
+  }
+
+
+
 }
