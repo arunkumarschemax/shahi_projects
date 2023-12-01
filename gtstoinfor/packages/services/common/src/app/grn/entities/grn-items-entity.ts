@@ -113,10 +113,16 @@ export class GrnItemsEntity {
     sampleItemId: number
 
     @Column('int', {
-        name: 'subjective_amount',
+        name: 'grn_item_amount',
         nullable: false,
     })
-    subjectiveAmount: number
+    grnItemAmount: number
+
+    @Column('int', {
+        name: 'buyer_id',
+        nullable: false,
+    })
+    buyerId: number
 
     @ManyToOne(type => GrnEntity, grn => grn.grnItemInfo)
     @JoinColumn({ name: 'grn_id' })

@@ -42,6 +42,8 @@ export class GrnDto{
   grnItemInfo: GrnItemsFormDto[];
   @ApiProperty()
   invoiceNo: string
+  @ApiProperty()
+  grnAmount:number
   
 
 }
