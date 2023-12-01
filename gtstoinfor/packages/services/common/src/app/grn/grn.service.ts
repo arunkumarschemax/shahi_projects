@@ -177,6 +177,9 @@ export class GrnService {
                 itemEntity.remarks = item.remarks
                 itemEntity.poItemId = item.poItemId
                 itemEntity.grnItemAmount = item.grnItemAmount
+                itemEntity.sampleRequestId = item.sampleRequestId
+                itemEntity.indentId = item.indentId
+                itemEntity.buyerId = item.buyerId
                 itemInfo.push(itemEntity)
             }
             grnEntity.grnItemInfo = itemInfo
