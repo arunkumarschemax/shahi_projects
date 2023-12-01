@@ -204,6 +204,7 @@ export class LocationMappingService {
             stockEntity.itemType = req.item_type;
             stockEntity.locationId = req.location_id;
             stockEntity.quantity = req.quantity;
+            stockEntity.styleId = req.style_id;
             stockEntity.m3Item = req.m3_item;
             stockEntity.stockType = StockTypeEnum.STOCK;
             stockEntity.uomId = req.uom_id;
