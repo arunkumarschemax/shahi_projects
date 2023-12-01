@@ -1,13 +1,13 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { BuyersService, FabricTypeService, FabricWeaveService, M3ItemsService, ReclassificationService, StockService, UomService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal } from "antd";
+import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag } from "antd";
 import { ColumnType, ColumnProps } from "antd/es/table";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useNavigate } from "react-router-dom";
-import { M3ItemsDTO, ReclassificationApproveRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { M3ItemsDTO, ReclassificationApproveRequestDto, ReclassificationStatusEnum, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
 import { Reclassification } from "./reclassification";
 const { TextArea } = Input;
 
@@ -201,12 +201,14 @@ export const ReclassificationApprovalGrid = () => {
       render: (text, rowData) => {
         return (
           <span>
+            {
+              rowData.status === ReclassificationStatusEnum.APPROVAL_PENDING ? 
             <Button
               style={{ backgroundColor: '#69c0ff' }}
               onClick={(e) => assignStock(rowData)}
             >
               <b>Assign Stock</b>
-            </Button>
+            </Button>: "Approved" }
           </span>
         );
       }
