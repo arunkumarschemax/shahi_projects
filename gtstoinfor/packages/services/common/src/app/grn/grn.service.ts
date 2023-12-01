@@ -159,7 +159,8 @@ export class GrnService {
             grnEntity.updatedUser = req.updatedUser
             grnEntity.itemType = req.itemType
             grnEntity.invoiceNo = req.invoiceNo
-            
+            grnEntity.grnAmount = req.grnAmount
+
             // console.log(req,'===========')
             for (const item of req.grnItemInfo) {
                 const itemEntity = new GrnItemsEntity()
@@ -173,10 +174,9 @@ export class GrnService {
                 itemEntity.m3ItemCodeId = item.m3ItemCodeId
                 itemEntity.sampleItemId = item.sampleItemId
                 itemEntity.indentItemId = item.indentItemId
-                itemEntity.subjectiveAmount = item.revisedSubjectivePrice
                 itemEntity.remarks = item.remarks
                 itemEntity.poItemId = item.poItemId
-
+                itemEntity.grnItemAmount = item.grnItemAmount
                 itemInfo.push(itemEntity)
             }
             grnEntity.grnItemInfo = itemInfo
@@ -225,26 +225,26 @@ export class GrnService {
     async getAllGrn(req?: GrnReq): Promise<CommonResponseModel> {
         try {
             const manager = this.dataSource;
-            let query=`SELECT g.grn_id AS grnId,g.grn_number AS grnNo,DATE(g.grn_date) AS grnDate,g.status,g.item_type AS itemType,g.grn_type AS grnType,g.invoice_no AS invoiceNo,
+            let query = `SELECT g.grn_id AS grnId,g.grn_number AS grnNo,DATE(g.grn_date) AS grnDate,g.status,g.item_type AS itemType,g.grn_type AS grnType,g.invoice_no AS invoiceNo,
             g.vendor_id AS vendorId, CONCAT(v.vendor_name,'-',v.vendor_code) AS vendor,g.po_id AS poId,po.po_number AS poNumber
             FROM grn g
             LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
             where 1=1`
-            if(req?.grnId){
-                query=query+` AND g.grn_id=${req.grnId}`
+            if (req?.grnId) {
+                query = query + ` AND g.grn_id=${req.grnId}`
             }
-            if(req?.grnNo){
-                query=query+` AND g.grn_number='${req.grnNo}'`
+            if (req?.grnNo) {
+                query = query + ` AND g.grn_number='${req.grnNo}'`
             }
-            if(req?.poNumber){
-                query=query+` AND po.po_number='${req.poNumber}'`
+            if (req?.poNumber) {
+                query = query + ` AND po.po_number='${req.poNumber}'`
             }
-            if(req?.status){
-                query=query+` AND g.status='${req.status}'`
+            if (req?.status) {
+                query = query + ` AND g.status='${req.status}'`
             }
             if (req.fromDate) {
-                query = query +` AND Date(g.grn_date) BETWEEN '${req.fromDate}' AND '${req.toDate}'`
+                query = query + ` AND Date(g.grn_date) BETWEEN '${req.fromDate}' AND '${req.toDate}'`
             }
             const result = await manager.query(query)
             if (result) {
@@ -278,28 +278,28 @@ export class GrnService {
     //     }
     // }
 
-    async getGRNItemsData(req?:GrnReq):Promise<CommonResponseModel>{
-        try{
+    async getGRNItemsData(req?: GrnReq): Promise<CommonResponseModel> {
+        try {
             // console.log(req,'--------------')
             let query = `SELECT g.grn_number AS grnNumber,gi.received_quantity AS receivedQty,gi.accepted_quantity AS acceptedQty,gi.rejected_quantity  AS rejectedQty,u.uom,
             gi.conversion_quantity  AS conversionQty,uom.uom AS convertedUom,gi.location_mapped_status AS locMapStatus,gi.remarks,`
-            if(req.itemType === 'FABRIC' || req.itemType === 'Fabric'){
+            if (req.itemType === 'FABRIC' || req.itemType === 'Fabric') {
                 query = query + `gi.m3_item_code_id AS m3ItemCodeId,m3.item_code AS itemCode
                 FROM grn_items gi
                 LEFT JOIN m3_items m3 ON m3.m3_items_id = gi.m3_item_code_id`
             }
-            if(req.itemType.includes('TRIM') || req.itemType.includes('Trim') ){
+            if (req.itemType.includes('TRIM') || req.itemType.includes('Trim')) {
                 query = query + `m3.trim_code AS itemCode,m3.m3_trim_Id AS m3ItemId
                 FROM grn_items gi
                 LEFT JOIN m3_trims m3 ON m3.m3_trim_Id = gi.m3_item_code_id`
             }
-            query = query +` LEFT JOIN grn g ON g.grn_id = gi.grn_id
+            query = query + ` LEFT JOIN grn g ON g.grn_id = gi.grn_id
             LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
             LEFT JOIN uom u ON u.id = gi.uom_id
             LEFT JOIN uom uom ON uom.id = gi.conversion_uom_id`
-            if(req?.grnId){
-                query=query+` where g.grn_id=${req.grnId}`
+            if (req?.grnId) {
+                query = query + ` where g.grn_id=${req.grnId}`
             }
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
@@ -307,13 +307,13 @@ export class GrnService {
             } else {
                 return new CommonResponseModel(false, 1, "No data found", [])
             }
-        }catch(err){
-            throw(err)
+        } catch (err) {
+            throw (err)
         }
     }
 
-    async getGRNNoData():Promise<CommonResponseModel>{
-        try{
+    async getGRNNoData(): Promise<CommonResponseModel> {
+        try {
             let query = `SELECT grn_number as grnNo FROM grn ORDER BY grn_number`
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
@@ -321,12 +321,12 @@ export class GrnService {
             } else {
                 return new CommonResponseModel(false, 1, "No data found", [])
             }
-        }catch(err){
-            throw(err)
+        } catch (err) {
+            throw (err)
         }
     }
-    async getPONoData():Promise<CommonResponseModel>{
-        try{
+    async getPONoData(): Promise<CommonResponseModel> {
+        try {
             let query = `
             SELECT po.po_number as poNumber, g.po_id as poId 
             FROM grn g
@@ -339,8 +339,8 @@ export class GrnService {
             } else {
                 return new CommonResponseModel(false, 1, "No data found", [])
             }
-        }catch(err){
-            throw(err)
+        } catch (err) {
+            throw (err)
         }
     }
 }
