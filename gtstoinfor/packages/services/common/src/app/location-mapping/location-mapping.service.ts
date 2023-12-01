@@ -110,8 +110,8 @@ export class LocationMappingService {
             IF(g.grn_type = "INDENT" AND g.item_type = "FABRIC", idfb.buyer_id, IF(g.grn_type = "INDENT" AND g.item_type != "FABRIC", idfb.buyer_id, IF(g.grn_type = "SAMPLE_ORDER" AND g.item_type = "FABRIC",sprfb.buyer_id,sprtb.buyer_id))) AS buyerId, IF(g.grn_type = "INDENT" AND g.item_type = "FABRIC", idfb.buyer_name, IF(g.grn_type = "INDENT" AND g.item_type != "FABRIC", idfb.buyer_name, IF(g.grn_type = "SAMPLE_ORDER" AND g.item_type = "FABRIC",sprfb.buyer_name,sprtb.buyer_name))) AS buyerName
             FROM grn_items gi LEFT JOIN grn g ON g.grn_id = gi.grn_id 
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
-            LEFT JOIN m3_items mit ON mit.m3_items_id AND g.item_type = "FABRIC"
-            LEFT JOIN m3_trims mtr ON mtr.m3_trim_Id AND g.item_type != "FABRIC"
+            LEFT JOIN m3_items mit ON mit.m3_items_id = gi.m3_item_code_id AND g.item_type = "FABRIC"
+            LEFT JOIN m3_trims mtr ON mtr.m3_trim_Id = gi.m3_item_code_id AND g.item_type != "FABRIC"
             LEFT JOIN stock_log st ON st.grn_item_id = gi.grn_item_id
             LEFT JOIN  sample_request_fabric_info spf ON spf.fabric_info_id = gi.sample_item_id AND g.grn_type = "SAMPLE_ORDER" AND g.item_type = "FABRIC"
             LEFT JOIN  sample_request_trim_info spt ON spt.trim_info_id = gi.sample_item_id AND g.grn_type = "SAMPLE_ORDER" AND g.item_type != "FABRIC"

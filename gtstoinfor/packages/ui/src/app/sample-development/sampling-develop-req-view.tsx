@@ -594,7 +594,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
          dataSource={avilableQuantity}
           columns={renderColumnForFabric} 
           pagination={false}
-           rowKey={record.sample_request_id}/>;
+           rowKey={record.stockId}/>;
       };
 
 
