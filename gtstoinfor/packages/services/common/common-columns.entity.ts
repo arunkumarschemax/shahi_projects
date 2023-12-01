@@ -9,9 +9,9 @@ import {
 
 
 export class CommonColumns {
-  @Column("uuid")
-  @Generated("uuid")
-  uuid: string;
+  // @Column("uuid")
+  // @Generated("uuid")
+  // uuid: string;
 
   @PrimaryGeneratedColumn("increment", {
     name: "id",

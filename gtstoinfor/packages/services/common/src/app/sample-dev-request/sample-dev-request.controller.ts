@@ -10,6 +10,8 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { SampleInventoryLog } from './dto/sample-inventory-log-dto';
 import { MaterialallitemsReq } from './dto/sample-req-size-req';
+import { AllocationApprovalRequest } from './dto/allocation-approval-req';
+import { AllocatedLocationRequest } from './dto/allocated-location-req';
 
 @ApiTags('sample-request')
 @Controller('sample-request')
@@ -323,15 +325,28 @@ export class SampleDevReqController {
     }
   }
 
-  // @Post('/ApprovaAllocatedStock')
-  // async ApprovaAllocatedStock(@Body() req:samp): Promise<CommonResponseModel> {
-  //   try {
-  //     return await this.sampleService.ApprovaAllocatedStock()
-  //   }
-  //   catch (err) {
-  //     return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-  //   }
-  // }
+  @Post('/allocatedLocationInfo')
+  @ApiBody({ type: AllocatedLocationRequest })
+  async allocatedLocationInfo(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.allocatedLocationInfo(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+
+  @Post('/approvaAllocatedStock')
+  @ApiBody({ type: AllocationApprovalRequest })
+  async approvaAllocatedStock(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.approveAllocatedStock(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+  
 
   
 }

@@ -101,7 +101,7 @@ export class LocationMappingService {
             
             // GROUP BY grn_item_id`
 
-            let query = `SELECT gi.uom_id AS uomId, u.uom AS uom, gi.grn_item_id As grnItemId,g.item_type AS materialType, (gi.accepted_quantity - SUM(st.quantity)) AS balance, SUM(st.quantity) AS allocatedQty, IF(g.item_type = "FABRIC", mit.m3_items_id, mtr.m3_trim_id) AS itemId,
+            let query = `SELECT gi.uom_id AS uomId, u.uom AS uom, gi.grn_item_id As grnItemId,g.item_type AS materialType, (gi.accepted_quantity - IF(SUM(st.quantity) IS NULL, 0 , SUM(st.quantity))) AS balance, IF(SUM(st.quantity) IS NULL, 0 , SUM(st.quantity)) AS allocatedQty, IF(g.item_type = "FABRIC", mit.m3_items_id, mtr.m3_trim_id) AS itemId,
             IF(g.item_type = "FABRIC", mit.item_code, mtr.trim_code) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity,
             IF(g.grn_type = "INDENT" AND g.item_type = "FABRIC", idfb.buyer_id, IF(g.grn_type = "INDENT" AND g.item_type != "FABRIC", idtb.buyer_id, IF(g.grn_type = "SAMPLE_ORDER" AND g.item_type = "FABRIC",sprfb.buyer_id,sprtb.buyer_id))) AS buyerId, IF(g.grn_type = "INDENT" AND g.item_type = "FABRIC", idfb.buyer_name, IF(g.grn_type = "INDENT" AND g.item_type != "FABRIC", idtb.buyer_name, IF(g.grn_type = "SAMPLE_ORDER" AND g.item_type = "FABRIC",sprfb.buyer_name,sprtb.buyer_name))) AS buyerName
             FROM grn_items gi LEFT JOIN grn g ON g.grn_id = gi.grn_id 
@@ -119,7 +119,7 @@ export class LocationMappingService {
             LEFT JOIN  indent_trims indt ON indt.itrims_id = gi.indent_item_id AND g.grn_type = "INDENT" AND g.item_type != "FABRIC"
             LEFT JOIN  indent idf ON idf.indent_id = indf.indent_id
             LEFT JOIN  indent idt ON idt.indent_id = indt.indent_id
-            LEFT JOIN  buyers idfb ON idfb.buyer_id = idf.buyer_id
+            LEFT JOIN  buyers idfb ON idfb.buyer_id = gi.buyer_id
             LEFT JOIN  buyers idtb ON idtb.buyer_id = idt.buyer_id
             LEFT JOIN  uom u ON u.id = gi.uom_id
             GROUP BY gi.grn_item_id`
@@ -204,11 +204,12 @@ export class LocationMappingService {
             stockEntity.itemType = req.item_type;
             stockEntity.locationId = req.location_id;
             stockEntity.quantity = req.quantity;
+            stockEntity.styleId = req.style_id;
             stockEntity.m3Item = req.m3_item;
             stockEntity.stockType = StockTypeEnum.STOCK;
             stockEntity.uomId = req.uom_id;
             stockEntity.stockBarCode = stock_bar_code;
-            stockEntity.uuid = '';
+            // stockEntity.uuid = '';
             saveStock = await this.stocksRepository.save(stockEntity)
             if(saveStock){
                 let stockLogEntity = new StockLogEntity();

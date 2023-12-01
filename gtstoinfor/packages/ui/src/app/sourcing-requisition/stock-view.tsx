@@ -133,6 +133,11 @@ export const StockView = () => {
     setVisibleModel(true);
   }
 
+  const setModel = (val) => {
+    console.log(val);
+    setVisibleModel(val);
+  }
+
   const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -319,7 +324,7 @@ export const StockView = () => {
               style={{ backgroundColor: '#69c0ff' }}
               onClick={(e) => getRowData(rowData)}
             >
-              <b>Assign Reclassification</b>
+              <b>Request Reclassification</b>
             </Button>
           </span>
         );
@@ -679,7 +684,7 @@ export const StockView = () => {
             onCancel={handleCancel}
             footer={[]}
         >
-            <Reclassification data = {rowData} buyer= {form.getFieldValue("buyerId")} type="stock" />
+            <Reclassification data = {rowData} buyer= {form.getFieldValue("buyerId")} type="stock" status={setModel}/>
 
             </Modal>
     </Card>

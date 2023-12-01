@@ -59,6 +59,7 @@ export const LocationMapping = () => {
     }
 
     const saveLocation = (result: any) => {
+        console.log(grnData)
         if(form.getFieldValue("locationId") === undefined || null){
          AlertMessages.getErrorMessage('Please select the Location')
         }
@@ -68,7 +69,7 @@ export const LocationMapping = () => {
       
         // const req = new LocationMappingReq(grnData.m3_items_Id
         //     , locationId, qty, grnData.grnItemId, shahi_item_code, item_type_id, plant_id,grnData.style_id, grnData.item_id, grnData.style_id,grnData.buyer_id );
-            const req = new LocationMappingReq(grnData.itemId,locationId,qty,grnData.grnItemId,1,grnData.buyerId,grnData.uomId,grnData.itemType,grnData.m3itemDescription,grnData.uom);
+            const req = new LocationMappingReq(grnData.itemId,locationId,qty,grnData.grnItemId,1,grnData.buyerId,grnData.uomId,grnData.materialType,grnData.m3itemDescription,grnData.uom);
         if (req) {
             locationService.postToStockLogs(req).then((res) => {
                 if (res.status === true) {
@@ -80,11 +81,11 @@ export const LocationMapping = () => {
                         locationService.updateRackLocationStatus(request).then((res) => {
                             if (res.status === true) {
                                 AlertMessages.getSuccessMessage("Rack location updated Succesufully")
-                                if (result === "close") {
+                                // if (result === "close") {
+                                //     navigate("/grn-pending-info-grid");
+                                // } else if (result === "continue") {
                                     navigate("/grn-pending-info-grid");
-                                } else if (result === "continue") {
-                                    navigate("/grn-pending-info-grid");
-                                }
+                                // }
                             } else if (res.status === false) {
                                 AlertMessages.getErrorMessage("Error while updating rack location")
                                 if (result === "close") {

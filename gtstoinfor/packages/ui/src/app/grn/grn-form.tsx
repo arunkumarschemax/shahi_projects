@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, Tabs } from 'antd'
+import { Button, Card, Col, DatePicker, Divider, Form, Input, Row, Select, Table, Tabs } from 'antd'
 import style from 'antd/es/alert/style'
 import TabPane from 'antd/es/tabs/TabPane'
 import React, { useEffect, useState } from 'react'
@@ -12,7 +12,7 @@ import { GRNTypeEnum, GrnDto, GrnItemsDto, GrnItemsFormDto, PoItemEnum, Purchase
 import AlertMessages from '../common/common-functions/alert-messages'
 import dayjs, { Dayjs } from "dayjs";
 import { useNavigate } from 'react-router-dom'
-import { EditOutlined } from '@ant-design/icons'
+import { EditOutlined, MinusCircleOutlined } from '@ant-design/icons'
 
 // const data : GrnItemsFormDto[] = []
 // const obj1 : GrnItemsFormDto = new GrnItemsFormDto(1,1,'YY/FAB00001','Activewear Fabrics',17,PoItemEnum.OPEN,3,'Inch',3000,5,2,5000,0,0,1200,18,'red',1,null,1,'')
@@ -60,12 +60,10 @@ const GRNForm = () => {
     })
   }
 
-  console.log(poData)
 
   const createGrn = () => {
     const values = form.getFieldsValue()
-    console.log(poData[0]?.poMaterialType)
-    const req = new GrnDto(values.vendorId, values.purchaseOrderId, form.getFieldValue('grnDate').format('YYYY-MM-DD'), PurchaseOrderStatus.OPEN, values.remarks, undefined, undefined, '', undefined, '', 0, 0, poData[0]?.poMaterialType, poItemData, 0, '', values.grnType, values.invoiceNo,poData?.poMaterialType);
+    const req = new GrnDto(values.vendorId, values.purchaseOrderId, form.getFieldValue('grnDate').format('YYYY-MM-DD'), PurchaseOrderStatus.OPEN, values.remarks, undefined, undefined, '', undefined, '', 0, 0, poData[0]?.poMaterialType, poItemData, 0, '', values.grnType, values.invoiceNo, poData?.poMaterialType,values.grnAmount);
     grnService.createGrn(req).then((res) => {
       if (res.status) {
         AlertMessages.getSuccessMessage(res.internalMessage);
@@ -98,23 +96,15 @@ const GRNForm = () => {
   }
 
   const getPODataById = (val, option) => {
-    console.log('po data called')
     itemsForm.resetFields()
     setPoData([])
     setPoItemData([])
-    if (!val) {
-      setSelectedPoType(null);
-      return;
-    }
-
     const req = new VendorIdReq(0, val, option?.name, option.val);
     poService.getPODataById(req).then((res) => {
       if (res.status) {
-        
         setPoData(res.data[0]);
         setPoItemData(res.data[0].grnItems)
         form.setFieldsValue({ grnType: res.data[0].poAgainst });
-        setSelectedPoType(res.data[0].poAgainst);
       }
     });
   };
@@ -125,145 +115,15 @@ const GRNForm = () => {
     setPoData([])
   }
 
-  // const validateFabricForm = async (value) => {
-  //   // let createChildData;
-
-  //   if (poData[0]?.materialType === 'Fabric') {
-  //     try {
-  //       const values = await form.validateFields();
-  //       form.validateFields().then((values) => {
-  //         const updatedFormData = poData.filter((record) => {
-  //           const key = record.key;
-  //           return (
-  //             values[`receivedQuantity_${record.poFabricId}_${key}`] ||
-  //             values[`acceptedQuantity_${record.poFabricId}_${key}`] ||
-  //             values[`rejectedQuantity_${record.poFabricId}_${key}`]
-  //           );
-  //         }).map((record) => ({
-  //           poFabricId: record.poFabricId,
-  //           receivedQuantity: values[`receivedQuantity_${record.poFabricId}_${record.key}`],
-  //           acceptedQuantity: values[`acceptedQuantity_${record.poFabricId}_${record.key}`],
-  //           rejectedQuantity: values[`rejectedQuantity_${record.poFabricId}_${record.key}`],
-  //           rejectedUomId: values[`rejectedUomId_${record.poFabricId}_${record.key}`],
-  //           conversionQuantity: quantity,
-  //           conversionUomId: values[`acceptedUomId_${record.poFabricId}_${record.key}`],
-  //           ...record,
-  //         }));
-  //         const grnItemsArray = [];
-  //         updatedFormData.forEach((record) => {
-  //           const grnItem = new GrnItemsDto(0, record.m3fabricCode, record.receivedQuantity, record.acceptedQuantity, record.rejectedQuantity, record.rejectedUomId, record.conversionQuantity, record.conversionUomId, record.remarks, undefined, '', undefined, '', 0, 0, record.poFabricId, null, record.indentFabricId, null)
-  //           grnItemsArray.push(grnItem)
-  //         });
-  //         createGrn(value, grnItemsArray)
-  //         console.log(value, grnItemsArray, '=hhhhhhhhhhhhhhhhh')
-  //       });
-  //     } catch (error) {
-  //       console.error('Error validating fabric fields:', error);
-  //       return;
-  //     }
-  //   }
-
-  //   if (poData[0]?.materialType === 'Trim') {
-  //     try {
-  //       const values = await form.validateFields();
-  //       const updatedFormData = poData.filter((record) => {
-  //         const key = record.key;
-  //         return (
-  //           values[`receivedQuantity_${record.poTrimId}_${key}`] ||
-  //           values[`acceptedQuantity_${record.poTrimId}_${key}`] ||
-  //           values[`rejectedQuantity_${record.poTrimId}_${key}`]
-  //         );
-  //       }).map((record) => ({
-  //         poTrimId: record.poTrimId,
-  //         receivedQuantity: values[`receivedQuantity_${record.poTrimId}_${record.key}`],
-  //         receivedUomId: values[`receivedUomId_${record.poTrimId}_${record.key}`],
-  //         acceptedQuantity: values[`acceptedQuantity_${record.poTrimId}_${record.key}`],
-  //         acceptedUomId: values[`acceptedUomId_${record.poTrimId}_${record.key}`],
-  //         rejectedQuantity: values[`rejectedQuantity_${record.poTrimId}_${record.key}`],
-  //         rejectedUomId: values[`rejectedUomId_${record.poTrimId}_${record.key}`],
-  //         conversionQuantity: quantity,
-  //         conversionUomId: values[`acceptedUomId_${record.poFabricId}_${record.key}`],
-  //         ...record,
-  //       }))
-
-  //       const grnItemsArray = [];
-  //       updatedFormData.forEach((record) => {
-  //         const grnItem = new GrnItemsDto(0, record.m3TrimCode, record.receivedQuantity, record.acceptedQuantity, record.rejectedQuantity, record.rejectedUomId, record.conversionQuantity, record.conversionUomId, record.remarks, undefined, '', undefined, '', 0, 0, 0, record.poTrimId, null, record.indentTrimId);
-  //         grnItemsArray.push(grnItem);
-  //       });
-
-  //       // Call createGrn here if needed
-  //       createGrn(value, grnItemsArray)
-  //     } catch (error) {
-  //       console.error('Error validating trim fields:', error);
-  //       return;
-  //     }
-  //   }
-
-  //   // You might want to move the call to createGrn outside the if blocks, depending on your logic.
-  //   // createGrn(value, createChildData);
-  // };
 
 
 
-
-
-  const uomConversionFactors = {
-    m: 1,          // 1 meter
-    yd: 0.9144,    // 1 yard = 0.9144 meters
-    gsm: 1,        // 1 gram per square meter
-    'oz/yd²': 33.906, // 1 ounce per square yard = 33.906 grams per square meter
-    pc: 1,         // 1 piece
-    ly: 1,         // 1 length (assuming length is in meters)
-    mm: 0.001,     // 1 millimeter = 0.001 meters
-    in: 0.0254,    // 1 inch = 0.0254 meters
-    cm: 0.01,      // 1 centimeter = 0.01 meters
-    gr: 0.001      // 1 gram
-  };
-
-
-  const convertQuantity = (quantity, fromUom, toUom) => {
-    if (quantity != null && fromUom != undefined && toUom != undefined) {
-      console.log(quantity, fromUom, toUom)
-      if (fromUom === toUom) {
-        console.log(quantity)
-        setQuantity(quantity)
-        return quantity;
-      }
-      if (!(fromUom in uomConversionFactors) || !(toUom in uomConversionFactors)) {
-        console.log(fromUom in uomConversionFactors)
-        throw new Error('Invalid units of measure');
-      }
-
-      const baseQuantity = quantity * uomConversionFactors[fromUom];
-      const convertedQuantity = baseQuantity / uomConversionFactors[toUom];
-      console.log(convertedQuantity)
-      setQuantity(convertedQuantity)
-      return convertedQuantity;
-    }
-  };
-
-  let convertedQty
-
-  const acceptUomOnchange = (option, value, record) => {
-    const acceptedQuantity = form.getFieldValue(`acceptedQuantity_${record.poFabricId}_${record.key}`);
-    convertedQty = convertQuantity(acceptedQuantity, reciveUomName, value?.type ? value.type : undefined);
-  }
-
-  const receiveuomOnChange = (value, option) => {
-    console.log(option.name)
-    setReciveUomName(option.name)
-
-  }
-
-  const acceptedQuantityOnchange = (value) => {
-    console.log(value)
-  }
 
   const setDataToForm = (record) => {
     itemsForm.setFieldsValue({
       m3itemCode: record.m3itemCode,
       uom: record.uom,
+
       poQuantity: record.poQuantity,
       m3ItemType: record.m3ItemType,
       grnQuantity: record.grnQuantity,
@@ -275,19 +135,30 @@ const GRNForm = () => {
       subjectiveAmount: record.subjectiveAmount,
       receivedQuantity: 0,
       acceptedQuantity: 0,
-      poItemId: record.poItemId
+      poItemId: record.poItemId,
+      conversionUomId:record.uomId
     })
+  }
+
+  function handleRemovePoItem(record) {
+    setPoItemData(prevData =>
+      prevData.filter(item => item.poItemId !== record.poItemId)
+    );
   }
 
 
   const columns: any = [
     {
       title: <div style={{ textAlign: "center" }}> Item Code</div>,
+      fixed: 'left',
       dataIndex: 'm3itemCode',
+
     },
     {
       title: <div style={{ textAlign: "center" }}> Item Type</div>,
       dataIndex: 'm3ItemType',
+      fixed: 'left',
+
     },
     // {
     //   title: <div style={{textAlign:"center"}}>Style</div>,
@@ -296,6 +167,8 @@ const GRNForm = () => {
     {
       title: <div style={{ textAlign: "center" }}>Buyer</div>,
       dataIndex: 'buyer',
+      fixed: 'left',
+
     },
     {
       title: <div style={{ textAlign: "center" }}>PO Qty</div>,
@@ -318,10 +191,11 @@ const GRNForm = () => {
       dataIndex: 'receivedQuantity',
       render: (value, rowData) => {
         return (
-          value ? value : 0
+          value ? value : (rowData.poQuantity-rowData.grnQuantity)
+          
         )
       }
-
+     
 
     },
     {
@@ -329,7 +203,7 @@ const GRNForm = () => {
       dataIndex: 'acceptedQuantity',
       render: (value, rowData) => {
         return (
-          value ? value : 0
+          value ? value : (rowData.poQuantity-rowData.grnQuantity)
         )
       }
 
@@ -337,7 +211,11 @@ const GRNForm = () => {
     {
       title: <div style={{ textAlign: "center" }}>Rejected Qty</div>,
       dataIndex: 'rejectedQuantity',
-
+      render: (value, rowData) => {
+        return (
+          value ? value : 0
+        )
+      }
     },
     {
       title: <div style={{ textAlign: "center" }}>UOM</div>,
@@ -345,7 +223,7 @@ const GRNForm = () => {
 
     },
     {
-      title: 'Converted UOM',
+      title: 'Received UOM',
       dataIndex: 'convertedUOMOnChange',
       render: (value, record) => {
         return value ? value : record.uom
@@ -366,7 +244,7 @@ const GRNForm = () => {
       dataIndex: 'tax',
 
     },
-    
+
     {
       title: <div style={{ textAlign: 'center' }}>Transportation</div>,
       dataIndex: 'transportation',
@@ -378,12 +256,12 @@ const GRNForm = () => {
 
     },
     {
-      title:'Subjective Amount',
-      dataIndex : 'subjectiveAmount',
+      title: 'Subjective Amount',
+      dataIndex: 'subjectiveAmount',
       render: (value, rowData) => {
         return (
-          rowData.revisedSubjectivePrice ?  rowData.revisedSubjectivePrice : value 
-        ) 
+          rowData.revisedSubjectivePrice ? rowData.revisedSubjectivePrice : value
+        )
       }
     },
     // {
@@ -396,7 +274,17 @@ const GRNForm = () => {
     // },
     {
       title: 'Action',
-      render: (_, record) => <EditOutlined onClick={() => setDataToForm(record)} />
+      fixed: 'right',
+      render: (_, record) => <span>
+        <EditOutlined onClick={() => setDataToForm(record)} />
+
+        {
+          poItemData.length > 1 ? <>
+            <Divider type='vertical' />
+            <MinusCircleOutlined onClick={() => handleRemovePoItem(record)} />
+          </> : <></>
+        }
+      </span>
     }
   ]
 
@@ -413,13 +301,13 @@ const GRNForm = () => {
         }
         return item;
       }))
-    console.log('state updated', poItemData)
+      calculatePrices()
   }
 
   function acceptedQuantityOnChange(e) {
     const poItemId = itemsForm.getFieldValue('poItemId')
     const receivedQunatity = itemsForm.getFieldValue('receivedQuantity')
-    
+
     setPoItemData(prevData =>
       prevData.map(item => {
         if (item.poItemId === poItemId) {
@@ -435,17 +323,13 @@ const GRNForm = () => {
   }
 
 
-  function calculatePrices(value){
-    const uomFactors = {
-      cm : 12
-    }
+  function calculatePrices() {
     const poItemId = itemsForm.getFieldValue('poItemId')
     const subjectivePrice = Number(itemsForm.getFieldValue('subjectiveAmount'))
     const acceptedQty = Number(itemsForm.getFieldValue('acceptedQuantity'))
     const poQty = Number(itemsForm.getFieldValue('poQuantity'))
-    console.log(subjectivePrice,acceptedQty,poQty)
-    const unitPrice = Number((subjectivePrice)/poQty)
-    const totalSubjectivePrice =( Number(acceptedQty) * Number(unitPrice))
+    const unitPrice = Number((subjectivePrice) / poQty)
+    const totalSubjectivePrice = (Number(acceptedQty) * Number(unitPrice))
     console.log(totalSubjectivePrice)
     console.log(poItemData)
     setPoItemData(prevData =>
@@ -453,12 +337,19 @@ const GRNForm = () => {
         if (item.poItemId == poItemId) {
           return {
             ...item,
-            revisedSubjectivePrice : totalSubjectivePrice
+            grnItemAmount: totalSubjectivePrice
           };
         }
         return item;
       }))
-   
+    let totalGrnAmount = 0
+   poItemData.forEach((v) => {
+      if (v.poItemId == poItemId) {
+        v.grnItemAmount = totalSubjectivePrice
+      }
+      totalGrnAmount += v.grnItemAmount ? Number(v.grnItemAmount) : Number(v.subjectiveAmount)
+    })
+    form.setFieldValue('grnAmount',totalGrnAmount)
   }
 
   function convertedUOMOnChange(e) {
@@ -474,16 +365,14 @@ const GRNForm = () => {
         }
         return item;
       }))
-      calculatePrices(e);
+
+  }
+
+  function itemsFormReset() {
+    itemsForm.resetFields()
   }
 
 
-const saveData = () => {
-  const formValues = form.getFieldsValue()
-  const grnDto = new GrnDto(formValues.vendorId,formValues.purchaseOrderId,new Date(),PurchaseOrderStatus.OPEN,"")
-  const grnItemsFormDto :GrnItemsFormDto[] = poItemData
-  
-}
 
 
   return (
@@ -493,6 +382,7 @@ const saveData = () => {
           <Button onClick={() => navigate("/grn-view")}>View</Button>
         </span>}>
         <Form form={form} layout="vertical" >
+          <Form.Item name={'grnAmount'} hidden><Input></Input></Form.Item>
           <Row gutter={8}>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
               <Form.Item name={'grnId'} hidden><Input></Input></Form.Item>
@@ -584,7 +474,7 @@ const saveData = () => {
           <Form form={itemsForm} layout="vertical">
             <Row gutter={24} >
               <Form.Item name={'poItemId'} hidden><Input></Input></Form.Item>
-              <Form.Item name={'revisedSubjectivePrice'} hidden><Input></Input></Form.Item>
+              <Form.Item name={'grnItemAmount'} hidden><Input></Input></Form.Item>
 
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                 <Form.Item name='m3itemCode' label='M3 Item'>
@@ -596,12 +486,12 @@ const saveData = () => {
                   <Input disabled />
                 </Form.Item>
               </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} hidden>
                 <Form.Item name='uom' label='UOM'>
                   <Input disabled />
                 </Form.Item>
               </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} hidden>
                 <Form.Item name='poQuantity' label='Po Qty'>
                   <Input disabled />
                 </Form.Item>
@@ -637,6 +527,7 @@ const saveData = () => {
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                 <Form.Item name='conversionUomId' label='Received UOM'>
                   <Select
+                  disabled
                     allowClear
                     style={{ width: "100%" }}
                     showSearch
@@ -653,39 +544,39 @@ const saveData = () => {
                 </Form.Item>
               </Col>
 
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }}>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} hidden>
                 <Form.Item name='unitPrice' label='Unit price'>
                   <Input disabled />
                 </Form.Item>
               </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }}>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} hidden>
                 <Form.Item name='discount' label='Discount'>
                   <Input disabled />
                 </Form.Item>
               </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }}>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} hidden>
                 <Form.Item name='tax' label='Tax %'>
                   <Input disabled />
                 </Form.Item>
               </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }}>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} hidden>
                 <Form.Item name='transportation' label='Transportation'>
                   <Input disabled />
                 </Form.Item>
               </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }}>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} hidden>
                 <Form.Item name='subjectiveAmount' label='Subjective Amount'>
                   <Input disabled />
                 </Form.Item>
               </Col>
               <Col>
-                <Button style={{ marginTop: '25px' }} type='primary'>Update</Button>
+                <Button style={{ marginTop: '25px' }} onClick={itemsFormReset} >Reset</Button>
               </Col>
             </Row>
           </Form>
 
           <Row>
-            <Table columns={columns} dataSource={poItemData} bordered />
+            <Table scroll={{ x: 'max-content' }} columns={columns} dataSource={poItemData} bordered pagination={false} />
           </Row>
         </Card>
 

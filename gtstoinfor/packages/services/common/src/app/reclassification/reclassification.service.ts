@@ -2,13 +2,14 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, Not, Raw, DataSource } from "typeorm";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
-import { CommonResponseModel, RacActiveDeactive, RackCreateRequest, StockTypeEnum } from "@project-management-system/shared-models";
+import { CommonResponseModel, RacActiveDeactive, RackCreateRequest, ReclassificationStatusEnum, StockTypeEnum } from "@project-management-system/shared-models";
 import { ReclassificationAdapter } from "./reclassification.adaptor";
 import { ReclassificationEntity } from "./reclassification.entity";
 import { ReclassificationDTO } from "./reclassification.dto";
 import { StocksRepository } from "../stocks/repository/stocks.repository";
 import { StocksEntity } from "../stocks/stocks.entity";
 import { GenericTransactionManager } from "../../typeorm-transactions";
+import { ReclassificationApproveRequestDTO } from "./reclassification-approve.request.dto";
 
 @Injectable()
 export class ReclassificationService {
@@ -28,35 +29,59 @@ export class ReclassificationService {
       await manager.startTransaction();
       const entity: ReclassificationEntity = this.adapter.convertDtoToEntity(dto);
       const saveReclassification = await manager.getRepository(ReclassificationEntity).save(entity);
-      if(saveReclassification.reclassificationId > 0){
-          const stocksEntity = new StocksEntity()
-          stocksEntity.buyerId = dto.buyer;
-          stocksEntity.grnItemId = dto.grnItemId;
-          stocksEntity.locationId = dto.location;
-          stocksEntity.m3Item = dto.itemId;
-          stocksEntity.quantity = dto.quantity;
-          stocksEntity.uomId = dto.uomId;
-          stocksEntity.stockType = StockTypeEnum.RECLASSIFICATION;
-          let saveStock = await manager.getRepository(StocksEntity).save(stocksEntity)
-          if(saveStock.id > 0){
-            let updateStockQty = await manager.getRepository(StocksEntity).update({id:dto.stockId},{ quantity: () => `quantity-${dto.quantity}`});
-            if(updateStockQty.affected > 0){
-              await manager.completeTransaction();
-              const saveDto: ReclassificationDTO = this.adapter.convertEntityToDto(saveReclassification);
-              return new CommonResponseModel(true, 1, 'Data saved successfully', saveDto);
-            }
-            else{
-              await manager.releaseTransaction();
-              return new CommonResponseModel(false, 0, "Something went wrong",);
-            }
-          }
-          else{
-            await manager.releaseTransaction();
-            return new CommonResponseModel(false, 0, "Something went wrong",);
-          }
+      // if(saveReclassification.reclassificationId > 0){
+      //     const stocksEntity = new StocksEntity()
+      //     stocksEntity.buyerId = dto.buyer;
+      //     stocksEntity.grnItemId = dto.grnItemId;
+      //     stocksEntity.locationId = dto.location;
+      //     stocksEntity.m3Item = dto.itemId;
+      //     stocksEntity.quantity = dto.quantity;
+      //     stocksEntity.uomId = dto.uomId;
+      //     stocksEntity.stockType = StockTypeEnum.RECLASSIFICATION;
+      //     let saveStock = await manager.getRepository(StocksEntity).save(stocksEntity)
+      //     if(saveStock.id > 0){
+      //       let updateStockQty = await manager.getRepository(StocksEntity).update({id:dto.stockId},{ quantity: () => `quantity-${dto.quantity}`});
+      //       if(updateStockQty.affected > 0){
+      //         await manager.completeTransaction();
+      //         const saveDto: ReclassificationDTO = this.adapter.convertEntityToDto(saveReclassification);
+      //         return new CommonResponseModel(true, 1, 'Data saved successfully', saveDto);
+      //       }
+      //       else{
+      //         await manager.releaseTransaction();
+      //         return new CommonResponseModel(false, 0, "Something went wrong",);
+      //       }
+      //     }
+      //     else{
+      //       await manager.releaseTransaction();
+      //       return new CommonResponseModel(false, 0, "Something went wrong",);
+      //     }
+      // }
+      if(saveReclassification){
+        await manager.completeTransaction();
+        const saveDto: ReclassificationDTO = this.adapter.convertEntityToDto(saveReclassification);
+        return new CommonResponseModel(true, 1, 'Data saved successfully', saveDto);
+      }
+      else{
+        await manager.releaseTransaction();
+        return new CommonResponseModel(false, 0, "Something went wrong",);
       }
     } catch (error) {
       await manager.releaseTransaction();
+      return new CommonResponseModel(false, 0, error)
+    }
+  }
+  async getAllReclassificationData(): Promise<CommonResponseModel> {
+    const manager=this.dataSource
+    try {
+      let query = "select r.status AS status,s.uom_id AS uomId,r.location AS locationId,r.item_id AS m3Item,r.reclassification_id AS reclassificationId,b.buyer_id AS toBuyerId, fb.buyer_id AS fromBuyerId,r.stock_id AS stockId,s.grn_item_id AS grnItemId,u.uom AS uom,b.buyer_name AS toBuyerName, fb.buyer_name AS fromBuyerName, r.quantity, rp.rack_position_name AS location,s.item_type AS itemType  from reclassification r left join buyers b on b.buyer_id = r.buyer left join buyers fb on fb.buyer_id = r.from_buyer left join rack_position rp on rp.position_Id = r.location left join stocks s on s.id = r.stock_id left join uom u on u.id = s.uom_id"
+      const data = await manager.query(query)
+      if(data){
+        return new CommonResponseModel(true, 1, 'Data saved successfully', data);
+      }
+      else{
+        return new CommonResponseModel(false, 0, "Something went wrong",);
+      }
+    } catch (error) {
       return new CommonResponseModel(false, 0, error)
     }
   }
@@ -80,8 +105,46 @@ export class ReclassificationService {
   //   }
   // }
 
+async getApproveStockReclassification(req:ReclassificationApproveRequestDTO): Promise<CommonResponseModel> {
+  console.log("*******************");
+  console.log(req);
+
+  const manager=this.dataSource
+    try {
+      let query = "update reclassification set status='"+ReclassificationStatusEnum.APPROVED+"' where reclassification_id = "+req.reclassificationId;
+      const updateStatus = await manager.query(query)
+      console.log(updateStatus)
+      if(updateStatus.affectedRows > 0){
+        const stocksEntity = new StocksEntity()
+          stocksEntity.buyerId = req.buyer;
+          stocksEntity.grnItemId = req.grnItemId;
+          stocksEntity.locationId = req.location;
+          stocksEntity.m3Item = req.itemId;
+          stocksEntity.quantity = req.quantity;
+          stocksEntity.uomId = req.uomId;
+          stocksEntity.styleId = req.styleId;
+          stocksEntity.itemType = req.itemType;
+          stocksEntity.stockType = StockTypeEnum.RECLASSIFICATION;
+          let saveStock = await manager.getRepository(StocksEntity).save(stocksEntity)
+          if(saveStock.id > 0){
+            let updateStockQty = await manager.getRepository(StocksEntity).update({id:req.stockId},{ transferedQuantity: () => `transfered_quantity+${req.quantity}`});
+            if(updateStockQty.affected > 0){
+              // await manager.completeTransaction();
+              return new CommonResponseModel(true, 1, 'Data saved successfully', );
+            }
+            else{
+              // await manager.releaseTransaction();
+              return new CommonResponseModel(false, 0, "Something went wrong",);
+            }
+          }
+          else{
+            // await manager.releaseTransaction();
+            return new CommonResponseModel(false, 0, "Something went wrong",);
+          }
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, error)
+    }
 }
 
-
-
-
+}

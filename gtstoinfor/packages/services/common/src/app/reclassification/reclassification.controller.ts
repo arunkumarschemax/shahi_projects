@@ -15,7 +15,7 @@ export class ReclassificationController {
 
   @Post('createReclassification')
   @ApiBody({type:ReclassificationDTO})
-  async createReclassification(@Body() dto: ReclassificationDTO): Promise<CommonResponseModel> {
+  async createReclassification(@Body() dto: any): Promise<CommonResponseModel> {
     console.log(dto,"con")
     try {
       return await this.Service.createReclassification(dto);
@@ -23,5 +23,26 @@ export class ReclassificationController {
       return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
     }
   }
+
+  @Post('getAllReclassificationData')
+  async getAllReclassificationData(): Promise<CommonResponseModel> {
+    try {
+      return await this.Service.getAllReclassificationData();
+    } catch (error) {
+      return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
+    }
+  }
+
+
+  @Post('getApproveStockReclassification')
+  async getApproveStockReclassification(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.Service.getApproveStockReclassification(req);
+    } catch (error) {
+      return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
+    }
+  }
+
+
 
 }
