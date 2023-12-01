@@ -17,7 +17,7 @@ import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
 import CompanyForm from "./masters/company/company-form"
 import CompanyGrid from "./masters/company/company-grid"
-import { CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto } from "@project-management-system/shared-models"
+import { CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto, PurchaseViewDto } from "@project-management-system/shared-models"
 import MasterBrandsForm from "./masters/master-brands/master-brands-form"
 import MasterBrandsGrid from "./masters/master-brands/master.brands-gridt"
 import OperationsForm from "./masters/operations/operations-form"
@@ -955,7 +955,9 @@ export const AppRoutes = () => {
                     <Route path="material-allocation" element={<MaterialAllocationGrid />} />
                     <Route path="material-allocation-view" element={<MaterialAllocationView />} />
                     <Route path="material-allocation-detail-view" element={<MaterialAllocationDetailView />} />
-                    <Route path="allocation-approval" element={<AllocatedStockApproval />} />
+
+
+
                 </Route>
 
 
@@ -1034,7 +1036,7 @@ export const AppRoutes = () => {
                 <Route path='/requisition-view' element={<SourcingRequisitionDynamicView />} />
                 <Route path='/purchase-order' element={<PurchaseOrderForm />} />
                 <Route path='/purchase-view' element={<PurchaseOrderView />} />
-                <Route path='/purchase-detali-view' element={<PurchaseOrderDetailsView />} />
+                <Route path='/purchase-detali-view' element={<PurchaseOrderDetailsView purchaseOrderId={undefined} />} />
                 <Route path='/grn-form' element={<GRNForm />} />
                 <Route path='/grn-view' element={<GRNView />} />
                 <Route path='/grn-detail-view' element={<GRNDetailView />} />

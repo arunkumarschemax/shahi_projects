@@ -113,6 +113,18 @@ export class GrnItemsEntity {
     sampleItemId: number
 
     @Column('int', {
+        name: 'sample_req_id',
+        nullable: false,
+    })
+    sampleRequestId: number
+
+    @Column('int', {
+        name: 'indent_id',
+        nullable: false,
+    })
+    indentId: number
+
+    @Column('int', {
         name: 'grn_item_amount',
         nullable: false,
     })

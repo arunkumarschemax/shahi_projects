@@ -39,6 +39,7 @@
     "highcharts": "9.1.1",
     "highcharts-react-official": "3.0.0",
     "highlighter": "0.1.0",
+    "html2pdf.js": "^0.10.1",
     "https": "1.0.0",
     "i": "0.3.7",
     "jspdf": "2.5.1",
