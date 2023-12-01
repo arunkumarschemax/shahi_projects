@@ -95,6 +95,10 @@ export const AllocatedStockApproval = () => {
     getAllocatedBomData();
   }
 
+  const renderCellData = (data) => {
+    return data ? data : "-";
+  };
+
   const fabColumns: ColumnProps<any>[] = [
     {
       title: "S No",
@@ -107,9 +111,31 @@ export const AllocatedStockApproval = () => {
       title: "Request No",
       dataIndex: "requestNo",
     },
+    // {
+    //   title: <div style={{ textAlign: "center" }}>Brand Name</div>,
+    //   dataIndex: "sm",
+    //   key: "sm",
+    //   align: "center",
+    //   render :(sm,text) => {
+    //     renderCellData(text);
+    //     return (
+    //         <Table
+    //         dataSource={sm}
+    //         columns={[
+    //             {
+    //                 dataIndex: "brandName",
+    //                 key: "brandName",
+    //                 align: "center",
+    //               },
+    //         ]}
+    //         pagination={false}
+    //         />
+    //     )
+    //   }
+    // },
     {
-      title: "Brand",
-      dataIndex: "brandName",
+        title: "Brand Name",
+        dataIndex: "brandName",
     },
     {
       title: "Style",
@@ -292,6 +318,7 @@ export const AllocatedStockApproval = () => {
                 },
                 rowExpandable: (record) => record.name !== "Not Expandable",
               }}
+            //   className="custom-table-wrapper"
             />
           </TabPane>
           <TabPane tab="Trim Details" key="2">
