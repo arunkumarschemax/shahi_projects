@@ -430,7 +430,7 @@ export class OrdersService {
             }
         } catch (error) {
             await transactionManager.releaseTransaction()
-            return new CommonResponseModel(false, 0, error)
+            return new CommonResponseModel(false, 0, 'Network Error or Code issue')
         }
     }
 
