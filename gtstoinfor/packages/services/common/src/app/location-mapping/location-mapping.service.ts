@@ -1,12 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { AppDataSource } from "../app-datasource";
-import { CommonResponseModel, LocationMappingReq, MaterialIssueIdreq, RackLocationStatusReq, StockTypeEnum } from "@project-management-system/shared-models";
+import { CommonResponseModel, LocationMappedEnum, LocationMappingReq, MaterialIssueIdreq, RackLocationStatusReq, StockTypeEnum } from "@project-management-system/shared-models";
 import { StocksEntity } from "../stocks/stocks.entity";
 import { StocksRepository } from "../stocks/repository/stocks.repository";
 import { StockLogEntity } from "../stocks/stock-log-entity";
 import { StockLogRepository } from "../stocks/repository/stock-log.repository";
-import { Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
+import { GrnItemsEntity } from "../grn/entities/grn-items-entity";
 
 @Injectable()
 export class LocationMappingService {
@@ -17,6 +18,7 @@ export class LocationMappingService {
     private stockLogRepository: Repository<StockLogEntity>,
     @InjectRepository(StocksEntity)
     private stocksRepository: Repository<StocksEntity>,
+    private readonly dataSource: DataSource,
 
 
 
@@ -191,6 +193,8 @@ export class LocationMappingService {
 
 
     async postToStockLogs(req: LocationMappingReq) {
+         const manager=this.dataSource
+
         const data = await this.getAllCount();
         console.log(data,"data")
         console.log(data.data[0].id,"data")
@@ -225,7 +229,16 @@ export class LocationMappingService {
                 stockLogEntity.stockId = saveStock.id;
                 let saveStockLog = await this.stockLogRepository.save(stockLogEntity)
                 if(saveStockLog){
-                    return new CommonResponseModel(true, 1111, "Data posted Succesufully");
+                    let updateGrnItemStatus = await manager.getRepository(GrnItemsEntity).update({grnItemId:req.grn_item_id},{ status: LocationMappedEnum.COMPLETED});
+                    console.log(updateGrnItemStatus)
+                    console.log("**********************************")
+                    if(updateGrnItemStatus.affected > 0){
+                        return new CommonResponseModel(true, 1111, "Data posted Succesufully");
+                    }
+                    else {
+                        return new CommonResponseModel(false, 10005, "Data not posted");
+                    }   
+
                 }
                 else {
                     return new CommonResponseModel(false, 10005, "Data not posted");
