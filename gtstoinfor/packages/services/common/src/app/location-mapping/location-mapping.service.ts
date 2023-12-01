@@ -101,7 +101,7 @@ export class LocationMappingService {
             
             // GROUP BY grn_item_id`
 
-            let query = `SELECT gi.uom_id AS uomId, u.uom AS uom, gi.grn_item_id As grnItemId,g.item_type AS materialType, (gi.accepted_quantity - SUM(st.quantity)) AS balance, SUM(st.quantity) AS allocatedQty, IF(g.item_type = "FABRIC", mit.m3_items_id, mtr.m3_trim_id) AS itemId,
+            let query = `SELECT gi.uom_id AS uomId, u.uom AS uom, gi.grn_item_id As grnItemId,g.item_type AS materialType, (gi.accepted_quantity - IF(SUM(st.quantity) IS NULL, 0 , SUM(st.quantity))) AS balance, IF(SUM(st.quantity) IS NULL, 0 , SUM(st.quantity)) AS allocatedQty, IF(g.item_type = "FABRIC", mit.m3_items_id, mtr.m3_trim_id) AS itemId,
             IF(g.item_type = "FABRIC", mit.item_code, mtr.trim_code) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity,
             IF(g.grn_type = "INDENT" AND g.item_type = "FABRIC", idfb.buyer_id, IF(g.grn_type = "INDENT" AND g.item_type != "FABRIC", idtb.buyer_id, IF(g.grn_type = "SAMPLE_ORDER" AND g.item_type = "FABRIC",sprfb.buyer_id,sprtb.buyer_id))) AS buyerId, IF(g.grn_type = "INDENT" AND g.item_type = "FABRIC", idfb.buyer_name, IF(g.grn_type = "INDENT" AND g.item_type != "FABRIC", idtb.buyer_name, IF(g.grn_type = "SAMPLE_ORDER" AND g.item_type = "FABRIC",sprfb.buyer_name,sprtb.buyer_name))) AS buyerName
             FROM grn_items gi LEFT JOIN grn g ON g.grn_id = gi.grn_id 
