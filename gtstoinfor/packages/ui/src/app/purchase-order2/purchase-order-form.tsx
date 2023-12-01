@@ -200,6 +200,7 @@ export const PurchaseOrderForm = () => {
     }
     const onFinish = () => {
         console.log(fabricData)
+        console.log(trimData)
         if(poForm.getFieldValue('currencyId') === undefined  || poForm.getFieldValue('totalAmount') === undefined){
             return notification.info({message:'Some input fields are missing in purchase order'})
         }
@@ -212,7 +213,7 @@ export const PurchaseOrderForm = () => {
         }
         if(trimData.length != 0){
             for (const trimdata of trimData) {
-                const trim  = new PoItemDetailsDto(null,trimdata.m3TrimCode,trimdata.poQuantity,trimdata.quantityUomId,undefined,trimdata.sampleItemId,trimdata.indentTrmId,trimdata.unitPrice,trimdata.discount,trimdata.tax,trimdata.transportation,trimdata.subjectiveAmount,trimdata.indentId,trimdata.sampleReqId)
+                const trim  = new PoItemDetailsDto(null,trimdata.m3TrimCode,trimdata.poQuantity,trimdata.quantityUomId,undefined,trimdata.sampleTrimInfoId,trimdata.indentTrmId,trimdata.unitPrice,trimdata.discount,trimdata.tax,trimdata.transportation,trimdata.subjectiveAmount,trimdata.indentId,trimdata.sampleReqId)
                 poItemDetails.push(trim)
             }
         }
