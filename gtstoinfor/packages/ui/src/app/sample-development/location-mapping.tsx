@@ -81,11 +81,11 @@ export const LocationMapping = () => {
                         locationService.updateRackLocationStatus(request).then((res) => {
                             if (res.status === true) {
                                 AlertMessages.getSuccessMessage("Rack location updated Succesufully")
-                                if (result === "close") {
+                                // if (result === "close") {
+                                //     navigate("/grn-pending-info-grid");
+                                // } else if (result === "continue") {
                                     navigate("/grn-pending-info-grid");
-                                } else if (result === "continue") {
-                                    navigate("/grn-pending-info-grid");
-                                }
+                                // }
                             } else if (res.status === false) {
                                 AlertMessages.getErrorMessage("Error while updating rack location")
                                 if (result === "close") {
