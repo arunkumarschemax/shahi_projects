@@ -32,6 +32,7 @@ export const SampleOperationReporting = () => {
     const [currentSequence, setCurrentSequence] = useState(1);
     const [saveId, setSaveId] = useState<number>()
     const [actionVisible, setActionVisible] = useState<boolean>(false)
+    const [defaultSegment, setDefaultSegment] = useState<string>('')
     const [opStatusMsg, setOpStatusMsg] = useState<string>('')
     const [selStyleId, setSelStyleId] = useState<number>()
     const uomService = new UomService()
@@ -54,9 +55,15 @@ export const SampleOperationReporting = () => {
         getStyle()
         getUom()
         getSampleReq()
-
+        
         // getMaterialIssue()
     },[])
+
+    useEffect(()=> {
+        if(data.length > 0){
+            console.log(data)
+        }
+    },[data])
 
     // const getData = (val) => {
     //     const req = new TabNameReq(val,form.getFieldValue('styleNo'))
@@ -104,20 +111,24 @@ export const SampleOperationReporting = () => {
         });
       };
 
-      const getSampleDevelopmentData = (val) => {
+      const getSampleDevelopmentData = (val,sequence) => {
         const sampleReqId = form.getFieldValue('sampleRequestId')
         sampleDevelopmentService.getSampleOrderDetails(new SampleIdRequest(sampleReqId)).then((res)=>{
             setData(res.data)
+            setShowTable(true)
         })
-        getOpStatus(val);
+        getOpStatus(val,sequence);
 
 
       }
-      const getOpStatus = (val) => {
+      const getOpStatus = (val,sequence) => {
         service.getReportedOperations(new TabNameReq(val,selStyleId,null,saveId)).then(res => {
-            // if(res.data){
+            if(sequence == 1 && res.data.isReported != 'Yes' && res.data.isNextOpeartion == 'No'){
+                setActionVisible(true)
+            }else{
                 if(res.data.isReported == 'No' && res.data.isNextOpeartion == 'Yes'){
                     setActionVisible(true)
+                    setDefaultSegment(val)
                 }
                 if(res.data.isReported == 'Yes' && res.data.isNextOpeartion == 'No'){
                     setActionVisible(false)
@@ -130,8 +141,7 @@ export const SampleOperationReporting = () => {
 
                 }
 
-
-            // }
+            }
         })
       }
       
@@ -189,7 +199,7 @@ export const SampleOperationReporting = () => {
             return nextSegment.value;
         } else {
             // Handle the case where there are no more segments (end of the sequence)
-            return null;
+            return 'NA';
         }
     };
     
@@ -214,7 +224,7 @@ export const SampleOperationReporting = () => {
         service.reportOperation(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
-                getMaterialIssue()
+                // getMaterialIssue()
             } else{
                 AlertMessages.getErrorMessage(res.internalMessage)
             }
@@ -299,6 +309,7 @@ export const SampleOperationReporting = () => {
       const onSegmentChange = (selectedValue) => {
         const selectedOption = segmentedOptions.find((option) => option.value === selectedValue);
         setSelectedOperationName(selectedOption.value);
+        console.log(selectedOption)
     
         // Find the current segment index
         const segmentIndex = segmentedOptions.findIndex((option) => option.value === selectedValue);
@@ -317,14 +328,14 @@ export const SampleOperationReporting = () => {
         //     console.log(res.data)
         // })
     
-        if (selectedOption.sequence === 1 && selectedOption.value !== 'COMPLETED') {
-            getMaterialIssue();
-            // getSampleDevelopmentData(selectedOption.value)
-        } else {
-            getSampleDevelopmentData(selectedOption.value)
+        // if (selectedOption.sequence === 1 && selectedOption.value !== 'COMPLETED') {
+        //     getMaterialIssue();
+        //     // getSampleDevelopmentData(selectedOption.value)
+        // } else {
+            getSampleDevelopmentData(selectedOption.value,selectedOption.sequence)
             // getOperationInventoryData(selectedValue);
             // setData([]);
-        }
+        // }
     };
     
 
@@ -334,6 +345,9 @@ export const SampleOperationReporting = () => {
             getSegmentLabel(record.styleId)
             setSaveId(val)
             setSelStyleId(record.styleId)
+            getSampleDevelopmentData('Cutting',1)
+            setCurrentSegment(1);
+            setSelectedOperationName('Cutting');
         }
     }
 
@@ -381,12 +395,14 @@ export const SampleOperationReporting = () => {
         <Segmented 
         style={{backgroundColor:'#dde5b6'}}
         options={segmentedOptions} 
+        // value={defaultSegment}
+        defaultValue='Cutting'
         onChange={onSegmentChange}
         />
             {
                 showTable ? (<>
             <div style={{width:'100%'}}>
-            <Table 
+            <Table  rowKey={record => record.colour}
       dataSource={data} 
       columns={columns} 
       // summary={summary}

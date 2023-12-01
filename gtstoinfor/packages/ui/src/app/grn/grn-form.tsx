@@ -191,10 +191,11 @@ const GRNForm = () => {
       dataIndex: 'receivedQuantity',
       render: (value, rowData) => {
         return (
-          value ? value : 0
+          value ? value : (rowData.poQuantity-rowData.grnQuantity)
+          
         )
       }
-
+     
 
     },
     {
@@ -202,7 +203,7 @@ const GRNForm = () => {
       dataIndex: 'acceptedQuantity',
       render: (value, rowData) => {
         return (
-          value ? value : 0
+          value ? value : (rowData.poQuantity-rowData.grnQuantity)
         )
       }
 
@@ -210,7 +211,11 @@ const GRNForm = () => {
     {
       title: <div style={{ textAlign: "center" }}>Rejected Qty</div>,
       dataIndex: 'rejectedQuantity',
-
+      render: (value, rowData) => {
+        return (
+          value ? value : 0
+        )
+      }
     },
     {
       title: <div style={{ textAlign: "center" }}>UOM</div>,
@@ -218,7 +223,7 @@ const GRNForm = () => {
 
     },
     {
-      title: 'Converted UOM',
+      title: 'Received UOM',
       dataIndex: 'convertedUOMOnChange',
       render: (value, record) => {
         return value ? value : record.uom

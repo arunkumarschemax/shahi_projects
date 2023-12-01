@@ -1,7 +1,7 @@
 import { IsInt, IsEmail, IsString, IsDateString, IsNumber, IsDate, IsAlphanumeric, MaxLength, Matches, IsOptional, IsNotEmpty, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { RackEnum, ReclassificationStatusEnum } from '@project-management-system/shared-models';
-export class ReclassificationDTO {
+export class ReclassificationApproveRequestDTO {
 
     @ApiProperty()
     reclassificationId: number;
@@ -14,9 +14,14 @@ export class ReclassificationDTO {
 
     @ApiProperty()
     itemId: number;
+    @ApiProperty()
+    itemType: string;
 
     @ApiProperty()
     location: number;
+
+    @ApiProperty()
+    styleId: number;
 
     @ApiProperty()
     buyer: number;
@@ -26,18 +31,6 @@ export class ReclassificationDTO {
 
     @ApiProperty()
     status: ReclassificationStatusEnum;
-
-    @ApiProperty()
-    isActive: boolean;
-
-    @ApiProperty()
-    createdUser: string;
-
-    @ApiProperty()
-    updatedUser: string;
-
-    @ApiProperty()
-    versionFlag: number;
 
     @ApiProperty()
     grnItemId?: number;

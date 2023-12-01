@@ -189,4 +189,9 @@ export class SampleDevelopmentService extends CommonAxiosService {
     return this.axiosPostCall(this.URL + "/getallMaterialAllocationItemsById",req )
 
   }
+
+  async getAllocatedBomInfo(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllocatedBomInfo" )
+
+  }
 }

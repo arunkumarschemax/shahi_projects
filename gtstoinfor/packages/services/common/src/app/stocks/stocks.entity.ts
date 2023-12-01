@@ -39,6 +39,11 @@ export class StocksEntity extends CommonColumns {
     })
     quantity: number;
 
+    @Column('int',{
+        name: "style_id",
+    })
+    styleId: number;
+
     @Column({
         name: "grn_item_id",
     })
@@ -49,6 +54,11 @@ export class StocksEntity extends CommonColumns {
         name: "allocatd_quantity",
     })
     allocateQuanty: number;
+
+    @Column({
+        name: "transfered_quantity",
+    })
+    transferedQuantity: number;
 
     @Column({
         name: "issued_quantity",

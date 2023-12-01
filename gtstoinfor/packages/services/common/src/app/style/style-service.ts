@@ -34,7 +34,8 @@ export class StyleService{
             }
             const save = await this.styleRepo.save(style)
             if(save){
-            const style= new Style()
+            const style= new Style();
+            this.insertDefaultOperation(save.styleId,req.style);
             return new AllStyleResponseModel(true,1,'Style created Sucessfully..',[save])
             }
             
@@ -43,7 +44,15 @@ export class StyleService{
             throw error
         }
     }
-    
+    async insertDefaultOperation(styleId:number,styleName:string){
+        const manager=this.datasource;
+        let cutting_qry=`INSERT INTO operation_sequence( operation_group_name, operation_name, sequence, operation_group_id, operation_id, style, style_id) VALUES ('Cutting','Cutting',1,1,4,'`+styleName+`',`+styleId+`)`;
+        await manager.query(cutting_qry);
+        let sewing_qry=`INSERT INTO operation_sequence( operation_group_name, operation_name, sequence, operation_group_id, operation_id, style, style_id) VALUES ('Sewing','Sewing',2,2,5,'`+styleName+`',`+styleId+`)`;
+        await manager.query(sewing_qry);
+         let finishing_qry=`INSERT INTO operation_sequence( operation_group_name, operation_name, sequence, operation_group_id, operation_id, style, style_id) VALUES ('Finishing','Finishing',3,9,11,'`+styleName+`',`+styleId+`)`;
+        await manager.query(finishing_qry);
+    }
     async updateStylePath(filePath: string, filename: string, styleId: number): Promise<UploadResponse> {
         console.log('upload service id---------------', styleId)
         try {
