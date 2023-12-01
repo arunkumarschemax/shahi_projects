@@ -316,9 +316,9 @@ export class SampleDevReqController {
   }
 
   @Post('/getAllocatedBomInfo')
-  async getAllocatedBomInfo(@Body() req:any): Promise<CommonResponseModel> {
+  async getAllocatedBomInfo(@Body() req?:any): Promise<CommonResponseModel> {
     try {
-      return await this.sampleService.getAllocatedBomInfo()
+      return await this.sampleService.getAllocatedBomInfo(req)
     }
     catch (err) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);

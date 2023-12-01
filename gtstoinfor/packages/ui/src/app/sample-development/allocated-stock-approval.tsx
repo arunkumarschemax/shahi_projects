@@ -1,170 +1,316 @@
-import React, { useEffect, useState } from 'react';
-import { SampleDevelopmentService } from '@project-management-system/shared-services';
-import AlertMessages from '../common/common-functions/alert-messages';
-import { Button, Card, Col, Form, Row, Select, Table } from 'antd';
-import { ColumnProps } from 'antd/es/table';
-import { Tabs } from 'antd';
-import { RequestNoReq } from '@project-management-system/shared-models';
+import React, { useEffect, useState } from "react";
+import { SampleDevelopmentService } from "@project-management-system/shared-services";
+import AlertMessages from "../common/common-functions/alert-messages";
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  Row,
+  Select,
+  Spin,
+  Table,
+  notification,
+} from "antd";
+import { ColumnProps } from "antd/es/table";
+import { Tabs } from "antd";
+import {
+  AllocatedLocationReq,
+  AllocationApprovalReq,
+  RequestNoReq,
+} from "@project-management-system/shared-models";
 
 export const AllocatedStockApproval = () => {
-    const Option = Select;
-    const [form] = Form.useForm()
-    const { TabPane } = Tabs;
-    const [stockData, setStockData] = useState<any[]>([])
-    const service = new SampleDevelopmentService();
-    const [page, setPage] = React.useState(1);
-    const [requestNo, setRequestNo] = useState<any>([]);
-    const [expandedRowKeys, setExpandedRowKeys] = useState([]);
+  const Option = Select;
+  const [form] = Form.useForm();
+  const { TabPane } = Tabs;
+  const [fabricStockData, setFabricStockData] = useState<any[]>([]);
+  const [trimStockData, setTrimStockData] = useState<any[]>([]);
+  const service = new SampleDevelopmentService();
+  const [page, setPage] = React.useState(1);
+  const [requestNo, setRequestNo] = useState<any>([]);
+  const [childData, setChildData] = useState({});
+  const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        getAllocatedBomData();
-        getAllRequestNo();
-    }, []);
+  useEffect(() => {
+    getAllocatedBomData();
+    getAllRequestNo();
+  }, []);
 
-    console.log(stockData)
-
-    const getAllocatedBomData = () => {
-        service.getAllocatedBomInfo().then((res) => {
-            if (res.status) {
-                setStockData(res.data)
-                AlertMessages.getSuccessMessage(res.internalMessage)
-            } else {
-                AlertMessages.getErrorMessage(res.internalMessage)
-            }
-        })
-    }
-
-    const getAllRequestNo = () => {
-        service.getAllRequestNo().then((res) => {
-            if (res.status) {
-                setRequestNo(res.data);
-            }
+  const allocatedLocationInfo = (value) => {
+    const req = new AllocatedLocationReq();
+    req.sampleRequestItemId = value;
+    service.allocatedLocationInfo(req).then((res) => {
+      console.log(res);
+      if (res.status) {
+        setChildData((prev) => {
+          return { ...prev, [value]: res.data };
         });
-    };
+      }
+    });
+  };
 
-    function getFilterData(){
-        const req = new RequestNoReq()
-        req.requestNo = form.getFieldValue('requestNo')
-    }
+  const getAllocatedBomData = () => {
+    const req = new RequestNoReq();
+    req.requestNo = form.getFieldValue("requestNo");
+    console.log(req);
+    service.getAllocatedBomInfo(req).then((res) => {
+      if (res.data) {
+        setFabricStockData(res.data.fabricInfo);
+        setTrimStockData(res.data.trimInfo);
+        AlertMessages.getSuccessMessage(res.internalMessage);
+      } else {
+        setFabricStockData([]);
+        setTrimStockData([]);
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    });
+  };
 
-    function onReset() {
-        form.resetFields()
-    }
+  const getAllRequestNo = () => {
+    service.getAllRequestNo().then((res) => {
+      if (res.status) {
+        setRequestNo(res.data);
+      }
+    });
+  };
 
-    const columns: ColumnProps<any>[] = [
-        {
-            title: 'S No',
-            key: 'sno',
-            width: '70px',
-            responsive: ['sm'],
-            render: (text, object, index) => (page - 1) * 10 + (index + 1)
-        },
-        {
-            title: 'Request No',
-            dataIndex: 'requestNo'
-        },
-        {
-            title: 'Rack Position Name',
-            dataIndex: 'rackPositionName'
-        },
-        {
-            title: 'Action',
-            render: (value, record) => {
-                return (
-                    <><Button>Approve</Button></>
-                )
-            }
-        }
-    ]
+  const approvaAllocatedStock = (val) => {
+    setLoading(true);
+    const req = new AllocationApprovalReq();
+    req.sampleRequestId = val;
+    service.approvaAllocatedStock(req).then((res) => {
+      if (res.status) {
+        notification.success({ message: res.internalMessage });
+      } else {
+        notification.error({ message: res.internalMessage });
+      }
+    }).finally(() => {
+        setLoading(false);
+      });
+  };
 
-    const expandedRowRender = (record) => {
-        const childColumns:ColumnProps<any>[] =[
-            {
-                title:'Location',
-                dataIndex:'location'
-            },
-            {
-                title:'Qty',
-                dataIndex:'qty'
-            }
-        ];
+  function onReset() {
+    form.resetFields();
+    getAllocatedBomData();
+  }
+
+  const fabColumns: ColumnProps<any>[] = [
+    {
+      title: "S No",
+      key: "sno",
+      width: "70px",
+      responsive: ["sm"],
+      render: (text, object, index) => (page - 1) * 10 + (index + 1),
+    },
+    {
+      title: "Request No",
+      dataIndex: "requestNo",
+    },
+    {
+      title: "Brand",
+      dataIndex: "brandName",
+    },
+    {
+      title: "Style",
+      dataIndex: "style",
+    },
+    {
+      title: "Colour",
+      dataIndex: "colour",
+    },
+    {
+      title: "Item Code",
+      dataIndex: "itemCode",
+    },
+    {
+      title: "Consumption",
+      dataIndex: "consumption",
+    },
+    {
+      title: "BOM",
+      dataIndex: "BOM",
+    },
+    {
+      title: "Action",
+      render: (value, record) => {
         return (
-            <Table
-              columns={childColumns}
-              dataSource={record.children}
-              pagination={false}
-            />
-          );
-    }
+          <>
+            <Button
+              disabled={loading}
+              onClick={(e) =>
+                approvaAllocatedStock(record.sampleRequestFabricId)
+              }
+            >
+              {loading ? (
+                <Spin size="small" style={{ marginRight: "8px" }} />
+              ) : (
+                <>Approve </>
+              )}
+            </Button>
+          </>
+        );
+      },
+    },
+  ];
 
-    const handleExpand = (key) => {
-        const isExpanded = expandedRowKeys.includes(key);
-        setExpandedRowKeys(isExpanded ? [] : [key]);
-      };
+  const trimColumns: ColumnProps<any>[] = [
+    {
+      title: "S No",
+      key: "sno",
+      width: "70px",
+      responsive: ["sm"],
+      render: (text, object, index) => (page - 1) * 10 + (index + 1),
+    },
+    {
+      title: "Request No",
+      dataIndex: "requestNo",
+    },
+    {
+      title: "Brand",
+      dataIndex: "brandName",
+    },
+    {
+      title: "Style",
+      dataIndex: "style",
+    },
 
+    {
+      title: "Consumption",
+      dataIndex: "consumption",
+    },
+    {
+      title: "Action",
+      render: (value, record) => {
+        return (
+          <>
+           <Button
+              disabled={loading}
+              onClick={(e) => approvaAllocatedStock(record.sampleReqTrimId)}
+            >
+              {loading ? (
+                <Spin size="small" style={{ marginRight: "8px" }} />
+              ) : (
+                <>Approve </>
+              )}
+            </Button>
+          </>
+        );
+      },
+    },
+  ];
+
+  const childColumns: ColumnProps<any>[] = [
+    {
+      title: "Location",
+      dataIndex: "location",
+    },
+    {
+      title: "Item Type",
+      dataIndex: "itemType",
+    },
+    {
+      title: "Quantity",
+      dataIndex: "quantity",
+    },
+    {
+      title: "Allocated Quantity",
+      dataIndex: "allocatedQty",
+    },
+  ];
+
+  const expandFabricTabel = (record) => {
     return (
-        <>
-            <Card>
-                <Form form={form} layout='vertical'>
-                    <Row gutter={24}>
-                        <Col span={4}>
-                            <Form.Item name={'requestNo'} label='Request No'>
-                                <Select
-                                    showSearch
-                                    allowClear
-                                    optionFilterProp="children"
-                                    placeholder="Select Request Number"
-                                >
-                                    {requestNo.map((e) => {
-                                        return (
-                                            <Option
-                                                key={e.SampleRequestId}
-                                                value={e.SampleRequestId}
-                                            >
-                                                {e.requestNo}
-                                            </Option>
-                                        );
-                                    })}
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col span={2}>
-                            <Button style={{ marginTop: '23px' }} type='primary'>Get</Button>
-                        </Col>
-                        <Col span={2}>
-                            <Button style={{ marginTop: '23px' }} onClick={onReset}>Reset</Button>
-                        </Col>
-                    </Row>
-                </Form>
-                <br></br>
-                <Tabs defaultActiveKey="1">
-                    <TabPane tab="Fabric Details" key="1">
-                        <Table
-                            columns={columns}
-                            dataSource={stockData}
-                            expandable={{
-                                expandedRowRender,
-                                onExpand: (_, record) => handleExpand(record.key),
-                                rowExpandable: (record) => record.children && record.children.length > 0,
-                              }}
-                              expandedRowKeys={expandedRowKeys}
-                        />
-                    </TabPane>
-                    <TabPane tab="Trim Details" key="2">
-                        <Table
-                            columns={columns}
-                            dataSource={stockData}
-                            expandable={{
-                                expandedRowRender,
-                                onExpand: (_, record) => handleExpand(record.key),
-                                rowExpandable: (record) => record.children && record.children.length > 0,
-                              }}
-                              expandedRowKeys={expandedRowKeys}
-                        />
-                    </TabPane>
-                </Tabs>
-            </Card>
-        </>
-    )
-}
-export default AllocatedStockApproval
+      <Table
+        rowKey={(record) => record.sampleFabricId}
+        columns={childColumns}
+        dataSource={childData[record.sampleRequestFabricId]}
+      ></Table>
+    );
+  };
+
+  const expandTrimTabel = (record) => {
+    return (
+      <Table
+        rowKey={(record) => record.sampleTrimInfoId}
+        columns={childColumns}
+        dataSource={childData[record.sampleReqTrimId]}
+      ></Table>
+    );
+  };
+
+  return (
+    <>
+      <Card>
+        <Form form={form} layout="vertical">
+          <Row gutter={24}>
+            <Col span={4}>
+              <Form.Item name="requestNo" label="Request No">
+                <Select
+                  showSearch
+                  allowClear
+                  optionFilterProp="children"
+                  placeholder="Select Request Number"
+                >
+                  {requestNo.map((e) => {
+                    return (
+                      <Option key={e.SampleRequestId} value={e.SampleRequestId}>
+                        {e.requestNo}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={2}>
+              <Button
+                onClick={getAllocatedBomData}
+                style={{ marginTop: "23px" }}
+                type="primary"
+              >
+                Get
+              </Button>
+            </Col>
+            <Col span={2}>
+              <Button style={{ marginTop: "23px" }} onClick={onReset}>
+                Reset
+              </Button>
+            </Col>
+          </Row>
+        </Form>
+        <br></br>
+        <Tabs defaultActiveKey="1">
+          <TabPane tab="Fabric Details" key="1">
+            <Table
+              rowKey={(record) => record.sampleFabricId}
+              columns={fabColumns}
+              dataSource={fabricStockData}
+              expandable={{
+                expandedRowRender: (record) => expandFabricTabel(record),
+                onExpand(expanded, record) {
+                  allocatedLocationInfo(record.sampleRequestFabricId);
+                },
+                rowExpandable: (record) => record.name !== "Not Expandable",
+              }}
+            />
+          </TabPane>
+          <TabPane tab="Trim Details" key="2">
+            <Table
+              rowKey={(record) => record.sampleTrimInfoId}
+              columns={trimColumns}
+              dataSource={trimStockData}
+              expandable={{
+                expandedRowRender: (record) => expandTrimTabel(record),
+                onExpand(expanded, record) {
+                  allocatedLocationInfo(record.sampleReqTrimId);
+                },
+                rowExpandable: (record) => record.name !== "Not Expandable",
+              }}
+            />
+          </TabPane>
+        </Tabs>
+      </Card>
+    </>
+  );
+};
+export default AllocatedStockApproval;
