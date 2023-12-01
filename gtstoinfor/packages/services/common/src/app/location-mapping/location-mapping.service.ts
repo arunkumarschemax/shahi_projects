@@ -119,7 +119,7 @@ export class LocationMappingService {
             LEFT JOIN  indent_trims indt ON indt.itrims_id = gi.indent_item_id AND g.grn_type = "INDENT" AND g.item_type != "FABRIC"
             LEFT JOIN  indent idf ON idf.indent_id = indf.indent_id
             LEFT JOIN  indent idt ON idt.indent_id = indt.indent_id
-            LEFT JOIN  buyers idfb ON idfb.buyer_id = idf.buyer_id
+            LEFT JOIN  buyers idfb ON idfb.buyer_id = gi.buyer_id
             LEFT JOIN  buyers idtb ON idtb.buyer_id = idt.buyer_id
             LEFT JOIN  uom u ON u.id = gi.uom_id
             GROUP BY gi.grn_item_id`
