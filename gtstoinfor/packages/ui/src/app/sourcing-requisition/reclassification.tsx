@@ -126,7 +126,7 @@ export const Reclassification = (props:ReclassificationProps) => {
               </Form.Item>
               <Form.Item
                 label="fromBuyer"
-                name="fromBuyer"
+                name="fromBuyer" style={{display:'none'}}
               >
                 <Input placeholder=" Enter  fromBuyer" />
               </Form.Item>
