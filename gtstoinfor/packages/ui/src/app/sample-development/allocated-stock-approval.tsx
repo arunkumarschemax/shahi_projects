@@ -355,7 +355,7 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
               </Button>
             </Col>
           </Row>
-          {fabricStockData.length > 0 ? (
+          {fabricStockData?.length > 0 ? (
             <>
               <Row gutter={24} justify={"end"}>
                 <Col>
