@@ -185,6 +185,7 @@ import { MaterialAllocationDetailView } from "./sample-development/material-allo
 import WarehouseDashboard from "./common/dashboards/warehouse-dashboard"
 import { ReclassificationApprovalGrid } from "./sourcing-requisition/reclassification-approval-grid"
 import AllocatedStockApproval from "./sample-development/allocated-stock-approval"
+import StoreIssues from "./sample-development/store-issues"
 
 
 
@@ -703,7 +704,8 @@ export const AppRoutes = () => {
                 <Route path='store-issues'>
                     <Route path="store-issues-view" element={<SourceIssuesView />} />
                     <Route path="store-issues-detail-view" element={<SourceIssuesDetailView MaterialIssueID={0} />} />
-                    <Route path="material-issue-view" element={<MaterialIssueView />} />
+                    {/* <Route path="material-issue-view" element={<MaterialIssueView />} /> */}
+                    <Route path="material-issue-view" element={<StoreIssues />} />
                 </Route>
 
                 <Route path='/materialCreation'>

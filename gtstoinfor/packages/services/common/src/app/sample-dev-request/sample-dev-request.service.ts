@@ -448,6 +448,14 @@ export class SampleRequestService {
       return new CommonResponseModel(false, 0, 'No data found')
   }
 
+  async getAllApprovedRequestNo(): Promise<CommonResponseModel> {
+    const records = await this.sampleRepo.find({where:{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION}});
+    if (records.length)
+      return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
+    else
+      return new CommonResponseModel(false, 0, 'No data found')
+  }
+
 
 
 

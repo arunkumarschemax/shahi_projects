@@ -356,6 +356,16 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
+
+  @Post('/getAllApprovedRequestNo')
+  async getAllApprovedRequestNo(): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getAllApprovedRequestNo()
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
   
 
   
