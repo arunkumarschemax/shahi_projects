@@ -207,4 +207,8 @@ export class SampleDevelopmentService extends CommonAxiosService {
     return this.axiosPostCall(this.URL + "/getAllAllocatedRequestNo" )
   }
 
+  async getAllApprovedRequestNo(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllApprovedRequestNo" )
+  }
+
 }
