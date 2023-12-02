@@ -18,3 +18,5 @@ export * from './allocate-material-items-request'
 export * from './sample-order-id.request'
 export * from'./allocate-material-response-model'
 export * from './request-no.req';
+export * from './allocated-location.request';
+export * from './allocated-approval.req';

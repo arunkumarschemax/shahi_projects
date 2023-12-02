@@ -335,15 +335,16 @@ import AlertMessages from "../common/common-functions/alert-messages";
       },
       {
         title: "Location",
-        key:'rack_position_name',
-        dataIndex: "rack_position_name",
+        key:'location',
+
+        dataIndex: "location",
         width:'80px',
       },
     
       {
         title: "Available Quantity",
         width: "150px",
-        dataIndex: "totalAvailablequntity",
+        dataIndex: "quantity",
       },
      
       {
@@ -593,7 +594,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
          dataSource={avilableQuantity}
           columns={renderColumnForFabric} 
           pagination={false}
-           rowKey={record.sample_request_id}/>;
+           rowKey={record.stockId}/>;
       };
 
 
@@ -815,7 +816,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
 
                     <Table
                     key={keyUpdate}
-                    rowKey={record => record.sample_request_id}
+                    rowKey={record => record.fabric_info_id}
                     columns={Columns}
                     dataSource={item.fabric}
                     expandedRowRender={renderItems}

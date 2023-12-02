@@ -371,8 +371,8 @@ export const SourcingRequisitionDynamicView = () => {
       },
     },
     {
-      title: "Description",
-      dataIndex: "description",
+      title: "Remarks",
+      dataIndex: "remarks",
     },
     {
       title: "Action",

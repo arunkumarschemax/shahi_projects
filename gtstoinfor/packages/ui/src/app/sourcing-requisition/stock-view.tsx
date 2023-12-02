@@ -250,6 +250,34 @@ export const StockView = () => {
       sortDirections: ["descend", "ascend"],
       
     },
+    // {
+    //   title: "Stock Type",
+    //   dataIndex: "stockType",
+    //   ...getColumnSearchProps("stockType"),
+    //   sorter: (a, b) => a.stockType.localeCompare(b.stockType),
+    //   sortDirections: ["descend", "ascend"],
+    // },
+    // {
+    //   title: "Sample Order",
+    //   dataIndex: "sampleOrder",
+    //   ...getColumnSearchProps("sampleOrder"),
+    //   sorter: (a, b) => a.sampleOrder.localeCompare(b.sampleOrder),
+    //   sortDirections: ["descend", "ascend"],
+    // },
+    // {
+    //   title: "Indent",
+    //   dataIndex: "Indent",
+    //   ...getColumnSearchProps("Indent"),
+    //   sorter: (a, b) => a.Indent.localeCompare(b.Indent),
+    //   sortDirections: ["descend", "ascend"],
+    // },
+    // {
+    //   title: "Style",
+    //   dataIndex: "style",
+    //   ...getColumnSearchProps("style"),
+    //   sorter: (a, b) => a.style.localeCompare(b.style),
+    //   sortDirections: ["descend", "ascend"],
+    // },
     {
       title: "Material Type",
       dataIndex: "itemType",

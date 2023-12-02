@@ -955,7 +955,7 @@ export const AppRoutes = () => {
                     <Route path="material-allocation" element={<MaterialAllocationGrid />} />
                     <Route path="material-allocation-view" element={<MaterialAllocationView />} />
                     <Route path="material-allocation-detail-view" element={<MaterialAllocationDetailView />} />
-
+                    <Route path='allocation-approval' element={<AllocatedStockApproval />} />
 
 
                 </Route>
@@ -1046,6 +1046,7 @@ export const AppRoutes = () => {
                     <Route path='grid-view' element={<AllOrdersGridView />} />
                     <Route path='revert-orders' element={<FileRevert />} />
                     <Route path='version-grid' element={<VersionChanges />} />
+                    
 
 
                     {/* <Route path='phase-wise-grid' element={<PhaseWiseData />} /> */}

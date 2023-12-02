@@ -46,6 +46,7 @@ export const ReclassificationApprovalGrid = () => {
     reclassificationService.getApproveStockReclassification(req).then((res) => {
       if(res.status){
         AlertMessages.getSuccessMessage(res.internalMessage)
+        navigate('/reclassification-approval-grid')
       }
       else{
           AlertMessages.getInfoMessage(res.internalMessage)
@@ -172,9 +173,9 @@ export const ReclassificationApprovalGrid = () => {
     },
     {
       title: "M3 Item",
-      dataIndex: "m3Item",
-      ...getColumnSearchProps("m3Item"),
-      sorter: (a, b) => a.m3Item.localeCompare(b.m3Item),
+      dataIndex: "m3ItemCode",
+      ...getColumnSearchProps("m3ItemCode"),
+      sorter: (a, b) => a.m3ItemCode.localeCompare(b.m3ItemCode),
       sortDirections: ["descend", "ascend"],
     },
    
