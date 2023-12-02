@@ -879,7 +879,7 @@ export class SampleRequestService {
 
     async getAllocatedBomInfo(req?:RequestNoReq):Promise<CommonResponseModel>{
       let fabricInfoQry = `SELECT sr.request_no as requestNo,sr.style_id as styleId,sr.brand_id as brandId,sr.buyer_id as buyerId,br.brand_name as brandName,b.buyer_name as buyerName,s.style,c.colour,mi.item_code as itemCode,sf.consumption
-      ,sf.total_requirement as BOM ,sf.sample_request_id as sampleRequestFabricId , sf.fabric_info_id as sampleFabricId
+      ,sf.total_requirement as BOM ,sf.sample_request_id as sampleRequestFabricId , sf.fabric_info_id as sampleFabricId,'Fabric' as type
        FROM sample_request sr 
             LEFT JOIN sample_request_fabric_info sf ON sf.sample_request_id = sr.sample_request_id
             LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id
@@ -891,11 +891,12 @@ export class SampleRequestService {
             if(req.requestNo){
               fabricInfoQry += ' AND sr.sample_request_id = ' + req.requestNo ;
             }
-      const fabricInfo = await this.dataSource.query(fabricInfoQry)
+            const fabricInfo = await this.dataSource.query(fabricInfoQry)
+            console.log()
       if(req.requestNo) {
 
       }
-      let trimInfoQry = `SELECT sr.request_no as requestNo,sr.style_id as styleId,sr.brand_id as brandId,sr.buyer_id as buyerId,br.brand_name as brandName,b.buyer_name as buyerName,s.style,mi.trim_code as trimCode,st.consumption , st.trim_info_id as sampleTrimInfoId , st.sample_request_id as sampleReqTrimId
+      let trimInfoQry = `SELECT sr.request_no as requestNo,sr.style_id as styleId,sr.brand_id as brandId,sr.buyer_id as buyerId,br.brand_name as brandName,b.buyer_name as buyerName,s.style,mi.trim_code as trimCode,st.consumption , st.trim_info_id as sampleTrimInfoId , st.sample_request_id as sampleReqTrimId ,'Trim' as type
       FROM sample_request sr 
 LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_request_id
       LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id
