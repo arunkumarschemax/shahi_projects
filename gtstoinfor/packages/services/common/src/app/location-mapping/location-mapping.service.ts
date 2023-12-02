@@ -8,6 +8,10 @@ import { StockLogRepository } from "../stocks/repository/stock-log.repository";
 import { DataSource, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { GrnItemsEntity } from "../grn/entities/grn-items-entity";
+import { SampleRequestService } from "../sample-dev-request/sample-dev-request.service";
+import { MaterialAllocationDTO } from "../sample-dev-request/dto/material-allocation-dto";
+import { MaterialAllocationEntity } from "../sample-dev-request/entities/material-allocation.entity";
+import { MaterialAllocationItemsEntity } from "../sample-dev-request/entities/material-allocation-items";
 
 @Injectable()
 export class LocationMappingService {
@@ -19,10 +23,6 @@ export class LocationMappingService {
     @InjectRepository(StocksEntity)
     private stocksRepository: Repository<StocksEntity>,
     private readonly dataSource: DataSource,
-
-
-
-       
       ) { }
 
       
@@ -103,26 +103,25 @@ export class LocationMappingService {
             
             // GROUP BY grn_item_id`
 
+             // LEFT JOIN  sample_request_fabric_info spf ON spf.fabric_info_id = gi.sample_item_id AND g.grn_type = "SAMPLE_ORDER" AND g.item_type = "FABRIC"
+            // LEFT JOIN  sample_request_trim_info spt ON spt.trim_info_id = gi.sample_item_id AND g.grn_type = "SAMPLE_ORDER" AND g.item_type != "FABRIC"
+            // LEFT JOIN  sample_request sprf ON sprf.sample_request_id = spf.sample_request_id
+            // LEFT JOIN  sample_request sprt ON sprf.sample_request_id = spt.sample_request_id
+            // LEFT JOIN  buyers sprfb ON sprfb.buyer_id = sprf.buyer_id
+            // LEFT JOIN  buyers sprtb ON sprt.buyer_id = sprt.buyer_id
+            // LEFT JOIN  indent_fabric indf ON indf.ifabric_id = gi.indent_item_id AND g.grn_type = "INDENT" AND g.item_type = "FABRIC"
+            // LEFT JOIN  indent_trims indt ON indt.itrims_id = gi.indent_item_id AND g.grn_type = "INDENT" AND g.item_type != "FABRIC"
+            // LEFT JOIN  indent idf ON idf.indent_id = indf.indent_id
+            // LEFT JOIN  indent idt ON idt.indent_id = indt.indent_id
             let query = `SELECT gi.uom_id AS uomId, u.uom AS uom, gi.grn_item_id As grnItemId,g.item_type AS materialType, 
             gi.accepted_quantity AS balance, 
             IF(g.item_type = "FABRIC", mit.m3_items_id, mtr.m3_trim_id) AS itemId,
-            IF(g.item_type = "FABRIC", mit.item_code, mtr.trim_code) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity,
-            IF(g.grn_type = "INDENT" AND g.item_type = "FABRIC", idfb.buyer_id, IF(g.grn_type = "INDENT" AND g.item_type != "FABRIC", idfb.buyer_id, IF(g.grn_type = "SAMPLE_ORDER" AND g.item_type = "FABRIC",sprfb.buyer_id,sprtb.buyer_id))) AS buyerId, IF(g.grn_type = "INDENT" AND g.item_type = "FABRIC", idfb.buyer_name, IF(g.grn_type = "INDENT" AND g.item_type != "FABRIC", idfb.buyer_name, IF(g.grn_type = "SAMPLE_ORDER" AND g.item_type = "FABRIC",sprfb.buyer_name,sprtb.buyer_name))) AS buyerName
+            IF(g.item_type = "FABRIC", mit.item_code, mtr.trim_code) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity, gi.buyer_id AS buyerId, idfb.buyer_name AS buyerName
             FROM grn_items gi LEFT JOIN grn g ON g.grn_id = gi.grn_id 
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
             LEFT JOIN m3_items mit ON mit.m3_items_id = gi.m3_item_code_id AND g.item_type = "FABRIC"
             LEFT JOIN m3_trims mtr ON mtr.m3_trim_Id = gi.m3_item_code_id AND g.item_type != "FABRIC"
             LEFT JOIN stock_log st ON st.grn_item_id = gi.grn_item_id
-            LEFT JOIN  sample_request_fabric_info spf ON spf.fabric_info_id = gi.sample_item_id AND g.grn_type = "SAMPLE_ORDER" AND g.item_type = "FABRIC"
-            LEFT JOIN  sample_request_trim_info spt ON spt.trim_info_id = gi.sample_item_id AND g.grn_type = "SAMPLE_ORDER" AND g.item_type != "FABRIC"
-            LEFT JOIN  sample_request sprf ON sprf.sample_request_id = spf.sample_request_id
-            LEFT JOIN  sample_request sprt ON sprf.sample_request_id = spt.sample_request_id
-            LEFT JOIN  buyers sprfb ON sprfb.buyer_id = sprf.buyer_id
-            LEFT JOIN  buyers sprtb ON sprt.buyer_id = sprt.buyer_id
-            LEFT JOIN  indent_fabric indf ON indf.ifabric_id = gi.indent_item_id AND g.grn_type = "INDENT" AND g.item_type = "FABRIC"
-            LEFT JOIN  indent_trims indt ON indt.itrims_id = gi.indent_item_id AND g.grn_type = "INDENT" AND g.item_type != "FABRIC"
-            LEFT JOIN  indent idf ON idf.indent_id = indf.indent_id
-            LEFT JOIN  indent idt ON idt.indent_id = indt.indent_id
             LEFT JOIN  buyers idfb ON idfb.buyer_id = gi.buyer_id
            LEFT JOIN  uom u ON u.id = gi.uom_id
            where gi.location_mapped_status!='COMPLETED'
@@ -194,7 +193,8 @@ export class LocationMappingService {
 
     async postToStockLogs(req: LocationMappingReq) {
          const manager=this.dataSource
-
+        const getGrnData = "select g.grn_type AS grnType, gi.sample_req_id AS sampleOrderId,gi.sample_item_id AS sampleItemId from grn_items gi left join grn g on g.grn_id = gi.grn_id where gi.grn_item_id = "+req.grn_item_id;
+        const grnDetails = await manager.query(getGrnData)
         const data = await this.getAllCount();
         console.log(data,"data")
         console.log(data.data[0].id,"data")
@@ -203,13 +203,13 @@ export class LocationMappingService {
             const stock_bar_code = `${req.item_type}/${req.description}/${req.quantity}${req.uomName}/000${maxId+1}`;
             let saveStock :StocksEntity = undefined;
             let stockEntity = new StocksEntity();
-            stockEntity.allocateQuanty = 0;
+            stockEntity.allocateQuanty = grnDetails[0].grnType === "INDENT" ? 0 : req.quantity;
             stockEntity.buyerId = req.buyer_id
             stockEntity.grnItemId = req.grn_item_id;
             stockEntity.issuedQuantity = 0;
             stockEntity.itemType = req.item_type;
             stockEntity.locationId = req.location_id;
-            stockEntity.quantity = req.quantity;
+            stockEntity.quantity = grnDetails[0].grnType === "INDENT" ? req.quantity : 0;
             stockEntity.styleId = req.style_id;
             stockEntity.m3Item = req.m3_item;
             stockEntity.stockType = StockTypeEnum.STOCK;
@@ -233,7 +233,33 @@ export class LocationMappingService {
                     console.log(updateGrnItemStatus)
                     console.log("**********************************")
                     if(updateGrnItemStatus.affected > 0){
-                        return new CommonResponseModel(true, 1111, "Data posted Succesufully");
+                        if(grnDetails[0].grnType === "INDENT"){
+                            return new CommonResponseModel(true, 1111, "Data posted Succesufully");
+                        }
+                        else{
+                            let materialAllocationItemsEntity = new MaterialAllocationItemsEntity();
+                            materialAllocationItemsEntity.allocateQuantity = req.quantity;
+                            materialAllocationItemsEntity.quantity = req.quantity;
+                            materialAllocationItemsEntity.stockId = saveStock.id;
+                            materialAllocationItemsEntity.locationId = req.location_id;
+
+                            let materialAllocationEntity = new MaterialAllocationEntity();
+                            materialAllocationEntity.buyerId = req.buyer_id
+                            materialAllocationEntity.itemType = req.item_type;
+                            materialAllocationEntity.m3ItemId = req.m3_item
+                            materialAllocationEntity.totalIssueQty = 0
+                            materialAllocationEntity.sampleOrderId = grnDetails[0].sampleOrderId
+                            materialAllocationEntity.sampleItemId = grnDetails[0].sampleItemId
+                            materialAllocationEntity.materialAllocationinfo = [materialAllocationItemsEntity]
+                            let allocateStock = await manager.getRepository(MaterialAllocationEntity).save(materialAllocationEntity);
+                            console.log(allocateStock)
+                            if(allocateStock.materialAllocationId > 0){
+                                return new CommonResponseModel(true, 1111, "Data posted Succesufully");
+                            }
+                            else {
+                                return new CommonResponseModel(false, 10005, "Data not posted");
+                            }
+                        }
                     }
                     else {
                         return new CommonResponseModel(false, 10005, "Data not posted");
