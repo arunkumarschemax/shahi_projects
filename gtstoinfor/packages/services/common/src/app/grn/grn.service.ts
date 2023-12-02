@@ -45,7 +45,7 @@ export class GrnService {
         try {
             const slNo = await this.grnRepo.count()
             // console.log(slNo);
-            const indentnum = "IND" + "/" + "22-23" + "/" + "00" + Number(Number(slNo) + 1)
+            const indentnum = "IND" + "/" + "23-24" + "/" + "00" + Number(Number(slNo) + 1)
             req.requestNo = indentnum;
             //  console.log(req);
             //   const convertedindentEntity: Indent = this.indentAdapter.convertDtoToEntity(req, isUpdate);

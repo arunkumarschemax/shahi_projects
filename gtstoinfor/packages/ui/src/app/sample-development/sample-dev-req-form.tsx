@@ -327,12 +327,12 @@ export const SampleDevForm = () => {
 
   return (
     <Card title='Sample Development Request' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}  
-    extra={
+    extra={ JSON.parse(localStorage.getItem('currentUser'))?.user.roles != "samplinguser" ?
       <Link to="/sample-development/sample-requests">
         <span style={{ color: "white" }}>
           <Button type={"primary"}>View </Button>{" "}
         </span>
-      </Link>
+      </Link>:""
     }
     >
       <Form layout="vertical" form={form} onFinish={onFinish}>

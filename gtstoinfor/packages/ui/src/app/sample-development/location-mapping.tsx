@@ -79,20 +79,20 @@ export const LocationMapping = () => {
                         const isActive = 1;
                         const request = new RackLocationStatusReq(locationStatusValue, locationId, isActive);
                         locationService.updateRackLocationStatus(request).then((res) => {
-                            if (res.status === true) {
+                            if (res.status) {
                                 AlertMessages.getSuccessMessage("Rack location updated Succesufully")
                                 // if (result === "close") {
                                 //     navigate("/grn-pending-info-grid");
                                 // } else if (result === "continue") {
                                     navigate("/grn-pending-info-grid");
                                 // }
-                            } else if (res.status === false) {
+                            } else{
                                 AlertMessages.getErrorMessage("Error while updating rack location")
-                                if (result === "close") {
-                                    navigate("/grn-pending-info-grid");
-                                } else if (result === "continue") {
-                                    navigate("/grn-pending-info-grid");
-                                }
+                                // if (result === "close") {
+                                //     navigate("/grn-pending-info-grid");
+                                // } else if (result === "continue") {
+                                //     navigate("/grn-pending-info-grid");
+                                // }
                             }
                         })
                     } else if (locationStatusValue === "Occupied") {
