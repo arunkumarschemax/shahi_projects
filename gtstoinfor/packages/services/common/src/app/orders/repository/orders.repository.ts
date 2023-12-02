@@ -31,11 +31,11 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         return await query.getRawMany();
     }
 
-    async getQtyChangeData(req:CompareOrdersFilterReq): Promise<any[]> {
+    async getQtyChangeData(req:CompareOrdersFilterReq,lat,pre): Promise<any[]> {
         const query = this.createQueryBuilder('o')
         .select(`o.production_plan_id,o.planning_sum,o.prod_plan_type,o.created_at,REPLACE(od.old_val,',','') as old_val,REPLACE(od.new_val,',','') as new_val,(REPLACE(od.new_val,',','') - REPLACE(od.old_val,',','')) AS Diff,od.version,o.order_plan_number,o.wh,o.exf,o.year`)
             .leftJoin(OrdersDifferenceEntity, 'od', 'od.prod_plan_id = o.production_plan_id')
-            .where(`column_name = 'order_plan_qty' AND o.version = od.version AND o.prod_plan_type != 'STOP'`)
+            .where(`column_name = 'order_plan_qty' AND o.version = od.version AND o.prod_plan_type != 'STOP' AND od.file_id IN (${lat},${pre}) AND od.old_val != od.new_val`)
         
             if(req.orderNumber){
                 query.andWhere(`o.order_plan_number = '${req.orderNumber}'`)
@@ -427,11 +427,11 @@ ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m-%d')) = 3 THEN REPLACE(order_plan
     return await query.getRawMany()
   }
 
-  async getItemWiseQtyChangeData(req:CompareOrdersFilterReq): Promise<any[]> {
+  async getItemWiseQtyChangeData(req:CompareOrdersFilterReq,lat,pre): Promise<any[]> {
     const query = this.createQueryBuilder('o')
     .select(`o.production_plan_id,o.prod_plan_type,o.created_at,SUM(REPLACE(od.old_val,',','')) as old_qty_value,SUM(REPLACE(od.new_val,',','')) as new_qty_value,(SUM(REPLACE(od.new_val,',','')) - SUM(REPLACE(od.old_val,',',''))) AS diff,od.version,o.order_plan_number,o.wh,o.exf,o.year,o.planning_sum`)
         .leftJoin(OrdersDifferenceEntity, 'od', 'od.prod_plan_id = o.production_plan_id')
-        .where(`column_name = 'order_plan_qty' AND o.version = od.version AND o.prod_plan_type != 'STOP'`)
+        .where(`column_name = 'order_plan_qty' AND o.version = od.version AND o.prod_plan_type != 'STOP' AND od.file_id IN (${lat},${pre}) AND od.old_val != od.new_val`)
     
         if(req.orderNumber){
             query.andWhere(`o.order_plan_number = '${req.orderNumber}'`)

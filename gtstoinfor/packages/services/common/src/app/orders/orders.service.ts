@@ -444,7 +444,8 @@ export class OrdersService {
     }
 
     async getQtyChangeData(req: CompareOrdersFilterReq): Promise<CommonResponseModel> {
-        const data = await this.ordersRepository.getQtyChangeData(req)
+        const latprefiles = await this.fileUploadRepo.getLatestPreviousFilesData()
+        const data = await this.ordersRepository.getQtyChangeData(req,latprefiles[0].fileId,latprefiles[1].fileId)
         if (data)
             return new CommonResponseModel(true, 1, 'data retrived', data)
         else
@@ -452,7 +453,8 @@ export class OrdersService {
     }
 
     async getQtyDifChangeData(req: CompareOrdersFilterReq): Promise<CommonResponseModel> {
-        const data = await this.ordersRepository.getItemWiseQtyChangeData(req)
+        const latprefiles = await this.fileUploadRepo.getLatestPreviousFilesData()
+        const data = await this.ordersRepository.getItemWiseQtyChangeData(req,latprefiles[0].fileId,latprefiles[1].fileId)
         if (data)
             return new CommonResponseModel(true, 1, 'data retrived', data)
         else
@@ -1408,7 +1410,6 @@ export class OrdersService {
 
     async getQtyDifChangeItemCode(): Promise<CommonResponseModel> {
         const files = await this.fileUploadRepo.getFilesData()
-
         let data;
         if (files.length == 0) {
             return new CommonResponseModel(false, 0, 'No data found');
