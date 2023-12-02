@@ -440,6 +440,14 @@ export class SampleRequestService {
       return new CommonResponseModel(false, 0, 'No data found')
   }
 
+  async getAllAllocatedRequestNo(): Promise<CommonResponseModel> {
+    const records = await this.sampleRepo.find({where:{lifeCycleStatus:LifeCycleStatusEnum.MATERIAL_ALLOCATED}});
+    if (records.length)
+      return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
+    else
+      return new CommonResponseModel(false, 0, 'No data found')
+  }
+
 
 
 
@@ -908,6 +916,8 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
         fabricInfoQry += ' AND sr.request_no = ' + req.requestNo ;
       }
       const trimInfo = await this.dataSource.query(trimInfoQry)
+      
+      const combineData = [...fabricInfo, ...trimInfo]
       let allocatedSampleReqInfo = {
         fabricInfo:[],
         trimInfo:[]
@@ -919,7 +929,7 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
         allocatedSampleReqInfo.trimInfo = trimInfo
       }
       if(fabricInfo.length > 0){
-        return new CommonResponseModel(true,1,'data retreived',allocatedSampleReqInfo)
+        return new CommonResponseModel(true,1,'data retreived',combineData)
       }else{
         return new CommonResponseModel(false,0,'No data')
       }

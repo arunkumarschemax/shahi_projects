@@ -346,6 +346,16 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
+
+  @Post('/getAllAllocatedRequestNo')
+  async getAllAllocatedRequestNo(): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getAllAllocatedRequestNo()
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
   
 
   
