@@ -705,7 +705,7 @@ export const AppRoutes = () => {
                     <Route path="store-issues-view" element={<SourceIssuesView />} />
                     <Route path="store-issues-detail-view" element={<SourceIssuesDetailView MaterialIssueID={0} />} />
                     {/* <Route path="material-issue-view" element={<MaterialIssueView />} /> */}
-                    <Route path="material-issue-view" element={<StoreIssues />} />
+                    <Route path="material-issue-view" element={<AllocatedStockApproval screen={"Issued"} />} />
                 </Route>
 
                 <Route path='/materialCreation'>
@@ -957,8 +957,8 @@ export const AppRoutes = () => {
                     <Route path="material-allocation" element={<MaterialAllocationGrid />} />
                     <Route path="material-allocation-view" element={<MaterialAllocationView />} />
                     <Route path="material-allocation-detail-view" element={<MaterialAllocationDetailView />} />
-                    <Route path='allocation-approval' element={<AllocatedStockApproval />} />
-
+                    <Route path='allocation-approval' element={<AllocatedStockApproval screen={"Allocated"}/>} />
+                    
 
                 </Route>
 

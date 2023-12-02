@@ -20,7 +20,11 @@ import {
   RequestNoReq,
 } from "@project-management-system/shared-models";
 
-export const AllocatedStockApproval = () => {
+export interface AllocatedStockApprovalProps {
+  screen: any;
+}
+
+export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
   const Option = Select;
   const [form] = Form.useForm();
   const { TabPane } = Tabs;
@@ -32,16 +36,23 @@ export const AllocatedStockApproval = () => {
   const [childData, setChildData] = useState({});
   const [loading, setLoading] = useState(false);
 
+
+
   useEffect(() => {
-    // getAllocatedBomData();
-    getAllRequestNo();
-  }, []);
+    if(props.screen === 'Allocated') {
+      onReset()
+      getAllRequestNo();
+    }
+    if(props.screen === 'Issued'){
+      onReset()
+      getAllApprovedRequestNo();
+    }
+  }, [props.screen]);
 
   const allocatedLocationInfo = (value) => {
     const req = new AllocatedLocationReq();
     req.sampleRequestItemId = value;
     service.allocatedLocationInfo(req).then((res) => {
-      console.log(res);
       if (res.status) {
         setChildData((prev) => {
           return { ...prev, [value]: res.data };
@@ -53,9 +64,7 @@ export const AllocatedStockApproval = () => {
   const getAllocatedBomData = () => {
     const req = new RequestNoReq();
     req.requestNo = form.getFieldValue("requestNo");
-    console.log(req);
     service.getAllocatedBomInfo(req).then((res) => {
-      console.log(res);
       if (res.data) {
         setFabricStockData(res.data);
         // setTrimStockData(res.data.trimInfo);
@@ -69,6 +78,7 @@ export const AllocatedStockApproval = () => {
   };
 
   const getAllRequestNo = () => {
+    setRequestNo([])
     service.getAllAllocatedRequestNo().then((res) => {
       if (res.status) {
         setRequestNo(res.data);
@@ -76,10 +86,24 @@ export const AllocatedStockApproval = () => {
     });
   };
 
+  const getAllApprovedRequestNo = () =>{
+    setRequestNo([])
+    service.getAllApprovedRequestNo().then((res)=>{
+      if (res.status) {
+        setRequestNo(res.data);
+      }
+    })
+  }
+
   const approvaAllocatedStock = (val) => {
-    setLoading(true);
+    // setLoading(true);
     const req = new AllocationApprovalReq();
     req.sampleRequestId = val;
+    if(props?.screen === 'Issued'){
+      req.action = 'Issued'
+    }else{
+      req.action = 'Approval'
+    }
     service
       .approvaAllocatedStock(req)
       .then((res) => {
@@ -275,7 +299,11 @@ export const AllocatedStockApproval = () => {
 
   return (
     <>
-      <Card title="Allocation Approval">
+      <Card title= {props?.screen === "Issued" ? (
+                          <>Material Issues </>
+                        ) : (
+                          <>Allocation Approval</>
+                        )}>
         <Form form={form} layout="vertical">
           <Row gutter={24}>
             <Col span={4}>
@@ -332,7 +360,13 @@ export const AllocatedStockApproval = () => {
                     {loading ? (
                       <Spin size="small" style={{ marginRight: "8px" }} />
                     ) : (
-                      <>Approve </>
+                      <>
+                        {props?.screen === "Issued" ? (
+                          <>Issued </>
+                        ) : (
+                          <> Approve</>
+                        )}
+                      </>
                     )}
                   </Button>
                 </Col>

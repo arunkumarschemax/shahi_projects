@@ -1,3 +1,4 @@
 export class AllocationApprovalReq {
-    sampleRequestId: number;
+  sampleRequestId: number;
+  action: string;
 }
