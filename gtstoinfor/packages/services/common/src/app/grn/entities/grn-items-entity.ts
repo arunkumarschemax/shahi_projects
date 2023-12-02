@@ -136,6 +136,12 @@ export class GrnItemsEntity {
     })
     buyerId: number
 
+    @Column('int', {
+        name: 'uom_id',
+        nullable: false
+    })
+    uomId: number
+
     @ManyToOne(type => GrnEntity, grn => grn.grnItemInfo)
     @JoinColumn({ name: 'grn_id' })
     grnEntity: GrnEntity

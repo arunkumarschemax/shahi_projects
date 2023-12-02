@@ -97,11 +97,11 @@ export class PurchaseOrderEntity{
     })
     remarks:string
     
-    @Column('varchar',{
+    @Column('int',{
       name:'grn_quantity',
       nullable:true
     })
-    grnQuantity:string
+    grnQuantity:number
 
     // @Column('int',{
     //   name:'indent_id',

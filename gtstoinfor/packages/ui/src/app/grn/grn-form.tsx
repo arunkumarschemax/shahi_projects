@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Divider, Form, Input, Row, Select, Table, Tabs } from 'antd'
+import { Button, Card, Col, DatePicker, Divider, Form, Input, Row, Select, Table, Tabs, Typography } from 'antd'
 import style from 'antd/es/alert/style'
 import TabPane from 'antd/es/tabs/TabPane'
 import React, { useEffect, useState } from 'react'
@@ -64,7 +64,7 @@ const GRNForm = () => {
   const createGrn = async () => {
     await form.validateFields()
     const values = form.getFieldsValue()
-    const req = new GrnDto(values.vendorId, values.purchaseOrderId, form.getFieldValue('grnDate').format('YYYY-MM-DD'), PurchaseOrderStatus.OPEN, values.remarks, undefined, undefined, '', undefined, '', 0, 0, poData[0]?.poMaterialType, poItemData, 0, '', values.grnType, values.invoiceNo, poData?.poMaterialType,values.grnAmount);
+    const req = new GrnDto(values.vendorId, values.purchaseOrderId, form.getFieldValue('grnDate').format('YYYY-MM-DD'), PurchaseOrderStatus.OPEN, values.remarks, undefined, undefined, '', undefined, '', 0, 0, poData[0]?.poMaterialType, poItemData, 0, '', values.grnType, values.invoiceNo, poData?.poMaterialType, values.grnAmount);
     grnService.createGrn(req).then((res) => {
       if (res.status) {
         AlertMessages.getSuccessMessage(res.internalMessage);
@@ -133,11 +133,13 @@ const GRNForm = () => {
       tax: record.tax,
       transportation: record.transportation,
       subjectiveAmount: record.subjectiveAmount,
-      receivedQuantity: 0,
-      acceptedQuantity: 0,
+      receivedQuantity: record.receivedQuantity,
+      acceptedQuantity: record.acceptedQuantity,
       poItemId: record.poItemId,
-      conversionUomId:record.uomId
+      conversionUomId: record.uomId
     })
+   
+
   }
 
   function handleRemovePoItem(record) {
@@ -189,23 +191,23 @@ const GRNForm = () => {
     {
       title: <div style={{ textAlign: "center" }}>Received Qty</div>,
       dataIndex: 'receivedQuantity',
-      render: (value, rowData) => {
-        return (
-          value ? value : (rowData.poQuantity-rowData.grnQuantity)
-          
-        )
-      }
-     
+      // render: (value, rowData) => {
+      //   return (
+      //     value ? value : (rowData.poQuantity - rowData.grnQuantity)
+
+      //   )
+      // }
+
 
     },
     {
       title: <div style={{ textAlign: "center" }}>Accepted Qty</div>,
       dataIndex: 'acceptedQuantity',
-      render: (value, rowData) => {
-        return (
-          value ? value : (rowData.poQuantity-rowData.grnQuantity)
-        )
-      }
+      // render: (value, rowData) => {
+      //   return (
+      //     value ? value : (rowData.poQuantity - rowData.grnQuantity)
+      //   )
+      // }
 
     },
     {
@@ -264,6 +266,11 @@ const GRNForm = () => {
         )
       }
     },
+    {
+      title: 'Grn Amount',
+      dataIndex: 'grnItemAmount',
+     
+    },
     // {
     //   title: <div style={{ textAlign: 'center' }}>Converted Qty</div>,
     //   dataIndex: 'convertedQty',
@@ -301,7 +308,7 @@ const GRNForm = () => {
         }
         return item;
       }))
-      calculatePrices()
+    calculatePrices()
   }
 
   function acceptedQuantityOnChange(e) {
@@ -313,19 +320,19 @@ const GRNForm = () => {
           return {
             ...item,
             acceptedQuantity: e.target.value,
-            rejectedQuantity: item.poQuantity - Number(e.target.value)
+            rejectedQuantity: item.receivedQuantity - Number(e.target.value)
           };
         }
         return item;
       }))
-      console.log(poItemData)
+    
   }
 
 
   function calculatePrices() {
     const poItemId = itemsForm.getFieldValue('poItemId')
     const subjectivePrice = Number(itemsForm.getFieldValue('subjectiveAmount'))
-    const acceptedQty = Number(itemsForm.getFieldValue('acceptedQuantity'))
+    const acceptedQty = Number(itemsForm.getFieldValue('receivedQuantity'))
     const poQty = Number(itemsForm.getFieldValue('poQuantity'))
     const unitPrice = Number((subjectivePrice) / poQty)
     const totalSubjectivePrice = (Number(acceptedQty) * Number(unitPrice))
@@ -340,13 +347,14 @@ const GRNForm = () => {
         return item;
       }))
     let totalGrnAmount = 0
-   poItemData.forEach((v) => {
+    poItemData.forEach((v) => {
       if (v.poItemId == poItemId) {
         v.grnItemAmount = totalSubjectivePrice
       }
       totalGrnAmount += v.grnItemAmount ? Number(v.grnItemAmount) : Number(v.subjectiveAmount)
     })
-    form.setFieldValue('grnAmount',totalGrnAmount)
+    form.setFieldValue('grnAmount', totalGrnAmount)
+    console.log(poItemData)
   }
 
   function convertedUOMOnChange(e) {
@@ -380,6 +388,7 @@ const GRNForm = () => {
         </span>}>
         <Form form={form} layout="vertical" >
           <Form.Item name={'grnAmount'} hidden><Input></Input></Form.Item>
+          <Form.Item name={'grnQuantity'} hidden><Input></Input></Form.Item>
           <Row gutter={8}>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
               <Form.Item name={'grnId'} hidden><Input></Input></Form.Item>
@@ -473,26 +482,26 @@ const GRNForm = () => {
               <Form.Item name={'poItemId'} hidden><Input></Input></Form.Item>
               <Form.Item name={'grnItemAmount'} hidden><Input></Input></Form.Item>
 
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                <Form.Item name='m3itemCode' label='M3 Item'>
-                  <Input disabled />
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                <Form.Item name='m3ItemType' label='M3 Item Type'>
-                  <Input disabled />
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} hidden>
-                <Form.Item name='uom' label='UOM'>
-                  <Input disabled />
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} hidden>
-                <Form.Item name='poQuantity' label='Po Qty'>
-                  <Input disabled />
-                </Form.Item>
-              </Col>
+              {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}> */}
+              <Form.Item name='m3itemCode' label='M3 Item' hidden>
+                <Input disabled />
+              </Form.Item>
+              {/* </Col> */}
+              {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}> */}
+              <Form.Item name='m3ItemType' label='M3 Item Type' hidden>
+                <Input disabled />
+              </Form.Item>
+              {/* </Col> */}
+              {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} hidden> */}
+              <Form.Item name='uom' label='UOM' hidden>
+                <Input disabled />
+              </Form.Item>
+              {/* </Col> */}
+              {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} hidden> */}
+              <Form.Item name='poQuantity' label='Po Qty' hidden>
+                <Input disabled />
+              </Form.Item>
+              {/* </Col> */}
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                 <Form.Item
                   name={`receivedQuantity`}
@@ -521,56 +530,77 @@ const GRNForm = () => {
                   />
                 </Form.Item>
               </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                <Form.Item name='conversionUomId' label='Received UOM'>
-                  <Select
+              {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}> */}
+              <Form.Item name='conversionUomId' label='Received UOM' hidden>
+                <Select
                   disabled
-                    allowClear
-                    style={{ width: "100%" }}
-                    showSearch
-                    optionFilterProp="children"
-                    placeholder="Select UOM"
-                    onChange={convertedUOMOnChange}
-                  >
-                    {uomData?.map((e) => (
-                      <Option key={e.uomId} value={e.uomId}>
-                        {e.uom}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
+                  allowClear
+                  style={{ width: "100%" }}
+                  showSearch
+                  optionFilterProp="children"
+                  placeholder="Select UOM"
+                  onChange={convertedUOMOnChange}
+                >
+                  {uomData?.map((e) => (
+                    <Option key={e.uomId} value={e.uomId}>
+                      {e.uom}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              {/* </Col> */}
 
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} hidden>
-                <Form.Item name='unitPrice' label='Unit price'>
-                  <Input disabled />
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} hidden>
-                <Form.Item name='discount' label='Discount'>
-                  <Input disabled />
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} hidden>
-                <Form.Item name='tax' label='Tax %'>
-                  <Input disabled />
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} hidden>
-                <Form.Item name='transportation' label='Transportation'>
-                  <Input disabled />
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} hidden>
-                <Form.Item name='subjectiveAmount' label='Subjective Amount'>
-                  <Input disabled />
-                </Form.Item>
-              </Col>
+              {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} hidden> */}
+              <Form.Item name='unitPrice' label='Unit price' hidden>
+                <Input disabled />
+              </Form.Item>
+              {/* </Col> */}
+              {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} hidden> */}
+              <Form.Item name='discount' label='Discount' hidden>
+                <Input disabled />
+              </Form.Item>
+              {/* </Col> */}
+              {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} hidden> */}
+              <Form.Item name='tax' label='Tax %' hidden>
+                <Input disabled />
+              </Form.Item>
+              {/* </Col> */}
+              {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} hidden> */}
+              <Form.Item name='transportation' label='Transportation' hidden>
+                <Input disabled />
+              </Form.Item>
+              {/* </Col> */}
+              {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} hidden> */}
+              <Form.Item name='subjectiveAmount' label='Subjective Amount' hidden>
+                <Input disabled />
+              </Form.Item>
+              {/* </Col> */}
               <Col>
                 <Button style={{ marginTop: '25px' }} onClick={itemsFormReset} >Reset</Button>
               </Col>
+              {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 6 }} hidden>
+                <Card title={false}>
+                  <Typography.Text >Po Quantity</Typography.Text><br />
+
+                  <Typography.Text >Grn Quantity</Typography.Text><br />
+                  <Typography.Text >Received Quantity</Typography.Text><br />
+                  <Typography.Text >Acceptep Quantity</Typography.Text><br />
+
+                </Card>
+              </Col> */}
+              {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 6 }} hidden>
+                <Card title={false}>
+                  <Typography.Text >Grn Quantity</Typography.Text><br />
+                  <Typography.Text >Received Quantity</Typography.Text><br />
+                  <Typography.Text >Received Quantity</Typography.Text>
+
+                </Card>
+              </Col> */}
             </Row>
           </Form>
+          <Row gutter={24}>
+
+          </Row>
 
           <Row>
             <Table scroll={{ x: 'max-content' }} columns={columns} dataSource={poItemData} bordered pagination={false} />

@@ -113,6 +113,12 @@ export class GrnEntity {
   })
   grnAmount: number
 
+  @Column('int', {
+    name: 'grn_quantity',
+    nullable: false,
+  })
+  grnQuantity: number
+
   // @OneToMany(type => GrnFabricEntity, grnFab => grnFab.grnEntity, { cascade: true })
   // grnFabricInfo: GrnFabricEntity[]
 
