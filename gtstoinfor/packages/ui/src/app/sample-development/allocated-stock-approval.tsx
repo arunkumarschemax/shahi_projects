@@ -52,6 +52,11 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
   const allocatedLocationInfo = (value) => {
     const req = new AllocatedLocationReq();
     req.sampleRequestItemId = value;
+    if(props?.screen === 'Issued'){
+      req.action = 'Issued'
+    }else{
+      req.action = 'Approval'
+    }
     service.allocatedLocationInfo(req).then((res) => {
       if (res.status) {
         setChildData((prev) => {
@@ -64,6 +69,11 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
   const getAllocatedBomData = () => {
     const req = new RequestNoReq();
     req.requestNo = form.getFieldValue("requestNo");
+    if(props?.screen === 'Issued'){
+      req.action = 'Issued'
+    }else{
+      req.action = 'Approval'
+    }
     service.getAllocatedBomInfo(req).then((res) => {
       if (res.data) {
         setFabricStockData(res.data);
@@ -350,6 +360,7 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
               <Row gutter={24} justify={"end"}>
                 <Col>
                   <Button
+                  type="primary"
                     disabled={loading}
                     onClick={(e) =>
                       approvaAllocatedStock(
