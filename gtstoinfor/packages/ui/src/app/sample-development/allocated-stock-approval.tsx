@@ -106,7 +106,7 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
   }
 
   const approvaAllocatedStock = (val) => {
-    // setLoading(true);
+    setLoading(true);
     const req = new AllocationApprovalReq();
     req.sampleRequestId = val;
     if(props?.screen === 'Issued'){
