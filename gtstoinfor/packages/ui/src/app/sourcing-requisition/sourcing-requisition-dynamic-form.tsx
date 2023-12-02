@@ -552,10 +552,10 @@ export const SourcingRequisitionDynamicForm = () => {
           dataIndex: 'quantity',
         },
        
-        {
-          title: 'Description',
-          dataIndex: 'description',
-        },
+        // {
+        //   title: 'Description',
+        //   dataIndex: 'description',
+        // },
         {
           title: 'Remarks',
           dataIndex: 'remarks',
@@ -1285,14 +1285,17 @@ const onTrimChange = (val, option) => {
                                                     {
                                                         required: true,
                                                         message: "Quantity Is Required",
+                                                        
                                                     },
                                                     {
                                                         pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
                                                         message: `Should contain only alphabets.`,
+
                                                     },
                                                 ]}>
-                                                <Input type="number" placeholder="Enter Quantity" addonAfter={<Form.Item name='quantityUnit' style={{width:'90px', height:"10px"}} rules={[{ required: true, message: 'Unit is required' }]}><Select showSearch allowClear optionFilterProp="children" placeholder='Unit' >
-                                                    {uom.filter((e)=> e.uomCategory === UomCategoryEnum.LENGTH)?.map(e => {
+                                                <Input type="number"  min={1} placeholder="Enter Quantity" addonAfter={<Form.Item name='quantityUnit' style={{width:'90px', height:"10px"}} rules={[{ required: true, message: 'Unit is required' }]}>
+                                                    <Select showSearch allowClear optionFilterProp="children" >
+                                                    {uom.filter((e)=> e.uomCategory === UomCategoryEnum.VOLUME)?.map(e => {
                                                         return (
                                                             <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
                                                         );
@@ -1322,14 +1325,14 @@ const onTrimChange = (val, option) => {
                                                 </Select>
                                             </Form.Item>
                                         </Col> */}
-                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+                                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}> */}
                                             <Form.Item
                                                 name="description"
-                                                label="Description"
+                                                // label="Description"
                                             >
-                                                <TextArea rows={1} placeholder="Enter Trim Description" />
+                                                <Input type="hidden" value='trim' />
                                             </Form.Item>
-                                        </Col>
+                                        {/* </Col> */}
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
                                             <Form.Item
                                                 name="remarks"

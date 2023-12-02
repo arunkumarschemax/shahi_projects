@@ -133,6 +133,11 @@ export const StockView = () => {
     setVisibleModel(true);
   }
 
+  const setModel = (val) => {
+    console.log(val);
+    setVisibleModel(val);
+  }
+
   const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -245,6 +250,34 @@ export const StockView = () => {
       sortDirections: ["descend", "ascend"],
       
     },
+    // {
+    //   title: "Stock Type",
+    //   dataIndex: "stockType",
+    //   ...getColumnSearchProps("stockType"),
+    //   sorter: (a, b) => a.stockType.localeCompare(b.stockType),
+    //   sortDirections: ["descend", "ascend"],
+    // },
+    // {
+    //   title: "Sample Order",
+    //   dataIndex: "sampleOrder",
+    //   ...getColumnSearchProps("sampleOrder"),
+    //   sorter: (a, b) => a.sampleOrder.localeCompare(b.sampleOrder),
+    //   sortDirections: ["descend", "ascend"],
+    // },
+    // {
+    //   title: "Indent",
+    //   dataIndex: "Indent",
+    //   ...getColumnSearchProps("Indent"),
+    //   sorter: (a, b) => a.Indent.localeCompare(b.Indent),
+    //   sortDirections: ["descend", "ascend"],
+    // },
+    // {
+    //   title: "Style",
+    //   dataIndex: "style",
+    //   ...getColumnSearchProps("style"),
+    //   sorter: (a, b) => a.style.localeCompare(b.style),
+    //   sortDirections: ["descend", "ascend"],
+    // },
     {
       title: "Material Type",
       dataIndex: "itemType",
@@ -319,7 +352,7 @@ export const StockView = () => {
               style={{ backgroundColor: '#69c0ff' }}
               onClick={(e) => getRowData(rowData)}
             >
-              <b>Assign Reclassification</b>
+              <b>Request Reclassification</b>
             </Button>
           </span>
         );
@@ -679,7 +712,7 @@ export const StockView = () => {
             onCancel={handleCancel}
             footer={[]}
         >
-            <Reclassification data = {rowData} buyer= {form.getFieldValue("buyerId")} type="stock" />
+            <Reclassification data = {rowData} buyer= {form.getFieldValue("buyerId")} type="stock" status={setModel}/>
 
             </Modal>
     </Card>

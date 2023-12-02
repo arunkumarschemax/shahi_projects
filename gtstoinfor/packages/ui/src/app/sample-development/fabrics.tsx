@@ -287,7 +287,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       ),
     },
     {
-      title: 'Wastage',
+      title: 'Wastage %',
       dataIndex: 'wastage',
       width:"10%",
       render: (_, record) => (

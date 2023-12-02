@@ -17,7 +17,7 @@ import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
 import CompanyForm from "./masters/company/company-form"
 import CompanyGrid from "./masters/company/company-grid"
-import { CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto } from "@project-management-system/shared-models"
+import { CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto, PurchaseViewDto } from "@project-management-system/shared-models"
 import MasterBrandsForm from "./masters/master-brands/master-brands-form"
 import MasterBrandsGrid from "./masters/master-brands/master.brands-gridt"
 import OperationsForm from "./masters/operations/operations-form"
@@ -183,6 +183,8 @@ import { MaterialAllocationView } from "./sample-development/material-allocation
 import SampleOperationReporting from "./orders/sample-operation-reporting"
 import { MaterialAllocationDetailView } from "./sample-development/material-allocation-detail.view"
 import WarehouseDashboard from "./common/dashboards/warehouse-dashboard"
+import { ReclassificationApprovalGrid } from "./sourcing-requisition/reclassification-approval-grid"
+import AllocatedStockApproval from "./sample-development/allocated-stock-approval"
 
 
 
@@ -237,7 +239,7 @@ export const AppRoutes = () => {
                 <Route path='/wh-dashboard' element={<WarehouseDashboard />} />
                 {/* <Route path='/masters'> */}
                 <Route path='quality-form' element={<QualityForm />} />
-                <Route path='reclassification' element={<Reclassification data={undefined} buyer={undefined} type="" />} />
+                <Route path='reclassification' element={<Reclassification data={undefined} buyer={undefined} type="" status={undefined} />} />
 
                 <Route path='quality-view' element={<QualityView />} />
                 <Route path='rack-form' element={<RackForm />} />
@@ -953,7 +955,7 @@ export const AppRoutes = () => {
                     <Route path="material-allocation" element={<MaterialAllocationGrid />} />
                     <Route path="material-allocation-view" element={<MaterialAllocationView />} />
                     <Route path="material-allocation-detail-view" element={<MaterialAllocationDetailView />} />
-
+                    <Route path='allocation-approval' element={<AllocatedStockApproval />} />
 
 
                 </Route>
@@ -999,6 +1001,8 @@ export const AppRoutes = () => {
 
                 </Route>
                 <Route path='/stock-view' element={<StockView />} />
+                <Route path='/reclassification-approval-grid' element={<ReclassificationApprovalGrid />} />
+
                 <Route path="/grn-pending-info-grid" element={<GrnPendingInfoGrid />} />
                 <Route path="/location-mapping" element={<LocationMapping />} />
 
@@ -1032,7 +1036,7 @@ export const AppRoutes = () => {
                 <Route path='/requisition-view' element={<SourcingRequisitionDynamicView />} />
                 <Route path='/purchase-order' element={<PurchaseOrderForm />} />
                 <Route path='/purchase-view' element={<PurchaseOrderView />} />
-                <Route path='/purchase-detali-view' element={<PurchaseOrderDetailsView />} />
+                <Route path='/purchase-detali-view' element={<PurchaseOrderDetailsView purchaseOrderId={undefined} />} />
                 <Route path='/grn-form' element={<GRNForm />} />
                 <Route path='/grn-view' element={<GRNView />} />
                 <Route path='/grn-detail-view' element={<GRNDetailView />} />
@@ -1042,6 +1046,7 @@ export const AppRoutes = () => {
                     <Route path='grid-view' element={<AllOrdersGridView />} />
                     <Route path='revert-orders' element={<FileRevert />} />
                     <Route path='version-grid' element={<VersionChanges />} />
+                    
 
 
                     {/* <Route path='phase-wise-grid' element={<PhaseWiseData />} /> */}

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest} from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest, LifeCycleStatusEnum, RequestNoReq} from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -37,6 +37,8 @@ import { MaterialAllocationItemsRepo } from './repo/material-allocation-items-re
 import { MaterialallitemsReq } from './dto/sample-req-size-req';
 import { MaterialAllocationItemsEntity } from './entities/material-allocation-items';
 import { StocksRepository } from '../stocks/repository/stocks.repository';
+import { AllocationApprovalRequest } from './dto/allocation-approval-req';
+import { AllocatedLocationRequest } from './dto/allocated-location-req';
 
 
 
@@ -67,8 +69,8 @@ export class SampleRequestService {
   async getAllSampleDevData(request?: SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
     try {
       const details = await this.sampleRepo.getAllSampleDevData(request)
-      console.log(details)
-      console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^66')
+      // console.log(details)
+      // console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^66')
       if (details.length) {
         for (const rec of details) {
           rec.fabric = await this.sampleRepo.sampleFabric(rec.sample_request_id)
@@ -648,9 +650,9 @@ export class SampleRequestService {
     try{
       const manager = this.dataSource;
       let query3
-      let query1='SELECT srf.consumption-po_quantity AS sampleBalanceQuanty,srf.consumption AS sampleQuantity,poi.po_quantity AS poquantity, rp.rack_position_name as locationName,brand_name as brandName, s.style AS styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,c.colour AS colourName, mi.item_code AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity, sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,st.quantity AS avilableQuantity FROM sampling_bom sb      LEFT JOIN  sample_request_fabric_info srf ON srf.sample_request_id=sb.sample_request_id AND srf.fabric_code=sb.m3_item_id  LEFT JOIN sample_request sr ON sr.sample_request_id=sb.sample_request_id   LEFT JOIN stocks st ON st.m3_item =sb.m3_item_id AND sr.buyer_id=st.buyer_id AND sb.item_type IN("fabric")  LEFT JOIN m3_items mi ON mi.m3_items_Id=sb.m3_item_id  LEFT JOIN colour c ON c.colour_id=sb.colour_id LEFT JOIN buyers b ON b.buyer_id=sr.buyer_id LEFT JOIN style s ON s.style_id=sr.style_id left join brands bs on bs.brand_id=sr.brand_id left join rack_position rp on rp.position_Id =sr.location_id   LEFT JOIN purchae_order_items poi ON poi.sample_item_id =srf.fabric_info_id   WHERE sb.item_type IN("Fabric")  AND st.quantity IS NULL '
+      let query1='SELECT required_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS bomQuantity,srf.consumption-po_quantity AS sampleBalanceQuanty,srf.consumption AS sampleQuantity,poi.po_quantity AS poquantity, rp.rack_position_name as locationName,brand_name as brandName, s.style AS styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,c.colour AS colourName, mi.item_code AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity, sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,st.quantity AS avilableQuantity FROM sampling_bom sb      LEFT JOIN  sample_request_fabric_info srf ON srf.sample_request_id=sb.sample_request_id AND srf.fabric_code=sb.m3_item_id  LEFT JOIN sample_request sr ON sr.sample_request_id=sb.sample_request_id   LEFT JOIN stocks st ON st.m3_item =sb.m3_item_id AND sr.buyer_id=st.buyer_id AND sb.item_type IN("fabric")  LEFT JOIN m3_items mi ON mi.m3_items_Id=sb.m3_item_id  LEFT JOIN colour c ON c.colour_id=sb.colour_id LEFT JOIN buyers b ON b.buyer_id=sr.buyer_id LEFT JOIN style s ON s.style_id=sr.style_id left join brands bs on bs.brand_id=sr.brand_id left join rack_position rp on rp.position_Id =sr.location_id   LEFT JOIN purchae_order_items poi ON poi.sample_item_id =srf.fabric_info_id   WHERE sb.item_type IN("Fabric")  AND st.quantity IS NULL AND (required_quantity-IF(po_quantity IS NOT NULL,po_quantity,0)) >0 '
 
-      let query2='select srt.consumption-po_quantity AS sampleBalanceQuanty,srt.consumption AS sampleQuantity,poi.po_quantity AS poquantity,rp.rack_position_name as locationName,brand_name as brandName, s.style as styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,c.colour AS colourName,mi.trim_code AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity,sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,st.quantity AS avilableQuantity FROM sampling_bom sb LEFT JOIN sample_request_trim_info srt ON srt.sample_request_id=sb.sample_request_id AND srt.trim_code=sb.m3_item_id LEFT JOIN sample_request sr ON sr.sample_request_id=sb.sample_request_id LEFT JOIN stocks st ON st.m3_item =sb.m3_item_id AND sr.buyer_id=st.buyer_id AND st.item_type IN("fabric") LEFT JOIN m3_trims mi ON mi.m3_trim_Id=sb.m3_item_id  LEFT JOIN colour c ON c.colour_id=sb.colour_id   LEFT JOIN buyers b ON b.buyer_id=sr.buyer_id LEFT JOIN style s ON s.style_id=sr.style_id left join brands bs on bs.brand_id=sr.brand_id left join rack_position rp on rp.position_Id =sr.location_id    LEFT JOIN purchae_order_items poi ON poi.sample_item_id =srt.trim_info_id    WHERE sb.item_type NOT IN ("Fabric")  AND st.quantity IS NULL '
+      let query2='select required_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS bomQuantity,srt.consumption-po_quantity AS sampleBalanceQuanty,srt.consumption AS sampleQuantity,poi.po_quantity AS poquantity,rp.rack_position_name as locationName,brand_name as brandName, s.style as styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,c.colour AS colourName,mi.trim_code AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity,sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,st.quantity AS avilableQuantity FROM sampling_bom sb LEFT JOIN sample_request_trim_info srt ON srt.sample_request_id=sb.sample_request_id AND srt.trim_code=sb.m3_item_id LEFT JOIN sample_request sr ON sr.sample_request_id=sb.sample_request_id LEFT JOIN stocks st ON st.m3_item =sb.m3_item_id AND sr.buyer_id=st.buyer_id AND st.item_type IN("fabric") LEFT JOIN m3_trims mi ON mi.m3_trim_Id=sb.m3_item_id  LEFT JOIN colour c ON c.colour_id=sb.colour_id   LEFT JOIN buyers b ON b.buyer_id=sr.buyer_id LEFT JOIN style s ON s.style_id=sr.style_id left join brands bs on bs.brand_id=sr.brand_id left join rack_position rp on rp.position_Id =sr.location_id    LEFT JOIN purchae_order_items poi ON poi.sample_item_id =srt.trim_info_id    WHERE sb.item_type NOT IN ("Fabric")  AND st.quantity IS NULL AND (required_quantity-IF(po_quantity IS NOT NULL,po_quantity,0)) >0'
       if (req.buyerId == undefined && req.sampleReqNo == undefined && req.styleId == undefined){
         query3 = query1+'   UNION ALL'+' '+query2
       }
@@ -707,7 +709,8 @@ export class SampleRequestService {
               itemCode:item.itemCode,
               fabricType: item.itemType,
               quantity: item.requiredQuantity,
-              assignedQuantity:item.assigned_quantity
+              assignedQuantity:item.assigned_quantity,
+              bomQuantity:item.bomQuantity
             }
           );
           console.log(result)
@@ -726,10 +729,13 @@ export class SampleRequestService {
     async getAvailbelQuantityAginstBuyerAnditem(req:buyerandM3ItemIdReq):Promise<CommonResponseModel>{
       try{
         const manager = this.dataSource;
-         const query='SELECT st.quantity-IF(st.issued_quantity IS NOT NULL,st.issued_quantity,0) AS totalAvailablequntity, mai.allocate_quantity AS materialAlloctedquantity,st.allocatd_quantity AS stockAllocatedQty,st.quantity AS stockQuantity,(st.quantity-st.allocatd_quantity) AS resultAvailableQuantity,st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,        st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId, st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, FALSE AS checkedStatus FROM stocks st LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id LEFT JOIN material_allocation_items mai ON mai.stock_id=st.id WHERE st.buyer_id=17 AND st.m3_item= 2 AND st.item_type="fabric" AND (st.quantity-IF(st.issued_quantity IS NOT NULL,st.issued_quantity,0)) >0'
+        //  const query='SELECT st.quantity-IF(st.issued_quantity IS NOT NULL,st.issued_quantity,0) AS totalAvailablequntity, mai.allocate_quantity AS materialAlloctedquantity,st.allocatd_quantity AS stockAllocatedQty,st.quantity AS stockQuantity,(st.quantity-st.allocatd_quantity) AS resultAvailableQuantity,st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId, st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, FALSE AS checkedStatus,date(g.grn_date) as grnDate FROM stocks st LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id LEFT JOIN material_allocation_items mai ON mai.stock_id=st.id WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+'  AND st.item_type="'+req.itemType+'" AND (st.quantity-IF(st.issued_quantity IS NOT NULL,st.issued_quantity,0)) >0 order by g.grn_date'
 
+         const rawQuery = 'Select st.location_id AS locationId,st.m3_item AS m3ItemId,st.item_type AS itemType,st.grn_item_id AS grnItemId, st.id AS stockId,(quantity-allocatd_quantity-transfered_quantity) AS quantity, g.grn_number AS grnNumber, date(g.grn_date) as grnDate, rp.rack_position_name AS location, FALSE AS checkedStatus, stock_bar_code AS stockBarCode from stocks st left join grn_items gi on gi.grn_item_id = st.grn_item_id left join rack_position rp on rp.position_id = st.location_id left join grn g on g.grn_id = gi.grn_id where id>0 and g.grn_type = "INDENT" and st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' AND st.item_type="'+req.itemType+'" and (quantity-allocatd_quantity-transfered_quantity) > 0';
         // const queryy ='SELECT mai.allocate_quantity AS materialAlloctedquantity,st.allocatd_quantity AS stockAllocatedQty,st.quantity AS stockQuantity,(st.quantity-st.allocatd_quantity) AS resultAvailableQuantity,st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId,st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, false AS checkedStatus FROM stocks st LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id  LEFT JOIN material_allocation_items mai ON mai.stock_id=st.id WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' and st.item_type="'+req.itemType+'" AND (st.quantity-st.allocatd_quantity)>0'
-        const rmData = await manager.query(query);
+        
+        const rmData = await manager.query(rawQuery);
+        // console.log(rmData)
         if(rmData){
           return new CommonResponseModel(true,1,'data',rmData)
         }else{
@@ -869,6 +875,97 @@ export class SampleRequestService {
       }catch(err){
         throw err
       }
+    }
+
+    async getAllocatedBomInfo(req?:RequestNoReq):Promise<CommonResponseModel>{
+      let fabricInfoQry = `SELECT sr.request_no as requestNo,sr.style_id as styleId,sr.brand_id as brandId,sr.buyer_id as buyerId,br.brand_name as brandName,b.buyer_name as buyerName,s.style,c.colour,mi.item_code as itemCode,sf.consumption
+      ,sf.total_requirement as BOM ,sf.sample_request_id as sampleRequestFabricId , sf.fabric_info_id as sampleFabricId
+       FROM sample_request sr 
+            LEFT JOIN sample_request_fabric_info sf ON sf.sample_request_id = sr.sample_request_id
+            LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id
+            LEFT JOIN style s ON s.style_id = sr.style_id
+            LEFT JOIN brands br ON br.brand_id = sr.brand_id
+            LEFT JOIN m3_items mi ON mi.m3_items_Id = sf.fabric_code
+            LEFT JOIN colour c ON c.colour_id = sf.colour_id
+            WHERE sr.life_cycle_status = '${LifeCycleStatusEnum.MATERIAL_ALLOCATED}'`;
+            if(req.requestNo){
+              fabricInfoQry += ' AND sr.sample_request_id = ' + req.requestNo ;
+            }
+      const fabricInfo = await this.dataSource.query(fabricInfoQry)
+      if(req.requestNo) {
+
+      }
+      let trimInfoQry = `SELECT sr.request_no as requestNo,sr.style_id as styleId,sr.brand_id as brandId,sr.buyer_id as buyerId,br.brand_name as brandName,b.buyer_name as buyerName,s.style,mi.trim_code as trimCode,st.consumption , st.trim_info_id as sampleTrimInfoId , st.sample_request_id as sampleReqTrimId
+      FROM sample_request sr 
+LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_request_id
+      LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id
+            LEFT JOIN style s ON s.style_id = sr.style_id
+            LEFT JOIN brands br ON br.brand_id = sr.brand_id
+            LEFT JOIN m3_trims mi ON mi.m3_trim_Id = st.trim_code
+      WHERE sr.life_cycle_status = '${LifeCycleStatusEnum.MATERIAL_ALLOCATED}'`;
+      if(req.requestNo){
+        fabricInfoQry += ' AND sr.request_no = ' + req.requestNo ;
+      }
+      const trimInfo = await this.dataSource.query(trimInfoQry)
+      let allocatedSampleReqInfo = {
+        fabricInfo:[],
+        trimInfo:[]
+      }
+      if(fabricInfo.length > 0){
+        allocatedSampleReqInfo.fabricInfo = fabricInfo
+      }
+      if(trimInfo.length > 0){
+        allocatedSampleReqInfo.trimInfo = trimInfo
+      }
+      if(fabricInfo.length > 0){
+        return new CommonResponseModel(true,1,'data retreived',allocatedSampleReqInfo)
+      }else{
+        return new CommonResponseModel(false,0,'No data')
+      }
+    }
+
+    async allocatedLocationInfo(req:AllocatedLocationRequest){
+      const data = `SELECT ma.sample_item_id AS sampleItemId,rp.rack_position_name AS location,position_Id AS id,item_type AS itemType,mai.quantity
+      ,mai.allocate_quantity AS allocatedQty,mai.material_allocation_items_id as materialAllocationId  FROM material_allocation ma
+      LEFT JOIN material_allocation_items mai ON mai.material_allocation_id = ma.material_allocation_id
+      LEFT JOIN rack_position rp ON rp.position_Id = mai.location_id
+       WHERE sample_item_id = ${req.sampleRequestItemId} and ma.status = '${MaterialStatusEnum.MATERIAL_ALLOCATED}'`
+       const res = await this.dataSource.query(data)
+       if(res.length > 0){
+         return new CommonResponseModel(true,1,'data',res)
+       }else{
+        return new CommonResponseModel(false,0,'No data Found')
+
+       }
+    } 
+
+    async approveAllocatedStock(req:AllocationApprovalRequest):Promise<CommonResponseModel>{
+      console.log(req)
+      const manager = new GenericTransactionManager(this.dataSource)
+      try{
+        await manager.startTransaction()
+        const updateSamleReq = await manager.getRepository(SampleRequest).update({SampleRequestId:req.sampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION})
+        if(updateSamleReq.affected){
+        const updateAllocations = await manager.getRepository(MaterialAllocationEntity).update({sampleOrderId:req.sampleRequestId},{status:MaterialStatusEnum.READY_FOR_PRODUCTION})
+          if(updateAllocations.affected){
+            console.log('yess')
+            await manager.completeTransaction()
+            return new CommonResponseModel(true,1,'Successfully Approved')
+          }else{
+            await manager.releaseTransaction()
+            return new CommonResponseModel(false,0,'something went wrong')
+          }
+        }else{
+          await manager.releaseTransaction()
+          return new CommonResponseModel(false,0,'something went wrong')
+        }
+
+      }catch(err){
+        await manager.releaseTransaction()
+        return new CommonResponseModel(false,0,err)
+      }
+
+
     }
 
 

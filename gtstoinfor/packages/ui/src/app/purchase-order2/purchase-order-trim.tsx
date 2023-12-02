@@ -53,9 +53,6 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
     },[indentId])
 
     useEffect(() =>{
-        console.log(sampleReqId.data[1].sampleReqIds)
-        console.log(sampleReqId.data[2].m3itemid)
-
         if(sampleReqId.length != 0){
             setTableColumns([...sampleColumns])
             sampleTrimData(sampleReqId.data[1].sampleReqIds,sampleReqId.data[2].m3itemid)
@@ -146,12 +143,19 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
     }
 
     const setEditForm = (rowData: any, index: any) => {
+        // console.log(rowData)
         setUpdate(true)
         setDefaultTrimFormData(rowData)
         setTrimIndexVal(index)
         if(rowData.indentTrmId != undefined){
         setInputDisable(true)
         trimForm.setFieldsValue({poQuantity:rowData.indentQuantity})
+        trimForm.setFieldsValue({indentId:rowData.indentId})
+        trimForm.setFieldsValue({m3TrimCode:rowData.m3TrimCode})    
+        trimForm.setFieldsValue({m3TrimCodeName:rowData.m3TrimCodeName})    
+        trimForm.setFieldsValue({indentQuantity:rowData.indentQuantity})    
+        trimForm.setFieldsValue({indentCode:rowData.indentCode})
+        trimForm.setFieldsValue({indentTrmId:rowData.indentTrmId})
         trimForm.setFieldsValue({indentId:rowData.indentId})
         }
         if(rowData.sampleTrimInfoId != undefined){
@@ -394,6 +398,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                 trimCodeName: defaultTrimFormData.trimCodeName,
                 quantityUomName:defaultTrimFormData.quantityUomName,
                 quantityUomId:defaultTrimFormData.quantityUomId,
+                m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
 
             })
 

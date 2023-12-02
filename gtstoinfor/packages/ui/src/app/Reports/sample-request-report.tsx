@@ -230,8 +230,8 @@ const SampleRequestReport = () => {
             dataSource={sm}
             columns={[
               {
-                dataIndex: "quantity",
-                key: "quantity",
+                dataIndex: "bomQuantity",
+                key: "bomQuantity",
                 align: "center",
               },
             ]}

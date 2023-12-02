@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { DeliveryMethodDto, DeliveryMethodRequest } from 'packages/libs/shared-models/src/common/delivery-method';
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { AllSampleDevReqResponseModel, Allocatematerial, CommonResponseModel, MaterialAllocationitemsIdreq, ProductGroupReq, SampleDevelopmentRequest, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SamplieMappingDto, UploadResponse, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq,SampleIdRequest } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, Allocatematerial, CommonResponseModel, MaterialAllocationitemsIdreq, ProductGroupReq, SampleDevelopmentRequest, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SamplieMappingDto, UploadResponse, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq,SampleIdRequest, AllocatedLocationReq, RequestNoReq, AllocationApprovalReq } from '@project-management-system/shared-models';
 import { create } from 'domain';
 
 
@@ -189,4 +189,18 @@ export class SampleDevelopmentService extends CommonAxiosService {
     return this.axiosPostCall(this.URL + "/getallMaterialAllocationItemsById",req )
 
   }
+
+  async getAllocatedBomInfo(req?:RequestNoReq): Promise<CommonResponseModel> {
+    console.log('----shared ser',req)
+    return this.axiosPostCall(this.URL + "/getAllocatedBomInfo",req )
+  }
+
+  async allocatedLocationInfo(req:AllocatedLocationReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/allocatedLocationInfo" ,req)
+  }
+
+  async approvaAllocatedStock(req:AllocationApprovalReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/approvaAllocatedStock" ,req)
+  }
+
 }

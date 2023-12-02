@@ -41,12 +41,14 @@ export class PurchaseOrderService {
             console.log(ToYear)
             console.log('$$$$')
             let poNumber
-            const data = 'select max(purchase_order_id) as poId from purchase_order'
+            // if buyer wise ponumber generation happens need to include Buyer also.
+            const data = 'select max(purchase_order_id) as poId from purchase_order where po_material_type = "'+req.poMaterialType+'"';
             const maxId = await this.poRepo.query(data)
+            let val = maxId[0].poId + 1;
             if (maxId[0].poId == null) {
-                poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + '001' + ''
+                poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + '000001' + ''
             } else {
-                poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + maxId[0].poId.toString().padStart(3, 0) + ''
+                poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + val.toString().padStart(5, 0) + ''
             }
             let poItemInfo = []
             const poEntity = new PurchaseOrderEntity()
@@ -140,14 +142,22 @@ export class PurchaseOrderService {
             if (req.materialType === 'Fabric') {
                 query = `SELECT m.item_code AS m3itemCode,poi.m3_item_id as m3ItemCodeId,poi.po_quantity AS poQuantity,poi.quantity_uom_id AS quantityUomId,u.uom,poi.purchase_order_item_id as poItemId,
                 poi.purchase_order_id AS purchaseOrderId,m.fabric_type AS m3ItemTypeId,ft.fabric_type_name AS m3ItemType,
-                poi.grn_quantity AS grnQuantity,poi.sample_item_id AS sampleItemId,poi.indent_item_id as indentItemId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style,poi.unit_price as unitPrice,poi.discount,poi.tax,poi.transportation,poi.subjective_amount as subjectiveAmount,poi.po_item_status as poItemStatus,poi.colour_id as colourId,c.colour as colour
+                poi.grn_quantity AS grnQuantity,poi.sample_item_id AS sampleItemId,poi.indent_item_id as indentItemId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style,poi.unit_price as unitPrice,poi.discount,t.tax_percentage as tax,t.tax_id as taxId,poi.transportation,poi.subjective_amount as subjectiveAmount,poi.po_item_status as poItemStatus,poi.colour_id as colourId,c.colour as colour`
+                if(req.poAgainst == 'Indent'){
+                    query = query + `,i.indent_id as indentId `
+                }
+                if(req.poAgainst == 'Sample Order'){
+                    query = query +  `,sr.sample_request_id as sampleRequestId `
+                }
+                query = query + `
                 FROM purchae_order_items poi
                 LEFT JOIN uom u ON u.id = poi.quantity_uom_id
+                LEFT JOIN taxes t on t.tax_id = poi.tax
                 LEFT JOIN m3_items m ON m.m3_items_Id = poi.m3_item_id
                 LEFT JOIN fabric_type ft ON ft.fabric_type_id = m.fabric_type
                 LEFT JOIN colour c ON c.colour_id = poi.colour_id
                 `
-                if (req.poAgainst =='Indent') {
+                if (req.poAgainst == 'Indent') {
                     query = query + ` 
                     LEFT JOIN indent_fabric inf ON inf.ifabric_id = poi.indent_item_id
                     LEFT JOIN indent i ON i.indent_id = inf.indent_id 
@@ -165,9 +175,16 @@ export class PurchaseOrderService {
                 }
             }
             if (req.materialType === 'Trim') {
-                query = `SELECT mt.trim_code as m3itemCode,poi.m3_item_id AS m3ItemCodeId,mt.trim_type as m3ItemType,poi.purchase_order_id AS purchaseOrderId, poi.po_quantity AS poQuantity,
-                poi.quantity_uom_id AS quantityUomId,u.uom,poi.grn_quantity AS grnQuantity,poi.indent_item_id as indentItemId, poi.sample_item_id as sampleItemId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style,poi.unit_price as unitPrice,poi.discount,poi.tax,poi.transportation,poi.subjective_amount as subjectiveAmount,poi.po_item_status as poItemStatus,poi.colour_id as colourId,c.colour as colour
-                FROM purchae_order_items poi
+                query = `SELECT mt.trim_code as m3itemCode,poi.m3_item_id AS m3ItemCodeId,mt.trim_type as m3ItemType,poi.purchase_order_id AS purchaseOrderId, poi.po_quantity AS poQuantity,poi.purchase_order_item_id as poItemId,
+                poi.quantity_uom_id AS quantityUomId,u.uom,poi.grn_quantity AS grnQuantity,poi.indent_item_id as indentItemId, poi.sample_item_id as sampleItemId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style,poi.unit_price as unitPrice,poi.discount,t.tax_percentage as tax,t.tax_id as taxId,poi.transportation,poi.subjective_amount as subjectiveAmount,poi.po_item_status as poItemStatus,poi.colour_id as colourId,c.colour as colour`
+                if(req.poAgainst == 'Indent'){
+                    query = query + `,i.indent_id as indentId `
+                }
+                if(req.poAgainst == 'Sample Order'){
+                    query = query +  `,sr.sample_request_id as sampleRequestId `
+                }
+                query = query + `FROM purchae_order_items poi
+                LEFT JOIN taxes t on t.tax_id = poi.tax
                 LEFT JOIN uom u ON u.id = poi.quantity_uom_id
                 LEFT JOIN m3_trims mt ON mt.m3_trim_Id=poi.m3_item_id
                 LEFT JOIN colour c ON c.colour_id = poi.colour_id
@@ -190,16 +207,17 @@ export class PurchaseOrderService {
                 }
 
             }
-            console.log(query)
             const itemData = await this.poTrimRepo.query(query)
+           
             const grnItemsArr: GrnItemsFormDto[] = []
             for (const rec of itemData) {
-                const grnItemsDto = new GrnItemsFormDto(rec.poItemId, rec.m3ItemCodeId, rec.m3itemCode, rec.m3ItemType, rec.m3ItemTypeId, rec.poItemStatus, rec.quantityUomId, rec.uom, rec.unitPrice, rec.discount, rec.tax, rec.transportation, rec.subjectiveAmount, rec.grnQuantity, rec.poQuantity, rec.colourId, rec.colour, rec.sampleItemId, rec.indentItemId,rec.buyerId,rec.buyer)
+                const receivedQty = rec.poQuantity - rec.grnQuantity
+                const grnItemsDto = new GrnItemsFormDto(rec.poItemId, rec.m3ItemCodeId, rec.m3itemCode, rec.m3ItemType, rec.m3ItemTypeId, rec.poItemStatus, rec.quantityUomId, rec.uom, rec.unitPrice, rec.discount, rec.tax, rec.transportation, rec.subjectiveAmount, rec.grnQuantity, rec.poQuantity, rec.colourId, rec.colour, rec.sampleItemId, rec.indentItemId,rec.buyerId,rec.buyer,rec?.sampleRequestId,rec?.indentId,receivedQty,receivedQty)
                 grnItemsArr.push(grnItemsDto)
             }
-            const poQuery = `select p.purchase_order_id as poId,p.style_id as styleId,p.po_material_type as poMaterialType,p.po_against as poAgainst from purchase_order p where p.purchase_order_id = ${req.poId}`
+            const poQuery = `select p.purchase_order_id as poId,p.style_id as styleId,p.po_material_type as poMaterialType,p.po_against as poAgainst,p.grn_quantity as grnQuantity from purchase_order p where p.purchase_order_id = ${req.poId}`
             const poData = await this.poTrimRepo.query(poQuery)
-             poData[0].grnItems = itemData 
+             poData[0].grnItems = grnItemsArr 
 
             if (grnItemsArr.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", poData)
@@ -281,6 +299,7 @@ export class PurchaseOrderService {
             if (req?.id) {
                 query += ` where po.purchase_order_id = ${req?.id}`
             }
+            query+=` order by po.expected_delivery_date`
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)

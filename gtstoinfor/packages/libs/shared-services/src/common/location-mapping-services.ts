@@ -17,6 +17,7 @@ export class LocationMappingService extends CommonAxiosService {
     }
 
     async postToStockLogs(req:LocationMappingReq): Promise<any> {
+        console.log(req);
         return this.axiosPostCall(this.URL + "/postToStockLogs", req);
     }
 

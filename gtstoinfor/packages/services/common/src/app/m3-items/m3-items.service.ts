@@ -75,8 +75,16 @@ export class M3ItemsService {
       if (req.finish!== undefined){
         query += ` AND m3.finish = '${req.finish}'`
       }
-      if (req.shrinkage!== undefined){
-        query += ` AND m3.shrinkage = '${req.shrinkage}'`
+      
+      if (req.weight!== undefined){
+        query += ` AND m3.weight = ${req.weight}`
+      }
+      if (req.width!== undefined){
+        query += ` AND m3.width = ${req.width}`
+      }
+
+      if (req.yarnCount!== undefined){
+        query += ` AND m3.yarn_count = ${req.yarnCount}`
       }
     }
    

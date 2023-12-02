@@ -10,6 +10,12 @@ export class StockLogEntity{
     stockLogId:number
     
     @Column('int',{
+        name:'stock_id',
+        nullable:false
+    })
+    stockId:number;
+
+    @Column('int',{
         name:'m3_item',
         nullable:false
     })

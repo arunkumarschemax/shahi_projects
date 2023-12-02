@@ -227,8 +227,8 @@ import AlertMessages from "../common/common-functions/alert-messages";
       },
       {
         title: "Required Quantity",
-        dataIndex: "fabric_consumption",
-        sorter: (a, b) => a.fabric_consumption.localeCompare(b.fabric_consumption),
+        dataIndex: "totalRequirement",
+        sorter: (a, b) => a.totalRequirement.localeCompare(b.totalRequirement),
         sortDirections: ["descend", "ascend"],
       },
       {
@@ -257,8 +257,8 @@ import AlertMessages from "../common/common-functions/alert-messages";
         render: (text, record) => {
           return (
             <>
-              {Number(record.fabric_consumption) - Number(record.availableQuantity) > 0
-                ? Number(record.fabric_consumption) - Number(record.availableQuantity)
+              {Number(record.totalRequirement) - Number(record.availableQuantity) > 0
+                ? Number(record.totalRequirement) - Number(record.availableQuantity)
                 : 0}
             </>
           );
@@ -326,16 +326,25 @@ import AlertMessages from "../common/common-functions/alert-messages";
 
       },
       {
+        title: "Grn Date",
+        key:'grnDate',
+        dataIndex:"grnDate",
+        render:(grnDate)=>moment(grnDate).format("YYYY-MM-DD"),
+        width: "150px",
+
+      },
+      {
         title: "Location",
-        key:'rack_position_name',
-        dataIndex: "rack_position_name",
+        key:'location',
+
+        dataIndex: "location",
         width:'80px',
       },
     
       {
         title: "Available Quantity",
         width: "150px",
-        dataIndex: "totalAvailablequntity",
+        dataIndex: "quantity",
       },
      
       {
@@ -550,10 +559,10 @@ import AlertMessages from "../common/common-functions/alert-messages";
           <span>Location : {<b>{location}</b>}</span>
           <span style={{ width: "10px" }}></span>
           <span style={{ width: "10px" }}></span>
+          {/* <span style={{ width: "10px" }}></span>
+          <span>Status : {<b>{status}</b>}</span> */}
           <span style={{ width: "10px" }}></span>
-          <span>Status : {<b>{status}</b>}</span>
-          <span style={{ width: "10px" }}></span>
-          <span>Life Cycle Status : {<b>{lifeCycleStatus}</b>}</span>
+          <span> Status : {<b>{lifeCycleStatus}</b>}</span>
           {/* <span style={{width:'10px'}}></span>
                 <span>{<Tag onClick={() => generateBarcode(requestNo)} style={{cursor:'pointer'}}>
                            <BarcodeOutlined />
@@ -585,7 +594,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
          dataSource={avilableQuantity}
           columns={renderColumnForFabric} 
           pagination={false}
-           rowKey={record.sample_request_id}/>;
+           rowKey={record.stockId}/>;
       };
 
 
@@ -613,13 +622,13 @@ import AlertMessages from "../common/common-functions/alert-messages";
       <Card
         headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
         title="Sample Requests"
-        extra={
-          <Link to="/sample-development/sample-development-form">
-            <span style={{ color: "white" }}>
-              <Button type={"primary"}>New </Button>{" "}
-            </span>
-          </Link>
-        }
+        // extra={
+        //   <Link to="/sample-development/sample-development-form">
+        //     <span style={{ color: "white" }}>
+        //       <Button type={"primary"}>New </Button>{" "}
+        //     </span>
+        //   </Link>
+        // }
       >
         <Form form={sourcingForm}>
           <Row gutter={8}>
@@ -807,7 +816,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
 
                     <Table
                     key={keyUpdate}
-                    rowKey={record => record.sample_request_id}
+                    rowKey={record => record.fabric_info_id}
                     columns={Columns}
                     dataSource={item.fabric}
                     expandedRowRender={renderItems}

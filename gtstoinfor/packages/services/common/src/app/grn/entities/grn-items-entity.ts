@@ -113,10 +113,34 @@ export class GrnItemsEntity {
     sampleItemId: number
 
     @Column('int', {
-        name: 'subjective_amount',
+        name: 'sample_req_id',
         nullable: false,
     })
-    subjectiveAmount: number
+    sampleRequestId: number
+
+    @Column('int', {
+        name: 'indent_id',
+        nullable: false,
+    })
+    indentId: number
+
+    @Column('int', {
+        name: 'grn_item_amount',
+        nullable: false,
+    })
+    grnItemAmount: number
+
+    @Column('int', {
+        name: 'buyer_id',
+        nullable: false,
+    })
+    buyerId: number
+
+    @Column('int', {
+        name: 'uom_id',
+        nullable: false
+    })
+    uomId: number
 
     @ManyToOne(type => GrnEntity, grn => grn.grnItemInfo)
     @JoinColumn({ name: 'grn_id' })

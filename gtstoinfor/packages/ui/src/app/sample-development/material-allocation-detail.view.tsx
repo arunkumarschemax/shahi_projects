@@ -44,14 +44,14 @@ export const MaterialAllocationDetailView = () => {
             //   ...getColumnSearchProps('vendorName')
         },
        
-        {
-            title: 'Quantity',
-            dataIndex: 'quantity',
-            align: 'left',
-            width:130,
-            sorter: (a, b) => a.quantity - b.quantity,
-            sortDirections: ['descend', 'ascend'],
-        },
+        // {
+        //     title: 'Quantity',
+        //     dataIndex: 'quantity',
+        //     align: 'left',
+        //     width:130,
+        //     sorter: (a, b) => a.quantity - b.quantity,
+        //     sortDirections: ['descend', 'ascend'],
+        // },
         {
             title: 'Allocate Quantity',
             dataIndex: 'allocate_quantity',
@@ -91,7 +91,7 @@ export const MaterialAllocationDetailView = () => {
 
     return (
         <div>
-            <Card title={<span style={{ color: 'white' }}>Material Allocation Detail View</span>}
+            <Card title={<span style={{ color: 'white' }}>Material Allocation Details</span>}
                 // style={{ textAlign: 'center' }} 
                 headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
                 extra={
@@ -112,7 +112,7 @@ export const MaterialAllocationDetailView = () => {
                 <DescriptionsItem label='Sample Request No'>{location?.state?.request_no}</DescriptionsItem>
                  <DescriptionsItem label='Buyer'>{location?.state?.buyer_name}</DescriptionsItem>
                 <DescriptionsItem label='Item Type'>{location?.state?.item_type}</DescriptionsItem>
-                <DescriptionsItem label='Quantity'>{location?.state?.quantity}</DescriptionsItem>
+                {/* <DescriptionsItem label='Quantity'>{location?.state?.quantity}</DescriptionsItem> */}
                 <DescriptionsItem label='Total Allocated Quantity'>{location?.state?.total_allocated_quantity}</DescriptionsItem>
                
             </Descriptions>

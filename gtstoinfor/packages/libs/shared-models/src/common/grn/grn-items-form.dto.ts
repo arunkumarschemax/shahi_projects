@@ -21,8 +21,8 @@ export class GrnItemsFormDto {
     colour: string;
     sampleItemId: number;
     indentItemId: number;
-    buyer:string
-    buyerId:number
+    buyer: string
+    buyerId: number
     receivedQuantity?: number
     acceptedQuantity?: number
     rejectedQuantity?: number
@@ -30,7 +30,9 @@ export class GrnItemsFormDto {
     conversionQuantity?: number
     conversionUomId?: number;
     remarks?: string;
-    revisedSubjectivePrice?:number;
+    grnItemAmount?: number;
+    sampleRequestId?: number;
+    indentId?: number;
     createdAt?: Date;
     createdUser?: string | null;
     updatedAt?: Date;
@@ -55,11 +57,13 @@ export class GrnItemsFormDto {
         grnQuantity: number,
         poQuantity: number,
         colourId: number,
-        colour : string,
+        colour: string,
         sampleItemId: number,
         indentItemId: number,
-        buyerId : number,
-        buyer:string,
+        buyerId: number,
+        buyer: string,
+        sampleRequestId?: number,
+        indentId?: number,
         receivedQuantity?: number,
         acceptedQuantity?: number,
         rejectedQuantity?: number,
@@ -67,25 +71,25 @@ export class GrnItemsFormDto {
         conversionUomId?: number,
         conversionQuantity?: number,
         remarks?: string,
-        revisedSubjectivePrice?:number,
+        grnItemAmount?: number,
         createdAt?: Date,
         createdUser?: string | null,
         updatedAt?: Date,
         updatedUser?: string | null,
         versionFlag?: number,
-    ){
+    ) {
         this.poItemId = poItemId;
         this.m3ItemCode = m3ItemCode;
         this.m3ItemCodeId = m3ItemCodeId;
         this.m3ItemType = m3ItemType;
         this.m3ItemTypeId = m3ItemTypeId;
         this.poitemStatus = poitemStatus;
-        this.uomId  = uomId;
+        this.uomId = uomId;
         this.uom = uom;
         this.unitPrice = unitPrice;
         this.discount = discount;
         this.tax = tax;
-        this.transportation =transportation;
+        this.transportation = transportation;
         this.subjectiveAmount = subjectiveAmount;
         this.grnQuantity = grnQuantity;
         this.poQuantity = poQuantity;
@@ -107,7 +111,9 @@ export class GrnItemsFormDto {
         this.versionFlag = versionFlag;
         this.buyerId = buyerId;
         this.buyer = buyer
-        this.revisedSubjectivePrice = revisedSubjectivePrice
+        this.grnItemAmount = grnItemAmount
+        this.sampleRequestId = sampleRequestId
+        this.indentId = indentId
     }
 
 }

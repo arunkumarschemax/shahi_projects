@@ -299,14 +299,14 @@ export const MaterialAllocationGrid = () => {
     //       sortDirections: ['descend', 'ascend'],
     //       ...getColumnSearchProps('location_name')
     // },
-    {
-      title: "Quantity",
-      dataIndex: "quantity",
-      align: "left",
-      sorter: (a, b) => a.quantity.localeCompare(b.quantity),
-      sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("quantity"),
-    },
+    // {
+    //   title: "Quantity",
+    //   dataIndex: "quantity",
+    //   align: "left",
+    //   sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+    //   sortDirections: ["descend", "ascend"],
+    //   ...getColumnSearchProps("quantity"),
+    // },
     {
       title: "Allocate Quantity",
       dataIndex: "total_allocated_quantity",
@@ -366,7 +366,7 @@ export const MaterialAllocationGrid = () => {
             </Tooltip>
           </span>
           <Divider type="vertical" />
-          <span>
+          {/* <span>
                     <Button
             type="primary"
             size="small"
@@ -376,8 +376,8 @@ export const MaterialAllocationGrid = () => {
             }}
           >
             MATERIAL ISSUE
-          </Button>
-          </span>
+          </Button> */}
+          {/* </span> */}
         </Row>
       ),
     },
@@ -592,7 +592,15 @@ export const MaterialAllocationGrid = () => {
              < MaterialAllocationPrint data={approvedData} id ={row}  />         
             </Modal>
 
-        <Tabs type={"card"} tabPosition={"top"}>
+            <Table
+              size="small"
+              columns={sampleTypeColumns}
+              dataSource={openData}
+              scroll={{ x: true }}
+              bordered
+              pagination={false}
+            />
+        {/* <Tabs type={"card"} tabPosition={"top"}>
           <TabPane
             key="1"
             tab={
@@ -627,7 +635,7 @@ export const MaterialAllocationGrid = () => {
               pagination={false}
             />
           </TabPane>
-        </Tabs>
+        </Tabs> */}
       </Card>
     </div>
   );
