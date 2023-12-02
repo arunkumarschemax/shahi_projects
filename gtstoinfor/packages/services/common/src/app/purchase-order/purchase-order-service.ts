@@ -41,12 +41,14 @@ export class PurchaseOrderService {
             console.log(ToYear)
             console.log('$$$$')
             let poNumber
-            const data = 'select max(purchase_order_id) as poId from purchase_order'
+            // if buyer wise ponumber generation happens need to include Buyer also.
+            const data = 'select max(purchase_order_id) as poId from purchase_order where po_material_type = "'+req.poMaterialType+'"';
             const maxId = await this.poRepo.query(data)
+            let val = maxId[0].poId + 1;
             if (maxId[0].poId == null) {
-                poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + '001' + ''
+                poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + '000001' + ''
             } else {
-                poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + maxId[0].poId.toString().padStart(3, 0) + ''
+                poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + val.toString().padStart(5, 0) + ''
             }
             let poItemInfo = []
             const poEntity = new PurchaseOrderEntity()
