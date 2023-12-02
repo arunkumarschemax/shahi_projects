@@ -222,6 +222,7 @@ export class GrnService {
 
         }
         catch (err) {
+            await transactionalEntityManager.releaseTransaction();
             throw err
         }
     }
