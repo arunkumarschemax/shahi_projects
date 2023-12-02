@@ -160,7 +160,7 @@ export class GrnService {
             grnEntity.itemType = req.itemType
             grnEntity.invoiceNo = req.invoiceNo
             grnEntity.grnAmount = req.grnAmount
-
+            grnEntity.grnQuantity = req.grnQuantity
             // console.log(req,'===========')
             for (const item of req.grnItemInfo) {
                 const itemEntity = new GrnItemsEntity()
@@ -169,7 +169,7 @@ export class GrnService {
                 itemEntity.acceptedQuantity = item.acceptedQuantity
                 itemEntity.rejectedQuantity = item.rejectedQuantity
                 itemEntity.conversionQuantity = item.conversionQuantity
-                itemEntity.conversionUomId = item.conversionUomId
+                itemEntity.conversionUomId = item.uomId
                 itemEntity.remarks = item.remarks
                 itemEntity.m3ItemCodeId = item.m3ItemCodeId
                 itemEntity.sampleItemId = item.sampleItemId
@@ -180,6 +180,7 @@ export class GrnService {
                 itemEntity.sampleRequestId = item.sampleRequestId
                 itemEntity.indentId = item.indentId
                 itemEntity.buyerId = item.buyerId
+                itemEntity.uomId = item.uomId
                 itemInfo.push(itemEntity)
             }
             grnEntity.grnItemInfo = itemInfo
@@ -207,14 +208,13 @@ export class GrnService {
                 }
                 const poData = await this.getAllPoDataToUPdateStatus(req.poId, req.materialtype)
                 if (poData.data.length == 0) {
-                    await this.poRepo.update({ purchaseOrderId: req.poId }, { status: PurchaseOrderStatus.CLOSED })
+                    await this.poRepo.update({ purchaseOrderId: req.poId }, { status: PurchaseOrderStatus.CLOSED,grnQuantity:req.grnQuantity })
                 } else {
-                    await this.poRepo.update({ purchaseOrderId: req.poId }, { status: PurchaseOrderStatus.IN_PROGRESS })
+                    await this.poRepo.update({ purchaseOrderId: req.poId }, { status: PurchaseOrderStatus.IN_PROGRESS,grnQuantity:req.grnQuantity })
                 }
 
                 await transactionalEntityManager.completeTransaction();
                 return new CommonResponseModel(true, 1, 'Grn Created Sucessfully', save)
-
             } else {
                 await transactionalEntityManager.releaseTransaction();
                 return new CommonResponseModel(false, 0, 'Something went wrong', [])

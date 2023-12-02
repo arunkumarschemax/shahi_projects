@@ -23,7 +23,7 @@ export class GrnDto{
   invoiceNo?: string
   itemType?:string
   grnAmount?: number
-
+  grnQuantity?:number
 
   constructor(
     vendorId:number,
@@ -45,8 +45,8 @@ export class GrnDto{
     grnType?:GRNTypeEnum,
     invoiceNo?: string,
     itemType? :string,
-    grnAmount?: number
-
+    grnAmount?: number,
+    grnQuantity?:number
 
   
   ){
@@ -70,6 +70,7 @@ export class GrnDto{
     this.invoiceNo = invoiceNo
     this.itemType = itemType
     this.grnAmount = grnAmount
+    this.grnQuantity = grnQuantity
   }
 
 

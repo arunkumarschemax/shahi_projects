@@ -43,7 +43,9 @@ export class GrnDto{
   @ApiProperty()
   invoiceNo: string
   @ApiProperty()
-  grnAmount:number
+  grnAmount:number;
+  @ApiProperty()
+  grnQuantity:number
   
 
 }
