@@ -3,6 +3,7 @@ import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { CategoryService } from "./category-service";
 import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryDto } from "./dto/category-dto";
 
 @ApiTags('category')
 @Controller('category')
@@ -13,7 +14,9 @@ export class categoryController{
 
     ){}
     @Post('/createCategory')
+    @ApiBody({type: CategoryDto})
     async createCategory(@Body() req:any): Promise<CommonResponseModel> {
+      console.log(req,"req con")
     try {
         return await this.CategService.createCategory(req,false);
       } catch (error) {
@@ -21,7 +24,9 @@ export class categoryController{
       }
     }
     @Post('/updateCategory')
+    @ApiBody({type: CategoryDto})
     async updateCategory(@Body() req:any): Promise<CommonResponseModel> {
+      console.log(req,"update")
     try {
         return await this.CategService.createCategory(req,true);
       } catch (error) {

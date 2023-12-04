@@ -10,7 +10,7 @@ export class CategoryService extends CommonAxiosService{
     }
   
     async updateCategory(color: CategoryReq): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.URL + "/updateColour", color)
+        return this.axiosPostCall(this.URL + "/updateCategory", color)
     }
     
     async getAllCategory(): Promise<CommonResponseModel> {

@@ -34,10 +34,10 @@ export const CategoryForm = (props:CategoryProps) => {
     }
     }
 
-    const savecolumn = (val) => {
+    const savecolumn = (val:CategoryReq) => {
         setDisable(true)
-        const req = new CategoryReq(val.category,val.categorycode,'admin')
-        service.createCategory(req).then(res => {
+        console.log(val,"val")
+        service.createCategory(val).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
                 onReset();
@@ -67,7 +67,7 @@ export const CategoryForm = (props:CategoryProps) => {
             onClick={() => navigate('/masters/column/column-view')} 
             type={'primary'}>View</Button></span>}> */}
             <Form form={form} layout="vertical" onFinish={onFinish} initialValues={props.columnData}>
-            <Form.Item name='category_id' style={{display:'none'}}>
+            <Form.Item name='categoryId' style={{display:'none'}}>
                         <Input disabled/>
                     </Form.Item>
                 <Row gutter={24}>
