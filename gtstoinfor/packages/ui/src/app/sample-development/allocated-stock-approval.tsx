@@ -20,7 +20,11 @@ import {
   RequestNoReq,
 } from "@project-management-system/shared-models";
 
-export const AllocatedStockApproval = () => {
+export interface AllocatedStockApprovalProps {
+  screen: any;
+}
+
+export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
   const Option = Select;
   const [form] = Form.useForm();
   const { TabPane } = Tabs;
@@ -32,16 +36,28 @@ export const AllocatedStockApproval = () => {
   const [childData, setChildData] = useState({});
   const [loading, setLoading] = useState(false);
 
+
+
   useEffect(() => {
-    getAllocatedBomData();
-    getAllRequestNo();
-  }, []);
+    if(props.screen === 'Allocated') {
+      onReset()
+      getAllRequestNo();
+    }
+    if(props.screen === 'Issued'){
+      onReset()
+      getAllApprovedRequestNo();
+    }
+  }, [props.screen]);
 
   const allocatedLocationInfo = (value) => {
     const req = new AllocatedLocationReq();
     req.sampleRequestItemId = value;
+    if(props?.screen === 'Issued'){
+      req.action = 'Issued'
+    }else{
+      req.action = 'Approval'
+    }
     service.allocatedLocationInfo(req).then((res) => {
-      console.log(res);
       if (res.status) {
         setChildData((prev) => {
           return { ...prev, [value]: res.data };
@@ -53,46 +69,68 @@ export const AllocatedStockApproval = () => {
   const getAllocatedBomData = () => {
     const req = new RequestNoReq();
     req.requestNo = form.getFieldValue("requestNo");
-    console.log(req);
+    if(props?.screen === 'Issued'){
+      req.action = 'Issued'
+    }else{
+      req.action = 'Approval'
+    }
     service.getAllocatedBomInfo(req).then((res) => {
       if (res.data) {
-        setFabricStockData(res.data.fabricInfo);
-        setTrimStockData(res.data.trimInfo);
+        setFabricStockData(res.data);
+        // setTrimStockData(res.data.trimInfo);
         AlertMessages.getSuccessMessage(res.internalMessage);
       } else {
         setFabricStockData([]);
-        setTrimStockData([]);
+        // setTrimStockData([]);
         AlertMessages.getErrorMessage(res.internalMessage);
       }
     });
   };
 
   const getAllRequestNo = () => {
-    service.getAllRequestNo().then((res) => {
+    setRequestNo([])
+    service.getAllAllocatedRequestNo().then((res) => {
       if (res.status) {
         setRequestNo(res.data);
       }
     });
   };
 
+  const getAllApprovedRequestNo = () =>{
+    setRequestNo([])
+    service.getAllApprovedRequestNo().then((res)=>{
+      if (res.status) {
+        setRequestNo(res.data);
+      }
+    })
+  }
+
   const approvaAllocatedStock = (val) => {
     setLoading(true);
     const req = new AllocationApprovalReq();
     req.sampleRequestId = val;
-    service.approvaAllocatedStock(req).then((res) => {
-      if (res.status) {
-        notification.success({ message: res.internalMessage });
-      } else {
-        notification.error({ message: res.internalMessage });
-      }
-    }).finally(() => {
+    if(props?.screen === 'Issued'){
+      req.action = 'Issued'
+    }else{
+      req.action = 'Approval'
+    }
+    service
+      .approvaAllocatedStock(req)
+      .then((res) => {
+        if (res.status) {
+          notification.success({ message: res.internalMessage });
+        } else {
+          notification.error({ message: res.internalMessage });
+        }
+      })
+      .finally(() => {
         setLoading(false);
       });
   };
 
   function onReset() {
     form.resetFields();
-    getAllocatedBomData();
+    setFabricStockData([]);
   }
 
   const renderCellData = (data) => {
@@ -110,6 +148,10 @@ export const AllocatedStockApproval = () => {
     {
       title: "Request No",
       dataIndex: "requestNo",
+    },
+    {
+      title: "Type",
+      dataIndex: "type",
     },
     // {
     //   title: <div style={{ textAlign: "center" }}>Brand Name</div>,
@@ -134,8 +176,8 @@ export const AllocatedStockApproval = () => {
     //   }
     // },
     {
-        title: "Brand Name",
-        dataIndex: "brandName",
+      title: "Brand Name",
+      dataIndex: "brandName",
     },
     {
       title: "Style",
@@ -157,27 +199,27 @@ export const AllocatedStockApproval = () => {
       title: "BOM",
       dataIndex: "BOM",
     },
-    {
-      title: "Action",
-      render: (value, record) => {
-        return (
-          <>
-            <Button
-              disabled={loading}
-              onClick={(e) =>
-                approvaAllocatedStock(record.sampleRequestFabricId)
-              }
-            >
-              {loading ? (
-                <Spin size="small" style={{ marginRight: "8px" }} />
-              ) : (
-                <>Approve </>
-              )}
-            </Button>
-          </>
-        );
-      },
-    },
+    // {
+    //   title: "Action",
+    //   render: (value, record) => {
+    //     return (
+    //       <>
+    //         <Button
+    //           disabled={loading}
+    //           onClick={(e) =>
+    //             approvaAllocatedStock(record.sampleRequestFabricId)
+    //           }
+    //         >
+    //           {loading ? (
+    //             <Spin size="small" style={{ marginRight: "8px" }} />
+    //           ) : (
+    //             <>Approve </>
+    //           )}
+    //         </Button>
+    //       </>
+    //     );
+    //   },
+    // },
   ];
 
   const trimColumns: ColumnProps<any>[] = [
@@ -210,7 +252,7 @@ export const AllocatedStockApproval = () => {
       render: (value, record) => {
         return (
           <>
-           <Button
+            <Button
               disabled={loading}
               onClick={(e) => approvaAllocatedStock(record.sampleReqTrimId)}
             >
@@ -267,11 +309,21 @@ export const AllocatedStockApproval = () => {
 
   return (
     <>
-      <Card>
+      <Card title= {props?.screen === "Issued" ? (
+                          <>Material Issues </>
+                        ) : (
+                          <>Allocation Approval</>
+                        )}>
         <Form form={form} layout="vertical">
           <Row gutter={24}>
             <Col span={4}>
-              <Form.Item name="requestNo" label="Request No">
+              <Form.Item
+                name="requestNo"
+                label="Request No"
+                rules={[
+                  { required: true, message: "Please input your Request No!" },
+                ]}
+              >
                 <Select
                   showSearch
                   allowClear
@@ -303,25 +355,56 @@ export const AllocatedStockApproval = () => {
               </Button>
             </Col>
           </Row>
+          {fabricStockData?.length > 0 ? (
+            <>
+              <Row gutter={24} justify={"end"}>
+                <Col>
+                  <Button
+                  type="primary"
+                    disabled={loading}
+                    onClick={(e) =>
+                      approvaAllocatedStock(
+                        fabricStockData[0]?.sampleRequestFabricId
+                      )
+                    }
+                  >
+                    {loading ? (
+                      <Spin size="small" style={{ marginRight: "8px" }} />
+                    ) : (
+                      <>
+                        {props?.screen === "Issued" ? (
+                          <>Issued </>
+                        ) : (
+                          <> Approve</>
+                        )}
+                      </>
+                    )}
+                  </Button>
+                </Col>
+              </Row>
+            </>
+          ) : (
+            ""
+          )}
         </Form>
         <br></br>
-        <Tabs defaultActiveKey="1">
-          <TabPane tab="Fabric Details" key="1">
-            <Table
-              rowKey={(record) => record.sampleFabricId}
-              columns={fabColumns}
-              dataSource={fabricStockData}
-              expandable={{
-                expandedRowRender: (record) => expandFabricTabel(record),
-                onExpand(expanded, record) {
-                  allocatedLocationInfo(record.sampleRequestFabricId);
-                },
-                rowExpandable: (record) => record.name !== "Not Expandable",
-              }}
-            //   className="custom-table-wrapper"
-            />
-          </TabPane>
-          <TabPane tab="Trim Details" key="2">
+        {/* <Tabs defaultActiveKey="1">
+          <TabPane tab="Fabric Details" key="1"> */}
+        <Table
+          rowKey={(record) => record.sampleFabricId}
+          columns={fabColumns}
+          dataSource={fabricStockData}
+          expandable={{
+            expandedRowRender: (record) => expandFabricTabel(record),
+            onExpand(expanded, record) {
+              allocatedLocationInfo(record.sampleRequestFabricId);
+            },
+            rowExpandable: (record) => record.name !== "Not Expandable",
+          }}
+          //   className="custom-table-wrapper"
+        />
+        {/* </TabPane> */}
+        {/* <TabPane tab="Trim Details" key="2">
             <Table
               rowKey={(record) => record.sampleTrimInfoId}
               columns={trimColumns}
@@ -334,8 +417,8 @@ export const AllocatedStockApproval = () => {
                 rowExpandable: (record) => record.name !== "Not Expandable",
               }}
             />
-          </TabPane>
-        </Tabs>
+          </TabPane> */}
+        {/* </Tabs> */}
       </Card>
     </>
   );

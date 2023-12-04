@@ -84,6 +84,8 @@ import { ReclassificationModule } from './reclassification/reclassification.modu
 import { LevelModule } from './level/level.module';
 import { CategoryModule } from './Trim Masters/category/category-module';
 import { ContentModule } from './Trim Masters/content-master/content-module';
+import { varietyModule } from './Trim Masters/variety/variety-module';
+import { trimModule } from './Trim Masters/trim/trim-module';
 
 
 @Module({
@@ -149,7 +151,7 @@ import { ContentModule } from './Trim Masters/content-master/content-module';
     LevelModule,
     CategoryModule,
     ContentModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,M3MastersModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,OperationTrackingModule,MaterialIssueModule,IndentModule,RackPositionModule,StocksModule,GrnModule,LocationMappingModule,M3TrimsModule,ReclassificationModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,M3MastersModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,OperationTrackingModule,MaterialIssueModule,IndentModule,RackPositionModule,StocksModule,GrnModule,LocationMappingModule,M3TrimsModule,ReclassificationModule,varietyModule,trimModule],
   controllers: [AppController],
   providers: [AppService],
 })

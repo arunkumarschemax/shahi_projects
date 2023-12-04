@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CustomerOrderStatusEnum, GrnItemsFormDto, PurchaseOrderStatus } from "@project-management-system/shared-models";
+import { CustomerOrderStatusEnum, GRNTypeEnum, GrnItemsFormDto, PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { GrnItemsEntity } from "../entities/grn-items-entity";
 import { GRNItemDto } from "./grn-item-dto";
 
@@ -46,6 +46,8 @@ export class GrnDto{
   grnAmount:number;
   @ApiProperty()
   grnQuantity:number
+  @ApiProperty()
+  grnType:GRNTypeEnum
   
 
 }
