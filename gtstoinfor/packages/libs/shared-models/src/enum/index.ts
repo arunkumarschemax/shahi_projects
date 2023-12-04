@@ -17,4 +17,6 @@ export * from './m3Items-content-enum'
 export * from './life-cycle-status.enum'
 export * from './stock-type.enum'
 export * from './reclassification-status.enum'
+export * from './reclassification-status.enum'
+export * from './bom-status.enum'
 
