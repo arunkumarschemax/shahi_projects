@@ -17,7 +17,7 @@ import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
 import CompanyForm from "./masters/company/company-form"
 import CompanyGrid from "./masters/company/company-grid"
-import { CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto, PurchaseViewDto } from "@project-management-system/shared-models"
+import { ColourDto, CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto, PurchaseViewDto, TrimDtos, VarietyDtos } from "@project-management-system/shared-models"
 import MasterBrandsForm from "./masters/master-brands/master-brands-form"
 import MasterBrandsGrid from "./masters/master-brands/master.brands-gridt"
 import OperationsForm from "./masters/operations/operations-form"
@@ -187,6 +187,11 @@ import { ReclassificationApprovalGrid } from "./sourcing-requisition/reclassific
 import AllocatedStockApproval from "./sample-development/allocated-stock-approval"
 import QualityGrid from "./common/qualitys/qualitys-view"
 import QualitysForm from "./common/qualitys/qualitys-form"
+import StoreIssues from "./sample-development/store-issues"
+import { VarietyForm } from "./trim-master/variety/variety-form"
+import VarietyGrid from "./trim-master/variety/variety-view"
+import { TrimForm } from "./trim-master/trim/trim-form"
+import TrimGrid from "./trim-master/trim/trim-view"
 
 
 
@@ -584,6 +589,7 @@ export const AppRoutes = () => {
                         updateDetails={(undefined) => { }} columnData={undefined} />} />
                     <Route path='column/column-view' element={<ColumnView />} />
 
+
                 </Route>
                 <Route path='/global'>
                     <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
@@ -670,6 +676,25 @@ export const AppRoutes = () => {
 
                 </Route>
 
+                <Route  path='/trim-master'>
+                    <Route path='variety/variety-form' element ={<VarietyForm varietyData={new VarietyDtos} updateItem={function (VarietyDto: VarietyDtos): void {
+                        throw new Error("Function not implemented.")
+                    } } isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.")
+                    } } />} />
+                    <Route path='variety/variety-view' element ={<VarietyGrid />} />
+
+                    <Route path='trim/trim-form' element ={<TrimForm TrimData={new TrimDtos} updateItem={function (Dto: TrimDtos): void {
+                        throw new Error("Function not implemented.")
+                    } } isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.")
+                    } } />} />
+                    <Route path='trim/trim-view' element ={<TrimGrid />} />
+
+
+
+                </Route>
+
                 <Route path="style-management">
                     <Route path='style/style-form' key='/style/style-form' element={<StyleForm styleData={undefined}
                         isUpdate={false}
@@ -709,7 +734,8 @@ export const AppRoutes = () => {
                 <Route path='store-issues'>
                     <Route path="store-issues-view" element={<SourceIssuesView />} />
                     <Route path="store-issues-detail-view" element={<SourceIssuesDetailView MaterialIssueID={0} />} />
-                    <Route path="material-issue-view" element={<MaterialIssueView />} />
+                    {/* <Route path="material-issue-view" element={<MaterialIssueView />} /> */}
+                    <Route path="material-issue-view" element={<AllocatedStockApproval screen={"Issued"} />} />
                 </Route>
 
                 <Route path='/materialCreation'>
@@ -961,8 +987,8 @@ export const AppRoutes = () => {
                     <Route path="material-allocation" element={<MaterialAllocationGrid />} />
                     <Route path="material-allocation-view" element={<MaterialAllocationView />} />
                     <Route path="material-allocation-detail-view" element={<MaterialAllocationDetailView />} />
-                    <Route path='allocation-approval' element={<AllocatedStockApproval />} />
-
+                    <Route path='allocation-approval' element={<AllocatedStockApproval screen={"Allocated"}/>} />
+                    
 
                 </Route>
 
