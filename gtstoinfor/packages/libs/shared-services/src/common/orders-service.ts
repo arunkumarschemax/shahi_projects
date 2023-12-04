@@ -8,11 +8,11 @@ import { AxiosInstance } from "../axios-instance";
 export class OrdersService extends CommonAxiosService {
     private ordersController = "/orders"
 
-    async saveOrder(data: any, id: number, month: any): Promise<CommonResponseModel> {
+    async saveOrder(data: any, id: number, month: any,uploadType:string): Promise<CommonResponseModel> {
         // console.log(month)
         const idn = id;
         const montId = month
-        const url = `/orders/saveOrder/${idn}/${montId}`;
+        const url = `/orders/saveOrder/${idn}/${montId}/${uploadType}`;
         return this.axiosPostCall(url, data);
     }
 

@@ -1773,7 +1773,7 @@ export class OrdersService {
                         // console.log(filename,'jjjjj')
                         if (saveFilePath.status) {
                             // console.log(dataArray,'------------------------------------')
-                            const saveProjOrders = await this.saveOrdersData(dataArray, saveFilePath.data.id, 9)
+                            const saveProjOrders = await this.saveOrdersData(dataArray, saveFilePath.data.id, 9,'Email')
                             // console.log(saveProjOrders,'saveProjOrders')
                             let req = new FileStatusReq();
                             req.fileId = saveFilePath.data.id;
@@ -2838,7 +2838,7 @@ export class OrdersService {
         return sendMail
     }
 
-    async saveOrdersData(formData: any, id: number, months: number): Promise<CommonResponseModel> {
+    async saveOrdersData(formData: any, id: number, months: number,uploadType:string): Promise<CommonResponseModel> {
         const currentDate = new Date();
         const month = currentDate.getMonth() + 1;
         const transactionManager = new GenericTransactionManager(this.dataSource)
@@ -2872,6 +2872,10 @@ export class OrdersService {
                 }
                 let dtoData: SaveOrderDto;
                 if (updatedObj.Order_Plan_Number !== null) {
+                    if(uploadType == 'Manual'){
+                        updatedObj.WH = moment(updatedObj.WH).add(1, 'days').format('MM-DD')
+                        updatedObj.EXF = moment(updatedObj.EXF).add(1, 'days').format('MM-DD')
+                    }
                     dtoData = new SaveOrderDto(null, updatedObj.Year, updatedObj.Planning_Ssn, updatedObj.Biz, updatedObj.Core_Category, updatedObj.Planning_Sum, updatedObj.Coeff, updatedObj.Publish_Flag_for_Factory, updatedObj.Order_Plan_Number, (updatedObj.Order_Plan_Qty).toString().replace(/,/g, ''), (updatedObj.Order_Plan_QtyCoeff)?.toString().replace(/,/g, ''), updatedObj.Prod_Plan_Type, updatedObj.WH ? moment(updatedObj.WH).format('MM-DD') : null, updatedObj.EXF_ETD, updatedObj.ETD_WH, updatedObj.Sample, updatedObj.EXF ? moment(updatedObj.EXF).format('MM-DD') : null, id, null, 'bidhun')
                     let newDate
                     if (dtoData.exf == null && dtoData.publishFlagForFactory !== 'NotPub') {
