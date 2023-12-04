@@ -90,6 +90,7 @@ import { varietyModule } from './Trim Masters/variety/variety-module';
 import { trimModule } from './Trim Masters/trim/trim-module';
 import { ThicknessModule } from './thickness/thickness.module';
 import { TypeModule } from './type/type.module';
+import { QualitysModule } from './qualitys/qualitys.module';
 
 
 @Module({
@@ -110,7 +111,7 @@ import { TypeModule } from './type/type.module';
       }
     }),
     FactoriesModule,
-
+    QualitysModule,
     CurrenciesModule,
     PaymentTermsModule,
     PackageTermsModule,

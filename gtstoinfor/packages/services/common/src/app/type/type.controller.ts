@@ -45,6 +45,7 @@ export class TypeController {
     @Post('/activateOrDeactivateType')
     @ApiBody({type:TypeActivateReq})
     async activateOrDeactivateType(@Body() req:any): Promise<TypeResponseModel> {
+
         try {
             return await this.typeService.activateOrDeactivateType(req);
         } catch (error) {
