@@ -92,5 +92,7 @@ export * from './Column'
 export* from './variety'
 export * from './trim'
 export * from './category'
+export * from './thickness'
+export * from './type'
 export * from './qualitys'
- 
+ export * from './content'

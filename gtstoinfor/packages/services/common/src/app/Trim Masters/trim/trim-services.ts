@@ -22,7 +22,6 @@ export class trimService{
         try {
           if (!isUpdate) {
             const existingDept = await this.trimRepository.findOne({ where: { trimCategory: DTO.trimCategory }});
-            const existingDept1 = await this.trimRepository.findOne({ where: { trimCategory: DTO.trimCategory }});
 
             if (existingDept) {
               throw new CommonResponseModel(false, 11104, 'Trim Category already exists');

@@ -16,4 +16,7 @@ export class ContentDto {
   @ApiProperty()
   updatedUser: string | null;
 
+  @ApiProperty()
+  isActive: boolean;
+
 }
