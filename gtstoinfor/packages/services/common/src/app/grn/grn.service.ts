@@ -1,5 +1,5 @@
 import { Injectable, Query } from '@nestjs/common';
-import { CommonResponseModel, CustomerOrderStatusEnum, GrnReq, PoItemEnum, PurchaseOrderStatus } from '@project-management-system/shared-models';
+import { CommonResponseModel, CustomerOrderStatusEnum, GRNTypeEnum, GrnReq, PoItemEnum, PurchaseOrderStatus } from '@project-management-system/shared-models';
 import { GrnRepository } from './dto/grn-repository';
 import { GrnAdapter } from './dto/grn-adapter';
 import { GrnDto, PurchaseOrderReq } from './dto/grn-dto';
@@ -161,6 +161,7 @@ export class GrnService {
             grnEntity.invoiceNo = req.invoiceNo
             grnEntity.grnAmount = req.grnAmount
             grnEntity.grnQuantity = req.grnQuantity
+            grnEntity.grnType  = Object.keys(GRNTypeEnum).find(key => GRNTypeEnum[key] === req.grnType) as any;
             // console.log(req,'===========')
             for (const item of req.grnItemInfo) {
                 const itemEntity = new GrnItemsEntity()
@@ -189,13 +190,12 @@ export class GrnService {
             if (save) {
                 for (const item of req.grnItemInfo) {
                     if (item.m3ItemCode != null) {
-
                         const poQuantity = await this.poItemRepo.find({ where: { purchaseOrderItemId: item.poItemId } })
                         if (poQuantity[0].poQuantity == item.conversionQuantity) {
-                            await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, { grnQuantity: item.acceptedQuantity, poitemStatus: PoItemEnum.RECEIVED })
+                            await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, {grnQuantity: () => `grn_quantity + ${item.acceptedQuantity}`, poitemStatus: PoItemEnum.RECEIVED })
                         }
                         else {
-                            await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, { poitemStatus: PoItemEnum.PARTAILLY_RECEIVED, grnQuantity: item.acceptedQuantity })
+                            await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, { poitemStatus: PoItemEnum.PARTAILLY_RECEIVED, grnQuantity: () => `grn_quantity + ${item.acceptedQuantity}` })
                         }
                         const indentId = await this.getIndentid(req.materialtype, item.indentItemId)
                         const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype, indentId.data[0].indentId)

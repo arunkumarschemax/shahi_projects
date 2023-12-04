@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { variety } from './variety-entity';
 import { VarietyController } from './variety-controller';
-import { varietyService } from './dto/variety-services';
+import { varietyService } from './variety-services';
 import { VarietyAdapter } from './dto/variety-adapter';
 
 @Module({
