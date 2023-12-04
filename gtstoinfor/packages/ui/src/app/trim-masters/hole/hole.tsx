@@ -25,7 +25,7 @@ export function HoleForm(props: HoleFormProps) {
     Service.createHole(dto).then(res => {
       if (res.status) {
         message.success('Finish Created Successfully',2);
-        navigate("/masters/hole/hole-view");
+        navigate("/trim-master/hole/hole-view");
         onReset();
       } else {
         if (res.status) {
@@ -53,7 +53,8 @@ export function HoleForm(props: HoleFormProps) {
   };
 
   return (
-    <Card title={<span >Hole</span>} style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={props.isUpdate==true?"":<Link to='/masters/hole/hole-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
+    <Card title={<span >Hole</span>} 
+    style={{textAlign:'left'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={props.isUpdate==true?"":<Link to='/trim-master/hole/hole-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
       <Form form={form } layout={'vertical'} initialValues={props.data} name="control-hooks" onFinish={saveData}>   
       <Form.Item name="holeId" style={{display:"none"}} >
         <Input hidden/>

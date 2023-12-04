@@ -25,7 +25,7 @@ export function FinishForm(props: FinishFormProps) {
     Service.createFinish(dto).then(res => {
       if (res.status) {
         message.success('Finish Created Successfully',2);
-        navigate("/masters/finish/finish-view");
+        navigate("/trim-master/finish/finish-view");
         onReset();
       } else {
         if (res.status) {
@@ -53,7 +53,7 @@ export function FinishForm(props: FinishFormProps) {
   };
 
   return (
-    <Card title={<span >Finish</span>} style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={props.isUpdate==true?"":<Link to='/masters/finish/finish-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
+    <Card title={<span >Finish</span>} style={{textAlign:'left'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={props.isUpdate==true?"":<Link to='/trim-master/finish/finish-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
       <Form form={form } layout={'vertical'} initialValues={props.data} name="control-hooks" onFinish={saveData}  >   
       <Form.Item name="finishId" style={{display:"none"}} >
         <Input hidden/>

@@ -593,18 +593,6 @@ export const AppRoutes = () => {
                         closeForm={() => { }}
                         updateDetails={(undefined) => { }} columnData={undefined} />} />
                     <Route path='column/column-view' element={<ColumnView />} />
-                    <Route path='hole/hole-form' element={<HoleForm
-                        isUpdate={false}
-                        closeForm={() => { }}
-                        updateHole={(undefined) => {}}
-                        data={undefined} />} />
-                    <Route path='hole/hole-view' element={<HoleGrid />} />
-                    <Route path='finish/finish-form' element={<FinishForm
-                        isUpdate={false}
-                        closeForm={() => { }}
-                        updateFinish={(undefined) => { }} 
-                        data={undefined} />} />
-                    <Route path='finish/finish-view' element={<FinishGrid />} />
                 </Route>
                 <Route path='/global'>
                     <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
@@ -705,6 +693,18 @@ export const AppRoutes = () => {
                         throw new Error("Function not implemented.")
                     } } />} />
                     <Route path='trim/trim-view' element ={<TrimGrid />} />
+                    <Route path='hole/hole-form' element={<HoleForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateHole={(undefined) => {}}
+                        data={undefined} />} />
+                    <Route path='hole/hole-view' element={<HoleGrid />}/>
+                    <Route path='finish/finish-form' element={<FinishForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateFinish={(undefined) => { }} 
+                        data={undefined} />} />
+                    <Route path='finish/finish-view' element={<FinishGrid />} />
 
 
 

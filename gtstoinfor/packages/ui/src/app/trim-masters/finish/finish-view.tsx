@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Alert } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/lib/table';
@@ -271,24 +271,24 @@ export function FinishGrid(props: FinishProps) {
   }
   return (
     <Card title={<span >Finish</span>}
-    style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
-    extra={<Link to='/masters/finish/finish-form' >
+    style={{textAlign:'left'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
+    extra={<Link to='/trim-master/finish/finish-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
       </Link>} >
-     <br></br>
-     <Row gutter={40}>
-      
-        <Col>
-          <Card title={'Total Finishes: ' + data.length} style={{ textAlign: 'left', width: 220, height: 41, backgroundColor: '#bfbfbf' }}></Card>
-        </Col>
-        <Col>
-          <Card title={'Active: ' + data.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
-        </Col>
-        <Col>
-          <Card title={'In-Active: ' + data.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
-        </Col>
-          </Row>
-          <br></br>
+        <br></br>
+        <Row gutter={24}>
+          <Col span={4}></Col>
+          <Col span={5}>
+            <Alert type='success' message={'Total Finishes: ' + data.length} style={{fontSize:'15px'}} />
+          </Col>
+          <Col span={5}>
+            <Alert type='warning' message={'Active: ' + data.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+          </Col>
+          <Col span={5}>
+            <Alert type='info' message={'Inactive: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+          </Col>
+        </Row> 
+        <br></br>
           <Table
           size='small'
           rowKey={record => record.finishId}
