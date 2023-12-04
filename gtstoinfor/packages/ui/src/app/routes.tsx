@@ -185,6 +185,8 @@ import { MaterialAllocationDetailView } from "./sample-development/material-allo
 import WarehouseDashboard from "./common/dashboards/warehouse-dashboard"
 import { ReclassificationApprovalGrid } from "./sourcing-requisition/reclassification-approval-grid"
 import AllocatedStockApproval from "./sample-development/allocated-stock-approval"
+import QualityGrid from "./common/qualitys/qualitys-view"
+import QualitysForm from "./common/qualitys/qualitys-form"
 
 
 
@@ -371,7 +373,11 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={() => { }}
                         updateData={(undefined) => { }} />} />
-
+                        <Route path="qualitys/qualitys-view" element={<QualityGrid />} />
+                    <Route path='qualitys/qualitys-form' element={<QualitysForm qualitysData={undefined}
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateDetails={(undefined) => { }} />} />
                     <Route path='currencies/currency-form' element={<CurrenciesForm currencyData={undefined}
                         isUpdate={false}
                         closeForm={() => { }}
