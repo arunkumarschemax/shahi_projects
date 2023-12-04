@@ -17,7 +17,7 @@ import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
 import CompanyForm from "./masters/company/company-form"
 import CompanyGrid from "./masters/company/company-grid"
-import { CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto, PurchaseViewDto } from "@project-management-system/shared-models"
+import { ColourDto, CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto, PurchaseViewDto, TrimDtos, VarietyDtos } from "@project-management-system/shared-models"
 import MasterBrandsForm from "./masters/master-brands/master-brands-form"
 import MasterBrandsGrid from "./masters/master-brands/master.brands-gridt"
 import OperationsForm from "./masters/operations/operations-form"
@@ -186,6 +186,10 @@ import WarehouseDashboard from "./common/dashboards/warehouse-dashboard"
 import { ReclassificationApprovalGrid } from "./sourcing-requisition/reclassification-approval-grid"
 import AllocatedStockApproval from "./sample-development/allocated-stock-approval"
 import StoreIssues from "./sample-development/store-issues"
+import { VarietyForm } from "./trim-master/variety/variety-form"
+import VarietyGrid from "./trim-master/variety/variety-view"
+import { TrimForm } from "./trim-master/trim/trim-form"
+import TrimGrid from "./trim-master/trim/trim-view"
 
 
 
@@ -579,6 +583,7 @@ export const AppRoutes = () => {
                         updateDetails={(undefined) => { }} columnData={undefined} />} />
                     <Route path='column/column-view' element={<ColumnView />} />
 
+
                 </Route>
                 <Route path='/global'>
                     <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
@@ -662,6 +667,25 @@ export const AppRoutes = () => {
 
 
                     <Route path='uom/uom-grid' element={<UomGrid />} />
+
+                </Route>
+
+                <Route  path='/trim-master'>
+                    <Route path='variety/variety-form' element ={<VarietyForm varietyData={new VarietyDtos} updateItem={function (VarietyDto: VarietyDtos): void {
+                        throw new Error("Function not implemented.")
+                    } } isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.")
+                    } } />} />
+                    <Route path='variety/variety-view' element ={<VarietyGrid />} />
+
+                    <Route path='trim/trim-form' element ={<TrimForm TrimData={new TrimDtos} updateItem={function (Dto: TrimDtos): void {
+                        throw new Error("Function not implemented.")
+                    } } isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.")
+                    } } />} />
+                    <Route path='trim/trim-view' element ={<TrimGrid />} />
+
+
 
                 </Route>
 
